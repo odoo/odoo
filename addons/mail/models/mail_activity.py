@@ -365,7 +365,7 @@ class MailActivity(models.Model):
 
         allowed_ids = defaultdict(set)
         for res_model, res_ids in model_ids.items():
-            records = self.env[res_model].browse(res_ids)
+            records = self.env[res_model].browse(res_ids).exists()
             # fall back on related document access right checks. Use the same as defined for mail.thread
             # if available; otherwise fall back on read
             operation = getattr(records, '_mail_post_access', 'read')
@@ -560,9 +560,11 @@ class MailActivity(models.Model):
 
         return messages, next_activities
 
+    @api.readonly
     def action_close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
 
+    @api.readonly
     def action_open_document(self):
         """ Opens the related record based on the model and ID """
         self.ensure_one()

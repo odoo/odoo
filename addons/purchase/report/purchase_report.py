@@ -31,7 +31,7 @@ class PurchaseReport(models.Model):
     product_uom = fields.Many2one('uom.uom', 'Reference Unit of Measure', required=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
-    user_id = fields.Many2one('res.users', 'Purchase Representative', readonly=True)
+    user_id = fields.Many2one('res.users', 'Buyer', readonly=True)
     delay = fields.Float('Days to Confirm', digits=(16, 2), readonly=True, aggregator='avg', help="Amount of time between purchase approval and order by date.")
     delay_pass = fields.Float('Days to Receive', digits=(16, 2), readonly=True, aggregator='avg',
                               help="Amount of time between date planned and order by date for each purchase order line.")
@@ -159,7 +159,7 @@ class PurchaseReport(models.Model):
         if aggregate_spec != 'price_average:avg':
             return super()._read_group_select(aggregate_spec, query)
         return SQL(
-            'SUM(%(f_price)s * %(f_qty)s) / SUM(%(f_qty)s)',
+            'SUM(%(f_price)s * %(f_qty)s) / NULLIF(SUM(%(f_qty)s), 0.0)',
             f_qty=self._field_to_sql(self._table, 'qty_ordered', query),
             f_price=self._field_to_sql(self._table, 'price_average', query),
         )

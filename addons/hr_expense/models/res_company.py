@@ -18,11 +18,11 @@ class ResCompany(models.Model):
         string="Outstanding Account",
         check_company=True,
         domain="[('account_type', '=', 'asset_current'), ('reconcile', '=', True)]",
-        help="The account used to record the outstanding amount of the employee expenses.",
+        help="The account used to record the outstanding amount of the company expenses.",
     )
     company_expense_allowed_payment_method_line_ids = fields.Many2many(
         "account.payment.method.line",
         string="Payment methods available for expenses paid by company",
         check_company=True,
-        domain="[('payment_type', '=', 'outbound'), ('journal_id', '!=', False)]",
+        domain="[('payment_type', '=', 'outbound'), ('journal_id', '!=', False), ('journal_id.active', '=', True)]",
     )

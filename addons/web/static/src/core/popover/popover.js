@@ -1,10 +1,17 @@
-import { Component, onMounted, onWillDestroy, useExternalListener, useRef } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, useComponent, useRef } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { useActiveElement } from "@web/core/ui/ui_service";
 import { addClassesToElement, mergeClasses } from "@web/core/utils/classname";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
+
+function useEarlyExternalListener(target, eventName, handler, eventParams) {
+    const component = useComponent();
+    const boundHandler = handler.bind(component);
+    target.addEventListener(eventName, boundHandler, eventParams);
+    onWillDestroy(() => target.removeEventListener(eventName, boundHandler, eventParams));
+}
 
 /**
  * Will trigger the callback when the window is clicked, giving
@@ -26,8 +33,8 @@ function useClickAway(callback) {
         }
     };
 
-    useExternalListener(window, "pointerdown", pointerDownHandler, { capture: true });
-    useExternalListener(window, "blur", blurHandler, { capture: true });
+    useEarlyExternalListener(window, "pointerdown", pointerDownHandler, { capture: true });
+    useEarlyExternalListener(window, "blur", blurHandler, { capture: true });
 }
 
 const POPOVERS = new WeakMap();
@@ -145,6 +152,12 @@ export class Popover extends Component {
             position: this.props.position,
         });
 
+        onMounted(() => POPOVERS.set(this.props.target, this.popoverRef.el));
+        onWillDestroy(() => POPOVERS.delete(this.props.target));
+
+        if (!this.props.close) {
+            return;
+        }
         if (this.props.target.isConnected) {
             useClickAway((target) => this.onClickAway(target));
 
@@ -157,8 +170,6 @@ export class Popover extends Component {
         } else {
             this.props.close();
         }
-        onMounted(() => POPOVERS.set(this.props.target, this.popoverRef.el));
-        onWillDestroy(() => POPOVERS.delete(this.props.target));
     }
 
     get defaultClassObj() {
@@ -171,8 +182,8 @@ export class Popover extends Component {
 
     isInside(target) {
         return (
-            this.props.target.contains(target) ||
-            this.popoverRef.el.contains(target) ||
+            this.props.target?.contains(target) ||
+            this.popoverRef?.el?.contains(target) ||
             this.env[OVERLAY_SYMBOL]?.contains(target)
         );
     }

@@ -3,8 +3,10 @@
 
 from odoo.addons.sms.tests.common import SMSCommon
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install', 'sms_composer')
 class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
     """ TODO LIST
 
@@ -169,16 +171,21 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
 
     def test_composer_nofield_w_customer(self):
         """ Test SMS composer without number field, the number on partner must be used instead"""
+        test_record = self.env['mail.test.sms.partner'].create({
+            'name': 'Test',
+            'customer_id': self.partner_1.id,
+        })
+
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
-                    default_res_model='mail.test.sms', default_res_id=self.test_record.id,
+                    default_res_model=test_record._name, default_res_id=test_record.id,
                 ).create({
                     'body': self._test_body,
                 })
-
+        self.assertFalse(composer.number_field_name)
         self.assertTrue(composer.recipient_single_valid)
-        self.assertEqual(composer.recipient_single_number, self.test_numbers[1])
-        self.assertEqual(composer.recipient_single_number_itf, self.test_numbers[1])
+        self.assertEqual(composer.recipient_single_number, self.partner_numbers[0])
+        self.assertEqual(composer.recipient_single_number_itf, self.partner_numbers[0])
 
     def test_composer_internals(self):
         with self.with_user('employee'):
@@ -194,8 +201,8 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
         self.assertEqual(composer.number_field_name, 'phone_nbr')
         self.assertTrue(composer.comment_single_recipient)
         self.assertEqual(composer.recipient_single_description, self.test_record.customer_id.display_name)
-        self.assertEqual(composer.recipient_single_number, self.test_numbers[1])
-        self.assertEqual(composer.recipient_single_number_itf, self.test_numbers[1])
+        self.assertEqual(composer.recipient_single_number, self.test_numbers_san[1])
+        self.assertEqual(composer.recipient_single_number_itf, self.test_numbers_san[1])
         self.assertTrue(composer.recipient_single_valid)
         self.assertEqual(composer.recipient_valid_count, 1)
         self.assertEqual(composer.recipient_invalid_count, 0)
@@ -282,6 +289,7 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
         self.assertSMSNotification([{'number': self.random_numbers_san[0]}], self._test_body)
 
 
+@tagged('sms_composer')
 class TestSMSComposerBatch(SMSCommon):
     @classmethod
     def setUpClass(cls):
@@ -332,6 +340,7 @@ class TestSMSComposerBatch(SMSCommon):
             )
 
 
+@tagged('sms_composer')
 class TestSMSComposerMass(SMSCommon):
 
     @classmethod

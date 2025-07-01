@@ -3,16 +3,16 @@
 import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
 import { HISTORY_SNAPSHOT_INTERVAL } from "@html_editor/others/collaboration/collaboration_plugin";
 import { COLLABORATION_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { normalizeHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { advanceTime, animationFrame, tick, waitUntil } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 import { Mutex } from "@web/core/utils/concurrency";
-import { normalizeHTML } from "@html_editor/utils/html";
 import { patch } from "@web/core/utils/patch";
 import { getContent, getSelection, setSelection } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
-import { animationFrame, advanceTime } from "@odoo/hoot-mock";
 
 /**
  * @typedef PeerPool
@@ -61,7 +61,7 @@ class PeerTest {
         this.editor.destroy();
     }
     async focus() {
-        return this.plugins["collaboration_odoo"].joinPeerToPeer();
+        return this.plugins["collaborationOdoo"].joinPeerToPeer();
     }
     async openDataChannel(peer) {
         this.connections.add(peer);
@@ -85,16 +85,16 @@ class PeerTest {
     }
     async writeToServer() {
         this.pool.lastRecordSaved = this.editor.getContent();
-        const lastId = this.plugins.collaboration_odoo.getLastHistoryStepId(
+        const lastId = this.plugins.collaborationOdoo.getLastHistoryStepId(
             this.pool.lastRecordSaved
         );
         for (const peer of Object.values(this.peers)) {
             if (peer === this) {
                 continue;
             }
-            peer.onlineMutex.exec(async () => {
-                return peer.plugins.collaboration_odoo.onServerLastIdUpdate(String(lastId));
-            });
+            peer.onlineMutex.exec(async () =>
+                peer.plugins.collaborationOdoo.onServerLastIdUpdate(String(lastId))
+            );
         }
     }
     async setOnline() {
@@ -125,7 +125,7 @@ class Wysiwygs extends Component {
         <div>
             <t t-foreach="this.props.peerIds" t-as="peerId" t-key="peerId">
                 <Wysiwyg
-                    config="getConfig({peerId})"
+                    config="getConfig({peerId, content: this.props.content})"
                     t-key="peerId"
                     iframe="true"
                     onLoad="(editor) => this.onLoad(peerId, editor)"
@@ -137,22 +137,24 @@ class Wysiwygs extends Component {
     static props = {
         peerIds: Array,
         pool: Object,
+        content: String,
     };
     setup() {
         this.peerResolvers = {};
         this.peerPromises = Promise.all(
-            this.props.peerIds.map((peerId) => {
-                return new Promise((resolve) => {
-                    this.peerResolvers[peerId] = resolve;
-                });
-            })
+            this.props.peerIds.map(
+                (peerId) =>
+                    new Promise((resolve) => {
+                        this.peerResolvers[peerId] = resolve;
+                    })
+            )
         );
         this.loadedPromise = new Promise((resolve) => {
             this.loadedResolver = resolve;
         });
         this.lastStepId = 0;
     }
-    getConfig({ peerId }) {
+    getConfig({ peerId, content }) {
         const busService = {
             subscribe() {},
             unsubscribe() {},
@@ -163,7 +165,7 @@ class Wysiwygs extends Component {
         };
         return {
             Plugins: [...MAIN_PLUGINS, ...COLLABORATION_PLUGINS],
-            content: initialValue.replaceAll("[]", ""),
+            content: content.replaceAll("[]", ""),
             collaboration: {
                 peerId,
                 busService,
@@ -181,11 +183,11 @@ class Wysiwygs extends Component {
         const loadedResolver = this.peerResolvers[peerId];
         const startPlugins = editor.startPlugins.bind(editor);
         editor.startPlugins = () => {
-            const plugins = Object.fromEntries(editor.plugins.map((p) => [p.constructor.name, p]));
+            const plugins = Object.fromEntries(editor.plugins.map((p) => [p.constructor.id, p]));
             const { pool } = this.props;
             const { peers } = this.props.pool;
 
-            patch(plugins["collaboration_odoo"], {
+            patch(plugins["collaborationOdoo"], {
                 getMetadata() {
                     const result = super.getMetadata();
                     result.avatarUrl = ``;
@@ -217,9 +219,7 @@ class Wysiwygs extends Component {
                             super.notifyAllPeers(...args);
                         },
                         _getPtpPeers() {
-                            return peers[peerId].connections.map((peer) => {
-                                return { id: peer.peerId };
-                            });
+                            return peers[peerId].connections.map((peer) => ({ id: peer.peerId }));
                         },
                         async _channelNotify(peerId, transportPayload) {
                             if (
@@ -280,12 +280,12 @@ class Wysiwygs extends Component {
             // if (configSelection) {
             //     editable.focus();
             // }
-            setSelection(getSelection(editable, initialValue));
+            setSelection(getSelection(editable, this.props.content));
         };
     }
 }
 
-async function createPeers(peerIds) {
+async function createPeers(peerIds, content = initialValue) {
     /**
      * @type PeerPool
      */
@@ -298,6 +298,7 @@ async function createPeers(peerIds) {
         props: {
             peerIds,
             pool,
+            content,
         },
     });
     await wysiwygs.peerPromises;
@@ -307,17 +308,13 @@ async function createPeers(peerIds) {
 
 async function insertEditorText(editor, text) {
     await insertText(editor, text);
-    editor.dispatch("ADD_STEP");
+    editor.shared.history.addStep();
 }
 
 beforeEach(() => {
-    onRpc("/web/dataset/call_kw/res.users/read", () => {
-        return [{ id: 0, name: "admin" }];
-    });
-    onRpc("/html_editor/get_ice_servers", () => {
-        return [];
-    });
-    onRpc("/html_editor/bus_broadcast", (params) => {
+    onRpc("res.users", "read", () => [{ id: 0, name: "admin" }]);
+    onRpc("/html_editor/get_ice_servers", () => []);
+    onRpc("/html_editor/bus_broadcast", () => {
         throw new Error("Should not be called.");
     });
 });
@@ -357,7 +354,7 @@ describe("Focus", () => {
         expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
             message: "p1 should have the same document as p2",
         });
-        expect(peers.p2.getValue()).toBe(`<p>[]ab</p>`, {
+        expect(peers.p2.getValue()).toBe(`<p>a[]b</p>`, {
             message: "p2 should have the same document as p1",
         });
         expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
@@ -378,7 +375,7 @@ describe("Focus", () => {
         expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
             message: "p1 should have the same document as p2",
         });
-        expect(peers.p2.getValue()).toBe(`<p>[]ab</p>`, {
+        expect(peers.p2.getValue()).toBe(`<p>a[]b</p>`, {
             message: "p2 should have the same document as p1",
         });
         expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
@@ -400,21 +397,21 @@ describe("Stale detection & recovery", () => {
 
             await peers.p1.writeToServer();
 
-            expect(peers.p1.plugins.collaboration_odoo.isDocumentStale).toBe(false, {
+            expect(peers.p1.plugins.collaborationOdoo.isDocumentStale).toBe(false, {
                 message: "p1 should not have a stale document",
             });
             expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                 message: "p1 should have the same document as p2",
             });
 
-            expect(peers.p2.plugins.collaboration_odoo.isDocumentStale).toBe(false, {
+            expect(peers.p2.plugins.collaborationOdoo.isDocumentStale).toBe(false, {
                 message: "p2 should not have a stale document",
             });
-            expect(peers.p2.getValue()).toBe(`<p>[]ab</p>`, {
+            expect(peers.p2.getValue()).toBe(`<p>a[]b</p>`, {
                 message: "p2 should have the same document as p1",
             });
 
-            expect(peers.p3.plugins.collaboration_odoo.isDocumentStale).toBe(true, {
+            expect(peers.p3.plugins.collaborationOdoo.isDocumentStale).toBe(true, {
                 message: "p3 should have a stale document",
             });
             expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
@@ -424,9 +421,9 @@ describe("Stale detection & recovery", () => {
             await peers.p3.focus();
             await peers.p1.openDataChannel(peers.p3);
             // This timeout is necessary for the selection to be set
-            await new Promise((resolve) => setTimeout(resolve));
+            await tick();
 
-            expect(peers.p3.plugins.collaboration_odoo.isDocumentStale).toBe(false, {
+            expect(peers.p3.plugins.collaborationOdoo.isDocumentStale).toBe(false, {
                 message: "p3 should not have a stale document",
             });
             expect(peers.p3.getValue()).toBe(`<p>[]ab</p>`, {
@@ -456,21 +453,21 @@ describe("Stale detection & recovery", () => {
                 await peers.p1.openDataChannel(peers.p3);
                 await peers.p2.openDataChannel(peers.p3);
 
-                const p3Spies = makeSpies(peers.p3.plugins.collaboration_odoo, [
+                const p3Spies = makeSpies(peers.p3.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
                     "processMissingSteps",
                     "applySnapshot",
                 ]);
 
-                expect(peers.p1.plugins.collaboration_odoo.historyShareId).toBe(
-                    peers.p2.plugins.collaboration_odoo.historyShareId,
+                expect(peers.p1.plugins.collaborationOdoo.historyShareId).toBe(
+                    peers.p2.plugins.collaborationOdoo.historyShareId,
                     {
                         message: "p1 and p2 should have the same historyShareId",
                     }
                 );
-                expect(peers.p1.plugins.collaboration_odoo.historyShareId).toBe(
-                    peers.p3.plugins.collaboration_odoo.historyShareId,
+                expect(peers.p1.plugins.collaborationOdoo.historyShareId).toBe(
+                    peers.p3.plugins.collaborationOdoo.historyShareId,
                     {
                         message: "p1 and p3 should have the same historyShareId",
                     }
@@ -479,10 +476,10 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p1 should have the same document as p2",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p2 should have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should have the same document as p1",
                 });
 
@@ -493,21 +490,21 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                     message: "p1 should have the same document as p2",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]ab</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]b</p>`, {
                     message: "p2 should have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
                 await peers.p1.writeToServer();
-                expect(peers.p1.plugins.collaboration_odoo.isDocumentStale).toBe(false, {
+                expect(peers.p1.plugins.collaborationOdoo.isDocumentStale).toBe(false, {
                     message: "p1 should not have a stale document",
                 });
-                expect(peers.p2.plugins.collaboration_odoo.isDocumentStale).toBe(false, {
+                expect(peers.p2.plugins.collaborationOdoo.isDocumentStale).toBe(false, {
                     message: "p2 should not have a stale document",
                 });
-                expect(peers.p3.plugins.collaboration_odoo.isDocumentStale).toBe(false, {
+                expect(peers.p3.plugins.collaborationOdoo.isDocumentStale).toBe(false, {
                     message: "p3 should not have a stale document",
                 });
 
@@ -529,10 +526,10 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                     message: "p1 should have the same document as p2",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]ab</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]b</p>`, {
                     message: "p2 should have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]ab</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]b</p>`, {
                     message: "p3 should have the same document as p1",
                 });
             });
@@ -552,13 +549,13 @@ describe("Stale detection & recovery", () => {
                 peers.p2.setOffline();
                 peers.p3.setOffline();
 
-                const p2Spies = makeSpies(peers.p2.plugins.collaboration_odoo, [
+                const p2Spies = makeSpies(peers.p2.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
                     "processMissingSteps",
                     "applySnapshot",
                 ]);
-                const p3Spies = makeSpies(peers.p3.plugins.collaboration_odoo, [
+                const p3Spies = makeSpies(peers.p3.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
                     "processMissingSteps",
@@ -573,10 +570,10 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                     message: "p1 have inserted char b",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p2 should not have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
@@ -599,7 +596,7 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p2.getValue()).toBe(`[]<p>ab</p>`, {
                     message: "p2 should have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
@@ -650,13 +647,13 @@ describe("Stale detection & recovery", () => {
                 peers.p2.setOffline();
                 peers.p3.setOffline();
 
-                const p2Spies = makeSpies(peers.p2.plugins.collaboration_odoo, [
+                const p2Spies = makeSpies(peers.p2.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
                     "processMissingSteps",
                     "applySnapshot",
                 ]);
-                const p3Spies = makeSpies(peers.p3.plugins.collaboration_odoo, [
+                const p3Spies = makeSpies(peers.p3.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
                     "processMissingSteps",
@@ -671,10 +668,10 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                     message: "p1 have inserted char b",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p2 should not have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
@@ -695,7 +692,7 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p2.getValue()).toBe(`[]<p>ab</p>`, {
                     message: "p2 should have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
@@ -748,7 +745,7 @@ describe("Stale detection & recovery", () => {
                 peers.p2.setOffline();
                 peers.p3.setOffline();
 
-                const p2Spies = makeSpies(peers.p2.plugins.collaboration_odoo, [
+                const p2Spies = makeSpies(peers.p2.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
                     "processMissingSteps",
@@ -757,7 +754,7 @@ describe("Stale detection & recovery", () => {
                     "resetFromPeer",
                 ]);
 
-                const p3Spies = makeSpies(peers.p3.plugins.collaboration_odoo, [
+                const p3Spies = makeSpies(peers.p3.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
                     "processMissingSteps",
@@ -772,10 +769,10 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                     message: "p1 have inserted char b",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p2 should not have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
@@ -840,7 +837,7 @@ describe("Stale detection & recovery", () => {
                 await peers.p1.openDataChannel(peers.p2);
                 peers.p2.setOffline();
 
-                const p2Spies = makeSpies(peers.p2.plugins.collaboration_odoo, [
+                const p2Spies = makeSpies(peers.p2.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
                     "processMissingSteps",
@@ -855,7 +852,7 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                     message: "p1 have inserted char b",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p2 should not have the same document as p1",
                 });
 
@@ -914,7 +911,7 @@ describe("Stale detection & recovery", () => {
                 peers.p2.setOffline();
                 peers.p3.setOffline();
 
-                const p2Spies = makeSpies(peers.p2.plugins.collaboration_odoo, [
+                const p2Spies = makeSpies(peers.p2.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
                     "processMissingSteps",
@@ -930,10 +927,10 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                     message: "p1 have inserted char b",
                 });
-                expect(peers.p2.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p2.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p2 should not have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
@@ -957,7 +954,7 @@ describe("Stale detection & recovery", () => {
                 expect(peers.p2.getValue()).toBe(`[]<p>ab</p>`, {
                     message: "p2 should have the same document as p1",
                 });
-                expect(peers.p3.getValue()).toBe(`<p>[]a</p>`, {
+                expect(peers.p3.getValue()).toBe(`<p>a[]</p>`, {
                     message: "p3 should not have the same document as p1",
                 });
 
@@ -1014,7 +1011,7 @@ describe("Disconnect & reconnect", () => {
             const p = document.createElement("p");
             p.textContent = content;
             peer.editor.editable.append(p);
-            peer.editor.dispatch("ADD_STEP");
+            peer.editor.shared.history.addStep();
         };
 
         setSelection(peers.p1);
@@ -1033,7 +1030,7 @@ describe("Disconnect & reconnect", () => {
         // should be removed when the fix of undetected missing step
         // will be merged. (task-3208277)
         const p1PromiseForMissingStep = new Promise((resolve) => {
-            patch(peers.p2.plugins.collaboration_odoo, {
+            patch(peers.p2.plugins.collaborationOdoo, {
                 async processMissingSteps() {
                     // Wait for the p2PromiseForMissingStep to resolve
                     // to avoid undetected missing step.
@@ -1044,7 +1041,7 @@ describe("Disconnect & reconnect", () => {
             });
         });
         const p2PromiseForMissingStep = new Promise((resolve) => {
-            patch(peers.p1.plugins.collaboration_odoo, {
+            patch(peers.p1.plugins.collaborationOdoo, {
                 async processMissingSteps() {
                     super.processMissingSteps(...arguments);
                     resolve();
@@ -1092,7 +1089,7 @@ describe("Snapshot", () => {
 
         await peers.p2.openDataChannel(peers.p3);
 
-        expect(peers.p3.getValue()).toBe(`<p>[]ab</p>`, {
+        expect(peers.p3.getValue()).toBe(`<p>a[]b</p>`, {
             message: "p3 should have the steps from the first snapshot of p2",
         });
     });
@@ -1116,16 +1113,16 @@ describe("History steps Ids", () => {
         await insertEditorText(peers.p1.editor, "b");
         await peers.p1.writeToServer();
 
-        expect(peers.p2.plugins.collaboration_odoo.isDocumentStale).toBe(true, {
+        expect(peers.p2.plugins.collaborationOdoo.isDocumentStale).toBe(true, {
             message: "p2 should have a stale document",
         });
 
         await peers.p2.focus();
         await peers.p1.openDataChannel(peers.p2);
         // This timeout is necessary for the selection to be set
-        await new Promise((resolve) => setTimeout(resolve));
+        await tick();
 
-        expect(peers.p2.plugins.collaboration_odoo.isDocumentStale).toBe(false, {
+        expect(peers.p2.plugins.collaborationOdoo.isDocumentStale).toBe(false, {
             message: "p2 should not have a stale document",
         });
         expect(getContent(peers.p2.editor.editable)).toBe(`<p>[]ab</p>`, {
@@ -1139,14 +1136,80 @@ describe("History steps Ids", () => {
         const peers = pool.peers;
         const editor = peers.p1.editor;
         await peers.p1.focus();
-        editor.dispatch("SPLIT_BLOCK");
+        editor.shared.split.splitBlock();
+        editor.shared.history.addStep();
         expect(getContent(editor.editable)).toBe(
             `<p>a</p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
-        editor.dispatch("SPLIT_BLOCK");
+        editor.shared.split.splitBlock();
+        editor.shared.history.addStep();
         expect(getContent(editor.editable)).toBe(
             `<p>a</p><p><br></p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
         editor.destroy();
+    });
+});
+
+describe("Indent List", () => {
+    test("should sync `li` indent properly", async () => {
+        const pool = await createPeers(["p1", "p2"], `<ul><li>a[]</li></ul>`);
+        const peers = pool.peers;
+
+        await peers.p1.focus();
+        await peers.p2.focus();
+        await peers.p1.openDataChannel(peers.p2);
+        await peers.p2.openDataChannel(peers.p1);
+
+        peers.p1.editor.editable.dispatchEvent(
+            new KeyboardEvent("keydown", {
+                key: "Tab",
+                code: "Tab",
+                bubbles: true,
+            })
+        );
+        await peers.p2.focus();
+        expect(peers.p2.getValue()).toBe(
+            `<ul><li class="oe-nested"><ul><li>a[]</li></ul></li></ul>`,
+            {
+                message: "p2 should not have the same document as p1",
+            }
+        );
+    });
+});
+
+describe("Selection", () => {
+    test("Selection should be updated for peer after delete backward", async () => {
+        const pool = await createPeers(["p1", "p2"]);
+        // editor content : <p>a</p>
+        const peers = pool.peers;
+        await peers.p1.focus(); // <p>a[]</p>
+        await peers.p2.focus();
+        await peers.p1.openDataChannel(peers.p2);
+        await animationFrame();
+        await tick();
+        expect(
+            peers.p2.plugins.collaborationSelectionAvatar.selectionInfos.get("p1").selection
+                .anchorOffset
+        ).toBe(1);
+        expect(
+            peers.p2.plugins.collaborationSelection.selectionInfos.get("p1").selection.anchorOffset
+        ).toBe(1);
+        peers.p1.plugins.delete.delete("backward", "character");
+        await waitUntil(() => {
+            const selectionInAvatarPlugin =
+                peers.p2.plugins.collaborationSelectionAvatar.selectionInfos.get("p1").selection
+                    .anchorOffset == 0;
+            const selectionInCollabSelectionPlugin =
+                peers.p2.plugins.collaborationSelection.selectionInfos.get("p1").selection
+                    .anchorOffset == 0;
+            return selectionInAvatarPlugin && selectionInCollabSelectionPlugin;
+        });
+        expect(
+            peers.p2.plugins.collaborationSelectionAvatar.selectionInfos.get("p1").selection
+                .anchorOffset
+        ).toBe(0);
+        expect(
+            peers.p2.plugins.collaborationSelection.selectionInfos.get("p1").selection.anchorOffset
+        ).toBe(0);
     });
 });

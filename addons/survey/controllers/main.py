@@ -137,7 +137,7 @@ class Survey(http.Controller):
                     if answer_sudo.partner_id.user_ids:
                         answer_sudo.partner_id.signup_cancel()
                     else:
-                        answer_sudo.partner_id.signup_prepare(expiration=fields.Datetime.now() + relativedelta(days=1))
+                        answer_sudo.partner_id.signup_prepare()
                     redirect_url = answer_sudo.partner_id._get_signup_url_for_action(url='/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.access_token))[answer_sudo.partner_id.id]
                 else:
                     redirect_url = '/web/login?redirect=%s' % ('/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.access_token))
@@ -629,7 +629,7 @@ class Survey(http.Controller):
         grab the answers of the user_input_id that has <answer_token>.'''
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=False, check_partner=False)
         if access_data['validity_code'] is not True and (
-                access_data['has_survey_access'] or
+                not access_data['has_survey_access'] or
                 access_data['validity_code'] not in ['token_required', 'survey_closed', 'survey_void', 'answer_deadline']):
             return self._redirect_with_error(access_data, access_data['validity_code'])
 

@@ -40,11 +40,11 @@ export class ResUsers extends webModels.ResUsers {
                     makeKwArgs({
                         fields: [
                             "active",
+                            "avatar_128",
                             "isAdmin",
                             "name",
                             "notification_type",
                             "user",
-                            "write_date",
                         ],
                     })
                 ),
@@ -54,7 +54,7 @@ export class ResUsers extends webModels.ResUsers {
             store.add({
                 self: mailDataHelpers.Store.one(
                     MailGuest.browse(this.env.cookie.get("dgid")),
-                    makeKwArgs({ fields: ["name", "write_date"] })
+                    makeKwArgs({ fields: ["avatar_128", "name"] })
                 ),
             });
         }

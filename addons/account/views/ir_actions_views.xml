@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.act_report_xml_view"/>
         <field name="arch" type="xml">
             <field name="paperformat_id" position="after">
-                <field name="is_invoice_report"/>
+                <field name="is_invoice_report" invisible="model != 'account.move'"/>
             </field>
         </field>
     </record>

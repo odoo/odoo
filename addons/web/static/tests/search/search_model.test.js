@@ -46,10 +46,6 @@ class Foo extends models.Model {
         definition_record: "bar",
         definition_record_field: "child_properties",
     });
-
-    _views = {
-        search: `<search/>`,
-    };
 }
 
 class Partner extends models.Model {
@@ -109,9 +105,6 @@ class Partner extends models.Model {
             category_id: 7,
         },
     ];
-    _views = {
-        search: `<search/>`,
-    };
 }
 
 class Company extends models.Model {
@@ -246,7 +239,7 @@ test("parsing date filter with start_month, end_month, start_year, end_year attr
     const model = await createSearchModel({
         searchViewArch: `
             <search>
-                <filter 
+                <filter
                     name="date_filter"
                     string="Date"
                     date="date_field"

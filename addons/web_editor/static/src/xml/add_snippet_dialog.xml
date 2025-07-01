@@ -17,6 +17,7 @@
                             <i class="oi oi-search" aria-hidden="true"></i>
                         </span>
                     </div>
+                    <!-- TODO the t-if="!state.search" should be on the list-group itself -->
                     <div class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto" role="tablist">
                         <t t-if="!state.search" t-foreach="snippetGroups" t-as="snippetGroup" t-key="snippetGroup.name">
                             <button class="list-group-item list-group-item-light list-group-item-action p-3" role="tab"

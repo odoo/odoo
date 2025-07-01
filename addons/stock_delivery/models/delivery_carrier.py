@@ -107,6 +107,8 @@ class DeliveryCarrier(models.Model):
             total_cost += self._product_price_to_company_currency(line.product_qty, line.product_id, order.company_id)
 
         total_weight = order._get_estimated_weight() + default_package_type.base_weight
+        order_weight = self.env.context.get('order_weight', False)
+        total_weight = order_weight or total_weight
         if total_weight == 0.0:
             weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
             raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s", weight_uom_name))
@@ -245,7 +247,7 @@ class DeliveryCarrier(models.Model):
 
     def fixed_get_tracking_link(self, picking):
         if self.tracking_url and picking.carrier_tracking_ref:
-            return self.tracking_url.lower().replace("<shipmenttrackingnumber>", picking.carrier_tracking_ref)
+            return self.tracking_url.replace("<shipmenttrackingnumber>", picking.carrier_tracking_ref)
         return False
 
     def fixed_cancel_shipment(self, pickings):
@@ -267,7 +269,7 @@ class DeliveryCarrier(models.Model):
 
     def base_on_rule_get_tracking_link(self, picking):
         if self.tracking_url and picking.carrier_tracking_ref:
-            return self.tracking_url.lower().replace("<shipmenttrackingnumber>", picking.carrier_tracking_ref)
+            return self.tracking_url.replace("<shipmenttrackingnumber>", picking.carrier_tracking_ref)
         return False
 
     def base_on_rule_cancel_shipment(self, pickings):

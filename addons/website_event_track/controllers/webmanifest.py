@@ -40,7 +40,7 @@ class TrackManifest(http.Controller):
         ])
         return response
 
-    @http.route('/event/service-worker.js', type='http', auth='public', methods=['GET'], website=True, sitemap=False)
+    @http.route('/event/service-worker.js', type='http', auth='public', methods=['GET'], website=True, sitemap=False, readonly=True)
     def service_worker(self):
         """ Returns a ServiceWorker javascript file scoped for website_event
         """
@@ -57,7 +57,7 @@ class TrackManifest(http.Controller):
         ])
         return response
 
-    @http.route('/event/offline', type='http', auth='public', methods=['GET'], website=True, sitemap=False)
+    @http.route('/event/offline', type='http', auth='public', methods=['GET'], website=True, sitemap=False, readonly=True)
     def offline(self):
         """ Returns the offline page used by the 'website_event' PWA
         """

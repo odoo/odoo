@@ -218,8 +218,13 @@ class PhoneMixin(models.AbstractModel):
 
     def _phone_get_sanitize_triggers(self):
         """ Tool method to get all triggers for sanitize """
-        res = [self._phone_get_country_field()] if self._phone_get_country_field() else []
-        return res + self._phone_get_number_fields()
+        res = self._phone_get_number_fields()
+        # no phone field -> no number to format
+        if res:
+            res += [self._phone_get_country_field()] if self._phone_get_country_field() else []
+            # if partner changes, fallback country may change
+            res += [fname for fname in self._mail_get_partner_fields() if self._fields[fname].store]
+        return res
 
     def _phone_set_blacklisted(self):
         return self.env['phone.blacklist'].sudo()._add([r.phone_sanitized for r in self])
@@ -233,11 +238,11 @@ class PhoneMixin(models.AbstractModel):
         can_access = self.env['phone.blacklist'].has_access('write')
         if can_access:
             return {
-                'name': 'Are you sure you want to unblacklist this Phone Number?',
+                'name': self.env._('Are you sure you want to unblacklist this Phone Number?'),
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'res_model': 'phone.blacklist.remove',
                 'target': 'new',
             }
         else:
-            raise AccessError("You do not have the access right to unblacklist phone numbers. Please contact your administrator.")
+            raise AccessError(self.env._("You do not have the access right to unblacklist phone numbers. Please contact your administrator."))

@@ -143,5 +143,5 @@ test("rpc can send additional headers", async () => {
         });
         return { result: true };
     });
-    await rpc("/test/", null, { headers: { Hello: 'World' } });
+    await rpc("/test/", null, { headers: { Hello: "World" } });
 });

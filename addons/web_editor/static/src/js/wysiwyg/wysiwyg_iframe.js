@@ -4,6 +4,7 @@ import { Wysiwyg } from '@web_editor/js/wysiwyg/wysiwyg';
 import { patch } from "@web/core/utils/patch";
 import { getBundle } from "@web/core/assets";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { useEffect } from "@odoo/owl";
 
 var promiseJsAssets;
 
@@ -12,6 +13,13 @@ var promiseJsAssets;
  **/
 
 patch(Wysiwyg.prototype, {
+    setup() {
+        super.setup();
+        useEffect(
+            () => this.handleSnippetsDisplay(),
+            () => [this.state.showSnippetsMenu, this.state.snippetsMenuFolded]
+        );
+    },
     /**
      * Add options to load Wysiwyg in an iframe.
      *
@@ -48,6 +56,29 @@ patch(Wysiwyg.prototype, {
         super.destroy();
     },
 
+    /**
+     * Add or remove iframe classes depending on the snippets menu folding
+     * state, in order to be able to add/remove enough blank space for it
+     * through css rules.
+     */
+    handleSnippetsDisplay() {
+        const iframe = this.$iframe?.[0];
+        if (!iframe || !iframe.isConnected) {
+            return;
+        }
+        iframe.classList.toggle(
+            "has_snippets_sidebar",
+            this.state.showSnippetsMenu && !this.state.snippetsMenuFolded
+        );
+    },
+
+    /**
+     * Hook called when the wysiwyg fullscreen state changes (allows overrides).
+     *
+     * @param {Boolean} isFullscreen
+     */
+    onToggleFullscreen(isFullscreen) {},
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -82,6 +113,7 @@ patch(Wysiwyg.prototype, {
             width: '100%',
             height: '100%',
         });
+        this.handleSnippetsDisplay();
         var avoidDoubleLoad = 0; // this bug only appears on some configurations.
 
         // resolve promise on load
@@ -146,6 +178,7 @@ patch(Wysiwyg.prototype, {
 
         return def.then(() => {
             this.options.onIframeUpdated();
+            this.handleSnippetsDisplay();
         });
     },
 

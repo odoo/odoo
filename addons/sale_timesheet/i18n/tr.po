@@ -16,14 +16,16 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2024
 # Ediz Duman <neps1192@gmail.com>, 2024
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
+# Hakan Türkün, 2025
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-27 13:04+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -152,6 +154,9 @@ msgid ""
 "order associated with this timesheet entry has been cancelled.\" "
 "invisible=\"sale_order_state != 'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Bu çalışma "
+"çizelgesi kaydıyla ilişkili satış siparişi iptal edilmiştir.\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -308,6 +313,15 @@ msgid ""
 "                        outside the box. We expect the candidate to be proactive and have a \"get it done\"\n"
 "                        spirit. To be successful, you will have solid solving problem skills."
 msgstr ""
+"Şirketimizin bir çalışanı olarak <b>ezber bozan ürünler yaratmak ve dağıtmak için \n"
+"                        her departmanla işbirliği yapacaksınız.</b> Gelin, size ilerleme ve başarılı \n"
+"                        liderlerden öğrenme fırsatı ile harika yan faydalar sağlayan, büyümekte olan  \n"
+"                        bir şirketin çalışanı olun. Deneyimli ve seçkin bir çalışan arıyoruz.\n"
+"                        \n"
+"                       <br><br> \n"
+"                        Bu pozisyon doğası gereği <b>hem yaratıcılık hem de titizlik ister</b>,  kalıpların dışında \n"
+"                        düşünmeniz gerekir. Adayın proaktif olmasını ve “bir yolunu bulurum” ruhuna sahip \n"
+"                        olmasını bekliyoruz. Başarılı olmak için sağlam problem çözme becerilerine sahip olmalısınız."
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -534,6 +548,11 @@ msgid ""
 "                    Several activities are often organized all over the year, such as weekly\n"
 "                    sports sessions, team building events, monthly drink, and much more"
 msgstr ""
+"Her bir çalışan, çalışmasının sonuçlarını ve yarattığı etkiyi görebilir.\n"
+"                    Şirketin başarısına somut bir biçimde katkı sunabilirsiniz.\n"
+"                    <br> \n"
+"                    Yıl boyunca haftalık spor seansları, ekibin bağlarını kuvvetlendirme\n"
+"                    etkinlikleri, aylık içki partileri gibi çeşitli etkinlikler düzenlenmektedir"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -618,7 +637,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_labour
 msgid "Handyman"
-msgstr ""
+msgstr "Tamirci"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
@@ -656,7 +675,7 @@ msgstr "ID"
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_interior_designer
 msgid "Interior Designer"
-msgstr ""
+msgstr "İç Mimar"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_interior_designing_product_template
@@ -716,7 +735,7 @@ msgstr "Proje haritası boş mu?"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__is_so_line_edited
 msgid "Is Sales Order Item Manually Edited"
-msgstr "Satış Siparişi Kalemi Manuel Olarak Düzenleniyor mu"
+msgstr "Satış Siparişi Kalemi Manuel olarak Düzenleniyor"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move
@@ -765,7 +784,7 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Siparişte Miktarları Elle Belirle: Faturayı oluştururken, analitik hesap oluşturmadan, elle belirlenmiş miktarları kullan\n"
+"Siparişte miktarları manuel olarak belirle: Faturayı oluştururken, analitik hesap oluşturmadan, manuel olarak belirlenmiş miktarları kullan\n"
 "Sözleşmelerde Çalışma Çizelgesi: Çalışma çizelgesine girilmiş olan saatlere göre faturalandırma yap.\n"
 "Görev oluştur ve süreyi izle: Müşteri siparişi doğrulaması hakkında bir görev oluşturun ve çalışma saatlerini izleyin."
 
@@ -956,8 +975,6 @@ msgid ""
 "Percentage of time delivered compared to the prepaid amount that must be "
 "reached for the upselling opportunity activity to be triggered."
 msgstr ""
-"Yukarı yönlü satış fırsatı aktivitesinin tetiklenmesi için ulaşılması "
-"gereken ön ödeme tutarına kıyasla teslim edilen sürenin oranı."
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1136,6 +1153,17 @@ msgid "Sales Orders"
 msgstr "Satış Siparişleri"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid ""
+"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
+msgstr ""
+"İlgili çalışanın zaman çizelgelerinde varsayılan olarak seçilecek satış siparişi kalemidir. Proje veya görev üzerinde tanımlı olan satış siparişi kalemini geçersiz kılar ve gerekirse her zaman çizelgesi girişinde değiştirilebilir. Başka bir deyişle, bir çalışanın uzmanlığına, becerilerine veya deneyimine göre zamanının hangi oranla faturalandırılacağını belirler.\n"
+"Aynı hizmeti farklı bir ücretle faturalandırmak istiyorsanız, iki ayrı satış siparişi kalemi oluşturmanız gerekir; çünkü her satış siparişi kaleminin aynı anda yalnızca tek bir birim fiyatı olabilir.\n"
+"Ayrıca, bu projeye özel olarak çalışanlarınızın zaman çizelgeleri için saatlik şirket maliyetini tanımlayabilirsiniz. Bu değer, çalışanın kartında tanımlı olan zaman çizelgesi maliyetini geçersiz kılar."
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
 msgid ""
 "Sales order item to which the time spent will be added in order to be "
@@ -1205,7 +1233,7 @@ msgstr "Hizmetler"
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_engineer
 msgid "Site Manager"
-msgstr ""
+msgstr "Şantiye Yöneticisi"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_solar_installation_product_template
@@ -1268,6 +1296,14 @@ msgid ""
 msgstr ""
 "%s ürünü, Çalışma Çizelgeleri uygulaması tarafından gereklidir ve "
 "arşivlenemez veya silinemez."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product_template.py:0
+msgid ""
+"The %s product is required by the Timesheets app and cannot be linked to a "
+"company."
+msgstr ""
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1362,7 +1398,7 @@ msgstr "Çalışma Çizelgesi Ürünü"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 msgid "Timesheet Report"
-msgstr ""
+msgstr "Çalışma Çizelgesi Raporu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues

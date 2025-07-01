@@ -276,10 +276,23 @@ class TestDevice(TestHttpBase):
         session = self.authenticate(self.user_admin.login, self.user_admin.login)
         session._trace_disable = True
         odoo.http.root.session_store.save(session)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user-rw')
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
+        self.assertEqual(res.status_code, 200)
         devices, logs = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 0)
         self.assertEqual(len(logs), 0)
+
+    def test_detection_device_default_order(self):
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_chrome})
+        self.hit('2024-01-01 10:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_firefox})
+        self.hit('2024-01-01 09:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_android_chrome})
+        devices, _ = self.get_devices_logs(self.user_admin)
+        self.assertEqual(
+            list(zip(devices.mapped('platform'), devices.mapped('browser'))),
+            [('linux', 'firefox'), ('android', 'chrome'), ('linux', 'chrome')],
+            "By default, devices should be found from the most recent to the least recent (according to their last activity)."
+        )
 
     # --------------------
     # DELETION

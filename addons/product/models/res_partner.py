@@ -29,7 +29,7 @@ class ResPartner(models.Model):
     )
 
     @api.depends('country_id', 'specific_property_product_pricelist')
-    @api.depends_context('company')
+    @api.depends_context('company', 'country_code')
     def _compute_product_pricelist(self):
         res = self.env['product.pricelist']._get_partner_pricelist_multi(self._ids)
         for partner in self:
@@ -49,3 +49,9 @@ class ResPartner(models.Model):
 
     def _commercial_fields(self):
         return super()._commercial_fields() + ['property_product_pricelist']
+
+    def _company_dependent_commercial_fields(self):
+        return [
+            *super()._company_dependent_commercial_fields(),
+            'specific_property_product_pricelist'
+        ]

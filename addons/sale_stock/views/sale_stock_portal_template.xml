@@ -18,12 +18,13 @@
         </tbody>
 
         <div id="sale_invoices" position="after">
-            <t t-set="delivery_orders" t-value="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'outgoing').sorted('date', reverse=True)[:3]"/>
+            <t t-set="delivery_orders" t-value="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'outgoing')"/>
+            <t t-set="latest_delivery_orders" t-value="delivery_orders.sorted('date', reverse=True)[:3]"/>
             <div t-if="delivery_orders" class="col-12 col-lg-6 mb-4">
                 <h5 class="mb-1">Last Delivery Orders</h5>
                 <hr class="mt-1 mb-2"/>
                 <div class="d-flex flex-column gap-2">
-                    <t t-foreach="delivery_orders" t-as="picking">
+                    <t t-foreach="latest_delivery_orders" t-as="picking">
                         <t t-set="delivery_report_url"
                            t-value="'/my/picking/pdf/%s?%s' % (picking.id, keep_query())"/>
                         <div name="delivery_order"
@@ -64,7 +65,7 @@
                     </t>
                 </div>
             </div>
-            <t t-set="returns" t-value="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'incoming')"/>
+            <t t-set="returns" t-value="delivery_orders.return_ids.sorted('date', reverse=True)"/>
             <div t-if="returns" class="col-12 col-lg-6 mb-4">
                 <h4 class="mb-1">Returns</h4>
                 <hr class="mt-1 mb-2"/>

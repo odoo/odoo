@@ -25,7 +25,7 @@
     &[data-mimetype$='archive'], &[data-mimetype$='compressed'], &[data-mimetype*='zip'], &[data-mimetype$='tar'], &[data-mimetype*='package'] {
         background-image: url('/web/static/img/mimetypes/archive.svg');
     }
-    &[data-mimetype='application/pdf'] {
+    &[data-mimetype^='application/pdf'] {
         background-image: url('/web/static/img/mimetypes/pdf.svg');
     }
     &[data-mimetype^='text-master'], &[data-mimetype*='document'], &[data-mimetype*='msword'], &[data-mimetype*='wordprocessing'] {

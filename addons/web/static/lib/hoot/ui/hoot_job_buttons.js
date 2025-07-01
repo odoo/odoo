@@ -25,32 +25,29 @@ export class HootJobButtons extends Component {
         <t t-set="type" t-value="getType()" />
         <div class="${HootJobButtons.name} items-center gap-1" t-att-class="props.hidden ? 'hidden' : 'flex'">
             <HootLink
-                type="type"
-                id="props.job.id"
-                class="'hoot-btn-link border border-primary text-pass rounded px-1 transition-colors'"
+                ids="{ [type]: props.job.id }"
+                class="'hoot-btn-link border border-primary text-emerald rounded transition-colors'"
                 title="'Run this ' + type + ' only'"
             >
-                <i class="fa fa-play" />
+                <i class="fa fa-play w-5 h-5" />
             </HootLink>
             <t t-if="type === 'test'">
                 <HootLink
-                    type="type"
-                    id="props.job.id"
+                    ids="{ [type]: props.job.id }"
                     options="{ debug: true }"
-                    class="'hoot-btn-link border border-primary text-pass rounded px-1 transition-colors'"
+                    class="'hoot-btn-link border border-primary text-emerald rounded transition-colors'"
                     title="'Run this ' + type + ' only in debug mode'"
                 >
-                    <i class="fa fa-bug" />
+                    <i class="fa fa-bug w-5 h-5" />
                 </HootLink>
             </t>
             <HootLink
-                type="type"
-                id="props.job.id"
+                ids="{ [type]: props.job.id }"
                 options="{ ignore: true }"
-                class="'hoot-btn-link border border-primary text-fail rounded px-1 transition-colors'"
+                class="'hoot-btn-link border border-primary text-rose rounded transition-colors'"
                 title="'Ignore ' + type"
             >
-                <i class="fa fa-ban" />
+                <i class="fa fa-ban w-5 h-5" />
             </HootLink>
         </div>
     `;

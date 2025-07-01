@@ -10,15 +10,16 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Pekka Ikonen, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-05-30 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -201,6 +202,11 @@ msgstr ""
 "suoraan Outlook-kalenteriin."
 
 #. module: microsoft_calendar
+#: model:ir.model,name:microsoft_calendar.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "Hälytysten hallinta"
+
+#. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
 msgstr "Tapahtuman toistuvuussääntö"
@@ -213,6 +219,9 @@ msgid ""
 "Either update the events/attendees or archive these events %(details)s:\n"
 "%(invalid_events)s"
 msgstr ""
+"Jotta Odoo ja Outlook-kalenteri voidaan synkronoida oikein, kaikilla osallistujilla on oltava sähköpostiosoite. Jotkin tapahtumat eivät kuitenkaan noudata tätä ehtoa. Niin kauan kuin tapahtumat ovat virheellisiä, kalentereita ei synkronoida.\n"
+"Joko päivitä tapahtumat/osallistujat tai arkistoi nämä tapahtumat %(details)s:\n"
+"%(invalid_events)s"
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -426,12 +435,6 @@ msgid ""
 msgstr ""
 "Outlook-synkronointi on määritettävä ennen kuin voit käyttää sitä, haluatko "
 "tehdä sen nyt?"
-
-#. module: microsoft_calendar
-#. odoo-python
-#: code:addons/microsoft_calendar/models/res_users.py:0
-msgid "The account for the Outlook Calendar service is not configured."
-msgstr "Outlook-kalenteripalvelun tiliä ei ole määritetty."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy

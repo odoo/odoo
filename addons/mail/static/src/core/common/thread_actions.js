@@ -10,9 +10,10 @@ threadActionsRegistry
     .add("fold-chat-window", {
         condition(component) {
             return (
-                !component.ui.isSmall &&
                 component.props.chatWindow &&
-                component.props.chatWindow.thread
+                component.props.chatWindow.thread &&
+                (component.env.services["im_livechat.livechat"] ||
+                    !component.env.services.ui.isSmall)
             );
         },
         icon: "fa fa-fw fa-minus",
@@ -107,6 +108,9 @@ function transformAction(component, id, action) {
         },
         /** Condition to display this action. */
         get condition() {
+            if (action.condition === undefined) {
+                return true;
+            }
             return action.condition(component);
         },
         /** Condition to disable the button of this action (but still display it). */
@@ -159,8 +163,14 @@ function transformAction(component, id, action) {
          * */
         open({ keepPrevious } = {}) {
             if (this.toggle) {
-                if (component.threadActions.activeAction && keepPrevious) {
-                    component.threadActions.actionStack.push(component.threadActions.activeAction);
+                if (component.threadActions.activeAction) {
+                    if (keepPrevious) {
+                        component.threadActions.actionStack.push(
+                            component.threadActions.activeAction
+                        );
+                    } else {
+                        component.threadActions.activeAction.close();
+                    }
                 }
                 component.threadActions.activeAction = this;
             }

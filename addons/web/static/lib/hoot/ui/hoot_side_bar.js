@@ -1,10 +1,9 @@
 /** @odoo-module */
 
-import { Component, onWillRender, useRef, useState, xml } from "@odoo/owl";
-import { FOCUSABLE_SELECTOR } from "../../hoot-dom/helpers/dom";
+import { Component, onWillRender, useEffect, useRef, useState, xml } from "@odoo/owl";
 import { Suite } from "../core/suite";
 import { createUrlFromId } from "../core/url";
-import { lookup, normalize } from "../hoot_utils";
+import { lookup, parseQuery } from "../hoot_utils";
 import { HootJobButtons } from "./hoot_job_buttons";
 
 /**
@@ -65,19 +64,36 @@ export class HootSideBarSuite extends Component {
                 }"
             />
         </t>
-        <span t-att-class="getClassName()" t-esc="props.name" />
+        <span t-ref="root" t-att-class="getClassName()" t-esc="props.name" />
         <t t-if="props.multi">
-            <strong class="text-abort whitespace-nowrap me-1">
+            <strong class="text-amber whitespace-nowrap me-1">
                 x<t t-esc="props.multi" />
             </strong>
         </t>
     `;
 
+    setup() {
+        const rootRef = useRef("root");
+        let wasSelected = false;
+        useEffect(
+            (selected) => {
+                if (selected && !wasSelected) {
+                    rootRef.el.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                    });
+                }
+                wasSelected = selected;
+            },
+            () => [this.props.selected]
+        );
+    }
+
     getClassName() {
         const { reporting, selected } = this.props;
         let className = "truncate transition";
         if (reporting.failed) {
-            className += " text-fail";
+            className += " text-rose";
         } else if (!reporting.tests) {
             className += " opacity-25";
         }
@@ -98,7 +114,7 @@ export class HootSideBarCounter extends Component {
     static template = xml`
         <t t-set="info" t-value="getCounterInfo()" />
         <span
-            t-attf-class="${HootSideBarCounter.name} {{ info[1] ? info[0] : 'text-muted' }} {{ info[1] ? 'font-bold' : '' }}"
+            t-attf-class="${HootSideBarCounter.name} {{ info[1] ? info[0] : 'text-gray' }} {{ info[1] ? 'font-bold' : '' }}"
             t-esc="info[1]"
         />
     `;
@@ -107,13 +123,13 @@ export class HootSideBarCounter extends Component {
         const { reporting, statusFilter } = this.props;
         switch (statusFilter) {
             case "failed":
-                return ["text-fail", reporting.failed];
+                return ["text-rose", reporting.failed];
             case "passed":
-                return ["text-pass", reporting.passed];
+                return ["text-emerald", reporting.passed];
             case "skipped":
-                return ["text-skip", reporting.skipped];
+                return ["text-cyan", reporting.skipped];
             case "todo":
-                return ["text-todo", reporting.todo];
+                return ["text-purple", reporting.todo];
             default:
                 return ["text-primary", reporting.tests];
         }
@@ -131,7 +147,7 @@ export class HootSideBar extends Component {
     static template = xml`
         <div
             class="${HootSideBar.name} flex-col w-64 h-full resize-x shadow bg-gray-200 dark:bg-gray-800 z-1 hidden md:flex"
-            t-on-click="onClick"
+            t-on-click.stop="onClick"
         >
             <form class="flex p-2 items-center gap-1">
                 <div class="hoot-search-bar border rounded bg-base w-full">
@@ -149,7 +165,7 @@ export class HootSideBar extends Component {
                     type="button"
                     class="text-primary p-1 transition-colors"
                     t-attf-title="{{ expanded ? 'Collapse' : 'Expand' }} all"
-                    t-on-click="() => this.toggleExpand(expanded)"
+                    t-on-click.stop="() => this.toggleExpand(expanded)"
                 >
                     <i t-attf-class="fa fa-{{ expanded ? 'compress' : 'expand' }}" />
                 </button>
@@ -162,7 +178,7 @@ export class HootSideBar extends Component {
                             t-att-class="{ 'bg-gray-300 dark:bg-gray-700': uiState.selectedSuiteId === suite.id }"
                             t-attf-style="margin-left: {{ (suite.path.length - 1) + 'rem' }};"
                             t-attf-title="{{ suite.fullName }}\n- {{ suite.totalTestCount }} tests\n- {{ suite.totalSuiteCount }} suites"
-                            t-on-click="() => this.toggleItem(suite)"
+                            t-on-click.stop="(ev) => this.toggleItem(suite)"
                             t-on-keydown="(ev) => this.onSuiteKeydown(ev, suite)"
                         >
                             <div class="flex items-center truncate gap-1 flex-1">
@@ -174,7 +190,7 @@ export class HootSideBar extends Component {
                                     selected="uiState.selectedSuiteId === suite.id"
                                     unfolded="unfoldedIds.has(suite.id)"
                                 />
-                                <span class="text-muted">
+                                <span class="text-gray">
                                     (<t t-esc="suite.totalTestCount" />)
                                 </span>
                             </div>
@@ -234,12 +250,12 @@ export class HootSideBar extends Component {
 
         // Filtering suites
 
-        const nFilter = normalize(this.state.filter);
-        if (nFilter) {
+        const parsedQuery = parseQuery(this.state.filter);
+        if (parsedQuery.length) {
             allowedIds = new Set();
             unfoldedIds = new Set(this.state.unfoldedIds);
             rootSuites = new Set();
-            for (const matchingSuite of lookup(nFilter, allSuites, "name")) {
+            for (const matchingSuite of lookup(parsedQuery, allSuites, "name")) {
                 for (const suite of matchingSuite.path) {
                     allowedIds.add(suite.id);
                     unfoldedIds.add(suite.id);
@@ -258,7 +274,7 @@ export class HootSideBar extends Component {
         /**
          * @param {Suite} suite
          */
-        const addSuite = (suite) => {
+        function addSuite(suite) {
             if (!(suite instanceof Suite) || (allowedIds && !allowedIds.has(suite.id))) {
                 return;
             }
@@ -269,7 +285,7 @@ export class HootSideBar extends Component {
             for (const child of suite.jobs) {
                 addSuite(child);
             }
-        };
+        }
 
         const unfoldedSuites = [];
         for (const suite of rootSuites) {
@@ -292,15 +308,10 @@ export class HootSideBar extends Component {
         return job.jobs.some((subJob) => subJob instanceof Suite);
     }
 
-    /**
-     * @param {PointerEvent} ev
-     */
-    onClick(ev) {
-        if (!ev.target.closest(FOCUSABLE_SELECTOR)) {
-            // Unselect suite when clicking outside of a suite & in the side bar
-            this.uiState.selectedSuiteId = null;
-            this.uiState.resultsPage = 0;
-        }
+    onClick() {
+        // Unselect suite when clicking outside of a suite & in the side bar
+        this.uiState.selectedSuiteId = null;
+        this.uiState.resultsPage = 0;
     }
 
     /**
@@ -322,46 +333,48 @@ export class HootSideBar extends Component {
      * @param {Suite} suite
      */
     onSuiteKeydown(ev, suite) {
-        /**
-         * @param {number} delta
-         */
-        const selectElementAt = (delta) => {
-            const suiteElements = this.getSuiteElements();
-            const nextIndex = suiteElements.indexOf(ev.currentTarget) + delta;
-            if (nextIndex < 0) {
-                this.searchInputRef.el?.focus();
-            } else if (nextIndex >= suiteElements.length) {
-                suiteElements[0].focus();
-            } else {
-                suiteElements[nextIndex].focus();
-            }
-        };
-
-        switch (ev.key) {
+        const { currentTarget, key } = ev;
+        switch (key) {
             case "ArrowDown": {
-                return selectElementAt(+1);
+                return this.selectElementAt(currentTarget, +1);
             }
             case "ArrowLeft": {
                 if (this.state.unfoldedIds.has(suite.id)) {
                     return this.toggleItem(suite, false);
                 } else {
-                    return selectElementAt(-1);
+                    return this.selectElementAt(currentTarget, -1);
                 }
             }
             case "ArrowRight": {
                 if (this.state.unfoldedIds.has(suite.id)) {
-                    return selectElementAt(+1);
+                    return this.selectElementAt(currentTarget, +1);
                 } else {
                     return this.toggleItem(suite, true);
                 }
             }
             case "ArrowUp": {
-                return selectElementAt(-1);
+                return this.selectElementAt(currentTarget, -1);
             }
             case "Enter": {
                 ev.preventDefault();
-                actualLocation.href = createUrlFromId(suite.id, "suite");
+                actualLocation.href = createUrlFromId({ suite: suite.id });
             }
+        }
+    }
+
+    /**
+     * @param {HTMLElement} target
+     * @param {number} delta
+     */
+    selectElementAt(target, delta) {
+        const suiteElements = this.getSuiteElements();
+        const nextIndex = suiteElements.indexOf(target) + delta;
+        if (nextIndex < 0) {
+            this.searchInputRef.el?.focus();
+        } else if (nextIndex >= suiteElements.length) {
+            suiteElements[0].focus();
+        } else {
+            suiteElements[nextIndex].focus();
         }
     }
 

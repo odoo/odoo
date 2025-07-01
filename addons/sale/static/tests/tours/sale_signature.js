@@ -11,6 +11,7 @@ registry.category("web_tour.tours").add('sale_signature', {
         content: "open the test SO",
         trigger: 'a:contains(/^test SO$/)',
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "click sign",
@@ -22,8 +23,11 @@ registry.category("web_tour.tours").add('sale_signature', {
         trigger: '.o_portal_sign_submit:enabled',
     },
     {
+        trigger: ".modal .o_web_sign_name_and_signature input:value(Joel Willis)"
+    },
+    {
         content: "click select style",
-        trigger: '.o_web_sign_auto_select_style button',
+        trigger: '.modal .o_web_sign_auto_select_style button',
         run: "click",
     },
     {
@@ -33,8 +37,9 @@ registry.category("web_tour.tours").add('sale_signature', {
     },
     {
         content: "click submit",
-        trigger: '.o_portal_sign_submit:enabled',
+        trigger: '.modal .o_portal_sign_submit:enabled',
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "check it's confirmed",
@@ -45,8 +50,30 @@ registry.category("web_tour.tours").add('sale_signature', {
         run: function () {
             redirect("/odoo");
         },  // Avoid race condition at the end of the tour by returning to the home page.
+        expectUnloadPage: true,
     },
     {
         trigger: 'nav',
     }
 ]});
+
+registry.category("web_tour.tours").add("sale_signature_without_name", {
+    steps: () => [
+        {
+            content: "Sign & Pay",
+            trigger:
+                ".o_portal_sale_sidebar .btn-primary, :iframe .o_portal_sale_sidebar .btn-primary",
+            run: "click",
+        },
+        {
+            content: "click submit",
+            trigger: ".o_portal_sign_submit:enabled, :iframe .o_portal_sign_submit:enabled",
+            run: "click",
+        },
+        {
+            content: "check error because no name",
+            trigger:
+                '.o_portal_sign_error_msg:contains("Signature is missing."), :iframe .o_portal_sign_error_msg:contains("Signature is missing.")',
+        },
+    ],
+});

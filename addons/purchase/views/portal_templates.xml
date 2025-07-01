@@ -160,7 +160,7 @@
                               <ul class="nav flex-column bs-sidenav"></ul>
                           </div>
                           <div t-if="order.user_id">
-                              <h6 class="small text-muted">Purchase Representative</h6>
+                              <h6 class="small text-muted">Buyer</h6>
                                 <t t-call="portal.portal_my_contact">
                                     <t t-set="_contactAvatar" t-value="image_data_uri(order.user_id.avatar_128)"/>
                                     <t t-set="_contactName" t-value="order.user_id.name"/>
@@ -170,7 +170,7 @@
                           </div>
 
                           <div>
-                            <button id="portal_connect_software_modal_btn" type="button" class="btn btn-primary"
+                            <button id="portal_connect_software_modal_btn" type="button" class="btn btn-primary invisible"
                             data-bs-toggle="modal" data-bs-target="#portal_connect_software_modal">
                                 Connect with your software!
                             </button>
@@ -369,7 +369,7 @@
                                         />
                                     </td>
                                     <td t-if="display_price_and_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                        <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.taxes_id))"/>
+                                        <span t-out="', '.join(map(lambda x: (x.name), line.taxes_id))"/>
                                     </td>
                                     <td t-if="display_price_and_taxes" t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                         <div t-field="line.discount" class="text-end"/>

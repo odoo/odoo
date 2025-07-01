@@ -54,6 +54,7 @@ import {
     lastLeaf,
     firstLeaf,
     convertList,
+    hasAnyFontSizeClass,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
@@ -338,7 +339,7 @@ export const editorCommands = {
                         } else if (isEmptyBlock(right)) {
                             right.remove();
                         }
-                        currentNode = insertBefore ? right : left;
+                        currentNode = insertBefore && right.isConnected ? right : left;
                     } else {
                         currentNode = currentNode.parentElement;
                     }
@@ -414,6 +415,17 @@ export const editorCommands = {
                 ? rightPos(lastLeaf(currentNode))
                 : rightPos(currentNode);
         }
+        if (
+            lastPosition[0].nodeName === "A" &&
+            (lastPosition[1] === nodeSize(lastPosition[0]) || lastPosition[1] === 0) &&
+            isLinkEligibleForZwnbsp(editor.editable, lastPosition[0])
+        ) {
+            // In case the currentNode is different than A but the lastposition is A
+            // we need to pad the link with zws and adjust the selection accordingly
+            padLinkWithZws(editor.editable, lastPosition[0]);
+            currentNode = lastPosition[0].nextSibling;
+            lastPosition = getDeepestPosition(...rightPos(currentNode));
+        }
         if (!editor.options.allowInlineAtRoot && lastPosition[0] === editor.editable) {
             // Correct the position if it happens to be in the editable root.
             lastPosition = getDeepestPosition(...lastPosition);
@@ -437,7 +449,13 @@ export const editorCommands = {
     // Change tags
     setTag(editor, tagName, extraClass = "") {
         const range = getDeepRange(editor.editable, { correctTripleClick: true });
-        const selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
+        const selectedBlocks = [
+            ...new Set(
+                getTraversedNodes(editor.editable, range)
+                    .map(closestBlock)
+                    .filter((block) => block.isContentEditable)
+            ),
+        ];
         const deepestSelectedBlocks = selectedBlocks.filter(block => (
             !descendants(block).some(descendant => selectedBlocks.includes(descendant)) &&
             block.isContentEditable
@@ -485,10 +503,10 @@ export const editorCommands = {
         }
         const isContextBlock = container => ['TD', 'DIV', 'LI'].includes(container.nodeName);
         if (!startContainer.isConnected || isContextBlock(startContainer)) {
-            startContainer = startContainerChild.parentNode;
+            startContainer = startContainerChild?.parentNode || startContainer;
         }
         if (!endContainer.isConnected || isContextBlock(endContainer)) {
-            endContainer = endContainerChild.parentNode;
+            endContainer = endContainerChild?.parentNode || endContainer;
         }
         const newRange = new Range();
         newRange.setStart(startContainer, startOffset);
@@ -504,7 +522,7 @@ export const editorCommands = {
     underline: editor => formatSelection(editor, 'underline'),
     strikeThrough: editor => formatSelection(editor, 'strikeThrough'),
     setFontSize: (editor, size) => formatSelection(editor, 'fontSize', {applyStyle: true, formatProps: {size}}),
-    setFontSizeClassName: (editor, className) => formatSelection(editor, 'setFontSizeClassName', {formatProps: {className}}),
+    setFontSizeClassName: (editor, className) => formatSelection(editor, 'setFontSizeClassName', {applyStyle: true, formatProps: {className}}),
     switchDirection: editor => {
         getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
         const selection = editor.document.getSelection();
@@ -549,6 +567,7 @@ export const editorCommands = {
         // created in the middle of the process, which we prevent here.
         editor.historyPauseSteps();
         editor.document.execCommand('removeFormat');
+        let hasFontSizeClass;
         for (const node of getTraversedNodes(editor.editable)) {
             if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('color')) {
                 node.removeAttribute('color');
@@ -556,6 +575,16 @@ export const editorCommands = {
             const element = closestElement(node);
             element.style.removeProperty('color');
             element.style.removeProperty('background');
+            element.style.removeProperty('-webkit-text-fill-color');
+            if (!hasFontSizeClass && closestElement(node, hasAnyFontSizeClass)) {
+                hasFontSizeClass = true;
+            }
+        }
+        if (hasFontSizeClass) {
+            // Calling `document.execCommand` will not remove font-size
+            // if font-size is applied through a css class. To remove
+            // those styles, font-size classes should be removed.
+            formatSelection(editor, 'setFontSizeClassName', { applyStyle: false });
         }
         textAlignStyles.forEach((textAlign, block) => {
             block.style.setProperty('text-align', textAlign);
@@ -728,11 +757,40 @@ export const editorCommands = {
             return selectedNodes.flatMap(node => {
                 let font = closestElement(node, 'font') || closestElement(node, 'span');
                 const children = font && descendants(font);
-                if (font && (font.nodeName === 'FONT' || (font.nodeName === 'SPAN' && font.style[mode]))) {
+                const hasInlineGradient = font && isColorGradient(font.style["background-image"]);
+                if (
+                    font &&
+                    (font.nodeName === "FONT" || (font.nodeName === "SPAN" && font.style[mode])) &&
+                    (isColorGradient(color) || color === "" || !hasInlineGradient)
+                ) {
                     // Partially selected <font>: split it.
                     const selectedChildren = children.filter(child => selectedNodes.includes(child));
                     if (selectedChildren.length) {
-                        font = splitAroundUntil(selectedChildren, font);
+                        const closestGradientEl = closestElement(node, 'font[style*="background-image"], span[style*="background-image"]');
+                        const isGradientBeingUpdated = closestGradientEl && isColorGradient(color);
+                        const splitnode = isGradientBeingUpdated ? closestGradientEl : font;
+                        font = splitAroundUntil(selectedChildren, splitnode);
+                        if (isGradientBeingUpdated) {
+                            const classRegex = mode === 'color' ?  TEXT_CLASSES_REGEX : BG_CLASSES_REGEX;
+                            // When updating a gradient, remove color applied to
+                            // its descendants.This ensures the gradient remains
+                            // visible without being overwritten by a descendant's color.
+                            for (const node of descendants(font)) {
+                                if (
+                                    node.nodeType === Node.ELEMENT_NODE &&
+                                    (node.style[mode] || classRegex.test(node.className))
+                                ) {
+                                    colorElement(node, "", mode);
+                                    node.style.webkitTextFillColor = "";
+                                }
+                            }
+                        } else if (
+                            mode === "color" &&
+                            (font.style.webkitTextFillColor ||
+                                closestGradientEl && closestGradientEl.classList.contains("text-gradient"))
+                        ) {
+                            font.style.webkitTextFillColor = color;
+                        }
                     } else {
                         font = [];
                     }
@@ -763,8 +821,12 @@ export const editorCommands = {
                         font = previous;
                     } else {
                         // No <font> found: insert a new one.
+                        const isTextGradient = hasInlineGradient && font.classList.contains("text-gradient");
                         font = document.createElement('font');
                         node.after(font);
+                        if (isTextGradient && mode === "color") {
+                            font.style.webkitTextFillColor = color;
+                        }
                     }
                     if (node.textContent) {
                         font.appendChild(node);

@@ -10,7 +10,7 @@
                         <div class="col-6">
                             <t t-set="information_block">
                                 <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
-                                    <strong>Shipping Address</strong>
+                                    <strong class="d-block mt-3">Shipping Address</strong>
                                     <div t-field="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                                 </div>
                             </t>
@@ -61,10 +61,12 @@
                             <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">Cancelled Credit Note</span>
                             <span t-elif="o.move_type == 'in_refund'">Vendor Credit Note</span>
                             <span t-elif="o.move_type == 'in_invoice'">Vendor Bill</span>
-                            <span t-if="o.name != '/'" t-field="o.name">INV/2023/0001</span>
+                            <span t-if="o.name and o.name != '/'" t-field="o.name">INV/2023/0001</span>
                         </t>
                         <div class="oe_structure"></div>
-                        <div id="informations" class="row mb-4">
+                        <div
+                            id="informations" class="row mb-4"
+                            t-if="o.invoice_date or (o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted') or o.delivery_date or o.invoice_origin or o.partner_id.ref or o.ref or o.invoice_incoterm_id">
                             <div class="col" t-if="o.invoice_date" name="invoice_date">
                                 <t t-if="o.move_type == 'out_invoice'"><strong>Invoice Date</strong></t>
                                 <t t-elif="o.move_type == 'out_refund'"><strong>Credit Note Date</strong></t>
@@ -153,14 +155,14 @@
                                         </t>
                                         <t t-elif="line.display_type == 'line_section'">
                                             <td colspan="99">
-                                                <span t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
+                                                <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
                                             </td>
                                             <t t-set="current_section" t-value="line"/>
                                             <t t-set="current_subtotal" t-value="0"/>
                                         </t>
                                         <t t-elif="line.display_type == 'line_note'">
                                             <td colspan="99">
-                                                <span t-field="line.name" t-options="{'widget': 'text'}">A note, whose content usually applies to the section or product above.</span>
+                                                <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A note, whose content usually applies to the section or product above.</span>
                                             </td>
                                         </t>
                                     </tr>
@@ -180,7 +182,7 @@
                             </tbody>
                         </table>
                         <div>
-                            <div id="right-elements" t-attf-class="#{'col-5' if report_type != 'html' else 'col-12 col-md-5'} ms-5 d-inline-block float-end">
+                            <div id="right-elements" t-attf-class="#{'col-5 mt-5' if report_type == 'pdf' else 'col-12 col-md-5'} ms-5 d-inline-block float-end">
                                 <div id="total" class="clearfix row mt-n3">
                                     <div class="ms-auto">
                                         <table class="o_total_table table table-borderless avoid-page-break-inside">
@@ -335,8 +337,8 @@
                 <t t-foreach="subtotal['tax_groups']" t-as="tax_group">
                     <tr class="o_taxes">
                         <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is None">
-                            <td>
-                                <span class="text-nowrap" t-out="tax_group['group_name']">Tax 15%</span>
+                            <td style="max-width: 200px;">
+                                <span t-out="tax_group['group_name']">Tax 15%</span>
                             </td>
                             <td class="text-end o_price_total">
                                 <span class="text-nowrap"

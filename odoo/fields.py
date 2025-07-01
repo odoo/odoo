@@ -42,6 +42,7 @@ from .tools.mimetypes import guess_mimetype
 from .tools.misc import unquote, has_list_types, Sentinel, SENTINEL
 from .tools.translate import html_translate
 
+from odoo import SUPERUSER_ID
 from odoo.exceptions import CacheMiss
 from odoo.osv import expression
 
@@ -81,7 +82,7 @@ def resolve_mro(model, name, predicate):
         classes are ignored.
     """
     result = []
-    for cls in model._model_classes:
+    for cls in model._model_classes__:
         value = cls.__dict__.get(name, SENTINEL)
         if value is SENTINEL:
             continue
@@ -211,11 +212,11 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         .. code-block:: python
 
             @api.model
-            def _read_group_selection_field(self, values, domain, order):
+            def _read_group_selection_field(self, values, domain):
                 return ['choice1', 'choice2', ...] # available selection choices.
 
             @api.model
-            def _read_group_many2one_field(self, records, domain, order):
+            def _read_group_many2one_field(self, records, domain):
                 return records + self.search([custom_domain])
 
     .. rubric:: Computed Fields
@@ -279,7 +280,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     # Company-dependent fields are stored as jsonb (see column_type).
     _column_type: typing.Tuple[str, str] | None = None
 
-    args = None                         # the parameters given to __init__()
+    _args__ = None                      # the parameters given to __init__()
     _module = None                      # the field's module name
     _modules = None                     # modules that define this field
     _setup_done = True                  # whether the field is completely set up
@@ -332,7 +333,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     def __init__(self, string: str | Sentinel = SENTINEL, **kwargs):
         kwargs['string'] = string
         self._sequence = next(_global_seq)
-        self.args = {key: val for key, val in kwargs.items() if val is not SENTINEL}
+        self.args = self._args__ = {key: val for key, val in kwargs.items() if val is not SENTINEL}
 
     def __str__(self):
         if self.name is None:
@@ -351,7 +352,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     # The base field setup is done by field.__set_name__(), which determines the
     # field's name, model name, module and its parameters.
     #
-    # The dictionary field.args gives the parameters passed to the field's
+    # The dictionary field._args__ gives the parameters passed to the field's
     # constructor.  Most parameters have an attribute of the same name on the
     # field.  The parameters as attributes are assigned by the field setup.
     #
@@ -361,7 +362,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     # are given to the new field as the parameter '_base_fields'; it is a list
     # of fields in override order (or reverse MRO).
     #
-    # In order to save memory, a field should avoid having field.args and/or
+    # In order to save memory, a field should avoid having field._args__ and/or
     # many attributes when possible.  We call "direct" a field that can be set
     # up directly from its definition class.  Direct fields are non-related
     # fields defined on models, and can be shared across registries.  We call
@@ -369,15 +370,15 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     # therefore specific to the registry.
     #
     # Toplevel field are set up once, and are no longer set up from scratch
-    # after that.  Those fields can save memory by discarding field.args and
+    # after that.  Those fields can save memory by discarding field._args__ and
     # field._base_fields once set up, because those are no longer necessary.
     #
     # Non-toplevel non-direct fields are the fields on definition classes that
     # may not be shared.  In other words, those fields are never used directly,
     # and are always recreated as toplevel fields.  On those fields, the base
-    # setup is useless, because only field.args is used for setting up other
+    # setup is useless, because only field._args__ is used for setting up other
     # fields.  We therefore skip the base setup for those fields.  The only
-    # attributes of those fields are: '_sequence', 'args', 'model_name', 'name'
+    # attributes of those fields are: '_sequence', '_args__', 'model_name', 'name'
     # and '_module', which makes their __dict__'s size minimal.
 
     def __set_name__(self, owner, name):
@@ -394,13 +395,13 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             self._module = owner._module
             owner._field_definitions.append(self)
 
-        if not self.args.get('related'):
+        if not self._args__.get('related'):
             self._direct = True
         if self._direct or self._toplevel:
             self._setup_attrs(owner, name)
             if self._toplevel:
-                # free memory, self.args and self._base_fields are no longer useful
-                self.__dict__.pop('args', None)
+                # free memory, self._args__ and self._base_fields are no longer useful
+                self.__dict__.pop('_args__', None)
                 self.__dict__.pop('_base_fields', None)
 
     #
@@ -412,21 +413,21 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         # determine all inherited field attributes
         attrs = {}
         modules = []
-        for field in self.args.get('_base_fields', ()):
+        for field in self._args__.get('_base_fields', ()):
             if not isinstance(self, type(field)):
                 # 'self' overrides 'field' and their types are not compatible;
                 # so we ignore all the parameters collected so far
                 attrs.clear()
                 modules.clear()
                 continue
-            attrs.update(field.args)
+            attrs.update(field._args__)
             if field._module:
                 modules.append(field._module)
-        attrs.update(self.args)
+        attrs.update(self._args__)
         if self._module:
             modules.append(self._module)
 
-        attrs['args'] = self.args
+        attrs['_args__'] = dict(self._args__)
         attrs['model_name'] = model_class._name
         attrs['name'] = name
         attrs['_module'] = modules[-1] if modules else None
@@ -489,7 +490,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         attrs = self._get_attrs(model_class, name)
 
         # determine parameters that must be validated
-        extra_keys = [key for key in attrs if not hasattr(self, key)]
+        extra_keys = tuple(key for key in attrs if not hasattr(self, key))
         if extra_keys:
             attrs['_extra_keys'] = extra_keys
 
@@ -783,7 +784,10 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
 
     def get_company_dependent_fallback(self, records):
         assert self.company_dependent
-        fallback = records.env['ir.default']._get_model_defaults(records._name).get(self.name)
+        fallback = records.env['ir.default'] \
+            .with_user(SUPERUSER_ID) \
+            .with_company(records.env.company) \
+            ._get_model_defaults(records._name).get(self.name)
         fallback = self.convert_to_cache(fallback, records, validate=False)
         return self.convert_to_record(fallback, records)
 
@@ -1272,9 +1276,21 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             value = env.cache.get(record, self)
 
         elif self.store and record._origin and not (self.compute and self.readonly):
-            # new record with origin: fetch from origin
-            value = self.convert_to_cache(record._origin[self.name], record, validate=False)
-            value = env.cache.patch_and_set(record, self, value)
+            # new record with origin: fetch from origin, and assign the
+            # records to prefetch in cache (which is necessary for
+            # relational fields to "map" prefetching ids to their value)
+            recs = record._in_cache_without(self)
+            try:
+                for rec in recs:
+                    if (rec_origin := rec._origin):
+                        value = self.convert_to_cache(rec_origin[self.name], rec, validate=False)
+                        env.cache.patch_and_set(rec, self, value)
+                value = env.cache.get(record, self)
+            except (AccessError, MissingError):
+                if len(recs) == 1:
+                    raise
+                value = self.convert_to_cache(record._origin[self.name], record, validate=False)
+                value = env.cache.patch_and_set(record, self, value)
 
         elif self.compute: #pylint: disable=using-constant-test
             # non-stored field or new record without origin: compute
@@ -1490,6 +1506,11 @@ class Boolean(Field[bool]):
     def convert_to_column(self, value, record, values=None, validate=True):
         return bool(value)
 
+    def convert_to_column_update(self, value, record):
+        if self.company_dependent:
+            value = {k: bool(v) for k, v in value.items()}
+        return super().convert_to_column_update(value, record)
+
     def convert_to_cache(self, value, record, validate=True):
         return bool(value)
 
@@ -1513,6 +1534,11 @@ class Integer(Field[int]):
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return int(value or 0)
+
+    def convert_to_column_update(self, value, record):
+        if self.company_dependent:
+            value = {k: int(v or 0) for k, v in value.items()}
+        return super().convert_to_column_update(value, record)
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, dict):
@@ -1619,6 +1645,11 @@ class Float(Field[float]):
         if self.company_dependent:
             return value_float
         return value
+
+    def convert_to_column_update(self, value, record):
+        if self.company_dependent:
+            value = {k: float(v or 0.0) for k, v in value.items()}
+        return super().convert_to_column_update(value, record)
 
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
@@ -1956,7 +1987,9 @@ class _String(Field[str | typing.Literal[False]]):
             translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
             text2terms = defaultdict(list)
             for term in new_terms:
-                text2terms[self.get_text_content(term)].append(term)
+                term_text = self.get_text_content(term)
+                if term_text:
+                    text2terms[term_text].append(term)
 
             is_text = self.translate.is_text if hasattr(self.translate, 'is_text') else lambda term: True
             term_adapter = self.translate.term_adapter if hasattr(self.translate, 'term_adapter') else None
@@ -1973,6 +2006,8 @@ class _String(Field[str | typing.Literal[False]]):
                         if old_is_text or not closest_is_text:
                             if not closest_is_text and records.env.context.get("install_mode") and lang == 'en_US' and term_adapter:
                                 adapter = term_adapter(closest_term)
+                                if adapter(old_term) is None:  # old term and closest_term have different structures
+                                    continue
                                 translation_dictionary[closest_term] = {k: adapter(v) for k, v in translation_dictionary.pop(old_term).items()}
                             else:
                                 translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
@@ -2067,6 +2102,8 @@ class Html(_String):
     :param bool sanitize_attributes: whether to sanitize attributes
         (only a white list of attributes is accepted, default: ``True``)
     :param bool sanitize_style: whether to sanitize style attributes (default: ``False``)
+    :param bool sanitize_conditional_comments: whether to kill conditional comments. (default: ``True``)
+    :param bool sanitize_output_method: whether to sanitize using html or xhtml (default: ``html``)
     :param bool strip_style: whether to strip style attributes
         (removed and therefore not sanitized, default: ``False``)
     :param bool strip_classes: whether to strip classes attributes (default: ``False``)
@@ -2080,14 +2117,32 @@ class Html(_String):
     sanitize_attributes = True          # whether to sanitize attributes (only a white list of attributes is accepted)
     sanitize_style = False              # whether to sanitize style attributes
     sanitize_form = True                # whether to sanitize forms
+    sanitize_conditional_comments = True  # whether to kill conditional comments. Otherwise keep them but with their content sanitized.
+    sanitize_output_method = 'html'     # whether to sanitize using html or xhtml
     strip_style = False                 # whether to strip style attributes (removed and therefore not sanitized)
     strip_classes = False               # whether to strip classes attributes
 
     def _get_attrs(self, model_class, name):
         # called by _setup_attrs(), working together with _String._setup_attrs()
         attrs = super()._get_attrs(model_class, name)
+        # Shortcut for common sanitize options
+        # Outgoing and incoming emails should not be sanitized with the same options.
+        # e.g. conditional comments: no need to keep conditional comments for incoming emails,
+        # we do not need this Microsoft Outlook client feature for emails displayed Odoo's web client.
+        # While we need to keep them in mail templates and mass mailings, because they could be rendered in Outlook.
+        if attrs.get('sanitize') == 'email_outgoing':
+            attrs['sanitize'] = True
+            attrs.update({key: value for key, value in {
+                'sanitize_tags': False,
+                'sanitize_attributes': False,
+                'sanitize_conditional_comments': False,
+                'sanitize_output_method': 'xml',
+            }.items() if key not in attrs})
         # Translated sanitized html fields must use html_translate or a callable.
-        if attrs.get('translate') is True and attrs.get('sanitize', True):
+        # `elif` intended, because HTML fields with translate=True and sanitize=False
+        # where not using `html_translate` before and they must remain without `html_translate`.
+        # Otherwise, breaks `--test-tags .test_render_field`, for instance.
+        elif attrs.get('translate') is True and attrs.get('sanitize', True):
             attrs['translate'] = html_translate
         return attrs
 
@@ -2125,6 +2180,8 @@ class Html(_String):
             'sanitize_attributes': self.sanitize_attributes,
             'sanitize_style': self.sanitize_style,
             'sanitize_form': self.sanitize_form,
+            'sanitize_conditional_comments': self.sanitize_conditional_comments,
+            'output_method': self.sanitize_output_method,
             'strip_style': self.strip_style,
             'strip_classes': self.strip_classes
         }
@@ -2802,10 +2859,10 @@ class Selection(Field[str | typing.Literal[False]]):
         for field in self._base_fields:
             # We cannot use field.selection or field.selection_add here
             # because those attributes are overridden by ``_setup_attrs``.
-            if 'selection' in field.args:
+            if 'selection' in field._args__:
                 if self.related:
                     _logger.warning("%s: selection attribute will be ignored as the field is related", self)
-                selection = field.args['selection']
+                selection = field._args__['selection']
                 if isinstance(selection, list):
                     if values is not None and list(values) != [kv[0] for kv in selection]:
                         _logger.warning("%s: selection=%r overrides existing selection; use selection_add instead", self, selection)
@@ -2816,17 +2873,17 @@ class Selection(Field[str | typing.Literal[False]]):
                     self.selection = selection
                     self.ondelete = None
 
-            if 'selection_add' in field.args:
+            if 'selection_add' in field._args__:
                 if self.related:
                     _logger.warning("%s: selection_add attribute will be ignored as the field is related", self)
-                selection_add = field.args['selection_add']
+                selection_add = field._args__['selection_add']
                 assert isinstance(selection_add, list), \
                     "%s: selection_add=%r must be a list" % (self, selection_add)
                 assert values is not None, \
                     "%s: selection_add=%r on non-list selection %r" % (self, selection_add, self.selection)
 
                 values_add = {kv[0]: (kv[1] if len(kv) > 1 else None) for kv in selection_add}
-                ondelete = field.args.get('ondelete') or {}
+                ondelete = field._args__.get('ondelete') or {}
                 new_values = [key for key in values_add if key not in values]
                 for key in new_values:
                     ondelete.setdefault(key, 'set null')
@@ -2884,13 +2941,13 @@ class Selection(Field[str | typing.Literal[False]]):
             module = field._module
             if not module:
                 continue
-            if 'selection' in field.args:
+            if 'selection' in field._args__:
                 value_modules.clear()
-                if isinstance(field.args['selection'], list):
-                    for value, label in field.args['selection']:
+                if isinstance(field._args__['selection'], list):
+                    for value, label in field._args__['selection']:
                         value_modules[value].add(module)
-            if 'selection_add' in field.args:
-                for value_label in field.args['selection_add']:
+            if 'selection_add' in field._args__:
+                for value_label in field._args__['selection_add']:
                     if len(value_label) > 1:
                         value_modules[value_label[0]].add(module)
         return value_modules
@@ -3065,6 +3122,11 @@ class _Relational(Field[M], typing.Generic[M]):
                 no_company_domain = env[self.comodel_name]._check_company_domain(companies='')
                 return f"({field_to_check} and {company_domain} or {no_company_domain}) + ({domain or []})"
         return domain
+
+    def _description_allow_hierachy_operators(self, env):
+        """ Return if the child_of/parent_of makes sense on this field """
+        comodel = env[self.comodel_name]
+        return comodel._parent_name in comodel._fields
 
 
 class Many2one(_Relational[M]):
@@ -4540,11 +4602,12 @@ class One2many(_RelationalMulti[M]):
                 ))
 
     def get_domain_list(self, records):
-        comodel = records.env.registry[self.comodel_name]
-        inverse_field = comodel._fields[self.inverse_name]
-        domain = super(One2many, self).get_domain_list(records)
-        if inverse_field.type == 'many2one_reference':
-            domain = domain + [(inverse_field.model_field, '=', records._name)]
+        domain = super().get_domain_list(records)
+        if self.comodel_name and self.inverse_name:
+            comodel = records.env.registry[self.comodel_name]
+            inverse_field = comodel._fields[self.inverse_name]
+            if inverse_field.type == 'many2one_reference':
+                domain = domain + [(inverse_field.model_field, '=', records._name)]
         return domain
 
     def __get__(self, records, owner=None):

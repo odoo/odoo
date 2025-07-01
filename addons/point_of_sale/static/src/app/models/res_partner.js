@@ -18,7 +18,7 @@ export class ResPartner extends Base {
         return fields
             .map((field) => {
                 if ((field === "phone" || field === "mobile") && this[field]) {
-                    return this[field].split(" ").join("");
+                    return this[field].replace(/[+\s()-]/g, "");
                 }
                 return this[field] || "";
             })
@@ -28,7 +28,7 @@ export class ResPartner extends Base {
 
     exactMatch(searchWord) {
         const fields = ["barcode"];
-        return fields.some((field) => this[field] && this[field] === searchWord);
+        return fields.some((field) => this[field] && this[field].toLowerCase() === searchWord);
     }
 }
 registry.category("pos_available_models").add(ResPartner.pythonModel, ResPartner);

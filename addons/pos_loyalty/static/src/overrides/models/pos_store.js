@@ -78,7 +78,7 @@ patch(PosStore.prototype, {
         }
 
         const order = this.get_order();
-        if (order.finalized) {
+        if (!order || order.finalized) {
             return;
         }
         updateRewardsMutex.exec(() => {
@@ -93,6 +93,16 @@ patch(PosStore.prototype, {
                         (reward.reward_type !== "product" ||
                             (reward.reward_type == "product" && !reward.multi_product))
                     ) {
+                        if (
+                            (reward.reward_type == "product" &&
+                                reward.program_id.applies_on !== "both") ||
+                            (reward.program_id.applies_on == "both" && reward.reward_product_qty)
+                        ) {
+                            this.addLineToCurrentOrder({
+                                product_id: reward.reward_product_id,
+                                qty: reward.reward_product_qty || 1,
+                            });
+                        }
                         order._applyReward(reward, coupon_id);
                         changed = true;
                     }
@@ -124,7 +134,8 @@ patch(PosStore.prototype, {
      */
     async updatePrograms() {
         const order = this.get_order();
-        if (!order) {
+        // 'order.delivery_provider_id' check is used for UrbanPiper orders (as loyalty points and rewards are not allowed for UrbanPiper orders)
+        if (!order || order.delivery_provider_id) {
             return;
         }
         const changesPerProgram = {};
@@ -216,6 +227,8 @@ patch(PosStore.prototype, {
                         couponPointChange.expiration_date = serializeDate(
                             luxon.DateTime.now().plus({ year: 1 })
                         );
+                        couponPointChange.code = order.get_selected_orderline()?.gift_code;
+                        couponPointChange.partner_id = order.get_partner()?.id;
                     }
 
                     order.uiState.couponPointChanges[coupon.id] = couponPointChange;
@@ -243,9 +256,15 @@ patch(PosStore.prototype, {
         const rule = this.models["loyalty.rule"].find((rule) => {
             return rule.mode === "with_code" && (rule.promo_barcode === code || rule.code === code);
         });
+        const loyaltyCard = this.models["loyalty.card"].find(
+            (card) => card.code === code && card.program_id?.program_type === "loyalty"
+        );
         let claimableRewards = null;
         let coupon = null;
-        if (rule) {
+        // If the code belongs to a loyalty card we just set the partner
+        if (loyaltyCard && loyaltyCard.partner_id) {
+            order.set_partner(loyaltyCard.partner_id);
+        } else if (rule) {
             const date_order = DateTime.fromSQL(order.date_order);
             if (
                 rule.program_id.date_from &&
@@ -259,7 +278,8 @@ patch(PosStore.prototype, {
             const program_pricelists = rule.program_id.pricelist_ids;
             if (
                 program_pricelists.length > 0 &&
-                (!order.pricelist_id || !program_pricelists.includes(order.pricelist_id.id))
+                (!order.pricelist_id ||
+                    !program_pricelists.some((pr) => pr.id === order.pricelist_id.id))
             ) {
                 return _t("That promo code program requires a specific pricelist.");
             }
@@ -349,8 +369,9 @@ patch(PosStore.prototype, {
     async addLineToCurrentOrder(vals, opt = {}, configure = true) {
         const product = vals.product_id;
         const order = this.get_order();
-        const linkedPrograms =
-            this.models["loyalty.program"].getBy("trigger_product_ids", product.id) || [];
+        const linkedPrograms = (
+            this.models["loyalty.program"].getBy("trigger_product_ids", product.id) || []
+        ).filter((p) => ["gift_card", "ewallet"].includes(p.program_type));
         let selectedProgram = null;
         if (linkedPrograms.length > 1) {
             selectedProgram = await makeAwaitable(this.dialog, SelectionPopup, {
@@ -608,7 +629,7 @@ patch(PosStore.prototype, {
                     ),
                 });
 
-                this.models["loyalty.reward"].delete(reward.id);
+                reward.delete();
             }
         }
     },
@@ -628,7 +649,7 @@ patch(PosStore.prototype, {
         return await this.data.searchRead(
             "loyalty.card",
             domain,
-            ["id", "points", "code", "partner_id", "program_id", "expiration_date"],
+            this.data.fields["loyalty.card"],
             { limit }
         );
     },

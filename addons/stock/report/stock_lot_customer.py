@@ -24,36 +24,56 @@ class StockLotReport(models.Model):
             MIN(sml.id) AS id,
             lot.id lot_id,
             lot.product_id,
-            picking.partner_id,
+            partner.id partner_id,
             picking.id picking_id,
             sml.quantity,
             sml.product_uom_id uom_id,
             CONCAT_WS(', ', partner.street, partner.street2, partner.city,  partner.zip, state.name, country.code) address,
-            (SELECT COUNT(sp_return.id) FROM stock_picking sp_return WHERE sp_return.return_id = picking.id) > 0 AS has_return,
+            MIN(sml_return.id) IS NOT NULL AS has_return,
             picking.date_done delivery_date
         """
 
-    def _from(self):
+    def _join_on_picking_type_and_partner(self):
+        # todo remove master
         return """
-            stock_lot lot
-            JOIN stock_move_line AS sml
-            ON lot.id = sml.lot_id
-            JOIN stock_picking AS picking
-            ON picking.id = sml.picking_id
             JOIN stock_picking_type AS type
             ON picking.picking_type_id = type.id and type.code = 'outgoing'
             JOIN res_partner AS partner
             ON partner.id = picking.partner_id
+        """
+
+    def _outgoing_operation_types(self):
+        return "'outgoing'"
+
+    def _from(self):
+        return f"""
+            stock_lot lot
+            JOIN stock_move_line AS sml
+            ON lot.id = sml.lot_id
+            JOIN stock_move AS sm
+            ON sm.id = sml.move_id
+            JOIN stock_picking AS picking
+            ON picking.id = COALESCE(sm.picking_id, sml.picking_id)
+            JOIN stock_picking_type AS type
+            ON type.id = COALESCE(sm.picking_type_id, picking.picking_type_id) and type.code in ({self._outgoing_operation_types()})
+            JOIN res_partner AS partner
+            ON partner.id = COALESCE(sm.partner_id, picking.partner_id)
             LEFT JOIN res_country_state AS state
             ON state.id = partner.state_id
             LEFT JOIN res_country AS country
             ON country.id = partner.country_id
+            LEFT JOIN stock_picking AS picking_return
+            ON picking_return.return_id = sml.picking_id
+            LEFT JOIN stock_move_line AS sml_return
+            ON sml_return.picking_id = picking_return.id 
+                AND sml_return.lot_id = lot.id 
+                AND sml_return.state = 'done'
         """
 
     def _group_by(self):
         return """
             picking.id,
-            picking.partner_id,
+            partner.id,
             lot.id,
             lot.product_id,
             country.code,
@@ -64,7 +84,8 @@ class StockLotReport(models.Model):
             partner.street2,
             sml.quantity,
             sml.product_uom_id,
-            picking.date_done
+            picking.date_done,
+            sml_return.id
         """
 
     def _query(self):

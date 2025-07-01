@@ -1,18 +1,48 @@
-import { afterEach, expect, test } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame } from "@odoo/hoot-mock";
+import { beforeEach, expect, test } from "@odoo/hoot";
+import { advanceTime, animationFrame, click, edit, queryOne } from "@odoo/hoot-dom";
 import { Component, useState, xml } from "@odoo/owl";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { MacroEngine } from "@web/core/macro";
+import { Macro } from "@web/core/macro";
 
-let engine;
-
-afterEach(() => {
-    if (engine.macros.size !== 0) {
-        throw new Error("Some macro is still running after a test");
+let macro;
+async function waitForMacro() {
+    for (let i = 0; i < 50; i++) {
+        await animationFrame();
+        await advanceTime(265);
+        if (macro.isComplete) {
+            return;
+        }
     }
+    if (!macro.isComplete) {
+        throw new Error(`Macro is not complete`);
+    }
+}
+
+beforeEach(() => {
+    patchWithCleanup(Macro.prototype, {
+        start() {
+            super.start(...arguments);
+            macro = this;
+        },
+    });
 });
+
+function onTextChange(element, callback) {
+    const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+            if (mutation.type === "characterData" || mutation.type === "childList") {
+                callback(element.textContent);
+            }
+        }
+    });
+    observer.observe(element, {
+        characterData: true,
+        childList: true,
+        subtree: true,
+    });
+    return observer;
+}
 
 class TestComponent extends Component {
     static template = xml`
@@ -31,223 +61,198 @@ class TestComponent extends Component {
 
 test("simple use", async () => {
     await mountWithCleanup(TestComponent);
-    engine = new MacroEngine({
-        target: queryOne(".counter"),
-        defaultCheckDelay: 500,
-    });
-
-    const span = queryOne("span.value");
-    expect(span).toHaveText("0");
-    await engine.activate({
+    new Macro({
         name: "test",
         steps: [
             {
                 trigger: "button.inc",
-                action: "click",
+                async action(trigger) {
+                    await click(trigger);
+                },
             },
         ],
-    });
-    await advanceTime(300);
+    }).start(queryOne(".counter"));
+
+    const span = queryOne("span.value");
     expect(span).toHaveText("0");
-    await advanceTime(300);
-    expect(span).toHaveText("1");
+    onTextChange(span, expect.step);
+    await waitForMacro();
+    expect.verifySteps(["1"]);
 });
 
 test("multiple steps", async () => {
     await mountWithCleanup(TestComponent);
-    engine = new MacroEngine({
-        target: queryOne(".counter"),
-        defaultCheckDelay: 500,
-    });
-
     const span = queryOne("span.value");
     expect(span).toHaveText("0");
 
-    await engine.activate({
+    new Macro({
         name: "test",
         steps: [
             {
                 trigger: "button.inc",
-                action: "click",
-            },
-            {
-                trigger: () => {
-                    return span.textContent === "1" ? span : null;
+                async action(trigger) {
+                    await click(trigger);
                 },
             },
             {
-                trigger: "button.inc",
-                action: "click",
+                trigger: () => (span.textContent === "1" ? span : null),
             },
-        ],
-    });
-    await advanceTime(500);
-    expect(span).toHaveText("1");
-    await advanceTime(500);
-    expect(span).toHaveText("2");
-    await advanceTime(500);
-    expect(span).toHaveText("2");
-});
-
-test("can use a function as action", async () => {
-    await mountWithCleanup(TestComponent);
-    engine = new MacroEngine({
-        target: queryOne(".counter"),
-        defaultCheckDelay: 500,
-    });
-    let flag = false;
-    await engine.activate({
-        name: "test",
-        steps: [
             {
                 trigger: "button.inc",
-                action: () => {
-                    flag = true;
+                async action(trigger) {
+                    await click(trigger);
                 },
             },
         ],
-    });
-    expect(flag).toBe(false);
-    await advanceTime(600);
-    expect(flag).toBe(true);
+    }).start(queryOne(".counter"));
+    onTextChange(span, expect.step);
+    await waitForMacro();
+    expect.verifySteps(["1", "2"]);
 });
 
 test("can input values", async () => {
     await mountWithCleanup(TestComponent);
-    engine = new MacroEngine({
-        target: queryOne(".counter"),
-        defaultCheckDelay: 500,
-    });
     const input = queryOne("input");
-
-    await engine.activate({
+    new Macro({
         name: "test",
         steps: [
             {
                 trigger: "div.counter input",
-                action: "text",
-                value: "aaron",
+                async action(trigger) {
+                    await click(trigger);
+                    await edit("aaron", { confirm: "blur" });
+                },
             },
         ],
-    });
+    }).start(queryOne(".counter"));
     expect(input).toHaveValue("");
-    await advanceTime(600);
+    await waitForMacro();
     expect(input).toHaveValue("aaron");
 });
 
 test("a step can have no trigger", async () => {
     await mountWithCleanup(TestComponent);
-    engine = new MacroEngine({
-        target: queryOne(".counter"),
-        defaultCheckDelay: 500,
-    });
     const input = queryOne("input");
-
-    await engine.activate({
+    new Macro({
         name: "test",
         steps: [
             { action: () => expect.step("1") },
             { action: () => expect.step("2") },
             {
                 trigger: "div.counter input",
-                action: "text",
-                value: "aaron",
+                async action(trigger) {
+                    await click(trigger);
+                    await edit("aaron", { confirm: "blur" });
+                },
             },
             { action: () => expect.step("3") },
         ],
-    });
+    }).start(queryOne(".counter"));
     expect(input).toHaveValue("");
-    await advanceTime(600);
+    await waitForMacro();
     expect(input).toHaveValue("aaron");
     expect.verifySteps(["1", "2", "3"]);
 });
 
 test("onStep function is called at each step", async () => {
     await mountWithCleanup(TestComponent);
-    engine = new MacroEngine({
-        target: queryOne(".counter"),
-        defaultCheckDelay: 500,
-    });
     const span = queryOne("span.value");
     expect(span).toHaveText("0");
 
-    await engine.activate({
+    new Macro({
         name: "test",
-        onStep: (el, step) => {
-            expect.step(step.info);
+        onStep: (el, step, index) => {
+            expect.step(index);
         },
         steps: [
-            { info: "1" },
             {
-                info: "2",
+                action: () => {
+                    console.log("brol");
+                },
+            },
+            {
                 trigger: "button.inc",
-                action: "click",
+                async action(trigger) {
+                    await click(trigger);
+                },
             },
         ],
-    });
-    // default interval is 500
-    await advanceTime(600);
+    }).start(queryOne(".counter"));
+    await waitForMacro();
     expect(span).toHaveText("1");
-    expect.verifySteps(["1", "2"]);
+    expect.verifySteps([0, 1]);
 });
 
 test("trigger can be a function returning an htmlelement", async () => {
     await mountWithCleanup(TestComponent);
-    engine = new MacroEngine({
-        target: queryOne(".counter"),
-        defaultCheckDelay: 500,
-    });
     const span = queryOne("span.value");
     expect(span).toHaveText("0");
 
-    await engine.activate({
+    new Macro({
         name: "test",
         steps: [
             {
                 trigger: () => queryOne("button.inc"),
-                action: "click",
+                async action(trigger) {
+                    await click(trigger);
+                },
             },
         ],
-    });
-    // default interval is 500
-    await advanceTime(300);
+    }).start(queryOne(".counter"));
     expect(span).toHaveText("0");
-    await advanceTime(300);
+    await waitForMacro();
     expect(span).toHaveText("1");
 });
 
-test("macro does not click on invisible element", async () => {
+test("macro wait element is visible to do action", async () => {
     await mountWithCleanup(TestComponent);
-    engine = new MacroEngine({
-        target: queryOne(".counter"),
-        defaultCheckDelay: 500,
-    });
     const span = queryOne("span.value");
     const button = queryOne("button.inc");
+    button.classList.add("d-none");
     expect(span).toHaveText("0");
-
-    await engine.activate({
+    new Macro({
         name: "test",
+        timeout: 1000,
         steps: [
             {
                 trigger: "button.inc",
-                action: "click",
+                action: () => {
+                    expect.step("element is now visible");
+                },
             },
         ],
-    });
-    button.classList.add("d-none");
-    await animationFrame(); // let mutation observer trigger
-    await advanceTime(500);
-
-    expect(span).toHaveText("0");
-
-    await advanceTime(500);
-
-    expect(span).toHaveText("0");
-
+        onError: (error) => {
+            expect.step(error);
+        },
+    }).start(queryOne(".counter"));
+    advanceTime(500);
     button.classList.remove("d-none");
-    await animationFrame(); // let mutation observer trigger
-    await advanceTime(500);
+    await waitForMacro();
+    expect.verifySteps(["element is now visible"]);
+});
 
-    expect(span).toHaveText("1");
+test("macro timeout if element is not visible", async () => {
+    await mountWithCleanup(TestComponent);
+    const span = queryOne("span.value");
+    const button = queryOne("button.inc");
+    button.classList.add("d-none");
+    expect(span).toHaveText("0");
+    const macro = new Macro({
+        name: "test",
+        timeout: 1000,
+        steps: [
+            {
+                trigger: "button.inc",
+                action: () => {
+                    expect.step("element is now visible");
+                },
+            },
+        ],
+        onError: (error) => {
+            expect.step(error.message);
+        },
+    });
+    macro.start(queryOne(".counter"));
+    await waitForMacro();
+    expect.verifySteps(["TIMEOUT step failed to complete within 1000 ms."]);
 });

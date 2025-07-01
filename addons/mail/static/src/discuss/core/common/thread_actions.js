@@ -50,6 +50,7 @@ threadActionsRegistry
                 : "fa fa-fw fa-lg fa-bell";
         },
         name: _t("Notification Settings"),
+        panelOuterClass: "bg-100 border border-secondary",
         sequence: 10,
         sequenceGroup: 30,
         toggle: true,
@@ -81,7 +82,9 @@ threadActionsRegistry
             );
         },
         panelOuterClass(component) {
-            return `o-discuss-ChannelInvitation ${component.props.chatWindow ? "bg-inherit" : ""}`;
+            return `o-discuss-ChannelInvitation ${
+                component.props.chatWindow ? "bg-inherit" : ""
+            } bg-100 border border-secondary`;
         },
         icon: "fa fa-fw fa-user-plus",
         iconLarge: "fa fa-fw fa-lg fa-user-plus",
@@ -126,6 +129,16 @@ threadActionsRegistry
         icon: "fa fa-fw fa-users",
         iconLarge: "fa fa-fw fa-lg fa-users",
         name: _t("Members"),
+        close(component) {
+            if (component.env.inDiscussApp) {
+                component.store.discuss.isMemberPanelOpenByDefault = false;
+            }
+        },
+        open(component) {
+            if (component.env.inDiscussApp) {
+                component.store.discuss.isMemberPanelOpenByDefault = true;
+            }
+        },
         sequence: 30,
         sequenceGroup: 10,
         toggle: true,

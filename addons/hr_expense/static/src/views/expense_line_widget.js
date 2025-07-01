@@ -23,7 +23,7 @@ export class ExpenseLinesListRenderer extends ListRenderer {
     async onCellClicked(record, column, ev) {
         const attachmentChecksum = record.data.message_main_attachment_checksum;
 
-        if (attachmentChecksum && this.sheetThread.mainAttachment.checksum !== attachmentChecksum) {
+        if (attachmentChecksum && this.sheetThread.mainAttachment?.checksum !== attachmentChecksum) {
             this.sheetThread.update({ mainAttachment: this.sheetThread.attachments.find((attachment) => attachment.checksum === attachmentChecksum) });
         }
         super.onCellClicked(record, column, ev);

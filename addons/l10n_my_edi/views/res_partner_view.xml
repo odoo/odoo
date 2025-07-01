@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_l10n_my_myinvois" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.l10n_my_myinvois</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <group name="container_row_2" position="inside">
+                <field name="l10n_my_tin_validation_state" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="l10n_my_edi_display_tin_warning" invisible="1"/> <!-- TODO: to be removed in master -->
+                <!-- Foreigner with a tax number registered in Malaysia could be customer of an e-invoice. -->
+                <group name="l10n_my_edi" string="MyInvois Information" invisible="'MY' not in fiscal_country_codes">
+                    <group colspan="2">
+                        <label for="l10n_my_identification_type" string="Identification"/>
+                        <div class="d-flex gap-2">
+                            <field name="l10n_my_identification_type"  readonly="parent_id"/>
+                            <span class="d-flex gap-2 w-100">
+                                <field name="l10n_my_identification_number_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
+                                <field name="l10n_my_identification_number" options="{'placeholder_field': 'l10n_my_identification_number_placeholder'}" readonly="parent_id"/>
+                                <button class="oe_link oe_inline p-0" type="object" name="action_validate_tin" invisible="not l10n_my_edi_display_tin_warning or l10n_my_tin_validation_state or parent_id">Validate</button>
+                                <span class="text-success fa fa-check" title="Validation Successful" invisible="not l10n_my_edi_display_tin_warning or l10n_my_tin_validation_state != 'valid'"/>
+                                <span class="text-danger fa fa-close" title="Validation Failed" invisible="not l10n_my_edi_display_tin_warning or l10n_my_tin_validation_state != 'invalid'"/>
+                            </span>
+                        </div>
+                    </group>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

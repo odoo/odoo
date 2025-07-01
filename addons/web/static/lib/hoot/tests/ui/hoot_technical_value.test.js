@@ -1,11 +1,11 @@
 /** @odoo-module */
 
-import { describe, expect, mountOnFixture, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { after, describe, expect, test } from "@odoo/hoot";
+import { animationFrame, click, Deferred } from "@odoo/hoot-dom";
 import { Component, reactive, useState, xml } from "@odoo/owl";
-import { parseUrl } from "../local_helpers";
+import { mountForTest, parseUrl } from "../local_helpers";
 
+import { logger } from "../../core/logger";
 import { HootTechnicalValue } from "../../ui/hoot_technical_value";
 
 const mountTechnicalValue = async (defaultValue) => {
@@ -26,7 +26,7 @@ const mountTechnicalValue = async (defaultValue) => {
         }
     }
 
-    await mountOnFixture(TechnicalValueParent);
+    await mountForTest(TechnicalValueParent);
 
     return updateValue;
 };
@@ -50,16 +50,23 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("technical value with objects", async () => {
+        const logDebug = logger.debug;
+        logger.debug = expect.step;
+        after(() => (logger.debug = logDebug));
+
         const updateValue = await mountTechnicalValue({});
         expect(".hoot-technical").toHaveText(`Object(0)`);
 
         await updateValue([1, 2, "3"]);
+
         expect(".hoot-technical").toHaveText(`Array(3)`);
+        expect.verifySteps([]);
 
         await click(".hoot-object");
         await animationFrame();
 
         expect(".hoot-technical").toHaveText(`Array(3)[\n1\n,\n2\n,\n"3"\n,\n]`);
+        expect.verifySteps([[1, 2, "3"]]);
 
         await updateValue({ a: true });
         expect(".hoot-technical").toHaveText(`Object(1)`);
@@ -83,6 +90,7 @@ describe(parseUrl(import.meta.url), () => {
         expect(".hoot-technical:first").toHaveText(
             `Object(2){\na\n:\ntrue\n,\nsub\n:\nObject(1)\n}`
         );
+        expect.verifySteps([]);
 
         await click(".hoot-object:last");
         await animationFrame();
@@ -90,6 +98,7 @@ describe(parseUrl(import.meta.url), () => {
         expect(".hoot-technical:first").toHaveText(
             `Object(2){\na\n:\ntrue\n,\nsub\n:\nObject(1){\nkey\n:\n"oui"\n,\n}\n}`
         );
+        expect.verifySteps([{ key: "oui" }]);
     });
 
     test("technical value with special cases", async () => {
@@ -106,5 +115,29 @@ describe(parseUrl(import.meta.url), () => {
         def.resolve("oui");
         await animationFrame();
         expect(".hoot-technical").toHaveText(`Deferred<\nfulfilled\n:\n"oui"\n>`);
+    });
+
+    test("evaluation of unsafe value does not crash", async () => {
+        const logDebug = logger.debug;
+        logger.debug = () => expect.step("debug");
+        after(() => (logger.debug = logDebug));
+
+        class UnsafeString extends String {
+            toString() {
+                return this.valueOf();
+            }
+            valueOf() {
+                throw new Error("UNSAFE");
+            }
+        }
+
+        await mountTechnicalValue(new UnsafeString("some value"));
+        await click(".hoot-object");
+
+        expect(".hoot-object").toHaveText("UnsafeString(0)", {
+            message: "size is 0 because it couldn't be evaluated",
+        });
+
+        expect.verifySteps(["debug"]);
     });
 });

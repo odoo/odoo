@@ -30,11 +30,17 @@ class TestStockLandedCostsLots(TestLotValuation):
                 'price_unit': 10,
             })],
         })
+        product2 = self.env['product.product'].create({
+            'name': 'product2',
+            'is_storable': True,
+            'tracking': 'lot',
+            'lot_valuated': True,
+        })
         picking_2 = self.env['stock.picking'].create({
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
             'move_ids': [Command.create({
                 'name': 'Picking 2',
-                'product_id': self.product1.id,
+                'product_id': product2.id,
                 'product_uom_qty': 10,
                 'product_uom': self.ref('uom.product_uom_unit'),
                 'location_id': self.supplier_location.id,
@@ -51,18 +57,19 @@ class TestStockLandedCostsLots(TestLotValuation):
             'quantity': 5,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.env.ref('stock.stock_location_stock').id,
-        }) for lot_name in ['LClot1', 'LClot2', 'LClot3']]
+        }) for lot_name in ['LClotA1', 'LClotA2', 'LClotA3']]
         picking_2.move_ids.move_line_ids = [Command.clear()] + [Command.create({
-            'product_id': self.product1.id,
+            'product_id': product2.id,
             'lot_name': lot_name,
             'quantity': 5,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.env.ref('stock.stock_location_stock').id,
-        }) for lot_name in ['LClot1', 'LClot2']]
+        }) for lot_name in ['LClotB1', 'LClotB2']]
         (picking_1 | picking_2).move_ids.picked = True
         (picking_1 | picking_2).button_validate()
 
-        og_layer = picking_2.move_ids.stock_valuation_layer_ids | picking_1.move_ids.stock_valuation_layer_ids
+        og_p1_layers = picking_1.move_ids.stock_valuation_layer_ids
+        og_p2_layers = picking_2.move_ids.stock_valuation_layer_ids
         lc_form = Form(self.env['stock.landed.cost'])
         lc_form.picking_ids = (picking_1 | picking_2)
         with lc_form.cost_lines.new() as cost_line:
@@ -84,20 +91,87 @@ class TestStockLandedCostsLots(TestLotValuation):
         product_value = abs(self.productlc1.value_svl)
         self.assertEqual(lc_value, product_value)
         lot = self.env['stock.lot'].search([('name', 'ilike', 'LClot')])
-
-        self.assertRecordValues(lc.stock_valuation_layer_ids.sorted('id'), [
-            {'lot_id': lot[0].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_layer[0].id, 'quantity': 0, 'value': 1.5},
-            {'lot_id': lot[1].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_layer[1].id, 'quantity': 0, 'value': 1.5},
-            {'lot_id': lot[0].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_layer[2].id, 'quantity': 0, 'value': 1},
-            {'lot_id': lot[1].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_layer[3].id, 'quantity': 0, 'value': 1},
-            {'lot_id': lot[2].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_layer[4].id, 'quantity': 0, 'value': 1},
+        lot_product_a = lot.filtered(lambda l: l.product_id == self.product1)
+        lot_product_b = lot - lot_product_a
+        self.assertRecordValues(lc.stock_valuation_layer_ids.sorted(lambda svl: svl.product_id.id), [
+            {'lot_id': lot_product_a[0].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_p1_layers[0].id, 'quantity': 0, 'value': 1},
+            {'lot_id': lot_product_a[1].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_p1_layers[1].id, 'quantity': 0, 'value': 1},
+            {'lot_id': lot_product_a[2].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_p1_layers[2].id, 'quantity': 0, 'value': 1},
+            {'lot_id': lot_product_b[0].id, 'product_id': product2.id, 'stock_valuation_layer_id': og_p2_layers[0].id, 'quantity': 0, 'value': 1.5},
+            {'lot_id': lot_product_b[1].id, 'product_id': product2.id, 'stock_valuation_layer_id': og_p2_layers[1].id, 'quantity': 0, 'value': 1.5},
         ])
 
-        for l, price in zip(lot, [10.75, 10.75, 10.2]):
+        for l, price in zip(lot_product_a, [10.2, 10.2, 10.2]):
             self.assertEqual(l.standard_price, price)
-        outs = self._make_out_move(self.product1, 9, lot_ids=[lot[0], lot[1], lot[2]])
+        for l, price in zip(lot_product_b, [11.3, 11.3]):
+            self.assertEqual(l.standard_price, price)
+        outs = self._make_out_move(self.product1, 9, lot_ids=[lot_product_a[0], lot_product_a[1], lot_product_a[2]])
         self.assertRecordValues(outs.stock_valuation_layer_ids.sorted('id'), [
-            {'lot_id': lot[0].id, 'product_id': self.product1.id, 'quantity': -3, 'value': -32.25},
-            {'lot_id': lot[1].id, 'product_id': self.product1.id, 'quantity': -3, 'value': -32.25},
-            {'lot_id': lot[2].id, 'product_id': self.product1.id, 'quantity': -3, 'value': -30.6},
+            {'lot_id': lot_product_a[0].id, 'product_id': self.product1.id, 'quantity': -3, 'value': -30.6},
+            {'lot_id': lot_product_a[1].id, 'product_id': self.product1.id, 'quantity': -3, 'value': -30.6},
+            {'lot_id': lot_product_a[2].id, 'product_id': self.product1.id, 'quantity': -3, 'value': -30.6},
+        ])
+        # out move with 2 units of product 2 in each lot, so 11.3 * 2 = 22.6
+        outs = self._make_out_move(product2, 4, lot_ids=[lot_product_b[0], lot_product_b[1]])
+        self.assertRecordValues(outs.stock_valuation_layer_ids.sorted('id'), [
+            {'lot_id': lot_product_b[0].id, 'product_id': product2.id, 'quantity': -2, 'value': -22.6},
+            {'lot_id': lot_product_b[1].id, 'product_id': product2.id, 'quantity': -2, 'value': -22.6},
+        ])
+
+    def test_landed_cost_when_partially_sold(self):
+        """
+        check that the landed costs split correctly between lot/ serial numbers
+        when some lot/serial number are empty (no share of the landed cost for those)
+        or when some have a portion of their quantity already sold (check that it uses the
+        remaining quantity)
+        """
+        product1 = self.env['product.product'].create({
+            'name': 'product2',
+            'is_storable': True,
+            'tracking': 'lot',
+            'lot_valuated': True,
+        })
+        self.product1.categ_id.property_cost_method = 'fifo'
+        # acquire 5 products
+        picking_1 = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'move_ids': [Command.create({
+                'name': 'Picking 2',
+                'product_id': product1.id,
+                'product_uom_qty': 5,
+                'product_uom': self.ref('uom.product_uom_unit'),
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+                'price_unit': 10000,
+            })],
+        })
+        picking_1.action_confirm()
+        # split in lots
+        picking_1.move_ids.move_line_ids = [Command.clear()] + [Command.create({
+            'product_id': product1.id,
+            'lot_name': lot_name,
+            'quantity': lot_quantity,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+        }) for (lot_name, lot_quantity) in [('L1', 1), ('L2', 2), ('L3', 1), ('L4', 1)]]
+        picking_1.move_ids.picked = True
+        picking_1.button_validate()
+        # deliver 2 products
+        (lot1, lot2, lot3, lot4) = picking_1.move_ids.move_line_ids.mapped('lot_id').sorted('id')
+        self._make_out_move(product1, quantity=2, lot_ids=[lot1, lot2])
+
+        # add the landed cost
+        lc_form = Form(self.env['stock.landed.cost'])
+        lc_form.picking_ids = picking_1
+        with lc_form.cost_lines.new() as cost_line:
+            cost_line.product_id = self.productlc1
+            cost_line.price_unit = 5000
+        lc = lc_form.save()
+        lc.compute_landed_cost()
+        lc.button_validate()
+        # check it was correctly split
+        self.assertRecordValues(lc.stock_valuation_layer_ids.sorted('id'), [
+            {'lot_id': lot2.id, 'value': 1000},
+            {'lot_id': lot3.id, 'value': 1000},
+            {'lot_id': lot4.id, 'value': 1000},
         ])

@@ -99,6 +99,7 @@ registry.category("web_tour.tours").add('website_links_tour', {
             run: function () {
                 window.location.href = $('#generated_tracked_link .o_website_links_short_url').text();
             },
+            expectUnloadPage: true,
         },
         {
             content: "check that we landed on correct page with correct query strings",
@@ -111,6 +112,7 @@ registry.category("web_tour.tours").add('website_links_tour', {
                 }
                 window.location.href = '/r';
             },
+            expectUnloadPage: true,
         },
         // 3. Check that counter got incremented and charts are correctly displayed
         {
@@ -127,6 +129,7 @@ registry.category("web_tour.tours").add('website_links_tour', {
             content: "visit link stats page",
             trigger: ".o_website_links_card",
             run: "click",
+            expectUnloadPage: true,
         },
         {
             trigger: '.website_links_click_chart .title:contains("1 clicks")',

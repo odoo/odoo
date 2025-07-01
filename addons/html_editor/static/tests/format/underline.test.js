@@ -1,9 +1,17 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { tick } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
 import { em, s, span, u } from "../_helpers/tags";
-import { insertText, italic, tripleClick, underline } from "../_helpers/user_actions";
+import {
+    insertText,
+    italic,
+    simulateArrowKeyPress,
+    tripleClick,
+    underline,
+} from "../_helpers/user_actions";
+import { unformat } from "../_helpers/format";
 
 test("should make a few characters underline", async () => {
     await testEditor({
@@ -108,6 +116,52 @@ test("should not format non-editable text (underline)", async () => {
         contentBefore: '<p>[a</p><p contenteditable="false">b</p><p>c]</p>',
         stepFunction: underline,
         contentAfter: `<p>${u("[a")}</p><p contenteditable="false">b</p><p>${u("c]")}</p>`,
+    });
+});
+
+test("should make a few characters underline inside table (underline)", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td"><p>[abc</p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td"><p>def</p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td"><p>]<br></p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>`),
+        stepFunction: underline,
+        contentAfterEdit: unformat(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td"><p>${u(`[abc`)}</p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td"><p>${u(`def`)}</p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td"><p>${u(`]<br>`)}</p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>`),
     });
 });
 
@@ -287,5 +341,17 @@ describe("with italic", () => {
             },
             contentAfter: `<p>ab${u(em(`cd`))}${em(`A${u(`B`)}C[]`)}${u(em(`ef`))}</p>`,
         });
+    });
+
+    test("should remove empty underline tag when changing selection", async () => {
+        const { editor, el } = await setupEditor("<p>ab[]cd</p>");
+
+        underline(editor);
+        await tick();
+        expect(getContent(el)).toBe(`<p>ab${u("[]\u200B", "first")}cd</p>`);
+
+        await simulateArrowKeyPress(editor, "ArrowLeft");
+        await tick(); // await selectionchange
+        expect(getContent(el)).toBe(`<p>a[]bcd</p>`);
     });
 });

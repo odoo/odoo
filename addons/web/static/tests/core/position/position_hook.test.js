@@ -1,14 +1,20 @@
 import { before, destroy, expect, getFixture, test } from "@odoo/hoot";
-import { queryOne, scroll } from "@odoo/hoot-dom";
+import {
+    manuallyDispatchProgrammaticEvent,
+    queryOne,
+    queryRect,
+    resize,
+    scroll,
+} from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
-import { Component, xml, useRef, onMounted } from "@odoo/owl";
+import { Component, onMounted, useRef, xml } from "@odoo/owl";
 import { defineParams, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { usePosition } from "@web/core/position/position_hook";
 
 before(
     () =>
-        document.readyState !== "loading" ||
-        new Promise((resolve) => addEventListener("load", resolve, { once: true }))
+        document.readyState === "complete" ||
+        new Promise((resolve) => window.addEventListener("load", resolve, { once: true }))
 );
 
 function getTestComponent(popperOptions, styles = {}, target = false) {
@@ -317,7 +323,7 @@ test("reposition popper when a load event occurs", async () => {
     await mountWithCleanup(TestComp);
     // onPositioned called when component mounted
     expect.verifySteps(["onPositioned called"]);
-    queryOne("#popper").dispatchEvent(new Event("load"));
+    manuallyDispatchProgrammaticEvent(queryOne("#popper"), "load");
     await animationFrame();
     // onPositioned called when load event is triggered
     expect.verifySteps(["onPositioned called"]);
@@ -487,7 +493,7 @@ test("iframe: popper is outside, target inside", async () => {
     // Scrolling inside the iframe should reposition the popover accordingly
     const previousPositionSolution = onPositionedArgs.solution;
     const scrollOffset = 100;
-    await scroll(queryOne("iframe").contentDocument.documentElement, { y: scrollOffset });
+    await scroll(":iframe html", { y: scrollOffset }, { scrollable: false });
     await animationFrame();
     expect.verifySteps(["bottom-middle"]);
     expect(previousPositionSolution.top).toBe(onPositionedArgs.solution.top + scrollOffset);
@@ -574,7 +580,7 @@ test("iframe: both popper and target inside", async () => {
     // Scrolling inside the iframe should reposition the popover accordingly
     const previousPositionSolution = onPositionedArgs.solution;
     const scrollOffset = 100;
-    await scroll(iframe.contentDocument.documentElement, { y: scrollOffset });
+    await scroll(":iframe html", { y: scrollOffset }, { scrollable: false });
     await animationFrame();
     expect.verifySteps(["bottom-middle"]);
     expect(previousPositionSolution.top).toBe(onPositionedArgs.solution.top + scrollOffset);
@@ -705,17 +711,26 @@ test("popper as child of another", async () => {
     }
 
     await mountWithCleanup(Parent);
-    const parentPopBox1 = queryOne("#popper").getBoundingClientRect();
-    const childPopBox1 = queryOne("#child .popper").getBoundingClientRect();
-    await scroll("#container", { y: 150 });
 
-    const parentPopBox2 = queryOne("#popper").getBoundingClientRect();
-    const childPopBox2 = queryOne("#child .popper").getBoundingClientRect();
+    // TODO: needed in mobile for initial positionning, probably a bug to investigate
+    await resize();
+    await animationFrame();
 
-    expect(parentPopBox1.top).toBe(parentPopBox2.top);
-    expect(childPopBox1.top).toBe(childPopBox2.top);
-    expect(parentPopBox2.left).toBe(parentPopBox1.left);
-    expect(childPopBox2.left).toBe(childPopBox1.left);
+    const container = queryOne("#container");
+    const parentRect = queryRect("#popper");
+    const childRect = queryRect("#child .popper");
+    const scrollTop = container.scrollHeight - container.offsetHeight;
+
+    await scroll("#container", { top: scrollTop });
+
+    expect("#popper").toHaveRect({
+        x: parentRect.x,
+        y: parentRect.y - scrollTop,
+    });
+    expect("#child .popper").toHaveRect({
+        x: childRect.x,
+        y: childRect.y - scrollTop,
+    });
 });
 
 test("batch update call", async () => {

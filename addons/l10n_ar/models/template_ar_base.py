@@ -15,6 +15,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_income_categ_id': 'base_venta_de_mercaderia',
             'name': _('Generic Chart of Accounts Argentina Single Taxpayer / Basis'),
             'code_digits': '12',
+            'sequence': 1,
         }
 
     @template('ar_base', 'res.company')
@@ -36,7 +37,7 @@ class AccountChartTemplate(models.AbstractModel):
         """ In case of an Argentinean CoA, we modify the default values of the sales journal to be a preprinted journal"""
         return {
             'sale': {
-                "name": "Ventas Preimpreso",
+                "name": self.env._("Ventas Preimpreso"),
                 "code": "0001",
                 "l10n_ar_afip_pos_number": 1,
                 "l10n_ar_afip_pos_partner_id": self.env.company.partner_id.id,

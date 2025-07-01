@@ -56,7 +56,7 @@ class AccountReport(models.Model):
     load_more_limit = fields.Integer(string="Load More Limit")
     search_bar = fields.Boolean(string="Search Bar")
     prefix_groups_threshold = fields.Integer(string="Prefix Groups Threshold", default=4000)
-    integer_rounding = fields.Selection(string="Integer Rounding", selection=[('HALF-UP', "Half-up (away from 0)"), ('UP', "Up"), ('DOWN', "Down")])
+    integer_rounding = fields.Selection(string="Integer Rounding", selection=[('HALF-UP', "Nearest"), ('UP', "Up"), ('DOWN', "Down")])
 
     default_opening_date_filter = fields.Selection(
         string="Default Opening",
@@ -166,9 +166,13 @@ class AccountReport(models.Model):
         for report in self.sorted(lambda x: not x.section_report_ids):
             # Reports are sorted in order to first treat the composite reports, in case they need to compute their filters a the same time
             # as their sections
+            is_accessible = self.env['ir.actions.client'].search_count([('context', 'ilike', f"'report_id': {report.id}"), ('tag', '=', 'account_report')])
+            is_variant = bool(report.root_report_id)
+            if (is_accessible or is_variant) and report.section_main_report_ids:
+                continue  # prevent updating the filters of a report when being added as a section of a report
             if report.root_report_id:
                 report[field_name] = report.root_report_id[field_name]
-            elif len(report.section_main_report_ids) == 1 and not self.env['ir.actions.client'].search_count([('context', 'ilike', f"'report_id': {report.id}"), ('tag', '=', 'account_report')]):
+            elif len(report.section_main_report_ids) == 1 and not is_accessible:
                 report[field_name] = report.section_main_report_ids[field_name]
             else:
                 report[field_name] = default_value
@@ -195,7 +199,7 @@ class AccountReport(models.Model):
     @api.constrains('line_ids')
     def _validate_parent_sequence(self):
         previous_lines = self.env['account.report.line']
-        for line in self.line_ids:
+        for line in self.line_ids.sorted('sequence'):
             if line.parent_id and line.parent_id not in previous_lines:
                 raise ValidationError(
                     _('Line "%(line)s" defines line "%(parent_line)s" as its parent, but appears before it in the report. '
@@ -266,6 +270,12 @@ class AccountReport(models.Model):
                     for old_code, new_code in code_mapping.items():
                         copied_formula = re.sub(f"(?<=\\W){old_code}(?=\\W)", new_code, copied_formula)
                     expression.formula = copied_formula.strip()  # Remove the spaces introduced for lookahead/lookbehind
+                    # Repeat the same logic for the subformula, if it is set.
+                    if expression.subformula:
+                        copied_subformula = f" {expression.subformula} "
+                        for old_code, new_code in code_mapping.items():
+                            copied_subformula = re.sub(f"(?<=\\W){old_code}(?=\\W)", new_code, copied_subformula)
+                        expression.subformula = copied_subformula.strip()
 
             old_report.column_ids.copy({'report_id': new_report.id})
         return new_reports
@@ -652,17 +662,26 @@ class AccountReportExpression(models.Model):
 
         self._strip_formula(vals)
 
+        tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
+
         if vals.get('engine') == 'tax_tags':
-            tag_name = vals.get('formula') or self.formula
-            country = self.report_line_id.report_id.country_id
-            self._create_tax_tags(tag_name, country)
-            return super().write(vals)
+            # We already generate the tags for the expressions receiving a new engine
+            tags_create_vals = []
+            for expression_with_new_engine in self - tax_tags_expressions:
+                tag_name = vals.get('formula') or expression_with_new_engine.formula
+                country = expression_with_new_engine.report_line_id.report_id.country_id
+                if not self.env['account.account.tag']._get_tax_tags(tag_name, country.id):
+                    tags_create_vals += self.env['account.report.expression']._get_tags_create_vals(
+                        tag_name,
+                        country.id,
+                    )
+
+            self.env['account.account.tag'].create(tags_create_vals)
 
         # In case the engine is changed we don't propagate any change to the tags themselves
         if 'formula' not in vals or (vals.get('engine') and vals['engine'] != 'tax_tags'):
             return super().write(vals)
 
-        tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
         former_formulas_by_country = defaultdict(lambda: [])
         for expr in tax_tags_expressions:
             former_formulas_by_country[expr.report_line_id.report_id.country_id].append(expr.formula)

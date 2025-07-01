@@ -25,5 +25,5 @@ class Digest(models.Model):
 
     def _compute_kpis_actions(self, company, user):
         res = super(Digest, self)._compute_kpis_actions(company, user)
-        res['kpi_pos_total'] = 'point_of_sale.action_pos_sale_graph&menu_id=%s' % self.env.ref('point_of_sale.menu_point_root').id
+        res['kpi_pos_total'] = 'point_of_sale.action_pos_sale_graph?menu_id=%s' % self.env.ref('point_of_sale.menu_point_root').id
         return res

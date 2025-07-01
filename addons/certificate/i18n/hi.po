@@ -2,12 +2,18 @@
 # This file contains the translation of the following modules:
 # 	* certificate
 # 
+# Translators:
+# Wil Odoo, 2024
+# Manav Shah, 2025
+# Ujjawal Pathak, 2025
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-29 00:00+0000\n"
+"Last-Translator: Ujjawal Pathak, 2025\n"
 "Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +31,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__active
 #: model:ir.model.fields,field_description:certificate.field_certificate_key__active
 msgid "Active"
-msgstr ""
+msgstr "सक्रिय"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
@@ -41,7 +47,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
 msgid "Archived"
-msgstr ""
+msgstr "संग्रहीत किया गया"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
@@ -95,12 +101,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__company_id
 #: model:ir.model.fields,field_description:certificate.field_certificate_key__company_id
 msgid "Company"
-msgstr ""
+msgstr "संस्था"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__country_code
 msgid "Country Code"
-msgstr ""
+msgstr "देश का कोड"
 
 #. module: certificate
 #: model_terms:ir.actions.act_window,help:certificate.certificate_certificate_action_view_list
@@ -116,7 +122,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__create_uid
 #: model:ir.model.fields,field_description:certificate.field_certificate_key__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "द्वारा निर्मित"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__create_date
@@ -138,7 +144,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__display_name
 #: model:ir.model.fields,field_description:certificate.field_certificate_key__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "डिस्प्ले नाम"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__date_end
@@ -160,7 +166,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__id
 #: model:ir.model.fields,field_description:certificate.field_certificate_key__id
 msgid "ID"
-msgstr ""
+msgstr "आईडी"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
@@ -227,7 +233,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__name
 #: model:ir.model.fields,field_description:certificate.field_certificate_key__name
 msgid "Name"
-msgstr ""
+msgstr "नाम"
 
 #. module: certificate
 #. odoo-python
@@ -332,14 +338,6 @@ msgid "The certificate and public key are not compatible."
 msgstr ""
 
 #. module: certificate
-#. odoo-python
-#: code:addons/certificate/models/certificate.py:0
-msgid ""
-"The certificate subject field contains invalid characters. Make sure all "
-"characters are unicode valid."
-msgstr ""
-
-#. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
 msgid "The date on which the certificate expires (UTC)"
 msgstr ""
@@ -352,7 +350,19 @@ msgstr ""
 #. module: certificate
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
+msgid "The key size should be at least 512 bytes."
+msgstr ""
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
 msgid "The private key could not be loaded."
+msgstr ""
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The public exponent should be 65537 (or 3 for legacy purposes)."
 msgstr ""
 
 #. module: certificate

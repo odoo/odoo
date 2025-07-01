@@ -26,6 +26,7 @@ class MrpUnbuild(models.Model):
         required=True, index=True)
     product_qty = fields.Float(
         'Quantity', default=1.0,
+        digits='Product Unit of Measure',
         compute='_compute_product_qty', store=True, precompute=True, readonly=False,
         required=True)
     product_uom_id = fields.Many2one(
@@ -148,7 +149,7 @@ class MrpUnbuild(models.Model):
         return {
             'move_id': finished_move.id,
             'lot_id': self.lot_id.id,
-            'quantity': self.product_qty,
+            'quantity': finished_move.product_uom_qty,
             'product_id': finished_move.product_id.id,
             'product_uom_id': finished_move.product_uom.id,
             'location_id': finished_move.location_id.id,
@@ -214,9 +215,10 @@ class MrpUnbuild(models.Model):
                 taken_quantity = float_round(taken_quantity, precision_rounding=move.product_uom.rounding)
                 if taken_quantity:
                     move_line_vals = self._prepare_move_line_vals(move, move_line, taken_quantity)
-                    self.env["stock.move.line"].create(move_line_vals)
+                    unbuild_move_line = self.env["stock.move.line"].create(move_line_vals)
                     needed_quantity -= taken_quantity
                     qty_already_used[move_line] += taken_quantity
+                    unbuild_move_line._apply_putaway_strategy()
 
         (finished_moves | consume_moves | produce_moves).picked = True
         finished_moves._action_done()

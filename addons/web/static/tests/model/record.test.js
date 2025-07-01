@@ -201,7 +201,8 @@ test(`provides a way to handle before/after saved the record`, async () => {
     expect.verifySteps(["fields_get", "web_read", "onWillSaveRecord", "web_save", "onRecordSaved"]);
 });
 
-test.tags("desktop")(`handles many2one fields: value is a pair id, display_name`, async () => {
+test.tags("desktop");
+test(`handles many2one fields: value is a pair id, display_name`, async () => {
     class Bar extends models.Model {
         name = fields.Char();
 

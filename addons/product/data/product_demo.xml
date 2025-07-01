@@ -621,6 +621,7 @@
             <field
                 name="combo_item_ids"
                 eval="[
+                    Command.clear(),
                     Command.create({
                         'product_id': ref('product.desk_organizer'),
                         'extra_price': 0,
@@ -642,6 +643,7 @@
             <field
                 name="combo_item_ids"
                 eval="[
+                    Command.clear(),
                     Command.create({
                         'product_id': ref('product.product_product_3'),
                         'extra_price': 0,
@@ -659,6 +661,7 @@
             <field
                 name="combo_item_ids"
                 eval="[
+                    Command.clear(),
                     Command.create({
                         'product_id': ref('product.product_product_11'),
                         'extra_price': 0,

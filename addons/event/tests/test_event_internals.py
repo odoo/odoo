@@ -447,6 +447,8 @@ class TestEventData(TestEventInternalsCommon):
         self.env['mail.template'].create({'model_id': self.env['ir.model']._get('res.partner').id, 'name': 'test template'})
         templates = self.env['mail.template'].with_context(filter_template_on_event=True).name_search('test template')
         self.assertEqual(len(templates), 1, 'Should return only mail templates related to the event registration model')
+        templates = self.env['mail.template'].with_context(filter_template_on_event=True).search([('name', '=', 'test template')])
+        self.assertEqual(len(templates), 1, 'Should also return only mail templates related to the event registration model using search')
 
     @freeze_time('2020-1-31 10:00:00')
     @users('user_eventmanager')

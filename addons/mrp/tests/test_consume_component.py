@@ -401,3 +401,90 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         ])
         mo.move_raw_ids.picked = True
         mo.button_mark_done()
+
+    def test_automatic_consume_new_added_component(self):
+        """
+        Create an MO for a product and set qty_producing than add a new component with quantity and automatically it's picked.
+        """
+        sfg_product, compo1, compo2 = self.env['product.product'].create([
+            {
+                'name': 'SFG Product',
+                'is_storable': True,
+                'route_ids': [(4, self.manufacture_route.id, 0)],
+            },
+            {
+                'name': 'Compo 1',
+                'is_storable': True,
+            },
+            {
+                'name': 'Compo 2',
+                'is_storable': True,
+            }
+        ])
+
+        quant = self.create_quant(compo1, 10)
+        quant |= self.create_quant(compo2, 10)
+        quant.action_apply_inventory()
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': sfg_product.product_tmpl_id.id,
+            'product_uom_id': sfg_product.uom_id.id,
+            'consumption': 'flexible',
+            'sequence': 1
+        })
+        self.create_bom_lines(bom, compo1, [1])
+
+        mo = self.env['mrp.production'].create({
+            'product_id': sfg_product.id,
+            'product_uom_id': sfg_product.uom_id.id,
+            'product_qty': 1,
+            'bom_id': bom.id
+        })
+        mo.action_confirm()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_uom_qty': 1.0, 'picked': False},
+        ])
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 1.0
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
+        ])
+        move = self.env['stock.move'].create({
+            'name': mo.name,
+            'product_id': compo2.id,
+            'raw_material_production_id': mo.id,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.env.company.id)]).id,
+        })
+        move.should_consume_qty = 1
+        move.quantity = 1
+        move._action_assign()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
+            {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
+        ])
+
+    def test_no_component_consumption_on_lot_removal(self):
+        """
+        If we have a manufacturing order (MO) for a product tracked by lot, and we assign a lot number
+        and then unassign it, the components should not be consumed at that point.
+        """
+        quant = self.create_quant(self.raw_none, 3)
+        quant |= self.create_quant(self.raw_lot, 2)
+        quant |= self.create_quant(self.raw_serial, 1)
+        quant.action_apply_inventory()
+        mo = self.create_mo(self.mo_lot_tmpl, self.DEFAULT_TRIGGERS_COUNT)
+        mo.action_confirm()
+        mo.action_generate_serial()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'quantity': 3.0, 'picked': False},
+            {'quantity': 2.0, 'picked': False},
+            {'quantity': 1.0, 'picked': False},
+        ])
+        with Form(mo) as mo_form:
+            mo_form.lot_producing_id = self.env['stock.lot']
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'quantity': 0.0, 'picked': False},
+            {'quantity': 0.0, 'picked': False},
+            {'quantity': 0.0, 'picked': False},
+        ])

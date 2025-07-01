@@ -80,17 +80,23 @@ class ResPartner(models.Model):
     def _compute_credit_to_invoice(self):
         # EXTENDS 'account'
         super()._compute_credit_to_invoice()
+        if not (commercial_partners := self.commercial_partner_id & self):
+            return  # nothing to compute
         company = self.env.company
         if not company.account_use_credit_limit:
             return
 
         sale_orders = self.env['sale.order'].search([
             ('company_id', '=', company.id),
-            ('partner_id', 'in', self.ids),
+            ('partner_invoice_id', 'any', [
+                ('commercial_partner_id', 'in', commercial_partners.ids),
+            ]),
             ('order_line', 'any', [('untaxed_amount_to_invoice', '>', 0)]),
             ('state', '=', 'sale'),
         ])
-        for (partner, currency), orders in sale_orders.grouped(lambda so: (so.partner_id, so.currency_id)).items():
+        for (partner, currency), orders in sale_orders.grouped(
+            lambda so: (so.partner_invoice_id, so.currency_id),
+        ).items():
             amount_to_invoice_sum = sum(orders.mapped('amount_to_invoice'))
             credit_company_currency = currency._convert(
                 amount_to_invoice_sum,
@@ -98,7 +104,7 @@ class ResPartner(models.Model):
                 company,
                 fields.Date.context_today(self),
             )
-            partner.credit_to_invoice += credit_company_currency
+            partner.commercial_partner_id.credit_to_invoice += credit_company_currency
 
     def unlink(self):
         # Unlink draft/cancelled SO so that the partner can be removed from database

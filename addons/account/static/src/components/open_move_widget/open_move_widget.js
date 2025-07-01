@@ -19,7 +19,7 @@ class OpenMoveWidget extends Component {
             type: "object",
             resId: this.props.record.resId,
             name: "action_open_business_doc",
-            resModel: "account.move.line",
+            resModel: this.props.record.resModel,
         });
     }
 }

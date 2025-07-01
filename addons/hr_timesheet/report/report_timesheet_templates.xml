@@ -82,20 +82,18 @@
             <t t-call="web.internal_layout">
                 <div class="page">
                     <t t-foreach="docs" t-as="doc">
-                        <t t-set="lines" t-value="doc.timesheet_ids if from_project else timesheets_per_task.get(doc, doc.env['account.analytic.line'])"/>
-                        <t t-if="lines">
-                            <div class="oe_structure"/>
-                            <div class="mt8">
-                                <h1>
-                                    <t t-out="title"/>: <t t-out="doc.name"/>
-                                </h1>
-                                <t t-call="hr_timesheet.timesheet_table"/>
-                                <t t-if="not from_project">
-                                    <t t-set="task_id" t-value="doc.id"/>
-                                    <t t-call="hr_timesheet.timesheet_report_subtask"/>
-                                </t>
-                            </div>
-                        </t>
+                        <div class="oe_structure"/>
+                        <div class="mt8">
+                            <t t-set="lines" t-value="doc.timesheet_ids if from_project else timesheets_per_task.get(doc, doc.env['account.analytic.line'])"/>
+                            <h1 t-if="lines">
+                                <t t-out="title"/>: <t t-out="doc.name"/>
+                            </h1>
+                            <t t-if="lines" t-call="hr_timesheet.timesheet_table"/>
+                            <t t-if="not from_project">
+                                <t t-set="task_id" t-value="doc.id"/>
+                                <t t-call="hr_timesheet.timesheet_report_subtask"/>
+                            </t>
+                        </div>
                     </t>
                 </div>
             </t>
@@ -107,7 +105,7 @@
         <t t-foreach="subtasks.sorted('sequence')" t-as="subtask">
             <t t-if="subtask in timesheets_per_task">
                 <h2 class="my-4">
-                    Sub-Task: <t t-out="subtask.name"/>
+                    Sub-Task of '<t t-out="doc.name"/>': <t t-out="subtask.name"/>
                 </h2>
                 <t t-set="lines" t-value="timesheets_per_task[subtask]"/>
                 <t t-call="hr_timesheet.timesheet_table"/>

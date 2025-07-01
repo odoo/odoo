@@ -21,7 +21,7 @@ import {
     mountWithSearch,
     onRpc,
     openAddCustomFilterDialog,
-    patchWithCleanup,
+    serverState,
     toggleMenuItem,
     toggleMenuItemOption,
     toggleSearchBarMenu,
@@ -728,7 +728,7 @@ test("Add a custom filter", async () => {
 });
 
 test("Add a custom filter containing an expression", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    serverState.debug = "1";
 
     onRpc("/web/domain/validate", () => true);
     const searchBar = await mountWithSearch(SearchBar, {
@@ -753,7 +753,7 @@ test("Add a custom filter containing an expression", async () => {
 });
 
 test("Add a custom filter containing a between operator", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    serverState.debug = "1";
 
     onRpc("/web/domain/validate", () => true);
     const searchBar = await mountWithSearch(SearchBar, {
@@ -776,7 +776,7 @@ test("Add a custom filter containing a between operator", async () => {
 });
 
 test("consistent display of ! in debug mode", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    serverState.debug = "1";
 
     onRpc("/web/domain/validate", () => true);
     const searchBar = await mountWithSearch(SearchBar, {
@@ -849,7 +849,7 @@ test("display of is (not) (not) set in facets", async () => {
 });
 
 test("Add a custom filter: notification on invalid domain", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    serverState.debug = "1";
     mockService("notification", {
         add(message, options) {
             expect.step("notification");
@@ -875,7 +875,7 @@ test("Add a custom filter: notification on invalid domain", async () => {
 });
 
 test("display names in facets", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    serverState.debug = "1";
     Partner._records = [
         { id: 1, name: "John" },
         { id: 2, name: "David" },
@@ -913,11 +913,11 @@ test("display names in facets", async () => {
 });
 
 test("display names in facets (with a property)", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    serverState.debug = "1";
     Partner._records = [{ id: 1, name: "John" }];
 
     onRpc("/web/domain/validate", () => true);
-    onRpc("/web/dataset/call_kw/parent.model/web_search_read", () => ({
+    onRpc("parent.model", "web_search_read", () => ({
         records: [
             {
                 id: 1337,
@@ -1039,4 +1039,27 @@ test("group by properties", async () => {
     await animationFrame();
     expect(searchBar.env.searchModel.groupBy).toEqual(["properties.my_datetime:quarter"]);
     expect(getFacetTexts()).toEqual(["My Datetime: Quarter"]);
+});
+
+test("shorten descriptions of long lists", async function () {
+    serverState.debug = "1";
+    onRpc("/web/domain/validate", () => true);
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchMenuTypes: ["filter"],
+        searchViewId: false,
+        searchViewArch: `<search />`,
+    });
+    expect(getFacetTexts()).toEqual([]);
+    expect(searchBar.env.searchModel.domain).toEqual([]);
+
+    await toggleSearchBarMenu();
+    await openAddCustomFilterDialog();
+    const values = new Array(500).fill(42525245);
+    await contains(`.o_domain_selector_debug_container textarea`).edit(
+        `[("id", "in", [${values}])]`
+    );
+    await contains(".modal footer button").click();
+    expect(getFacetTexts()).toEqual([`Id is in ( ${values.slice(0, 20).join(" , ")} , ... )`]);
+    expect(searchBar.env.searchModel.domain).toEqual([["id", "in", values]]);
 });

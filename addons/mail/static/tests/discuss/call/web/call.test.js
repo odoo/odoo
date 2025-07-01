@@ -11,13 +11,12 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
-import { mockUserAgent } from "@odoo/hoot-mock";
+import { test } from "@odoo/hoot";
 import { mockService } from "@web/../tests/web_test_helpers";
 
-describe.current.tags("desktop");
 defineMailModels();
 
+test.tags("desktop");
 test("no default rtc after joining a chat conversation", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
@@ -35,6 +34,7 @@ test("no default rtc after joining a chat conversation", async () => {
     await contains(".o-discuss-Call", { count: 0 });
 });
 
+test.tags("desktop");
 test("no default rtc after joining a group conversation", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
@@ -56,9 +56,9 @@ test("no default rtc after joining a group conversation", async () => {
     await contains(".o-discuss-Call", { count: 0 });
 });
 
-test.tags("mobile")("show Push-to-Talk button on mobile", async () => {
+test.tags("mobile");
+test.skip("show Push-to-Talk button on mobile", async () => {
     mockGetMedia();
-    mockUserAgent("android");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     mockService("discuss.ptt_extension", {

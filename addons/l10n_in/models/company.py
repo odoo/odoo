@@ -9,8 +9,8 @@ class ResCompany(models.Model):
     l10n_in_upi_id = fields.Char(string="UPI Id")
     l10n_in_hsn_code_digit = fields.Selection(
         selection=[
-            ("4", "4 Digits"),
-            ("6", "6 Digits"),
+            ("4", "4 Digits (turnover < 5 CR.)"),
+            ("6", "6 Digits (turnover > 5 CR.)"),
             ("8", "8 Digits"),
         ],
         string="HSN Code Digit",

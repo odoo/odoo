@@ -8,6 +8,7 @@ import { preferencesItem } from "@web/webclient/user_menu/user_menu_items";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { click, getFixture, mount } from "@web/../tests/helpers/utils";
+import { markup } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 const userMenuRegistry = registry.category("user_menuitems");
@@ -84,14 +85,25 @@ QUnit.test("can be rendered", async (assert) => {
             },
         };
     });
+    userMenuRegistry.add("html_item", function () {
+        return {
+            type: "item",
+            id: "html",
+            description: markup(`<div>HTML<i class="fa fa-check px-2"></i></div>`),
+            callback: () => {
+                assert.step("callback html_item");
+            },
+            sequence: 20,
+        };
+    });
     await mount(BurgerUserMenu, target, { env });
-    assert.containsN(target, "a", 3);
+    assert.containsN(target, "a", 4);
     assert.containsOnce(target, ".form-switch input.form-check-input");
     assert.containsOnce(target, "hr");
     const items = [...target.querySelectorAll("a, .form-switch")] || [];
     assert.deepEqual(
         items.map((el) => el.textContent),
-        ["Ring", "Bad", "Frodo", "Eye"]
+        ["Ring", "Bad", "Frodo", "HTML", "Eye"]
     );
     for (const item of items) {
         click(item);
@@ -100,6 +112,7 @@ QUnit.test("can be rendered", async (assert) => {
         "callback ring_item",
         "callback bad_item",
         "callback frodo_item",
+        "callback html_item",
         "callback eye_item",
     ]);
 });

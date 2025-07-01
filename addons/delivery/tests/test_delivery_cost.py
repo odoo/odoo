@@ -533,7 +533,8 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
                 'max_value': 0,
                 'variable_factor': 'weight',
                 'list_base_price': 15,
-            })]
+            })],
+            'fixed_margin': 10,
         })
 
         # Create sale using the shipping method
@@ -560,4 +561,4 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
         # check delivery price was properly converted
         delivery_sol = so.order_line[-1]
         self.assertEqual(delivery_sol.product_id, delivery.product_id)
-        self.assertEqual(delivery_sol.price_subtotal, 7.5)
+        self.assertEqual(delivery_sol.price_subtotal, 12.5)

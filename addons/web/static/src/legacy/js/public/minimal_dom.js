@@ -53,7 +53,7 @@ export function makeAsyncHandler(fct, preventDefault, stopPropagation, stopImmed
 
         _lock();
         const result = fct.apply(this, arguments);
-        Promise.resolve(result).then(_unlock, _unlock);
+        Promise.resolve(result).finally(_unlock);
         return result;
     };
 }

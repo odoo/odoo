@@ -8,7 +8,7 @@
             <field name="name">account.payment.list</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <list edit="false" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+                <list edit="false" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'canceled'">
                     <header>
                         <button name="action_post" type="object" string="Confirm"/>
                     </header>
@@ -26,7 +26,7 @@
                     <field name="currency_id" string="Payment Currency" optional="hide"/>
                     <field name="activity_ids" widget="list_activity" optional="hide"/>
                     <field name="amount_company_currency_signed" widget="monetary" string="Amount" sum="Total"/>
-                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'in_process'"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'in_process'" decoration-success="state == 'paid'"/>
                 </list>
             </field>
         </record>
@@ -142,7 +142,7 @@
                         <button name="action_post" string="Confirm" type="object" class="oe_highlight"
                                 invisible="state != 'draft'" data-hotkey="q"/>
                         <button name="action_validate" string="Validate" type="object" class="oe_highlight"
-                                invisible="state != 'in_process'" data-hotkey="q"/>
+                                invisible="state != 'in_process' or move_id" data-hotkey="q"/>
                         <button name="action_reject" string="Reject" type="object" class="oe_highlight"
                                 invisible="state != 'in_process' or not is_sent" data-hotkey="q"/>
                         <button name="action_draft" string="Reset To Draft" type="object" class="btn btn-secondary"

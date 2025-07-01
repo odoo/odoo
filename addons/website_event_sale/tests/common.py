@@ -30,6 +30,10 @@ class TestWebsiteEventSaleCommon(TransactionCase):
         cls.zero_tax = cls.env['account.tax'].sudo().create({
             'name': 'Tax 0',
             'amount': 0,
+            'tax_group_id': cls.env['account.tax.group'].create({
+                'name': 'Text Tax Group',
+                'company_id': cls.env.company.id,
+            }).id
         })
         cls.product_event = cls.env['product.product'].create({
             'type': 'service',
@@ -39,19 +43,36 @@ class TestWebsiteEventSaleCommon(TransactionCase):
             'taxes_id': [(6, 0, cls.zero_tax.ids)],
         })
 
-        cls.event = cls.env['event.event'].create({
-            'date_begin': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 07:00:00'),
-            'date_end': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 16:30:00'),
-            'name': 'Pycon',
-            'user_id': cls.env.ref('base.user_admin').id,
-            'website_published': True,
-        })
-        cls.ticket = cls.env['event.event.ticket'].create([{
-            'event_id': cls.event.id,
-            'name': 'Standard',
-            'product_id': cls.product_event.id,
-            'price': 100,
-        }])
+        cls.event, cls.event_2 = cls.env['event.event'].create([
+            {
+                'date_begin': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 07:00:00'),
+                'date_end': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 16:30:00'),
+                'name': 'Pycon',
+                'user_id': cls.env.ref('base.user_admin').id,
+                'website_published': True,
+            },
+            {
+                'date_begin': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 07:00:00'),
+                'date_end': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 16:30:00'),
+                'name': 'Conference for Architects TEST',
+                'user_id': cls.env.ref('base.user_admin').id,
+                'website_published': True,
+            }
+        ])
+        cls.ticket, cls.ticket_2 = cls.env['event.event.ticket'].create([
+            {
+                'event_id': cls.event.id,
+                'name': 'Standard',
+                'product_id': cls.product_event.id,
+                'price': 100,
+            },
+            {
+                'event_id': cls.event_2.id,
+                'name': 'Standard',
+                'product_id': cls.product_event.id,
+                'price': 1000,
+            }
+        ])
 
         cls.current_website = cls.env['website'].get_current_website()
         cls.pricelist = cls.env['product.pricelist'].create({'name': 'Base Pricelist'})

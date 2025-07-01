@@ -1,6 +1,14 @@
 import { expect, test } from "@odoo/hoot";
-import { click, edit, queryAll, queryFirst, setInputFiles, waitFor } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import {
+    click,
+    edit,
+    manuallyDispatchProgrammaticEvent,
+    queryAll,
+    queryFirst,
+    setInputFiles,
+    waitFor,
+} from "@odoo/hoot-dom";
+import { animationFrame, runAllTimers, mockDate } from "@odoo/hoot-mock";
 import {
     clickSave,
     defineModels,
@@ -13,6 +21,8 @@ import {
 
 import { getOrigin } from "@web/core/utils/urls";
 
+const { DateTime } = luxon;
+
 const MY_IMAGE =
     "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
 const PRODUCT_IMAGE =
@@ -23,10 +33,10 @@ function getUnique(target) {
     return new URL(src).searchParams.get("unique");
 }
 
-async function setFiles(files) {
+async function setFiles(files, name = "document") {
     await click("input[type=file]", { visible: false });
     await setInputFiles(files);
-    await waitFor(`div[name=document] img[data-src^="data:image/"]`, { timeout: 1000 });
+    await waitFor(`div[name=${name}] img[data-src^="data:image/"]`, { timeout: 1000 });
 }
 
 class Partner extends models.Model {
@@ -150,7 +160,7 @@ test("ImageField with alt attribute", async () => {
             </form>`,
     });
 
-    expect(".o_field_widget[name='document'] img").toHaveAttribute("data-alt", "something", {
+    expect(".o_field_widget[name='document'] img").toHaveAttribute("alt", "something", {
         message: "the image should correctly set its alt attribute",
     });
 });
@@ -158,6 +168,8 @@ test("ImageField with alt attribute", async () => {
 test("ImageField on a many2one", async () => {
     Partner._fields.parent_id = fields.Many2one({ relation: "partner" });
     Partner._records[1].parent_id = 1;
+
+    mockDate("2017-02-06 10:00:00");
 
     await mountView({
         type: "form",
@@ -172,9 +184,83 @@ test("ImageField on a many2one", async () => {
     expect(".o_field_widget[name=parent_id] img").toHaveCount(1);
     expect('div[name="parent_id"] img').toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/partner/1/document`
+        `${getOrigin()}/web/image/partner/1/document?unique=1486375200000`
     );
-    expect(".o_field_widget[name='parent_id'] img").toHaveAttribute("data-alt", "first record");
+    expect(".o_field_widget[name='parent_id'] img").toHaveAttribute("alt", "first record");
+});
+
+test("url should not use the record last updated date when the field is related", async () => {
+    Partner._fields.related = fields.Binary({ related: "parent_id.document" });
+    Partner._fields.parent_id = fields.Many2one({ relation: "partner" });
+    Partner._records[1].parent_id = 1;
+    Partner._records[0].write_date = "2017-02-04 10:00:00";
+    Partner._records[0].document = "3 kb";
+
+    mockDate("2017-02-06 10:00:00");
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        arch: `
+            <form>
+                <field name="foo"/>
+                <field name="related" widget="image" readonly="0"/>
+            </form>`,
+    });
+
+    const initialUnique = Number(getUnique(queryFirst('div[name="related"] img')));
+    expect(DateTime.fromMillis(initialUnique).hasSame(DateTime.fromISO("2017-02-06"), "days")).toBe(
+        true
+    );
+
+    await click(".o_field_widget[name='foo'] input");
+    await edit("grrr");
+    await animationFrame();
+
+    expect(Number(getUnique(queryFirst('div[name="related"] img')))).toBe(initialUnique);
+
+    mockDate("2017-02-09 10:00:00");
+
+    await click("input[type=file]", { visible: false });
+    await setFiles(
+        new File(
+            [Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)))],
+            "fake_file.png",
+            { type: "png" }
+        ),
+        "related"
+    );
+
+    expect("div[name=related] img").toHaveAttribute(
+        "data-src",
+        `data:image/png;base64,${MY_IMAGE}`
+    );
+
+    await clickSave();
+
+    const unique = Number(getUnique(queryFirst('div[name="related"] img')));
+    expect(DateTime.fromMillis(unique).hasSame(DateTime.fromISO("2017-02-09"), "days")).toBe(true);
+});
+
+test("url should use the record last updated date when the field is related on the same model", async () => {
+    Partner._fields.related = fields.Binary({ related: "document" });
+    Partner._records[0].write_date = "2017-02-04 10:00:00"; // 1486202400000
+    Partner._records[0].document = "3 kb";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="related" widget="image"/>
+            </form>`,
+    });
+    expect('div[name="related"] img').toHaveAttribute(
+        "data-src",
+        `${getOrigin()}/web/image/partner/1/related?unique=1486202400000`
+    );
 });
 
 test("ImageField is correctly replaced when given an incorrect value", async () => {
@@ -202,7 +288,7 @@ test("ImageField is correctly replaced when given an incorrect value", async () 
     // As GET requests can't occur in tests, we must generate an error
     // on the img element to check whether the data-src is replaced with
     // a placeholder, here knowing that the GET request would fail
-    queryFirst('div[name="document"] img').dispatchEvent(new ErrorEvent("error"));
+    manuallyDispatchProgrammaticEvent(queryFirst('div[name="document"] img'), "error");
     await animationFrame();
 
     expect('.o_field_widget[name="document"]').toHaveClass("o_field_image", {
@@ -235,7 +321,11 @@ test("ImageField is correctly replaced when given an incorrect value", async () 
 });
 
 test("ImageField preview is updated when an image is uploaded", async () => {
-    const imageData = Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)));
+    const imageFile = new File(
+        [Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)))],
+        "fake_file.png",
+        { type: "png" }
+    );
     await mountView({
         type: "form",
         resModel: "partner",
@@ -255,19 +345,8 @@ test("ImageField preview is updated when an image is uploaded", async () => {
     // Whitebox: replace the event target before the event is handled by the field so that we can modify
     // the files that it will take into account. This relies on the fact that it reads the files from
     // event.target and not from a direct reference to the input element.
-    const fileInput = queryFirst("input[type=file]");
-    const fakeInput = {
-        files: [new File([imageData], "fake_file.png", { type: "png" })],
-    };
-    fileInput.addEventListener(
-        "change",
-        (ev) => {
-            Object.defineProperty(ev, "target", { value: fakeInput });
-        },
-        { capture: true }
-    );
-
-    fileInput.dispatchEvent(new Event("change"));
+    await click(".o_select_file_button");
+    await setInputFiles(imageFile);
     // It can take some time to encode the data as a base64 url
     await runAllTimers();
     // Wait for a render
@@ -632,14 +711,14 @@ test("ImageField is reset when changing record", async () => {
     });
 
     const imageFile = new File([imageData], "fake_file.png", { type: "png" });
-    expect("img[data-alt='Binary file']").toHaveAttribute(
+    expect("img[alt='Binary file']").toHaveAttribute(
         "data-src",
         "/web/static/img/placeholder.png",
         { message: "image field should not be set" }
     );
 
     await setFiles(imageFile);
-    expect("img[data-alt='Binary file']").toHaveAttribute(
+    expect("img[alt='Binary file']").toHaveAttribute(
         "data-src",
         `data:image/png;base64,${MY_IMAGE}`,
         {
@@ -651,14 +730,14 @@ test("ImageField is reset when changing record", async () => {
     await click(".o_control_panel_main_buttons .o_form_button_create");
     await runAllTimers();
     await animationFrame();
-    expect("img[data-alt='Binary file']").toHaveAttribute(
+    expect("img[alt='Binary file']").toHaveAttribute(
         "data-src",
         "/web/static/img/placeholder.png",
         { message: "image field should be reset" }
     );
 
     await setFiles(imageFile);
-    expect("img[data-alt='Binary file']").toHaveAttribute(
+    expect("img[alt='Binary file']").toHaveAttribute(
         "data-src",
         `data:image/png;base64,${MY_IMAGE}`,
         {
@@ -763,22 +842,20 @@ test("unique in url does not change on record change if reload option is set to 
 });
 
 test("convert image to webp", async () => {
-    onRpc(({ method, model, args }) => {
-        if (method == "create_unique" && model == "ir.attachment") {
-            // This RPC call is done two times - once for storing webp and once for storing jpeg
-            // This handles first RPC call to store webp
-            if (!args[0][0].res_id) {
-                // Here we check the image data we pass and generated data.
-                // Also we check the file type
-                expect(args[0][0].datas).not.toBe(imageData);
-                expect(args[0][0].mimetype).toBe("image/webp");
-                return [1];
-            }
-            // This handles second RPC call to store jpeg
+    onRpc("ir.attachment", "create_unique", ({ args }) => {
+        // This RPC call is done two times - once for storing webp and once for storing jpeg
+        // This handles first RPC call to store webp
+        if (!args[0][0].res_id) {
+            // Here we check the image data we pass and generated data.
+            // Also we check the file type
             expect(args[0][0].datas).not.toBe(imageData);
-            expect(args[0][0].mimetype).toBe("image/jpeg");
-            return true;
+            expect(args[0][0].mimetype).toBe("image/webp");
+            return [1];
         }
+        // This handles second RPC call to store jpeg
+        expect(args[0][0].datas).not.toBe(imageData);
+        expect(args[0][0].mimetype).toBe("image/jpeg");
+        return true;
     });
 
     const imageData = Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)));
@@ -793,7 +870,7 @@ test("convert image to webp", async () => {
     });
 
     const imageFile = new File([imageData], "fake_file.jpeg", { type: "jpeg" });
-    expect("img[data-alt='Binary file']").toHaveAttribute(
+    expect("img[alt='Binary file']").toHaveAttribute(
         "data-src",
         "/web/static/img/placeholder.png",
         { message: "image field should not be set" }

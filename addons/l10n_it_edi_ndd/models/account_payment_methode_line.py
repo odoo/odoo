@@ -35,3 +35,6 @@ class AccountPaymentMethodLine(models.Model):
         string="Italian Payment Method",
         default='MP05',
     )
+
+    def _get_l10n_it_payment_method_selection_code(self):
+        return [payment_method[0] for payment_method in L10N_IT_PAYMENT_METHOD_SELECTION]

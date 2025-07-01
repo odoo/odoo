@@ -4,19 +4,21 @@ import { user } from "@web/core/user";
 
 import {
     addGlobalFilter,
+    redo,
     selectCell,
     setCellContent,
     undo,
-    redo,
 } from "@spreadsheet/../tests/helpers/commands";
 import {
     getCell,
     getCellContent,
     getCellFormula,
-    getCellValue,
+    getCellFormattedValue,
     getCells,
+    getCellValue,
     getEvaluatedCell,
     getEvaluatedGrid,
+    getFormattedValueGrid,
 } from "@spreadsheet/../tests/helpers/getters";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
 import { createSpreadsheetWithList } from "@spreadsheet/../tests/helpers/list";
@@ -29,14 +31,14 @@ import {
     defineSpreadsheetActions,
     defineSpreadsheetModels,
     generateListDefinition,
-    getBasicServerData,
+    Partner,
+    Product,
 } from "@spreadsheet/../tests/helpers/data";
 
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 const { DEFAULT_LOCALE, PIVOT_TABLE_CONFIG } = spreadsheet.constants;
 const { toZone } = spreadsheet.helpers;
 const { cellMenuRegistry } = spreadsheet.registries;
-
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -78,18 +80,57 @@ test("Boolean fields are correctly formatted", async () => {
     expect(getCellValue(model, "A5")).toBe(false);
 });
 
+test("Numeric/monetary fields are correctly loaded and displayed", async () => {
+    Partner._records.push({
+        id: 5,
+        probability: 0,
+        field_with_array_agg: 0,
+        currency_id: 2,
+        pognon: 0,
+    });
+    const { model } = await createSpreadsheetWithList({
+        columns: ["pognon", "probability", "field_with_array_agg"],
+    });
+
+    // prettier-ignore
+    expect(getFormattedValueGrid(model, "A2:C6")).toEqual({
+        A2: "74.40€",    B2: "10.00",  C2: "1",
+        A3: "$74.80",    B3: "11.00",  C3: "2",
+        A4: "4.00€",     B4: "95.00",  C4: "3",      
+        A5: "$1,000.00", B5: "15.00",  C5: "4",
+        A6: "$0.00",     B6: "0.00",   C6: "0",
+    });
+});
+
+test("Text fields are correctly loaded and displayed", async () => {
+    Partner._records = [{ name: "Record 1" }, { name: false }];
+    const { model } = await createSpreadsheetWithList({
+        columns: ["name"],
+    });
+    expect(getCellFormattedValue(model, "A2")).toBe("Record 1");
+    expect(getCellFormattedValue(model, "A3")).toBe("");
+});
+
 test("properties field displays property display names", async () => {
-    const serverData = getBasicServerData();
-    serverData.models.partner.records = [
+    Product._records = [
         {
-            partner_properties: [
-                { name: "dbfc66e0afaa6a8d", type: "date", string: "prop 1", default: false },
-                { name: "f80b6fb58d0d4c72", type: "integer", string: "prop 2", default: 0 },
+            id: 1,
+            properties_definitions: [
+                { name: "dbfc66e0afaa6a8d", type: "date", string: "prop 1" },
+                { name: "f80b6fb58d0d4c72", type: "integer", string: "prop 2" },
             ],
         },
     ];
+    Partner._records = [
+        {
+            product_id: 1,
+            partner_properties: {
+                dbfc66e0afaa6a8d: false,
+                f80b6fb58d0d4c72: 0,
+            },
+        },
+    ];
     const { model } = await createSpreadsheetWithList({
-        serverData,
         columns: ["partner_properties"],
     });
     expect(getCellValue(model, "A2")).toBe("prop 1, prop 2");
@@ -431,11 +472,11 @@ test("can update a list", async () => {
             ) {
                 expect.step("data-fetched");
                 if (isInitialUpdate) {
-                    expect(args.kwargs.order).toEqual("name DESC");
+                    expect(args.kwargs.order).toBe("name DESC");
                     expect(args.kwargs.domain).toEqual([["name", "in", ["hola"]]]);
                 }
                 if (isUndoUpdate) {
-                    expect(args.kwargs.order).toEqual("");
+                    expect(args.kwargs.order).toBe("");
                     expect(args.kwargs.domain).toEqual([]);
                 }
             }
@@ -635,7 +676,7 @@ test("Can see record on vectorized list index", async function () {
     model.dispatch("CREATE_SHEET", { sheetId: "42" });
     model.dispatch("ACTIVATE_SHEET", {
         sheetIdFrom: model.getters.getActiveSheetId(),
-        sheetIdTo: "42"
+        sheetIdTo: "42",
     });
     setCellContent(model, "C1", "1");
     setCellContent(model, "C2", "2");
@@ -716,6 +757,7 @@ test("Preload currency of monetary field", async function () {
                 expect(Object.keys(spec).length).toBe(2);
                 expect(spec.currency_id).toEqual({
                     fields: {
+                        display_name: {},
                         name: {},
                         symbol: {},
                         decimal_places: {},
@@ -726,6 +768,16 @@ test("Preload currency of monetary field", async function () {
             }
         },
     });
+});
+
+test("add currency field after the list has been loaded", async function () {
+    const { model } = await createSpreadsheetWithList({
+        columns: ["pognon"],
+    });
+    setCellContent(model, "A1", '=ODOO.LIST(1, 1, "pognon")');
+    await waitForDataLoaded(model);
+    setCellContent(model, "A2", '=ODOO.LIST(1, 1, "currency_id")');
+    expect(getEvaluatedCell(model, "A2").value).toBe("EUR");
 });
 
 test("fetch all and only required fields", async function () {
@@ -929,6 +981,25 @@ test("can import (export) contextual domain", async function () {
     expect.verifySteps(["web_search_read"]);
 });
 
+test("can import (export) action xml id", async function () {
+    const listId = 1;
+    const spreadsheetData = {
+        lists: {
+            [listId]: {
+                id: listId,
+                columns: ["foo"],
+                domain: [],
+                model: "partner",
+                orderBy: [],
+                actionXmlId: "spreadsheet.test_action",
+            },
+        },
+    };
+    const model = await createModelWithDataSource({ spreadsheetData });
+    expect(model.getters.getListDefinition(listId).actionXmlId).toBe("spreadsheet.test_action");
+    expect(model.exportData().lists[listId].actionXmlId).toBe("spreadsheet.test_action");
+});
+
 test("Load list spreadsheet with models that cannot be accessed", async function () {
     let hasAccessRights = true;
     const { model } = await createSpreadsheetWithList({
@@ -1046,4 +1117,30 @@ test("INSERT_ODOO_LIST_WITH_TABLE adds a table that maches the list dimension", 
     expect(table.range.zone).toEqual(toZone("A20:D25"));
     expect(table.type).toBe("static");
     expect(table.config).toEqual({ ...PIVOT_TABLE_CONFIG, firstColumn: false });
+});
+
+test("An error is displayed if the list has invalid model", async function () {
+    const { model } = await createSpreadsheetWithList({
+        mockRPC: async function (route, { model, method, kwargs }) {
+            if (model === "unknown" && method === "fields_get") {
+                throw makeServerError({ code: 404 });
+            }
+        },
+    });
+    const listId = model.getters.getListIds()[0];
+    const listDefinition = model.getters.getListModelDefinition(listId);
+    model.dispatch("UPDATE_ODOO_LIST", {
+        listId,
+        list: {
+            ...listDefinition,
+            metaData: {
+                ...listDefinition.metaData,
+                resModel: "unknown",
+            },
+        },
+    });
+    setCellContent(model, "A1", `=ODOO.LIST(1,1,"foo")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("#ERROR");
+    expect(getEvaluatedCell(model, "A1").message).toBe(`The model "unknown" does not exist.`);
 });

@@ -5,8 +5,8 @@ from ast import literal_eval
 from uuid import uuid4
 
 from odoo import api, fields, models, _
+from odoo.addons.sms.tools.sms_tools import sms_content_to_rendered_html
 from odoo.exceptions import UserError
-from odoo.tools import html2plaintext, plaintext2html
 
 
 class SendSMS(models.TransientModel):
@@ -103,7 +103,7 @@ class SendSMS(models.TransientModel):
                 continue
 
             records = composer._get_records()
-            if records and isinstance(records, self.pool['mail.thread']):
+            if records:
                 res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=not composer.comment_single_recipient)
                 composer.recipient_valid_count = len([rid for rid, rvalues in res.items() if rvalues['sanitized']])
                 composer.recipient_invalid_count = len([rid for rid, rvalues in res.items() if not rvalues['sanitized']])
@@ -116,13 +116,13 @@ class SendSMS(models.TransientModel):
     def _compute_recipient_single_stored(self):
         for composer in self:
             records = composer._get_records()
-            if not records or not isinstance(records, self.pool['mail.thread']) or not composer.comment_single_recipient:
+            if not records or not composer.comment_single_recipient:
                 composer.recipient_single_number_itf = ''
                 continue
             records.ensure_one()
-            res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=False)
+            res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=True)
             if not composer.recipient_single_number_itf:
-                composer.recipient_single_number_itf = res[records.id]['number'] or ''
+                composer.recipient_single_number_itf = res[records.id]['sanitized'] or res[records.id]['number'] or ''
             if not composer.number_field_name:
                 composer.number_field_name = res[records.id]['field_store']
 
@@ -130,14 +130,14 @@ class SendSMS(models.TransientModel):
     def _compute_recipient_single_non_stored(self):
         for composer in self:
             records = composer._get_records()
-            if not records or not isinstance(records, self.pool['mail.thread']) or not composer.comment_single_recipient:
+            if not records or not composer.comment_single_recipient:
                 composer.recipient_single_description = False
                 composer.recipient_single_number = ''
                 continue
             records.ensure_one()
             res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=True)
             composer.recipient_single_description = res[records.id]['partner'].name or records._mail_get_partners()[records[0].id].display_name
-            composer.recipient_single_number = res[records.id]['number'] or ''
+            composer.recipient_single_number = res[records.id]['sanitized'] or res[records.id]['number'] or ''
 
     @api.depends('recipient_single_number', 'recipient_single_number_itf')
     def _compute_recipient_single_valid(self):
@@ -204,7 +204,14 @@ class SendSMS(models.TransientModel):
             return self._action_send_sms_mass(records)
 
     def _action_send_sms_numbers(self):
-        sms_values = [{'body': self.body, 'number': number} for number in self.sanitized_numbers.split(',')]
+        sms_values = [
+            {
+                'body': self.body,
+                'number': number
+            } for number in (
+                self.sanitized_numbers.split(',') if self.sanitized_numbers else [self.recipient_single_number_itf or self.recipient_single_number or '']
+            )
+        ]
         self.env['sms.sms'].sudo().create(sms_values).send()
         return True
 
@@ -333,7 +340,7 @@ class SendSMS(models.TransientModel):
     def _prepare_log_body_values(self, sms_records_values):
         result = {}
         for record_id, sms_values in sms_records_values.items():
-            result[record_id] = plaintext2html(html2plaintext(sms_values['body']))
+            result[record_id] = sms_content_to_rendered_html(sms_values['body'])
         return result
 
     def _prepare_mass_log_values(self, records, sms_records_values):

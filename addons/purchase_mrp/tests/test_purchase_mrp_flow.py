@@ -1234,3 +1234,144 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         # however, due to rounding differences, the expected value is 100
         svl_val = self.env['stock.valuation.layer'].search([('stock_move_id', '=', move.id)]).value
         self.assertEqual(svl_val, 100)
+
+    def test_valuation_by_lot_component_in_kit(self):
+        """
+        Test that a product can be valuated by lot when it is a component of a kit
+        """
+        avco_category = self.env['product.category'].create({
+            'name': 'AVCO',
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time'
+        })
+        self.component_a.categ_id = avco_category
+        self.component_a.is_storable = True
+        self.component_a.lot_valuated = True
+        lot_a = self.env['stock.lot'].create({
+            'name': 'lot_a',
+            'product_id': self.component_a.id,
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': self.kit_1.id,
+                'product_uom': self.kit_1.uom_id.id,
+                'price_unit': 60.0,
+                'product_qty': 2,
+            })],
+        })
+        po.button_confirm()
+        self.assertEqual(po.state, 'purchase')
+        self.assertEqual(self.component_a.standard_price, 0)
+        picking = po.picking_ids
+        move_line = picking.move_line_ids.filtered(lambda m:m.product_id == self.component_a)
+        move_line.lot_id = lot_a
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+        # The standard price of the component is updated to $10 because the kit cost
+        # is $60, there are 6 units of different components used in this BoM, and since
+        # the cost_share is equal, 60/6 = $10.
+        self.assertEqual(self.component_a.standard_price, 10)
+        self.assertEqual(lot_a.standard_price, 10)
+        self.assertEqual(lot_a.quantity_svl, 4)
+        self.assertEqual(lot_a.value_svl, 40)
+
+    def test_inter_company_received_qty_with_kit(self):
+        """
+        Test that the received quantity on a purchase order lines gets updated when purchasing a kit
+        through an inter-company transaction.
+        """
+        # Create the purchase order with a partner that uses the inter company location
+        inter_comp_location = self.env.ref('stock.stock_location_inter_company')
+        partner = self.env['res.partner'].create({'name': 'Testing Partner'})
+        partner.property_stock_customer = inter_comp_location
+        partner.property_stock_supplier = inter_comp_location
+        po = self.env['purchase.order'].create({
+            'partner_id': partner.id,
+            'order_line': [
+                (0, 0,
+                 {
+                     'name': self.kit_1.name,
+                     'product_id': self.kit_1.id,
+                     'product_qty': 1,
+                 })
+            ]
+        })
+        po.button_confirm()
+
+        self.assertTrue(po.picking_ids)
+        self.assertEqual(po.order_line.qty_received, 0)
+
+        picking = po.picking_ids
+        for move in picking.move_ids:
+            move.write({'quantity': move.product_uom_qty, 'picked': True})
+        picking.button_validate()
+
+        self.assertEqual(po.order_line.qty_received, 1)
+
+    def test_purchase_kit_bill_before_reception_component_cost_exactly_aligns_with_kit_product_cost(self):
+        """ When a kit product is invoiced prior to delivery, we want to make sure to reconcile all
+        the AMLs from its explosion together, else we risk re-reconciliation attempts (which will
+        block certain actions from being performed altogether).
+        """
+        kit_product = self.env['product.product'].create({
+            'name': 'kit prod',
+            'purchase_method': 'purchase',
+            'is_storable': True,
+            'standard_price': 10,
+            'list_price': 20,
+        })
+        kit_product.categ_id.write({
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time',
+        })
+        components = self.env['product.product'].create([{
+            'name': f'comp {i}',
+            'is_storable': True,
+            'standard_price': 5,
+            'list_price': 5,
+        } for i in (1, 2)])
+        self.env['mrp.bom'].create({
+            'type': 'phantom',
+            'product_id': kit_product.id,
+            'product_tmpl_id': kit_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'bom_line_ids': [Command.create({
+                'product_id': comp.id,
+                'product_qty': 1,
+            }) for comp in components
+        ]})
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': kit_product.id,
+                'product_qty': 1,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+        receipt = purchase_order.picking_ids
+        # would fail due to attempted re-reconciliation prior to this commit
+        receipt.button_validate()
+        stock_input_account, stock_valuation_account, tax_paid_account, account_payable_account = (
+            kit_product.categ_id.property_stock_account_input_categ_id,
+            kit_product.categ_id.property_stock_valuation_account_id,
+            self.company_data['default_account_tax_purchase'],
+            self.company_data['default_account_payable'],
+        )
+        # stock input account move lines should be reconciled
+        self.assertRecordValues(
+            self.env['account.move.line'].search([], order='id asc'),
+            [
+                {'account_id': stock_input_account.id,       'product_id': kit_product.id,     'reconciled': True,    'debit': 10.0,   'credit':  0.0},
+                {'account_id': tax_paid_account.id,          'product_id': False,              'reconciled': False,   'debit':  1.5,   'credit':  0.0},
+                {'account_id': account_payable_account.id,   'product_id': False,              'reconciled': False,   'debit':  0.0,   'credit': 11.5},
+                {'account_id': stock_input_account.id,       'product_id': components[0].id,   'reconciled': True,    'debit':  0.0,   'credit':  5.0},
+                {'account_id': stock_valuation_account.id,   'product_id': components[0].id,   'reconciled': False,   'debit':  5.0,   'credit':  0.0},
+                {'account_id': stock_input_account.id,       'product_id': components[1].id,   'reconciled': True,    'debit':  0.0,   'credit':  5.0},
+                {'account_id': stock_valuation_account.id,   'product_id': components[1].id,   'reconciled': False,   'debit':  5.0,   'credit':  0.0},
+            ]
+        )

@@ -108,7 +108,7 @@ class TestM2MGrouping(TransactionCaseWithUserDemo):
                 'user_ids': False,
                 'user_ids_count': 1,
                 'name': unordered(["Donkey Kong"]),
-                '__domain': [('user_ids', 'not in', [self.users[0].id, self.users[1].id])],
+                '__domain': [('user_ids', 'not any', [(1, '=', 1)])],
             },
         ])
 
@@ -172,7 +172,7 @@ class TestM2MGrouping(TransactionCaseWithUserDemo):
                 'user_ids': False,
                 'user_ids_count': 1,
                 'name': unordered(["Donkey Kong"]),
-                '__domain': [('user_ids', 'not in', [self.users[0].id, self.users[1].id])],
+                '__domain': [('user_ids', 'not any', [(1, '=', 1)])],
             },
         ])
 
@@ -217,7 +217,7 @@ class TestM2MGrouping(TransactionCaseWithUserDemo):
                 'user_ids': False,
                 'user_ids_count': 2,
                 'name': unordered(["Luigi's Mansion", 'Donkey Kong']),
-                '__domain': [('user_ids', 'not in', self.users[0].ids)],
+                '__domain': [('user_ids', 'not any', [(1, '=', 1)])],
             },
         ])
 
@@ -249,7 +249,7 @@ class TestM2MGrouping(TransactionCaseWithUserDemo):
             {   # tasks of no one
                 'user_ids': False,
                 'user_ids_count': 1,
-                '__domain': [('user_ids', 'not in', [self.users[1].id, self.users[0].id])],
+                '__domain': [('user_ids', 'not any', [(1, '=', 1)])],
             },
             {   # tasks of Luigi
                 'user_ids': (self.users[1].id, 'Luigi'),

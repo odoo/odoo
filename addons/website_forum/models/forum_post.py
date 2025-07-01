@@ -312,9 +312,12 @@ class Post(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        defaults_to_check = self.default_get(['content', 'forum_id'])
         for vals in vals_list:
-            if 'content' in vals and vals.get('forum_id'):
-                vals['content'] = self._update_content(vals['content'], vals['forum_id'])
+            content = vals.get('content', defaults_to_check.get('content'))
+            if content:
+                forum_id = vals.get('forum_id', defaults_to_check.get('forum_id'))
+                vals['content'] = self._update_content(content, forum_id)
 
         posts = super(Post, self.with_context(mail_create_nolog=True)).create(vals_list)
 
@@ -831,7 +834,7 @@ class Post(models.Model):
         res = {
             "upvoteCount": self.vote_count,
             "datePublished": self.create_date.isoformat() + 'Z',
-            "url": self.website_url,
+            "url": self.env['ir.http']._url_for(self.website_url),
             "author": {
                 "@type": "Person",
                 "name": self.create_uid.sudo().name,
@@ -846,7 +849,7 @@ class Post(models.Model):
             res["text"] = self.plain_content or self.name
             res["answerCount"] = self.child_count
         if self.create_uid.sudo().website_published:
-            res["author"]["url"] = f"/forum/user/{ self.create_uid.sudo().id }"
+            res["author"]["url"] = self.env['ir.http']._url_for(f"/forum/user/{ self.create_uid.sudo().id }")
         return res
 
     def go_to_website(self):

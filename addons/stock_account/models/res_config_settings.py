@@ -17,6 +17,6 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         automatic_before = self.env.user.has_group('stock_account.group_stock_accounting_automatic')
         super().set_values()
-        if automatic_before and not self.group_stock_accounting_automatic:
+        if automatic_before and not self.env.user.has_group('stock_account.group_stock_accounting_automatic'):
             self.env['product.category'].sudo().with_context(active_test=False).search([
                 ('property_valuation', '=', 'real_time')]).property_valuation = 'manual_periodic'

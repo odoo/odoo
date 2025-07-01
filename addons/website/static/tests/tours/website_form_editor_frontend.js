@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                 ":has(.s_website_form_field:has(label:contains('Your Message')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Products')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
-                ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('State')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
     },
     {
@@ -67,7 +67,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                 ":has(.s_website_form_field:has(label:contains('Your Message')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Products')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
-                ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('State')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
     },
     {
@@ -90,7 +90,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                 ":has(.s_website_form_field:has(label:contains('Your Message')):not(.o_has_error))" +
                 ":has(.s_website_form_field:has(label:contains('Products')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
-                ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('State')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
     },
     {
@@ -117,6 +117,11 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
         content:  "Check a service",
         trigger:  "input[name='Service'][value='Development Service']",
         run: "click",
+    },
+    {
+        content:  "Select a State",
+        trigger:  "select[name='State']",
+        run:      "select Canada",
     },
     {
         content:  "Complete Your Name field",
@@ -213,6 +218,10 @@ registry.category("web_tour.tours").add('website_form_contactus_submit', {
     // As the demo portal user, only two inputs needs to be filled to send
     // the email
     {
+        isActive: ["body:has(.o-livechat-root)"],
+        trigger: ":shadow span:contains(select an option above)",
+    },
+    {
         content: "Fill in the subject",
         trigger: 'input[name="subject"]',
         run: "edit Test",
@@ -226,6 +235,7 @@ registry.category("web_tour.tours").add('website_form_contactus_submit', {
         content: 'Send the form',
         trigger: '.s_website_form_send',
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: 'Check form is submitted without errors',

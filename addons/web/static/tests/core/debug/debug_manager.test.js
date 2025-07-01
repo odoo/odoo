@@ -1,30 +1,31 @@
-import { browser } from "@web/core/browser/browser";
-import { regenerateAssets } from "@web/core/debug/debug_menu_items";
-import { openViewItem } from "@web/webclient/debug/debug_items";
-import { describe, test, expect, beforeEach } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { click, queryAll, queryAllProperties, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { DebugMenu } from "@web/core/debug/debug_menu";
-import { ActionDialog } from "@web/webclient/actions/action_dialog";
-import { WebClient } from "@web/webclient/webclient";
-import { registry } from "@web/core/registry";
-import { useDebugCategory, useOwnDebugContext } from "@web/core/debug/debug_context";
+import { Component, xml } from "@odoo/owl";
 import {
-    mountWithCleanup,
+    clearRegistry,
     contains,
+    defineModels,
+    defineWebModels,
+    fields,
+    getService,
+    makeDialogMockEnv,
+    models,
+    mountWithCleanup,
     onRpc,
     patchWithCleanup,
-    fields,
-    models,
-    webModels,
-    defineWebModels,
-    getService,
-    defineModels,
-    clearRegistry,
     serverState,
-    makeDialogMockEnv,
+    webModels,
 } from "@web/../tests/web_test_helpers";
-import { Component, xml } from "@odoo/owl";
-import { queryOne, queryAll, queryAllTexts, click } from "@odoo/hoot-dom";
+import { browser } from "@web/core/browser/browser";
+import { useDebugCategory, useOwnDebugContext } from "@web/core/debug/debug_context";
+import { DebugMenu } from "@web/core/debug/debug_menu";
+import { becomeSuperuser, regenerateAssets } from "@web/core/debug/debug_menu_items";
+import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
+import { ActionDialog } from "@web/webclient/actions/action_dialog";
+import { openViewItem } from "@web/webclient/debug/debug_items";
+import { WebClient } from "@web/webclient/webclient";
 
 class DebugMenuParent extends Component {
     static template = xml`<DebugMenu/>`;
@@ -39,11 +40,11 @@ const debugRegistry = registry.category("debug");
 
 onRpc(async (args) => {
     if (args.method === "has_access") {
-        return Promise.resolve(true);
+        return true;
     }
     if (args.route === "/web/dataset/call_kw/ir.attachment/regenerate_assets_bundles") {
         expect.step("ir.attachment/regenerate_assets_bundles");
-        return Promise.resolve(true);
+        return true;
     }
 });
 
@@ -54,7 +55,8 @@ beforeEach(() => {
     clearRegistry(debugRegistry.category("custom"));
 });
 
-describe.tags("desktop")("DebugMenu", () => {
+describe.tags("desktop");
+describe("DebugMenu", () => {
     test("can be rendered", async () => {
         debugRegistry
             .category("default")
@@ -101,8 +103,7 @@ describe.tags("desktop")("DebugMenu", () => {
         expect(children.map((el) => el.tagName)).toEqual(["DIV", "SPAN", "SPAN", "DIV", "SPAN"]);
         expect(queryAllTexts(children)).toEqual(["a", "Item 2", "Item 1", "b", "Item 3"]);
 
-        const items = [...queryAll(".dropdown-menu .dropdown-item")] || [];
-        for (const item of items) {
+        for (const item of queryAll(".dropdown-menu .dropdown-item")) {
             await click(item);
         }
 
@@ -144,8 +145,12 @@ describe.tags("desktop")("DebugMenu", () => {
             });
         await mountWithCleanup(DebugMenuParent);
         await contains("button.dropdown-toggle").click();
-        const items = [...queryAll(".dropdown-menu .dropdown-item")];
-        expect(items.map((el) => el.textContent)).toEqual(["Item 1", "Item 2", "Item 3", "Item 4"]);
+        expect(queryAllTexts(".dropdown-menu .dropdown-item")).toEqual([
+            "Item 1",
+            "Item 2",
+            "Item 3",
+            "Item 4",
+        ]);
     });
 
     test("Don't display the DebugMenu if debug mode is disabled", async () => {
@@ -209,8 +214,8 @@ describe.tags("desktop")("DebugMenu", () => {
         await contains(".o_dialog .o_debug_manager button").click();
         expect(".dropdown-menu .dropdown-item").toHaveCount(2);
         // Check that global debugManager elements are not displayed (global_1)
-        const items = [...queryAll(".dropdown-menu .dropdown-item")] || [];
-        expect(items.map((el) => el.textContent)).toEqual(["Item 1", "Item 2"]);
+        const items = queryAll(".dropdown-menu .dropdown-item");
+        expect(queryAllTexts(items)).toEqual(["Item 1", "Item 2"]);
         for (const item of items) {
             await click(item);
         }
@@ -232,13 +237,19 @@ describe.tags("desktop")("DebugMenu", () => {
         expect.verifySteps(["ir.attachment/regenerate_assets_bundles", "reloadPage"]);
     });
 
+    test("cannot acess the Become superuser menu if not admin", async () => {
+        debugRegistry.category("default").add("becomeSuperuser", becomeSuperuser);
+        user.isAdmin = false;
+        await mountWithCleanup(DebugMenuParent);
+        await contains("button.dropdown-toggle").click();
+        expect(".dropdown-menu .dropdown-item").toHaveCount(0);
+    });
+
     test("can open a view", async () => {
         serverState.debug = "1";
 
         webModels.IrUiView._views.list = `<list><field name="name"/><field name="type"/></list>`;
-        webModels.IrUiView._views.search = `<search/>`;
         webModels.ResPartner._views["form,1"] = `<form><div class="some_view"/></form>`;
-        webModels.ResPartner._views.search = `<search/>`;
 
         webModels.IrUiView._records.push({
             id: 1,
@@ -264,7 +275,6 @@ describe.tags("desktop")("DebugMenu", () => {
         serverState.debug = "1";
 
         webModels.ResPartner._views.list = `<list><field name="name"/></list>`;
-        webModels.ResPartner._views.search = `<search/>`;
 
         defineWebModels();
 
@@ -286,10 +296,8 @@ describe.tags("desktop")("DebugMenu", () => {
         serverState.debug = "1";
 
         webModels.ResPartner._views["pivot,18"] = "<pivot></pivot>";
-        webModels.ResPartner._views.search = `<search/>`;
         webModels.IrUiView._records.push({ id: 18, name: "Edit View" });
         webModels.IrUiView._views.form = `<form><field name="id"/></form>`;
-        webModels.IrUiView._views.search = `<search/>`;
 
         defineWebModels();
         await mountWithCleanup(WebClient);
@@ -319,7 +327,6 @@ describe.tags("desktop")("DebugMenu", () => {
         webModels.ResPartner._views["search,293"] = "<search></search>";
         webModels.IrUiView._records.push({ id: 293, name: "Edit View" });
         webModels.IrUiView._views.form = `<form><field name="id"/></form>`;
-        webModels.IrUiView._views.search = `<search/>`;
 
         defineWebModels();
         await mountWithCleanup(WebClient);
@@ -345,7 +352,6 @@ describe.tags("desktop")("DebugMenu", () => {
         webModels.ResPartner._views["search,293"] = "<search></search>";
         webModels.IrUiView._records.push({ id: 293, name: "Edit View" });
         webModels.IrUiView._views.form = `<form><field name="id"/></form>`;
-        webModels.IrUiView._views.search = `<search/>`;
 
         defineWebModels();
         await mountWithCleanup(WebClient);
@@ -368,7 +374,6 @@ describe.tags("desktop")("DebugMenu", () => {
         serverState.debug = "1";
 
         webModels.ResPartner._views.form = `<form><field name="id"/></form>`;
-        webModels.ResPartner._views.search = `<search/>`;
 
         defineWebModels();
         await mountWithCleanup(WebClient);
@@ -391,7 +396,6 @@ describe.tags("desktop")("DebugMenu", () => {
             <form>
                 <field name="name"/>
             </form>`;
-        webModels.ResPartner._views.search = "<search/>";
         webModels.ResPartner._records.push({ id: 1000, name: "p1" });
         webModels.IrUiView._records.push({ id: 24 });
 
@@ -425,7 +429,6 @@ describe.tags("desktop")("DebugMenu", () => {
             <form>
                 <field name="name"/>
             </form>`;
-        webModels.ResPartner._views.search = "<search/>";
         webModels.ResPartner._records.push({ id: 1001, name: "p1" });
         webModels.IrUiView._records.push({ id: 25 });
 
@@ -458,7 +461,6 @@ describe.tags("desktop")("DebugMenu", () => {
             <form>
                 <field name="name"/>
             </form>`;
-        webModels.ResPartner._views.search = "<search/>";
         webModels.ResPartner._records.push({ id: 1002, name: "p1" });
         webModels.IrUiView._records.push({ id: 26 });
 
@@ -494,11 +496,6 @@ describe.tags("desktop")("DebugMenu", () => {
                     name: "custom1",
                 },
             ];
-
-            _views = {
-                form: "<form></form>",
-                search: "<search/>",
-            };
         }
 
         defineWebModels();
@@ -537,8 +534,6 @@ describe.tags("desktop")("DebugMenu", () => {
             ];
         });
 
-        webModels.ResPartner._views.form = `<form></form>`;
-        webModels.ResPartner._views.search = "<search/>";
         webModels.ResPartner._records.push({ id: 1003, name: "p1" });
 
         defineWebModels();
@@ -600,13 +595,13 @@ describe.tags("desktop")("DebugMenu", () => {
             ];
 
             _views = {
-                form: `
+                "form,18": /* xml */ `
                     <form>
                         <field name="datetime"/>
                         <field name="reference"/>
                         <field name="m2o"/>
-                    </form>`,
-                search: "<search/>",
+                    </form>
+                `,
             };
         }
 
@@ -662,14 +657,12 @@ describe.tags("desktop")("DebugMenu", () => {
     test("display model view in developer tools", async () => {
         serverState.debug = "1";
         webModels.ResPartner._views.form = `<form><field name="name"/></form>`;
-        webModels.ResPartner._views.search = "<search/>";
         webModels.ResPartner._records.push({ id: 88, name: "p1" });
         webModels.IrModel._views.form = `
             <form>
                 <field name="name"/>
                 <field name="model"/>
             </form>`;
-        webModels.IrModel._views.search = "<search/>";
 
         defineWebModels();
         await mountWithCleanup(WebClient);
@@ -686,5 +679,85 @@ describe.tags("desktop")("DebugMenu", () => {
         expect(".breadcrumb-item").toHaveCount(1);
         expect(".o_breadcrumb .active").toHaveCount(1);
         expect(".o_breadcrumb .active").toHaveText("Partner");
+    });
+
+    test("set defaults: settings default value with a very long value", async () => {
+        serverState.debug = "1";
+
+        const fooValue = "12".repeat(250);
+        const argSteps = [];
+
+        onRpc("ir.default", "set", async (args) => {
+            argSteps.push(args.args);
+            return true;
+        });
+
+        class Partner extends models.Model {
+            _name = "partner";
+
+            foo = fields.Char();
+            description = fields.Html();
+            bar = fields.Many2one({ relation: "ir.ui.view" });
+
+            _records = [
+                {
+                    id: 1,
+                    display_name: "p1",
+                    foo: fooValue,
+                    description: fooValue,
+                    bar: 18,
+                },
+            ];
+
+            _views = {
+                form: `
+                    <form>
+                        <field name="foo"/>
+                        <field name="description"/>
+                        <field name="bar" invisible="1"/>
+                    </form>`,
+            };
+        }
+
+        class IrUiView extends models.Model {
+            _name = "ir.ui.view";
+
+            name = fields.Char();
+            model = fields.Char();
+
+            _records = [{ id: 18 }];
+        }
+
+        defineModels([Partner, IrUiView]);
+
+        await mountWithCleanup(WebClient);
+
+        await getService("action").doAction({
+            name: "Partners",
+            res_model: "partner",
+            res_id: 1,
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+        });
+        await contains(".o_debug_manager button").click();
+        await contains(".dropdown-menu .dropdown-item:contains('Set Default Values')").click();
+        expect(".modal").toHaveCount(1);
+
+        expect(queryAllTexts`.modal #formview_default_fields option`).toEqual([
+            "",
+            "Foo = 121212121212121212121212121212121212121212121212121212121...",
+            "Description = 121212121212121212121212121212121212121212121212121212121...",
+        ]);
+
+        expect(queryAllProperties(".modal #formview_default_fields option", "value")).toEqual([
+            "",
+            "foo",
+            "description",
+        ]);
+
+        await contains(".modal #formview_default_fields").select("foo");
+        await contains(".modal .modal-footer button:nth-child(2)").click();
+        expect(".modal").toHaveCount(0);
+        expect(argSteps).toEqual([["partner", "foo", fooValue, true, true, false]]);
     });
 });

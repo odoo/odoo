@@ -17,4 +17,6 @@ class CustomerPortal(reorder.CustomerPortal):
         result = super().my_orders_reorder_modal_content(order_id, access_token)
         for product in result['products']:
             product['is_storable'] = request.env['product.product'].browse(product['product_id']).is_storable
+            for combo_item in product['selected_combo_items']:
+                combo_item['is_storable'] = request.env['product.product'].browse(combo_item['product_id']).is_storable
         return result

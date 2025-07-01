@@ -4,6 +4,7 @@ from lxml import html
 from unittest.mock import patch
 
 from odoo import http
+from odoo.addons.website.models.website import Website
 import odoo.tests
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
@@ -48,6 +49,22 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         self.assertEqual(res.status_code, 303)
         self.assertTrue(res.next.path_url.startswith("/web/login/totp"))
 
+    def test_04_ensure_website_get_cached_values_can_be_called(self):
+        session = self.authenticate('admin', 'admin')
+
+        # Force a browser language that is not installed
+        session.context['lang'] = 'fr_MC'
+        http.root.session_store.save(session)
+
+        # Disable cache in order to make sure that values would be fetched at any time
+        get_cached_values_without_cache = Website._get_cached_values.__cache__.method
+        with patch.object(Website, '_get_cached_values',
+                          side_effect=get_cached_values_without_cache, autospec=True):
+
+            # ensure that permissions on logout are OK
+            res = self.url_open('/web/session/logout')
+            self.assertEqual(res.status_code, 200)
+
     def test_branding_cache(self):
         def has_branding(html_text):
             el = html.fromstring(html_text)
@@ -60,7 +77,7 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         # Create session for demo user.
         public_session = self.authenticate(None, None)
         demo_session = self.authenticate('demo', 'demo')
-        record = self.env['test.model'].search([])
+        record = self.env['test.model'].search([], limit=1)
         result = self.url_open(f'/test_website/model_item_sudo/{record.id}')
         self.assertTrue(has_branding(result.text), "Should have branding for user demo")
 

@@ -21,11 +21,15 @@ class TestSaleCouponCommon(SaleCommon):
         cls.env['loyalty.program'].search([]).sudo().write({'active': False})
 
         # Taxes
+        tax_group_group = cls.env['account.tax.group'].create({
+            'name': 'Test Account Tax Group'
+        })
         cls.tax_15pc_excl = cls.env['account.tax'].create({
             'name': "Tax 15%",
             'amount_type': 'percent',
             'amount': 15,
             'type_tax_use': 'sale',
+            'tax_group_id': tax_group_group.id,
         })
 
         cls.tax_10pc_incl = cls.env['account.tax'].create({
@@ -33,6 +37,7 @@ class TestSaleCouponCommon(SaleCommon):
             'amount_type': 'percent',
             'amount': 10,
             'price_include_override': 'tax_included',
+            'tax_group_id': tax_group_group.id,
         })
 
         cls.tax_10pc_base_incl = cls.env['account.tax'].create({
@@ -41,6 +46,7 @@ class TestSaleCouponCommon(SaleCommon):
             'amount': 10,
             'price_include_override': 'tax_included',
             'include_base_amount': True,
+            'tax_group_id': tax_group_group.id,
         })
 
         cls.tax_10pc_excl = cls.env['account.tax'].create({
@@ -48,6 +54,7 @@ class TestSaleCouponCommon(SaleCommon):
             'amount_type': 'percent',
             'amount': 10,
             'price_include_override': 'tax_excluded',
+            'tax_group_id': tax_group_group.id,
         })
 
         cls.tax_20pc_excl = cls.env['account.tax'].create({
@@ -55,12 +62,14 @@ class TestSaleCouponCommon(SaleCommon):
             'amount_type': 'percent',
             'amount': 20,
             'price_include_override': 'tax_excluded',
+            'tax_group_id': tax_group_group.id,
         })
 
         cls.tax_group = cls.env['account.tax'].create({
             'name': "tax_group",
             'amount_type': 'group',
             'children_tax_ids': [Command.set((cls.tax_10pc_incl + cls.tax_10pc_base_incl).ids)],
+            'tax_group_id': tax_group_group.id,
         })
 
         #products
@@ -203,6 +212,8 @@ class TestSaleCouponCommon(SaleCommon):
             status = order._apply_program_reward(rewards, coupons)
             if 'error' in status:
                 raise ValidationError(status['error'])
+        elif len(coupons) == 1 and len(rewards) > 1:
+            return rewards
 
     def _claim_reward(self, order, program, coupon=False):
         if len(program.reward_ids) != 1:
@@ -222,6 +233,12 @@ class TestSaleCouponCommon(SaleCommon):
             if len(program.reward_ids) > 1 or len(coupons_per_program[program]) != 1 or not program.active:
                 continue
             self._claim_reward(order, program, coupons_per_program[program])
+
+    def _generate_coupons(self, loyality_program, coupon_qty=1):
+        self.env['loyalty.generate.wizard'].with_context(active_id=loyality_program.id).create({
+            'coupon_qty': coupon_qty,
+        }).generate_coupons()
+        return loyality_program.coupon_ids
 
 class TestSaleCouponNumbersCommon(TestSaleCouponCommon):
     @classmethod

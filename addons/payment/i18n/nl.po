@@ -7,16 +7,18 @@
 # Martin Trigaux, 2024
 # Tiffany Chang, 2024
 # Wil Odoo, 2024
-# Manon Rondou, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Fabien Pinckaers <fp@openerp.com>, 2025
+# Dylan Kiss, 2025
+# Manon Rondou, 2025
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-05-07 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -191,7 +193,7 @@ msgid ""
 "<strong>Warning!</strong> You can not capture a negative amount nor more\n"
 "                    than"
 msgstr ""
-"<strong>Waarschuwing!</strong> Je kan geen negatief bedrag vastleggen, noch meer\n"
+"<strong>Waarschuwing!</strong> Je kunt geen negatief bedrag vastleggen, noch meer\n"
 "                    dan"
 
 #. module: payment
@@ -210,7 +212,7 @@ msgid ""
 "                                    correct partner before making this payment."
 msgstr ""
 "<strong>Waarschuwing</strong> Zorg ervoor dat je bent ingelogd als de\n"
-"                                    juiste relatie voordat je deze betaling uitvoert."
+"                                    juiste partner voordat je deze betaling uitvoert."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -270,6 +272,11 @@ msgstr "ACH Direct Debit"
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "ACTIVATE STRIPE"
 msgstr "ACTIVATE STRIPE"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_abitab
+msgid "Abitab"
+msgstr "Abitab"
 
 #. module: payment
 #. odoo-python
@@ -450,6 +457,11 @@ msgid "Asiapay"
 msgstr "Azië betalen"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_astropay
+msgid "Astropay TEF"
+msgstr "Astropay TEF"
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_atome
 msgid "Atome"
 msgstr "Atome"
@@ -533,6 +545,16 @@ msgstr "BRI"
 #: model:payment.method,name:payment.payment_method_bancnet
 msgid "BancNet"
 msgstr "BancNet"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_banco_guayaquil
+msgid "Banco Guayaquil"
+msgstr "Banco Guayaquil"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_banco_pichincha
+msgid "Banco Pichincha"
+msgstr "Banco Pichincha"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_banco_de_bogota
@@ -689,7 +711,7 @@ msgstr "Geannuleerd"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__cancel_msg
 msgid "Cancelled Message"
-msgstr "Geannuleerd bericht"
+msgstr "Bericht bij geannuleerd"
 
 #. module: payment
 #. odoo-javascript
@@ -780,7 +802,7 @@ msgstr "Onderliggende transacties"
 #: model_terms:ir.ui.view,arch_db:payment.form
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr "Kies een betalinsgmethode"
+msgstr "Kies een betalingsmethode"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -1035,7 +1057,7 @@ msgstr "Neem gerust contact met ons op als je niets ontvangt."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__done_msg
 msgid "Done Message"
-msgstr "Gedaan bericht"
+msgstr "Bericht bij gereed"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__draft
@@ -1124,6 +1146,11 @@ msgid "FPX"
 msgstr "FPX"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_facilito
+msgid "Facilito"
+msgstr "Facilito"
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_floa_bank
 msgid "Floa Bank"
 msgstr "Floa Bank"
@@ -1179,7 +1206,7 @@ msgstr "Giropay"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
-msgstr "Ga naar mijn Account <i class=\"oi oi-arrow-right ms-2\"/>"
+msgstr "Ga naar mijn account <i class=\"oi oi-arrow-right ms-2\"/>"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_gopay
@@ -1453,6 +1480,11 @@ msgid "LinkAja"
 msgstr "LinkAja"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_nuvei_local
+msgid "Local Payments"
+msgstr "Locale betalingen"
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_lydia
 msgid "Lydia"
 msgstr "Lydia"
@@ -1671,12 +1703,17 @@ msgstr "Er zijn geen betalingsproviders geconfigureerd."
 #. odoo-python
 #: code:addons/payment/models/payment_token.py:0
 msgid "No token can be assigned to the public partner."
-msgstr "Er kan geen token toegewezen worden aan de publieke relatie."
+msgstr "Er kan geen token toegewezen worden aan de publieke contact."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "None is configured for:"
 msgstr "Geen is geconfigureerd voor:"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_nuvei
+msgid "Nuvei"
+msgstr "Nuvei"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ovo
@@ -1803,6 +1840,11 @@ msgid "Other payment methods"
 msgstr "Andere betaalmethodes"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_oxxopay
+msgid "Oxxo Pay"
+msgstr "Oxxo Pay"
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_p24
 msgid "P24"
 msgstr "P24"
@@ -1838,12 +1880,12 @@ msgstr "Gedeeltelijk"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Partner"
-msgstr "Relatie"
+msgstr "Partner"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_name
 msgid "Partner Name"
-msgstr "Relatienaam"
+msgstr "Naam partner"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -2230,6 +2272,11 @@ msgid "Redirect Form Template"
 msgstr "Formuliersjabloon omleiden"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_redpagos
+msgid "Redpagos"
+msgstr "Redpagos"
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -2296,6 +2343,11 @@ msgstr "RuPay"
 #: model:payment.provider,name:payment.payment_provider_sepa_direct_debit
 msgid "SEPA Direct Debit"
 msgstr "SEPA automatische incasso"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_spei
+msgid "SPEI"
+msgstr "SPEI"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_samsung_pay
@@ -2618,7 +2670,7 @@ msgstr "Het bericht dat wordt weergegeven als de betaling is geautoriseerd"
 msgid ""
 "The message displayed if the order is cancelled during the payment process"
 msgstr ""
-"Weergegeven bericht als de bestelling wordt geannuleerd tijdens het "
+"Weergegeven bericht als de order wordt geannuleerd tijdens het "
 "betalingsproces"
 
 #. module: payment
@@ -2627,15 +2679,15 @@ msgid ""
 "The message displayed if the order is successfully done after the payment "
 "process"
 msgstr ""
-"Het bericht dat wordt weergegeven als de bestelling is voltooid na het "
+"Het bericht dat wordt weergegeven als de order is voltooid na het "
 "betalingsproces"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pending_msg
 msgid "The message displayed if the order pending after the payment process"
 msgstr ""
-"Het bericht dat wordt weergegeven als de bestelling in behandeling is na het"
-" betalingsproces"
+"Het bericht dat wordt weergegeven als de order in behandeling is na het "
+"betalingsproces"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pre_msg
@@ -2817,7 +2869,7 @@ msgid ""
 msgstr ""
 "Hiermee wordt bepaald of klanten hun betaalmethoden kunnen opslaan als betaaltokens.\n"
 "Een betalingstoken is een anonieme link naar de details van de betaalmethode die zijn opgeslagen in de\n"
-"database van de provider, zodat de klant deze kan hergebruiken voor een volgende bestelling."
+"database van de provider, zodat de klant deze kan hergebruiken voor een volgende order."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -2836,8 +2888,8 @@ msgid ""
 "This partner has no email, which may cause issues with some payment providers.\n"
 "                     Setting an email for this partner is advised."
 msgstr ""
-"Deze relatie heeft geen e-mailadres, wat problemen kan veroorzaken bij sommige betaalproviders.\n"
-"Het wordt aangeraden om een e-mailadres in te stellen voor deze relatie."
+"Deze partner heeft geen e-mailadres, wat problemen kan veroorzaken bij sommige betaalproviders.\n"
+"Het wordt aangeraden om een e-mailadres in te stellen voor deze partner."
 
 #. module: payment
 #. odoo-python
@@ -3051,6 +3103,11 @@ msgid "WeLend"
 msgstr "WeLend"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_webpay
+msgid "WebPay"
+msgstr "WebPay"
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
 msgid ""
 "Whether a payment token should be created when post-processing the "
@@ -3112,12 +3169,18 @@ msgstr ""
 
 #. module: payment
 #. odoo-python
+#: code:addons/payment/models/payment_method.py:0
+msgid "You cannot delete the default payment method."
+msgstr "Je kunt de standaardbetaalmethode niet verwijderen."
+
+#. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 msgid ""
 "You cannot delete the payment provider %s; disable it or uninstall it "
 "instead."
 msgstr ""
-"Je kan de betaalprovider %s niet verwijderen; schakel hem uit of "
+"Je kunt de betaalprovider %s niet verwijderen; schakel hem uit of "
 "desinstalleer hem in de plaats."
 
 #. module: payment
@@ -3153,6 +3216,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_mercado_pago
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sepa_direct_debit
@@ -3161,7 +3225,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_xendit
 msgid "Your payment has been authorized."
-msgstr "Jouw betaling is toegestaan."
+msgstr "Je betaling is toegestaan."
 
 #. module: payment
 #. odoo-python
@@ -3175,6 +3239,7 @@ msgstr "Jouw betaling is toegestaan."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_mercado_pago
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sepa_direct_debit
@@ -3183,7 +3248,7 @@ msgstr "Jouw betaling is toegestaan."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_xendit
 msgid "Your payment has been cancelled."
-msgstr "Jouw betaling is geannuleerd."
+msgstr "Je betaling is geannuleerd."
 
 #. module: payment
 #. odoo-python
@@ -3197,6 +3262,7 @@ msgstr "Jouw betaling is geannuleerd."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_mercado_pago
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
@@ -3219,6 +3285,7 @@ msgstr "Je betaling is succesvol verwerkt maar wacht op goedkeuring."
 #: model_terms:payment.provider,done_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,done_msg:payment.payment_provider_mercado_pago
 #: model_terms:payment.provider,done_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,done_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,done_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sepa_direct_debit

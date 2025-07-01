@@ -44,10 +44,10 @@
                 .company_invoice_line {
                     margin-top: 1mm;
                 }
-                > span {
+                .colored_address {
                     color: $o-default-report-secondary-color;
-                    font-size: 0.8em;
                 }
+                font-size: 0.8em;
             }
             .information_block, .invoice_address {
                 width: 75mm;
@@ -90,6 +90,7 @@
     &.footer {
         padding-left: 5mm;
         padding-right: 10mm;
+        font-size: 0.7em;
         .page_number {
             margin-top: 4.23mm;
             width: 100%;
@@ -98,7 +99,6 @@
         .company_details {
             margin-top: 4.23mm;
             width: 100%;
-            font-size: 0.8em;
             table {
                 border-top: solid 1px;
                 table-layout: fixed;
@@ -108,9 +108,38 @@
                     padding-right: 3mm;
                     li {
                         font-size: 0.7em;
+                        p {
+                            line-height: 1.3em;
+                        }
                     }
                     &:last-child {
                         padding-right: initial;
+                    }
+                }
+            }
+        }
+    }
+    table.o_main_table{
+        tr {
+            &.o_line_section td {
+                background-color: rgba($gray-300, .5);
+            }
+    
+            th {
+                font-weight: bolder;
+            }
+        }
+    }
+    div#total {
+        tr {
+            &.o_subtotal,
+            &.o_total {
+                td {
+                    border-top: 1px solid black !important;
+                }
+                &.o_border_bottom {
+                    td {
+                        border-bottom: 1px solid black !important;
                     }
                 }
             }

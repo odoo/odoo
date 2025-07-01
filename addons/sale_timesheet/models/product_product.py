@@ -11,6 +11,7 @@ class ProductProduct(models.Model):
 
     @tools.ormcache()
     def _get_default_uom_id(self):
+        # TODO remove me in master
         return self.env.ref('uom.product_uom_unit')
 
     def _is_delivered_timesheet(self):
@@ -21,13 +22,20 @@ class ProductProduct(models.Model):
     @api.onchange('type', 'service_type', 'service_policy')
     def _onchange_service_fields(self):
         for record in self:
+            default_uom_id = self.env['ir.default']._get_model_defaults('product.product').get('uom_id')
+            default_uom = self.env['uom.uom'].browse(default_uom_id)
             if record.type == 'service' and record.service_type == 'timesheet' and \
                not (record._origin.service_policy and record.service_policy == record._origin.service_policy):
-                record.uom_id = self.env.ref('uom.product_uom_hour')
+                if default_uom and default_uom.category_id == self.env.ref('uom.uom_categ_wtime'):
+                    record.uom_id = default_uom
+                else:
+                    record.uom_id = self.env.ref('uom.product_uom_hour')
             elif record._origin.uom_id:
                 record.uom_id = record._origin.uom_id
+            elif default_uom:
+                record.uom_id = default_uom
             else:
-                record.uom_id = self._get_default_uom_id()
+                record.uom_id = self.product_tmpl_id.default_get(['uom_id']).get('uom_id')
             record.uom_po_id = record.uom_id
 
     @api.onchange('service_policy')

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="tax_report_vat" model="account.report">
+    <record id="tax_report" model="account.report">
         <field name="name">VAT Report (KMD)</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.ee"/>
@@ -13,26 +13,76 @@
             </record>
         </field>
         <field name="line_ids">
+            <!-- Valid until 2025-06-31 -->
             <record id="tax_report_line_1" model="account.report.line">
                 <field name="name">1 - Acts and transactions subject to tax at a rate of 22%</field>
                 <field name="code">l10n_ee_vat_1</field>
+                <field name="hide_if_zero" eval="True"/>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_1_tag" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
-                        <field name="formula">1</field>
+                        <field name="formula">1_base</field>
+                    </record>
+                    <record id="tax_report_line_1_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">1_tax</field>
+                    </record>
+                </field>
+            </record>
+            <!-- Valid from 2025-07-01 -->
+            <record id="tax_report_line_1_24" model="account.report.line">
+                <field name="name">1 - Acts and transactions subject to tax at a rate of 24%</field>
+                <field name="code">l10n_ee_vat_1_24</field>
+                <field name="hide_if_zero" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_1_24_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">1_base_24</field>
+                    </record>
+                    <record id="tax_report_line_1_24_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">1_tax_24</field>
                     </record>
                 </field>
             </record>
             <record id="tax_report_line_1_1" model="account.report.line">
                 <field name="name">1¹ - Acts and transactions subject to tax at a rate of 20%</field>
                 <field name="code">l10n_ee_vat_1_1</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_1_1_tag" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
-                        <field name="formula">1_1</field>
+                        <field name="formula">1_1_base</field>
+                    </record>
+                    <record id="tax_report_line_1_1_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">1_1_tax</field>
+                    </record>
+                </field>
+            </record>
+            <!-- Valid from 2025-07-01 -->
+            <record id="tax_report_line_1_2" model="account.report.line">
+                <field name="name">1² - Acts and transactions subject to tax at a rate of 22%</field>
+                <field name="code">l10n_ee_vat_1_2</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_1_2_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">1_2_base</field>
+                    </record>
+                    <record id="tax_report_line_1_2_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">1_2_tax</field>
                     </record>
                 </field>
             </record>
@@ -44,7 +94,12 @@
                     <record id="tax_report_line_2_tag" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
-                        <field name="formula">2</field>
+                        <field name="formula">2_base</field>
+                    </record>
+                    <record id="tax_report_line_2_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">2_tax</field>
                     </record>
                 </field>
             </record>
@@ -56,7 +111,29 @@
                     <record id="tax_report_line_2_1_tag" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
-                        <field name="formula">2_1</field>
+                        <field name="formula">2_1_base</field>
+                    </record>
+                    <record id="tax_report_line_2_1_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">2_1_tax</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_2_2" model="account.report.line">
+                <field name="name">2² - Acts and transactions subject to tax at a rate of 13%</field>
+                <field name="code">l10n_ee_vat_2_2</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_2_2_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">2_2_base</field>
+                    </record>
+                    <record id="tax_report_line_2_2_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">2_2_tax</field>
                     </record>
                 </field>
             </record>
@@ -162,7 +239,12 @@
                     <record id="tax_report_line_4_tag" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">l10n_ee_vat_1.balance * 0.22 + l10n_ee_vat_1_1.balance * 0.2 + l10n_ee_vat_2.balance * 0.09 + l10n_ee_vat_2_1.balance * 0.05</field>
+                        <field name="formula">l10n_ee_vat_1_24.balance * 0.24 + l10n_ee_vat_1.balance * 0.22 + l10n_ee_vat_1_2.balance * 0.22 + l10n_ee_vat_1_1.balance * 0.2 + l10n_ee_vat_2.balance * 0.09 + l10n_ee_vat_2_1.balance * 0.05 + l10n_ee_vat_2_2.balance * 0.13</field>
+                    </record>
+                    <record id="tax_report_line_4_tag_no_rounding" model="account.report.expression">
+                        <field name="label">balance_from_tags</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_ee_vat_1_24.tax + l10n_ee_vat_1.tax + l10n_ee_vat_1_1.tax + l10n_ee_vat_1_2.tax + l10n_ee_vat_2.tax + l10n_ee_vat_2_1.tax + l10n_ee_vat_2_2.tax</field>
                     </record>
                 </field>
             </record>
@@ -174,7 +256,7 @@
                     <record id="tax_report_line_4_1_tag" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
-                        <field name="formula">4_1</field>
+                        <field name="formula">4_1_tax</field>
                     </record>
                 </field>
             </record>
@@ -191,7 +273,7 @@
                     <record id="tax_report_line_5_tag" model="account.report.expression">
                         <field name="label">tax_tags</field>
                         <field name="engine">tax_tags</field>
-                        <field name="formula">5</field>
+                        <field name="formula">5_tax</field>
                     </record>
                 </field>
                 <field name="children_ids">
@@ -202,7 +284,7 @@
                             <record id="tax_report_line_5_1_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">5_1</field>
+                                <field name="formula">5_1_tax</field>
                             </record>
                         </field>
                     </record>
@@ -213,7 +295,7 @@
                             <record id="tax_report_line_5_2_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">5_2</field>
+                                <field name="formula">5_2_tax</field>
                             </record>
                         </field>
                     </record>
@@ -224,7 +306,7 @@
                             <record id="tax_report_line_5_3_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">5_3</field>
+                                <field name="formula">5_3_tax</field>
                             </record>
                         </field>
                         <field name="children_ids">
@@ -249,7 +331,7 @@
                             <record id="tax_report_line_5_4_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">5_4</field>
+                                <field name="formula">5_4_tax</field>
                             </record>
                         </field>
                         <field name="children_ids">

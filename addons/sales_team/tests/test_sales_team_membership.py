@@ -19,6 +19,12 @@ class TestMembership(TestSalesCommon):
         })
         cls.env['ir.config_parameter'].set_param('sales_team.membership_multi', True)
 
+    def test_archive_user_archives_team_member(self):
+        """Test that archiving a user also archives their linked team member."""
+        self.assertTrue(self.sales_team_1_m1.active)
+        self.user_sales_leads.action_archive()
+        self.assertFalse(self.sales_team_1_m1.active)
+
     @users('user_sales_manager')
     def test_fields(self):
         self.assertTrue(self.sales_team_1.with_user(self.env.user).is_membership_multi)

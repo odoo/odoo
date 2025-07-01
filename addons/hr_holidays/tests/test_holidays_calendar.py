@@ -3,6 +3,8 @@
 
 from datetime import date, timedelta
 
+from odoo.osv import expression
+
 from odoo.addons.base.tests.common import HttpCase
 from odoo.tests.common import tagged
 from odoo.tests.common import users

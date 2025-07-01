@@ -56,6 +56,15 @@ $report-text-colors: null;
     flex: 1 0 0%;
 }
 
+.report-wrapping-flexbox {
+    // overriding the `display` prop of `.row`
+    display: block !important;
+}
+
+.report-wrapping-flexbox > .col {
+    float: left;
+}
+
 // Report footer need to support bootstrap columns (2, 3 and 4 columns)
 // Even if the width is smaller than the media querry limit from bootstrap.
 // This need come from the footer being editable via the Odoo editor.

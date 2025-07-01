@@ -19,7 +19,7 @@
                                         <label for="hr_expense_alias_prefix" string="Alias" class="o_light_label"/>
                                         <field name="hr_expense_alias_prefix" placeholder="alias" class="oe_inline ps-2"/>
                                         <span>@</span>
-                                        <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
+                                        <field name="hr_expense_alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
                                                options="{'no_create': True, 'no_open': True}"/>
                                     </div>
                                 </div>
@@ -43,8 +43,8 @@
                                      string="Employee Expense Journal">
                                 <field name="expense_journal_id"/>
                             </setting>
-                            <setting company_dependent="1" help="Default outstanding account for expenses paid by employees."
-                                     string="Employee Expense Oustanding Account">
+                            <setting company_dependent="1" help="Default outstanding account for expenses paid by company."
+                                     string="Expense Outstanding Account">
                                 <field name="expense_outstanding_account_id"/>
                             </setting>
                             <setting company_dependent="1" string="Payment methods"

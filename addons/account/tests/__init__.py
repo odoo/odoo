@@ -13,6 +13,7 @@ from . import test_account_tax
 from . import test_account_analytic
 from . import test_account_payment
 from . import test_account_payment_method_line
+from . import test_account_move_duplicate
 from . import test_account_payment_duplicate
 from . import test_account_bank_statement
 from . import test_account_invoice_report
@@ -41,6 +42,7 @@ from . import test_account_incoming_supplier_invoice
 from . import test_payment_term
 from . import test_account_payment_items
 from . import test_account_payment_register
+from . import test_account_report
 from . import test_tour
 from . import test_early_payment_discount
 from . import test_ir_actions_report
@@ -53,3 +55,6 @@ from . import test_unexpected_invoice
 from . import test_mail_tracking_value
 from . import test_res_partner_merge
 from . import test_account_merge_wizard
+from . import test_account_move_attachment
+from . import test_account_move_auto_post
+from . import test_dict_to_xml

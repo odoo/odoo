@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools.misc import clean_context
 
 
 class StockWarnInsufficientQty(models.AbstractModel):
@@ -42,7 +43,7 @@ class StockWarnInsufficientQtyScrap(models.TransientModel):
         return self.scrap_id.company_id
 
     def action_done(self):
-        return self.scrap_id.do_scrap()
+        return self.with_context(clean_context(self.env.context)).scrap_id.do_scrap()
 
     def action_cancel(self):
         # FIXME in master: we should not have created the scrap in a first place

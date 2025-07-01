@@ -63,3 +63,47 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
             self.env.company.project_time_mode_id
         )
         self.assertEqual(sale_order.order_line.purchase_price, expected_cost, "Sale order line cost should be number of working hours on one day * timesheet cost of the employee set on the timesheet linked to the SOL.")
+
+    def test_no_recompute_purchase_price_not_timesheet(self):
+        project = self.env['project.project'].create({
+            'name': "Test",
+        })
+        self.product_1.write({
+            'uom_id': self.ref('uom.product_uom_unit'),
+            'uom_po_id': self.ref('uom.product_uom_unit'),
+            'service_type': 'timesheet',
+            'service_policy': 'ordered_prepaid',
+            'service_tracking': 'task_global_project',
+            'project_id': project.id,
+            'standard_price': 2,
+        })
+        sale_order = self.env['sale.order'].create({
+            'name': 'Test_SO0002',
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_1.id,
+                    'price_unit': 1.0,
+                    'product_uom': self.ref('uom.product_uom_unit'),
+                    'product_uom_qty': 1.0,
+            })],
+            'partner_id': self.partner_b.id,
+            'partner_invoice_id': self.partner_b.id,
+            'partner_shipping_id': self.partner_b.id,
+        })
+        sale_order.order_line.purchase_price = 3
+        # Confirm the sales order, create project and task.
+        sale_order.action_confirm()
+
+        # Add timesheet line
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line 222',
+            'unit_amount': 2,
+            'amount': 1,
+            'employee_id': self.employee_manager.id,
+            'project_id': project.id,
+            'task_id': sale_order.order_line.task_id.id,
+            'account_id': self.analytic_account_sale.id,
+            'so_line': sale_order.order_line.id,
+        })
+        self.env.flush_all()
+        self.assertEqual(sale_order.order_line.purchase_price, 3)

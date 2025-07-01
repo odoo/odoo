@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-04-07 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr "Thông tin bổ sung"
 #. module: partner_autocomplete
 #: model:iap.service,description:partner_autocomplete.iap_service_partner_autocomplete
 msgid "Automatically enrich your contact base with corporate data."
-msgstr ""
+msgstr "Tự động tăng cường cơ sở liên hệ của bạn với dữ liệu công ty."
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -40,13 +41,6 @@ msgstr "Mua thêm tín dụng"
 #: model:ir.model,name:partner_autocomplete.model_res_company
 msgid "Companies"
 msgstr "Công ty"
-
-#. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_company.py:0
-msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr ""
-"Công ty được tự động hoàn thành bởi Dịch vụ tự động hoàn thành đối tác Odoo"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
@@ -88,7 +82,7 @@ msgstr "Hoàn tất tăng cường"
 #. module: partner_autocomplete
 #: model:iap.service,unit_name:partner_autocomplete.iap_service_partner_autocomplete
 msgid "Enrichments"
-msgstr ""
+msgstr "Lượt tăng cường"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_ir_http
@@ -104,7 +98,7 @@ msgstr "IAP Thiếu Token tài khoản"
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_iap_autocomplete_api
 msgid "IAP Partner Autocomplete API"
-msgstr "IAP API tự động hoàn thành đối tác"
+msgstr "IAP API tự động điền thông tin đối tác"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__id
@@ -141,7 +135,7 @@ msgstr "Không có token tài khoản"
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
 msgid "Not enough credits for Partner Autocomplete"
-msgstr "Không đủ tín dụng để Tự động hoàn thành đối tác"
+msgstr "Không đủ tín dụng để Tự động điền thông tin đối tác"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__partner_id
@@ -151,24 +145,18 @@ msgstr "Đối tác"
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_partner_autocomplete_sync
 msgid "Partner Autocomplete Sync"
-msgstr "Đồng bộ tự động hoàn thành đối tác"
+msgstr "Đồng bộ tự động điền thông tin đối tác"
 
 #. module: partner_autocomplete
 #: model:ir.actions.server,name:partner_autocomplete.ir_cron_partner_autocomplete_ir_actions_server
 msgid "Partner Autocomplete: Sync with remote DB"
-msgstr "Tự động hoàn thành đối tác: Đồng bộ với cơ sở dữ liệu từ xa"
-
-#. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_partner.py:0
-msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr "Đối tác được tạo bởi Dịch vụ tự động hoàn thành đối tác Odoo"
+msgstr "Tự động điền thông tin đối tác: Đồng bộ với cơ sở dữ liệu từ xa"
 
 #. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
-msgid "Placeholder"
-msgstr "Phần giữ chỗ"
+msgid "Search Worldwide 🌎"
+msgstr "Tìm kiếm trên toàn cầu 🌎"
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -188,3 +176,10 @@ msgstr "Thiết lập token tài khoản của bạn"
 #: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
 msgid "Test mode"
 msgstr "Chế độ kiểm tử"
+
+#. module: partner_autocomplete
+#. odoo-python
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+msgid "Unable to enrich company (no credit was consumed)."
+msgstr ""
+"Không thể làm giàu dữ liệu công ty (không có tín dụng nào được sử dụng)."

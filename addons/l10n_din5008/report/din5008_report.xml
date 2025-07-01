@@ -34,7 +34,9 @@
         <!-- New report layout for din5008 format -->
         <template id="external_layout_din5008">
             <div>
-                <div t-attf-class="header din_page o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' else ''}">
+                <t t-set="is_din_paperformat"
+                    t-value="company.paperformat_id in [env.ref('l10n_din5008.paperformat_euro_din_a', raise_if_not_found=False), env.ref('l10n_din5008.paperformat_euro_din', raise_if_not_found=False)]" />
+                <div t-attf-class="header din_page o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' and is_din_paperformat else ''}">
                     <table class="company_header table-borderless" t-att-style="'height: %dmm;' % (din_header_spacing or 27)">
                         <tr>
                             <td><div class="h3 mt0" t-field="company.report_header"/></td>
@@ -42,49 +44,46 @@
                         </tr>
                     </table>
                 </div>
-
-                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}} #{'din_page_pdf' if report_type == 'pdf' else ''}"
-                     t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
-                           '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''}});"
+                <t t-set="layout_background_url"
+                   t-value="'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
+                        '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''" />
+                
+                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  ''}} #{'din_page_pdf' if report_type == 'pdf' and is_din_paperformat else ''}"
+                     t-attf-style="{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}"
                      t-att-data-oe-model="o and o._name"
                      t-att-data-oe-id="o and o.id">
                     <table class="din_company_info table-borderless">
                         <tr>
                             <td>
-                                <div class="address">
-                                    <t t-if="company.name">
-                                        <span t-field="company.name"/>
-                                    </t>
-                                    <t t-if="company.street">
-                                        <span>|</span> <span t-field="company.street"/>
-                                    </t>
-                                    <t t-if="company.street2">
-                                        <span>|</span> <span t-field="company.street2"/>
-                                    </t>
-                                    <t t-if="company.zip">
-                                        <span>|</span> <span t-field="company.zip"/>
-                                    </t>
-                                    <t t-if="company.city">
-                                        <span t-if="not company.zip">|</span> <span t-field="company.city"/>
-                                    </t>
-                                    <t t-if="company.country_id">
-                                        <span>|</span> <span t-field="company.country_id.name"/>
-                                    </t>
-                                    <hr class="company_invoice_line" />
-                                    <t t-if="o and 'l10n_din5008_addresses' in o" t-set="address">
-                                        <address class="mb-0" t-field="o.partner_id.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
-                                        <div t-if="o.partner_id.commercial_partner_id.vat" id="partner_vat_address_same_as_shipping">
-                                            <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-                                            <t t-else="">Tax ID</t>: <span t-field="o.partner_id.commercial_partner_id.vat"/>
-                                        </div>
-                                    </t>
-                                    <div t-if="address">
-                                        <t t-out="address"/>
+                                <div class="address" id="din5008_report_main_address">
+                                    <div class="colored_address">
+                                        <t t-if="company.name">
+                                            <span t-field="company.name"/>
+                                        </t>
+                                        <t t-if="company.street">
+                                            <span>|</span> <span t-field="company.street"/>
+                                        </t>
+                                        <t t-if="company.street2">
+                                            <span>|</span> <span t-field="company.street2"/>
+                                        </t>
+                                        <t t-if="company.zip">
+                                            <span>|</span> <span t-field="company.zip"/>
+                                        </t>
+                                        <t t-if="company.city">
+                                            <span t-if="not company.zip">|</span> <span t-field="company.city"/>
+                                        </t>
+                                        <t t-if="company.country_id">
+                                            <span>|</span> <span t-field="company.country_id.name"/>
+                                        </t>
                                     </div>
-                                    <div t-else="fallback_address">
+                                    <hr class="company_invoice_line" />
+                                    <span t-if="address">
+                                        <t t-out="address"/>
+                                    </span>
+                                    <span t-else="fallback_address">
                                         <t t-out="fallback_address"
                                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-                                    </div>
+                                    </span>
                                 </div>
                             </td>
                             <td t-if="din5008_document_information">
@@ -108,7 +107,7 @@
                     <t t-out="0"/>
                 </div>
 
-                <div t-attf-class="din_page footer o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' else ''}">
+                <div t-attf-class="din_page footer o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' and is_din_paperformat else ''}">
                     <div class="text-end page_number">
                         <div class="text-muted">
                             Page: <span class="page"/> of <span class="topage"/>
@@ -117,17 +116,17 @@
                     <div class="company_details">
                         <table class="table-borderless">
                             <tr>
-                                <td>
-                                    <ul class="list-inline text-nowrap">
+                                <td colspan="3">
+                                    <ul class="list-inline">
                                         <li t-if="company.company_details"><span t-field="company.company_details"/></li>
                                     </ul>
                                 </td>
-                                <td>
+                                <td colspan="4">
                                     <ul class="list-inline">
                                         <li t-if="company.report_footer"><span t-field="company.report_footer"/></li>
                                     </ul>
                                 </td>
-                                <td>
+                                <td colspan="2">
                                     <ul class="list-inline">
                                         <li t-if="company.vat"><t t-out="company.account_fiscal_country_id.vat_label or 'Tax ID'"/>:
                                             <span t-if="forced_vat" t-out="forced_vat"/>
@@ -136,11 +135,11 @@
                                         <li>HRB Nr: <span t-field="company.company_registry"/></li>
                                     </ul>
                                 </td>
-                                <td t-if="company.partner_id.bank_ids">
+                                <td colspan="3" t-if="company.partner_id.bank_ids">
                                     <ul class="list-inline">
                                         <t t-foreach="company.partner_id.bank_ids[:2]" t-as="bank">
                                             <li><span t-field="bank.bank_id.name"/></li>
-                                            <li>IBAN: <span t-field="bank.acc_number"/></li>
+                                            <li class="text-nowrap">IBAN: <span t-field="bank.acc_number"/></li>
                                             <li>BIC: <span t-field="bank.bank_id.bic"/></li>
                                         </t>
                                     </ul>
@@ -166,7 +165,7 @@
                         &amp;.invoice_note {
                             td {
                                 .address {
-                                    > span {
+                                    .colored_address {
                                         color: <t t-out='secondary'/>;
                                     }
                                 }
@@ -222,38 +221,26 @@
 
                 <t t-set="din5008_address_block">
                     <t t-if="o and o._name=='account.move'">
-                        <t t-set="commercial_partner_id" t-value=""/>
-                        <t t-set="fact_partner_id" t-value="o.partner_id"/>
-                        <t t-set="delivery_partner_id" t-value="o.partner_shipping_id"/>
+                        <t t-set="commercial_partner" t-value="o.commercial_partner_id"/>
+                        <t t-set="invoice_partner" t-value="o.partner_id"/>
+                        <t t-set="delivery_partner" t-value="o.partner_shipping_id"/>
 
                         <t t-set="different_partner_count" t-value="len({partner.id for partner in [o.partner_id.commercial_partner_id, o.partner_id, o.partner_shipping_id] if partner})"/>
                         <tr t-if="different_partner_count > 1">
-                            <t t-if="different_partner_count == 3">
-                                <td class="shipping_address">
-                                    <span class="fw-bold">Shipping Address:</span>
-                                    <address t-esc="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
-                                </td>
-                                <td class="shipping_address">
-                                    <span class="fw-bold">Invoicing Address:</span>
-                                    <address t-esc="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
-                                </td>
-                            </t>
-                            <t t-elif="commercial_partner == invoice_partner">
+                            <t t-if="delivery_partner and delivery_partner != commercial_partner">
                                 <td class="shipping_address">
                                     <span class="fw-bold">Shipping Address:</span>
                                     <address t-esc="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                                 </td>
                             </t>
-                            <t t-elif="commercial_partner == delivery_partner">
+                            <t t-if="invoice_partner and invoice_partner != commercial_partner">
                                 <td class="shipping_address">
-                                    <span class="fw-bold">Invoicing Address:</span>
-                                    <address t-esc="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
-                                </td>
-                            </t>
-                            <t t-elif="invoice_partner == delivery_partner">
-                                <td class="shipping_address">
-                                    <span class="fw-bold">Invoicing and Shipping Address:</span>
-                                    <address t-esc="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                                    <span class="fw-bold">Beneficiary:</span>
+                                    <address class="mb-0" t-esc="o.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                                    <div t-if="o.commercial_partner_id.vat">
+                                        <t t-if="o.commercial_partner_id.company_id.account_fiscal_country_id.vat_label" t-out="o.commercial_partner_id.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                        <t t-else="">Tax ID</t>: <span t-field="o.commercial_partner_id.vat"/>
+                                    </div>
                                 </td>
                             </t>
                         </tr>

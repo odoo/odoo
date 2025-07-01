@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import contextlib
+import logging
 import requests
 from lxml import etree
 from markupsafe import Markup
@@ -12,6 +13,8 @@ from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account.models.company import PEPPOL_LIST
 
 TIMEOUT = 10
+_logger = logging.getLogger(__name__)
+
 
 
 class ResPartner(models.Model):
@@ -25,7 +28,7 @@ class ResPartner(models.Model):
     peppol_verification_state = fields.Selection(
         selection=[
             ('not_verified', 'Not verified yet'),
-            ('not_valid', 'Not valid'),  # does not exist on Peppol at all
+            ('not_valid', 'Not on Peppol'),  # does not exist on Peppol at all
             ('not_valid_format', 'Cannot receive this format'),  # registered on Peppol but cannot receive the selected document type
             ('valid', 'Valid'),
         ],
@@ -92,16 +95,15 @@ class ResPartner(models.Model):
     def _get_participant_info(self, edi_identification):
         hash_participant = md5(edi_identification.lower().encode()).hexdigest()
         endpoint_participant = parse.quote_plus(f"iso6523-actorid-upis::{edi_identification}")
-        peppol_user = self.env.company.sudo().account_edi_proxy_client_ids.filtered(lambda user: user.proxy_type == 'peppol')
-        edi_mode = peppol_user and peppol_user.edi_mode or 'prod'
+        edi_mode = self.env.company._get_peppol_edi_mode()
         sml_zone = 'acc.edelivery' if edi_mode == 'test' else 'edelivery'
         smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.{sml_zone}.tech.ec.europa.eu/{endpoint_participant}"
 
         try:
             response = requests.get(smp_url, timeout=TIMEOUT)
-        except requests.exceptions.ConnectionError:
-            return None
-        if response.status_code != 200:
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            _logger.debug(e)
             return None
         return etree.fromstring(response.content)
 
@@ -171,6 +173,7 @@ class ResPartner(models.Model):
         self._update_peppol_state_per_company(vals=vals)
         return res
 
+    @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
         if res:
@@ -200,9 +203,9 @@ class ResPartner(models.Model):
         self_partner.peppol_verification_state = self._get_peppol_verification_state(
             self.peppol_endpoint,
             self.peppol_eas,
-            self_partner.invoice_edi_format
+            self_partner._get_peppol_edi_format(),
         )
-        if self_partner.peppol_verification_state == 'valid':
+        if self_partner.peppol_verification_state == 'valid' and not self_partner.invoice_sending_method:
             self_partner.invoice_sending_method = 'peppol'
 
         self._log_verification_state_update(company, old_value, self_partner.peppol_verification_state)
@@ -212,7 +215,7 @@ class ResPartner(models.Model):
     @handle_demo
     def _get_peppol_verification_state(self, peppol_endpoint, peppol_eas, invoice_edi_format):
         if not (peppol_eas and peppol_endpoint) or invoice_edi_format not in self._get_peppol_formats():
-            return False
+            return 'not_verified'
 
         edi_identification = f"{peppol_eas}:{peppol_endpoint}".lower()
         participant_info = self._get_participant_info(edi_identification)

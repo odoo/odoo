@@ -179,7 +179,7 @@ class AccountPaymentRegister(models.TransientModel):
         '''
         if len(lines.move_id) == 1:
             move = lines.move_id
-            label = (len(lines) == 1 and lines.name) or move.ref or move.name
+            label = move.payment_reference or move.ref or move.name
         else:
             label = self.company_id.get_next_batch_payment_communication()
         return label
@@ -212,9 +212,7 @@ class AccountPaymentRegister(models.TransientModel):
         payment_values = batch_result['payment_values']
         foreign_currency_id = payment_values['currency_id']
         partner_bank_id = payment_values['partner_bank_id']
-        company = batch_result['lines'].company_id
-        if len(company) > 1:
-            company = company._accessible_branches()[:1]
+        company = min(batch_result['lines'].company_id, key=lambda c: len(c.parent_ids))
 
         currency_domain = [('currency_id', '=', foreign_currency_id)]
         partner_bank_domain = [('bank_account_id', '=', partner_bank_id)]
@@ -248,13 +246,13 @@ class AccountPaymentRegister(models.TransientModel):
     @api.model
     def _get_batch_available_partner_banks(self, batch_result, journal):
         payment_values = batch_result['payment_values']
-        company = batch_result['lines'].company_id._accessible_branches()[:1]
 
         # A specific bank account is set on the journal. The user must use this one.
         if payment_values['payment_type'] == 'inbound':
             # Receiving money on a bank account linked to the journal.
             return journal.bank_account_id
         else:
+            company = min(batch_result['lines'].company_id, key=lambda c: len(c.sudo().parent_ids))
             # Sending money to a bank account owned by a partner.
             return batch_result['lines'].partner_id.bank_ids.filtered(lambda x: x.company_id.id in (False, company.id))._origin
 
@@ -287,7 +285,7 @@ class AccountPaymentRegister(models.TransientModel):
         '''
         payment_values = batch_result['payment_values']
         lines = batch_result['lines']
-        company = lines[0].company_id._accessible_branches()[:1]
+        company = min(lines.company_id, key=lambda c: len(c.sudo().parent_ids)) if not self._from_sibling_companies(lines) else lines.company_id.root_id
 
         source_amount = abs(sum(lines.mapped('amount_residual')))
         if payment_values['currency_id'] == company.currency_id.id:
@@ -304,6 +302,10 @@ class AccountPaymentRegister(models.TransientModel):
             'source_amount': source_amount,
             'source_amount_currency': source_amount_currency,
         }
+
+    @api.model
+    def _from_sibling_companies(self, lines):
+        return len(lines.company_id) > 1 and not any(c.root_id in lines.company_id for c in lines.company_id)
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -428,8 +430,10 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.can_edit_wizard = True
             else:
                 # == Multiple batches: The wizard is not editable  ==
+                lines = sum((batch_result['lines'] for batch_result in wizard.batches), self.env['account.move.line'])
+                company = min(lines.company_id, key=lambda c: len(c.parent_ids)) if not self._from_sibling_companies(lines) else lines.company_id.root_id
                 wizard.update({
-                    'company_id': wizard.batches[0]['lines'][0].company_id._accessible_branches()[:1].id,
+                    'company_id': company.id,
                     'partner_id': False,
                     'partner_type': False,
                     'payment_type': wizard_values_from_batch['payment_type'],
@@ -487,6 +491,8 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('available_journal_ids')
     def _compute_journal_id(self):
         for wizard in self:
+            if wizard.journal_id in wizard.available_journal_ids:
+                continue
             move_payment_method_lines = wizard.line_ids.move_id.preferred_payment_method_line_id
             if move_payment_method_lines and len(move_payment_method_lines) == 1:
                 wizard.journal_id = move_payment_method_lines.journal_id
@@ -538,6 +544,9 @@ class AccountPaymentRegister(models.TransientModel):
                 available_payment_method_lines = wizard.journal_id._get_available_payment_method_lines(wizard.payment_type)
             else:
                 available_payment_method_lines = False
+
+            if available_payment_method_lines and wizard.payment_method_line_id in available_payment_method_lines:
+                continue
 
             # Select the first available one by default.
             if available_payment_method_lines:
@@ -949,6 +958,8 @@ class AccountPaymentRegister(models.TransientModel):
                 raise UserError(_("You can't register a payment because there is nothing left to pay on the selected journal items."))
             if len(lines.company_id.root_id) > 1:
                 raise UserError(_("You can't create payments for entries belonging to different companies."))
+            if self._from_sibling_companies(lines) and lines.company_id.root_id not in self.env.user.company_ids:
+                raise UserError(_("You can't create payments for entries belonging to different branches without access to parent company."))
             if len(set(available_lines.mapped('account_type'))) > 1:
                 raise UserError(_("You can't register payments for both inbound and outbound moves at the same time."))
 
@@ -1247,10 +1258,19 @@ class AccountPaymentRegister(models.TransientModel):
                     'batch': batch_result,
                 })
 
-        payments = self._init_payments(to_process, edit_mode=edit_mode)
-        self._post_payments(to_process, edit_mode=edit_mode)
-        self._reconcile_payments(to_process, edit_mode=edit_mode)
-        return payments
+        lines = sum((batch_result['lines'] for batch_result in batches), self.env['account.move.line'])
+        from_sibling_companies = self._from_sibling_companies(lines)
+        if from_sibling_companies and lines.company_id.root_id not in self.env.companies:
+            # Payment made for sibling companies, we don't want to redirect to the payments
+            # to avoid access error, as it will be created as parent company.
+            self.env.context = {**self.env.context, "dont_redirect_to_payments": True}
+
+        wizard = self.sudo() if from_sibling_companies else self
+
+        payments = wizard._init_payments(to_process, edit_mode=edit_mode)
+        wizard._post_payments(to_process, edit_mode=edit_mode)
+        wizard._reconcile_payments(to_process, edit_mode=edit_mode)
+        return payments.sudo(flag=False)
 
     def _get_next_payment_date_in_context(self):
         if active_domain := self.env.context.get('active_domain'):

@@ -52,6 +52,15 @@ class PosOrderReport(models.Model):
                 LEFT JOIN pos_order po ON (po.id = pol.order_id)
                 LEFT JOIN pos_payment pm ON (pm.pos_order_id=po.id)
                 GROUP BY pol.id
+            ),
+            first_pos_category AS (
+                SELECT
+                    pt.id AS product_template_id,
+                    (array_agg(pc.id))[1] AS id
+                FROM product_template pt
+                LEFT JOIN pos_category_product_template_rel pcpt ON (pt.id = pcpt.product_template_id)
+                LEFT JOIN pos_category pc ON (pcpt.pos_category_id = pc.id)
+                GROUP BY pt.id
             )
             SELECT
                 l.id AS id,
@@ -80,9 +89,10 @@ class PosOrderReport(models.Model):
                 s.pricelist_id,
                 s.session_id,
                 s.account_move IS NOT NULL AS invoiced,
-                pc.id AS pos_categ_id,
                 l.price_subtotal - COALESCE(l.total_cost,0) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS margin,
-                pm.payment_method_id AS payment_method_id
+                pm.payment_method_id AS payment_method_id,
+                fpc.id AS pos_categ_id
+
         """
 
     def _from(self):
@@ -97,8 +107,7 @@ class PosOrderReport(models.Model):
                 LEFT JOIN res_currency cu ON (co.currency_id=cu.id)
                 LEFT JOIN payment_method_by_order_line pm ON (pm.pos_order_line_id=l.id)
                 LEFT JOIN pos_payment_method ppm ON (pm.payment_method_id=ppm.id)
-                LEFT JOIN pos_category_product_template_rel pcpt ON (pt.id = pcpt.product_template_id)
-                LEFT JOIN pos_category pc ON (pcpt.pos_category_id = pc.id)
+                LEFT JOIN first_pos_category fpc ON (pt.id = fpc.product_template_id)
         """
 
     def _group_by(self):

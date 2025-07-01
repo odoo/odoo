@@ -26,7 +26,7 @@ export class CartNotification extends Component {
                 },
             },
         },
-        currency_id: Number,
+        currency_id: {type: Number, optional: true},
         className: String,
         close: Function,
         refresh: Function,

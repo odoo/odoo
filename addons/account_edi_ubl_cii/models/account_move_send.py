@@ -30,9 +30,9 @@ class AccountMoveSend(models.AbstractModel):
             )
             if not_configured_company_partners:
                 alerts['account_edi_ubl_cii_configure_company'] = {
-                    'message': _("Please fill in Peppol EAS and Peppol Endpoint in your company form to generate a complete file."),
+                    'message': _("Please fill in your company's VAT or Peppol Address to generate a complete XML file."),
                     'level': 'info',
-                    'action_text': _("View Company"),
+                    'action_text': _("Configure"),
                     'action': not_configured_company_partners._get_records_action(),
                 }
             not_configured_partners = peppol_format_moves.partner_id.commercial_partner_id.filtered(
@@ -40,22 +40,11 @@ class AccountMoveSend(models.AbstractModel):
             )
             if not_configured_partners:
                 alerts['account_edi_ubl_cii_configure_partner'] = {
-                    'message': _("These partners are missing Peppol EAS or Peppol Endpoint field. "
-                                 "Please check those in their Accounting tab. "
-                                 "Otherwise, the generated files will be incomplete."),
+                    'message': _("Please fill in partner's VAT or Peppol Address."),
                     'level': 'info',
                     'action_text': _("View Partner(s)"),
                     'action': not_configured_partners._get_records_action(name=_("Check Partner(s)"))
                 }
-
-        ubl_formats = set(self.env['res.partner']._get_ubl_cii_formats())
-        if moves_without_bank := moves.filtered(lambda m: moves_data[m]['invoice_edi_format'] in ubl_formats and not m.partner_bank_id):
-            alerts['account_edi_ubl_cii_configure_bank'] = {
-                'message': _("Please add a Recipient bank in the 'Other Info' tab to generate a complete file."),
-                'level': 'danger' if len(moves_without_bank) == 1 else 'warning',
-                'action_text': _("View Invoice(s)"),
-                'action': moves_without_bank._get_records_action(name=_("Check Invoice(s)")),
-            }
         return alerts
 
     # -------------------------------------------------------------------------
@@ -66,12 +55,11 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         return super()._get_invoice_extra_attachments(move) + move.ubl_cii_xml_id
 
-    def _get_placeholder_mail_attachments_data(self, move, extra_edis=None):
+    def _get_placeholder_mail_attachments_data(self, move, invoice_edi_format=None, extra_edis=None):
         # EXTENDS 'account'
-        results = super()._get_placeholder_mail_attachments_data(move, extra_edis=extra_edis)
-        partner_edi_format = self._get_default_invoice_edi_format(move)
-        if move._need_ubl_cii_xml(partner_edi_format):
-            builder = move.partner_id.commercial_partner_id._get_edi_builder(partner_edi_format)
+        results = super()._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis)
+        if move._need_ubl_cii_xml(invoice_edi_format):
+            builder = move.partner_id.commercial_partner_id._get_edi_builder(invoice_edi_format)
             filename = builder._export_invoice_filename(move)
             results.append({
                 'id': f'placeholder_{filename}',
@@ -131,7 +119,7 @@ class AccountMoveSend(models.AbstractModel):
 
         # during tests, no wkhtmltopdf, create the attachment for test purposes
         if tools.config['test_enable']:
-            self.env['ir.attachment'].create({
+            self.env['ir.attachment'].sudo().create({
                 'name': 'factur-x.xml',
                 'raw': xml_facturx,
                 'res_id': invoice.id,
@@ -140,7 +128,8 @@ class AccountMoveSend(models.AbstractModel):
             return
 
         # Read pdf content.
-        pdf_values = invoice.invoice_pdf_report_id or invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
+        pdf_values = (not self.env.context.get('custom_template_facturx') and invoice.invoice_pdf_report_id) or \
+            invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
         reader_buffer = io.BytesIO(pdf_values['raw'])
         reader = OdooPdfFileReader(reader_buffer, strict=False)
 

@@ -7,7 +7,7 @@ class TestDashboard(TestHrHolidaysCommon):
     def test_dashboard_special_days(self):
         self.env.user = self.user_hrmanager
         employee = self.env.user.employee_id
-        other_calendar = self.env['resource.calendar'].create({
+        other_calendar = self.env['resource.calendar'].sudo().create({
             'name': 'Other calendar',
         })
 

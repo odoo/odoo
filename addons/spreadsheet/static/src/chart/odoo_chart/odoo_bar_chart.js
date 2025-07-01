@@ -12,7 +12,8 @@ const {
     chartFontColor,
     ColorGenerator,
     getTrendDatasetForBarChart,
-    formatTickValue
+    formatValue,
+    formatTickValue,
 } = spreadsheet.helpers;
 
 const { TREND_LINE_XAXIS_ID } = spreadsheet.constants;
@@ -139,7 +140,14 @@ function getBarConfiguration(chart, labels, locale) {
         },
         y: {
             position: chart.verticalAxisPosition,
-            ticks: { color },
+            ticks: {
+                color,
+                callback: (value) =>
+                    formatValue(value, {
+                        locale,
+                        format: Math.abs(value) >= 1000 ? "#,##" : undefined,
+                    }),
+            },
             beginAtZero: true, // the origin of the y axis is always zero
             title: getChartAxisTitleRuntime(chart.axesDesign?.y),
         },

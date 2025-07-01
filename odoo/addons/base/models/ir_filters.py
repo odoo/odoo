@@ -39,6 +39,11 @@ class IrFilters(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
+        # NULL Integer field value read as 0, wouldn't matter except in this case will trigger
+        # check_res_id_only_when_embedded_action
+        for vals in vals_list:
+            if vals.get('embedded_parent_res_id') == 0:
+                del vals['embedded_parent_res_id']
         return [dict(vals, name=self.env._("%s (copy)", ir_filter.name)) for ir_filter, vals in zip(self, vals_list)]
 
     def write(self, vals):

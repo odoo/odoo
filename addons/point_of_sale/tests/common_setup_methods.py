@@ -29,6 +29,16 @@ def setup_product_combo_items(self):
         }
     )
 
+    pos_category_1 = self.env["pos.category"].create({
+        "name": "Category 1",
+    })
+    pos_category_2 = self.env["pos.category"].create({ 
+        "name": "Category 2",
+    })
+    pos_category_3 = self.env["pos.category"].create({
+        "name": "Category 3",
+    })
+
     combo_product_1 = self.env["product.product"].create(
         {
             "name": "Combo Product 1",
@@ -36,6 +46,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 10,
             "taxes_id": [(6, 0, [tax10.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_1.id])],
         }
     )
 
@@ -46,6 +57,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 11,
             "taxes_id": [(6, 0, [tax20in.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_1.id])],
         }
     )
 
@@ -56,6 +68,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 16,
             "taxes_id": [(6, 0, [tax30.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_1.id])],
         }
     )
 
@@ -86,6 +99,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 20,
             "taxes_id": [(6, 0, [tax10.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_2.id])],
         }
     )
 
@@ -96,6 +110,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 25,
             "taxes_id": [(6, 0, [tax20in.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_2.id])],
         }
     )
 
@@ -122,6 +137,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 30,
             "taxes_id": [(6, 0, [tax30.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_3.id])],
         }
     )
 
@@ -132,6 +148,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 32,
             "taxes_id": [(6, 0, [tax10.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_3.id])],
         }
     )
 
@@ -142,8 +159,65 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 40,
             "taxes_id": [(6, 0, [tax20in.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_3.id])],
         }
     )
+
+    combo_product_9 = self.env["product.product"].create(
+        {
+            "name": "Combo Product 9",
+            "is_storable": True,
+            "available_in_pos": True,
+            "list_price": 50,
+            "taxes_id": [(6, 0, [tax20in.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_3.id])],
+        }
+    )
+
+    chair_color_attribute = self.env['product.attribute'].create({
+        'name': 'Color',
+        'display_type': 'color',
+        'create_variant': 'no_variant',
+    })
+    chair_color_red = self.env['product.attribute.value'].create({
+        'name': 'Red',
+        'attribute_id': chair_color_attribute.id,
+        'html_color': '#ff0000',
+    })
+    chair_color_blue = self.env['product.attribute.value'].create({
+        'name': 'Blue',
+        'attribute_id': chair_color_attribute.id,
+        'html_color': '#0000ff',
+    })
+    self.env['product.template.attribute.line'].create({
+        'product_tmpl_id': combo_product_9.product_tmpl_id.id,
+        'attribute_id': chair_color_attribute.id,
+        'value_ids': [(6, 0, [chair_color_red.id, chair_color_blue.id])]
+    })
+
+    color_attribute = self.env['product.attribute'].create({
+        'name': 'Color always',
+        'sequence': 4,
+        'create_variant': 'always',
+        'value_ids': [(0, 0, {
+            'name': 'White',
+            'sequence': 1,
+        }), (0, 0, {
+            'name': 'Red',
+            'sequence': 2,
+        })],
+    })
+
+    product_10_template = self.env['product.template'].create({
+        'name': 'Combo Product 10',
+        'list_price': 200,
+        'taxes_id': False,
+        'available_in_pos': True,
+        'attribute_line_ids': [(0, 0, {
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, color_attribute.value_ids.ids)]
+        })],
+    })
 
     self.chairs_combo = self.env["product.combo"].create(
         {
@@ -161,9 +235,24 @@ def setup_product_combo_items(self):
                     "product_id": combo_product_8.id,
                     "extra_price": 5,
                 }),
+                Command.create({
+                    "product_id": combo_product_9.id,
+                    "extra_price": 0,
+                }),
+                Command.create({
+                    "product_id": product_10_template.product_variant_ids[0].id,
+                    "extra_price": 0,
+                }),
+                Command.create({
+                    "product_id": product_10_template.product_variant_ids[1].id,
+                    "extra_price": 0,
+                }),
             ],
         }
     )
+
+    # Archive one variant
+    product_10_template.product_variant_ids[0].write({'active': False})
 
     # Create Office Combo
     self.office_combo = self.env["product.product"].create(
@@ -178,5 +267,6 @@ def setup_product_combo_items(self):
             "combo_ids": [
                 (6, 0, [self.desks_combo.id, self.chairs_combo.id, self.desk_accessories_combo.id])
             ],
+            "pos_categ_ids": [(6, 0, [pos_category_2.id])],
         }
     )

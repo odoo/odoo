@@ -394,6 +394,7 @@
                     .btn.o_install_btn {
                         z-index: 1;
                         @include o-position-absolute($top: 10px);
+                        @include text-truncate();
                     }
 
                     &:not(:hover) .btn.o_install_btn {
@@ -570,6 +571,10 @@
                     background: $o-we-dropdown-item-bg-hover;
                     color: $o-we-dropdown-item-hover-color;
                 }
+                &.active {
+                    background: $o-we-dropdown-item-active-bg;
+                    color: $o-we-dropdown-item-active-color;
+                }
             }
 
             .o_we_font_size_badge {
@@ -615,7 +620,11 @@
                     &.o_long_title {
                         width: fit-content !important;
                         padding-right: 10px !important;
+                        flex: 1 1 auto;
                     }
+                }
+                we-button .o_switch {
+                    min-width: fit-content;
                 }
                 .highlighted-text {
                     color: white;
@@ -740,6 +749,8 @@
                     justify-content: space-between;
 
                     span {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                         color: white;
 
                         pre, blockquote {
@@ -1395,6 +1406,9 @@
                 &::placeholder {
                     color: $o-we-sidebar-content-field-control-item-color;
                 }
+                &.datetimepicker-input.text-primary {
+                    color: inherit !important;
+                }
             }
             span {
                 flex: 0 0 auto;
@@ -1764,6 +1778,10 @@
                 }
             }
 
+            &:has(.o_long_title) we-button {
+                flex-shrink: 0;
+            }
+
             &.o_we_header_font_row > div {
                 justify-content: space-between;
 
@@ -1978,7 +1996,11 @@
             // does not make a scrollbar appear for no reason
             flex: 1 1 auto;
 
-            &::after {
+            // The backdrop is not added for "o_we_select_pager". This is
+            // because it covers the entire panel, making it unnecessary.
+            // Additionally, using the backdrop with an "o_we_select_pager"
+            // causes a CSS bug on Safari.
+            &:not(:has(.o_we_select_pager.o_we_widget_opened))::after {
                 content: "";
                 // We use a "sticky" position because it ensures that the
                 // backdrop covers the entire "customize panel" element, even

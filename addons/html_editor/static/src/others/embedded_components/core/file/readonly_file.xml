@@ -1,38 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <!-- /file template -->
-    <t t-name="html_editor.ReadonlyEmbeddedFile">
-        <div class="d-flex justify-content-between flex-wrap w-100">
-            <div class="d-flex flex-grow-1">
-                <div class="o_file_image d-flex align-items-center">
-                    <a class="o_image" t-att-title="fileModel.filename" t-att-data-mimetype="fileModel.mimetype"
-                        t-att-href="fileModel.downloadUrl" t-on-click.prevent.stop="onClickFileImage"
-                    />
-                </div>
-                <div class="d-block ps-2 text-break flex-grow-1">
-                    <div class="o_embedded_file_name_container">
-                        <div class="d-flex" >
-                            <span class="o_file_name" t-out="fileModel.filename"/>
-                        </div>
-                    </div>
-                    <div class="d-flex flex-wrap">
-                        <div t-if="fileModel.extension" class="text-uppercase small"
-                            t-out="fileModel.extension"/>
-                        <div class="flex-grow-1 d-flex justify-content-end">
-                            <EmbeddedComponentToolbar>
-                                <t t-set-slot="buttons">
-                                    <EmbeddedComponentToolbarButton
-                                        icon="'fa-download'"
-                                        label.translate="Download"
-                                        name="'download'"
-                                        onClick.bind="onClickDownload"
-                                    />
-                                </t>
-                            </EmbeddedComponentToolbar>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <t t-name="html_editor.ReadonlyEmbeddedFile" t-inherit="html_editor.StaticFileBox" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_file_image')]" position="inside">
+            <a t-att-href="fileModel.downloadUrl" t-on-click.prevent.stop="onClickFileImage" class="w-100"/>
+        </xpath>
+
+        <xpath expr="//span[hasclass('o_file_name_container')]/a" position="replace">
+            <span class="o_file_name" t-out="fileModel.filename"/>
+        </xpath>
+
+        <xpath expr="//span[hasclass('o_file_name_container')]" position="after">
+            <span class="flex-grow-1 d-flex justify-content-end">
+                <!-- Empty toolbar, buttons are added by templates that extend this one -->
+                <EmbeddedComponentToolbar>
+                    <t t-set-slot="buttons"/>
+                </EmbeddedComponentToolbar>
+            </span>
+        </xpath>
+       
     </t>
+
 </templates>

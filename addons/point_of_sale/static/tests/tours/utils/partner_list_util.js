@@ -1,8 +1,9 @@
-export function clickPartner(name = "") {
+export function clickPartner(name = "", { expectUnloadPage = false } = {}) {
     return {
         content: `click partner '${name}' from partner list screen`,
         trigger: `.modal .partner-list b:contains(${name})`,
         run: "click",
+        expectUnloadPage,
     };
 }
 export function clickPartnerOptions(name) {
@@ -68,6 +69,13 @@ export function searchCustomerValue(val) {
             content: `Search customer with "${val}"`,
             trigger: `.modal-dialog .input-group input`,
             run: `edit ${val}`,
+        },
+        {
+            content: `Click on search more if present`,
+            trigger: `.search-more-button > button, .partner-list .partner-info:nth-child(1):contains("${val}")`,
+            run: function () {
+                this.anchor.click();
+            },
         },
         {
             content: `Check "${val}" is shown`,

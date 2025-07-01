@@ -30,7 +30,7 @@ class Partner extends models.Model {
         { id: 2, display_name: "Second record" },
     ];
     _views = {
-        "form,false": `
+        form: `
             <form>
                 <header>
                     <button name="object" string="Call method" type="object"/>
@@ -47,8 +47,7 @@ class Partner extends models.Model {
                     </t>
                 </templates>
             </kanban>`,
-        "list,false": `<list><field name="display_name"/></list>`,
-        "search,false": `<search/>`,
+        list: `<list><field name="display_name"/></list>`,
     };
 }
 
@@ -119,7 +118,6 @@ test("report actions can close modals and reload views", async () => {
             name: "Create a Partner",
             res_model: "partner",
             target: "new",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
         },
     ]);
@@ -350,7 +348,8 @@ test("can use custom handlers for report actions", async () => {
     ]);
 });
 
-test.tags("desktop")("context is correctly passed to the client action report", async (assert) => {
+test.tags("desktop");
+test("context is correctly passed to the client action report", async (assert) => {
     patchWithCleanup(download, {
         _download: (options) => {
             expect.step(options.url);

@@ -73,7 +73,7 @@
                 </t>
                 <t t-if="props.mode === 'import'" class="d-flex">
                     <div class="grid o_inner_group">
-                        <div class="d-flex d-sm-contents">
+                        <div class="d-flex">
                             <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
                                 <label class="o_form_label" for="next_serial_0">
                                     <t t-if="props.move.data.has_tracking==='lot'">Lot numbers</t>
@@ -88,7 +88,7 @@
                                     class="o_input" t-ref="lots" id="next_serial_0" type="text"/>
                             </div>
                         </div>
-                        <div class="d-flex d-sm-contents">
+                        <div class="d-flex">
                             <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
                                 <label class="o_form_label" for="keep_lines_0">Keep current lines</label>
                             </div>

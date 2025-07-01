@@ -2,6 +2,7 @@ import { AND, Record } from "@mail/core/common/record";
 import { rpc } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
+import { expirableStorage } from "../expirable_storage";
 
 export class Chatbot extends Record {
     static id = AND("script", "thread");
@@ -84,7 +85,8 @@ export class Chatbot extends Record {
         return (
             (this.currentStep?.isLast &&
                 (!this.currentStep.expectAnswer || this.currentStep?.completed)) ||
-            this.currentStep?.operatorFound
+            this.currentStep?.operatorFound ||
+            !this.thread.livechat_active
         );
     }
 
@@ -142,16 +144,7 @@ export class Chatbot extends Record {
      * @returns {Promise<boolean>} Whether the script is ready to go to the next step.
      */
     async _processAnswerQuestionSelection(message) {
-        if (this.currentStep.selectedAnswer) {
-            return true;
-        }
-        const answer = this.currentStep.answers.find(({ name }) => message.body.includes(name));
-        this.currentStep.selectedAnswer = answer;
-        await rpc("/chatbot/answer/save", {
-            channel_id: this.thread.id,
-            message_id: this.currentStep.message.id,
-            selected_answer_id: answer.id,
-        });
+        const answer = this.currentStep.selectedAnswer;
         if (!answer.redirect_link) {
             return true;
         }
@@ -161,8 +154,19 @@ export class Chatbot extends Record {
             const nextURL = new URL(answer.redirect_link, window.location.href);
             isRedirecting = url.pathname !== nextURL.pathname || url.origin !== nextURL.origin;
         }
+        const redirects = JSON.parse(
+            expirableStorage.getItem("im_livechat.chatbot_redirect") ?? "[]"
+        );
         const targetURL = new URL(answer.redirect_link, window.location.origin);
-        const redirectionAlreadyDone = targetURL.href === location.href;
+        const redirectionAlreadyDone =
+            targetURL.href === location.href || redirects.includes(message.id);
+        redirects.push(message.id);
+        const ONE_DAY_TTL = 60 * 60 * 24;
+        expirableStorage.setItem(
+            "im_livechat.chatbot_redirect",
+            JSON.stringify([...new Set(redirects)]),
+            ONE_DAY_TTL
+        );
         if (!redirectionAlreadyDone) {
             browser.location.assign(answer.redirect_link);
         }
@@ -192,6 +196,7 @@ export class Chatbot extends Record {
     restart() {
         if (this.currentStep) {
             this.currentStep.isLast = false;
+            this.thread.livechat_active = true;
         }
     }
 }

@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { delay } from '@odoo/hoot-dom';
 import {
     clickOnEditAndWaitEditMode,
     clickOnExtraMenuItem,
@@ -53,6 +54,9 @@ registerWebsitePreviewTour('edit_menus', {
     },
     {
         trigger: "body:not(:has(.oe_menu_editor))",
+    },
+    {
+        trigger: ":iframe body:contains(welcome to your)",
     },
     clickOnExtraMenuItem({}, true),
     {
@@ -245,10 +249,9 @@ registerWebsitePreviewTour('edit_menus', {
         content: "Drag Mega at the top",
         trigger: '.oe_menu_editor li:contains("Megaaaaa!") .fa-bars',
         run(helpers) {
-            return helpers.drag_and_drop('.oe_menu_editor li:contains("Home")', {
-                position: {
-                    y: 27,
-                    left: 5,
+            return helpers.drag_and_drop(".oe_menu_editor li:contains('Home') .fa-bars", {
+                position : {
+                    top: 20,
                 },
                 relative: true,
             });
@@ -337,15 +340,119 @@ registerWebsitePreviewTour('edit_menus', {
     },
     ...clickOnEditAndWaitEditMode(),
     {
+        trigger: ":iframe main section.s_media_list .s_media_list_item:eq(2) h3:contains(post)",
+    },
+    {
         content: "Open nested menu item",
-        trigger: ':iframe .top_menu .nav-item:contains("Home"):nth-child(2) .dropdown-toggle',
-        run: "click",
+        trigger: ':iframe .o_header_is_scrolled.o_top_fixed_element .nav-item:contains("Home"):nth-child(2) .dropdown-toggle',
+        async run(actions) {
+            // If you scroll after click on dropdown, nested menu disappears.
+            await delay(500);
+            // So wait that scroll is finished before click.
+            await actions.click();
+        },
     },
     {
         // If this step fails, it means that a patch inside bootstrap was lost.
         content: "Press the 'down arrow' key.",
         trigger: ':iframe .top_menu .nav-item:contains("Home") li:contains("Contact us")',
         run: "press ArrowDown",
+    },
+    ...clickOnSave(),
+    // Nest and re-arrange menu items for a newly created menu
+    {
+        content: "Open site menu",
+        trigger: 'button[data-menu-xmlid="website.menu_site"]',
+        run: "click",
+    },
+    {
+        content: "Click on Edit Menu",
+        trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
+        run: "click",
+    },
+    {
+        content: "Trigger link dialog (click 'Add Menu Item')",
+        trigger: '.modal-body a:eq(0)',
+        run: "click",
+    },
+    {
+        content: "Write a label for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
+        run: "edit new_menu",
+    },
+    {
+        content: "Write a url for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(1)',
+        run: "edit #",
+    },
+    {
+        content: "Confirm the new menu entry",
+        trigger: '.modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)',
+        run: "click",
+    },
+    {
+        content: "Check if new menu(new_menu) is added",
+        trigger: '.oe_menu_editor li:contains("new_menu")',
+    },
+    {
+        content: "Trigger link dialog (click 'Add Menu Item')",
+        trigger: '.modal-body a:eq(0)',
+        run: "click",
+    },
+    {
+        content: "Write a label for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
+        run: "edit new_nested_menu",
+    },
+    {
+        content: "Write a url for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(1)',
+        run: "edit #",
+    },
+    {
+        content: "Confirm the new menu entry",
+        trigger: '.modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)',
+        run: "click",
+    },
+    {
+        content: "Check if new menu(new_nested_menu) is added",
+        trigger: '.oe_menu_editor li:contains("new_nested_menu")',
+    },
+    {
+        content: "Nest 'new_nested_menu' under 'new_menu'",
+        trigger: '.oe_menu_editor li:contains("new_nested_menu") .fa-bars',
+        run: "drag_and_drop .oe_menu_editor li:contains('new_menu') .form-control",
+    },
+    {
+        content: "Drag 'Modnar !!' below 'new_menu'",
+        trigger: '.oe_menu_editor li:contains("Modnar !!") .fa-bars',
+        async run(helpers) {
+            await helpers.drag_and_drop('.oe_menu_editor li:contains("new_menu") .fa-bars', {
+                position: "bottom",
+            });
+        },
+    },
+    {
+        content: "Nest 'Modnar !!' under 'new_menu'",
+        trigger: '.oe_menu_editor li:contains("Modnar !!") .fa-bars',
+        run: "drag_and_drop .oe_menu_editor li:contains('new_menu') .form-control",
+    },
+    {
+        content: "Check if 'nested_menu' and 'Modnar !!' is nested under 'new_menu'",
+        trigger: '.oe_menu_editor li:contains("new_menu") > ul > li:contains("Modnar !!") + li:contains("nested_menu")',
+    },
+    {
+        content: "Move 'Modnar !!' below 'new_nested_menu' inside the 'new_menu'",
+        trigger: '.oe_menu_editor  li:contains("new_menu") > ul > li:contains("Modnar !!") .fa-bars',
+        async run(helpers) {
+            await helpers.drag_and_drop(".oe_menu_editor  li:contains('new_menu') > ul > li:contains('new_nested_menu') .fa-bars", {
+                position: "bottom",
+            });
+        },
+    },
+    {
+        content: "Check if 'Modnar !!' is now below 'new_nested_menu' in 'new_menu'",
+        trigger: '.oe_menu_editor li:contains("new_menu") > ul > li:last-child:contains("Modnar !!")',
     },
 ]);
 

@@ -78,3 +78,26 @@ export function checkCombo(comboName, products) {
 
     return steps;
 }
+
+export function cancelOrder() {
+    return [
+        {
+            content: `Click on 'Cancel' button`,
+            trigger: '.order-cart-content .btn:contains("Cancel")',
+            run: "click",
+        },
+        {
+            content: `Validate cancel popup`,
+            trigger: ".modal-dialog .btn:contains('Cancel Order')",
+            run: "click",
+        },
+    ];
+}
+
+export function removeLine(productName) {
+    return {
+        content: `remove orderline with name ${productName}`,
+        trigger: `.product-card-item:has(.product-info strong:contains(${productName})) .product-controllers button:eq(0)`,
+        run: "click",
+    };
+}

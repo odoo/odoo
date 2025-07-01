@@ -82,7 +82,11 @@ class ReportMoOverview(models.AbstractModel):
 
         if production.bom_id:
             currency = (production.company_id or self.env.company).currency_id
-            missing_components = (bom_line for bom_line in production.bom_id.bom_line_ids if bom_line not in (production.move_raw_ids.bom_line_id + self._get_kit_bom_lines(production.bom_id)))
+            current_bom_lines = production.move_raw_ids.bom_line_id | self._get_kit_bom_lines(production.bom_id)
+            missing_components = production.bom_id.bom_line_ids.filtered(
+                lambda bom_line: bom_line not in current_bom_lines and
+                not bom_line._skip_bom_line(production.product_id)
+            )
             missing_operations = (bom_line for bom_line in production.bom_id.operation_ids if bom_line not in production.workorder_ids.operation_id)
             for line in missing_components:
                 line_cost = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * line.product_qty
@@ -149,7 +153,7 @@ class ReportMoOverview(models.AbstractModel):
             if bp_move.state == 'cancel' or float_is_zero(bp_move.cost_share, precision_digits=2):
                 continue
             # As UoMs can vary, we use the default UoM of each product
-            quantities_by_product[bp_move.product_id] += bp_move.product_qty
+            quantities_by_product[bp_move.product_id] += bp_move.product_uom._compute_quantity(bp_move.quantity, bp_move.product_id.uom_id, rounding_method='HALF-UP')
             cost_share = bp_move.cost_share / 100
             total_cost_by_product[bp_move.product_id] += extras['total_real_cost'] * cost_share
             component_cost_by_product[bp_move.product_id] += extras['total_real_cost_components'] * cost_share
@@ -273,9 +277,8 @@ class ReportMoOverview(models.AbstractModel):
         operations = production.bom_id.operation_ids + kit_operation if kit_operation else production.bom_id.operation_ids
         if workorder.operation_id not in operations:
             return False
-        capacity = workorder.operation_id.workcenter_id._get_capacity(production.product_id)
-        operation_cycle = float_round(production.product_uom_qty / capacity, precision_rounding=1, rounding_method='UP')
-        return workorder.operation_id._compute_operation_cost() * operation_cycle
+        duration = workorder.operation_id._get_duration_expected(production.product_id, production.product_qty)
+        return self.env.company.currency_id.round(workorder.operation_id.with_context(op_duration=duration)._compute_operation_cost())
 
     def _get_operations_data(self, production, level=0, current_index=False):
         if production.state == "done":

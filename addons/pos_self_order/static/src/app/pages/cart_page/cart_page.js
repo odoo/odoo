@@ -4,6 +4,8 @@ import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { PopupTable } from "@pos_self_order/app/components/popup_table/popup_table";
 import { _t } from "@web/core/l10n/translation";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
+import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
+import { rpc } from "@web/core/network/rpc";
 
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
@@ -12,11 +14,20 @@ export class CartPage extends Component {
 
     setup() {
         this.selfOrder = useSelfOrder();
+        this.dialog = useService("dialog");
         this.router = useService("router");
         this.state = useState({
             selectTable: false,
             cancelConfirmation: false,
         });
+    }
+
+    get showCancelButton() {
+        return (
+            this.selfOrder.config.self_ordering_mode === "mobile" &&
+            this.selfOrder.config.self_ordering_pay_after === "each" &&
+            typeof this.selfOrder.currentOrder.id === "number"
+        );
     }
 
     get lines() {
@@ -38,6 +49,25 @@ export class CartPage extends Component {
         }
     }
 
+    async cancelOrder() {
+        this.dialog.add(CancelPopup, {
+            title: _t("Cancel order"),
+            confirm: async () => {
+                try {
+                    await rpc("/pos-self-order/remove-order", {
+                        access_token: this.selfOrder.access_token,
+                        order_id: this.selfOrder.currentOrder.id,
+                        order_access_token: this.selfOrder.currentOrder.access_token,
+                    });
+                    this.selfOrder.currentOrder.state = "cancel";
+                    this.router.navigate("default");
+                } catch (error) {
+                    this.selfOrder.handleErrorNotification(error);
+                }
+            },
+        });
+    }
+
     getLineChangeQty(line) {
         const currentQty = line.qty;
         const lastChange = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
@@ -49,7 +79,11 @@ export class CartPage extends Component {
         const type = this.selfOrder.config.self_ordering_mode;
         const takeAway = this.selfOrder.currentOrder.takeaway;
 
-        if (this.selfOrder.rpcLoading || !this.selfOrder.verifyCart()) {
+        if (
+            this.selfOrder.rpcLoading ||
+            !this.selfOrder.verifyCart() ||
+            !this.selfOrder.verifyPriceLoading()
+        ) {
             return;
         }
 
@@ -127,6 +161,7 @@ export class CartPage extends Component {
         } else {
             this.selfOrder.removeLine(line);
         }
+        !this.lines.length && this.router.back();
     }
 
     async _changeQuantity(line, increase) {
@@ -140,7 +175,7 @@ export class CartPage extends Component {
         }
         increase ? line.qty++ : line.qty--;
         for (const cline of this.selfOrder.currentOrder.lines) {
-            if (cline.combo_parent_uuid === line.uuid) {
+            if (cline.combo_parent_id?.uuid === line.uuid) {
                 this._changeQuantity(cline, increase);
                 cline.setDirty();
             }

@@ -1,6 +1,6 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { hover, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
 
 import {
     clickFieldDropdown,
@@ -11,6 +11,7 @@ import {
     fieldInput,
     fields,
     makeServerError,
+    MockServer,
     mockService,
     models,
     mountView,
@@ -158,9 +159,9 @@ test("Many2ManyTagsField with color: rendering and edition", async () => {
     PartnerType._records.push({ id: 13, name: "red", color: 8 });
     onRpc(({ args, method, model, kwargs, route }) => {
         if (route === "/web/dataset/call_kw/partner/web_save") {
-            var commands = args[1].timmy;
-            expect(commands.length).toBe(2);
-            expect(commands.map((cmd) => cmd[0]).join("-")).toBe("4-3");
+            const commands = args[1].timmy;
+            expect(commands).toHaveLength(2);
+            expect(commands.map((cmd) => cmd[0])).toEqual([4, 3]);
             expect(commands.map((cmd) => cmd[1])).toEqual([13, 14], {
                 message: "Should add 13, remove 14",
             });
@@ -558,9 +559,9 @@ test("Many2ManyTagsField can load more than 40 records", async () => {
         relation: "partner",
     });
     Partner._records[0].partner_ids = [];
-    for (var i = 15; i < 115; i++) {
-        Partner._records.push({ id: i, name: "walter" + i });
-        Partner._records[0].partner_ids.push(i);
+    for (let id = 15; id < 115; id++) {
+        Partner._records.push({ id, name: "walter" + id });
+        Partner._records[0].partner_ids.push(id);
     }
     await mountView({
         type: "form",
@@ -852,11 +853,8 @@ test("Many2ManyTagsField: select multiple records", async () => {
         search: '<search><field name="name"/></search>',
     };
 
-    for (var i = 1; i <= 10; i++) {
-        PartnerType._records.push({
-            id: 100 + i,
-            name: "Partner" + i,
-        });
+    for (let id = 101; id <= 110; id++) {
+        PartnerType._records.push({ id, name: "Partner" + id });
     }
 
     await mountView({
@@ -874,7 +872,7 @@ test("Many2ManyTagsField: select multiple records", async () => {
     expect(".o_dialog").toHaveCount(1);
     // + 1 for the select all
     expect(".o_dialog .o_list_renderer .o_list_record_selector input").toHaveCount(
-        PartnerType._records.length + 1
+        MockServer.env["partner.type"].length + 1
     );
     //multiple select tag
     await contains(".o_dialog .o_list_renderer .o_list_record_selector input").click();
@@ -883,7 +881,7 @@ test("Many2ManyTagsField: select multiple records", async () => {
 
     await contains(".o_dialog .o_select_button").click();
     expect("o_dialog").toHaveCount(0);
-    expect('[name="timmy"] .badge').toHaveCount(PartnerType._records.length);
+    expect('[name="timmy"] .badge').toHaveCount(MockServer.env["partner.type"].length);
 });
 
 test("Many2ManyTagsField: select multiple records doesn't show already added tags", async () => {
@@ -894,11 +892,8 @@ test("Many2ManyTagsField: select multiple records doesn't show already added tag
         search: '<search><field name="name"/></search>',
     };
 
-    for (var i = 1; i <= 10; i++) {
-        PartnerType._records.push({
-            id: 100 + i,
-            name: "Partner" + i,
-        });
+    for (let id = 101; id <= 110; id++) {
+        PartnerType._records.push({ id, name: "Partner" + id });
     }
 
     await mountView({
@@ -914,22 +909,19 @@ test("Many2ManyTagsField: select multiple records doesn't show already added tag
     await selectFieldDropdownItem("timmy", "Search More...");
 
     expect(".o_dialog .o_list_renderer .o_list_record_selector input").toHaveCount(
-        PartnerType._records.length + 1
+        MockServer.env["partner.type"].length + 1
     );
 
     //multiple select tag
     await contains(".o_dialog .o_list_renderer .o_list_record_selector input").click();
     await animationFrame(); // necessary for the button to be switched to enabled.
     await contains(".o_dialog .o_select_button").click();
-    expect('[name="timmy"] .badge').toHaveCount(PartnerType._records.length);
+    expect('[name="timmy"] .badge').toHaveCount(MockServer.env["partner.type"].length);
 });
 
 test("Many2ManyTagsField: save&new in edit mode doesn't close edit window", async () => {
-    for (var i = 1; i <= 10; i++) {
-        PartnerType._records.push({
-            id: 100 + i,
-            name: "Partner" + i,
-        });
+    for (let id = 101; id <= 110; id++) {
+        PartnerType._records.push({ id, name: "Partner" + id });
     }
 
     PartnerType._views = {
@@ -938,10 +930,6 @@ test("Many2ManyTagsField: save&new in edit mode doesn't close edit window", asyn
         form: '<form><field name="name"/></form>',
     };
 
-    const nameSearchProm = new Deferred();
-    onRpc("name_search", () => {
-        nameSearchProm.resolve();
-    });
     await mountView({
         type: "form",
         resModel: "partner",
@@ -954,7 +942,6 @@ test("Many2ManyTagsField: save&new in edit mode doesn't close edit window", asyn
     });
 
     await contains(`div[name="timmy"] input`).edit("Ralts", { confirm: false });
-    await nameSearchProm;
     await runAllTimers();
     await clickFieldDropdownItem("timmy", "Create and edit...");
     //await testUtils.fields.many2one.createAndEdit("timmy", "Ralts");
@@ -975,34 +962,11 @@ test("Many2ManyTagsField: save&new in edit mode doesn't close edit window", asyn
 });
 
 test("Many2ManyTagsField: make tag name input field blank on Save&New", async () => {
-    expect.assertions(4);
-
     PartnerType._views = {
         form: '<form><field name="name"/></form>',
     };
 
-    let onchangeCalls = 0;
-    const nameSearchProm = new Deferred();
-    onRpc("onchange", (args) => {
-        if (onchangeCalls === 0) {
-            expect(args.kwargs.context).toEqual(
-                { allowed_company_ids: [1], default_name: "hello", lang: "en", tz: "taht", uid: 7 },
-                { message: "context should have default_name with 'hello' as value" }
-            );
-        }
-        if (onchangeCalls === 1) {
-            expect(args.kwargs.context).toEqual({
-                allowed_company_ids: [1],
-                lang: "en",
-                tz: "taht",
-                uid: 7,
-            });
-        }
-        onchangeCalls++;
-    });
-    onRpc("name_search", () => {
-        nameSearchProm.resolve();
-    });
+    onRpc("onchange", (args) => expect.step(args.kwargs.context));
     await mountView({
         type: "form",
         resModel: "partner",
@@ -1011,36 +975,87 @@ test("Many2ManyTagsField: make tag name input field blank on Save&New", async ()
     });
 
     await contains(".o_field_widget input").edit("hello", { confirm: false });
-    await nameSearchProm;
-    await animationFrame();
+    await runAllTimers();
     await clickFieldDropdownItem("timmy", "Create and edit...");
-    await animationFrame();
 
     expect(".modal .o_form_view input").toHaveValue("hello");
 
     // Create record with save & new
     await contains(".modal .btn-primary:nth-child(2)").click();
     expect(".modal .o_form_view input").toHaveValue("");
+
+    expect.verifySteps([
+        { allowed_company_ids: [1], default_name: "hello", lang: "en", tz: "taht", uid: 7 },
+        {
+            allowed_company_ids: [1],
+            lang: "en",
+            tz: "taht",
+            uid: 7,
+        },
+    ]);
+});
+
+test("Many2ManyTagsField: Save&New in many2many_tags with default_ keys in context", async () => {
+    PartnerType._views = {
+        form: `
+            <form>
+                <field name="name"/>
+                <field name="color"/>
+            </form>`,
+    };
+
+    onRpc("onchange", (args) => expect.step(args.kwargs.context));
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="timmy" widget="many2many_tags" context="{'default_color': 3}"/>
+            </form>`,
+        resId: 1,
+    });
+
+    await contains(".o_field_widget input").edit("hello", { confirm: false });
+    await runAllTimers();
+    await clickFieldDropdownItem("timmy", "Create and edit...");
+
+    expect(".modal .o_field_widget[name=name] input").toHaveValue("hello");
+    expect(".modal .o_field_widget[name=color] input").toHaveValue("3");
+
+    // Create record with save & new
+    await contains(".modal .btn-primary:nth-child(2)").click();
+    expect(".modal .o_field_widget[name=name] input").toHaveValue("");
+    expect(".modal .o_field_widget[name=color] input").toHaveValue("3");
+
+    expect.verifySteps([
+        {
+            allowed_company_ids: [1],
+            default_name: "hello",
+            default_color: 3,
+            lang: "en",
+            tz: "taht",
+            uid: 7,
+        },
+        {
+            allowed_company_ids: [1],
+            default_color: 3,
+            lang: "en",
+            tz: "taht",
+            uid: 7,
+        },
+    ]);
 });
 
 test("Many2ManyTagsField: conditional create/delete actions", async () => {
     Turtle._records[0].partner_ids = [2];
-    for (var i = 1; i <= 10; i++) {
-        Partner._records.push({
-            id: 100 + i,
-            name: "Partner" + i,
-        });
+    for (let id = 101; id <= 110; id++) {
+        Partner._records.push({ id, name: "Partner" + id });
     }
 
     Partner._views = {
         list: '<list><field name="name"/></list>',
-        search: "<search/>",
     };
 
-    let nameSearchProm = new Deferred();
-    onRpc("name_search", () => {
-        nameSearchProm.resolve();
-    });
     await mountView({
         type: "form",
         resModel: "turtle",
@@ -1057,7 +1072,6 @@ test("Many2ManyTagsField: conditional create/delete actions", async () => {
     expect(".o_field_many2many_tags.o_field_widget .badge .o_delete").toHaveCount(1);
 
     await clickFieldDropdown("partner_ids");
-    await nameSearchProm;
     await animationFrame();
     expect(
         ".o-autocomplete.dropdown li.o_m2o_start_typing a:contains(Start typing...)"
@@ -1070,14 +1084,10 @@ test("Many2ManyTagsField: conditional create/delete actions", async () => {
     await contains(".modal .modal-footer .o_form_button_cancel").click();
 
     // type something that doesn't exist
-    nameSearchProm = new Deferred();
     await contains(".o_field_many2many_tags input").edit("Something that does not exist", {
         confirm: false,
     });
-
-    await press("ArrowDown");
-    await nameSearchProm;
-    await animationFrame();
+    await runAllTimers();
 
     expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(2);
 
@@ -1088,10 +1098,8 @@ test("Many2ManyTagsField: conditional create/delete actions", async () => {
     // remove icon should still be there as it doesn't delete records but rather remove links
     expect(".o_field_many2many_tags.o_field_widget .badge .o_delete").toHaveCount(1);
 
-    nameSearchProm = new Deferred();
     await clickFieldDropdown("partner_ids");
-    await nameSearchProm;
-    await animationFrame();
+    await runAllTimers();
 
     // only Search More option should be available
     expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
@@ -1106,14 +1114,8 @@ test("Many2ManyTagsField: conditional create/delete actions", async () => {
     await contains(".modal .modal-footer .o_form_button_cancel").click();
 
     // type something that does exist in multiple occurrences
-    // LPE: to check with AAB
-    nameSearchProm = new Deferred();
     await contains(".o_field_many2many_tags input").edit("Pa", { confirm: false });
-
-    await press("ArrowUp");
-    await animationFrame();
-    await nameSearchProm;
-    await animationFrame();
+    await runAllTimers();
 
     // only Search More option should be available
     expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
@@ -1420,9 +1422,9 @@ test("Many2ManyTagsField with attribute 'can_create' set to false", async () => 
 });
 
 test("Many2ManyTagsField with arch context in form view", async () => {
-    onRpc("name_search", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("name_search", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("name search with context given");
             for (const res of result) {
                 res[1] += " coucou";
@@ -1430,9 +1432,9 @@ test("Many2ManyTagsField with arch context in form view", async () => {
         }
         return result;
     });
-    onRpc("web_read", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("web_read", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("read with context given");
             result[0].display_name += " coucou";
         }
@@ -1451,9 +1453,9 @@ test("Many2ManyTagsField with arch context in form view", async () => {
 });
 
 test("Many2ManyTagsField with arch context in list view", async () => {
-    onRpc("name_search", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("name_search", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("name search with context given");
             for (const res of result) {
                 res[1] += " coucou";
@@ -1461,9 +1463,9 @@ test("Many2ManyTagsField with arch context in list view", async () => {
         }
         return result;
     });
-    onRpc("web_read", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("web_read", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("read with context given");
             result[0].display_name += " coucou";
         }
@@ -1563,7 +1565,7 @@ test("Many2ManyTagsField with edit_tags option", async () => {
         expect(args[0]).toEqual([12], {
             message: "should call get_formview_id with correct id",
         });
-        return Promise.resolve(false);
+        return false;
     });
     onRpc("partner.type", "web_save", ({ args }) => {
         expect(args[1]).toEqual({ name: "new" });
@@ -1625,4 +1627,33 @@ test("Many2ManyTagsField with edit_tags option overrides color edition", async (
     // Edit name of tag
     await fieldInput("name").edit("new");
     await clickSave();
+});
+
+test("Many2ManyTagsField: press backspace multiple times to remove tag", async () => {
+    Partner._records[0].timmy = [12, 14];
+    Partner._fields.timmy.onChange = () => {};
+
+    const def = new Deferred();
+    onRpc("onchange", ({ args }) => {
+        expect.step(`onchange ${JSON.stringify(args[1].timmy)}`);
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="timmy" widget="many2many_tags"/>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_many2many_tags .badge").toHaveCount(2);
+
+    await contains(".o_field_many2many_tags .badge:eq(1)").click();
+    press("BackSpace");
+    press("BackSpace");
+    def.resolve();
+    await animationFrame();
+    expect(".o_field_many2many_tags .badge").toHaveCount(1);
+    expect.verifySteps(["onchange [[3,14]]"]);
 });

@@ -4,6 +4,7 @@ from freezegun import freeze_time
 import logging
 from pytz import timezone
 
+from odoo import Command
 from odoo.tests import tagged
 from odoo.tools import misc
 
@@ -31,6 +32,94 @@ class TestEdiZatca(TestSaEdiCommon):
             current_tree = self.with_applied_xpath(current_tree, self.remove_ubl_extensions_xpath)
 
             self.assertXmlTreeEqual(current_tree, expected_tree)
+
+    def testInvoiceWithDownpayment(self):
+
+        if 'sale' not in self.env["ir.module.module"]._installed():
+            self.skipTest("Sale module is not installed")
+
+        def test_generated_file(move, test_file, xpath_to_apply):
+            move.with_context(skip_readonly_check=True).write({
+                'invoice_date': '2022-09-05',
+                'invoice_date_due': '2022-09-22',
+                'state': 'posted',
+                'l10n_sa_confirmation_datetime': datetime.now(),
+            })
+            move._l10n_sa_generate_unsigned_data()
+            generated_file = self.env['account.edi.format']._l10n_sa_generate_zatca_template(move)
+            current_tree = self.get_xml_tree_from_string(generated_file)
+            current_tree = self.with_applied_xpath(current_tree, self.remove_ubl_extensions_xpath)
+
+            expected_file = misc.file_open(f'l10n_sa_edi/tests/test_files/{test_file}.xml', 'rb').read()
+            expected_tree = self.get_xml_tree_from_string(expected_file)
+            expected_tree = self.with_applied_xpath(expected_tree, xpath_to_apply)
+
+            self.assertXmlTreeEqual(current_tree, expected_tree)
+
+        retention_tax = self.env['account.tax'].create({
+            'l10n_sa_is_retention': True,
+            'name': 'Retention Tax',
+            'amount_type': 'percent',
+            'amount': -5.0,
+        })
+
+        with freeze_time(datetime(year=2022, month=9, day=5, hour=8, minute=20, second=2, tzinfo=timezone('Etc/GMT-3'))):
+            self.partner_us.vat = 'US12345677'
+
+            pricelist = self.env['product.pricelist'].create({'name': 'SAR', 'currency_id': self.env.ref('base.SAR').id})
+            sale_order = self.env['sale.order'].create({
+                'partner_id': self.partner_us.id,
+                'pricelist_id': pricelist.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product_a.id,
+                        'price_unit': 1000,
+                        'product_uom_qty': 1,
+                        'tax_id': [Command.set(self.tax_15.ids)],
+                    })
+                ]
+            })
+            sale_order.action_confirm()
+
+            context = {
+                'active_model': 'sale.order',
+                'active_ids': [sale_order.id],
+                'active_id': sale_order.id,
+                'default_journal_id': self.company_data['default_journal_sale'].id,
+            }
+            downpayment = self.env['sale.advance.payment.inv'].with_context(context).create({
+                'advance_payment_method': 'fixed',
+                'fixed_amount': 115,
+            })._create_invoices(sale_order)
+            final = self.env['sale.advance.payment.inv'].with_context(context).create({})._create_invoices(sale_order)
+            final.invoice_line_ids.filtered('is_downpayment').write({
+                'name': 'Down payment',
+            })
+            final.invoice_line_ids.filtered(lambda l: l.product_id == self.product_a).tax_ids = [(Command.link(retention_tax.id))]
+
+            for move, test_file in (
+                (downpayment, "downpayment_invoice"),
+                (final, "final_invoice")
+            ):
+                with self.subTest(move=move, test_file=test_file):
+                    test_generated_file(move, test_file, self.invoice_applied_xpath)
+
+            for move, test_file in (
+                (downpayment, "downpayment_credit_note"),
+                (final, "final_credit_note")
+            ):
+                with self.subTest(move=move, test_file=test_file):
+                    wiz_context = {
+                        'active_model': 'account.move',
+                        'active_ids': [move.id],
+                        'default_journal_id': move.journal_id.id,
+                    }
+                    refund_invoice_wiz = self.env['account.move.reversal'].with_context(wiz_context).create({
+                        'reason': 'please reverse :c',
+                        'date': '2022-09-05',
+                    })
+                    refund_invoice = self.env['account.move'].browse(refund_invoice_wiz.reverse_moves()['res_id'])
+                    test_generated_file(refund_invoice, test_file, self.credit_note_applied_xpath)
 
     def testCreditNoteStandard(self):
 

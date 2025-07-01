@@ -18,18 +18,18 @@ const threadPatch = {
         this.onlineMembers = Record.many("ChannelMember", {
             /** @this {import("models").Thread} */
             compute() {
-                return this.channelMembers.filter((member) =>
-                    this.store.onlineMemberStatuses.includes(member.persona.im_status)
-                );
-            },
-            sort(m1, m2) {
-                return this.store.sortMembers(m1, m2);
+                return this.channelMembers
+                    .filter((member) =>
+                        this.store.onlineMemberStatuses.includes(member.persona.im_status)
+                    )
+                    .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
             },
         });
         this.offlineMembers = Record.many("ChannelMember", {
-            compute: this._computeOfflineMembers,
-            sort(m1, m2) {
-                return this.store.sortMembers(m1, m2);
+            compute() {
+                return this._computeOfflineMembers().sort(
+                    (m1, m2) => this.store.sortMembers(m1, m2) // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
+                );
             },
         });
     },
@@ -59,7 +59,7 @@ const threadPatch = {
             }
             const data = await rpc("/discuss/channel/info", { channel_id: this.id });
             if (data) {
-                this.store.insert(data);
+                this.store.insert(data, { html: true });
             } else {
                 this.delete();
             }

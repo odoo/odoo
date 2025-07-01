@@ -23,12 +23,13 @@ export class TodoChatterPanel extends Component {
 
     toggleChatter(ev) {
         this.state.displayChatter = ev.detail.displayChatter;
+        this.rootRef.el?.parentElement?.classList.toggle('d-none', !this.state.displayChatter);
     }
 }
 
 export const todoChatterPanel = {
     component: TodoChatterPanel,
-    additionalClasses: ["o_todo_chatter", "position-relative", "p-0", "overflow-y-auto"],
+    additionalClasses: ["o_todo_chatter", "d-none", "position-relative", "p-0", "overflow-y-auto"],
 };
 
 registry.category("view_widgets").add("todo_chatter_panel", todoChatterPanel);

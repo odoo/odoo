@@ -115,8 +115,6 @@ export function generateListDefinition(model, columns) {
 export function getBasicListArchs() {
     return {
         "partner,false,list": getBasicListArch(),
-        "partner,false,search": /* xml */ `<search/>`,
-        "partner,false,form": /* xml */ `<form/>`,
     };
 }
 
@@ -130,7 +128,6 @@ export function defineSpreadsheetActions() {
             id: 1,
             name: "partner Action",
             res_model: "partner",
-            type: "ir.actions.act_window",
             xml_id: "spreadsheet.partner_action",
             views: [
                 [false, "list"],
@@ -199,7 +196,7 @@ export class SpreadsheetMixin extends models.Model {
 
     spreadsheet_binary_data = fields.Binary({ string: "Spreadsheet file" });
     spreadsheet_data = fields.Text();
-    thumbnail = fields.Binary();
+    display_thumbnail = fields.Binary();
 
     get_display_names_for_spreadsheet(args) {
         const result = [];
@@ -428,8 +425,6 @@ export class Partner extends models.Model {
         list: getBasicListArch(),
         pivot: getBasicPivotArch(),
         graph: getBasicGraphArch(),
-        form: /* xml */ `<Form/>`,
-        search: /* xml */ `<search/>`,
     };
 }
 

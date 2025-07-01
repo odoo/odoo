@@ -11,4 +11,17 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record model="ir.module.category" id="test_website.module_category_test_website">
+        <field name="name">Tests about Website with additional model</field>
+        <field name="sequence">24</field>
+    </record>
+
+    <record id="group_test_website_tester" model="res.groups">
+        <field name="name">Tester</field>
+        <field name="category_id" ref="test_website.module_category_test_website"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="groups_id" eval="[(4, ref('test_website.group_test_website_tester'))]"/>
+    </record>
 </odoo>

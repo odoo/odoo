@@ -21,6 +21,7 @@ import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { Typing } from "@mail/discuss/typing/common/typing";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 /**
  * @typedef {Object} Props
@@ -76,27 +77,40 @@ export class ChatWindow extends Component {
         return undefined;
     }
 
+    get hasActionsMenu() {
+        return (
+            this.partitionedActions.group.length > 0 ||
+            this.partitionedActions.other.length > 0 ||
+            (this.ui.isSmall && this.partitionedActions.quick.length > 2) ||
+            (!this.ui.isSmall && this.partitionedActions.quick.length > 3)
+        );
+    }
+
     get thread() {
         return this.props.chatWindow.thread;
     }
 
     get style() {
-        const maxHeight = !this.ui.isSmall ? "max-height: 95vh;" : "";
         const textDirection = localization.direction;
         const offsetFrom = textDirection === "rtl" ? "left" : "right";
         const visibleOffset = this.ui.isSmall ? 0 : this.props.right;
         const oppositeFrom = offsetFrom === "right" ? "left" : "right";
-        return `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto; ${maxHeight}`;
+        return `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto;`;
     }
 
     onKeydown(ev) {
         const chatWindow = toRaw(this.props.chatWindow);
+        if (ev.key === "Escape" && this.threadActions.activeAction) {
+            this.threadActions.activeAction.close();
+            ev.stopPropagation();
+            return;
+        }
         if (ev.target.closest(".o-dropdown") || ev.target.closest(".o-dropdown--menu")) {
             return;
         }
         ev.stopPropagation(); // not letting home menu steal my CTRL-C
-        switch (ev.key) {
-            case "Escape":
+        switch (getActiveHotkey(ev)) {
+            case "escape":
                 if (
                     isEventHandled(ev, "NavigableList.close") ||
                     isEventHandled(ev, "Composer.discard")
@@ -109,7 +123,7 @@ export class ChatWindow extends Component {
                 }
                 this.close({ escape: true });
                 break;
-            case "Tab": {
+            case "tab": {
                 const index = this.store.chatHub.opened.findIndex((cw) => cw.eq(chatWindow));
                 if (index === this.store.chatHub.opened.length - 1) {
                     this.store.chatHub.opened[0].focus();
@@ -118,6 +132,10 @@ export class ChatWindow extends Component {
                 }
                 break;
             }
+            case "control+k":
+                this.store.env.services.command.openMainPalette();
+                ev.preventDefault();
+                break;
         }
     }
 
@@ -135,7 +153,7 @@ export class ChatWindow extends Component {
 
     toggleFold() {
         const chatWindow = toRaw(this.props.chatWindow);
-        if (this.ui.isSmall || this.state.actionsMenuOpened) {
+        if (this.state.actionsMenuOpened) {
             return;
         }
         chatWindow.fold();

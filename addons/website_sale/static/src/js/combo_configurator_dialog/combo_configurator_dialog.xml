@@ -15,7 +15,8 @@
         </button>
         <button name="sale_combo_configurator_confirm_button" position="after">
             <button
-                class="btn btn-secondary"
+                name="website_sale_combo_configurator_continue_button"
+                class="btn btn-secondary flex-grow-1 flex-md-grow-0"
                 t-if="this.props.isFrontend"
                 t-on-click="() => this.confirm({goToCart: false})"
                 t-att-disabled="!areAllCombosSelected"
@@ -25,7 +26,8 @@
         </button>
         <button name="sale_combo_configurator_cancel_button" position="after">
             <button
-                class="btn btn-primary"
+                name="website_sale_combo_configurator_checkout_button"
+                class="btn btn-primary flex-grow-1 flex-md-grow-0"
                 t-if="this.props.isFrontend"
                 t-on-click="() => this.confirm({goToCart: true})"
                 t-att-disabled="!areAllCombosSelected"

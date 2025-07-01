@@ -255,6 +255,8 @@ class AccountPaymentTerm(models.Model):
 
     def _get_last_discount_date(self, date_ref):
         self.ensure_one()
+        if not date_ref:
+            return None
         return date_ref + relativedelta(days=self.discount_days or 0) if self.early_discount else False
 
     def _get_last_discount_date_formatted(self, date_ref):
@@ -262,6 +264,12 @@ class AccountPaymentTerm(models.Model):
         if not date_ref:
             return None
         return format_date(self.env, self._get_last_discount_date(date_ref))
+
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=_("%s (copy)", line.name)) for line, vals in zip(self, vals_list)]
+
 
 class AccountPaymentTermLine(models.Model):
     _name = "account.payment.term.line"

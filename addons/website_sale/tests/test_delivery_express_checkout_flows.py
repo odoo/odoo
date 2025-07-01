@@ -8,6 +8,9 @@ from odoo.http import root
 from odoo.tests import HttpCase, tagged
 
 from odoo.addons.base.tests.common import BaseUsersCommon
+from odoo.addons.payment import utils as payment_utils
+from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.controllers.delivery import (
     Delivery as WebsiteSaleDeliveryController,
 )
@@ -67,6 +70,14 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(BaseUsersCommon, WebsiteSaleCo
         }
 
         cls.user_demo = cls.user_internal
+        # Ensure demo user address exists and is valid
+        cls.user_demo.write({
+            'street': "215 Vine St",
+            'city': "Scranton",
+            'zip': "18503",
+            'country_id': cls.env.ref('base.us').id,
+            'state_id': cls.env.ref('base.state_us_39').id,
+        })
 
         cls.express_checkout_demo_shipping_values = {
             'name': cls.user_demo.partner_id.name,
@@ -97,6 +108,32 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(BaseUsersCommon, WebsiteSaleCo
             'state': cls.user_demo.partner_id.state_id.code,
         }
 
+    def assertPartnerShippingValues(self, partner, shipping_values):
+        for key, expected in shipping_values.items():
+            if key in ('state', 'country'):
+                value = partner[f'{key}_id'].code
+            else:
+                value = partner[key]
+            self.assertEqual(value, expected, "Shipping value should match")
+        if partner.state_id:
+            self.assertEqual(
+                partner.state_id.country_id,
+                partner.country_id,
+                "Partner's state should be within partner's country",
+            )
+
+    def test_express_checkout_takes_order_amount_without_delivery(self):
+        """Test that the amount to pay does not include the delivery costs in express checkout."""
+        amount_without_delivery = payment_utils.to_minor_currency_units(
+            self.cart.amount_total, self.cart.currency_id
+        )
+        self.carrier.fixed_price = 20
+        self.cart.set_delivery_line(self.carrier, self.carrier.fixed_price)
+        with MockRequest(self.env, sale_order_id=self.cart.id, website=self.website):
+            payment_values = WebsiteSale()._get_express_shop_payment_values(self.sale_order)
+
+        self.assertEqual(payment_values['minor_amount'], amount_without_delivery)
+
     def test_express_checkout_public_user_shipping_address_change(self):
         """ Test that when using express checkout as a public user and selecting a shipping address,
             a new partner is created if the partner of the SO is the public partner.
@@ -118,15 +155,10 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(BaseUsersCommon, WebsiteSaleCo
             new_partner = self.sale_order.partner_shipping_id
             self.assertNotEqual(new_partner, self.website.user_id.partner_id)
             self.assertTrue(new_partner.name.endswith(self.sale_order.name))
-            for k in self.express_checkout_anonymized_shipping_values:
-                if k in ['state', 'country']:
-                    # State and country are stored as ids in `new_partner` and therefore cannot be
-                    # compared.
-                    continue
-                self.assertEqual(
-                    new_partner[k],
-                    self.express_checkout_anonymized_shipping_values[k]
-                )
+            self.assertPartnerShippingValues(
+                new_partner,
+                self.express_checkout_anonymized_shipping_values,
+            )
 
     def test_express_checkout_public_user_shipping_address_change_twice(self):
         """ Test that when using express checkout as a public user and selecting a shipping address
@@ -156,15 +188,10 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(BaseUsersCommon, WebsiteSaleCo
                 }
             )
             self.assertEqual(new_partner.id, self.sale_order.partner_shipping_id.id)
-            for k in self.express_checkout_anonymized_shipping_values_2:
-                if k in ['state', 'country']:
-                    # State and country are stored as ids in `new_partner` and therefore cannot be
-                    # compared.
-                    continue
-                self.assertEqual(
-                    new_partner[k],
-                    self.express_checkout_anonymized_shipping_values_2[k]
-                )
+            self.assertPartnerShippingValues(
+                new_partner,
+                self.express_checkout_anonymized_shipping_values_2,
+            )
 
     def test_express_checkout_registered_user_exisiting_shipping_address_change(self):
         """ Test that when using express checkout as a registered user and selecting an exisiting
@@ -211,15 +238,10 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(BaseUsersCommon, WebsiteSaleCo
             self.assertEqual(self.sale_order.partner_id.id, self.user_demo.partner_id.id)
             self.assertNotEqual(new_partner.id, self.user_demo.partner_id.id)
             self.assertTrue(new_partner.name.endswith(self.sale_order.name))
-            for k in self.express_checkout_anonymized_shipping_values:
-                if k in ['state', 'country']:
-                    # State and country are stored as ids in `new_partner` and therefore cannot be
-                    # compared.
-                    continue
-                self.assertEqual(
-                    new_partner[k],
-                    self.express_checkout_anonymized_shipping_values[k]
-                )
+            self.assertPartnerShippingValues(
+                new_partner,
+                self.express_checkout_anonymized_shipping_values,
+            )
 
     def test_express_checkout_registered_user_new_shipping_address_change_twice(self):
         """ Test that when using express checkout as a registered user and selecting a new
@@ -250,15 +272,10 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(BaseUsersCommon, WebsiteSaleCo
                 }
             )
             self.assertEqual(new_partner.id, self.sale_order.partner_shipping_id.id)
-            for k in self.express_checkout_anonymized_shipping_values_2:
-                if k in ['state', 'country']:
-                    # State and country are stored as ids in `new_partner` and therefore cannot be
-                    # compared.
-                    continue
-                self.assertEqual(
-                    new_partner[k],
-                    self.express_checkout_anonymized_shipping_values_2[k]
-                )
+            self.assertPartnerShippingValues(
+                new_partner,
+                self.express_checkout_anonymized_shipping_values_2
+            )
 
     def test_express_checkout_partial_delivery_address_context_key(self):
         """ Test that when using express checkout with only partial delivery information,
@@ -290,7 +307,7 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(BaseUsersCommon, WebsiteSaleCo
             'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
             return_value=self.rate_shipment_result
         ):
-            shipping_options = self.make_jsonrpc_request(
+            shipping_options_data = self.make_jsonrpc_request(
                 urls.url_join(
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_delivery_route
                 ), params={
@@ -302,7 +319,7 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(BaseUsersCommon, WebsiteSaleCo
             self.make_jsonrpc_request(urls.url_join(self.base_url(), WebsiteSaleDeliveryController._express_checkout_route), params={
                 'billing_address': dict(self.express_checkout_billing_values),
                 'shipping_address': dict(self.express_checkout_demo_shipping_values),
-                'shipping_option': shipping_options[0],
+                'shipping_option': shipping_options_data['delivery_methods'][0],
             })
             self.assertEqual(self.sale_order.partner_id.id, self.user_demo.partner_id.id)
 
@@ -338,7 +355,7 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(BaseUsersCommon, WebsiteSaleCo
                 ), params={
                     'billing_address': dict(self.express_checkout_billing_values),
                     'shipping_address': dict(self.express_checkout_demo_shipping_values_2),
-                    'shipping_option': shipping_options[0],
+                    'shipping_option': shipping_options['delivery_methods'][0],
                 }
             )
             self.assertNotEqual(

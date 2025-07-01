@@ -7,7 +7,6 @@
 # Martin Trigaux, 2024
 # Rivo Zängov <eraser@eraser.ee>, 2024
 # Stevin Lilla, 2024
-# Siim Raasuke, 2024
 # Anna, 2024
 # Piia Paurson <piia@avalah.ee>, 2024
 # Triine Aavik <triine@avalah.ee>, 2024
@@ -17,14 +16,16 @@
 # Algo Kärp <algokarp@gmail.com>, 2024
 # Martin Aavastik <martin@avalah.ee>, 2024
 # Leaanika Randmets, 2024
+# Siim Raasuke, 2025
+# Tairi Tiimann, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Leaanika Randmets, 2024\n"
+"Last-Translator: Tairi Tiimann, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,33 +85,23 @@ msgstr ""
 
 #. module: sales_team
 #. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"Adding %(user_name)s in this team would remove him/her from its current team"
-" %(team_name)s."
-msgstr ""
-"Kui lisate %(user_name)s sellesse meeskonda, eemaldatakse ta praegusest "
-"meeskonnast %(team_name)s."
-
-#. module: sales_team
-#. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
 msgid ""
-"Adding %(user_name)s in this team would remove him/her from its current "
-"teams %(team_names)s."
+"Adding %(user_name)s in this team will remove them from %(team_names)s. "
+"Working in multiple teams? Activate the option under Configuration>Settings."
 msgstr ""
-"Kui lisate %(user_name)s sellesse meeskonda, eemaldatakse ta selle "
-"praegustest tiimidest %(team_names)s."
+"Lisades %(user_name)s sellesse meeskonda eemaldab nad %(team_names)s "
+"meeskonnast. Töötate mitmes meeskonnas? Aktiveerige see võimalus "
+"Seaded>Seaded alt."
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 msgid ""
-"Adding %(user_names)s in this team would remove them from their current "
-"teams (%(team_names)s)."
+"Adding %(user_names)s in this team will remove them from %(team_names)s."
 msgstr ""
-"Kui lisate sellesse meeskonda %(user_names)s, eemaldatakse nad nende "
-"praegustest tiimidest (%(team_names)s)."
+"Lisades %(user_names)s sellesse meeskonda eemaldab nad %(team_names)s "
+"meeskonnast."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -630,16 +621,6 @@ msgstr ""
 "\"Helista\" või \"Koosoleku ettevalmistamine\")."
 
 #. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"To add a Salesperson into multiple Teams, activate the Multi-Team option in "
-"settings."
-msgstr ""
-"Müügiesindaja mitmesse meeskonda lisamiseks aktiveerige seadetes \"Mtu "
-"müügimeeskonda\"."
-
-#. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
 msgid "Training"
 msgstr "Treening"
@@ -714,7 +695,7 @@ msgstr "Kasutaja müügimeeskond"
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
 msgid "User: All Documents"
-msgstr "Kasutaja: kõik dokumendi"
+msgstr "Kasutaja: kõik dokumendid"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
@@ -730,6 +711,14 @@ msgstr "Kasutajad määratud siia meeskonda."
 #: model:crm.team,name:sales_team.salesteam_website_sales
 msgid "Website"
 msgstr "Veebileht"
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+msgid ""
+"Working in multiple teams? Activate the option under Configuration>Settings."
+msgstr ""
+"Töötate mitmes meeskonnas? Aktiveerige see võimalus Seaded>Seaded alt."
 
 #. module: sales_team
 #. odoo-python

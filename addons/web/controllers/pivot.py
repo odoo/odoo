@@ -5,6 +5,8 @@ from collections import deque
 import io
 import json
 
+from werkzeug.datastructures import FileStorage
+
 from odoo import http, _
 from odoo.http import content_disposition, request
 from odoo.tools import osutil
@@ -15,7 +17,7 @@ class TableExporter(http.Controller):
 
     @http.route('/web/pivot/export_xlsx', type='http', auth="user", readonly=True)
     def export_xlsx(self, data, **kw):
-        jdata = json.loads(data)
+        jdata = json.load(data) if isinstance(data, FileStorage) else json.loads(data)
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         worksheet = workbook.add_worksheet(jdata['title'])
@@ -87,7 +89,7 @@ class TableExporter(http.Controller):
         # Step 4: writing data
         x = 0
         for row in jdata['rows']:
-            worksheet.write(y, x, row['indent'] * '     ' + row['title'], header_plain)
+            worksheet.write(y, x, f"{row['indent'] * '     '}{row['title']}", header_plain)
             for cell in row['values']:
                 x = x + 1
                 if cell.get('is_bold', False):

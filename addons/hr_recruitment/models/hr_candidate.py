@@ -105,6 +105,9 @@ class HrCandidate(models.Model):
             candidate.email_from = candidate.partner_id.email
             if not candidate.partner_phone:
                 candidate.partner_phone = candidate.partner_id.phone
+    
+    def _phone_get_number_fields(self):
+        return ['partner_phone']
 
     def _inverse_partner_email(self):
         for candidate in self:
@@ -185,7 +188,7 @@ class HrCandidate(models.Model):
             candidate.attachment_count = attach_data.get(candidate.id, 0)
 
     def _compute_application_count(self):
-        read_group_res = self.env['hr.applicant']._read_group(
+        read_group_res = self.env['hr.applicant'].with_context(active_test=False)._read_group(
             [('candidate_id', 'in', self.ids)],
             ['candidate_id'], ['__count'])
         application_data = dict(read_group_res)
@@ -236,6 +239,13 @@ class HrCandidate(models.Model):
                 candidate.meeting_display_text = _('Next Meeting')
             else:
                 candidate.meeting_display_text = _('Last Meeting')
+
+    def write(self, vals):
+        res = super().write(vals)
+
+        if vals.get("company_id") and not self.env.context.get('do_not_propagate_company', False):
+            self.applicant_ids.with_context(do_not_propagate_company=True).write({"company_id": vals["company_id"]})
+        return res
 
     def action_open_similar_candidates(self):
         self.ensure_one()

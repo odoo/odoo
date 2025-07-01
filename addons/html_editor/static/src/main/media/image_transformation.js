@@ -25,6 +25,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 import { Component, onMounted, useExternalListener, useRef } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { usePositionHook } from "@html_editor/position_hook";
 
 const rad = Math.PI / 180;
 
@@ -32,6 +33,7 @@ export class ImageTransformation extends Component {
     static template = "html_editor.ImageTransformation";
     static props = {
         document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
+        editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
         image: { validate: (p) => p.tagName === "IMG" },
         destroy: { type: Function },
         onChange: { type: Function },
@@ -49,7 +51,18 @@ export class ImageTransformation extends Component {
         });
         useExternalListener(window, "mousemove", this.mouseMove);
         useExternalListener(window, "mouseup", this.mouseUp);
+        // When a character key is pressed and the image gets deleted,
+        // close the image transform via selectionchange.
+        useExternalListener(this.document, "selectionchange", () => this.props.destroy());
+        // Backspace/Delete don’t trigger selectionchange on image
+        // delete in Chrome, so we use keydown event.
+        useExternalListener(this.document, "keydown", (ev) => {
+            if (["Backspace", "Delete"].includes(ev.key)) {
+                this.props.destroy();
+            }
+        });
         useHotkey("escape", () => this.props.destroy());
+        usePositionHook({ el: this.props.editable }, this.document, this.resetHandlers);
     }
 
     mouseMove(ev) {
@@ -224,7 +237,6 @@ export class ImageTransformation extends Component {
                 : 1;
 
         this.image.style.transform = "";
-        this.transfo.settings.style = this.image.style;
 
         this.transfo.settings.pos = this.getOffset(this.image);
 
@@ -261,7 +273,6 @@ export class ImageTransformation extends Component {
         settings.translatexp = Math.round((settings.translatex / width) * 1000) / 10;
         settings.translateyp = Math.round((settings.translatey / height) * 1000) / 10;
 
-        this.image.style = settings.style;
         this.setImageTransformation(this.image);
 
         this.transfoContainer.el.style.position = "absolute";
@@ -331,5 +342,10 @@ export class ImageTransformation extends Component {
                 left: rect.left + win.pageXOffset + offset.left,
             };
         }
+    }
+
+    resetHandlers() {
+        this.computeImageTransformations();
+        this.positionTransfoContainer();
     }
 }

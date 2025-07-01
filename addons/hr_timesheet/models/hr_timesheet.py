@@ -20,6 +20,7 @@ class AccountAnalyticLine(models.Model):
             ('employee_id', '=', employee_id),
             ('project_id', '!=', False),
             ('project_id.active', '=', True),
+            ('project_id.allow_timesheets', '=', True)
         ]
 
     @api.model
@@ -29,7 +30,7 @@ class AccountAnalyticLine(models.Model):
         )
         if not last_timesheets:
             internal_project = self.env.company.internal_project_id
-            return internal_project.active and internal_project.id
+            return internal_project.active and internal_project.allow_timesheets and internal_project.id
         return mode([t.project_id.id for t in last_timesheets])
 
     @api.model
@@ -62,7 +63,7 @@ class AccountAnalyticLine(models.Model):
         'project.task', 'Task', index='btree_not_null',
         compute='_compute_task_id', store=True, readonly=False,
         domain="[('allow_timesheets', '=', True), ('project_id', '=?', project_id)]")
-    parent_task_id = fields.Many2one('project.task', related='task_id.parent_id', store=True)
+    parent_task_id = fields.Many2one('project.task', related='task_id.parent_id', store=True, index='btree_not_null')
     project_id = fields.Many2one(
         'project.project', 'Project', domain=_domain_project_id, index=True,
         compute='_compute_project_id', store=True, readonly=False)
@@ -129,6 +130,7 @@ class AccountAnalyticLine(models.Model):
 
     @api.depends('task_id.partner_id', 'project_id.partner_id')
     def _compute_partner_id(self):
+        super()._compute_partner_id()
         for timesheet in self:
             if timesheet.project_id:
                 timesheet.partner_id = timesheet.task_id.partner_id or timesheet.project_id.partner_id
@@ -335,7 +337,7 @@ class AccountAnalyticLine(models.Model):
         if not project:
             return {}
         company = self.env['res.company'].browse(vals.get('company_id'))
-        mandatory_plans = self._get_mandatory_plans(company, business_domain='timesheet')
+        mandatory_plans = [plan for plan in self._get_mandatory_plans(company, business_domain='timesheet') if plan['column_name'] != 'account_id']
         missing_plan_names = [plan['name'] for plan in mandatory_plans if not project[plan['column_name']]]
         if missing_plan_names:
             raise ValidationError(_(
@@ -435,3 +437,13 @@ class AccountAnalyticLine(models.Model):
                 'res_id': uom_hours.id,
                 'noupdate': True,
             })
+
+    def action_open_timesheet_view_portal(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_id': self.id,
+            'res_model': 'account.analytic.line',
+            'views': [(self.env.ref('hr_timesheet.timesheet_view_form_portal_user').id, 'form')],
+            'context': self._context,
+        }

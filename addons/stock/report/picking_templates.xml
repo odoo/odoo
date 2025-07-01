@@ -5,7 +5,7 @@
             <t t-set="uom_categ_unit" t-value="env.ref('uom.product_uom_categ_unit')"/>
             <t t-foreach="docs" t-as="picking">
 
-                <t t-set="picking_quantity" t-value="any(picking.move_lines.move_line_ids.mapped('quantity'))"/>
+                <t t-set="picking_quantity" t-value="any(picking.move_ids.move_line_ids.mapped('quantity'))"/>
                 <t t-foreach="picking.move_ids" t-as="move">
                     <t t-foreach="move.move_line_ids" t-as="move_line">
                         <t t-if="move_line.product_uom_id.category_id == uom_categ_unit">
@@ -13,7 +13,7 @@
                                 <t t-set="qty" t-value="int(move_line.quantity)"/>
                             </t>
                             <t t-else="">
-                                <t t-set="qty" t-value="int(move_line.product_uom_qty)"/>
+                                <t t-set="qty" t-value="int(move_line.reserved_uom_qty)"/>
                             </t>
                         </t>
                         <t t-else="">
@@ -48,7 +48,7 @@
                 <div class="page">
                     <t t-set="uom_categ_unit" t-value="env.ref('uom.product_uom_categ_unit')"/>
                     <t t-foreach="docs" t-as="picking">
-                        <t t-set="picking_quantity" t-value="any(picking.move_lines.move_line_ids.mapped('quantity'))"/>
+                        <t t-set="picking_quantity" t-value="any(picking.move_ids.move_line_ids.mapped('quantity'))"/>
                         <t t-foreach="picking.move_ids" t-as="move">
                             <t t-foreach="move.move_line_ids" t-as="move_line">
                                 <t t-if="move_line.product_uom_id.category_id == uom_categ_unit">
@@ -56,7 +56,7 @@
                                         <t t-set="qty" t-value="int(move_line.quantity)"/>
                                     </t>
                                     <t t-else="">
-                                        <t t-set="qty" t-value="int(move_line.product_uom_qty)"/>
+                                        <t t-set="qty" t-value="int(move_line.reserved_uom_qty)"/>
                                     </t>
                                 </t>
                                 <t t-else="">

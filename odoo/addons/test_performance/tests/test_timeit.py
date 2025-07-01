@@ -1,4 +1,5 @@
 import logging
+import time
 import timeit
 from typing import Literal
 
@@ -81,8 +82,13 @@ class TestPerformanceTimeit(TransactionCase):
         """
         assert repeat > 1, "repeat at least twice as the first result is often slower"
         assert number > 0, "number of runs must be positive"
-        times = timeit.repeat(code, globals={**ctx, 'records': records}, repeat=repeat, number=number)
-        best_mean = min(times) / number * 1_000_000
+        args = dict(globals={**ctx, 'records': records}, repeat=repeat, number=number, timer=time.process_time_ns)
+        times = timeit.repeat(code, **args)
+        if min(times) == 0:
+            _logger.info("  retry with default timer, result is too small")
+            args['timer'] = time.perf_counter_ns
+            times = timeit.repeat(code, **args)
+        best_mean = min(times) / number / 1000
         if relative_size != 1:
             _logger.info("  `%s` takes %.3fµs (%.3fµs/%d)", code, best_mean / relative_size, best_mean, relative_size)
         else:
@@ -94,7 +100,7 @@ class TestPerformanceTimeit(TransactionCase):
         code: str, *,
         record_list: list[BaseModel] | None = None,
         relative_size: list[int] | None = None,
-        check_type: Literal['linear', 'maybe-linear', None] = 'linear',
+        check_type: Literal['linear', 'maybe-linear'] | None = 'linear',
         number: int = 4,
         repeat: int = 3,
         **kw,
@@ -157,7 +163,7 @@ class TestPerformanceTimeit(TransactionCase):
             p.with_context(active_test=True)
             for p in self.get_parents()
         ]
-        self.launch_perf_set("records.child_ids", record_list=record_list)
+        self.launch_perf_set("records.child_ids", record_list=record_list, check_type='maybe-linear')
 
     def test_perf_access_iter(self):
         self.launch_perf_set("list(records)")
@@ -166,7 +172,7 @@ class TestPerformanceTimeit(TransactionCase):
         self.launch_perf_set("records._as_query()", number=100)
 
     def test_perf_exists(self):
-        self.launch_perf_set("records.exists()")
+        self.launch_perf_set("records.exists()", check_type='maybe-linear')
 
     def test_perf_search_query(self):
         self.launch_perf("records._search([])", self.Model)
@@ -181,7 +187,7 @@ class TestPerformanceTimeit(TransactionCase):
 
     def test_perf_domain_filtered(self):
         for domain in self.example_domains:
-            self.launch_perf_set(f"records.filtered_domain({domain!r})", repeat=2)
+            self.launch_perf_set(f"records.filtered_domain({domain!r})", repeat=2, check_type='maybe-linear')
 
     def test_perf_xxlarge_domain(self):
 

@@ -45,23 +45,23 @@ function pivotPeriodToFilterValue(timeRange, value) {
                 yearOffset,
             };
         case "month": {
-            const month = value.includes("/") ? Number.parseInt(value.split("/")[0]) : -1;
+            const month = value.includes("/") ? Number.parseInt(value.split("/")[0]) - 1 : -1;
             if (!(month in monthsOptions)) {
                 return { yearOffset, period: undefined };
             }
             return {
                 yearOffset,
-                period: monthsOptions[month - 1].id,
+                period: monthsOptions[month].id,
             };
         }
         case "quarter": {
-            const quarter = value.includes("/") ? Number.parseInt(value.split("/")[0]) : -1;
+            const quarter = value.includes("/") ? Number.parseInt(value.split("/")[0]) - 1 : -1;
             if (!(quarter in FILTER_DATE_OPTION.quarter)) {
                 return { yearOffset, period: undefined };
             }
             return {
                 yearOffset,
-                period: FILTER_DATE_OPTION.quarter[quarter - 1],
+                period: FILTER_DATE_OPTION.quarter[quarter],
             };
         }
     }
@@ -130,6 +130,10 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
             case "CLEAR_GLOBAL_FILTER_VALUE":
                 this._addDomains();
                 break;
+            case "UPDATE_PIVOT":
+            case "UPDATE_ODOO_PIVOT_DOMAIN":
+                this._addDomain(cmd.pivotId);
+                break;
             case "UNDO":
             case "REDO": {
                 if (
@@ -138,6 +142,8 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
                             "ADD_GLOBAL_FILTER",
                             "EDIT_GLOBAL_FILTER",
                             "REMOVE_GLOBAL_FILTER",
+                            "UPDATE_ODOO_PIVOT_DOMAIN",
+                            "UPDATE_PIVOT",
                         ].includes(command.type)
                     )
                 ) {
@@ -239,6 +245,10 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
                                 break;
                             }
                         }
+                        // A group by value of "none"
+                        if (value === false) {
+                            break;
+                        }
                         if (JSON.stringify(currentValue) !== `[${value}]`) {
                             transformedValue = [value];
                         }
@@ -267,6 +277,9 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
      * @param {string} pivotId pivot id
      */
     _addDomain(pivotId) {
+        if (this.getters.getPivotCoreDefinition(pivotId).type !== "ODOO") {
+            return;
+        }
         const domainList = [];
         for (const [filterId, fieldMatch] of Object.entries(
             this.getters.getPivotFieldMatch(pivotId)

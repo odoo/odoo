@@ -7,7 +7,6 @@ import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_u
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("EWalletProgramTour1", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -33,7 +32,6 @@ registry.category("web_tour.tours").add("EWalletProgramTour1", {
 
 const getEWalletText = (suffix) => "eWallet" + (suffix !== "" ? ` ${suffix}` : "");
 registry.category("web_tour.tours").add("EWalletProgramTour2", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -114,7 +112,6 @@ registry.category("web_tour.tours").add("EWalletProgramTour2", {
 });
 
 registry.category("web_tour.tours").add("ExpiredEWalletProgramTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -129,7 +126,6 @@ registry.category("web_tour.tours").add("ExpiredEWalletProgramTour", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyPointsEwallet", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -145,5 +141,31 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsEwallet", {
             }),
             PosLoyalty.pointsAwardedAre("100"),
             PosLoyalty.finalizeOrder("Cash", "90.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("EWalletLoyaltyHistory", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickDisplayedProduct("Top-up eWallet"),
+            PosLoyalty.orderTotalIs("50.00"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.clickPartner("AAAAAAA"),
+            PosLoyalty.finalizeOrder("Cash", "50"),
+
+            ProductScreen.addOrderline("Whiteboard Pen", "2", "6", "12.00"),
+            PosLoyalty.eWalletButtonState({ highlighted: false }),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAAAAA"),
+            PosLoyalty.eWalletButtonState({
+                highlighted: true,
+                text: getEWalletText("Pay"),
+                click: true,
+            }),
+            PosLoyalty.orderTotalIs("0.00"),
+            PosLoyalty.finalizeOrder("Cash", "0"),
         ].flat(),
 });

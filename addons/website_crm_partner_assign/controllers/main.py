@@ -239,7 +239,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
 
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>',
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>/page/<int:page>',
-    ], type='http', auth="public", website=True, sitemap=sitemap_partners)
+    ], type='http', auth="public", website=True, sitemap=sitemap_partners, readonly=True)
     def partners(self, country=None, grade=None, page=0, **post):
         country_all = post.pop('country_all', False)
         partner_obj = request.env['res.partner']

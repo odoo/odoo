@@ -81,10 +81,9 @@ test("toggling category button does not hide active sub thread", async () => {
 });
 
 test("Closing a category sends the updated user setting to the server.", async () => {
-    onRpc("/web/dataset/call_kw/res.users.settings/set_res_users_settings", async (request) => {
-        const { params } = await request.json();
+    onRpc("res.users.settings", "set_res_users_settings", ({ kwargs }) => {
         step("/web/dataset/call_kw/res.users.settings/set_res_users_settings");
-        expect(params.kwargs.new_settings.is_discuss_sidebar_category_channel_open).toBe(false);
+        expect(kwargs.new_settings.is_discuss_sidebar_category_channel_open).toBe(false);
     });
     await start();
     await openDiscuss();
@@ -101,10 +100,9 @@ test("Opening a category sends the updated user setting to the server.", async (
         user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    onRpc("/web/dataset/call_kw/res.users.settings/set_res_users_settings", async (request) => {
-        const { params } = await request.json();
+    onRpc("res.users.settings", "set_res_users_settings", ({ kwargs }) => {
         step("/web/dataset/call_kw/res.users.settings/set_res_users_settings");
-        expect(params.kwargs.new_settings.is_discuss_sidebar_category_channel_open).toBe(true);
+        expect(kwargs.new_settings.is_discuss_sidebar_category_channel_open).toBe(true);
     });
     await start();
     await openDiscuss();
@@ -289,7 +287,7 @@ test("sidebar: basic chat rendering", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
-    await contains(".o-mail-DiscussSidebarChannel img[data-alt='Thread Image']");
+    await contains(".o-mail-DiscussSidebarChannel img[alt='Thread Image']");
     await contains(
         ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Unpin Conversation']"
     );
@@ -367,7 +365,8 @@ test("sidebar: unpin chat from bus", async () => {
     await contains(".o-mail-Discuss-threadName", { count: 0, value: "Demo" });
 });
 
-test("chat - channel should count unread message [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("chat - channel should count unread message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Demo",
@@ -393,7 +392,8 @@ test("chat - channel should count unread message [REQUIRE FOCUS]", async () => {
     await contains(".o-discuss-badge", { count: 0 });
 });
 
-test("mark channel as seen on last message visible [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("mark channel as seen on last message visible", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
@@ -877,14 +877,14 @@ test("channel - states: open from the bus", async () => {
         user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    onRpcBefore("/mail/action", (args) => {
+    onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
-            step(`/mail/action - ${JSON.stringify(args)}`);
+            step(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     await start();
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
@@ -1029,14 +1029,14 @@ test("chat - states: open from the bus", async () => {
         user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    onRpcBefore("/mail/action", (args) => {
+    onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
-            step(`/mail/action - ${JSON.stringify(args)}`);
+            step(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     await start();
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
@@ -1097,7 +1097,7 @@ test("chat - avatar: should have correct avatar", async () => {
     );
 });
 
-test("chat should be sorted by last activity time [REQUIRE FOCUS]", async () => {
+test("chat should be sorted by last activity time", async () => {
     const pyEnv = await startServer();
     const [demo_id, yoshi_id] = pyEnv["res.partner"].create([{ name: "Demo" }, { name: "Yoshi" }]);
     pyEnv["res.users"].create([{ partner_id: demo_id }, { partner_id: yoshi_id }]);
@@ -1215,7 +1215,8 @@ test("Do no channel_info after unpin", async () => {
     await assertSteps([]);
 });
 
-test("Group unread counter up to date after mention is marked as seen [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("Group unread counter up to date after mention is marked as seen", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Chuck" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -1262,7 +1263,8 @@ test("Unpinning channel closes its chat window", async () => {
     await contains(".o-mail-ChatWindow", { count: 0, text: "Sales" });
 });
 
-test("Update channel data via bus notification [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("Update channel data via bus notification", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "Sales",

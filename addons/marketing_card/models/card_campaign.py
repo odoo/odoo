@@ -10,6 +10,7 @@ class CardCampaign(models.Model):
     _description = 'Marketing Card Campaign'
     _inherit = ['mail.activity.mixin', 'mail.render.mixin', 'mail.thread']
     _order = 'id DESC'
+    _unrestricted_rendering = True
 
     def _default_card_template_id(self):
         return self.env['card.template'].search([], limit=1)
@@ -22,7 +23,7 @@ class CardCampaign(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
-    body_html = fields.Html(related='card_template_id.body', render_engine="qweb")
+    body_html = fields.Html(related='card_template_id.body', render_engine="qweb", readonly=False)
 
     card_count = fields.Integer(compute='_compute_card_stats')
     card_click_count = fields.Integer(compute='_compute_card_stats')
@@ -48,7 +49,7 @@ class CardCampaign(models.Model):
 
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user, domain="[('share', '=', False)]")
 
-    reward_message = fields.Html(string='Thanks to You Message')
+    reward_message = fields.Html(string='Thank You Message')
     reward_target_url = fields.Char(string='Reward Link')
     request_title = fields.Char('Request', default=lambda self: _('Help us share the news'))
     request_description = fields.Text('Request Description')
@@ -112,8 +113,27 @@ class CardCampaign(models.Model):
             'content_header_dyn', 'content_header_path', 'content_header_color', 'content_sub_header',
             'content_sub_header_dyn', 'content_sub_header_path', 'content_section', 'content_section_dyn',
             'content_section_path', 'content_sub_section1', 'content_sub_section1_dyn', 'content_sub_header_color',
-            'content_sub_section1_path', 'content_sub_section2', 'content_sub_section2_dyn', 'content_sub_section2_path'
+            'content_sub_section1_path', 'content_sub_section2', 'content_sub_section2_dyn', 'content_sub_section2_path',
+            'card_template_id',
         ]
+
+    def _check_access_right_dynamic_template(self):
+        """ `_unrestricted_rendering` being True means we trust the value on model
+        when rendering. This means once created, rendering is done without restriction.
+        But this attribute triggers a check at create / write / translation update that
+        current user is an admin or has full edition rights (group_mail_template_editor).
+
+         However here a Marketing Card Manager must be able to edit the fields other
+         than the rendering fields. The qweb rendered field `body_html` cannot be
+         modified by users other than the `base.group_system` users, as
+        - it's a related field to `card.template.body`,
+        - store=False
+        - the model `card.template` can only be altered by `base.group_system`
+
+        Hence the security is delegated to the 'card.template' model, hence the
+        check done by `_check_access_right_dynamic_template` can be bypassed.
+        """
+        return
 
     @api.depends(lambda self: self._get_render_fields() + ['preview_record_ref'])
     def _compute_image_preview(self):
@@ -354,8 +374,8 @@ class CardCampaign(models.Model):
         """Helper to get the right value for dynamic fields."""
         self.ensure_one()
         result = {
-            'image1': images[0] if (images := self.content_image1_path and record.mapped(self.content_image1_path)) else False,
-            'image2': images[0] if (images := self.content_image2_path and record.mapped(self.content_image2_path)) else False,
+            'image1': images[0] if (images := self.content_image1_path and self.content_image1_path in record and record.mapped(self.content_image1_path)) else False,
+            'image2': images[0] if (images := self.content_image2_path and self.content_image2_path in record and record.mapped(self.content_image2_path)) else False,
         }
         campaign_text_element_fields = (
             ('header', 'content_header', 'content_header_dyn', 'content_header_path'),

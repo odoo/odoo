@@ -53,7 +53,10 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         url = urls.url_join('https://api.mercadopago.com', endpoint)
-        headers = {'Authorization': f'Bearer {self.mercado_pago_access_token}'}
+        headers = {
+            'Authorization': f'Bearer {self.mercado_pago_access_token}',
+            'X-Platform-Id': 'dev_cdf1cfac242111ef9fdebe8d845d0987',
+        }
         try:
             if method == 'GET':
                 response = requests.get(url, params=payload, headers=headers, timeout=10)

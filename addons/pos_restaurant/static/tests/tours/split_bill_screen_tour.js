@@ -44,6 +44,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
             // click pay to split, go back to check the lines
             SplitBillScreen.clickPay(),
             Chrome.activeTableOrOrderIs("2B"),
+            ProductScreen.totalAmountIs("8.0"),
             ProductScreen.clickOrderline("Water", "3.0"),
             ProductScreen.clickOrderline("Coca-Cola", "1.0"),
 
@@ -91,6 +92,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             ProductScreen.addOrderline("Coca-Cola", "1", "2.0"),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("2"),
+            Chrome.isSynced(),
             ProductScreen.clickControlButton("Split"),
 
             SplitBillScreen.clickOrderline("Water"),
@@ -132,6 +134,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
 
             // click pay to split, and pay
             SplitBillScreen.clickPay(),
+            ProductScreen.totalAmountIs("2.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -140,7 +143,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
             // Check if there is still water in the order
             ProductScreen.isShown(),
             ProductScreen.orderLineHas("Water", "1.0"),
-            ProductScreen.clickPayButton(true),
+            ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             // Check if there is no more order to continue
@@ -165,29 +168,36 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
             combo.select("Combo Product 4"),
             combo.select("Combo Product 7"),
             Dialog.confirm(),
+            // now we set the qty of this combo combination to 2
+            ProductScreen.clickOrderline("Combo Product 2"),
+            ProductScreen.clickNumpad("2"),
+            ProductScreen.selectedOrderlineHas("Combo Product 2", "2"),
 
             ProductScreen.addOrderline("Water", "1"),
             ProductScreen.addOrderline("Minute Maid", "1"),
 
-            // The water and the first combo will go in the new splitted order
-            // we will then check if the rest of the items from this combo
-            // are automatically sent to the new order.
+            // The water, the first combo, and one out of the two items
+            // of the second combo will go in the new splitted order.
+            // we will then check if the rest of the items from the selected
+            // combos are automatically sent to the new order.
             ProductScreen.clickControlButton("Split"),
             SplitBillScreen.clickOrderline("Water"),
             SplitBillScreen.clickOrderline("Combo Product 3"),
+            SplitBillScreen.clickOrderline("Combo Product 2"),
             // we check that all the lines in the combo are splitted together
             SplitBillScreen.orderlineHas("Water", "1", "1"),
             SplitBillScreen.orderlineHas("Office Combo", "1", "1"),
             SplitBillScreen.orderlineHas("Combo Product 3", "1", "1"),
             SplitBillScreen.orderlineHas("Combo Product 5", "1", "1"),
             SplitBillScreen.orderlineHas("Combo Product 8", "1", "1"),
-            SplitBillScreen.orderlineHas("Office Combo", "1", "1"),
-            SplitBillScreen.orderlineHas("Combo Product 2", "1", "0"),
-            SplitBillScreen.orderlineHas("Combo Product 4", "1", "0"),
-            SplitBillScreen.orderlineHas("Combo Product 7", "1", "0"),
+            SplitBillScreen.orderlineHas("Office Combo", "2", "1"),
+            SplitBillScreen.orderlineHas("Combo Product 2", "2", "0"),
+            SplitBillScreen.orderlineHas("Combo Product 4", "2", "0"),
+            SplitBillScreen.orderlineHas("Combo Product 7", "2", "0"),
 
-            ...SplitBillScreen.subtotalIs("53.80"),
+            ...SplitBillScreen.subtotalIs("97.14"),
             ...SplitBillScreen.clickPay(),
+            ProductScreen.totalAmountIs("97.13"),
             ProductScreen.clickPayButton(),
             ...PaymentScreen.clickPaymentMethod("Bank"),
             ...PaymentScreen.clickValidate(),

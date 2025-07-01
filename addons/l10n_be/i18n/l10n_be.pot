@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.5alpha1+e\n"
+"Project-Id-Version: Odoo Server saas~17.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-28 10:46+0000\n"
-"PO-Revision-Date: 2023-08-28 10:46+0000\n"
+"POT-Creation-Date: 2024-12-26 17:03+0000\n"
+"PO-Revision-Date: 2024-12-26 17:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -194,7 +194,7 @@ msgstr ""
 
 #. module: l10n_be
 #. odoo-python
-#: code:addons/l10n_be/models/template_be_ass.py:0
+#: code:addons/l10n_be/models/template_be_asso.py:0
 msgid "Associations and Foundations"
 msgstr ""
 
@@ -222,7 +222,7 @@ msgstr ""
 
 #. module: l10n_be
 #. odoo-python
-#: code:addons/l10n_be/models/template_be_com.py:0
+#: code:addons/l10n_be/models/template_be_comp.py:0
 msgid "Companies"
 msgstr ""
 
@@ -247,6 +247,11 @@ msgid "IV Due"
 msgstr ""
 
 #. module: l10n_be
+#: model:ir.model.fields.selection,name:l10n_be.selection__account_tax__tax_scope__invest
+msgid "Investment"
+msgstr ""
+
+#. module: l10n_be
 #: model:ir.model,name:l10n_be.model_account_journal
 msgid "Journal"
 msgstr ""
@@ -257,8 +262,28 @@ msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_be
+#: model:ir.model.fields.selection,name:l10n_be.selection__account_tax__tax_scope__merch
+msgid "Merchandise"
+msgstr ""
+
+#. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_title_operations
 msgid "Operations"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model.fields,help:l10n_be.field_account_tax__tax_scope
+msgid "Restrict the use of taxes to a type of product."
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model,name:l10n_be.model_account_tax
+msgid "Tax"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model.fields,field_description:l10n_be.field_account_tax__tax_scope
+msgid "Tax Scope"
 msgstr ""
 
 #. module: l10n_be

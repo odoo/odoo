@@ -8,12 +8,15 @@ export class BaseProductAttribute extends Component {
     static template = "";
     static props = ["attributeLine"];
     setup() {
-        this.env.attribute_components.push(this);
         this.attributeLine = this.props.attributeLine;
         this.values = this.attributeLine.product_template_value_ids;
         this.state = useState({
-            attribute_value_ids: parseFloat(this.values[0].id),
+            attribute_value_ids: this.values[0].id.toString(),
             custom_value: "",
+        });
+        onMounted(() => {
+            this.env.attribute_components.push(this);
+            this.env.computeProductProduct();
         });
     }
 
@@ -113,7 +116,10 @@ export class ProductConfiguratorPopup extends Component {
     static props = ["product", "getPayload", "close"];
 
     setup() {
-        useSubEnv({ attribute_components: [] });
+        useSubEnv({
+            attribute_components: [],
+            computeProductProduct: this.computeProductProduct.bind(this),
+        });
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.inputArea = useRef("input-area");
@@ -121,8 +127,6 @@ export class ProductConfiguratorPopup extends Component {
             product: this.props.product,
             payload: this.env.attribute_components,
         });
-
-        this.computeProductProduct();
         useRefListener(this.inputArea, "touchend", this.computeProductProduct.bind(this));
         useRefListener(this.inputArea, "click", this.computeProductProduct.bind(this));
     }
@@ -155,11 +159,11 @@ export class ProductConfiguratorPopup extends Component {
     computeProductProduct() {
         let product = this.props.product;
         const formattedPayload = this.computePayload();
-        const alwaysVariants = this.props.product.attribute_line_ids.every(
-            (line) => line.attribute_id.create_variant === "always"
+        const hasVariants = this.props.product.attribute_line_ids.some(
+            (line) => line.attribute_id.create_variant !== "no_variant"
         );
 
-        if (alwaysVariants) {
+        if (hasVariants) {
             const newProduct = this.pos.models["product.product"]
                 .filter((p) => p.raw?.product_template_variant_value_ids?.length > 0)
                 .find((p) =>

@@ -8,11 +8,14 @@ from odoo.addons.product.tests.common import ProductCommon
 
 import json
 import base64
+import logging
 from contextlib import contextmanager
 from functools import wraps
 from lxml import etree
 from unittest import SkipTest
 from unittest.mock import patch
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountTestInvoicingCommon(ProductCommon):
@@ -53,6 +56,7 @@ class AccountTestInvoicingCommon(ProductCommon):
 
         cls.maxDiff = None
         cls.company_data = cls.collect_company_accounting_data(cls.env.company)
+        cls.tax_number = 0
 
         # ==== Taxes ====
         cls.tax_sale_a = cls.company_data['default_tax_sale']
@@ -162,22 +166,24 @@ class AccountTestInvoicingCommon(ProductCommon):
 
         # ==== Payment methods ====
         bank_journal = cls.company_data['default_journal_bank']
-        in_outstanding_account = cls.env['account.account'].create({
-            'name': "Outstanding Receipts",
-            'code': 'OSTR00',
-            'reconcile': True,
-            'account_type': 'asset_current'
-        })
-        out_outstanding_account = cls.env['account.account'].create({
-            'name': "Outstanding Payments",
-            'code': 'OSTP00',
-            'reconcile': True,
-            'account_type': 'asset_current'
-        })
+        in_outstanding_account = cls.env['account.chart.template'].ref('account_journal_payment_debit_account_id')
+        out_outstanding_account = cls.env['account.chart.template'].ref('account_journal_payment_credit_account_id')
         cls.inbound_payment_method_line = bank_journal.inbound_payment_method_line_ids[0]
         cls.inbound_payment_method_line.payment_account_id = in_outstanding_account
         cls.outbound_payment_method_line = bank_journal.outbound_payment_method_line_ids[0]
         cls.outbound_payment_method_line.payment_account_id = out_outstanding_account
+
+        # user with restricted groups
+        cls.simple_accountman = cls.env['res.users'].create({
+            'name': 'simple accountman',
+            'login': 'simple_accountman',
+            'password': 'simple_accountman',
+            'groups_id': [
+                # the `account` specific groups from get_default_groups()
+                Command.link(cls.env.ref('account.group_account_manager').id),
+                Command.link(cls.env.ref('account.group_account_user').id),
+            ],
+        })
 
     @classmethod
     def change_company_country(cls, company, country):
@@ -244,7 +250,11 @@ class AccountTestInvoicingCommon(ProductCommon):
     @classmethod
     def setup_other_currency(cls, code, **kwargs):
         if 'rates' not in kwargs:
-            return super().setup_other_currency(code, rates=[('2016-01-01', 3.0), ('2017-01-01', 2.0)], **kwargs)
+            return super().setup_other_currency(code, rates=[
+                ('1900-01-01', 1.0),
+                ('2016-01-01', 3.0),
+                ('2017-01-01', 2.0),
+            ], **kwargs)
         return super().setup_other_currency(code, **kwargs)
 
     @classmethod
@@ -286,6 +296,8 @@ class AccountTestInvoicingCommon(ProductCommon):
                     *account_company_domain,
                     ('account_type', '=', 'liability_payable')
                 ], limit=1),
+            'default_tax_account_receivable': company.account_purchase_tax_id.tax_group_id.tax_receivable_account_id,
+            'default_tax_account_payable': company.account_sale_tax_id.tax_group_id.tax_payable_account_id,
             'default_account_assets': AccountAccount.search([
                     *account_company_domain,
                     ('account_type', '=', 'asset_fixed')
@@ -339,6 +351,42 @@ class AccountTestInvoicingCommon(ProductCommon):
                 suffix_nb += 1
             else:
                 return account.copy(default={'code': new_code, 'name': account.name, **(default or {})})
+
+    def group_of_taxes(self, taxes, **kwargs):
+        self.tax_number += 1
+        return self.env['account.tax'].create({
+            **kwargs,
+            'name': f"group_({self.tax_number})",
+            'amount_type': 'group',
+            'children_tax_ids': [Command.set(taxes.ids)],
+        })
+
+    def percent_tax(self, amount, **kwargs):
+        self.tax_number += 1
+        return self.env['account.tax'].create({
+            **kwargs,
+            'name': f"percent_{amount}_({self.tax_number})",
+            'amount_type': 'percent',
+            'amount': amount,
+        })
+
+    def division_tax(self, amount, **kwargs):
+        self.tax_number += 1
+        return self.env['account.tax'].create({
+            **kwargs,
+            'name': f"division_{amount}_({self.tax_number})",
+            'amount_type': 'division',
+            'amount': amount,
+        })
+
+    def fixed_tax(self, amount, **kwargs):
+        self.tax_number += 1
+        return self.env['account.tax'].create({
+            **kwargs,
+            'name': f"fixed_{amount}_({self.tax_number})",
+            'amount_type': 'fixed',
+            'amount': amount,
+        })
 
     @classmethod
     def setup_armageddon_tax(cls, tax_name, company_data, **kwargs):
@@ -551,14 +599,19 @@ class AccountTestInvoicingCommon(ProductCommon):
             current_amounts = {}
         self.assertDictEqual(current_amounts, expected_amounts)
 
-    def _assert_tax_totals_summary(self, tax_totals, expected_results):
+    def _assert_tax_totals_summary(self, tax_totals, expected_results, soft_checking=False):
+        """ Assert the tax totals.
+        :param tax_totals:          The tax totals computed from _get_tax_totals_summary in account.tax.
+        :param expected_results:    The expected values.
+        :param soft_checking:       Limit the asserted values to the ones in 'expected_results' and don't go deeper inside the dictionary.
+        """
         def fix_monetary_value(current_values, expected_values, monetary_fields):
             for key, current_value in current_values.items():
                 if not isinstance(expected_values.get(key), float):
                     continue
                 expected_value = expected_values[key]
                 currency = monetary_fields.get(key)
-                if currency.is_zero(current_value - expected_value):
+                if current_value is not None and currency.is_zero(current_value - expected_value):
                     current_values[key] = expected_value
 
         currency = self.env['res.currency'].browse(tax_totals['currency_id'])
@@ -593,8 +646,14 @@ class AccountTestInvoicingCommon(ProductCommon):
 
         current_values = {k: len(v) if k == 'subtotals' else v for k, v in tax_totals.items() if k not in excluded_fields}
         expected_values = {k: len(v) if k == 'subtotals' else v for k, v in expected_results.items()}
+        if soft_checking:
+            current_values = {k: v for k, v in current_values.items() if k in expected_values}
+
         fix_monetary_value(current_values, expected_values, monetary_fields)
         self.assertEqual(current_values, expected_values)
+        if soft_checking:
+            return
+
         for subtotal, expected_subtotal in zip(tax_totals['subtotals'], expected_results['subtotals']):
             current_values = {k: len(v) if k == 'tax_groups' else v for k, v in subtotal.items() if k not in excluded_fields}
             expected_values = {k: len(v) if k == 'tax_groups' else v for k, v in expected_subtotal.items()}
@@ -621,13 +680,14 @@ class AccountTestInvoicingCommon(ProductCommon):
         attrib_wo_ns = {k: v for k, v in node.attrib.items() if '}' not in k}
         full_path = f'{path}/{tag_wo_ns}'
         return {
+            'node': node,
             'tag': tag_wo_ns,
             'full_path': full_path,
             'namespace': None if len(tag_split) < 2 else tag_split[0],
             'text': (node.text or '').strip(),
             'attrib': attrib_wo_ns,
             'children': [
-                self._turn_node_as_dict_hierarchy(child_node, path=path)
+                self._turn_node_as_dict_hierarchy(child_node, path=full_path)
                 for child_node in node.getchildren()
             ],
         }
@@ -668,9 +728,19 @@ class AccountTestInvoicingCommon(ProductCommon):
                 )
 
             # Check children.
+            children = [child['tag'] for child in node_dict['children']]
+            expected_children = [child['tag'] for child in expected_node_dict['children']]
+            if children != expected_children:
+                for child in node_dict['children']:
+                    if child['tag'] not in expected_children:
+                        _logger.warning('Non-expected child: \n%s', etree.tostring(child['node']).decode())
+                for child in expected_node_dict['children']:
+                    if child['tag'] not in children:
+                        _logger.warning('Missing child: \n%s', etree.tostring(child['node']).decode())
+
             self.assertEqual(
-                [child['tag'] for child in node_dict['children']],
-                [child['tag'] for child in expected_node_dict['children']],
+                children,
+                expected_children,
                 f"Number of children elements for node {node_dict['full_path']} is different.",
             )
 
@@ -841,6 +911,12 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             return {}
         return taxes._eval_taxes_computation_turn_to_product_values(product=product)
 
+    def _jsonify_product_uom(self, uom):
+        return {
+            'id': uom.id,
+            'name': uom.name,
+        }
+
     def _jsonify_tax_group(self, tax_group):
         return {
             'id': tax_group.id,
@@ -862,6 +938,12 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             'has_negative_factor': tax.has_negative_factor,
             'children_tax_ids': [self._jsonify_tax(child) for child in tax.children_tax_ids],
             'tax_group_id': self._jsonify_tax_group(tax.tax_group_id),
+        }
+
+    def _jsonify_country(self, country):
+        return {
+            'id': country.id,
+            'code': country.code,
         }
 
     def _jsonify_currency(self, currency):
@@ -888,6 +970,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             'currency_id': self._jsonify_currency(line.get('currency_id') or document['currency']),
             'rate': line['rate'] if 'rate' in line else document['rate'],
             'product_id': self._jsonify_product(line['product_id'], line['tax_ids']),
+            'product_uom_id': self._jsonify_product_uom(line['product_uom_id']),
             'tax_ids': [self._jsonify_tax(tax) for tax in line['tax_ids']],
             'price_unit': line['price_unit'],
             'quantity': line['quantity'],
@@ -913,29 +996,37 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         return {
             'id': company.id,
             'tax_calculation_rounding_method': company.tax_calculation_rounding_method,
+            'account_fiscal_country_id': self._jsonify_country(company.account_fiscal_country_id),
             'currency_id': self._jsonify_currency(company.currency_id),
         }
 
+    def convert_base_line_to_invoice_line(self, document, base_line):
+        values = {
+            'price_unit': base_line['price_unit'],
+            'discount': base_line['discount'],
+            'quantity': base_line['quantity'],
+        }
+        if base_line['product_id']:
+            values['product_id'] = base_line['product_id'].id
+        if base_line['product_uom_id']:
+            values['product_uom_id'] = base_line['product_uom_id'].id
+        if base_line['tax_ids']:
+            values['tax_ids'] = [Command.set(base_line['tax_ids'].ids)]
+        return values
+
     def convert_document_to_invoice(self, document):
         invoice_date = '2020-01-01'
-        usd = self.setup_other_currency('EUR', rates=[(invoice_date, document['rate'])])
+        currency = self.setup_other_currency(document['currency'].name.upper(), rates=[(invoice_date, document['rate'])])
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'invoice_date': invoice_date,
-            'currency_id': document['currency'].id,
+            'currency_id': currency.id,
             'invoice_cash_rounding_id': document['cash_rounding'] and document['cash_rounding'].id,
             'invoice_line_ids': [
-                Command.create({
-                    'product_id': base_line['product_id'].id,
-                    'price_unit': base_line['price_unit'],
-                    'discount': base_line['discount'],
-                    'quantity': base_line['quantity'],
-                    'tax_ids': [Command.set(base_line['tax_ids'].ids)],
-                })
+                Command.create(self.convert_base_line_to_invoice_line(document, base_line))
                 for base_line in document['lines']
             ],
         })
-        usd.rate_ids.unlink()
         return invoice
 
     def _run_js_tests(self):
@@ -1059,11 +1150,12 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
                     float_round(results['price_unit'], precision_rounding=rounding),
                 )
 
-    def _create_py_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, precision_rounding, rounding_method):
+    def _create_py_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, precision_rounding, rounding_method, excluded_tax_ids):
         kwargs = {
             'product': product,
             'precision_rounding': precision_rounding,
             'rounding_method': rounding_method,
+            'filter_tax_function': (lambda tax: tax.id not in excluded_tax_ids) if excluded_tax_ids else None,
         }
         results = {'results': taxes._get_tax_details(price_unit, quantity, **kwargs)}
         if rounding_method == 'round_globally':
@@ -1081,7 +1173,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             )
         return results
 
-    def _create_js_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, precision_rounding, rounding_method):
+    def _create_js_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, precision_rounding, rounding_method, excluded_tax_ids):
         return {
             'test': 'taxes_computation',
             'taxes': [self._jsonify_tax(tax) for tax in taxes],
@@ -1090,6 +1182,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             'product': self._jsonify_product(product, taxes),
             'precision_rounding': precision_rounding,
             'rounding_method': rounding_method,
+            'excluded_tax_ids': excluded_tax_ids,
         }
 
     def assert_taxes_computation(
@@ -1102,6 +1195,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         precision_rounding=0.01,
         rounding_method='round_per_line',
         excluded_special_modes=None,
+        excluded_tax_ids=None,
     ):
         def extra_function(results):
             results['excluded_special_modes'] = excluded_special_modes
@@ -1120,6 +1214,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             product,
             precision_rounding,
             rounding_method,
+            excluded_tax_ids,
             extra_function=extra_function,
         )
 
@@ -1159,9 +1254,9 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
     # -------------------------------------------------------------------------
 
     def _assert_sub_test_tax_totals_summary(self, results, expected_results):
-        self._assert_tax_totals_summary(results['tax_totals'], expected_results)
+        self._assert_tax_totals_summary(results['tax_totals'], expected_results, soft_checking=results['soft_checking'])
 
-    def _create_py_sub_test_tax_totals_summary(self, document, excluded_tax_group_ids):
+    def _create_py_sub_test_tax_totals_summary(self, document, excluded_tax_group_ids, soft_checking):
         AccountTax = self.env['account.tax']
         tax_totals = AccountTax._get_tax_totals_summary(
             base_lines=document['lines'],
@@ -1171,15 +1266,16 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         )
         if excluded_tax_group_ids:
             tax_totals = AccountTax._exclude_tax_groups_from_tax_totals_summary(tax_totals, excluded_tax_group_ids)
-        return {'tax_totals': tax_totals}
+        return {'tax_totals': tax_totals, 'soft_checking': soft_checking}
 
-    def _create_js_sub_test_tax_totals_summary(self, document, excluded_tax_group_ids):
+    def _create_js_sub_test_tax_totals_summary(self, document, excluded_tax_group_ids, soft_checking):
         return {
             'test': 'tax_totals_summary',
             'document': self._jsonify_document(document),
+            'soft_checking': soft_checking,
         }
 
-    def assert_tax_totals_summary(self, document, expected_values, excluded_tax_group_ids=None):
+    def assert_tax_totals_summary(self, document, expected_values, excluded_tax_group_ids=None, soft_checking=False):
         self._create_assert_test(
             expected_values,
             self._create_py_sub_test_tax_totals_summary,
@@ -1187,44 +1283,18 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             self._assert_sub_test_tax_totals_summary,
             document,
             excluded_tax_group_ids or set(),
-        )
-
-    # -------------------------------------------------------------------------
-    # tax_totals_summary, tax_amount_currency only
-    # -------------------------------------------------------------------------
-
-    def _assert_sub_test_tax_total(self, results, expected_tax_amount):
-        tax_amount_currency = results['tax_amount_currency']
-        self.assertAlmostEqual(tax_amount_currency, expected_tax_amount)
-
-    def _create_py_sub_test_tax_total(self, document):
-        tax_totals = self.env['account.tax']._get_tax_totals_summary(document['lines'], document['currency'], self.env.company)
-        return {'tax_amount_currency': tax_totals['tax_amount_currency']}
-
-    def _create_js_sub_test_tax_total(self, document):
-        return {
-            'test': 'tax_total',
-            'document': self._jsonify_document(document),
-            'rounding_method': self.env.company.tax_calculation_rounding_method,
-        }
-
-    def assert_tax_total(self, document, expected_tax_amount):
-        self._create_assert_test(
-            expected_tax_amount,
-            self._create_py_sub_test_tax_total,
-            self._create_js_sub_test_tax_total,
-            self._assert_sub_test_tax_total,
-            document,
+            soft_checking,
         )
 
     # -------------------------------------------------------------------------
     # invoice tax_totals_summary
     # -------------------------------------------------------------------------
 
-    def assert_invoice_tax_totals_summary(self, invoice, expected_values):
-        self._assert_tax_totals_summary(invoice.tax_totals, expected_values)
+    def assert_invoice_tax_totals_summary(self, invoice, expected_values, soft_checking=False):
+        self._assert_tax_totals_summary(invoice.tax_totals, expected_values, soft_checking=soft_checking)
+        cash_rounding_base_amount_currency = invoice.tax_totals.get('cash_rounding_base_amount_currency', 0.0)
         self.assertRecordValues(invoice, [{
-            'amount_untaxed': expected_values['base_amount_currency'],
+            'amount_untaxed': expected_values['base_amount_currency'] + cash_rounding_base_amount_currency,
             'amount_tax': expected_values['tax_amount_currency'],
             'amount_total': expected_values['total_amount_currency'],
         }])

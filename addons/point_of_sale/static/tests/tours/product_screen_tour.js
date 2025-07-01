@@ -12,12 +12,12 @@ import {
     inLeftSide,
     selectButton,
     scan_barcode,
+    negateStep,
 } from "@point_of_sale/../tests/tours/utils/common";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/utils/product_configurator_util";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
-    checkDelay: 50,
     steps: () =>
         [
             // Go by default to home category
@@ -46,6 +46,12 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
                 ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "123.0", "627.3"),
                 ...[".", "5"].map(Numpad.click),
                 ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "123.5", "629.85"),
+            ]),
+            // Check effects of numpad on product card quantity
+            ProductScreen.productCardQtyIs("Desk Organizer", "123.5"),
+            inLeftSide([
+                // Re-select the order line after switching to the product screen
+                { ...ProductScreen.clickLine("Desk Organizer", "123.5")[0], isActive: ["mobile"] },
                 Numpad.click("Price"),
                 Numpad.isActive("Price"),
                 Numpad.click("1"),
@@ -146,8 +152,26 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("FloatingOrderTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.orderIsEmpty(),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2.0", "10.20"),
+            ProductScreen.productCardQtyIs("Desk Organizer", "2.0"),
+            Chrome.createFloatingOrder(),
+            ProductScreen.clickDisplayedProduct("Letter Tray", true, "1.0", "5.28"),
+            ProductScreen.clickDisplayedProduct("Letter Tray", true, "2.0", "10.56"),
+            ProductScreen.selectFloatingOrder(0),
+            ProductScreen.productCardQtyIs("Desk Organizer", "2.0"),
+            ProductScreen.isShown(),
+            ProductScreen.selectFloatingOrder(1),
+            ProductScreen.productCardQtyIs("Letter Tray", "2.0"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("FiscalPositionNoTax", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -165,7 +189,6 @@ registry.category("web_tour.tours").add("FiscalPositionNoTax", {
 });
 
 registry.category("web_tour.tours").add("FiscalPositionIncl", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -186,7 +209,6 @@ registry.category("web_tour.tours").add("FiscalPositionIncl", {
 });
 
 registry.category("web_tour.tours").add("FiscalPositionExcl", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -204,7 +226,6 @@ registry.category("web_tour.tours").add("FiscalPositionExcl", {
 });
 
 registry.category("web_tour.tours").add("CashClosingDetails", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -220,14 +241,25 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
             ProductScreen.closeWithCashAmount("50.0"),
             ProductScreen.cashDifferenceIs("-1.00"),
             Dialog.confirm("Close Register"),
-            Dialog.confirm("Proceed Anyway", ".btn-primary"),
-            Chrome.clickBtn("Backend"),
+            {
+                trigger: ".modal .btn-primary:contains(Proceed Anyway)",
+                run: "click",
+                expectUnloadPage: true,
+            },
+            {
+                trigger: "button:contains(backend)",
+                run: "click",
+                expectUnloadPage: true,
+            },
+            {
+                trigger: "body",
+                expectUnloadPage: true,
+            },
             ProductScreen.lastClosingCashIs("50.00"),
         ].flat(),
 });
 
 registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -240,7 +272,6 @@ registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
 });
 
 registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -261,8 +292,22 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("multiPricelistRulesTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product 1"),
+            ProductScreen.selectedOrderlineHas("Test Product 1", "1.0", "200.0"),
+            ProductScreen.clickDisplayedProduct("Test Product 1"),
+            ProductScreen.selectedOrderlineHas("Test Product 1", "2.0", "200.0"), // 100.0 * 2
+            ProductScreen.clickDisplayedProduct("Test Product 1"),
+            ProductScreen.selectedOrderlineHas("Test Product 1", "3.0", "150.0"), // 50.0 * 3
+            Chrome.endTour(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("MultiProductOptionsTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -271,14 +316,13 @@ registry.category("web_tour.tours").add("MultiProductOptionsTour", {
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductConfiguratorPopup.isOptionShown("Value 1"),
             ProductConfiguratorPopup.isOptionShown("Value 2"),
-            Dialog.confirm("Ok"),
+            Dialog.confirm("Add"),
 
             Chrome.endTour(),
         ].flat(),
 });
 
 registry.category("web_tour.tours").add("TranslateProductNameTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -289,7 +333,6 @@ registry.category("web_tour.tours").add("TranslateProductNameTour", {
 });
 
 registry.category("web_tour.tours").add("DecimalCommaOrderlinePrice", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -303,8 +346,25 @@ registry.category("web_tour.tours").add("DecimalCommaOrderlinePrice", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("SearchProducts", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.searchProduct("chair"),
+            ProductScreen.clickDisplayedProduct("Test chair 1"),
+            ProductScreen.clickDisplayedProduct("Test CHAIR 2"),
+            ProductScreen.clickDisplayedProduct("Test sofa"),
+            ProductScreen.searchProduct("CHAIR"),
+            ProductScreen.clickDisplayedProduct("Test chair 1"),
+            ProductScreen.clickDisplayedProduct("Test CHAIR 2"),
+            ProductScreen.clickDisplayedProduct("Test sofa"),
+            ProductScreen.searchProduct("clémentine"),
+            ProductScreen.clickDisplayedProduct("clémentine"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("CheckProductInformation", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -323,13 +383,11 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
             },
             {
                 trigger: ".section-product-info-title:not(:contains('On hand:'))",
-                run: () => {},
             },
         ].flat(),
 });
 
 registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -338,7 +396,7 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             PartnerList.checkContactValues(
                 "John Doe",
                 "1 street of astreet",
-                "1234567890",
+                "9898989899",
                 "0987654321",
                 "john@doe.com"
             ),
@@ -354,7 +412,7 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             ProductScreenPartnerList.searchCustomerValueAndClear("26432685463"),
             ProductScreenPartnerList.searchCustomerValueAndClear("Acity"),
             ProductScreenPartnerList.searchCustomerValueAndClear("United States"),
-            ProductScreenPartnerList.searchCustomerValueAndClear("1234567890"),
+            ProductScreenPartnerList.searchCustomerValueAndClear("9898989899"),
             ProductScreenPartnerList.searchCustomerValueAndClear("0987654321"),
             ProductScreen.clickPartnerButton(),
             PartnerList.searchCustomerValue("john@doe.com"),
@@ -389,6 +447,171 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
             },
             {
                 trigger: '.category-button:eq(3) > span:contains("AAY")',
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("AutofillCashCount", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Expensive"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.isShown(),
+            Chrome.clickMenuOption("Close Register"),
+            {
+                trigger: ".fa-clone.btn-secondary",
+                run: "click",
+            },
+            ProductScreen.cashDifferenceIs(0),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ProductSearchTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.searchProduct("Test Product"),
+            ProductScreen.productIsDisplayed("Apple").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 1"),
+            ProductScreen.productIsDisplayed("Test Product 2"),
+            ProductScreen.searchProduct("Apple"),
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
+            ProductScreen.searchProduct("Test Produt"), // typo to test the fuzzy search
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
+            ProductScreen.searchProduct("1234567890123"),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 1"),
+            ProductScreen.searchProduct("1234567890124"),
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2"),
+            ProductScreen.searchProduct("TESTPROD1"),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 1"),
+            ProductScreen.searchProduct("TESTPROD2"),
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ProductCardUoMPrecision", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Configurable Chair", false),
+            ProductConfiguratorPopup.pickRadio("Leather"),
+            Chrome.clickBtn("Add"),
+            inLeftSide([
+                Numpad.click("."),
+                Numpad.click("1"),
+                ...Order.hasLine({
+                    productName: "Configurable Chair",
+                    quantity: "0.1",
+                }),
+            ]),
+            ProductScreen.clickDisplayedProduct("Configurable Chair", false),
+            ProductConfiguratorPopup.pickRadio("wool"),
+            Chrome.clickBtn("Add"),
+            inLeftSide([
+                Numpad.click("."),
+                Numpad.click("7"),
+                ...Order.hasLine({
+                    productName: "Configurable Chair",
+                    quantity: "0.7",
+                }),
+            ]),
+            ProductScreen.productCardQtyIs("Configurable Chair", "0.8"),
+            {
+                content:
+                    "Check the cart button if it shows the quantity in correct format/precision",
+                isActive: ["mobile"],
+                trigger: ".review-button:contains('0.8')",
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("AddMultipleSerialsAtOnce", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.enterLotNumbers(["SN001", "SN002", "SN003"]),
+            ProductScreen.selectedOrderlineHas("Product A", "3.0"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            [
+                {
+                    trigger: ".fa-trash-o",
+                    run: "click",
+                },
+            ],
+            ProductScreen.enterLotNumbers(["SN005", "SN006"]),
+            ProductScreen.selectedOrderlineHas("Product A", "4.0"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_draft_orders_not_syncing", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.orderIsEmpty(),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            Chrome.createFloatingOrder(),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_one_attribute_value_scan_barcode", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            scan_barcode("1234567"),
+            ProductScreen.selectedOrderlineHas("Product Test (Red)", "1.0"),
+
+            scan_barcode("1234568"),
+            ProductScreen.selectedOrderlineHas("Product Test (Blue)", "1.0"),
+
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("FiscalPositionTaxLabels", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickFiscalPosition("Fiscal Position Test"),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            {
+                content: "Make sure orderline tax label is correct",
+                trigger: ".orderline:contains('Tax Group 2')",
+            },
+            {
+                content: "Make sure receipt tax label is correct and correspond to the orderline",
+                trigger: ".pos-receipt-taxes:contains('Tax Group 2')",
             },
         ].flat(),
 });

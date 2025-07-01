@@ -20,9 +20,7 @@ registry.category("web_tour.tours").add('mailing_editor', {
 }, {
     content: 'choose the theme "empty" to edit the mailing with snippets',
     trigger: '[name="body_arch"] :iframe #empty',
-    run() {
-        this.anchor.click();
-    }
+    run: "click",
 }, {
     content: 'wait for the editor to be rendered',
     trigger: '[name="body_arch"] :iframe .o_editable[data-editor-message="DRAG BUILDING BLOCKS HERE"]',

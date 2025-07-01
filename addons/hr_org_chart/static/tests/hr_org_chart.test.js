@@ -28,17 +28,17 @@ test("hr org chart: empty render", async () => {
 
     onRpc("/hr/get_org_chart", async (request) => {
         const { params: args } = await request.json();
-        expect("employee_id" in args).toBe(true, {
+        expect(args).toInclude("employee_id", {
             message: "it should have 'employee_id' as argument",
         });
-        return Promise.resolve({
+        return {
             children: [],
             managers: [],
             managers_more: false,
-        });
+        };
     });
     onRpc("/hr/get_redirect_model", () => {
-        return Promise.resolve("hr.employee");
+        return "hr.employee";
     });
     await mountView({
         type: "form",
@@ -55,10 +55,10 @@ test("hr org chart: render without data", async () => {
 
     onRpc("/hr/get_org_chart", async (request) => {
         const { params: args } = await request.json();
-        expect("employee_id" in args).toBe(true, {
+        expect(args).toInclude("employee_id", {
             message: "it should have 'employee_id' as argument",
         });
-        return Promise.resolve({}); // return no data
+        return {}; // return no data
     });
     await mountView({
         type: "form",
@@ -75,10 +75,10 @@ test("hr org chart: basic render", async () => {
 
     onRpc("/hr/get_org_chart", async (request) => {
         const { params: args } = await request.json();
-        expect("employee_id" in args).toBe(true, {
+        expect(args).toInclude("employee_id", {
             message: "it should have 'employee_id' as argument",
         });
-        return Promise.resolve({
+        return {
             children: [
                 {
                     direct_sub_count: 0,
@@ -101,10 +101,10 @@ test("hr org chart: basic render", async () => {
                 link: "fake_link",
                 name: "Antoine Langlais",
             },
-        });
+        };
     });
     onRpc("/hr/get_redirect_model", () => {
-        return Promise.resolve("hr.employee");
+        return "hr.employee";
     });
     await mountView({
         type: "form",
@@ -134,10 +134,10 @@ test("hr org chart: basic manager render", async () => {
 
     onRpc("/hr/get_org_chart", async (request) => {
         const { params: args } = await request.json();
-        expect("employee_id" in args).toBe(true, {
+        expect(args).toInclude("employee_id", {
             message: "it should have 'employee_id' as argument",
         });
-        return Promise.resolve({
+        return {
             children: [
                 {
                     direct_sub_count: 0,
@@ -170,10 +170,10 @@ test("hr org chart: basic manager render", async () => {
                 link: "fake_link",
                 name: "John Smith",
             },
-        });
+        };
     });
     onRpc("/hr/get_redirect_model", () => {
-        return Promise.resolve("hr.employee");
+        return "hr.employee";
     });
     await mountView({
         type: "form",

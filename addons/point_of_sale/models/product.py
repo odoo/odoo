@@ -20,6 +20,14 @@ class ProductTemplate(models.Model):
         string="Product Description",
         translate=True
     )
+    color = fields.Integer('Color Index', compute="_compute_color", store=True, readonly=False)
+
+    @api.depends('pos_categ_ids')
+    def _compute_color(self):
+        """Automatically set the color field based on the selected category."""
+        for product in self:
+            if product.pos_categ_ids:
+                product.color = product.pos_categ_ids[0].color
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_open_session(self):
@@ -64,7 +72,7 @@ class ProductProduct(models.Model):
         return [
             'id', 'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name',
             'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking', 'type', 'service_tracking', 'is_storable',
-            'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_template_variant_value_ids',
+            'write_date', 'color', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_template_variant_value_ids', 'product_tag_ids',
         ]
 
     def _load_pos_data(self, data):
@@ -147,7 +155,13 @@ class ProductProduct(models.Model):
     def _get_archived_combinations_per_product_tmpl_id(self, product_tmpl_ids):
         archived_combinations = {}
         for product_tmpl in self.env['product.template'].browse(product_tmpl_ids):
-            archived_combinations[product_tmpl.id] = product_tmpl._get_attribute_exclusions()['archived_combinations']
+            attribute_exclusions = product_tmpl._get_attribute_exclusions()
+            archived_combinations[product_tmpl.id] = attribute_exclusions['archived_combinations']
+            excluded = {}
+            for ptav_id, ptav_ids in attribute_exclusions['exclusions'].items():
+                for ptav_id2 in set(ptav_ids) - excluded.keys():
+                    excluded[ptav_id] = ptav_id2
+            archived_combinations[product_tmpl.id].extend(excluded.items())
         return archived_combinations
 
     @api.ondelete(at_uninstall=False)
@@ -165,7 +179,13 @@ class ProductProduct(models.Model):
         config = self.env['pos.config'].browse(pos_config_id)
 
         # Tax related
-        taxes = self.taxes_id.compute_all(price, config.currency_id, quantity, self)
+        tax_to_use = None
+        company = config.company_id
+        while not tax_to_use and company:
+            tax_to_use = self.taxes_id.filtered(lambda tax: tax.company_id.id == company.id)
+            if not tax_to_use:
+                company = company.parent_id
+        taxes = tax_to_use.compute_all(price, config.currency_id, quantity, self)
         grouped_taxes = {}
         for tax in taxes['taxes']:
             if tax['id'] in grouped_taxes:
@@ -213,6 +233,7 @@ class ProductProduct(models.Model):
             for s in list(group):
                 if not((s.date_start and s.date_start > date.today()) or (s.date_end and s.date_end < date.today()) or (s.min_qty > quantity)):
                     supplier_list.append({
+                        'id': s.id,
                         'name': s.partner_id.name,
                         'delay': s.delay,
                         'price': s.price
@@ -254,7 +275,7 @@ class ProductAttributeCustomValue(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['custom_value', 'custom_product_template_attribute_value_id', 'pos_order_line_id']
+        return ['custom_value', 'custom_product_template_attribute_value_id', 'pos_order_line_id', 'write_date']
 
 
 class ProductTemplateAttributeLine(models.Model):
@@ -277,11 +298,12 @@ class ProductTemplateAttributeValue(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        loaded_product_tmpl_ids = list({p['product_tmpl_id'] for p in data['product.product']['data']})
+        ptav_ids = {ptav_id for p in data['product.product']['data'] for ptav_id in p['product_template_variant_value_ids']}
+        ptav_ids.update({ptav_id for ptal in data['product.template.attribute.line']['data'] for ptav_id in ptal['product_template_value_ids']})
         return AND([
             [('ptav_active', '=', True)],
             [('attribute_id', 'in', [attr['id'] for attr in data['product.attribute']['data']])],
-            [('product_tmpl_id', 'in', loaded_product_tmpl_ids)]
+            [('id', 'in', list(ptav_ids))]
         ])
 
     @api.model
@@ -311,7 +333,7 @@ class UomCateg(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('uom_ids', 'in', [uom['category_id'] for uom in data['uom.uom']['data']])]
+        return [('id', 'in', [uom['category_id'] for uom in data['uom.uom']['data']])]
 
     @api.model
     def _load_pos_data_fields(self, config_id):
@@ -344,7 +366,7 @@ class ProductPricelist(models.Model):
     @api.model
     def _load_pos_data_domain(self, data):
         config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
-        return [('id', 'in', config_id.available_pricelist_ids.ids)] if config_id.use_pricelist else [('id', '=', config_id.pricelist_id.id)]
+        return [('id', 'in', config_id._get_available_pricelists().ids)]
 
     @api.model
     def _load_pos_data_fields(self, config_id):

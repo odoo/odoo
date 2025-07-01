@@ -5,9 +5,10 @@ import { registries, helpers, constants } from "@odoo/o-spreadsheet";
 import { deserializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
+import { localization } from "@web/core/l10n/localization";
 
 const { pivotTimeAdapterRegistry } = registries;
-const { formatValue, toNumber, toJsDate, toString } = helpers;
+const { toNumber, toJsDate, toString } = helpers;
 const { DEFAULT_LOCALE } = constants;
 
 const { DateTime } = luxon;
@@ -58,6 +59,21 @@ const odooNumberDateAdapter = {
     },
 };
 
+function boundedOdooNumberDateAdapter(lower, upper) {
+    return {
+        normalizeServerValue(groupBy, field, readGroupResult) {
+            return Number(readGroupResult[groupBy]);
+        },
+        increment(normalizedValue, step) {
+            const value = normalizedValue + step;
+            if (value < lower || upper < value) {
+                return undefined;
+            }
+            return value;
+        },
+    };
+}
+
 const odooDayAdapter = {
     normalizeServerValue(groupBy, field, readGroupResult) {
         const serverDayValue = getGroupStartingDay(field, groupBy, readGroupResult);
@@ -105,19 +121,6 @@ const odooWeekAdapter = {
  * e.g. "01/2020" for January 2020
  */
 const odooMonthAdapter = {
-    normalizeFunctionValue(value) {
-        const date = toNumber(value, DEFAULT_LOCALE);
-        return formatValue(date, { locale: DEFAULT_LOCALE, format: "mm/yyyy" });
-    },
-    toValueAndFormat(normalizedValue) {
-        return {
-            value: toNumber(normalizedValue, DEFAULT_LOCALE),
-            format: "mmmm yyyy",
-        };
-    },
-    toFunctionValue(normalizedValue) {
-        return `"${normalizedValue}"`;
-    },
     normalizeServerValue(groupBy, field, readGroupResult) {
         const firstOfTheMonth = getGroupStartingDay(field, groupBy, readGroupResult);
         const date = deserializeDate(firstOfTheMonth).reconfigure({ numberingSystem: "latn" });
@@ -170,11 +173,12 @@ const odooQuarterAdapter = {
 };
 
 const odooDayOfWeekAdapter = {
-    normalizeServerValue(groupBy, field, readGroupResult) {
-        /**
-         * 0: First day of the week in the locale.
-         */
-        return Number(readGroupResult[groupBy]) + 1;
+    normalizeServerValue(groupBy, field, readGroupResult, locale) {
+        const weekStart = localization.weekStart; // 1 = Monday, 7 = Sunday
+        const dayOffset = Number(readGroupResult[groupBy]); // offset from the first day of the week
+        const fromSundayIsZero = (dayOffset + weekStart) % 7;
+        const fromLocaleIsZero = (7 - locale.weekStart + fromSundayIsZero) % 7;
+        return fromLocaleIsZero + 1; // 1-based
     },
     increment(normalizedValue, step) {
         return (normalizedValue + step) % 7;
@@ -211,11 +215,11 @@ const odooSecondNumberAdapter = {
  */
 function falseHandlerDecorator(adapter) {
     return {
-        normalizeServerValue(groupBy, field, readGroupResult) {
+        normalizeServerValue(groupBy, field, readGroupResult, locale) {
             if (readGroupResult[groupBy] === false) {
                 return false;
             }
-            return adapter.normalizeServerValue(groupBy, field, readGroupResult);
+            return adapter.normalizeServerValue(groupBy, field, readGroupResult, locale);
         },
         increment(normalizedValue, step) {
             if (
@@ -262,20 +266,20 @@ function extendSpreadsheetAdapter(granularity, adapter) {
 }
 
 pivotTimeAdapterRegistry.add("week", falseHandlerDecorator(odooWeekAdapter));
-pivotTimeAdapterRegistry.add("month", falseHandlerDecorator(odooMonthAdapter));
 pivotTimeAdapterRegistry.add("quarter", falseHandlerDecorator(odooQuarterAdapter));
 
 extendSpreadsheetAdapter("day", odooDayAdapter);
 extendSpreadsheetAdapter("year", odooNumberDateAdapter);
-extendSpreadsheetAdapter("day_of_month", odooNumberDateAdapter);
+extendSpreadsheetAdapter("day_of_month", boundedOdooNumberDateAdapter(1, 31));
 extendSpreadsheetAdapter("day", odooDayAdapter);
-extendSpreadsheetAdapter("iso_week_number", odooNumberDateAdapter);
-extendSpreadsheetAdapter("month_number", odooNumberDateAdapter);
-extendSpreadsheetAdapter("quarter_number", odooNumberDateAdapter);
+extendSpreadsheetAdapter("iso_week_number", boundedOdooNumberDateAdapter(0, 54));
+extendSpreadsheetAdapter("month_number", boundedOdooNumberDateAdapter(1, 12));
+extendSpreadsheetAdapter("quarter_number", boundedOdooNumberDateAdapter(1, 4));
 extendSpreadsheetAdapter("day_of_week", odooDayOfWeekAdapter);
 extendSpreadsheetAdapter("hour_number", odooHourNumberAdapter);
 extendSpreadsheetAdapter("minute_number", odooMinuteNumberAdapter);
 extendSpreadsheetAdapter("second_number", odooSecondNumberAdapter);
+extendSpreadsheetAdapter("month", odooMonthAdapter);
 
 /**
  * When grouping by a time field, return

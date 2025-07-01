@@ -10,7 +10,16 @@ import {
 } from "@odoo/owl";
 import { isNode, toSelector } from "@web/../lib/hoot-dom/helpers/dom";
 import { isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
-import { getTypeOf, Markup, stringify, toExplicitString } from "../hoot_utils";
+import { logger } from "../core/logger";
+import {
+    getTypeOf,
+    isSafe,
+    Markup,
+    S_ANY,
+    S_NONE,
+    stringify,
+    toExplicitString,
+} from "../hoot_utils";
 
 /**
  * @typedef {{
@@ -24,7 +33,6 @@ import { getTypeOf, Markup, stringify, toExplicitString } from "../hoot_utils";
 
 const {
     Object: { keys: $keys },
-    console: { log: $log },
 } = globalThis;
 
 //-----------------------------------------------------------------------------
@@ -36,12 +44,13 @@ const {
  *
  * @type {typeof String.raw}
  */
-const xml = (template, ...substitutions) =>
-    owlXml({
+function xml(template, ...substitutions) {
+    return owlXml({
         raw: String.raw(template, ...substitutions)
             .replace(/>\s+/g, ">")
             .replace(/\s+</g, "<"),
     });
+}
 
 const INVARIABLE_OBJECTS = [Promise, RegExp];
 
@@ -59,7 +68,7 @@ export class HootTechnicalValue extends Component {
 
     static template = xml`
         <t t-if="isMarkup">
-            <t t-if="value.technical">
+            <t t-if="value.type === 'technical'">
                 <pre class="hoot-technical" t-att-class="value.className">
                     <t t-foreach="value.content" t-as="subValue" t-key="subValue_index">
                         <HootTechnicalValue value="subValue" />
@@ -73,7 +82,10 @@ export class HootTechnicalValue extends Component {
         </t>
         <t t-elif="isNode(value)">
             <t t-set="elParts" t-value="toSelector(value, { object: true })" />
-            <button class="hoot-html" t-on-click="log">
+            <button
+                class="hoot-html"
+                t-on-click.stop="log"
+            >
                 <t>&lt;<t t-esc="elParts.tag" /></t>
                 <t t-if="elParts.id">
                     <span class="hoot-html-id" t-esc="elParts.id" />
@@ -84,20 +96,33 @@ export class HootTechnicalValue extends Component {
                 <t>/&gt;</t>
             </button>
         </t>
+        <t t-elif="value === S_ANY or value === S_NONE">
+            <span class="italic">
+                &lt;<t t-esc="symbolValue(value)" />&gt;
+            </span>
+        </t>
+        <t t-elif="typeof value === 'symbol'">
+            <span>
+                Symbol(<span class="hoot-string" t-esc="stringify(symbolValue(value))" />)
+            </span>
+        </t>
         <t t-elif="value and typeof value === 'object'">
             <t t-set="labelSize" t-value="getLabelAndSize()" />
             <pre class="hoot-technical">
-                <button class="hoot-object inline-flex items-center gap-1 me-1" t-on-click="onClick">
+                <button
+                    class="hoot-object inline-flex items-center gap-1 me-1"
+                    t-on-click.stop="onClick"
+                >
                     <t t-if="labelSize[1] > 0">
                         <i
-                            class="fa fa-caret-right flex justify-center w-2 transition"
+                            class="fa fa-caret-right"
                             t-att-class="{ 'rotate-90': state.open }"
                         />
                     </t>
                     <t t-esc="labelSize[0]" />
                     <t t-if="state.promiseState">
                         &lt;
-                        <span class="text-muted" t-esc="state.promiseState[0]" />
+                        <span class="text-gray" t-esc="state.promiseState[0]" />
                         <t t-if="state.promiseState[0] !== 'pending'">
                             : <HootTechnicalValue value="state.promiseState[1]" />
                         </t>
@@ -150,6 +175,9 @@ export class HootTechnicalValue extends Component {
     stringify = stringify;
     toSelector = toSelector;
 
+    S_ANY = S_ANY;
+    S_NONE = S_NONE;
+
     get explicitValue() {
         return toExplicitString(this.value);
     }
@@ -165,6 +193,7 @@ export class HootTechnicalValue extends Component {
         onWillRender(() => {
             this.isMarkup = Markup.isMarkup(this.props.value);
             this.value = toRaw(this.props.value);
+            this.isSafe = isSafe(this.value);
         });
         onWillUpdateProps((nextProps) => {
             this.state.open = false;
@@ -193,6 +222,9 @@ export class HootTechnicalValue extends Component {
                 return null;
             }
         }
+        if (!this.isSafe) {
+            return 0;
+        }
         const values = isIterable(this.value) ? [...this.value] : $keys(this.value);
         return values.length;
     }
@@ -206,7 +238,14 @@ export class HootTechnicalValue extends Component {
             return;
         }
         this.logged = true;
-        $log(this.value);
+        logger.debug(this.value);
+    }
+
+    /**
+     * @param {Symbol} symbol
+     */
+    symbolValue(symbol) {
+        return symbol.toString().slice(7, -1);
     }
 
     wrapPromiseValue(promise) {

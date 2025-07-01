@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -32,6 +32,15 @@ msgid "Bills of Materials"
 msgstr "Zestawienia materiałowe"
 
 #. module: project_mrp
+#. odoo-python
+#: code:addons/project_mrp/models/project_project.py:0
+msgid ""
+"Bills of materials allow you to define the list of required raw materials "
+"used to make a finished product; through a manufacturing order or a pack of "
+"products."
+msgstr ""
+
+#. module: project_mrp
 #: model:ir.model,name:project_mrp.model_mrp_production
 msgid "Manufacturing Order"
 msgstr "Zamówienie produkcji"
@@ -44,8 +53,24 @@ msgid "Manufacturing Orders"
 msgstr "Zamówienia produkcji"
 
 #. module: project_mrp
+#. odoo-python
+#: code:addons/project_mrp/models/project_project.py:0
+msgid "No bill of materials found. Let's create one."
+msgstr ""
+
+#. module: project_mrp
 #: model:ir.model,name:project_mrp.model_project_project
 #: model:ir.model.fields,field_description:project_mrp.field_mrp_bom__project_id
 #: model:ir.model.fields,field_description:project_mrp.field_mrp_production__project_id
 msgid "Project"
 msgstr "Projekt"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_stock_move
+msgid "Stock Move"
+msgstr "Przesunięcie"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_stock_rule
+msgid "Stock Rule"
+msgstr "Reguła zasobów"

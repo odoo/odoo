@@ -21,7 +21,7 @@ QUnit.module("Sale Project Milestone Form View", (hooks) => {
                         records: [
                             { id: 1, product_uom_qty: -1, quantity_percentage: -25 },
                             { id: 2, product_uom_qty: 5, quantity_percentage: 125 },
-                            { id: 3, product_uom_qty: 2, quantity_percentage: 50 },
+                            { id: 3, product_uom_qty: 2, quantity_percentage: 0 },
                         ]
                     },
                 },
@@ -52,7 +52,7 @@ QUnit.module("Sale Project Milestone Form View", (hooks) => {
     QUnit.test("Quantities don't have text-danger if quantity >= 0", async function (assert) {
         makeViewParams.resId = 3;
         await makeView(makeViewParams);
-        assert.notOk(assert.hasClass($("#quantity_percentage_0").parent(), "text-danger"));
-        assert.notOk(assert.hasClass($("#product_uom_qty_0").parent(), "text-danger"));
+        assert.notOk($("#quantity_percentage_0").parent().hasClass('text-danger'));
+        assert.notOk($("#product_uom_qty_0").parent().hasClass('text-danger'));
     });
 });

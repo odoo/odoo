@@ -17,7 +17,7 @@ Rafael Blasco rafael.blasco@tecnativa.com https://github.com/rafaelbn (up to 202
 Sergio Teruel sergio.teruel@tecnativa.com https://github.com/sergio-teruel
 Carlos Dauden carlos.dauden@tecnativa.com https://github.com/carlosdauden
 Jairo Llopis jairo.llopis@tecnativa.com https://github.com/yajo (up to 2021-11-25)
-David Vidal david.vidal@tecnativa.com https://github.com/chienandalu
+David Vidal david.vidal@tecnativa.com https://github.com/chienandalu (up to 2025-03-31)
 Cristina Martín cristina.martin@tecnativa.com https://github.com/cristinamartinrod (up to 2019-04-30)
 Ernesto Tejeda ernesto.tejeda@tecnativa.com https://github.com/ernestotejeda (up to 2023-06-30)
 Alexandre Díaz alexandre.diaz@tecnativa.com https://github.com/Tardo (up to 2022-08-31)

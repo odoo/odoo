@@ -169,7 +169,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         const self = this;
         var attrs = ['placeholder', 'title', 'alt', 'value'];
         const $editable = this.getEditableArea();
-        const translationRegex = /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>(.*)<\/span>/;
+        const translationRegex = /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>/;
         let $edited = $();
         attrs.forEach((attr) => {
             const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-source-sha="]').filter(':empty, input, select, textarea, img');
@@ -251,7 +251,8 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         // Apply data-oe-readonly on nested data.
         $(this.websiteService.pageDocument).find(savableSelector)
             .filter(':has(' + savableSelector + ')')
-            .attr('data-oe-readonly', true);
+            .attr('data-oe-readonly', true)
+            .removeAttr('contenteditable');
 
         const styleEl = document.createElement('style');
         styleEl.id = "translate-stylesheet";

@@ -1,27 +1,51 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { QWebPicker } from "./qweb_picker";
+import { isElement } from "@html_editor/utils/dom_info";
 
-const isUnsplittableQWebElement = (element) =>
-    element.tagName === "T" ||
-    ["t-field", "t-if", "t-elif", "t-else", "t-foreach", "t-value", "t-esc", "t-out", "t-raw"].some(
-        (attr) => element.getAttribute(attr)
-    );
+const isUnsplittableQWebElement = (node) =>
+    isElement(node) &&
+    (node.tagName === "T" ||
+        [
+            "t-field",
+            "t-if",
+            "t-elif",
+            "t-else",
+            "t-foreach",
+            "t-value",
+            "t-esc",
+            "t-out",
+            "t-raw",
+        ].some((attr) => node.getAttribute(attr)));
+
+const PROTECTED_QWEB_SELECTOR = "[t-esc], [t-raw], [t-out], [t-field]";
 
 export class QWebPlugin extends Plugin {
-    static name = "qweb";
-    static dependencies = ["overlay", "selection"];
+    static id = "qweb";
+    static dependencies = ["overlay", "protectedNode", "selection"];
     resources = {
-        onSelectionChange: this.onSelectionChange.bind(this),
-        is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
-        isUnremovable: (element) => element.getAttribute("t-set") || element.getAttribute("t-call"),
-        isUnsplittable: isUnsplittableQWebElement,
+        /** Handlers */
+        selectionchange_handlers: this.onSelectionChange.bind(this),
+        clean_handlers: this.clearDataAttributes.bind(this),
+        clean_for_save_handlers: ({ root }) => {
+            this.clearDataAttributes(root);
+            for (const element of root.querySelectorAll(PROTECTED_QWEB_SELECTOR)) {
+                element.removeAttribute("contenteditable");
+                delete element.dataset.oeProtected;
+            }
+        },
+        normalize_handlers: this.normalize.bind(this),
+
+        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+        unremovable_node_predicates: (node) =>
+            node.getAttribute?.("t-set") || node.getAttribute?.("t-call"),
+        unsplittable_node_predicates: isUnsplittableQWebElement,
     };
 
     setup() {
         this.editable.classList.add("odoo-editor-qweb");
-        this.picker = this.shared.createOverlay(QWebPicker, {
+        this.picker = this.dependencies.overlay.createOverlay(QWebPicker, {
             positionOptions: { position: "top-start" },
         });
         this.addDomListener(this.editable, "click", this.onClick);
@@ -43,47 +67,32 @@ export class QWebPlugin extends Plugin {
         return true;
     }
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "NORMALIZE":
-                this.normalize(payload.node);
-                break;
-            case "CLEAN":
-                this.clearDataAttributes(payload.root);
-                break;
-            case "CLEAN_FOR_SAVE":
-                this.clearDataAttributes(payload.root);
-                for (const element of payload.root.querySelectorAll(
-                    "[t-esc], [t-raw], [t-out], [t-field]"
-                )) {
-                    element.removeAttribute("contenteditable");
-                }
-                break;
+    isValidTargetForDomListener(ev) {
+        if (
+            ev.type === "click" &&
+            ev.target &&
+            closestElement(ev.target, PROTECTED_QWEB_SELECTOR)
+        ) {
+            // Allow clicking on a protected QWEB node to open the custom toolbar.
+            return true;
         }
+        return super.isValidTargetForDomListener(ev);
     }
 
     /**
      * @param { SelectionData } selectionData
      */
-    onSelectionChange(selectionData) {
-        const selection = selectionData.documentSelection;
-        const qwebNode =
-            selection &&
-            selection.anchorNode &&
-            closestElement(selection.anchorNode, "[t-field],[t-esc],[t-out]");
-        if (qwebNode && this.editable.contains(qwebNode)) {
-            // select the whole qweb node
-            const [anchorNode, anchorOffset] = leftPos(qwebNode);
-            const [focusNode, focusOffset] = rightPos(qwebNode);
-            this.shared.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+    onSelectionChange() {
+        if (this.picker.isOpen) {
+            this.picker.close();
         }
     }
 
     normalize(root) {
         this.normalizeInline(root);
 
-        for (const element of root.querySelectorAll("[t-esc], [t-raw], [t-out], [t-field]")) {
-            element.setAttribute("contenteditable", "false");
+        for (const element of selectElements(root, PROTECTED_QWEB_SELECTOR)) {
+            this.dependencies.protectedNode.setProtectingNode(element, true);
         }
         this.applyGroupQwebBranching(root);
     }
@@ -102,7 +111,7 @@ export class QWebPlugin extends Plugin {
     }
 
     normalizeInline(root) {
-        for (const el of root.querySelectorAll("t")) {
+        for (const el of selectElements(root, "t")) {
             if (this.checkAllInline(el)) {
                 el.setAttribute("data-oe-t-inline", "true");
             }
@@ -138,7 +147,28 @@ export class QWebPlugin extends Plugin {
     }
 
     onClick(ev) {
-        this.picker.close();
+        if (this.picker.isOpen) {
+            this.picker.close();
+        }
+        if (ev.detail > 1) {
+            const selectionData = this.dependencies.selection.getSelectionData();
+            const selection = selectionData.documentSelection;
+            const qwebNode =
+                selection &&
+                selection.anchorNode &&
+                closestElement(selection.anchorNode, "[t-field],[t-esc],[t-out]");
+            if (qwebNode && this.editable.contains(qwebNode)) {
+                // select the whole qweb node
+                const [anchorNode, anchorOffset] = leftPos(qwebNode);
+                const [focusNode, focusOffset] = rightPos(qwebNode);
+                this.dependencies.selection.setSelection({
+                    anchorNode,
+                    anchorOffset,
+                    focusNode,
+                    focusOffset,
+                });
+            }
+        }
         const targetNode = ev.target;
         if (targetNode.closest("[data-oe-t-group]")) {
             this.selectNode(targetNode);
@@ -146,6 +176,10 @@ export class QWebPlugin extends Plugin {
     }
 
     selectNode(node) {
+        const editableSelection = this.dependencies.selection.getSelectionData().editableSelection;
+        if (!editableSelection.isCollapsed) {
+            return;
+        }
         this.selectedNode = node;
         this.picker.open({
             target: node,
@@ -157,7 +191,7 @@ export class QWebPlugin extends Plugin {
     }
 
     applyGroupQwebBranching(root) {
-        const tNodes = root.querySelectorAll("[t-if], [t-elif], [t-else]");
+        const tNodes = selectElements(root, "[t-if], [t-elif], [t-else]");
         const groupsEncounter = new Set();
         for (const node of tNodes) {
             const prevNode = node.previousElementSibling;
@@ -182,10 +216,11 @@ export class QWebPlugin extends Plugin {
             // If there is no element in groupId activated, activate the first
             // one.
             if (!isOneElementActive) {
-                root.querySelector(`[data-oe-t-group='${groupId}']`).setAttribute(
-                    "data-oe-t-group-active",
-                    "true"
-                );
+                const firstElementToActivate = selectElements(
+                    root,
+                    `[data-oe-t-group='${groupId}']`
+                ).next().value;
+                firstElementToActivate.setAttribute("data-oe-t-group-active", "true");
             }
         }
     }

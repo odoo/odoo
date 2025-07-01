@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_online_payment_self_order
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: pos_online_payment_self_order
@@ -72,6 +74,11 @@ msgid "Point of Sale Orders"
 msgstr "Заказы в торговых точках"
 
 #. module: pos_online_payment_self_order
+#: model:ir.model,name:pos_online_payment_self_order.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Способы оплаты в торговых точках"
+
+#. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.xml:0
 msgid "Scan the QR code to pay"
@@ -92,14 +99,23 @@ msgstr "Текущий заказ не может быть оплачен (во�
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,help:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
 #: model:ir.model.fields,help:pos_online_payment_self_order.field_res_config_settings__pos_self_order_online_payment_method_id
-msgid "The online payment method to use when a customer pays a self-order online."
-msgstr "Способ онлайн-оплаты, который используется, когда клиент оплачивает самостоятельный заказ онлайн."
+msgid ""
+"The online payment method to use when a customer pays a self-order online."
+msgstr ""
+"Способ онлайн-оплаты, который используется, когда клиент оплачивает "
+"самостоятельный заказ онлайн."
 
 #. module: pos_online_payment_self_order
 #. odoo-python
 #: code:addons/pos_online_payment_self_order/models/pos_config.py:0
-msgid "The online payment method used for self-order in a POS config must have at least one published payment provider supporting the currency of that POS config."
-msgstr "Способ онлайн-оплаты, используемый для самостоятельного заказа в конфигурации POS, должен иметь по крайней мере одного опубликованного поставщика платежей, поддерживающего валюту этой конфигурации POS."
+msgid ""
+"The online payment method used for self-order in a POS config must have at "
+"least one published payment provider supporting the currency of that POS "
+"config."
+msgstr ""
+"Способ онлайн-оплаты, используемый для самостоятельного заказа в "
+"конфигурации POS, должен иметь по крайней мере одного опубликованного "
+"поставщика платежей, поддерживающего валюту этой конфигурации POS."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment

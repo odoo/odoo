@@ -17,6 +17,16 @@ class ResCompany(models.Model):
     )
     l10n_de_widnr = fields.Char(string="W-IdNr.", help="Business identification number.", tracking=True)
 
+    def write(self, vals):
+        if (
+            'account_fiscal_country_id' in vals
+            and (german_companies := self.filtered(lambda c: c.account_fiscal_country_id.code == 'DE'))
+            and self.env['res.country'].browse(vals['account_fiscal_country_id']).code != 'DE'
+            and self.env['account.move'].search_count([('company_id', 'in', german_companies.ids)], limit=1)
+        ):
+            raise ValidationError(_("You cannot change the fiscal country."))
+        return super().write(vals)
+
     @api.depends('country_code')
     @api.constrains('state_id', 'l10n_de_stnr')
     def _validate_l10n_de_stnr(self):

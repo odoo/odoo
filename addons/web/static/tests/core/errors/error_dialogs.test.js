@@ -7,7 +7,7 @@ import {
     mockService,
     makeDialogMockEnv,
 } from "@web/../tests/web_test_helpers";
-import { click, queryAllTexts } from "@odoo/hoot-dom";
+import { click, freezeTime, queryAllTexts } from "@odoo/hoot-dom";
 import {
     ClientErrorDialog,
     Error504Dialog,
@@ -20,6 +20,7 @@ import {
 describe.current.tags("desktop");
 
 test("ErrorDialog with traceback", async () => {
+    freezeTime();
     expect(".o_dialog").toHaveCount(0);
     const env = await makeDialogMockEnv();
     await mountWithCleanup(ErrorDialog, {
@@ -53,6 +54,7 @@ test("ErrorDialog with traceback", async () => {
 });
 
 test("Client ErrorDialog with traceback", async () => {
+    freezeTime();
     const env = await makeDialogMockEnv();
     await mountWithCleanup(ClientErrorDialog, {
         env,
@@ -85,6 +87,7 @@ test("Client ErrorDialog with traceback", async () => {
 });
 
 test("button clipboard copy error traceback", async () => {
+    freezeTime();
     expect.assertions(1);
     const error = new Error();
     error.name = "ERROR_NAME";

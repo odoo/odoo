@@ -706,7 +706,7 @@ export function makeDraggableHook(hookParams) {
                 safePrevent(ev);
                 let activeElement = document.activeElement;
                 while (activeElement?.nodeName === "IFRAME") {
-                    activeElement = activeElement.contentDocument.activeElement;
+                    activeElement = activeElement.contentDocument?.activeElement;
                 }
                 if (activeElement && !activeElement.contains(ev.target)) {
                     activeElement.blur();
@@ -836,7 +836,7 @@ export function makeDraggableHook(hookParams) {
                 let iframeOffsetX = 0;
                 let iframeOffsetY = 0;
                 const iframeEl = container.ownerDocument.defaultView.frameElement;
-                if (iframeEl && !iframeEl.contentDocument.contains(element)) {
+                if (iframeEl && !iframeEl.contentDocument?.contains(element)) {
                     const { x, y } = dom.getRect(iframeEl);
                     iframeOffsetX = x;
                     iframeOffsetY = y;

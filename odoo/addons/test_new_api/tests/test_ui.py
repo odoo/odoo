@@ -18,7 +18,7 @@ class TestUi(HttpCaseWithUserDemo):
         # "fall off" into the "o_extra_menu_items" section if the window is
         # too small or there are too many items preceding it in the tests menu
         self.start_tour("/odoo/action-test_new_api.action_discussions",
-            'widget_x2many', step_delay=100, login="admin", timeout=120)
+            'widget_x2many', login="admin", timeout=120)
 
 
 @odoo.tests.tagged('-at_install', 'post_install')

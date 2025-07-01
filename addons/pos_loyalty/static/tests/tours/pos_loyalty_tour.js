@@ -4,6 +4,7 @@ import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_p
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as Notification from "@point_of_sale/../tests/tours/utils/generic_components/notification_util";
+import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import { registry } from "@web/core/registry";
 import { scan_barcode } from "@point_of_sale/../tests/tours/utils/common";
 
@@ -120,7 +121,8 @@ registry.category("web_tour.tours").add("PosLoyaltyTour2", {
             PosLoyalty.hasRewardLine("90% on the cheapest product", "-4.59"),
             // set quantity to 18
             // free qty stays the same since the amount of points on the card only allows for 4 free products
-            ProductScreen.clickNumpad("⌫", "8"),
+            //TODO: The following step should works with ProductScreen.clickNumpad("⌫", "8"),
+            ProductScreen.clickNumpad("⌫", "⌫", "1", "8"),
             PosLoyalty.hasRewardLine("10% on your order", "-6.68"),
             PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-20.40"),
             // scan the code again and check notification
@@ -495,6 +497,37 @@ registry.category("web_tour.tours").add("CustomerLoyaltyPointsDisplayed", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("PosLoyalty2DiscountsSpecificGlobal", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
+
+            ProductScreen.addOrderline("Test Product A", "5"),
+            ProductScreen.clickDisplayedProduct("Test Product B"),
+            PosLoyalty.hasRewardLine("10% on your order", "-3.00"),
+            PosLoyalty.hasRewardLine("10% on Test Product B", "-0.45"),
+            PosLoyalty.finalizeOrder("Cash", "100"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosLoyaltySpecificProductDiscountWithGlobalDiscount", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product A", "1"),
+            PosLoyalty.hasRewardLine("$ 40 on Product A", "-40.00"),
+            PosLoyalty.clickDiscountButton(),
+            Dialog.confirm(),
+            PosLoyalty.hasRewardLine("$ 40 on Product A", "-40.00"),
+            PosLoyalty.orderTotalIs("20.00"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosRewardProductScan", {
     steps: () =>
         [
@@ -518,5 +551,43 @@ registry.category("web_tour.tours").add("PosRewardProductScanGS1", {
             PosLoyalty.hasRewardLine("50% on your order", "-575.00"),
             PosLoyalty.orderTotalIs("575.00"),
             PosLoyalty.finalizeOrder("Cash", "575.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosLoyaltyPromocodePricelist", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Test Product 1", "1"),
+            PosLoyalty.enterCode("hellopromo"),
+            PosLoyalty.orderTotalIs("25.87"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("RefundRulesProduct", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("product_a"),
+            PosLoyalty.finalizeOrder("Cash", "1000"),
+            ProductScreen.isShown(),
+            ...ProductScreen.clickRefund(),
+            TicketScreen.filterIs("Paid"),
+            TicketScreen.selectOrder("-0001"),
+            ProductScreen.clickNumpad("1"),
+            TicketScreen.confirmRefund(),
+            ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_scan_loyalty_card_select_customer", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            scan_barcode("0444-e050-4548"),
+            ProductScreen.customerIsSelected("Test Partner"),
         ].flat(),
 });

@@ -31,7 +31,7 @@ function rpcErrorHandler(env, error, originalError) {
 }
 registry.category("error_handlers").add("rpcErrorHandler", rpcErrorHandler);
 
-function offlineErrorHandler(env, error, originalError) {
+export function offlineErrorHandler(env, error, originalError) {
     if (originalError instanceof ConnectionLostError) {
         if (!env.services.pos.data.network.warningTriggered) {
             env.services.dialog.add(AlertDialog, {

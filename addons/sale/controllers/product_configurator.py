@@ -41,7 +41,7 @@ class SaleProductConfiguratorController(Controller):
         """
         if company_id:
             request.update_context(allowed_company_ids=[company_id])
-        product_template = request.env['product.template'].browse(product_template_id)
+        product_template = self._get_product_template(product_template_id)
 
         combination = request.env['product.template.attribute.value']
         if ptav_ids:
@@ -114,7 +114,7 @@ class SaleProductConfiguratorController(Controller):
         :rtype: int
         :return: The product created, as a `product.product` id.
         """
-        product_template = request.env['product.template'].browse(product_template_id)
+        product_template = self._get_product_template(product_template_id)
         combination = request.env['product.template.attribute.value'].browse(ptav_ids)
         product = product_template._create_product_variant(combination)
         return product.id
@@ -156,14 +156,14 @@ class SaleProductConfiguratorController(Controller):
         """
         if company_id:
             request.update_context(allowed_company_ids=[company_id])
-        product_template = request.env['product.template'].browse(product_template_id)
+        product_template = self._get_product_template(product_template_id)
         pricelist = request.env['product.pricelist'].browse(pricelist_id)
         product_uom = request.env['uom.uom'].browse(product_uom_id)
         currency = request.env['res.currency'].browse(currency_id)
         combination = request.env['product.template.attribute.value'].browse(ptav_ids)
         product = product_template._get_variant_for_combination(combination)
 
-        return self._get_basic_product_information(
+        values = self._get_basic_product_information(
             product or product_template,
             pricelist,
             combination,
@@ -173,6 +173,9 @@ class SaleProductConfiguratorController(Controller):
             date=datetime.fromisoformat(so_date),
             **kwargs,
         )
+        # Shouldn't be sent client-side
+        values.pop('pricelist_rule_id', None)
+        return values
 
     @route(route='/sale/product_configurator/get_optional_products', type='json', auth='user')
     def sale_product_configurator_get_optional_products(
@@ -205,7 +208,7 @@ class SaleProductConfiguratorController(Controller):
         """
         if company_id:
             request.update_context(allowed_company_ids=[company_id])
-        product_template = request.env['product.template'].browse(product_template_id)
+        product_template = self._get_product_template(product_template_id)
         parent_combination = request.env['product.template.attribute.value'].browse(
             parent_ptav_ids + ptav_ids
         )
@@ -228,6 +231,9 @@ class SaleProductConfiguratorController(Controller):
             ) for optional_product_template in product_template.optional_product_ids if
             self._should_show_product(optional_product_template, parent_combination)
         ]
+
+    def _get_product_template(self, product_template_id):
+        return request.env['product.template'].browse(product_template_id)
 
     def _get_product_information(
         self,
@@ -293,7 +299,7 @@ class SaleProductConfiguratorController(Controller):
         )
         product_or_template = product or product_template
 
-        return dict(
+        values = dict(
             product_tmpl_id=product_template.id,
             **self._get_basic_product_information(
                 product_or_template,
@@ -327,6 +333,9 @@ class SaleProductConfiguratorController(Controller):
             archived_combinations=attribute_exclusions['archived_combinations'],
             parent_exclusions=attribute_exclusions['parent_exclusions'],
         )
+        # Shouldn't be sent client-side
+        values.pop('pricelist_rule_id', None)
+        return values
 
     def _get_basic_product_information(self, product_or_template, pricelist, combination, **kwargs):
         """ Return basic information about a product.
@@ -358,15 +367,17 @@ class SaleProductConfiguratorController(Controller):
                 basic_information.update(
                     display_name=f"{basic_information['display_name']} ({combination_name})"
                 )
+        price, pricelist_rule_id = request.env['product.template']._get_configurator_display_price(
+            product_or_template.with_context(
+                **product_or_template._get_product_price_context(combination)
+            ),
+            pricelist=pricelist,
+            **kwargs,
+        )
         return dict(
             **basic_information,
-            price=request.env['product.template']._get_configurator_display_price(
-                product_or_template.with_context(
-                    **product_or_template._get_product_price_context(combination)
-                ),
-                pricelist=pricelist,
-                **kwargs,
-            ),
+            price=price,
+            pricelist_rule_id=pricelist_rule_id,
             **request.env['product.template']._get_additional_configurator_data(
                 product_or_template, pricelist=pricelist, **kwargs
             ),

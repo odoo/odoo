@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Rasareeyar Lappiam, 2024
+# Rasareeyar Lappiam, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +26,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                                    Buy Credit"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                    ซื้อเครดิต"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -52,6 +54,8 @@ msgid ""
 "An error occurred while reaching %s. Please contact Odoo support if this "
 "error persists."
 msgstr ""
+"เกิดข้อผิดพลาดขณะเข้าถึง %s โปรดติดต่อฝ่ายสนับสนุน Odoo "
+"หากข้อผิดพลาดนี้ยังคงมีอยู่"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
@@ -126,6 +130,10 @@ msgid ""
 "leads, generate leads based on a set of criteria and enrich the company data"
 " of your opportunities."
 msgstr ""
+"รับโอกาสทางการขายและลูกค้าเป้าหมายที่มีคุณภาพ: "
+"เปลี่ยนผู้เยี่ยมชมเว็บไซต์ของคุณให้กลายเป็นลูกค้าเป้าหมาย "
+"สร้างลูกค้าเป้าหมายโดยอิงตามเกณฑ์ชุดหนึ่ง "
+"และเสริมข้อมูลบริษัทเกี่ยวกับโอกาสทางการขายของคุณ"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -153,7 +161,7 @@ msgstr "API การเพิ่มข้อมูลลูกค้าเป�
 #. module: iap
 #: model:ir.model,name:iap.model_iap_service
 msgid "IAP Service"
-msgstr ""
+msgstr "บริการ IAP"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
@@ -170,7 +178,7 @@ msgstr "เครดิตไม่เพียงพอที่จะดำเ
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
 msgid "Integer Balance"
-msgstr ""
+msgstr "ความสมดุลของจำนวนเต็ม"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
@@ -188,7 +196,7 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 #. odoo-javascript
 #: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 msgid "Manage Service & Buy Credits"
-msgstr ""
+msgstr "จัดการบริการและซื้อเครดิต"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
@@ -208,17 +216,18 @@ msgid ""
 "One of the email alert recipients doesn't have an email address set. Users: "
 "%s"
 msgstr ""
+"ผู้รับการแจ้งเตือนทางอีเมลรายหนึ่งไม่ได้ตั้งค่าที่อยู่อีเมล ผู้ใช้: %s"
 
 #. module: iap
 #: model:ir.model.constraint,message:iap.constraint_iap_service_unique_technical_name
 msgid "Only one service can exist with a specific technical_name"
-msgstr ""
+msgstr "สามารถมีได้เพียงหนึ่งบริการที่มี technical_name เฉพาะ"
 
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "Please set a positive email alert threshold."
-msgstr ""
+msgstr "กรุณากำหนดเกณฑ์การแจ้งเตือนทางอีเมลเชิงบวก"
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
@@ -233,7 +242,7 @@ msgstr "บริการ"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_locked
 msgid "Service Locked"
-msgstr ""
+msgstr "บริการถูกล็อค"
 
 #. module: iap
 #. odoo-javascript
@@ -251,6 +260,15 @@ msgstr "สถานะ"
 #: model:ir.model.fields,field_description:iap.field_iap_service__technical_name
 msgid "Technical Name"
 msgstr "ชื่อทางเทคนิค"
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/tools/iap_tools.py:0
+msgid ""
+"The request to the service timed out. Please contact the author of the app. "
+"The URL it tried to contact was %s"
+msgstr ""
+"การร้องขอไปยังบริการหมดเวลา โปรดติดต่อผู้สร้างแอป URL ที่พยายามติดต่อคือ %s"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name

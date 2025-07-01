@@ -11,12 +11,11 @@ from werkzeug.exceptions import Forbidden
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.tools.misc import file_open
+from odoo.tools import file_open, mute_logger
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_stripe import utils as stripe_utils
 from odoo.addons.payment_stripe.const import HANDLED_WEBHOOK_EVENTS
-
 
 _logger = logging.getLogger(__name__)
 
@@ -49,7 +48,9 @@ class StripeController(http.Controller):
                 payload={'expand[]': 'payment_method'},  # Expand all required objects.
                 method='GET',
             )
-            _logger.info("Received payment_intents response:\n%s", pprint.pformat(payment_intent))
+            secret_keys = tx_sudo._get_specific_secret_keys()
+            logged_intent = {k: v for k, v in payment_intent.items() if k not in secret_keys}
+            _logger.info("Received payment_intents response:\n%s", pprint.pformat(logged_intent))
             self._include_payment_intent_in_notification_data(payment_intent, data)
         else:
             # Fetch the SetupIntent and PaymentMethod objects from Stripe.
@@ -65,7 +66,8 @@ class StripeController(http.Controller):
         tx_sudo._handle_notification_data('stripe', data)
 
         # Redirect the user to the status page.
-        return request.redirect('/payment/status')
+        with mute_logger('werkzeug'):  # avoid logging secret URL params
+            return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
     def stripe_webhook(self):

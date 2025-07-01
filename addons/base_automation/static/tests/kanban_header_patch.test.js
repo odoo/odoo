@@ -41,7 +41,8 @@ class Partner extends models.Model {
 defineMailModels();
 defineModels([Partner]);
 
-test.tags("desktop")("basic grouped rendering with automations", async () => {
+test.tags("desktop");
+test("basic grouped rendering with automations", async () => {
     mockService("action", {
         doAction: (action, options) => {
             expect.step(action);

@@ -16,6 +16,7 @@ registry.category("web_tour.tours").add("course_member", {
         {
             trigger: 'a:contains("Basics of Gardening - Test")',
             run: "click",
+            expectUnloadPage: true,
         },
         // Chatter is lazy loading. Wait for it.
         {
@@ -33,6 +34,7 @@ registry.category("web_tour.tours").add("course_member", {
         {
             trigger: 'a:contains("Join this Course")',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             // check membership
@@ -41,6 +43,7 @@ registry.category("web_tour.tours").add("course_member", {
         {
             trigger: 'a:contains("Gardening: The Know-How")',
             run: "click",
+            expectUnloadPage: true,
         },
         // eLearning: follow course by cliking on first lesson and going to fullscreen player
         {
@@ -135,31 +138,46 @@ registry.category("web_tour.tours").add("course_member", {
         {
             trigger: 'a:contains("End course")',
             run: "click",
+            expectUnloadPage: true,
         },
         // eLearning: ending course redirect to /slides, course is completed now
         {
             // check that the course is marked as completed
             trigger: 'div:contains("Basics of Gardening") span:contains("Completed")',
         },
-        // eLearning: go back on course and rate it (new rate or update it, both should work)
+        // eLearning: go back on course and rate it
         {
             trigger: 'a:contains("Basics of Gardening")',
             run: "click",
+            expectUnloadPage: true,
         },
         {
-            trigger: 'button[data-bs-target="#ratingpopupcomposer"]',
+            trigger: 'button[data-bs-target="#ratingpopupcomposer"]:contains("Add Review")',
             run: "click",
         },
         {
-            trigger: ".modal .modal-body i.fa.fa-star:eq(2)",
+            trigger: ".modal.modal_shown .modal-body i.fa.fa-star:eq(2)",
             run: "click",
         },
         {
-            trigger: ".modal .modal-body textarea",
-            run: "edit This is a great course. Top !",
+            trigger: ".modal.modal_shown .modal-body textarea",
+            run: "edit This is a great course. Top!",
         },
         {
-            trigger: ".modal button:contains(review)",
+            trigger: ".modal.modal_shown button:contains(review)",
+            run: "click",
+        },
+        // eLearning: edit the review
+        {
+            trigger: 'button[data-bs-target="#ratingpopupcomposer"]:contains("Edit Review")',
+            run: "click",
+        },
+        {
+            trigger: ".modal.modal_shown .modal-body textarea",
+            run: "edit This is a great course. I highly recommend it!",
+        },
+        {
+            trigger: ".modal.modal_shown button:contains(review)",
             run: "click",
         },
         {

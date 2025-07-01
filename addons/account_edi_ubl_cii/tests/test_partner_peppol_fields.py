@@ -101,10 +101,7 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
             'name': "AU partner",
             'country_id': self.env.ref('base.au').id,
         })
-        with patch(
-                'odoo.addons.account_edi_ubl_cii.models.res_partner.ResPartner._get_ubl_cii_formats_info',
-                _get_ubl_cii_formats_info
-        ):
+        with patch.object(self.env.registry['res.partner'], '_get_ubl_cii_formats_info', _get_ubl_cii_formats_info):
             self.assertEqual(Partner._get_ubl_cii_formats(), ['ubl_no_country', 'peppol', 'cii'])
             self.assertEqual(Partner._get_ubl_cii_formats_by_country()['NZ'], ['peppol'])
             self.assertEqual(Partner._get_ubl_cii_formats_by_country()['AU'], ['peppol', 'cii'])

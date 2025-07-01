@@ -29,6 +29,7 @@ from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationErro
 from odoo.http import request, DEFAULT_LANG
 from odoo.osv import expression
 from odoo.tools import is_html_empty, partition, frozendict, lazy_property, SQL, SetDefinitions
+from odoo.tools.misc import OrderedSet
 
 _logger = logging.getLogger(__name__)
 
@@ -229,7 +230,7 @@ class Groups(models.Model):
         where_domains = []
         for group in operand:
             values = [v for v in group.split('/') if v]
-            group_name = values.pop().strip()
+            group_name = values.pop().strip() if values else ''
             category_name = values and '/'.join(values).strip() or group_name
             group_domain = [('name', operator, lst and [group_name] or group_name)]
             category_ids = self.env['ir.module.category'].sudo()._search(
@@ -344,7 +345,7 @@ class Users(models.Model):
             'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz',
             'tz_offset', 'groups_id', 'partner_id', 'write_date', 'action_id',
             'avatar_1920', 'avatar_1024', 'avatar_512', 'avatar_256', 'avatar_128',
-            'share', 'device_ids',
+            'share', 'device_ids', 'display_name',
         ]
 
     @property
@@ -476,7 +477,7 @@ class Users(models.Model):
           - { 'uid': 32, 'auth_method': 'webauthn',      'mfa': 'skip'    }
         :rtype: dict
         """
-        if not (credential['type'] == 'password' and credential['password']):
+        if not (credential['type'] == 'password' and credential.get('password')):
             raise AccessDenied()
         self.env.cr.execute(
             "SELECT COALESCE(password, '') FROM res_users WHERE id=%s",
@@ -593,13 +594,23 @@ class Users(models.Model):
         action_open_website = self.env.ref('base.action_open_website', raise_if_not_found=False)
         if action_open_website and any(user.action_id.id == action_open_website.id for user in self):
             raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
-        # Prevent using reload actions.
         # We use sudo() because  "Access rights" admins can't read action models
         for user in self.sudo():
             if user.action_id.type == "ir.actions.client":
+                # Prevent using reload actions.
                 action = self.env["ir.actions.client"].browse(user.action_id.id)  # magic
                 if action.tag == "reload":
                     raise ValidationError(_('The "%s" action cannot be selected as home action.', action.name))
+
+            elif user.action_id.type == "ir.actions.act_window":
+                # Restrict actions that include 'active_id' in their context.
+                action = self.env["ir.actions.act_window"].browse(user.action_id.id)  # magic
+                if not action.context:
+                    continue
+                if "active_id" in action.context:
+                    raise ValidationError(
+                        _('The action "%s" cannot be set as the home action because it requires a record to be selected beforehand.', action.name)
+                    )
 
 
     @api.constrains('groups_id')
@@ -816,7 +827,8 @@ class Users(models.Model):
         domain = super()._search_display_name(operator, value)
         if operator in ('=', 'ilike') and value:
             name_domain = [('login', '=', value)]
-            domain = expression.OR([name_domain, domain])
+            if users := self.search(name_domain):
+                domain = [('id', 'in', users.ids)]
         return domain
 
     def copy_data(self, default=None):
@@ -859,7 +871,7 @@ class Users(models.Model):
         if lang not in langs:
             lang = request.best_lang if request else None
             if lang not in langs:
-                lang = self.env.user.company_id.partner_id.lang
+                lang = self.env.user.with_context(prefetch_fields=False).company_id.partner_id.lang
                 if lang not in langs:
                     lang = DEFAULT_LANG
                     if lang not in langs:
@@ -1132,13 +1144,16 @@ class Users(models.Model):
 
     @check_identity
     def action_revoke_all_devices(self):
-        return self._action_revoke_all_devices()
+        # self.env.user is sudo by default
+        # Need sudo to bypass access error for removing the devices of portal user
+        return (self.env.user if self.id == self.env.uid else self)._action_revoke_all_devices()
 
     def _action_revoke_all_devices(self):
         devices = self.env["res.device"].search([("user_id", "=", self.id)])
         devices.filtered(lambda d: not d.is_current)._revoke()
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
+    @api.readonly
     def has_groups(self, group_spec: str) -> bool:
         """ Return whether user ``self`` satisfies the given group restrictions
         ``group_spec``, i.e., whether it is member of at least one of the groups,
@@ -1170,6 +1185,7 @@ class Users(models.Model):
             return True
         return not positives
 
+    @api.readonly
     def has_group(self, group_ext_id: str) -> bool:
         """ Return whether user ``self`` belongs to the given group (given by its
         fully-qualified external ID).
@@ -1469,6 +1485,8 @@ class GroupsImplied(models.Model):
         res = super(GroupsImplied, self).write(values)
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
+            updated_group_ids = OrderedSet()
+            updated_user_ids = OrderedSet()
             for group in self:
                 self._cr.execute("""
                     WITH RECURSIVE group_imply(gid, hid) AS (
@@ -1489,7 +1507,22 @@ class GroupsImplied(models.Model):
                            FROM res_groups_users_rel r
                            JOIN group_imply i ON (r.gid = i.hid)
                           WHERE i.gid = %(gid)s
+                    RETURNING gid, uid
                 """, dict(gid=group.id))
+                updated = self.env.cr.fetchall()
+                gids, uids = zip(*updated) if updated else ([], [])
+                updated_group_ids.update(gids)
+                updated_user_ids.update(uids)
+            # notify the ORM about the updated users and groups
+            updated_groups = self.env['res.groups'].browse(updated_group_ids)
+            updated_groups.invalidate_recordset(['users'])
+            updated_groups.modified(['users'])
+            updated_users = self.env['res.users'].browse(updated_user_ids)
+            updated_users.invalidate_recordset(['groups_id'])
+            updated_users.modified(['groups_id'])
+            # explicitly check constraints
+            updated_groups._validate_fields(['users'])
+            updated_users._validate_fields(['groups_id'])
             self._check_one_user_type()
         if 'implied_ids' in values:
             self.env.registry.clear_cache('groups')
@@ -1572,12 +1605,15 @@ class UsersImplied(models.Model):
         if not values.get('groups_id'):
             return super(UsersImplied, self).write(values)
         users_before = self.filtered(lambda u: u._is_internal())
-        res = super(UsersImplied, self).write(values)
+        res = super(UsersImplied, self.with_context(no_add_implied_groups=True)).write(values)
         demoted_users = users_before.filtered(lambda u: not u._is_internal())
         if demoted_users:
             # demoted users are restricted to the assigned groups only
             vals = {'groups_id': [Command.clear()] + values['groups_id']}
             super(UsersImplied, demoted_users).write(vals)
+        if self.env.context.get('no_add_implied_groups'):
+            # in a recursive write, defer adding implied groups to the base call
+            return res
         # add implied groups for all users (in batches)
         users_batch = defaultdict(self.browse)
         for user in self:
@@ -1741,7 +1777,7 @@ class GroupsView(models.Model):
                     xml4.append(E.group(*right_group))
 
             xml4.append({'class': "o_label_nowrap"})
-            user_type_invisible = f'{user_type_field_name} != {group_employee.id}' if user_type_field_name else None
+            user_type_invisible = f'{user_type_field_name} != {group_employee.id}' if user_type_field_name else ''
 
             for xml_cat in sorted(xml_by_category.keys(), key=lambda it: it[0]):
                 master_category_name = xml_cat[1]
@@ -2113,6 +2149,17 @@ class UsersView(models.Model):
             })
         return res
 
+    def _get_view_postprocessed(self, view, arch, **options):
+        arch, models = super()._get_view_postprocessed(view, arch, **options)
+        if view == self.env.ref('base.view_users_form_simple_modif'):
+            tree = etree.fromstring(arch)
+            for node_field in tree.xpath('//field[@__groups_key__]'):
+                if node_field.get('name') in self.SELF_READABLE_FIELDS:
+                    node_field.attrib.pop('__groups_key__')
+            arch = etree.tostring(tree)
+        return arch, models
+
+
 class CheckIdentity(models.TransientModel):
     """ Wizard used to re-check the user's credentials (password) and eventually
     revoke access to his account to every device he has an active session on.
@@ -2362,10 +2409,10 @@ class APIKeys(models.Model):
         if self.env.is_system():
             return
         if not date:
-            raise UserError(_("The API key must have an expiration date"))
+            raise ValidationError(_("The API key must have an expiration date"))
         max_duration = max(group.api_key_duration for group in self.env.user.groups_id) or 1.0
         if date > datetime.datetime.now() + datetime.timedelta(days=max_duration):
-            raise UserError(_("You cannot exceed %(duration)s days.", duration=max_duration))
+            raise ValidationError(_("You cannot exceed %(duration)s days.", duration=max_duration))
 
     def _generate(self, scope, name, expiration_date):
         """Generates an api key.
@@ -2457,6 +2504,12 @@ class APIKeyDescription(models.TransientModel):
                 'message': error.args[0]
             }
             return {'warning': warning}
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        self.env['res.users.apikeys']._check_expiration_date(res.expiration_date)
+        return res
 
     @check_identity
     def make_key(self):

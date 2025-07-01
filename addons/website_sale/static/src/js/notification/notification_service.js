@@ -13,7 +13,7 @@ export class CartNotificationContainer extends NotificationContainer {
         Notification: CartNotification,
     }
     static template = xml`
-    <div class="position-absolute w-100 h-100 top-0 pe-none">
+    <div class="position-fixed w-100 h-100 top-0 pe-none">
         <div class="d-flex flex-column container align-items-end">
             <t t-foreach="notifications" t-as="notification" t-key="notification">
                 <Transition leaveDuration="0" name="'o_notification_fade'" t-slot-scope="transition">

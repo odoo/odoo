@@ -33,8 +33,6 @@ defineActions([
         xml_id: "action_3",
         name: "Partners",
         res_model: "partner",
-        mobile_view_mode: "kanban",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [1, "kanban"],
@@ -46,7 +44,6 @@ defineActions([
         xml_id: "action_4",
         name: "Partners Action 4",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [
             [1, "kanban"],
             [2, "list"],
@@ -58,7 +55,6 @@ defineActions([
         xml_id: "action_8",
         name: "Favorite Ponies",
         res_model: "pony",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [false, "form"],
@@ -81,17 +77,9 @@ defineActions([
 ]);
 
 defineMenus([
-    {
-        id: "root",
-        name: "root",
-        appID: "root",
-        children: [
-            // id:0 is a hack to not load anything at webClient mount
-            { id: 0, children: [], name: "UglyHack", appID: 0, xmlid: "menu_0" },
-            { id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "menu_1" },
-            { id: 2, children: [], name: "App2", appID: 2, actionID: 1002, xmlid: "menu_2" },
-        ],
-    },
+    { id: 0 }, // prevents auto-loading the first action
+    { id: 1, actionID: 1001 },
+    { id: 2, actionID: 1002 },
 ]);
 
 class Partner extends models.Model {
@@ -108,7 +96,7 @@ class Partner extends models.Model {
         { id: 5, name: "Fifth record", foo: "zoup" },
     ];
     _views = {
-        kanban: `
+        "kanban,1": /* xml */ `
             <kanban>
                 <templates>
                     <t t-name="card">
@@ -117,8 +105,12 @@ class Partner extends models.Model {
                 </templates>
             </kanban>
         `,
-        list: `<list><field name="foo"/></list>`,
-        form: `
+        "list,2": /* xml */ `
+            <list>
+                <field name="foo" />
+            </list>
+        `,
+        form: /* xml */ `
             <form>
                 <header>
                     <button name="object" string="Call method" type="object"/>
@@ -130,7 +122,11 @@ class Partner extends models.Model {
                 </group>
             </form>
         `,
-        search: `<search><field name="foo" string="Foo"/></search>`,
+        search: /* xml */ `
+            <search>
+                <field name="foo" string="Foo" />
+            </search>
+        `,
     };
 }
 
@@ -145,7 +141,6 @@ class Pony extends models.Model {
     _views = {
         list: `<list><field name="name"/></list>`,
         form: `<form><field name="name"/></form>`,
-        search: `<search/>`,
     };
 }
 
@@ -323,7 +318,7 @@ test(`actions override previous state from menu click`, async () => {
 test(`action in target new do not push state`, async () => {
     defineActions([
         {
-            id: 1001,
+            id: 2001,
             tag: "__test__client__action__",
             target: "new",
             type: "ir.actions.client",
@@ -341,7 +336,7 @@ test(`action in target new do not push state`, async () => {
     expect(browser.location.href).toBe("http://example.com/odoo");
     expect(browser.history.length).toBe(1);
 
-    await getService("action").doAction(1001);
+    await getService("action").doAction(2001);
     expect(`.modal .test_client_action`).toHaveCount(1);
 
     await animationFrame();

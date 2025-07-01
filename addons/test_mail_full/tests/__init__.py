@@ -11,3 +11,4 @@ from . import test_portal_message_update_controller
 from . import test_portal_thread_controller
 from . import test_rating
 from . import test_res_users
+from . import test_ui

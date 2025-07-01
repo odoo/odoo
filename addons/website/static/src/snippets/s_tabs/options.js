@@ -83,9 +83,12 @@ options.registry.NavTabs = options.registry.MultipleItems.extend({
      */
     _removeItemCallback($target) {
         const $targetNavLink = this.$(`.nav-item a[href="#${$target.attr('id')}"]`);
-        const $navLinkToShow = this.$navLinks.eq((this.$navLinks.index($targetNavLink) + 1) % this.$navLinks.length);
+        const linkIndex = (this.$navLinks.index($targetNavLink) + 1) % this.$navLinks.length;
+        const $navLinkToShow = this.$navLinks.eq(linkIndex);
+        const $tabPaneToShow = this.$tabPanes.eq(linkIndex);
         $targetNavLink.parent().remove();
         this._findLinksAndPanes();
+        $tabPaneToShow[0].classList.add("active", "show");
         new window.Tab($navLinkToShow[0]).show();
     },
 });
@@ -165,7 +168,7 @@ options.registry.NavTabsStyle = options.Class.extend({
 
         // Select relevant elements within mainEl
         const nav = mainEl.querySelector('.s_tabs_nav .nav');
-        const navLinks = mainEl.querySelectorAll('.s_tabs_nav > .nav-link');
+        const navLinks = mainEl.querySelectorAll('.s_tabs_nav .nav .nav-link');
         const tabsNav = mainEl.querySelector('.s_tabs_nav');
         const tabsContent = mainEl.querySelector('.s_tabs_content');
 
@@ -191,7 +194,7 @@ options.registry.NavTabsStyle = options.Class.extend({
 
         switch (methodName) {
             case 'setStyle':
-                const matchingValue = params.possibleValues.find(value => navEl.classList.contains(value));
+                const matchingValue = params.possibleValues.find(value => !navEl || navEl.classList.contains(value));
                 return matchingValue;
             case 'setDirection':
                 return this.$target.find('.s_tabs_nav:first .nav').hasClass('flex-sm-column') ? 'vertical' : 'horizontal';

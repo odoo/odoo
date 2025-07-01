@@ -164,12 +164,12 @@
         <field name="name">Allocations: base.group_user create/write</field>
         <field name="model_id" ref="model_hr_leave_allocation"/>
         <field name="domain_force">[
-            ('holiday_status_id.requires_allocation', '=', 'yes'),
-            ('holiday_status_id.employee_requests', '=', 'yes'),
             '|',
-                ('employee_id.user_id', '=', user.id),
                 '&amp;',
-                    ('validation_type', '=', 'hr'),
+                    ('employee_id.user_id', '=', user.id),
+                    ('state', '=', 'confirm'),
+                '&amp;',
+                    ('validation_type', 'in', ['manager', 'both', 'no_validation']),
                     ('employee_id.leave_manager_id', '=', user.id),
         ]</field>
         <field name="perm_read" eval="False"/>

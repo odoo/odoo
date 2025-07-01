@@ -2,11 +2,14 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('order_lunch_tour', {
     url: "/odoo",
-    steps: () => [{
-    trigger: 'a[data-menu-xmlid="lunch.menu_lunch"]',
+    steps: () => [
+    stepUtils.showAppsMenuItem(),
+{
+    trigger: '.o_app[data-menu-xmlid="lunch.menu_lunch"]',
     content: _t("Start by accessing the lunch app."),
     tooltipPosition: 'bottom',
     run: "click",
@@ -23,7 +26,6 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
 },
 {
     trigger: '.lunch_location input:value("Farm 1")',
-    run: () => {},  // wait for article to be correctly loaded
 },
 {
     trigger: ".o_kanban_record",
@@ -47,4 +49,8 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
     content: _t("Validate your order"),
     tooltipPosition: 'left',
     run: 'click',
+}, {
+    trigger: '.o_lunch_widget_lines .badge:contains("Ordered")',
+    content: 'Check that order is ordered',
+    run: () => {}
 }]});

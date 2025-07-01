@@ -1,4 +1,3 @@
-import { test } from "@odoo/hoot";
 import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
 import {
     assertSteps,
@@ -8,13 +7,20 @@ import {
     startServer,
     step,
 } from "@mail/../tests/mail_test_helpers";
-import { onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { test } from "@odoo/hoot";
+import {
+    onRpc,
+    patchWithCleanup,
+    preloadBundle,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 
 defineCalendarModels();
+preloadBundle("web.fullcalendar_lib");
 
 test("can listen on bus and display notifications in DOM and click OK", async () => {
     const pyEnv = await startServer();
-    onRpc("/calendar/notify_ack", () => { step("notifyAck") });
+    onRpc("/calendar/notify_ack", () => step("notifyAck"));
     await start();
     pyEnv["bus.bus"]._sendone(serverState.partnerId, "calendar.alarm", [
         {
@@ -58,7 +64,7 @@ test("can listen on bus and display notifications in DOM and click Detail", asyn
 
 test("can listen on bus and display notifications in DOM and click Snooze", async () => {
     const pyEnv = await startServer();
-    onRpc("/calendar/notify_ack", () => { step("notifyAck") });
+    onRpc("/calendar/notify_ack", () => step("notifyAck"));
     await start();
     pyEnv["bus.bus"]._sendone(serverState.partnerId, "calendar.alarm", [
         {

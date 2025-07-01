@@ -174,10 +174,16 @@ class SaleOrder(models.Model):
         if set_qty == 0 and line.coupon_id and reward_id and reward_id.reward_type == 'discount':
             # Force the deletion of the line even if it's a temporary record created by new()
             line_id = line.id
-        res = super()._cart_update(product_id, line_id, add_qty, set_qty, **kwargs)
+        res = super()._cart_update(
+            product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty, **kwargs
+        )
         self._update_programs_and_rewards()
         self._auto_apply_rewards()
         return res
+
+    def _get_non_delivery_lines(self):
+        """Override of `website_sale` to exclude delivery reward lines."""
+        return super()._get_non_delivery_lines() - self._get_free_shipping_lines()
 
     def _get_free_shipping_lines(self):
         self.ensure_one()
@@ -218,7 +224,7 @@ class SaleOrder(models.Model):
         global_discount_reward = self._get_applied_global_discount()
         for coupon in loyality_cards:
             points = self._get_real_points_for_coupon(coupon)
-            for reward in coupon.program_id.reward_ids:
+            for reward in coupon.program_id.reward_ids - self.order_line.reward_id:
                 if (
                     reward.is_global_discount
                     and global_discount_reward

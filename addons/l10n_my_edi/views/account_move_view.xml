@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_move_form_inherit_l10n_my_myinvois" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_my_myinvois</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//widget[@name='web_ribbon']" position="before">
+                <widget name="web_ribbon" title="Processing" bg_color="text-bg-info" invisible="l10n_my_edi_state != 'in_progress'"/>
+                <widget name="web_ribbon" title="Rejected" bg_color="text-bg-warning" invisible="l10n_my_edi_state != 'rejected'"/>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <!-- The invalid/cancelled states should be final. -->
+                <!-- This button is not needed on rejected invoices as it expects an action from the user -->
+                <button name="action_l10n_my_edi_update_status" string="Update MyInvois Status" type="object"
+                        groups="account.group_account_invoice"
+                        invisible="not l10n_my_edi_state or (l10n_my_edi_state not in ['in_progress', 'valid']) or (l10n_my_edi_state == 'rejected' and move_type not in ('out_invoice', 'out_refund'))"/>
+                <button name="action_l10n_my_edi_reject_bill" string="Reject" type="object"
+                        groups="account.group_account_invoice"
+                        invisible="l10n_my_edi_state != 'valid' or move_type not in ('in_invoice', 'in_refund')"/>
+            </xpath>
+            <!-- There are quite a few fields, and with other modules adding some too it would be too messy to not put them in a tab. -->
+            <xpath expr="//notebook" position="inside">
+                <page string="MyInvois" invisible="country_code != 'MY'">
+                    <group>
+                        <group>
+                            <!-- Only displayed if the invoice contains a tax of type Exempt -->
+                            <field name="l10n_my_edi_display_tax_exemption_reason" invisible="1"/> <!-- TODO: to be removed in master -->
+                            <field name="l10n_my_edi_exemption_reason" invisible="not l10n_my_edi_display_tax_exemption_reason" readonly="l10n_my_edi_state != False"/>
+                            <field name="l10n_my_edi_custom_form_reference" readonly="l10n_my_edi_state != False"/>
+                        </group>
+                        <group>
+                            <!-- a "not sent" placeholder would be great, but they don't work in readonly -->
+                            <field name="l10n_my_edi_state" invisible="not l10n_my_edi_state"/>
+                            <field name="l10n_my_edi_submission_uid" invisible="not l10n_my_edi_submission_uid"/>
+                            <field name="l10n_my_edi_external_uuid" invisible="not l10n_my_edi_external_uuid"/>
+                            <field name="l10n_my_edi_validation_time" invisible="not l10n_my_edi_validation_time"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_list_inherit_l10n_my_myinvois" model="ir.ui.view">
+        <field name="name">account.move.list.inherit.l10n_my_myinvois</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree" />
+        <field name="arch" type="xml">
+            <field name="status_in_payment" position="before">
+                <field name="l10n_my_edi_state" optional="hide"/>
+            </field>
+        </field>
+    </record>
+</odoo>

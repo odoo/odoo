@@ -2,12 +2,14 @@ import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import {
     Component,
     onMounted,
     onPatched,
     onWillUnmount,
+    toRaw,
     useExternalListener,
     useRef,
     useState,
@@ -43,6 +45,7 @@ export class Call extends Component {
         this.grid = useRef("grid");
         this.notification = useService("notification");
         this.rtc = useState(useService("discuss.rtc"));
+        this.isMobileOs = isMobileOS();
         this.state = useState({
             isFullscreen: false,
             sidebar: false,
@@ -139,13 +142,15 @@ export class Call extends Component {
     /** @returns {CardData[]} */
     get visibleMainCards() {
         const activeSession = this.props.thread.activeRtcSession;
-        this.state.insetCard = undefined;
         if (!activeSession) {
+            this.state.insetCard = undefined;
             return this.visibleCards;
         }
         const type = activeSession.mainVideoStreamType;
         if (type === "screen" || activeSession.isScreenSharingOn) {
             this.setInset(activeSession, type === "camera" ? "screen" : "camera");
+        } else {
+            this.state.insetCard = undefined;
         }
         return [
             {
@@ -162,12 +167,18 @@ export class Call extends Component {
      * @param {String} [videoType]
      */
     setInset(session, videoType) {
-        this.state.insetCard = {
-            key: "session_" + session.id,
-            session,
-            type: videoType,
-            videoStream: session.getStream(videoType),
-        };
+        const key = "session_" + session.id;
+        if (toRaw(this.state).insetCard?.key === key) {
+            this.state.insetCard.type = videoType;
+            this.state.insetCard.videoStream = session.getStream(videoType);
+        } else {
+            this.state.insetCard = {
+                key,
+                session,
+                type: videoType,
+                videoStream: session.getStream(videoType),
+            };
+        }
     }
 
     get hasCallNotifications() {

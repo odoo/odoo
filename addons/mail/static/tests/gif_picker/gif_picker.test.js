@@ -12,12 +12,13 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { onRpc, patchWithCleanup, preloadBundle } from "@web/../tests/web_test_helpers";
 
 import { GifPicker } from "@mail/discuss/gif_picker/common/gif_picker";
 
 describe.current.tags("desktop");
 defineMailModels();
+preloadBundle("web.assets_emoji");
 
 let gifId = 0;
 const gifFactory = (count = 1, options = {}) => {
@@ -126,6 +127,37 @@ test("Open a GIF category trigger the search for the category", async () => {
     await contains("input[placeholder='Search for a GIF']", { value: "cry" });
 });
 
+test("Can have GIF categories with same name", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    onRpc("/discuss/gif/categories", () => {
+        return {
+            locale: "en",
+            tags: [
+                {
+                    searchterm: "duplicate",
+                    path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
+                    image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
+                    name: "#duplicate",
+                },
+                {
+                    searchterm: "duplicate",
+                    path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
+                    image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
+                    name: "#duplicate",
+                },
+            ],
+        };
+    });
+    onRpc("/discuss/gif/search", () => rpc.search);
+    await start();
+    await openDiscuss(channelId);
+    await click("button[aria-label='GIFs']");
+    await contains("img[data-src='https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif']", {
+        count: 2,
+    });
+});
+
 test("Reopen GIF category list when going back", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
@@ -214,4 +246,15 @@ test("Scrolling at the bottom should trigger the search to load more gif, even a
     await contains(".o-discuss-Gif", { count: 4 });
     await scroll(".o-discuss-GifPicker-content", "bottom");
     await contains(".o-discuss-Gif", { count: 8 });
+});
+
+test("Show help when no favorite GIF", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    onRpc("/discuss/gif/categories", () => rpc.categories);
+    await start();
+    await openDiscuss(channelId);
+    await click("button[aria-label='GIFs']");
+    await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });
+    await contains("span", { text: "So uhh... maybe go favorite some GIFs?" });
 });

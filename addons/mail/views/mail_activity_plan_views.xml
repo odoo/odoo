@@ -61,12 +61,13 @@
                                 <field name="res_model"/>
                             </group>
                             <group name="company_id" groups="base.group_multi_company">
-                                <field name="company_id"/>
+                                <field name="company_id" domain="[('id', '=', allowed_company_ids)]" placeholder="Available for all Companies"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Activities To Create">
-                                <field name="template_ids" nolabel="1">
+                                <!-- Pass on the model to ensure the correct dynamic selection (in e.g. hr) on unsaved plans -->
+                                <field name="template_ids" nolabel="1" context="{'default_res_model': res_model}">
                                     <list>
                                         <field name="company_id" column_invisible="1"/>
                                         <field name="note" column_invisible="1"/>

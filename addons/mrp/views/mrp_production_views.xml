@@ -292,11 +292,11 @@
                             <field name="product_description_variants" invisible="product_description_variants in (False, '')" readonly="state != 'draft'"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row g-0 d-flex">
-                                <div invisible="state == 'draft'" class="o_row flex-grow-0">
-                                    <field name="qty_producing" class="text-start" readonly="state == 'cancel' or (state == 'done' and is_locked)"/>
+                                <div invisible="state == 'draft'" class="o_row flex-grow-1">
+                                    <field name="qty_producing" class="text-start text-truncate" readonly="state == 'cancel' or (state == 'done' and is_locked)"/>
                                     /
                                 </div>
-                                <field name="product_qty" class="oe_inline text-start" invisible="state not in ('draft', 'done')" readonly="state != 'draft'"/>
+                                <field name="product_qty" class="oe_inline text-start text-truncate" invisible="state not in ('draft', 'done')" readonly="state != 'draft'" style="width:auto!important"/>
                                 <button type="action" name="%(mrp.action_change_production_qty)d"
                                     context="{'default_mo_id': id}" class="oe_link oe_inline" style="margin: 0px; padding: 0px;" invisible="state in ('draft', 'done', 'cancel') or not id">
                                     <field name="product_qty" class="oe_inline" readonly="state != 'draft'"/>
@@ -304,8 +304,8 @@
                                 <label for="product_uom_id" string="" class="oe_inline"/>
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom_id" groups="!uom.group_uom" invisible="1"/>
-                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="state != 'draft'"/>
-                                <span class='fw-bold'>To Produce</span>
+                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="state != 'draft'" class="flex-grow-0" style="width:auto!important"/>
+                                <span class='fw-bold text-nowrap'>To Produce</span>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="forecasted_issue"/>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not forecasted_issue" class="text-danger"/>
                             </div>
@@ -357,7 +357,7 @@
                                 <list editable="bottom">
                                     <field name="product_id" readonly="state == 'done'"/>
                                     <field name="product_uom_qty" readonly="state == 'done'"/>
-                                    <field name="product_uom"/>
+                                    <field name="product_uom" groups="uom.group_uom"/>
                                     <field name="operation_id"/>
                                     <field name="byproduct_id"/>
                                     <field name="name"/>
@@ -449,6 +449,8 @@
                                     <!-- TODO put forecast back -->
                                     <field name="forecast_availability" column_invisible="parent.state in ['done', 'cancel']" string="Forecast" widget="forecast_widget" optional="hide"/>
                                     <field name="quantity" string="Quantity"
+                                        decoration-success="not is_done and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) == 0)"
+                                        decoration-warning="not is_done and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) &gt; 0.0001)"
                                         column_invisible="parent.state == 'draft'"
                                         decoration-info="manual_consumption"
                                         decoration-bf="manual_consumption"
@@ -482,14 +484,14 @@
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
                             <field name="move_byproduct_ids"
                                 widget="stock_move_one2many"
-                                context="{'default_date': date_finished, 'default_date_deadline': date_deadline, 'default_location_id': production_location_id, 'default_location_dest_id': location_dest_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'mrp.view_mrp_stock_move_operations'}"
+                                context="{'default_date': date_finished, 'default_date_deadline': date_deadline, 'default_warehouse_id': warehouse_id, 'default_location_id': production_location_id, 'default_location_dest_id': location_dest_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'mrp.view_mrp_stock_move_operations'}"
                                 readonly="state == 'cancel' or (state == 'done' and is_locked)" options="{'delete': [('state', '=', 'draft')]}">
                                 <list default_order="is_done,sequence" decoration-muted="is_done" editable="bottom">
                                     <control>
                                         <create string="Add a line"/>
                                         <button name="action_add_from_catalog_byproduct" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
                                     </control>
-                                    <field name="product_id" context="{'default_is_storable': True}" domain="[('id', '!=', parent.product_id)]" required="1" readonly="state == 'done'"/>
+                                    <field name="product_id" context="{'default_is_storable': True}" domain="[('id', '!=', parent.product_id)]" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)"/>
                                     <field name="location_dest_id" string="To" readonly="1" force_save="1" groups="stock.group_stock_multi_locations"/>
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="product_uom_category_id" column_invisible="True"/>
@@ -574,7 +576,7 @@
                                 <field name="priority" widget="priority"/>
                                 <field name="product_id" class="fw-bolder fs-6 ms-1"/>
                                 <field name="product_qty" class="ms-auto"/>
-                                <field name="product_uom_id" class="small ms-1"/>
+                                <field name="product_uom_id" class="small ms-1" groups="uom.group_uom"/>
                             </div>
                             <footer class="text-muted">
                                 <div class="d-flex">

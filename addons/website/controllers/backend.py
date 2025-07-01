@@ -8,7 +8,7 @@ from odoo.http import request
 
 class WebsiteBackend(http.Controller):
 
-    @http.route('/website/fetch_dashboard_data', type="json", auth='user')
+    @http.route('/website/fetch_dashboard_data', type="json", auth='user', readonly=True)
     def fetch_dashboard_data(self, website_id):
         Website = request.env['website']
         has_group_system = request.env.user.has_group('base.group_system')
@@ -33,11 +33,15 @@ class WebsiteBackend(http.Controller):
             dashboard_data['dashboards']['plausible_share_url'] = current_website._get_plausible_share_url()
         return dashboard_data
 
-    @http.route('/website/iframefallback', type="http", auth='user', website=True)
+    @http.route('/website/iframefallback', type="http", auth='user', website=True, readonly=True)
     def get_iframe_fallback(self):
+        # TODO adapt in master (done like this as a fix in stable)
+        view = request.env.ref('website.iframefallback').with_context(no_cow=True).sudo()
+        if '"website.assets_wysiwyg"' in view.arch:
+            view.arch = view.arch.replace('"website.assets_wysiwyg"', '"website.assets_wysiwyg_inside"')
         return request.render('website.iframefallback')
 
-    @http.route('/website/check_new_content_access_rights', type="json", auth='user')
+    @http.route('/website/check_new_content_access_rights', type="json", auth='user', readonly=True)
     def check_create_access_rights(self, models):
         """
         TODO: In master, remove this route and method and find a better way
@@ -54,7 +58,7 @@ class WebsiteBackend(http.Controller):
             for model in models
         }
 
-    @http.route('/website/track_installing_modules', type='json', auth='user')
+    @http.route('/website/track_installing_modules', type='json', auth='user', readonly=True)
     def website_track_installing_modules(self, selected_features, total_features=None):
         """
         During the website configuration, this route allows to track the

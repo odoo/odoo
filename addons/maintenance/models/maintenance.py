@@ -160,7 +160,7 @@ class MaintenanceEquipment(models.Model):
 
     @api.depends('serial_no')
     def _compute_match_serial(self):
-        if 'stock.lot' not in self.env:
+        if 'stock.lot' not in self.env or not self.env['stock.lot'].has_access('read'):
             self.match_serial = False
             return
         matched_serial_data = self.env['stock.lot']._read_group(

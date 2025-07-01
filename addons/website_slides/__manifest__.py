@@ -103,6 +103,7 @@ Featuring
             'website_slides/static/src/js/slides_course_quiz_question_form.js',
             'website_slides/static/src/js/slides_course_tag_add.js',
             'website_slides/static/src/js/slides_course_unsubscribe.js',
+            'website_slides/static/src/js/snippets.animation.js',
             'website_slides/static/src/js/portal_rating_composer.js',
             'website_slides/static/src/xml/website_slides_sidebar.xml',
             'website_slides/static/src/xml/website_slides_fullscreen.xml',
@@ -198,6 +199,9 @@ Featuring
             'website_slides/static/tests/**/*',
             ('remove', 'website_slides/static/tests/legacy/**/*'),
             ('remove', 'website_slides/static/tests/tours/**/*'),
+        ],
+        'portal.assets_chatter': [
+            'website_slides/static/src/chatter/frontend/**/*',
         ],
     },
     'license': 'LGPL-3',

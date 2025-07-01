@@ -185,22 +185,15 @@ class Certificate(models.Model):
 
                 try:
                     common_name = cert.subject.get_attributes_for_oid(x509.NameOID.COMMON_NAME)
+                    certificate.subject_common_name = common_name[0].value if common_name else ""
                 except ValueError:
-                    certificate.pem_certificate = None
                     certificate.subject_common_name = None
-                    certificate.content_format = None
-                    certificate.date_start = None
-                    certificate.date_end = None
-                    certificate.serial_number = None
-                    certificate.loading_error = _("The certificate subject field contains invalid characters. Make sure all characters are unicode valid.")
-                    continue
 
                 certificate.loading_error = ""
 
                 # Extract certificate data
                 certificate.pem_certificate = base64.b64encode(cert.public_bytes(Encoding.PEM))
                 certificate.serial_number = cert.serial_number
-                certificate.subject_common_name = common_name and common_name[0].value or ""
                 if parse_version(metadata.version('cryptography')) < parse_version('42.0.0'):
                     certificate.date_start = cert.not_valid_before
                     certificate.date_end = cert.not_valid_after
@@ -276,11 +269,30 @@ class Certificate(models.Model):
     # -------------------------------------------------------
 
     def _get_der_certificate_bytes(self, formatting='encodebytes'):
+        ''' Get the DER bytes of the certificate.
+
+        :param optional,default='encodebytes' formatting: The formatting of the returned bytes
+            - 'encodebytes' returns a base64-encoded block of 76 characters lines
+            - 'base64' returns the raw base64-encoded data
+            - other returns non-encoded data
+        :return: The formatted DER bytes of the certificate
+        :rtype: bytes
+        '''
         self.ensure_one()
         cert = x509.load_pem_x509_certificate(base64.b64decode(self.with_context(bin_size=False).pem_certificate))
         return _get_formatted_value(cert.public_bytes(serialization.Encoding.DER), formatting=formatting)
 
     def _get_fingerprint_bytes(self, hashing_algorithm='sha256', formatting='encodebytes'):
+        ''' Get the fingerprint bytes of the certificate.
+
+        :param optional,default='sha256' hashing_algorithm: The digest algorithm to use. Currently, only 'sha1' and 'sha256' are available.
+        :param optional,default='encodebytes' formatting: The formatting of the returned bytes
+            - 'encodebytes' returns a base64-encoded block of 76 characters lines
+            - 'base64' returns the raw base64-encoded data
+            - other returns non-encoded data
+        :return: The formatted fingerprint bytes of the certificate
+        :rtype: bytes
+        '''
         self.ensure_one()
         cert = x509.load_pem_x509_certificate(base64.b64decode(self.with_context(bin_size=False).pem_certificate))
         if hashing_algorithm not in STR_TO_HASH:
@@ -288,22 +300,53 @@ class Certificate(models.Model):
         return _get_formatted_value(cert.fingerprint(STR_TO_HASH[hashing_algorithm]), formatting=formatting)
 
     def _get_signature_bytes(self, formatting='encodebytes'):
+        ''' Get the signature bytes of the certificate.
+
+        :param optional,default='encodebytes' formatting: The formatting of the returned bytes
+            - 'encodebytes' returns a base64-encoded block of 76 characters lines
+            - 'base64' returns the raw base64-encoded data
+            - other returns non-encoded data
+        :return: The formatted signature bytes of the certificate
+        :rtype: bytes
+        '''
         self.ensure_one()
         cert = x509.load_pem_x509_certificate(base64.b64decode(self.with_context(bin_size=False).pem_certificate))
         return _get_formatted_value(cert.signature, formatting=formatting)
 
     def _get_public_key_numbers_bytes(self, formatting='encodebytes'):
+        ''' Get the certificate public key's public numbers bytes.
+
+        :param optional,default='encodebytes' formatting: The formatting of the returned bytes
+            - 'encodebytes' returns a base64-encoded block of 76 characters lines
+            - 'base64' returns the raw base64-encoded data
+            - other returns non-encoded data
+        :return: A tuple containing the formatted public number bytes of the certificate's public key
+
+        :rtype: tuple(bytes,bytes)
+        '''
         self.ensure_one()
         if self.public_key_id or self.private_key_id:
             return (self.public_key_id or self.private_key_id)._get_public_key_numbers_bytes(formatting=formatting)
 
         # When no keys are set to the certificate, use the self-contained public key from the content
-        return self.env['certificate.key']._get_public_key_numbers_bytes_with_key(
+        return self.env['certificate.key']._numbers_public_key_bytes_with_key(
             self._get_public_key_bytes(encoding='pem'),
             formatting=formatting,
         )
 
     def _get_public_key_bytes(self, encoding='der', formatting='encodebytes'):
+        ''' Get the certificate's public key bytes.
+
+        :param optional,default='der' encoding: The formatting of the returned bytes
+            - 'der' returns DER public key bytes
+            - other returns PEM public key bytes
+        :param optional,default='encodebytes' formatting: The formatting of the returned bytes
+            - 'encodebytes' returns a base64-encoded block of 76 characters lines
+            - 'base64' returns the raw base64-encoded data
+            - other returns non-encoded data
+        :return: The formatted certificate public key bytes in the corresponding format
+        :rtype: bytes
+        '''
         self.ensure_one()
         if self.public_key_id or self.private_key_id:
             return (self.public_key_id or self.private_key_id)._get_public_key_bytes(encoding=encoding, formatting=formatting)
@@ -325,7 +368,17 @@ class Certificate(models.Model):
         )
 
     def _sign(self, message, hashing_algorithm='sha256', formatting='encodebytes'):
-        """ Return the base64 encoded signature of message. """
+        ''' Compute and return the message's signature.
+
+        :param str|bytes message: The message to sign
+        :param optional,default='sha256' hashing_algorithm: The digest algorithm to use. Currently, only 'sha1' and 'sha256' are available.
+        :param optional,default='encodebytes' formatting: The formatting of the returned bytes
+            - 'encodebytes' returns a base64-encoded block of 76 characters lines
+            - 'base64' returns the raw base64-encoded data
+            - other returns non-encoded data
+        :return: The formatted signature bytes of the message
+        :rtype: bytes
+        '''
         self.ensure_one()
 
         if not self.is_valid:

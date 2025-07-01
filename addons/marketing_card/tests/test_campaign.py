@@ -323,3 +323,46 @@ class TestMarketingCardSecurity(MarketingCardCommon):
         with self.assertRaises(exceptions.AccessError):
             campaign_as_other.unlink()
         campaign_as_owner.unlink()
+
+    def test_mail_render_security_body_html(self):
+        """Asserts body_html of card.campaign cannot be written to.
+
+        See _check_access_right_dynamic_template override.
+        """
+        campaign = self.campaign.with_user(self.marketing_card_manager)
+        # Will raise ZeroDivisionError if the template is executed
+        arbitrary_qweb = """
+        <img t-attf-src="data:image/png;base64,{{1 / 0}}"/>
+        """
+
+        with self.assertRaisesRegex(exceptions.AccessError, 'You are not allowed to modify'):
+            campaign.body_html = arbitrary_qweb
+            # Flush to simulate the end of the transaction and trigger all recomputes
+            self.env.cr.flush()
+
+        # Ensure that the value is well not written in db, nor on the current campaign, nor on the related.
+        self.assertTrue(arbitrary_qweb not in campaign.body_html)
+        self.assertTrue(arbitrary_qweb not in campaign.card_template_id.body)
+
+        with self.assertRaisesRegex(exceptions.AccessError, 'You are not allowed to modify'):
+            campaign.card_template_id.body = arbitrary_qweb
+
+    def test_mail_render_security_render_field_write_access(self):
+        """Check the rendered fields on card.campaign are not both rendered and writeable.
+
+        See _check_access_right_dynamic_template override.
+        """
+        CardCampaign = self.env['card.campaign'].with_user(self.marketing_card_manager)
+        # Asserts all render fields are related to card.template, not stored on the campaign itself, and readonly
+        # If one of the render fields doesn't fulfil this assumption, the `_unrestricted_rendering = True` must be
+        # reconsidered for security reasons.
+        self.assertTrue(
+            all(
+                field.related_field.model_name == 'card.template'
+                and not field.store
+                and not field.readonly
+                for field in CardCampaign._fields.values() if hasattr(field, 'render_engine')
+            )
+        )
+        # Asserts the manager doesn't have write access to card.template
+        self.assertFalse(CardCampaign.card_template_id.has_access('write'))

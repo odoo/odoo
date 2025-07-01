@@ -15,7 +15,7 @@
                         }" role="menu" >
                 <div t-foreach="images" t-as="attachment" t-key="attachment.id"
                      t-att-aria-label="attachment.filename"
-                     class="o-mail-AttachmentImage d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1 rounded"
+                     class="o-mail-AttachmentImage d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1 rounded o-viewable"
                      t-att-title="attachment.name"
                      t-att-class="{ 'o-isUploading': attachment.uploading }"
                      tabindex="0"
@@ -24,7 +24,7 @@
                      role="menuitem"
                 >
                     <img
-                        class="img img-fluid my-0 mx-auto o-viewable rounded"
+                        class="img img-fluid my-0 mx-auto rounded"
                         t-att-class="{ 'opacity-25': attachment.uploading }"
                         t-att-src="getImageUrl(attachment)"
                         t-att-alt="attachment.name"
@@ -37,15 +37,12 @@
                     <ImageActions actions="getActions(attachment)" imagesHeight="props.imagesHeight"/>
                 </div>
             </div>
-            <div class="grid row-gap-0 column-gap-0">
+            <div class="d-flex flex-wrap mt-1 mx-1">
                 <!-- t-attf-class overridden in extensions -->
                 <div
                     t-foreach="cards" t-as="attachment" t-key="attachment.id"
                     class="o-mail-AttachmentCard d-flex rounded mb-1 me-1 mw-100 overflow-auto"
                     t-att-class="{
-                               'g-col-12': env.inChatWindow,
-                               'g-col-3': env.inComposer or attachment.message?.thread?.model === 'discuss.channel' and !env.inChatWindow,
-                               'g-col-4': !env.inComposer and attachment.message?.thread?.model !== 'discuss.channel' and !env.inChatWindow,
                                'ms-1': isInChatWindowAndIsAlignedRight,
                                'me-1': !isInChatWindowAndIsAlignedRight,
                                'o-viewable': attachment.isViewable,
@@ -78,9 +75,13 @@
                         >
                             <i class="fa fa-trash" role="img" aria-label="Remove"/>
                         </button>
+                        <a t-if="attachment.type === 'url'" class="btn d-flex align-items-center justify-content-center w-100 h-100 rounded-0" t-attf-class="bg-300" t-att-href="attachment.url" target='_blank' title="Open Link">
+                            <i class="fa fa-external-link" role="img" aria-label="Open Link"/>
+                        </a>
                         <!-- t-attf-class overridden in extensions -->
-                        <button t-if="canDownload(attachment)" class="btn d-flex align-items-center justify-content-center w-100 h-100 rounded-0"
-                                t-attf-class="{{ bg-300 }}"
+                        <button t-elif="canDownload(attachment)" class="btn d-flex align-items-center justify-content-center w-100 h-100 rounded-0"
+                                t-attf-class="bg-300"
+                                t-att-data-download-url="attachment.downloadUrl"
                                 t-on-click.stop="() => this.onClickDownload(attachment)" title="Download"
                         >
                             <i class="fa fa-download" role="img" aria-label="Download"/>

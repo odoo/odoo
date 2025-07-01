@@ -53,12 +53,16 @@ def data_method_provider(chart_template_name, country_code):
                 f'{external_id_prefix}test_account_tax_recoverable_template': {
                     'name': f'{external_id_prefix}tax recoverable',
                     'code': '411000',
-                    'account_type': 'asset_current',
+                    'account_type': 'asset_receivable',
+                    'reconcile': True,
+                    'non_trade': True,
                 },
                 f'{external_id_prefix}test_account_tax_receivable_template': {
-                    'name': f'{external_id_prefix}tax recoverable',
+                    'name': f'{external_id_prefix}tax receivable',
                     'code': '411200',
-                    'account_type': 'asset_current',
+                    'account_type': 'asset_receivable',
+                    'reconcile': True,
+                    'non_trade': True,
                 },
                 f'{external_id_prefix}test_account_advance_payment_tax_template': {
                     'name': f'{external_id_prefix}advance tax payment',
@@ -66,9 +70,11 @@ def data_method_provider(chart_template_name, country_code):
                     'account_type': 'asset_current',
                 },
                 f'{external_id_prefix}test_account_tax_payable_template': {
-                    'name': f'{external_id_prefix}tax recoverable',
+                    'name': f'{external_id_prefix}tax payable',
                     'code': '451200',
-                    'account_type': 'liability_current',
+                    'account_type': 'liability_payable',
+                    'reconcile': True,
+                    'non_trade': True,
                 },
                 f'{external_id_prefix}test_account_cash_basis_transition_account_id': {
                     'name': f'{external_id_prefix}cash basis transition account',
@@ -117,20 +123,21 @@ def data_method_provider(chart_template_name, country_code):
     return test_data_getter
 
 
-def _tax_vals(name, amount, external_id_prefix):
+def _tax_vals(name, amount, external_id_prefix, cash_basis=False, account_on_repartition=True):
     return {
         'name': name,
         'amount': amount,
         'type_tax_use': 'purchase',
         'tax_group_id': 'tax_group_taxes',
-        'cash_basis_transition_account_id': f'{external_id_prefix}test_account_cash_basis_transition_account_id',
+        'cash_basis_transition_account_id': f'{external_id_prefix}test_account_cash_basis_transition_account_id' if cash_basis else False,
+        'tax_exigibility': 'on_payment' if cash_basis else 'on_invoice',
         'repartition_line_ids': [
             Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'base'}),
             Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'tax',
-                           'account_id': f'{external_id_prefix}test_account_tax_recoverable_template'}),
+                           'account_id': f'{external_id_prefix}test_account_tax_recoverable_template' if account_on_repartition else False}),
             Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'base'}),
             Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'tax',
-                           'account_id': f'{external_id_prefix}test_account_tax_recoverable_template'}),
+                           'account_id': f'{external_id_prefix}test_account_tax_recoverable_template' if account_on_repartition else False}),
         ]
     }
 
@@ -217,14 +224,12 @@ class TestMultiVAT(AccountTestInvoicingCommon):
 
         tax = self.env["account.chart.template"].ref('foreign_test_tax_1_template')
         self.assertEqual(tax.country_id.code, 'FR')
-        self.assertEqual(tax.cash_basis_transition_account_id.code, '451501')
         _base_line, tax_line = tax.invoice_repartition_line_ids
         self.assertEqual(tax_line.account_id.code, '411001',
                          "The foreign tax account should be a new account with a code close to the local tax account code")
 
         tax = self.env["account.chart.template"].ref('foreign_test_tax_2_template')
         self.assertEqual(tax.country_id.code, 'FR')
-        self.assertEqual(tax.cash_basis_transition_account_id.code, '451501')
         _base_line, tax_line = tax.invoice_repartition_line_ids
         self.assertEqual(tax_line.account_id.code, '411001',
                          "The previously created tax account should be reused for similar tax")
@@ -242,3 +247,34 @@ class TestMultiVAT(AccountTestInvoicingCommon):
                 for i, child in enumerate(record.children_tax_ids):
                     child_tax = self.env["account.chart.template"].ref(children_taxes[xml_id][i], raise_if_not_found=False)
                     self.assertEqual(child.id, child_tax.id)
+
+    def test_multivat_cash_basis(self):
+        def wrap_data_getter_for_caba(data_getter):
+            def caba_data_getter(self, template_code):
+                rslt = data_getter(self, template_code)
+
+                rslt['account.tax']['es.caba_0_tax'] = _tax_vals("Dudu 0", 0, 'es', cash_basis=True, account_on_repartition=False)
+                rslt['account.tax']['es.caba_42_tax'] = _tax_vals("Dudu 42", 42, 'es', cash_basis=True)
+
+                return rslt
+
+            return caba_data_getter
+
+        foreign_country = self.env.ref("base.es")
+        foreign_vat_fpos = self.env["account.fiscal.position"].create({
+            "name": "ES foreign VAT",
+            "auto_apply": True,
+            "country_id": foreign_country.id,
+            "foreign_vat": "ESA12345674",
+        })
+
+        test_get_data = wrap_data_getter_for_caba(data_method_provider("foreign", "es"))
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            foreign_vat_fpos.action_create_foreign_taxes()
+
+        created_taxes = self.env.ref('local_es.caba_0_tax') + self.env.ref('local_es.caba_42_tax')
+        for tax in created_taxes:
+            self.assertEqual(tax.tax_exigibility, 'on_payment')
+            self.assertEqual(tax.cash_basis_transition_account_id.code, '411005')
+
+        self.assertTrue(self.env.company.tax_exigibility, "Creating foreign cash basis taxes should enable the cash basis setting on the company.")

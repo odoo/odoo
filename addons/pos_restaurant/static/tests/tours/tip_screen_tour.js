@@ -12,7 +12,6 @@ import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosResTipScreenTour", {
-    checkDelay: 50,
     steps: () =>
         [
             // Create order that is synced when draft.
@@ -37,7 +36,9 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             ProductScreen.totalAmountIs("4.0"),
             Chrome.clickPlanButton(),
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.nthRowContains("2", "Tipping"),
+            {
+                trigger: `.ticket-screen .orders > .order-row:contains(Tipping):contains($ 2.00)`,
+            },
             Chrome.clickPlanButton(),
 
             // Create without syncing the draft.
@@ -62,8 +63,9 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             ProductScreen.clickCloseButton(),
             Chrome.clickPlanButton(),
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.nthRowContains("4", "Tipping"),
-
+            {
+                trigger: `.ticket-screen .orders > .order-row:contains(Tipping):contains($ 6.00)`,
+            },
             // Tip 20% on order1
             TicketScreen.selectOrderByPrice("2.0"),
             TicketScreen.loadSelectedOrder(),
@@ -118,8 +120,9 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             TicketScreen.tipContains("1.00"),
             TicketScreen.settleTips(),
             TicketScreen.selectFilter("All active orders"),
-            TicketScreen.nthRowContains(2, "Ongoing"),
-
+            {
+                trigger: `.ticket-screen .orders > .order-row:contains(Ongoing):contains($ 4.00)`,
+            },
             // tip order2 during payment
             // tip screen should not show after validating payment screen
             TicketScreen.selectOrderByPrice("4.0"),
@@ -134,11 +137,6 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             PaymentScreen.emptyPaymentlines("5.0"),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ReceiptScreen.isShown(),
 
             // order 5
@@ -152,11 +150,6 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             PaymentScreen.clickValidate(),
             TipScreen.isShown(),
             TipScreen.clickSettle(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ReceiptScreen.isShown(),
             ReceiptScreen.clickNextOrder(),
             FloorScreen.isShown(),

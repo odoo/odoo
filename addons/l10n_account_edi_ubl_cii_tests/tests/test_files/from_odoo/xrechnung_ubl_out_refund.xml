@@ -20,6 +20,9 @@
   <cac:AccountingSupplierParty>
     <cac:Party>
       <cbc:EndpointID schemeID="9930">DE257486969</cbc:EndpointID>
+      <cac:PartyIdentification>
+        <cbc:ID>ref_partner_1</cbc:ID>
+      </cac:PartyIdentification>
       <cac:PartyName>
         <cbc:Name>partner_1</cbc:Name>
       </cac:PartyName>
@@ -51,6 +54,9 @@
   <cac:AccountingCustomerParty>
     <cac:Party>
       <cbc:EndpointID schemeID="9930">DE186775212</cbc:EndpointID>
+      <cac:PartyIdentification>
+        <cbc:ID>ref_partner_2</cbc:ID>
+      </cac:PartyIdentification>
       <cac:PartyName>
         <cbc:Name>partner_2</cbc:Name>
       </cac:PartyName>
@@ -78,6 +84,7 @@
     </cac:Party>
   </cac:AccountingCustomerParty>
   <cac:Delivery>
+    <cbc:ActualDeliveryDate>2017-01-01</cbc:ActualDeliveryDate>
     <cac:DeliveryLocation>
       <cac:Address>
         <cbc:StreetName>Europa-Park-Straße 2</cbc:StreetName>
@@ -90,7 +97,7 @@
     </cac:DeliveryLocation>
   </cac:Delivery>
   <cac:PaymentMeans>
-    <cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
+    <cbc:PaymentMeansCode name="standing agreement">57</cbc:PaymentMeansCode>
     <cbc:PaymentID>RINV/2017/01/0001</cbc:PaymentID>
     <cac:PayeeFinancialAccount>
       <cbc:ID>DE50500105175653254743</cbc:ID>

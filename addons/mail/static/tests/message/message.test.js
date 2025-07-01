@@ -4,6 +4,7 @@ import {
     click,
     contains,
     defineMailModels,
+    hover,
     insertText,
     onRpcBefore,
     openDiscuss,
@@ -13,11 +14,10 @@ import {
     startServer,
     step,
     triggerHotkey,
-    hover,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { leave, press, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
-import { leave, press } from "@odoo/hoot-dom";
 import {
     Command,
     mockService,
@@ -130,6 +130,11 @@ test("Can edit message comment in chatter", async () => {
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click(".o-mail-Message a", { text: "save" });
     await contains(".o-mail-Message-content", { text: "edited message (edited)" });
+    // save without change should keep (edited)
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await click(".o-mail-Message a", { text: "save" });
+    await contains(".o-mail-Message-content", { text: "edited message (edited)" });
 });
 
 test("Can edit message comment in chatter (mobile)", async () => {
@@ -169,7 +174,7 @@ test("Cursor is at end of composer input on edit", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    const textarea = $(".o-mail-Composer-input")[0];
+    const textarea = queryFirst(".o-mail-Composer-input");
     const contentLength = textarea.value.length;
     expect(textarea.selectionStart).toBe(contentLength);
     expect(textarea.selectionEnd).toBe(contentLength);
@@ -835,7 +840,7 @@ test("message comment of same author within 5min. should be squashed", async () 
     await contains(".o-mail-Message", {
         contains: [
             [".o-mail-Message-content", { text: "body2" }],
-            [".o-mail-Message-sidebar .o-mail-Message-date", { text: "10:02" }],
+            [".o-mail-Message-sidebar .o-mail-Message-date", { text: "10:02 AM" }],
         ],
     });
 });
@@ -994,11 +999,11 @@ test("Notification Sent", async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-notification");
     await contains(".o-mail-Message-notification i");
-    expect($(".o-mail-Message-notification i")[0]).toHaveClass("fa-envelope-o");
+    expect(".o-mail-Message-notification i:first").toHaveClass("fa-envelope-o");
     await click(".o-mail-Message-notification");
     await contains(".o-mail-MessageNotificationPopover");
     await contains(".o-mail-MessageNotificationPopover i");
-    expect($(".o-mail-MessageNotificationPopover i")[0]).toHaveClass("fa-check");
+    expect(".o-mail-MessageNotificationPopover i:first").toHaveClass("fa-check");
     await contains(".o-mail-MessageNotificationPopover", { text: "Someone" });
 });
 
@@ -1037,7 +1042,7 @@ test("Notification Error", async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-notification");
     await contains(".o-mail-Message-notification i");
-    expect($(".o-mail-Message-notification i")[0]).toHaveClass("fa-envelope");
+    expect(".o-mail-Message-notification i:first").toHaveClass("fa-envelope");
     await click(".o-mail-Message-notification").then(() => {});
     await openResendActionDef;
     await assertSteps(["do_action"]);
@@ -1357,7 +1362,7 @@ test("avatar card from author should be opened after clicking on their avatar", 
     await start();
     await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Message-avatar");
-    expect($(".o-mail-Message-avatarContainer")[0]).toHaveClass("cursor-pointer");
+    expect(".o-mail-Message-avatarContainer:first").toHaveClass("cursor-pointer");
     await click(".o-mail-Message-avatar");
     await contains(".o_avatar_card");
     await contains(".o_card_user_infos > span", { text: "Partner_2" });

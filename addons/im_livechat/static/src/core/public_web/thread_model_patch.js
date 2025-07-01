@@ -52,7 +52,7 @@ patch(Thread.prototype, {
     },
 
     get displayName() {
-        if (this.channel_type !== "livechat" || !this.correspondent) {
+        if (this.channel_type !== "livechat" || !this.correspondent || this.custom_channel_name) {
             return super.displayName;
         }
         if (!this.correspondent.persona.is_public && this.correspondent.persona.country) {

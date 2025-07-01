@@ -4,11 +4,12 @@
 from datetime import datetime, timedelta
 
 from odoo.addons.auth_totp.controllers.home import TRUSTED_DEVICE_AGE
-from odoo.addons.mail.tests.test_res_users import TestNotifySecurityUpdate
-from odoo.tests import users
+from odoo.addons.mail.tests.common import MailCommon
+from odoo.tests import tagged, users
 
 
-class TestNotifySecurityUpdateTotp(TestNotifySecurityUpdate):
+@tagged('-at_install', 'post_install', 'mail_tools', 'res_users')
+class TestNotifySecurityUpdateTotp(MailCommon):
     @users('employee')
     def test_security_update_totp_enabled_disabled(self):
         recipients = [self.env.user.email_formatted]

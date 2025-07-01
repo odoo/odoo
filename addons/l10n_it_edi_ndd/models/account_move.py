@@ -1,5 +1,7 @@
-from odoo.addons.l10n_it_edi_ndd.models.account_payment_methode_line import L10N_IT_PAYMENT_METHOD_SELECTION
 from odoo import api, fields, models
+from odoo.tools.sql import column_exists, create_column
+from odoo.addons.l10n_it_edi_ndd.models.account_payment_methode_line import L10N_IT_PAYMENT_METHOD_SELECTION
+from odoo.addons.l10n_it_edi.models.account_move import get_text
 
 
 class AccountMove(models.Model):
@@ -17,7 +19,17 @@ class AccountMove(models.Model):
         compute='_compute_l10n_it_document_type',
         store=True,
         readonly=False,
+        copy=False,
     )
+
+    def _auto_init(self):
+        # Create compute stored field l10n_it_document_type and l10n_it_payment_method
+        # here to avoid timeout error on large databases.
+        if not column_exists(self.env.cr, 'account_move', 'l10n_it_payment_method'):
+            create_column(self.env.cr, 'account_move', 'l10n_it_payment_method', 'varchar')
+        if not column_exists(self.env.cr, 'account_move', 'l10n_it_document_type'):
+            create_column(self.env.cr, 'account_move', 'l10n_it_document_type', 'integer')
+        return super()._auto_init()
 
     @api.depends('line_ids.matching_number', 'payment_state', 'matched_payment_ids')
     def _compute_l10n_it_payment_method(self):
@@ -69,7 +81,21 @@ class AccountMove(models.Model):
             But when reversing the move, the document type of the original move is copied and so it isn't recomputed.
         """
         # EXTENDS account
+        default_values_list = default_values_list or [{}] * len(self)
+        for default_values in default_values_list:
+            default_values.update({'l10n_it_document_type': False})
         reverse_moves = super()._reverse_moves(default_values_list, cancel)
-        for move in reverse_moves:
-            move.l10n_it_document_type = False
         return reverse_moves
+
+    def _l10n_it_edi_import_invoice(self, invoice, data, is_new):
+        res = super()._l10n_it_edi_import_invoice(invoice=invoice, data=data, is_new=is_new)
+        if not res:
+            return
+        self = res
+
+        #l10n_it_payment_method
+        if payment_method := get_text(data['xml_tree'], '//DatiPagamento/DettaglioPagamento/ModalitaPagamento'):
+            if payment_method in self.env['account.payment.method.line']._get_l10n_it_payment_method_selection_code():
+                self.l10n_it_payment_method = payment_method
+
+        return self

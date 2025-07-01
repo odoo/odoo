@@ -1,13 +1,15 @@
-import { registry } from "@web/core/registry";
 import { App } from "@odoo/owl";
-import { getTemplate } from "@web/core/templates";
+
 import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
+import { getTemplate } from "@web/core/templates";
+import { setElementContent } from "@web/core/utils/html";
 
 export const mailPopoutService = {
     start(env) {
         let externalWindow;
-        let beforeFn;
-        let afterFn;
+        let beforeFn = () => {};
+        let afterFn = () => {};
         let app;
 
         /**
@@ -17,8 +19,8 @@ export const mailPopoutService = {
          * - destroy the current app mounted on the window
          */
         function reset() {
-            if (externalWindow) {
-                externalWindow.document.head.innerHTML = "";
+            if (externalWindow?.document) {
+                setElementContent(externalWindow.document.head, "");
                 externalWindow.document.write(window.document.head.outerHTML);
                 externalWindow.document.body = externalWindow.document.createElement("body");
             }
@@ -30,7 +32,7 @@ export const mailPopoutService = {
 
         /**
          * Poll the external window to detect when it is closed.
-         * the afterPopout hook (afterFn) is then called after the window is closed
+         * the afterPopoutClosed hook (afterFn) is then called after the window is closed
          */
         async function pollClosedWindow() {
             while (externalWindow) {
@@ -44,12 +46,12 @@ export const mailPopoutService = {
 
         /**
          * This function registers hooks (before/after the window popout)
-         * @param {Function} beforePopout: this function is called before the component is initially mounted on the external window.
-         * @param {Function} afterPopout: this function is called after the external window is closed.
+         * @param {Function} beforePopout: this function is called before the external window is created.
+         * @param {Function} afterPopoutClosed: this function is called after the external window is closed.
          */
-        function addHooks(beforePopout = () => {}, afterPopout = () => {}) {
+        function addHooks(beforePopout = () => {}, afterPopoutClosed = () => {}) {
             beforeFn = beforePopout;
-            afterFn = afterPopout;
+            afterFn = afterPopoutClosed;
         }
 
         /**
@@ -61,6 +63,7 @@ export const mailPopoutService = {
          */
         function popout(component, props) {
             if (!externalWindow || externalWindow.closed) {
+                beforeFn();
                 externalWindow = browser.open("about:blank", "_blank", "popup=yes");
                 window.addEventListener("beforeunload", () => {
                     if (externalWindow && !externalWindow.closed) {
@@ -70,7 +73,6 @@ export const mailPopoutService = {
                 pollClosedWindow();
             }
 
-            beforeFn();
             reset();
             app = new App(component, {
                 name: "Popout",

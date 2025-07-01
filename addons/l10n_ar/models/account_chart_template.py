@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api, _
+from odoo.exceptions import ValidationError
 from odoo.addons.account.models.chart_template import template
 
 
@@ -18,7 +19,7 @@ class AccountChartTemplate(models.AbstractModel):
         }
         return match.get(chart_template)
 
-    def _load(self, template_code, company, install_demo):
+    def _load(self, template_code, company, install_demo,force_create=True):
         """ Set companies AFIP Responsibility and Country if AR CoA is installed, also set tax calculation rounding
         method required in order to properly validate match AFIP invoices.
 
@@ -32,11 +33,17 @@ class AccountChartTemplate(models.AbstractModel):
                 'country_id': self.env['res.country'].search([('code', '=', 'AR')]).id,
                 'tax_calculation_rounding_method': 'round_globally',
             })
-            # set CUIT identification type (which is the argentinean vat) in the created company partner instead of
-            # the default VAT type.
-            company.partner_id.l10n_latam_identification_type_id = self.env.ref('l10n_ar.it_cuit')
 
-        res = super()._load(template_code, company, install_demo)
+            current_identification_type = company.partner_id.l10n_latam_identification_type_id
+            try:
+                # set CUIT identification type (which is the argentinean vat) in the created company partner instead of
+                # the default VAT type.
+                company.partner_id.l10n_latam_identification_type_id = self.env.ref('l10n_ar.it_cuit')
+            except ValidationError:
+                # put back previous value if we could not validate the CUIT
+                company.partner_id.l10n_latam_identification_type_id = current_identification_type
+
+        res = super()._load(template_code, company, install_demo,force_create)
 
         # If Responsable Monotributista remove the default purchase tax
         if template_code in ('ar_base', 'ar_ex'):
@@ -44,7 +51,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         return res
 
-    def try_loading(self, template_code, company, install_demo=False):
+    def try_loading(self, template_code, company, install_demo=False, force_create=True):
         # During company creation load template code corresponding to the AFIP Responsibility
         if not company:
             return
@@ -57,4 +64,4 @@ class AccountChartTemplate(models.AbstractModel):
                 self.env.ref('l10n_ar.res_IVARI'): 'ar_ri',
             }
             template_code = match.get(company.l10n_ar_afip_responsibility_type_id, template_code)
-        return super().try_loading(template_code, company, install_demo)
+        return super().try_loading(template_code, company, install_demo, force_create)

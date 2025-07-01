@@ -10,10 +10,9 @@ QUnit.module("Websocket Worker");
 QUnit.test("connect event is broadcasted after calling start", async function (assert) {
     const worker = patchWebsocketWorkerWithCleanup({
         broadcast(type) {
-            if (type === "update_state") {
-                return;
+            if (type !== "worker_state_updated") {
+                assert.step(`broadcast ${type}`);
             }
-            assert.step(`broadcast ${type}`);
         },
     });
     worker._start();
@@ -25,10 +24,9 @@ QUnit.test("connect event is broadcasted after calling start", async function (a
 QUnit.test("disconnect event is broadcasted", async function (assert) {
     const worker = patchWebsocketWorkerWithCleanup({
         broadcast(type) {
-            if (type === "update_state") {
-                return;
+            if (type !== "worker_state_updated") {
+                assert.step(`broadcast ${type}`);
             }
-            assert.step(`broadcast ${type}`);
         },
     });
     worker._start();
@@ -48,10 +46,9 @@ QUnit.test("reconnecting/reconnect event is broadcasted", async function (assert
     });
     const worker = patchWebsocketWorkerWithCleanup({
         broadcast(type) {
-            if (type === "update_state") {
-                return;
+            if (type !== "worker_state_updated") {
+                assert.step(`broadcast ${type}`);
             }
-            assert.step(`broadcast ${type}`);
         },
     });
     worker._start();

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.TourSelectorPopup">
+        <Dialog>
+            <t t-set-slot="header">
+                <h4 class="modal-title">Launch fake tours</h4>
+            </t>
+            <div class="alert alert-warning" role="alert">
+                Running a fake tour will create random orders. Use at your own risk.
+            </div>
+            <div class="payment-methods-overview overflow-auto w-100 d-flex flex-wrap gap-1">
+                <div t-foreach="this.tours" t-as="name" t-key="name">
+                    <input class="form-check-input d-none" type="checkbox" t-att-name="name" t-att-id="name" t-on-change="onCheck" />
+                    <label class="btn btn-secondary btn d-flex" t-att-for="name" t-att-class="{'active': this.state.selectedTours.has(name)}">
+                        <span t-esc="name" />
+                    </label>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <div class="modal-footer-left d-flex gap-2">
+                    <div class="modal-footer-left d-flex gap-2">
+                        <button class="button highlight btn btn btn-primary" t-on-click="confirm">Confirm</button>
+                        <button class="button btn btn btn-secondary" t-on-click="props.close">Close</button>
+                    </div>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

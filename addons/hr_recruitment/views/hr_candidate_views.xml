@@ -83,7 +83,7 @@
                     <notebook/>
                 </sheet>
                 <div class="o_attachment_preview" groups="hr_recruitment.group_applicant_cv_display"/>
-                <chatter open_attachments="True"/>
+                <chatter open_attachments="True" reload_on_attachment="True"/>
             </form>
         </field>
     </record>
@@ -215,20 +215,6 @@
                 </group>
             </search>
         </field>
-    </record>
-    
-    <record id="action_hr_candidate_mass_sms" model="ir.actions.act_window">
-        <field name="name">Send SMS</field>
-        <field name="res_model">sms.composer</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-        <field name="context">{
-            'default_composition_mode': 'mass',
-            'default_mass_keep_log': True,
-            'default_res_ids': active_ids,
-        }</field>
-        <field name="binding_model_id" ref="hr_recruitment.model_hr_candidate"/>
-        <field name="binding_view_types">list</field>
     </record>
 
     <record id="action_candidate_send_mail" model="ir.actions.server">

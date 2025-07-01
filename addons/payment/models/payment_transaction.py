@@ -12,7 +12,7 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import format_amount
+from odoo.tools import email_normalize_all, format_amount
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -167,11 +167,12 @@ class PaymentTransaction(models.Model):
 
             # Duplicate partner values.
             partner = self.env['res.partner'].browse(values['partner_id'])
+            partner_emails = email_normalize_all(partner.email)
             values.update({
                 # Use the parent partner as fallback if the invoicing address has no name.
                 'partner_name': partner.name or partner.parent_id.name,
                 'partner_lang': partner.lang,
-                'partner_email': partner.email,
+                'partner_email': partner_emails[0] if partner_emails else None,
                 'partner_address': payment_utils.format_partner_address(
                     partner.street, partner.street2
                 ),
@@ -408,6 +409,7 @@ class PaymentTransaction(models.Model):
         - `amount`: The rounded amount of the transaction.
         - `currency_id`: The currency of the transaction, as a `res.currency` id.
         - `partner_id`: The partner making the transaction, as a `res.partner` id.
+        - `should_tokenize`: Whether this transaction should be tokenized.
         - Additional provider-specific entries.
 
         Note: `self.ensure_one()`
@@ -424,14 +426,17 @@ class PaymentTransaction(models.Model):
             'amount': self.amount,
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
+            'should_tokenize': self.tokenize,
         }
 
         # Complete generic processing values with provider-specific values.
         processing_values.update(self._get_specific_processing_values(processing_values))
+        secret_keys = self._get_specific_secret_keys()
+        logged_values = {k: v for k, v in processing_values.items() if k not in secret_keys}
         _logger.info(
             "generic and provider-specific processing values for transaction with reference "
             "%(ref)s:\n%(values)s",
-            {'ref': self.reference, 'values': pprint.pformat(processing_values)},
+            {'ref': self.reference, 'values': pprint.pformat(logged_values)},
         )
 
         # Render the html form for the redirect flow if available.
@@ -477,6 +482,14 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         return dict()
+
+    def _get_specific_secret_keys(self):
+        """ Return dict keys of provider-specific values that should be hidden when logged.
+
+        :return: The provider-specific secret keys
+        :rtype: dict_keys
+        """
+        return dict().keys()
 
     def _get_mandate_values(self):
         """ Return a dict of module-specific values used to create a mandate.

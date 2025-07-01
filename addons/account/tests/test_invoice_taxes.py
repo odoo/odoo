@@ -791,3 +791,98 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             invoice.line_ids.filtered('tax_line_id').sorted('balance'),
             [{'balance': -0.03}] + [{'balance': -0.01}] * 2 + [{'balance': 0.01}] * 5,
         )
+
+    def test_tax_line_amount_currency_modification_auto_balancing(self):
+        date = '2017-01-01'
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': date,
+            'partner_id': self.partner_a.id,
+            'invoice_date': date,
+            'currency_id': self.other_currency.id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_id': self.product_a.uom_id.id,
+                    'quantity': 1.0,
+                    'price_unit': 1000,
+                    'tax_ids': self.product_a.taxes_id.ids,
+                }),
+                Command.create({
+                    'name': self.product_b.name,
+                    'product_id': self.product_b.id,
+                    'product_uom_id': self.product_b.uom_id.id,
+                    'quantity': 1.0,
+                    'price_unit': 200,
+                    'tax_ids': self.product_b.taxes_id.ids,
+                }),
+            ]
+        })
+        receivable_line = move.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        self.assertRecordValues(receivable_line, [
+            {'amount_currency': 1410.00, 'balance': 705.00},
+        ])
+
+        # Modify the tax lines
+        tax_lines = move.line_ids.filtered(lambda line: line.display_type == 'tax').sorted('amount_currency')
+        self.assertRecordValues(tax_lines, [
+            {'amount_currency': -180.00, 'balance': -90.00},
+            {'amount_currency': -30.00, 'balance': -15.00},
+        ])
+        tax_lines[0].amount_currency = -180.03
+        # The following line should not cause the move to become unbalanced; i.e. there should be no error
+        tax_lines[1].amount_currency = -29.99
+
+        self.assertRecordValues(receivable_line, [
+            {'amount_currency': 1410.02, 'balance': 705.02},
+        ])
+
+    def test_product_account_tags(self):
+        product_tag = self.env['account.account.tag'].create({
+            'name': "Pikachu",
+            'applicability': 'products',
+        })
+        self.product_a.account_tag_ids = [Command.set(product_tag.ids)]
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2025-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'test with product tag',
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000,
+                    'tax_ids': self.percent_tax_1.ids,
+                }),
+                Command.create({
+                    'name': 'test with product tag',
+                    'product_id': self.product_b.id,
+                    'price_unit': 100,
+                    'tax_ids': self.percent_tax_1.ids,
+                }),
+                Command.create({
+                    'name': 'test without product tag',
+                    'product_id': self.product_b.id,
+                    'price_unit': 200,
+                    'tax_ids': self.percent_tax_2.ids,
+                }),
+            ]
+        })
+
+        invoice.action_post()
+
+        self.assertRecordValues(
+            invoice.line_ids,
+            [
+                {'tax_ids': self.percent_tax_1.ids, 'tax_line_id': False,                 'tax_tag_ids': product_tag.ids,  'credit': 1000, 'debit': 0},
+                {'tax_ids': self.percent_tax_1.ids, 'tax_line_id': False,                 'tax_tag_ids': [],               'credit': 100,  'debit': 0},
+                {'tax_ids': self.percent_tax_2.ids, 'tax_line_id': False,                 'tax_tag_ids': [],               'credit': 200,  'debit': 0},
+                {'tax_ids': [],                     'tax_line_id': self.percent_tax_1.id, 'tax_tag_ids': product_tag.ids,  'credit': 210,  'debit': 0},
+                {'tax_ids': [],                     'tax_line_id': self.percent_tax_1.id, 'tax_tag_ids': [],               'credit': 21,   'debit': 0},
+                {'tax_ids': [],                     'tax_line_id': self.percent_tax_2.id, 'tax_tag_ids': [],               'credit': 24,   'debit': 0},
+                {'tax_ids': [],                     'tax_line_id': False,                 'tax_tag_ids': [],               'credit': 0,    'debit': 1555},
+            ],
+        )

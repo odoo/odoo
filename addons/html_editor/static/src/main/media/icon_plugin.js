@@ -1,13 +1,46 @@
 import { withSequence } from "@html_editor/utils/resource";
 import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
+import { ColorSelector } from "../font/color_selector";
 
 export class IconPlugin extends Plugin {
-    static name = "icon";
-    static dependencies = ["history", "link", "selection", "color"];
-    /** @type { (p: IconPlugin) => Record<string, any> } */
+    static id = "icon";
+    static dependencies = ["history", "selection", "color"];
     resources = {
-        toolbarNamespace: [
+        user_commands: [
+            {
+                id: "resizeIcon1",
+                title: _t("Icon size 1x"),
+                run: () => this.resizeIcon({ size: "1" }),
+            },
+            {
+                id: "resizeIcon2",
+                title: _t("Icon size 2x"),
+                run: () => this.resizeIcon({ size: "2" }),
+            },
+            {
+                id: "resizeIcon3",
+                title: _t("Icon size 3x"),
+                run: () => this.resizeIcon({ size: "3" }),
+            },
+            {
+                id: "resizeIcon4",
+                title: _t("Icon size 4x"),
+                run: () => this.resizeIcon({ size: "4" }),
+            },
+            {
+                id: "resizeIcon5",
+                title: _t("Icon size 5x"),
+                run: () => this.resizeIcon({ size: "5" }),
+            },
+            {
+                id: "toggleSpinIcon",
+                title: _t("Toggle icon spin"),
+                icon: "fa-play",
+                run: this.toggleSpinIcon.bind(this),
+            },
+        ],
+        toolbar_namespaces: [
             {
                 id: "icon",
                 isApplied: (traversedNodes) =>
@@ -20,7 +53,7 @@ export class IconPlugin extends Plugin {
                     ),
             },
         ],
-        toolbarCategory: [
+        toolbar_groups: [
             withSequence(1, {
                 id: "icon_color",
                 namespace: "icon",
@@ -31,113 +64,93 @@ export class IconPlugin extends Plugin {
             }),
             withSequence(3, { id: "icon_spin", namespace: "icon" }),
         ],
-        toolbarItems: [
+        toolbar_items: [
             {
                 id: "icon_forecolor",
-                category: "icon_color",
-                inherit: "forecolor",
+                groupId: "icon_color",
+                title: _t("Font Color"),
+                Component: ColorSelector,
+                props: this.dependencies.color.getPropsForColorSelector("foreground"),
             },
             {
                 id: "icon_backcolor",
-                category: "icon_color",
-                inherit: "backcolor",
+                groupId: "icon_color",
+                title: _t("Background Color"),
+                Component: ColorSelector,
+                props: this.dependencies.color.getPropsForColorSelector("background"),
             },
             {
                 id: "icon_size_1",
-                category: "icon_size",
-                action(dispatch) {
-                    dispatch("RESIZE_ICON", "1");
-                },
+                groupId: "icon_size",
+                commandId: "resizeIcon1",
                 text: "1x",
-                title: _t("Icon size 1x"),
-                isFormatApplied: () => this.hasIconSize("1"),
+                isActive: () => this.hasIconSize("1"),
             },
             {
                 id: "icon_size_2",
-                category: "icon_size",
-                action(dispatch) {
-                    dispatch("RESIZE_ICON", "2");
-                },
+                groupId: "icon_size",
+                commandId: "resizeIcon2",
                 text: "2x",
-                title: _t("Icon size 2x"),
-                isFormatApplied: () => this.hasIconSize("2"),
+                isActive: () => this.hasIconSize("2"),
             },
             {
                 id: "icon_size_3",
-                category: "icon_size",
-                action(dispatch) {
-                    dispatch("RESIZE_ICON", "3");
-                },
+                groupId: "icon_size",
+                commandId: "resizeIcon3",
                 text: "3x",
-                title: _t("Icon size 3x"),
-                isFormatApplied: () => this.hasIconSize("3"),
+                isActive: () => this.hasIconSize("3"),
             },
             {
                 id: "icon_size_4",
-                category: "icon_size",
-                action(dispatch) {
-                    dispatch("RESIZE_ICON", "4");
-                },
+                groupId: "icon_size",
+                commandId: "resizeIcon4",
                 text: "4x",
-                title: _t("Icon size 4x"),
-                isFormatApplied: () => this.hasIconSize("4"),
+                isActive: () => this.hasIconSize("4"),
             },
             {
                 id: "icon_size_5",
-                category: "icon_size",
-                action(dispatch) {
-                    dispatch("RESIZE_ICON", "5");
-                },
+                groupId: "icon_size",
+                commandId: "resizeIcon5",
                 text: "5x",
-                title: _t("Icon size 5x"),
-                isFormatApplied: () => this.hasIconSize("5"),
+                isActive: () => this.hasIconSize("5"),
             },
             {
                 id: "icon_spin",
-                category: "icon_spin",
-                action(dispatch) {
-                    dispatch("TOGGLE_SPIN_ICON");
-                },
-                icon: "fa-play",
-                title: _t("Toggle icon spin"),
-                isFormatApplied: () => this.hasSpinIcon(),
+                groupId: "icon_spin",
+                commandId: "toggleSpinIcon",
+                isActive: () => this.hasSpinIcon(),
             },
         ],
-        colorApply: this.applyIconColor.bind(this),
+        color_apply_overrides: this.applyIconColor.bind(this),
     };
 
     getSelectedIcon() {
-        const selectedNodes = this.shared.getSelectedNodes();
+        const selectedNodes = this.dependencies.selection.getSelectedNodes();
         return selectedNodes.find((node) => node.classList?.contains?.("fa"));
     }
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "RESIZE_ICON": {
-                const selectedIcon = this.getSelectedIcon();
-                if (!selectedIcon) {
-                    return;
-                }
-                for (const classString of selectedIcon.classList) {
-                    if (classString.match(/^fa-[2-5]x$/)) {
-                        selectedIcon.classList.remove(classString);
-                    }
-                }
-                if (payload !== "1") {
-                    selectedIcon.classList.add(`fa-${payload}x`);
-                }
-                this.dispatch("ADD_STEP");
-                break;
-            }
-            case "TOGGLE_SPIN_ICON": {
-                const selectedIcon = this.getSelectedIcon();
-                if (!selectedIcon) {
-                    return;
-                }
-                selectedIcon.classList.toggle("fa-spin");
-                break;
+    resizeIcon({ size }) {
+        const selectedIcon = this.getSelectedIcon();
+        if (!selectedIcon) {
+            return;
+        }
+        for (const classString of selectedIcon.classList) {
+            if (classString.match(/^fa-[2-5]x$/)) {
+                selectedIcon.classList.remove(classString);
             }
         }
+        if (size !== "1") {
+            selectedIcon.classList.add(`fa-${size}x`);
+        }
+        this.dependencies.history.addStep();
+    }
+
+    toggleSpinIcon() {
+        const selectedIcon = this.getSelectedIcon();
+        if (!selectedIcon) {
+            return;
+        }
+        selectedIcon.classList.toggle("fa-spin");
     }
 
     hasIconSize(size) {
@@ -166,7 +179,7 @@ export class IconPlugin extends Plugin {
         if (!selectedIcon) {
             return;
         }
-        this.shared.colorElement(selectedIcon, color, mode);
+        this.dependencies.color.colorElement(selectedIcon, color, mode);
         return true;
     }
 }

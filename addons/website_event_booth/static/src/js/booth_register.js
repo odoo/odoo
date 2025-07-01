@@ -112,6 +112,12 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
             .querySelector(".o_wbooth_registration_error_section")
             .classList.toggle("d-none", !errors.length);
 
+        const errorSigninEl = this.el
+            .querySelector('.o_wbooth_registration_error_signin');
+        if (errorSigninEl) {
+            errorSigninEl.classList.add('d-none');
+        }
+
         let errorMessages = [];
         const errorMessageEl = this.el.querySelector(".o_wbooth_registration_error_message");
 
@@ -125,6 +131,13 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
 
         if (errors.includes('boothCategoryError')) {
             errorMessages.push(_t("The booth category doesn't exist."));
+        }
+
+        if (errors.includes('existingPartnerError')) {
+            errorMessages.push(_t("It looks like your email is linked to an existing account."));
+            if (errorSigninEl) {
+                errorSigninEl.classList.remove('d-none');
+            }
         }
 
         errorMessageEl.textContent = errorMessages.join(" ");

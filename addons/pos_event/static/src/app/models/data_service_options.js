@@ -24,4 +24,7 @@ patch(DataServiceOptions.prototype, {
             },
         };
     },
+    get dynamicModels() {
+        return [...super.dynamicModels, "event.registration", "event.registration.answer"];
+    },
 });

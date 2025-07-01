@@ -15,21 +15,8 @@ export function checkBtn(buttonName) {
 
 export function checkIsNoBtn(buttonName) {
     return {
-        content: `Check if '${buttonName}' do not exist`,
-        trigger: `body`,
-        run: () => {
-            const element = document.querySelectorAll(".btn");
-
-            for (const el of element) {
-                const text = el.innerText;
-
-                if (text === buttonName) {
-                    throw new Error(`Button '${buttonName}' exist`);
-                }
-            }
-
-            return true;
-        },
+        content: `Check that '${buttonName}' do not exist`,
+        trigger: `body:not(:has(.btn:contains(${buttonName})))`,
     };
 }
 
@@ -53,4 +40,20 @@ export function openLanguageSelector() {
         trigger: `.self_order_language_selector`,
         run: "click",
     };
+}
+
+export function changeLanguage(language) {
+    return [
+        openLanguageSelector(),
+        {
+            content: `Check that the language is available`,
+            trigger: `.self_order_language_popup .btn:contains(${language})`,
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            content: `Check that the language changed`,
+            trigger: `.self_order_language_selector:contains(${language})`,
+        },
+    ];
 }

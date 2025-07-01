@@ -23,7 +23,7 @@ patch(PosStore.prototype, {
     },
     get employeeIsAdmin() {
         const cashier = this.get_cashier();
-        return cashier._role === "manager" || cashier.user_id?.id === this.user.id;
+        return cashier._role === "manager";
     },
     checkPreviousLoggedCashier() {
         if (this.config.module_pos_hr) {
@@ -35,11 +35,6 @@ patch(PosStore.prototype, {
             }
         } else {
             super.checkPreviousLoggedCashier(...arguments);
-        }
-    },
-    async actionAfterIdle() {
-        if (this.mainScreen.component?.name !== "LoginScreen") {
-            return super.actionAfterIdle();
         }
     },
     async afterProcessServerData() {
@@ -141,5 +136,11 @@ patch(PosStore.prototype, {
             return super.shouldShowOpeningControl(...arguments) && this.hasLoggedIn;
         }
         return super.shouldShowOpeningControl(...arguments);
+    },
+    async allowProductCreation() {
+        if (this.config.module_pos_hr) {
+            return this.employeeIsAdmin;
+        }
+        return await super.allowProductCreation();
     },
 });

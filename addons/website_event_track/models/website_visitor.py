@@ -38,7 +38,7 @@ class WebsiteVisitor(models.Model):
         """ Search visitors with terms on wishlisted tracks. E.g. [('event_track_wishlisted_ids',
         'in', [1, 2])] should return visitors having wishlisted tracks 1, 2. """
         if operator == "not in":
-            raise NotImplementedError("Unsupported 'Not In' operation on track wishlist visitors")
+            raise NotImplementedError(self.env._("Unsupported 'Not In' operation on track wishlist visitors"))
 
         track_visitors = self.env['event.track.visitor'].sudo().search([
             ('track_id', operator, operand),

@@ -25,6 +25,10 @@ registry.category("web_tour.tours").add("self_combo_selector", {
             },
         ]),
         Utils.clickBtn("Order"),
+        {
+            trigger: '.btn:contains("＋")',
+            run: "click",
+        },
         ...CartPage.checkCombo("Office Combo", [
             {
                 product: "Desk Organizer",
@@ -42,6 +46,23 @@ registry.category("web_tour.tours").add("self_combo_selector", {
                 attributes: [],
             },
         ]),
+        Utils.clickBtn("Pay"),
+        Utils.clickBtn("Ok"),
+        Utils.checkIsNoBtn("Order Now"),
+    ],
+});
+
+registry.category("web_tour.tours").add("self_combo_selector_category", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Test Combo"),
+        ...ProductPage.setupCombo([
+            {
+                product: "Combo Product 5",
+                attributes: [],
+            },
+        ]),
+        Utils.clickBtn("Order"),
         Utils.clickBtn("Pay"),
         Utils.clickBtn("Ok"),
         Utils.checkIsNoBtn("Order Now"),

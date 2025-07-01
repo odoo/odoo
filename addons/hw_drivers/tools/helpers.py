@@ -39,11 +39,11 @@ except ImportError:
 
 
 class Orientation(Enum):
-    """xrandr screen orientation for kiosk mode"""
+    """xrandr/wlr-randr screen orientation for kiosk mode"""
     NORMAL = 'normal'
-    INVERTED = 'inverted'
-    LEFT = 'left'
-    RIGHT = 'right'
+    INVERTED = '180'
+    LEFT = '90'
+    RIGHT = '270'
 
 
 class CertificateStatus(Enum):
@@ -169,17 +169,20 @@ def check_git_branch():
             )
 
             if db_branch != local_branch:
-                with writable():
-                    subprocess.run(git + ['branch', '-m', db_branch], check=True)
-                    subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
-                    _logger.info("Updating odoo folder to the branch %s", db_branch)
-                    subprocess.run(
-                        ['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh'], check=True
-                    )
-                odoo_restart()
+                try:
+                    with writable():
+                        subprocess.run(git + ['branch', '-m', db_branch], check=True)
+                        subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
+                        _logger.info("Updating odoo folder to the branch %s", db_branch)
+                        subprocess.run(
+                            ['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh'], check=True
+                        )
+                except subprocess.CalledProcessError:
+                    _logger.exception("Failed to update the code with git.")
+                finally:
+                    odoo_restart()
     except Exception:
-        _logger.exception('An error occurred while connecting to server')
-
+        _logger.exception('An error occurred while trying to update the code with git')
 
 def check_image():
     """
@@ -205,19 +208,21 @@ def check_image():
     return {'major': version[0], 'minor': version[1]}
 
 
-def save_conf_server(url, token, db_uuid, enterprise_code):
+def save_conf_server(url, token, db_uuid, enterprise_code, db_name=None):
     """
     Save server configurations in odoo.conf
     :param url: The URL of the server
     :param token: The token to authenticate the server
     :param db_uuid: The database UUID
     :param enterprise_code: The enterprise code
+    :param db_name: The database name
     """
     update_conf({
         'remote_server': url,
         'token': token,
         'db_uuid': db_uuid,
         'enterprise_code': enterprise_code,
+        'db_name': db_name,
     })
 
 
@@ -234,7 +239,7 @@ def generate_password():
             subprocess.run(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'), check=True)
         return password
     except subprocess.CalledProcessError as e:
-        _logger.error("Failed to generate password: %s", e.output)
+        _logger.exception("Failed to generate password: %s", e.output)
         return 'Error: Check IoT log'
 
 
@@ -349,14 +354,14 @@ def load_certificate():
     """
     db_uuid = get_conf('db_uuid')
     enterprise_code = get_conf('enterprise_code')
-    if not (db_uuid and enterprise_code):
+    if not db_uuid:
         return "ERR_IOT_HTTPS_LOAD_NO_CREDENTIAL"
 
     url = 'https://www.odoo.com/odoo-enterprise/iot/x509'
     data = {
         'params': {
             'db_uuid': db_uuid,
-            'enterprise_code': enterprise_code
+            'enterprise_code': enterprise_code or ''
         }
     }
     urllib3.disable_warnings()
@@ -375,8 +380,16 @@ def load_certificate():
     if response.status != 200:
         return "ERR_IOT_HTTPS_LOAD_REQUEST_STATUS %s\n\n%s" % (response.status, response.reason)
 
-    result = json.loads(response.data.decode('utf8'))['result']
-    if not result:
+    response_body = json.loads(response.data.decode())
+    server_error = response_body.get('error')
+    if server_error:
+        _logger.error("A server error received from odoo.com while trying to get the certificate: %s", server_error)
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
+
+    result = response_body.get('result', {})
+    certificate_error = result.get('error')
+    if certificate_error:
+        _logger.error("An error received from odoo.com while trying to get the certificate: %s", certificate_error)
         return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
 
     update_conf({'subject': result['subject_cn']})
@@ -398,17 +411,17 @@ def load_certificate():
 
 
 def delete_iot_handlers():
-    """
-    Delete all the drivers and interfaces
-    This is needed to avoid conflicts
-    with the newly downloaded drivers
+    """Delete all drivers, interfaces and libs if any.
+    This is needed to avoid conflicts with the newly downloaded drivers.
     """
     try:
-        for directory in ['drivers', 'interfaces']:
-            path = file_path(f'hw_drivers/iot_handlers/{directory}')
-            iot_handlers = list_file_by_os(path)
-            for file in iot_handlers:
-                unlink_file(f"odoo/addons/hw_drivers/iot_handlers/{directory}/{file}")
+        iot_handlers = Path(file_path(f'hw_drivers/iot_handlers'))
+        filenames = [
+            f"odoo/addons/hw_drivers/iot_handlers/{file.relative_to(iot_handlers)}"
+            for file in iot_handlers.glob('**/*')
+            if file.is_file()
+        ]
+        unlink_file(*filenames)
         _logger.info("Deleted old IoT handlers")
     except OSError:
         _logger.exception('Failed to delete old IoT handlers')
@@ -427,13 +440,11 @@ def download_iot_handlers(auto=True):
             if resp.data:
                 delete_iot_handlers()
                 with writable():
-                    drivers_path = ['odoo', 'addons', 'hw_drivers', 'iot_handlers']
-                    path = path_file(str(Path().joinpath(*drivers_path)))
+                    path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
                     zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
                     zip_file.extractall(path)
-        except Exception as e:
-            _logger.error('Could not reach configured server')
-            _logger.error('A error encountered : %s ' % e)
+        except Exception:
+            _logger.exception('Could not reach configured server to download IoT handlers')
 
 def compute_iot_handlers_addon_name(handler_kind, handler_file_name):
     return "odoo.addons.hw_drivers.iot_handlers.{handler_kind}.{handler_name}".\
@@ -454,9 +465,8 @@ def load_iot_handlers():
                 module = util.module_from_spec(spec)
                 try:
                     spec.loader.exec_module(module)
-                except Exception as e:
-                    _logger.error('Unable to load file: %s ', file)
-                    _logger.error('An error encountered : %s ', e)
+                except Exception:
+                    _logger.exception('Unable to load handler file: %s', file)
     lazy_property.reset_all(http.root)
 
 def list_file_by_os(file_list):
@@ -476,12 +486,16 @@ def odoo_restart(delay=0):
     IR.start()
 
 
-def path_file(filename):
+def path_file(*args):
+    """Return the path to the file from IoT Box root or Windows Odoo
+    server folder
+    :return: The path to the file
+    """
     platform_os = platform.system()
     if platform_os == 'Linux':
-        return Path.home() / filename
+        return Path("~pi", *args).expanduser() # Path.home() returns odoo user's home instead of pi's
     elif platform_os == 'Windows':
-        return Path().absolute().parent.joinpath('server/' + filename)
+        return Path().absolute().parent.joinpath('server', *args)
 
 
 def read_file_first_line(filename):
@@ -491,11 +505,12 @@ def read_file_first_line(filename):
             return f.readline().strip('\n')
 
 
-def unlink_file(filename):
+def unlink_file(*filenames):
     with writable():
-        path = path_file(filename)
-        if path.exists():
-            path.unlink()
+        for filename in filenames:
+            path = path_file(filename)
+            if path.exists():
+                path.unlink()
 
 
 def write_file(filename, text, mode='w'):
@@ -528,8 +543,8 @@ def download_from_url(download_url, path_to_filename):
         request_response.raise_for_status()
         write_file(path_to_filename, request_response.content, 'wb')
         _logger.info('Downloaded %s from %s', path_to_filename, download_url)
-    except Exception as e:
-        _logger.error('Failed to download from %s: %s', download_url, e)
+    except Exception:
+        _logger.exception('Failed to download from %s', download_url)
 
 def unzip_file(path_to_filename, path_to_extract):
     """
@@ -546,8 +561,8 @@ def unzip_file(path_to_filename, path_to_extract):
                 zip_file.extractall(path_file(path_to_extract))
             Path(path).unlink()
         _logger.info('Unzipped %s to %s', path_to_filename, path_to_extract)
-    except Exception as e:
-        _logger.error('Failed to unzip %s: %s', path_to_filename, e)
+    except Exception:
+        _logger.exception('Failed to unzip %s', path_to_filename)
 
 
 @cache
@@ -598,6 +613,10 @@ def disconnect_from_server():
         'token': '',
         'db_uuid': '',
         'enterprise_code': '',
+        'db_name': '',
+        'screen_orientation': '',
+        'browser_url': '',
+        'iot_handlers_etag': '',
     })
 
 
@@ -609,7 +628,7 @@ def save_browser_state(url=None, orientation=None):
     """
     update_conf({
         'browser-url': url,
-        'screen-orientation': orientation.value if orientation else None,
+        'screen-orientation': orientation.name.lower() if orientation else None,
     })
 
 
@@ -619,8 +638,8 @@ def load_browser_state():
     :return: The URL the browser is on and the orientation of the screen (default to NORMAL)
     """
     url = get_conf('browser-url')
-    orientation = get_conf('screen-orientation') or Orientation.NORMAL
-    return url, Orientation(orientation)
+    orientation = get_conf('screen-orientation') or Orientation.NORMAL.name
+    return url, Orientation[orientation.upper()]
 
 
 def url_is_valid(url):
@@ -656,3 +675,17 @@ def parse_url(url):
         "url": f"{url.scheme}://{url.netloc}",
         **search_params,
     }
+
+
+def reset_log_level():
+    """Reset the log level to the default one if the reset timestamp is reached
+    This timestamp is set by the log controller in `hw_posbox_homepage/homepage.py` when the log level is changed
+    """
+    log_level_reset_timestamp = get_conf('log_level_reset_timestamp')
+    if log_level_reset_timestamp and float(log_level_reset_timestamp) <= time.time():
+        _logger.info("Resetting log level to default.")
+        update_conf({
+            'log_level_reset_timestamp': '',
+            'log_handler': ':WARNING',
+            'log_level': 'warn',
+        })

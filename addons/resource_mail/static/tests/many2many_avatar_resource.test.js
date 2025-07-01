@@ -8,11 +8,12 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAll } from "@odoo/hoot-dom";
-import { defineResourceModels } from "@resource/../tests/resource_test_helpers";
+import { defineResourceMailModels } from "./resource_mail_test_helpers";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 const data = {};
-defineResourceModels();
+defineResourceMailModels();
 beforeEach(async () => {
     /* 1. Create data
         3 type of resources will be tested in the widget:
@@ -66,6 +67,20 @@ beforeEach(async () => {
     data.task1Id = pyEnv["resource.task"].create({
         display_name: "Task with three resources",
         resource_ids: [data.resourceComputerId, data.resourceMarieId, data.resourcePierreId],
+    });
+
+    onRpc("resource.resource", "get_avatar_card_data", (params) => {
+        const resourceIdArray = params.args[0];
+        const resourceId = resourceIdArray[0];
+        const resources = pyEnv['resource.resource'].read([resourceId]);
+        const result = resources.map(resource => ({
+            name: resource.name,
+            role_ids: resource.role_ids,
+            email:resource.email,
+            phone: resource.phone,
+            user_id: resource.user_id,
+        }));
+        return result;
     });
 });
 test("many2many_avatar_resource widget in form view", async () => {

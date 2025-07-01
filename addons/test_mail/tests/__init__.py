@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import test_invite
 from . import test_ir_actions
@@ -10,9 +10,11 @@ from . import test_mail_composer
 from . import test_mail_composer_mixin
 from . import test_mail_followers
 from . import test_mail_gateway
+from . import test_mail_flow
 from . import test_mail_mail
 from . import test_mail_management
 from . import test_mail_message
+from . import test_mail_message_security
 from . import test_mail_multicompany
 from . import test_mail_push
 from . import test_mail_scheduled_message
@@ -25,3 +27,4 @@ from . import test_message_management
 from . import test_message_post
 from . import test_message_track
 from . import test_performance
+from . import test_public_binary_controller

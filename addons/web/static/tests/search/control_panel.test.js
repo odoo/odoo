@@ -3,7 +3,9 @@ import { click, press, queryAll } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { reactive } from "@odoo/owl";
 import {
+    contains,
     defineModels,
+    fields,
     getService,
     models,
     mountWithCleanup,
@@ -16,8 +18,6 @@ import { WebClient } from "@web/webclient/webclient";
 
 class Foo extends models.Model {
     _views = {
-        search: `<search/>`,
-        list: `<list/>`,
         kanban: `<kanban><t t-name="card"></t></kanban>`,
     };
 }
@@ -35,7 +35,8 @@ test("simple rendering", async () => {
     expect(`.o_breadcrumb`).toHaveCount(1);
 });
 
-test.tags`desktop`("breadcrumbs", async () => {
+test.tags("desktop");
+test("breadcrumbs", async () => {
     await mountWithSearch(
         ControlPanel,
         { resModel: "foo" },
@@ -65,7 +66,8 @@ test.tags`desktop`("breadcrumbs", async () => {
     expect.verifySteps(["controller_7"]);
 });
 
-test.tags`desktop`("view switcher", async () => {
+test.tags("desktop");
+test("view switcher", async () => {
     await mountWithSearch(
         ControlPanel,
         { resModel: "foo" },
@@ -92,7 +94,8 @@ test.tags`desktop`("view switcher", async () => {
     expect.verifySteps(["kanban"]);
 });
 
-test.tags`mobile`("view switcher on mobile", async () => {
+test.tags("mobile");
+test("view switcher on mobile", async () => {
     await mountWithSearch(
         ControlPanel,
         { resModel: "foo" },
@@ -162,7 +165,37 @@ test("view switcher hotkey cycles through views", async () => {
     expect(`.o_list_view`).toHaveCount(1);
 });
 
-test.tags("mobile")("Control panel is shown/hide on top when scrolling", async () => {
+test.tags("desktop");
+test("control panel layout buttons in dialog", async () => {
+    onRpc("has_group", () => true);
+    Foo._fields.char = fields.Char();
+    Foo._records = [
+        {
+            char: "a",
+        },
+        {
+            char: "b",
+        },
+    ];
+    Foo._views["list"] = `<list editable="top"><field name="char"/></list>`;
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "foo",
+        type: "ir.actions.act_window",
+        target: "new",
+        views: [[false, "list"]],
+    });
+    expect(`.o_list_view`).toHaveCount(1);
+    await contains(".o_data_cell").click();
+    expect(".modal-footer .o_list_buttons button").toHaveCount(2);
+    expect(".o_control_panel .o_list_buttons button").toHaveCount(0, {
+        message: "layout buttons are not replicated in the control panel when inside a dialog",
+    });
+});
+
+test.tags("mobile");
+test("Control panel is shown/hide on top when scrolling", async () => {
     await mountWithSearch(
         ControlPanel,
         { resModel: "foo" },

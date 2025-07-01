@@ -164,7 +164,9 @@ def to_minor_currency_units(major_amount, currency, arbitrary_decimal_number=Non
         decimal_number = CURRENCY_MINOR_UNITS.get(currency.name, currency.decimal_places)
     else:
         decimal_number = arbitrary_decimal_number
-    return int(float_round(major_amount * (10**decimal_number), precision_digits=0))
+    return int(
+        float_round(major_amount * (10**decimal_number), precision_digits=0, rounding_method='DOWN')
+    )
 
 
 # Partner values formatting

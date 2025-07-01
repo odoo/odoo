@@ -1,11 +1,12 @@
 /** @odoo-module */
 
-import { describe, expect, makeExpect, mountOnFixture, test } from "@odoo/hoot";
-import { check, tick } from "@odoo/hoot-dom";
+import { describe, expect, makeExpect, test } from "@odoo/hoot";
+import { check, manuallyDispatchProgrammaticEvent, tick, waitFor } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
-import { parseUrl } from "../local_helpers";
+import { mountForTest, parseUrl } from "../local_helpers";
 
 import { Test } from "../../core/test";
+import { makeLabel } from "../../hoot_utils";
 
 describe(parseUrl(import.meta.url), () => {
     test("makeExpect passing, without a test", () => {
@@ -23,7 +24,7 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(true);
-        expect(results.assertions).toHaveLength(2);
+        expect(results.events).toHaveLength(2);
     });
 
     test("makeExpect failing, without a test", () => {
@@ -37,7 +38,7 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.assertions).toHaveLength(2);
+        expect(results.events).toHaveLength(2);
     });
 
     test("makeExpect with a test", async () => {
@@ -72,10 +73,26 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.assertions[0].pass).toBe(true);
+        expect(results.events[0].pass).toBe(true);
     });
 
-    test("makeExpect with no assertions", () => {
+    test("makeExpect with no assertions & query events", async () => {
+        await mountForTest(/* xml */ `<div>ABC</div>`);
+
+        const [, hooks] = makeExpect({ headless: true });
+
+        hooks.before();
+
+        await waitFor("div:contains(ABC)");
+
+        const results = hooks.after();
+
+        expect(results.pass).toBe(true);
+        expect(results.events).toHaveLength(1);
+        expect(results.events[0].label).toBe("waitFor");
+    });
+
+    test("makeExpect with no assertions & no query events", () => {
         const [customExpect, hooks] = makeExpect({ headless: true });
 
         hooks.before();
@@ -87,10 +104,12 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.assertions).toHaveLength(1);
-        expect(results.assertions[0].message).toBe(
-            "expected at least 1 assertion, but none were run"
-        );
+        expect(results.events).toHaveLength(1);
+        expect(results.events[0].message).toEqual([
+            "expected at least",
+            ["1", "integer"],
+            "assertion or query event, but none were run",
+        ]);
     });
 
     test("makeExpect with unconsumed matchers", () => {
@@ -99,13 +118,16 @@ describe(parseUrl(import.meta.url), () => {
         hooks.before();
 
         expect(() => customExpect(true, true)).toThrow("`expect()` only accepts a single argument");
+        customExpect(1).toBe(1);
         customExpect(true);
 
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.assertions).toHaveLength(1);
-        expect(results.assertions[0].message).toBe("called once without calling any matchers");
+        expect(results.events).toHaveLength(2);
+        expect(results.events[1].message.join(" ")).toBe(
+            "called once without calling any matchers"
+        );
     });
 
     test("makeExpect with unverified steps", () => {
@@ -120,8 +142,8 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.assertions).toHaveLength(2);
-        expect(results.assertions[1].message).toBe("unverified steps");
+        expect(results.events).toHaveLength(2); // 1 'verifySteps' + 1 'unverified steps'
+        expect(results.events.at(-1).message).toEqual(["unverified steps"]);
     });
 
     test("makeExpect retains current values", () => {
@@ -135,14 +157,14 @@ describe(parseUrl(import.meta.url), () => {
 
         const testResult = hooks.after();
 
-        const [assertion] = testResult.assertions;
+        const [assertion] = testResult.events;
         expect(assertion.pass).toBe(false);
         expect(assertion.failedDetails[1][1]).toEqual({ a: 1 });
         expect(object).toEqual({ a: 1, b: 2 });
     });
 
     test("'expect' results contain the correct informations", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <label style="color: #f00">
                 Checkbox
                 <input class="cb" type="checkbox" />
@@ -170,6 +192,7 @@ describe(parseUrl(import.meta.url), () => {
             ["toHaveLength", [], 0],
             ["toInclude", [1], 1],
             ["toMatch", "a", "a"],
+            ["toMatchObject", { a: 1, b: { l: [1, 2] } }, { b: { l: [1, 2] } }],
             [
                 "toThrow",
                 () => {
@@ -201,10 +224,25 @@ describe(parseUrl(import.meta.url), () => {
         const testResult = hooks.after();
 
         expect(testResult.pass).toBe(true);
-        expect(testResult.assertions).toHaveLength(matchers.length);
-        expect(testResult.assertions.map(({ label }) => label)).toEqual(
-            matchers.map(([name]) => name)
-        );
+        expect(testResult.events).toHaveLength(matchers.length);
+        expect(testResult.events.map(({ label }) => label)).toEqual(matchers.map(([name]) => name));
+    });
+
+    test("assertions are prevented after an error", async () => {
+        const [customExpect, hooks] = makeExpect({ headless: true });
+
+        hooks.before();
+
+        await customExpect(Promise.resolve(1)).resolves.toBe(1);
+        hooks.error(new Error("boom"));
+        customExpect(2).toBe(2);
+        customExpect(Promise.resolve(3)).resolves.toBe(3);
+        await tick();
+
+        const results = hooks.after();
+
+        expect(results.pass).toBe(false);
+        expect(results.events).toHaveLength(3); // toBe + error + unverified errors
     });
 
     describe("standard matchers", () => {
@@ -255,14 +293,16 @@ describe(parseUrl(import.meta.url), () => {
 
         test("toBeCloseTo", () => {
             expect(0.2 + 0.1).toBeCloseTo(0.3);
-            expect(0.2 + 0.1).toBeCloseTo(0.3, { digits: 2 });
-            expect(0.2 + 0.1).toBeCloseTo(0.3, { digits: 16 });
-            expect(0.2 + 0.1).not.toBeCloseTo(0.3, { digits: 17 });
+            expect(0.2 + 0.1).toBeCloseTo(0.3, { margin: Number.EPSILON });
+            expect(0.2 + 0.1).not.toBeCloseTo(0.3, { margin: 1e-17 });
 
-            expect(3.51).toBeCloseTo(3.5, { digits: 1 });
-            expect(3.51).not.toBeCloseTo(3.5);
-            expect(3.51).not.toBeCloseTo(3.5, { digits: 2 });
-            expect(3.51).not.toBeCloseTo(3.5, { digits: 17 });
+            expect(3.51).toBeCloseTo(3);
+            expect(3.51).toBeCloseTo(3.52, { margin: 2e-2 });
+            expect(3.502).not.toBeCloseTo(3.503, { margin: 1e-3 });
+
+            expect(3).toBeCloseTo(4 - 1e-15);
+            expect(3 + 1e-15).toBeCloseTo(4);
+            expect(3).not.toBeCloseTo(4);
         });
 
         test("toEqual", () => {
@@ -329,6 +369,32 @@ describe(parseUrl(import.meta.url), () => {
             expect(new Exception("oui")).toMatch(new Error("oui"));
         });
 
+        test("toMatchObject", () => {
+            expect({
+                bath: true,
+                bedrooms: 4,
+                kitchen: {
+                    amenities: ["oven", "stove", "washer"],
+                    area: 20,
+                    wallColor: "white",
+                },
+            }).toMatchObject({
+                bath: true,
+                kitchen: {
+                    amenities: ["oven", "stove", "washer"],
+                    wallColor: "white",
+                },
+            });
+            expect([{ tralalero: "tralala" }, { foo: 1 }]).toMatchObject([
+                { tralalero: "tralala" },
+                { foo: 1 },
+            ]);
+            expect([{ tralalero: "tralala" }, { foo: 1, lirili: "larila" }]).toMatchObject([
+                { tralalero: "tralala" },
+                { foo: 1 },
+            ]);
+        });
+
         test("toThrow", async () => {
             const asyncBoom = async () => {
                 throw new Error("rejection");
@@ -349,22 +415,22 @@ describe(parseUrl(import.meta.url), () => {
 
         test("verifyErrors", async () => {
             expect.assertions(1);
-            expect.errors(2);
+            expect.errors(3);
 
-            const asyncBoom = async () => {
-                throw new Error("rejection");
+            const boom = (msg) => {
+                throw new Error(msg);
             };
 
-            const boom = () => {
-                throw new Error("error");
-            };
+            // Timeout
+            setTimeout(() => boom("timeout"));
+            // Promise
+            queueMicrotask(() => boom("promise"));
+            // Event
+            manuallyDispatchProgrammaticEvent(window, "error", { message: "event" });
 
-            asyncBoom();
-            setTimeout(boom);
-            await tick();
             await tick();
 
-            expect.verifyErrors(["error", "rejection"]);
+            expect.verifyErrors(["event", "promise", "timeout"]);
         });
 
         test("verifySteps", () => {
@@ -386,7 +452,7 @@ describe(parseUrl(import.meta.url), () => {
 
     describe("DOM matchers", () => {
         test("toBeChecked", async () => {
-            await mountOnFixture(/* xml */ `
+            await mountForTest(/* xml */ `
                 <input type="checkbox" />
                 <input type="checkbox" checked="" />
             `);
@@ -396,7 +462,7 @@ describe(parseUrl(import.meta.url), () => {
         });
 
         test("toHaveAttribute", async () => {
-            await mountOnFixture(/* xml */ `
+            await mountForTest(/* xml */ `
                 <input type="number" disabled="" />
             `);
 
@@ -406,7 +472,7 @@ describe(parseUrl(import.meta.url), () => {
         });
 
         test("toHaveCount", async () => {
-            await mountOnFixture(/* xml */ `
+            await mountForTest(/* xml */ `
                 <ul>
                     <li>milk</li>
                     <li>eggs</li>
@@ -424,7 +490,7 @@ describe(parseUrl(import.meta.url), () => {
         });
 
         test("toHaveProperty", async () => {
-            await mountOnFixture(/* xml */ `
+            await mountForTest(/* xml */ `
                 <input type="search" readonly="" />
             `);
 
@@ -444,7 +510,7 @@ describe(parseUrl(import.meta.url), () => {
                 nbsp = "\u00a0";
             }
 
-            await mountOnFixture(TextComponent);
+            await mountForTest(TextComponent);
 
             expect(".with").toHaveText("With nbsp");
             expect(".with").toHaveText("With\u00a0nbsp", { raw: true });
@@ -456,7 +522,7 @@ describe(parseUrl(import.meta.url), () => {
         });
 
         test("toHaveInnerHTML", async () => {
-            await mountOnFixture(/* xml */ `
+            await mountForTest(/* xml */ `
                 <div class="parent">
                     <p>
                         abc<strong>def</strong>ghi
@@ -472,7 +538,7 @@ describe(parseUrl(import.meta.url), () => {
         });
 
         test("toHaveOuterHTML", async () => {
-            await mountOnFixture(/* xml */ `
+            await mountForTest(/* xml */ `
                 <div class="parent">
                     <p>
                         abc<strong>def</strong>ghi
@@ -487,6 +553,72 @@ describe(parseUrl(import.meta.url), () => {
                     <p>abc<strong>def</strong>ghi<br><input type="text"></p>
                 </div>
             `);
+        });
+
+        test("toHaveStyle", async () => {
+            const documentFontSize = parseFloat(
+                getComputedStyle(document.documentElement).fontSize
+            );
+            await mountForTest(/* xml */ `
+                <div class="div" style="width: 3rem; height: 26px" />
+            `);
+
+            expect(".div").toHaveStyle({ width: `${3 * documentFontSize}px`, height: 26 });
+            expect(".div").toHaveStyle({ display: "block" });
+            expect(".div").toHaveStyle("border-top");
+            expect(".div").not.toHaveStyle({ height: 50 });
+
+            expect(".div").toHaveStyle("height: 26px ; width : 3rem", { inline: true });
+            expect(".div").not.toHaveStyle({ display: "block" }, { inline: true });
+            expect(".div").not.toHaveStyle("border-top", { inline: true });
+        });
+
+        test("no elements found messages", async () => {
+            const [customExpect, hooks] = makeExpect({ headless: true });
+            hooks.before();
+
+            await mountForTest(/* xml */ `
+                <div />
+            `);
+
+            const SELECTOR = "#brrbrrpatapim";
+            const DOM_MATCHERS = [
+                ["toBeChecked"],
+                ["toBeDisplayed"],
+                ["toBeEnabled"],
+                ["toBeFocused"],
+                ["toBeVisible"],
+                ["toHaveAttribute", "attr"],
+                ["toHaveClass", "cls"],
+                ["toHaveInnerHTML", "<html></html>"],
+                ["toHaveOuterHTML", "<html></html>"],
+                ["toHaveProperty", "prop"],
+                ["toHaveRect", {}],
+                ["toHaveStyle", {}],
+                ["toHaveText", "abc"],
+                ["toHaveValue", "value"],
+            ];
+
+            for (const [matcher, arg] of DOM_MATCHERS) {
+                customExpect(SELECTOR)[matcher](arg);
+            }
+
+            const results = hooks.after();
+            const assertions = results.getEvents("assertion");
+            for (let i = 0; i < DOM_MATCHERS.length; i++) {
+                const { label, message } = assertions[i];
+                expect.step(label);
+                expect(message).toEqual([
+                    "expected at least",
+                    makeLabel(1),
+                    "element and got",
+                    makeLabel(0),
+                    "elements matching",
+                    makeLabel(SELECTOR),
+                ]);
+            }
+
+            expect.verifySteps(DOM_MATCHERS.map(([matcher]) => matcher));
         });
     });
 });

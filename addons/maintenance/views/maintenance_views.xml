@@ -373,7 +373,7 @@
                         <button type="object"
                             name="action_open_matched_serial"
                             icon="fa-bars" class="oe_stat_button"
-                            invisible="not match_serial"> <!-- The button must stay invisible without stock module -->
+                            invisible="not match_serial"> <!-- The button must stay invisible without any access to `stock.lot` -->
                             <field string="Serial Number" name="serial_no" widget="statinfo"/>
                         </button>
                         <button name="%(hr_equipment_request_action_from_equipment)d"

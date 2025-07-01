@@ -89,7 +89,8 @@ class MrpRoutingWorkcenter(models.Model):
             for item in data:
                 total_duration += item['duration']
                 capacity = item['workcenter_id']._get_capacity(item.product_id)
-                cycle_number += float_round((item['qty_produced'] / capacity or 1.0), precision_digits=0, rounding_method='UP')
+                qty_produced = item.product_uom_id._compute_quantity(item['qty_produced'], item.product_id.uom_id)
+                cycle_number += float_round((qty_produced / capacity or 1.0), precision_digits=0, rounding_method='UP')
             if cycle_number:
                 operation.time_cycle = total_duration / cycle_number
             else:
@@ -127,6 +128,8 @@ class MrpRoutingWorkcenter(models.Model):
         res = super().action_archive()
         bom_lines = self.env['mrp.bom.line'].search([('operation_id', 'in', self.ids)])
         bom_lines.write({'operation_id': False})
+        byproduct_lines = self.env['mrp.bom.byproduct'].search([('operation_id', 'in', self.ids)])
+        byproduct_lines.write({'operation_id': False})
         self.bom_id._set_outdated_bom_in_productions()
         return res
 
@@ -169,9 +172,11 @@ class MrpRoutingWorkcenter(models.Model):
         # skip operation line if archived
         if not self.active:
             return True
-        if product._name == 'product.template':
+        if not product or product._name == 'product.template':
             return False
-        return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
+
+        never_attribute_values = self.env.context.get('never_attribute_ids')
+        return self.env['mrp.bom']._skip_for_no_variant(product, self.bom_product_template_attribute_value_ids, never_attribute_values)
 
     def _get_duration_expected(self, product, quantity, unit=False, workcenter=False):
         product = product or self.bom_id.product_tmpl_id
@@ -185,4 +190,5 @@ class MrpRoutingWorkcenter(models.Model):
         return workcenter._get_expected_duration(product) + cycle_number * self.time_cycle * 100.0 / workcenter.time_efficiency
 
     def _compute_operation_cost(self):
-        return (self.time_cycle / 60.0) * (self.workcenter_id.costs_hour)
+        duration = self.env.context.get('op_duration', self.time_cycle)
+        return (duration / 60.0) * (self.workcenter_id.costs_hour)

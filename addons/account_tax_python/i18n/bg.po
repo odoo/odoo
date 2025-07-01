@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_tax_python
-#
+# 
 # Translators:
-# Nikola Iliev, 2023
-# Maria Boyadjieva <marabo2000@gmail.com>, 2023
-# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
-#
+# KeyVillage, 2024
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2024
+# Albena Mincheva <albena_vicheva@abv.bg>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023\n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Albena Mincheva <albena_vicheva@abv.bg>, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
-"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_tax_python
@@ -27,104 +27,46 @@ msgid ""
 "\n"
 "    - Group of Taxes: The tax is a set of sub taxes.\n"
 "    - Fixed: The tax amount stays the same whatever the price.\n"
-"    - Percentage of Price: The tax amount is a % of the price:\n"
+"    - Percentage: The tax amount is a % of the price:\n"
 "        e.g 100 * (1 + 10%) = 110 (not price included)\n"
 "        e.g 110 / (1 + 10%) = 100 (price included)\n"
-"    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
+"    - Percentage Tax Included: The tax amount is a division of the price:\n"
 "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
 
 #. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
-msgid "Applicable Code"
-msgstr "Приложим код"
-
-#. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
 msgid ""
-"Compute the amount of the tax by setting the variable 'result'.\n"
+"Compute the amount of the tax.\n"
 "\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
+":param base: float, actual amount on which the tax is applied\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
-":param company: res.company recordset singleton\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
+":param product: A object representing the product\n"
 msgstr ""
-"Изчислете размера на данъка, като зададете променливата величина \"резултат\".\n"
-"\n"
-": параметър base_amount: плаваща запетая, действителна сума, върху която се прилага данъкът\n"
-": параметър price_unit: плаваща запетая\n"
-": параметър количество: плаваща запетая\n"
-": параметър компания: res.company набор записи, единичен тон\n"
-": параметър продукт: product.product  набор записи, единичен тон или нищо\n"
-": параметър контрагент: res.partner набор записи, единичен тон или нищо"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
-msgid ""
-"Compute the amount of the tax by setting the variable 'result'.\n"
-"\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"Изчислява размера на данъка въз основа на променливата величина 'резултат'.\n"
-"\n"
-":параметър base_amount: плаваща запетая, действителна сума, която се облага с данък\n"
-":параметър price_unit: плаваща запетая\n"
-":параметър количество: плаваща запетая\n"
-":параметър продукт: product.product набор записи, единичен тон или нищо\n"
-":параметър контрагент: res.partner набор записи, единичен тон или нищо"
-
-#. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
-msgid ""
-"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param company: res.company recordset singleton\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"Определете дали данъкът ще бъде приложен чрез задаване на променливата величина \"резултат\" на 'Правилно' или 'Грешно'.\n"
-"\n"
-": параметър price_unit: плаваща запетая\n"
-": параметър количество: плаваща запетая\n"
-": параметър компания: res.company набор записи, единичен тон\n"
-": параметър продукт: product.product набор записи, единичен тон или нищо\n"
-": параметър контрагент: набор записи, единичен тон или нищо"
-
-#. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
-msgid ""
-"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"Определете дали данъкът ще бъде приложен чрез задаване на променливата величина \"резултат\" на 'Правилно' или 'Грешно'.\n"
-"\n"
-": параметър price_unit: плаваща запетая\n"
-": параметър количество: плаваща запетая\n"
-": параметър продукт: product.product набор записи, единичен тон или нищо\n"
-": параметър контрагент: res.partner набор записи, единичен тон или нищо"
-
-#. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
-#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
-msgid "Python Code"
-msgstr "Код Python"
+msgid "Custom Formula"
+msgstr ""
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
+msgid "Formula"
+msgstr "Формула"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
+msgid "Formula Decoded Info"
+msgstr ""
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+msgid "Malformed formula '%(formula)s' at position %(position)s"
+msgstr ""
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
@@ -133,11 +75,5 @@ msgstr "Данък"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
 msgstr "Данъчна изчислителна система"
-
-#. module: account_tax_python
-#: model:ir.model,name:account_tax_python.model_account_tax_template
-msgid "Templates for Taxes"
-msgstr "Шаблон за данъци"

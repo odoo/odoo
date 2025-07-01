@@ -62,6 +62,8 @@ _CACHES_BY_KEY = {
     'groups': ('groups', 'templates', 'templates.cached_values'),  # The processing of groups is saved in the view
 }
 
+_REPLICA_RETRY_TIME = 20 * 60  # 20 minutes
+
 
 def _unaccent(x):
     if isinstance(x, SQL):
@@ -104,10 +106,6 @@ class Registry(Mapping):
                 return cls.registries[db_name]
             except KeyError:
                 return cls.new(db_name)
-            finally:
-                # set db tracker - cleaned up at the WSGI dispatching phase in
-                # odoo.http.root
-                threading.current_thread().dbname = db_name
 
     @classmethod
     @locked
@@ -173,6 +171,7 @@ class Registry(Mapping):
         self.db_name = db_name
         self._db = odoo.sql_db.db_connect(db_name, readonly=False)
         self._db_readonly = None
+        self._db_readonly_failed_time = None
         if config['db_replica_host'] is not False or config['test_enable']:  # by default, only use readonly pool if we have a db_replica_host defined. Allows to have an empty replica host for testing
             self._db_readonly = odoo.sql_db.db_connect(db_name, readonly=True)
 
@@ -858,6 +857,8 @@ class Registry(Mapping):
                           self.registry_sequence, ' '.join('[Cache %s: %s]' % cs for cs in self.cache_sequences.items()))
 
     def get_sequences(self, cr):
+        assert cr.readonly is False, "can't use replica, sequence data is not replicated"
+
         cache_sequences_query = ', '.join([f'base_cache_signaling_{cache_name}' for cache_name in _CACHES_BY_KEY])
         cache_sequences_values_query = ',\n'.join([f'base_cache_signaling_{cache_name}.last_value' for cache_name in _CACHES_BY_KEY])
         cr.execute(f"""
@@ -985,17 +986,31 @@ class Registry(Mapping):
     def cursor(self, /, readonly=False):
         """ Return a new cursor for the database. The cursor itself may be used
             as a context manager to commit/rollback and close automatically.
+
+            :param readonly: Attempt to acquire a cursor on a replica database.
+                Acquire a read/write cursor on the primary database in case no
+                replica exists or that no readonly cursor could be acquired.
         """
         if self.test_cr is not None:
             # in test mode we use a proxy object that uses 'self.test_cr' underneath
             if readonly and not self.test_readonly_enabled:
                 _logger.info('Explicitly ignoring readonly flag when generating a cursor')
-            return TestCursor(self.test_cr, self.test_lock, readonly and self.test_readonly_enabled)
+            return TestCursor(self.test_cr, self.test_lock, readonly and self.test_readonly_enabled, current_test=odoo.modules.module.current_test)
 
-        connection = self._db
         if readonly and self._db_readonly is not None:
-            connection = self._db_readonly
-        return connection.cursor()
+            if (
+                self._db_readonly_failed_time is None
+                or time.monotonic() > self._db_readonly_failed_time + _REPLICA_RETRY_TIME
+            ):
+                try:
+                    cr = self._db_readonly.cursor()
+                    self._db_readonly_failed_time = None
+                    return cr
+                except psycopg2.OperationalError:
+                    self._db_readonly_failed_time = time.monotonic()
+                    _logger.warning("Failed to open a readonly cursor, falling back to read-write cursor for %dmin %dsec", *divmod(_REPLICA_RETRY_TIME, 60))
+            threading.current_thread().cursor_mode = 'ro->rw'
+        return self._db.cursor()
 
 
 class DummyRLock(object):

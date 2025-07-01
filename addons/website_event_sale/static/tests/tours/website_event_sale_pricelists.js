@@ -11,6 +11,7 @@ registry.category("web_tour.tours").add("event_sale_pricelists_different_currenc
             content: "Open the Pycon event",
             trigger: '.o_wevent_events_list a:contains("Pycon")',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "Open the register modal",
@@ -23,8 +24,8 @@ registry.category("web_tour.tours").add("event_sale_pricelists_different_currenc
             run: "click",
         },
         {
-            trigger:
-                '.modal#modal_attendees_registration:not(.o_inactive_modal) form[id="attendee_registration"]',
+            content: "Wait the modal is shown before continue",
+            trigger: ".modal.modal_shown.show form[id=attendee_registration]",
         },
         {
             trigger:
@@ -53,6 +54,7 @@ registry.category("web_tour.tours").add("event_sale_pricelists_different_currenc
             trigger:
                 ".modal#modal_attendees_registration:not(.o_inactive_modal) button[type=submit]",
             run: "click",
+            expectUnloadPage: true,
         },
         {
             trigger: "body:not(:has(.modal#modal_attendees_registration))",

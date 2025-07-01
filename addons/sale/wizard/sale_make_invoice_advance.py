@@ -3,7 +3,7 @@
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tools import format_date, frozendict
+from odoo.tools import formatLang, frozendict
 
 
 class SaleAdvancePaymentInv(models.TransientModel):
@@ -103,7 +103,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
     @api.depends('sale_order_ids')
     def _compute_display_draft_invoice_warning(self):
         for wizard in self:
-            wizard.display_draft_invoice_warning = wizard.sale_order_ids.invoice_ids.filtered(lambda invoice: invoice.state == 'draft')
+            invoice_states = wizard.sale_order_ids._origin.sudo().invoice_ids.mapped('state')
+            wizard.display_draft_invoice_warning = 'draft' in invoice_states
 
     @api.depends('sale_order_ids')
     def _compute_invoice_amounts(self):
@@ -258,7 +259,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             down_payment_values.append([
                 taxes - fixed_taxes,
                 base_line_values['analytic_distribution'],
-                tax_details['total_excluded_currency'],
+                tax_details['raw_total_excluded_currency'],
                 account,
             ])
             for fixed_tax in fixed_taxes:
@@ -349,7 +350,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         self.ensure_one()
         context = {'lang': order.partner_id.lang}
         if self.advance_payment_method == 'percentage':
-            name = _("Down payment of %s%%", self.amount)
+            name = _("Down payment of %s%%", formatLang(self.env(context=context), self.amount))
         else:
             name = _('Down Payment')
         del context

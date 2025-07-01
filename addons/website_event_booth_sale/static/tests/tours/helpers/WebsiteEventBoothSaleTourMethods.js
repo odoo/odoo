@@ -8,20 +8,23 @@
                 content: "Go to page Event",
                 trigger: '.nav-link:contains("Event")',
                 run: "click",
+                expectUnloadPage: true,
             },
             {
                 content: 'Open "Test Event Booths" event',
                 trigger: `h5.card-title span:contains(${eventName})`,
                 run: "click",
+                expectUnloadPage: true,
             },
             {
                 content: 'Go to "Get A Booth" page',
                 trigger: 'li.nav-item a:has(span:contains("Get A Booth"))',
                 run: "click",
+                expectUnloadPage: true,
             },
             {
                 content: 'Select the booth',
-                trigger: '.o_wbooth_booths input[name="event_booth_ids"]',
+                trigger: ".o_wbooth_booths input[name=event_booth_ids]:not(:visible)",
                 run: function () {
                     document.querySelector('.o_wbooth_booths input[name="event_booth_ids"]:nth-child(1)').click();
                 },

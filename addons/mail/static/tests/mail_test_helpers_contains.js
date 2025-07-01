@@ -6,6 +6,17 @@ import { Deferred, tick } from "@odoo/hoot-mock";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { isVisible } from "@web/core/utils/ui";
 
+/**
+ * Use `expect.step` instead
+ * @deprecated
+ */
+export const step = expect.step;
+/**
+ * Use `expect.waitForSteps` instead
+ * @deprecated
+ */
+export const assertSteps = expect.waitForSteps;
+
 /** @param {EventInit} [args] */
 const mapBubblingEvent = (args) => ({ ...args, bubbles: true });
 
@@ -936,74 +947,4 @@ class Contains {
  */
 export async function contains(selector, options) {
     await new Contains(selector, options).run();
-}
-
-const stepState = {
-    expectedSteps: null,
-    /** @type {Promise} */
-    deferred: null,
-    timeout: null,
-    currentSteps: [],
-
-    clear() {
-        clearTimeout(this.timeout);
-        this.timeout = null;
-        this.deferred = null;
-        this.currentSteps = [];
-        this.expectedSteps = null;
-    },
-
-    check({ crashOnFail = false } = {}) {
-        const success =
-            this.expectedSteps.length === this.currentSteps.length &&
-            this.expectedSteps.every((s, i) => s === this.currentSteps[i]);
-        if (!success && !crashOnFail) {
-            return;
-        }
-        expect.verifySteps(this.expectedSteps);
-        if (success) {
-            this.deferred.resolve();
-        } else {
-            this.deferred.reject(new Error("Steps do not match."));
-        }
-        this.clear();
-    },
-};
-
-afterEach(() => {
-    if (stepState.expectedSteps) {
-        stepState.check({ crashOnFail: true });
-    } else {
-        stepState.clear();
-    }
-});
-
-/**
- * Indicate the completion of a test step. This step must then be verified by
- * calling `assertSteps`.
- *
- * @param {string} step
- */
-export function step(step) {
-    stepState.currentSteps.push(step);
-    expect.step(step);
-    if (stepState.expectedSteps) {
-        stepState.check();
-    }
-}
-
-/**
- * Wait for the given steps to be executed or for the timeout to be reached.
- *
- * @param {string[]} steps
- */
-export function assertSteps(steps) {
-    if (stepState.expectedSteps) {
-        stepState.check({ crashOnFail: true });
-    }
-    stepState.expectedSteps = steps;
-    stepState.deferred = new Deferred();
-    stepState.timeout = setTimeout(() => stepState.check({ crashOnFail: true }), 2000);
-    stepState.check();
-    return stepState.deferred;
 }

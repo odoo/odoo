@@ -4,7 +4,12 @@
 import json
 
 import requests
-import werkzeug.http
+from werkzeug import http, datastructures
+
+if hasattr(datastructures.WWWAuthenticate, "from_header"):
+    parse_auth = datastructures.WWWAuthenticate.from_header
+else:
+    parse_auth = http.parse_www_authenticate_header
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessDenied, UserError
@@ -33,9 +38,8 @@ class ResUsers(models.Model):
         if response.ok: # nb: could be a successful failure
             return response.json()
 
-        auth_challenge = werkzeug.http.parse_www_authenticate_header(
-            response.headers.get('WWW-Authenticate'))
-        if auth_challenge.type == 'bearer' and 'error' in auth_challenge:
+        auth_challenge = parse_auth(response.headers.get("WWW-Authenticate"))
+        if auth_challenge and auth_challenge.type == 'bearer' and 'error' in auth_challenge:
             return dict(auth_challenge)
 
         return {'error': 'invalid_request'}

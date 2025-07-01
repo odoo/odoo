@@ -350,6 +350,7 @@
 
     <!-- EVENT.EVENT HEADER: REGISTRATION DESK MENU -->
 
+    <!-- will be removed in master -->
     <record id="event_action_install_kiosk_pwa" model="ir.actions.client">
         <field name="name">Registration Desk</field>
         <field name="target">new</field>
@@ -362,7 +363,7 @@
         id="menu_event_registration_desk"
         name="Registration Desk"
         sequence="30"
-        action="event_action_install_kiosk_pwa"
+        action="event.event_barcode_action_main_view"
         parent="event.event_main_menu"
         groups="event.group_event_registration_desk"
     />

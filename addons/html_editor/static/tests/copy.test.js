@@ -40,6 +40,7 @@ describe("range not collapsed", () => {
         expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe("<p>abc<br>efg</p>");
     });
 
+    test.tags("focus required");
     test("should copy a selection as text/plain, text/html and application/vnd.odoo.odoo-editor in table", async () => {
         await setupEditor(
             `]<table><tbody><tr><td><ul><li>a[</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>`
@@ -52,6 +53,20 @@ describe("range not collapsed", () => {
         );
         expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
             "<table><tbody><tr><td><ul><li>a</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>"
+        );
+    });
+
+    test("should copy a selection as text/html and application/vnd.odoo.odoo-editor in table", async () => {
+        await setupEditor(
+            "<p>[abcd</p><table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>]"
+        );
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/html")).toBe(
+            "<p>abcd</p><table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>"
+        );
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
+            "<p>abcd</p><table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>"
         );
     });
 
@@ -126,6 +141,43 @@ describe("range not collapsed", () => {
         expect(clipboardData.getData("text/html")).toBe("<ul><li>First</li><li>Second</li></ul>");
         expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
             "<ul><li>First</li><li>Second</li></ul>"
+        );
+    });
+
+    test("should remove ufeff characters from link selection", async () => {
+        await setupEditor('<p>[<a href="http://test.com/">label</a>]</p>');
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/plain")).toBe("label");
+        expect(clipboardData.getData("text/html")).toBe(
+            '<p><a href="http://test.com/">label</a></p>'
+        );
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
+            '<p><a href="http://test.com/">label</a></p>'
+        );
+    });
+
+    test("should add origin to images urls", async () => {
+        await setupEditor('<p>[<img src="/nice.png">]</p>');
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/html")).toBe(
+            `<p><img src="${window.location.origin}/nice.png"></p>`
+        );
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
+            `<p><img src="${window.location.origin}/nice.png"></p>`
+        );
+    });
+
+    test("should not add origin to base64 images", async () => {
+        const base64Img =
+            "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+        await setupEditor(`<p>[<img src="${base64Img}">]</p>`);
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/html")).toBe(`<p><img src="${base64Img}"></p>`);
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
+            `<p><img src="${base64Img}"></p>`
         );
     });
 });

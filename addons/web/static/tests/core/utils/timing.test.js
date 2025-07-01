@@ -1,7 +1,8 @@
-import { describe, destroy, expect, mountOnFixture, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
+import { describe, destroy, expect, getFixture, test } from "@odoo/hoot";
+import { click, tick } from "@odoo/hoot-dom";
 import { Deferred, advanceTime, animationFrame, microTick, runAllTimers } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import {
     batched,
@@ -13,18 +14,6 @@ import {
 
 describe.current.tags("headless");
 
-function nextMicroTick() {
-    return Promise.resolve();
-}
-
-function nextAnimationFrame() {
-    return new Promise((resolve) => requestAnimationFrame(() => resolve()));
-}
-
-function nextSetTimeout() {
-    return new Promise((resolve) => setTimeout(() => resolve()));
-}
-
 describe("batched", () => {
     test("callback is called only once after operations", async () => {
         let n = 0;
@@ -35,129 +24,102 @@ describe("batched", () => {
         fn();
         expect(n).toBe(0);
 
-        await nextMicroTick();
+        await microTick();
         expect(n).toBe(1);
 
-        await nextMicroTick();
+        await microTick();
         expect(n).toBe(1);
     });
 
-    test("callback is called only once after operations (synchronize at nextAnimationFrame)", async () => {
+    test("callback is called only once after operations (synchronize at animationFrame)", async () => {
         let n = 0;
-        const fn = batched(
-            () => n++,
-            () => nextAnimationFrame()
-        );
+        const fn = batched(() => n++, animationFrame);
         expect(n).toBe(0);
 
         fn();
         fn();
         expect(n).toBe(0);
 
-        await nextMicroTick();
+        await microTick();
         expect(n).toBe(0);
 
-        await nextAnimationFrame();
+        await animationFrame();
         expect(n).toBe(1);
 
-        await nextAnimationFrame();
+        await animationFrame();
         expect(n).toBe(1);
     });
 
     test("callback is called only once after operations (synchronize at setTimeout)", async () => {
         let n = 0;
-        const fn = batched(
-            () => n++,
-            () => new Promise(setTimeout)
-        );
+        const fn = batched(() => n++, tick);
         expect(n).toBe(0);
 
         fn();
         fn();
         expect(n).toBe(0);
 
-        await nextMicroTick();
+        await microTick();
         expect(n).toBe(0);
 
-        await nextSetTimeout();
+        await tick();
         expect(n).toBe(1);
 
-        await nextSetTimeout();
+        await tick();
         expect(n).toBe(1);
     });
 
     test("calling batched function from within the callback is not treated as part of the original batch", async () => {
         let n = 0;
-        const fn = batched(() => {
-            n++;
-            if (n === 1) {
-                fn();
-            }
-        });
+        const fn = batched(() => ++n == 1 && fn());
         expect(n).toBe(0);
 
         fn();
         expect(n).toBe(0);
 
-        await nextMicroTick(); // First batch
+        await Promise.resolve(); // First batch
         expect(n).toBe(1);
 
-        await nextMicroTick(); // Second batch initiated from within the callback
+        await Promise.resolve(); // Second batch initiated from within the callback
         expect(n).toBe(2);
 
-        await nextMicroTick();
+        await Promise.resolve();
         expect(n).toBe(2);
     });
 
-    test("calling batched function from within the callback is not treated as part of the original batch (synchronize at nextAnimationFrame)", async () => {
+    test("calling batched function from within the callback is not treated as part of the original batch (synchronize at animationFrame)", async () => {
         let n = 0;
-        const fn = batched(
-            () => {
-                n++;
-                if (n === 1) {
-                    fn();
-                }
-            },
-            () => nextAnimationFrame()
-        );
+        const fn = batched(() => ++n == 1 && fn(), animationFrame);
         expect(n).toBe(0);
 
         fn();
         expect(n).toBe(0);
 
-        await nextAnimationFrame(); // First batch
+        await animationFrame(); // First batch
         expect(n).toBe(1);
 
-        await nextAnimationFrame(); // Second batch initiated from within the callback
+        await animationFrame(); // Second batch initiated from within the callback
         expect(n).toBe(2);
 
-        await nextAnimationFrame();
+        await animationFrame();
         expect(n).toBe(2);
     });
 
     test("calling batched function from within the callback is not treated as part of the original batch (synchronize at setTimeout)", async () => {
         let n = 0;
-        const fn = batched(
-            () => {
-                n++;
-                if (n === 1) {
-                    fn();
-                }
-            },
-            () => nextSetTimeout()
-        );
+        const fn = batched(() => ++n === 1 && fn(), tick);
         expect(n).toBe(0);
 
         fn();
         expect(n).toBe(0);
 
-        await nextSetTimeout(); // First batch
+        await tick(); // First batch
         expect(n).toBe(1);
 
-        await nextSetTimeout(); // Second batch initiated from within the callback
+        await tick(); // Second batch initiated from within the callback
         expect(n).toBe(2);
 
-        await nextSetTimeout();
+        await tick();
         expect(n).toBe(2);
     });
 
@@ -169,55 +131,49 @@ describe("batched", () => {
         fn();
         expect(n).toBe(0);
 
-        await nextMicroTick();
+        await microTick();
         expect(n).toBe(1);
 
         fn();
         expect(n).toBe(1);
 
-        await nextMicroTick();
+        await microTick();
         expect(n).toBe(2);
     });
 
-    test("callback is called twice (synchronize at nextAnimationFrame)", async () => {
+    test("callback is called twice (synchronize at animationFrame)", async () => {
         let n = 0;
-        const fn = batched(
-            () => n++,
-            () => nextAnimationFrame()
-        );
+        const fn = batched(() => n++, animationFrame);
 
         expect(n).toBe(0);
         fn();
 
         expect(n).toBe(0);
-        await nextAnimationFrame();
+        await animationFrame();
         expect(n).toBe(1);
 
         fn();
         expect(n).toBe(1);
 
-        await nextAnimationFrame();
+        await animationFrame();
         expect(n).toBe(2);
     });
 
     test("callback is called twice (synchronize at setTimeout)", async () => {
         let n = 0;
-        const fn = batched(
-            () => n++,
-            () => nextSetTimeout()
-        );
+        const fn = batched(() => n++, tick);
         expect(n).toBe(0);
 
         fn();
         expect(n).toBe(0);
 
-        await nextSetTimeout();
+        await tick();
         expect(n).toBe(1);
 
         fn();
         expect(n).toBe(1);
 
-        await nextSetTimeout();
+        await tick();
         expect(n).toBe(2);
     });
 });
@@ -262,6 +218,7 @@ describe("debounce", () => {
         imSearchDef.resolve(42);
         await microTick(); // wait for promise returned by myFunc
         await microTick(); // wait for promise returned by debounce
+
         expect.verifySteps(["resolved 42"]);
     });
 
@@ -276,8 +233,9 @@ describe("debounce", () => {
         });
         expect.verifySteps(["myFunc"]);
 
+        await microTick(); // wait for promise returned by myFunc
         await microTick(); // wait for promise returned by debounce
-        await microTick(); // wait for promise returned chained onto it (step resolved x)
+
         expect.verifySteps(["resolved 42"]);
 
         myDebouncedFunc().then((x) => {
@@ -301,7 +259,7 @@ describe("debounce", () => {
 
         debounce(myFunc, "animationFrame")();
         expect.verifySteps([]);
-        await nextAnimationFrame();
+        await animationFrame();
         expect.verifySteps(["myFunc"]);
     });
 
@@ -374,13 +332,13 @@ describe("throttleForAnimation", () => {
         throttledFn(1);
         expect.verifySteps(["1"]);
 
-        await nextAnimationFrame();
+        await animationFrame();
         throttledFn(2);
         expect.verifySteps(["2"]);
 
         throttledFn(3);
         throttledFn(4);
-        await nextAnimationFrame();
+        await animationFrame();
         expect.verifySteps(["4"]);
 
         await runAllTimers();
@@ -404,8 +362,7 @@ describe("throttleForAnimation", () => {
 
 describe("throttleForAnimationScrollEvent", () => {
     test("scroll loses target", async () => {
-        let resolveThrottled;
-        let throttled = new Promise((resolve) => (resolveThrottled = resolve));
+        let throttled = new Deferred();
         const throttledFn = throttleForAnimation((val, targetEl) => {
             // In Chrome, the currentTarget of scroll events is lost after the
             // event was handled, it is therefore null here.
@@ -416,23 +373,22 @@ describe("throttleForAnimationScrollEvent", () => {
             expect.step(
                 `throttled function called with ${nodeName} in event, but ${targetName} in parameter`
             );
-            resolveThrottled();
+            throttled.resolve();
         });
 
         const el = document.createElement("div");
         el.style = "position: absolute; overflow: scroll; height: 100px; width: 100px;";
         const childEl = document.createElement("div");
         childEl.style = "height: 200px; width: 200px;";
-        let resolveScrolled;
-        let scrolled = new Promise((resolve) => (resolveScrolled = resolve));
+        let scrolled = new Deferred();
         el.appendChild(childEl);
         el.addEventListener("scroll", (ev) => {
             expect.step("before scroll");
             throttledFn(ev, ev.currentTarget);
             expect.step("after scroll");
-            resolveScrolled();
+            scrolled.resolve();
         });
-        document.body.appendChild(el);
+        getFixture().appendChild(el);
         el.scrollBy(1, 1);
         el.scrollBy(2, 2);
         await scrolled;
@@ -444,8 +400,8 @@ describe("throttleForAnimationScrollEvent", () => {
             "after scroll",
         ]);
 
-        throttled = new Promise((resolve) => (resolveThrottled = resolve));
-        scrolled = new Promise((resolve) => (resolveScrolled = resolve));
+        throttled = new Deferred();
+        scrolled = new Deferred();
         el.scrollBy(3, 3);
         await scrolled;
         expect.verifySteps([
@@ -453,9 +409,6 @@ describe("throttleForAnimationScrollEvent", () => {
             // Further call is delayed.
             "after scroll",
         ]);
-        setTimeout(async () => {
-            await nextAnimationFrame();
-        });
         await throttled;
         expect.verifySteps(["throttled function called with null in event, but DIV in parameter"]);
         el.remove();
@@ -471,7 +424,7 @@ describe("useDebounced", () => {
                 this.debounced = useDebounced(() => expect.step("debounced"), 1000);
             }
         }
-        const component = await mountOnFixture(TestComponent);
+        const component = await mountWithCleanup(TestComponent);
         expect.verifySteps([]);
         expect("button.c").toHaveCount(1);
 
@@ -501,7 +454,7 @@ describe("useDebounced", () => {
                 });
             }
         }
-        const component = await mountOnFixture(TestComponent);
+        const component = await mountWithCleanup(TestComponent);
         expect.verifySteps([]);
         expect(`button.c`).toHaveCount(1);
 
@@ -530,7 +483,7 @@ describe("useDebounced", () => {
                 });
             }
         }
-        const component = await mountOnFixture(TestComponent);
+        const component = await mountWithCleanup(TestComponent);
         expect.verifySteps([]);
         expect(`button.c`).toHaveCount(1);
 
@@ -556,7 +509,7 @@ describe("useThrottleForAnimation", () => {
                 this.throttled = useThrottleForAnimation(() => expect.step("throttled"), 1000);
             }
         }
-        const component = await mountOnFixture(TestComponent);
+        const component = await mountWithCleanup(TestComponent);
         expect.verifySteps([]);
         expect(`button.c`).toHaveCount(1);
 
@@ -579,7 +532,6 @@ describe("useThrottleForAnimation", () => {
         expect.verifySteps(["throttled"]);
 
         await click(`button.c`);
-        await Promise.resolve();
         expect.verifySteps([]);
 
         destroy(component);

@@ -34,7 +34,7 @@
                     <CogMenu/>
                 </t>
                 <t t-set-slot="layout-actions">
-                    <SearchBar t-if="searchBarToggler.state.showSearchBar"/>
+                    <SearchBar toggler="searchBarToggler"/>
                 </t>
                 <t t-set-slot="control-panel-navigation-additional">
                     <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>

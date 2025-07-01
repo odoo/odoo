@@ -6,12 +6,13 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
 registry.category("web_tour.tours").add("shop_checkout_address_ec", {
     url: "/shop",
     steps: () => [
-        ...tourUtils.addToCart({ productName: "Test Product" }),
+        ...tourUtils.addToCart({ productName: "Test Product", expectUnloadPage: true }),
         tourUtils.goToCart({ quantity: 1 }),
         {
             content: "Go to checkout",
             trigger: "a:contains('Checkout')",
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "Check that VAT field is present",
@@ -25,7 +26,6 @@ registry.category("web_tour.tours").add("shop_checkout_address_ec", {
 });
 
 registry.category("web_tour.tours").add("tour_new_billing_ec", {
-    test: true,
     url: "/shop",
     steps: () => [
         ...tourUtils.addToCart({ productName: "Test Product" }),
@@ -47,19 +47,17 @@ registry.category("web_tour.tours").add("tour_new_billing_ec", {
         },
         {
             content: "Billing address is not same as delivery address",
-            trigger: '#use_delivery_as_billing',
+            trigger: "#use_delivery_as_billing",
             run: "click",
         },
         {
             content: "Add new billing address",
-            trigger: '.all_billing a[href^="/shop/address?address_type=billing"]:contains("Add address")',
+            trigger: `.all_billing a[href^="/shop/address?address_type=billing"]:contains(Add address)`,
             run: "click",
         },
         ...tourUtils.fillAdressForm(),
         {
-            content: "Save address",
-            trigger: "button#save_address",
-            run: "click",
+            trigger: `[name="address_card"] address:contains(1 rue de la paix)`,
         },
     ],
 });

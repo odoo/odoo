@@ -107,3 +107,134 @@ class TestQwebProcessAtt(TransactionCase):
             match.reset_calls()
             self._test_att('/x?y#z', {'href': '/x?y#z'})
             match.assert_called_with('/x', method='POST', query_args='y')
+
+
+class TestQwebDataSnippet(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['ir.ui.view'].create({
+            'name': 'some_html',
+            'type': 'qweb',
+            'key': 'website.some_html',
+            'arch': '''
+                <t t-name="some_html">
+                    <article>
+                        <span>Hello</span>
+                        <t t-out="0"/>
+                    </article>
+                </t>
+            '''
+        })
+
+        cls.env['ir.ui.view'].create({
+            'name': 's_a',
+            'type': 'qweb',
+            'key': 'website.s_a',
+            'arch': '''
+                <t t-name="s_a">
+                    <section class="hello">
+                        <t t-call="website.some_html"/>
+                        <t t-out="0"/>
+                    </section>
+                </t>
+            '''
+        })
+        cls.env['ir.ui.view'].create({
+            'name': 's_b',
+            'type': 'qweb',
+            'key': 'website.s_b',
+            'arch': '''
+                <t t-name="s_b">
+                    <section class="foo">
+                        <t t-snippet-call="website.s_a"/>
+                    </section>
+                </t>
+            '''
+        })
+        cls.env['ir.ui.view'].create({
+            'name': 's_c',
+            'type': 'qweb',
+            'key': 'website.s_c',
+            'arch': '''
+                <t t-name="s_c">
+                    <t t-call="website.some_html">
+                        <p>World!</p>
+                    </t>
+                </t>
+            '''
+        })
+        cls.env['ir.ui.view'].create({
+            'name': 's_d',
+            'type': 'qweb',
+            'key': 'website.s_d',
+            'arch_db': '''
+                <t t-name="s_d">
+                    <t t-snippet-call="website.s_a">
+                        <p>World!</p>
+                    </t>
+                </t>
+            '''
+        })
+
+    def _normalize_xml(self, html):
+        return "\n".join(
+            line.strip() for line in html.strip().splitlines() if line.strip()
+    )
+
+    def _render_snippet(self, snippet):
+        render_template = self.env['ir.ui.view'].create({
+            'name': f't-snippet-call_{snippet}',
+            'type': 'qweb',
+            'arch': f'''
+                <t t-snippet-call="{snippet}"/>
+            '''
+        })
+        return self.env['ir.qweb']._render(render_template.id)
+
+    def test_t_call_inside_snippet(self):
+        expected_output = '''
+            <section class="hello" data-snippet="s_a">
+                <article>
+                    <span>Hello</span>
+                </article>
+            </section>
+        '''
+        rendered = self._render_snippet('website.s_a')
+        self.assertEqual(self._normalize_xml(rendered), self._normalize_xml(expected_output))
+
+    def test_t_snippet_call_inside_snippet(self):
+        expected_output = '''
+            <section class="foo" data-snippet="s_b">
+                <section class="hello" data-snippet="s_a">
+                    <article>
+                        <span>Hello</span>
+                    </article>
+                </section>
+            </section>
+        '''
+        rendered = self._render_snippet('website.s_b')
+        self.assertEqual(self._normalize_xml(rendered), self._normalize_xml(expected_output))
+
+    def test_t_call_as_snippet_root(self):
+        expected_output = '''
+            <article data-snippet="s_c">
+                <span>Hello</span>
+                <p>World!</p>
+            </article>
+        '''
+        rendered = self._render_snippet('website.s_c')
+        self.assertEqual(self._normalize_xml(rendered), self._normalize_xml(expected_output))
+
+    def test_t_snippet_call_as_snippet_root(self):
+        expected_output = '''
+            <section class="hello" data-snippet="s_a">
+                <article>
+                    <span>Hello</span>
+                </article>
+                <p>World!</p>
+            </section>
+        '''
+        rendered = self._render_snippet('website.s_d')
+        self.assertEqual(self._normalize_xml(rendered), self._normalize_xml(expected_output))

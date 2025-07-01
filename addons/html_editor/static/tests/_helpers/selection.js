@@ -1,3 +1,5 @@
+import { manuallyDispatchProgrammaticEvent, animationFrame } from "@odoo/hoot-dom";
+
 /**
  * @param {Node} node
  * @param {Object} options
@@ -61,7 +63,7 @@ function _getElemContent(el, selection, options) {
 
 function getElemContent(el, selection, options) {
     const tag = el.tagName.toLowerCase();
-    const attributes = [...el.attributes];
+    let attributes = [...el.attributes];
     if (options.sortAttrs) {
         attributes.sort((attr1, attr2) => {
             if (attr1.name === attr2.name) {
@@ -69,6 +71,9 @@ function getElemContent(el, selection, options) {
             }
             return attr1.name > attr2.name ? 1 : -1;
         });
+    }
+    if (!options.showVersion) {
+        attributes = attributes.filter((attr) => attr.name !== "data-oe-version");
     }
     const attrs = [];
     for (const attr of attributes) {
@@ -100,7 +105,10 @@ export function setContent(el, content) {
         textNode.textContent = textNode.textContent.replace("[", "").replace("]", "");
     }
     // remove extra empty text nodes
-    el.innerHTML = div.innerHTML;
+    const innerHTML = div.innerHTML;
+    if (el.innerHTML !== innerHTML) {
+        el.innerHTML = innerHTML;
+    }
 
     const configSelection = getSelection(el, content);
     if (configSelection) {
@@ -207,4 +215,43 @@ function visitAndSetRange(target, ref, configSelection) {
             }
         }
     }
+}
+
+export async function firstClick(target) {
+    manuallyDispatchProgrammaticEvent(target, "mousedown", { detail: 1 });
+    setSelection({ anchorNode: target, anchorOffset: 0 });
+    await animationFrame(); // selectionChange
+    manuallyDispatchProgrammaticEvent(target, "mouseup", { detail: 1 });
+    manuallyDispatchProgrammaticEvent(target, "click", { detail: 1 });
+    await animationFrame();
+}
+
+export async function secondClick(target) {
+    manuallyDispatchProgrammaticEvent(target, "mousedown", { detail: 2 });
+    const document = target.ownerDocument;
+    document.getSelection().modify("extend", "forward", "word");
+    await animationFrame(); // selectionChange
+    manuallyDispatchProgrammaticEvent(target, "mouseup", { detail: 2 });
+    manuallyDispatchProgrammaticEvent(target, "click", { detail: 2 });
+    await animationFrame();
+}
+
+export async function thirdClick(target) {
+    manuallyDispatchProgrammaticEvent(target, "mousedown", { detail: 3 });
+    const document = target.ownerDocument;
+    document.getSelection().modify("extend", "forward", "paragraphboundary");
+    await animationFrame(); // selectionChange
+    manuallyDispatchProgrammaticEvent(target, "mouseup", { detail: 3 });
+    manuallyDispatchProgrammaticEvent(target, "click", { detail: 3 });
+    await animationFrame();
+}
+
+export async function simulateDoubleClickSelect(target) {
+    await firstClick(target);
+    await secondClick(target);
+}
+export async function simulateTripleClickSelect(target) {
+    await firstClick(target);
+    await secondClick(target);
+    await thirdClick(target);
 }

@@ -2,6 +2,7 @@
 
 import { logger } from "./core/logger";
 import { Runner } from "./core/runner";
+import { urlParams } from "./core/url";
 import { makeRuntimeHook } from "./hoot_utils";
 import { setRunner } from "./main_runner";
 import { setupHootUI } from "./ui/setup_hoot_ui";
@@ -17,7 +18,7 @@ import { setupHootUI } from "./ui/setup_hoot_ui";
 // Internal
 //-----------------------------------------------------------------------------
 
-const runner = new Runner();
+const runner = new Runner(urlParams);
 
 setRunner(runner);
 
@@ -26,10 +27,10 @@ setRunner(runner);
 //-----------------------------------------------------------------------------
 
 /**
- * @param {unknown} value
+ * @param {...unknown} values
  */
-export function registerDebugInfo(value) {
-    logger.logDebug("debug context provided:", value);
+export function registerDebugInfo(...values) {
+    logger.logDebug(...values);
 }
 
 // Main test API
@@ -46,17 +47,17 @@ export const onError = makeRuntimeHook("onError");
 
 // Fixture
 export const getFixture = runner.fixture.get;
-export const mountOnFixture = runner.fixture.mount;
 
 // Other functions
+export const definePreset = runner.exportFn(runner.definePreset);
 export const dryRun = runner.exportFn(runner.dryRun);
 export const getCurrent = runner.exportFn(runner.getCurrent);
-export const registerPreset = runner.exportFn(runner.registerPreset);
 export const start = runner.exportFn(runner.start);
 export const stop = runner.exportFn(runner.stop);
 
 export { makeExpect } from "./core/expect";
 export { destroy } from "./core/fixture";
+export { defineTags } from "./core/tag";
 export { createJobScopedGetter } from "./hoot_utils";
 
 // Constants

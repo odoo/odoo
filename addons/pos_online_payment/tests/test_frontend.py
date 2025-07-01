@@ -6,6 +6,7 @@ from unittest.mock import patch
 from odoo import Command, fields
 from odoo.tools import mute_logger
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.pos_online_payment.tests.online_payment_common import OnlinePaymentCommon
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
@@ -16,7 +17,7 @@ import odoo.tests
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
+class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
 
     def _get_url(self):
         return f"/pos/ui?config_id={self.pos_config.id}"
@@ -280,6 +281,10 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
     def test_errors_tour(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('OnlinePaymentErrorsTour', login="pos_op_user")
+
+    def test_customer_display_online_payment(self):
+        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}",
+                        'CustomerDisplayTourOnlinePayment', login="pos_user")
 
     @classmethod
     def tearDownClass(cls):

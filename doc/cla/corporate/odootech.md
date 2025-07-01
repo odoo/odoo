@@ -11,4 +11,5 @@ Csaba Tóth csaba.toth@odootech.hu https://github.com/tsabi
 List of contributors:
 
 Csaba Tóth csaba.toth@odootech.hu https://github.com/tsabi
-Krisztián Juhász juhasz.krisztian@odootech.hu https://github.com/odootechnology
+Csaba Geier geier.csaba@dotech.hu https://github.com/geiercsaba
+Dávid Ötvös otvos.david@dotech.hu https://github.com/davidotvos

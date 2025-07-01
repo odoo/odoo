@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <div id="qrcode" position="after">
+            <div id="myinvois_qrcode" class="d-flex mb-3 avoid-page-break-inside" t-if="o.l10n_my_edi_external_uuid">
+                <div class="qrcode me-3" id="myinvois_qrcode_image">
+                    <t t-set="qr_code_url" t-value="o._generate_myinvois_qr_code()"/>
+                    <p t-if="qr_code_url" class="position-relative mb-0">
+                        <img t-att-src="qr_code_url"/>
+                        <img src="/account/static/src/img/Odoo_logo_O.svg"
+                             id="qrcode_odoo_logo"
+                             class="top-50 start-50 position-absolute bg-white border border-white border-3 rounded-circle"
+                        />
+                    </p>
+                </div>
+                <div class="d-inline text-muted lh-sm fst-italic" id="qrcode_info" t-if="qr_code_url">
+                    <p>Scan this QR Code to<br/>access your invoice
+                    </p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_my_edi_extended.report_invoice_document'"
+               t-call="l10n_my_edi_extended.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

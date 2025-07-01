@@ -40,6 +40,9 @@ This module adds several features to the Point of Sale that are specific to rest
         'web.assets_tests': [
             'pos_restaurant/static/tests/tours/**/*',
         ],
+        'point_of_sale.assets_debug': [
+            'pos_restaurant/static/tests/tours/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }

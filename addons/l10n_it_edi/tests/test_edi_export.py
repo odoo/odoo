@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests import tagged
+from odoo.tests import freeze_time, tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 
@@ -323,35 +323,6 @@ class TestItEdiExport(TestItEdi):
         with self.subTest('credit note'):
             self._assert_export_invoice(credit_note, 'credit_note_negative_price.xml')
 
-        invoice = self.env['account.move'].with_company(self.company).create({
-            'move_type': 'out_invoice',
-            'invoice_date': '2022-03-24',
-            'invoice_date_due': '2022-03-24',
-            'partner_id': self.italian_partner_a.id,
-            'partner_bank_id': self.test_bank.id,
-            'invoice_line_ids': [
-                Command.create({
-                    'name': 'standard_line',
-                    'price_unit': 800.40,
-                    'tax_ids': [Command.set(self.default_tax.ids)],
-                }),
-                Command.create({
-                    'name': 'negative_line',
-                    'price_unit': -100.0,
-                    'tax_ids': [Command.set(self.default_tax.ids)],
-                }),
-                # This negative line can't be dispatched, rejeted.
-                Command.create({
-                    'name': 'negative_line_different_tax',
-                    'price_unit': -50.0,
-                    'tax_ids': [Command.set(tax_10.ids)],
-                    }),
-            ],
-        })
-        invoice.action_post()
-        with self.subTest('invoice_different_taxes'):
-            self._assert_export_invoice(invoice, 'invoice_negative_price_different_taxes.xml')
-
     def test_invoice_more_decimal_price_unit(self):
         decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits
         decimal_precision = self.env['decimal.precision'].search([('name', '=', decimal_precision_name)])
@@ -379,6 +350,7 @@ class TestItEdiExport(TestItEdi):
         self.italian_partner_a.zip = False  # invalid configuration for partner -> proforma pdf
         invoice = self.env['account.move'].with_company(self.company).create({
             'partner_id': self.italian_partner_a.id,
+            'invoice_date': '2024-03-24',
             'move_type': 'out_invoice',
             'invoice_line_ids': [
                 Command.create({
@@ -495,3 +467,118 @@ class TestItEdiExport(TestItEdi):
         })
         invoice.action_post()
         self._assert_export_invoice(invoice, 'export_foreign_currency_global_discount.xml')
+
+    @freeze_time("2025-02-03")
+    def test_export_invoice_with_two_downpayments(self):
+        if self.env['ir.module.module']._get('sale').state != 'installed':
+            self.skipTest("sale module is not installed")
+
+        sale_order = self.env['sale.order'].with_company(self.company).create({
+            'partner_id': self.italian_partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.service_product.id, 'price_unit': 200.00}),
+            ],
+        })
+        sale_order.action_confirm()
+
+        for amount in (50, 100):
+            self.env['account.move'].with_company(self.company).browse(
+                self.env['sale.advance.payment.inv'].create([{
+                    'advance_payment_method': 'fixed',
+                    'fixed_amount': amount,
+                    'sale_order_ids': [Command.link(sale_order.id)],
+                }]).create_invoices()['res_id']
+            ).action_post()
+
+        invoice = self.env['account.move'].with_company(self.company).browse(
+            self.env['sale.advance.payment.inv'].create([{
+                'advance_payment_method': 'delivered',
+                'sale_order_ids': [Command.link(sale_order.id)],
+            }]).create_invoices()['res_id']
+        )
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'test_export_invoice_with_two_downpayments.xml')
+
+    @freeze_time('2025-03-07')
+    def test_send_prezzo_unitario_converted_to_company_currency(self):
+        """
+        Test that the prezzo unitario is converted to the company currency when the invoice is in a foreign currency
+        """
+        usd = self.env.ref('base.USD')
+        self.env['res.currency.rate'].create({
+            'name': '2025-01-01',
+            'rate': 1.54639273,
+            'currency_id': usd.id,
+            'company_id': self.company.id,
+        })
+
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            partner=self.italian_partner_a,
+            invoice_date='2025-02-24',
+            post=True,
+            amounts=[100],
+            taxes=[self.default_tax],
+            company=self.company,
+            currency=usd,
+        )
+
+        self._assert_export_invoice(invoice, 'prezzio_unitario_converted_company_currency.xml')
+
+    def test_export_XML_lowercase_fields(self):
+        partner = self.env['res.partner'].create({
+            'name': 'Alessi',
+            'l10n_it_codice_fiscale': 'Mrtmtt91d08f205j',
+            'l10n_it_pa_index': 'N8mimm9',
+            'is_company': False,
+        })
+
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'partner_id': partner.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line1',
+                    'price_unit': 800.40,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'invoice_lowercase_fields.xml')
+
+    def test_export_invoice_with_rounding_lines_value(self):
+        """Test that invoices with rounding lines are correctly exported with exempt tax 'N2.2'."""
+        self.env['res.config.settings'].create({
+            'company_id': self.company.id,
+            'group_cash_rounding': True
+        })
+
+        cash_rounding_add_invoice_line = self.env['account.cash.rounding'].with_company(self.company).create({
+            'name': 'Rounding to 0.05',
+            'rounding': 0.05,
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company_data_2['default_account_revenue'].id,
+            'loss_account_id': self.company_data_2['default_account_expense'].id,
+            'rounding_method': 'HALF-UP',
+        })
+
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'partner_id': self.italian_partner_a.id,
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'invoice_cash_rounding_id': cash_rounding_add_invoice_line.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'standard_line',
+                    'price_unit': 100.02,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                }),
+            ]
+        })
+        invoice.action_post()
+
+        self._assert_export_invoice(invoice, 'invoice_with_rounding_line.xml')

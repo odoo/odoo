@@ -9,7 +9,7 @@ import {
 
 const checkNoTranslate = {
     content: "Check there is no translate button",
-    trigger: ".o_menu_systray:not(:contains(.o_translate_website_container))",
+    trigger: ".o_menu_systray:not(:has(.o_translate_website_container)):contains(edit)",
 };
 const translate = [{
     content: "Open Edit menu",
@@ -65,6 +65,9 @@ registerWebsitePreviewTour('test_restricted_editor_only', {
     ...closeErrorDialog,
     ...switchTo('en'),
     // Model item
+    {
+        trigger: ":iframe body:contains(welcome to your)"
+    },
     ...goToMenuItem,
     checkNoTranslate,
     ...clickOnEditAndWaitEditMode(),
@@ -72,6 +75,7 @@ registerWebsitePreviewTour('test_restricted_editor_only', {
         content: "Check icons cannot be dragged",
         trigger: "#oe_snippets .oe_snippet[name='Intro'].o_disabled",
     },
+    ...clickOnSave(),
     ...switchTo('fr'),
     ...translate,
     ...closeErrorDialog,
@@ -126,6 +130,10 @@ registerWebsitePreviewTour('test_restricted_editor_test_admin', {
     {
         content: "Assure the modal is well closed",
         trigger: "body:not(:has(.modal))",
+    },
+    {
+        content: "Check that html fields are not content editable when translating",
+        trigger: ":iframe [data-oe-expression='record.website_description']:not([contenteditable='true'])",
     },
     {
         content: "Translate name",

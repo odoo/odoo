@@ -4,8 +4,15 @@ import { registry } from "@web/core/registry";
 import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add("discuss_channel_tour", {
-    url: "/odoo/action-mail.action_discuss",
+    url: "/odoo",
     steps: () => [
+        {
+            isActive: ["enterprise"],
+            trigger: "a[data-menu-xmlid='mail.menu_root_discuss']",
+            content: _t("Open Discuss App"),
+            tooltipPosition: "bottom",
+            run: "click",
+        },
         {
             trigger: ".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add",
             content: markup(
@@ -45,24 +52,10 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            trigger: ".o-mail-Message",
-            content: _t("Click on your message"),
+            trigger: ".o-mail-Message:contains(today at)",
+            content: _t("Hover on your message and mark as todo"),
             tooltipPosition: "top",
-            run: "click",
-        },
-        {
-            trigger: ".o-mail-Message [title='Expand']",
-            content: _t("Expand options"),
-            tooltipPosition: "top",
-            run: "click",
-        },
-        {
-            trigger: ".o-mail-Message [title='Mark as Todo']",
-            content: markup(
-                _t("Messages can be <b>starred</b> to remind you to check back later.")
-            ),
-            tooltipPosition: "bottom",
-            run: "click",
+            run: "hover && click .o-mail-Message [title='Mark as Todo']",
         },
         {
             trigger: "button:contains(Starred)",
@@ -83,7 +76,6 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o-discuss-ChannelSelector",
         },
     ],

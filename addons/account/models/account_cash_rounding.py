@@ -27,7 +27,7 @@ class AccountCashRounding(models.Model):
         string='Profit Account',
         company_dependent=True,
         check_company=True,
-        domain="[('deprecated', '=', False)]",
+        domain="[('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         ondelete='restrict',
     )
     loss_account_id = fields.Many2one(
@@ -35,11 +35,11 @@ class AccountCashRounding(models.Model):
         string='Loss Account',
         company_dependent=True,
         check_company=True,
-        domain="[('deprecated', '=', False)]",
+        domain="[('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         ondelete='restrict',
     )
     rounding_method = fields.Selection(string='Rounding Method', required=True,
-        selection=[('UP', 'UP'), ('DOWN', 'DOWN'), ('HALF-UP', 'HALF-UP')],
+        selection=[('UP', 'Up'), ('DOWN', 'Down'), ('HALF-UP', 'Nearest')],
         default='HALF-UP', help='The tie-breaking rule used for float rounding operations')
 
     @api.constrains('rounding')

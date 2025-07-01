@@ -75,11 +75,6 @@ class AccountEdiXmlUBLPINTJP(models.AbstractModel):
             vals_list.append(tax_totals_vals)
         return vals_list
 
-    def _get_customization_ids(self):
-        vals = super()._get_customization_ids()
-        vals['pint_jp'] = 'urn:peppol:pint:billing-1@jp-1'
-        return vals
-
     def _export_invoice_vals(self, invoice):
         # EXTENDS account_edi_ubl_cii
         vals = super()._export_invoice_vals(invoice)

@@ -24,11 +24,12 @@ import traceback
 import typing
 import unicodedata
 import warnings
+import zlib
 from collections import defaultdict
 from collections.abc import Iterable, Iterator, Mapping, MutableMapping, MutableSet, Reversible
 from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
-from functools import wraps
+from functools import reduce, wraps
 from itertools import islice, groupby as itergroupby
 from operator import itemgetter
 
@@ -460,8 +461,9 @@ except ImportError:
 
 def get_iso_codes(lang: str) -> str:
     if lang.find('_') != -1:
-        if lang.split('_')[0] == lang.split('_')[1].lower():
-            lang = lang.split('_')[0]
+        lang_items = lang.split('_')
+        if lang_items[0] == lang_items[1].lower():
+            lang = lang_items[0]
     return lang
 
 
@@ -1081,6 +1083,9 @@ class OrderedSet(MutableSet[T], typing.Generic[T]):
     def __repr__(self):
         return f'{type(self).__name__}({list(self)!r})'
 
+    def intersection(self, *others):
+        return reduce(OrderedSet.__and__, others, self)
+
 
 class LastOrderedSet(OrderedSet[T], typing.Generic[T]):
     """ A set collection that remembers the elements last insertion order. """
@@ -1665,8 +1670,16 @@ class ReadonlyDict(Mapping[K, T], typing.Generic[K, T]):
     def __init__(self, data):
         self.__data = dict(data)
 
+    def __contains__(self, key: K):
+        return key in self.__data
+
     def __getitem__(self, key: K) -> T:
-        return self.__data[key]
+        try:
+            return self.__data[key]
+        except KeyError:
+            if hasattr(type(self), "__missing__"):
+                return self.__missing__(key)
+            raise
 
     def __len__(self):
         return len(self.__data)
@@ -1703,7 +1716,7 @@ def get_diff(data_from, data_to, custom_style=False, dark_color_scheme=False):
         For the table to fit the modal width, some custom style is needed.
         """
         to_append = {
-            'diff_header': 'bg-600 text-center align-top px-2',
+            'diff_header': 'bg-600 text-light text-center align-top px-2',
             'diff_next': 'd-none',
         }
         for old, new in to_append.items():
@@ -1816,6 +1829,60 @@ def verify_hash_signed(env, scope, payload):
         message_values = json.loads(message)
         return message_values
     return None
+
+
+def limited_field_access_token(record, field_name, timestamp=None):
+    """Generate a token granting access to the given record and field_name from
+    the binary routes (/web/content or /web/image).
+
+    The validitiy of the token is determined by the timestamp parameter.
+    When it is not specified, a timestamp is automatically generated with a
+    validity of at least 14 days. For a given record and field_name, the
+    generated timestamp is deterministic within a 14-day period (even across
+    different days/months/years) to allow browser caching, and expires after
+    maximum 42 days to prevent infinite access. Different record/field
+    combinations expire at different times to prevent thundering herd problems.
+
+    :param record: the record to generate the token for
+    :type record: class:`odoo.models.Model`
+    :param field_name: the field name of record to generate the token for
+    :type field_name: str
+    :param timestamp: expiration timestamp of the token, or None to generate one
+    :type timestamp: int, optional
+    :return: the token, which includes the timestamp in hex format
+    :rtype: string
+    """
+    record.ensure_one()
+    if not timestamp:
+        unique_str = repr((record._name, record.id, field_name))
+        two_weeks = 1209600  # 2 * 7 * 24 * 60 * 60
+        start_of_period = int(time.time()) // two_weeks * two_weeks
+        adler32_max = 4294967295
+        jitter = two_weeks * zlib.adler32(unique_str.encode()) // adler32_max
+        timestamp = hex(start_of_period + 2 * two_weeks + jitter)
+    token = hmac(record.env(su=True), "binary", (record._name, record.id, field_name, timestamp))
+    return f"{token}o{timestamp}"
+
+
+def verify_limited_field_access_token(record, field_name, access_token):
+    """Verify the given access_token grants access to field_name of record.
+    In particular, the token must have the right format, must be valid for the
+    given record, and must not have expired.
+
+    :param record: the record to verify the token for
+    :type record: class:`odoo.models.Model`
+    :param field_name: the field name of record to verify the token for
+    :type field_name: str
+    :param access_token: the access token to verify
+    :type access_token: str
+    :return: whether the token is valid for the record/field_name combination at
+        the current date and time
+    :rtype: bool
+    """
+    *_, timestamp = access_token.rsplit("o", 1)
+    return consteq(
+        access_token, limited_field_access_token(record, field_name, timestamp)
+    ) and datetime.datetime.now() < datetime.datetime.fromtimestamp(int(timestamp, 16))
 
 
 ADDRESS_REGEX = re.compile(r'^(.*?)(\s[0-9][0-9\S]*)?(?: - (.+))?$', flags=re.DOTALL)

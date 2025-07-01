@@ -13,12 +13,14 @@ export class ProductProduct {
      * @param {number} product_tmpl_id
      * @param {string} display_name
      * @param {ProductTemplateAttributeLine[]|object[]} ptals
+     * @param {string} image_src
      */
-    setup({id, product_tmpl_id, display_name, ptals}) {
+    setup({id, product_tmpl_id, display_name, ptals, image_src}) {
         this.id = id;
         this.product_tmpl_id = product_tmpl_id;
         this.display_name = display_name;
         this.ptals = ptals.map(ptal => new ProductTemplateAttributeLine(ptal));
+        this.image_src = image_src;
     }
 
     /**
@@ -28,15 +30,6 @@ export class ProductProduct {
      */
     get noVariantPtals() {
         return this.ptals.filter(ptal => ptal.create_variant === 'no_variant');
-    }
-
-    /**
-     * Check whether this product has `no_variant` PTALs.
-     *
-     * @return {Boolean} Whether this product has `no_variant` PTALs.
-     */
-    get hasNoVariantPtals() {
-        return this.noVariantPtals.length > 0;
     }
 
     /**

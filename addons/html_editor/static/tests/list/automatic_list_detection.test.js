@@ -5,6 +5,7 @@ import { insertText } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
 import { unformat } from "../_helpers/format";
 import { animationFrame } from "@odoo/hoot-mock";
+import { execCommand } from "../_helpers/userCommands";
 
 test("typing '1. ' should create number list", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
@@ -150,7 +151,7 @@ test("typing '[] ' should create checklist and restore the original text when un
         `<ul class="o_checklist"><li placeholder="List" class="o-we-hint">[]<br></li></ul>`
     );
 
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect(getContent(el)).toBe(`<p>\[\] []</p>`);
 });
 
@@ -159,7 +160,7 @@ test("Typing '[] ' at the start of existing text should create a checklist and r
     await insertText(editor, "[] ");
     expect(getContent(el)).toBe(`<ul class="o_checklist"><li>[]abc</li></ul>`);
 
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect(getContent(el)).toBe(`<p>\[\] []abc</p>`);
 });
 

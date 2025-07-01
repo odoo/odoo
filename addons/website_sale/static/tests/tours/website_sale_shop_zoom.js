@@ -14,6 +14,7 @@ registry.category("web_tour.tours").add('shop_zoom', {
         content: "select " + imageName,
         trigger: `.oe_product_cart a:contains(/^${imageName}$/)`,
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "click on the image",
@@ -31,7 +32,7 @@ registry.category("web_tour.tours").add('shop_zoom', {
     },
     {
         content: "change variant",
-        trigger: 'input[data-attribute_name="Beautiful Color"][data-value_name="' + nameGreen + '"]',
+        trigger: `input[data-attribute_name='Beautiful Color'][data-value_name='${nameGreen}']:not(:visible)`,
         run: 'click',
     },
     {

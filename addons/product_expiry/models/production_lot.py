@@ -78,10 +78,16 @@ class StockLot(models.Model):
             ('location_id.usage', '=', 'internal')])
         alert_lots = lot_stock_quants.mapped('lot_id')
 
+        alert_activity_xml_id = "product_expiry.mail_activity_type_alert_date_reached"
+        alert_activity = self.env.ref(alert_activity_xml_id, raise_if_not_found=False)
+        alert_activity_default_user_id = alert_activity.default_user_id.id if alert_activity else None
         for lot in alert_lots:
+            user_id = alert_activity_default_user_id or \
+                      lot.product_id.with_company(lot.company_id).responsible_id.id or \
+                      lot.product_id.responsible_id.id or SUPERUSER_ID
             lot.activity_schedule(
-                'product_expiry.mail_activity_type_alert_date_reached',
-                user_id=lot.product_id.with_company(lot.company_id).responsible_id.id or lot.product_id.responsible_id.id or SUPERUSER_ID,
+                alert_activity_xml_id,
+                user_id=user_id,
                 note=_("The alert date has been reached for this lot/serial number")
             )
         alert_lots.write({
@@ -96,5 +102,16 @@ class ProcurementGroup(models.Model):
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
         super(ProcurementGroup, self)._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
         self.env['stock.lot']._alert_date_exceeded()
+        if 'scheduler_task_done' in self._context:
+            task_done = self._context.get('scheduler_task_done', {'task_done': 0})['task_done'] + 1
+            self._context['scheduler_task_done']['task_done'] = task_done
+        else:
+            task_done = self._get_scheduler_tasks_to_do()
+
         if use_new_cursor:
+            self.env['ir.cron']._notify_progress(done=task_done, remaining=self._get_scheduler_tasks_to_do() - task_done)
             self.env.cr.commit()
+
+    @api.model
+    def _get_scheduler_tasks_to_do(self):
+        return super()._get_scheduler_tasks_to_do() + 1

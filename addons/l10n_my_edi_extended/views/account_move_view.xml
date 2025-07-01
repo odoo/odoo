@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_move_form_inherit_l10n_my_myinvois_extended" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_my_myinvois_extended</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_my_edi.view_move_form_inherit_l10n_my_myinvois"/>
+        <field name="arch" type="xml">
+            <!-- Hide the original send & print button, as it is difficult to update its invisible condition -->
+            <button name="action_invoice_sent" class="oe_highlight" position="attributes">
+                <attribute name="invisible" add="l10n_my_invoice_need_edi" separator=" or "/>
+            </button>
+            <!-- Instead, we display our own buttons so that we can write the invisible properly for our use case. -->
+            <xpath expr="//button[@name='action_invoice_sent' and not(@class)]" position="after">
+                <button name="action_invoice_sent"
+                        type="object"
+                        string="Send &amp; Print"
+                        invisible="(not l10n_my_invoice_need_edi or l10n_my_edi_state != 'valid') or (state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type not in ('out_invoice', 'out_refund'))"
+                        class="oe_highlight"
+                        data-hotkey="y"/>
+                <button name="action_invoice_sent"
+                        type="object"
+                        string="Send &amp; Print"
+                        invisible="(not l10n_my_invoice_need_edi or l10n_my_edi_state == 'valid') or (state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type not in ('out_invoice', 'out_refund'))"
+                        data-hotkey="y"/>
+            </xpath>
+            <!-- We want the CTA to be primary only on invoices, and secondary on vendor bills. -->
+            <button name="action_invoice_sent" position="before">
+                <button name="action_l10n_my_edi_send_invoice" string="Send To MyInvois" type="object"
+                        groups="account.group_account_invoice"
+                        class="oe_highlight"
+                        invisible="not l10n_my_invoice_need_edi or l10n_my_edi_state or move_type not in ('out_invoice', 'out_refund')"/>
+            </button>
+            <button name="action_register_payment" position="after">
+                <button name="action_l10n_my_edi_send_invoice" string="Send To MyInvois" type="object"
+                        groups="account.group_account_invoice"
+                        invisible="not l10n_my_invoice_need_edi or l10n_my_edi_state or move_type not in ('in_invoice', 'in_refund')"/>
+            </button>
+            <!-- The rejection button is only intended for received bills, as we don't support that at the moment, and we now send bills, it will be confusing to keep it. -->
+            <button name="action_l10n_my_edi_reject_bill" position="replace">
+            </button>
+            <field name="l10n_my_edi_display_tax_exemption_reason" position="after">
+                    <field name="l10n_my_invoice_need_edi" invisible="1"/> <!-- TODO: to be removed in master -->
+            </field>
+            <!-- Add the classification code to the invoice lines -->
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='name']" position="after">
+                <field name="l10n_my_edi_classification_code" optional="hide"/>
+            </xpath>
+            <field name="l10n_my_edi_external_uuid" position="after">
+                <field name="l10n_my_edi_invoice_long_id" invisible="not l10n_my_edi_external_uuid"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="invoice_send_to_myinvois" model="ir.actions.server">
+        <field name="name">Send To MyInvois</field>
+        <field name="state">code</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="binding_model_id" ref="model_account_move"/>
+        <field name="binding_view_types">list</field>
+        <field name="code">
+            if records:
+                action = records.action_l10n_my_edi_send_invoice()
+        </field>
+    </record>
+</odoo>

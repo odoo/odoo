@@ -73,6 +73,7 @@ class StockMoveLine(models.Model):
                 'move_ids': [],
                 'move_line_ids': [],
                 'batch_id': wave.id,
+                'scheduled_date': picking.scheduled_date,
             })[0]
             for move, move_lines in line_by_move.items():
                 picking_to_wave_vals['move_line_ids'] += [Command.link(line.id) for line in lines]
@@ -96,8 +97,7 @@ class StockMoveLine(models.Model):
     def _is_auto_waveable(self):
         self.ensure_one()
         if not self.picking_id \
-           or self.picking_id.state != 'assigned' \
-           or float_is_zero(self.quantity, precision_rounding=self.product_uom_id.rounding) \
+           or (self.picking_id.state != 'assigned' or float_is_zero(self.quantity, precision_rounding=self.product_uom_id.rounding)) and not self.env.context.get('skip_auto_waveable')  \
            or self.batch_id.is_wave \
            or not self.picking_type_id._is_auto_wave_grouped() \
            or (self.picking_type_id.wave_group_by_category and self.product_id.categ_id not in self.picking_type_id.wave_category_ids):  # noqa: SIM103

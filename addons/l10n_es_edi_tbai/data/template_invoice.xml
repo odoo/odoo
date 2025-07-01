@@ -110,7 +110,7 @@
             </CabeceraFactura>
             <DatosFactura t-if="is_emission">
                 <FechaOperacion t-if="delivery_date" t-out="format_date(delivery_date)"/>
-                <DescripcionFactura t-out="origin or 'manual'"/>
+                <DescripcionFactura t-out="origin"/>
                 <DetallesFactura>
                     <IDDetalleFactura t-foreach="base_lines" t-as="base_line">
                         <DescripcionDetalle t-out="base_line['description']"/>
@@ -170,7 +170,6 @@
                                 <CuotaImpuesto t-out="format_float(detalle['CuotaRepercutida'])"/>
                                 <TipoRecargoEquivalencia t-if="detalle.get('TipoRecargoEquivalencia')" t-out="format_float(detalle['TipoRecargoEquivalencia'])"/>
                                 <CuotaRecargoEquivalencia t-if="detalle.get('CuotaRecargoEquivalencia')" t-out="format_float(detalle['CuotaRecargoEquivalencia'])"/>
-                                <OperacionEnRecargoDeEquivalenciaORegimenSimplificado t-out="'S' if is_simplified else 'N'"/>
                             </DetalleIVA>
                         </DesgloseIVA>
                     </DetalleNoExenta>

@@ -12,12 +12,21 @@ import { KioskGreetings } from "@hr_attendance/components/greetings/greetings";
 import { KioskPinCode } from "@hr_attendance/components/pin_code/pin_code";
 import { KioskBarcodeScanner } from "@hr_attendance/components/kiosk_barcode/kiosk_barcode";
 import { browser } from "@web/core/browser/browser";
+import { isIosApp } from "@web/core/browser/feature_detection";
 import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 import { session } from "@web/session";
 
 class kioskAttendanceApp extends Component{
     static template = "hr_attendance.public_kiosk_app";
-    static props = [];
+    static props = {
+        token: { type: String },
+        companyId: { type: Number },
+        companyName: { type: String },
+        departments: { type: Array },
+        kioskMode: { type: String },
+        barcodeSource: { type: String },
+        fromTrialMode: { type: Boolean },
+    };
     static components = {
         KioskBarcodeScanner,
         CardLayout,
@@ -31,6 +40,7 @@ class kioskAttendanceApp extends Component{
     setup() {
         this.barcode = useService("barcode");
         this.notification = useService("notification");
+        this.ui = useService("ui");
         this.companyImageUrl = url("/web/binary/company_logo", {
             company: this.props.companyId,
         });
@@ -134,8 +144,35 @@ class kioskAttendanceApp extends Component{
         this.notification.add(text, { type: "danger" });
     }
 
-    async onManualSelection(employeeId, enteredPin){
-        const result = await rpc('manual_selection',
+    async makeRpcWithGeolocation(route, params) {
+        if (!isIosApp()) { // iOS app lacks permissions to call `getCurrentPosition`
+            return new Promise((resolve) => {
+                navigator.geolocation.getCurrentPosition(
+                    async ({ coords: { latitude, longitude } }) => {
+                        const result = await rpc(route, {
+                            ...params,
+                            latitude,
+                            longitude,
+                        });
+                        resolve(result);
+                    },
+                    async (err) => {
+                        const result = await rpc(route, {
+                            ...params
+                        });
+                        resolve(result);
+                    },
+                    { enableHighAccuracy: true }
+                );
+            });
+        }
+        else {
+            return rpc(route, {...params})
+        }
+    }
+
+    async onManualSelection(employeeId, enteredPin) {
+        const result = await this.makeRpcWithGeolocation('manual_selection',
             {
                 'token': this.props.token,
                 'employee_id': employeeId,
@@ -156,18 +193,29 @@ class kioskAttendanceApp extends Component{
             return;
         }
         this.lockScanner = true;
-        const result = await rpc('attendance_barcode_scanned',
-            {
-                'barcode': barcode,
-                'token': this.props.token
-            })
-        if (result && result.employee_name) {
-            this.employeeData = result
-            this.switchDisplay('greet')
-        }else{
-            this.displayNotification(_t("No employee corresponding to Badge ID '%(barcode)s.'", { barcode }))
+        this.ui.block();
+
+        let result;
+        try {
+            result = await rpc("attendance_barcode_scanned", {
+                barcode: barcode,
+                token: this.props.token,
+            });
+
+            if (result && result.employee_name) {
+                this.employeeData = result;
+                this.switchDisplay("greet");
+            } else {
+                this.displayNotification(
+                    _t("No employee corresponding to Badge ID '%(barcode)s.'", { barcode })
+                );
+            }
+        } catch (error) {
+            this.displayNotification(error.data.message);
+        } finally {
+            this.lockScanner = false;
+            this.ui.unblock();
         }
-        this.lockScanner = false
     }
 
     removeDemoMessage() {

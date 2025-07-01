@@ -34,7 +34,40 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'paypal':
             return res
 
+        payload = self._paypal_prepare_order_payload()
+
+        _logger.info(
+            "Sending '/checkout/orders' request for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat(payload)
+        )
+        idempotency_key = payment_utils.generate_idempotency_key(
+            self, scope='payment_request_order'
+        )
+        order_data = self.provider_id._paypal_make_request(
+            '/v2/checkout/orders', json_payload=payload, idempotency_key=idempotency_key
+        )
+        _logger.info(
+            "Response of '/checkout/orders' request for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat(order_data)
+        )
+        return {'order_id': order_data['id']}
+
+    def _paypal_prepare_order_payload(self):
+        """ Prepare the payload for the Paypal create order request.
+
+        :return: The requested payload to create a Paypal order.
+        :rtype: dict
+        """
         partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
+        if self.partner_id.is_public:
+            invoice_address_vals = {'address': {'country_code': self.company_id.country_code}}
+            shipping_address_vals = {}
+        else:
+            invoice_address_vals = paypal_utils.format_partner_address(self.partner_id)
+            shipping_address_vals = paypal_utils.format_shipping_address(self)
+        shipping_preference = 'SET_PROVIDED_ADDRESS' if shipping_address_vals else 'NO_SHIPPING'
+
+        # See https://developer.paypal.com/docs/api/orders/v2/#orders_create!ct=application/json
         payload = {
             'intent': 'CAPTURE',
             'purchase_units': [
@@ -47,45 +80,32 @@ class PaymentTransaction(models.Model):
                     },
                     'payee':  {
                         'display_data': {
-                            'business_email':  self.provider_id.company_id.email,
                             'brand_name': self.provider_id.company_id.name,
                         },
                         'email_address': paypal_utils.get_normalized_email_account(self.provider_id)
                     },
+                    **shipping_address_vals,
                 },
             ],
             'payment_source': {
                 'paypal': {
                     'experience_context': {
-                        'shipping_preference': 'NO_SHIPPING',
+                        'shipping_preference': shipping_preference,
                     },
-                    'email_address': self.partner_email,
                     'name': {
                         'given_name': partner_first_name,
                         'surname': partner_last_name,
                     },
-                    'address': {
-                        'address_line_1': self.partner_address,
-                        'admin_area_1': self.partner_state_id.name,
-                        'admin_area_2': self.partner_city,
-                        'postal_code': self.partner_zip,
-                        'country_code': self.partner_country_id.code,
-                    },
+                    **invoice_address_vals,
                 },
             },
         }
-        _logger.info(
-            "Sending '/checkout/orders' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(payload)
-        )
-        order_data = self.provider_id._paypal_make_request(
-            '/v2/checkout/orders', json_payload=payload
-        )
-        _logger.info(
-            "Response of '/checkout/orders' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(order_data)
-        )
-        return {'order_id': order_data['id']}
+        # PayPal does not accept None set to fields and to avoid users getting errors when email
+        # is not set on company we will add it conditionally since its not a required field.
+        if company_email := self.provider_id.company_id.email:
+            payload['purchase_units'][0]['payee']['display_data']['business_email'] = company_email
+
+        return payload
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of `payment` to find the transaction based on Paypal data.

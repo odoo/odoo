@@ -8,13 +8,11 @@ patch(Chatter.prototype, {
         super.setup(...arguments);
         this.topRef = useRef("top");
         onWillPatch(() => {
-            // Keep the composer position under the page header on scrolling
-            if (!this.props.twoColumns) {
-                const paddingTop = document.querySelector("#wrapwrap header")
-                    ? document.querySelector("#wrapwrap header").getBoundingClientRect().height +
-                      15 +
-                      "px"
-                    : "";
+            // Keep the composer position under the page header on scrolling 
+            // unless the header is on the side.
+            const headerEl = document.querySelector("#wrapwrap header");
+            if (!this.props.twoColumns && headerEl && !headerEl.matches(".o_header_sidebar")) {
+                const paddingTop = headerEl.getBoundingClientRect().height + 15 + "px";
                 this.observer = new window.IntersectionObserver(
                     ([e]) =>
                         (e.target.style.paddingTop =

@@ -34,6 +34,7 @@
                     <attribute name="edit">0</attribute>
                     <attribute name="create">0</attribute>
                     <attribute name="delete">0</attribute>
+                    <attribute name="js_class"></attribute>
                 </xpath>
                 <xpath expr="//field[@name='task_id']" position="attributes">
                     <attribute name="options">{'no_create_edit': True, 'no_open': True}</attribute>
@@ -287,6 +288,7 @@
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" sample="1">
+                    <field name="company_id" invisible="1"/>
                     <templates>
                         <t t-name="card">
                             <div class="d-flex gap-1">

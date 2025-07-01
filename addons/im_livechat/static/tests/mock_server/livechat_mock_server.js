@@ -3,10 +3,9 @@ import {
     parseRequestParams,
     registerRoute,
 } from "@mail/../tests/mock_server/mail_mock_server";
-import { patch } from "@web/core/utils/patch";
-import { MockResponse } from "@web/../lib/hoot/mock/network";
-import { loadBundle } from "@web/core/assets";
 import { makeKwArgs, serverState } from "@web/../tests/web_test_helpers";
+import { loadBundle } from "@web/core/assets";
+import { patch } from "@web/core/utils/patch";
 
 /**
  * @template [T={}]
@@ -73,7 +72,7 @@ async function get_session(request) {
             name: channelVals["name"],
             operator: mailDataHelpers.Store.one(
                 ResPartner.browse(channelVals.livechat_operator_id),
-                makeKwArgs({ fields: ["user_livechat_username", "write_date"] })
+                makeKwArgs({ fields: ["avatar_128", "user_livechat_username"] })
             ),
             scrollUnread: false,
             state: "open",
@@ -160,7 +159,7 @@ registerRoute("/im_livechat/emoji_bundle", get_emoji_bundle);
 /** @type {RouteCallback} */
 async function get_emoji_bundle(request) {
     await loadBundle("web.assets_emoji");
-    return new MockResponse();
+    return new Response();
 }
 
 patch(mailDataHelpers, {

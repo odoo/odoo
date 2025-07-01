@@ -36,33 +36,28 @@ class AccountEdiXmlCII(models.AbstractModel):
 
     def _export_invoice_constraints(self, invoice, vals):
         constraints = self._invoice_constraints_common(invoice)
+        if invoice.move_type == 'out_invoice':
+            # [BR-DE-1] An Invoice must contain information on "PAYMENT INSTRUCTIONS" (BG-16)
+            # first check that a partner_bank_id exists, then check that there is an account number
+            constraints.update({
+                'seller_payment_instructions_1': self._check_required_fields(
+                    vals['record'], 'partner_bank_id'
+                ),
+                'seller_payment_instructions_2': self._check_required_fields(
+                    vals['record']['partner_bank_id'], 'sanitized_acc_number',
+                    _("The field 'Sanitized Account Number' is required on the Recipient Bank.")
+                ),
+            })
         constraints.update({
             # [BR-08]-An Invoice shall contain the Seller postal address (BG-5).
             # [BR-09]-The Seller postal address (BG-5) shall contain a Seller country code (BT-40).
             'seller_postal_address': self._check_required_fields(
                 vals['record']['company_id']['partner_id']['commercial_partner_id'], 'country_id'
             ),
-            # [BR-DE-9] The element "Buyer post code" (BT-53) must be transmitted. (only mandatory in Germany ?)
-            'buyer_postal_address': self._check_required_fields(
-                vals['record']['commercial_partner_id'], 'zip'
-            ),
-            # [BR-DE-4] The element "Seller post code" (BT-38) must be transmitted. (only mandatory in Germany ?)
-            'seller_post_code': self._check_required_fields(
-                vals['record']['company_id']['partner_id']['commercial_partner_id'], 'zip'
-            ),
             # [BR-CO-26]-In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29),
             # the Seller legal registration identifier (BT-30) and/or the Seller VAT identifier (BT-31) shall be present.
             'seller_identifier': self._check_required_fields(
                 vals['record']['company_id'], ['vat']  # 'siret'
-            ),
-            # [BR-DE-1] An Invoice must contain information on "PAYMENT INSTRUCTIONS" (BG-16)
-            # first check that a partner_bank_id exists, then check that there is an account number
-            'seller_payment_instructions_1': self._check_required_fields(
-                vals['record'], 'partner_bank_id'
-            ),
-            'seller_payment_instructions_2': self._check_required_fields(
-                vals['record']['partner_bank_id'], 'sanitized_acc_number',
-                _("The field 'Sanitized Account Number' is required on the Recipient Bank.")
             ),
             # [BR-DE-6] The element "Seller contact telephone number" (BT-42) must be transmitted.
             'seller_phone': self._check_required_fields(
@@ -82,9 +77,9 @@ class AccountEdiXmlCII(models.AbstractModel):
             # [BR-IG-05]-In an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is "IGIC" the
             # invoiced item VAT rate (BT-152) shall be greater than 0 (zero).
             'igic_tax_rate': self._check_non_0_rate_tax(vals)
-                if vals['record']['commercial_partner_id']['country_id']['code'] == 'ES'
-                    and vals['record']['commercial_partner_id']['zip']
-                    and vals['record']['commercial_partner_id']['zip'][:2] in ['35', '38'] else None,
+                if vals['record']['partner_id']['country_id']['code'] == 'ES'
+                    and vals['record']['partner_id']['zip']
+                    and vals['record']['partner_id']['zip'][:2] in ['35', '38'] else None,
         })
         return constraints
 
@@ -105,7 +100,7 @@ class AccountEdiXmlCII(models.AbstractModel):
     def _get_scheduled_delivery_time(self, invoice):
         # don't create a bridge only to get line.sale_line_ids.order_id.picking_ids.date_done
         # line.sale_line_ids.order_id.picking_ids.scheduled_date or line.sale_line_ids.order_id.commitment_date
-        return invoice.invoice_date
+        return invoice.delivery_date or invoice.invoice_date
 
     def _get_invoicing_period(self, invoice):
         # get the Invoicing period (BG-14): a list of dates covered by the invoice
@@ -194,6 +189,9 @@ class AccountEdiXmlCII(models.AbstractModel):
             'document_context_id': "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended",
         }
 
+        template_values['billing_start'] = invoice.invoice_date
+        template_values['billing_end'] = invoice.invoice_date_due
+
         # data used for IncludedSupplyChainTradeLineItem / SpecifiedLineTradeSettlement
         for line_vals in template_values['invoice_line_vals_list']:
             line = line_vals['line']
@@ -229,6 +227,15 @@ class AccountEdiXmlCII(models.AbstractModel):
             sum_fixed_taxes = sum(x['amount'] for x in line_vals['allowance_charge_vals_list'])
             line_vals['line_total_amount'] = line_vals['line'].price_subtotal + sum_fixed_taxes
 
+            # The quantity is the line.quantity since we keep the unece_uom_code!
+            line_vals['quantity'] = line_vals['line'].quantity
+
+            # Invert the quantity and the gross_price_total_unit if a line has a negative price total
+            if line_vals['line'].currency_id.compare_amounts(line_vals['gross_price_total_unit'], 0) == -1:
+                line_vals['quantity'] *= -1
+                line_vals['gross_price_total_unit'] *= -1
+                line_vals['price_subtotal_unit'] *= -1
+
         # Fixed taxes: set the total adjusted amounts on the document level
         template_values['tax_basis_total_amount'] = tax_details['base_amount_currency']
         template_values['tax_total_amount'] = tax_details['tax_amount_currency']
@@ -250,7 +257,7 @@ class AccountEdiXmlCII(models.AbstractModel):
             'vat': self._find_value(f".//ram:{role}/ram:SpecifiedTaxRegistration/ram:ID[string-length(text()) > 5]", tree),
             'name': self._find_value(f".//ram:{role}/ram:Name", tree),
             'phone': self._find_value(f".//ram:{role}/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber", tree),
-            'email': self._find_value(f".//ram:{role}//ram:URIID[@schemeID='SMTP']", tree),
+            'email': self._find_value(f".//ram:{role}//ram:EmailURIUniversalCommunication/ram:URIID", tree),
             'country_code': self._find_value(f'.//ram:{role}/ram:PostalTradeAddress//ram:CountryID', tree),
         }
 
@@ -372,3 +379,4 @@ class AccountEdiXmlCII(models.AbstractModel):
             if amount_node is not None and float(amount_node.text) < 0:
                 return 'refund', -1
             return 'invoice', 1
+        return None, None

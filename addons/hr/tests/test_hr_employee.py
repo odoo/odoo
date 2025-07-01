@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from psycopg2.errors import UniqueViolation
 
-from odoo.tests import Form, users
+from odoo.tests import Form, users, HttpCase, tagged
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tools import mute_logger
 from odoo.exceptions import ValidationError
@@ -212,7 +212,7 @@ class TestHrEmployee(TestHrCommon):
     def test_employee_update_work_contact_id(self):
         """
             Check that the `work_contact_id` information is no longer
-            updated when an employee's `user_id` is removed.
+            updated when an employee's `user_id` is added to another employee.
         """
         user = self.env['res.users'].create({
             'name': 'Test',
@@ -236,6 +236,8 @@ class TestHrEmployee(TestHrCommon):
         employee_B.work_email = 'new_email@example.com'
         self.assertEqual(employee_A.work_email, 'employee_A@example.com')
         self.assertEqual(employee_B.work_email, 'new_email@example.com')
+        self.assertFalse(employee_A.work_contact_id)
+        self.assertEqual(employee_B.work_contact_id, user.partner_id)
 
     def test_availability_user_infos_employee(self):
         """ Ensure that all the user infos needed to display the avatar popover card
@@ -319,6 +321,88 @@ class TestHrEmployee(TestHrCommon):
         with Form(test_employee) as employee_form:
             employee_form.user_id = test_user
 
+    def test_change_user_on_employee_keep_partner(self):
+        """
+            Check that removing user from employee keeps the link in
+            work_contact_id until the user is assigned to another employee.
+        """
+        user = self.env['res.users'].create({
+            'name': 'Test User',
+            'login': 'test_user',
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Test User - employee',
+            'user_id': user.id,
+        })
+        # remove user
+        employee.user_id = None
+        self.assertEqual(employee.work_contact_id, user.partner_id)
+        self.assertFalse(employee.user_id)
+        # create new employee from user
+        user._compute_company_employee()
+        user.action_create_employee()
+        self.assertTrue(len(user.employee_ids) == 1, "Test user should have exactly one employee associated with it")
+        # previous employee shouldn't have a work_contact_id anymore, as the partner is reassigned
+        self.assertFalse(employee.work_contact_id)
+        # the new employee should be associated to both the user and its partner
+        new_employee = user.employee_ids
+        self.assertEqual(new_employee.work_contact_id, user.partner_id)
+        self.assertEqual(new_employee.user_id, user)
+
+    def test_change_user_on_employee_multi_company(self):
+        """
+            Removing user from employee keeps the link in work_contact_id in the correct company until the user
+            is assigned to another employee, and does not affect employees in other companies. When the unique
+            constraint of one employee per user in one company is triggered, the work_contact_id for the
+            existing employee is nor removed, and employees in other companies are not affected.
+        """
+        company_A = self.env['res.company'].create({'name': 'company_A'})
+        company_B = self.env['res.company'].create({'name': 'company_B'})
+        user = self.env['res.users'].create({
+            'name': 'Test User',
+            'login': 'test_user',
+        })
+        partner = user.partner_id
+        employee_A = self.env['hr.employee'].create({
+            'name': 'employee_A',
+            'user_id': user.id,
+            'company_id': company_A.id,
+        })
+        employee_B = self.env['hr.employee'].create({
+            'name': 'employee_B',
+            'user_id': user.id,
+            'company_id': company_B.id
+        })
+        # Creating an employee in one company does not remove the link with employee in the other company
+        self.assertEqual(user.with_company(company_A).employee_id, employee_A)
+        self.assertEqual(user.with_company(company_B).employee_id, employee_B)
+        # Partner is linked to both employees
+        partner.with_company(company_A).with_company(company_B)._compute_employees_count()
+        self.assertEqual(partner.employees_count, 2)
+        # Remove user from employee in one company does not affect link user-employee in the other company
+        employee_A.user_id = None
+        self.assertEqual(user.with_company(company_A).employee_id.ids, [])
+        self.assertEqual(user.with_company(company_B).employee_id, employee_B)
+        # Partner still linked to both employees
+        partner.with_company(company_A).with_company(company_B)._compute_employees_count()
+        self.assertEqual(partner.employees_count, 2)
+        # Creating a new employee for a user in company A does not affect link user-employee in the other company
+        new_employee_A = self.env['hr.employee'].create({
+            'name': 'new_employee_A',
+            'user_id': user.id,
+            'company_id': company_A.id,
+        })
+        # User cannot be assigned to more than one employee in the same company. work_contact_id should not be removed.
+        with mute_logger('odoo.sql_db'), self.assertRaises(UniqueViolation), self.assertRaises(ValidationError), self.cr.savepoint():
+            self.env['hr.employee'].create({
+                'name': 'new_employee_B',
+                'user_id': user.id,
+                'company_id': company_B.id,
+            })
+        self.assertEqual(user.with_company(company_A).employee_id, new_employee_A)
+        self.assertEqual(user.with_company(company_B).employee_id, employee_B)
+        self.assertEqual(partner.employee_ids, employee_B + new_employee_A)
+
     def test_avatar(self):
         # Check simple employee has a generated image (initials)
         employee_georgette = self.env['hr.employee'].create({'name': 'Georgette Pudubec'})
@@ -338,3 +422,56 @@ class TestHrEmployee(TestHrCommon):
         employee_norbert = self.env['hr.employee'].create({'name': 'Norbert Employee', 'user_id': user_norbert.id})
         self.assertEqual(employee_norbert.image_1920, user_norbert.image_1920)
         self.assertEqual(employee_norbert.avatar_1920, user_norbert.avatar_1920)
+
+    def test_badge_validation(self):
+        # check employee's barcode should be a sequence of digits and alphabets
+        employee = self.env['hr.employee'].create({
+            'name': 'Badge Employee'
+        })
+
+        employee_form = Form(employee)
+        employee_form.barcode = 'Test@badge1'
+        with self.assertRaises(ValidationError):
+            employee_form.save()
+
+        employee_form.barcode = 'Testàë@badge'
+        with self.assertRaises(ValidationError):
+            employee_form.save()
+
+        employee_form.barcode = 'Testbadge2'
+        employee_form.save()
+
+        self.assertEqual(employee_form.barcode, 'Testbadge2')
+
+    def test_is_flexible(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee',
+        })
+        self.assertTrue(employee.resource_calendar_id)
+        self.assertFalse(employee.is_flexible)
+        self.assertFalse(employee.is_fully_flexible)
+
+        employee.resource_calendar_id.flexible_hours = True
+        self.assertTrue(employee.is_flexible)
+        self.assertFalse(employee.is_fully_flexible)
+
+        employee.resource_calendar_id = False
+        self.assertTrue(employee.is_flexible)
+        self.assertTrue(employee.is_fully_flexible)
+
+
+@tagged('-at_install', 'post_install')
+class TestHrEmployeeWebJson(HttpCase):
+
+    def test_webjson_employees(self):
+        #check that json employees can be accessed
+        url = "/json/1/employees"
+        self.authenticate('admin', 'admin')
+        CSRF_USER_HEADERS = {
+            "Sec-Fetch-Dest": "document",
+            "Sec-Fetch-Mode": "navigate",
+            "Sec-Fetch-Site": 'none',
+            "Sec-Fetch-User": "?1",
+        }
+        res = self.url_open(url, headers=CSRF_USER_HEADERS)
+        self.assertEqual(res.status_code, 200)

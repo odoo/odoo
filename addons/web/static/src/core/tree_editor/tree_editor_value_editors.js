@@ -15,6 +15,7 @@ import { unique } from "@web/core/utils/arrays";
 import { Input, Select, List, Range, Within } from "@web/core/tree_editor/tree_editor_components";
 import { connector, formatValue, isTree } from "@web/core/tree_editor/condition_tree";
 import { getResModel, disambiguate, isId } from "@web/core/tree_editor/utils";
+import { Domain } from "@web/core/domain";
 
 const { DateTime } = luxon;
 
@@ -77,6 +78,17 @@ function makeSelectEditor(options, params = {}) {
     };
 }
 
+function getDomain(fieldDef) {
+    if (fieldDef.type === "many2one") {
+        return [];
+    }
+    try {
+        return new Domain(fieldDef.domain || []).toList();
+    } catch {
+        return [];
+    }
+}
+
 function makeAutoCompleteEditor(fieldDef) {
     return {
         component: DomainSelectorAutocomplete,
@@ -84,6 +96,7 @@ function makeAutoCompleteEditor(fieldDef) {
             return {
                 resModel: getResModel(fieldDef),
                 fieldString: fieldDef.string,
+                domain: getDomain(fieldDef),
                 update: (value) => update(unique(value)),
                 resIds: unique(value),
             };
@@ -265,21 +278,21 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
             return makeSelectEditor(options, params);
         }
         case "many2one": {
-            if (["=", "!=", "parent_of", "child_of"].includes(operator)) {
+            if (["=", "!="].includes(operator)) {
                 return {
                     component: DomainSelectorSingleAutocomplete,
-                    extractProps: ({ value, update }) => {
-                        return {
-                            resModel: getResModel(fieldDef),
-                            fieldString: fieldDef.string,
-                            update,
-                            resId: value,
-                        };
-                    },
+                    extractProps: ({ value, update }) => ({
+                        resModel: getResModel(fieldDef),
+                        fieldString: fieldDef.string,
+                        update,
+                        resId: value,
+                    }),
                     isSupported: () => true,
                     defaultValue: () => false,
                     shouldResetValue: (value) => value !== false && !isId(value),
                 };
+            } else if (["parent_of", "child_of"].includes(operator)) {
+                return makeAutoCompleteEditor(fieldDef);
             }
             break;
         }

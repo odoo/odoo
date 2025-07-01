@@ -4,6 +4,7 @@ class DecimalPrecision(models.Model):
     _inherit = 'decimal.precision'
 
     def precision_get(self, application):
-        if application == 'Discount' and self.env.context.get('ignore_discount_precision'):
+        stackmap = self.env.cr.cache.get('account_disable_recursion_stack', {})
+        if application == 'Discount' and stackmap.get('ignore_discount_precision'):
             return 100
         return super().precision_get(application)

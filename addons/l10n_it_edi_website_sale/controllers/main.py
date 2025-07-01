@@ -22,7 +22,7 @@ class L10nITWebsiteSale(WebsiteSale):
                 partner_dummy.validate_codice_fiscale()
             except UserError as e:
                 invalid_fields.add('l10n_it_codice_fiscale')
-                error_messages.append(e.name)
+                error_messages.append(e.args)
 
         pa_index = address_values.get('l10n_it_pa_index')
         if pa_index and (len(pa_index) < 6 or len(pa_index) > 7):

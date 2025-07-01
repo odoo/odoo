@@ -20,13 +20,13 @@ const { floor: $floor, random: $random } = Math;
 /**
  * @param {unknown} [seed]
  */
-const toValidSeed = (seed) => {
+function toValidSeed(seed) {
     if (isNil(seed)) {
         return generateSeed();
     }
     const nSeed = $parseFloat(seed);
     return $isNaN(nSeed) ? stringToNumber(nSeed) : nSeed;
-};
+}
 
 const DEFAULT_SEED = 1e16;
 

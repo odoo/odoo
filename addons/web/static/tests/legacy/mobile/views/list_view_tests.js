@@ -61,7 +61,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
         // select a record
         await triggerEvents(fixture, ".o_data_row:nth-child(1)", ["touchstart", "touchend"]);
         assert.containsOnce(fixture, ".o_list_selection_box");
-        assert.containsNone(fixture, ".o_list_selection_box .o_list_select_domain");
+        assert.containsOnce(fixture, ".o_list_selection_box .o_list_select_domain");
         assert.containsNone(fixture, ".o_control_panel .o_cp_searchview");
         assert.ok(
             fixture.querySelector(".o_list_selection_box").textContent.includes("1 selected")
@@ -75,7 +75,10 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
         await triggerEvents(fixture, ".o_data_row:nth-child(1)", ["touchstart", "touchend"]);
         await triggerEvents(fixture, ".o_data_row:nth-child(2)", ["touchstart", "touchend"]);
         assert.ok(
-            fixture.querySelector(".o_list_selection_box").textContent.includes("2 selected")
+            fixture.querySelector(".o_list_selection_box > span").textContent.includes("2 selected")
+        );
+        assert.ok(
+            fixture.querySelector(".o_list_selection_box > button.o_list_select_domain").textContent.includes("All")
         );
         assert.containsOnce(fixture, "div.o_control_panel .o_cp_action_menus");
 
@@ -115,7 +118,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
         await triggerEvents(fixture, ".o_data_row:nth-child(1)", ["touchstart", "touchend"]);
 
         assert.containsOnce(fixture, ".o_list_selection_box");
-        assert.containsNone(fixture, ".o_list_selection_box .o_list_select_domain");
+        assert.containsOnce(fixture, ".o_list_selection_box .o_list_select_domain");
         assert.ok(
             fixture.querySelector(".o_list_selection_box").textContent.includes("1 selected")
         );

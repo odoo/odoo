@@ -4,7 +4,7 @@ import { getContent, setSelection } from "../_helpers/selection";
 import { unformat } from "../_helpers/format";
 
 function findAdjacentPosition(editor, direction) {
-    const deletePlugin = editor.plugins.find((p) => p.constructor.name === "delete");
+    const deletePlugin = editor.plugins.find((p) => p.constructor.id === "delete");
     const selection = editor.document.getSelection();
     const { anchorNode, anchorOffset } = selection;
 

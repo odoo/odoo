@@ -542,3 +542,59 @@ class TestProjectSubtasks(TestProjectCommon):
             task_form.parent_id = Task
         self.assertEqual(task.project_id, self.task_1.project_id, "project_id should be affected")
         self.assertTrue(task.display_in_project, "display_in_project should be True when there is no parent task")
+
+    def test_invisible_subtask_became_visible_when_converted_to_task(self):
+        task = self.env['project.task'].create({
+            'name': 'Parent task',
+            'project_id': self.project_goats.id,
+            'child_ids': [Command.create({'name': 'Sub-task invisible', 'project_id': self.project_goats.id})],
+        })
+        invisible_subtask = task.child_ids
+
+        self.assertFalse(invisible_subtask.display_in_project)
+
+        with Form(invisible_subtask, view="project.project_task_convert_to_subtask_view_form") as subtask_form:
+            subtask_form.parent_id = self.env['project.task']
+
+        self.assertTrue(invisible_subtask.display_in_project)
+
+    def test_subtask_private_project_and_parent_task(self):
+        """
+            Test that an assigned employee to a subtask can open it even when
+            they don't have access to the parent task or project.
+
+            Test Case:
+            ==========
+            1) Create a private project with a parent task and a subtask.
+            2) assign an employee to the subtask.
+            3) Ensure the employee can access the subtask even if they don't have
+               access to the parent task or project.
+        """
+        private_project = self.env['project.project'].create({
+            'name': 'Private Project',
+            'privacy_visibility': 'followers',
+        })
+        task = self.env['project.task'].create({
+            'name': 'Parent Task',
+            'project_id': private_project.id,
+        })
+        employee = self.env['res.users'].create({
+            'name': 'Employee',
+            'login': 'employee',
+            'email': 'employee@odoo.com',
+            'groups_id': [(6, 0, [self.env.ref('project.group_project_user').id])],
+        })
+        subtask = self.env['project.task'].create({
+            'name': 'Subtask',
+            'parent_id': task.id,
+            'project_id': private_project.id,
+            'user_ids': [(4, employee.id)],
+        })
+
+        # Ensure the employee can read subtask fields
+
+        # List to be extended in future fixes if more fields give same error
+        fields_to_read = ["show_display_in_project"]
+        self.env.invalidate_all()
+        subtask_data = subtask.with_user(employee).read(fields_to_read)
+        self.assertTrue(subtask_data, "The employee should be able to read the subtask data.")

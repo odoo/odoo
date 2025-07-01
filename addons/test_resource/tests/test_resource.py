@@ -1322,6 +1322,41 @@ class TestTimezones(TestResourceCommon):
             (datetime(2022, 9, 21, 15, 0, tzinfo=utc), datetime(2022, 9, 22, 0, 0, tzinfo=utc)),
         ])
 
+    def test_flexible_resource_leave_interval(self):
+        """
+        Test whole day off for a flexible resource.
+        The standard 8 - 17 leave should be converted to a whole day leave interval for the flexible resource.
+        """
+
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flex Calendar',
+            'tz': 'UTC',
+            'flexible_hours': True,
+            'full_time_required_hours': 40,
+            'hours_per_day': 8
+        })
+        flex_resource = self.env['resource.resource'].create({
+            'name': 'Test FlexResource',
+            'calendar_id': flexible_calendar.id,
+        })
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Standard Time Off',
+            'calendar_id': flexible_calendar.id,
+            'resource_id': flex_resource.id,
+            'date_from': '2025-03-07 08:00:00',
+            'date_to': '2025-03-07 17:00:00',
+        })
+
+        start_dt = datetime(2025, 3, 7, 8, 0, 0, tzinfo=utc)
+        end_dt = datetime(2025, 3, 7, 16, 00, 00, 00, tzinfo=utc)
+
+        intervals = flexible_calendar._leave_intervals_batch(start_dt, end_dt, [flex_resource])
+        intervals_list = list(intervals[flex_resource.id])
+        self.assertEqual(len(intervals_list), 1, "There should be one leave interval")
+        interval = intervals_list[0]
+        self.assertEqual(interval[0], start_dt, "The start of the interval should be 08:00:00")
+        self.assertEqual(interval[1], end_dt, "The end of the interval should be 16:00:00")
+
 class TestResource(TestResourceCommon):
 
     def test_calendars_validity_within_period(self):

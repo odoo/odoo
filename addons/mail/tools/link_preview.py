@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import re
 from lxml import html
+import chardet
 import requests
 from urllib3.exceptions import LocationParseError
 
@@ -65,7 +66,21 @@ def get_link_preview_from_html(url, response):
 
     if not content:
         return False
-    tree = html.fromstring(content)
+
+    encoding = response.encoding or chardet.detect(content).get("encoding", "utf-8")
+    try:
+        decoded_content = content.decode(encoding)
+    except (UnicodeDecodeError, TypeError) as e:
+        decoded_content = content.decode("utf-8", errors="ignore")
+
+    try:
+        tree = html.fromstring(decoded_content)
+    except ValueError:
+        decoded_content = re.sub(
+            r"^<\?xml[^>]+\?>\s*", "", decoded_content, flags=re.IGNORECASE
+        )
+        tree = html.fromstring(decoded_content)
+
     og_title = tree.xpath('//meta[@property="og:title"]/@content')
     if og_title:
         og_title = og_title[0]

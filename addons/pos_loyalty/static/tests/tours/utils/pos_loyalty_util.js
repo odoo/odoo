@@ -111,6 +111,15 @@ export function customerIs(name) {
         },
     ];
 }
+export function isPointsDisplayed(isDisplayed) {
+    return [
+        {
+            trigger: isDisplayed
+                ? ".loyalty-points-title"
+                : "body:not(:has(.loyalty-points-title))",
+        },
+    ];
+}
 export function pointsAwardedAre(points_str) {
     return [
         {
@@ -140,8 +149,8 @@ export function checkAddedLoyaltyPoints(points) {
     ];
 }
 
-export function createManualGiftCard(code, amount) {
-    return [
+export function createManualGiftCard(code, amount, date = false) {
+    const steps = [
         {
             trigger: `a:contains("Sell physical gift card?")`,
             run: "click",
@@ -156,11 +165,19 @@ export function createManualGiftCard(code, amount) {
             trigger: `input[id="amount"]`,
             run: `edit ${amount}`,
         },
-        {
-            trigger: `.btn-primary:contains("Add Balance")`,
-            run: "click",
-        },
     ];
+    if (date !== false) {
+        steps.push({
+            content: `Input date '${date}'`,
+            trigger: `.modal input.o_datetime_input.cursor-pointer.form-control.form-control-lg`,
+            run: `edit ${date}`,
+        });
+    }
+    steps.push({
+        trigger: `.btn-primary:contains("Add Balance")`,
+        run: "click",
+    });
+    return steps;
 }
 
 export function clickPhysicalGiftCard(code = "Sell physical gift card?") {

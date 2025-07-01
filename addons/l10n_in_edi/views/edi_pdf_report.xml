@@ -11,7 +11,7 @@
         </xpath>
         <xpath expr="//div[@id='right-elements']" position="after">
             <t t-set="l10n_in_einvoice_json" t-value="o._get_l10n_in_edi_response_json()"/>
-            <div t-attf-class="#{'col-5' if report_type != 'html' else 'ms-auto'} row" t-if="l10n_in_einvoice_json">
+            <div t-attf-class="#{'col-5' if report_type != 'html' else 'ms-auto'} row avoid-page-break-inside" t-if="l10n_in_einvoice_json">
                 <div class="col-7 me-2" t-attf-style="#{'' if report_type != 'html' else 'padding: 0 !important;'}">
                     <strong>IRN:</strong>
                     <span t-esc="l10n_in_einvoice_json['Irn']"/>

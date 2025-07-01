@@ -40,14 +40,14 @@ describe("range collapsed", () => {
             stepFunction: async (editor) => {
                 await insertText(editor, "o");
             },
-            contentAfter: '<p>a<a href="https://google.com">goo[]gle.com</a>b</p>',
+            contentAfter: '<p>a<a href="https://else.com">goo[]gle.com</a>b</p>',
         });
         await testEditor({
             contentBefore: '<p>a<a href="https://else.com">http://go[]gle.com</a>b</p>',
             stepFunction: async (editor) => {
                 await insertText(editor, "o");
             },
-            contentAfter: '<p>a<a href="http://google.com">http://goo[]gle.com</a>b</p>',
+            contentAfter: '<p>a<a href="https://else.com">http://goo[]gle.com</a>b</p>',
         });
         await testEditor({
             contentBefore: '<p>a<a href="mailto:hello@moto.com">hello@moto[].com</a></p>',
@@ -140,14 +140,14 @@ describe("range not collapsed", () => {
             stepFunction: async (editor) => {
                 await insertText(editor, "google");
             },
-            contentAfter: '<p>a<a href="https://google.com">google[].com</a>b</p>',
+            contentAfter: '<p>a<a href="https://gogle.com">google[].com</a>b</p>',
         });
         await testEditor({
             contentBefore: '<p>a<a href="https://else.com">go[gle.c]om</a>b</p>',
             stepFunction: async (editor) => {
                 await insertText(editor, ".c");
             },
-            contentAfter: '<p>a<a href="https://go.com">go.c[]om</a>b</p>',
+            contentAfter: '<p>a<a href="https://else.com">go.c[]om</a>b</p>',
         });
     });
 

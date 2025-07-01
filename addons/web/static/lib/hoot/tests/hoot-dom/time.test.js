@@ -1,18 +1,26 @@
 /** @odoo-module */
 
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, delay, microTick, waitUntil } from "@odoo/hoot-dom";
-import { Deferred, advanceTime, runAllTimers, tick } from "@odoo/hoot-mock";
+import {
+    Deferred,
+    advanceTime,
+    animationFrame,
+    microTick,
+    runAllTimers,
+    tick,
+    waitUntil,
+} from "@odoo/hoot-dom";
 import { parseUrl } from "../local_helpers";
 
 // timeout of 1 second to ensure all timeouts are actually mocked
-describe.timeout(1_000)(parseUrl(import.meta.url), () => {
+describe.timeout(1_000);
+describe(parseUrl(import.meta.url), () => {
     test("advanceTime", async () => {
         expect.assertions(8);
 
         await advanceTime(5_000);
 
-        const timeoutId = window.setTimeout(() => expect.step("timeout"), 2_000);
+        const timeoutId = window.setTimeout(() => expect.step("timeout"), "2000");
         const intervalId = window.setInterval(() => expect.step("interval"), 3_000);
         const animationHandle = window.requestAnimationFrame((delta) => {
             expect(delta).toBeGreaterThan(5_000);
@@ -80,7 +88,7 @@ describe.timeout(1_000)(parseUrl(import.meta.url), () => {
 
         const ms = await runAllTimers();
 
-        expect(ms).toBeWithin(1e6 - 1, 1e6); // more or less
+        expect(ms).toBeCloseTo(1e6, { margin: 10 });
         expect.verifySteps(["animation", "timeout"]);
     });
 
@@ -100,18 +108,7 @@ describe.timeout(1_000)(parseUrl(import.meta.url), () => {
     });
 
     test("waitUntil: rejects", async () => {
-        const promise = waitUntil(() => false, { timeout: 1 }).catch(() => expect.step("rejected"));
-
-        expect.verifySteps([]);
-        expect(promise).toBeInstanceOf(Promise);
-
-        await delay(1);
-
-        expect.verifySteps([]);
-
-        await animationFrame();
-
-        expect.verifySteps(["rejected"]);
+        await expect(waitUntil(() => false, { timeout: 0 })).rejects.toThrow();
     });
 
     test("waitUntil: lazy", async () => {

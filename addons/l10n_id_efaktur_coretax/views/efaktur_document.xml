@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_id_efaktur_document_form_view" model="ir.ui.view">
+            <field name="name">l10n_id.efaktur_coretax.document.form.view</field>
+            <field name="model">l10n_id_efaktur_coretax.document</field>
+            <field name="arch" type="xml">
+                <form string="E-faktur Document" create="false">
+                    <header>
+                        <field name="attachment_id" invisible="1" /> <!-- TODO: to be removed in master -->
+                        <button name="action_download" string="Download" class="btn-primary"
+                                type="object" groups="account.group_account_invoice" data-hotkey="q"
+                                invisible="not invoice_ids"/>
+                        <button name="action_regenerate" string="Regenerate File" class="btn-secondary"
+                                type="object" groups="account.group_account_invoice" data-hotkey="q"
+                                invisible="not invoice_ids or not attachment_id"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Draft"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="company_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page id="invoice_tab" name="invoice_tab" string="Invoices">
+                                <field name="invoice_ids" force_save="1" widget="many2many">
+                                    <list create="False" edit="False">
+                                        <field name="name"/>
+                                        <field name="invoice_date" optional="show" string="Accounting Date"/>
+                                        <field name="amount_untaxed_in_currency_signed" string="Tax Excluded" sum="Total" optional="show"/>
+                                        <field name="amount_tax_signed" string="Tax" sum="Total" optional="hide"/>
+                                        <field name="amount_total_in_currency_signed" string="Total" sum="Total" optional="show"/>
+                                        <field name="currency_id" optional="hide"/>
+                                        <field name="status_in_payment"
+                                               string="Status"
+                                               widget="badge"
+                                               optional="show"
+                                        />
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <!-- Chatter -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="l10n_id_efaktur_document_list_view" model="ir.ui.view">
+            <field name="name">l10n_id.efaktur_coretax.document.list.view</field>
+            <field name="model">l10n_id_efaktur_coretax.document</field>
+            <field name="arch" type="xml">
+                <list string="E-faktur Document" create="false" sample="1">
+                    <field name="name"/>
+                    <field name="invoice_ids" options="{'no_quick_create': True}" widget="many2many_tags"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="l10n_id_efaktur_document_filter_view" model="ir.ui.view">
+            <field name="name">l10n_id.efaktur_coretax.document.filter.view</field>
+            <field name="model">l10n_id_efaktur_coretax.document</field>
+            <field name="arch" type="xml">
+                <search string="Search Document">
+                    <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                    <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>

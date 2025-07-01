@@ -83,12 +83,15 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         total_amount = sum(overdue_invoices.mapped('amount_total'))
         amount_residual = sum(overdue_invoices.mapped('amount_residual'))
         batch_name = company.get_next_batch_payment_communication() if len(overdue_invoices) > 1 else first_invoice.name
-        values['payment'] = {
-            'date': fields.Date.today(),
-            'reference': batch_name,
+        values.update({
+            'payment': {
+                'date': fields.Date.today(),
+                'reference': batch_name,
+                'amount': total_amount,
+                'currency': currency,
+            },
             'amount': total_amount,
-            'currency': currency,
-        }
+        })
 
         common_view_values = self._get_common_page_view_values(
             invoices_data={

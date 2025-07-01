@@ -9,7 +9,6 @@ Html Editor
 This addon provides an extensible, maintainable editor.
     """,
 
-    'author': "odoo",
     'website': "https://www.odoo.com",
     'version': '1.0',
     'category': 'Hidden',
@@ -21,8 +20,10 @@ This addon provides an extensible, maintainable editor.
         ],
         'web.assets_backend': [
             'html_editor/static/src/**/*',
-            ('remove', 'html_editor/static/src/components/history_dialog/history_dialog.dark.scss'),
             ('include', 'html_editor.assets_media_dialog'),
+            ('include', 'html_editor.assets_link_popover'),
+            ('remove', 'html_editor/static/src/components/history_dialog/history_dialog.dark.scss'),
+            ('remove', 'html_editor/static/src/main/toolbar/toolbar.dark.scss'),
         ],
         'html_editor.assets_media_dialog': [
             # Bundle to use the media dialog in the backend and the frontend
@@ -32,6 +33,7 @@ This addon provides an extensible, maintainable editor.
         ],
         "web.assets_web_dark": [
             'html_editor/static/src/components/history_dialog/history_dialog.dark.scss',
+            'html_editor/static/src/main/toolbar/toolbar.dark.scss',
         ],
         'web.assets_unit_tests': [
             'html_editor/static/tests/**/*',
@@ -39,6 +41,11 @@ This addon provides an extensible, maintainable editor.
         'html_editor.assets_image_cropper': [
             'html_editor/static/lib/cropperjs/cropper.css',
             'html_editor/static/lib/cropperjs/cropper.js',
+        ],
+        'html_editor.assets_link_popover': [
+            'html_editor/static/src/main/link/link_popover.js',
+            'html_editor/static/src/main/link/link_popover.xml',
+            'html_editor/static/src/main/link/utils.js',
         ],
     },
     'license': 'LGPL-3'

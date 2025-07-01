@@ -102,13 +102,7 @@ class WebsiteBlog(http.Controller):
         else:
             domain += [("post_date", "<=", fields.Datetime.now())]
 
-        use_cover = request.website.is_view_active('website_blog.opt_blog_cover_post')
-        fullwidth_cover = request.website.is_view_active('website_blog.opt_blog_cover_post_fullwidth_design')
-
-        # if blog, we show blog title, if use_cover and not fullwidth_cover we need pager + latest always
         offset = (page - 1) * self._blog_post_per_page
-        if not blog and use_cover and not fullwidth_cover and not tags and not date_begin and not date_end and not search:
-            offset += 1
 
         options = self._get_blog_post_search_options(
             blog=blog,
@@ -145,7 +139,7 @@ class WebsiteBlog(http.Controller):
             all_tags = tools.lazy(lambda: blogs.all_tags(join=True) if not blog else blogs.all_tags().get(blog.id, request.env['blog.tag']))
         tag_category = tools.lazy(lambda: sorted(all_tags.mapped('category_id'), key=lambda category: category.name.upper()))
         other_tags = tools.lazy(lambda: sorted(all_tags.filtered(lambda x: not x.category_id), key=lambda tag: tag.name.upper()))
-        nav_list = tools.lazy(self.nav_list)
+        nav_list = tools.lazy(lambda: self.nav_list(blog))
         # and avoid accessing related blogs one by one
         posts.blog_id
 

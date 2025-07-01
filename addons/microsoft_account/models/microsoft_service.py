@@ -85,6 +85,31 @@ class MicrosoftService(models.AbstractModel):
         return content.get('refresh_token')
 
     @api.model
+    def _refresh_microsoft_token(self, service, rtoken):
+        """ Call Microsoft API to refresh the token, with the given authorization code
+            :param service : the name of the microsoft service to actualize
+            :param rtoken : the code to exchange against the new refresh token
+            :returns the new refresh token
+        """
+        ICP_sudo = self.env['ir.config_parameter'].sudo()
+
+        headers = {"Content-type": "application/x-www-form-urlencoded"}
+        data = {
+            'client_id': self._get_microsoft_client_id(service),
+            'client_secret': _get_microsoft_client_secret(ICP_sudo, service),
+            'grant_type': 'refresh_token',
+            'refresh_token': rtoken,
+        }
+        dummy, response, dummy = self._do_request(
+            DEFAULT_MICROSOFT_TOKEN_ENDPOINT,
+            params=data,
+            headers=headers,
+            method='POST',
+            preuri=''
+        )
+        return response.get('access_token'), response.get('expires_in')
+
+    @api.model
     def _get_authorize_uri(self, from_url, service, scope, redirect_uri):
         """ This method return the url needed to allow this instance of Odoo to access to the scope
             of gmail specified as parameters

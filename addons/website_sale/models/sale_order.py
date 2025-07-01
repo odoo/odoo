@@ -139,8 +139,8 @@ class SaleOrder(models.Model):
             if not order.user_id:
                 order.user_id = (
                     order.website_id.salesperson_id
-                    or order.partner_id.parent_id.user_id.id
                     or order.partner_id.user_id.id
+                    or order.partner_id.parent_id.user_id.id
                 )
 
     #=== CRUD METHODS ===#
@@ -216,6 +216,13 @@ class SaleOrder(models.Model):
             return self.env['website'].browse(website_id).get_base_url()
         return super()._get_note_url()
 
+    def _get_non_delivery_lines(self):
+        """Exclude delivery-related lines."""
+        return self.order_line.filtered(lambda line: not line.is_delivery)
+
+    def _get_amount_total_excluding_delivery(self):
+        return sum(self._get_non_delivery_lines().mapped('price_total'))
+
     def _cart_update_order_line(self, product_id, quantity, order_line, **kwargs):
         self.ensure_one()
 
@@ -247,6 +254,22 @@ class SaleOrder(models.Model):
         if fpos_changed:
             # Recompute taxes on fpos change
             self._recompute_taxes()
+
+        # If the user has explicitly selected a valid pricelist, we don't want to change it
+        if selected_pricelist_id := request.session.get('website_sale_selected_pl_id'):
+            selected_pricelist = (
+                self.env['product.pricelist'].browse(selected_pricelist_id).exists()
+            )
+            if (
+                selected_pricelist
+                and selected_pricelist._is_available_on_website(self.website_id)
+                and selected_pricelist._is_available_in_country(
+                    self.partner_id.country_id.code
+                )
+            ):
+                self.pricelist_id = selected_pricelist
+            else:
+               request.session.pop('website_sale_selected_pl_id', None)
 
         if self.pricelist_id != pricelist_before or fpos_changed:
             # Pricelist may have been recomputed by the `partner_id` field update
@@ -329,7 +352,9 @@ class SaleOrder(models.Model):
 
         if (
             order_line
+            # Combo product lines will be checked after creating all of their combo item lines.
             and order_line.product_template_id.type != 'combo'
+            and not order_line.combo_item_id
             and order_line.price_unit == 0
             and self.website_id.prevent_zero_price_sale
             and product.service_tracking not in self.env['product.template']._get_product_types_allow_zero_price()
@@ -390,17 +415,21 @@ class SaleOrder(models.Model):
                 lambda sol: sol.product_id.id == product_id and sol.id == line_id
             )
 
+        product = self.env['product.product'].browse(product_id)
+        if product.type == 'combo':
+            return self.env['sale.order.line']
+
         domain = [
             ('product_id', '=', product_id),
             ('product_custom_attribute_value_ids', '=', False),
             ('linked_line_id', '=', linked_line_id),
+            ('combo_item_id', '=', False),
         ]
 
         filtered_sol = self.order_line.filtered_domain(domain)
         if not filtered_sol:
             return self.env['sale.order.line']
 
-        product = self.env['product.product'].browse(product_id)
         if product.product_tmpl_id._has_no_variant_attributes():
             filtered_sol = filtered_sol.filtered(
                 lambda sol:
@@ -567,7 +596,9 @@ class SaleOrder(models.Model):
 
     def _is_reorder_allowed(self):
         self.ensure_one()
-        return self.state == 'sale' and any(line._is_reorder_allowed() for line in self.order_line if not line.display_type)
+        return self.state == 'sale' and any(
+            line._is_reorder_allowed() for line in self.order_line if line.product_id
+        )
 
     def _filter_can_send_abandoned_cart_mail(self):
         self.website_id.ensure_one()
@@ -617,7 +648,7 @@ class SaleOrder(models.Model):
         :return: Whether the order has deliverable products.
         :rtype: bool
         """
-        return not self.only_services
+        return bool(self.order_line.product_id) and not self.only_services
 
     def _remove_delivery_line(self):
         super()._remove_delivery_line()
@@ -719,3 +750,6 @@ class SaleOrder(models.Model):
 
         if not self.only_services and not self.carrier_id:
             raise ValidationError(_("No shipping method is selected."))
+
+    def _is_delivery_ready(self):
+        return not self._has_deliverable_products() or self.carrier_id

@@ -1,6 +1,11 @@
 import { describe, expect, test } from "@odoo/hoot";
-
-import { defineModels, fields, makeMockServer, models } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    fields,
+    makeMockServer,
+    models,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
     _name = "res.partner";
@@ -171,6 +176,72 @@ const ormRequest = async (params) => {
 };
 
 describe.current.tags("headless");
+
+test("onRpc: normal result", async () => {
+    onRpc("/get_result", () => "result");
+
+    await makeMockServer();
+
+    const response = await fetch("/get_result");
+
+    expect(response).toBeInstanceOf(Response);
+
+    await expect(response.json()).resolves.toEqual({ result: "result", error: null });
+});
+
+test("onRpc: error handling", async () => {
+    class CustomError extends Error {
+        name = "CustomError";
+    }
+
+    onRpc("/boom", () => {
+        throw new CustomError("boom");
+    });
+
+    await makeMockServer();
+
+    const response = await fetch("/boom");
+
+    expect(response).toBeInstanceOf(Response);
+
+    await expect(response.json()).resolves.toEqual({
+        result: null,
+        error: {
+            code: 418,
+            data: {
+                name: "CustomError",
+            },
+            message: "boom",
+            type: "CustomError",
+        },
+    });
+});
+
+test("onRpc: pure, normal result", async () => {
+    onRpc("/get_result", () => "result", { pure: true });
+
+    await makeMockServer();
+
+    const response = await fetch("/get_result");
+
+    expect(response).toBeInstanceOf(Response);
+
+    await expect(response.text()).resolves.toBe("result");
+});
+
+test("onRpc: pure, error handling", async () => {
+    onRpc(
+        "/boom",
+        () => {
+            throw new Error("boom");
+        },
+        { pure: true }
+    );
+
+    await makeMockServer();
+
+    await expect(fetch("/boom")).rejects.toThrow("boom");
+});
 
 test("performRPC: search with active_test=false", async () => {
     await makeMockServer();
@@ -889,6 +960,32 @@ test("performRPC: read_group, group by datetime with number granularity", async 
             result.map((r) => [[`datetime.${granularity}`, "=", r]])
         );
     }
+});
+
+test("performRPC: read_group day_of_week", async () => {
+    Bar._records = [
+        { foo: 11, datetime: "2025-02-17 13:00:00" }, // Monday
+        { foo: 22, datetime: "2025-02-18 13:00:00" }, // Tuesday
+        { foo: 33, datetime: "2025-02-19 13:00:00" }, // Wednesday
+        { foo: 44, datetime: "2025-02-20 13:00:00" }, // Thursday
+        { foo: 55, datetime: "2025-02-21 13:00:00" }, // Friday
+        { foo: 66, datetime: "2025-02-22 13:00:00" }, // Saturday
+        { foo: 77, datetime: "2025-02-23 13:00:00" }, // Sunday
+    ];
+    await makeMockServer();
+
+    const response = await ormRequest({
+        model: "bar",
+        method: "read_group",
+        kwargs: {
+            fields: ["foo:max"],
+            domain: [],
+            groupby: ["datetime:day_of_week"],
+        },
+    });
+
+    expect(response.map((x) => x["datetime:day_of_week"])).toEqual([0, 1, 2, 3, 4, 5, 6]);
+    expect(response.map((x) => x.foo)).toEqual([77, 11, 22, 33, 44, 55, 66]);
 });
 
 test("performRPC: read_group, group by m2m", async () => {

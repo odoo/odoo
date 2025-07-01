@@ -38,6 +38,28 @@ class TestAllocations(TestHrHolidaysCommon):
             'allocation_validation_type': 'no_validation',
         })
 
+        cls.calendar_35h = cls.env['resource.calendar'].create({
+            'name': 'Calendar - 35H',
+            'company_id': cls.company.id,
+            'attendance_ids': [(5, 0, 0),
+                    (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                    (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                    (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                    (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                    (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                    (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
+                ]
+        })
+
     def test_allocation_whole_company(self):
         company_allocation = self.env['hr.leave.allocation.generate.multi.wizard'].create({
             'name': 'Bank Holiday',
@@ -157,7 +179,7 @@ class TestAllocations(TestHrHolidaysCommon):
 
     def test_allocation_type_hours_with_resource_calendar(self):
         self.leave_type.request_unit = 'hour'
-        self.employee.resource_calendar_id = self.ref('resource.resource_calendar_std_35h')
+        self.employee.resource_calendar_id = self.calendar_35h
 
         hour_type_allocation = self.env['hr.leave.allocation.generate.multi.wizard'].create({
             'name': 'Hours Allocation',
@@ -313,7 +335,7 @@ class TestAllocations(TestHrHolidaysCommon):
         employee = self.env['hr.employee'].create({
             'name': 'My Employee',
             'company_id': self.company.id,
-            'resource_calendar_id': self.ref('resource.resource_calendar_std_35h'),
+            'resource_calendar_id': self.calendar_35h.id,
         })
 
         leave_type = self.env['hr.leave.type'].create({
@@ -324,7 +346,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'request_unit': 'hour',
         })
 
-        with Form(self.env['hr.leave.allocation']) as allocation_form:
+        with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as allocation_form:
             allocation_form.allocation_type = 'regular'
             allocation_form.employee_id = employee
             allocation_form.holiday_status_id = leave_type
@@ -332,3 +354,75 @@ class TestAllocations(TestHrHolidaysCommon):
             allocation = allocation_form.save()
 
         self.assertEqual(allocation.number_of_hours_display, 10.0)
+
+    def test_automatic_allocation_type(self):
+        """
+        Make sure that an allocation with an accrual plan imported will automatically set the allocation_type to 'accrual'
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Hourly Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'hour',
+        })
+
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+        })
+
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Alloc with accrual plan',
+            'employee_id': self.employee.id,
+            'holiday_status_id': leave_type.id,
+            'accrual_plan_id': accrual_plan.id,
+        })
+
+        self.assertEqual(allocation.allocation_type, 'accrual')
+
+        allocation.update({
+            'accrual_plan_id': False,
+        })
+
+        self.assertEqual(allocation.allocation_type, 'regular')
+
+    def test_create_allocation_from_company_with_no_employee_for_current_user(self):
+        """
+            This test makes sure that the allocation can be created if the current company doesn't have an employee
+            linked to the loggedIn user.
+        """
+        self.user_hrmanager.employee_id = False
+        allocation_form = Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager))
+        self.assertFalse(allocation_form.employee_id)
+        allocation_form.employee_id = self.employee
+        allocation_form.holiday_status_id = self.leave_type
+        allocation = allocation_form.save()
+        self.assertTrue(allocation)
+
+    def test_leave_allocation_and_leave_request(self):
+        leave_type = self.env.ref('hr_holidays.holiday_status_comp')
+        self.env['hr.leave.allocation'].sudo().create([
+            {
+                'employee_id': employee.id,
+                'holiday_status_id': leave_type.id,
+                'number_of_days': 3,
+                'allocation_type': 'regular',
+                'date_from': date(2024, 1, 1),
+            }
+            for employee in [self.employee, self.employee_emp]
+        ]).action_validate()
+
+        leave_request = self.env['hr.leave'].create({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2024, 1, 5),
+            'request_date_to': date(2024, 1, 7),
+        })
+
+        with Form(leave_request) as leave:
+            leave.employee_id = self.employee
+
+        leave_request.action_approve()
+
+        self.assertEqual(leave_request.employee_id, self.employee)
+        self.assertEqual(leave_request.state, 'validate')

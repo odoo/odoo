@@ -15,8 +15,6 @@
     text-align: left;
     position: fixed;
     top: 100%;
-    left: 0;
-    right: 0;
     overflow-y: auto;
     max-height: 15rem;
     z-index: 1000000;
@@ -36,4 +34,10 @@
 .pos .edit-list-inputs .options-dropdown .option.selected,
 .pos .edit-list-inputs .options-dropdown .option:hover {
     background-color: $gray-200;
+}
+
+@media (max-width: 575px) {
+    .pos .edit-list-inputs .options-dropdown {
+        position: static;
+    }
 }

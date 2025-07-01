@@ -40,6 +40,7 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
         self._webhook_notification_flow(self.notification_data)
         self.assertFalse(tx.token_id, "No token should be created.")
         self.assertEqual(tx.state, 'done')
+        self.assertEqual(tx.provider_reference, '1234567890')
 
     @mute_logger('odoo.addons.payment_worldline.controllers.main')
     def test_webhook_notification_creates_token(self):
@@ -54,8 +55,32 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
         self.assertEqual(tx.token_id.payment_details, '4242')
 
     @mute_logger('odoo.addons.payment_worldline.controllers.main')
-    def test_failed_webhook_notification_set_tx_as_error(self):
+    def test_failed_webhook_notification_set_tx_as_error_1(self):
         """ Test the processing of a webhook notification for a failed transaction. """
+        tx = self._create_transaction('redirect')
+        test = self.notification_data_insufficient_funds
+        self._webhook_notification_flow(test)
+        self.assertEqual(tx.state, 'error')
+        self.assertEqual(
+            tx.state_message,
+            "Worldline: Transaction declined with error code 30511001.",
+        )
+
+    @mute_logger('odoo.addons.payment_worldline.controllers.main')
+    def test_failed_webhook_notification_set_tx_as_error_2(self):
+        """ Test the processing of a webhook notification for a failed transaction. """
+        tx = self._create_transaction('redirect')
+        test = self.notification_data_expired_card
+        self._webhook_notification_flow(test)
+        self.assertEqual(tx.state, 'error')
+        self.assertEqual(
+            tx.state_message,
+            "Worldline: Transaction declined with error code 30331001.",
+        )
+
+    @mute_logger('odoo.addons.payment_worldline.controllers.main')
+    def test_failed_webhook_notification_set_tx_as_cancel(self):
+        """Test the processing of a webhook notification for a cancelled transaction."""
         tx = self._create_transaction('redirect')
         test = {
             'payment': {
@@ -63,11 +88,20 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
                 'hostedCheckoutSpecificOutput': {
                     'hostedCheckoutId': '123456789',
                 },
-                'status': 'REJECTED',
+                'status': 'CANCELLED',
+                'statusOutput': {
+                    'errors': [{
+                        'errorCode': '30171001',
+                    }],
+                },
             },
         }
         self._webhook_notification_flow(test)
-        self.assertEqual(tx.state, 'error')
+        self.assertEqual(tx.state, 'cancel')
+        self.assertEqual(
+            tx.state_message,
+            "Worldline: Transaction cancelled with error code 30171001.",
+        )
 
     @mute_logger('odoo.addons.payment_worldline.controllers.main')
     def test_webhook_notification_triggers_signature_check(self):

@@ -16,6 +16,7 @@ from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import link_preview
+from lxml import html
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
@@ -253,7 +254,7 @@ class HTML_Editor(http.Controller):
             # only supported image types are incorporated into the data.
             response = requests.head(url, timeout=10)
             if response.status_code == 200:
-                mime_type = response.headers['content-type']
+                mime_type = response.headers.get('content-type')
                 if mime_type in SUPPORTED_IMAGE_MIMETYPES:
                     attachment_data['mimetype'] = mime_type
         else:
@@ -328,7 +329,6 @@ class HTML_Editor(http.Controller):
         if is_image:
             format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_MIMETYPES.values()))
             try:
-                data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
                 mimetype = guess_mimetype(data)
                 if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
                     return {'error': format_error_msg}
@@ -338,11 +338,10 @@ class HTML_Editor(http.Controller):
                         str(uuid.uuid4())[:6],
                         SUPPORTED_IMAGE_MIMETYPES[mimetype],
                     )
-            except UserError:
-                # considered as an image by the browser file input, but not
-                # recognized as such by PIL, eg .webp
-                return {'error': format_error_msg}
-            except ValueError as e:
+                data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
+            except (ValueError, UserError) as e:
+                # When UserError thrown, browser considers file input an
+                # image but not recognized as such by PIL, eg .webp
                 return {'error': e.args[0]}
 
         self._clean_context()
@@ -363,6 +362,7 @@ class HTML_Editor(http.Controller):
         """
         self._clean_context()
         attachment = request.env['ir.attachment'].browse(attachment.id)
+
         fields = {
             'original_id': attachment.id,
             'datas': data,
@@ -370,6 +370,7 @@ class HTML_Editor(http.Controller):
             'res_model': res_model or 'ir.ui.view',
             'mimetype': mimetype or attachment.mimetype,
             'name': name or attachment.name,
+            'res_id': 0,
         }
         if fields['res_model'] == 'ir.ui.view':
             fields['res_id'] = 0
@@ -377,11 +378,27 @@ class HTML_Editor(http.Controller):
             fields['res_id'] = res_id
         if fields['mimetype'] == 'image/webp':
             fields['name'] = re.sub(r'\.(jpe?g|png)$', '.webp', fields['name'], flags=re.I)
+
         existing_attachment = get_existing_attachment(request.env['ir.attachment'], fields)
         if existing_attachment and not existing_attachment.url:
             attachment = existing_attachment
         else:
-            attachment = attachment.copy(fields)
+            # Restricted editors can handle attachments related to records to
+            # which they have access.
+            # Would user be able to read fields of original record?
+            if attachment.res_model and attachment.res_id:
+                request.env[attachment.res_model].browse(attachment.res_id).check_access('read')
+
+            # Would user be able to write fields of target record?
+            # Rights check works with res_id=0 because browse(0) returns an
+            # empty record set.
+            request.env[fields['res_model']].browse(fields['res_id']).check_access('write')
+
+            # Sudo and SUPERUSER_ID because restricted editor will not be able
+            # to copy the record and the mimetype will be forced to plain text.
+            attachment = attachment.with_user(SUPERUSER_ID).sudo().copy(fields)
+            attachment = attachment.with_user(request.env.user.id).sudo(False)
+
         if alt_data:
             for size, per_type in alt_data.items():
                 reference_id = attachment.id
@@ -404,6 +421,7 @@ class HTML_Editor(http.Controller):
                         'res_model': 'ir.attachment',
                         'mimetype': 'image/jpeg',
                     }])
+
         if attachment.url:
             # Don't keep url if modifying static attachment because static images
             # are only served from disk and don't fallback to attachments.
@@ -416,8 +434,10 @@ class HTML_Editor(http.Controller):
                 url_fragments = attachment.url.split('/')
                 url_fragments.insert(-1, str(attachment.id))
                 attachment.url = '/'.join(url_fragments)
+
         if attachment.public:
             return attachment.image_src
+
         attachment.generate_access_token()
         return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
 
@@ -559,7 +579,10 @@ class HTML_Editor(http.Controller):
 
     @http.route('/html_editor/link_preview_external', type="json", auth="public", methods=['POST'])
     def link_preview_metadata(self, preview_url):
-        return link_preview.get_link_preview_from_url(preview_url)
+        link_preview_data = link_preview.get_link_preview_from_url(preview_url)
+        if link_preview_data and link_preview_data.get('og_description'):
+            link_preview_data['og_description'] = html.fromstring(link_preview_data['og_description']).text_content()
+        return link_preview_data
 
     @http.route('/html_editor/link_preview_internal', type="json", auth="user", methods=['POST'])
     def link_preview_metadata_internal(self, preview_url):
@@ -570,20 +593,26 @@ class HTML_Editor(http.Controller):
 
             record_id = int(words.pop())
             action_name = words.pop()
-            action = Actions.sudo().search([('path', '=', action_name)])
-            if not action:
-                return {'error_msg': _("Action %s not found, link preview is not available, please check your url is correct", action_name)}
-            action_type = action.type
-            if action_type != 'ir.actions.act_window':
-                return {'other_error_msg': _("Action %s is not a window action, link preview is not available", action_name)}
-            action = request.env[action_type].browse(action.id)
+            if (action_name.startswith('m-') or '.' in action_name) and action_name in request.env and not request.env[action_name]._abstract:
+                # if path format is `odoo/<model>/<record_id>` so we use `action_name` as model name
+                model_name = action_name.removeprefix('m-')
+                model = request.env[model_name].with_context(context)
+            else:
+                action = Actions.sudo().search([('path', '=', action_name)])
+                if not action:
+                    return {'error_msg': _("Action %s not found, link preview is not available, please check your url is correct", action_name)}
+                action_type = action.type
+                if action_type != 'ir.actions.act_window':
+                    return {'other_error_msg': _("Action %s is not a window action, link preview is not available", action_name)}
+                action = request.env[action_type].browse(action.id)
 
-            model = request.env[action.res_model].with_context(context)
+                model = request.env[action.res_model].with_context(context)
+
             record = model.browse(record_id)
 
             result = {}
             if 'description' in record:
-                result['description'] = record.description
+                result['description'] = html.fromstring(record.description).text_content() if record.description else ""
 
             if 'link_preview_name' in record:
                 result['link_preview_name'] = record.link_preview_name

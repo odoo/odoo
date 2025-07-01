@@ -3,6 +3,7 @@
 from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
+from odoo.tests.common import new_test_user
 
 
 class TestWarehouse(TestStockCommon):
@@ -850,3 +851,58 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(picking_out.picking_type_id, warehouse_B.pick_type_id)
         picking_out.button_validate()
         self.assertEqual(customer_move.move_dest_ids.warehouse_id, warehouse_B)
+
+    def test_multi_step_routes_multi_company(self):
+        """
+        Check the pickings of the multi-step routes are correctly generated
+        in multi-company set up.
+        """
+        companies = self.env['res.company'].create([
+            {'name': 'COMP1'},
+            {'name': 'COMP2'},
+        ])
+        warehouses = self.env['stock.warehouse'].create([
+            {
+                'name': 'Warehouse 1',
+                'company_id': companies.ids[0],
+                'code': 'WHC1',
+            },
+            {
+                'name': 'Warehouse 2',
+                'company_id': companies.ids[1],
+                'code': 'WHC2',
+            },
+        ])
+        warehouse = warehouses[0]
+        warehouse.delivery_steps = 'pick_ship'
+        user = new_test_user(self.env, login='bub', groups='stock.group_stock_user', company_id=companies.ids[1], company_ids=[Command.set(companies.ids)])
+        pick = self.env['stock.picking'].with_user(user).create({
+            'partner_id': self.partner.id,
+            'picking_type_id': warehouse.pick_type_id.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': warehouse.wh_output_stock_loc_id.id,
+            'company_id': companies.ids[0],
+            'move_ids': [Command.create({
+                'name': self.product.name,
+                'product_id': self.product.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product.uom_id.id,
+                'company_id': companies.ids[0],
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': warehouse.wh_output_stock_loc_id.id,
+            })]
+        })
+        pick.with_user(user).action_confirm()
+        pick.with_user(user).button_validate()
+        ship = pick.move_ids.move_dest_ids
+        self.assertRecordValues(ship, [{
+            'picking_type_id': warehouse.out_type_id.id, 'company_id': companies.ids[0], 'location_id': warehouse.wh_output_stock_loc_id.id,
+        }])
+
+    def test_sequence_preservation_on_step_change(self):
+        out_type = self.warehouse_1.out_type_id
+        sequence = out_type.sequence_id
+        end_of_prefix = 'LOREM/'
+        sequence.prefix += end_of_prefix
+        self.warehouse_1.delivery_steps = 'pick_ship'
+        self.assertTrue(sequence.prefix.endswith(end_of_prefix))

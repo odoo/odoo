@@ -9,6 +9,7 @@ registry.category("web_tour.tours").add('forum_question', {
         content: "Ask the question in this forum by clicking on the button.",
         trigger: '.o_wforum_ask_btn',
         run: "click",
+        expectUnloadPage: true,
     }, {
         content: "Give your question content.",
         trigger: 'input[name=post_name]',
@@ -41,18 +42,22 @@ registry.category("web_tour.tours").add('forum_question', {
         content: "Click to post your question.",
         trigger: 'button:contains("Post")',
         run: "click",
+        expectUnloadPage: true,
     }, {
         content: "This page contain new created question.",
         trigger: '#wrap:has(.fa-star)',
     },
     {
+        trigger: ".o_wforum_question:contains(marc demo)",
+    },
+    {
         content: "Close modal once modal animation is done.",
-        trigger: ".modal .modal-header button.btn-close",
+        trigger: ".modal.modal_shown.show:contains(thanks for posting!) button.btn-close",
         run: "click",
     },
     {
         content: "Check that the code still exists as it was written.",
-        trigger: 'div[data-oe-field="content"]:contains("First Question <p>code here</p>")',
+        trigger: 'div.o_wforum_post_content:contains("First Question <p>code here</p>")',
     },
     {
         content: "Open dropdown to edit the post",
@@ -63,6 +68,7 @@ registry.category("web_tour.tours").add('forum_question', {
         content: "Click on edit",
         trigger: '.o_wforum_question button:contains("Edit")',
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "Check that the content is the same",
@@ -72,6 +78,7 @@ registry.category("web_tour.tours").add('forum_question', {
         content: "Save changes",
         trigger: 'button:contains("Save Changes")',
         run: "click",
+        expectUnloadPage: true,
     },
     {
         trigger: "a:contains(\"Reply\").collapsed",
@@ -91,6 +98,7 @@ registry.category("web_tour.tours").add('forum_question', {
         content: "Click to post your answer.",
         trigger: 'button:contains("Post Answer")',
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "Close modal once modal animation is done.",

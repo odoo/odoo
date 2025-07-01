@@ -1,5 +1,5 @@
 import { useComponent, useState } from "@odoo/owl";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
@@ -55,7 +55,7 @@ callActionsRegistry
         isActive: (component) => component.rtc.selfSession?.raisingHand,
         icon: "fa-hand-paper-o",
         select: (component) => component.rtc.raiseHand(!component.rtc.selfSession.raisingHand),
-        sequence: 40,
+        sequence: 50,
     })
     .add("share-screen", {
         condition: (component) => component.rtc && !isMobileOS(),
@@ -65,8 +65,21 @@ callActionsRegistry
                 : _t("Share Screen"),
         isActive: (component) => component.rtc.selfSession?.isScreenSharingOn,
         icon: "fa-desktop",
+        activeClass: "text-success",
         select: (component) => component.rtc.toggleVideo("screen"),
-        sequence: 50,
+        sequence: 40,
+    })
+    .add("blur-background", {
+        condition: (component) =>
+            !isBrowserSafari() && component.rtc && component.rtc.selfSession?.isCameraOn,
+        name: (component) =>
+            component.store.settings.useBlur ? _t("Remove Blur") : _t("Blur Background"),
+        isActive: (component) => component.store?.settings?.useBlur,
+        icon: "fa-photo",
+        select: (component) => {
+            component.store.settings.useBlur = !component.store.settings.useBlur;
+        },
+        sequence: 60,
     })
     .add("fullscreen", {
         condition: (component) => component.props && component.props.fullscreen,
@@ -82,7 +95,7 @@ callActionsRegistry
                 component.props.fullscreen.enter();
             }
         },
-        sequence: 60,
+        sequence: 70,
     });
 
 function transformAction(component, id, action) {

@@ -175,7 +175,8 @@ test("char field with size attribute", async () => {
     });
 });
 
-test.tags("desktop")("char field in editable list view", async () => {
+test.tags("desktop");
+test("char field in editable list view", async () => {
     await mountView({
         type: "list",
         resModel: "res.partner",
@@ -214,51 +215,51 @@ test("char field translatable", async () => {
     serverState.lang = "en_US";
     serverState.multiLang = true;
 
-    await mountView({ type: "form", resModel: "res.partner", resId: 1 });
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        resId: 1,
+    });
 
-    let call_get_field_translations = 0;
-    onRpc(async ({ args, method, model }) => {
-        if (method === "get_installed" && model === "res.lang") {
+    let callGetFieldTranslations = 0;
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+        ["es_ES", "Spanish"],
+    ]);
+    onRpc("res.partner", "get_field_translations", () => {
+        if (callGetFieldTranslations++ === 0) {
             return [
-                ["en_US", "English"],
-                ["fr_BE", "French (Belgium)"],
-                ["es_ES", "Spanish"],
+                [
+                    { lang: "en_US", source: "yop", value: "yop" },
+                    { lang: "fr_BE", source: "yop", value: "yop français" },
+                    { lang: "es_ES", source: "yop", value: "yop español" },
+                ],
+                { translation_type: "char", translation_show_source: false },
+            ];
+        } else {
+            return [
+                [
+                    { lang: "en_US", source: "bar", value: "bar" },
+                    { lang: "fr_BE", source: "bar", value: "yop français" },
+                    { lang: "es_ES", source: "bar", value: "bar" },
+                ],
+                { translation_type: "char", translation_show_source: false },
             ];
         }
-        if (method === "get_field_translations" && model === "res.partner") {
-            if (call_get_field_translations === 0) {
-                call_get_field_translations = 1;
-                return [
-                    [
-                        { lang: "en_US", source: "yop", value: "yop" },
-                        { lang: "fr_BE", source: "yop", value: "yop français" },
-                        { lang: "es_ES", source: "yop", value: "yop español" },
-                    ],
-                    { translation_type: "char", translation_show_source: false },
-                ];
+    });
+    onRpc("res.partner", "update_field_translations", function ({ args, kwargs }) {
+        expect(args[2]).toEqual(
+            { en_US: "bar", es_ES: false },
+            {
+                message:
+                    "the new translation value should be written and the value false voids the translation",
             }
-            if (call_get_field_translations === 1) {
-                return [
-                    [
-                        { lang: "en_US", source: "bar", value: "bar" },
-                        { lang: "fr_BE", source: "bar", value: "yop français" },
-                        { lang: "es_ES", source: "bar", value: "bar" },
-                    ],
-                    { translation_type: "char", translation_show_source: false },
-                ];
-            }
+        );
+        for (const record of this.env["res.partner"].browse(args[0])) {
+            record[args[1]] = args[2][kwargs.context.lang];
         }
-        if (method === "update_field_translations" && model === "res.partner") {
-            expect(args[2]).toEqual(
-                { en_US: "bar", es_ES: false },
-                {
-                    message:
-                        "the new translation value should be written and the value false voids the translation",
-                }
-            );
-            Partner._records[0].name = "bar";
-            return true;
-        }
+        return true;
     });
     expect("[name=name] input").toHaveClass("o_field_translate");
     await contains("[name=name] input").click();
@@ -494,7 +495,8 @@ test("char field trim (or not) characters", async () => {
     expect(".o_field_widget[name='foo2'] input:only").toHaveValue("  def  ");
 });
 
-test.tags("desktop")("input field: change value before pending onchange returns", async () => {
+test.tags("desktop");
+test("input field: change value before pending onchange returns", async () => {
     await mountView({
         type: "form",
         resModel: "res.partner",
@@ -580,21 +582,20 @@ test("input field: change value before pending onchange returns (2)", async () =
     });
 });
 
-test.tags("desktop")(
-    "input field: change value before pending onchange returns (with fieldDebounce)",
-    async () => {
-        // this test is exactly the same as the previous one, except that in
-        // this scenario the onchange return *before* we validate the change
-        // on the input field (before the "change" event is triggered).
-        Partner._onChanges.product_id = (obj) => {
-            obj.int_field = obj.product_id ? 7 : false;
-        };
-        let def;
+test.tags("desktop");
+test("input field: change value before pending onchange returns (with fieldDebounce)", async () => {
+    // this test is exactly the same as the previous one, except that in
+    // this scenario the onchange return *before* we validate the change
+    // on the input field (before the "change" event is triggered).
+    Partner._onChanges.product_id = (obj) => {
+        obj.int_field = obj.product_id ? 7 : false;
+    };
+    let def;
 
-        await mountView({
-            type: "form",
-            resModel: "res.partner",
-            arch: `
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        arch: `
         <form>
             <field name="partner_ids">
                 <list editable="bottom">
@@ -604,33 +605,32 @@ test.tags("desktop")(
                 </list>
             </field>
         </form>`,
-        });
+    });
 
-        onRpc("onchange", () => def);
+    onRpc("onchange", () => def);
 
-        await contains(".o_field_x2many_list_row_add a").click();
-        expect(".o_field_widget[name='name'] input").toHaveValue("My little Name Value", {
-            message: "should contain the default value",
-        });
+    await contains(".o_field_x2many_list_row_add a").click();
+    expect(".o_field_widget[name='name'] input").toHaveValue("My little Name Value", {
+        message: "should contain the default value",
+    });
 
-        def = new Deferred();
-        await contains(".o-autocomplete--input").click();
-        await contains(".o-autocomplete--dropdown-item").click();
-        await fieldInput("name").edit("tralala", { confirm: false });
-        expect(".o_field_widget[name='name'] input").toHaveValue("tralala", {
-            message: "should contain tralala",
-        });
-        expect(".o_field_widget[name='int_field'] input").toHaveValue("");
-        def.resolve();
-        await animationFrame();
-        expect(".o_field_widget[name='name'] input").toHaveValue("tralala", {
-            message: "should contain the same value as before onchange",
-        });
-        expect(".o_field_widget[name='int_field'] input").toHaveValue("7", {
-            message: "should contain the value returned by the onchange",
-        });
-    }
-);
+    def = new Deferred();
+    await contains(".o-autocomplete--input").click();
+    await contains(".o-autocomplete--dropdown-item").click();
+    await fieldInput("name").edit("tralala", { confirm: false });
+    expect(".o_field_widget[name='name'] input").toHaveValue("tralala", {
+        message: "should contain tralala",
+    });
+    expect(".o_field_widget[name='int_field'] input").toHaveValue("");
+    def.resolve();
+    await animationFrame();
+    expect(".o_field_widget[name='name'] input").toHaveValue("tralala", {
+        message: "should contain the same value as before onchange",
+    });
+    expect(".o_field_widget[name='int_field'] input").toHaveValue("7", {
+        message: "should contain the value returned by the onchange",
+    });
+});
 
 test("onchange return value before editing input", async () => {
     Partner._onChanges.name = (obj) => {
@@ -642,7 +642,8 @@ test("onchange return value before editing input", async () => {
     await expect("[name='name'] input").toHaveValue("yop");
 });
 
-test.tags("desktop")("input field: change value before pending onchange renaming", async () => {
+test.tags("desktop");
+test("input field: change value before pending onchange renaming", async () => {
     Partner._onChanges.product_id = (obj) => {
         obj.name = "on change value";
     };
@@ -789,7 +790,8 @@ test("input field: empty password", async () => {
     });
 });
 
-test.tags("desktop")("input field: set and remove value, then wait for onchange", async () => {
+test.tags("desktop");
+test("input field: set and remove value, then wait for onchange", async () => {
     Partner._onChanges.product_id = (obj) => {
         obj.name = obj.product_id ? "onchange value" : false;
     };

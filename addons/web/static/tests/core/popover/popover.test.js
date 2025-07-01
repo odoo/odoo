@@ -290,7 +290,7 @@ test("within iframe", async () => {
     expect(Math.floor(popoverBox.top)).toBe(Math.floor(expectedTop));
     expect(Math.floor(popoverBox.left)).toBe(Math.floor(expectedLeft));
 
-    await scroll(popoverTarget.ownerDocument.documentElement, { y: 100 });
+    await scroll(popoverTarget.ownerDocument.documentElement, { y: 100 }, { scrollable: false });
     await animationFrame();
     expect.verifySteps(["bottom"]);
     popoverBox = popoverEl.getBoundingClientRect();
@@ -341,8 +341,9 @@ test("popover fixed position", async () => {
         }
     }
 
+    await resize({ width: 450, height: 450 });
     await mountWithCleanup(/* xml */ `
-        <div class="container" style="width: 450px; height: 450px; display: flex">
+        <div class="container w-100 h-100" style="display: flex">
             <div class="popover-target" style="width: 50px; height: 50px;" />
         </div>
     `);
@@ -362,9 +363,8 @@ test("popover fixed position", async () => {
     expect.verifySteps(["onPositioned"]);
 
     // force the DOM update
-    container.style.height = "125px";
     container.style.alignItems = "flex-end";
-    await resize();
+    await resize({ height: 125 });
     await animationFrame();
 
     expect.verifySteps([]);

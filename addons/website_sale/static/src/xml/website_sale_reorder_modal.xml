@@ -24,6 +24,20 @@
                             <td t-att-colspan="product.has_image ? '1' : '2'">
                                 <h5><t t-esc="product.name"/></h5>
                                 <span class="text-muted d-none d-md-inline-block" t-if="product.description_sale" t-out="product.description_sale"/>
+                                <ul
+                                    t-if="product.selected_combo_items.length"
+                                    class="list-unstyled mb-0 small text-muted mt-1"
+                                >
+                                    <t
+                                        t-foreach="product.selected_combo_items"
+                                        t-as="comboItem"
+                                        t-key="comboItem.combo_item_id"
+                                    >
+                                        <li>
+                                            <t t-esc="product.qty"/> x <t t-esc="comboItem.combinationInfo.display_name"/>
+                                        </li>
+                                    </t>
+                                </ul>
                             </td>
                             <t t-if="product.add_to_cart_allowed">
                                 <td class="text-center td-qty">

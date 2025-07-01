@@ -57,7 +57,7 @@ class WebsiteForm(form.WebsiteForm):
         return super(WebsiteForm, self)._handle_website_form(model_name, **kwargs)
 
     def insert_record(self, request, model, values, custom, meta=None):
-        is_lead_model = model.model == 'crm.lead'
+        is_lead_model = model.sudo().model == 'crm.lead'
         if is_lead_model:
             values_email_normalized = tools.email_normalize(values.get('email_from'))
             visitor_sudo = request.env['website.visitor']._get_visitor_from_request(force_create=True)

@@ -150,7 +150,7 @@ export class KanbanArchParser {
         let cardDoc = templateDocs[KANBAN_CARD_ATTRIBUTE];
         const isLegacyArch = !cardDoc;
         if (isLegacyArch) {
-            console.warn("'kanban-box' is deprecated, use 'kanban-card' API instead");
+            console.warn("'kanban-box' is deprecated, define a 'card' template instead");
         }
         if (!cardDoc) {
             cardDoc = templateDocs[LEGACY_KANBAN_BOX_ATTRIBUTE];
@@ -161,7 +161,8 @@ export class KanbanArchParser {
         const cardClassName = (!isLegacyArch && cardDoc.getAttribute("class")) || "";
 
         if (!defaultOrder.length && handleField) {
-            defaultOrder = stringToOrderBy(handleField);
+            const handleFieldSort = `${handleField}, id`;
+            defaultOrder = stringToOrderBy(handleFieldSort);
         }
 
         return {

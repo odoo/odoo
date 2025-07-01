@@ -482,7 +482,8 @@ registry.slider = publicWidget.Widget.extend({
 
         // Only for carousels having the `Carousel` and `CarouselItem` options
         // (i.e. matching the `section > .carousel` selector).
-        if (this.editableMode && this.el.matches("section > .carousel")) {
+        if (this.editableMode && this.el.matches("section > .carousel")
+                && !this.options.wysiwyg.options.enableTranslation) {
             this.controlEls = this.el.querySelectorAll(".carousel-control-prev, .carousel-control-next");
             const indicatorEls = this.el.querySelectorAll(".carousel-indicators > *");
             // Deactivate the carousel controls to handle the slides manually in
@@ -520,7 +521,8 @@ registry.slider = publicWidget.Widget.extend({
         this.$el.off('.slider'); // TODO remove in master
         this.$('img').off('.slider');
 
-        if (this.editableMode && this.el.matches("section > .carousel")) {
+        if (this.editableMode && this.el.matches("section > .carousel")
+                && !this.options.wysiwyg.options.enableTranslation) {
             // Restore the carousel controls.
             const indicatorEls = this.el.querySelectorAll(".carousel-indicators > *");
             this.options.wysiwyg.odooEditor.observerUnactive("restore_controls");
@@ -616,6 +618,7 @@ publicWidget.registry.CarouselBootstrapUpgradeFix = publicWidget.Widget.extend({
         "[data-snippet='s_quotes_carousel'] .carousel",
         "[data-snippet='s_quotes_carousel_minimal'] .carousel",
         "[data-snippet='s_carousel_intro'] .carousel",
+        "#o-carousel-product.carousel", // TODO adapt the shop XML directly in master
     ].join(", "),
     disabledInEditableMode: false,
     events: {
@@ -649,7 +652,7 @@ publicWidget.registry.CarouselBootstrapUpgradeFix = publicWidget.Widget.extend({
             // instead of "carousel", it's better not to change the behavior and
             // let the user update the snippet manually to avoid making changes
             // that they don't expect.
-            const snippetName = this.el.closest("[data-snippet]").dataset.snippet;
+            const snippetName = this.el.closest("[data-snippet]")?.dataset.snippet;
             this.el.dataset.bsRide = this.OLD_AUTO_SLIDING_SNIPPETS.includes(snippetName) ? "carousel" : "true";
             await this._destroyCarouselInstance();
             const options = this.editableMode ? {ride: false, pause: true} : undefined;
@@ -1022,6 +1025,12 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
                 videoContainerEl.classList.remove('d-none');
             });
         }
+        this.__adjustIframe = debounce(() => this._adjustIframe(), 100);
+        const resizeObserver = new ResizeObserver(this.__adjustIframe.bind(this));
+        // A change in an element padding does not trigger the resizeObserver so
+        // both inner and outer element are observed for any resizing.
+        resizeObserver.observe(this.$target[0].parentElement);
+        resizeObserver.observe(this.$target[0]);
         return Promise.all(proms).then(() => this._appendBgVideo());
     },
     /**
@@ -1248,7 +1257,10 @@ registry.FullScreenHeight = publicWidget.Widget.extend({
             // rules may alter the full-screen-height class behavior in some
             // cases (blog...).
             this._adaptSize();
-            $(window).on('resize.FullScreenHeight', debounce(() => this._adaptSize(), 250));
+            $(window).on('resize.FullScreenHeight', debounce(() => this._adaptSize(), 250, {
+                leading: true,
+                trailing: true,
+            }));
         }
         return this._super(...arguments);
     },
@@ -1276,16 +1288,43 @@ registry.FullScreenHeight = publicWidget.Widget.extend({
      * @private
      */
     _computeIdealHeight() {
-        const windowHeight = $(window).outerHeight();
-        if (this.inModal) {
-            return windowHeight;
+        // Compute the smallest viewport height (svh) to use to set up the ideal
+        // height of the element, which won't flicker based on the viewport
+        // resize in mobile (when its browser UI changes).
+        // TODO: should try to use svh directly, combined with `calc` and
+        // CSS variables to avoid this JS as much as possible... but see below:
+        // can't because of Arc browser).
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        if (!this.smallestViewportHeight
+                // Update svh definition only if the viewport resize seems to
+                // not be to a mobile browser UI change (e.g. Arc browser
+                // mistakenly changes svh while its UI changes at the moment).
+                || Math.abs(viewportWidth - this.previousViewportWidth) > 15
+                || Math.abs(viewportHeight - this.previousViewportHeight) > 150) {
+            this.previousViewportWidth = viewportWidth;
+            this.previousViewportHeight = viewportHeight;
+            const el = document.createElement('div');
+            el.classList.add('vh-100');
+            el.style.position = 'fixed';
+            el.style.top = '0';
+            el.style.pointerEvents = 'none';
+            el.style.visibility = 'hidden';
+            el.style.setProperty('height', '100svh', 'important');
+            document.body.appendChild(el);
+            this.smallestViewportHeight = parseFloat(el.getBoundingClientRect().height);
+            document.body.removeChild(el);
         }
 
-        // Doing it that way allows to considerer fixed headers, hidden headers,
+        if (this.inModal) {
+            return this.smallestViewportHeight;
+        }
+
+        // Doing it that way allows to consider fixed headers, hidden headers,
         // connected users, ...
         const firstContentEl = $('#wrapwrap > main > :first-child')[0]; // first child to consider the padding-top of main
         const mainTopPos = firstContentEl.getBoundingClientRect().top + document.documentElement.scrollTop;
-        return (windowHeight - mainTopPos);
+        return (this.smallestViewportHeight - mainTopPos);
     },
 });
 
@@ -1362,7 +1401,7 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
     async start() {
         this.$scrollingElement = $().getScrollingElement();
         this.$scrollingTarget = $().getScrollingTarget(this.$scrollingElement);
-        this.__hideBottomFixedElements = debounce(() => this._hideBottomFixedElements(), 100);
+        this.__hideBottomFixedElements = debounce(() => this._hideBottomFixedElements(), 100, { leading: true, trailing: true });
         this.$scrollingTarget.on('scroll.bottom_fixed_element', this.__hideBottomFixedElements);
         $(window).on('resize.bottom_fixed_element', this.__hideBottomFixedElements);
         return this._super(...arguments);
@@ -1425,7 +1464,7 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
                     x: elRect.x,
                     y: elRect.y,
                 });
-                if (hiddenButtonEl) {
+                if (hiddenButtonEl.length) {
                     if (el.classList.contains('o_bottom_fixed_element_move_up')) {
                         el.style.marginBottom = window.innerHeight - hiddenButtonEl.getBoundingClientRect().top + 5 + 'px';
                     } else {
@@ -1457,7 +1496,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      */
     start() {
         this.lastScroll = 0;
-        this.$scrollingElement = $().getScrollingElement();
+        this.$scrollingElement = this.findScrollingElement();
         this.$scrollingTarget = $().getScrollingTarget(this.$scrollingElement);
         this.$animatedElements = this.$('.o_animate');
 
@@ -1521,6 +1560,10 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         this.__onScrollWebsiteAnimate.cancel();
         this.$scrollingTarget[0].removeEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
         this.$scrollingElement[0].classList.remove('o_wanim_overflow_xy_hidden');
+    },
+
+    findScrollingElement() {
+        return $().getScrollingElement();
     },
 
     //--------------------------------------------------------------------------

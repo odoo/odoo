@@ -44,15 +44,20 @@ export class Thread extends Record {
     static new() {
         const thread = super.new(...arguments);
         Record.onChange(thread, ["state"], () => {
+            if (
+                thread.state === "folded" ||
+                (thread.state === "open" &&
+                    this.store.env.services.ui.isSmall &&
+                    this.store.env.services["im_livechat.livechat"])
+            ) {
+                const cw = this.store.ChatWindow?.insert({ thread });
+                thread.store.chatHub.folded.delete(cw);
+                thread.store.chatHub.folded.unshift(cw);
+            }
             if (thread.state === "open" && !this.store.env.services.ui.isSmall) {
                 const cw = this.store.ChatWindow?.insert({ thread });
                 thread.store.chatHub.opened.delete(cw);
                 thread.store.chatHub.opened.unshift(cw);
-            }
-            if (thread.state === "folded") {
-                const cw = this.store.ChatWindow?.insert({ thread });
-                thread.store.chatHub.folded.delete(cw);
-                thread.store.chatHub.folded.unshift(cw);
             }
         });
         return thread;
@@ -72,6 +77,7 @@ export class Thread extends Record {
     });
     /** @type {boolean} */
     areAttachmentsLoaded = false;
+    group_public_id = Record.one("res.groups");
     attachments = Record.many("Attachment", {
         /**
          * @param {import("models").Attachment} a1
@@ -90,6 +96,8 @@ export class Thread extends Record {
     get canUnpin() {
         return this.channel_type === "chat" && this.importantCounter === 0;
     }
+    /** @type {boolean} */
+    can_react = true;
     channelMembers = Record.many("ChannelMember", {
         inverse: "thread",
         onDelete: (r) => r.delete(),
@@ -262,6 +270,9 @@ export class Thread extends Record {
     });
     /** @type {string} */
     name;
+    // FIXME: should be in the portal/frontend bundle but live chat can be loaded
+    // before portal resulting in the field not being properly initialized.
+    portal_partner = Record.one("Persona");
     selfMember = Record.one("ChannelMember", {
         inverse: "threadAsSelf",
     });
@@ -368,9 +379,7 @@ export class Thread extends Record {
         const attachments = this.attachments.filter(
             (attachment) => (attachment.isPdf || attachment.isImage) && !attachment.uploading
         );
-        attachments.sort((a1, a2) => {
-            return a2.id - a1.id;
-        });
+        attachments.sort((a1, a2) => a2.id - a1.id);
         return attachments;
     }
 
@@ -401,9 +410,16 @@ export class Thread extends Record {
         return ["chat", "group"].includes(this.channel_type);
     }
 
+    get supportsCustomChannelName() {
+        return this.isChatChannel && this.channel_type !== "group";
+    }
+
     get displayName() {
+        if (this.supportsCustomChannelName && this.custom_channel_name) {
+            return this.custom_channel_name;
+        }
         if (this.channel_type === "chat" && this.correspondent) {
-            return this.custom_channel_name || this.correspondent.persona.name;
+            return this.correspondent.persona.name;
         }
         if (this.channel_type === "group" && !this.name) {
             return formatList(
@@ -414,7 +430,7 @@ export class Thread extends Record {
     }
 
     get correspondents() {
-        return this.channelMembers.filter(({ persona }) => persona.notEq(this.store.self));
+        return this.channelMembers.filter(({ persona }) => persona?.notEq(this.store.self));
     }
 
     computeCorrespondent() {
@@ -562,7 +578,11 @@ export class Thread extends Record {
     }
 
     get showUnreadBanner() {
-        return !this.selfMember?.hideUnreadBanner && this.selfMember?.localMessageUnreadCounter > 0;
+        return (
+            !this.selfMember?.hideUnreadBanner &&
+            this.selfMember?.localMessageUnreadCounter > 0 &&
+            this.firstUnreadMessage
+        );
     }
 
     get rpcParams() {
@@ -657,12 +677,12 @@ export class Thread extends Record {
         try {
             const { data, messages } = await this.fetchMessagesData({ after, around, before });
             this.store.insert(data, { html: true });
-            this.isLoaded = true;
             return this.store.Message.insert(messages.reverse());
         } catch (e) {
             this.hasLoadingFailed = true;
             throw e;
         } finally {
+            this.isLoaded = true;
             this.status = "ready";
         }
     }
@@ -728,6 +748,27 @@ export class Thread extends Record {
             // handled in fetchMessages
         }
         this.pendingNewMessages = [];
+    }
+
+    /**
+     * Get the effective persona performing actions on this thread.
+     * Priority order: logged-in user, portal partner (token-authenticated), guest.
+     *
+     * @returns {import("models").Persona}
+     */
+    get effectiveSelf() {
+        return this.store.self;
+    }
+
+    /**
+     * Get the current user's active identities.These identities include both
+     * the cookie-authenticated persona and the partner authenticated with the
+     * portal token in the context of this thread.
+     *
+     * @returns {import("models").Persona[]}
+     */
+    get selves() {
+        return [this.store.self];
     }
 
     async fetchNewMessages() {
@@ -931,6 +972,8 @@ export class Thread extends Record {
         this.store.chatHub.opened.unshift(cw);
         if (!isMobileOS()) {
             cw.focus();
+        } else {
+            this.markAsRead();
         }
         this.state = "open";
         cw.notifyState();
@@ -955,9 +998,7 @@ export class Thread extends Record {
         const newName = name.trim();
         if (
             newName !== this.displayName &&
-            ((newName && this.channel_type === "channel") ||
-                this.channel_type === "chat" ||
-                this.channel_type === "group")
+            ((newName && this.channel_type === "channel") || this.isChatChannel)
         ) {
             if (this.channel_type === "channel" || this.channel_type === "group") {
                 this.name = newName;
@@ -967,7 +1008,7 @@ export class Thread extends Record {
                     [[this.id]],
                     { name: newName }
                 );
-            } else if (this.channel_type === "chat") {
+            } else if (this.supportsCustomChannelName) {
                 this.custom_channel_name = newName;
                 await this.store.env.services.orm.call(
                     "discuss.channel",
@@ -981,7 +1022,7 @@ export class Thread extends Record {
 
     addOrReplaceMessage(message, tmpMsg) {
         // The message from other personas (not self) should not replace the tmpMsg
-        if (tmpMsg && tmpMsg.in(this.messages) && message.author.eq(this.store.self)) {
+        if (tmpMsg && tmpMsg.in(this.messages) && this.effectiveSelf.eq(message.author)) {
             this.messages.splice(this.messages.indexOf(tmpMsg), 1, message);
             return;
         }
@@ -1012,7 +1053,7 @@ export class Thread extends Record {
                 res_id: this.id,
                 model: "discuss.channel",
             };
-            tmpData.author = this.store.self;
+            tmpData.author = this.effectiveSelf;
             if (parentId) {
                 tmpData.parentMessage = this.store.Message.get(parentId);
             }

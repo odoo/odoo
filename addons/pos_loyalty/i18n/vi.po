@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Thi Huong Nguyen, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-04-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -199,7 +199,7 @@ msgstr "Nhập mã"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/product_screen/order_summary/order_summary.js:0
 msgid "Enter Gift Card Number"
-msgstr ""
+msgstr "Nhập số thẻ quà tặng"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -303,7 +303,7 @@ msgstr "Phiếu giảm giá khách hàng thân thiết"
 #. module: pos_loyalty
 #: model:loyalty.program,portal_point_name:pos_loyalty.loyalty_program
 msgid "Loyalty Points"
-msgstr "Điểm khách hàng thân thiết"
+msgstr "Điểm thưởng"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_program
@@ -328,12 +328,6 @@ msgid "No"
 msgstr "Không"
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/overrides/models/pos_order.js:0
-msgid "No product is compatible with this promotion."
-msgstr ""
-
-#. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 msgid "No reward can be claimed with this coupon."
@@ -349,7 +343,7 @@ msgstr "Không tìm thấy ví điện tử hợp lệ nào"
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 msgid "Onsite %s"
-msgstr ""
+msgstr "Tại cửa hàng %s"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -376,22 +370,22 @@ msgstr "Đơn hàng POS mà phiếu giảm giá này được tạo. "
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_ok
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
 msgid "Point of Sale"
-msgstr "Điểm bán hàng"
+msgstr "POS"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Cấu hình điểm bán hàng"
+msgstr "Cấu hình POS"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Chi tiết đơn hàng điểm bán hàng"
+msgstr "Chi tiết đơn hàng POS"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Đơn hàng điểm bán hàng"
+msgstr "Đơn hàng POS"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_session
@@ -401,7 +395,7 @@ msgstr "Phiên POS"
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_config_ids
 msgid "Point of Sales"
-msgstr "Điểm bán hàng"
+msgstr "POS"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -486,13 +480,13 @@ msgstr "Chọn chương trình"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/product_screen/order_summary/order_summary.xml:0
 msgid "Sell physical gift card?"
-msgstr ""
+msgstr "Bán thẻ quà tặng vật lý?"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/product_screen/order_summary/order_summary.js:0
 msgid "Sell/Manage physical gift card"
-msgstr ""
+msgstr "Bán/Quản lý thẻ quà tặng vật lý"
 
 #. module: pos_loyalty
 #: model:product.template,name:pos_loyalty.simple_pen_product_template
@@ -641,7 +635,7 @@ msgstr "Đây là những sản phẩm khả dụng cho quy tắc này."
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/product_screen/order_summary/order_summary.js:0
-msgid "This Gift card is already been sold."
+msgid "This Gift card has already been sold."
 msgstr ""
 
 #. module: pos_loyalty
@@ -686,11 +680,16 @@ msgstr "Được sử dụng để in thẻ quà tặng đã tạo từ POS."
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
+msgid "This programs requires a code to be applied."
+msgstr "Chương trình này yêu cầu áp dụng mã."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
 msgid ""
 "To continue, make the following reward products available in Point of Sale."
 msgstr ""
-"Để tiếp tục, hãy đặt các sản phẩm thưởng sau ở trạng thái có sẵn trong Điểm "
-"bán hàng."
+"Để tiếp tục, hãy đặt các sản phẩm thưởng sau ở trạng thái có sẵn trong POS."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type

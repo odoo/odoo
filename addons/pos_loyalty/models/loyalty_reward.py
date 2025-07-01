@@ -24,7 +24,7 @@ class LoyaltyReward(models.Model):
     def _load_pos_data_fields(self, config_id):
         return ['description', 'program_id', 'reward_type', 'required_points', 'clear_wallet', 'currency_id',
                 'discount', 'discount_mode', 'discount_applicability', 'all_discount_product_ids', 'is_global_discount',
-                'discount_max_amount', 'discount_line_product_id', 'reward_product_id', 'tax_ids',
+                'discount_max_amount', 'discount_line_product_id', 'reward_product_id',
                 'multi_product', 'reward_product_ids', 'reward_product_qty', 'reward_product_uom_id', 'reward_product_domain']
 
     def _load_pos_data(self, data):
@@ -44,7 +44,7 @@ class LoyaltyReward(models.Model):
         search_domain = [('program_id', 'in', config._get_program_ids().ids)]
         domains = self.search_read(search_domain, fields=['reward_product_domain'], load=False)
         for domain in filter(lambda d: d['reward_product_domain'] != "null", domains):
-            domain = ast.literal_eval(domain['reward_product_domain'])
+            domain = json.loads(domain['reward_product_domain'])
             for condition in self._parse_domain(domain).values():
                 field_name, _, _ = condition
                 fields.add(field_name)

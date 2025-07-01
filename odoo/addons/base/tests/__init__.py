@@ -52,6 +52,7 @@ from . import test_sql
 from . import test_translate
 from . import test_tz
 # from . import test_uninstall  # loop
+from . import test_upgrade_code
 from . import test_user_has_group
 from . import test_views
 from . import test_xmlrpc

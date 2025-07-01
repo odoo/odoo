@@ -36,6 +36,13 @@ export function clickDiscard() {
     };
 }
 
+export function checkAttributePrice(name, value, price) {
+    return {
+        content: `Check product price ${price} for variant ${name}: ${value}`,
+        trigger: `div.attribute-row h2:contains('${name}') + div.row div.col label div.name span:contains('${value}') + span:contains('${price}')`,
+    };
+}
+
 export function setupAttribute(attributes, addToCart = true) {
     const steps = [];
     if (addToCart) {
@@ -106,4 +113,11 @@ export function setupCombo(products, addToCart = true) {
     }
 
     return steps;
+}
+
+export function isShown() {
+    return {
+        content: `product page is shown`,
+        trigger: `.product-list`,
+    };
 }

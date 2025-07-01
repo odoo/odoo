@@ -24,7 +24,7 @@ class MailComposerMixin(models.AbstractModel):
     subject = fields.Char('Subject', compute='_compute_subject', readonly=False, store=True, compute_sudo=False)
     body = fields.Html(
         'Contents', compute='_compute_body', readonly=False, store=True, compute_sudo=False,
-        render_engine='qweb', render_options={'post_process': True}, sanitize=False)
+        render_engine='qweb', render_options={'post_process': True}, sanitize='email_outgoing')
     body_has_template_value = fields.Boolean(
         'Body content is the same as the template',
         compute='_compute_body_has_template_value',
@@ -66,8 +66,21 @@ class MailComposerMixin(models.AbstractModel):
         for composer_mixin in self:
             if not tools.is_html_empty(composer_mixin.body) and composer_mixin.template_id:
                 template_value = composer_mixin.template_id.body_html
-                sanitized_template_value = tools.html_sanitize(template_value)
-                composer_mixin.body_has_template_value = composer_mixin.body in (template_value, sanitized_template_value)
+                # matching email_outgoing sanitize level
+                sanitize_vals = {
+                    'output_method': 'xml',
+                    'sanitize_attributes': False,
+                    'sanitize_conditional_comments': False,
+                    'sanitize_form': True,
+                    'sanitize_style': True,
+                    'sanitize_tags': False,
+                    'silent': True,
+                    'strip_classes': False,
+                    'strip_style': False,
+                }
+                sanitized_template_value = tools.html_sanitize(template_value, **sanitize_vals)
+                composer_mixin.body_has_template_value = composer_mixin.body in (template_value,
+                    sanitized_template_value)
             else:
                 composer_mixin.body_has_template_value = False
 

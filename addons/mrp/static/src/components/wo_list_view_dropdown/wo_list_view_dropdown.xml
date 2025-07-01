@@ -17,9 +17,9 @@
                 </DropdownItem>
                 <DropdownItem
                     class="`d-flex align-items-center`"
-                    onSelected="() => this.block()">
+                    onSelected="() => this.toggleBlock()">
                         <span t-attf-class="fa fa-lg fa-times-circle text-danger me-2"/>
-                        <span>Block WC</span>
+                        <span t-esc="this.blockTitle"></span>
                 </DropdownItem>
                 <div role="separator" class="dropdown-divider"/>
                 <DropdownItem

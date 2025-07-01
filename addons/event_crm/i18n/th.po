@@ -93,6 +93,8 @@ msgstr "กำหนดลูกค้าเป้าหมายที่สร
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Aww! No Leads created, check your Lead Generation Rules and try again."
 msgstr ""
+"อุ๊ย! ไม่มีการสร้างลูกค้าเป้าหมาย "
+"ตรวจสอบกฎการสร้างลูกค้าเป้าหมายของคุณแล้วลองอีกครั้ง"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
@@ -166,12 +168,12 @@ msgstr "อีเวนต์"
 #. module: event_crm
 #: model:ir.actions.server,name:event_crm.ir_cron_generate_leads_ir_actions_server
 msgid "Event CRM: Generate Leads based on Rules"
-msgstr ""
+msgstr "CRM กิจกรรม: สร้างโอกาสในการขายตามกฎเกณฑ์"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_request
 msgid "Event Lead Request"
-msgstr ""
+msgstr "คำขอลูกค้าเป้าหมายของกิจกรรม"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_rule
@@ -241,6 +243,8 @@ msgstr "สร้างลูกค้าเป้าหมาย"
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Got it! We've noted your request. Your leads will be created soon!"
 msgstr ""
+"เข้าใจล่ะ! เราได้บันทึกคำขอของคุณไว้เรียบร้อยแล้ว "
+"เราจะสร้างรายชื่อลูกค้าเป้าหมายของคุณในเร็วๆ นี้!"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__id
@@ -343,13 +347,14 @@ msgstr "ไม่พบการลงทะเบียน"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_event__has_lead_request
 msgid "Ongoing Generation Request"
-msgstr ""
+msgstr "คำขอการสร้างอย่างต่อเนื่อง"
 
 #. module: event_crm
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Only Event Managers are allowed to re-generate all leads."
 msgstr ""
+"มีเพียงผู้จัดการงานเท่านั้นที่ได้รับอนุญาตให้สร้างรายชื่อลูกค้าเป้าหมายจะเป็นลูกค้าใหม่ทั้งหมด"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
@@ -384,7 +389,7 @@ msgstr "ต่อคำสั่ง"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__processed_registration_id
 msgid "Processed Registration"
-msgstr ""
+msgstr "ดำเนินการลงทะเบียนแล้ว"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_lead_rule_id
@@ -448,7 +453,7 @@ msgstr "กฎค้นหาการสร้างลูกค้าเป้
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_event__has_lead_request
 msgid "Set to True when a Lead Generation Request is currently running."
-msgstr ""
+msgstr "ตั้งค่าเป็น True เมื่อคำขอสร้างโอกาสในการขายกำลังทำงานอยู่"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
@@ -471,6 +476,8 @@ msgid ""
 "The ID of the last processed event.registration, used to know where to "
 "resume."
 msgstr ""
+"รหัสของการลงทะเบียนกิจกรรมที่ประมวลผลครั้งล่าสุด "
+"ใช้เพื่อทราบว่าจะต้องดำเนินการต่อจากที่ใด"
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
@@ -498,12 +505,12 @@ msgstr "จาก"
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Yee-ha, %(leads_count)s Leads have been created!"
-msgstr ""
+msgstr "เย้! %(leads_count)s รายการได้รับการสร้างแล้ว!"
 
 #. module: event_crm
 #: model:ir.model.constraint,message:event_crm.constraint_event_lead_request_uniq_event
 msgid "You can only have one generation request per event at a time."
-msgstr ""
+msgstr "คุณสามารถสร้างคำขอได้เพียง 1 รายการต่อกิจกรรมในแต่ละครั้ง"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form

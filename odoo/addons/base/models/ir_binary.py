@@ -9,6 +9,7 @@ from odoo.http import Stream, request
 from odoo.tools import file_open, replace_exceptions
 from odoo.tools.image import image_process, image_guess_size_from_field_name
 from odoo.tools.mimetypes import guess_mimetype, get_extension
+from odoo.tools.misc import verify_limited_field_access_token
 
 
 DEFAULT_PLACEHOLDER_PATH = 'web/static/img/placeholder.png'
@@ -45,7 +46,8 @@ class IrBinary(models.AbstractModel):
             record = self.env[res_model].browse(res_id).exists()
         if not record:
             raise MissingError(f"No record found for xmlid={xmlid}, res_model={res_model}, id={res_id}")
-
+        if access_token and verify_limited_field_access_token(record, field, access_token):
+            return record.sudo()
         record = self._find_record_check_access(record, access_token, field)
         return record
 

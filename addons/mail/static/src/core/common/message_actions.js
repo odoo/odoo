@@ -62,7 +62,7 @@ messageActionsRegistry
                         const reaction = component.props.message.reactions.find(
                             ({ content, personas }) =>
                                 content === emoji &&
-                                personas.find((persona) => persona.eq(component.store.self))
+                                component.props.thread.effectiveSelf.in(personas)
                         );
                         if (!reaction) {
                             component.props.message.react(emoji);
@@ -113,7 +113,7 @@ messageActionsRegistry
     })
     .add("unfollow", {
         condition: (component) => component.props.message.canUnfollow(component.props.thread),
-        icon: "fa-user-times",
+        icon: "fa fa-user-times",
         title: _t("Unfollow"),
         onClick: (component) => component.props.message.unfollow(),
         sequence: 60,
@@ -149,6 +149,7 @@ messageActionsRegistry
     })
     .add("delete", {
         condition: (component) => component.props.message.editable,
+        btnClass: "text-danger",
         icon: "fa fa-trash",
         title: _t("Delete"),
         onClick: async (component) => {
@@ -209,6 +210,11 @@ messageActionsRegistry
 
 function transformAction(component, id, action) {
     return {
+        get btnClass() {
+            return typeof action.btnClass === "function"
+                ? action.btnClass(component)
+                : action.btnClass;
+        },
         component: action.component,
         id,
         mobileCloseAfterClick: action.mobileCloseAfterClick ?? true,

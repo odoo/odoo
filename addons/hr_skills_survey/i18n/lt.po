@@ -1,30 +1,51 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_skills_survey
-#
+# 
 # Translators:
-# Linas Versada <linaskrisiukenas@gmail.com>, 2022
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
-#
+# Donatas <donatasvaliulis16@gmail.com>, 2024
+# Arminas Grigonis <arminas@versada.lt>, 2024
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
+# Linas Versada <linaskrisiukenas@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Gailius Kazlauskas <gailius@vialaurea.lt>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Gailius Kazlauskas <gailius@vialaurea.lt>, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
-"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: lt\n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: hr_skills_survey
+#: model:hr.resume.line,name:hr_skills_survey.resume_line_valid
+msgid "AWS Cloud"
+msgstr ""
 
 #. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__survey_id
 #: model:ir.model.fields.selection,name:hr_skills_survey.selection__hr_resume_line__display_type__certification
+#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
 msgid "Certification"
 msgstr "Sertifikavimas"
+
+#. module: hr_skills_survey
+#: model:ir.ui.menu,name:hr_skills_survey.hr_employee_certication_report_menu
+msgid "Certifications"
+msgstr "Sertifikatas"
+
+#. module: hr_skills_survey
+#: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__department_id
+#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
+msgid "Department"
+msgstr "Skyrius"
 
 #. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__display_type
@@ -32,11 +53,99 @@ msgid "Display Type"
 msgstr "Ekrano tipas"
 
 #. module: hr_skills_survey
+#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
+msgid "Employee"
+msgstr "Darbuotojas"
+
+#. module: hr_skills_survey
+#: model:ir.actions.act_window,name:hr_skills_survey.hr_employee_certification_report_action
+msgid "Employee Certifications"
+msgstr ""
+
+#. module: hr_skills_survey
+#: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__expiration_status
+msgid "Expiration Status"
+msgstr ""
+
+#. module: hr_skills_survey
+#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
+msgid "Expiration date"
+msgstr ""
+
+#. module: hr_skills_survey
+#: model:ir.model.fields.selection,name:hr_skills_survey.selection__hr_resume_line__expiration_status__expired
+#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
+msgid "Expired"
+msgstr "Negaliojanti"
+
+#. module: hr_skills_survey
+#: model:ir.model.fields.selection,name:hr_skills_survey.selection__hr_resume_line__expiration_status__expiring
+msgid "Expiring"
+msgstr ""
+
+#. module: hr_skills_survey
+#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
+msgid "Expiring Soon"
+msgstr "Greitai baigs galioti"
+
+#. module: hr_skills_survey
+#: model:hr.resume.line.type,name:hr_skills_survey.resume_type_certification
+msgid "Internal Certification"
+msgstr ""
+
+#. module: hr_skills_survey
+#: model:hr.resume.line,name:hr_skills_survey.resume_line_expiring
+msgid "MongoDB Developer"
+msgstr ""
+
+#. module: hr_skills_survey
+#: model:hr.resume.line,name:hr_skills_survey.resume_line_aws
+msgid "Oracle DB"
+msgstr ""
+
+#. module: hr_skills_survey
 #: model:ir.model,name:hr_skills_survey.model_hr_resume_line
 msgid "Resume line of an employee"
+msgstr "Darbuotojo gyvenimo aprašymo eilutė"
+
+#. module: hr_skills_survey
+#: model:ir.model.fields,help:hr_skills_survey.field_survey_survey__certification_validity_months
+msgid ""
+"Specify the number of months the certification is valid after being awarded."
+" Enter 0 for certifications that never expire."
 msgstr ""
+
+#. module: hr_skills_survey
+#: model:ir.model,name:hr_skills_survey.model_survey_survey
+msgid "Survey"
+msgstr "Apklausa"
 
 #. module: hr_skills_survey
 #: model:ir.model,name:hr_skills_survey.model_survey_user_input
 msgid "Survey User Input"
 msgstr "Apklausos vartotojo įvestis"
+
+#. module: hr_skills_survey
+#: model:ir.model.fields.selection,name:hr_skills_survey.selection__hr_resume_line__expiration_status__valid
+msgid "Valid"
+msgstr "Galioja"
+
+#. module: hr_skills_survey
+#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
+msgid "Valid Until"
+msgstr "Galioja iki"
+
+#. module: hr_skills_survey
+#: model:ir.model.fields,field_description:hr_skills_survey.field_survey_survey__certification_validity_months
+msgid "Validity"
+msgstr "Galiojimas"
+
+#. module: hr_skills_survey
+#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_employee_certification_report_view_list
+msgid "Validity End"
+msgstr ""
+
+#. module: hr_skills_survey
+#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_employee_certification_report_view_list
+msgid "Validity Start"
+msgstr ""

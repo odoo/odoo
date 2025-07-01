@@ -11,7 +11,7 @@ var recoveryLinkKey = 'website_sale.tour_shop_cart_recovery.recoveryLink';
 registry.category("web_tour.tours").add('shop_cart_recovery', {
     url: '/shop',
     steps: () => [
-        ...tourUtils.addToCart({productName: "Acoustic Bloc Screens"}),
+        ...tourUtils.addToCart({ productName: "Acoustic Bloc Screens", expectUnloadPage: true }),
         tourUtils.goToCart(),
     {
         content: "check product is in cart, get cart id, logout, go to login",
@@ -21,19 +21,32 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
             browser.localStorage.setItem(orderIdKey, orderId);
             window.location.href = "/web/session/logout?redirect=/web/login";
         },
+        expectUnloadPage: true,
+    },
+    {
+        content: "edit login input",
+        trigger: '.oe_login_form input[name="login"]',
+        run: "edit admin",
+    },
+    {
+        content: "edit password input",
+        trigger: '.oe_login_form input[name="password"]',
+        run: "edit admin",
+    },
+    {
+        content: "edit hidden redirect input",
+        trigger: '.oe_login_form input[name="redirect"]:hidden',
+        run() {
+            const orderId = browser.localStorage.getItem(orderIdKey);
+            const url = "/odoo/action-sale.action_orders/" + orderId;
+            this.anchor.value = url;
+        }
     },
     {
         content: "login as admin and go to the SO (backend)",
-        trigger: '.oe_login_form',
-        run: function () {
-            var orderId = browser.localStorage.getItem(orderIdKey);
-            var url = "/odoo/action-sale.action_orders/" + orderId;
-            var loginForm = document.querySelector('.oe_login_form');
-            loginForm.querySelector('input[name="login"]').value = "admin";
-            loginForm.querySelector('input[name="password"]').value = "admin";
-            loginForm.querySelector('input[name="redirect"]').value = url;
-            loginForm.submit();
-        },
+        trigger: ".oe_login_form .oe_login_buttons button:contains(log in)",
+        run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "click action",
@@ -44,6 +57,10 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
         content: "click Send an Email",
         trigger: "span:contains(/^Send an email$/)",
         run: "click",
+    },
+    {
+        content: "Wait the modal is opened and form is fullfilled",
+        trigger: ".modal main .o_form_view_container [name=subject] input:value(/^S0/)",
     },
     {
         content: "select template",
@@ -67,7 +84,8 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
             var link = queryOne('.o-mail-Message-body a:contains("Resume order")').getAttribute('href');
             browser.localStorage.setItem(recoveryLinkKey, link);
             window.location.href = "/web/session/logout?redirect=/";
-        }
+        },
+        expectUnloadPage: true,
     },
     {
         content: "go to the recovery link",
@@ -76,6 +94,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
             const localStorage = browser.localStorage;
             window.location.href = localStorage.getItem(recoveryLinkKey);
         },
+        expectUnloadPage: true,
     },
     {
         trigger: 'p:contains("This is your current cart")',
@@ -84,6 +103,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
         content: "check the page is working, click on restore",
         trigger: 'p:contains("restore") a:contains("Click here")',
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "check product is in restored cart",

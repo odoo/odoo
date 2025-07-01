@@ -61,19 +61,19 @@ class TestMassMailValues(MassMailCommon):
                 'state': 'draft',
                 'mailing_model_id': self.env['ir.model']._get('res.partner').id,
                 'body_html': """
-                    <html>
+                    <section>
                         <!--[if mso]>
                             <v:image src="https://www.example.com/image" style="width:100px;height:100px;"/>
                         <![endif]-->
-                    </html>
+                    </section>
                 """,
             })
-        self.assertEqual(str(mailing.body_html), f"""
-                    <html>
+        self.assertEqual(str(mailing.body_html).strip(), f"""
+                    <section>
                         <!--[if mso]>
                             <v:image src="/web/image/{attachment['id']}?access_token={attachment['token']}" style="width:100px;height:100px;"/>
                         <![endif]-->
-                    </html>
+                    </section>
         """.strip())
 
     @users('user_marketing')
@@ -102,7 +102,7 @@ class TestMassMailValues(MassMailCommon):
                     'state': 'draft',
                     'mailing_model_id': self.env['ir.model']._get('res.partner').id,
                     'body_html': f"""
-                        <html><body>
+                        <section>
                             <img src="data:image/png;base64,{BASE_64_STRING}0">
                             <img src="data:image/jpg;base64,{BASE_64_STRING}1">
                             <div style='color: red; background-image:url("data:image/jpg;base64,{BASE_64_STRING}2"); display: block;'/>
@@ -124,21 +124,21 @@ class TestMassMailValues(MassMailCommon):
                                 <div style="color: red; background-image: url(data:image/jpg;base64,{BASE_64_STRING}16); background: url('data:image/jpg;base64,{BASE_64_STRING}17'); display: block;"/>
                             <![endif]-->
                             <img src="data:image/png;base64,{BASE_64_STRING}0">
-                        </body></html>
+                        </section>
                     """,
                 })
         self.assertEqual(len(attachments), 19)
         self.assertEqual(attachments[0]['id'], attachments[18]['id'])
-        self.assertEqual(str(mailing.body_html), f"""
-                        <html><body>
-                            <img src="/web/image/{attachments[0]['id']}?access_token={attachments[0]['token']}">
-                            <img src="/web/image/{attachments[1]['id']}?access_token={attachments[1]['token']}">
-                            <div style='color: red; background-image:url("/web/image/{attachments[2]['id']}?access_token={attachments[2]['token']}"); display: block;'></div>
-                            <div style="color: red; background-image:url('/web/image/{attachments[3]['id']}?access_token={attachments[3]['token']}'); display: block;"></div>
-                            <div style='color: red; background-image:url("/web/image/{attachments[4]['id']}?access_token={attachments[4]['token']}"); display: block;'></div>
-                            <div style='color: red; background-image:url("/web/image/{attachments[5]['id']}?access_token={attachments[5]['token']}"); display: block;'></div>
-                            <div style="color: red; background-image:url(/web/image/{attachments[6]['id']}?access_token={attachments[6]['token']}); display: block;"></div>
-                            <div style="color: red; background-image: url(/web/image/{attachments[7]['id']}?access_token={attachments[7]['token']}); background: url('/web/image/{attachments[8]['id']}?access_token={attachments[8]['token']}'); display: block;"></div>
+        self.assertEqual(str(mailing.body_html).strip(), f"""
+                        <section>
+                            <img src="/web/image/{attachments[0]['id']}?access_token={attachments[0]['token']}"/>
+                            <img src="/web/image/{attachments[1]['id']}?access_token={attachments[1]['token']}"/>
+                            <div style="color: red; background-image:url(&quot;/web/image/{attachments[2]['id']}?access_token={attachments[2]['token']}&quot;); display: block;"/>
+                            <div style="color: red; background-image:url('/web/image/{attachments[3]['id']}?access_token={attachments[3]['token']}'); display: block;"/>
+                            <div style="color: red; background-image:url(&quot;/web/image/{attachments[4]['id']}?access_token={attachments[4]['token']}&quot;); display: block;"/>
+                            <div style="color: red; background-image:url(&quot;/web/image/{attachments[5]['id']}?access_token={attachments[5]['token']}&quot;); display: block;"/>
+                            <div style="color: red; background-image:url(/web/image/{attachments[6]['id']}?access_token={attachments[6]['token']}); display: block;"/>
+                            <div style="color: red; background-image: url(/web/image/{attachments[7]['id']}?access_token={attachments[7]['token']}); background: url('/web/image/{attachments[8]['id']}?access_token={attachments[8]['token']}'); display: block;"/>
                             <!--[if mso]>
                                 <img src="/web/image/{attachments[9]['id']}?access_token={attachments[9]['token']}">Fake url, in text: img src="data:image/png;base64,{BASE_64_STRING}"
                                 Fake url, in text: img src="data:image/png;base64,{BASE_64_STRING}"
@@ -151,8 +151,8 @@ class TestMassMailValues(MassMailCommon):
                                 <div style="color: red; background-image:url(/web/image/{attachments[15]['id']}?access_token={attachments[15]['token']}); display: block;"/>
                                 <div style="color: red; background-image: url(/web/image/{attachments[16]['id']}?access_token={attachments[16]['token']}); background: url('/web/image/{attachments[17]['id']}?access_token={attachments[17]['token']}'); display: block;"/>
                             <![endif]-->
-                            <img src="/web/image/{attachments[18]['id']}?access_token={attachments[18]['token']}">
-                        </body></html>
+                            <img src="/web/image/{attachments[18]['id']}?access_token={attachments[18]['token']}"/>
+                        </section>
         """.strip())
 
     @users('user_marketing')
@@ -479,6 +479,25 @@ class TestMassMailValues(MassMailCommon):
         mail_thread_attachments = mailing._get_mail_thread_data_attachments()
         self.assertSetEqual(set(mail_thread_attachments.ids), {png_duplicate_of_svg_attachment.id, original_png_attachment.id})
 
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_process_mailing_queue_without_html_body(self):
+        """ Test mailing with past schedule date and without any html body """
+        mailing = self.env['mailing.mailing'].create({
+                'name': 'mailing',
+                'subject': 'some subject',
+                'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+                'preview': "Check it out before its too late",
+                'body_html': False,
+                'schedule_date': datetime(2023, 2, 17, 11, 0),
+            })
+        mailing.action_put_in_queue()
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            mailing._process_mass_mailing_queue()
+
+        self.assertFalse(mailing.body_html)
+        self.assertEqual(mailing.mailing_model_name, 'res.partner')
+
 
 @tagged("mass_mailing", "utm")
 class TestMassMailUTM(MassMailCommon):
@@ -534,6 +553,23 @@ class TestMassMailUTM(MassMailCommon):
         mailing_0.subject = 'First subject'
         self.assertEqual(mailing_0.name, 'First subject (Mass Mailing created on 2022-01-02)',
             msg='The name should be back to first one')
+
+    def test_mailing_create_with_context(self):
+        """ Test that the default_name provided via context is ignored to prevent constraint violations."""
+        mailing_1, mailing_2 = self.env["mailing.mailing"].create([
+            {
+                "subject": "First subject",
+                "name": "Mailing",
+            },
+            {
+                "subject": "Second subject",
+                "name": "Mailing",
+            },
+        ])
+        self.assertEqual(mailing_1.name, "Mailing")
+        self.assertEqual(mailing_2.name, "Mailing [2]")
+        mailing_3 = self.env["mailing.mailing"].with_context({"default_name": "Mailing"}).create({"subject": "Third subject"})
+        self.assertEqual(mailing_3.name, "Mailing [3]")
 
 
 @tagged('mass_mailing')

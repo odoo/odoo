@@ -225,7 +225,7 @@
                     <span class="fa fa-magic fa-fw"></span>
                 </div>
             </div>
-            <div id="translate" t-attf-class="btn-group {{ props.dropDirection }}">
+            <div t-if="!state.isPublicUser" id="translate" t-attf-class="btn-group {{ props.dropDirection }}">
                 <div t-if="state.languages.length === 1" class="btn lang" title="Translate with AI" t-att-data-value="state.languages[0][1]">
                     Translate
                 </div>

@@ -3,6 +3,7 @@ import {
     bootstrapToTable,
     cardToTable,
     classToStyle,
+    createMso,
     formatTables,
     getCSSRules,
     listGroupToTable,
@@ -10,6 +11,7 @@ import {
     normalizeRem,
 } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { afterEach, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
+import { enableTransitions } from "@odoo/hoot-mock";
 import {
     getGridHtml,
     getRegularGridHtml,
@@ -859,6 +861,7 @@ describe("Convert classes to inline styles", () => {
     });
 
     test("convert Bootstrap classes to inline styles", async () => {
+        enableTransitions();
         editable.innerHTML = `
             <div class="container"><div class="row"><div class="col">Hello</div></div></div>`;
         getFixture().append(editable); // editable needs to be in the DOM to compute its dynamic styles.
@@ -867,9 +870,9 @@ describe("Convert classes to inline styles", () => {
         // Some positional properties (eg., padding-right, margin-left) are not
         // concatenated (eg., as padding, margin) because they were defined with
         // variables (var) or calculated (calc).
-        const containerStyle = `margin: 0px auto; box-sizing: border-box; max-width: 1320px; padding-left: 16px; padding-right: 16px; width: 100%;`;
-        const rowStyle = `box-sizing: border-box; margin-left: -16px; margin-right: -16px; margin-top: 0px;`;
-        const colStyle = `box-sizing: border-box; margin-top: 0px; padding-left: 16px; padding-right: 16px; max-width: 100%; width: 100%;`;
+        const containerStyle = `border-radius: 0px; border-style: none; margin: 0px auto; box-sizing: border-box; border-width: 0px; max-width: 1320px; padding-left: 16px; padding-right: 16px; width: 100%;`;
+        const rowStyle = `border-radius: 0px; border-style: none; padding: 0px; box-sizing: border-box; border-width: 0px; margin-left: -16px; margin-right: -16px; margin-top: 0px;`;
+        const colStyle = `border-radius: 0px; border-style: none; box-sizing: border-box; border-width: 0px; margin-top: 0px; padding-left: 16px; padding-right: 16px; max-width: 100%; width: 100%;`;
         expect(editable).toHaveInnerHTML(
             `<div class="container" style="${containerStyle}" width="100%">` +
                 `<div class="row" style="${rowStyle}">` +
@@ -1349,7 +1352,7 @@ describe("Convert classes to inline styles", () => {
         iframeEditable.innerHTML = `<div class="o_layout" style="padding: 50px;"></div>`;
         classToStyle(iframeEditable, getCSSRules(iframeEditable.ownerDocument));
         expect(iframeEditable).toHaveInnerHTML(
-            `<div class="o_layout" style="box-sizing:border-box;font-size:50px;color:white;background-color:red;padding: 50px;"></div>`,
+            `<div class="o_layout" style="border-radius:0px;border-style:none;margin:0px;box-sizing:border-box;border-left-width:0px;border-bottom-width:0px;border-right-width:0px;border-top-width:0px;font-size:50px;color:white;background-color:red;padding: 50px;"></div>`,
             { message: "should have given all styles of body to .o_layout" }
         );
     });
@@ -1417,5 +1420,26 @@ describe("Convert classes to inline styles", () => {
         );
 
         // @todo to adapt when hoot has a better way to remove it
+    });
+});
+
+describe("Properly add MSO conditions", () => {
+    test("Create mso properly", async () => {
+        expect(createMso("<div>abcde</div>").nodeValue).toEqual(
+            `[if mso]><div>abcde</div><![endif]`,
+            { message: "Should wrap the content in mso condition" }
+        );
+
+        expect(
+            createMso("<div>ef<!--[if mso]><div>abcd</div><![endif]-->gh</div>").nodeValue
+        ).toEqual(`[if mso]><div>ef<div>abcd</div>gh</div><![endif]`, {
+            message: "Should wrap the content inside one mso condition",
+        });
+
+        expect(
+            createMso("<div>ef<!--[if !mso]><div>abcd</div><![endif]-->gh</div>").nodeValue
+        ).toEqual(`[if mso]><div>efgh</div><![endif]`, {
+            message: "Should remove nested mso hide condition",
+        });
     });
 });

@@ -141,15 +141,15 @@
                             </div>
                             <div t-if="['confirm', 'validate1'].includes(record.state.raw_value)">
                                 <button t-if="record.state.raw_value === 'confirm'" name="action_approve" type="object" class="btn btn-link btn-sm ps-0"
-                                    groups="hr_holidays.group_hr_holidays_user">
+                                    groups="hr_holidays.group_hr_holidays_responsible">
                                     <i class="fa fa-thumbs-up"/> Approve
                                 </button>
                                 <button t-if="record.state.raw_value === 'validate1'" name="action_validate" type="object" class="btn btn-link btn-sm ps-0"
-                                    groups="hr_holidays.group_hr_holidays_manager">
+                                    groups="hr_holidays.group_hr_holidays_responsible">
                                     <i class="fa fa-check"/> Validate
                                 </button>
                                 <button t-if="['confirm', 'validate1'].includes(record.state.raw_value)" name="action_refuse" type="object" class="btn btn-link btn-sm ps-0"
-                                    groups="hr_holidays.group_hr_holidays_user">
+                                    groups="hr_holidays.group_hr_holidays_responsible">
                                     <i class="fa fa-times"/> Refuse
                                 </button>
                             </div>
@@ -172,8 +172,11 @@
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='number_of_days']/../.." position='before'>
-                <field name="employee_id" widget="image" options="{'preview_image': 'avatar_128'}"
-                    class="o_image_64_cover float-start me-2 col-3"/>
+                <field name="write_date" invisible="1"/>
+                <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128'
+                        + '?unique=' + record.write_date.raw_value"
+                    class="o_image_64_cover float-start mb-2 me-2" 
+                    alt="Employee's image"/>
             </xpath>
             <xpath expr="//field[@name='name']" position="replace"/>
         </field>
@@ -454,7 +457,7 @@
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
             <list string="Time Off Requests" sample="1">
-                <field name="employee_id" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
+                <field name="employee_id" widget="many2one_avatar_employee" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
                 <field name="department_id" optional="hidden" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="holiday_status_id" class="fw-bold" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="name"/>
@@ -473,11 +476,11 @@
                 <button string="Validate" name="action_validate" type="object"
                     icon="fa-check"
                     invisible="state != 'validate1'"
-                    groups="hr_holidays.group_hr_holidays_user"/>
+                    groups="hr_holidays.group_hr_holidays_responsible"/>
                 <button string="Refuse" name="action_refuse" type="object"
                     icon="fa-times"
                     invisible="state not in ('confirm', 'validate1')"
-                    groups="hr_holidays.group_hr_holidays_user"/>
+                    groups="hr_holidays.group_hr_holidays_responsible"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </list>
         </field>
@@ -673,7 +676,8 @@
             'search_default_waiting_for_me_manager': 2,
             'search_default_current_year': 3,
             'hide_employee_name': 1,
-            'holiday_status_display_name': False}</field>
+            }
+        </field>
         <field name="domain">[('employee_id.company_id', 'in', allowed_company_ids)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -691,7 +695,7 @@
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_manager"/>
         <field name="context">{
             'hide_employee_name': 1,
-            'holiday_status_display_name': False}
+            }
         </field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

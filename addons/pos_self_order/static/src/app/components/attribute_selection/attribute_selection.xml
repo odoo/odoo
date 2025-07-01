@@ -4,12 +4,12 @@
         <div class="self_order_attribute_selection d-flex flex-column flex-grow-1">
             <div class="attribute-selection-content align-items-center justify-content-start px-3 flex-grow-1">
                 <div class="d-flex flex-column">
-                    <div t-foreach="availableAttributes()" t-as="attribute" t-key="attribute.id" class="attribute-row">
+                    <div t-foreach="props.product.attribute_line_ids" t-as="attribute" t-key="attribute.id" class="attribute-row">
                         <h2 t-out="attribute.attribute_id.name"/>
                         <div class="row g-2 g-md-3 g-xl-4 justify-content-between justify-content-md-start mb-5 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-xl-5 row-cols-xxl-6"
                             t-ref="attribute_grid_{{attribute.id}}">
                             <t t-foreach="availableAttributeValue(attribute)" t-as="value" t-key="value.id">
-                                <div class="col">
+                                <div class="col" t-att-class="{'opacity-50' : value.excluded}">
                                     <label t-attf-for="{{ attribute.id }}_{{ value.id }}"
                                             t-attf-class="self_order_attribute_selection_option {{ this.isChecked(attribute, value) ? 'text-bg-primary border-primary active' : '' }}
                                             d-flex align-items-center justify-content-center h-100 rounded border ratio ratio-16x9"

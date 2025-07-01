@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillStart, onWillUnmount, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
@@ -28,29 +28,7 @@ export class ConfirmationPage extends Component {
                     this.setDefautLanguage();
                 }, 5000);
 
-                setTimeout(async () => {
-                    try {
-                        await this.printer.print(OrderReceipt, {
-                            data: this.selfOrder.orderExportForPrinting(this.confirmedOrder),
-                            formatCurrency: this.selfOrder.formatMonetary,
-                        });
-                        if (!this.selfOrder.has_paper) {
-                            this.updateHasPaper(true);
-                        }
-                    } catch (e) {
-                        if (e.errorCode === "EPTR_REC_EMPTY") {
-                            this.dialog.add(OutOfPaperPopup, {
-                                title: `No more paper in the printer, please remember your order number: '${this.confirmedOrder.trackingNumber}'.`,
-                                close: () => {
-                                    this.router.navigate("default");
-                                },
-                            });
-                            this.updateHasPaper(false);
-                        } else {
-                            console.error(e);
-                        }
-                    }
-                }, 500);
+                setTimeout(() => this.printOrderAfterTime(), 500);
                 this.defaultTimeout = setTimeout(() => {
                     this.router.navigate("default");
                 }, 30000);
@@ -60,26 +38,50 @@ export class ConfirmationPage extends Component {
             clearTimeout(this.defaultTimeout);
         });
 
-        onWillStart(() => {
-            this.initOrder();
+        onMounted(async () => {
+            await this.initOrder();
         });
     }
 
+    async printOrderAfterTime() {
+        try {
+            if (this.confirmedOrder && Object.keys(this.confirmedOrder).length > 0) {
+                await this.printer.print(OrderReceipt, {
+                    data: this.selfOrder.orderExportForPrinting(this.confirmedOrder),
+                    formatCurrency: this.selfOrder.formatMonetary.bind(this.selfOrder),
+                });
+                if (!this.selfOrder.has_paper) {
+                    this.updateHasPaper(true);
+                }
+            } else {
+                setTimeout(() => this.printOrderAfterTime(), 500);
+            }
+        } catch (e) {
+            if (e.errorCode === "EPTR_REC_EMPTY") {
+                this.dialog.add(OutOfPaperPopup, {
+                    title: `No more paper in the printer, please remember your order number: '${this.confirmedOrder.trackingNumber}'.`,
+                    close: () => {
+                        this.router.navigate("default");
+                    },
+                });
+                this.updateHasPaper(false);
+            } else {
+                console.error(e);
+            }
+        }
+    }
+
     async initOrder() {
-        const data = await rpc(`/pos-self-order/get-orders/`, {
-            access_token: this.selfOrder.access_token,
-            order_access_tokens: [this.props.orderAccessToken],
-        });
-        this.selfOrder.models.loadData(data);
+        await this.selfOrder.getOrdersFromServer([this.props.orderAccessToken]);
         const order = this.selfOrder.models["pos.order"].find(
             (o) => o.access_token === this.props.orderAccessToken
         );
         order.tracking_number = "S" + order.tracking_number;
         this.confirmedOrder = order;
 
-        const paymentMethods = this.selfOrder.models["pos.payment.method"].filter(
-            (p) => p.is_online_payment
-        );
+        const paymentMethods = this.selfOrder.filterPaymentMethods(
+            this.selfOrder.models["pos.payment.method"].getAll()
+        ); // Stripe, Adyen, Online
 
         if (
             !order ||

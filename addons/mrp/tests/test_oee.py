@@ -2,10 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta, time
+from freezegun import freeze_time
 from pytz import timezone, utc
 
 from odoo import fields
 from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo.tests import Form
 
 
 class TestOee(TestMrpCommon):
@@ -18,9 +20,26 @@ class TestOee(TestMrpCommon):
             'description': loss_reason.name
         })
 
+    @freeze_time('2025-05-30')
+    def test_unset_end_date(self):
+        with Form(self.env['mrp.workcenter.productivity']) as workcenter_productivity:
+            # Set the end date to tomorrow
+            workcenter_productivity.date_end = datetime(2025, 5, 31, 12, 0, 0)
+            # Unset the end date
+            workcenter_productivity.date_end = False
+            self.assertFalse(workcenter_productivity.date_end)
+            self.assertEqual(workcenter_productivity.duration, 0.0, "The duration should be 0.0 when the end date is unset.")
+
+            workcenter_productivity.workcenter_id = self.workcenter_1
+            workcenter_productivity.date_end = datetime(2025, 5, 31, 12, 0, 0)
+            workcenter_productivity.date_start = datetime(2025, 5, 30, 12, 0, 0)
+            workcenter_productivity.save()
+            self.assertEqual(workcenter_productivity.duration, 1440.0)
+
     def test_wrokcenter_oee(self):
         """  Test case workcenter oee. """
         day = datetime.date(datetime.today())
+        self.workcenter_1.resource_calendar_id.leave_ids.unlink()
         # Make the test work the weekend. It will fails due to workcenter working hours.
         if day.weekday() in (5, 6):
             day -= timedelta(days=2)

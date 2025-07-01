@@ -3,17 +3,18 @@
 # 	* sale_project
 # 
 # Translators:
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
-# Wil Odoo, 2024
-# Fernanda Alvarez, 2024
+# gera-odoo, 2024
+# Wil Odoo, 2025
+# Fernanda Alvarez, 2025
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-06-06 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -141,11 +142,11 @@ msgstr "<span>)</span>"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid ""
-"A project must be defined on the quotation or on the form of products creating a task on order.\n"
-"The following products need a project in which to put their task: %(product_names)s"
+"A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
+"The following product need a project in which to put its task: %(product_name)s"
 msgstr ""
-"Debe definir un proyecto en la cotización o en el formulario de los productos que crean una tarea al realizar una orden.\n"
-"Los siguientes productos necesitan un proyecto para poder asignar la tarea: %(product_names)s"
+"Debe definir un proyecto en la cotización %(order)s o en el formulario de productos que crean una tarea al ordenarse.\n"
+"Los siguientes productos necesitan un proyecto en el que puedan agregar la tarea: %(product_names)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -177,7 +178,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Delivered Quantity (Manual)"
-msgstr "Basado en cantidad entregada (manual) "
+msgstr "Basado en cantidad entregada (manual)"
 
 #. module: sale_project
 #. odoo-python
@@ -201,6 +202,18 @@ msgstr "Cancelado"
 #: model:ir.model,name:sale_project.model_res_config_settings
 msgid "Config Settings"
 msgstr "Ajustes de configuración"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "Cost of Goods Sold"
+msgstr "Costo de bienes vendidos"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "Cost of Goods Sold Items"
+msgstr "Costo de bienes vendidos"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
@@ -486,6 +499,12 @@ msgstr "Servicios de plomería"
 
 #. module: sale_project
 #. odoo-python
+#: code:addons/sale_project/models/project_task.py:0
+msgid "Portal Sale Order"
+msgstr "Orden de venta del portal"
+
+#. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Prepaid/Fixed Price"
 msgstr "Precio fijo o de prepago"
@@ -607,7 +626,7 @@ msgstr "Orden de venta"
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Sales Order Item"
-msgstr "Artículo en la orden de venta"
+msgstr "Artículo de la orden de venta"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
@@ -623,9 +642,9 @@ msgid ""
 "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
 "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
 msgstr ""
-"Artículo de la orden de venta en el que se agregará el tiempo agregado que se le facturará al cliente.\n"
-"De forma predeterminada, se seleccionará el artículo de la orden de venta que está establecido en el proyecto. Si no hay uno, se utilizará el último artículo de la orden de venta prepagado y que todavía tenga tiempo por usar.\n"
-"Si quiere que esta tarea no sea facturable, entonces borre el artículo de la orden de venta. También puede borrar uno por uno el artículo de cada entrada de la hoja de horas."
+"Artículo de la orden de venta al que se agregará el tiempo utilizado para facturar al cliente.\n"
+"El artículo de la orden de venta que está configurado en el proyecto se seleccionará de forma predeterminada. Si no hay uno, se utilizará el último artículo de la orden de venta prepagado y que todavía tenga tiempo por usar.\n"
+"Elimine el artículo de la orden de venta si quiere que esta tarea no sea facturable. También puede cambiar o eliminar el artículo de la orden de venta de las entradas de cada hoja de horas por separado."
 
 #. module: sale_project
 #. odoo-javascript
@@ -727,6 +746,13 @@ msgstr "Tareas"
 #: model:ir.model,name:sale_project.model_report_project_task_user
 msgid "Tasks Analysis"
 msgstr "Análisis de las tareas"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order_line.py:0
+msgid "The Sale Order Item should contain a service product."
+msgstr ""
+"El artículo de la orden de venta debe contener un producto de servicio."
 
 #. module: sale_project
 #. odoo-python

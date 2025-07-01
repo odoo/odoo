@@ -25,22 +25,18 @@ function mapObj(obj, fn) {
 const RELATION_TYPES = new Set(["many2many", "many2one", "one2many"]);
 const X2MANY_TYPES = new Set(["many2many", "one2many"]);
 const AVAILABLE_EVENT = ["create", "update", "delete"];
-export const SERIALIZABLE_MODELS = [
-    "pos.order",
-    "pos.order.line",
-    "pos.payment",
-    "pos.pack.operation.lot",
-    "product.attribute.custom.value",
-    "event.registration", // FIXME should be overrided from pos_event
-    "event.registration.answer",
-];
 
 function processModelDefs(modelDefs) {
     modelDefs = clone(modelDefs);
     const inverseMap = new Map();
     const many2oneFields = [];
+    const baseData = {};
     for (const model in modelDefs) {
         const fields = modelDefs[model];
+        if (!baseData[model]) {
+            baseData[model] = {};
+        }
+
         for (const fieldName in fields) {
             const field = fields[fieldName];
 
@@ -136,14 +132,17 @@ function processModelDefs(modelDefs) {
         inverseMap.set(field, dummyField);
         inverseMap.set(dummyField, field);
     }
-    return [inverseMap, modelDefs];
+    return [inverseMap, modelDefs, baseData];
 }
 
 export class Base {
-    constructor({ models, records, model }) {
+    constructor({ models, records, model, dynamicModels, baseData }) {
         this.models = models;
         this.records = records;
         this.model = model;
+        this._dynamicModels = dynamicModels;
+        this.baseData = baseData;
+        this._indexMaps = {};
     }
     /**
      * Called during instantiation when the instance is fully-populated with field values.
@@ -178,8 +177,8 @@ export class Base {
         return { ...this.uiState };
     }
 
-    update(vals) {
-        this.model.update(this, vals);
+    update(vals, opts = {}) {
+        this.model.update(this, vals, opts);
     }
     delete(opts = {}) {
         return this.model.delete(this, opts);
@@ -214,11 +213,11 @@ export class Base {
                             let data = {};
 
                             if (
-                                !SERIALIZABLE_MODELS.includes(params.relation) &&
+                                !this._dynamicModels.includes(params.relation) &&
                                 typeof id === "number"
                             ) {
                                 return [4, id];
-                            } else if (!SERIALIZABLE_MODELS.includes(params.relation)) {
+                            } else if (!this._dynamicModels.includes(params.relation)) {
                                 throw new Error(
                                     "Trying to create a non serializable record" + params.relation
                                 );
@@ -259,12 +258,9 @@ export class Base {
                         })
                         .filter((s) => s);
 
-                    if (
-                        this.models.commands[params.model].unlink.has(name) ||
-                        this.models.commands[params.model].delete.has(name)
-                    ) {
-                        const unlinks = this.models.commands[params.model].unlink.get(name);
-                        const deletes = this.models.commands[params.model].delete.get(name);
+                    const unlinks = this.getCommand("unlink", name);
+                    const deletes = this.getCommand("delete", name);
+                    if (unlinks || deletes) {
                         for (const id of unlinks || []) {
                             serializedDataOrm[name].push([3, id]);
                         }
@@ -272,8 +268,8 @@ export class Base {
                             serializedDataOrm[name].push([2, id]);
                         }
                         if (clear) {
-                            this.models.commands[params.model].unlink.delete(name);
-                            this.models.commands[params.model].delete.delete(name);
+                            this.deleteCommand("unlink", name);
+                            this.deleteCommand("delete", name);
                         }
                     }
                 } else {
@@ -290,22 +286,55 @@ export class Base {
 
         return serializedData;
     }
-    getCacheMap(fieldName) {
-        const cacheName = `_${fieldName}`;
-        if (!(cacheName in this)) {
-            this[cacheName] = new Map();
+    getIndexMaps(fieldName) {
+        if (!this._indexMaps[fieldName]) {
+            this._indexMaps[fieldName] = new Map();
         }
-        return this[cacheName];
+        return this._indexMaps[fieldName];
     }
     get raw() {
-        return this._raw ?? {};
+        return this.baseData[this.id];
+    }
+    getCommand(command, fieldName) {
+        const key = `${fieldName}_${this.id}`;
+        if (this.models.commands[this.model.modelName][command].has(key)) {
+            return this.models.commands[this.model.modelName][command].get(key);
+        }
+    }
+    deleteCommand(command, fieldName = "") {
+        if (command === "delete" || command === "unlink") {
+            const key = `${fieldName}_${this.id}`;
+            if (this.models.commands[this.model.modelName][command].has(key)) {
+                this.models.commands[this.model.modelName][command].delete(key);
+            }
+        } else if (command === "update") {
+            if (this.models.commands[this.model.modelName][command].has(this.id)) {
+                this.models.commands[this.model.modelName][command].delete(this.id);
+            }
+        }
+    }
+    clearCommands() {
+        this.deleteCommand("update");
+        for (const [name, params] of Object.entries(this.model.modelFields)) {
+            if (
+                !params.dummy &&
+                X2MANY_TYPES.has(params.type) &&
+                this._dynamicModels.includes(params.relation)
+            ) {
+                this.deleteCommand("unlink", name);
+                this.deleteCommand("delete", name);
+                for (const record of [...this[name]]) {
+                    record.clearCommands();
+                }
+            }
+        }
     }
 }
 
 export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     const indexes = opts.databaseIndex || {};
     const database = opts.databaseTable || {};
-    const [inverseMap, processedModelDefs] = processModelDefs(modelDefs);
+    const [inverseMap, processedModelDefs, baseData] = processModelDefs(modelDefs);
     const records = mapObj(processedModelDefs, () => reactive(new Map()));
     const callbacks = mapObj(processedModelDefs, () => []);
     const commands = mapObj(processedModelDefs, () => ({
@@ -313,7 +342,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         unlink: new Map(),
         update: new Set(),
     }));
-    const baseData = {};
     const missingFields = {};
 
     // object: model -> key -> keyval -> record
@@ -331,7 +359,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             container[key] = reactive({});
         }
 
-        baseData[model] = {};
         return container;
     });
 
@@ -340,19 +367,30 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     }
 
     function removeItem(record, fieldName, item) {
-        const cacheMap = record.getCacheMap(fieldName);
+        if (typeof record !== "object") {
+            return;
+        }
+
+        const indexMap = record.getIndexMaps(fieldName);
         const key = database[item.model.modelName]?.key || "id";
         const keyVal = item[key];
+        const existingIndex = indexMap.get(keyVal);
 
-        if (cacheMap.has(keyVal)) {
-            cacheMap.delete(keyVal);
-            const index = record[fieldName].findIndex((r) => r[key] === keyVal);
-            record[fieldName].splice(index, 1);
+        if (existingIndex !== undefined) {
+            indexMap.delete(keyVal);
+            record[fieldName].splice(existingIndex, 1);
+
+            // update indexes for items after existingIndex
+            for (let i = existingIndex; i < record[fieldName].length; i++) {
+                const shiftedItem = record[fieldName][i];
+                const shiftedKeyVal = shiftedItem[key];
+                indexMap.set(shiftedKeyVal, i);
+            }
         }
     }
 
     function addItem(record, fieldName, item) {
-        const cacheMap = record.getCacheMap(fieldName);
+        const indexMap = record.getIndexMaps(fieldName);
         const key = database[item.model.modelName]?.key || "id";
         const keyVal = item[key];
 
@@ -360,12 +398,12 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             console.warn(`Key ${key} not found in ${item.model.modelName}`);
         }
 
-        if (!cacheMap.has(keyVal)) {
-            cacheMap.set(keyVal, item);
+        const existingIndex = indexMap.get(keyVal);
+        if (existingIndex === undefined) {
             record[fieldName].push(item);
+            indexMap.set(keyVal, record[fieldName].length - 1);
         } else {
-            const index = record[fieldName].findIndex((r) => r[key] === keyVal);
-            record[fieldName].splice(index, 1, item);
+            record[fieldName][existingIndex] = item;
         }
     }
 
@@ -429,7 +467,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     }
 
     function exists(model, id) {
-        return records[model].has(id);
+        return model in records && records[model].has(id);
     }
 
     function create(
@@ -444,7 +482,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         const Model = modelClasses[model] || Base;
-        const record = reactive(new Model({ models, records, model: models[model] }));
+        const record = reactive(
+            new Model({
+                models,
+                records,
+                model: models[model],
+                dynamicModels: opts.dynamicModels,
+                baseData: baseData[model],
+            })
+        );
         const id = vals["id"];
         record.id = id;
         if (!vals.uuid && database[model]?.key === "uuid") {
@@ -452,11 +498,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             vals.uuid = record.uuid;
         }
 
-        if (!baseData[model][id]) {
-            baseData[model][id] = vals;
-        }
-
-        record._raw = baseData[model][id];
+        baseData[model][id] = vals;
         records[model].set(id, record);
 
         const fields = getFields(model);
@@ -530,7 +572,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                             if (exists(comodelName, val.id)) {
                                 connect(field, record, val);
                             }
-                        } else if (models[field.relation]) {
+                        } else if (models[field.relation] && typeof val === "object") {
                             const newRecord = create(comodelName, val);
                             connect(field, record, newRecord);
                         } else {
@@ -556,17 +598,38 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         return create(model, vals, false, true);
     }
 
-    function update(model, record, vals) {
+    function update(model, record, vals, opts = {}) {
         const fields = getFields(model);
         Object.assign(baseData[model][record.id], vals);
 
         for (const name in vals) {
-            if (!(name in fields)) {
+            if (!(name in fields) && name !== "id") {
+                continue;
+            } else if (name === "id" && vals[name] !== record.id) {
+                records[model].delete(record.id);
+
+                for (const key of indexes[model] || []) {
+                    const keyVal = record.raw[key];
+                    if (Array.isArray(keyVal)) {
+                        for (const val of keyVal) {
+                            indexedRecords[model][key][val].delete(record.id);
+                        }
+                    }
+                }
+
+                delete baseData[model][record.id];
+
+                record.id = vals[name];
+                records[model].set(record.id, record);
+                baseData[model][record.id] = vals;
+                continue;
+            } else if (name === "id") {
                 continue;
             }
+
             const field = fields[name];
             const comodelName = field.relation;
-            if (X2MANY_TYPES.has(field.type)) {
+            if (X2MANY_TYPES.has(field.type) && comodelName in models) {
                 for (const command of vals[name]) {
                     const [type, ...items] = command;
                     if (type === "unlink") {
@@ -590,16 +653,31 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         for (const record2 of existingRecords) {
                             connect(field, record, record2);
                         }
+                    } else if (type === "set") {
+                        const linkedRecs = record[name];
+                        const existingRecords = items.filter((record) =>
+                            exists(comodelName, record.id)
+                        );
+                        for (const record2 of [...linkedRecs]) {
+                            disconnect(field, record, record2);
+                        }
+                        for (const record2 of existingRecords) {
+                            connect(field, record, record2);
+                        }
                     }
+
+                    baseData[model][record.id][name] = items
+                        .filter((r) => typeof r.id === "number")
+                        .map((r) => r.id);
                 }
-            } else if (field.type === "many2one") {
+            } else if (field.type === "many2one" && comodelName in models) {
                 if (vals[name]) {
                     const id = vals[name]?.id || vals[name];
                     const exist = exists(comodelName, id);
 
                     if (exist) {
                         connect(field, record, vals[name]);
-                    } else if (models[field.relation]) {
+                    } else if (models[field.relation] && typeof vals[name] === "object") {
                         const newRecord = create(comodelName, vals[name]);
                         connect(field, record, newRecord);
                     } else {
@@ -609,13 +687,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     const linkedRec = record[name];
                     disconnect(field, record, linkedRec);
                 }
-            } else {
+            }
+
+            if (!RELATION_TYPES.has(field.type)) {
                 record[name] = vals[name];
             }
         }
 
-        if (typeof record.id === "number") {
-            commands[model].update.add(record.id);
+        if (typeof record.id === "number" && !opts.silent) {
+            addToCommand(model, "update", record.id);
         }
     }
 
@@ -624,10 +704,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         const fields = getFields(model);
         const handleCommand = (inverse, field, record, backend = false) => {
             if (inverse && !inverse.dummy && !opts.silent && typeof id === "number") {
-                const modelCommands = commands[field.relation];
-                const map = backend ? modelCommands.delete : modelCommands.unlink;
-                const oldVal = map.get(inverse.name);
-                map.set(inverse.name, [...(oldVal || []), record.id]);
+                addToCommand(
+                    field.relation,
+                    backend ? "delete" : "unlink",
+                    id,
+                    inverse.name,
+                    record[field.name].id
+                );
             }
         };
 
@@ -662,6 +745,26 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         return id;
     }
 
+    function addToCommand(model, command, recordId, fieldName, inverseId) {
+        if (!(model in commands)) {
+            throw new Error(`Model ${model} not found`);
+        }
+        if (!(command in commands[model])) {
+            throw new Error(`Command ${command} not found`);
+        }
+        if (typeof recordId !== "number") {
+            return;
+        }
+        const modelCommand = commands[model][command];
+        if (["delete", "unlink"].includes(command)) {
+            const key = `${fieldName}_${inverseId}`;
+            const oldVal = modelCommand.get(key);
+            modelCommand.set(key, [...(oldVal || []), recordId]);
+        } else if (command === "update") {
+            modelCommand.add(recordId);
+        }
+    }
+
     function createCRUD(model, fields) {
         return {
             // We need to read these object from this to keep
@@ -671,7 +774,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 return records;
             },
             get orderedRecords() {
-                return Array.from(records[model].values());
+                return Array.from(this.records[model].values());
             },
             get indexedRecords() {
                 return indexedRecords;
@@ -700,16 +803,16 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 }
                 return result;
             },
-            update(record, vals) {
-                return update(model, record, vals);
+            update(record, vals, opts = {}) {
+                return update(model, record, vals, opts);
             },
             delete(record, opts = {}) {
                 return delete_(model, record, opts);
             },
-            deleteMany(records) {
+            deleteMany(records, opts = {}) {
                 const result = [];
                 records.forEach((record) => {
-                    result.push(delete_(model, record));
+                    result.push(delete_(model, record, opts));
                 });
                 return result;
             },
@@ -773,11 +876,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         continue;
                     }
 
+                    const raw =
+                        typeof record.raw[name] == "object" ? record.raw[name]?.id || false : false;
                     if (field.type === "many2one") {
-                        result[name] = record[name]?.id || record.raw[name] || false;
+                        result[name] = record[name]?.id || raw || false;
                     } else if (X2MANY_TYPES.has(field.type)) {
-                        const ids = [...record[name]].map((record) => record.id);
-                        result[name] = ids.length ? ids : (!orm && record.raw[name]) || [];
+                        const ids = [...record[name]].map((record) => record.id).filter(Boolean);
+                        result[name] = ids.length ? ids : (!orm && raw) || [];
                     } else if (typeof record[name] === "object") {
                         result[name] = JSON.stringify(record[name]);
                     } else {
@@ -868,13 +973,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
      */
     function loadData(rawData, load = [], fromSerialized = false) {
         const results = {};
-        const oldStates = {};
+        const ignoreConnection = {};
 
         for (const model in rawData) {
+            ignoreConnection[model] = [];
             const modelKey = database[model]?.key || "id";
-            if (!oldStates[model]) {
-                oldStates[model] = {};
-            }
 
             if (!load.includes(model) && load.length !== 0) {
                 continue;
@@ -884,10 +987,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
             const _records = rawData[model];
             for (const record of _records) {
-                if (!baseData[model]) {
-                    baseData[model] = {};
-                }
-
                 if (fromSerialized && typeof record.id === "string") {
                     const data = record.id.split("_");
                     const id = parseInt(data[1]);
@@ -898,22 +997,62 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     }
                 }
 
-                baseData[model][record.id] = record;
-
                 const oldRecord = indexedRecords[model][modelKey][record[modelKey]];
                 if (oldRecord) {
-                    oldStates[model][oldRecord[modelKey]] = oldRecord.serializeState();
+                    const raw = {};
+                    for (const [field, value] of Object.entries(record)) {
+                        const params = getFields(model)[field];
+                        if (field === "id" || !params) {
+                            continue;
+                        }
+
+                        if (X2MANY_TYPES.has(params.type)) {
+                            if (
+                                fromSerialized ||
+                                (oldRecord._dynamicModels.includes(params.relation) &&
+                                    database[params.relation]?.key &&
+                                    database[params.relation]?.key !== "id")
+                            ) {
+                                value.push(
+                                    ...oldRecord[field]
+                                        .filter((r) => typeof r.id === "string")
+                                        .map((r) => r.id)
+                                );
+                            }
+                            const existingRecords = value
+                                .map((r) => models[params.relation]?.get(r))
+                                .filter(Boolean);
+
+                            if (existingRecords.length) {
+                                record[field] = [["set", ...existingRecords]];
+                            } else {
+                                record[field] = [["clear"]];
+                            }
+
+                            raw[field] = value.filter((id) => typeof id === "number");
+                        } else if (
+                            params.type === "many2one" &&
+                            value &&
+                            !exists(params.relation, value)
+                        ) {
+                            const key = `${params.relation}_${value}`;
+                            if (!missingFields[key]) {
+                                missingFields[key] = [[oldRecord, params]];
+                            } else {
+                                missingFields[key].push([oldRecord, params]);
+                            }
+                        }
+                    }
+
+                    oldRecord.update(record, { silent: true });
+                    oldRecord.setup(record);
+                    ignoreConnection[model].push(record.id);
+                    results[model].push(oldRecord);
+                    Object.assign(baseData[model][record.id], raw);
+                    continue;
                 }
 
                 const result = create(model, record, true, false, true);
-                if (oldRecord && oldRecord.id !== result.id) {
-                    oldRecord.delete();
-                }
-
-                if (!(model in results)) {
-                    results[model] = [];
-                }
-
                 results[model].push(result);
             }
         }
@@ -941,6 +1080,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         connect(field, record, recorded);
                     }
                     delete missingFields[key];
+                }
+
+                if (ignoreConnection[model].includes(rawRec.id)) {
+                    continue;
                 }
 
                 for (const name in fields) {
@@ -990,12 +1133,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         // Setup all records when relations are linked
         for (const { raw, record } of modelToSetup) {
             record.setup(raw);
-            const model = record.model.modelName;
-            const modelKey = database[model]?.key || "id";
-            const states = oldStates[model][record[modelKey]];
-            if (states) {
-                record.setupState(states);
-            }
         }
 
         makeRecordsAvailable(results, rawData);
@@ -1025,12 +1162,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 }
             }
         };
-
-        for (const [models, values] of Object.entries(rawData)) {
-            for (const value of values) {
-                baseData[models][value.id] = value;
-            }
-        }
 
         for (const [model, values] of Object.entries(results)) {
             indexRecord(model, values);

@@ -1814,6 +1814,20 @@ class TestMany2one(TransactionCase):
         ''']):
             self.Partner.search([('company_id', 'not like', "blablabla")])
 
+    def test_name_search_undefined(self):
+        """Check that if the _rec_name is not defined, we do not restrict anything.
+
+        This way the model continues to work in the web interface inside many2one fields.
+        """
+        PartnerClass = self.env.registry['res.partner']
+        with (
+            patch.object(PartnerClass, '_rec_name', ''),
+            patch.object(PartnerClass, '_rec_names_search', []),
+            mute_logger('odoo.models'),
+        ):
+            self.assertGreater(len(self.Partner.name_search()), 0)
+            self.assertGreater(len(self.Partner.name_search('test')), 0)
+
 
 class TestOne2many(TransactionCase):
     def setUp(self):

@@ -71,7 +71,7 @@ class ir_cron(models.Model):
     cron_name = fields.Char('Name', compute='_compute_cron_name', store=True)
     user_id = fields.Many2one('res.users', string='Scheduler User', default=lambda self: self.env.user, required=True)
     active = fields.Boolean(default=True)
-    interval_number = fields.Integer(default=1, help="Repeat every x.", required=True)
+    interval_number = fields.Integer(default=1, aggregator=None, help="Repeat every x.", required=True)
     interval_type = fields.Selection([('minutes', 'Minutes'),
                                       ('hours', 'Hours'),
                                       ('days', 'Days'),
@@ -79,7 +79,7 @@ class ir_cron(models.Model):
                                       ('months', 'Months')], string='Interval Unit', default='months', required=True)
     nextcall = fields.Datetime(string='Next Execution Date', required=True, default=fields.Datetime.now, help="Next planned execution date for this job.")
     lastcall = fields.Datetime(string='Last Execution Date', help="Previous time the cron ran successfully, provided to the job through the context on the `lastcall` key")
-    priority = fields.Integer(default=5, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
+    priority = fields.Integer(default=5, aggregator=None, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
     failure_count = fields.Integer(default=0, help="The number of consecutive failures of this job. It is automatically reset on success.")
     first_failure_date = fields.Datetime(string='First Failure Date', help="The first time the cron failed. It is automatically reset on success.")
 
@@ -721,7 +721,7 @@ class ir_cron(models.Model):
         :return: a pair ``(cron, progress)``, where the progress has
             been injected inside the cron's context
         """
-        progress = self.env['ir.cron.progress'].create([{
+        progress = self.env['ir.cron.progress'].sudo().create([{
             'cron_id': self.id,
             'remaining': 0,
             'done': 0,
@@ -743,7 +743,7 @@ class ir_cron(models.Model):
             return
         if done < 0 or remaining < 0:
             raise ValueError("`done` and `remaining` must be positive integers.")
-        self.env['ir.cron.progress'].browse(progress_id).write({
+        self.env['ir.cron.progress'].sudo().browse(progress_id).write({
             'remaining': remaining,
             'done': done,
             'deactivate': deactivate,

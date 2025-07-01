@@ -128,7 +128,7 @@ class ProductAttributeValue(models.Model):
                 [('product_attribute_value_id', '=', pav.id)]
             ).with_context(active_test=False).ptav_product_variant_ids
             active_linked_products = linked_products.filtered('active')
-            if not active_linked_products:
+            if not active_linked_products and linked_products:
                 # If product attribute value found on non-active product variants
                 # archive PAV instead of deleting
                 pavs_to_archive |= pav

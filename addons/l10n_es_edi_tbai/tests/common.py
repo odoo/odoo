@@ -19,7 +19,7 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.frozen_today = datetime(year=2022, month=1, day=1, hour=0, minute=0, second=0, tzinfo=timezone('utc'))
+        cls.frozen_today = datetime(year=2025, month=1, day=1, hour=0, minute=0, second=0, tzinfo=timezone('utc'))
 
         # Allow to see the full result of AssertionError.
         cls.maxDiff = None
@@ -29,7 +29,7 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
         cls.company_data['company'].write({
             'name': 'EUS Company',
             'state_id': cls.env.ref('base.state_es_ss').id,
-            'vat': 'ES09760433S',
+            'vat': 'ESA12345674',
             'l10n_es_tbai_test_env': True,
         })
         cls._set_tax_agency('gipuzkoa')
@@ -58,8 +58,8 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
             cert_name = 'bizkaia_111111.p12'
             cert_password = '111111'
         elif agency == 'gipuzkoa':
-            cert_name = 'gipuzkoa_IZDesa2021.p12'
-            cert_password = 'IZDesa2021'
+            cert_name = 'gipuzkoa_Iz3np32024.p12'
+            cert_password = 'Iz3np32024'
         else:
             raise ValueError("Unknown tax agency: " + agency)
 
@@ -90,8 +90,8 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
         return cls.env['account.move'].with_context(edi_test_mode=True).create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
-            'invoice_date': '2022-01-01',
-            'date': '2022-01-01',
+            'invoice_date': '2025-01-01',
+            'date': '2025-01-01',
             **kwargs,
             'invoice_line_ids': [(0, 0, {
                 'product_id': cls.product_a.id,
@@ -104,7 +104,7 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
     def _create_posted_invoice(cls):
         out_invoice = cls.env['account.move'].create({
                 'move_type': 'out_invoice',
-                'invoice_date': date(2022, 1, 1),
+                'invoice_date': date(2025, 1, 1),
                 'partner_id': cls.partner_a.id,
                 'invoice_line_ids': [(0, 0, {
                     'product_id': cls.product_a.id,
@@ -121,7 +121,7 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
     def _get_invoice_send_wizard(cls, invoice):
         out_invoice_send_wizard = cls.env['account.move.send.wizard']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'sending_methods': []})
         return out_invoice_send_wizard
 
     @classmethod
@@ -130,7 +130,7 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
             'move_type': 'in_invoice',
             'invoice_date': date.today(),
             'partner_id': cls.partner_a.id,
-            'ref': "A reference",
+            'ref': "INV123",
             'invoice_line_ids': [(0, 0, {
                 'product_id': cls.product_a.id,
                 'price_unit': 1000.0,

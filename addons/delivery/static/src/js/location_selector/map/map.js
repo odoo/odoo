@@ -110,6 +110,8 @@ export class Map extends Component {
                     'delivery.locationSelector.map.marker',
                     { number: locations.indexOf(loc) + 1 },
                 ),
+                iconSize: [30, 40],
+                iconAnchor: [15, 40],
             };
 
             const marker = L.marker(

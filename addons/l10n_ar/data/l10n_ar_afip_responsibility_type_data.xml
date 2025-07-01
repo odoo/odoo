@@ -7,12 +7,12 @@
     </record>
     <record model='l10n_ar.afip.responsibility.type' id='res_IVARNI'>
         <field name='code'>2</field>
-        <field name='name'>IVA Responsable no Inscripto</field>
+        <field name='name'>(Depreciado) IVA Responsable no Inscripto</field>
         <field name='active' eval="False"/>
     </record>
     <record model='l10n_ar.afip.responsibility.type' id='res_IVANR'>
         <field name='code'>3</field>
-        <field name='name'>IVA no Responsable</field>
+        <field name='name'>(Depreciado) IVA no Responsable</field>
         <field name='active' eval="False"/>
     </record>
     <record model='l10n_ar.afip.responsibility.type' id='res_IVAE'>
@@ -33,11 +33,15 @@
     <record model='l10n_ar.afip.responsibility.type' id='res_NOCATEG'>
         <field name='code'>7</field>
         <field name='name'>Sujeto no Categorizado</field>
-        <field name='active' eval="False"/>
+        <field name='active' eval="True"/>
+    </record>
+    <record model='l10n_ar.afip.responsibility.type' id='res_EXT_Prov'>
+        <field name='code'>8</field>
+        <field name='name'>Proveedor del Exterior</field>
     </record>
     <record model='l10n_ar.afip.responsibility.type' id='res_EXT'>
         <field name='code'>9</field>
-        <field name='name'>Cliente / Proveedor del Exterior</field>
+        <field name='name'>Cliente del Exterior</field>
         <field name='active' eval="True"/>
     </record>
     <record model='l10n_ar.afip.responsibility.type' id='res_IVA_LIB'>
@@ -47,26 +51,31 @@
     </record>
     <record model='l10n_ar.afip.responsibility.type' id='res_IVARI_AP'>
         <field name='code'>11</field>
-        <field name='name'>IVA Responsable Inscripto – Agente de Percepción</field>
+        <field name='name'>(Depreciado) IVA Responsable Inscripto – Agente de Percepción</field>
         <field name='active' eval="False"/>
     </record>
     <record model='l10n_ar.afip.responsibility.type' id='res_EVENTUAL'>
         <field name='code'>12</field>
-        <field name='name'>Pequeño Contribuyente Eventual</field>
+        <field name='name'>(Depreciado) Pequeño Contribuyente Eventual</field>
         <field name='active' eval="False"/>
     </record>
     <record model='l10n_ar.afip.responsibility.type' id='res_MON_SOCIAL'>
         <field name='code'>13</field>
         <field name='name'>Monotributista Social</field>
-        <field name='active' eval="False"/>
+        <field name='active' eval="True"/>
     </record>
     <record model='l10n_ar.afip.responsibility.type' id='res_EVENTUAL_SOCIAL'>
         <field name='code'>14</field>
-        <field name='name'>Pequeño Contribuyente Eventual Social</field>
+        <field name='name'>(Depreciado) Pequeño Contribuyente Eventual Social</field>
         <field name='active' eval="False"/>
     </record>
     <record model='l10n_ar.afip.responsibility.type' id='res_IVA_NO_ALC'>
-        <field name='code'>99</field>
+        <field name='code'>15</field>
         <field name='name'>IVA No Alcanzado</field>
+        <field name='active' eval="True"/>
+    </record>
+    <record model='l10n_ar.afip.responsibility.type' id='res_MON_Ind'>
+        <field name='code'>16</field>
+        <field name='name'>Monotributo Trabajador / Independiente Promovido</field>
     </record>
 </odoo>

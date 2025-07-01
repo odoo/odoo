@@ -1,5 +1,4 @@
 import { _t } from "@web/core/l10n/translation";
-import { parseFloat } from "@web/views/fields/parsers";
 import { Transition } from "@web/core/transition";
 import { useBus, useService } from "@web/core/utils/hooks";
 
@@ -73,16 +72,6 @@ export class DebugWidget extends Component {
     toggleWidget() {
         this.state.isShown = !this.state.isShown;
     }
-    setWeight() {
-        var weightInKg = parseFloat(this.state.weightInput);
-        if (!isNaN(weightInKg)) {
-            this.hardwareProxy.setDebugWeight(weightInKg);
-        }
-    }
-    resetWeight() {
-        this.state.weightInput = "";
-        this.hardwareProxy.resetDebugWeight();
-    }
     async barcodeScan() {
         if (!this.barcodeReader) {
             return;
@@ -118,7 +107,7 @@ export class DebugWidget extends Component {
                 );
 
                 for (const order of orders) {
-                    this.pos.data.localDeleteCascade(order, true);
+                    this.pos.data.localDeleteCascade(order, !paid);
                 }
 
                 if (!this.pos.get_order()) {
@@ -160,6 +149,10 @@ export class DebugWidget extends Component {
 
                     if (!model) {
                         continue;
+                    }
+
+                    if (!order[rel.name] && (rel.local || rel.related || rel.compute)) {
+                        order[rel.name] = [];
                     }
 
                     const existingRecords = model.getAllBy("id");

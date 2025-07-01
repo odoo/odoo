@@ -1,8 +1,15 @@
 import { expect, test } from "@odoo/hoot";
+import { tick } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent, setSelection } from "../_helpers/selection";
 import { s, span } from "../_helpers/tags";
-import { insertText, strikeThrough, tripleClick } from "../_helpers/user_actions";
+import {
+    insertText,
+    strikeThrough,
+    tripleClick,
+    simulateArrowKeyPress,
+} from "../_helpers/user_actions";
+import { unformat } from "../_helpers/format";
 
 test("should make a few characters strikeThrough", async () => {
     await testEditor({
@@ -190,4 +197,62 @@ test("should not format non-editable text (strikeThrough)", async () => {
         stepFunction: strikeThrough,
         contentAfter: `<p>${s("[a")}</p><p contenteditable="false">b</p><p>${s("c]")}</p>`,
     });
+});
+
+test("should make a few characters strikeThrough inside table (strikeThrough)", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td"><p>[abc</p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td"><p>def</p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td"><p>]<br></p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>`),
+        stepFunction: strikeThrough,
+        contentAfterEdit: unformat(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td"><p>${s(`[abc`)}</p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td"><p>${s(`def`)}</p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td"><p>${s(`]<br>`)}</p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>`),
+    });
+});
+
+test("should remove empty strikeThrough when changing selection", async () => {
+    const { editor, el } = await setupEditor("<p>ab[]cd</p>");
+
+    strikeThrough(editor);
+    await tick();
+    expect(getContent(el)).toBe(`<p>ab${s("[]\u200B", "first")}cd</p>`);
+
+    await simulateArrowKeyPress(editor, "ArrowLeft");
+    await tick(); // await selectionchange
+    expect(getContent(el)).toBe(`<p>a[]bcd</p>`);
 });

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.3alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 12:18+0000\n"
+"POT-Creation-Date: 2024-12-26 17:03+0000\n"
 "PO-Revision-Date: 2023-04-14 14:20+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -32,17 +32,17 @@ msgstr "00 - Opérations soumises à un régime particulier"
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_line_01
 msgid "01 - Operations subject to 6% VAT"
-msgstr "01 - Opérations soumises à la TVA à 6%"
+msgstr "01 - Opérations soumises à la TVA de 6%"
 
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_line_02
 msgid "02 - Operations subject to 12% VAT"
-msgstr "02 - Opérations soumises à la TVA à 12%"
+msgstr "02 - Opérations soumises à la TVA de 12%"
 
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_line_03
 msgid "03 - Operations subject to 21% VAT"
-msgstr "03 - Opérations soumises à la TVA à 21%"
+msgstr "03 - Opérations soumises à la TVA de 21%"
 
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_line_44
@@ -73,38 +73,42 @@ msgstr "46T - Ventes ABC"
 #: model:account.report.line,name:l10n_be.tax_report_line_47
 msgid "47 - Other exempted operations and operations carried out abroad"
 msgstr ""
-"47 - Autres opérations exemptées et autres opérations effectuées à l'étranger"
+"47 - Autres opérations exemptées et opérations effectuées à l'étranger"
 
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_title_operations_sortie_48
 msgid "48 - Credit notes for operations in grids [44] and [46]"
 msgstr ""
-"48 - Notes de crédit relatif aux opérations inscrites en grilles [44] et [46]"
+"48 - Notes de crédit relatives aux opérations inscrites en grilles [44] et [46]"
 
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_line_48s44
 msgid "48s44 - Credit notes for operations in grid [44]"
-msgstr "48s44 - Notes de crédit relatif aux opérations inscrites en grille [44]"
+msgstr ""
+"48s44 - Notes de crédit relatives aux opérations inscrites en grille [44]"
 
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_line_48s46L
 msgid "48s46L - Credit notes for operations in grid [46L]"
-msgstr "48s46L - Notes de crédit relatif aux opérations inscrites en grille [46L]"
+msgstr ""
+"48s46L - Notes de crédit relatives aux opérations inscrites en grille [46L]"
 
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_line_48s46T
 msgid "48s46T - Credit notes for operations in grid [46T]"
-msgstr "48s46T - Notes de crédit relatif aux opérations inscrites en grille [46T]"
+msgstr ""
+"48s46T - Notes de crédit relatives aux opérations inscrites en grille [46T]"
 
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_line_49
 msgid "49 - Credit notes for other operations in part II"
-msgstr "49 - Notes de crédit relatif aux autres opérations de la partie II"
+msgstr "49 - Notes de crédit relatives aux autres opérations de la partie II"
 
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_line_54
 msgid "54 - VAT on operations in grids [01], [02] and [03]"
-msgstr "54 - TVA relative aux opérations déclarées en grilles [01], [02] et [03]"
+msgstr ""
+"54 - TVA relative aux opérations déclarées en grilles [01], [02] et [03]"
 
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_line_55
@@ -178,12 +182,15 @@ msgstr "83 - Biens d'investissement"
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_line_84
 msgid "84 - Credit notes for operations in grids [86] and [88]"
-msgstr "84 - Notes de crédits reçues relatif aux opérations inscrites en grilles [86] et [88]"
+msgstr ""
+"84 - Notes de crédits reçues relatives aux opérations inscrites en grilles "
+"[86] et [88]"
 
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_line_85
 msgid "85 - Credit notes received relating to other operations in part III"
-msgstr "85 - Notes de crédits reçues relatif aux autres opérations de la partie III"
+msgstr ""
+"85 - Notes de crédits reçues relatives aux autres opérations de la partie III"
 
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_line_86
@@ -207,7 +214,7 @@ msgstr "Modèle de plan comptable"
 
 #. module: l10n_be
 #. odoo-python
-#: code:addons/l10n_be/models/template_be_ass.py:0
+#: code:addons/l10n_be/models/template_be_asso.py:0
 msgid "Associations and Foundations"
 msgstr "Associations et fondations"
 
@@ -215,18 +222,6 @@ msgstr "Associations et fondations"
 #: model:account.report.column,name:l10n_be.tax_report_vat_balance
 msgid "Balance"
 msgstr "Solde"
-
-#. module: l10n_be
-#. odoo-python
-#: code:addons/l10n_be/models/template_be.py:0
-msgid "Bank Fees (21% VAT)"
-msgstr "Frais bancaires (21% TVA)"
-
-#. module: l10n_be
-#. odoo-python
-#: code:addons/l10n_be/models/template_be.py:0
-msgid "Bank Fees (No VAT)"
-msgstr "Frais bancaires (Hors TVA)"
 
 #. module: l10n_be
 #. odoo-python
@@ -247,7 +242,7 @@ msgstr "Standard de référence"
 
 #. module: l10n_be
 #. odoo-python
-#: code:addons/l10n_be/models/template_be_com.py:0
+#: code:addons/l10n_be/models/template_be_comp.py:0
 msgid "Companies"
 msgstr "Sociétés"
 
@@ -255,18 +250,6 @@ msgstr "Sociétés"
 #: model:ir.model,name:l10n_be.model_res_partner
 msgid "Contact"
 msgstr "Contact"
-
-#. module: l10n_be
-#. odoo-python
-#: code:addons/l10n_be/models/template_be.py:0
-msgid "Discount"
-msgstr "Escompte"
-
-#. module: l10n_be
-#. odoo-python
-#: code:addons/l10n_be/models/template_be.py:0
-msgid "Discount Granted"
-msgstr "Escompte accordé"
 
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_title_operations_sortie
@@ -284,10 +267,9 @@ msgid "IV Due"
 msgstr "IV Dues"
 
 #. module: l10n_be
-#. odoo-python
-#: code:addons/l10n_be/models/template_be.py:0
-msgid "Internal Transfers"
-msgstr "Virements internes"
+#: model:ir.model.fields.selection,name:l10n_be.selection__account_tax__tax_scope__invest
+msgid "Investment"
+msgstr "Investissements"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_account_journal
@@ -300,9 +282,29 @@ msgid "Journal Entry"
 msgstr "Écriture comptable"
 
 #. module: l10n_be
+#: model:ir.model.fields.selection,name:l10n_be.selection__account_tax__tax_scope__merch
+msgid "Merchandise"
+msgstr "Marchandises"
+
+#. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_title_operations
 msgid "Operations"
 msgstr "Opérations"
+
+#. module: l10n_be
+#: model:ir.model.fields,help:l10n_be.field_account_tax__tax_scope
+msgid "Restrict the use of taxes to a type of product."
+msgstr "Limiter l'utilisation de taxes à un type de produit."
+
+#. module: l10n_be
+#: model:ir.model,name:l10n_be.model_account_tax
+msgid "Tax"
+msgstr "Taxe"
+
+#. module: l10n_be
+#: model:ir.model.fields,field_description:l10n_be.field_account_tax__tax_scope
+msgid "Tax Scope"
+msgstr "Portée de la taxe"
 
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_title_taxes
@@ -317,14 +319,18 @@ msgstr "V Déductibles"
 #. module: l10n_be
 #: model:account.report,name:l10n_be.tax_report_vat
 msgid "VAT Return"
-msgstr "Déclaration à la TVA"
+msgstr "Déclaration de TVA"
 
 #. module: l10n_be
 #: model:account.report.line,name:l10n_be.tax_report_title_taxes_soldes
 msgid "VI Balance"
-msgstr "VI Soldes"
+msgstr "Solde VI"
 
 #. module: l10n_be
 #: model:ir.model.fields,help:l10n_be.field_account_journal__invoice_reference_model
-msgid "You can choose different models for each type of reference. The default one is the Odoo reference."
-msgstr "Vous pouvez choisir différents modèles par type de référence. Le modèle par défaut est la référence Odoo."
+msgid ""
+"You can choose different models for each type of reference. The default one "
+"is the Odoo reference."
+msgstr ""
+"Vous pouvez choisir différents modèles par type de référence. Le modèle par "
+"défaut est la référence Odoo."

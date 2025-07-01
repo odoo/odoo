@@ -5,7 +5,6 @@ import * as tourUtils from '@website_sale/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewards', {
     url: '/shop?search=Super%20Chair',
-    checkDelay: 100,
     steps: () => [
         {
             trigger: ".oe_search_found",
@@ -14,6 +13,7 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
             content: 'select Super Chair',
             trigger: '.oe_product_cart a:contains("Super Chair")',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: 'Add Super Chair into cart',
@@ -36,6 +36,7 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
             content: 'validate the promo code',
             trigger: 'form[name="coupon_code"] .a-submit',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: 'check reward',
@@ -45,6 +46,7 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
             content: 'claim reward',
             trigger: '.alert:contains("10% on Super Chair") .btn:contains("Claim")',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "check claimed reward",
@@ -64,6 +66,7 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
             content: 'validate the promo code',
             trigger: 'form[name="coupon_code"] .a-submit',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: 'check refused message',

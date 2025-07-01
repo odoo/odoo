@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import namedtuple
 import logging
 import re
 import serial
@@ -16,11 +15,9 @@ from odoo.addons.hw_drivers.iot_handlers.drivers.SerialBaseDriver import SerialD
 
 _logger = logging.getLogger(__name__)
 
-# Only needed to ensure compatibility with older versions of Odoo
+# Only needed to expose scale via hw_proxy (used by Community edition)
 ACTIVE_SCALE = None
 new_weight_event = threading.Event()
-
-ScaleProtocol = namedtuple('ScaleProtocol', SerialProtocol._fields + ('zeroCommand', 'tareCommand', 'clearCommand', 'autoResetWeight'))
 
 # 8217 Mettler-Toledo (Weight-only) Protocol, as described in the scale's Service Manual.
 #    e.g. here: https://www.manualslib.com/manual/861274/Mettler-Toledo-Viva.html?page=51#manual
@@ -28,7 +25,7 @@ ScaleProtocol = namedtuple('ScaleProtocol', SerialProtocol._fields + ('zeroComma
 # both the USB and RS232 ports, it can be configured in the setup menu as protocol option 3.
 # We use the default serial protocol settings, the scale's settings can be configured in the
 # scale's menu anyway.
-Toledo8217Protocol = ScaleProtocol(
+Toledo8217Protocol = SerialProtocol(
     name='Toledo 8217',
     baudrate=9600,
     bytesize=serial.SEVENBITS,
@@ -43,18 +40,14 @@ Toledo8217Protocol = ScaleProtocol(
     newMeasureDelay=0.2,
     commandTerminator=b'',
     measureCommand=b'W',
-    zeroCommand=b'Z',
-    tareCommand=b'T',
-    clearCommand=b'C',
     emptyAnswerValid=False,
-    autoResetWeight=False,
 )
 
 # The ADAM scales have their own RS232 protocol, usually documented in the scale's manual
 #   e.g at https://www.adamequipment.com/media/docs/Print%20Publications/Manuals/PDF/AZEXTRA/AZEXTRA-UM.pdf
 #          https://www.manualslib.com/manual/879782/Adam-Equipment-Cbd-4.html?page=32#manual
 # Only the baudrate and label format seem to be configurable in the AZExtra series.
-ADAMEquipmentProtocol = ScaleProtocol(
+ADAMEquipmentProtocol = SerialProtocol(
     name='Adam Equipment',
     baudrate=4800,
     bytesize=serial.EIGHTBITS,
@@ -72,20 +65,16 @@ ADAMEquipmentProtocol = ScaleProtocol(
     # before the scale starts beeping. Could not find a way to disable the beeps.
     newMeasureDelay=5,
     measureCommand=b'P',
-    zeroCommand=b'Z',
-    tareCommand=b'T',
-    clearCommand=None,  # No clear command -> Tare again
     emptyAnswerValid=True,  # AZExtra does not answer unless a new non-zero weight has been detected
-    autoResetWeight=True,  # AZExtra will not return 0 after removing products
 )
 
 
-# Ensures compatibility with older versions of Odoo
-class ScaleReadOldRoute(http.Controller):
+# HW Proxy is used by Community edition
+class ScaleReadHardwareProxy(http.Controller):
     @http.route('/hw_proxy/scale_read', type='json', auth='none', cors='*')
     def scale_read(self):
         if ACTIVE_SCALE:
-            return {'weight': ACTIVE_SCALE._scale_read_old_route()}
+            return {'weight': ACTIVE_SCALE._scale_read_hw_proxy()}
         return None
 
 
@@ -99,14 +88,13 @@ class ScaleDriver(SerialDriver):
         self._set_actions()
         self._is_reading = True
 
-        # Ensures compatibility with older versions of Odoo
-        # Only the last scale connected is kept
+        # The HW Proxy can only expose one scale,
+        # only the last scale connected is kept
         global ACTIVE_SCALE
         ACTIVE_SCALE = self
         proxy_drivers['scale'] = ACTIVE_SCALE
 
-    # Ensures compatibility with older versions of Odoo
-    # and allows using the `ProxyDevice` in the point of sale to retrieve the status
+    # Used by the HW Proxy in Community edition
     def get_status(self):
         """Allows `hw_proxy.Proxy` to retrieve the status of the scales"""
 
@@ -118,9 +106,6 @@ class ScaleDriver(SerialDriver):
 
         self._actions.update({
             'read_once': self._read_once_action,
-            'set_zero': self._set_zero_action,
-            'set_tare': self._set_tare_action,
-            'clear_tare': self._clear_tare_action,
             'start_reading': self._start_reading_action,
             'stop_reading': self._stop_reading_action,
         })
@@ -133,29 +118,12 @@ class ScaleDriver(SerialDriver):
         """Stops asking for the scale value."""
         self._is_reading = False
 
-    def _clear_tare_action(self, data):
-        """Clears the scale current tare weight."""
-
-        # if the protocol has no clear tare command, we can just tare again
-        clearCommand = self._protocol.clearCommand or self._protocol.tareCommand
-        self._connection.write(clearCommand + self._protocol.commandTerminator)
-
     def _read_once_action(self, data):
         """Reads the scale current weight value and pushes it to the frontend."""
 
         self._read_weight()
         self.last_sent_value = self.data['value']
         event_manager.device_changed(self)
-
-    def _set_zero_action(self, data):
-        """Makes the weight currently applied to the scale the new zero."""
-
-        self._connection.write(self._protocol.zeroCommand + self._protocol.commandTerminator)
-
-    def _set_tare_action(self, data):
-        """Sets the scale's current weight value as tare weight."""
-
-        self._connection.write(self._protocol.tareCommand + self._protocol.commandTerminator)
 
     @staticmethod
     def _get_raw_response(connection):
@@ -189,8 +157,8 @@ class ScaleDriver(SerialDriver):
                 'status': self._status
             }
 
-    # Ensures compatibility with older versions of Odoo
-    def _scale_read_old_route(self):
+    # Ensures compatibility with Community edition
+    def _scale_read_hw_proxy(self):
         """Used when the iot app is not installed"""
         with self._device_lock:
             self._read_weight()
@@ -282,8 +250,8 @@ class AdamEquipmentDriver(ScaleDriver):
         else:
             time.sleep(0.5)
 
-    # Ensures compatibility with older versions of Odoo
-    def _scale_read_old_route(self):
+    # Ensures compatibility with Community edition
+    def _scale_read_hw_proxy(self):
         """Used when the iot app is not installed"""
 
         time.sleep(3)

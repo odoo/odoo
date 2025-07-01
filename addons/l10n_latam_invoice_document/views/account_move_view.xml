@@ -35,9 +35,9 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <form>
-                <field name="l10n_latam_available_document_type_ids" invisible="1"/>
-                <field name="l10n_latam_use_documents" invisible="1"/>
-                <field name="l10n_latam_manual_document_number" invisible="1"/>
+                <field name="l10n_latam_available_document_type_ids" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="l10n_latam_use_documents" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="l10n_latam_manual_document_number" invisible="1"/> <!-- TODO: to be removed in master -->
             </form>
 
             <xpath expr="//div[@name='journal_div']" position="after">
@@ -49,12 +49,11 @@
                 <field name="l10n_latam_document_number"
                     invisible="(not l10n_latam_use_documents or not l10n_latam_manual_document_number) and (not l10n_latam_use_documents or highest_name or state != 'draft')"
                     readonly="posted_before and state != 'draft'"
-                    required="partner_id and l10n_latam_use_documents and (l10n_latam_manual_document_number or not highest_name)"/>
+                    required="partner_id and l10n_latam_use_documents and l10n_latam_manual_document_number"/>
             </xpath>
 
             <!-- on latam_documents we use document_number to set name -->
             <field name="name" position="attributes">
-                <attribute name="invisible">name == '/' and not posted_before and not quick_edit_mode</attribute>
                 <attribute name="readonly">state != 'draft' or l10n_latam_use_documents</attribute>
                 <attribute name="force_save">1</attribute>
             </field>

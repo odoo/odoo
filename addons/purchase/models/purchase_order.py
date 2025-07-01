@@ -243,6 +243,8 @@ class PurchaseOrder(models.Model):
                 currency=order.currency_id or order.company_id.currency_id,
                 company=order.company_id,
             )
+            if order.currency_id != order.company_currency_id:
+                order.tax_totals['amount_total_cc'] = f"({formatLang(self.env, order.amount_total_cc, currency_obj=self.company_currency_id)})"
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
@@ -476,6 +478,7 @@ class PurchaseOrder(models.Model):
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
             'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
+            'email_notification_allow_footer': True,
             'force_email': True,
             'mark_rfq_as_sent': True,
         })
@@ -635,7 +638,10 @@ class PurchaseOrder(models.Model):
             for i, line_val in enumerate(line_vals, start=1)
         ]
         downpayment_lines = self.env['purchase.order.line'].create(vals)
-        self.order_line += downpayment_lines
+        self.order_line = [
+            Command.link(line_id)
+            for line_id in downpayment_lines.ids
+        ]  # a simple concatenation would cause all order_line to recompute, we do not want it to happen
         return downpayment_lines
 
     def action_create_invoice(self):
@@ -738,7 +744,8 @@ class PurchaseOrder(models.Model):
                 # Merge RFQs into the oldest purchase order
                 rfqs -= oldest_rfq
                 for rfq_line in rfqs.order_line:
-                    existing_line = oldest_rfq.order_line.filtered(lambda l: l.product_id == rfq_line.product_id and
+                    existing_line = oldest_rfq.order_line.filtered(lambda l: l.display_type not in ['line_note', 'line_section'] and
+                                                                                l.product_id == rfq_line.product_id and
                                                                                 l.product_uom == rfq_line.product_uom and
                                                                                 l.product_packaging_id == rfq_line.product_packaging_id and
                                                                                 l.product_packaging_qty == rfq_line.product_packaging_qty and

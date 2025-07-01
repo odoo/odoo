@@ -1,5 +1,4 @@
-/** @odoo-module **/
-
+import { _t } from '@web/core/l10n/translation';
 import { patch } from '@web/core/utils/patch';
 import {
     ProductTemplateAttributeLine
@@ -22,5 +21,10 @@ patch(ProductTemplateAttributeLine.prototype, {
             ptalDisplayName += `: ${this.props.customValue}`;
         }
         return ptalDisplayName;
+    },
+
+    get customValuePlaceholder() {
+        // The original definition of this placeholder is in `sale` module which is not a frontend module. However, it should be repeated here as translations are only fetched in the context of a frontend module, which is `website_sale` in this case.
+        return _t("Enter a customized value");
     },
 });

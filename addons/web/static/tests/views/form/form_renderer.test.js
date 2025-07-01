@@ -55,7 +55,8 @@ test("compile notebook with modifiers", async () => {
     expect(queryAllTexts`.o_notebook_headers .nav-item`).toEqual(["p1", "p2"]);
 });
 
-test.tags("desktop")("compile header and buttons on desktop", async () => {
+test.tags("desktop");
+test("compile header and buttons on desktop", async () => {
     Partner._views = {
         form: /*xml*/ `
             <form>
@@ -74,7 +75,8 @@ test.tags("desktop")("compile header and buttons on desktop", async () => {
     expect(`.o_statusbar_buttons button[name=action_button]:contains(ActionButton)`).toHaveCount(1);
 });
 
-test.tags("mobile")("compile header and buttons on mobile", async () => {
+test.tags("mobile");
+test("compile header and buttons on mobile", async () => {
     Partner._views = {
         form: /*xml*/ `
             <form>
@@ -129,7 +131,8 @@ test("render field with placeholder", async () => {
     expect.verifySteps(["setup field component"]);
 });
 
-test.tags("desktop")("compile a button with id on desktop", async () => {
+test.tags("desktop");
+test("compile a button with id on desktop", async () => {
     Partner._views = {
         form: /*xml*/ `
             <form>
@@ -148,7 +151,8 @@ test.tags("desktop")("compile a button with id on desktop", async () => {
     expect(`button[id=action_button]`).toHaveCount(1);
 });
 
-test.tags("mobile")("compile a button with id on mobile", async () => {
+test.tags("mobile");
+test("compile a button with id on mobile", async () => {
     Partner._views = {
         form: /*xml*/ `
             <form>
@@ -166,4 +170,21 @@ test.tags("mobile")("compile a button with id on mobile", async () => {
     });
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
     expect(`button[id=action_button]`).toHaveCount(1);
+});
+
+test("compile a button with disabled", async () => {
+    Partner._views = {
+        form: /*xml*/ `
+            <form>
+                <button id="action_button" string="ActionButton" name="action_button" type="object" disabled="disabled"/>
+            </form>
+        `,
+    };
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        resId: 1,
+    });
+    expect(`button[id=action_button]`).toHaveAttribute("disabled")
 });

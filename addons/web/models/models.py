@@ -135,7 +135,9 @@ class Base(models.AbstractModel):
                 co_records = self[field_name]
 
                 if 'order' in field_spec and field_spec['order']:
-                    co_records = co_records.search([('id', 'in', co_records.ids)], order=field_spec['order'])
+                    co_records = co_records.with_context(active_test=False).search(
+                        [('id', 'in', co_records.ids)], order=field_spec['order'],
+                    ).with_context(co_records.env.context)  # Reapply previous context
                     order_key = {
                         co_record.id: index
                         for index, co_record in enumerate(co_records)
@@ -178,9 +180,14 @@ class Base(models.AbstractModel):
                     if not record[field_name]:
                         continue
 
+                    record_values = values_by_id[record.id]
+
                     if field.type == 'reference':
                         co_record = record[field_name]
                     else:  # field.type == 'many2one_reference'
+                        if not record[field.model_field]:
+                            record_values[field_name] = False
+                            continue
                         co_record = self.env[record[field.model_field]].browse(record[field_name])
 
                     if 'context' in field_spec:
@@ -201,8 +208,6 @@ class Base(models.AbstractModel):
                         # not actually read the records so we do not know if they exist.
                         # This ensures the record actually exists
                         co_record_exists = co_record.exists()
-
-                    record_values = values_by_id[record.id]
 
                     if not co_record_exists:
                         record_values[field_name] = False

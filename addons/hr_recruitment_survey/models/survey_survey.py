@@ -23,3 +23,11 @@ class SurveySurvey(models.Model):
                 if view := self.env.ref('hr_recruitment_survey.survey_survey_view_form', raise_if_not_found=False):
                     return view.id
         return super().get_formview_id(access_uid=access_uid)
+    
+    def action_survey_user_input_completed(self):
+        action = super().action_survey_user_input_completed()
+        if self.survey_type == 'recruitment':
+            action.update({
+                'domain': [('survey_id.survey_type', '=', 'recruitment')]
+            })
+        return action

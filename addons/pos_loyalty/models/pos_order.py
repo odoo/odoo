@@ -56,9 +56,9 @@ class PosOrder(models.Model):
         id_mapping = {item['old_id']: int(item['id']) for item in coupon_updates}
         history_lines_create_vals = []
         for coupon in coupon_data:
-            if int(coupon['card_id']) not in id_mapping:
+            card_id = id_mapping.get(int(coupon['card_id'], False)) or int(coupon['card_id'])
+            if not self.env['loyalty.card'].browse(card_id).exists():
                 continue
-            card_id = id_mapping[int(coupon['card_id'])]
             issued = coupon['won']
             cost = coupon['spent']
             if (issued or cost) and card_id > 0:
@@ -95,6 +95,7 @@ class PosOrder(models.Model):
             'partner_id': get_partner_id(p.get('partner_id', False)),
             'code': p.get('code') or p.get('barcode') or self.env['loyalty.card']._generate_code(),
             'points': 0,
+            'expiration_date': p.get('date_to', False),
             'source_pos_order_id': self.id,
             'expiration_date': p.get('expiration_date')
         } for p in coupons_to_create.values()]

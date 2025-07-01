@@ -68,6 +68,7 @@ var buyCertificationSteps = [{
     content: 'eLearning: start course',
     trigger: '.o_wslides_js_slides_list_slide_link',
     run: "click",
+    expectUnloadPage: true,
 }];
 
 var failCertificationSteps = [{
@@ -96,6 +97,7 @@ var retrySteps = [{
     content: 'Survey: retry certification',
     trigger: 'a:contains("Retry")',
     run: "click",
+    expectUnloadPage: true,
 }];
 
 var succeedCertificationSteps = [{
@@ -160,6 +162,7 @@ var profileSteps = [{
     content: 'eLearning: access user profile',
     trigger: '.o_wslides_home_aside_loggedin a:contains("View")',
     run: "click",
+    expectUnloadPage: true,
 }, {
     content: 'eLearning: check that the user profile certifications include the new certification',
     trigger: '.o_wprofile_slides_course_card_body:contains("Furniture Creation Certification")',

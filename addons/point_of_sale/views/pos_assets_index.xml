@@ -22,6 +22,7 @@
                 'pos_session_id': pos_session_id,
                 'pos_config_id': pos_config_id,
                 'access_token': access_token,
+                'use_pos_fake_tours': use_pos_fake_tours,
                 'debug': debug,
             })"/>;
             // Prevent the menu_service to load anything. In an ideal world, POS assets would only contain
@@ -33,6 +34,9 @@
             <t t-set="ignore_missing_deps" t-value="True"/>
         </t>
         <t t-call-assets="point_of_sale.assets_prod" />
+        <t t-if="use_pos_fake_tours">
+            <t t-call-assets="point_of_sale.assets_debug" />
+        </t>
     </head>
     <body class="pos">
     </body>

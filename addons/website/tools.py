@@ -21,6 +21,7 @@ def MockRequest(
         website=None, remote_addr=HOST, environ_base=None, url_root=None,
         # website_sale
         sale_order_id=None, website_sale_current_pl=None,
+        website_sale_selected_pl_id=None,
 ):
     # TODO move MockRequest to a package in addons/web/tests
     from odoo.tests.common import HttpCase  # noqa: PLC0415
@@ -56,8 +57,10 @@ def MockRequest(
         redirect=env['ir.http']._redirect,
         session=DotDict(
             odoo.http.get_default_session(),
+            force_website_id=website and website.id,
             sale_order_id=sale_order_id,
             website_sale_current_pl=website_sale_current_pl,
+            website_sale_selected_pl_id=website_sale_selected_pl_id,
             context={'lang': ''},
         ),
         geoip=odoo.http.GeoIP('127.0.0.1'),
@@ -77,7 +80,10 @@ def MockRequest(
     if website:
         request.website_routing = website.id
     if country_code:
-        request.geoip._city_record = odoo.http.geoip2.models.City({'country': {'iso_code': country_code}})
+        try:
+            request.geoip._city_record = odoo.http.geoip2.models.City(['en'], country={'iso_code': country_code})
+        except TypeError:
+            request.geoip._city_record = odoo.http.geoip2.models.City({'country': {'iso_code': country_code}})
 
     # The following code mocks match() to return a fake rule with a fake
     # 'routing' attribute (routing=True) or to raise a NotFound
@@ -179,6 +185,18 @@ def text_from_html(html_fragment, collapse_whitespace=False):
     """
     # lxml requires one single root element
     tree = etree.fromstring('<p>%s</p>' % html_fragment, etree.XMLParser(recover=True))
+
+    # Remove scripts or other technical elements that should not be converted
+    # into text.
+    xpath_filters = [
+        '//script',
+        '//style',
+        '//svg',
+        '//*[@class="css_non_editable_mode_hidden"]',
+    ]
+    for xpath_filter in xpath_filters:
+        for element in tree.xpath(xpath_filter): element.getparent().remove(element)
+
     content = ' '.join(tree.itertext())
     if collapse_whitespace:
         content = re.sub('\\s+', ' ', content).strip()

@@ -1,9 +1,9 @@
-import { Component, mount, xml, useSubEnv } from "@odoo/owl";
-import { MainComponentsContainer } from "@web/core/main_components_container";
-import { test, expect, getFixture, destroy, after } from "@odoo/hoot";
+import { expect, getFixture, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { mountWithCleanup, getService, makeMockEnv } from "@web/../tests/web_test_helpers";
-import { getTemplate } from "@web/core/templates";
+import { Component, useSubEnv, xml } from "@odoo/owl";
+import { getService, makeMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
+
+import { MainComponentsContainer } from "@web/core/main_components_container";
 
 test("simple case", async () => {
     await mountWithCleanup(MainComponentsContainer);
@@ -26,27 +26,24 @@ test("simple case", async () => {
 });
 
 test("shadow DOM overlays are visible when registered before main component is mounted", async () => {
-    let app, root;
-    after(() => {
-        if (app) {
-            destroy(app);
-        }
-        root?.remove();
-    });
     class MyComp extends Component {
         static template = xml`
             <div class="overlayed"></div>
         `;
         static props = ["*"];
     }
-    const env = await makeMockEnv();
-    root = document.createElement("div");
-    getFixture().append(root);
+
+    const root = document.createElement("div");
     root.setAttribute("id", "my-root-id");
-    getService("overlay").add(MyComp, undefined, { rootId: "my-root-id" });
-    const shadow = root.attachShadow({ mode: "open" });
-    app = await mount(MainComponentsContainer, shadow, { env, getTemplate });
+    root.attachShadow({ mode: "open" });
+    getFixture().appendChild(root);
+
+    await makeMockEnv();
+    getService("overlay").add(MyComp, {}, { rootId: "my-root-id" });
+
+    await mountWithCleanup(MainComponentsContainer, { target: root.shadowRoot });
     await animationFrame();
+
     expect("#my-root-id:shadow .o-overlay-container .overlayed").toHaveCount(1);
 });
 

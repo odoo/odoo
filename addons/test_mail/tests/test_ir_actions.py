@@ -78,10 +78,10 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         with self.assertSinglePostNotifications(
                 [{'partner': self.test_partner, 'type': 'email', 'status': 'ready'}],
                 message_info={'content': 'Hello %s' % self.test_partner.name,
-                              'fields_values': {
+                              'mail_mail_values': {
                                 'author_id': self.env.user.partner_id,
                               },
-                              'message_type': 'notification',
+                              'message_type': 'auto_comment',
                               'subtype': 'mail.mt_comment',
                              }
             ):
@@ -98,7 +98,7 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         with self.assertSinglePostNotifications(
                 [{'partner': self.test_partner, 'type': 'email', 'status': 'ready'}],
                 message_info={'content': 'Hello %s' % self.test_partner.name,
-                              'message_type': 'notification',
+                              'message_type': 'auto_comment',
                               'subtype': 'mail.mt_note',
                              }
             ):
@@ -176,4 +176,4 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
                 'subject': 'About Test NoMailThread',
             }
         )
-        self.assertIn('Powered by', mail.body_html, 'Body should contain the notification layout')
+        self.assertNotIn('Powered by', mail.body_html, 'Body should contain the notification layout')

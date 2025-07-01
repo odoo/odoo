@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -255,6 +254,20 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                 subtype_xmlid='mail.mt_comment',
             )
 
+    def test_recipients_multi_company(self):
+        """Test mentioning a partner with no common company."""
+        test_records_mc_c2 = self.test_records_mc[1]
+        self._reset_bus()
+        with self.assertBus([(self.cr.dbname, "res.partner", self.user_employee_c3.partner_id.id)]):
+            test_records_mc_c2.with_user(self.user_employee_c2).with_context(
+                allowed_company_ids=self.company_2.ids
+            ).message_post(
+                body="Hello @Freudenbergerg",
+                message_type="comment",
+                partner_ids=self.user_employee_c3.partner_id.ids,
+                subtype_xmlid="mail.mt_comment",
+            )
+
     @freeze_time('2023-11-22 08:00:00')
     @users("admin")
     def test_systray_get_activities(self):
@@ -393,7 +406,7 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                     self.assertEqual(other_activity_group["total_count"], 5)
 
 
-@tagged('-at_install', 'post_install', 'multi_company')
+@tagged('-at_install', 'post_install', 'multi_company', 'mail_controller')
 class TestMultiCompanyRedirect(MailCommon, HttpCase):
 
     def test_redirect_to_records(self):
@@ -428,8 +441,7 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                 if not login:
                     path = url_parse(response.url).path
                     self.assertEqual(path, '/web/login')
-                    self.assertTrue('cids' in response.request._cookies)
-                    self.assertEqual(response.request._cookies.get('cids'), str(mc_record.company_id.id))
+                    self.assertNotIn('cids', response.request._cookies)
                 else:
                     user = self.env['res.users'].browse(self.session.uid)
                     self.assertEqual(user.login, login)
@@ -505,20 +517,37 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                     self.assertTrue('cids' in response.request._cookies)
                     self.assertEqual(response.request._cookies.get('cids'), str(user_company.id))
 
-        # when being not logged, cids should be added based on
-        # '_get_redirect_suggested_company'
+        # when being not logged, cids should not be added as redirection after
+        # logging will be 'mail/view' again
         for test_record in nothreads:
-            with self.subTest(record_name=test_record.name, user_company=user_company):
+            with self.subTest(record_name=test_record.name):
                 self.authenticate(None, None)
-                self.user_admin.write({'company_id': user_company.id})
                 response = self.url_open(
                     f'/mail/view?model={test_record._name}&res_id={test_record.id}',
                     timeout=15
                 )
                 self.assertEqual(response.status_code, 200)
+                self.assertNotIn('cids', response.request._cookies)
 
-                if test_record.company_id:
-                    self.assertIn('cids', response.request._cookies)
-                    self.assertEqual(response.request._cookies.get('cids'), str(test_record.company_id.id))
-                else:
-                    self.assertNotIn('cids', response.request._cookies)
+
+@tagged("-at_install", "post_install", "multi_company", "mail_controller")
+class TestMultiCompanyThreadData(MailCommon, HttpCase):
+
+    def test_mail_thread_data_follower(self):
+        partner_portal = self.env["res.partner"].create(
+            {"company_id": self.company_3.id, "name": "portal partner"}
+        )
+        record = self.env["mail.test.multi.company"].create({"name": "Multi Company Record"})
+        record.message_subscribe(partner_ids=partner_portal.ids)
+        self.assertFalse(partner_portal.with_user(self.user_employee_c2).has_access("read"))
+        self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
+        data = self.make_jsonrpc_request(
+            "/mail/thread/data",
+            {
+                "thread_id": record.id,
+                "thread_model": "mail.test.multi.company",
+                "request_list": ["followers"],
+            },
+        )
+        self.assertEqual(len(data["mail.followers"]), 1)
+        self.assertEqual(data["mail.followers"][0]["partner"]["id"], partner_portal.id)

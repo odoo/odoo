@@ -336,6 +336,15 @@ class Company(models.Model):
             'sequence', # user._get_company_ids and other potential cached search
         }
 
+    def unlink(self):
+        """
+        Unlink the companies and clear the cache to make sure that
+        _get_company_ids of res.users gets only existing company ids.
+        """
+        res = super().unlink()
+        self.env.registry.clear_cache()
+        return res
+
     def write(self, values):
         invalidation_fields = self.cache_invalidation_fields()
         asset_invalidation_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
@@ -467,3 +476,19 @@ class Company(models.Model):
             },
             'views': [[False, 'list'], [False, 'kanban'], [False, 'form']],
         }
+
+    def _get_public_user(self):
+        self.ensure_one()
+        # We need sudo to be able to see public users from others companies too
+        public_users = self.env.ref('base.group_public').sudo().with_context(active_test=False).users
+        public_users_for_company = public_users.filtered(lambda user: user.company_id == self)
+
+        if public_users_for_company:
+            return public_users_for_company[0]
+        else:
+            return self.env.ref('base.public_user').sudo().copy({
+                'name': 'Public user for %s' % self.name,
+                'login': 'public-user@company-%s.com' % self.id,
+                'company_id': self.id,
+                'company_ids': [(6, 0, [self.id])],
+            })

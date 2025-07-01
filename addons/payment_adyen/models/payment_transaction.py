@@ -460,6 +460,7 @@ class PaymentTransaction(models.Model):
                     self._log_message_on_linked_documents(_(
                         "The capture of the transaction with reference %s failed.", self.reference
                     ))
+        elif payment_state in const.RESULT_CODES_MAPPING['refused']:
             _logger.warning(
                 "the transaction with reference %s was refused. reason: %s",
                 self.reference, refusal_reason

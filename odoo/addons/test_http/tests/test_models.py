@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import html
 from http import HTTPStatus
 
 import odoo
@@ -14,9 +13,13 @@ from .test_common import TestHttpBase
 
 @tagged('post_install', '-at_install')
 class TestHttpModels(TestHttpBase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.jackoneill = new_test_user(cls.env, 'jackoneill', context={'lang': 'en_US'})
+
     def setUp(self):
         super().setUp()
-        self.jackoneill = new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})
         self.authenticate('jackoneill', 'jackoneill')
 
     def test_models0_galaxy_ok(self):
@@ -66,7 +69,7 @@ class TestHttpModels(TestHttpBase):
         milky_way = self.env.ref('test_http.milky_way')
         res = self.url_open(f'/test_http/{milky_way.id}/9999')  # unknown gate
         self.assertEqual(res.status_code, 400)
-        self.assertIn("The goa'uld destroyed the gate", html.unescape(res.text))
+        self.assertIn("The goauld destroyed the gate", res.text)
 
     def test_models4_stargate_setname(self):
         milky_way = self.env.ref('test_http.milky_way')

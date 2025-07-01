@@ -1,6 +1,5 @@
-import { describe, expect, test } from "@odoo/hoot";
-
 import { addLink, parseAndTransform } from "@mail/utils/common/format";
+import { useSequential } from "@mail/utils/common/hooks";
 import {
     click,
     contains,
@@ -10,7 +9,9 @@ import {
     start,
     startServer,
 } from "./mail_test_helpers";
-import { useSequential } from "@mail/utils/common/hooks";
+
+import { describe, expect, test } from "@odoo/hoot";
+import { markup } from "@odoo/owl";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -33,6 +34,7 @@ test("add_link utility function", () => {
         "https://github.com/odoo/enterprise/compare/16.0...chỗgiặt-voip-fix_demo_data-tsm?expand=1": true,
         "https://github.com/odoo/enterprise/compare/chỗgiặt...chỗgiặt-voip-fix_demo_data-tsm?expand=1": true,
         "https://github.com/odoo/enterprise/compare/@...}-voip-fix_demo_data-tsm?expand=1": true,
+        "https://x.com": true,
     };
 
     for (const [content, willLinkify] of Object.entries(testInputs)) {
@@ -47,38 +49,55 @@ test("add_link utility function", () => {
 });
 
 test("addLink: utility function and special entities", () => {
-    const testInputs = {
+    const testInputs = [
         // textContent not unescaped
-        "<p>https://example.com/?&amp;currency_id</p>":
+        [
+            markup("<p>https://example.com/?&amp;currency_id</p>"),
             '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/?&amp;currency_id">https://example.com/?&amp;currency_id</a></p>',
+        ],
         // entities not unescaped
-        "&amp; &amp;amp; &gt; &lt;": "&amp; &amp;amp; &gt; &lt;",
+        [markup("&amp; &amp;amp; &gt; &lt;"), "&amp; &amp;amp; &gt; &lt;"],
         // > and " not linkified since they are not in URL regex
-        "<p>https://example.com/&gt;</p>":
+        [
+            markup("<p>https://example.com/&gt;</p>"),
             '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/">https://example.com/</a>&gt;</p>',
-        '<p>https://example.com/"hello"&gt;</p>':
+        ],
+        [
+            markup('<p>https://example.com/"hello"&gt;</p>'),
             '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/">https://example.com/</a>"hello"&gt;</p>',
+        ],
         // & and ' linkified since they are in URL regex
-        "<p>https://example.com/&amp;hello</p>":
+        [
+            markup("<p>https://example.com/&amp;hello</p>"),
             '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/&amp;hello">https://example.com/&amp;hello</a></p>',
-        "<p>https://example.com/'yeah'</p>":
+        ],
+        [
+            markup("<p>https://example.com/'yeah'</p>"),
             '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/\'yeah\'">https://example.com/\'yeah\'</a></p>',
-        // normal character should not be escaped
-        ":'(": ":'(",
-        // special character in smileys should be escaped
-        "&lt;3": "&lt;3",
+        ],
+        [markup("<p>:'(</p>"), "<p>:'(</p>"],
+        [markup(":'("), ":&#x27;("],
+        ["<p>:'(</p>", "&lt;p&gt;:&#x27;(&lt;/p&gt;"],
+        [":'(", ":&#x27;("],
+        [markup("<3"), "&lt;3"],
+        [markup("&lt;3"), "&lt;3"],
+        ["<3", "&lt;3"],
         // Already encoded url should not be encoded twice
-        "https://odoo.com/%5B%5D": `<a target="_blank" rel="noreferrer noopener" href="https://odoo.com/%5B%5D">https://odoo.com/[]</a>`,
-    };
+        [
+            markup("https://odoo.com/%5B%5D"),
+            `<a target="_blank" rel="noreferrer noopener" href="https://odoo.com/%5B%5D">https://odoo.com/[]</a>`,
+        ],
+    ];
 
-    for (const [content, result] of Object.entries(testInputs)) {
+    for (const [content, result] of testInputs) {
         const output = parseAndTransform(content, addLink);
-        expect(output).toBe(result);
+        expect(output).toBeInstanceOf(markup().constructor);
+        expect(output.toString()).toBe(result);
     }
 });
 
 test("addLink: linkify inside text node (1 occurrence)", async () => {
-    const content = "<p>some text https://somelink.com</p>";
+    const content = markup("<p>some text https://somelink.com</p>");
     const linkified = parseAndTransform(content, addLink);
     expect(linkified.startsWith("<p>some text <a")).toBe(true);
     expect(linkified.endsWith("</a></p>")).toBe(true);
@@ -90,27 +109,27 @@ test("addLink: linkify inside text node (1 occurrence)", async () => {
     const div = document.createElement("div");
     fragment.appendChild(div);
     div.innerHTML = linkified;
-    expect(div.textContent).toBe("some text https://somelink.com");
+    expect(div).toHaveText("some text https://somelink.com");
     await contains("a", { target: div });
-    expect(div.querySelector(":scope a").textContent).toBe("https://somelink.com");
+    expect(div.querySelector(":scope a")).toHaveText("https://somelink.com");
 });
 
 test("addLink: linkify inside text node (2 occurrences)", () => {
     // linkify may add some attributes. Since we do not care of their exact
     // stringified representation, we continue deeper assertion with query
     // selectors.
-    const content = "<p>some text https://somelink.com and again https://somelink2.com ...</p>";
+    const content = markup(
+        "<p>some text https://somelink.com and again https://somelink2.com ...</p>"
+    );
     const linkified = parseAndTransform(content, addLink);
     const fragment = document.createDocumentFragment();
     const div = document.createElement("div");
     fragment.appendChild(div);
     div.innerHTML = linkified;
-    expect(div.textContent).toBe(
-        "some text https://somelink.com and again https://somelink2.com ..."
-    );
+    expect(div).toHaveText("some text https://somelink.com and again https://somelink2.com ...");
     expect(div.querySelectorAll(":scope a")).toHaveCount(2);
-    expect(div.querySelectorAll(":scope a")[0].textContent).toBe("https://somelink.com");
-    expect(div.querySelectorAll(":scope a")[1].textContent).toBe("https://somelink2.com");
+    expect(div.querySelectorAll(":scope a")[0]).toHaveText("https://somelink.com");
+    expect(div.querySelectorAll(":scope a")[1]).toHaveText("https://somelink2.com");
 });
 
 test("url", async () => {

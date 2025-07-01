@@ -16,6 +16,8 @@ export class ActivityButton extends Component {
         this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
         this.buttonRef = useRef("button");
         this.env = useEnv();
+        this.defaultActivityStateClass = "text-muted";
+        this.defaultActivityDecorationClass = "fa-clock-o btn-link text-dark";
     }
 
     get buttonClass() {
@@ -31,7 +33,9 @@ export class ActivityButton extends Component {
                 classes.push("text-success");
                 break;
             default:
-                classes.push("text-muted");
+                if (this.defaultActivityStateClass) {
+                    classes.push(this.activityStateClass);
+                }
                 break;
         }
         switch (this.props.record.data.activity_exception_decoration) {
@@ -49,7 +53,7 @@ export class ActivityButton extends Component {
                     classes.push(activity_type_icon || "fa-tasks");
                     break;
                 }
-                classes.push("fa-clock-o btn-link text-dark");
+                classes.push(this.defaultActivityDecorationClass);
                 break;
             }
         }
@@ -84,6 +88,7 @@ export class ActivityButton extends Component {
                 onActivityChanged: (thread) => {
                     const recordToLoad = resIds ? selectedRecords : [this.props.record];
                     recordToLoad.forEach((r) => r.load());
+                    this.onActivityChanged();
                     this.popover.close();
                 },
                 resId,
@@ -92,4 +97,7 @@ export class ActivityButton extends Component {
             });
         }
     }
+
+    /** Add custom behavior on activity changed */
+    onActivityChanged() {}
 }

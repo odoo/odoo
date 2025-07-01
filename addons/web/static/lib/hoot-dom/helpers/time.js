@@ -1,8 +1,11 @@
 /** @odoo-module */
 
-import { HootDomError } from "../hoot_dom_utils";
-
 /**
+ * @typedef {{
+ *  animationFrame?: boolean;
+ *  blockTimers?: boolean;
+ * }} AdvanceTimeOptions
+ *
  * @typedef {{
  *  message?: string | () => string;
  *  timeout?: number;
@@ -19,6 +22,7 @@ const {
     clearTimeout,
     Error,
     Math: { ceil: $ceil, floor: $floor, max: $max, min: $min },
+    Number,
     performance,
     Promise,
     requestAnimationFrame,
@@ -35,9 +39,11 @@ const $performanceNow = performance.now.bind(performance);
 /**
  * @param {number} id
  */
-const animationToId = (id) => ID_PREFIX.animation + String(id);
+function animationToId(id) {
+    return ID_PREFIX.animation + String(id);
+}
 
-const getNextTimerValues = () => {
+function getNextTimerValues() {
     /** @type {[number, () => any, string] | null} */
     let timerValues = null;
     for (const [internalId, [callback, init, delay]] of timers.entries()) {
@@ -47,34 +53,59 @@ const getNextTimerValues = () => {
         }
     }
     return timerValues;
-};
+}
 
 /**
  * @param {string} id
  */
-const idToAnimation = (id) => Number(id.slice(ID_PREFIX.animation.length));
+function idToAnimation(id) {
+    return Number(id.slice(ID_PREFIX.animation.length));
+}
 
 /**
  * @param {string} id
  */
-const idToInterval = (id) => Number(id.slice(ID_PREFIX.interval.length));
+function idToInterval(id) {
+    return Number(id.slice(ID_PREFIX.interval.length));
+}
 
 /**
  * @param {string} id
  */
-const idToTimeout = (id) => Number(id.slice(ID_PREFIX.timeout.length));
+function idToTimeout(id) {
+    return Number(id.slice(ID_PREFIX.timeout.length));
+}
 
 /**
  * @param {number} id
  */
-const intervalToId = (id) => ID_PREFIX.interval + String(id);
+function intervalToId(id) {
+    return ID_PREFIX.interval + String(id);
+}
 
-const now = () => $performanceNow() + timeOffset;
+/**
+ * Converts a given value to a **natural number** (or 0 if failing to do so).
+ *
+ * @param {unknown} value
+ */
+function parseNat(value) {
+    return $max($floor(Number(value)), 0) || 0;
+}
+
+function now() {
+    return (frozen ? 0 : $performanceNow()) + timeOffset;
+}
 
 /**
  * @param {number} id
  */
-const timeoutToId = (id) => ID_PREFIX.timeout + String(id);
+function timeoutToId(id) {
+    return ID_PREFIX.timeout + String(id);
+}
+
+class HootTimingError extends Error {
+    name = "HootTimingError";
+}
 
 const ID_PREFIX = {
     animation: "a_",
@@ -85,8 +116,8 @@ const ID_PREFIX = {
 /** @type {Map<string, [() => any, number, number]>} */
 const timers = new Map();
 
-let allowTimers = true;
-let freezed = false;
+let allowTimers = false;
+let frozen = false;
 let frameDelay = 1000 / 60;
 let nextDummyId = 1;
 let timeOffset = 0;
@@ -97,9 +128,10 @@ let timeOffset = 0;
 
 /**
  * @param {number} [frameCount]
+ * @param {AdvanceTimeOptions} [options]
  */
-export function advanceFrame(frameCount) {
-    return advanceTime(frameDelay * $max(1, frameCount));
+export function advanceFrame(frameCount, options) {
+    return advanceTime(frameDelay * parseNat(frameCount), options);
 }
 
 /**
@@ -109,9 +141,16 @@ export function advanceFrame(frameCount) {
  * It returns a promise resolved after all related callbacks have been executed.
  *
  * @param {number} ms
+ * @param {AdvanceTimeOptions} [options]
  * @returns {Promise<number>} time consumed by timers (in ms).
  */
-export function advanceTime(ms) {
+export async function advanceTime(ms, options) {
+    ms = parseNat(ms);
+
+    if (options?.blockTimers) {
+        allowTimers = false;
+    }
+
     const targetTime = now() + ms;
     let remaining = ms;
     /** @type {ReturnType<typeof getNextTimerValues>} */
@@ -132,18 +171,23 @@ export function advanceTime(ms) {
         timeOffset += remaining;
     }
 
-    // Waits for callbacks to execute
-    return animationFrame().then(() => ms);
+    if (options?.animationFrame ?? true) {
+        await animationFrame();
+    }
+
+    allowTimers = true;
+
+    return ms;
 }
 
 /**
  * Returns a promise resolved after the next animation frame, typically allowing
  * Owl components to render.
  *
- * @returns {Deferred<void>}
+ * @returns {Promise<void>}
  */
 export function animationFrame() {
-    return new Deferred((resolve) => requestAnimationFrame(() => delay().then(resolve)));
+    return new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve)));
 }
 
 /**
@@ -162,36 +206,40 @@ export function cancelAllTimers() {
 }
 
 export function cleanupTime() {
+    allowTimers = false;
+    frozen = false;
+
     cancelAllTimers();
 
-    freezed = false;
+    // Wait for remaining async code to run
+    return delay();
 }
 
 /**
  * Returns a promise resolved after a given amount of milliseconds (default to 0).
  *
  * @param {number} [duration]
- * @returns {Deferred<void>}
+ * @returns {Promise<void>}
  * @example
  *  await delay(1000); // waits for 1 second
  */
 export function delay(duration) {
-    return new Deferred((resolve) => setTimeout(resolve, duration));
+    return new Promise((resolve) => setTimeout(resolve, duration));
 }
 
 /**
  * @param {boolean} setFreeze
  */
 export function freezeTime(setFreeze) {
-    freezed = setFreeze ?? !freezed;
+    frozen = setFreeze ?? !frozen;
 }
 
 export function getTimeOffset() {
     return timeOffset;
 }
 
-export function isTimeFreezed() {
-    return freezed;
+export function isTimeFrozen() {
+    return frozen;
 }
 
 /**
@@ -200,12 +248,12 @@ export function isTimeFreezed() {
  * @returns {Promise<void>}
  */
 export function microTick() {
-    return Deferred.resolve();
+    return new Promise(queueMicrotask);
 }
 
 /** @type {typeof cancelAnimationFrame} */
 export function mockedCancelAnimationFrame(handle) {
-    if (!freezed) {
+    if (!frozen) {
         cancelAnimationFrame(handle);
     }
     timers.delete(animationToId(handle));
@@ -213,7 +261,7 @@ export function mockedCancelAnimationFrame(handle) {
 
 /** @type {typeof clearInterval} */
 export function mockedClearInterval(intervalId) {
-    if (!freezed) {
+    if (!frozen) {
         clearInterval(intervalId);
     }
     timers.delete(intervalToId(intervalId));
@@ -221,7 +269,7 @@ export function mockedClearInterval(intervalId) {
 
 /** @type {typeof clearTimeout} */
 export function mockedClearTimeout(timeoutId) {
-    if (!freezed) {
+    if (!frozen) {
         clearTimeout(timeoutId);
     }
     timers.delete(timeoutToId(timeoutId));
@@ -233,13 +281,13 @@ export function mockedRequestAnimationFrame(callback) {
         return 0;
     }
 
-    const handler = () => {
+    function handler() {
         mockedCancelAnimationFrame(handle);
         return callback(now());
-    };
+    }
 
     const animationValues = [handler, now(), frameDelay];
-    const handle = freezed ? nextDummyId++ : requestAnimationFrame(handler);
+    const handle = frozen ? nextDummyId++ : requestAnimationFrame(handler);
     const internalId = animationToId(handle);
     timers.set(internalId, animationValues);
 
@@ -252,21 +300,19 @@ export function mockedSetInterval(callback, ms, ...args) {
         return 0;
     }
 
-    if (isNaN(ms) || !ms || ms < 0) {
-        ms = 0;
-    }
+    ms = parseNat(ms);
 
-    const handler = () => {
+    function handler() {
         if (allowTimers) {
-            intervalValues[1] = Math.max(now(), intervalValues[1] + ms);
+            intervalValues[1] = $max(now(), intervalValues[1] + ms);
         } else {
             mockedClearInterval(intervalId);
         }
         return callback(...args);
-    };
+    }
 
     const intervalValues = [handler, now(), ms];
-    const intervalId = freezed ? nextDummyId++ : setInterval(handler, ms);
+    const intervalId = frozen ? nextDummyId++ : setInterval(handler, ms);
     const internalId = intervalToId(intervalId);
     timers.set(internalId, intervalValues);
 
@@ -279,17 +325,15 @@ export function mockedSetTimeout(callback, ms, ...args) {
         return 0;
     }
 
-    if (isNaN(ms) || !ms || ms < 0) {
-        ms = 0;
-    }
+    ms = parseNat(ms);
 
-    const handler = () => {
+    function handler() {
         mockedClearTimeout(timeoutId);
         return callback(...args);
-    };
+    }
 
     const timeoutValues = [handler, now(), ms];
-    const timeoutId = freezed ? nextDummyId++ : setTimeout(handler, ms);
+    const timeoutId = frozen ? nextDummyId++ : setTimeout(handler, ms);
     const internalId = timeoutToId(timeoutId);
     timers.set(internalId, timeoutValues);
 
@@ -305,26 +349,16 @@ export function resetTimeOffset() {
  * animations, and then advances the current time by that amount.
  *
  * @see {@link advanceTime}
- * @param {boolean} [preventTimers=false]
+ * @param {AdvanceTimeOptions} [options]
  * @returns {Promise<number>} time consumed by timers (in ms).
  */
-export async function runAllTimers(preventTimers = false) {
+export function runAllTimers(options) {
     if (!timers.size) {
         return 0;
     }
 
-    if (preventTimers) {
-        allowTimers = false;
-    }
-
     const endts = $max(...[...timers.values()].map(([, init, delay]) => init + delay));
-    const ms = await advanceTime($ceil(endts - now()));
-
-    if (preventTimers) {
-        allowTimers = true;
-    }
-
-    return ms;
+    return advanceTime($ceil(endts - now()), options);
 }
 
 /**
@@ -333,16 +367,21 @@ export async function runAllTimers(preventTimers = false) {
  * @param {number} frameRate
  */
 export function setFrameRate(frameRate) {
-    if (!Number.isInteger(frameRate) || frameRate <= 0 || frameRate > 1000) {
-        throw new Error("frame rate must be an number between 1 and 1000");
+    frameRate = parseNat(frameRate);
+    if (frameRate < 1 || frameRate > 1000) {
+        throw new HootTimingError("frame rate must be an number between 1 and 1000");
     }
     frameDelay = 1000 / frameRate;
+}
+
+export function setupTime() {
+    allowTimers = true;
 }
 
 /**
  * Returns a promise resolved after the next task tick.
  *
- * @returns {Deferred<void>}
+ * @returns {Promise<void>}
  */
 export function tick() {
     return delay();
@@ -358,31 +397,35 @@ export function tick() {
  * The promise automatically rejects after a given `timeout` (defaults to 5 seconds).
  *
  * @template T
- * @param {() => T} predicate
+ * @param {(last: boolean) => T} predicate
  * @param {WaitOptions} [options]
- * @returns {Deferred<T>}
+ * @returns {Promise<T>}
  * @example
  *  await waitUntil(() => []); // -> []
  * @example
  *  const button = await waitUntil(() => queryOne("button:visible"));
  *  button.click();
  */
-export function waitUntil(predicate, options) {
+export async function waitUntil(predicate, options) {
+    await Promise.resolve();
+
     // Early check before running the loop
-    const result = predicate();
+    const result = predicate(false);
     if (result) {
-        return Deferred.resolve(result);
+        return result;
     }
 
+    const timeout = $floor(options?.timeout ?? 200);
+    const maxFrameCount = $ceil(timeout / frameDelay);
+    let frameCount = 0;
     let handle;
-    let timeoutId;
-    let running = true;
-    return new Deferred((resolve, reject) => {
-        const runCheck = () => {
-            const result = predicate();
+    return new Promise((resolve, reject) => {
+        function runCheck() {
+            const isLast = ++frameCount >= maxFrameCount;
+            const result = predicate(isLast);
             if (result) {
                 resolve(result);
-            } else if (running) {
+            } else if (!isLast) {
                 handle = requestAnimationFrame(runCheck);
             } else {
                 let message =
@@ -390,16 +433,17 @@ export function waitUntil(predicate, options) {
                 if (typeof message === "function") {
                     message = message();
                 }
-                reject(new HootDomError(message.replace("%timeout%", String(timeout))));
+                if (message instanceof Error) {
+                    reject(message);
+                } else {
+                    reject(new HootTimingError(message.replace("%timeout%", String(timeout))));
+                }
             }
-        };
+        }
 
-        const timeout = $floor(options?.timeout ?? 200);
-        timeoutId = setTimeout(() => (running = false), timeout);
         handle = requestAnimationFrame(runCheck);
     }).finally(() => {
         cancelAnimationFrame(handle);
-        clearTimeout(timeoutId);
     });
 }
 
@@ -422,7 +466,7 @@ export class Deferred extends Promise {
     constructor(executor) {
         let _resolve, _reject;
 
-        super((resolve, reject) => {
+        super(function deferredResolver(resolve, reject) {
             _resolve = resolve;
             _reject = reject;
             executor?.(_resolve, _reject);

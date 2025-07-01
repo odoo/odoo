@@ -86,8 +86,16 @@ class ProductAttribute(models.Model):
 
     @api.depends('attribute_line_ids.active', 'attribute_line_ids.product_tmpl_id')
     def _compute_products(self):
+        templates_by_attribute = {
+            attribute.id: templates
+            for attribute, templates in self.env['product.template.attribute.line']._read_group(
+                domain=[('attribute_id', 'in', self.ids)],
+                groupby=['attribute_id'],
+                aggregates=['product_tmpl_id:recordset']
+            )
+        }
         for pa in self:
-            pa.with_context(active_test=False).product_tmpl_ids = pa.attribute_line_ids.product_tmpl_id
+            pa.with_context(active_test=False).product_tmpl_ids = templates_by_attribute.get(pa.id, False)
 
     # === ONCHANGE METHODS === #
 

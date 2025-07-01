@@ -45,9 +45,9 @@ class TestDisableSnippetsAssets(TransactionCase):
 
         # New snippet
         s_image_gallery_000 = self._get_snippet_asset('s_image_gallery', '000', 'scss')
-        s_image_gallery_001 = self._get_snippet_asset('s_image_gallery', '001', 'scss')
+        s_image_gallery_002 = self._get_snippet_asset('s_image_gallery', '002', 'scss')
         self.assertEqual(s_image_gallery_000.active, False)
-        self.assertEqual(s_image_gallery_001.active, True)
+        self.assertEqual(s_image_gallery_002.active, True)
 
         unwanted_snippets_assets_changes = set(self.initial_active_snippets_assets) - set(self._get_active_snippets_assets()) - set([s_image_gallery_000.path])
 
@@ -97,9 +97,9 @@ class TestDisableSnippetsAssets(TransactionCase):
         self.assertEqual(s_masonry_block_001_scss.active, True)
 
         s_image_gallery_000 = self._get_snippet_asset('s_image_gallery', '000', 'scss')
-        s_image_gallery_001 = self._get_snippet_asset('s_image_gallery', '001', 'scss')
+        s_image_gallery_002 = self._get_snippet_asset('s_image_gallery', '002', 'scss')
         self.assertEqual(s_image_gallery_000.active, True)
-        self.assertEqual(s_image_gallery_001.active, True)
+        self.assertEqual(s_image_gallery_002.active, True)
 
     def _get_snippet_asset(self, snippet_id, asset_version, asset_type):
         return self.IrAsset.search([('path', '=', 'website/static/src/snippets/' + snippet_id + '/' + asset_version + '.' + asset_type)], limit=1)
@@ -160,7 +160,7 @@ MEGA_MENU_UP_TO_DATE = """
         </div>
     </section>
 
-<section class="s_image_gallery o_slideshow pt24 o_colored_level" data-vcss="001" data-columns="3" style="height: 500px; overflow: hidden;" data-snippet="s_image_gallery" data-name="Image Gallery">
+<section class="s_image_gallery o_slideshow pt24 o_colored_level" data-vcss="002" data-columns="3" style="height: 500px; overflow: hidden;" data-snippet="s_image_gallery" data-name="Image Gallery">
         <div class="container">
         </div>
     </section>

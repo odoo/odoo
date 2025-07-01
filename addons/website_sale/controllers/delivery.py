@@ -177,7 +177,7 @@ class Delivery(WebsiteSale):
             # Pricelists are recomputed every time the partner is changed. We don't want to
             # recompute the price with another pricelist at this state since the customer has
             # already accepted the amount and validated the payment.
-            with request.env.protecting(['pricelist_id'], order_sudo):
+            with request.env.protecting([order_sudo._fields['pricelist_id']], order_sudo):
                 order_sudo.partner_id = new_partner_sudo
         elif order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
             order_sudo.partner_shipping_id.write(partial_delivery_address)
@@ -205,14 +205,27 @@ class Delivery(WebsiteSale):
                 order_sudo=order_sudo,
             )
 
-        # Return the list of delivery methods available for the sales order.
-        return sorted([{
+        sorted_delivery_methods = sorted([{
             'id': dm.id,
             'name': dm.name,
             'description': dm.website_description,
             'minorAmount': payment_utils.to_minor_currency_units(price, order_sudo.currency_id),
         } for dm, price in Delivery._get_delivery_methods_express_checkout(order_sudo).items()
         ], key=lambda dm: dm['minorAmount'])
+
+        # Preselect the cheapest method imitating the behavior of the express checkout form.
+        if (
+            sorted_delivery_methods
+            and order_sudo.carrier_id.id != sorted_delivery_methods[0]['id']
+            and (cheapest_dm := next((
+                dm for dm in order_sudo._get_delivery_methods()
+                if dm.id == sorted_delivery_methods[0]['id']), None
+            ))
+        ):
+            order_sudo._set_delivery_method(cheapest_dm)
+
+        # Return the list of delivery methods available for the sales order.
+        return {'delivery_methods': sorted_delivery_methods}
 
     @staticmethod
     def _get_delivery_methods_express_checkout(order_sudo):
