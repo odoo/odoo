@@ -11,7 +11,6 @@ import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useTransition } from "@web/core/transition";
 import { effect } from "@web/core/utils/reactive";
 import { htmlField, HtmlField } from "@html_editor/fields/html_field";
-import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/backend/plugin_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { Deferred, Race } from "@web/core/utils/concurrency";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -144,9 +143,10 @@ export class MassMailingHtmlField extends HtmlMailField {
 
     getBuilderConfig() {
         const config = super.getConfig();
+        // All plugins for the html builder are defined in mass_mailing_builder
+        delete config.Plugins;
         return {
             ...config,
-            Plugins: [...(this.props.dynamicPlaceholder ? DYNAMIC_PLACEHOLDER_PLUGINS : [])],
             // TODO EGGMAIL?: allow the builder to show the theme selection again
             // Applying a new Theme from the builder should CREATE AN EDITOR STEP
             // that can be UNDONE.

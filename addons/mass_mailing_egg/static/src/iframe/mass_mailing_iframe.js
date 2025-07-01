@@ -159,11 +159,6 @@ export class MassMailingIframe extends Component {
     }
 
     getBuilderProps() {
-        // TODO EGGMAIL: clean plugins providing to builder (bordel)
-        // TODO EGGMAIL: deleteme with master rebase (FUCK)
-        const config = this.props.config;
-        const Plugins = config.Plugins ?? [];
-        delete config.Plugins;
         return {
             overlayRef: this.overlayRef,
             iframeLoaded: this.iframeLoaded,
@@ -174,7 +169,6 @@ export class MassMailingIframe extends Component {
             },
             // codeView => make it an available option in the builder (optional), only in debug?
             // getThemeTab => provide DesignTab
-            Plugins: [...Plugins, ...registry.category("builder-plugins").getAll()],
             // Plugins => provide plugins selection, properly filter excluded Plugins
             isMobile: false, // TODO EGGMAIL: investigate, is it the mobile display feature or the current page state
             isTranslation: false, // TODO EGGMAIL: investigate, do we need that for mass_mailing?

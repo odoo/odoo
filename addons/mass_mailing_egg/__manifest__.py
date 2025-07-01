@@ -41,7 +41,6 @@
         ],
         'mass_mailing_egg.assets_iframe_edit': [  # equivalent html_builder.assets_edit_frontend in website_builder_action.js
             # JS and style assets required to edit the mail content
-            ('include', 'html_builder.assets_edit_frontend'),
         ],
         'mass_mailing_egg.assets_iframe_dark': [  # separated complement of assets_iframe_style for dark mode
             # style assets for dark mode. Not used by convert_inline.
