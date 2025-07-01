@@ -8,6 +8,7 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
+import { session } from "@web/session";
 
 import { cookie } from "@web/core/browser/cookie";
 import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_company_menu";
@@ -642,4 +643,46 @@ test("select and de-select all", async () => {
     // No company is selected, there should be a empty check box
     expect("[role=menuitemcheckbox][title='Select all'] i").toHaveClass("fa-square-o");
     expect(".o_switch_company_item:has([role=menuitemcheckbox][aria-checked=true])").toHaveCount(0);
+});
+
+test("disallowed companies in between allowed companies are not enabled", async () => {
+    const companies = {
+        1: { id: 1, name: "Parent", sequence: 1, parent_id: false, child_ids: [2] },
+        2: { id: 2, name: "Child A", sequence: 2, parent_id: 1, child_ids: [3] },
+        3: { id: 3, name: "Child B", sequence: 3, parent_id: 2, child_ids: [] },
+    };
+
+    patchWithCleanup(session.user_companies, {
+        allowed_companies: companies,
+        current_company: 3,
+        disallowed_ancestor_companies: {
+            2: companies[2]
+        },
+    });
+
+    cookie.set("cids", "3");
+    stepOnCookieChange();
+
+    await mountWithCleanup(SwitchCompanyMenu);
+    expect.verifySteps(["3"]);
+
+    /**
+     *   [ ] Parent
+     *   [ ]    Child A
+     *   [x]        Child B
+     */
+    expect(getService("company").activeCompanyIds).toEqual([3]);
+    expect(getService("company").currentCompany.id).toBe(3);
+    await openCompanyMenu();
+    expect("[data-company-id]").toHaveCount(3);
+    expect("[data-company-id] .fa-check-square").toHaveCount(1);
+    expect("[data-company-id] .fa-square-o").toHaveCount(2);
+
+    /**
+     *   [x] Parent -> toggle
+     *   [ ]    Child A
+     *   [x]        Child B
+     */
+    await contains(".log_into:eq(0)").click();
+    expect.verifySteps(["1-3"]);
 });
