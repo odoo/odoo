@@ -21,6 +21,7 @@ export class PosOrderline extends Base {
         this.uuid = vals.uuid ? vals.uuid : uuidv4();
         this.skip_change = vals.skip_change || false;
         this.setFullProductName();
+        this.customer_note = vals.customer_note || "";
 
         // Data that are not saved in the backend
         this.uiState = {
