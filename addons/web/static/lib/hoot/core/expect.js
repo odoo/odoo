@@ -2146,11 +2146,11 @@ export class Matcher {
                     if (this._flags & FLAGS.rejects) {
                         this._result.registerEvent("assertion", {
                             label: "rejects",
-                            message: [
+                            pass: false,
+                            reportMessage: [
                                 r`expected promise to reject, instead resolved with:`,
                                 result,
                             ],
-                            pass: false,
                         });
                         return false;
                     } else {
@@ -2163,11 +2163,11 @@ export class Matcher {
                     if (this._flags & FLAGS.resolves) {
                         this._result.registerEvent("assertion", {
                             label: "resolves",
-                            message: [
+                            pass: false,
+                            reportMessage: [
                                 r`expected promise to resolve, instead rejected with:`,
                                 reason,
                             ],
-                            pass: false,
                         });
                         return false;
                     } else {
