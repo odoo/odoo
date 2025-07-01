@@ -197,12 +197,12 @@ test("should not apply font tag to t nodes (protects if else nodes separation)",
             <p>
                 <t t-if="object.partner_id.parent_id">
                     <t t-out="object.partner_id.parent_id.name or ''" style="color: red;">
-                        <font style="color: red;">AzureInterior</font>
+                        <font style="color: red;">Azure Interior</font>
                     </t>
                 </t>
                 <t t-else="">
                     <t t-out="object.partner_id.name or ''" style="color: red;">
-                        <font style="color: red;">BrandonFreeman</font>
+                        <font style="color: red;">Brandon Freeman</font>
                     </t>
                 </t>
             </p>
