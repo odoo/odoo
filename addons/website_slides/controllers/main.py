@@ -435,9 +435,24 @@ class WebsiteSlides(WebsiteProfile):
         )
         search = post.get('search')
         order = self._channel_order_by_criterion.get(post.get('sorting'))
-        search_count, details, fuzzy_search_term = request.website._search_with_fuzzy("slide_channels_only", search,
-            limit=1000, order=order, options=options)
-        channels = details[0].get('results', request.env['slide.channel'])
+        search_count, search_details, fuzzy_search_term = request.website._search_with_fuzzy(
+            "slides", search, limit=1000, order="" if order is None else order, options=options)
+        channels = search_details[0].get('results', request.env['slide.channel'])
+        slides = search_details[1].get('results', request.env['slide.slide'])
+        grouped_slides_by_category = slides.grouped('slide_category')
+
+        # Don't show contents because tags are related to courses
+        if options['tag'] is not None:
+            slides, grouped_slides_by_category = self.env['slide.slide'], {}
+
+        # Get selection value label as key to be used by the XML displaying
+        for (key, label) in self.env['slide.slide']._fields['slide_category'].selection:
+            if key in grouped_slides_by_category:
+                grouped_slides_by_category[label] = grouped_slides_by_category[key]
+                del grouped_slides_by_category[key]
+        channel_progress = {}
+        for channel in slides.channel_id:
+            channel_progress = channel_progress | self._get_channel_progress(channel, include_quiz=True)
 
         tag_groups = request.env['slide.channel.tag.group'].search(
             ['&', ('tag_ids', '!=', False), ('website_published', '=', True)])
@@ -452,6 +467,7 @@ class WebsiteSlides(WebsiteProfile):
         render_values.update(self._prepare_user_values(**post))
         render_values.update({
             'channels': channels,
+            'channel_progress': channel_progress,
             'tag_groups': tag_groups,
             'search_term': fuzzy_search_term or search,
             'original_search': fuzzy_search_term and search,
@@ -462,6 +478,7 @@ class WebsiteSlides(WebsiteProfile):
             'top3_users': self._get_top3_users(),
             'slugify_tags': self._slugify_tags,
             'slide_query_url': QueryURL('/slides/all', ['tag']),
+            'grouped_slides_by_category': grouped_slides_by_category,
         })
 
         return render_values
