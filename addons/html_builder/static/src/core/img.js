@@ -1,4 +1,12 @@
-import { Component, onWillStart, onWillUpdateProps, useEffect, useRef, xml } from "@odoo/owl";
+import {
+    Component,
+    onWillStart,
+    onWillUpdateProps,
+    useEffect,
+    useRef,
+    useState,
+    xml,
+} from "@odoo/owl";
 import { Cache } from "@web/core/utils/cache";
 
 const svgCache = new Cache(async (src) => {
@@ -29,51 +37,68 @@ export class Img extends Component {
         alt: { type: String, optional: true },
         attrs: { type: Object, optional: true },
         svgCheck: { type: Boolean, optional: true },
+        placeholderStyles: { type: Object, optional: true },
     };
     static defaultProps = {
         svgCheck: true,
+        placeholderStyles: {},
     };
     static template = xml`
-        <svg t-if="isSvg(props.src)" t-ref="svg"
-             xmlns="http://www.w3.org/2000/svg"
-             t-att-width="svg.width"
-             t-att-viewBox="svg.viewBox"
-             t-att-fill="svg.fill"
-             class="hb-svg d-flex m-auto"
-             t-att-class="props.class"
-             t-att-style="props.style"
-             t-att="props.attrs"/>
-        <img t-else=""
-             t-att-src="props.src"
-             t-att-class="props.class"
-             t-att-style="props.style"
-             t-att-alt="props.alt"
-             t-att="props.attrs"/>
+        <t t-if="state.loaded">
+            <svg t-if="isSvg(props.src)" t-ref="svg"
+                xmlns="http://www.w3.org/2000/svg"
+                t-att-width="svg.width"
+                t-att-viewBox="svg.viewBox"
+                t-att-fill="svg.fill"
+                class="hb-svg d-flex m-auto"
+                t-att-class="props.class"
+                t-att-style="props.style"
+                t-att="props.attrs"/>
+            <img t-else=""
+                t-att-src="props.src"
+                t-att-class="props.class"
+                t-att-style="props.style"
+                t-att-alt="props.alt"
+                t-att="props.attrs"/>
+        </t>
+        <div t-else="" class="o-img-placeholder rounded" t-att-style="placeholderStyles"/>
         `;
 
     setup() {
         this.svgRef = useRef("svg");
         this.svg = {};
+        this.state = useState({ loaded: false });
 
         onWillStart(async () => {
-            await this.handleImgLoad(this.props.src);
+            this.handleImgLoad(this.props.src);
         });
         onWillUpdateProps(async (nextProps) => {
             if (this.props.src !== nextProps.src) {
-                await this.handleImgLoad(nextProps.src);
+                this.handleImgLoad(nextProps.src);
             }
         });
-        useEffect(() => {
-            if (this.isSvg(this.props.src) && this.svg.children.length) {
-                // We can't use t-out with markup because it is parsed as HTML,
-                // but SVG need to be parsed as XML for all features to work.
-                const children = [];
-                for (const child of this.svg.children) {
-                    children.push(child.cloneNode(true));
+        useEffect(
+            (loaded) => {
+                if (this.isSvg(this.props.src) && loaded && this.svg.children.length) {
+                    // We can't use t-out with markup because it is parsed as HTML,
+                    // but SVG need to be parsed as XML for all features to work.
+                    const children = [];
+                    for (const child of this.svg.children) {
+                        children.push(child.cloneNode(true));
+                    }
+                    this.svgRef.el.replaceChildren(...children);
                 }
-                this.svgRef.el.replaceChildren(...children);
-            }
-        });
+            },
+            () => [this.state.loaded]
+        );
+    }
+
+    get placeholderStyles() {
+        const styles = [];
+        for (const prop in this.props.placeholderStyles) {
+            styles.push(`${prop}: ${this.props.placeholderStyles[prop]};`);
+        }
+        return styles.join(" ");
     }
 
     async handleImgLoad(src) {
@@ -82,6 +107,7 @@ export class Img extends Component {
         } else {
             await this.loadImage(src);
         }
+        this.state.loaded = true;
     }
 
     loadImage() {

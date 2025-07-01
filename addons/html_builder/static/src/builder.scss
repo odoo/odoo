@@ -161,3 +161,20 @@
         appearance: auto !important;
     }
 }
+
+.o-img-placeholder {
+    background-color: #666;
+    min-height: 1em;
+    width: 100%;
+    object-fit: contain;
+    animation: 1s linear infinite alternate blink;
+}
+
+@keyframes blink {
+    from {
+        opacity: 0.9;
+    }
+    to {
+        opacity: 0.6;
+    }
+}
