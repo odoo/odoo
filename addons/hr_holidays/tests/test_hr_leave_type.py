@@ -4,7 +4,7 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import date_utils
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -72,3 +72,61 @@ class TestHrLeaveType(TestHrHolidaysCommon):
             ).search([('has_valid_allocation', '=', True)], limit=1)
 
         self.assertFalse(leave_types, "Got valid leaves outside vaild period")
+
+    def test_calendar_duration_count_days(self):
+        """Test duration calculation when duration_count is calendar"""
+        calendar_leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Time Off',
+            'requires_allocation': False,
+            'duration_count': 'calendar',
+        })
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_hruser_id,
+            'holiday_status_id': calendar_leave_type.id,
+            'request_date_from': date(2024, 6, 1),
+            'request_date_to': date(2024, 6, 7),
+        })
+
+        days, hours = leave._get_durations()[leave.id]
+        self.assertEqual(days, 7, "Calendar duration should include all 7 days")
+        self.assertEqual(hours, 56, "Calendar duration should be 7 * 8 hours")
+
+    def test_working_duration_count_days(self):
+        """Test duration calculation when duration_count is worked days"""
+        working_leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Time Off',
+            'requires_allocation': False,
+            'duration_count': 'working',
+        })
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_hruser_id,
+            'holiday_status_id': working_leave_type.id,
+            'request_date_from': date(2024, 6, 1),
+            'request_date_to': date(2024, 6, 7),
+        })
+
+        days, hours = leave._get_durations()[leave.id]
+        self.assertEqual(days, 5, "Working days should exclude weekends")
+        self.assertEqual(hours, 40, "Working hours should be 5 * 8 hours")
+
+    def test_change_duration_count(self):
+        """Changing duration_count after leave is validated should raise ValidationError"""
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Time Off',
+            'requires_allocation': False,
+            'duration_count': 'working',
+        })
+
+        # Change before any leave: should be allowed
+        leave_type.duration_count = 'calendar'
+
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_hruser_id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2024, 7, 1),
+            'request_date_to': date(2024, 7, 5),
+        })
+        leave.action_approve()
+
+        with self.assertRaises(ValidationError):
+            leave_type.duration_count = 'working'
