@@ -32,6 +32,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { reactive } from "@odoo/owl";
 import { FontSizeSelector } from "./font_size_selector";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { weakMemoize } from "@html_editor/utils/functions";
 
 export const fontItems = [
     {
@@ -125,7 +126,7 @@ export class FontPlugin extends Plugin {
                 description: _t("Big section heading"),
                 icon: "fa-header",
                 run: () => this.dependencies.dom.setTag({ tagName: "H1" }),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.blockFormatIsAvailable.bind(this),
             },
             {
                 id: "setTagHeading2",
@@ -133,7 +134,7 @@ export class FontPlugin extends Plugin {
                 description: _t("Medium section heading"),
                 icon: "fa-header",
                 run: () => this.dependencies.dom.setTag({ tagName: "H2" }),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.blockFormatIsAvailable.bind(this),
             },
             {
                 id: "setTagHeading3",
@@ -141,7 +142,7 @@ export class FontPlugin extends Plugin {
                 description: _t("Small section heading"),
                 icon: "fa-header",
                 run: () => this.dependencies.dom.setTag({ tagName: "H3" }),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.blockFormatIsAvailable.bind(this),
             },
             {
                 id: "setTagParagraph",
@@ -153,7 +154,7 @@ export class FontPlugin extends Plugin {
                         tagName: this.dependencies.baseContainer.getDefaultNodeName(),
                     });
                 },
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.blockFormatIsAvailable.bind(this),
             },
             {
                 id: "setTagQuote",
@@ -161,7 +162,7 @@ export class FontPlugin extends Plugin {
                 description: _t("Add a blockquote section"),
                 icon: "fa-quote-right",
                 run: () => this.dependencies.dom.setTag({ tagName: "blockquote" }),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.blockFormatIsAvailable.bind(this),
             },
             {
                 id: "setTagPre",
@@ -169,7 +170,7 @@ export class FontPlugin extends Plugin {
                 description: _t("Add a code section"),
                 icon: "fa-code",
                 run: () => this.dependencies.dom.setTag({ tagName: "pre" }),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.blockFormatIsAvailable.bind(this),
             },
         ],
         toolbar_groups: [
@@ -195,7 +196,7 @@ export class FontPlugin extends Plugin {
                         this.updateFontSelectorParams();
                     },
                 },
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.blockFormatIsAvailable.bind(this),
             }),
             withSequence(20, {
                 id: "font-size",
@@ -298,6 +299,9 @@ export class FontPlugin extends Plugin {
     setup() {
         this.fontSize = reactive({ displayName: "" });
         this.font = reactive({ displayName: "" });
+        this.blockFormatIsAvailableMemoized = weakMemoize(
+            (selection) => isHtmlContentSupported(selection) && this.dependencies.dom.canSetTag()
+        );
     }
 
     normalize(root) {
@@ -359,6 +363,10 @@ export class FontPlugin extends Plugin {
 
             return [{ ...item, tagName: "span", name: roundedValue }];
         });
+    }
+
+    blockFormatIsAvailable(selection) {
+        return this.blockFormatIsAvailableMemoized(selection);
     }
 
     // @todo @phoenix: Move this to a specific Pre/CodeBlock plugin?
