@@ -713,51 +713,58 @@
                                 />
                                 <div
                                     t-if="not opt_wsale_floating_bar"
-                                    class="products_header btn-toolbar flex-nowrap align-items-center justify-content-between gap-1 gap-lg-2 gap-xl-3"
+                                    class="products_header d-flex gap-1 gap-lg-2 gap-xl-3"
                                 >
-                                    <t t-if="is_view_active('website_sale.search')">
-                                        <t t-set="_has_all_sibligns" t-value="hasPricelistDropdown and is_view_active('website_sale.sort') and wsale_has_filters_btn"></t>
-                                        <!-- Desktop Search button -->
-                                        <div t-attf-class="o_wsale_products_header_search_form_container {{ _has_all_sibligns and 'd-none d-sm-inline-block'}} col-xl-5 me-auto {{not hasLeftColumn and 'col-xl-6'}}">
-                                            <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
-                                            <t t-call="website_sale.search" placeholder="placeholder" search="original_search or search"/>
+                                    <div class="o_wsale_products_header_inner d-contents">
+                                        <t t-if="is_view_active('website_sale.search')">
+                                            <!-- Desktop Search button -->
+                                            <div
+                                                class="o_wsale_products_header_search_form_container d-none d-sm-inline-block flex-grow-1 mw-xxl-25 me-auto"
+                                            >
+                                                <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                                                <t t-call="website_sale.search" placeholder="placeholder" search="original_search or search"/>
+                                            </div>
+                                            <!-- Mobile Search button -->
+                                            <a
+                                                t-attf-class="btn o_not_editable d-inline-block d-sm-none me-auto btn-{{navClass}}"
+                                                data-bs-target="#o_wsale_search_modal"
+                                                data-bs-toggle="modal"
+                                                role="button"
+                                                title="Search Products"
+                                                href="#"
+                                            >
+                                                <i class="oi oi-search" role="img"/>
+                                            </a>
+                                        </t>
+                                        <div t-attf-class="{{'d-lg-none' if not hasPricelistDropdown and not is_view_active('website_sale.sort') else ''}} o_wsale_products_header_dropdown_wrap d-flex gap-3">
+                                            <t
+                                                t-if="hasPricelistDropdown"
+                                                t-call="website_sale.pricelist_list"
+                                            >
+                                                <t t-set="_classes" t-value="'ms-auto'"/>
+                                            </t>
+                                            <t
+                                                t-if="is_view_active('website_sale.sort')"
+                                                t-call="website_sale.sort"
+                                            />
+                                            <button
+                                                t-if="wsale_has_filters_btn"
+                                                t-attf-class="btn btn-{{navClass}} position-relative {{not wsale_has_filters_btn_lg and 'd-lg-none'}} {{not is_view_active('website_sale.search') and 'ms-auto'}} text-nowrap"
+                                                title="Filters"
+                                                data-bs-toggle="offcanvas"
+                                                data-bs-target="#o_wsale_offcanvas"
+                                            >
+                                                <i class="oi oi-settings-adjust" role="img"/>
+                                                <small t-attf-class="ms-1 {{(hasPricelistDropdown and is_view_active('website_sale.search') and is_view_active('website_sale.sort')) and 'd-none d-md-inline-block'}}">Filters</small>
+                                                <span
+                                                    t-if="isFilteringByPrice or attrib_set or tags"
+                                                    t-attf-class="position-absolute top-0 start-100 translate-middle border border-{{navClass}} rounded-circle bg-danger p-1"
+                                                >
+                                                    <span class="visually-hidden">filters active</span>
+                                                </span>
+                                            </button>
                                         </div>
-                                        <!-- Mobile Search button -->
-                                        <a
-                                            t-attf-class="btn o_not_editable {{_has_all_sibligns and 'd-inline-block d-sm-none' or 'd-none'}} me-auto btn-{{navClass}}"
-                                            data-bs-target="#o_wsale_search_modal"
-                                            data-bs-toggle="modal"
-                                            role="button"
-                                            title="Search Products"
-                                            href="#"
-                                        >
-                                            <i class="oi oi-search" role="img"/>
-                                        </a>
-                                    </t>
-                                    <t
-                                        t-if="hasPricelistDropdown"
-                                        t-call="website_sale.pricelist_list"
-                                    />
-                                    <t
-                                        t-if="is_view_active('website_sale.sort')"
-                                        t-call="website_sale.sort"
-                                    />
-                                    <button
-                                        t-if="wsale_has_filters_btn"
-                                        t-attf-class="btn btn-{{navClass}} position-relative {{not wsale_has_filters_btn_lg and 'd-lg-none'}} {{not is_view_active('website_sale.search') and 'ms-auto'}} text-nowrap"
-                                        title="Filters"
-                                        data-bs-toggle="offcanvas"
-                                        data-bs-target="#o_wsale_offcanvas"
-                                    >
-                                        <i class="oi oi-settings-adjust" role="img"/>
-                                        <small t-attf-class="ms-1 {{(hasPricelistDropdown and is_view_active('website_sale.search') and is_view_active('website_sale.sort')) and 'd-none d-md-inline-block'}}">Filters</small>
-                                        <span
-                                            t-if="isFilteringByPrice or attrib_set or tags"
-                                            t-attf-class="position-absolute top-0 start-100 translate-middle border border-{{navClass}} rounded-circle bg-danger p-1"
-                                        >
-                                            <span class="visually-hidden">filters active</span>
-                                        </span>
-                                    </button>
+                                    </div>
                                 </div>
                                 <div t-if="original_search and products" class="alert alert-warning mt8">
                                     No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="search"/>'.
