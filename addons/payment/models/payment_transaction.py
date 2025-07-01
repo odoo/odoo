@@ -43,6 +43,11 @@ class PaymentTransaction(models.Model):
     payment_method_code = fields.Char(
         string="Payment Method Code", related='payment_method_id.code'
     )
+    primary_payment_method_id = fields.Many2one(
+        string="Primary Payment Method",
+        comodel_name='payment.method',
+        compute='_compute_primary_payment_method_id',
+    )
     reference = fields.Char(
         string="Reference", help="The internal reference of the transaction", readonly=True,
         required=True)  # Already has an index from the UNIQUE SQL constraint.
@@ -127,6 +132,10 @@ class PaymentTransaction(models.Model):
     )
 
     #=== COMPUTE METHODS ===#
+
+    def _compute_primary_payment_method_id(self):
+        for pm, txs in self.grouped('payment_method_id').items():
+            txs.primary_payment_method_id = pm.primary_payment_method_id or pm
 
     def _compute_refunds_count(self):
         rg_data = self.env['payment.transaction']._read_group(
