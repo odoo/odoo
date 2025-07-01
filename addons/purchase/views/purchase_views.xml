@@ -219,7 +219,8 @@
                             <div name="date_approve" invisible="state != 'purchase'" class="o_row">
                                 <field name="date_approve"/>
                             </div>
-                            <label for="date_planned"/>
+                            <label for="date_planned" invisible="state == 'purchase'"/>
+                            <label for="date_planned" invisible="state != 'purchase'" string="Agreed Deadline"/>
                             <div name="date_planned_div" class="o_row">
                                 <field name="date_planned" readonly="state not in ('draft', 'sent', 'to approve', 'purchase')"/>
                             </div>
@@ -270,7 +271,8 @@
                                         options="{'show_label_warning': True}"
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)]"/>
                                     <field name="name" widget="section_and_note_text" optional="show"/>
-                                    <field name="date_planned" optional="hide" required="not display_type and not is_downpayment" force_save="1" readonly="is_downpayment"/>
+                                    <field name="date_planned" optional="hide" required="not display_type and not is_downpayment" force_save="1" readonly="is_downpayment" column_invisible="parent.state == 'purchase'"/>
+                                    <field name="date_planned" optional="hide" required="not display_type and not is_downpayment" force_save="1" readonly="is_downpayment" string="Agreed Deadline" column_invisible="parent.state != 'purchase'"/>
                                     <field name="analytic_distribution" widget="analytic_distribution"
                                            groups="analytic.group_analytic_accounting"
                                            options="{'product_field': 'product_id', 'business_domain': 'purchase_order', 'amount_field': 'price_subtotal'}"/>
@@ -644,7 +646,7 @@
                     <field name="amount_total_cc" sum="Total amount" widget="monetary" optional="hide"/>
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="invoice_status" widget="badge" decoration-success="invoice_status == 'invoiced'" decoration-info="invoice_status == 'to invoice'" optional="show"/>
-                    <field name="date_planned" column_invisible="context.get('quotation_only', False)" optional="show"/>
+                    <field name="date_planned" string="Agreed Deadline" column_invisible="context.get('quotation_only', False)" optional="show" readonly="1"/>
                 </list>
             </field>
         </record>
