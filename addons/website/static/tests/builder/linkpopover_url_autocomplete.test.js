@@ -1,11 +1,13 @@
 import { expect, test } from "@odoo/hoot";
-import { click, press, waitFor } from "@odoo/hoot-dom";
+import { click, press, waitFor, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { cleanLinkArtifacts } from "@html_editor/../tests/_helpers/format";
-import { getContent } from "@html_editor/../tests/_helpers/selection";
+import { getContent, setSelection } from "@html_editor/../tests/_helpers/selection";
 import { setupEditor } from "@html_editor/../tests/_helpers/editor";
-import { contains, defineModels, onRpc } from "@web/../tests/web_test_helpers";
-import { mailModels } from "@mail/../tests/mail_test_helpers";
+import { contains, defineModels, onRpc, serverState, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { click as mailClick, mailModels, openFormView, start } from "@mail/../tests/mail_test_helpers";
+import { insertText } from "@html_editor/../tests/_helpers/user_actions";
+import { HtmlField } from "@html_editor/fields/html_field";
 
 defineModels(mailModels);
 
@@ -77,4 +79,33 @@ test("autocomplete should shown and able to edit the link", async () => {
     // check the default page anchors are in the autocomplete dropdown
     expect(".o-autocomplete--dropdown-item:first").toHaveText("#top");
     expect(".o-autocomplete--dropdown-item:last").toHaveText("#bottom");
+});
+
+test("LinkPopover opens in full composer", async () => {
+
+    let htmlEditor;
+    mailModels.MailComposeMessage._views = {
+        "form,false": `
+        <form js_class="mail_composer_form">
+            <field name="body" type="html" widget="html_composer_message"/>
+        </form>`,
+    };
+    patchWithCleanup(HtmlField.prototype, {
+        onEditorLoad(editor) {
+            htmlEditor = editor;
+            return super.onEditorLoad(...arguments);
+        },
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await mailClick("button", { text: "Log note" });
+    await mailClick("button[title='Open Full Composer']");
+    await waitFor(".odoo-editor-editable");
+    await insertText(htmlEditor, "test");
+    const node = queryOne(".odoo-editor-editable div.o-paragraph");
+    setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });
+    await mailClick(".o-we-toolbar .fa-link");
+    await waitFor(".o-we-linkpopover");
+    await animationFrame();
+    expect(".o-we-linkpopover").toHaveCount(1);
 });
