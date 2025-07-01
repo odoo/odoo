@@ -91,7 +91,8 @@
                     <field name="name"/>
                     <field name="company_ids" column_invisible="True"/>
                     <field name="account_type" widget="account_type_selection"/>
-                    <field name="reconcile" widget="boolean_toggle"/>
+                    <field name="reconcile" optional="hide" widget="boolean_toggle"/>
+                    <field name="active" optional="show" widget="boolean_toggle"/>
                     <field name="opening_debit" options="{'no_symbol': True}"/>
                     <field name="opening_credit" options="{'no_symbol': True}"/>
                     <field name="opening_balance" optional="hide" options="{'no_symbol': True}"/>
