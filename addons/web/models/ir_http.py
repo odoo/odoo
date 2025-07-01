@@ -148,6 +148,7 @@ class IrHttp(models.AbstractModel):
                 # current_company should be default_company
                 "user_companies": {
                     'current_company': user.company_id.id,
+<<<<<<< 5007c89c6ff7ae3218c070f2fd691cf94f0b6afb
                     'allowed_companies': {
                         comp.id: {
                             'id': comp.id,
@@ -166,6 +167,13 @@ class IrHttp(models.AbstractModel):
                             'parent_id': comp.parent_id.id,
                         } for comp in disallowed_ancestor_companies_sudo
                     },
+||||||| a9854def7470c04a04e78edb435b377acf2ba480
+                    'allowed_companies': {comp.id: comp._get_session_info(user_companies) for comp in user_companies},
+                    'disallowed_ancestor_companies': {comp.id: comp._get_session_info(all_companies_in_hierarchy_sudo) for comp in disallowed_ancestor_companies_sudo},
+=======
+                    'allowed_companies': {comp.id: comp._get_session_info(all_companies_in_hierarchy_sudo) for comp in user_companies},
+                    'disallowed_ancestor_companies': {comp.id: comp._get_session_info(all_companies_in_hierarchy_sudo) for comp in disallowed_ancestor_companies_sudo},
+>>>>>>> 0328416632e2e4f4a56987f2d717a4380c0c3a72
                 },
                 "show_effect": True,
             })

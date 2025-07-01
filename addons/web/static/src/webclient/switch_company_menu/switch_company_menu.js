@@ -95,29 +95,36 @@ export class CompanySelector {
     }
 
     _selectCompany(companyId, unshift = false) {
-        if (!this.selectedCompaniesIds.includes(companyId)) {
-            if (unshift) {
+        if (this._isCompanyAllowed(companyId)) {
+            if (!this.selectedCompaniesIds.includes(companyId)) {
+                if (unshift) {
+                    this.selectedCompaniesIds.unshift(companyId);
+                } else {
+                    this.selectedCompaniesIds.push(companyId);
+                }
+            } else if (unshift) {
+                const index = this.selectedCompaniesIds.findIndex((c) => c === companyId);
+                this.selectedCompaniesIds.splice(index, 1);
                 this.selectedCompaniesIds.unshift(companyId);
-            } else {
-                this.selectedCompaniesIds.push(companyId);
             }
-        } else if (unshift) {
-            const index = this.selectedCompaniesIds.findIndex((c) => c === companyId);
-            this.selectedCompaniesIds.splice(index, 1);
-            this.selectedCompaniesIds.unshift(companyId);
         }
+
         this._getBranches(companyId).forEach((companyId) => this._selectCompany(companyId));
     }
 
     _deselectCompany(companyId) {
         if (this.selectedCompaniesIds.includes(companyId)) {
             this.selectedCompaniesIds.splice(this.selectedCompaniesIds.indexOf(companyId), 1);
-            this._getBranches(companyId).forEach((companyId) => this._deselectCompany(companyId));
         }
+        this._getBranches(companyId).forEach((companyId) => this._deselectCompany(companyId));
     }
 
     _getBranches(companyId) {
         return getCompany(companyId).child_ids || [];
+    }
+    
+    _isCompanyAllowed(companyId) {
+        return user.allowedCompanies.some((c) => c.id == companyId);
     }
 
     _isSingleCompanyMode() {
