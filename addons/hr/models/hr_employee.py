@@ -1128,15 +1128,6 @@ class HrEmployee(models.Model):
                 'message': _("To avoid multi company issues (losing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead.")
             }}
 
-    def _get_marital_status_selection(self):
-        return [
-            ('single', _('Single')),
-            ('married', _('Married')),
-            ('cohabitant', _('Legal Cohabitant')),
-            ('widower', _('Widower')),
-            ('divorced', _('Divorced')),
-        ]
-
     def _load_scenario(self):
         demo_tag = self.env.ref('hr.employee_category_demo', raise_if_not_found=False)
         if demo_tag:
