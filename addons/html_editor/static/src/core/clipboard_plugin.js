@@ -7,7 +7,7 @@ import {
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
 import { unwrapContents, wrapInlinesInBlocks, splitTextNode, fillEmpty } from "../utils/dom";
-import { fillClipboardData } from "../utils/clipboard";
+import { fillHtmlTransferData } from "../utils/clipboard";
 import { childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
 import {
@@ -141,6 +141,8 @@ export class ClipboardPlugin extends Plugin {
     }
 
     onCut(ev) {
+        const selection = this.dependencies.selection.getEditableSelection();
+        this.dispatchTo("before_cut_handlers", selection);
         this.onCopy(ev);
         this.dependencies.history.stageSelection();
         this.dependencies.delete.deleteSelection();
@@ -152,26 +154,34 @@ export class ClipboardPlugin extends Plugin {
      */
     onCopy(ev) {
         ev.preventDefault();
+        this.setSelectionTransferData(ev, "clipboardData");
+    }
+
+    /**
+     * Prepare HTML and plain text from the current selection.
+     */
+    setSelectionTransferData(ev, transferObjectProperty) {
         const selection = this.dependencies.selection.getEditableSelection();
         let clonedContents = selection.cloneContents();
         if (!clonedContents.hasChildNodes()) {
             return;
         }
-
         // Prepare text content for clipboard.
         let textContent = selection.textContent();
         for (const processor of this.getResource("clipboard_text_processors")) {
             textContent = processor(textContent);
         }
-        ev.clipboardData.setData("text/plain", textContent);
+        ev[transferObjectProperty].setData("text/plain", textContent);
 
         // Prepare html content for clipboard.
         for (const processor of this.getResource("clipboard_content_processors")) {
             clonedContents = processor(clonedContents, selection) || clonedContents;
         }
         this.dependencies.dom.removeSystemProperties(clonedContents);
-        fillClipboardData(ev, clonedContents, {
-            fillEditorClipboard: isContentEditable(selection.commonAncestorContainer),
+        fillHtmlTransferData(ev, transferObjectProperty, clonedContents, {
+            setEditorTransferData:
+                isContentEditable(selection.commonAncestorContainer) ||
+                this.dependencies.selection.isNodeEditable(selection.commonAncestorContainer),
         });
     }
 
@@ -595,13 +605,9 @@ export class ClipboardPlugin extends Plugin {
      * @param {DragEvent} ev
      */
     onDragStart(ev) {
-        if (ev.target.nodeName === "IMG") {
-            this.dragImage = ev.target instanceof HTMLElement && ev.target;
-            ev.dataTransfer.setData(
-                "application/vnd.odoo.odoo-editor-node",
-                this.dragImage.outerHTML
-            );
-        }
+        const selection = this.dependencies.selection.getEditableSelection();
+        this.dispatchTo("before_drag_handlers", selection);
+        this.setSelectionTransferData(ev, "dataTransfer");
     }
     /**
      * Handle safe dropping of html into the editor.
@@ -629,16 +635,10 @@ export class ClipboardPlugin extends Plugin {
         }
 
         const dataTransfer = (ev.originalEvent || ev).dataTransfer;
-        const imageNodeHTML = ev.dataTransfer.getData("application/vnd.odoo.odoo-editor-node");
-        const image =
-            imageNodeHTML &&
-            this.dragImage &&
-            imageNodeHTML === this.dragImage.outerHTML &&
-            this.dragImage;
-
-        const fileTransferItems = getImageFiles(dataTransfer);
+        const odooEditorHtml = ev.dataTransfer.getData("application/vnd.odoo.odoo-editor");
+        const fileTransferItems = !odooEditorHtml && getImageFiles(dataTransfer);
         const htmlTransferItem = [...dataTransfer.items].find((item) => item.type === "text/html");
-        if (image || fileTransferItems.length || htmlTransferItem) {
+        if (fileTransferItems.length || htmlTransferItem || odooEditorHtml) {
             if (this.document.caretPositionFromPoint) {
                 const range = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
                 this.dependencies.delete.deleteSelection();
@@ -655,11 +655,12 @@ export class ClipboardPlugin extends Plugin {
                 });
             }
         }
-        if (image) {
-            const fragment = this.document.createDocumentFragment();
-            fragment.append(image);
-            this.dependencies.dom.insert(fragment);
-            this.dependencies.history.addStep();
+        if (odooEditorHtml) {
+            const fragment = parseHTML(this.document, odooEditorHtml);
+            if (fragment.hasChildNodes()) {
+                this.dependencies.dom.insert(fragment);
+                this.dependencies.history.addStep();
+            }
         } else if (fileTransferItems.length) {
             const html = await this.addImagesFiles(fileTransferItems);
             this.dependencies.dom.insert(html);
