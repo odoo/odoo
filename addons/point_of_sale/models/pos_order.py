@@ -358,6 +358,8 @@ class PosOrder(models.Model):
         help="List of account moves created when this POS order was reversed and invoiced after session close."
     )
 
+    _unique_uuid = models.Constraint('unique (uuid)', 'An order with this uuid already exists')
+
     def get_preparation_change(self):
         self.ensure_one()
         return {
@@ -1454,6 +1456,8 @@ class PosOrderLine(models.Model):
     is_edited = fields.Boolean('Edited', default=False)
     # Technical field holding custom data for the taxes computation engine.
     extra_tax_data = fields.Json()
+
+    _unique_uuid = models.Constraint('unique (uuid)', 'An order line with this uuid already exists')
 
     @api.model
     def _load_pos_data_domain(self, data, config):
