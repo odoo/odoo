@@ -1631,14 +1631,14 @@ class Many2many(_RelationalMulti):
 
     def _condition_to_sql_relational(self, model: BaseModel, alias: str, exists: bool, coquery: Query, query: Query) -> SQL:
         assert not self.auto_join, f"auto_join not implemented for many2many fields ({self})"
+        if coquery.is_empty():
+            return SQL("FALSE") if exists else SQL("TRUE")
         rel_table, rel_id1, rel_id2 = self.relation, self.column1, self.column2
         rel_alias = query.make_alias(alias, self.name)
         if not coquery.where_clause:
             # case: no constraints on table and we have foreign keys
-            # so we can inverse the operator and check against empty query
-            coquery = model.browse()._as_query()
+            # so we can inverse the operator and check existence
             exists = not exists
-        if coquery.is_empty():
             return SQL(
                 "%sEXISTS (SELECT 1 FROM %s AS %s WHERE %s = %s)",
                 SQL("NOT ") if exists else SQL(),
