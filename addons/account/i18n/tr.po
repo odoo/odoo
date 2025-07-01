@@ -10,42 +10,26 @@
 # Yedigen, 2025
 # Cihad GÜNDOĞDU <cihadgundogdu@gmail.com>, 2025
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2025
-# Melih Melik Sonmez, 2025
 # Hakan Türkün, 2025
 # Wil Odoo, 2025
 # Thomas Becquevort, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # Ayhan Kızıltan, 2025
+# Melih Melik Sonmez, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:37+0000\n"
+"POT-Creation-Date: 2025-06-26 18:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Ayhan Kızıltan, 2025\n"
+"Last-Translator: Melih Melik Sonmez, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"Hareket (%(move)s) denk değil.\n"
-"Borçların toplamı eşittir %(debit_total)s ve kredilerin toplamı eşittir %(credit_total)s.\n"
-"Her hareketi otomatik olarak denkleştirmek için \"%(journal)s\" günlüğünde varsayılan bir hesap belirtmek isteyebilirsiniz."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -2963,12 +2947,6 @@ msgstr ""
 "                hesapları defterlerin parçalarıdır. Şirketler yıllık\n"
 "                hesaplarını iki ana bölümde tutarlar : Bilanço, \n"
 "                ve gelir tablosu (kâr ve zarar hesapları)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "Bir hata oluştu."
 
 #. module: account
 #. odoo-python
@@ -8242,6 +8220,8 @@ msgstr "Siparişlerde ve faturalarda toplam vergi tutarı nasıl hesaplanacak"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
 msgid "IBAN: BE76 4294 6878 9995"
 msgstr ""
+"IBAN: BE76 4294 6878 9995\n"
+" "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -15650,6 +15630,12 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "%(name)s girişi (id %(id)s) taslak halinde olmalıdır."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is not balanced."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -15718,6 +15704,14 @@ msgstr "Aşağıdaki Yevmiye Girişleri oluşturulacak"
 msgid ""
 "The following accounts must be assigned to at least one company:\n"
 "%(accounts)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
 msgstr ""
 
 #. module: account

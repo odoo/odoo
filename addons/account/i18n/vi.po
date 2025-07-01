@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:37+0000\n"
+"POT-Creation-Date: 2025-06-26 18:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -22,22 +22,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"Bút toán (%(move)s) chưa được cân đối.\n"
-"Tổng nợ là %(debit_total)s và tổng có là %(credit_total)s.\n"
-"Bạn có thể chỉ định một tài khoản mặc định trên sổ nhật ký \"%(journal)s\" để tự động cân đối mỗi bút toán."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -221,6 +205,9 @@ msgid ""
 "\"%(receivable)s\" or \"%(payable)s\" with both options "
 "\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
+"%(tax_account)s (%(account_name)s) phải là tài khoản thuộc loại "
+"\"%(receivable)s\" hoặc \"%(payable)s\", đồng thời cả hai tuỳ chọn "
+"\"%(allow_reconciliation)s\" và \"%(non_trade)s\" phải được bật."
 
 #. module: account
 #. odoo-python
@@ -1363,7 +1350,7 @@ msgstr "<span>Cảnh báo: chứng từ này có thể trùng lặp với</span>
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Địa chỉ giao hàng</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2960,12 +2947,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "Đã xảy ra lỗi."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
 msgid ""
 "An error occurred when computing the inalterability. A gap has been detected"
 " in the sequence."
@@ -3558,7 +3539,7 @@ msgstr "Tài khoản ngân hàng"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s archived"
-msgstr ""
+msgstr "Tài khoản ngân hàng %(link)s có số %(number)s đã được lưu trữ"
 
 #. module: account
 #. odoo-python
@@ -15710,6 +15691,12 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "Bút toán %(name)s (id %(id)s) phải ở trạng thái nháp."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is not balanced."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -15781,6 +15768,14 @@ msgid ""
 msgstr ""
 "Các tài khoản sau đây phải được chỉ định cho ít nhất một công ty:\n"
 "%(accounts)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
+msgstr ""
 
 #. module: account
 #. odoo-python

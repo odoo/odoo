@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:37+0000\n"
+"POT-Creation-Date: 2025-06-26 18:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Thomas Becquevort, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -22,22 +22,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"Движение средств (%(move)s) не сбалансировано.\n"
-"Сумма дебетов равна %(debit_total)s, а сумма кредитов равна %(credit_total)s.\n"
-"Возможно, вы захотите указать счет по умолчанию в журнале \"%(journal)s\", чтобы автоматически сбалансировать каждое движение средств."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -2943,12 +2927,6 @@ msgstr ""
 "                балансовый отчет и отчет о прибылях и убытках (profit and loss\n"
 "                счет). По закону годовая отчетность компании должна\n"
 "                раскрывать определенный объем информации."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "Произошла ошибка."
 
 #. module: account
 #. odoo-python
@@ -15732,6 +15710,12 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "Запись %(name)s (id %(id)s) должна быть в черновике."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is not balanced."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -15801,6 +15785,14 @@ msgstr "Будут созданы следующие записи журнала
 msgid ""
 "The following accounts must be assigned to at least one company:\n"
 "%(accounts)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
 msgstr ""
 
 #. module: account

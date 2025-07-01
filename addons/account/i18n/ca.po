@@ -7,42 +7,26 @@
 # Quim, 2025
 # Óscar Fonseca <tecnico@pyming.com>, 2025
 # Harcogourmet, 2025
-# Santiago Payà <santiagopim@gmail.com>, 2025
 # Jonatan Gk, 2025
 # Wil Odoo, 2025
 # Josep Anton Belchi, 2025
 # EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025
 # Noemi Pla, 2025
+# Santiago Payà <santiagopim@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:37+0000\n"
+"POT-Creation-Date: 2025-06-26 18:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Noemi Pla, 2025\n"
+"Last-Translator: Santiago Payà <santiagopim@gmail.com>, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"El moviment (%(move)s) no està equilibrat.\n"
-"El total del deure és igual a %(debit_total)s i el total de l'haver és igual a %(credit_total)s.\n"
-"Potser vol especificar un compte per defecte al diari \"%(journal)s\" per saldar cada moviment de forma automàtica."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -227,6 +211,9 @@ msgid ""
 "\"%(receivable)s\" or \"%(payable)s\" with both options "
 "\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
+"%(tax_account)s (%(account_name)s) ha de ser un compte del tipus "
+"\"%(receivable)s\" o \"%(payable)s\" amb les opcions "
+"\"%(allow_reconciliation)s\" i \"%(non_trade)s\" totes dues activades."
 
 #. module: account
 #. odoo-python
@@ -2981,12 +2968,6 @@ msgstr ""
 "pèrdues i guanys (compte de resultats). Els comptes anuals són requerits per"
 " la llei a les empreses per revelar certa quantitat d'informació sobre "
 "aquestes."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "S'ha produït un error."
 
 #. module: account
 #. odoo-python
@@ -15666,6 +15647,8 @@ msgstr ""
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
 msgstr ""
+"El soci comercial s'ha actualitzat per a tots els assentaments comptables "
+"relacionats."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -15819,6 +15802,12 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "L'assentament %(name)s (id %(id)s) ha de ser un esborrany."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is not balanced."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -15889,6 +15878,14 @@ msgstr "Es generaran els següents assentaments"
 msgid ""
 "The following accounts must be assigned to at least one company:\n"
 "%(accounts)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
 msgstr ""
 
 #. module: account
@@ -18467,6 +18464,8 @@ msgid ""
 "You can't create payments for entries belonging to different branches "
 "without access to parent company."
 msgstr ""
+"No podeu crear pagaments per a assentaments de diferents sucursals sense "
+"accés a la companyia principal."
 
 #. module: account
 #. odoo-python
@@ -18955,6 +18954,8 @@ msgid ""
 "You cannot set a partner as an invoicing address of another if they have a "
 "different %(vat_label)s."
 msgstr ""
+"No podeu establir un contacte com adreça de facturació d'un altre contacte "
+"si tenen un %(vat_label)s diferent."
 
 #. module: account
 #. odoo-python

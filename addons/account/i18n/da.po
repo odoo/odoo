@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:37+0000\n"
+"POT-Creation-Date: 2025-06-26 18:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Sammi Iversen <sammi@vkdata.dk>, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
@@ -23,22 +23,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"Bevægelsen (%(move)s) er ikke udlignet.\n"
-"Den smalede debit er lig %(debit_total)s og den samlede kredit er lig %(credit_total)s.\n"
-"Det kan være, du skal angive en standard konto på journalen \"%(journal)s\" for automatisk at afstemme hver bevægelse."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -2949,12 +2933,6 @@ msgstr ""
 "                balance og resultatopgørelse (indtægter og tab)\n"
 "                Det er for et selskab lovpligtigt\n"
 "                at videregive en vis mængde oplysninger."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "Der opstod en fejl."
 
 #. module: account
 #. odoo-python
@@ -15652,6 +15630,12 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "Posteringen %(name)s (id %(id)s) skal være i kladde."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is not balanced."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -15720,6 +15704,14 @@ msgstr "De følgende journalbilag vil blive genereret"
 msgid ""
 "The following accounts must be assigned to at least one company:\n"
 "%(accounts)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
 msgstr ""
 
 #. module: account

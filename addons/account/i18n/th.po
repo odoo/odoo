@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:37+0000\n"
+"POT-Creation-Date: 2025-06-26 18:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Thomas Becquevort, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -20,22 +20,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"การเคลื่อนไหว (%(move)s) ไม่สมดุล\n"
-"ยอดเดบิตทั้งหมดเท่ากับ %(debit_total)s และยอดรวมเครดิตเท่ากับ %(credit_total)s\n"
-"คุณอาจต้องการระบุบัญชีเริ่มต้นในสมุดรายวัน \"%(journal)s\" เพื่อให้สมดุลแต่ละการเคลื่อนไหวโดยอัตโนมัติ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -2924,12 +2908,6 @@ msgstr ""
 "งบดุลและงบกำไรขาดทุน (บัญชีกำไรขาดทุน)\n"
 "กฎหมายกำหนดให้บัญชีประจำปีของ\n"
 "บริษัทต้องเปิดเผยข้อมูลจำนวนหนึ่ง"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "เกิดข้อผิดพลาดขึ้น"
 
 #. module: account
 #. odoo-python
@@ -15562,6 +15540,12 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "รายการ %(name)s (id %(id)s) จะต้องเป็นแบบร่าง"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is not balanced."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -15630,6 +15614,14 @@ msgstr "รายการสมุดรายวันต่อไปนี้
 msgid ""
 "The following accounts must be assigned to at least one company:\n"
 "%(accounts)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
 msgstr ""
 
 #. module: account

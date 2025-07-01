@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:37+0000\n"
+"POT-Creation-Date: 2025-06-26 18:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -19,22 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"Pemindahan (%(move)s) tidak seimbang.\n"
-"Total debit sesuai %(debit_total)s dan total kredit sesuai %(credit_total)s.\n"
-"Anda mungkin ingin menentukan akun default pada jurnal \"%(journal)s\" untuk secara otomatis menyeimbangkan setiap pemindahan."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -2959,12 +2943,6 @@ msgstr ""
 "                utama: neraca dan laporan laba rugi (akun laba rugi). Akun tahunan\n"
 "                perusahaan diwajibkan oleh hukum untuk melaporkan sejumlah\n"
 "                informasi tertentu."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "Telah terjadi kesalahan."
 
 #. module: account
 #. odoo-python
@@ -15738,6 +15716,12 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "Entri %(name)s (id %(id)s) harus dalam draft."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is not balanced."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -15809,6 +15793,14 @@ msgid ""
 msgstr ""
 "Akun-akun berikut harus ditugaskan ke setidaknya satu perusahaan:\n"
 "%(accounts)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
+msgstr ""
 
 #. module: account
 #. odoo-python

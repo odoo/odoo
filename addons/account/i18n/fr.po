@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:37+0000\n"
+"POT-Creation-Date: 2025-06-26 18:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -20,22 +20,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"L'écriture (%(move)s) n'est pas équilibrée.\n"
-"Le total des débits est égal à %(debit_total)s et le total des crédits est égal à %(credit_total)s.\n"
-"Vous pouvez spécifier un compte par défaut sur le journal \"%(journal)s\" pour équilibrer automatiquement chaque mouvement."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -2990,12 +2974,6 @@ msgstr ""
 "bilan et le compte de résultat (compte de pertes et \n"
 "profits). Les comptes annuels d'une société sont requis par la loi \n"
 "afin de publier un certain nombre d'information."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "Une erreur s'est produite."
 
 #. module: account
 #. odoo-python
@@ -15884,6 +15862,12 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "L'écriture %(name)s (id %(id)s) doit être en brouillon."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is not balanced."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -15956,6 +15940,14 @@ msgid ""
 msgstr ""
 "Les comptes suivants doivent être affectés à au moins une société :\n"
 "%(accounts)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18539,6 +18531,8 @@ msgid ""
 "You can't create payments for entries belonging to different branches "
 "without access to parent company."
 msgstr ""
+"Vous ne pouvez pas créer de paiements pour des écritures appartenant à "
+"différentes branches sans avoir accès à la société mère."
 
 #. module: account
 #. odoo-python

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:37+0000\n"
+"POT-Creation-Date: 2025-06-26 18:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -21,22 +21,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: es_419\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"El movimiento (%(move)s) no está saldado.\n"
-"El total de débito es igual a %(debit_total)s y el total de crédito es igual a %(credit_total)s.\n"
-"Especifique una cuenta predeterminada en el diario \"%(journal)s\" para saldar cada movimiento de forma automática."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -2979,12 +2963,6 @@ msgstr ""
 "                la hoja de balance general y el estado de resultados (ganancias y pérdidas)\n"
 "                Las cuentas anuales son requeridas por ley a las empresas\n"
 "                para revelar cierta cantidad de información."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "Ocurrió un error."
 
 #. module: account
 #. odoo-python
@@ -15823,6 +15801,12 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "El asiento %(name)s (id %(id)s) debe ser un borrador."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is not balanced."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -15896,6 +15880,14 @@ msgid ""
 msgstr ""
 "Las siguientes cuentas deben estar asignadas por lo menos a una empresa:\n"
 "%(accounts)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
+msgstr ""
 
 #. module: account
 #. odoo-python
