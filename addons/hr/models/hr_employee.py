@@ -136,13 +136,7 @@ class HrEmployee(models.Model):
     work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_user")
     work_permit_name = fields.Char('work_permit_name', compute='_compute_work_permit_name', groups="hr.group_hr_user")
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
-    certificate = fields.Selection([
-        ('graduate', 'Graduate'),
-        ('bachelor', 'Bachelor'),
-        ('master', 'Master'),
-        ('doctor', 'Doctor'),
-        ('other', 'Other'),
-    ], 'Certificate Level', groups="hr.group_hr_user", tracking=True)
+    certificate = fields.Selection(selection='_get_certificate_selection', string='Certificate Level', groups="hr.group_hr_user", tracking=True)
     study_field = fields.Char("Field of Study", groups="hr.group_hr_user", tracking=True)
     study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
     emergency_contact = fields.Char(groups="hr.group_hr_user", tracking=True)
@@ -282,6 +276,16 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.hr_icon_display = 'presence_' + employee.hr_presence_state
             employee.show_hr_icon_display = bool(employee.user_id)
+
+    @api.model
+    def _get_certificate_selection(self):
+        return [
+            ('graduate', self.env._('Graduate')),
+            ('bachelor', self.env._('Bachelor')),
+            ('master', self.env._('Master')),
+            ('doctor', self.env._('Doctor')),
+            ('other', self.env._('Other')),
+        ]
 
     def _get_first_versions(self):
         self.ensure_one()
