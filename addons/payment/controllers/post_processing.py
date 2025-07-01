@@ -5,6 +5,7 @@ import logging
 import psycopg2
 
 from odoo import http
+from odoo.exceptions import ValidationError
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -45,7 +46,7 @@ class PaymentPostProcessing(http.Controller):
             self.get_monitored_transaction_id()
         ).exists()
         if not monitored_tx:  # The session might have expired, or the tx has never existed.
-            raise Exception('tx_not_found')
+            raise ValidationError('tx_not_found')
 
         # Finalize the post-processing of the transaction before redirecting the user to the landing
         # route and its document.
