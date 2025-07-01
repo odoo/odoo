@@ -31,6 +31,7 @@ export class MassMailingHtmlField extends HtmlMailField {
 
     setup() {
         super.setup();
+        this.alwaysComputeInlineEditorContent = false;
         this.themeService = useService("mass_mailing_egg.themes");
         Object.assign(this.state, {
             // TODO EGGMAIL: maybe define a condition if there is no content to display
@@ -180,17 +181,20 @@ export class MassMailingHtmlField extends HtmlMailField {
         this.iframeLoaded.resolve(iframeLoaded);
     }
 
-    /**
-     * In mass_mailing, only the field given with `inline-field` option is
-     * processed with `toInline`.
-     * @override
-     */
-    processEditorContent(el) {
-        return el;
-    }
-
     toggleThemeSelector(show = true) {
         this.state.showThemeSelector = show;
+    }
+
+    /**
+     * Process the content at a specifically designed location to avoid
+     * interference with the UI.
+     * @override
+     */
+    insertForInlineProcessing(el) {
+        const processingContainer = this.iframeRef.el.contentDocument.querySelector(
+            ".o_mass_mailing_processing_container"
+        );
+        processingContainer.append(el);
     }
 
     /**
@@ -208,12 +212,7 @@ export class MassMailingHtmlField extends HtmlMailField {
         this.isDirty = false;
         const shouldRestoreDisplayNone = this.iframeRef.el.classList.contains("d-none");
         this.iframeRef.el.classList.remove("d-none");
-        const previousSibling =
-            this.iframeRef.el.contentDocument.querySelector(".o_mass_mailing_value");
-        const inlineValue = await HtmlMailField.getInlineHTML(
-            previousSibling,
-            parseHTML(this.iframeRef.el.contentDocument, value).firstElementChild
-        ).innerHTML;
+        const inlineValue = await this.getInlineEditorContent().innerHTML;
         if (shouldRestoreDisplayNone) {
             this.iframeRef.el.classList.add("d-none");
         }

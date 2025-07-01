@@ -6,33 +6,49 @@ import { ColumnPlugin } from "@html_editor/main/column_plugin";
 const cssRulesByDocument = new WeakMap();
 
 export class HtmlMailField extends HtmlField {
+    setup() {
+        super.setup();
+        this.alwaysComputeInlineEditorContent = true;
+    }
+
     /**
      * @param {HTMLElement} el element to be processed
-     * @param {Object[]} cssRules result of @see getCSSRules
+     * @param {Document} styleDocument source document for the style
      */
-    static async getInlineHTML(el, cssRules) {
-        // Insert the cloned element inside an DOM so we can get its computed style.
-        previousSibling.after(el);
-        el.classList.remove("odoo-editor-editable");
+    static async getInlineHTML(el, styleDocument) {
+        if (!cssRulesByDocument.has(styleDocument)) {
+            cssRulesByDocument.set(styleDocument, getCSSRules(styleDocument));
+        }
+        const cssRules = cssRulesByDocument.get(styleDocument);
         await toInline(el, cssRules);
-        el.remove();
         return el;
     }
 
     async getEditorContent() {
-        let el = await super.getEditorContent();
-        el = await this.processEditorContent(el);
-        return el;
+        if (this.alwaysComputeInlineEditorContent) {
+            return this.getInlineEditorContent();
+        }
+        return super.getEditorContent();
     }
 
-    async processEditorContent(el) {
+    /**
+     * Temporarily insert the cloned element inside the DOM so we can get its computed style.
+     * @param {HTMLElement} el
+     */
+    insertForInlineProcessing(el) {
+        const editable = this.editor.editable;
+        editable.after(el);
+    }
+
+    async getInlineEditorContent() {
+        let el = await super.getEditorContent();
+        el.classList.remove("odoo-editor-editable");
         const editable = this.editor.editable;
         const editableDocument = editable.ownerDocument;
-        if (!cssRulesByDocument.has(editableDocument)) {
-            cssRulesByDocument.set(editableDocument, getCSSRules(editableDocument));
-        }
-        const cssRules = cssRulesByDocument.get(previousSibling);
-        return await HtmlMailField.getInlineHTML(el, cssRules);
+        this.insertForInlineProcessing(el);
+        el = await HtmlMailField.getInlineHTML(el, editableDocument);
+        el.remove();
+        return el;
     }
 
     getConfig() {

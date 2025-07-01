@@ -87,8 +87,6 @@ export class MassMailingIframe extends Component {
         this.iframeRef.el.contentWindow.addEventListener("beforeUnload", () => {
             this.iframeRef.el.removeAttribute("is-ready");
         });
-        this.iframeRef.el.contentDocument.head.appendChild(this.renderHeadContent());
-        this.iframeRef.el.contentDocument.body.appendChild(this.renderBodyContent());
         this.iframeLoaded.resolve(this.iframeRef.el);
         this.props.onIframeLoad(this.iframeLoaded);
         this.state.ready = true;
