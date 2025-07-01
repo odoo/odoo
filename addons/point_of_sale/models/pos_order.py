@@ -353,6 +353,8 @@ class PosOrder(models.Model):
         ('to_invoice', 'To Invoice'),
     ], string='Invoice Status', compute='_compute_invoice_status')
 
+    _unique_uuid = models.Constraint('unique (uuid)', 'An order with this uuid already exists')
+
     def get_preparation_change(self):
         self.ensure_one()
         return {
@@ -1460,6 +1462,8 @@ class PosOrderLine(models.Model):
 
     combo_item_id = fields.Many2one('product.combo.item', string='Combo Item')
     is_edited = fields.Boolean('Edited', default=False)
+
+    _unique_uuid = models.Constraint('unique (uuid)', 'An order line with this uuid already exists')
 
     @api.model
     def _load_pos_data_domain(self, data):
