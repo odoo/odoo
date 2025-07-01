@@ -5,15 +5,15 @@
             <div class="row" t-if="o.delivery_date" name="delivery_date">
                 <div class="col-6"></div>
                 <div class="col-2">
-                    <strong style="white-space:nowrap">Delivery Date:
+                    <strong style="white-space:nowrap">Supply Date:
                     </strong>
                 </div>
                 <div class="col-2">
-                    <span t-field="o.delivery_date"/>
+                    <span t-out="o.delivery_date.strftime('%Y-%m-%d')"/>
                 </div>
                 <div class="col-2 text-end">
                     <strong style="white-space:nowrap">:
-                        تاريخ التوصيل
+                        تاريخ التوريد
                     </strong>
                 </div>
             </div>
@@ -102,14 +102,19 @@
                 إجمالي قيمة الفاتورة شامل ضريبة القيمة المضافة
             </strong>
         </xpath>
-        <xpath expr="//div[@name='invoice_date']//span" position="before">
-            <span t-if="o.l10n_sa_confirmation_datetime" t-field="o.l10n_sa_confirmation_datetime"/>
+        <xpath expr="//span[@t-field='o.invoice_date']" position="attributes">
+            <attribute name="t-field"></attribute>
+            <attribute name="t-out">o.invoice_date.strftime('%Y-%m-%d')</attribute>
         </xpath>
-        <xpath expr="//div[@name='invoice_date']//span[@t-field='o.invoice_date']" position="attributes">
-            <attribute name="t-if">not o.l10n_sa_confirmation_datetime</attribute>
+        <xpath expr="//span[@t-field='o.invoice_date_due']" position="attributes">
+            <attribute name="t-field"></attribute>
+            <attribute name="t-out">o.invoice_date_due.strftime('%Y-%m-%d')</attribute>
         </xpath>
         <xpath expr="//div[hasclass('clearfix')]" position="attributes">
             <attribute name="class">clearfix pt-2 pb-2</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]">
+            <t t-set="additional_footer_text" t-value="o.get_l10n_sa_confirmation_datetime_sa_tz()"/> <!-- This is to show the issue date on the footer of all layouts. -->
         </xpath>
     </template>
 </odoo>

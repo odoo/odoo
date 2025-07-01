@@ -12,6 +12,7 @@ class AccountChartTemplate(models.AbstractModel):
             'name': _('Argentine Generic Chart of Accounts for Registered Accountants'),
             'parent': 'ar_ex',
             'code_digits': '12',
+            'sequence': 0,
         }
 
     @template('ar_ri', 'res.company')

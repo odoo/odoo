@@ -398,3 +398,31 @@ class TestAllocations(TestHrHolidaysCommon):
         allocation_form.holiday_status_id = self.leave_type
         allocation = allocation_form.save()
         self.assertTrue(allocation)
+
+    def test_leave_allocation_and_leave_request(self):
+        leave_type = self.env.ref('hr_holidays.holiday_status_comp')
+        self.env['hr.leave.allocation'].sudo().create([
+            {
+                'employee_id': employee.id,
+                'holiday_status_id': leave_type.id,
+                'number_of_days': 3,
+                'allocation_type': 'regular',
+                'date_from': date(2024, 1, 1),
+            }
+            for employee in [self.employee, self.employee_emp]
+        ]).action_validate()
+
+        leave_request = self.env['hr.leave'].create({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2024, 1, 5),
+            'request_date_to': date(2024, 1, 7),
+        })
+
+        with Form(leave_request) as leave:
+            leave.employee_id = self.employee
+
+        leave_request.action_approve()
+
+        self.assertEqual(leave_request.employee_id, self.employee)
+        self.assertEqual(leave_request.state, 'validate')

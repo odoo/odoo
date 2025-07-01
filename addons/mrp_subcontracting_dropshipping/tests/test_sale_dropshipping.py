@@ -288,3 +288,44 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         sale_order.picking_ids[1].button_validate()
 
         self.assertEqual(sale_order.order_line.qty_delivered, 1.0)
+
+    def test_kit_dropshipped_change_qty_SO(self):
+        # Create BoM
+        product_a, product_b, final_product = self.env['product.product'].create([{
+            'name': p_name,
+            'type': 'consu',
+            'is_storable': True,
+            'seller_ids': [(0, 0, {
+                'partner_id': self.supplier.id,
+            })],
+        } for p_name in ['Comp 1', 'Comp 2', 'Final Product']])
+        product_a.route_ids = self.env.ref('stock_dropshipping.route_drop_shipping')
+        product_b.route_ids = self.env.ref('stock_dropshipping.route_drop_shipping')
+        self.env['mrp.bom'].create({
+            'product_id': final_product.id,
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_a.id, 'product_qty': 1}),
+                (0, 0, {'product_id': product_b.id, 'product_qty': 1}),
+            ]
+        })
+
+        # Create sale order
+        partner = self.env['res.partner'].create({'name': 'Testing Man'})
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+        })
+        sol = self.env['sale.order.line'].create({
+            'name': "Order line",
+            'product_id': final_product.id,
+            'order_id': so.id,
+            'product_uom_qty': 25,
+        })
+        so.action_confirm()
+
+        user_admin = self.env['res.users'].search([('login', '=', 'admin')])
+        sol.with_user(user_admin).write({'product_uom_qty': 10})
+        self.assertEqual(sol.purchase_line_ids.mapped('product_uom_qty'), [10, 10])

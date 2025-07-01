@@ -432,10 +432,11 @@ class PaymentTransaction(models.Model):
         # Complete generic processing values with provider-specific values.
         processing_values.update(self._get_specific_processing_values(processing_values))
         secret_keys = self._get_specific_secret_keys()
+        logged_values = {k: v for k, v in processing_values.items() if k not in secret_keys}
         _logger.info(
             "generic and provider-specific processing values for transaction with reference "
             "%(ref)s:\n%(values)s",
-            {'ref': self.reference, 'values': pprint.pformat(processing_values - secret_keys)},
+            {'ref': self.reference, 'values': pprint.pformat(logged_values)},
         )
 
         # Render the html form for the redirect flow if available.

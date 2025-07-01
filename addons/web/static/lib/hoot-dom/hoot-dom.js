@@ -70,9 +70,6 @@ export {
 //-----------------------------------------------------------------------------
 
 // DOM
-export const $ = dom.queryFirst;
-export const $$ = dom.queryAll;
-export const $1 = dom.queryOne;
 export const observe = interactor("query", dom.observe);
 export const waitFor = interactor("query", dom.waitFor);
 export const waitForNone = interactor("query", dom.waitForNone);
