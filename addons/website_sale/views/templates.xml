@@ -346,7 +346,7 @@
                 </div>
                 <div class="o_wsale_product_sub d-flex align-items-center justify-content-between flex-nowrap gap-3">
                     <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
-                    <div t-attf-class="product_price d-flex align-items-baseline w-100 {{'justify-content-between' if layout_mode == 'grid' else 'gap-1'}}">
+                    <div t-attf-class="product_price d-sm-flex flex-wrap align-items-center w-100 {{'justify-content-between' if layout_mode == 'grid' else 'gap-1'}}">
                         <span
                             name="product_price_reduce"
                             class="h6 mb-0"
@@ -357,27 +357,24 @@
                                 t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                             />
                         </span>
-                        <div>
+                        <div
+                            t-if="template_price_vals.get('pricelist_comparison') != 'none' and 'base_price' in template_price_vals and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce']) and (template_price_vals['price_reduce'] or not website.prevent_zero_price_sale)"
+                            name="product_base_price"
+                            class="h6 mb-0 d-flex align-items-center"
+                        >
+                            <del
+                                class="me-2 small text-muted"
+                                t-out="template_price_vals['base_price']"
+                                t-options="{
+                                    'widget': 'monetary',
+                                    'display_currency': website.currency_id
+                                }"
+                            />
                             <span
-                                t-if="template_price_vals.get('pricelist_comparison') != 'none' and 'base_price' in template_price_vals and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce']) and (template_price_vals['price_reduce'] or not website.prevent_zero_price_sale)"
-                                name="product_base_price"
+                                t-if="template_price_vals.get('pricelist_comparison') == 'strike_and_percentage' and template_price_vals.get('price_reduce_percentage')"
+                                class="badge text-bg-success"
                             >
-                                <del t-attf-class="text-muted me-1 h6 mb-0" style="white-space: nowrap;">
-                                    <span
-                                        class="small"
-                                        t-out="template_price_vals['base_price']"
-                                        t-options="{
-                                            'widget': 'monetary',
-                                            'display_currency': website.currency_id
-                                        }"
-                                    />
-                                </del>
-                                <span
-                                    t-if="template_price_vals.get('pricelist_comparison') == 'strike_and_percentage' and template_price_vals.get('price_reduce_percentage')"
-                                    class="text-muted h6 bg-primary text-white rounded p-1"
-                                >
-                                    <t t-out="template_price_vals['price_reduce_percentage']"/>%
-                                </span>
+                                - <t t-out="template_price_vals['price_reduce_percentage']"/> %
                             </span>
                         </div>
                     </div>
@@ -2553,27 +2550,27 @@
         >
             <div
                 name="product_price_container"
-                class="css_editable_mode_hidden d-flex align-items-center justify-content-end gap-2 flex-wrap h4 mb-0 text-wrap w-100"
+                class="css_editable_mode_hidden d-flex align-items-center gap-2 flex-wrap h4 mb-0 text-wrap w-100"
             >
                 <span class="oe_price"
                       style="white-space: nowrap;"
                       t-out="combination_info['price']"
                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                <div>
+                <div class="d-flex justify-content-between align-items-center gap-3 h5-fs">
                     <span
                         t-if="combination_info.get('pricelist_comparison') != 'none'"
-                        t-attf-class="text-muted oe_default_price ms-1 h5 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                        t-attf-class="oe_default_price ms-1 mb-0 text-muted {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
                         style="text-decoration: line-through; white-space: nowrap;"
                         t-esc="combination_info['list_price']"
                         t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                         name="product_list_price"
                     />
-                    <em
+                    <span
                         t-if="combination_info['has_discounted_price'] and combination_info.get('pricelist_comparison') == 'strike_and_percentage' and combination_info.get('price_reduce_percentage')"
-                        class="text-muted h5 bg-primary text-light rounded p-1"
+                        class="badge text-bg-success"
                     >
-                        <t t-out="combination_info['price_reduce_percentage']"/>%
-                    </em>
+                        - <t t-out="combination_info['price_reduce_percentage']"/> %
+                    </span>
                 </div>
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
                 <div t-if="combination_info.get('pricelist_comparison') != 'none' and combination_info.get('compare_list_price') and (combination_info['compare_list_price'] &gt; combination_info['price'])">
