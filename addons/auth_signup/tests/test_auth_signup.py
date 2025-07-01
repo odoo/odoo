@@ -10,6 +10,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUs
 from odoo.exceptions import AccessError, UserError
 
 from datetime import datetime, timedelta
+from odoo.tools import mute_logger
 
 class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
@@ -97,3 +98,38 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             u.create_date = datetime.now() - timedelta(days=5, minutes=10)
         with self.registry.cursor() as cr:
             users.with_env(users.env(cr=cr)).send_unregistered_user_reminder(after_days=5, batch_size=100)
+
+    @mute_logger('odoo.sql_db', 'odoo.addons.auth_signup.controllers.main')
+    def test_similar_user_signup(self):
+        self._activate_free_signup()
+
+        # Get csrf_token
+        self.authenticate(None, None)
+        csrf_token = http.Request.csrf_token(self)
+
+        # Values from login form
+        payload = {
+            'login': 'unique@example.com',
+            'name': 'user',
+            'password': 'mypassword',
+            'confirm_password': 'mypassword',
+            'csrf_token': csrf_token,
+        }
+
+        url_free_signup = self._get_free_signup_url()
+        self.url_open(url_free_signup, data=payload)
+
+        # Change the login to capitalized login
+        similar_logins = ['Unique@example.com', 'UNIQUE@example.com', 'unique@Example.com']
+        for login in similar_logins:
+            payload['login'] = login
+            # Call the controller
+            res = self.url_open(url_free_signup, data=payload)
+            # Check that error is shown in the UI
+            self.assertIn(b'User with similar login already exists!', res.content)
+
+        # Try to signup with a login with spaces around
+        payload['login'] = '  unique@example.com  '
+        res = self.url_open(url_free_signup, data=payload)
+        # Check that error is shown in the UI
+        self.assertIn(b'Another user is already registered using this email address.', res.content)
