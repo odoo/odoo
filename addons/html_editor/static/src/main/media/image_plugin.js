@@ -1,7 +1,7 @@
 import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { isImageUrl } from "@html_editor/utils/url";
-import { ImageDescription } from "./image_description";
+import { ImageDescription, ImageDescriptionPopover } from "./image_description";
 import { ImageToolbarDropdown } from "./image_toolbar_dropdown";
 import { createFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
@@ -36,7 +36,7 @@ const IMAGE_SIZE = [
 
 export class ImagePlugin extends Plugin {
     static id = "image";
-    static dependencies = ["history", "link", "powerbox", "dom", "selection"];
+    static dependencies = ["history", "link", "powerbox", "dom", "selection", "overlay"];
     static shared = ["getTargetedImage", "previewImage", "resetImageTransformation"];
     resources = {
         user_commands: [
@@ -119,9 +119,7 @@ export class ImagePlugin extends Plugin {
                 groupId: "image_description",
                 Component: ImageDescription,
                 props: {
-                    getDescription: () => this.getImageAttribute("alt"),
-                    getTooltip: () => this.getImageAttribute("title"),
-                    updateImageDescription: this.updateImageDescription.bind(this),
+                    openImageDescriptionPopover: this.openImageDescriptionPopover.bind(this),
                 },
                 isAvailable: isHtmlContentSupported,
             },
@@ -219,6 +217,9 @@ export class ImagePlugin extends Plugin {
             }
         });
         this.fileViewer = createFileViewer();
+        this.overlay = this.dependencies.overlay.createOverlay(ImageDescriptionPopover, {
+            className: "popover",
+        });
     }
 
     destroy() {
@@ -398,5 +399,22 @@ export class ImagePlugin extends Plugin {
 
     updateImageParams() {
         this.imageSize.displayName = this.imageSizeName;
+    }
+
+    openImageDescriptionPopover() {
+        const image = this.getTargetedImage();
+        if (image) {
+            this.overlay.open({
+                target: image,
+                props: {
+                    close: () => this.overlay.close(),
+                    description: this.getImageAttribute("alt"),
+                    tooltip: this.getImageAttribute("title"),
+                    onConfirm: (description, tooltip) => {
+                        this.updateImageDescription({ description, tooltip });
+                    },
+                },
+            });
+        }
     }
 }
