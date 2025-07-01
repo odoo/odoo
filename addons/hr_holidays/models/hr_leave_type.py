@@ -111,6 +111,10 @@ class HrLeaveType(models.Model):
     leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
     allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
     support_document = fields.Boolean(string='Supporting Document')
+    allow_request_on_top = fields.Boolean(string='Allow Request on Top', default=False,
+        help="If checked, users can request a leave on top of the already allocated days.")
+    elligible_for_accrual_rate = fields.Boolean(string='Eligible for Accrual Rate', compute="_compute_eligible_for_accrual_rate", store=True, readonly=False,
+        help="If checked, this time off type will be taken into account for accruals computation.")
     accruals_ids = fields.One2many('hr.leave.accrual.plan', 'time_off_type_id')
     accrual_count = fields.Float(compute="_compute_accrual_count", string="Accruals count")
     # negative time off
@@ -377,6 +381,12 @@ class HrLeaveType(models.Model):
                 else:
                     name = _("%(name)s (%(time)g remaining out of %(maximum)g days)", name=record.name, time=remaining_time, maximum=maximum)
             record.display_name = name
+        return None
+
+    @api.depends('time_type')
+    def _compute_eligible_for_accrual_rate(self):
+        for leave_type in self:
+            leave_type.elligible_for_accrual_rate = leave_type.time_type != 'leave'
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None):

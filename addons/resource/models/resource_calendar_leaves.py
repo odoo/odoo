@@ -47,6 +47,8 @@ class ResourceCalendarLeaves(models.Model):
         help="If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource")
     time_type = fields.Selection([('leave', 'Time Off'), ('other', 'Other')], default='leave',
                                  help="Whether this should be computed as a time off or as work time (eg: formation)")
+    elligible_for_accrual_rate = fields.Boolean(string='Eligible for Accrual Rate', default=False,
+            help="If checked, this time off type will be taken into account for accruals computation.")
 
     @api.depends('resource_id.calendar_id')
     def _compute_calendar_id(self):
