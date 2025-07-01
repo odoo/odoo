@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add('hr_employee_tour', {
         run: 'click',
     }, {
         content: "Open My Preferences",
-        trigger: "[data-menu=settings]",
+        trigger: "[data-menu=preferences]",
         run: 'click',
     },
 ]});

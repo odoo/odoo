@@ -141,7 +141,7 @@ test("can execute the callback of settings", async () => {
         },
     });
 
-    userMenuRegistry.add("profile", preferencesItem);
+    userMenuRegistry.add("preferences", preferencesItem);
     await mountWithCleanup(UserMenu);
     await contains("button.dropdown-toggle").click();
     expect(".dropdown-menu .dropdown-item").toHaveCount(1);

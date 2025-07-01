@@ -20,7 +20,7 @@ patch(
                 },
                 {
                     content: "Open preferences / profile screen",
-                    trigger: "[data-menu=settings]",
+                    trigger: "[data-menu=preferences]",
                     run: "click",
                 },
                 {
