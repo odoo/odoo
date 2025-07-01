@@ -113,6 +113,11 @@ class HrLeaveType(models.Model):
     support_document = fields.Boolean(string='Supporting Document')
     accruals_ids = fields.One2many('hr.leave.accrual.plan', 'time_off_type_id')
     accrual_count = fields.Float(compute="_compute_accrual_count", string="Accruals count")
+    duration_count = fields.Selection([
+        ('working', 'Working Days'),
+        ('calendar', 'Calendar Days'),
+        ], string='Status', default='working',
+        help="If you take a leave on the whole week, worked days will result in a various number based on the working hours of the employee, calendar days will result in 7 in every case.")
     # negative time off
     allows_negative = fields.Boolean(string='Allow Negative Cap',
         help="If checked, users request can exceed the allocated days and balance can go in negative.")
@@ -190,6 +195,16 @@ class HrLeaveType(models.Model):
                 if leave_from_date <= public_holiday_to_date and leave_to_date >= public_holiday_from_date:
                     raise ValidationError(_("You cannot modify the 'Public Holiday Included' setting since one or more leaves for that \
                         time off type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."))
+
+    @api.constrains('duration_count')
+    def _check_leaves_for_duration_count(self):
+        leave_count = self.env['hr.leave'].search_count([
+            ('holiday_status_id', 'in', self.ids),
+            ('state', 'in', ('validate', 'validate1', 'confirm')),
+        ])
+        if leave_count:
+            raise ValidationError(self.env._("You cannot modify the 'Duration Count' setting since one or more leaves for that \
+                time off type are already been taken, meaning that the balance of those employees would be affected by this change."))
 
     @api.depends('requires_allocation', 'max_leaves', 'virtual_remaining_leaves')
     def _compute_valid(self):
