@@ -26,11 +26,21 @@ test("defaults to now if undefined", async () => {
         selector: ".test-options-target",
         template: xml`<BuilderDateTimePicker dataAttributeAction="'date'"/>`,
     });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderCheckbox classAction="'checkbox-action'"/>`,
+    });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
     const expectedDateTime = DateTime.now();
-    expect(".we-bg-options-container input").toHaveValue(formatDateTime(expectedDateTime));
+    expect(".we-bg-options-container input.o-hb-input-base").toHaveValue(
+        formatDateTime(expectedDateTime)
+    );
+    await contains(".we-bg-options-container input.form-check-input").click();
+    expect(".we-bg-options-container input.o-hb-input-base").toHaveValue(
+        formatDateTime(expectedDateTime)
+    );
 });
 
 test("defaults to last one when invalid date provided", async () => {

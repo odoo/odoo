@@ -46,7 +46,7 @@ export class BuilderList extends Component {
         useBuilderComponent();
         const { state, commit, preview } = useInputBuilderComponent({
             id: this.props.id,
-            defaultValue: this.parseDisplayValue([this.makeDefaultItem()]),
+            defaultValue: this.parseDisplayValue([]),
             parseDisplayValue: this.parseDisplayValue,
             formatRawValue: this.formatRawValue,
         });
