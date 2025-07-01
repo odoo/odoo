@@ -46,11 +46,12 @@ export class LinkPopover extends Component {
 
         const textContent = cleanZWChars(this.props.linkElement.textContent);
         const labelEqualsUrl =
-            textContent === this.props.linkElement.href ||
-            textContent + "/" === this.props.linkElement.href;
+            textContent === this.props.linkElement.getAttribute("href") ||
+            textContent + "/" === this.props.linkElement.getAttribute("href");
         this.state = useState({
             editing: this.props.LinkPopoverState.editing,
-            url: this.props.linkElement.href || "",
+            // `.getAttribute("href")` instead of `.href` to keep relative url
+            url: this.props.linkElement.getAttribute("href") || this.deduceUrl(textContent),
             label: labelEqualsUrl ? "" : textContent,
             previewIcon: {
                 /** @type {'fa'|'imgSrc'|'mimetype'} */
@@ -65,7 +66,8 @@ export class LinkPopover extends Component {
                 this.props.type ||
                 this.props.linkElement.className
                     .match(/btn(-[a-z0-9_-]*)(primary|secondary)/)
-                    ?.pop() || "",
+                    ?.pop() ||
+                "",
             isImage: this.props.isImage,
             showLabel: !this.props.linkElement.childElementCount,
         });
@@ -100,7 +102,12 @@ export class LinkPopover extends Component {
 
     onChange() {
         // Apply changes to update the link preview.
-        this.props.onChange(this.state.url, this.state.label, this.classes, this.state.attachmentId);
+        this.props.onChange(
+            this.state.url,
+            this.state.label,
+            this.classes,
+            this.state.attachmentId
+        );
     }
     onClickApply() {
         this.state.editing = false;
@@ -111,22 +118,20 @@ export class LinkPopover extends Component {
         this.state.url = deducedUrl
             ? this.correctLink(deducedUrl)
             : this.correctLink(this.state.url);
-        this.props.onApply(
-            this.state.url,
-            this.state.label,
-            this.classes,
-            this.state.attachmentId
-        );
+        this.props.onApply(this.state.url, this.state.label, this.classes, this.state.attachmentId);
     }
     onClickEdit() {
         this.state.editing = true;
         this.props.onEdit();
-        this.state.url = this.props.linkElement.href;
+        this.updateUrlAndLabel();
+    }
+    updateUrlAndLabel() {
+        this.state.url = this.props.linkElement.getAttribute("href");
 
         const textContent = cleanZWChars(this.props.linkElement.textContent);
         const labelEqualsUrl =
-            textContent === this.props.linkElement.href ||
-            textContent + "/" === this.props.linkElement.href;
+            textContent === this.props.linkElement.getAttribute("href") ||
+            textContent + "/" === this.props.linkElement.getAttribute("href");
         this.state.label = labelEqualsUrl ? "" : textContent;
     }
     async onClickCopy(ev) {
@@ -212,7 +217,7 @@ export class LinkPopover extends Component {
         }
 
         try {
-            url = new URL(this.state.url); // relative to absolute
+            url = new URL(this.state.url, this.props.document.URL); // relative to absolute
         } catch {
             // Invalid URL, might happen with editor unsuported protocol. eg type
             // `geo:37.786971,-122.399677`, become `http://geo:37.786971,-122.399677`
@@ -255,7 +260,7 @@ export class LinkPopover extends Component {
             // Set state based on cached link meta data
             // for record missing errors, we push a warning that the url is likely invalid
             // for other errors, we log them to not block the ui
-            const internalMetadata = await this.props.getInternalMetaData(this.state.url);
+            const internalMetadata = await this.props.getInternalMetaData(url.href);
             if (internalMetadata.favicon) {
                 this.state.previewIcon = {
                     type: "imgSrc",

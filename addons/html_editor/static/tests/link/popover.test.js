@@ -196,6 +196,18 @@ describe("popover should edit,copy,remove the link", () => {
             '<p>this is a <a href="http://test.com/">http://test.com/[]</a></p>'
         );
     });
+    test("relative URLs should be kept relative URLs", async () => {
+        onRpc("/html_editor/link_preview_internal", () => ({}));
+        onRpc("/contactus", () => ({}));
+        const { el } = await setupEditor('<p>this is a <a href="/contactus">li[]nk</a></p>');
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await waitFor(".o_we_apply_link");
+        await click(".o_we_apply_link");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="/contactus">li[]nk</a></p>'
+        );
+    });
     test("after clicking on copy button, the url should be copied to clipboard", async () => {
         await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
         await waitFor(".o-we-linkpopover");
