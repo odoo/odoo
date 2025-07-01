@@ -48,7 +48,6 @@ export default function useTours() {
                 states.index = 0;
             }
             await tour.startTour(states.selectedTours[states.index], {
-                stepDelay: 150,
                 throw: false,
             });
 
