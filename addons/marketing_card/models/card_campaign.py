@@ -408,13 +408,20 @@ class CardCampaign(models.Model):
         for el, text_field, dyn_field, path_field in campaign_text_element_fields:
             if not self[dyn_field]:
                 result[el] = self[text_field]
+            elif not (field_path := self[path_field]):
+                result[el] = record
             else:
+                fnames = field_path.split('.')
                 try:
-                    m = record.mapped(self[path_field])
+                    value = record
+                    while fnames and (fname := fnames.pop(0)):
+                        value.fetch([fname])
+                        value = value[fname]
+                    m = record.mapped(field_path)
                     result[el] = m and m[0] or False
-                except (AttributeError, KeyError):
+                except (AttributeError, ValueError):
                     # for generic image, or if field incorrect, return name of field
-                    result[el] = self[path_field]
+                    result[el] = field_path
                 # force dates to their relevant timezone as that's what is usually wanted
                 if (
                     isinstance(result[el], (date, datetime))
