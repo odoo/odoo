@@ -379,6 +379,16 @@ class TestSubqueries(TransactionCase):
                     ('tags.name', 'like', 'z'),
             ])
 
+    def test_empty_many2many(self):
+        sub_query = self.env['test_orm.multi'].tags._as_query()
+        with self.assertQueries(["""
+            SELECT "test_orm_multi"."id"
+            FROM "test_orm_multi"
+            WHERE FALSE
+            ORDER BY "test_orm_multi"."id"
+        """]):
+            self.env['test_orm.multi'].search([('tags', 'any', sub_query)])
+
     def test_related_simple(self):
         model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
         self.env['ir.rule'].create({
