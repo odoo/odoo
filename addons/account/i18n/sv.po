@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:39+0000\n"
+"POT-Creation-Date: 2025-06-26 18:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
@@ -23,22 +23,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"Flytten (%(move)s) är inte balanserad.\n"
-"Summan av debiteringar är lika med %(debit_total)s och summan av krediteringar är lika med %(credit_total)s.\n"
-"Du kanske vill ange ett standardkonto på verifikatet \"%(journal)s\" för att automatiskt balansera varje flytt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -253,7 +237,6 @@ msgstr "%s (Kopia)"
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_payment_term.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
-#: code:addons/account/models/account_report.py:0
 msgid "%s (copy)"
 msgstr "%s (copy)"
 
@@ -2823,12 +2806,6 @@ msgstr ""
 "Företag presenterar sina årsredovisningar i två huvuddelar: balansräkningen\n"
 "och resultaträkningen (vinst och förlustkonto). Företagets årsredovisningar är\n"
 "enligt lagskyldiga att avslöja en viss mängd information."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "Ett fel har inträffat."
 
 #. module: account
 #. odoo-python
@@ -15637,6 +15614,12 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "Posten %(name)s (id %(id)s) måste vara i utkast."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is not balanced."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -15699,6 +15682,14 @@ msgstr "Följande verifikat kommer att genereras"
 msgid ""
 "The following accounts must be assigned to at least one company:\n"
 "%(accounts)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
 msgstr ""
 
 #. module: account

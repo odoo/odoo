@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:39+0000\n"
+"POT-Creation-Date: 2025-06-26 18:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -19,22 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"この仕訳 (%(move)s) は不均衡です。\n"
-"借方の総額は %(debit_total)s 、貸方の総額は %(credit_total)sです。\n"
-"仕訳帳\"%(journal)s\"にデフォルト勘定科目を特定して、自動的に全ての仕訳を均衡にすることもできます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -250,7 +234,6 @@ msgstr "%s (コピー)"
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_payment_term.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
-#: code:addons/account/models/account_report.py:0
 msgid "%s (copy)"
 msgstr "%s (コピー)"
 
@@ -2849,12 +2832,6 @@ msgstr ""
 "                企業の年度会計は、主に2つに分かれます。\n"
 "                貸借対照表と収益明細(損益計算書)です。\n"
 "                企業の年度会計は法律である程度が公開されることが求められています。 "
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "エラーが発生しました"
 
 #. module: account
 #. odoo-python
@@ -15313,6 +15290,12 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "仕訳%(name)s (id %(id)s) はドラフトである必要があります。"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is not balanced."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -15372,6 +15355,14 @@ msgid ""
 msgstr ""
 "次のアカウントを少なくとも1つの会社に割当てして下さい:\n"
 "%(accounts)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
+msgstr ""
 
 #. module: account
 #. odoo-python

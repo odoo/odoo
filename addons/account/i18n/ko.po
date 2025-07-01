@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:39+0000\n"
+"POT-Creation-Date: 2025-06-26 18:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -20,22 +20,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"작업 (%(move)s)에 따른 대차가 맞지 않습니다.\n"
-"대변 총액은  %(debit_total)s이며 차변 총액은 %(credit_total)s입니다.\n"
-"작업으로 인한 대차 금액을 자동 조정하기 위해 \"%(journal)s\" 계정을 전표 기본 설정으로 지정할 수 있습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -252,7 +236,6 @@ msgstr "%s (사본)"
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_payment_term.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
-#: code:addons/account/models/account_report.py:0
 msgid "%s (copy)"
 msgstr "%s (사본)"
 
@@ -2867,12 +2850,6 @@ msgstr ""
 "                이는 바로 재무상태표와 손익계산서입니다.\n"
 "                회사의 연도별 계정은 법적으로\n"
 "                특정한 정보를 공개해야 합니다."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "오류가 발생했습니다."
 
 #. module: account
 #. odoo-python
@@ -15374,6 +15351,12 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "%(name)s 항목 (ID %(id)s)이 초안에 있어야 합니다."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is not balanced."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -15433,6 +15416,14 @@ msgid ""
 msgstr ""
 "다음 계정은 반드시 적어도 하나의 회사에 할당되어야 합니다:\n"
 "%(accounts)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
+msgstr ""
 
 #. module: account
 #. odoo-python
