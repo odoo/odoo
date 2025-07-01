@@ -360,9 +360,14 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             to be included in the UBL
         """
         if not line.move_id._is_downpayment() and line.sale_line_ids and all(sale_line.is_downpayment for sale_line in line.sale_line_ids):
-            prepayment_move_id = line.sale_line_ids.invoice_lines.move_id.filtered(lambda m: m._is_downpayment())
-            if not prepayment_move_id.l10n_sa_confirmation_datetime:
-                raise ValidationError(f"Please Insure that the Prepayment Move [{prepayment_move_id.name}] has been posted to zatca successfully in order to be able to post the current invoice.")
+            prepayment_move_id = line.sale_line_ids.invoice_lines.move_id.filtered(
+                lambda m: m.move_type == 'out_invoice' and m._is_downpayment()
+            )
+            if not prepayment_move_id or not prepayment_move_id.l10n_sa_confirmation_datetime:
+                raise ValidationError(
+                    _("The related prepayment [%s] has not been successfully submitted to ZATCA. "
+                    "Please ensure it is posted and confirmed before continuing.") % (prepayment_move_id.name or 'Unknown')
+                )
 
             return {
                 'prepayment_id': prepayment_move_id.name,
