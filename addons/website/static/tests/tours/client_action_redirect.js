@@ -1,5 +1,4 @@
 /** @odoo-module */
-
 import { delay } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
@@ -11,7 +10,8 @@ const goToFrontendSteps = [{
     async run() {
         await delay(2000);
         window.location.assign(testUrl);
-    }
+    },
+    expectUnloadPage: true,
 }, {
     content: "Check we are in the frontend",
     trigger: 'body:not(:has(.o_website_preview)) #test_contact_FE',
@@ -22,7 +22,8 @@ const goToBackendSteps = [{
     async run() {
         await delay(2000);
         window.location.assign(`/@${testUrl}`);
-    }
+    },
+    expectUnloadPage: true,
 }, {
     content: "Check we are in the backend",
     trigger: ".o_website_preview[data-view-xmlid='website.test_client_action_redirect'] :iframe",
@@ -50,6 +51,7 @@ registry.category("web_tour.tours").add('client_action_redirect', {
         content: "Click on the link to frontend",
         trigger: '#test_contact_FE',
         run: "click",
+        expectUnloadPage: true,
     },
     ...checkEditorSteps,
 
@@ -59,6 +61,7 @@ registry.category("web_tour.tours").add('client_action_redirect', {
         content: "Click on the link to backend",
         trigger: '#test_contact_BE',
         run: "click",
+        expectUnloadPage: true,
     },
     ...checkEditorSteps,
 
@@ -78,6 +81,7 @@ registry.category("web_tour.tours").add('client_action_redirect', {
         content: "Click on the link to backend (2)",
         trigger: ':iframe #test_contact_BE',
         run: "click",
+        expectUnloadPage: true,
     },
     ...checkEditorSteps,
 ]});
