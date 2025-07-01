@@ -403,7 +403,6 @@ class AccountMove(models.Model):
             if (
                 grouping_key
                 and not grouping_key['skip']
-                and not self.currency_id.is_zero(values['tax_amount_currency'])
             ):
                 results.append({
                     'name': grouping_key['name'],
