@@ -42,6 +42,8 @@ export class CaptionPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         mount_component_handlers: this.setupNewCaption.bind(this),
         delete_handlers: this.afterDelete.bind(this),
+        before_cut_handlers: this.expandSelectionToCaption.bind(this),
+        before_drag_handlers: this.expandSelectionToCaption.bind(this),
         delete_image_overrides: this.handleDeleteImage.bind(this),
         after_save_media_dialog_handlers: this.onImageReplaced.bind(this),
         hints: [{ selector: "FIGCAPTION", text: _t("Write a caption...") }],
@@ -294,6 +296,19 @@ export class CaptionPlugin extends Plugin {
             });
             this.dependencies.history.addStep();
             return true;
+        }
+    }
+
+    expandSelectionToCaption(selection) {
+        const startFigure = closestElement(selection.anchorNode, "figure");
+        const endFigure = closestElement(selection.focusNode, "figure");
+
+        if (startFigure && startFigure === endFigure) {
+            const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(startFigure);
+            this.dependencies.selection.setSelection(
+                { anchorNode, anchorOffset, focusNode, focusOffset },
+                { normalize: false }
+            );
         }
     }
 }
