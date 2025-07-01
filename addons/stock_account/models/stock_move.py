@@ -202,7 +202,7 @@ class StockMove(models.Model):
         :rtype: dict
         """
         self.ensure_one()
-        detail = ', '.join(self.scrap_id.scrap_reason_tag_ids.mapped('name')) if self.scrapped else self.product_id.name
+        detail = ', '.join(self.scrap_id.scrap_reason_tag_ids.mapped('name')) if self.location_dest_usage == 'inventory' else self.product_id.name
         return {
             'stock_move_id': self.id,
             'company_id': self.company_id.id,
@@ -259,7 +259,7 @@ class StockMove(models.Model):
                 vals = [move.product_id._prepare_out_svl_vals(sum(quantities.values()), move.company_id)]
             for val in vals:
                 val.update(move._prepare_common_svl_vals())
-                if forced_quantity and not move.scrapped:
+                if forced_quantity and move.location_dest_usage != 'inventory':
                     val['description'] = _('Correction of %s (modification of past move)', move.reference)
                 val['description'] += val.pop('rounding_adjustment', '')
             svl_vals_list += vals

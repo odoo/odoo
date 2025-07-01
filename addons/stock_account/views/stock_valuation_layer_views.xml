@@ -58,7 +58,7 @@
                         decoration-info="picking_code == 'outgoing'"
                         decoration-primary="picking_code == 'mrp_operation'"
                         decoration-warning="is_inventory"
-                        decoration-danger="is_scrap"/>
+                        decoration-danger="location_dest_usage == 'inventory'"/>
                 <field name="account_move_id" optional="hide" groups="account.group_account_user"/>
                 <button name="action_open_journal_entry" groups="account.group_account_user" type="object" title="Journal Entry" icon="fa-book" invisible="not account_move_id"/>
                 <field name="product_id" />

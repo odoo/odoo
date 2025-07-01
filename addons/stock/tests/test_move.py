@@ -4482,7 +4482,7 @@ class TestStockMove(TestStockCommon):
         move = scrap.move_ids[0]
         self.assertEqual(move.state, 'done')
         self.assertEqual(move.quantity, 1)
-        self.assertEqual(move.scrapped, True)
+        self.assertEqual(move.location_dest_usage, 'inventory')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, self.stock_location), 0)
 
     def test_scrap_2(self):
@@ -4502,7 +4502,7 @@ class TestStockMove(TestStockCommon):
         move = scrap.move_ids[0]
         self.assertEqual(move.state, 'done')
         self.assertEqual(move.quantity, 1)
-        self.assertEqual(move.scrapped, True)
+        self.assertEqual(move.location_dest_usage, 'inventory')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_consu, self.stock_location), 0)
 
     def test_scrap_3(self):

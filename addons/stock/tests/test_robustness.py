@@ -66,7 +66,7 @@ class TestRobustness(TransactionCase):
             'name': "Test Location",
             'location_id': self.stock_location.id,
         })
-        test_stock_location.scrap_location = True
+        test_stock_location.usage = 'inventory'
 
         # make some stock
         self.env['stock.quant']._update_available_quantity(
@@ -90,7 +90,7 @@ class TestRobustness(TransactionCase):
         self.assertEqual(move.state, 'done')
 
         # change the stock usage
-        test_stock_location.scrap_location = False
+        test_stock_location.usage = 'internal'
 
         # make some stock again
         self.env['stock.quant']._update_available_quantity(
@@ -101,7 +101,7 @@ class TestRobustness(TransactionCase):
 
         # change the stock usage again
         with self.assertRaises(UserError):
-            test_stock_location.scrap_location = True
+            test_stock_location.usage = 'inventory'
 
     def test_package_unpack(self):
         """ Unpack a package that contains quants with a reservation
