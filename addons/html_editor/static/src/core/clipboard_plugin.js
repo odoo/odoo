@@ -145,18 +145,25 @@ export class ClipboardPlugin extends Plugin {
     onCopy(ev) {
         ev.preventDefault();
         const selection = this.dependencies.selection.getEditableSelection();
-        let clonedContents = selection.cloneContents();
+        const clonedContents = selection.cloneContents();
         if (!clonedContents.hasChildNodes()) {
             return;
         }
+        const [htmlContent, textContent] = this.getSelectionTransferData(selection, clonedContents);
+        ev.clipboardData.setData("text/plain", textContent);
+        ev.clipboardData.setData("text/html", htmlContent);
+        ev.clipboardData.setData("application/vnd.odoo.odoo-editor", htmlContent);
+    }
 
+    /**
+     * Prepare HTML and plain text from the current selection.
+     */
+    getSelectionTransferData(selection, clonedContents) {
         // Prepare text content for clipboard.
         let textContent = selection.textContent();
         for (const processor of this.getResource("clipboard_text_processors")) {
             textContent = processor(textContent);
         }
-        ev.clipboardData.setData("text/plain", textContent);
-
         // Prepare html content for clipboard.
         for (const processor of this.getResource("clipboard_content_processors")) {
             clonedContents = processor(clonedContents, selection) || clonedContents;
@@ -166,8 +173,7 @@ export class ClipboardPlugin extends Plugin {
         dataHtmlElement.append(clonedContents);
         prependOriginToImages(dataHtmlElement, window.location.origin);
         const htmlContent = dataHtmlElement.innerHTML;
-        ev.clipboardData.setData("text/html", htmlContent);
-        ev.clipboardData.setData("application/vnd.odoo.odoo-editor", htmlContent);
+        return [htmlContent, textContent];
     }
 
     /**
@@ -552,13 +558,15 @@ export class ClipboardPlugin extends Plugin {
      * @param {DragEvent} ev
      */
     onDragStart(ev) {
-        if (ev.target.nodeName === "IMG") {
-            this.dragImage = ev.target instanceof HTMLElement && ev.target;
-            ev.dataTransfer.setData(
-                "application/vnd.odoo.odoo-editor-node",
-                this.dragImage.outerHTML
-            );
+        const selection = this.dependencies.selection.getEditableSelection();
+        const clonedContents = selection.cloneContents();
+        if (!clonedContents.hasChildNodes()) {
+            return;
         }
+        const [htmlContent, textContent] = this.getSelectionTransferData(selection, clonedContents);
+        ev.dataTransfer.setData("text/plain", textContent);
+        ev.dataTransfer.setData("text/html", htmlContent);
+        ev.dataTransfer.setData("application/vnd.odoo.odoo-editor", htmlContent);
     }
     /**
      * Handle safe dropping of html into the editor.
@@ -586,16 +594,10 @@ export class ClipboardPlugin extends Plugin {
         }
 
         const dataTransfer = (ev.originalEvent || ev).dataTransfer;
-        const imageNodeHTML = ev.dataTransfer.getData("application/vnd.odoo.odoo-editor-node");
-        const image =
-            imageNodeHTML &&
-            this.dragImage &&
-            imageNodeHTML === this.dragImage.outerHTML &&
-            this.dragImage;
-
         const fileTransferItems = getImageFiles(dataTransfer);
+        const odooEditorHtml = ev.dataTransfer.getData("application/vnd.odoo.odoo-editor");
         const htmlTransferItem = [...dataTransfer.items].find((item) => item.type === "text/html");
-        if (image || fileTransferItems.length || htmlTransferItem) {
+        if (fileTransferItems.length || htmlTransferItem || odooEditorHtml) {
             if (this.document.caretPositionFromPoint) {
                 const range = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
                 this.dependencies.delete.deleteSelection();
@@ -612,15 +614,16 @@ export class ClipboardPlugin extends Plugin {
                 });
             }
         }
-        if (image) {
-            const fragment = this.document.createDocumentFragment();
-            fragment.append(image);
-            this.dependencies.dom.insert(fragment);
-            this.dependencies.history.addStep();
-        } else if (fileTransferItems.length) {
+        if (fileTransferItems.length) {
             const html = await this.addImagesFiles(fileTransferItems);
             this.dependencies.dom.insert(html);
             this.dependencies.history.addStep();
+        } else if (odooEditorHtml) {
+            const fragment = parseHTML(this.document, odooEditorHtml);
+            if (fragment.hasChildNodes()) {
+                this.dependencies.dom.insert(fragment);
+                this.dependencies.history.addStep();
+            }
         } else if (htmlTransferItem) {
             htmlTransferItem.getAsString((pastedText) => {
                 this.dependencies.dom.insert(this.prepareClipboardData(pastedText));
@@ -696,7 +699,6 @@ function getImageUrl(file) {
         };
     });
 }
-
 
 /**
  * Add origin to relative img src.
