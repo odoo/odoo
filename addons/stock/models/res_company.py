@@ -102,7 +102,6 @@ class ResCompany(models.Model):
                 'usage': 'inventory',
                 'location_id': parent_location.id,
                 'company_id': company.id,
-                'scrap_location': True,
             })
 
     def _create_scrap_sequence(self):
@@ -158,7 +157,7 @@ class ResCompany(models.Model):
     @api.model
     def create_missing_scrap_location(self):
         company_ids  = self.env['res.company'].search([])
-        companies_having_scrap_loc = self.env['stock.location'].search([('scrap_location', '=', True)]).mapped('company_id')
+        companies_having_scrap_loc = self.env['stock.location'].search([('usage', '=', 'inventory')]).mapped('company_id')
         company_without_property = company_ids - companies_having_scrap_loc
         company_without_property._create_scrap_location()
 

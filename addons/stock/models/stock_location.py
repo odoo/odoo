@@ -61,7 +61,6 @@ class StockLocation(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env.company, index=True,
         help='Let this field empty if this location is shared between companies')
-    scrap_location = fields.Boolean('Is a Scrap Location?', default=False, help='Check this box to allow using this location to put scrapped/damaged goods.')
     replenish_location = fields.Boolean('Replenishments', copy=False, compute="_compute_replenish_location", readonly=False, store=True,
                                         help='Trigger replenishment suggestions for this location when required')
     removal_strategy_id = fields.Many2one(
@@ -177,11 +176,6 @@ class StockLocation(models.Model):
         for loc in self:
             loc.child_internal_location_ids = self.search([('id', 'child_of', loc.id), ('usage', '=', 'internal')])
 
-    @api.onchange('usage')
-    def _onchange_usage(self):
-        if self.usage not in ('internal', 'inventory'):
-            self.scrap_location = False
-
     @api.depends('usage')
     def _compute_replenish_location(self):
         for loc in self:
@@ -197,10 +191,10 @@ class StockLocation(models.Model):
                 if replenish_wh_location:
                     raise ValidationError(_('Another parent/sub replenish location %s exists, if you wish to change it, uncheck it first', replenish_wh_location.name))
 
-    @api.constrains('scrap_location')
+    @api.constrains('usage')
     def _check_scrap_location(self):
         for record in self:
-            if record.scrap_location and self.env['stock.picking.type'].search_count([('code', '=', 'mrp_operation'), ('default_location_dest_id', '=', record.id)], limit=1):
+            if record.usage == 'inventory' and self.env['stock.picking.type'].search_count([('code', '=', 'mrp_operation'), ('default_location_dest_id', '=', record.id)], limit=1):
                 raise ValidationError(_("You cannot set a location as a scrap location when it is assigned as a destination location for a manufacturing type operation."))
 
     @api.ondelete(at_uninstall=False)
@@ -231,10 +225,8 @@ class StockLocation(models.Model):
         if 'usage' in values and values['usage'] == 'view':
             if self.mapped('quant_ids'):
                 raise UserError(_("This location's usage cannot be changed to view as it contains products."))
-        if 'usage' in values or 'scrap_location' in values:
-            modified_locations = self.filtered(
-                lambda l: any(l[f] != values[f] if f in values else False
-                              for f in {'usage', 'scrap_location'}))
+        if 'usage' in values:
+            modified_locations = self.filtered(lambda l: l.usage != values['usage'])
             reserved_quantities = self.env['stock.quant'].search_count([
                 ('location_id', 'in', modified_locations.ids),
                 ('quantity', '>', 0),
@@ -415,7 +407,7 @@ class StockLocation(models.Model):
 
     def should_bypass_reservation(self):
         self.ensure_one()
-        return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location
+        return self.usage in ('supplier', 'customer', 'inventory', 'production')
 
     def _check_access_putaway(self):
         return self
