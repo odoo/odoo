@@ -27,6 +27,7 @@ class SaleOrder(models.Model):
     slsu = fields.Boolean(string="Manual SLSU", compute="_compute_slsu", store=True)
     docs = fields.Char(string='Docs URL')
     items = fields.Char(string='Items')
+    shipmentid = fields.Char(string='Shipment ID')
 
     @api.depends('automation_manual_order', 'order_line.product_uom_qty', 'order_line', 'discrete_pick')
     def _compute_slsu(self):
