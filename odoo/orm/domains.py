@@ -934,8 +934,10 @@ class DomainCondition(Domain):
 
             # handle searchable fields
             if field.search and field.name == self.field_expr:
-                domain = self._optimize_field_search_method(model).optimize(model)
-                # the domain is optimized so that value data types are already comparable
+                domain = self._optimize_field_search_method(model)
+                # The domain is optimized so that value data types are comparable.
+                # Only simple optimization to avoid endless recursion.
+                domain = domain.optimize(model)
                 if domain != self:
                     return domain
 
@@ -1061,6 +1063,8 @@ class DomainCondition(Domain):
         field_expr, operator, value = self.field_expr, self.operator, self.value
         assert operator in STANDARD_CONDITION_OPERATORS, \
             f"Invalid operator {operator!r} for SQL in domain term {(field_expr, operator, value)!r}"
+        assert self._opt_level >= OptimizationLevel.FULL, \
+            f"Must fully optimize before generating the query {(field_expr, operator, value)}"
 
         field = self._field(model)
         model._check_field_access(field, 'read')
