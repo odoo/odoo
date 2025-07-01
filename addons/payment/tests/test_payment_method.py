@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged
 
@@ -25,6 +25,23 @@ class TestPaymentMethod(PaymentCommon):
         self.provider.state = 'disabled'
         with self.assertRaises(UserError):
             self.payment_methods.active = True
+
+    def test_brand_compatible_with_manual_capture(self):
+        """ Test that a "brand" can be enabled for providers which support manual capture. """
+        self.provider.update({
+            'capture_manually': True,
+            'support_manual_capture': 'partial',
+        })
+        self.payment_method.support_manual_capture = 'partial'
+        brand_payment_method = self.env['payment.method'].create({
+            'name': "Dummy Brand",
+            'code': 'dumbrand',
+            'primary_payment_method_id': self.payment_method.id,
+            'active': False,
+            'provider_ids': self.provider.ids,
+        })
+        self._assert_does_not_raise(ValidationError, brand_payment_method.action_unarchive)
+        self.assertTrue(brand_payment_method.active)
 
     def test_payment_method_compatible_when_provider_is_enabled(self):
         """ Test that a payment method is available when it is supported by an enabled provider. """
