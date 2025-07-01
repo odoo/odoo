@@ -10,7 +10,7 @@
                     </div>
                     <FilterValue filter="item.globalFilter"
                                  model="props.model"
-                                 setGlobalFilterValue="(id, value, displayNames) => this.setGlobalFilterValue(item, value, displayNames)"
+                                 setGlobalFilterValue="(id, value) => this.setGlobalFilterValue(item, value)"
                                  globalFilterValue="item.value"/>
                     <button class="btn btn-link px-2 text-danger fs-4" t-on-click="() => this.removeFilter(item.globalFilter.id)">
                         <i class="fa fa-trash"></i>

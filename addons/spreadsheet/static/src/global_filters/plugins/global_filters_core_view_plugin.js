@@ -44,14 +44,6 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     ]);
     constructor(config) {
         super(config);
-        this.nameService = config.custom.env?.services.name;
-        this.odooDataProvider = config.custom.odooDataProvider;
-        /**
-         * Cache record display names for relation filters.
-         * For each filter, contains a promise resolving to
-         * the list of display names.
-         */
-        this.recordsDisplayName = {};
         this.values = {};
     }
 
@@ -83,17 +75,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
      */
     handle(cmd) {
         switch (cmd.type) {
-            case "ADD_GLOBAL_FILTER":
-                this.recordsDisplayName[cmd.filter.id] = cmd.filter.defaultValueDisplayNames;
-                break;
-            case "EDIT_GLOBAL_FILTER": {
-                const filter = cmd.filter;
-                const id = filter.id;
-                this.recordsDisplayName[id] = filter.defaultValueDisplayNames;
-                break;
-            }
             case "SET_GLOBAL_FILTER_VALUE":
-                this.recordsDisplayName[cmd.id] = cmd.displayNames;
                 if (cmd.value === undefined) {
                     this._clearGlobalFilterValue(cmd.id);
                 } else {
@@ -101,7 +83,6 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
                 }
                 break;
             case "REMOVE_GLOBAL_FILTER":
-                delete this.recordsDisplayName[cmd.id];
                 delete this.values[cmd.id];
                 break;
         }
@@ -202,11 +183,10 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
             case "text":
             case "boolean":
             case "selection":
+            case "relation":
                 return [[{ value: value?.length ? value.join(", ") : "" }]];
             case "date":
                 return this._getDateFilterDisplayValue(filter);
-            case "relation":
-                return this._getRelationFilterDisplayValue(filter, value);
         }
     }
 
@@ -355,22 +335,6 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
                 };
         }
         return undefined;
-    }
-
-    _getRelationFilterDisplayValue(filter, value) {
-        if (!value?.length || !this.nameService) {
-            return [[{ value: "" }]];
-        }
-        if (!this.recordsDisplayName[filter.id]) {
-            const promise = this.nameService
-                .loadDisplayNames(filter.modelName, value)
-                .then((result) => {
-                    this.recordsDisplayName[filter.id] = Object.values(result);
-                });
-            this.odooDataProvider.notifyWhenPromiseResolves(promise);
-            return [[{ value: "" }]];
-        }
-        return [[{ value: this.recordsDisplayName[filter.id].join(", ") }]];
     }
 
     /**

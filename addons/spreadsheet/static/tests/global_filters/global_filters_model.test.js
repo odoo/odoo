@@ -1122,19 +1122,7 @@ test("ODOO.FILTER.VALUE date from/to with from and to defined", async function (
 });
 
 test("ODOO.FILTER.VALUE relation filter", async function () {
-    const { model } = await createModelWithDataSource({
-        mockRPC: function (route, { method, kwargs }) {
-            if (method === "web_search_read") {
-                const resId = kwargs.domain[0][2][0];
-                const names = {
-                    1: "Jean-Jacques",
-                    2: "Raoul Grosbedon",
-                };
-                expect.step(`read_${resId}`);
-                return { records: [{ id: resId, display_name: names[resId] }] };
-            }
-        },
-    });
+    const { model } = await createModelWithDataSource();
     setCellContent(model, "A10", `=ODOO.FILTER.VALUE("Relation Filter")`);
     await animationFrame();
     await addGlobalFilter(model, {
@@ -1145,32 +1133,26 @@ test("ODOO.FILTER.VALUE relation filter", async function () {
     });
     await animationFrame();
     const [filter] = model.getters.getGlobalFilters();
-    expect.verifySteps([]);
-    // One record; displayNames not defined => rpc
     await setGlobalFilterValue(model, {
         id: filter.id,
         value: [1],
     });
     await animationFrame();
-    expect(getCellValue(model, "A10")).toBe("Jean-Jacques");
+    expect(getCellValue(model, "A10")).toBe("1");
 
-    // Two records; displayNames defined => no rpc
     await setGlobalFilterValue(model, {
         id: filter.id,
         value: [1, 2],
-        displayNames: ["Jean-Jacques", "Raoul Grosbedon"],
     });
     await animationFrame();
-    expect(getCellValue(model, "A10")).toBe("Jean-Jacques, Raoul Grosbedon");
+    expect(getCellValue(model, "A10")).toBe("1, 2");
 
-    // another record; displayNames not defined => rpc
     await setGlobalFilterValue(model, {
         id: filter.id,
         value: [2],
     });
     await animationFrame();
-    expect(getCellValue(model, "A10")).toBe("Raoul Grosbedon");
-    expect.verifySteps(["read_1", "read_2"]);
+    expect(getCellValue(model, "A10")).toBe("2");
 });
 
 test("ODOO.FILTER.VALUE with escaped quotes in the filter label", async function () {

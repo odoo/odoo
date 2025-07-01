@@ -37,7 +37,6 @@ export class FilterValue extends Component {
 
     setup() {
         this.getters = this.props.model.getters;
-        this.nameService = useService("name");
         this.fieldService = useService("field");
         this.isValid = false;
         onWillStart(async () => {
@@ -121,11 +120,7 @@ export class FilterValue extends Component {
             // force clear, even automatic default values
             this.clear(id);
         } else {
-            const displayNames = await this.nameService.loadDisplayNames(
-                this.filter.modelName,
-                resIds
-            );
-            this.props.setGlobalFilterValue(id, resIds, Object.values(displayNames));
+            this.props.setGlobalFilterValue(id, resIds);
         }
     }
 
