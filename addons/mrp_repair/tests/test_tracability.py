@@ -254,7 +254,7 @@ class TestRepairTraceability(TestMrpCommon):
         Move the component back to the stock
         Use it in a MO
         """
-        scrap_location = self.env['stock.location'].search([('company_id', '=', self.env.company.id), ('scrap_location', '=', True)], limit=1)
+        scrap_location_id = self.env['stock.location'].search_read([('company_id', '=', self.env.company.id), ('usage', '=', 'inventory')], fields=['id'], limit=1)[0].get('id')
 
         finished = self.bom_4.product_id
         component = self.bom_4.bom_line_ids.product_id
@@ -287,7 +287,7 @@ class TestRepairTraceability(TestMrpCommon):
                     'product_id': component.id,
                     'lot_ids': [(4, sn_lot.id)],
                     'repair_line_type': 'remove',
-                    'location_dest_id': scrap_location.id,
+                    'location_dest_id': scrap_location_id,
                     'price_unit': 0,
                 })
             ],
@@ -300,7 +300,7 @@ class TestRepairTraceability(TestMrpCommon):
             'product_id': component.id,
             'product_uom_qty': 1,
             'product_uom': component.uom_id.id,
-            'location_id': scrap_location.id,
+            'location_id': scrap_location_id,
             'location_dest_id': self.stock_location.id,
         })
         sm._action_confirm()

@@ -822,8 +822,8 @@ class StockPicking(models.Model):
                 'any_draft': picking_moves_state_map[picking_id.id].get('any_draft', False) or move_state == 'draft',
                 'all_cancel': picking_moves_state_map[picking_id.id].get('all_cancel', True) and move_state == 'cancel',
                 'all_cancel_done': picking_moves_state_map[picking_id.id].get('all_cancel_done', True) and move_state in ('cancel', 'done'),
-                'all_done_are_scrapped': picking_moves_state_map[picking_id.id].get('all_done_are_scrapped', True) and (move.scrapped if move_state == 'done' else True),
-                'any_cancel_and_not_scrapped': picking_moves_state_map[picking_id.id].get('any_cancel_and_not_scrapped', False) or (move_state == 'cancel' and not move.scrapped),
+                'all_done_are_scrapped': picking_moves_state_map[picking_id.id].get('all_done_are_scrapped', True) and (move.location_dest_usage == 'inventory' if move_state == 'done' else True),
+                'any_cancel_and_not_scrapped': picking_moves_state_map[picking_id.id].get('any_cancel_and_not_scrapped', False) or (move_state == 'cancel' and move.location_dest_usage != 'inventory'),
             })
             picking_move_lines[picking_id.id].add(move.id)
         for picking in self:
@@ -916,7 +916,7 @@ class StockPicking(models.Model):
         result = {
             picking
             for [picking] in self.env['stock.move']._read_group(
-                [('picking_id', 'in', self.ids), ('scrapped', '=', True)],
+                [('picking_id', 'in', self.ids), ('location_dest_usage', '=', 'inventory')],
                 ['picking_id'],
             )
         }
@@ -1142,7 +1142,7 @@ class StockPicking(models.Model):
         if 'partner_id' in vals:
             after_vals['partner_id'] = vals['partner_id']
         if after_vals:
-            self.move_ids.filtered(lambda move: not move.scrapped).write(after_vals)
+            self.move_ids.filtered(lambda move: move.location_dest_usage != 'inventory').write(after_vals)
         if vals.get('move_ids'):
             self._autoconfirm_picking()
 
@@ -1455,7 +1455,7 @@ class StockPicking(models.Model):
             for move in picking.move_ids:
                 if move.quantity:
                     has_quantity = True
-                if move.scrapped:
+                if move.location_dest_usage == 'inventory':
                     continue
                 if move.picked:
                     has_pick = True

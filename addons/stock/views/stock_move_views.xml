@@ -61,14 +61,13 @@
             <field name="model">stock.move</field>
             <field eval="50" name="priority"/>
             <field name="arch" type="xml">
-                <list decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
+                <list decoration-muted="scrap_id or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
                     <field name="company_id" column_invisible="True"/>
                     <field name="date" column_invisible="True"/>
                     <field name="state" readonly="0" column_invisible="True"/>
                     <field name="picking_type_id" column_invisible="True"/>
                     <field name="location_id" column_invisible="True"/>
                     <field name="location_dest_id" column_invisible="True"/>
-                    <field name="scrapped" column_invisible="True"/>
                     <field name="picking_code" column_invisible="True"/>
                     <field name="show_details_visible" column_invisible="True"/>
                     <field name="additional" column_invisible="True"/>

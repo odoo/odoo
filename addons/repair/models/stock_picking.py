@@ -132,7 +132,7 @@ class StockPickingType(models.Model):
         company_ids = repair_picking_type.company_id.ids
         company_ids.append(False)
         scrap_locations = self.env['stock.location']._read_group(
-            [('scrap_location', '=', True), ('company_id', 'in', company_ids)],
+            [('usage', '=', 'inventory'), ('company_id', 'in', company_ids)],
             ['company_id'],
             ['id:min'],
         )

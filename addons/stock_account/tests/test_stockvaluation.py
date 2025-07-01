@@ -3094,7 +3094,6 @@ class TestStockValuation(TestStockValuationBase):
             'name': 'scrap',
             'usage': 'inventory',
             'location_id': view_location.id,
-            'scrap_location': True,
         })
 
         move1 = self.env['stock.move'].create({
@@ -3176,7 +3175,6 @@ class TestStockValuation(TestStockValuationBase):
             'name': 'scrap',
             'usage': 'inventory',
             'location_id': self.stock_location.id,
-            'scrap_location': True,
         })
 
         move1 = self.env['stock.move'].create({
