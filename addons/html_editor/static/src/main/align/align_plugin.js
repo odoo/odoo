@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { AlignSelector } from "./align_selector";
 import { reactive } from "@odoo/owl";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { weakMemoize } from "@html_editor/utils/functions";
 
 const alignmentItems = [
     { mode: "left" },
@@ -21,22 +22,22 @@ export class AlignPlugin extends Plugin {
             {
                 id: "alignLeft",
                 run: () => this.setAlignment("left"),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.canSetAlignment.bind(this),
             },
             {
                 id: "alignCenter",
                 run: () => this.setAlignment("center"),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.canSetAlignment.bind(this),
             },
             {
                 id: "alignRight",
                 run: () => this.setAlignment("right"),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.canSetAlignment.bind(this),
             },
             {
                 id: "justify",
                 run: () => this.setAlignment("justify"),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.canSetAlignment.bind(this),
             },
         ],
         toolbar_items: [
@@ -52,7 +53,7 @@ export class AlignPlugin extends Plugin {
                         this.setAlignment(item.mode);
                     },
                 },
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.canSetAlignment.bind(this),
             },
         ],
 
@@ -68,6 +69,9 @@ export class AlignPlugin extends Plugin {
 
     setup() {
         this.alignment = reactive({ displayName: "" });
+        this.canSetAlignmentMemoized = weakMemoize(
+            (selection) => isHtmlContentSupported(selection) && this.getBlocksToAlign().length > 0
+        );
     }
 
     get alignmentMode() {
@@ -87,28 +91,36 @@ export class AlignPlugin extends Plugin {
         return textAlign;
     }
 
+    getBlocksToAlign() {
+        return this.dependencies.selection
+            .getTargetedNodes()
+            .filter((node) => isVisibleTextNode(node) || node.nodeName === "BR")
+            .map((node) => closestBlock(node))
+            .filter((block) => block.isContentEditable);
+    }
+
     setAlignment(mode = "") {
         const visitedBlocks = new Set();
-        const targetedNodes = this.dependencies.selection.getTargetedNodes();
         let isAlignmentUpdated = false;
 
-        for (const node of targetedNodes) {
-            if (isVisibleTextNode(node) || node.nodeName === "BR") {
-                const block = closestBlock(node);
-                if (!visitedBlocks.has(block)) {
-                    const currentTextAlign = this.getTextAlignment(block);
-                    if (currentTextAlign !== mode && block.isContentEditable) {
-                        block.style.textAlign = mode;
-                        isAlignmentUpdated = true;
-                    }
-                    visitedBlocks.add(block);
+        for (const block of this.getBlocksToAlign()) {
+            if (!visitedBlocks.has(block)) {
+                const currentTextAlign = this.getTextAlignment(block);
+                if (currentTextAlign !== mode) {
+                    block.style.textAlign = mode;
+                    isAlignmentUpdated = true;
                 }
+                visitedBlocks.add(block);
             }
         }
         if (mode && isAlignmentUpdated) {
             this.dependencies.history.addStep();
         }
         this.updateAlignmentParams();
+    }
+
+    canSetAlignment(selection) {
+        return this.canSetAlignmentMemoized(selection);
     }
 
     updateAlignmentParams() {

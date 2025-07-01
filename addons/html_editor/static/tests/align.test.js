@@ -1,5 +1,5 @@
-import { describe, test } from "@odoo/hoot";
-import { testEditor } from "./_helpers/editor";
+import { describe, expect, test } from "@odoo/hoot";
+import { setupEditor, testEditor } from "./_helpers/editor";
 import {
     alignCenter,
     justify,
@@ -9,6 +9,20 @@ import {
     alignMiddle,
     alignBottom,
 } from "./_helpers/user_actions";
+import { expandToolbar } from "./_helpers/toolbar";
+
+test("should have align tool only if the block is content editable", async () => {
+    for (const [contenteditable, count] of [
+        [false, 0],
+        [true, 1],
+    ]) {
+        await setupEditor(
+            `<div contenteditable="${contenteditable}"><p><span contenteditable="true">ab[cde]fg</span></p></div>`
+        );
+        await expandToolbar();
+        expect(".btn[name='text_align']").toHaveCount(count);
+    }
+});
 
 describe("left", () => {
     test("should align left", async () => {
