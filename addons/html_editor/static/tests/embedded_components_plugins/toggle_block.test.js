@@ -529,7 +529,7 @@ describe("Enter applied to toggle title", () => {
                     </button>
                     <div class="flex-fill ms-1">
                         <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
-                            <p>Hello</p>
+                            <p>Hello&nbsp;</p>
                         </div>
                     </div>
                 </div>
@@ -588,7 +588,7 @@ describe("Enter applied to toggle title", () => {
                     </button>
                     <div class="flex-fill ms-1">
                         <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
-                            <p>Hello </p>
+                            <p>Hello&nbsp;</p>
                         </div>
                     </div>
                 </div>
