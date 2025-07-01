@@ -1421,3 +1421,16 @@ class StockQuantRemovalStrategy(TransactionCase):
             ('package_id', '=', package.id),
             ('location_id', '=', self.stock_location.id),
         ]))
+
+    def test_display_name(self):
+        package = self.env['stock.quant.package'].create({})
+        stock_quant = self.env['stock.quant'].create({
+            'product_id': self.product.id,
+            'location_id': self.stock_location.id,
+            'package_id': package.id,
+            'quantity': 10.0,
+        })
+        self.assertEqual(stock_quant.display_name, 'stock_location - ' + package.name)
+
+        stock_quant.location_id = self.env['stock.location']
+        self.assertEqual(stock_quant.display_name, package.name)
