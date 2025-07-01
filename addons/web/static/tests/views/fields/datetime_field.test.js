@@ -1,8 +1,22 @@
 import { after, expect, test } from "@odoo/hoot";
-import { click, edit, queryAll, queryAllProperties, queryAllTexts, resize } from "@odoo/hoot-dom";
+import {
+    click,
+    edit,
+    queryAll,
+    queryAllProperties,
+    queryAllTexts,
+    queryRect,
+    resize,
+} from "@odoo/hoot-dom";
 import { animationFrame, mockTimeZone } from "@odoo/hoot-mock";
 import {
+    editTime,
+    getPickerCell,
+    zoomOut,
+} from "@web/../tests/core/datetime/datetime_test_helpers";
+import {
     clickSave,
+    contains,
     defineModels,
     defineParams,
     fields,
@@ -10,11 +24,6 @@ import {
     mountView,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-import {
-    editTime,
-    getPickerCell,
-    zoomOut,
-} from "@web/../tests/core/datetime/datetime_test_helpers";
 
 import { resetDateFieldWidths } from "@web/views/list/column_width_hook";
 class Partner extends models.Model {
@@ -274,6 +283,20 @@ test("DatetimeField in editable list view", async () => {
         { message: "the selected datetime should be displayed after saving" }
     );
 });
+
+test("DatetimeField input in editable list view keeps its parent's width when empty", async () => {
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */ `<list editable="bottom"><field name="datetime"/></list>`,
+    });
+    await contains(".o_data_row:eq(1) .o_data_cell").click();
+    expect(".o_data_row:eq(1) .o_data_cell input").toHaveRect(
+        queryRect(".o_data_row:eq(1) .o_data_cell .o_field_datetime"),
+        { message: "input should have the same size as its parent when empty" }
+    );
+});
+
 test.tags("desktop");
 test("multi edition of DatetimeField in list view: edit date in input", async () => {
     onRpc("has_group", () => true);
