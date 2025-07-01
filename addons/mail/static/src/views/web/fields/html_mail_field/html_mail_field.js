@@ -3,19 +3,14 @@ import { registry } from "@web/core/registry";
 import { getCSSRules, toInline } from "./convert_inline";
 import { ColumnPlugin } from "@html_editor/main/column_plugin";
 
-const cssRulesByElement = new WeakMap();
+const cssRulesByDocument = new WeakMap();
 
 export class HtmlMailField extends HtmlField {
     /**
-     * @param {WeakMap} cssRulesByElement
-     * @param {Editor} editor
-     * @param {HTMLElement} el
+     * @param {HTMLElement} el element to be processed
+     * @param {Object[]} cssRules result of @see getCSSRules
      */
-    static async getInlinedEditorContent(previousSibling, el) {
-        if (!cssRulesByElement.has(previousSibling)) {
-            cssRulesByElement.set(previousSibling, getCSSRules(previousSibling.ownerDocument));
-        }
-        const cssRules = cssRulesByElement.get(previousSibling);
+    static async getInlineHTML(el, cssRules) {
         // Insert the cloned element inside an DOM so we can get its computed style.
         previousSibling.after(el);
         el.classList.remove("odoo-editor-editable");
@@ -31,8 +26,13 @@ export class HtmlMailField extends HtmlField {
     }
 
     async processEditorContent(el) {
-        const previousSibling = this.editor.editable;
-        return await HtmlMailField.getInlinedEditorContent(previousSibling, el);
+        const editable = this.editor.editable;
+        const editableDocument = editable.ownerDocument;
+        if (!cssRulesByDocument.has(editableDocument)) {
+            cssRulesByDocument.set(editableDocument, getCSSRules(editableDocument));
+        }
+        const cssRules = cssRulesByDocument.get(previousSibling);
+        return await HtmlMailField.getInlineHTML(el, cssRules);
     }
 
     getConfig() {

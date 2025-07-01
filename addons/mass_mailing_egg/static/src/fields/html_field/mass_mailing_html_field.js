@@ -197,6 +197,9 @@ export class MassMailingHtmlField extends HtmlMailField {
      * Complete rewrite of `updateValue` to ensure that both the field and the
      * inlineField are saved at the same time. Depends on the iframe to compute
      * the style of the inlineField.
+     * TODO EGGMAIL: this is too slow for urgent save. We should display the
+     * save confirmation popup like in website on beforeUnload, unlike other
+     * html_fields in form views.
      * @override
      */
     async updateValue(value) {
@@ -207,7 +210,7 @@ export class MassMailingHtmlField extends HtmlMailField {
         this.iframeRef.el.classList.remove("d-none");
         const previousSibling =
             this.iframeRef.el.contentDocument.querySelector(".o_mass_mailing_value");
-        const inlineValue = await HtmlMailField.getInlinedEditorContent(
+        const inlineValue = await HtmlMailField.getInlineHTML(
             previousSibling,
             parseHTML(this.iframeRef.el.contentDocument, value).firstElementChild
         ).innerHTML;

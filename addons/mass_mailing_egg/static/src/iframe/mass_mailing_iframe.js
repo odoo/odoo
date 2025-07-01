@@ -6,7 +6,6 @@ import { uniqueId } from "@web/core/utils/functions";
 import { useChildRef, useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { renderToString } from "@web/core/utils/render";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
-import { registry } from "@web/core/registry";
 import { Editor } from "@html_editor/editor";
 
 const IFRAME_VALUE_SELECTOR = ".o_mass_mailing_value";
@@ -171,7 +170,6 @@ export class MassMailingIframe extends Component {
             // getThemeTab => provide DesignTab
             // Plugins => provide plugins selection, properly filter excluded Plugins
             isMobile: false, // TODO EGGMAIL: investigate, is it the mobile display feature or the current page state
-            isTranslation: false, // TODO EGGMAIL: investigate, do we need that for mass_mailing?
             toggleMobile: () => {}, // TODO EGGMAIL: is it the mobile display feature?
             editableSelector: IFRAME_VALUE_SELECTOR,
             toggleFullscreen: () => {
