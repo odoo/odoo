@@ -846,9 +846,9 @@ class AccountTestInvoicingCommon(ProductCommon):
 
 
 class AccountTestMockOnlineSyncCommon(HttpCase):
-    def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
+    def start_tour(self, url_path, tour_name, **kwargs):
         with self.mock_online_sync_favorite_institutions():
-            super().start_tour(url_path, tour_name, step_delay, **kwargs)
+            super().start_tour(url_path, tour_name, **kwargs)
 
     @classmethod
     @contextmanager
