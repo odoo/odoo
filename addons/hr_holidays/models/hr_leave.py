@@ -5,6 +5,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta, time, UTC
 from zoneinfo import ZoneInfo
 
+from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 from math import ceil
 from markupsafe import Markup
@@ -13,7 +14,7 @@ from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools.date_utils import float_to_time
+from odoo.tools.date_utils import float_to_time, sum_intervals
 from odoo.fields import Command, Date, Domain
 from odoo.tools.float_utils import float_round, float_compare, float_is_zero
 from odoo.tools.intervals import Intervals
@@ -446,6 +447,7 @@ class HrLeave(models.Model):
                  'request_date_from', 'request_date_to', 'work_entry_type_request_unit', 'employee_id')
     def _compute_date_from_to(self):
         for holiday in self:
+            is_calendar_leave = holiday.work_entry_type_id.count_days_as == 'calendar'
             if not holiday.request_date_from or not holiday.request_date_to:
                 holiday.date_from = False
                 holiday.date_to = False
@@ -474,13 +476,13 @@ class HrLeave(models.Model):
                 if holiday.request_date_from == holiday.request_date_to:
                     day_period = from_period if from_period == to_period else None
                     hour_from, hour_to = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_to,
-                        day_period)
+                        day_period, count_non_working_days=is_calendar_leave)
                 else:
-                    hour_from, _ = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_from, from_period)
-                    _, hour_to = holiday._get_hour_from_to(holiday.request_date_to, holiday.request_date_to, to_period)
+                    hour_from, _ = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_from, from_period, count_non_working_days=is_calendar_leave)
+                    _, hour_to = holiday._get_hour_from_to(holiday.request_date_to, holiday.request_date_to, to_period, count_non_working_days=is_calendar_leave)
 
             else:
-                hour_from, hour_to = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_to)
+                hour_from, hour_to = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_to, count_non_working_days=is_calendar_leave)
 
             holiday.date_from = self._to_utc(holiday.request_date_from, hour_from, holiday.employee_id or holiday)
             holiday.date_to = self._to_utc(holiday.request_date_to, hour_to, holiday.employee_id or holiday)
@@ -600,35 +602,110 @@ class HrLeave(models.Model):
             (date_from, date_to, include_public_holidays_in_duration, calendar): employees._get_work_days_data_batch(date_from, date_to, compute_leaves=not include_public_holidays_in_duration, domain=domain, calendar=calendar)
             for (date_from, date_to, include_public_holidays_in_duration, calendar), employees in employees_by_dates_calendar.items()
         }
+
+        min_start = max_end = False
+        for rec in self:
+            start = rec.request_date_from
+            end = rec.request_date_to
+            if start:
+                min_start = start if not min_start or start < min_start else min_start
+            if end:
+                max_end = end if not max_end or end > max_end else max_end
+
+        public_holidays = self.env['resource.calendar.leaves']
+        if min_start and max_end:
+            public_holidays = public_holidays.search([
+                ('resource_id', '=', False),
+                ('company_id', 'in', self.company_id.ids),
+                ('date_from', '<=', max_end),
+                ('date_to', '>=', min_start),
+            ])
+
+        public_holiday_dates_per_company = defaultdict(set)
+
+        for ph in public_holidays:
+            start = ph.date_from.date()
+            end = ph.date_to.date()
+            days = (end - start).days + 1
+            company_id = ph.company_id.id
+            for day in rrule.rrule(rrule.DAILY, dtstart=start, until=start + timedelta(days=days)):
+                public_holiday_dates_per_company[company_id].add(day.date())
         for leave in self:
             calendar = resource_calendar or leave.resource_calendar_id
             if not leave.date_from or not leave.date_to or (not calendar and not leave.employee_id):
                 result[leave.id] = (0, 0)
                 continue
+            if leave.work_entry_type_id.count_days_as == 'calendar':
+                start_date = leave.request_date_from
+                end_date = leave.request_date_to
+                include_public = leave.work_entry_type_id.include_public_holidays_in_duration
+                company = leave.company_id
+                day_start, day_end = leave.employee_id.sudo()._get_hours_for_date(start_date, count_non_working_days=True)
+
+                if leave.work_entry_type_request_unit == 'day':
+                    if include_public:
+                        days = (end_date - start_date).days + 1
+                    else:
+                        filtered_public_holiday = public_holidays.filtered(lambda h:
+                            (h.calendar_id == calendar or not h.calendar_id) and
+                            h.company_id == company
+                        )
+                        days = ceil(leave._subtract_public_holidays(filtered_public_holiday) / 24)
+                    hours = days * (day_end - day_start)
+                else:
+                    # Partial Day Leave
+                    work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, include_public, calendar][leave.employee_id.id]
+                    hours, days = work_days_data['hours'], work_days_data['days']
+
+                    # sudo as is_flexible is on version model and employee does not have access to it.
+                    if leave.employee_id.sudo().is_flexible:
+                        result[leave.id] = (days, hours)
+                        continue
+                    # Identify workin days
+                    work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, include_public, calendar][leave.employee_id.id]
+                    working_dates = {interval[0] for interval in work_time_per_day_list}
+
+                    total_dates = {
+                        day.date()
+                        for day in rrule.rrule(rrule.DAILY,
+                                            dtstart=leave.request_date_from,
+                                            until=leave.request_date_from + timedelta(days=(end_date - start_date).days)
+                                        )
+                    }
+                    weekend_dates = total_dates - working_dates - public_holiday_dates_per_company[leave.company_id.id]
+
+                    if weekend_dates:
+                        if start_date == end_date:
+                            # Count only the hours within the calendar working range
+                            day_hours = min(day_end, leave.request_hour_to) - max(day_start, leave.request_hour_from)
+                            hours += max(0, day_hours)
+                            days += day_hours / calendar.hours_per_day
+                            weekend_dates.remove(leave.date_from.date())
+                        else:
+                            if start_date in weekend_dates:
+                                days += 0.5 if leave.request_date_from_period == 'pm' else 1
+                                hours += max(0, day_end - max(day_start, leave.request_hour_from))
+                                weekend_dates.remove(start_date)
+                            if end_date in weekend_dates:
+                                days += 1 if leave.request_date_to_period == 'pm' else 0.5
+                                hours += max(0, min(day_end, leave.request_hour_to) - day_start)
+                                weekend_dates.remove(end_date)
+
+                        days += len(weekend_dates)
+                        hours += len(weekend_dates) * calendar.hours_per_day
+
+                result[leave.id] = (days, hours)
+                continue
             hours, days = (0, 0)
             if leave.employee_id:
-                if leave.work_entry_type_id.count_as != 'absence' and leave.work_entry_type_id.request_unit == 'hour':
-                    hours = (leave.date_to - leave.date_from).total_seconds() / 3600
-                    days = 1
                 # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
                 # sudo as is_flexible is on version model and employee does not have access to it.
-                elif leave.employee_id.sudo().is_flexible and leave.request_date_to == leave.request_date_from:
-                    public_holidays = self.env['resource.calendar.leaves'].search([
-                        ('resource_id', '=', False),
-                        ('date_from', '<', leave.date_to),
-                        ('date_to', '>', leave.date_from),
-                        ('calendar_id', 'in', [False, calendar.id]),
-                        ('company_id', '=', leave.company_id.id)
-                    ])
-                    if public_holidays:
-                        public_holidays_intervals = Intervals([(ph.date_from, ph.date_to, ph) for ph in public_holidays])
-                        leave_intervals = Intervals([(leave.date_from, leave.date_to, leave)])
-                        real_leave_intervals = leave_intervals - public_holidays_intervals
-                        hours = 0
-                        for start, stop, meta in real_leave_intervals:
-                            hours += (stop - start).total_seconds() / 3600
-                    else:
-                        hours = (leave.date_to - leave.date_from).total_seconds() / 3600
+                if leave.employee_id.sudo().is_flexible and leave.request_date_to == leave.request_date_from:
+                    filtered_public_holidays = public_holidays.filtered(lambda h:
+                        (h.calendar_id == calendar or not h.calendar_id) and
+                        h.company_id == leave.company_id
+                    )
+                    hours = leave._subtract_public_holidays(filtered_public_holidays)
                     if leave.work_entry_type_request_unit != 'hour' and not public_holidays:
                         days = 1 if leave.work_entry_type_request_unit != 'half_day' or leave.request_date_from_period != leave.request_date_to_period else 0.5
                     else:
@@ -1114,6 +1191,15 @@ class HrLeave(models.Model):
                 ),
                 partner_ids=notify_partner_ids)
 
+    def _subtract_public_holidays(self, public_holidays):
+        """Subtract public holiday intervals from leave and return hours."""
+        self.ensure_one()
+        public_holidays_intervals = Intervals([])
+        if public_holidays:
+            public_holidays_intervals = Intervals([(ph.date_from, ph.date_to, ph) for ph in public_holidays])
+        leave_intervals = Intervals([(self.date_from, self.date_to, self)])
+        real_leave_intervals = leave_intervals - public_holidays_intervals
+        return sum_intervals(real_leave_intervals)
 
     def _prepare_holidays_meeting_values(self):
         result = defaultdict(list)
@@ -1702,7 +1788,7 @@ class HrLeave(models.Model):
         holiday_tz = ZoneInfo(resource.tz or self.env.user.tz or 'UTC')
         return datetime.combine(date, hour, tzinfo=holiday_tz).astimezone(UTC).replace(tzinfo=None)
 
-    def _get_hour_from_to(self, request_date_from, request_date_to, day_period=None):
+    def _get_hour_from_to(self, request_date_from, request_date_to, day_period=None, count_non_working_days=False):
         """
         Return the hour_from and hour_to for the given request dates, based on
         the resource calendar.
@@ -1711,8 +1797,8 @@ class HrLeave(models.Model):
         the earliest hour_from and latest hour_to that exist in the schedule.
         """
 
-        hour_from, _ = self.employee_id.sudo()._get_hours_for_date(request_date_from, day_period)
-        _, hour_to = self.employee_id.sudo()._get_hours_for_date(request_date_to, day_period)
+        hour_from, _ = self.employee_id.sudo()._get_hours_for_date(request_date_from, day_period, count_non_working_days)
+        _, hour_to = self.employee_id.sudo()._get_hours_for_date(request_date_to, day_period, count_non_working_days)
 
         return (hour_from, hour_to)
 

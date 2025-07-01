@@ -378,6 +378,38 @@
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
     </record>
 
+    <record id="hr_work_entry.l10n_be_work_entry_type_non_taxable_political_service" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_other_presence" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_paid_compensatory_rest" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_unpaid_compensatory_rest" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+   
+    <record id="hr_work_entry.l10n_be_work_entry_type_paid_recovered_compensatory_rest" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_unpaid_recovered_compensatory_rest" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_sectoral_compensatory_rest" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_other_training" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+
 <!-- CH: Switzerland -->
 
     <record id="hr_work_entry.l10n_ch_swissdec_unpaid_wt" model="hr.work.entry.type">
@@ -446,6 +478,26 @@
         <field name="country_id" ref="base.ch"/>
     </record>
 
+    <record id="hr_work_entry.l10n_ch_swissdec_monthly_wt" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_ch_swissdec_hourly_wt" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_ch_swissdec_lesson_wt" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_ch_swissdec_overtime_wt" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_ch_swissdec_overtime_125_wt" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+
 <!-- EG: Egypt -->
     <record id="hr_work_entry.l10n_eg_work_entry_type_marriage" model="hr.work.entry.type">
         <field name="name">Marriage Leave</field>
@@ -503,6 +555,10 @@
         <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
         <field name="country_id" ref="base.eg"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_eg_work_entry_type_overtime_work_days_nighttime" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
     </record>
 
 <!-- HK : Hong Kong -->
@@ -648,6 +704,15 @@
         <field name="country_id" ref="base.id"/>
     </record>
 
+<!-- IQ : Iraq -->
+    <record id="hr_work_entry.iq_work_entry_type_day_overtime" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+
+    <record id="hr_work_entry.iq_work_entry_type_night_overtime" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+
 <!-- JO : Jordan -->
     <record id="hr_work_entry.l10n_jo_work_entry_type_sick_leave_unpaid" model="hr.work.entry.type">
         <field name="requires_allocation">False</field>
@@ -687,6 +752,14 @@
         <field name="unit_of_measure">day</field>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.jo"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_jo_work_entry_type_rest_days_overtime" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_jo_work_entry_type_week_days_overtime" model="hr.work.entry.type">
+        <field name="count_days_as">calendar</field>
     </record>
 
 <!-- LU : Luxemburg -->

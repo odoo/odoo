@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date, datetime
 from freezegun import freeze_time
 
 from odoo.exceptions import AccessError, ValidationError
@@ -130,3 +131,104 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
             ).search([('has_valid_allocation', '=', True)], limit=1)
 
         self.assertFalse(work_entry_types, "Got valid leaves outside vaild period")
+
+    def test_calendar_duration_excluding_public_holidays(self):
+        """Test calendar duration calculation excluding public holidays"""
+
+        calendar_work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Test Time Off (Exclude PH)',
+            'code': 'Test Time Off 1',
+            'requires_allocation': False,
+            'count_days_as': 'calendar',
+            'include_public_holidays_in_duration': False,
+        })
+
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2024, 6, 3, 0, 0, 0),
+            'date_to': datetime(2024, 6, 3, 23, 59, 59),
+            'calendar_id': False,
+            'company_id': self.env.company.id,
+        })
+
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_hruser_id,
+            'work_entry_type_id': calendar_work_entry_type.id,
+            'request_date_from': date(2024, 6, 1),
+            'request_date_to': date(2024, 6, 7),
+        })
+
+        days, hours = leave._get_durations()[leave.id]
+        self.assertEqual(days, 6, "Duration should exclude 1 public holiday, resulting in 6 days")
+        self.assertEqual(hours, 48, "Duration should be 6 * 8 hours when excluding public holidays")
+
+    def test_calendar_duration_including_public_holidays(self):
+        """Test calendar duration calculation including public holidays"""
+
+        calendar_work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Test Time Off (Include PH)',
+            'code': 'Test Time Off 2',
+            'requires_allocation': False,
+            'count_days_as': 'calendar',
+            'include_public_holidays_in_duration': True,
+        })
+
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2024, 6, 3, 0, 0, 0),
+            'date_to': datetime(2024, 6, 3, 23, 59, 59),
+            'calendar_id': False,
+            'company_id': self.env.company.id,
+        })
+
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_hruser_id,
+            'work_entry_type_id': calendar_work_entry_type.id,
+            'request_date_from': date(2024, 6, 1),
+            'request_date_to': date(2024, 6, 7),
+        })
+
+        days, hours = leave._get_durations()[leave.id]
+        self.assertEqual(days, 7, "Duration should include all 7 days even with public holiday")
+        self.assertEqual(hours, 56, "Duration should be 7 * 8 hours when including public holidays")
+
+    def test_count_days_as_working_days(self):
+        """Test duration calculation when count_days_as is worked days"""
+        working_work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Test Time Off',
+            'code': 'Test Time Off 3',
+            'requires_allocation': False,
+            'count_days_as': 'working',
+        })
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_hruser_id,
+            'work_entry_type_id': working_work_entry_type.id,
+            'request_date_from': date(2024, 6, 1),
+            'request_date_to': date(2024, 6, 7),
+        })
+
+        days, hours = leave._get_durations()[leave.id]
+        self.assertEqual(days, 5, "Working days should exclude weekends")
+        self.assertEqual(hours, 40, "Working hours should be 5 * 8 hours")
+
+    def test_change_count_days_as(self):
+        """Changing count_days_as after leave is validated should raise ValidationError"""
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Test Time Off',
+            'code': 'Test Time Off 4',
+            'requires_allocation': False,
+            'count_days_as': 'working',
+        })
+
+        work_entry_type.count_days_as = 'calendar'
+
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_hruser_id,
+            'work_entry_type_id': work_entry_type.id,
+            'request_date_from': date(2024, 7, 1),
+            'request_date_to': date(2024, 7, 5),
+        })
+        leave.action_approve()
+
+        with self.assertRaises(ValidationError):
+            work_entry_type.count_days_as = 'working'
