@@ -158,7 +158,15 @@ export class Composer extends Component {
         );
         useEffect(
             () => {
+                let wasEmpty = false;
+                if (!this.fakeTextarea.el.value) {
+                    wasEmpty = true;
+                    this.fakeTextarea.el.value = "0";
+                }
                 this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
+                if (wasEmpty) {
+                    this.fakeTextarea.el.value = "";
+                }
             },
             () => [this.props.composer.textInputContent, this.ref.el]
         );
