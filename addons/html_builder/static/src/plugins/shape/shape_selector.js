@@ -1,4 +1,5 @@
 import { useRef, useState } from "@odoo/owl";
+import { ImgGroup } from "@html_builder/core/img_group";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { getShapeURL } from "../image/image_helpers";
@@ -14,6 +15,7 @@ export class ShapeSelector extends BaseOptionComponent {
         imgThroughDiv: { type: Boolean, optional: true },
         getShapeUrl: { type: Function, optional: true },
     };
+    static components = { ImgGroup };
 
     setup() {
         super.setup();

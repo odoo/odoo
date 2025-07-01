@@ -1,4 +1,12 @@
-import { Component, onWillStart, onWillUpdateProps, useEffect, useRef, xml } from "@odoo/owl";
+import {
+    Component,
+    onWillStart,
+    onWillUpdateProps,
+    useEffect,
+    useRef,
+    useState,
+    xml,
+} from "@odoo/owl";
 import { Cache } from "@web/core/utils/cache";
 
 const svgCache = new Cache(async (src) => {
@@ -34,53 +42,67 @@ export class Img extends Component {
         svgCheck: true,
     };
     static template = xml`
-        <svg t-if="isSvg(props.src)" t-ref="svg"
-             xmlns="http://www.w3.org/2000/svg"
-             t-att-width="svg.width"
-             t-att-viewBox="svg.viewBox"
-             t-att-fill="svg.fill"
-             class="hb-svg d-flex m-auto"
-             t-att-class="props.class"
-             t-att-style="props.style"
-             t-att="props.attrs"/>
-        <img t-else=""
-             t-att-src="props.src"
-             t-att-class="props.class"
-             t-att-style="props.style"
-             t-att-alt="props.alt"
-             t-att="props.attrs"/>
+        <t t-if="state.loaded">
+            <svg t-if="isSvg(props.src)" t-ref="svg"
+                xmlns="http://www.w3.org/2000/svg"
+                t-att-width="svg.width"
+                t-att-viewBox="svg.viewBox"
+                t-att-fill="svg.fill"
+                class="hb-svg d-flex m-auto"
+                t-att-class="props.class"
+                t-att-style="props.style"
+                t-att="props.attrs"/>
+            <img t-else=""
+                t-att-src="props.src"
+                t-att-class="props.class"
+                t-att-style="props.style"
+                t-att-alt="props.alt"
+                t-att="props.attrs"/>
+        </t>
         `;
 
     setup() {
         this.svgRef = useRef("svg");
         this.svg = {};
+        this.state = useState({ loaded: false });
 
-        onWillStart(async () => {
-            await this.handleImgLoad(this.props.src);
-        });
+        onWillStart(async () => this.handleImgLoad(this.props.src));
         onWillUpdateProps(async (nextProps) => {
             if (this.props.src !== nextProps.src) {
                 await this.handleImgLoad(nextProps.src);
             }
         });
-        useEffect(() => {
-            if (this.isSvg(this.props.src) && this.svg.children.length) {
-                // We can't use t-out with markup because it is parsed as HTML,
-                // but SVG need to be parsed as XML for all features to work.
-                const children = [];
-                for (const child of this.svg.children) {
-                    children.push(child.cloneNode(true));
+        useEffect(
+            (imgLoaded) => {
+                if (imgLoaded && this.isSvg(this.props.src) && this.svg.children.length) {
+                    // We can't use t-out with markup because it is parsed as HTML,
+                    // but SVG need to be parsed as XML for all features to work.
+                    const children = [];
+                    for (const child of this.svg.children) {
+                        children.push(child.cloneNode(true));
+                    }
+                    this.svgRef.el.replaceChildren(...children);
                 }
-                this.svgRef.el.replaceChildren(...children);
-            }
-        });
+            },
+            () => [this.state.loaded]
+        );
     }
 
     async handleImgLoad(src) {
+        const prom = this.isSvg(src) ? this.getSvg() : this.loadImage(src);
         if (this.isSvg(src)) {
-            this.svg = await this.getSvg();
+            prom.then((svg) => {
+                this.svg = svg;
+            });
+        }
+        if (this.env.imgGroup) {
+            this.env.imgGroup.addImgProm(prom);
+            this.env.imgGroup.loaded.then(() => {
+                this.state.loaded = true;
+            });
         } else {
-            await this.loadImage(src);
+            await prom;
+            this.state.loaded = true;
         }
     }
 
