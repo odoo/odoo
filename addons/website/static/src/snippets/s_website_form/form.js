@@ -764,11 +764,17 @@ export class Form extends Interaction {
      * @returns {FormData} a FormData object containing also disabled fields
      */
     getFormDataIncludingDisabledFields(formEl) {
-        const formCopy = formEl.cloneNode(true);
-        formCopy.querySelectorAll("input, select, textarea").forEach((element) => {
+        const disabledFields = formEl.querySelectorAll(
+            "input:disabled, select:disabled, textarea:disabled"
+        );
+        disabledFields.forEach((element) => {
             element.removeAttribute("disabled");
         });
-        return new FormData(formCopy);
+        const formData = new FormData(formEl);
+        disabledFields.forEach((element) => {
+            element.setAttribute("disabled", true);
+        });
+        return formData;
     }
 
     isFieldVisible(fieldEl) {
