@@ -163,6 +163,14 @@ class HrEmployee(models.Model):
             Check Out: modify check_out field of appropriate attendance record
         """
         self.ensure_one()
+
+        # employee_attendance_channel = "hr_attendance.channel/presence"
+        employee_attendance_channel = f"hr_attendance_presence:{self._name}:{self.id}"
+        channel_notification_type = "presence_status"
+        channel_message = {
+            "channel": employee_attendance_channel,
+            "data": {"emp_id": self.id, "status": ""},
+        }
         action_date = fields.Datetime.now()
 
         if self.attendance_state != 'checked_in':
@@ -177,7 +185,14 @@ class HrEmployee(models.Model):
                     'employee_id': self.id,
                     'check_in': action_date,
                 }
-            return self.env['hr.attendance'].create(vals)
+            res = self.env['hr.attendance'].create(vals)
+            channel_message["data"]["status"] = f"presence_{self.hr_presence_state}"
+            self.env['bus.bus']._sendone(
+                employee_attendance_channel,
+                channel_notification_type,
+                channel_message,
+            )
+            return res
         attendance = self.env['hr.attendance'].search([('employee_id', '=', self.id), ('check_out', '=', False)], limit=1)
         if attendance:
             if geo_information:
@@ -189,6 +204,12 @@ class HrEmployee(models.Model):
                 attendance.write({
                     'check_out': action_date
                 })
+            channel_message["data"]["status"] = f"presence_{self.hr_presence_state}"
+            self.env['bus.bus']._sendone(
+                employee_attendance_channel,
+                channel_notification_type,
+                channel_message,
+            )
         else:
             raise exceptions.UserError(_(
                 'Cannot perform check out on %(empl_name)s, could not find corresponding check in. '
