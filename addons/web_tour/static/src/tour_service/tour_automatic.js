@@ -8,6 +8,7 @@ import * as hootDom from "@odoo/hoot-dom";
 
 export class TourAutomatic {
     mode = "auto";
+    allowUnload = true;
     constructor(data) {
         Object.assign(this, data);
         this.steps = this.steps.map((step, index) => new TourStepAutomatic(step, this, index));
@@ -64,6 +65,7 @@ export class TourAutomatic {
                         if (delayToCheckUndeterminisms > 0) {
                             await step.checkForUndeterminisms(trigger, delayToCheckUndeterminisms);
                         }
+                        this.allowUnload = false;
                         if (!step.skipped && step.expectUnloadPage) {
                             this.allowUnload = true;
                             setTimeout(() => {
