@@ -84,23 +84,21 @@ class EventRegistration(models.Model):
         open_registrations = self.filtered(lambda reg: reg.state == 'open')
         done_registrations = self.filtered(lambda reg: reg.state == 'done')
 
-        if event_lead_rules:
-            create_lead_rules = event_lead_rules.filtered(lambda rule: rule.lead_creation_trigger == 'create')
-        else:
-            create_lead_rules = self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'create')])
+        if not event_lead_rules:
+            search_triggers = ['create']
+            if open_registrations:
+                search_triggers.append('confirm')
+            if done_registrations:
+                search_triggers.append('done')
+            event_lead_rules = self.env['event.lead.rule'].search([('lead_creation_trigger', 'in', search_triggers)])
 
+        create_lead_rules = event_lead_rules.filtered(lambda rule: rule.lead_creation_trigger == 'create')
         leads += create_lead_rules.sudo()._run_on_registrations(self)
         if open_registrations:
-            if event_lead_rules:
-                confirm_lead_rules = event_lead_rules.filtered(lambda rule: rule.lead_creation_trigger == 'confirm')
-            else:
-                confirm_lead_rules = self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'confirm')])
+            confirm_lead_rules = event_lead_rules.filtered(lambda rule: rule.lead_creation_trigger == 'confirm')
             leads += confirm_lead_rules.sudo()._run_on_registrations(open_registrations)
         if done_registrations:
-            if event_lead_rules:
-                done_lead_rules = event_lead_rules.filtered(lambda rule: rule.lead_creation_trigger == 'done')
-            else:
-                done_lead_rules = self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'done')])
+            done_lead_rules = event_lead_rules.filtered(lambda rule: rule.lead_creation_trigger == 'done')
             leads += done_lead_rules.sudo()._run_on_registrations(done_registrations)
         return leads
 
