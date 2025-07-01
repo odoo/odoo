@@ -212,7 +212,13 @@ export class MassMailingHtmlField extends HtmlMailField {
         this.isDirty = false;
         const shouldRestoreDisplayNone = this.iframeRef.el.classList.contains("d-none");
         this.iframeRef.el.classList.remove("d-none");
-        const inlineValue = await this.getInlineEditorContent().innerHTML;
+        const processingEl = this.iframeRef.el.contentDocument.createElement("DIV");
+        processingEl.append(parseHTML(this.iframeRef.el.contentDocument, value));
+        this.insertForInlineProcessing(processingEl);
+        const inlineValue = (
+            await HtmlMailField.getInlineHTML(processingEl, this.iframeRef.el.contentDocument)
+        ).innerHTML;
+        processingEl.remove();
         if (shouldRestoreDisplayNone) {
             this.iframeRef.el.classList.add("d-none");
         }
