@@ -163,6 +163,15 @@ class HrEmployee(models.Model):
             att = employee.last_attendance_id.sudo()
             employee.attendance_state = att and not att.check_out and 'checked_in' or 'checked_out'
 
+    def _notify_employee_presence_status(self):
+        self.ensure_one()
+        payload = {
+            "hr_presence_state": self.hr_presence_state,
+            "hr_icon_display": self.hr_icon_display,
+            "employee_id": self.id,
+        }
+        self._bus_send("hr.employee/presence", payload)
+
     def _attendance_action_change(self, geo_information=None):
         """ Check In/Check Out action
             Check In: create a new attendance record
@@ -183,7 +192,9 @@ class HrEmployee(models.Model):
                     'employee_id': self.id,
                     'check_in': action_date,
                 }
-            return self.env['hr.attendance'].create(vals)
+            res = self.env['hr.attendance'].create(vals)
+            self._notify_employee_presence_status()
+            return res
         attendance = self.env['hr.attendance'].search([('employee_id', '=', self.id), ('check_out', '=', False)], limit=1)
         if attendance:
             if geo_information:
@@ -195,6 +206,7 @@ class HrEmployee(models.Model):
                 attendance.write({
                     'check_out': action_date
                 })
+            self._notify_employee_presence_status()
         else:
             raise exceptions.UserError(_(
                 'Cannot perform check out on %(empl_name)s, could not find corresponding check in. '
