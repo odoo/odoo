@@ -162,12 +162,13 @@ class WebsiteCustom(http.Controller):
         website=True,
     )
     def render_birthday_single(self, employee, **kwargs):
-        if not employee.user_id:
+        employee_sudo = employee.sudo()
+        if not employee_sudo.user_id:
             pass
 
         values = {
-            "employee": employee,
-            "main_object": employee,
+            "employee": employee_sudo,
+            "main_object": employee_sudo,
             "hide_sidebar": True,
         }
         return request.render("mi_website_ext.birthday_single_template", values)
@@ -248,16 +249,17 @@ class WebsiteCustom(http.Controller):
     )
     def render_anniversary(self, employee, **kwargs):
         years_in_company = 0
-        if employee and employee.contract_ids:
-            first_contract = employee.contract_ids.sorted(lambda c: c.date_start or fields.Date.today())[0]
+        employee_sudo = employee.sudo()
+        if employee_sudo and employee_sudo.contract_ids:
+            first_contract = employee_sudo.contract_ids.sorted(lambda c: c.date_start or fields.Date.today())[0]
             if first_contract.date_start:
                 hire_year = first_contract.date_start.year
                 current_year = fields.Date.today().year
                 if fields.Date.today().month == first_contract.date_start.month:
                     years_in_company = current_year - hire_year
         values = {
-            "employee": employee,
-            "main_object": employee,
+            "employee": employee_sudo,
+            "main_object": employee_sudo,
             "hide_sidebar": True,
             "years_in_company": years_in_company,
         }
