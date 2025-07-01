@@ -1,11 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import date, datetime
+from datetime import date, datetime, time
 
 import pytz
 from dateutil.relativedelta import relativedelta
 
 from odoo.tests import BaseCase
-from odoo.tools.date_utils import date_range, get_fiscal_year
+from odoo.tools.date_utils import (
+    add,
+    date_range,
+    end_of,
+    get_fiscal_year,
+    start_of,
+    subtract,
+)
 
 
 class TestDateUtils(BaseCase):
@@ -27,6 +34,97 @@ class TestDateUtils(BaseCase):
         self.assertEqual(get_fiscal_year(date(2024, 2, 29), 28, 2), (date(2023, 3, 1), date(2024, 2, 29)))
         self.assertEqual(get_fiscal_year(date(2023, 2, 28), 28, 2), (date(2022, 3, 1), date(2023, 2, 28)))
         self.assertEqual(get_fiscal_year(date(2023, 2, 28), 29, 2), (date(2022, 3, 1), date(2023, 2, 28)))
+
+    def test_offset_utils(self):
+        """ test date/datetime fields helpers """
+        d = date(2077, 10, 23)
+        dt = datetime(2077, 10, 23, 9, 42)
+
+        # addition
+        self.assertEqual(add(d, days=5), date(2077, 10, 28))
+        self.assertEqual(add(dt, seconds=10), datetime(2077, 10, 23, 9, 42, 10))
+
+        # subtraction
+        self.assertEqual(subtract(d, months=1), date(2077, 9, 23))
+        self.assertEqual(subtract(dt, hours=2), datetime(2077, 10, 23, 7, 42, 0))
+
+        # start_of
+        # year
+        self.assertEqual(start_of(d, 'year'), date(2077, 1, 1))
+        self.assertEqual(start_of(dt, 'year'), datetime(2077, 1, 1))
+
+        # quarter
+        q1 = date(2077, 1, 1)
+        q2 = date(2077, 4, 1)
+        q3 = date(2077, 7, 1)
+        q4 = date(2077, 10, 1)
+        self.assertEqual(start_of(d.replace(month=3), 'quarter'), q1)
+        self.assertEqual(start_of(d.replace(month=5), 'quarter'), q2)
+        self.assertEqual(start_of(d.replace(month=7), 'quarter'), q3)
+        self.assertEqual(start_of(d, 'quarter'), q4)
+        self.assertEqual(start_of(dt, 'quarter'), datetime.combine(q4, time.min))
+
+        # month
+        self.assertEqual(start_of(d, 'month'), date(2077, 10, 1))
+        self.assertEqual(start_of(dt, 'month'), datetime(2077, 10, 1))
+
+        # week
+        self.assertEqual(start_of(d, 'week'), date(2077, 10, 18))
+        self.assertEqual(start_of(dt, 'week'), datetime(2077, 10, 18))
+
+        # day
+        self.assertEqual(start_of(d, 'day'), d)
+        self.assertEqual(start_of(dt, 'day'), dt.replace(hour=0, minute=0, second=0))
+
+        # hour
+        with self.assertRaises(ValueError):
+            start_of(d, 'hour')
+        self.assertEqual(start_of(dt, 'hour'), dt.replace(minute=0, second=0))
+
+        # invalid
+        with self.assertRaises(ValueError):
+            start_of(dt, 'poop')
+
+        # end_of
+        # year
+        self.assertEqual(end_of(d, 'year'), d.replace(month=12, day=31))
+        self.assertEqual(end_of(dt, 'year'),
+                         datetime.combine(d.replace(month=12, day=31), time.max))
+
+        # quarter
+        q1 = date(2077, 3, 31)
+        q2 = date(2077, 6, 30)
+        q3 = date(2077, 9, 30)
+        q4 = date(2077, 12, 31)
+        self.assertEqual(end_of(d.replace(month=2), 'quarter'), q1)
+        self.assertEqual(end_of(d.replace(month=4), 'quarter'), q2)
+        self.assertEqual(end_of(d.replace(month=9), 'quarter'), q3)
+        self.assertEqual(end_of(d, 'quarter'), q4)
+        self.assertEqual(end_of(dt, 'quarter'), datetime.combine(q4, time.max))
+
+        # month
+        self.assertEqual(end_of(d, 'month'), d.replace(day=31))
+        self.assertEqual(end_of(dt, 'month'),
+                         datetime.combine(date(2077, 10, 31), time.max))
+
+        # week
+        self.assertEqual(end_of(d, 'week'), date(2077, 10, 24))
+        self.assertEqual(end_of(dt, 'week'),
+                         datetime.combine(datetime(2077, 10, 24), time.max))
+
+        # day
+        self.assertEqual(end_of(d, 'day'), d)
+        self.assertEqual(end_of(dt, 'day'), datetime.combine(dt, time.max))
+
+        # hour
+        with self.assertRaises(ValueError):
+            end_of(d, 'hour')
+        self.assertEqual(end_of(dt, 'hour'),
+                         datetime.combine(dt, time.max).replace(hour=dt.hour))
+
+        # invalid
+        with self.assertRaises(ValueError):
+            end_of(dt, 'crap')
 
 
 class TestDateRangeFunction(BaseCase):
