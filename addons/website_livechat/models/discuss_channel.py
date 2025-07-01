@@ -2,6 +2,7 @@
 
 from odoo import fields, models, _
 from odoo.addons.mail.tools.discuss import Store
+from datetime import datetime, timedelta
 
 
 class DiscussChannel(models.Model):
@@ -67,6 +68,31 @@ class DiscussChannel(models.Model):
             visitor=self.livechat_visitor_id.display_name or _("The visitor"),
             operator=operator or _("an operator"),
         )
+
+    def _get_livechat_session_fields_to_store(self):
+        fields_to_store = super()._get_livechat_session_fields_to_store()
+        domain = [
+            ("channel_type", "=", "livechat"),
+            ("livechat_visitor_id", "=", self.livechat_visitor_id.id),
+            (
+                "create_date",
+                ">=",
+                fields.Datetime.to_string(datetime.now() - timedelta(days=7)),
+            ),
+        ]
+        channels = self.env["discuss.channel"].search(domain, limit=5)
+        fields_to_store.append(
+            Store.One(
+                "livechat_visitor_id", [
+                    Store.Many(
+                        "discuss_channel_ids",
+                        value=channels,
+                    ),
+                ],
+                predicate=lambda channel: channel.channel_type == "livechat",
+            ),
+        )
+        return fields_to_store
 
     def message_post(self, **kwargs):
         """Override to mark the visitor as still connected.

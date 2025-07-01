@@ -467,6 +467,8 @@ class DiscussChannel(models.Model):
             last_msg_from_chatbot = message.author_id == chatbot_op
         return Markup("").join(parts)
 
+    def _get_livechat_session_fields_to_store(self):
+        return []
 
     # =======================
     # Chatbot
