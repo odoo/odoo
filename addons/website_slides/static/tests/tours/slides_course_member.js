@@ -16,6 +16,7 @@ registry.category("web_tour.tours").add("course_member", {
         {
             trigger: 'a:contains("Basics of Gardening - Test")',
             run: "click",
+            expectUnloadPage: true,
         },
         // Chatter is lazy loading. Wait for it.
         {
@@ -33,6 +34,7 @@ registry.category("web_tour.tours").add("course_member", {
         {
             trigger: 'a:contains("Join this Course")',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             // check membership
@@ -41,6 +43,7 @@ registry.category("web_tour.tours").add("course_member", {
         {
             trigger: 'a:contains("Gardening: The Know-How")',
             run: "click",
+            expectUnloadPage: true,
         },
         // eLearning: follow course by cliking on first lesson and going to fullscreen player
         {
@@ -135,6 +138,7 @@ registry.category("web_tour.tours").add("course_member", {
         {
             trigger: 'a:contains("End course")',
             run: "click",
+            expectUnloadPage: true,
         },
         // eLearning: ending course redirect to /slides, course is completed now
         {
@@ -145,6 +149,7 @@ registry.category("web_tour.tours").add("course_member", {
         {
             trigger: 'a:contains("Basics of Gardening")',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             trigger: 'button[data-bs-target="#ratingpopupcomposer"]:contains("Add Review")',
