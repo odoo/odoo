@@ -32,39 +32,41 @@ class BaseLanguageExport(models.TransientModel):
     model_name = fields.Char(string="Model Name", related="model_id.model")
     domain = fields.Char(string="Model Domain", default='[]')
     data = fields.Binary('File', readonly=True, attachment=False)
-    state = fields.Selection([('choose', 'choose'), ('get', 'get')], # choose language or get the file
+    state = fields.Selection([('choose', 'choose'), ('get', 'get')],  # choose language or get the file
                              default='choose')
 
     def act_getfile(self):
-        this = self[0]
-        lang = this.lang if this.lang != NEW_LANG_KEY else False
+        self.ensure_one()
+        lang = self.lang if self.lang != NEW_LANG_KEY else False
 
         with io.BytesIO() as buf:
-            if this.export_type == 'model':
-                ids = self.env[this.model_name].search(ast.literal_eval(this.domain)).ids
-                trans_export_records(lang, this.model_name, ids, buf, this.format, self.env)
+            if self.export_type == 'model':
+                ids = self.env[self.model_name].search(ast.literal_eval(self.domain)).ids
+                is_exported = trans_export_records(lang, self.model_name, ids, buf, self.format, self.env)
             else:
-                mods = sorted(this.mapped('modules.name')) or ['all']
-                trans_export(lang, mods, buf, this.format, self.env)
-            out = base64.encodebytes(buf.getvalue())
+                mods = sorted(self.mapped('modules.name')) or ['all']
+                is_exported = trans_export(lang, mods, buf, self.format, self.env)
+            out = is_exported and base64.encodebytes(buf.getvalue())
 
         filename = 'new'
         if lang:
             filename = tools.get_iso_codes(lang)
-        elif this.export_type == 'model':
-            filename = this.model_name.replace('.', '_')
+        elif self.export_type == 'model':
+            filename = self.model_name.replace('.', '_')
         elif len(mods) == 1:
             filename = mods[0]
-        extension = this.format
+        extension = self.format
         if not lang and extension == 'po':
             extension = 'pot'
         name = "%s.%s" % (filename, extension)
-        this.write({'state': 'get', 'data': out, 'name': name})
+
+        self.write({'state': 'get', 'data': out, 'name': name})
         return {
+            'name': self.env.ref('base.action_wizard_lang_export').name,
             'type': 'ir.actions.act_window',
             'res_model': 'base.language.export',
             'view_mode': 'form',
-            'res_id': this.id,
+            'res_id': self.id,
             'views': [(False, 'form')],
             'target': 'new',
         }
