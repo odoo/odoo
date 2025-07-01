@@ -38,6 +38,7 @@
             ('include', 'mass_mailing.iframe_css_assets_edit'),
             ('include', 'web_editor.wysiwyg_iframe_editor_assets'),
             ('include', 'html_builder.inside_builder_style'),
+            'mass_mailing_egg/static/src/iframe_assets/**/*',
         ],
         'mass_mailing_egg.assets_iframe_edit': [  # equivalent html_builder.assets_edit_frontend in website_builder_action.js
             # JS and style assets required to edit the mail content

@@ -5,8 +5,8 @@
             <div class="d-flex w-100 h-100">
                 <div class="flex-grow-1">
                     <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
-                    <iframe class="h-100" t-att-class="{'d-none': props.showThemeSelector}" t-ref="iframeRef"
-                        t-on-blur="onBlur"/>
+                    <iframe scrolling="no" t-att-class="{'d-none': props.showThemeSelector}"
+                        t-ref="iframeRef" t-on-blur="onBlur"/>
                 </div>
                 <div t-if="!props.readonly and props.themeOptions.withBuilder and !props.showThemeSelector"
                     class="o_mass_mailing_egg-builder_sidebar border-start border-dark o_builder_sidebar_open">

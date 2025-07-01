@@ -1,5 +1,13 @@
 import { parseHTML } from "@html_editor/utils/html";
-import { Component, onMounted, onWillDestroy, status, useState, useSubEnv } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillDestroy,
+    status,
+    useEffect,
+    useState,
+    useSubEnv,
+} from "@odoo/owl";
 import { LazyComponent, loadBundle } from "@web/core/assets";
 import { Deferred } from "@web/core/utils/concurrency";
 import { uniqueId } from "@web/core/utils/functions";
@@ -57,6 +65,19 @@ export class MassMailingIframe extends Component {
                 });
             }
         });
+        useEffect(
+            () => {
+                this.iframeLoaded.then(() => {
+                    if (status(this) === "destroyed") {
+                        return;
+                    }
+                    this.iframeRef.el.contentDocument.body.classList[
+                        this.state.showFullscreen ? "add" : "remove"
+                    ]("o_mass_mailing_iframe_fullscreen");
+                });
+            },
+            () => [this.state.showFullscreen]
+        );
         if (!this.props.readonly && this.props.themeOptions.withBuilder) {
             this.state.showFullscreen = false;
         } else if (!this.props.readonly) {
@@ -75,9 +96,23 @@ export class MassMailingIframe extends Component {
         if (status(this) === "destroyed") {
             return;
         }
+        const htmlResizeObserver = new ResizeObserver(() => {
+            const height = Math.trunc(
+                this.iframeRef.el.contentDocument.body
+                    .querySelector(IFRAME_VALUE_SELECTOR)
+                    .getBoundingClientRect().height
+            );
+            this.iframeRef.el.style.height = height + "px";
+            // this.iframeRef.el.style.height = height + "px";
+            // console.log('coucou');
+            // debugger;
+        });
         // Set `ready` symbol for tours
         this.iframeRef.el.contentDocument.head.appendChild(this.renderHeadContent());
         this.iframeRef.el.contentDocument.body.appendChild(this.renderBodyContent());
+        htmlResizeObserver.observe(
+            this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
+        );
         if (this.props.readonly) {
             this.retargetLinks(
                 this.iframeRef.el.contentDocument.querySelector(IFRAME_VALUE_SELECTOR)
