@@ -12,7 +12,7 @@ class ReportProjectTaskUser(models.Model):
     _order = 'name desc, project_id'
     _auto = False
 
-    name = fields.Char(string='Task', readonly=True)
+    name = fields.Char(string='Task Title', readonly=True)
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
                                 string='Assignees', readonly=True)
     create_date = fields.Datetime("Create Date", readonly=True)
@@ -51,7 +51,7 @@ class ReportProjectTaskUser(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     stage_id = fields.Many2one('project.task.type', string='Stage', readonly=True)
-    task_id = fields.Many2one('project.task', string='Tasks', readonly=True)
+    task_id = fields.Many2one('project.task', string='Task', readonly=True)
     tag_ids = fields.Many2many('project.tags', relation='project_tags_project_task_rel',
         column1='project_task_id', column2='project_tags_id',
         string='Tags', readonly=True)
