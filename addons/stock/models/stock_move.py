@@ -2046,10 +2046,10 @@ Please change the quantity done or the rounding precision in your settings.""",
         )
 
     def _check_quantity(self):
-        return self.env['stock.quant'].search([
+        return self.env['stock.quant'].sudo().search([
             ('product_id', 'in', self.product_id.ids),
             ('location_id', 'child_of', self.location_dest_id.ids),
-            ('lot_id', 'in', self.lot_ids.ids)
+            ('lot_id', 'in', self.sudo().lot_ids.ids)
         ]).check_quantity()
 
     def _action_done(self, cancel_backorder=False):
