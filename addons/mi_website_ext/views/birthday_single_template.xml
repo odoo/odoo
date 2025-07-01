@@ -1,11 +1,11 @@
 <odoo>
     <template id="birthday_single_template" name="Birthday View">
-        <t t-call="website.layout">
-            <div id="splash-loader">
-                <div class="splash-wrapper">
-                    <div class="splash-spinner"></div>
-                </div>
+        <div id="splash-loader">
+            <div class="splash-wrapper">
+                <div class="splash-spinner"></div>
             </div>
+        </div>
+        <t t-call="website.layout">
             <t t-call-assets="mi_website_ext.assets_birthday_single" />
             <t t-if="employee">
                 <div class="content_container">

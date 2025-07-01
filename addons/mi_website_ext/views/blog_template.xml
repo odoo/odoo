@@ -1,11 +1,11 @@
 <odoo>
     <template id="blog_template" name="Blog View">
-        <t t-call="website.layout">
-            <div id="splash-loader">
-                <div class="splash-wrapper">
-                    <div class="splash-spinner"></div>
-                </div>
+        <div id="splash-loader">
+            <div class="splash-wrapper">
+                <div class="splash-spinner"></div>
             </div>
+        </div>
+        <t t-call="website.layout">
             <div class="content_container">
                 <div class="blog_container">
                     <h1 class="blog_title">Blog</h1>
@@ -21,8 +21,12 @@
                                         <t t-else="">
                                             <img src="/mi_website_ext/static/src/img/imagetester.jpg" t-att-alt="post.name"/>
                                         </t>
-                                        <h3><t t-esc="post.name"/></h3>
-                                        <p><span t-field="post.publish_date" t-options='{"format": "long"}'/></p>
+                                        <h3>
+                                            <t t-esc="post.name"/>
+                                        </h3>
+                                        <p>
+                                            <span t-field="post.publish_date" t-options='{"format": "long"}'/>
+                                        </p>
                                     </a>
                                 </t>
                             </t>

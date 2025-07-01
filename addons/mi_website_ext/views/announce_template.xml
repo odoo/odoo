@@ -1,11 +1,11 @@
 <odoo>
     <template id="announce_template" name="Announce View">
-        <t t-call="website.layout">
-            <div id="splash-loader">
-                <div class="splash-wrapper">
-                    <div class="splash-spinner"></div>
-                </div>
+        <div id="splash-loader">
+            <div class="splash-wrapper">
+                <div class="splash-spinner"></div>
             </div>
+        </div>
+        <t t-call="website.layout">
             <t t-if="publication">
                 <t t-call-assets="mi_website_ext.assets_announce" />
                 <div class="content_container">
