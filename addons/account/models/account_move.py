@@ -5759,6 +5759,7 @@ class AccountMove(models.Model):
                         move._post()
                 except UserError as e:
                     move.checked = False
+                    move.auto_post = 'no'
                     msg = _('The move could not be posted for the following reason: %(error_message)s', error_message=e)
                     move.message_post(body=msg, message_type='comment')
 
