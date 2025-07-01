@@ -15,8 +15,10 @@ class TestSessionInfo(common.HttpCase):
         cls.company_b = cls.env['res.company'].create({'name': "B"})
         cls.company_c = cls.env['res.company'].create({'name': "C"})
         cls.company_b_branch = cls.env['res.company'].create({'name': "B Branch", 'parent_id': cls.company_b.id})
-        cls.allowed_companies = cls.company_a + cls.company_b_branch + cls.company_c
-        cls.disallowed_ancestor_companies = cls.company_b
+        cls.company_c_branch = cls.env['res.company'].create({'name': "C Branch", 'parent_id': cls.company_c.id})
+        cls.company_c_branch_branch = cls.env['res.company'].create({'name': "C Branch Branch", 'parent_id': cls.company_c_branch.id})
+        cls.allowed_companies = cls.company_a + cls.company_b_branch + cls.company_c + cls.company_c_branch_branch
+        cls.disallowed_ancestor_companies = cls.company_b + cls.company_c_branch
 
         cls.user_password = "info"
         cls.user = common.new_test_user(
