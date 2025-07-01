@@ -7,5 +7,11 @@
         <span name="sale_product_configurator_list_total" position="attributes">
             <attribute name="class" remove="h4" add="h5" separator=" "/>
         </span>
+        <tr name="product_row" position="attributes">
+            <attribute
+                name="t-att-data-publish"
+                add="product.website_published and 'on' or 'off'"
+            />
+        </tr>
     </t>
 </templates>

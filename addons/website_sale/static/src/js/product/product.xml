@@ -31,6 +31,16 @@
             position="attributes">
             <attribute name="class" remove="h5" add="h6" separator=" "/>
         </xpath>
+        <td name="product_name_description" position="inside">
+            <a
+                t-if="!this.props.website_published"
+                role="button"
+                class="btn btn-sm btn-danger"
+                title="This product is unpublished."
+            >
+                Unpublished
+            </a>
+        </td>
     </t>
 
     <t t-inherit="sale.product_price" t-inherit-mode="extension">

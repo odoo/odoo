@@ -148,6 +148,12 @@ class ProductProduct(models.Model):
             return False
         return request.website.has_ecommerce_access()
 
+    def _get_snippet_filter_domain(self):
+        """override of website.models._get_snippet_filter_domain to show unpublished products on
+        snippets.
+        """
+        return []
+
     @api.onchange('public_categ_ids')
     def _onchange_public_categ_ids(self):
         if self.public_categ_ids:
