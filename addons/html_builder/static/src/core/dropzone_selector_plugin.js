@@ -3,6 +3,9 @@ import { Plugin } from "@html_editor/plugin";
 const card_parent_handlers =
     ".s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_newsletter_centered .row > div, .s_company_team_spotlight .row > div, .s_comparisons_horizontal .row > div, .s_company_team_grid .row > div, .s_company_team_card .row > div, .s_carousel_cards_item";
 const special_cards_selector = `.s_card.s_timeline_card, div:is(${card_parent_handlers}) > .s_card`;
+const blockquote_parent_handlers =
+    ".s_reviews_wall .row > div";
+const special_blockquote_selector = `div:is(${blockquote_parent_handlers}) > .s_blockquote`;
 
 const so_snippet_addition_drop_in =
     ":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section:not(.s_snippet_group), > div:not(.o_hook_drop_zone)))";
@@ -32,12 +35,12 @@ export class DropZoneSelectorPlugin extends Plugin {
                         ".s_card",
                     ].join(", ");
                 },
-                exclude: `${special_cards_selector}`,
+                exclude: `${special_cards_selector}, ${special_blockquote_selector}`,
                 dropIn: "nav",
                 get dropNear() {
                     return `p, h1, h2, h3, ul, ol, div:not(.o_grid_item_image) > img, div:not(.o_grid_item_image) > a, .btn, ${this.plugin
                         .getResource("so_content_addition_selector")
-                        .join(", ")}, .s_card:not(${special_cards_selector})`;
+                        .join(", ")}, .s_card:not(${special_cards_selector}), .s_blockquote:not(${special_blockquote_selector})`;
                 },
                 excludeNearParent: so_snippet_addition_drop_in,
             },

@@ -11,6 +11,9 @@ import { ancestors, closestElement, findFurthest } from "@html_editor/utils/dom_
 import { childNodeIndex, DIRECTIONS, nodeSize } from "@html_editor/utils/position";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
+const blockquote_parent_handlers = ".s_reviews_wall .row > div";
+const special_blockquote_selector = `div:is(${blockquote_parent_handlers}) > .s_blockquote`;
+
 class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
     static dependencies = ["imageToolOption", "history", "selection", "split"];
@@ -26,7 +29,7 @@ class AnimateOptionPlugin extends Plugin {
                 OptionComponent: AnimateOption,
                 selector: ".o_animable, section .row > div, img, .fa, .btn, .o_animated_text",
                 exclude:
-                    "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize",
+                    `[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, ${special_blockquote_selector}`,
                 props: this.animateOptionProps,
                 // todo: to implement
                 // textSelector: ".o_animated_text",
