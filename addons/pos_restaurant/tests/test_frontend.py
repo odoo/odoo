@@ -217,12 +217,12 @@ class TestFrontend(TestFrontendCommon):
         })
 
         self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('pos_restaurant_sync', step_delay=300)
+        self.start_pos_tour('pos_restaurant_sync')
 
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
-        self.start_pos_tour('pos_restaurant_sync_second_login', step_delay=300)
+        self.start_pos_tour('pos_restaurant_sync_second_login')
 
         self.assertEqual(0, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 2.2), ('state', '=', 'draft')]))
@@ -238,7 +238,7 @@ class TestFrontend(TestFrontendCommon):
         # disable kitchen printer to avoid printing errors
         self.pos_config.is_order_printer = False
         self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_pos_tour('ControlButtonsTour', login="pos_admin", step_delay=100)
+        self.start_pos_tour('ControlButtonsTour', login="pos_admin")
 
     def test_04_ticket_screen(self):
         self.pos_config.is_order_printer = False
