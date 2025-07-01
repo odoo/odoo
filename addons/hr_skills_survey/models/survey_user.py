@@ -46,7 +46,6 @@ class SurveyUser_Input(models.Model):
                     'date_end': date_start + relativedelta(months=validity_month) if validity_month else False,
                     'description': html2plaintext(survey.description) if survey.description else '',
                     'line_type_id': line_type.id if line_type else False,
-                    'display_type': 'certification',
                     'survey_id': survey.id,
                 }
                 if existing_resume_survey := resume_survey_by_ids.get((employee, survey)):
