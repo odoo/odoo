@@ -123,7 +123,7 @@
                                     </div>
                                     <div class="col align-content-center">
                                         <div class="d-flex justify-content-center">
-                                            <field name="old_application_count" class="number"/>
+                                            <field name="open_application_count" class="number"/>
                                             <div class=" number_description text-body-secondary fs-4 lh-1">
                                                 in<br/>progress
                                             </div>
@@ -388,7 +388,7 @@
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="department_id"/>
-                <field name="application_count" string="Applications" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
+                <field name="open_application_count" string="Open Applications" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
                 <field name="no_of_recruitment"/>
             </field>
             <field name="no_of_employee" position="after">
