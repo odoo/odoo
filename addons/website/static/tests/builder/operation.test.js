@@ -1,16 +1,16 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
+import { Operation } from "@html_builder/core/operation";
+import { HistoryPlugin } from "@html_editor/core/history_plugin";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, Deferred, delay, hover, press, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { Operation } from "@html_builder/core/operation";
-import { HistoryPlugin } from "@html_editor/core/history_plugin";
 import {
     addActionOption,
     addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "./website_helpers";
-import { BuilderAction } from "@html_builder/core/builder_action";
 
 describe("Operation", () => {
     test("handle 3 concurrent cancellable operations (with delay)", async () => {
