@@ -13,20 +13,30 @@ function prependOriginToImages(doc, origin) {
 }
 
 /**
- * Fills clipboard data, also with the
- * application/vnd.odoo.odoo-editor mimetype so that it can recognized
- * on paste inside an editor.
- * @param {ClipboardEvent} ev copy event
+ * Fills clipboard or dataTransfer data, including the
+ * application/vnd.odoo.odoo-editor MIME type so it can be recognized
+ * when pasted or dropped inside an editor.
+ *
+ * @param {ClipboardEvent | DragEvent} ev - The event on which to set the data.
+ * @param {'clipboardData' | 'dataTransfer'} transferObjectProperty
  * @param {DocumentFragment} clonedContents
+ * @param {Object} [options]
+ * @param {boolean} [options.setEditorTransferData=true]
  */
-export function fillClipboardData(ev, clonedContents, { fillEditorClipboard = true } = {}) {
+
+export function fillHtmlTransferData(
+    ev,
+    transferObjectProperty,
+    clonedContents,
+    { setEditorTransferData = true } = {}
+) {
     const doc = ev.target.ownerDocument;
     const dataHtmlElement = doc.createElement("data");
     dataHtmlElement.append(clonedContents);
     prependOriginToImages(dataHtmlElement, doc.defaultView.location.origin);
     const htmlContent = dataHtmlElement.innerHTML;
-    ev.clipboardData.setData("text/html", htmlContent);
-    if (fillEditorClipboard) {
-        ev.clipboardData.setData("application/vnd.odoo.odoo-editor", htmlContent);
+    ev[transferObjectProperty].setData("text/html", htmlContent);
+    if (setEditorTransferData) {
+        ev[transferObjectProperty].setData("application/vnd.odoo.odoo-editor", htmlContent);
     }
 }
