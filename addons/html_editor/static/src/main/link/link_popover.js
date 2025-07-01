@@ -67,14 +67,15 @@ export class LinkPopover extends Component {
 
         const textContent = cleanZWChars(this.props.linkElement.textContent);
         const labelEqualsUrl =
-            textContent === this.props.linkElement.href ||
-            textContent + "/" === this.props.linkElement.href;
+            textContent === this.props.linkElement.getAttribute("href") ||
+            textContent + "/" === this.props.linkElement.getAttribute("href");
         const computedStyle = this.props.document.defaultView.getComputedStyle(
             this.props.linkElement
         );
         this.state = useState({
             editing: this.props.LinkPopoverState.editing,
-            url: this.props.linkElement.href || this.deduceUrl(textContent),
+            // `.getAttribute("href")` instead of `.href` to keep relative url
+            url: this.props.linkElement.getAttribute("href") || this.deduceUrl(textContent),
             label: labelEqualsUrl ? "" : textContent,
             previewIcon: {
                 /** @type {'fa'|'imgSrc'|'mimetype'} */
@@ -230,12 +231,12 @@ export class LinkPopover extends Component {
         this.updateUrlAndLabel();
     }
     updateUrlAndLabel() {
-        this.state.url = this.props.linkElement.href;
+        this.state.url = this.props.linkElement.getAttribute("href");
 
         const textContent = cleanZWChars(this.props.linkElement.textContent);
         const labelEqualsUrl =
-            textContent === this.props.linkElement.href ||
-            textContent + "/" === this.props.linkElement.href;
+            textContent === this.props.linkElement.getAttribute("href") ||
+            textContent + "/" === this.props.linkElement.getAttribute("href");
         this.state.label = labelEqualsUrl ? "" : textContent;
     }
     async onClickCopy(ev) {
@@ -302,12 +303,7 @@ export class LinkPopover extends Component {
      */
     async updateDocumentState() {
         const url = this.state.url;
-        let urlObject = null;
-        try {
-            urlObject = new URL(url);
-        } catch {
-            // skip
-        }
+        const urlObject = URL.parse(url, this.props.document.URL);
         if (
             url &&
             (url.startsWith("/web/content/") ||
@@ -380,7 +376,7 @@ export class LinkPopover extends Component {
             return;
         }
         try {
-            url = new URL(this.state.url); // relative to absolute
+            url = new URL(this.state.url, this.props.document.URL); // relative to absolute
         } catch {
             // Invalid URL, might happen with editor unsuported protocol. eg type
             // `geo:37.786971,-122.399677`, become `http://geo:37.786971,-122.399677`
@@ -423,7 +419,7 @@ export class LinkPopover extends Component {
             // Set state based on cached link meta data
             // for record missing errors, we push a warning that the url is likely invalid
             // for other errors, we log them to not block the ui
-            const internalMetadata = await this.props.getInternalMetaData(this.state.url);
+            const internalMetadata = await this.props.getInternalMetaData(url.href);
             if (internalMetadata.favicon) {
                 this.state.previewIcon = {
                     type: "imgSrc",
