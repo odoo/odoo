@@ -159,7 +159,7 @@
                     <img class="w-100 h-100 rounded-2 object-fit-cover" t-att-class="threadAvatarAttClass" t-att-src="thread.avatarUrl" alt="Thread Image"/>
                     <ThreadIcon t-if="thread.channel_type?.includes('chat') or (thread.channel_type === 'channel' and !thread.group_public_id)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute top-100 start-100 translate-middle mt-n1 ms-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
                 </div>
-                <span t-if="!store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarChannel-itemName mx-2 text-truncate opacity-trigger-hove" t-att-class="itemNameAttClass">
+                <span t-if="!store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarChannel-itemName mx-2 text-truncate text-start lh-base opacity-trigger-hove" t-att-class="itemNameAttClass">
                     <t t-esc="thread.displayName"/>
                 </span>
             </div>
