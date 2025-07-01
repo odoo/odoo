@@ -211,3 +211,46 @@ class TestMrpReplenish(TestMrpCommon):
         lead_days_date = datetime.strptime(
             loads(repl_info.json_lead_days)['lead_days_date'], '%m/%d/%Y').date()
         self.assertEqual(lead_days_date, fields.Date.today() + timedelta(days=365))
+
+    def test_replenish_multi_level_bom_with_pbm_sam(self):
+        """
+        Ensure that in a 3-step manufacturing flow ('pbm_sam') with MTO + reordering rule,
+        a multi-level BOM triggers separate MOs for each level without constraint errors.
+        1.) Set warehouse manufacture to (manufacture_steps == 'pbm_sam')
+        2.) Product_1 (enable manufacture and mto routes)
+        3.) Product_4 (enable manufacture)
+        4.) Add Product_1 as bom for product_4
+        5.) Add a reordering rule (manufacture) for product_4
+        6.) trigger replenishment for product_4
+        """
+        self.warehouse = self.env.ref('stock.warehouse0')
+        self.warehouse.write({'manufacture_steps': 'pbm_sam'})
+        self.warehouse.mto_pull_id.route_id.active = True
+
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
+        route_mto = self.warehouse.mto_pull_id.route_id.id
+
+        self.product_1.write({
+            'route_ids': [(6, 0, [route_mto, route_manufacture])]
+        })  # Component
+        self.product_4.write({
+            'route_ids': [(6, 0, [route_manufacture])],
+            'bom_ids': [(6, 0, [self.bom_1.id])]
+        })  # Finished Product
+
+        # Create reordering rule
+        self.env['stock.warehouse.orderpoint'].create({
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': self.product_4.id,
+            'route_id': route_manufacture,
+            'product_min_qty': 1,
+            'product_max_qty': 1,
+        })
+        self.product_4.orderpoint_ids.action_replenish()
+
+        # Check both MOs were created
+        mo_final = self.env['mrp.production'].search([('product_id', '=', self.product_4.id)])
+        mo_component = self.env['mrp.production'].search([('product_id', '=', self.product_1.id)])
+
+        self.assertEqual(len(mo_final), 1, "Expected one MO for the final product.")
+        self.assertEqual(len(mo_component), 1, "Expected one MO for the manufactured BOM component.")
