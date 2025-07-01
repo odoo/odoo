@@ -261,6 +261,10 @@ $input-placeholder-color: mix($input-bg, $input-color) !default;
 $input-disabled-bg: mix($input-color, $input-bg, 10%) !default;
 
 $form-check-input-border: ($input-border-width or 1px) solid $input-border-color !default;
+// We limit the border radius for checkboxes to a maximum of 0.25rem
+// (BS5 default), to prevent checkboxes from appearing too rounded and
+// resembling radio buttons.
+$form-check-input-border-radius: if($input-border-radius != null, min($input-border-radius, .25rem), null) !default;
 // Note that using "input-disabled-bg" here might seems strange at first but it
 // is actually the most consistent found way at the moment:
 // - It does not depend on the "border-color", which is important as the
