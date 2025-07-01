@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import date, datetime, time
+from datetime import date, datetime, time, timedelta, timezone
 
 import pytz
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo.tests import BaseCase
 from odoo.tools.date_utils import (
@@ -10,12 +11,27 @@ from odoo.tools.date_utils import (
     date_range,
     end_of,
     get_fiscal_year,
+    localized,
     start_of,
     subtract,
+    to_timezone,
 )
 
 
 class TestDateUtils(BaseCase):
+
+    @freeze_time('2024-05-01 14:00:00')
+    def test_localized_timezone(self):
+        dt = datetime.now()
+        self.assertIsNotNone(localized(dt).tzinfo)
+        tz = timezone(timedelta(hours=5))
+        self.assertIs(localized(dt.astimezone(tz)).tzinfo, tz)
+
+        dtz = dt.astimezone(tz)
+        self.assertEqual(dtz.hour, 19)
+        self.assertIs(dtz.tzinfo, tz)
+        self.assertEqual(to_timezone(None)(dtz), dt)
+        self.assertEqual(to_timezone(tz)(dt), dtz)
 
     def test_fiscal_year(self):
         self.assertEqual(get_fiscal_year(date(2024, 12, 31)), (date(2024, 1, 1), date(2024, 12, 31)))
