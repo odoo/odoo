@@ -221,7 +221,8 @@ class I18n(Command):
         _logger.info("Exporting %s (%s) to %s", source, lang_code or 'pot', destination)
 
         if destination == 'stdout':
-            trans_export(lang_code, module_names, sys.stdout.buffer, 'po', env)
+            if not trans_export(lang_code, module_names, sys.stdout.buffer, 'po', env):
+                _logger.warning("No translatable terms were found in %s.", module_names)
             return
 
         path.parent.mkdir(exist_ok=True)
@@ -229,7 +230,8 @@ class I18n(Command):
         if export_format == 'pot':
             export_format = 'po'
         with path.open('wb') as outfile:
-            trans_export(lang_code, module_names, outfile, export_format, env)
+            if not trans_export(lang_code, module_names, outfile, export_format, env):
+                _logger.warning("No translatable terms were found in %s.", module_names)
 
     def _loadlang(self, parsed_args):
         with Registry(parsed_args.db_name).cursor() as cr:
