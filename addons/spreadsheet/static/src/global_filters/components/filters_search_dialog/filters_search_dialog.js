@@ -61,9 +61,8 @@ export class FiltersSearchDialog extends Component {
         return _t(node.globalFilter.label); // Label is extracted from the spreadsheet json file
     }
 
-    setGlobalFilterValue(node, value, displayNames) {
+    setGlobalFilterValue(node, value) {
         node.value = value;
-        node.displayNames = displayNames;
     }
 
     getTranslatedFilterLabel(filter) {
@@ -88,7 +87,6 @@ export class FiltersSearchDialog extends Component {
                 this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", {
                     id: filter.id,
                     value: node.value,
-                    displayNames: node.displayNames,
                 });
             } else {
                 this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: filter.id });
