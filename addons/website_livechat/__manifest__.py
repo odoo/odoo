@@ -30,18 +30,18 @@
             "website_livechat/static/src/**/common/**/*",
         ],
         'website.assets_wysiwyg': [
-            'website_livechat/static/src/scss/**/*',
+            "website/static/src/**/common/**/*",
         ],
         'website.assets_editor': [
             'website_livechat/static/src/js/**/*',
         ],
         'web.assets_frontend': [
-            'website_livechat/static/src/patch/assets_frontend/website.scss',
+            "website_livechat/static/src/**/common/**/*",
+            'website_livechat/static/src/**/frontend/**/*',
         ],
         'web.assets_backend': [
             "website_livechat/static/src/**/common/**/*",
             'website_livechat/static/src/**/*',
-            ('remove', 'website_livechat/static/src/scss/**/*'),
         ],
         'web.assets_unit_tests': [
             'website_livechat/static/tests/**/*',

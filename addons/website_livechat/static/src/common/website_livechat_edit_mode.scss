@@ -1,0 +1,10 @@
+body.editor_enable .o-livechat-root {
+    &::part(ChatHub),
+    &::part(openChatButton) {
+        visibility: hidden;
+    }
+}
+
+body:has(.o_website_preview):not(.o_builder_open) .o-mail-ChatHub {
+    visibility: hidden;
+}
