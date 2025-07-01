@@ -19,6 +19,9 @@ export function useAutoresize(ref, options = {}) {
             if (el) {
                 resize = (programmaticResize = false) => {
                     wasProgrammaticallyResized = programmaticResize;
+                    if (options.ignoreIfEmpty && !el.value) {
+                        return;
+                    }
                     if (el instanceof HTMLInputElement) {
                         resizeInput(el, options);
                     } else {
