@@ -104,7 +104,7 @@ class Im_LivechatReportChannel(models.Model):
                 to_char(date_trunc('hour', C.create_date), 'HH24') as start_hour,
                 to_char(date_trunc('minute', C.create_date), 'YYYY-MM-DD HH:MI:SS') AS start_date_minutes,
                 EXTRACT(dow from C.create_date)::text AS day_number,
-                EXTRACT('epoch' FROM message_vals.last_message_dt - c.create_date)/60 AS duration,
+                EXTRACT('epoch' FROM COALESCE(C.livechat_end_dt, NOW() AT TIME ZONE 'utc') - C.create_date)/60 AS duration,
                 CASE
                     WHEN channel_member_history.has_agent AND channel_member_history.has_bot THEN
                         EXTRACT('epoch' FROM message_vals.first_agent_message_dt - message_vals.last_bot_message_dt)
@@ -211,7 +211,6 @@ class Im_LivechatReportChannel(models.Model):
         LEFT JOIN LATERAL
             (
                 SELECT COUNT(DISTINCT M.id) AS message_count,
-                       MAX(M.create_date) as last_message_dt,
                        MIN(CASE WHEN H.livechat_member_type = 'agent' THEN M.create_date END) AS first_agent_message_dt,
                        MAX(CASE WHEN H.livechat_member_type = 'bot' THEN M.create_date END) AS last_bot_message_dt,
                        MIN(CASE WHEN M.author_id = C.livechat_operator_id THEN M.create_date END) AS first_agent_message_dt_legacy

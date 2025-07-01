@@ -158,13 +158,10 @@ class DiscussChannel(models.Model):
         "(channel_type, create_date) WHERE channel_type = 'livechat'"
     )
 
-    @api.depends('message_ids')
+    @api.depends("livechat_end_dt")
     def _compute_duration(self):
-        last_msg_by_channel_id = {
-            message.res_id: message for message in self._get_last_messages()
-        }
         for record in self:
-            end = last.date if (last := last_msg_by_channel_id.get(record.id)) else fields.Datetime.now()
+            end = record.livechat_end_dt or fields.Datetime.now()
             record.duration = (end - record.create_date).total_seconds() / 3600
 
     @api.depends("livechat_end_dt")
