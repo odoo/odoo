@@ -104,16 +104,6 @@ class AccountChartTemplate(models.AbstractModel):
         ], limit=1)
         self.ref('demo_bank_statement_1').line_ids[0].line_ids[1]['account_id'] = current_year_earnings_account.id
 
-        # We want the "Line with Bank Fees" reco model to be applied on the bank fees statement line
-        demo_bank_statement_line_5 = self.ref('demo_bank_statement_line_5', raise_if_not_found=False)
-        if demo_bank_statement_line_5:
-            demo_bank_statement_line_5.line_ids[0]['reconcile_model_id'] = self.ref('reconcile_from_label')
-
-        # The chart template creates a Bank Fees model, if possible, we want to apply it
-        bank_fees_statement_line = self.ref('demo_bank_statement_line_1', raise_if_not_found=False)
-        if bank_fees_statement_line:
-            bank_fees_statement_line.line_ids[0]['reconcile_model_id']: self.ref('bank_fees_reco', raise_if_not_found=False)
-
     @api.model
     def _get_demo_data_bank(self, company=False):
         if company.root_id.partner_id.bank_ids:
