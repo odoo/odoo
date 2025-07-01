@@ -3,8 +3,9 @@
 from datetime import timedelta
 
 from odoo import fields
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo.tests.common import HttpCase
 from odoo.exceptions import UserError
 
 
@@ -1007,3 +1008,52 @@ class TestProcurement(TestMrpCommon):
 
         # Check the generated MO
         self.assertEqual(mo.product_qty, 45)
+
+
+@tagged('post_install', '-at_install')
+class TestReorderingRule(HttpCase, TestMrpCommon):
+
+    def test_edit_rr_for_confirmed_mo(self):
+        self.warehouse = self.env.ref('stock.warehouse0')
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'is_storable': True,
+            'is_favorite': True,
+            'route_ids': [(4, self.warehouse.manufacture_pull_id.route_id.id)],
+        })
+        component = self.env['product.product'].create({
+            'name': 'Test Component',
+            'is_storable': True,
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1})],
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Test Orderpoint',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 0.0,
+            'product_max_qty': 0.0,
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': product.id,
+            'bom_id': bom.id,
+            'orderpoint_id': orderpoint.id,
+            'product_uom_qty': 10.0,
+        })
+        self.env['mrp.workorder'].create({
+            'name': "Test Work Order",
+            'production_id': mo.id,
+            'workcenter_id': self.workcenter_1.id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'duration_expected': 5000,
+        })
+        mo.action_confirm()
+
+        url = "/odoo/manufacturing"
+        self.start_tour(url, 'mrp_reordering_rule_onchange_tour', login="admin")
