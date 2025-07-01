@@ -36,6 +36,8 @@ class HrJob(models.Model):
         help="Select the location where the applicant will work. Addresses listed here are defined on the company's contact information.")
     application_ids = fields.One2many('hr.applicant', 'job_id', "Job Applications")
     application_count = fields.Integer(compute='_compute_application_count', string="Application Count")
+    open_application_count = fields.Integer(compute='_compute_open_application_count', string="Open Application Count",
+                                            help="Number of applications that are still ongoing (not hired or refused)")
     all_application_count = fields.Integer(compute='_compute_all_application_count', string="All Application Count")
     new_application_count = fields.Integer(
         compute='_compute_new_application_count', string="New Application",
@@ -179,6 +181,15 @@ class HrJob(models.Model):
         result = {job.id: count for job, count in read_group_result}
         for job in self:
             job.application_count = result.get(job.id, 0)
+
+    def _compute_open_application_count(self):
+        hired_stages = self.env['hr.recruitment.stage'].search([('hired_stage', '=', True)])
+        result = dict(self.env['hr.applicant']._read_group([
+            ('job_id', 'in', self.ids),
+            ('stage_id', 'not in', hired_stages.ids),
+        ], ['job_id'], ['__count']))
+        for job in self:
+            job.open_application_count = result.get(job, 0)
 
     def _compute_employee_count(self):
         res = {
