@@ -77,8 +77,8 @@ export function patchWebsocketWorkerWithCleanup(params = {}) {
             return new WebSocketMock();
         },
     });
-    patchWithCleanup(websocketWorker || WebsocketWorker.prototype, params);
     websocketWorker = websocketWorker || new WebsocketWorker();
+    patchWithCleanup(websocketWorker, params);
     websocketWorker.INITIAL_RECONNECT_DELAY = 0;
     websocketWorker.RECONNECT_JITTER = 0;
     patchWithCleanup(browser, {
