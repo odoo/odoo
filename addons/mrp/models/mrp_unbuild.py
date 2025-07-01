@@ -201,25 +201,26 @@ class MrpUnbuild(models.Model):
         # TODO: Will fail if user do more than one unbuild with lot on the same MO. Need to check what other unbuild has aready took
         qty_already_used = defaultdict(float)
         for move in produce_moves | consume_moves:
-            original_move = move in produce_moves and self.mo_id.move_raw_ids or self.mo_id.move_finished_ids
-            original_move = original_move.filtered(lambda m: m.product_id == move.product_id)
-            if not original_move:
-                move.quantity = float_round(move.product_uom_qty, precision_rounding=move.product_uom.rounding)
-                continue
-            needed_quantity = move.product_uom_qty
-            moves_lines = original_move.mapped('move_line_ids')
-            if move in produce_moves and self.lot_id:
-                moves_lines = moves_lines.filtered(lambda ml: self.lot_id in ml.produce_line_ids.lot_id)  # FIXME sle: double check with arm
-            for move_line in moves_lines:
-                # Iterate over all move_lines until we unbuilded the correct quantity.
-                taken_quantity = min(needed_quantity, move_line.quantity - qty_already_used[move_line])
-                taken_quantity = float_round(taken_quantity, precision_rounding=move.product_uom.rounding)
-                if taken_quantity:
-                    move_line_vals = self._prepare_move_line_vals(move, move_line, taken_quantity)
-                    unbuild_move_line = self.env["stock.move.line"].create(move_line_vals)
-                    needed_quantity -= taken_quantity
-                    qty_already_used[move_line] += taken_quantity
-                    unbuild_move_line._apply_putaway_strategy()
+            if float_compare(move.product_uom_qty, move.quantity, precision_rounding=move.product_uom.rounding) > 0:
+                original_move = move in produce_moves and self.mo_id.move_raw_ids or self.mo_id.move_finished_ids
+                original_move = original_move.filtered(lambda m: m.product_id == move.product_id)
+                if not original_move:
+                    move.quantity = float_round(move.product_uom_qty, precision_rounding=move.product_uom.rounding)
+                    continue
+                needed_quantity = move.product_uom_qty - move.quantity
+                moves_lines = original_move.mapped('move_line_ids')
+                if move in produce_moves and self.lot_id:
+                    moves_lines = moves_lines.filtered(lambda ml: self.lot_id in ml.produce_line_ids.lot_id)  # FIXME sle: double check with arm
+                for move_line in moves_lines:
+                    # Iterate over all move_lines until we unbuilded the correct quantity.
+                    taken_quantity = min(needed_quantity, move_line.quantity - qty_already_used[move_line])
+                    taken_quantity = float_round(taken_quantity, precision_rounding=move.product_uom.rounding)
+                    if taken_quantity:
+                        move_line_vals = self._prepare_move_line_vals(move, move_line, taken_quantity)
+                        unbuild_move_line = self.env["stock.move.line"].create(move_line_vals)
+                        needed_quantity -= taken_quantity
+                        qty_already_used[move_line] += taken_quantity
+                        unbuild_move_line._apply_putaway_strategy()
 
         (finished_moves | consume_moves | produce_moves).picked = True
         finished_moves._action_done()

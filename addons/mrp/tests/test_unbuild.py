@@ -990,6 +990,14 @@ class TestUnbuild(TestMrpCommon):
         """Check the data of the unbuild of a non-storable product.
         """
         self.product_4.is_storable = False
+        self.product_3.is_storable = False
+
+        self.env['mrp.bom.byproduct'].create({
+            'bom_id': self.bom_1.id,
+            'product_id': self.product_3.id,
+            'product_qty': 1,
+            'product_uom_id': self.product_3.uom_id.id,
+        })
 
         # Create mo
         mo_form = Form(self.env['mrp.production'])
@@ -1011,11 +1019,13 @@ class TestUnbuild(TestMrpCommon):
         unbuild_wizard.product_id = self.product_4
         unbuild_wizard.bom_id = self.bom_1
         unbuild_wizard.product_qty = 4.0
+        unbuild_wizard.mo_id = mo
         unbuild = unbuild_wizard.save()
         unbuild.action_unbuild()
 
         self.assertRecordValues(unbuild.produce_line_ids, [
                     {'product_id': self.product_4.id, 'quantity': 4, 'state': 'done'},   # Stick
+                    {'product_id': self.product_3.id, 'quantity': 12, 'state': 'done'},  # Stone
                     {'product_id': self.product_2.id, 'quantity': 24, 'state': 'done'},  # Wood
                     {'product_id': self.product_1.id, 'quantity': 48, 'state': 'done'},  # Courage
                 ])
