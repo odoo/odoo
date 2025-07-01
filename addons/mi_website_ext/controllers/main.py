@@ -4,6 +4,7 @@ from odoo.http import request
 import logging
 from dateutil.relativedelta import relativedelta
 from odoo.addons.portal.controllers.portal import CustomerPortal
+from werkzeug.utils import redirect
 
 _logger = logging.getLogger(__name__)
 

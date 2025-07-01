@@ -12,14 +12,14 @@
                                      class="img-fluid rounded-circle mb-3"
                                      style="width: 150px; height: 150px; object-fit: cover;"
                                      alt="Avatar"/>
-                                <h4 class="card-title">
+                                <h3 class="profile-name">
                                     <t t-esc="user.name"/>
-                                </h4>
+                                </h3>
                                 <p class="profile-email">
                                     <t t-esc="user.email"/>
                                 </p>
                                 <hr class="profile-hr"/>
-                                <h5 class="mt-4">Cambiar Foto de Perfil</h5>
+                                <h5 class="mt-4 profile-subtitle">Cambiar Foto de Perfil</h5>
                                 <form action="/my/account/update_avatar" method="post" enctype="multipart/form-data">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                     <div class="mb-3">

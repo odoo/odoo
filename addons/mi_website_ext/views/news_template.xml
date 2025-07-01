@@ -1,6 +1,11 @@
 <odoo>
     <template id="news_template" name="News View">
         <t t-call="website.layout">
+            <div id="splash-loader">
+                <div class="splash-wrapper">
+                    <div class="splash-spinner"></div>
+                </div>
+            </div>
             <t t-call-assets="mi_website_ext.assets_news" />
             <div class="content_container">
                 <div class="news_container">

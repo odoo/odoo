@@ -1,6 +1,11 @@
 <odoo>
     <template id="gallery_template" name="Gallery View">
         <t t-call="website.layout">
+            <div id="splash-loader">
+                <div class="splash-wrapper">
+                    <div class="splash-spinner"></div>
+                </div>
+            </div>
             <t t-set="hide_sidebar" t-value="True" />
             <t t-call-assets="mi_website_ext.assets_gallery" />
             <div class="content_container">
@@ -10,22 +15,26 @@
                     <div class="album_section">
                         <div class="album_list">
                             <t t-if="albums">
-                            <t t-foreach="albums" t-as="album">
-                                <a class="album_item" t-attf-href="/gallery/album/#{album.id}">
-                                    <t t-if="album.image_1920">
-                                        <img t-att-src="image_data_uri(album.image_1920)" t-att-alt="album.name"/>
-                                    </t>
-                                    <t t-else="">
-                                        <img src="/mi_website_ext/static/src/img/imagetester.jpg" t-att-alt="album.name"/>
-                                    </t>
-                                    <h3><t t-esc="album.name"/></h3>
-                                    <p><t t-esc="album.description"/></p>
-                                </a>
+                                <t t-foreach="albums" t-as="album">
+                                    <a class="album_item" t-attf-href="/gallery/album/#{album.id}">
+                                        <t t-if="album.image_1920">
+                                            <img t-att-src="image_data_uri(album.image_1920)" t-att-alt="album.name"/>
+                                        </t>
+                                        <t t-else="">
+                                            <img src="/mi_website_ext/static/src/img/imagetester.jpg" t-att-alt="album.name"/>
+                                        </t>
+                                        <h3>
+                                            <t t-esc="album.name"/>
+                                        </h3>
+                                        <p>
+                                            <t t-esc="album.description"/>
+                                        </p>
+                                    </a>
+                                </t>
                             </t>
-                        </t>
-                        <t t-else="">
-                            <p class="no_photo">No hay álbumes para mostrar en este momento.</p>
-                        </t>
+                            <t t-else="">
+                                <p class="no_photo">No hay álbumes para mostrar en este momento.</p>
+                            </t>
                         </div>
                     </div>
                 </div>

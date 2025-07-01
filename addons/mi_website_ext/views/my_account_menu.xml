@@ -2,6 +2,11 @@
 <odoo>
     <template id="custom_my_account_link_unified" inherit_id="portal.user_dropdown" priority="99">
         <xpath expr="//div[@id='o_logout_divider']/preceding-sibling::a[1]" position="replace">
+             <a t-attf-href="/web#action=198&amp;id={{ request.env.user.id }}&amp;model=res.users&amp;view_type=form" 
+               role="menuitem" 
+               class="dropdown-item ps-3">
+                <i class="fa fa-fw fa-lock me-1 small"/> Cambiar Contraseña
+            </a>
             <a href="/my/profile" role="menuitem" class="dropdown-item ps-3">
                 <i class="fa fa-fw fa-user me-1 small"/> Mi Perfil
             </a>

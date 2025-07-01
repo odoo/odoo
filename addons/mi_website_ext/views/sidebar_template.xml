@@ -40,6 +40,11 @@
                 <div t-attf-class="company-theme-wrapper company-#{request.env.user.company_id.id}">
                     <div t-attf-class="company-theme-wrapper company-theme-#{request.env.user.company_id.id}">
                         <div class="three-column-layout">
+                            <div id="splash-loader">
+                                <div class="splash-wrapper">
+                                    <div class="splash-spinner"></div>
+                                </div>
+                            </div>
                             <t t-call="mi_website_ext.terms_and_conditions_modal"/>
                             <t t-call="mi_website_ext.announcements_modal"/>
                             <div class="notification-column">
@@ -69,7 +74,13 @@
                                     <div class="card-items">
                                         <a href="/policy">
                                             <img src="/mi_website_ext/static/src/img/Policy.svg" alt="Grupo" />
-                                            <p>Politicas y reglamentos</p>
+                                            <p>Políticas y Reglamentos</p>
+                                        </a>
+                                    </div>
+                                    <div class="card-items">
+                                        <a href="/mi_website_ext/static/src/pdf/Intranet_manual_v1.pdf" download="Manual_Usuario.pdf">
+                                            <img src="/mi_website_ext/static/src/img/Manual.png" alt="Grupo" />
+                                            <p>Manual</p>
                                         </a>
                                     </div>
                                     <hr class="divider" />
@@ -634,7 +645,7 @@
                                     </div>
                                     -->
                                         <div class="btn-section">
-                                            <a class="btn-time" href="https://odoo.calengs.com/odoo/time-off">Maneja tu tiempo</a>
+                                            <a class="btn-time" href="https://odoo.calengs.com/odoo/my-time-off">Maneja tu tiempo</a>
                                         </div>
                                         <!-- <div class="btn-section">
                                 <a class="btn-soli" href="http://44.220.161.53:8069/odoo/time-off">Solicitar carta</a>

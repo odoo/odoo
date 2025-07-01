@@ -2,6 +2,11 @@
 <odoo>
     <template id="policy_template" name="Políticas y Reglamentos">
         <t t-call="website.layout">
+            <div id="splash-loader">
+                <div class="splash-wrapper">
+                    <div class="splash-spinner"></div>
+                </div>
+            </div>
             <t t-set="hide_sidebar" t-value="True"/>
             <div class="content_container">
                 <div class="policy_container">

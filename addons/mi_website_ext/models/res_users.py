@@ -86,7 +86,7 @@ class Users(models.Model):
                     if days_remaining == 0:
                         user.x_days_until_vacation_display = "Hoy"
                     elif days_remaining == 1:
-                        user.x_days_until_vacation_display = "Mañana"
+                        user.x_days_until_vacation_display = "1"
                     else:
                         user.x_days_until_vacation_display = str(days_remaining)
             else:

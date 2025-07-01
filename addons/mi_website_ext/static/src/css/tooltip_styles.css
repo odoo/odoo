@@ -1,16 +1,26 @@
 .custom-tooltip {
   position: absolute;
-  z-index: 9999;
-  display: none; /* Empezará oculto */
-  width: 320px;
-  padding: 16px 16px 24px 16px;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  border-radius: 16px;
-  border: 1px solid #a1a0a0;
   background: #fafdff;
-  box-shadow: 0px 4px 5.2px 0px rgba(63, 64, 123, 0.06);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  max-width: 350px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s ease;
+  display: none;
+  pointer-events: auto;
+}
+
+.custom-tooltip::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -18px;
+  transform: translateY(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent rgba(50, 50, 50, 0.95) transparent transparent;
 }
 
 .tooltip-content {
@@ -26,8 +36,8 @@
 
 .tooltip-icon {
   display: flex;
-  width: 80px;
-  height: 80px;
+  width: 140px;
+  height: 140px;
   flex-direction: column;
   justify-content: center;
   align-items: center;

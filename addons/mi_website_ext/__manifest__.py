@@ -20,6 +20,8 @@
             "mi_website_ext/static/src/js/read_tracker.js",
             "mi_website_ext/static/src/js/tooltip_handler.js",
             "mi_website_ext/static/src/js/comment_handler.js",
+            'mi_website_ext/static/src/js/splash_loader.js',
+            "mi_website_ext/static/src/css/splash_loader.css",
             "mi_website_ext/static/src/css/comment.css",
             "mi_website_ext/static/src/css/tooltip_styles.css",
             "mi_website_ext/static/src/css/gallery.css",

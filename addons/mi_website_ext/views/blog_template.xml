@@ -1,6 +1,11 @@
 <odoo>
     <template id="blog_template" name="Blog View">
         <t t-call="website.layout">
+            <div id="splash-loader">
+                <div class="splash-wrapper">
+                    <div class="splash-spinner"></div>
+                </div>
+            </div>
             <div class="content_container">
                 <div class="blog_container">
                     <h1 class="blog_title">Blog</h1>

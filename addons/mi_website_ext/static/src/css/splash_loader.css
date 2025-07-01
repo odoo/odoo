@@ -1,0 +1,38 @@
+#splash-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #ffffff;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease;
+}
+
+.splash-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.splash-logo {
+    width: 120px;
+    height: auto;
+}
+
+.splash-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #ccc;
+    border-top: 4px solid #333;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
