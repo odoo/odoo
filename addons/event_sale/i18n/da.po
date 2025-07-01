@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2025
 # Mads Søndergaard, 2025
+# Kira Petersen, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-09 20:36+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Mads Søndergaard, 2025\n"
+"Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,6 +75,9 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"Tillad flere tidsblokke, hvor kommunikation, deltagergrænse og "
+"tilmeldingsbegrænsning defineres individuelt for hver tidsblok fremfor for "
+"hele arrangementet."
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
@@ -279,7 +283,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_slot_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_slot_id
 msgid "Event Slot"
-msgstr ""
+msgstr "Arrangementstidsblok"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
@@ -363,7 +367,7 @@ msgstr "Fakturaadresse"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__is_multi_slots
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "Er flere tidsblokke"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
@@ -635,6 +639,10 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
+"Ubekræftet: Tilmeldinger, der afventer handling (typisk i forbindelse med salgsstatus).\n"
+"Tilmeldt: Tilmeldinger, der anses som bekræftede af kunden.\n"
+"Deltaget: Tilmeldinger, hvor deltageren har deltaget i arrangementet.\n"
+"Annulleret: Tilmeldinger, der er blevet annulleret manuelt."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed
