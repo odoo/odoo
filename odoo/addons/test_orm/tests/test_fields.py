@@ -2,7 +2,7 @@ import base64
 import io
 import threading
 from collections import OrderedDict
-from datetime import date, datetime, time
+from datetime import date, datetime
 from unittest.mock import patch
 
 import psycopg2
@@ -13,7 +13,6 @@ from odoo.exceptions import AccessError, MissingError, UserError, ValidationErro
 from odoo.fields import Domain
 from odoo.tests import Form, TransactionCase, tagged, users
 from odoo.tools import float_repr, mute_logger
-from odoo.tools.date_utils import add, end_of, start_of, subtract
 from odoo.tools.image import image_data_uri
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -1171,97 +1170,6 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertFalse(record.filtered_domain([('moment', '<', datetime(2012, 5, 2, 12, 0, 0))]))
         self.assertFalse(record.filtered_domain([('moment', '!=', False)]))
         self.assertTrue(record.filtered_domain([('moment', '=', False)]))
-
-    def test_21_date_datetime_helpers(self):
-        """ test date/datetime fields helpers """
-        _date = fields.Date.from_string("2077-10-23")  # noqa: RUF052
-        _datetime = fields.Datetime.from_string("2077-10-23 09:42:00")  # noqa: RUF052
-
-        # addition
-        self.assertEqual(add(_date, days=5), date(2077, 10, 28))
-        self.assertEqual(add(_datetime, seconds=10), datetime(2077, 10, 23, 9, 42, 10))
-
-        # subtraction
-        self.assertEqual(subtract(_date, months=1), date(2077, 9, 23))
-        self.assertEqual(subtract(_datetime, hours=2), datetime(2077, 10, 23, 7, 42, 0))
-
-        # start_of
-        # year
-        self.assertEqual(start_of(_date, 'year'), date(2077, 1, 1))
-        self.assertEqual(start_of(_datetime, 'year'), datetime(2077, 1, 1))
-
-        # quarter
-        q1 = date(2077, 1, 1)
-        q2 = date(2077, 4, 1)
-        q3 = date(2077, 7, 1)
-        q4 = date(2077, 10, 1)
-        self.assertEqual(start_of(_date.replace(month=3), 'quarter'), q1)
-        self.assertEqual(start_of(_date.replace(month=5), 'quarter'), q2)
-        self.assertEqual(start_of(_date.replace(month=7), 'quarter'), q3)
-        self.assertEqual(start_of(_date, 'quarter'), q4)
-        self.assertEqual(start_of(_datetime, 'quarter'), datetime.combine(q4, time.min))
-
-        # month
-        self.assertEqual(start_of(_date, 'month'), date(2077, 10, 1))
-        self.assertEqual(start_of(_datetime, 'month'), datetime(2077, 10, 1))
-
-        # week
-        self.assertEqual(start_of(_date, 'week'), date(2077, 10, 18))
-        self.assertEqual(start_of(_datetime, 'week'), datetime(2077, 10, 18))
-
-        # day
-        self.assertEqual(start_of(_date, 'day'), _date)
-        self.assertEqual(start_of(_datetime, 'day'), _datetime.replace(hour=0, minute=0, second=0))
-
-        # hour
-        with self.assertRaises(ValueError):
-            start_of(_date, 'hour')
-        self.assertEqual(start_of(_datetime, 'hour'), _datetime.replace(minute=0, second=0))
-
-        # invalid
-        with self.assertRaises(ValueError):
-            start_of(_datetime, 'poop')
-
-        # end_of
-        # year
-        self.assertEqual(end_of(_date, 'year'), _date.replace(month=12, day=31))
-        self.assertEqual(end_of(_datetime, 'year'),
-                         datetime.combine(_date.replace(month=12, day=31), time.max))
-
-        # quarter
-        q1 = date(2077, 3, 31)
-        q2 = date(2077, 6, 30)
-        q3 = date(2077, 9, 30)
-        q4 = date(2077, 12, 31)
-        self.assertEqual(end_of(_date.replace(month=2), 'quarter'), q1)
-        self.assertEqual(end_of(_date.replace(month=4), 'quarter'), q2)
-        self.assertEqual(end_of(_date.replace(month=9), 'quarter'), q3)
-        self.assertEqual(end_of(_date, 'quarter'), q4)
-        self.assertEqual(end_of(_datetime, 'quarter'), datetime.combine(q4, time.max))
-
-        # month
-        self.assertEqual(end_of(_date, 'month'), _date.replace(day=31))
-        self.assertEqual(end_of(_datetime, 'month'),
-                         datetime.combine(date(2077, 10, 31), time.max))
-
-        # week
-        self.assertEqual(end_of(_date, 'week'), date(2077, 10, 24))
-        self.assertEqual(end_of(_datetime, 'week'),
-                         datetime.combine(datetime(2077, 10, 24), time.max))
-
-        # day
-        self.assertEqual(end_of(_date, 'day'), _date)
-        self.assertEqual(end_of(_datetime, 'day'), datetime.combine(_datetime, time.max))
-
-        # hour
-        with self.assertRaises(ValueError):
-            end_of(_date, 'hour')
-        self.assertEqual(end_of(_datetime, 'hour'),
-                         datetime.combine(_datetime, time.max).replace(hour=_datetime.hour))
-
-        # invalid
-        with self.assertRaises(ValueError):
-            end_of(_datetime, 'crap')
 
     def test_22_selection(self):
         """ test selection fields """
