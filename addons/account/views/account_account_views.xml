@@ -104,6 +104,7 @@
                     <field name="group_id" optional="hide"/>
                     <field name="internal_group" column_invisible="True"/>
                     <field name="reconcile" widget="boolean_toggle" invisible="account_type in ('asset_cash', 'liability_credit_card', 'off_balance')"/>
+                    <field name="active" optional="hide" widget="boolean_toggle"/>
                     <field name="non_trade" widget="boolean_toggle" invisible="account_type not in ('liability_payable', 'asset_receivable')" optional="hide"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tax_tags"/>
                     <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" optional="hide" widget="many2many_tags"/>
