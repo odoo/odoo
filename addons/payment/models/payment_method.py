@@ -182,9 +182,10 @@ class PaymentMethod(models.Model):
     @api.constrains('active', 'support_manual_capture')
     def _check_manual_capture_supported_by_providers(self):
         incompatible_pms = self.filtered(
-            lambda method: method.active and method.support_manual_capture == 'none' and any(
-                provider.capture_manually for provider in method.provider_ids
-            )
+            lambda pm:
+                pm.active
+                and (pm.primary_payment_method_id or pm).support_manual_capture == 'none'
+                and any(provider.capture_manually for provider in pm.provider_ids),
         )
         if incompatible_pms:
             raise ValidationError(_(
