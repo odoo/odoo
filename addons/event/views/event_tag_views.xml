@@ -24,6 +24,9 @@
                             <h1><field nolabel="1" name="name" placeholder='e.g. "Age Category"'/></h1>
                         </div>
                         <group>
+                            <!-- Placeholders in the layout for overrides -->
+                            <group id='left_header' invisible='1'/>
+                            <group id='right_header' invisible='1'/>
                             <field name="tag_ids" context="{'default_category_id': id}">
                                 <list string="Tags" editable="bottom">
                                     <field name="sequence" widget="handle"/>
