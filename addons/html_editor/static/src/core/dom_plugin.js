@@ -61,6 +61,7 @@ function getConnectedParents(nodes) {
  * @typedef {Object} DomShared
  * @property { DomPlugin['insert'] } insert
  * @property { DomPlugin['copyAttributes'] } copyAttributes
+ * @property { DomPlugin['canSetTag'] } canSetTag
  * @property { DomPlugin['setTag'] } setTag
  * @property { DomPlugin['setTagName'] } setTagName
  */
@@ -68,7 +69,7 @@ function getConnectedParents(nodes) {
 export class DomPlugin extends Plugin {
     static id = "dom";
     static dependencies = ["baseContainer", "selection", "history", "split", "delete", "lineBreak"];
-    static shared = ["insert", "copyAttributes", "setTag", "setTagName"];
+    static shared = ["insert", "copyAttributes", "canSetTag", "setTag", "setTagName"];
     resources = {
         user_commands: [
             {
@@ -531,6 +532,19 @@ export class DomPlugin extends Plugin {
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
     }
 
+    getBlocksToTag() {
+        const targetedBlocks = [...this.dependencies.selection.getTargetedBlocks()];
+        return targetedBlocks.filter(
+            (block) =>
+                !descendants(block).some((descendant) => targetedBlocks.includes(descendant)) &&
+                block.isContentEditable
+        );
+    }
+
+    canSetTag() {
+        return this.getBlocksToTag().length > 0;
+    }
+
     /**
      * @param {Object} param0
      * @param {string} param0.tagName
@@ -549,13 +563,7 @@ export class DomPlugin extends Plugin {
             newCandidate = baseContainer;
         }
         const cursors = this.dependencies.selection.preserveSelection();
-        const targetedBlocks = [...this.dependencies.selection.getTargetedBlocks()];
-        const deepestTargetedBlocks = targetedBlocks.filter(
-            (block) =>
-                !descendants(block).some((descendant) => targetedBlocks.includes(descendant)) &&
-                block.isContentEditable
-        );
-        for (const block of deepestTargetedBlocks) {
+        for (const block of this.getBlocksToTag()) {
             if (isParagraphRelatedElement(block) || isListItemElement(block)) {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;
