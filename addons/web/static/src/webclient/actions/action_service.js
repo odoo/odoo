@@ -678,14 +678,14 @@ function makeActionManager(env) {
                         });
                     }
                 }
-                this.isMounted = false;
+                controller.isMounted = false;
 
                 onMounted(this.onMounted);
                 onWillUnmount(this.onWillUnmount);
                 onError(this.onError);
             }
             onError(error) {
-                if (this.isMounted) {
+                if (controller.isMounted) {
                     // the error occurred on the controller which is
                     // already in the DOM, so simply show the error
                     Promise.resolve().then(() => {
@@ -767,9 +767,10 @@ function makeActionManager(env) {
                 }
                 resolve();
                 env.bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));
-                this.isMounted = true;
+                controller.isMounted = true;
             }
             onWillUnmount() {
+                controller.isMounted = false;
                 if (action.target === "new" && dialogCloseResolve) {
                     dialogCloseResolve();
                 }
@@ -1377,6 +1378,9 @@ function makeActionManager(env) {
         }
         const controller = controllerStack[index];
         if (controller.action.type === "ir.actions.act_window") {
+            if (controller.isMounted) {
+                controller.exportedState = controller.getLocalState();
+            }
             const { action, exportedState, view, views } = controller;
             const props = { ...controller.props };
             if (exportedState && "resId" in exportedState) {
