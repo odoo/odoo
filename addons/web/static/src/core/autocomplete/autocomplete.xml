@@ -19,7 +19,6 @@
                 t-on-click="onInputClick"
                 t-on-change="onInputChange"
                 t-on-input="onInput"
-                t-on-keydown="onInputKeydown"
                 t-on-focus="onInputFocus"
                 t-ref="input"
             />
@@ -28,7 +27,9 @@
                     role="menu"
                     class="o-autocomplete--dropdown-menu ui-widget show"
                     t-att-class="ulDropdownClass"
-                    t-ref="sourcesList">
+                    t-ref="sourcesList"
+                    t-on-mouseleave="onMouseLeave"
+                >
                     <t t-foreach="sources" t-as="source" t-key="source.id">
                         <t t-if="source.isLoading">
                             <li class="ui-menu-item"

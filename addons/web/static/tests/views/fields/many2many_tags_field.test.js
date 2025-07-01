@@ -944,6 +944,7 @@ test("input and remove text without selecting any tag or option on desktop", asy
     await hover(".o-autocomplete--dropdown-item:eq(0)");
     await hover(".o_form_renderer");
     await press("Tab");
+    await runAllTimers();
 
     // ensure we're not adding any value
     expect(".modal").toHaveCount(0);

@@ -1,10 +1,67 @@
-import { onWillUnmount, useEffect, useRef } from "@odoo/owl";
+import { onMounted, onWillDestroy, useEffect, useRef } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { throttleForAnimation } from "@web/core/utils/timing";
 
+/**
+ * @typedef {Object} NavigationOptions
+ * @property {() => HTMLElement[]} getItems
+ * @property {({{ navigator: Navigator, target: HTMLElement }}) => bool} isNavigationAvailable
+ * @property {NavigationHotkeys} hotkeys
+ * @property {Function} onUpdated
+ * @property {Boolean} [virtualFocus=false] - If true, items are only visually
+ * focused so the actual focus can be kept on another input.
+ * @property {Boolean} [shouldFocusChildInput=false] - If true, elements like inputs or buttons
+ * inside of the items are focused instead of the items themselves.
+ * @property {string} activeClass - CSS class which is added on the currently
+ * active element.
+ */
+
+/**
+ * @typedef {{
+ *  home: hotkeyHandler|HotkeyOptions|undefined,
+ *  end: hotkeyHandler|HotkeyOptions|undefined,
+ *  tab: hotkeyHandler|HotkeyOptions|undefined,
+ *  "shift+tab": hotkeyHandler|HotkeyOptions|undefined,
+ *  arrowup: hotkeyHandler|HotkeyOptions|undefined,
+ *  arrowdown: hotkeyHandler|HotkeyOptions|undefined,
+ *  enter: hotkeyHandler|HotkeyOptions|undefined,
+ *  arrowleft: hotkeyHandler|HotkeyOptions|undefined,
+ *  arrowright: hotkeyHandler|HotkeyOptions|undefined,
+ *  escape: hotkeyHandler|HotkeyOptions|undefined,
+ *  space: hotkeyHandler|HotkeyOptions|undefined,
+ * }} NavigationHotkeys
+ */
+
+/**
+ * @typedef HotkeyOptions
+ * @param {hotkeyHandler} callback
+ * @param {({{ navigator: Navigator, target: HTMLElement }}) => bool} isAvailable
+ * @param {boolean} bypassEditableProtection
+ * @param {boolean} [preventDefault=true]
+ * @param {boolean} [allowRepeat=true]
+ */
+
+/**
+ * Callback used to override the behaviour of a specific
+ * key input.
+ *
+ * @callback hotkeyHandler
+ * @param {Navigator} navigator
+ */
+
 export const ACTIVE_ELEMENT_CLASS = "focus";
+
+const DISPATCH_RESULTS = {
+    Failed: -1,
+    PreventDefault: 0,
+    DontPrevent: 1,
+};
+
 const throttledFocus = throttleForAnimation((el) => el?.focus());
 
 class NavigationItem {
@@ -108,17 +165,13 @@ export class Navigator {
     /**@type {Array<NavigationItem>}*/
     items = [];
 
-    /**@private*/ _hotkeyRemoves = [];
-    /**@private*/ _hotkeyService = undefined;
+    /**@private*/
+    _options = {};
 
     /**
      * @param {NavigationOptions} options
-     * @param {import("@web/core/hotkeys/hotkey_service").HotkeyService} hotkeyService
      */
-    constructor(options, hotkeyService) {
-        this._hotkeyService = hotkeyService;
-
-        /**@private*/
+    constructor(options) {
         this._options = deepMerge(
             {
                 isNavigationAvailable: ({ target }) => this.contains(target),
@@ -156,32 +209,6 @@ export class Navigator {
             },
             options
         );
-
-        for (const [hotkey, hotkeyInfo] of Object.entries(this._options.hotkeys)) {
-            if (!hotkeyInfo) {
-                continue;
-            }
-
-            const callback = typeof hotkeyInfo == "function" ? hotkeyInfo : hotkeyInfo.callback;
-            if (!callback) {
-                continue;
-            }
-
-            const isAvailable = hotkeyInfo?.isAvailable ?? (() => true);
-            const bypassEditableProtection = hotkeyInfo?.bypassEditableProtection ?? false;
-            const allowRepeat = hotkeyInfo?.allowRepeat ?? true;
-
-            this._hotkeyRemoves.push(
-                this._hotkeyService.add(hotkey, async () => await callback(this), {
-                    global: true,
-                    allowRepeat,
-                    isAvailable: (target) =>
-                        this._options.isNavigationAvailable({ navigator: this, target }) &&
-                        isAvailable({ navigator: this, target }),
-                    bypassEditableProtection,
-                })
-            );
-        }
     }
 
     /**
@@ -263,17 +290,55 @@ export class Navigator {
 
     /**
      * @private
+     * @param {KeyboardEvent} event
+     * @returns {number}
+     */
+    async _dispatch(event) {
+        const hotkey = getActiveHotkey(event);
+
+        const data = { navigator: this, target: event.target };
+        if (this._options.isNavigationAvailable(data)) {
+            const hotkeyInfo = this._options.hotkeys[hotkey];
+
+            if (typeof hotkeyInfo === "function") {
+                await hotkeyInfo(this, event);
+                return DISPATCH_RESULTS.PreventDefault;
+            }
+
+            if (
+                !hotkeyInfo ||
+                !hotkeyInfo.callback ||
+                ("isAvailable" in hotkeyInfo && !hotkeyInfo.isAvailable(data)) ||
+                (event.repeat && hotkeyInfo.allowRepeat === false)
+            ) {
+                return DISPATCH_RESULTS.Failed;
+            }
+
+            const targetIsEditable =
+                event.target instanceof HTMLElement &&
+                (/input|textarea/i.test(event.target.tagName) || event.target.isContentEditable) &&
+                !event.target.matches("input[type=checkbox], input[type=radio]");
+            if (targetIsEditable && !hotkeyInfo.bypassEditableProtection && hotkey !== "escape") {
+                return DISPATCH_RESULTS.Failed;
+            }
+
+            await hotkeyInfo.callback(this, event);
+            return hotkeyInfo.preventDefault === false
+                ? DISPATCH_RESULTS.DontPrevent
+                : DISPATCH_RESULTS.PreventDefault;
+        }
+
+        return DISPATCH_RESULTS.Failed;
+    }
+
+    /**
+     * @private
      */
     _destroy() {
         for (const item of this.items) {
             item._removeListeners();
         }
         this.items = [];
-
-        for (const removeHotkey of this._hotkeyRemoves) {
-            removeHotkey();
-        }
-        this._hotkeyRemoves = [];
     }
 
     /**
@@ -299,51 +364,43 @@ export class Navigator {
     }
 }
 
-/**
- * @typedef {Object} NavigationOptions
- * @property {() => HTMLElement[]} getItems
- * @property {({{ navigator: Navigator, target: HTMLElement }}) => bool} isNavigationAvailable
- * @property {NavigationHotkeys} hotkeys
- * @property {Function} onUpdated
- * @property {Boolean} [virtualFocus=false] - If true, items are only visually
- * focused so the actual focus can be kept on another input.
- * @property {Boolean} [shouldFocusChildInput=false] - If true, elements like inputs or buttons
- * inside of the items are focused instead of the items themselves.
- * @property {string} activeClass - CSS class which is added on the currently
- * active element.
- */
+export const navigationService = {
+    dependencies: ["ui"],
+    start(env, { ui }) {
+        const navigators = [];
 
-/**
- * @typedef {{
- *  home: hotkeyHandler|HotkeyOptions|undefined,
- *  end: hotkeyHandler|HotkeyOptions|undefined,
- *  tab: hotkeyHandler|HotkeyOptions|undefined,
- *  "shift+tab": hotkeyHandler|HotkeyOptions|undefined,
- *  arrowup: hotkeyHandler|HotkeyOptions|undefined,
- *  arrowdown: hotkeyHandler|HotkeyOptions|undefined,
- *  enter: hotkeyHandler|HotkeyOptions|undefined,
- *  arrowleft: hotkeyHandler|HotkeyOptions|undefined,
- *  arrowright: hotkeyHandler|HotkeyOptions|undefined,
- *  escape: hotkeyHandler|HotkeyOptions|undefined,
- *  space: hotkeyHandler|HotkeyOptions|undefined,
- * }} NavigationHotkeys
- */
+        browser.addEventListener(
+            "keydown",
+            async (event) => {
+                for (let i = navigators.length - 1; i >= 0; i--) {
+                    const dispatchResult = await navigators[i]._dispatch(event);
+                    if (dispatchResult !== DISPATCH_RESULTS.Failed) {
+                        if (dispatchResult === DISPATCH_RESULTS.PreventDefault) {
+                            event.preventDefault();
+                            event.stopImmediatePropagation();
+                        }
+                        return;
+                    }
+                }
+            },
+            true
+        );
 
-/**
- * @typedef HotkeyOptions
- * @param {hotkeyHandler} callback
- * @param {({{ navigator: Navigator, target: HTMLElement }}) => bool} isAvailable
- * @param {boolean} bypassEditableProtection
- * @param {boolean} [allowRepeat=true]
- */
+        return {
+            registerNavigator: (navigator) => {
+                navigators.push(navigator);
+            },
+            unregisterNavigator: (navigator) => {
+                const i = navigators.indexOf(navigator);
+                if (i >= 0) {
+                    navigators.splice(i, 1);
+                }
+            },
+        };
+    },
+};
 
-/**
- * Callback used to override the behaviour of a specific
- * key input.
- *
- * @callback hotkeyHandler
- * @param {Navigator} navigator
- */
+registry.category("services").add("navigation", navigationService);
 
 /**
  * This hook adds keyboard navigation to items contained in an element.
@@ -368,8 +425,8 @@ export function useNavigation(containerRef, options = {}) {
         newOptions.getItems = () => containerRef.el?.querySelectorAll(":scope .o-navigable") ?? [];
     }
 
-    const hotkeyService = useService("hotkey");
-    const navigator = new Navigator(newOptions, hotkeyService);
+    const navigationService = useService("navigation");
+    const navigator = new Navigator(newOptions);
     const observer = new MutationObserver(() => navigator.update());
 
     useEffect(
@@ -386,7 +443,15 @@ export function useNavigation(containerRef, options = {}) {
         () => [containerRef.el]
     );
 
-    onWillUnmount(() => navigator._destroy());
+    onMounted(() => {
+        navigationService.registerNavigator(navigator);
+        navigator.update();
+    });
+
+    onWillDestroy(() => {
+        navigator._destroy();
+        navigationService.unregisterNavigator(navigator);
+    });
 
     return navigator;
 }

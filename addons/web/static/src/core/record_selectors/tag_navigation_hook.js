@@ -33,6 +33,10 @@ export function useTagNavigation(refName, options = {}) {
     };
 
     const canNavigateFromInput = (navigator, navNext) => {
+        if (!navigator.activeItem) {
+            return false;
+        }
+
         const el = navigator.activeItem.el;
         if (el.classList.contains("o-autocomplete--input")) {
             const menu = tagsContainerRef.el.querySelector(".o-autocomplete--dropdown-menu");

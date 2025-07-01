@@ -1,8 +1,8 @@
 import { expect, test } from "@odoo/hoot";
 import {
-    hover,
     isInViewPort,
     isScrollable,
+    manuallyDispatchProgrammaticEvent,
     pointerDown,
     pointerUp,
     press,
@@ -673,8 +673,10 @@ test("autocomplete scrolls when moving with arrows", async () => {
     const msgNotInView = "item should not be in view within dropdown";
     await mountWithCleanup(Parent);
     expect(".o-autocomplete input").toHaveCount(1);
-    // Open with arrow key.
+    // Open with arrow key.s
     await contains(".o-autocomplete input").focus();
+    await animationFrame();
+    await runAllTimers();
     await press("ArrowDown");
     await animationFrame();
     expect(".o-autocomplete--dropdown-item").toHaveCount(5);
@@ -757,6 +759,7 @@ test("unselectable options are... not selectable", async () => {
 
     await mountWithCleanup(Parent);
     await contains(`.o-autocomplete input`).click();
+    await animationFrame();
     expect(`.o-autocomplete--input`).toHaveAttribute("aria-activedescendant", "autocomplete_0_1");
     expect(`.dropdown-item#autocomplete_0_1`).toHaveText("selectable");
     expect(`.dropdown-item#autocomplete_0_1`).toHaveAttribute("aria-selected", "true");

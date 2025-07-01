@@ -2,7 +2,6 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
 import {
     Component,
@@ -230,8 +229,14 @@ export class AutoComplete extends Component {
 
         await Promise.all(proms);
         this.navigator.update();
-        this.navigator.items[1]?.setActive();
-        this.scroll();
+
+        for (let i = 0; i < this.sources.length; i++) {
+            const options = this.sources[i].options;
+            for (let j = 0; j < options.length; j++) {
+                this.state.activeSourceOption = [i, j];
+                return;
+            }
+        }
     }
     get displayOptions() {
         return !this.props.dropdown || (this.isOpened && this.hasOptions);
@@ -295,6 +300,25 @@ export class AutoComplete extends Component {
             }
         };
 
+        const onTab = async (navigator, event) => {
+            if (this.loadingPromise) {
+                await this.loadingPromise;
+            }
+
+            if (!this.isOpened) {
+                return;
+            }
+
+            if (
+                this.props.autoSelect &&
+                this.activeOption &&
+                (this.state.navigationRev > 0 || this.inputRef.el.value.length > 0)
+            ) {
+                this.selectOption(this.activeOption);
+            }
+            this.close();
+        };
+
         this.navigator = useNavigation(this.listRef, {
             virtualFocus: true,
             activeClass: "ui-state-active",
@@ -318,16 +342,17 @@ export class AutoComplete extends Component {
             onNavigated: (navigator) => {
                 const el = navigator.activeItem && navigator.activeItem.el;
                 if (el && el.hasAttributes("data-source") && el.hasAttribute("data-option")) {
-                    const sourceIndex = parseInt(el.dataset.source);
-                    const optionIndex = parseInt(el.dataset.option);
-                    this.state.activeSourceOption = [sourceIndex, optionIndex];
-                    this.inputRef.el.setAttribute(
-                        "aria-activedescendant",
-                        this.activeSourceOptionId
-                    );
+                    this.state.activeSourceOption = [
+                        parseInt(el.dataset.source),
+                        parseInt(el.dataset.option),
+                    ];
+                    // this.inputRef.el.setAttribute(
+                    //     "aria-activedescendant",
+                    //     this.activeSourceOptionId
+                    // );
                 } else {
                     this.state.activeSourceOption = null;
-                    this.inputRef.el.removeAttribute("aria-activedescendant");
+                    // this.inputRef.el.removeAttribute("aria-activedescendant");
                 }
             },
             hotkeys: {
@@ -341,17 +366,35 @@ export class AutoComplete extends Component {
                     isAvailable: () => this.isOpened,
                     callback: () => this.cancel(),
                 },
-                tab: {
-                    isAvailable: () => false,
-                    callback: () => {},
-                },
                 "shift+tab": {
-                    isAvailable: () => false,
-                    callback: () => {},
+                    isAvailable: () => true,
+                    callback: onTab,
+                },
+                tab: {
+                    isAvailable: () => true,
+                    prevent: false,
+                    callback: onTab,
                 },
                 enter: {
-                    isAvailable: () => false,
-                    callback: () => {},
+                    isAvailable: () => true,
+                    prevent: false,
+                    callback: async (navigator, event) => {
+                        if (this.loadingPromise) {
+                            event.stopPropagation();
+                            event.preventDefault();
+                            await this.loadingPromise;
+                        }
+
+                        if (!this.isOpened) {
+                            return;
+                        }
+
+                        if (this.activeOption) {
+                            this.selectOption(this.activeOption);
+                            event.stopPropagation();
+                            event.preventDefault();
+                        }
+                    },
                 },
             },
         });
@@ -421,54 +464,6 @@ export class AutoComplete extends Component {
         });
     }
 
-    async onInputKeydown(ev) {
-        const hotkey = getActiveHotkey(ev);
-        const isSelectKey = ["enter", "tab"].includes(hotkey);
-
-        if (this.loadingPromise && isSelectKey) {
-            if (hotkey === "enter") {
-                ev.stopPropagation();
-                ev.preventDefault();
-            }
-            await this.loadingPromise;
-        }
-
-        const trySelectActiveOption = () => {
-            if (this.activeOption) {
-                this.selectOption(this.activeOption);
-                return true;
-            } else {
-                const firstOption = this.sources[0]?.options[0];
-                if (firstOption) {
-                    this.selectOption(firstOption);
-                    return true;
-                }
-            }
-            return false;
-        };
-
-        switch (hotkey) {
-            case "enter":
-                if (trySelectActiveOption()) {
-                    ev.stopPropagation();
-                    ev.preventDefault();
-                }
-                break;
-            case "tab":
-            case "shift+tab":
-                if (
-                    this.props.autoSelect &&
-                    (this.state.navigationRev > 0 || this.inputRef.el.value.length > 0)
-                ) {
-                    trySelectActiveOption();
-                }
-                this.close();
-                break;
-            default:
-                break;
-        }
-    }
-
     onOptionClick(option) {
         this.selectOption(option);
         this.inputRef.el.focus();
@@ -493,5 +488,10 @@ export class AutoComplete extends Component {
         if (isScrollableY(this.listRef.el)) {
             scrollTo(this.listRef.el.querySelector(`#${this.activeSourceOptionId}`));
         }
+    }
+
+    onMouseLeave() {
+        this.state.activeSourceOption = null;
+        this.navigator?.activeItem?.setInactive();
     }
 }
