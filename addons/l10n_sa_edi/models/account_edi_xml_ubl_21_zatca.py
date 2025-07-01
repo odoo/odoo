@@ -5,6 +5,7 @@ from lxml import etree
 from odoo import models, fields
 from odoo.tools.misc import file_path
 import re
+from odoo.exceptions import ValidationError
 
 TAX_EXEMPTION_CODES = ['VATEX-SA-29', 'VATEX-SA-29-7', 'VATEX-SA-30']
 TAX_ZERO_RATE_CODES = ['VATEX-SA-32', 'VATEX-SA-33', 'VATEX-SA-34-1', 'VATEX-SA-34-2', 'VATEX-SA-34-3', 'VATEX-SA-34-4',
@@ -360,6 +361,9 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         """
         if not line.move_id._is_downpayment() and line.sale_line_ids and all(sale_line.is_downpayment for sale_line in line.sale_line_ids):
             prepayment_move_id = line.sale_line_ids.invoice_lines.move_id.filtered(lambda m: m._is_downpayment())
+            if not prepayment_move_id.l10n_sa_confirmation_datetime:
+                raise ValidationError(f"Please Insure that the Prepayment Move [{prepayment_move_id.name}] has been posted to zatca successfully in order to be able to post the current invoice.")
+
             return {
                 'prepayment_id': prepayment_move_id.name,
                 'issue_date': fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'),
