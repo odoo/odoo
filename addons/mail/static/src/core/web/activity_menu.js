@@ -63,6 +63,7 @@ export class ActivityMenu extends Component {
             // Necessary because activity_ids of mail.activity.mixin has auto_join
             // So, duplicates are faking the count and "Load more" doesn't show up
             force_search_count: 1,
+            exclude_done_activities: true,
         };
         if (group.model === "mail.activity") {
             this.action
