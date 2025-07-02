@@ -359,3 +359,70 @@ registerWebsitePreviewTour(
             .flat(),
     ]
 );
+
+registerWebsitePreviewTour(
+    "test_ace_editor_is_hidden",
+    {
+        url: "/",
+    },
+    () => [
+        {
+            trigger: ":iframe #wrapwrap",
+        },
+        {
+            content: "Open Site menu",
+            trigger: "button[data-menu-xmlid='website.menu_site']",
+            run: "click",
+        },
+        {
+            content: "Open HTML / CSS Editor",
+            trigger: ".o_popover a[data-menu-xmlid='website.menu_ace_editor']:contains(/^HTML/)",
+            run: "click",
+        },
+        {
+            content: "Make sure the editor is open",
+            trigger: ".o_resource_editor",
+        },
+        {
+            content: "Click on edit",
+            trigger: ".o_menu_systray_item.o_edit_website_container > button",
+            run: "click",
+        },
+        {
+            content: "Wait for it to open",
+            trigger: ".o-website-builder_sidebar",
+        },
+        {
+            content: "Make sure the editor has been hidden after starting editing",
+            trigger: ":not(.o_resource_editor)",
+        },
+        {
+            content: "Discard edit mode",
+            trigger: ".o-website-builder_sidebar .o-snippets-top-actions button:contains(Discard)",
+            run: "click",
+        },
+        {
+            content: "Open Site menu",
+            trigger: "button[data-menu-xmlid='website.menu_site']",
+            run: "click",
+        },
+        {
+            content: "Open HTML / CSS Editor",
+            trigger: ".o_popover a[data-menu-xmlid='website.menu_ace_editor']:contains(/^HTML/)",
+            run: "click",
+        },
+        {
+            content: "Make sure the editor is open",
+            trigger: ".o_resource_editor",
+        },
+        {
+            content: "Navigate to contact us page",
+            trigger: ":iframe a[href='/contactus']",
+            run: "click",
+        },
+        {
+            content: "Make sure the editor has been hidden after navigating to other page",
+            trigger: ":not(.o_resource_editor)",
+        },
+    ]
+);

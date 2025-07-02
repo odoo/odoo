@@ -254,6 +254,7 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     async onEditPage() {
+        this.websiteContext.showResourceEditor = false;
         this.blockIframe();
         await this.loadIframeAndBundles(true);
         this.unblockIframe();
@@ -357,7 +358,10 @@ export class WebsiteBuilderClientAction extends Component {
                 }
             }
         }
-
+        if (this.lastPageURL !== iframe.contentWindow.location.href) {
+            // Hide Ace Editor when moving to another page.
+            this.websiteService.context.showResourceEditor = false;
+        }
         this.websiteService.pageDocument = this.websiteContent.el.contentDocument;
         if (this.translation) {
             deleteQueryParam("edit_translations", this.websiteService.contentWindow, true);
@@ -370,6 +374,7 @@ export class WebsiteBuilderClientAction extends Component {
         this.resolveIframeLoaded();
         this.addWelcomeMessage();
         this.websiteService.hideLoader();
+        this.lastPageURL = iframe.contentWindow.location.href;
     }
 
     blockIframe() {
