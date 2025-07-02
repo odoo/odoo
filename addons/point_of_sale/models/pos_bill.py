@@ -1,6 +1,5 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.osv.expression import OR
 
 
 class PosBill(models.Model):

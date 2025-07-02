@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
-
 from odoo import api, models, fields, _
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class ResCompany(models.Model):
@@ -54,17 +52,15 @@ class ResCompany(models.Model):
             record = record.with_context(ignore_exceptions=True)
             fiscal_lock_date = max(record.user_fiscalyear_lock_date, record.user_hard_lock_date)
             sessions_in_period = pos_session_model.search(
-                [
-                    ("company_id", "child_of", record.id),
-                    ("state", "!=", "closed"),
-                    *expression.OR([
-                        [("start_at", "<=", fiscal_lock_date)],
-                        [("start_at", "<=", record.user_tax_lock_date)],
-                        # The `config_id.journal_id.type` is either 'sale' or 'misc'
-                        [("config_id.journal_id.type", "=", 'sale'),
-                         ("start_at", "<=", record.user_sale_lock_date)],
-                    ])
-                ]
+                Domain("company_id", "child_of", record.id)
+                & Domain("state", "!=", "closed")
+                & Domain.OR((
+                    Domain("start_at", "<=", fiscal_lock_date),
+                    Domain("start_at", "<=", record.user_tax_lock_date),
+                    # The `config_id.journal_id.type` is either 'sale' or 'misc'
+                    Domain("config_id.journal_id.type", "=", 'sale')
+                        & Domain("start_at", "<=", record.user_sale_lock_date),
+                ))
             )
             if sessions_in_period:
                 sessions_str = ', '.join(sessions_in_period.mapped('name'))

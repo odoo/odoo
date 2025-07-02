@@ -12,7 +12,7 @@ from lxml import etree
 from odoo import SUPERUSER_ID, api, fields, models, modules
 from odoo.addons.account.tools import dict_to_xml
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import config, date_utils, split_every
 from odoo.tools.image import image_data_uri
 
@@ -743,15 +743,15 @@ class MyInvoisDocument(models.Model):
         # /!\ when a document validation is pending, myinvois_validation_time is still None. These also need to be updated.
         datetime_threshold = datetime.datetime.now() - datetime.timedelta(hours=74)
         # We always want to fetch in_progress document, it's very likely that their status is already there.
-        domain = [('myinvois_state', 'in', ('in_progress', False))]
+        domain = Domain('myinvois_state', 'in', ('in_progress', False))
         # For valid document, we want them if their myinvois_validation_time is less than 74h ago, and if their myinvois_retry_at in the past.
-        domain = expression.OR([domain, [
+        domain |= Domain([
             ('myinvois_state', '=', 'valid'),
             ('myinvois_validation_time', '>', datetime_threshold),
             '|',
             ('myinvois_retry_at', '<=', datetime.datetime.now()),
             ('myinvois_retry_at', '=', False),
-        ]])
+        ])
         grouped_documents = self.env['myinvois.document']._read_group(
             domain,
             groupby=['myinvois_submission_uid'],

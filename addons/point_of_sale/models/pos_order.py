@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-import json
 from datetime import datetime
 from markupsafe import Markup
 from itertools import groupby
@@ -13,10 +11,10 @@ from pprint import pformat
 import psycopg2
 import pytz
 
-from odoo import api, fields, models, tools, _, Command
+from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, float_round, float_repr, float_compare, formatLang
 from odoo.exceptions import ValidationError, UserError
-from odoo.osv.expression import AND
+from odoo.fields import Command, Domain
 import base64
 
 
@@ -1353,11 +1351,9 @@ class PosOrder(models.Model):
     @api.model
     def search_paid_order_ids(self, config_id, domain, limit, offset):
         """Search for 'paid' orders that satisfy the given domain, limit and offset."""
-        default_domain = [('state', '!=', 'draft'), ('state', '!=', 'cancel')]
-        if domain == []:
-            real_domain = AND([[['config_id', '=', config_id]], default_domain])
-        else:
-            real_domain = AND([domain, default_domain])
+        default_domain = Domain('state', '!=', 'draft') & Domain('state', '!=', 'cancel')
+        domain = Domain(domain) or Domain('config_id', '=', config_id)
+        real_domain = domain & default_domain
         orders = self.search(real_domain, limit=limit, offset=offset, order='create_date desc')
         # We clean here the orders that does not have the same currency.
         # As we cannot use currency_id in the domain (because it is not a stored field),

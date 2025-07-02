@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
@@ -9,7 +8,7 @@ import werkzeug
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import is_html_empty
 
 
@@ -675,19 +674,19 @@ class SurveySurvey(models.Model):
         """ Returns the number of attempts left. """
         self.ensure_one()
 
-        domain = [
+        domain = Domain([
             ('survey_id', '=', self.id),
             ('test_entry', '=', False),
             ('state', '=', 'done')
-        ]
+        ])
 
         if partner:
-            domain = expression.AND([domain, [('partner_id', '=', partner.id)]])
+            domain &= Domain('partner_id', '=', partner.id)
         else:
-            domain = expression.AND([domain, [('email', '=', email)]])
+            domain &= Domain('email', '=', email)
 
         if invite_token:
-            domain = expression.AND([domain, [('invite_token', '=', invite_token)]])
+            domain &= Domain('invite_token', '=', invite_token)
 
         return self.attempts_limit - self.env['survey.user_input'].search_count(domain)
 
@@ -867,7 +866,7 @@ class SurveySurvey(models.Model):
                 raise ValueError("Page id is needed for question layout 'page_per_section'")
             page_or_question_id = int(page_id)
             questions = self.env['survey.question'].sudo().search(
-                expression.AND([[('survey_id', '=', self.id)], [('page_id', '=', page_or_question_id)]]))
+                Domain('survey_id', '=', self.id) & Domain('page_id', '=', page_or_question_id))
         elif self.questions_layout == 'page_per_question':
             if not question_id:
                 raise ValueError("Question id is needed for question layout 'page_per_question'")
