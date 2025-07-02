@@ -256,6 +256,17 @@ export class BuilderOptionsPlugin extends Plugin {
         if (lastValidContainerIdx > 0) {
             containers = containers.slice(lastValidContainerIdx);
         }
+        if (
+            containers.length === 2 &&
+            containers[0].element.tagName === "HEADER" &&
+            containers[1].element.tagName === "NAV"
+        ) {
+            for (const c of containers) {
+                if (!("folded" in c.element)) {
+                    c.folded = false;
+                }
+            }
+        }
         if (containers.length) {
             containers.at(-1).folded = false;
         }
