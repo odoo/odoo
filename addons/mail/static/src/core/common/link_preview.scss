@@ -1,23 +1,21 @@
 .o-mail-LinkPreviewCard {
     max-width: $o-mail-LinkPreview-width;
+}
 
-    .row {
-        min-height: $o-mail-LinkPreviewCard-height;
-    }
+.o-mail-LinkPreviewCard-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
 }
 
 .o-mail-LinkPreviewCard-description {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 4;
 }
 
-.o-mail-LinkPreviewCard-imageLinkWrap {
-    border-right: 1px solid $card-border-color;
-}
-
-.o-mail-LinkPreviewImage img {
-    max-height: $o-mail-LinkPreview-height;
+.o-mail-LinkPreviewCard-noImage {
+    min-height: $o-mail-LinkPreviewCard-height;
     max-width: $o-mail-LinkPreview-width;
 }
 
@@ -107,5 +105,11 @@ $o-mail-LinkPreviewVideo-providerBorderWidth: 4px;
         .o-mail-LinkPreview-aside {
             display: block;
         }
+    }
+}
+
+@media (min-width: 576px) {
+    .o-mail-LinkPreview-dialog {
+        max-width: $o-mail-ChatWindow-width;
     }
 }
