@@ -32,14 +32,16 @@
                                     o_select_start: arInfo.isSelectStart,
                                     o_select_end: arInfo.isSelectEnd,
                                     o_highlighted: arInfo.isHighlighted,
-                                    'o_today fw-bolder text-decoration-underline': itemInfo.includesToday,
+                                    'o_today fw-bolder': itemInfo.includesToday,
                                     [itemInfo.extraClass]: true,
                                 }"
                                 t-att-disabled="!itemInfo.isValid"
                                 t-on-pointerenter="() => (state.hoveredDate = itemInfo.range[0])"
                                 t-on-click="() => this.zoomOrSelect(itemInfo)"
                             >
-                                <t t-esc="itemInfo.label" />
+                                <div t-att-class="{'w-75 align-content-center text-center rounded-circle': itemInfo.includesToday}">
+                                    <t t-esc="itemInfo.label" />
+                                </div>
                             </div>
                         </t>
                     </t>
