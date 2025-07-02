@@ -218,3 +218,84 @@ test("setShippingDate and getShippingDate with Luxon", async () => {
     order.setShippingDate(null);
     expect(order.getShippingDate()).toBeEmpty();
 });
+
+test("priceDoesntChangeWhenChangingPreset", async () => {
+    const store = await setupPosEnv();
+    store.models["pos.preset"].get(1).pricelist_id = false;
+    const otherPreset = store.models["pos.preset"].get(2);
+    store.models["product.combo"].get(1).qty_free = 2;
+    const comboProduct1 = store.models["product.combo.item"].get(1);
+    const comboProductExtra = store.models["product.combo.item"].get(2);
+    const comboProduct2 = store.models["product.combo.item"].get(3);
+    const template = store.models["product.template"].get(7);
+    const order = store.addNewOrder();
+    const order2 = store.addNewOrder();
+    const order3 = store.addNewOrder();
+    const order4 = store.addNewOrder();
+
+    // Normal flow with extras
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: template,
+            payload: [
+                [{ combo_item_id: comboProduct1, qty: 2 }],
+                [{ combo_item_id: comboProduct2, qty: 2 }],
+            ],
+            qty: 1,
+        },
+        order
+    );
+
+    let total = order.amount_total;
+    order.setPreset(otherPreset);
+    order.recomputeOrderData();
+    expect(order.amount_total).toBe(total);
+
+    // Normal flow
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: template,
+            payload: [[{ combo_item_id: comboProduct1, qty: 2 }]],
+            qty: 1,
+        },
+        order2
+    );
+    total = order2.amount_total;
+    order2.setPreset(otherPreset);
+    order2.recomputeOrderData();
+    expect(order2.amount_total).toBe(total);
+
+    // Flow with products with extra price
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: template,
+            payload: [
+                [{ combo_item_id: comboProduct1, qty: 2 }],
+                [{ combo_item_id: comboProductExtra, qty: 2 }],
+            ],
+            qty: 1,
+        },
+        order3
+    );
+    total = order3.amount_total;
+    order3.setPreset(otherPreset);
+    order3.recomputeOrderData();
+    expect(order3.amount_total).toBe(total);
+
+    // Flow with all the same product
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: template,
+            payload: [
+                [{ combo_item_id: comboProduct1, qty: 2 }],
+                [{ combo_item_id: comboProduct1, qty: 2 }],
+            ],
+            qty: 1,
+        },
+        order4
+    );
+    total = order4.amount_total;
+    order4.setPreset(otherPreset);
+    order4.recomputeOrderData();
+    expect(order4.amount_total).toBe(total);
+});
