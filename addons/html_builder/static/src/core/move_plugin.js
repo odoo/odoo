@@ -8,6 +8,7 @@ import {
 } from "@html_builder/utils/column_layout_utils";
 import { isElementInViewport } from "@html_builder/utils/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
+import { localization } from "@web/core/l10n/localization";
 
 export class MovePlugin extends Plugin {
     static id = "move";
@@ -36,6 +37,8 @@ export class MovePlugin extends Plugin {
     setup() {
         this.overlayTarget = null;
         this.noScroll = false;
+        this.isEditableRTL = this.config.isEditableRTL;
+        this.isBackendRTL = localization.direction === "rtl";
 
         // Compute the selectors.
         const verticalSelector = [];
@@ -98,6 +101,7 @@ export class MovePlugin extends Plugin {
         const buttons = [];
         this.overlayTarget = target;
         this.noScroll = this.overlayTarget.matches(this.noScrollSelector);
+        const reverseButtons = this.isEditableRTL !== this.isBackendRTL;
 
         if (!this.areArrowsHidden()) {
             const isVertical =
@@ -113,23 +117,27 @@ export class MovePlugin extends Plugin {
             );
 
             if (previousSiblingEl) {
-                const direction = isVertical ? "up" : "left";
+                const direction = isVertical ? "up" : reverseButtons ? "right" : "left";
                 const button = {
                     class: `fa fa-fw fa-angle-${direction}`,
-                    title: _t("Move %s", direction),
+                    title: isVertical ? _t("Move up") : this.isEditableRTL ? _t("Move right") : _t("Move left"),
                     handler: this.onMoveClick.bind(this, "prev"),
                 };
                 buttons.push(button);
             }
 
             if (nextSiblingEl) {
-                const direction = isVertical ? "down" : "right";
+                const direction = isVertical ? "down" : reverseButtons ? "left" : "right";
                 const button = {
                     class: `fa fa-fw fa-angle-${direction}`,
-                    title: _t("Move %s", direction),
+                    title: isVertical ? _t("Move down") : this.isEditableRTL ? _t("Move left") : _t("Move right"),
                     handler: this.onMoveClick.bind(this, "next"),
                 };
                 buttons.push(button);
+            }
+
+            if (reverseButtons && !isVertical) {
+                buttons.reverse();
             }
         }
         return buttons;
