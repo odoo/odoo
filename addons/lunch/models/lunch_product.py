@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import base64
 
 from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class LunchProduct(models.Model):
@@ -80,13 +77,12 @@ class LunchProduct(models.Model):
             Is available_at is always false when browsing it
             this field is there only to search (see _search_is_available_at)
         """
-        for product in self:
-            product.is_available_at = False
+        self.is_available_at = False
 
     def _search_is_available_at(self, operator, value):
         if operator != 'in':
             return NotImplemented
-        return expression.OR([[('supplier_id.available_location_ids', 'in', value)], [('supplier_id.available_location_ids', '=', False)]])
+        return Domain('supplier_id.available_location_ids', 'in', value) | Domain('supplier_id.available_location_ids', '=', False)
 
     def _sync_active_from_related(self):
         """ Archive/unarchive product after related field is archived/unarchived """

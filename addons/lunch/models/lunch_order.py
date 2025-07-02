@@ -3,7 +3,7 @@
 from odoo import api, fields, models, _
 
 from odoo.exceptions import ValidationError, UserError
-from odoo.osv.expression import AND
+from odoo.fields import Domain
 
 
 class LunchOrder(models.Model):
@@ -216,7 +216,7 @@ class LunchOrder(models.Model):
             ('lunch_location_id', '=', values.get('lunch_location_id', default_location_id)),
         ]
         if values.get('state'):
-            domain = AND([domain, [('state', '=', values['state'])]])
+            domain = Domain.AND([domain, [('state', '=', values['state'])]])
         toppings = values.get('toppings', [])
         return self.search(domain).filtered(lambda line: (line.topping_ids_1 | line.topping_ids_2 | line.topping_ids_3).ids == toppings)
 
