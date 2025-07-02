@@ -201,6 +201,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/xml/wysiwyg_colorpicker.xml',
         ],
         'web_editor.backend_assets_wysiwyg': [
+            ('include', 'web._assets_jquery'),
             ('include', 'web_editor.assets_wysiwyg'),
         ],
         'web.assets_backend': [
