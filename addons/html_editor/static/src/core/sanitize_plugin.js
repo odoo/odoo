@@ -31,7 +31,7 @@ export class SanitizePlugin extends Plugin {
         return this.DOMPurify.sanitize(elem, {
             IN_PLACE: true,
             ADD_TAGS: ["#document-fragment", "fake-el"],
-            ADD_ATTR: ["contenteditable"],
+            ADD_ATTR: ["contenteditable", "t-field", "t-out", "t-esc"],
         });
     }
 

@@ -16,6 +16,19 @@ test("sanitize should remove nasty elements", async () => {
     ).toBe("<p>abc</p>");
 });
 
+test("sanitize should leave t-field, t-out, t-esc as is", async () => {
+    const { editor } = await setupEditor("");
+    expect(editor.shared.sanitize.sanitize(`<span t-esc="expr"></span>`)).toBe(
+        '<span t-esc="expr"></span>'
+    );
+    expect(editor.shared.sanitize.sanitize(`<span t-out="expr"></span>`)).toBe(
+        '<span t-out="expr"></span>'
+    );
+    expect(editor.shared.sanitize.sanitize(`<span t-field="expr"></span>`)).toBe(
+        '<span t-field="expr"></span>'
+    );
+});
+
 test("sanitize plugin should handle contenteditable attribute with o-contenteditable-[true/false] class", async () => {
     await testEditor({
         contentBefore: `<p class="o-contenteditable-true">a[]</p><p class="o-contenteditable-false">b</p>`,
