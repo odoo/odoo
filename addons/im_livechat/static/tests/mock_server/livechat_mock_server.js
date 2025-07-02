@@ -29,11 +29,11 @@ async function get_session(request) {
     let {
         channel_id,
         anonymous_name,
-        previous_operator_id,
+        operator_params,
         persisted,
         context = {},
     } = await parseRequestParams(request);
-    previous_operator_id = parseInt(previous_operator_id);
+    operator_params['previous_operator_id'] = parseInt(operator_params['previous_operator_id'])
     let country_id;
     // don't use the anonymous name if the user is logged in
     if (this.env.user && !ResUsers._is_public(this.env.uid)) {
@@ -52,7 +52,7 @@ async function get_session(request) {
     const channelVals = LivechatChannel._get_livechat_discuss_channel_vals(
         channel_id,
         anonymous_name,
-        previous_operator_id,
+        operator_params,
         country_id,
         persisted
     );

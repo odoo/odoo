@@ -78,7 +78,7 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/get_session', methods=["POST"], type="jsonrpc", auth='public')
     @add_guest_to_context
-    def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True):
+    def get_session(self, channel_id, anonymous_name, operator_params=None, persisted=True):
         store = Store()
         user_id = None
         country_id = None
@@ -96,6 +96,11 @@ class LivechatController(http.Controller):
                 if country:
                     country_id = country.id
 
+        if operator_params is None:
+            operator_params = {}
+        previous_operator_id = operator_params.get('previous_operator_id')
+        chatbot_script_id = operator_params.get('chatbot_script_id')
+
         if previous_operator_id:
             previous_operator_id = int(previous_operator_id)
 
@@ -104,16 +109,17 @@ class LivechatController(http.Controller):
             chatbot_script = request.env['chatbot.script'].sudo().with_context(
                 lang=request.env["chatbot.script"]._get_chatbot_language()
             ).browse(chatbot_script_id)
+        operator_params.update({'previous_operator_id': previous_operator_id, 'chatbot_script': chatbot_script})
         channel_vals = request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._get_livechat_discuss_channel_vals(
             anonymous_name,
-            previous_operator_id=previous_operator_id,
-            chatbot_script=chatbot_script,
+            operator_params=operator_params,
             user_id=user_id,
             country_id=country_id,
             lang=request.cookies.get('frontend_lang')
         )
         if not channel_vals:
             return False
+
         channel_id = -1  # only one temporary thread at a time, id does not matter.
         if not persisted:
             chatbot_data = None

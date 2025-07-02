@@ -46,11 +46,11 @@ export class LivechatChannel extends models.ServerModel {
         return users.filter((user) => user.im_status === "online");
     }
     /** @param {integer} id */
-    _get_livechat_discuss_channel_vals(id, anonymous_name, previous_operator_id, country_id) {
+    _get_livechat_discuss_channel_vals(id, anonymous_name, operator_params, country_id) {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        const operator = this._get_operator(id, previous_operator_id);
+        const operator = this._get_operator(id, operator_params['previous_operator_id']);
         if (!operator) {
             return false;
         }
