@@ -49,12 +49,17 @@
                     <i class="o-mail-DiscussSidebarCategory-chevronCompact position-absolute fa-fw o-xxsmaller" t-att-class="{
                         'oi oi-chevron-down opacity-75': category.open,
                         'oi oi-chevron-right opacity-50': !category.open,
+                        'invisible': !hasVisibleThreads,
                     }"/>
                     <span class="rounded p-1" t-att-class="{ 'opacity-50': !category.open }"><i t-if="store.channels.status === 'fetching'" class="fa fa-fw fa-circle-o-notch fa-spin fs-3"/><i t-else="" class="fa-fw fa-lg fs-3" t-att-class="category.icon ?? 'fa fa-user'"/></span>
                 </t>
                 <t t-else="">
                     <span t-if="store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa fa-fw fa-circle-o-notch fa-spin opacity-50"/></span>
-                    <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa-fw" t-att-class="category.open ? 'oi oi-chevron-down opacity-100' : 'oi oi-chevron-right opacity-50'"/>
+                    <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa-fw" t-att-class="{
+                        'oi oi-chevron-down opacity-100': category.open,
+                        'oi oi-chevron-right opacity-50': !category.open,
+                        'invisible': !hasVisibleThreads,
+                    }"/>
                     <span class="btn-sm p-0 text-uppercase text-break fw-bolder o-xsmaller text-muted" t-att-class="{ 'opacity-50': !category.open }"><t t-esc="category.name"/></span>
                 </t>
             </button>
