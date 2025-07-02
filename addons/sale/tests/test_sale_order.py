@@ -721,6 +721,33 @@ class TestSaleOrder(SaleCommon):
         context = self.sale_order._notify_by_email_prepare_rendering_context(message=self.env['mail.message'])
         self.assertEqual(context['subtitles'][0], f"{self.sale_order.name} - Test Partner")
 
+    def test_sale_order_unit_price_recompute_on_product_change(self):
+        """Ensure price_unit is correctly recomputed when the product is
+           changed after manually changing the price.
+        """
+        product2 = self.env['product.product'].create({
+            'name': "Test Product2",
+            'list_price': 0.0,
+        })
+        sol = self.sale_order.order_line[0]
+        # Manually change the product & price on the SO line
+        with Form(sol) as sol_form:
+            sol_form.product_id = product2
+            sol_form.price_unit = 100
+        # Expected price_subtotal = custom unit price * quantity
+        self.assertAlmostEqual(
+            sol.price_subtotal, 100 * sol.product_uom_qty,
+            msg="price_total should be equal to expected_total",
+        )
+        # Unit price should reset after changing the product
+        with Form(sol) as sol_form:
+            sol_form.product_id = self.product
+        # Expected price_subtotal = list price * quantity
+        self.assertAlmostEqual(
+            sol.price_subtotal, self.product.list_price * sol.product_uom_qty,
+            msg="price_total should be equal to expected_total",
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
