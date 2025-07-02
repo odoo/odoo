@@ -10,3 +10,4 @@ from . import test_access_rights
 from . import test_accrued_purchase_orders
 from . import test_purchase_dashboard
 from . import test_import_files
+from . import test_purchase_product_catalog
