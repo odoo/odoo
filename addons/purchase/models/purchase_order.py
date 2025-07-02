@@ -1180,8 +1180,11 @@ class PurchaseOrder(models.Model):
             params=params
         )
         if seller:
+            price = seller.price_discounted
+            if seller.currency_id != self.currency_id:
+                price = seller.currency_id._convert(seller.price_discounted, self.currency_id)
             product_infos.update(
-                price=seller.price_discounted,
+                price=price,
                 min_qty=seller.min_qty,
             )
 
@@ -1290,7 +1293,11 @@ class PurchaseOrder(models.Model):
             })
             if pol.selected_seller_id:
                 # Fix the PO line's price on the seller's one.
-                pol.price_unit = pol.selected_seller_id.price_discounted
+                seller = pol.selected_seller_id
+                price = seller.price_discounted
+                if seller.currency_id != self.currency_id:
+                    price = seller.currency_id._convert(seller.price_discounted, self.currency_id)
+                pol.price_unit = price
         return pol.price_unit_discounted
 
     def _create_order_section(self, child_field, name, position, **kwargs):
