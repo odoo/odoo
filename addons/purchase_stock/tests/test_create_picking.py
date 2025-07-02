@@ -883,7 +883,7 @@ class TestCreatePicking(ProductVariantsCommon):
             'partner_id': self.partner_id.id,
             'order_line': [Command.create({
                     'product_id': product_with_description.product_variant_ids.filtered(lambda p: p.product_template_attribute_value_ids.name == 'red').id,
-                    'product_no_variant_attribute_value_ids': [Command.set(product_with_description.attribute_line_ids[1].product_template_value_ids[0].ids)],
+                    'product_no_variant_attribute_value_ids': product_matrix_installed and [Command.set(product_with_description.attribute_line_ids[1].product_template_value_ids[0].ids)],
                     'product_qty': 1,
                 }),
             ]
