@@ -160,6 +160,7 @@ class AlarmManager(models.AbstractModel):
         already.
         """
         lastcall = self.env.context.get('lastcall', False) or fields.date.today() - relativedelta(weeks=1)
+        now = self.env.cr.now()
         self.env.cr.execute('''
             SELECT "alarm"."id", "event"."id"
               FROM "calendar_event" AS "event"
@@ -171,9 +172,9 @@ class AlarmManager(models.AbstractModel):
                    "alarm"."alarm_type" = %s
                AND "event"."active"
                AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) >= %s
-               AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) < now() at time zone 'utc'
-               AND "event"."stop" > now() at time zone 'utc'
-              ''' + self._get_notify_alert_extra_conditions(), [alarm_type, lastcall])
+               AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) < %s at time zone 'utc'
+               AND "event"."stop" > %s at time zone 'utc'
+              ''' + self._get_notify_alert_extra_conditions(), [alarm_type, lastcall, now, now])
 
         events_by_alarm = {}
         for alarm_id, event_id in self.env.cr.fetchall():
