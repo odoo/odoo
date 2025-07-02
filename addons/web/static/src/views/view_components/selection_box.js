@@ -15,6 +15,9 @@ export class SelectionBox extends Component {
     get nbTotal() {
         return this.root.isGrouped ? this.root.recordCount : this.root.count;
     }
+    get hasLimitedCount() {
+        return this.root.hasLimitedCount;
+    }
     get isDomainSelected() {
         return this.root.isDomainSelected;
     }
