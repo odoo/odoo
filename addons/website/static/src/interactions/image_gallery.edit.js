@@ -9,7 +9,7 @@ export class ImageGalleryEdit extends Interaction {
             "t-on-click": this.onAddImage.bind(this),
         },
     };
-    setup() {
+    start() {
         this.renderAt("website.empty_image_gallery_alert", {}, this.el);
     }
     onAddImage() {
