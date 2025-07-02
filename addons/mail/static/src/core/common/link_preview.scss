@@ -1,28 +1,41 @@
 .o-mail-LinkPreviewCard {
     max-width: $o-mail-LinkPreview-width;
-
-    .row {
-        min-height: $o-mail-LinkPreviewCard-height;
-    }
 }
 
-.o-mail-LinkPreviewCard-description {
+.o-mail-LinkPreviewCardImage {
+    max-height: $o-mail-LinkPreviewImage-height;
+}
+
+.o-mail-LinkPreviewCardImage-squarish {
+    max-width: $o-mail-LinkPreviewCard-squarishImageSize;
+    max-height: $o-mail-LinkPreviewCard-squarishImageSize;
+}
+.o-mail-LinkPreviewCard-noImage {
+    width: fit-content;
+}
+
+.o-mail-LinkPreviewCard-title, .o-mail-LinkPreviewCard-description {
     display: -webkit-box;
     -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.o-mail-LinkPreviewCard-title {
     -webkit-line-clamp: 2;
 }
 
-.o-mail-LinkPreviewCard-imageLinkWrap {
-    border-right: 1px solid $card-border-color;
+.o-mail-LinkPreviewCard-description {
+    -webkit-line-clamp: 3;
 }
 
-.o-mail-LinkPreviewImage img {
-    max-height: $o-mail-LinkPreview-height;
-    max-width: $o-mail-LinkPreview-width;
-}
-
-.o-mail-ChatWindow .o-mail-LinkPreviewImage img {
-    max-width: 100%;
+.o-mail-LinkPreviewImage {
+    img {
+        max-width: $o-mail-LinkPreview-width;
+        max-height: $o-mail-LinkPreviewImage-height;
+    }
+    .o-mail-ChatWindow & img {
+        max-width: 100%;
+    }
 }
 
 .o-mail-LinkPreviewVideo {
@@ -107,5 +120,11 @@ $o-mail-LinkPreviewVideo-providerBorderWidth: 4px;
         .o-mail-LinkPreview-aside {
             display: block;
         }
+    }
+}
+
+@media (min-width: 576px) {
+    .o-mail-LinkPreview-dialog {
+        max-width: $o-mail-LinkPreview-dialogWidth;
     }
 }

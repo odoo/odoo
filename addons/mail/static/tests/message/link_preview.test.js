@@ -83,7 +83,7 @@ test("simplest card layout", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewCard");
-    await contains(".o-mail-LinkPreviewCard h6:text('Article title')");
+    await contains(".o-mail-LinkPreviewCard p:text('Article title')");
     await contains(".o-mail-LinkPreviewCard p:text('Description')");
 });
 
@@ -107,7 +107,7 @@ test("simplest card layout with image", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewCard");
-    await contains(".o-mail-LinkPreviewCard h6:text('Article title')");
+    await contains(".o-mail-LinkPreviewCard p:text('Article title')");
     await contains(".o-mail-LinkPreviewCard p:text('Description')");
     await contains(".o-mail-LinkPreviewCard img");
 });

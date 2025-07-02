@@ -12,6 +12,8 @@ export class LinkPreview extends Record {
     message_link_preview_ids = fields.Many("mail.message.link.preview", {
         inverse: "link_preview_id",
     });
+    /** @type {boolean} */
+    hasSquarishCardImage;
     /** @type {string} */
     image_mimetype;
     /** @type {string} */

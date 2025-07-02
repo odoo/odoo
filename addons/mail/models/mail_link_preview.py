@@ -73,7 +73,7 @@ class MailLinkPreview(models.Model):
                 len(message_link_previews_ok)
                 + len(message_link_previews_values)
                 + len(link_previews_values)
-                > 5
+                > 4
             ):
                 break
         new_link_preview_by_url = {

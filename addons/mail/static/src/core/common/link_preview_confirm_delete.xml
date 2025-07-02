@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.LinkPreviewConfirmDelete">
-        <Dialog size="'md'" title.translate="Confirmation" modalRef="modalRef">
+        <Dialog size="'md'" title.translate="Confirmation" modalRef="modalRef" contentClass="'o-bg-body o-mail-LinkPreview-dialog'">
             <p class="mx-3 mb-3">Do you really want to delete this preview?</p>
-            <t t-component="props.LinkPreview" messageLinkPreview="props.messageLinkPreview"/>
+            <div class="d-flex flex-column ms-md-2">
+                <blockquote>
+                    <t t-component="props.LinkPreview" messageLinkPreview="props.messageLinkPreview"/>
+                </blockquote>
+            </div>
             <t t-set-slot="footer">
                 <button class="btn btn-danger me-2" t-on-click="onClickOk">Delete</button>
                 <button t-if="props.messageLinkPreview.hasDeleteAll" class="btn btn-outline-danger me-2" t-on-click="onClickDeleteAll">Delete all previews</button>
