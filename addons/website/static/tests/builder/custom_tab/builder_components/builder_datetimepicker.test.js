@@ -1,11 +1,25 @@
 import { expect, test } from "@odoo/hoot";
+import { queryOne } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import { formatDateTime } from "@web/core/l10n/dates";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../website_helpers";
 const { DateTime } = luxon;
 
+const TIME_TOLERANCE = 2;
+
 defineWebsiteModels();
+
+// To avoid indeterminism in tests, we use a tolerance
+function isExpectedDateTime({
+    dateString,
+    expectedDateTime = DateTime.now(),
+    tolerance = TIME_TOLERANCE,
+}) {
+    const actualTimestamp = DateTime.fromFormat(dateString, "MM/dd/yyyy HH:mm:ss").toUnixInteger();
+    const expectedTimestamp = expectedDateTime.toUnixInteger();
+    const difference = Math.abs(actualTimestamp - expectedTimestamp);
+    return difference <= tolerance;
+}
 
 test("opens DateTimePicker on focus, closes on blur", async () => {
     addOption({
@@ -33,14 +47,12 @@ test("defaults to now if undefined", async () => {
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
-    const expectedDateTime = DateTime.now();
-    expect(".we-bg-options-container input.o-hb-input-base").toHaveValue(
-        formatDateTime(expectedDateTime)
-    );
+    let dateString = queryOne(".we-bg-options-container input.o-hb-input-base").value;
+    expect(isExpectedDateTime({ dateString })).toBe(true);
+
     await contains(".we-bg-options-container input.form-check-input").click();
-    expect(".we-bg-options-container input.o-hb-input-base").toHaveValue(
-        formatDateTime(expectedDateTime)
-    );
+    dateString = queryOne(".we-bg-options-container input.o-hb-input-base").value;
+    expect(isExpectedDateTime({ dateString })).toBe(true);
 });
 
 test("defaults to last one when invalid date provided", async () => {
@@ -67,9 +79,9 @@ test("defaults to now when no date is selected", async () => {
     await contains(".we-bg-options-container input").edit("04/01/2019 10:00:00");
     expect(".we-bg-options-container input").toHaveValue("04/01/2019 10:00:00");
 
-    const expectedDateTime = DateTime.now();
     await contains(".we-bg-options-container input").edit("");
-    expect(".we-bg-options-container input").toHaveValue(formatDateTime(expectedDateTime));
+    const dateString = queryOne(".we-bg-options-container input").value;
+    expect(isExpectedDateTime({ dateString })).toBe(true);
 });
 
 test("defaults to now when clicking on clear button", async () => {
@@ -85,8 +97,8 @@ test("defaults to now when clicking on clear button", async () => {
     await contains(".we-bg-options-container input").click();
     await contains(".o_datetime_buttons button .fa-eraser").click();
     await contains(".options-container").click();
-    const expectedDateTime = DateTime.now();
-    expect(".we-bg-options-container input").toHaveValue(formatDateTime(expectedDateTime));
+    const dateString = queryOne(".we-bg-options-container input").value;
+    expect(isExpectedDateTime({ dateString })).toBe(true);
 });
 
 test("selects a date and properly applies it", async () => {
@@ -96,24 +108,18 @@ test("selects a date and properly applies it", async () => {
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    const expectedDateTime = DateTime.now().plus({ days: 1 });
 
     await contains(".we-bg-options-container input").click();
     await contains(".o_date_item_cell.o_today + .o_date_item_cell").click();
     await contains(".options-container").click();
 
-    // To avoid indeterminism, don't check last digit of seconds
-    const formattedDateTime = formatDateTime(expectedDateTime);
-    expect(".we-bg-options-container input").toHaveValue(
-        new RegExp(`^${formattedDateTime.slice(0, -1)}`)
-    );
+    const dateString = queryOne(".we-bg-options-container input").value;
+    const expectedDateTime = DateTime.now().plus({ days: 1 });
+    expect(isExpectedDateTime({ dateString, expectedDateTime })).toBe(true);
 
-    // To avoid indeterminism, don't check last digit of the timestamp
-    const timestamp = expectedDateTime.toUnixInteger().toString();
-    expect(":iframe .test-options-target").toHaveAttribute(
-        "data-date",
-        new RegExp(`^${timestamp.slice(0, -1)}`)
-    );
+    const expectedDateTimestamp = expectedDateTime.toUnixInteger();
+    const dateTimestamp = parseFloat(queryOne(":iframe .test-options-target").dataset.date);
+    expect(Math.abs(expectedDateTimestamp - dateTimestamp)).toBeLessThan(TIME_TOLERANCE);
 });
 
 test("selects a date and synchronize the input field, while still in preview", async () => {
@@ -123,14 +129,14 @@ test("selects a date and synchronize the input field, while still in preview", a
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    const expectedDateTime = DateTime.now().plus({ days: 1 });
-
     await contains(".we-bg-options-container input").click();
     await contains(".o_date_item_cell.o_today + .o_date_item_cell").click();
 
-    const formattedDateTime = formatDateTime(expectedDateTime);
-    expect(".we-bg-options-container input").toHaveValue(formattedDateTime);
+    const dateString = queryOne(".we-bg-options-container input").value;
+    const expectedDateTime = DateTime.now().plus({ days: 1 });
+    expect(isExpectedDateTime({ dateString, expectedDateTime })).toBe(true);
 
-    const timestamp = expectedDateTime.toUnixInteger().toString();
-    expect(":iframe .test-options-target").toHaveAttribute("data-date", timestamp);
+    const expectedDateTimestamp = expectedDateTime.toUnixInteger();
+    const dateTimestamp = parseFloat(queryOne(":iframe .test-options-target").dataset.date);
+    expect(Math.abs(expectedDateTimestamp - dateTimestamp)).toBeLessThan(TIME_TOLERANCE);
 });
