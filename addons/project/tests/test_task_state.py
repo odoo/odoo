@@ -103,9 +103,21 @@ class TestTaskState(TestProjectCommon):
         (self.task_1 + self.task_2).write({
             'project_id': project_pigs.id
         })
-        self.task_1._onchange_project_id()
         self.assertEqual(self.task_1.state, '01_in_progress', "task_1 state should automatically switch back to in_progress when its project changes")
         self.assertEqual(self.task_2.state, '01_in_progress', "task_2 state should automatically switch back to in_progress when its project changes")
+
+    def test_task_state_unchanged_when_changing_project_with_shared_stage(self):
+        # copying the project because we want shared stage among projects
+        project_cows = self.project_goats.copy()
+        self.task_1.write({
+            'state': '03_approved',
+            'project_id': project_cows.id
+        })
+        self.assertEqual(self.task_1.state, '03_approved', "Task state should remain unchanged when moving to a project with the same shared stage.")
+        self.task_1.write({
+            'project_id': self.project_pigs.id
+        })
+        self.assertEqual(self.task_1.state, '01_in_progress', "Task state should change when moving to a project with non-shared stage.")
 
     def test_duplicate_dependent_task(self):
         self.task_1.write({
