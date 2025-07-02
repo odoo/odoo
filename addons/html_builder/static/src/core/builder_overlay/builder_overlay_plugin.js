@@ -100,6 +100,7 @@ export class BuilderOverlayPlugin extends Plugin {
                 next: this.dependencies.operation.next,
                 isMobileView: this.config.isMobileView,
                 mobileBreakpoint: this.config.mobileBreakpoint,
+                isRtl: this.config.isEditableRTL,
             });
             this.overlays.push(overlay);
             this.overlayContainer.append(overlay.overlayElement);

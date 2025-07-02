@@ -55,6 +55,8 @@ export class GridLayoutPlugin extends Plugin {
 
     setup() {
         this.overlayTarget = null;
+        this.isRtl = this.config.isEditableRTL;
+        this.iframe = this.document.defaultView.frameElement;
     }
 
     /**
@@ -311,8 +313,10 @@ export class GridLayoutPlugin extends Plugin {
             // drag that column instead.
             const columnEl = this.wrapInGridItem(snippetEl, dropzoneEl, dragState);
             // Drag the column by the middle top.
+            const iframeRect = this.iframe.getBoundingClientRect();
             dragState.mousePositionYOnElement = 0;
-            dragState.mousePositionXOnElement = columnEl.scrollWidth / 2;
+            dragState.mousePositionXOnElement =
+                (iframeRect.x + columnEl.scrollWidth / 2) * (this.isRtl ? -1 : 1);
         }
 
         this.onDropzoneOver({ draggedEl: dragState.draggedEl, dragState });
@@ -674,17 +678,29 @@ export class GridLayoutPlugin extends Plugin {
         const rowRect = rowEl.getBoundingClientRect();
         const rowTop = rowRect.top;
         const rowLeft = rowRect.left;
+        const rowRight = rowRect.right;
 
         // Place the column where the mouse is, without overflowing horizontally
         // or above the top of the grid.
         const { mousePositionYOnElement, mousePositionXOnElement } = dragState;
         let top = y - rowTop - mousePositionYOnElement;
-        let left = x - rowLeft - mousePositionXOnElement;
+
+        let left;
+        if (this.isRtl) {
+            left = rowRight - x - mousePositionXOnElement - columnWidth;
+        } else {
+            left = x - rowLeft - mousePositionXOnElement;
+        }
+
         top = top < 0 ? 0 : top;
         left = clamp(left, 0, rowEl.clientWidth - columnWidth);
         const bottom = top + columnHeight;
         columnEl.style.top = `${top}px`;
-        columnEl.style.left = `${left}px`;
+        if (this.isRtl) {
+            columnEl.style.right = `${left}px`;
+        } else {
+            columnEl.style.left = `${left}px`;
+        }
 
         // Compute the drag helper grid-area corresponding to the column
         // position.
