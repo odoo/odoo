@@ -4,5 +4,8 @@
         <xpath expr="//button[hasclass('edit-order-payment')]" position="attributes">
             <attribute name="t-if">!this.pos.config.module_pos_hr || this.pos.employeeIsAdmin</attribute>
         </xpath>
+        <xpath expr="//div[hasclass('ticket-screen')]//div[hasclass('subpads d-flex flex-column')]" position="attributes">
+            <attribute name="t-if">!this.pos.config.module_pos_hr or this.pos.cashier._role !== 'minimal'</attribute>
+        </xpath>
     </t>
 </templates>
