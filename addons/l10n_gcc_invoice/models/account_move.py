@@ -3,8 +3,7 @@
 
 import logging
 
-from odoo import fields, models, api
-
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -23,8 +22,13 @@ class AccountMove(models.Model):
     def _get_name_invoice_report(self):
         self.ensure_one()
         if self.company_id.country_id and 'GCC' in self.company_id.country_id.country_group_codes:
-            return 'l10n_gcc_invoice.arabic_english_invoice'
+            return 'l10n_gcc_invoice.l10n_gcc_report_invoice_document'
         return super()._get_name_invoice_report()
+
+    def _l10n_gcc_get_invoice_title(self):
+        """To be overriden by inheriting modules implementing a custom invoice title"""
+        self.ensure_one()
+        return False
 
     def _num2words(self, number, lang):
         if num2words is None:
@@ -87,3 +91,21 @@ class AccountMoveLine(models.Model):
                 line.l10n_gcc_line_name = lang_product_name(line, line.move_id.partner_id.lang)
             else:
                 line.l10n_gcc_line_name = line.name
+
+    def get_lines_grouped_by_section(self):
+        # EXTENDS account
+        self.ensure_one()
+        res = super().get_lines_grouped_by_section()
+
+        for line in res:
+            line['l10n_gcc_invoice_tax_amount'] = line['price_total'] - line['price_subtotal']
+
+        return res
+
+    def _l10n_gcc_get_section_total(self):
+        section_lines = self.child_ids + self.child_ids.child_ids
+        return sum(section_lines.mapped('price_total'))
+
+    def _l10n_gcc_get_section_tax_amount(self):
+        section_lines = self.child_ids + self.child_ids.child_ids
+        return sum(section_lines.mapped('l10n_gcc_invoice_tax_amount'))
