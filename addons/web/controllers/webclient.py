@@ -55,13 +55,13 @@ class WebClient(http.Controller):
         """
         if mods:
             mods = mods.split(',')
-        elif mods is None:
-            mods = list(request.env.registry._init_modules) + odoo.tools.config['server_wide_modules']
+        else:
+            mods = request.env.registry._init_modules.union(odoo.tools.config['server_wide_modules'])
 
         if lang and lang not in {code for code, _ in request.env['res.lang'].sudo().get_installed()}:
             lang = None
 
-        current_hash = request.env["ir.http"].with_context(cache_translation_data=True).get_web_translations_hash(mods, lang)
+        current_hash = request.env["ir.http"].with_context(cache_translation_data=True)._get_web_translations_hash(mods, lang)
 
         body = {
             'lang': lang,
@@ -69,11 +69,11 @@ class WebClient(http.Controller):
         }
         if current_hash != hash:
             if 'translation_data' in request.env.cr.cache:
-                # ormcache of get_web_translations_hash was cold and fill the translation_data cache
+                # ormcache of _get_web_translations_hash was cold and fill the translation_data cache
                 body.update(request.env.cr.cache.pop('translation_data'))
             else:
-                # ormcache of get_web_translations_hash was hot
-                translations_per_module, lang_params = request.env["ir.http"].get_translations_for_webclient(mods, lang)
+                # ormcache of _get_web_translations_hash was hot
+                translations_per_module, lang_params = request.env["ir.http"]._get_translations_for_webclient(mods, lang)
                 body.update({
                     'lang_parameters': lang_params,
                     'modules': translations_per_module,
