@@ -13,7 +13,7 @@ class Im_LivechatChannel(models.Model):
             user_id=None,
             country_id=None,
             lang=None,
-            close_old_livechat_thread=True,
+            thread_id_to_keep=None,
         ):
         discuss_channel_vals = super()._get_livechat_discuss_channel_vals(
             anonymous_name, operator_params, user_id=user_id, country_id=country_id, lang=lang
@@ -21,20 +21,14 @@ class Im_LivechatChannel(models.Model):
         if not discuss_channel_vals:
             return False
         visitor_sudo = self.env['website.visitor']._get_visitor_from_request()
-        if visitor_sudo and close_old_livechat_thread:
+        if visitor_sudo:
             discuss_channel_vals['livechat_visitor_id'] = visitor_sudo.id
             # As chat requested by the visitor, delete the chat requested by an operator if any to avoid conflicts between two flows
             # TODO DBE : Move this into the proper method (open or init mail channel)
-            chat_request_channel = (
-                self.env["discuss.channel"]
-                .sudo()
-                .search(
-                    [
-                        ("livechat_visitor_id", "=", visitor_sudo.id),
-                        ("livechat_end_dt", "=", False),
-                    ]
-                )
-            )
+            chat_request_domain = [('livechat_visitor_id', '=', visitor_sudo.id), ('livechat_end_dt', '=', False)]
+            if thread_id_to_keep:
+                chat_request_domain.append(('id', '!=', thread_id_to_keep))
+            chat_request_channel = self.env['discuss.channel'].sudo().search(chat_request_domain)
             for discuss_channel in chat_request_channel:
                 operator = discuss_channel.livechat_operator_id
                 operator_name = operator.user_livechat_username or operator.name

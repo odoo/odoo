@@ -265,7 +265,7 @@ class Im_LivechatChannel(models.Model):
     # Channel Methods
     # --------------------------
     def _get_livechat_discuss_channel_vals(
-        self, anonymous_name, operator_params=None, user_id=None, country_id=None, lang=None, close_old_livechat_thread=True,
+        self, anonymous_name, operator_params=None, user_id=None, country_id=None, lang=None, thread_id_to_keep=None,
     ):
         if operator_params is None:
             operator_params = {}

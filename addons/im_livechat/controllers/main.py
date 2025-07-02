@@ -117,7 +117,8 @@ class LivechatController(http.Controller):
             user_id=user_id,
             country_id=country_id,
             lang=request.cookies.get('frontend_lang'),
-            close_old_livechat_thread=channel_info['close_old_livechat_thread']
+            thread_id_to_keep=channel_info.get("discuss_channel_id")
+            # close_old_livechat_thread=channel_info['close_old_livechat_thread']
         )
         if not channel_vals:
             return False
@@ -161,7 +162,7 @@ class LivechatController(http.Controller):
                     create_member_params={"livechat_member_type": "visitor"},
                     post_joined_message=False
                 )
-            channel = channel.with_context(guest=guest)  # a new guest was possibly created
+            channel = channel.sudo().with_context(guest=guest)  # a new guest was possibly created
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
                 channel._broadcast([channel.livechat_operator_id.id])
             if guest:

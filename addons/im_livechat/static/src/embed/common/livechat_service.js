@@ -128,7 +128,6 @@ export class LivechatService {
             return;
         }
         this.store.insert(store_data);
-        debugger;
         const thread = this.store.Thread.get({ id: channel_id, model: "discuss.channel" });
         const ONE_DAY_TTL = 60 * 60 * 24;
         expirableStorage.setItem(
@@ -136,6 +135,7 @@ export class LivechatService {
             thread.livechat_operator_id.id,
             ONE_DAY_TTL * 7
         );
+        debugger;
         return thread;
     }
     
