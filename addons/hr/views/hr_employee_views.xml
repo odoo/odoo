@@ -151,7 +151,7 @@
                                 <div class="row" id="o_hr_work_information_container">
                                     <div id="o_work_information" class="col-lg-7 d-flex flex-column">
                                         <group string="work">
-                                            <field name="company_id" groups="base.group_multi_company"/>
+                                            <field name="company_id" groups="base.group_multi_company" domain="[('id', 'in', allowed_company_ids)]"/>
                                             <field name="department_id"/>
                                             <field name="job_id" string="Job Position" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
                                             <field name="job_title"/>
