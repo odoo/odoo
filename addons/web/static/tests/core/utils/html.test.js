@@ -61,6 +61,12 @@ test("highlightText", () => {
     expect(highlightText(markup`<p>ab</p>`, markup`<p>ab</p>`, "hl").toString()).toBe(
         '<span class="hl"><p>ab</p></span>'
     );
+    expect(highlightText("cè", "Cédric ce cèdre", "hl").toString()).toBe(
+        '<span class="hl">Cé</span>dric <span class="hl">ce</span> <span class="hl">cè</span>dre',
+        {
+            message: "highlightText should be accent insensitive",
+        }
+    );
 });
 
 test("htmlEscape escapes text", () => {
