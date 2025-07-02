@@ -24,7 +24,7 @@ export const sizingGrid = {
 };
 
 export class BuilderOverlay {
-    constructor(overlayTarget, { iframe, overlayContainer, history, hasOverlayOptions, next }) {
+    constructor(overlayTarget, { iframe, overlayContainer, history, hasOverlayOptions, next, isRtl }) {
         this.history = history;
         this.next = next;
         this.hasOverlayOptions = hasOverlayOptions;
@@ -43,6 +43,7 @@ export class BuilderOverlay {
             `.e:not(.o_grid_handle), .w:not(.o_grid_handle)`
         );
         this.gridHandles = this.handlesWrapperEl.querySelectorAll(".o_grid_handle");
+        this.isRtl = isRtl;
 
         this.initHandles();
         this.initSizing();
@@ -422,6 +423,14 @@ export class BuilderOverlay {
             XY = "YX";
         }
 
+        if (this.isRtl) {
+            if (compass.includes("e")) {
+                compass = compass.replace("e", "w");
+            } else if (compass.includes("w")) {
+                compass = compass.replace("w", "e");
+            }
+        }
+
         const currentConfig = [];
         for (let i = 0; i < compass.length; i++) {
             currentConfig.push(sizingConfig[compass[i]]);
@@ -515,8 +524,12 @@ export class BuilderOverlay {
 
                 // Get the number of pixels by which the pointer moved, compared
                 // to the initial position of the handle.
-                const delta =
-                    ev[`page${dir.XY}`] - dir.initialPageXY + configValues[dir.initialIndex];
+                let deltaRaw = ev[`page${dir.XY}`] - dir.initialPageXY;
+                // In RTL mode, reverse only horizontal movement (X axis).
+                if (dir.XY === "X" && this.isRtl) {
+                    deltaRaw = -deltaRaw;
+                }
+                const delta = deltaRaw + configValues[dir.initialIndex];
 
                 // Compute the indexes of the next step and the step before it,
                 // based on the delta.
