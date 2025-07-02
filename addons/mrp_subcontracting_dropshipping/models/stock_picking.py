@@ -9,7 +9,8 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     def _compute_is_dropship(self):
-        dropship_subcontract_pickings = self.filtered(lambda p: p.location_dest_id.is_subcontracting_location and p.location_id.usage == 'supplier')
+        dropship_subcontract_pickings = self.filtered(
+            lambda p: p.location_dest_id == self.env.company.subcontracting_location_id and p.location_id.usage == 'supplier')
         dropship_subcontract_pickings.is_dropship = True
         super(StockPicking, self - dropship_subcontract_pickings)._compute_is_dropship()
 
@@ -66,7 +67,7 @@ class StockPicking(models.Model):
         res = super()._prepare_subcontract_mo_vals(subcontract_move, bom)
         if not res.get('picking_type_id') and (
                 subcontract_move.location_dest_id.usage == 'customer'
-                or subcontract_move.location_dest_id.is_subcontracting_location
+                or subcontract_move.location_dest_id == self.env.company.subcontracting_location_id
         ):
             # If the if-condition is respected, it means that `subcontract_move` is not
             # related to a specific warehouse. This can happen if, for instance, the user

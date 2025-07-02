@@ -12,8 +12,8 @@ class ProductProduct(models.Model):
         domain = Domain.AND([
             Domain.OR([
                 super()._get_monthly_demand_moves_location_domain(),
-                [('location_dest_id.is_subcontracting_location', '=', True)],
+                [('location_dest_id', '=', self.env.company.subcontracting_location_id.id)],
             ]),
-            [('location_id.is_subcontracting_location', '!=', True)],
+            [('location_id', '!=', self.env.company.subcontracting_location_id.id)],
         ])
         return domain

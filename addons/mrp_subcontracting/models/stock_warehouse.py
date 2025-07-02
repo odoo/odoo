@@ -27,7 +27,6 @@ class StockWarehouse(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        res._update_subcontracting_locations_rules()
         # if new warehouse has resupply enabled, enable global route
         if any([vals.get('subcontracting_to_resupply', False) for vals in vals_list]):
             res._update_global_route_resupply_subcontractor()
@@ -194,19 +193,9 @@ class StockWarehouse(models.Model):
     def _get_subcontracting_location(self):
         return self.company_id.subcontracting_location_id
 
-    def _get_subcontracting_locations(self):
-        return self.env['stock.location'].search([
-            ('company_id', 'in', self.company_id.ids),
-            ('is_subcontracting_location', '=', True),
-        ])
-
-    def _update_subcontracting_locations_rules(self):
-        subcontracting_locations = self._get_subcontracting_locations()
-        subcontracting_locations._activate_subcontracting_location_rules()
-
     def _update_resupply_rules(self):
         '''update (archive/unarchive) any warehouse subcontracting location resupply rules'''
-        subcontracting_locations = self._get_subcontracting_locations()
+        subcontracting_locations = self._get_subcontracting_location()
         warehouses_to_resupply = self.filtered(lambda w: w.subcontracting_to_resupply and w.active)
         if warehouses_to_resupply:
             self.env['stock.rule'].with_context(active_test=False).search([

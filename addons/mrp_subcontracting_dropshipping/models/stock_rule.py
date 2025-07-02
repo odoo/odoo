@@ -9,8 +9,7 @@ class StockRule(models.Model):
 
     def _prepare_purchase_order(self, company_id, origins, values):
         if 'partner_id' not in values[0] \
-            and (company_id.subcontracting_location_id.parent_path in self.location_dest_id.parent_path
-                 or self.location_dest_id.is_subcontracting_location):
+            and (company_id.subcontracting_location_id.parent_path in self.location_dest_id.parent_path):
             values[0]['partner_id'] = values[0]['group_id'].partner_id.id
         return super()._prepare_purchase_order(company_id, origins, values)
 
