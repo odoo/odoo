@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
 import { omit } from "../utils/objects";
-import { useDateTimePicker } from "./datetime_hook";
 import { DateTimePicker } from "./datetime_picker";
+import { useDateTimePicker } from "./datetime_picker_hook";
 
 /**
  * @typedef {import("./datetime_picker").DateTimePickerProps & {

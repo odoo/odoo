@@ -1,15 +1,15 @@
 import { Component, onWillRender, useState } from "@odoo/owl";
-import { useDateTimePicker } from "@web/core/datetime/datetime_hook";
+import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { ensureArray } from "@web/core/utils/arrays";
 import { exprToBoolean } from "@web/core/utils/strings";
+import { FIELD_WIDTHS } from "@web/views/list/column_width_hook";
 import { formatDate, formatDateTime } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
-import { localization } from "@web/core/l10n/localization";
-import { FIELD_WIDTHS } from "@web/views/list/column_width_hook";
 
 function getFormattedPlaceholder(value, type, options) {
     if (value instanceof luxon.DateTime) {
