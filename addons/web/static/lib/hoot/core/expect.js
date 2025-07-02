@@ -21,6 +21,7 @@ import {
     addInteractionListener,
     getColorHex,
     isFirefox,
+    isInstanceOf,
     isIterable,
     R_WHITE_SPACE,
 } from "@web/../lib/hoot-dom/hoot_dom_utils";
@@ -360,7 +361,7 @@ function valueMatches(value, matcher) {
     if (matcher === S_ANY) {
         return !isNil(value);
     }
-    if (matcher instanceof RegExp) {
+    if (isInstanceOf(matcher, RegExp)) {
         return matcher.test(value);
     }
     if (typeof matcher === "number") {
@@ -1258,7 +1259,7 @@ export class Matcher {
         return this._resolve(() => ({
             name: "toBeInstanceOf",
             acceptedType: "any",
-            predicate: (received) => received instanceof cls,
+            predicate: (received) => isInstanceOf(received, cls),
             message: options?.message,
             onPass: () => [this._received, r`is[! not] an instance of`, cls],
             onFail: () => [r`expected value[! not] to be an instance of the given class`],
@@ -2260,7 +2261,7 @@ export class Matcher {
      */
     _toHaveHTML(name, property, expected, options) {
         options = { type: "html", ...options };
-        if (!(expected instanceof RegExp)) {
+        if (!isInstanceOf(expected, RegExp)) {
             expected = formatXml(expected, options);
         }
 
