@@ -3,6 +3,7 @@
 import pytz
 
 from datetime import datetime, time, timedelta
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields
@@ -67,11 +68,11 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
                  (self.saturday_1pm, 13.0, 'sat'), (self.saturday_8pm, 20.0, 'sat')]
 
         for value, rvalue, dayname in tests:
-            with self.subTest(value=value), patch.object(fields.Datetime, 'now', return_value=value):
+            with self.subTest(value=value), freeze_time(value):
                 self.assertEqual(
-                    Supplier._search_available_today('in', [True]),
+                    list(Supplier._search_available_today('in', [True])),
                     ['&', '|', ('recurrency_end_date', '=', False),
-                        ('recurrency_end_date', '>', value.replace(tzinfo=pytz.UTC).astimezone(pytz.timezone(self.env.user.tz))),
+                        ('recurrency_end_date', '>', value.astimezone(pytz.timezone(self.env.user.tz)).date()),
                         (dayname, 'in', [True])],
                 )
 
