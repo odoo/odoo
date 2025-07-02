@@ -597,15 +597,23 @@ class SaleOrderLine(models.Model):
                 line.price_unit = 0.0
                 line.technical_price_unit = 0.0
             else:
-                line = line.with_company(line.company_id)
-                price = line._get_display_price()
-                product_taxes = line.product_id.taxes_id._filter_taxes_by_company(line.company_id)
-                line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
-                    price,
-                    product_taxes=product_taxes,
-                    fiscal_position=line.order_id.fiscal_position_id,
-                )
-                line.technical_price_unit = line.price_unit
+                line._reset_price_unit()
+
+    def _reset_price_unit(self):
+        self.ensure_one()
+
+        line = self.with_company(self.company_id)
+        price = line._get_display_price()
+        product_taxes = line.product_id.taxes_id._filter_taxes_by_company(line.company_id)
+        price_unit = line.product_id._get_tax_included_unit_price_from_price(
+            price,
+            product_taxes=product_taxes,
+            fiscal_position=line.order_id.fiscal_position_id,
+        )
+        line.update({
+            'price_unit': price_unit,
+            'technical_price_unit': price_unit,
+        })
 
     def _get_order_date(self):
         self.ensure_one()
@@ -1217,6 +1225,14 @@ class SaleOrderLine(models.Model):
                 raise ValidationError(_(
                     "A sale order line's product must match its combo item's product."
                 ))
+
+    # === ONCHANGE METHODS ===#
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if not self.product_id:
+            return
+        self._reset_price_unit()
 
     #=== CRUD METHODS ===#
 
