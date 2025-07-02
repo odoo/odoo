@@ -3,6 +3,7 @@
 
 <t t-name="html_builder.BuilderTextInputBase">
     <div class="d-flex flex-row flex-nowrap align-items-center"
+        style="width: 100%"
         t-attf-class="{{ props.classes }}"
         t-att-data-action-id="info.actionId"
         t-att-data-action-param="info.actionParam"
@@ -27,7 +28,7 @@
             t-on-focus="onFocus"
             t-on-keydown="onKeydown"
             t-att-value="state.value"
-            t-att-style="props.style"
+            t-att-style="(props.style || '') + 'text-align: center'"
         />
         <t t-slot="default"/>
     </div>
