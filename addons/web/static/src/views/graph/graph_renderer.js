@@ -743,14 +743,17 @@ export class GraphRenderer extends Component {
             }
         });
 
-        const views = {};
-        for (const [viewId, viewType] of this.env.config.views || []) {
-            views[viewType] = viewId;
-        }
-        function getView(viewType) {
-            return [views[viewType] || false, viewType];
-        }
-        const actionViews = [getView("list"), getView("form")];
+        // Retrieve form and list view ids from the action
+        // Always include 'list'; include 'form' only if it exists in the views
+        const { views = [] } = this.env.config;
+
+        const actionViews = ["list"]
+            .concat(views.some(view => view[1] === "form") ? ["form"] : [])
+            .map((viewType) => {
+                const view = views.find((view) => view[1] === viewType);
+                return [view ? view[0] : false, viewType];
+            });
+
         this.openView(domain, actionViews, context);
     }
 
