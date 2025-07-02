@@ -624,32 +624,6 @@ export class PosStore extends WithLazyGetterTrap {
         return result;
     }
 
-    // FIXME Dead code to be deleted in master
-    computeProductPricelistCache(data) {
-        if (!data) {
-            return;
-        }
-
-        const products = this.models["product.product"].readMany(data.ids);
-        this._loadMissingPricelistItems(products);
-    }
-
-    // FIXME Dead code to be deleted in master
-    async _loadMissingPricelistItems(products) {
-        const validProducts = products.filter((product) => typeof product.id === "number");
-        if (!validProducts.length) {
-            return;
-        }
-        const product_tmpl_ids = validProducts.map((product) => product.raw.product_tmpl_id);
-        const product_ids = validProducts.map((product) => product.id);
-        await this.data.callRelated("pos.session", "get_pos_ui_product_pricelist_item_by_product", [
-            odoo.pos_session_id,
-            product_tmpl_ids,
-            product_ids,
-            this.config.id,
-        ]);
-    }
-
     async handleUrlParams() {
         const orderPathUuid = this.router.state.params.orderUuid;
         const order = this.models["pos.order"].find((order) => order.uuid === orderPathUuid);
