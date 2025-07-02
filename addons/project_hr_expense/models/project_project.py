@@ -3,7 +3,7 @@
 import json
 
 from odoo import models
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class ProjectProject(models.Model):
@@ -29,9 +29,9 @@ class ProjectProject(models.Model):
         return action
 
     def _get_add_purchase_items_domain(self):
-        return expression.AND([
+        return Domain.AND([
             super()._get_add_purchase_items_domain(),
-            [('expense_id', '=', False)],
+            Domain('expense_id', '=', False),
         ])
 
     def action_profitability_items(self, section_name, domain=None, res_id=False):
@@ -106,7 +106,7 @@ class ProjectProject(models.Model):
         return expense_profitability_items
 
     def _get_profitability_aal_domain(self):
-        return expression.AND([
+        return Domain.AND([
             super()._get_profitability_aal_domain(),
             ['|', ('move_line_id', '=', False), ('move_line_id.expense_id', '=', False)],
         ])

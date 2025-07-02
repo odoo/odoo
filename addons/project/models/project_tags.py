@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from random import randint
 
 from odoo import api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import SQL
 
 
@@ -36,14 +35,14 @@ class ProjectTags(models.Model):
     def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[dict]:
         if 'project_id' in self.env.context:
             tag_ids = [id_ for id_, _label in self.name_search()]
-            domain = expression.AND([domain, [('id', 'in', tag_ids)]])
+            domain = Domain.AND([domain, [('id', 'in', tag_ids)]])
         return super().formatted_read_group(domain, groupby, aggregates, having=having, offset=offset, limit=limit, order=order)
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
         if 'project_id' in self.env.context:
             tag_ids = [id_ for id_, _label in self.name_search()]
-            domain = expression.AND([domain, [('id', 'in', tag_ids)]])
+            domain = Domain.AND([domain, [('id', 'in', tag_ids)]])
             return self.arrange_tag_list_by_id(super().search_read(domain=domain, fields=fields, offset=offset, limit=limit), tag_ids)
         return super().search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)
 
@@ -66,7 +65,7 @@ class ProjectTags(models.Model):
         if limit is None:
             return super().name_search(name, domain, operator, limit)
         tags = self.browse()
-        domain = expression.AND([self._search_display_name(operator, name), domain or []])
+        domain = Domain.AND([self._search_display_name(operator, name), domain or Domain.TRUE])
         if self.env.context.get('project_id'):
             # optimisation for large projects, we look first for tags present on the last 1000 tasks of said project.
             # when not enough results are found, we complete them with a fallback on a regular search
@@ -82,9 +81,9 @@ class ProjectTags(models.Model):
                     LIMIT 1000
                 ) AS project_tasks_tags
             )""", project_id=self.env.context['project_id'])
-            tags += self.search_fetch(expression.AND([[('id', 'in', tag_sql)], domain]), ['display_name'], limit=limit)
+            tags += self.search_fetch(Domain('id', 'in', tag_sql) & domain, ['display_name'], limit=limit)
         if len(tags) < limit:
-            tags += self.search_fetch(expression.AND([[('id', 'not in', tags.ids)], domain]), ['display_name'], limit=limit - len(tags))
+            tags += self.search_fetch(Domain('id', 'not in', tags.ids) & domain, ['display_name'], limit=limit - len(tags))
         return [(tag.id, tag.display_name) for tag in tags.sudo()]
 
     @api.model

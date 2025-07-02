@@ -5,11 +5,11 @@ from pytz import UTC
 from collections import defaultdict
 from datetime import timedelta, datetime, time
 
-from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo.fields import Command, Domain
 from odoo.addons.rating.models import rating_data
 from odoo.addons.web_editor.tools import handle_history_divergence
-from odoo.exceptions import UserError, ValidationError, AccessError
-from odoo.osv import expression
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_list, SQL, LazyTranslate
 from odoo.addons.resource.models.utils import filter_domain_leaf
 from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
@@ -423,7 +423,7 @@ class ProjectTask(models.Model):
 
     @api.model
     def _search_personal_stage_id(self, operator, value):
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
+        if Domain.is_negative_operator(operator):
             return NotImplemented
         field_name = 'display_name' if any(isinstance(v, str) for v in value) or value == '' else 'id'  # noqa: PLC1901
         domain = [(field_name, operator, value), ('user_id', '=', self.env.uid)]
@@ -757,7 +757,7 @@ class ProjectTask(models.Model):
                 users_to_keep.append(r'%s\b' % user)
         self.user_ids = user_ids
         if tags:
-            domain = expression.OR([[('name', '=ilike', tag)] for tag in tags])
+            domain = Domain.OR(Domain('name', '=ilike', tag) for tag in tags)
             existing_tags = self.env['project.tags'].search(domain)
             existing_tags_names = {tag.name.lower() for tag in existing_tags}
             new_tags_names = {tag for tag in tags if tag.lower() not in existing_tags_names}
@@ -1374,7 +1374,7 @@ class ProjectTask(models.Model):
                         new_domain.append(("id", op, [value]))
                 else:
                     new_domain.append(dom)
-            return new_domain
+            return Domain(new_domain)
 
         filtered_domain = filter_domain_leaf(domain, lambda field_to_check: field_to_check in [
             field,
@@ -1385,13 +1385,11 @@ class ProjectTask(models.Model):
             f"{field}.id": "id",
             f"{field}.name": "name",
         })
-        if not filtered_domain.is_true():
-            # If domain is not equal to Domain.TRUE then
-            filtered_domain = _change_operator(filtered_domain)
-        if not filtered_domain:
+        if filtered_domain.is_true():
             return self.env[comodel]
+        filtered_domain = _change_operator(filtered_domain)
         if additional_domain:
-            filtered_domain = expression.AND([filtered_domain, additional_domain])
+            filtered_domain &= Domain(additional_domain)
         return self.env[comodel].search(filtered_domain)
 
     # ---------------------------------------------------
@@ -1700,10 +1698,7 @@ class ProjectTask(models.Model):
         return super()._message_post_after_hook(message, msg_vals)
 
     def _get_projects_to_make_billable_domain(self, additional_domain=None):
-        return expression.AND([
-            [('partner_id', '!=', False)],
-            additional_domain or [],
-        ])
+        return Domain('partner_id', '!=', False) & Domain(additional_domain or Domain.TRUE)
 
     def _get_all_subtasks(self):
         return self.browse(set.union(set(), *self._get_subtask_ids_per_task_id().values()))
@@ -2121,10 +2116,10 @@ class ProjectTask(models.Model):
             return {}
         # sudo: mail.followers - reading message_follower_ids on accessible task/project is allowed
         followers = project.sudo().message_follower_ids | self.sudo().message_follower_ids
-        domain = expression.AND([
-            self.env["res.partner"]._get_mention_suggestions_domain(search),
-            [("id", "in", followers.partner_id.ids)],
-        ])
+        domain = (
+            Domain(self.env["res.partner"]._get_mention_suggestions_domain(search))
+            & Domain("id", "in", followers.partner_id.ids)
+        )
         partners = self.env["res.partner"].sudo()._search_mention_suggestions(domain, limit)
         return (
             Store()

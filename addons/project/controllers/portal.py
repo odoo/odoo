@@ -10,7 +10,6 @@ from odoo import http, _
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv.expression import AND, FALSE_DOMAIN
 from odoo.tools import groupby as groupbyelem
 
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
@@ -191,14 +190,15 @@ class ProjectCustomerPortal(CustomerPortal):
         try:
             project_sudo = self._document_check_access('project.project', project_id)
             task_sudo = request.env['project.task'].search([('project_id', '=', project_id), ('id', '=', task_id)]).sudo()
-            task_domain = [('id', 'child_of', task_id), ('id', '!=', task_id)]
-            searchbar_filters = self._get_my_tasks_searchbar_filters([('id', '=', task_sudo.project_id.id)], task_domain)
+            task_domain = Domain('id', 'child_of', task_id) & Domain('id', '!=', task_id)
+            searchbar_filters = self._get_my_tasks_searchbar_filters(Domain('id', '=', task_sudo.project_id.id), task_domain)
 
             if not filterby:
                 filterby = 'all'
-            domain = searchbar_filters.get(filterby, searchbar_filters.get('all'))['domain']
+            domain = Domain(searchbar_filters.get(filterby, searchbar_filters.get('all'))['domain'])
 
-            values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, url=f'/my/projects/{project_id}/task/{task_id}/subtasks', domain=AND([task_domain, domain]))
+            values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby,
+                url=f'/my/projects/{project_id}/task/{task_id}/subtasks', domain=task_domain & domain)
             values['page_name'] = 'project_subtasks'
 
             # pager
@@ -224,17 +224,17 @@ class ProjectCustomerPortal(CustomerPortal):
         try:
             project_sudo = self._document_check_access('project.project', project_id)
             task_sudo = request.env['project.task'].search([('project_id', '=', project_id), ('id', '=', task_id)], limit=1).sudo()
-            task_domain = [('id', 'in', task_sudo.recurrence_id.task_ids.ids)]
-            searchbar_filters = self._get_my_tasks_searchbar_filters([('id', '=', project_id)], task_domain)
+            task_domain = Domain('id', 'in', task_sudo.recurrence_id.task_ids.ids)
+            searchbar_filters = self._get_my_tasks_searchbar_filters(Domain('id', '=', project_id), task_domain)
 
             if not filterby:
                 filterby = 'all'
-            domain = searchbar_filters.get(filterby, searchbar_filters.get('all'))['domain']
+            domain = Domain(searchbar_filters.get(filterby, searchbar_filters.get('all'))['domain'])
 
             values = self._prepare_tasks_values(
                 page, date_begin, date_end, sortby, search, search_in, groupby,
                 url=f'/my/projects/{project_id}/task/{task_id}/recurrent_tasks',
-                domain=AND([task_domain, domain])
+                domain=task_domain & domain,
             )
             values['page_name'] = 'project_recurrent_tasks'
             pager = portal_pager(**values['pager'])
@@ -378,12 +378,11 @@ class ProjectCustomerPortal(CustomerPortal):
 
         Task = request.env['project.task']
 
-        if not domain:
-            domain = []
+        domain = Domain(domain or Domain.TRUE)
         if not su and Task.has_access('read'):
-            domain = AND([domain, request.env['ir.rule']._compute_domain(Task._name, 'read')])
+            domain &= Domain(request.env['ir.rule']._compute_domain(Task._name, 'read'))
         Task_sudo = Task.sudo()
-        milestone_domain = AND([domain, [('allow_milestones', '=', True)], [('milestone_id', '!=', False)]])
+        milestone_domain = domain & Domain('allow_milestones', '=', True) & Domain('milestone_id', '!=', False)
         milestones_allowed = Task_sudo.search_count(milestone_domain, limit=1) == 1
         searchbar_sortings = dict(sorted(self._task_get_searchbar_sortings(milestones_allowed, project).items(),
                                          key=lambda item: item[1]["sequence"]))
@@ -399,14 +398,14 @@ class ProjectCustomerPortal(CustomerPortal):
             groupby = 'project_id'
 
         if date_begin and date_end:
-            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+            domain &= Domain('create_date', '>', date_begin) & Domain('create_date', '<=', date_end)
 
         # search reset if needed
         if not milestones_allowed and search_in == 'milestone_id':
             search_in = 'all'
         # search
         if search and search_in:
-            domain = AND([domain, self._task_get_search_domain(search_in, search, milestones_allowed, project)])
+            domain &= Domain(self._task_get_search_domain(search_in, search, milestones_allowed, project))
 
         # content according to pager and archive selected
         if groupby == 'none':
@@ -441,7 +440,6 @@ class ProjectCustomerPortal(CustomerPortal):
                     grouped_tasks = [Task_sudo.concat(*g) for k, g in groupbyelem(tasks, itemgetter(groupby))]
             else:
                 grouped_tasks = [tasks] if tasks else []
-
 
             task_states = dict(Task_sudo._fields['state']._description_selection(request.env))
             if sortby == 'state':
@@ -493,7 +491,7 @@ class ProjectCustomerPortal(CustomerPortal):
         # extends filterby criteria with project (criteria name is the project id)
         # Note: portal users can't view projects they don't follow
         project_groups = request.env['project.task']._read_group(
-            AND([[('project_id', 'not in', projects.ids), ('is_template', '=', False), ('project_id', '!=', False)], task_domain or []]),
+            Domain.AND([[('project_id', 'not in', projects.ids), ('is_template', '=', False), ('project_id', '!=', False)], task_domain or []]),
             ['project_id'])
         for [project] in project_groups:
             searchbar_filters.update({

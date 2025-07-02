@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
 from dateutil.relativedelta import relativedelta
-from werkzeug.urls import url_encode
 
 from odoo import api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import format_amount, formatLang
 
 STATUS_COLOR = {
@@ -139,9 +136,9 @@ class ProjectUpdate(models.Model):
             [('project_id', '=', project.id),
              '|', ('deadline', '<', fields.Date.context_today(self) + relativedelta(years=1)), ('deadline', '=', False)])._get_data_list()
         updated_milestones = self._get_last_updated_milestone(project)
-        domain = [('project_id', '=', project.id)]
+        domain = Domain('project_id', '=', project.id)
         if project.last_update_id.create_date:
-            domain = expression.AND([domain, [('create_date', '>', project.last_update_id.create_date)]])
+            domain &= Domain('create_date', '>', project.last_update_id.create_date)
         created_milestones = Milestone.search(domain)._get_data_list()
         return {
             'show_section': (list_milestones or updated_milestones or created_milestones) and True or False,

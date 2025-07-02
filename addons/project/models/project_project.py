@@ -6,11 +6,11 @@ import json
 from collections import defaultdict
 from datetime import timedelta
 
-from odoo import api, Command, fields, models
+from odoo import api, fields, models
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.rating.models import rating_data
 from odoo.exceptions import UserError
-from odoo.osv.expression import AND
+from odoo.fields import Command, Domain
 from odoo.tools import get_lang, SQL, LazyTranslate
 from odoo.tools.misc import unquote
 from odoo.tools.translate import _
@@ -40,12 +40,12 @@ class ProjectProject(models.Model):
         count_fields = {fname for fname in self._fields if 'count' in fname}
         if count_field not in count_fields:
             raise ValueError(f"Parameter 'count_field' can only be one of {count_fields}, got {count_field} instead.")
-        domain = [('project_id', 'in', self.ids)]
+        domain = Domain('project_id', 'in', self.ids)
         if additional_domain:
-            domain = AND([domain, additional_domain])
+            domain &= Domain(additional_domain)
         ProjectTask = self.env['project.task'].with_context(active_test=any(project.active for project in self))
         tasks_count_by_project = dict(ProjectTask._read_group(domain, ['project_id'], ['__count']))
-        templates_count_by_project = dict(ProjectTask._read_group(AND([domain, [('is_template', '=', True)]]), ['project_id'], ['__count']))
+        templates_count_by_project = dict(ProjectTask._read_group(domain & Domain('is_template', '=', True), ['project_id'], ['__count']))
         for project in self:
             if project.is_template:
                 count = templates_count_by_project.get(project, 0)
@@ -1047,7 +1047,7 @@ class ProjectProject(models.Model):
         pass
 
     def _get_plan_domain(self, plan):
-        return AND([super()._get_plan_domain(plan), ['|', ('company_id', '=', False), ('company_id', '=?', unquote('company_id'))]])
+        return Domain.AND([super()._get_plan_domain(plan), ['|', ('company_id', '=', False), ('company_id', '=?', unquote('company_id'))]])
 
     def _get_account_node_context(self, plan):
         return {
