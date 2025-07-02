@@ -167,7 +167,7 @@ class DiscussChannelMember(models.Model):
                 *self.env["res.partner"]._get_store_livechat_username_fields(),
             ]
             if self.livechat_member_type == "visitor":
-                new_fields += ["offline_since"]
+                new_fields += ["offline_since", "email"]
             return new_fields
         return super()._get_store_partner_fields(fields)
 

@@ -1,3 +1,5 @@
+import { TranscriptSender } from "@im_livechat/core/common/transcript_sender";
+
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
@@ -10,7 +12,7 @@ import { startUrl } from "@web/core/browser/router";
 import { TagsList } from "@web/core/tags_list/tags_list";
 
 export class LivechatChannelInfoList extends Component {
-    static components = { ActionPanel, TagsList };
+    static components = { ActionPanel, TagsList, TranscriptSender };
     static template = "im_livechat.LivechatChannelInfoList";
     static props = ["thread"];
 
