@@ -1,3 +1,4 @@
+import { delay } from '@odoo/hoot-dom';
 import { registry } from '@web/core/registry';
 
 registry.category('web_tour.tours').add('website_sale_contact_us_button', {
@@ -25,11 +26,20 @@ registry.category('web_tour.tours').add('website_sale_contact_us_button', {
         {
             content: "Select attribute with price extra value",
             trigger: '.js_attribute_value:contains(blue):contains(20.00) input',
-            run: 'click',
+            async run(helpers) {
+                await helpers.click();
+                //force reflow;
+                await delay(100);
+                helpers.anchor.offsetHeight;
+            },
+        },
+        {
+            content: "Check product variant image has changed",
+            trigger: "#o-carousel-product img[src*='(blue)']",
         },
         {
             content: "Product price should be updated",
-            trigger: '.product_price .oe_currency_value:contains(20.00)',
+            trigger: '.product_price .oe_currency_value:eq(0):contains(20.00)',
         },
         {
             content: '"Add to Cart" button should now be visibile',
