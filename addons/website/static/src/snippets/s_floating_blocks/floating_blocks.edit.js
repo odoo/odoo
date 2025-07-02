@@ -9,6 +9,9 @@ const FloatingBlocksEdit = (I) =>
                 "t-on-click": this.onAddCard.bind(this),
             },
         };
+        isImpactedBy(el) {
+            return this.el.contains(el) && el.matches(".s_floating_blocks_block, .s_floating_blocks_wrapper");
+        }
         shouldStop() {
             // The interaction is restarted every time that the content of
             // s_floating_blocks changes. This is needed to provide the correct
@@ -19,8 +22,7 @@ const FloatingBlocksEdit = (I) =>
             // IDs to the blocks and check if their order has changed.
             return true;
         }
-        setup() {
-            super.setup();
+        start() {
             // The "No card" message must be injected *before* the removal of
             // the last block, otherwise the snippet could be automatically
             // removed by the editor during edition:
@@ -30,10 +32,11 @@ const FloatingBlocksEdit = (I) =>
                 {},
                 this.el.querySelector(".s_floating_blocks_wrapper")
             );
+            super.start();
         }
         onAddCard() {
             const applySpec = { editingElement: this.el };
-            this.services["website_edit"].applyAction("addCard", applySpec);
+            this.services["website_edit"].applyAction("addFloatingBlockCard", applySpec);
         }
     };
 

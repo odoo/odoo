@@ -206,6 +206,9 @@ registry.category("services").add("website_edit", {
                         this.configurationSnapshot = snapshot;
                         return true;
                     },
+                    isImpactedBy(el) {
+                        return false;
+                    },
                     insert(...args) {
                         const el = args[0];
                         super.insert(...args);
@@ -219,13 +222,11 @@ registry.category("services").add("website_edit", {
                 }),
                 patch(publicInteractions.constructor.prototype, {
                     shouldStop(el, interaction) {
-                        if (super.shouldStop(el, interaction) || interaction.el.contains(el)) {
-                            if (this.isRefreshing) {
-                                return interaction.interaction.shouldStop();
-                            }
-                            return true;
+                        if (this.isRefreshing) {
+                            const mustBeRefreshed = super.shouldStop(el, interaction) || interaction.interaction.isImpactedBy(el);
+                            return mustBeRefreshed && interaction.interaction.shouldStop();
                         }
-                        return false;
+                        return super.shouldStop(el, interaction);
                     },
                 })
             );
