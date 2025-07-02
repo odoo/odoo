@@ -269,6 +269,8 @@ export class MassMailingIframe extends Component {
                 this.state.showFullscreen = !this.state.showFullscreen;
             },
             onEditorLoad: this.props.onEditorLoad,
+            getExternalScrollableAncestor: () =>
+                !this.showFullscreen && this.iframeRef.el && closestScrollableY(this.iframeRef.el),
         };
     }
 
