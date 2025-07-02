@@ -62,10 +62,31 @@ class ProductTemplate(models.Model):
             if not record.available_in_pos:
                 record.self_order_available = False
 
+<<<<<<< 38a25fc64ff14526115014e83b15dc3feb0e7ccf
+||||||| 61116191c6b933ca9b40863774d506f219a410a1
+    @api.depends('pos_categ_ids', 'pos_categ_ids.pos_config_ids.self_ordering_mode')
+=======
+    @api.depends('pos_categ_ids', 'pos_categ_ids.pos_config_ids.self_ordering_mode', 'pos_categ_ids.pos_config_ids.iface_available_categ_ids')
+>>>>>>> e37b007ccff2b1f49bf2a4ca5c833292ec9dd418
     def _compute_self_order_visible(self):
+<<<<<<< 38a25fc64ff14526115014e83b15dc3feb0e7ccf
         active_self_order_configs = self.env['pos.config'].sudo().search_count([('self_ordering_mode', '!=', 'nothing')])
         for product in self:
             product.self_order_visible = bool(active_self_order_configs)
+||||||| 61116191c6b933ca9b40863774d506f219a410a1
+        config_with_self = self.env['pos.config'].search([('self_ordering_mode', '!=', 'nothing')])
+        categ_ids = config_with_self.iface_available_categ_ids.ids
+        for product in self:
+            product.self_order_visible = any(p_cat_id in categ_ids for p_cat_id in product.pos_categ_ids.ids)
+=======
+        if self.env['pos.config'].search_count([('self_ordering_mode', '!=', 'nothing'), ('limit_categories', '=', False)]):
+            self.self_order_visible = True
+        else:
+            config_with_self = self.env['pos.config'].search([('self_ordering_mode', '!=', 'nothing')])
+            categ_ids = config_with_self.iface_available_categ_ids.ids
+            for product in self:
+                product.self_order_visible = any(p_cat_id in categ_ids for p_cat_id in product.pos_categ_ids.ids)
+>>>>>>> e37b007ccff2b1f49bf2a4ca5c833292ec9dd418
 
     def write(self, vals):
         if 'available_in_pos' in vals:
