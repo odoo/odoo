@@ -11,5 +11,5 @@ class IrHttp(models.AbstractModel):
         res = super().session_info()
         ICP = self.env['ir.config_parameter'].sudo()
         if ICP.get_param('cloud_storage_provider'):
-            res['cloud_storage_min_file_size'] = ICP.get_param('cloud_storage_min_file_size', DEFAULT_CLOUD_STORAGE_MIN_FILE_SIZE)
+            res['cloud_storage_min_file_size'] = int(ICP.get_param('cloud_storage_min_file_size', DEFAULT_CLOUD_STORAGE_MIN_FILE_SIZE))
         return res
