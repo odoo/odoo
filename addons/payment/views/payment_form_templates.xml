@@ -51,6 +51,7 @@
         <t t-set="submit_button_label"
            t-value="submit_button_label or (pay_label if mode == 'payment' else save_label)"
         />
+        <div class="payment_form_container">
         <form t-if="payment_methods_sudo or tokens_sudo" id="o_payment_form"
               class="o_payment_form"
               t-att-data-mode="mode"
@@ -131,6 +132,7 @@
             <t t-call="payment.availability_report"/>
         </form>
         <t t-else="" t-call="payment.no_pms_available_warning"/>
+        </div>
     </template>
 
     <template id="payment.token_form" name="Payment Token Form">
