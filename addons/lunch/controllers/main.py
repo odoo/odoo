@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, http, fields
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 from odoo.tools import float_round, float_repr
 
 
@@ -128,10 +127,10 @@ class LunchController(http.Controller):
         if not user_location or not has_multi_company_access:
             user.last_lunch_location_id = user_location = request.env['lunch.location'].search([], limit=1) or user_location
 
-        alert_domain = expression.AND([
-            [('available_today', '=', True)],
-            [('location_ids', 'in', user_location.id)],
-            [('mode', '=', 'alert')],
+        alert_domain = Domain.AND([
+            Domain('available_today', '=', True),
+            Domain('location_ids', 'in', user_location.id),
+            Domain('mode', '=', 'alert'),
         ])
 
         res.update({

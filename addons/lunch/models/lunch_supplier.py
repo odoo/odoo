@@ -9,7 +9,7 @@ from textwrap import dedent
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import float_round
 
 from odoo.addons.base.models.res_partner import _tz_get
@@ -323,19 +323,14 @@ class LunchSupplier(models.Model):
         if operator not in ('in', 'not in'):
             return NotImplemented
 
-        now = fields.Datetime.now().replace(tzinfo=pytz.UTC).astimezone(pytz.timezone(self.env.user.tz or 'UTC'))
-        fieldname = WEEKDAY_TO_NAME[now.weekday()]
+        today = fields.Date.context_today(self)
+        fieldname = WEEKDAY_TO_NAME[today.weekday()]
         truth = operator == 'in'
 
-        recurrency_domain = expression.OR([
-            [('recurrency_end_date', '=', False)],
-            [('recurrency_end_date', '>' if truth else '<', now)]
-        ])
+        recurrency_domain = Domain('recurrency_end_date', '=', False) \
+            | Domain('recurrency_end_date', '>' if truth else '<', today)
 
-        return expression.AND([
-            recurrency_domain,
-            [(fieldname, operator, value)]
-        ])
+        return recurrency_domain & Domain(fieldname, operator, value)
 
     def _compute_buttons(self):
         self.env.cr.execute("""

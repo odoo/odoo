@@ -3,7 +3,7 @@ import pytz
 import logging
 
 from odoo import api, fields, models, _
-from odoo.osv import expression
+from odoo.fields import Domain
 
 from .lunch_supplier import float_to_time
 from datetime import datetime, timedelta
@@ -68,22 +68,18 @@ class LunchAlert(models.Model):
         fieldname = WEEKDAY_TO_NAME[today.weekday()]
 
         for alert in self:
-            alert.available_today = alert.until > today if alert.until else True and alert[fieldname]
+            alert.available_today = (alert.until > today if alert.until else True) and alert[fieldname]
 
     def _search_available_today(self, operator, value):
-        if operator not in ('in', 'not in'):
+        if operator != 'in':
             return NotImplemented
 
         today = fields.Date.context_today(self)
         fieldname = WEEKDAY_TO_NAME[today.weekday()]
 
-        return expression.AND([
-            [(fieldname, operator, value)],
-            expression.OR([
-                [('until', '=', False)],
-                [('until', '>' if operator == 'in' else '<', today)],
-            ])
-        ])
+        return Domain(fieldname, operator, value) & (
+            Domain('until', '=', False) | Domain('until', '>', today)
+        )
 
     def _sync_cron(self):
         """ Synchronise the related cron fields to reflect this alert """
@@ -175,10 +171,10 @@ class LunchAlert(models.Model):
         if not self.active or self.mode != 'chat':
             raise ValueError("Cannot send a chat notification in the current state")
 
-        order_domain = [('state', '!=', 'cancelled')]
+        order_domain = Domain('state', '!=', 'cancelled')
 
         if self.location_ids.ids:
-            order_domain = expression.AND([order_domain, [('user_id.last_lunch_location_id', 'in', self.location_ids.ids)]])
+            order_domain &= Domain('user_id.last_lunch_location_id', 'in', self.location_ids.ids)
 
         if self.recipients != 'everyone':
             weeksago = fields.Date.today() - timedelta(weeks=(
@@ -186,7 +182,7 @@ class LunchAlert(models.Model):
                 4 if self.recipients == 'last_month' else
                 52  # if self.recipients == 'last_year'
             ))
-            order_domain = expression.AND([order_domain, [('date', '>=', weeksago)]])
+            order_domain &= Domain('date', '>=', weeksago)
 
         partners = self.env['lunch.order'].search(order_domain).user_id.partner_id
         if partners:

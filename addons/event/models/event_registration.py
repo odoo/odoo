@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import os
 
 from odoo import _, api, fields, models, SUPERUSER_ID
-from odoo.osv import expression
-from odoo.tools import email_normalize, email_normalize_all, formataddr
-from odoo.exceptions import AccessError, ValidationError
+from odoo.fields import Domain
+from odoo.tools import email_normalize, formataddr
+from odoo.exceptions import ValidationError
 _logger = logging.getLogger(__name__)
 
 
@@ -179,7 +178,7 @@ class EventRegistration(models.Model):
 
     @api.model
     def _search_event_begin_date(self, operator, value):
-        return expression.OR([
+        return Domain.OR([
             ["&", ("event_slot_id", "!=", False), ("event_slot_id.start_datetime", operator, value)],
             ["&", ("event_slot_id", "=", False), ("event_id.date_begin", operator, value)],
         ])
