@@ -167,6 +167,10 @@ class MailScheduledMessage(models.Model):
         else:
             raise UserError(_("You are not allowed to send this scheduled message"))
 
+    def _message_created_hook(self, message):
+        """Hook called after scheduled messages have been posted."""
+        self.ensure_one()
+
     def _post_message(self, raise_exception=True):
         """ Post the scheduled messages.
             They are posted using their creator as user so that one can check that the creator has
@@ -182,7 +186,7 @@ class MailScheduledMessage(models.Model):
             message_creator = scheduled_message.create_uid
             try:
                 scheduled_message.with_user(message_creator)._check()
-                self.env[scheduled_message.model].browse(scheduled_message.res_id).with_context(
+                message = self.env[scheduled_message.model].browse(scheduled_message.res_id).with_context(
                         clean_context(scheduled_message.send_context or {})
                     ).with_user(message_creator).message_post(
                     attachment_ids=list(scheduled_message.attachment_ids.ids),
@@ -193,6 +197,7 @@ class MailScheduledMessage(models.Model):
                     subtype_xmlid='mail.mt_note' if scheduled_message.is_note else 'mail.mt_comment',
                     **{k: v for k, v in json.loads(scheduled_message.notification_parameters or '{}').items() if k in notification_parameters_whitelist},
                 )
+                self._message_created_hook(message)
                 if auto_commit:
                     self.env.cr.commit()
             except Exception:

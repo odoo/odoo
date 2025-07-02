@@ -706,6 +706,29 @@ class MailComposeMessage(models.TransientModel):
         self._action_schedule_message()
         return {'type': 'ir.actions.act_window_close'}
 
+    def _prepare_schedule_message_post_values(self, post_values):
+        """ Override this method to add additional values to the 'mail.scheduled.message' record creation.
+            This is useful for custom modules that need to add specific fields to the scheduled message.
+            :param post_values: dict of post values to be used for the scheduled message
+            :param wizard: mail.compose.message record that is used to schedule the message
+            :return: dict of additional values to be added to the scheduled message creation
+        """
+        self.ensure_one()
+        return {
+            'attachment_ids': post_values.pop('attachment_ids'),
+            'author_id': post_values.pop('author_id'),
+            'body': post_values.pop('body'),
+            'composition_comment_option': self.composition_comment_option,
+            'is_note': self.subtype_is_log,
+            'model': self.model,
+            'partner_ids': post_values.pop('partner_ids'),
+            'res_id': self._evaluate_res_ids()[0],
+            'scheduled_date': post_values.pop('scheduled_date'),
+            'send_context': clean_context(self.env.context),
+            'subject': post_values.pop('subject'),
+            'notification_parameters': json.dumps(post_values),  # last to not include popped post_values
+        }
+
     def _action_schedule_message(self):
         """ Create a 'scheduled message' to be posted automatically later. """
         # currently only allowed in mono-comment mode
@@ -721,20 +744,7 @@ class MailComposeMessage(models.TransientModel):
                 continue
             if not post_values['scheduled_date']:
                 raise UserError(_("A scheduled date is needed to schedule a message"))
-            create_values.append({
-                'attachment_ids': post_values.pop('attachment_ids'),
-                'author_id': post_values.pop('author_id'),
-                'body': post_values.pop('body'),
-                'composition_comment_option': wizard.composition_comment_option,
-                'is_note': wizard.subtype_is_log,
-                'model': wizard.model,
-                'partner_ids': post_values.pop('partner_ids'),
-                'res_id': res_id,
-                'scheduled_date': post_values.pop('scheduled_date'),
-                'send_context': cleaned_ctx,
-                'subject': post_values.pop('subject'),
-                'notification_parameters': json.dumps(post_values),  # last to not include popped post_values
-            })
+            create_values.append(wizard._prepare_schedule_message_post_values(post_values))
         return self.env['mail.scheduled.message'].create(create_values)
 
     def action_send_mail(self):
