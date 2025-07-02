@@ -33,7 +33,6 @@ class ImageToolOptionPlugin extends Plugin {
         "media",
         "builderOptions",
     ];
-    static shared = ["canHaveHoverEffect"];
     resources = {
         builder_options: [
             withSequence(REPLACE_MEDIA, {
@@ -110,19 +109,19 @@ class ImageToolOptionPlugin extends Plugin {
                 }
             }
         },
+        hover_effect_allowed_predicates: (el) => this.canHaveHoverEffect(el),
         // TODO Remove in master.
         normalize_handlers: this.migrateImages.bind(this),
     };
 
     async canHaveHoverEffect(img) {
         const getDataset = async () => Object.assign({}, img.dataset, await loadImageInfo(img));
-        return (
-            img.tagName === "IMG" &&
-            !this.isDeviceShape(img) &&
-            !this.isAnimatedShape(img) &&
-            this.isImageSupportedForShapes(img, await getDataset()) &&
-            !(await isImageCorsProtected(img))
-        );
+        return img.tagName === "IMG"
+            ? !this.isDeviceShape(img) &&
+                  !this.isAnimatedShape(img) &&
+                  this.isImageSupportedForShapes(img, await getDataset()) &&
+                  !(await isImageCorsProtected(img))
+            : null;
     }
     isDeviceShape(img) {
         const shapeName = img.dataset.shape;
