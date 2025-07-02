@@ -171,6 +171,8 @@
                                             <label string="Email Alias" for="alias_name"/>
                                             <field name="alias_name" placeholder="alias"/>@
                                             <field name="alias_domain_id" placeholder="e.g. mycompany.com" options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="alias_email" widget="EmailAliasCopyClipboardButtonField" class="ms-2"
+                                                options="{'btn_class': 'link'}" string="" invisible="not alias_email"/>
                                         </div>
                                         <field name="incoming_einvoice_notification_email" invisible="type != 'purchase'" placeholder="Enter an email to get notified"/>
                                     </group>
