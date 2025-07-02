@@ -409,9 +409,7 @@ class IrHttp(models.AbstractModel):
         http.root.session_store.vacuum(max_lifetime=http.get_session_max_inactivity(self.env))
 
     @api.model
-    def get_translations_for_webclient(self, modules, lang):
-        if not modules:
-            modules = self.pool._init_modules
+    def _get_translations_for_webclient(self, modules, lang):
         if not lang:
             lang = self.env.context.get("lang")
         lang_data = self.env['res.lang']._get_data(code=lang)
@@ -439,8 +437,8 @@ class IrHttp(models.AbstractModel):
 
     @api.model
     @tools.ormcache('frozenset(modules)', 'lang')
-    def get_web_translations_hash(self, modules, lang):
-        translations, lang_params = self.get_translations_for_webclient(modules, lang)
+    def _get_web_translations_hash(self, modules, lang):
+        translations, lang_params = self._get_translations_for_webclient(modules, lang)
         translation_cache = {
             'lang_parameters': lang_params,
             'modules': translations,

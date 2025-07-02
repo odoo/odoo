@@ -16,6 +16,7 @@ from odoo import release
 from odoo.addons import __path__ as __addons_path__
 from odoo.exceptions import UserError
 from odoo.tools import mute_logger
+from odoo.tools.translate import TranslationModuleReader
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -52,9 +53,10 @@ class TestImportModule(odoo.tests.TransactionCase):
                 b'bar,bar'
             ),
             ('foo/data.sql', b"INSERT INTO res_currency (name, symbol, active) VALUES ('New Currency', 'NCU', TRUE);"),
-            ('foo/static/css/style.css', b".foo{color: black;}"),
-            ('foo/static/js/foo.js', b"console.log('foo')"),
+            ('foo/static/src/css/style.css', b".foo{color: black;}"),
+            ('foo/static/src/js/foo.js', b"console.log('foo')"),
             ('bar/__manifest__.py', self.manifest_content(data=['data.xml'])),
+            ('bar/static/src/js/bar.js', b"console.log(_t('baz')"),
             ('bar/data.xml', b"""
                 <data>
                     <record id="foo" model="res.country">
@@ -63,17 +65,35 @@ class TestImportModule(odoo.tests.TransactionCase):
                     </record>
                 </data>
             """),
-            ('bar/i18n/fr_FR.po', b"""
+            ('bar/i18n/fr.po', b"""
                 #. module: bar
                 #: model:res.country,name:bar.foo
                 msgid "foo"
                 msgstr "dumb"
+
+                #. module: bar
+                #. odoo-javascript
+                #: code:addons/foo/static/src/js/foo.js:0
+                msgid "baz"
+                msgstr "qux"
             """),
+            ('bar/i18n/nl.po', b"""
+                #. module: bar
+                #: model:res.country,name:bar.foo
+                msgid "foo"
+                msgstr "dumb_nl"
+
+                #. module: bar
+                #. odoo-javascript
+                #: code:addons/foo/static/src/js/baz.js:0
+                msgid "baz"
+                msgstr "qux_nl"
+            """)
         ]
         self.env['res.lang']._activate_lang('fr_FR')
-        with self.assertLogs('odoo.addons.base.models.ir_module') as log_catcher:
+        with self.assertLogs('odoo.addons.base_import_module.models.ir_module') as log_catcher:
             self.import_zipfile(files)
-            self.assertIn('INFO:odoo.addons.base.models.ir_module:module foo: no translation for language fr_FR', log_catcher.output)
+            self.assertIn('INFO:odoo.addons.base_import_module.models.ir_module:module foo: no translation for language fr_FR', log_catcher.output)
         self.assertEqual(self.env.ref('foo.foo')._name, 'res.partner')
         self.assertEqual(self.env.ref('foo.foo').name, 'foo')
         self.assertEqual(self.env.ref('foo.bar')._name, 'res.partner')
@@ -93,6 +113,30 @@ class TestImportModule(odoo.tests.TransactionCase):
                 static_attachment = self.env['ir.attachment'].search([('url', '=', '/%s' % path)])
                 self.assertEqual(static_attachment.name, os.path.basename(path))
                 self.assertEqual(static_attachment.datas, base64.b64encode(data))
+
+        self.assertEqual(
+            self.env['ir.http']._get_translations_for_webclient(['bar'], 'fr_FR')[0]['bar'],
+            {'messages': ({'id': 'baz', 'string': 'qux'},)},
+        )
+
+        # test importing modules first then activating a language
+        self.env['res.lang']._activate_lang('nl_NL')
+        self.assertEqual(
+            self.env['ir.http']._get_translations_for_webclient(['bar'], 'nl_NL')[0]['bar'],
+            {'messages': ({'id': 'baz', 'string': 'qux_nl'},)},
+        )
+        self.assertEqual(self.env.ref('bar.foo').with_context(lang='nl_NL').name, 'foo')
+        self.env['ir.module.module'].search([('name', '=', 'bar')])._update_translations('nl_NL')
+        self.assertEqual(self.env.ref('bar.foo').with_context(lang='nl_NL').name, 'dumb_nl')
+
+        po_reader = TranslationModuleReader(self.env.cr, ['bar'], 'fr_FR')
+        self.assertEqual(
+            po_reader._to_translate,
+            [
+                ('bar', 'foo', 'res.country,name', 'bar.foo', 'model', (), self.env.ref('bar.foo').id, 'dumb'),
+                ('bar', 'baz', r'addons/bar/static/src/js/bar.js', 1, 'code', ('odoo-javascript',), None, 'qux'),
+            ]
+        )
 
     def test_import_zip_invalid_manifest(self):
         """Assert the expected behavior when import a ZIP module with an invalid manifest"""

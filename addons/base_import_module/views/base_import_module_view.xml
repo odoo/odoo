@@ -6,7 +6,7 @@
             <field name="arch" type="xml">
                 <form string="Install the application">
                     <field name="state" invisible="1"/>
-                    <p class="alert alert-warning" role="alert" invisible="state == 'done' or context.get('data_module')">Note: you can only import data modules (.xml files and static assets)</p>
+                    <p class="alert alert-warning" role="alert" invisible="state == 'done' or context.get('data_module')">Note: you can only import data modules (.xml files, i18n files and static assets)</p>
                     <field name="modules_dependencies" readonly="1" nolabel="1" invisible="state == 'done'"/>
                     <group invisible="state != 'init'">
                         <field name="module_file" string="Module file (.zip)" options="{'accepted_file_extensions': '.zip'}" invisible="context.get('data_module')"/>
