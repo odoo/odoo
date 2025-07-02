@@ -560,6 +560,9 @@ export class LinkPlugin extends Plugin {
                 this.restoreSavePoint();
                 if (linkElement.isConnected) {
                     this.openLinkTools(linkElement);
+                } else {
+                    this.linkInDocument = null;
+                    this.currentOverlay.close();
                 }
                 this.dependencies.selection.focusEditable();
             },
