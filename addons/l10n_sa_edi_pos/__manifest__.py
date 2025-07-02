@@ -19,7 +19,7 @@ E-invoice implementation for Saudi Arabia; Integration with ZATCA (POS)
     'license': 'LGPL-3',
     'assets': {
         'point_of_sale._assets_pos': [
-            'l10n_sa_edi_pos/static/src/overrides/**/*.js',
+            'l10n_sa_edi_pos/static/src/overrides/**/*',
         ],
     }
 }

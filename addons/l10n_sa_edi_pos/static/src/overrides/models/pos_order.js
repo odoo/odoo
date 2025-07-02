@@ -11,10 +11,6 @@ patch(PosOrder.prototype, {
         }
     },
 
-    isSACompany() {
-        return this.company.country_id?.code === "SA";
-    },
-
     isToInvoice() {
         if (this.isSACompany()) {
             return true;

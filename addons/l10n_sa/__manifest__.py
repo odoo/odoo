@@ -26,6 +26,7 @@ Activates:
         'account_debit_note',
     ],
     'auto_install': ['account'],
+    'post_init_hook': '_l10n_sa_post_init',
     'data': [
         'data/account_data.xml',
         'data/account_tax_report_data.xml',

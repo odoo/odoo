@@ -3,8 +3,7 @@
 
 import logging
 
-from odoo import fields, models, api
-
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -23,7 +22,7 @@ class AccountMove(models.Model):
     def _get_name_invoice_report(self):
         self.ensure_one()
         if self.company_id.country_id and 'GCC' in self.company_id.country_id.country_group_codes:
-            return 'l10n_gcc_invoice.arabic_english_invoice'
+            return 'l10n_gcc_invoice.l10n_gcc_report_invoice_document'
         return super()._get_name_invoice_report()
 
     def _num2words(self, number, lang):

@@ -26,6 +26,12 @@ class AccountMove(models.Model):
                                                     help="""Date when the invoice is confirmed and posted.
                                                     In other words, it is the date on which the invoice is generated as final document (after securing all internal approvals).""")
 
+    def _get_name_invoice_report(self):
+        self.ensure_one()
+        if self.company_id.country_code == 'SA':
+            return 'l10n_sa.l10n_sa_report_invoice_document'
+        return super()._get_name_invoice_report()
+
     @api.depends('country_code', 'move_type')
     def _compute_show_delivery_date(self):
         # EXTENDS 'account'

@@ -17,7 +17,7 @@ Activates:
  - States
     """,
     'depends': [
-        'account',
+        'account', 'l10n_gcc_invoice'
     ],
     'data': [
         'data/tax_report_full.xml',
