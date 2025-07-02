@@ -15,6 +15,7 @@ export class NewContentSystrayItem extends Component {
     }
 
     onClick() {
+        this.websiteContext.showResourceEditor = false;
         this.websiteContext.showNewContentModal = !this.websiteContext.showNewContentModal;
     }
 }
