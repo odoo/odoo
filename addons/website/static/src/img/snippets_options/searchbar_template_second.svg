@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="100" viewBox="0 0 720 90">
+  <defs>
+    <g id="product_card_layout">
+      <!-- Image Box -->
+      <clipPath id="clip-octagon">
+        <polygon points="20,0 100,0 120,20 120,100 100,120 20,120 0,100 0,20" />
+      </clipPath>
+      <g id="image-box">
+        <rect width="120" height="120" rx="0" fill="#cceeff"/>
+        <g clip-path="url(#clip-octagon)">
+          <rect width="120" height="120" fill="#cceeff"/>
+          <circle cx="35" cy="30" r="10" fill="#e6f6fc"/>
+          <circle cx="50" cy="35" r="7" fill="#e6f6fc"/>
+          <path d="M0 80 Q40 75 65 85 Q90 95 120 90 V120 H0 Z" fill="#74a719"/>
+          <path d="M0 70 Q30 68 60 75 Q85 80 120 75 V90 H0 Z" fill="#aad77c"/>
+        </g>
+      </g>
+
+      <!-- Title and Subtitle -->
+      <rect x="140" y="10" rx="10" ry="10" width="560" height="20" fill="#e1f3fd"/>
+      <rect x="140" y="35" rx="10" ry="10" width="360" height="20" fill="#b7e1f3"/>
+
+      <!-- Content Lines -->
+      <rect x="140" y="60" width="540" height="6" rx="3" fill="#a6d9eb"/>
+      <rect x="140" y="70" width="500" height="6" rx="3" fill="#a6d9eb"/>
+      <rect x="140" y="80" width="460" height="6" rx="3" fill="#a6d9eb"/>
+      <rect x="140" y="90" width="420" height="6" rx="3" fill="#a6d9eb"/>
+
+      <!-- Button -->
+      <rect x="600" y="105" rx="10" ry="10" width="120" height="20" fill="#b7e1f3"/>
+    </g>
+  </defs>
+
+  <!-- Use the layout -->
+  <use href="#product_card_layout" x="0" y="-10"/>
+</svg>

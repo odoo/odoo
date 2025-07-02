@@ -5,6 +5,7 @@ export class SearchbarOption extends BaseOptionComponent {
     static props = {
         getOrderByItems: Function,
         getDisplayItems: Function,
+        getTemplates: Function,
     };
 
     setup() {
@@ -13,5 +14,6 @@ export class SearchbarOption extends BaseOptionComponent {
 
         this.orderByItems = this.props.getOrderByItems();
         this.displayItems = this.props.getDisplayItems();
+        this.templates = this.props.getTemplates();
     }
 }
