@@ -328,9 +328,7 @@ export class SelfOrder extends Reactive {
             orderAccessToken: access_token,
             screenMode: screen_mode,
         });
-        if (device === "kiosk") {
-            this.printKioskChanges(access_token);
-        }
+        this.printKioskChanges(access_token);
     }
 
     filterPaymentMethods(pms) {

@@ -46,5 +46,4 @@ class PosSelfAdyenController(PosAdyenController):
 
         if order.config_id.self_ordering_mode == 'kiosk':
             order._send_payment_result(payment_result)
-
         return request.make_json_response('[accepted]') # https://docs.adyen.com/point-of-sale/design-your-integration/choose-your-architecture/cloud/#guarantee
