@@ -2330,7 +2330,7 @@
     <template id="product_tags" name="Product Tags" active="True">
         <div
             class="o_product_tags o_field_tags d-flex flex-wrap align-items-center gap-2 mb-2 mt-1"
-            t-if="any(tag.visible_on_ecommerce for tag in all_product_tags)"
+            t-if="any(tag.visible_to_customers for tag in all_product_tags)"
         >
             <t t-foreach="all_product_tags" t-as="tag">
                 <t t-if="tag.visible_to_customers">
