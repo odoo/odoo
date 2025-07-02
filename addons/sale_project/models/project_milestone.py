@@ -38,18 +38,10 @@ class ProjectMilestone(models.Model):
 
     @api.depends('sale_line_id.product_uom_qty', 'product_uom_qty')
     def _compute_quantity_percentage(self):
-        for milestone in self:
-            if milestone.quantity_percentage:
-                if milestone.quantity_percentage < 0:
-                    milestone.quantity_percentage = 0
-                elif milestone.quantity_percentage > 1:
-                    milestone.quantity_percentage = 1
-            else:
+        changed = any(milestone.quantity_percentage != 0.0 for milestone in self)
+        if not changed:
+            for milestone in self:
                 milestone.quantity_percentage = milestone.sale_line_id.product_uom_qty and milestone.product_uom_qty / milestone.sale_line_id.product_uom_qty
-
-            # total_qty = sum(m.quantity_percentage for m in milestone.project_id.milestone_ids if m.sale_line_id == milestone.sale_line_id)
-            # if total_qty != 1:
-            #     raise ValueError(_("The quantity percentage must be between 0 and 100%."))
 
     @api.depends('sale_line_id', 'quantity_percentage')
     def _compute_product_uom_qty(self):
