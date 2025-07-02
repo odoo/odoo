@@ -1,591 +1,311 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="arabic_english_invoice">
-        <t t-call="web.external_layout">
-            <t t-set="o" t-value="o.with_context(lang=lang)" />
-            <t t-set="forced_vat" t-value="o.fiscal_position_id.foreign_vat"/> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
-            <t t-set="address">
-                <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' style="text-align: right"/>
-                <div t-if="o.partner_id.vat" class="mt16" style="text-align: right">
-                    <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-                    <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/></div>
+    <data>
+        <template id="l10n_gcc_report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+            <t t-set="o" position="after">
+                <t name="l10n_gcc_settings">
+                    <t t-if="lang != 'ar_001'" t-set="lang_sec" t-value="o.env['res.lang']._get_code('ar_001')"/>
+                    <t t-else="" t-set="lang_sec" t-value="o.env['res.lang']._get_code('en_US')"/>
+                    <t t-set="o_sec" t-value="o.with_context(lang=lang_sec)"/>
+                    <t t-set="display_in_lang_sec" t-value="o.company_id.l10n_gcc_country_is_gcc and o.company_id.l10n_gcc_dual_language_invoice"/>
+                    <t t-set="display_in_ar" t-value="display_in_lang_sec and lang_sec == 'ar_001'"/>
+                    <t t-set="display_in_en" t-value="display_in_lang_sec and lang_sec == 'en_US'"/>
+                    <t t-set="invoice_gcc_title" t-value="o._l10n_gcc_get_invoice_title()"/>
+                    <t t-set="invoice_gcc_title_sec" t-value="o_sec._l10n_gcc_get_invoice_title()"/>
+                </t>
             </t>
-
-            <t t-set="o_sec" t-value="o.with_context(lang=o.env['res.lang']._get_code('ar_001'))"/>
-            <t t-set="o" t-value="o.with_context(lang='en_US')"/>
-
-            <div class="page">
-                <h3>
-                    <div class="row">
-                        <div class="col-4" style="text-align:left">
-                            <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
-                                Tax Invoice
-                            </span>
-                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">
-                                Draft Invoice
-                            </span>
-                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">
-                                Cancelled Invoice
-                            </span>
-                            <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
-                                Credit Note
-                            </span>
-                            <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
-                                Draft Credit Note
-                            </span>
-                            <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">
-                                Cancelled Credit Note
-                            </span>
-                            <span t-elif="o.move_type == 'in_refund'">
-                                Vendor Credit Note
-                            </span>
-                            <span t-elif="o.move_type == 'in_invoice'">
-                                Vendor Bill
-                            </span>
-                        </div>
-                        <div class="col-4 text-center">
-                            <span t-if="o.name != '/'" t-field="o.name"/>
-                        </div>
-                        <div class="col-4" style="text-align:right">
-                            <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
-                                فاتورة ضريبية
-                            </span>
-                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">
-                                مسودة فاتورة
-                            </span>
-                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">
-                                فاتورة ملغاة
-                            </span>
-                            <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
-                                إشعار دائن
-                            </span>
-                            <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
-                                إشعار خصم المسودة
-                            </span>
-                            <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">
-                                إشعار خصم ملغاة
-                            </span>
-                            <span t-elif="o.move_type == 'in_refund'">
-                                إشعار مدين
-                            </span>
-                            <span t-elif="o.move_type == 'in_invoice'">
-                                فاتورة المورد
-                            </span>
-                        </div>
+            <!-- Arabic & English titles -->
+            <t name="invoice_title" position="attributes">
+                <attribute name="t-if">not invoice_gcc_title</attribute>
+            </t>
+            <t name="invoice_title" position="after">
+                <t t-else="" name="invoice_gcc_title" t-out="invoice_gcc_title"></t>
+            </t>
+            <span t-field='o.name' position="after">
+                <t t-if="display_in_ar and not proforma" t-translation="off">
+                    <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
+                        <t t-if="not invoice_gcc_title_sec" name="invoice_title_ar">فاتورة</t>
+                        <t t-else="" name="invoice_gcc_title_ar" t-out="invoice_gcc_title_sec"></t>
+                    </span>
+                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">
+                        <t name="draft_invoice_title_ar">مسودة فاتورة</t>
+                    </span>
+                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">
+                        <t name="cancelled_invoice_title_ar">فاتورة ملغاة</t>
+                    </span>
+                    <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
+                        <t name="credit_note_title_ar">إشعار دائن</t>
+                    </span>
+                    <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
+                        <t name="draft_credit_note_title_ar">مسودة إشعار دائن</t>
+                    </span>
+                    <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">
+                        <t name="cancelled_credit_note_title_ar">إشعار دائن ملغاة</t>
+                    </span>
+                    <span t-elif="o.move_type == 'in_refund'">
+                        <t name="vendor_credit_note_title_ar">إشعار المورد الدائن</t>
+                    </span>
+                    <span t-elif="o.move_type == 'in_invoice'">
+                        <t name="vendor_bill_title_ar">فاتورة المورد</t>
+                    </span>
+                </t>
+                <t t-elif="display_in_en and not proforma" t-translation="off">
+                    <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'" dir="rtl">
+                        <t t-if="not invoice_gcc_title_sec" name="invoice_title_en">Invoice</t>
+                        <t t-else="" name="invoice_gcc_title_en" t-out="invoice_gcc_title_sec"></t>
+                    </span>
+                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'" dir="rtl">
+                        <t name="draft_invoice_title_en">Draft Invoice</t>
+                    </span>
+                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'" dir="rtl">
+                        <t name="cancelled_invoice_title_en">Cancelled Invoice</t>
+                    </span>
+                    <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'" dir="rtl">
+                        <t name="credit_note_title_en">Credit Note</t>
+                    </span>
+                    <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'" dir="rtl">
+                        <t name="draft_credit_note_title_en">Draft Credit Note</t>
+                    </span>
+                    <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'" dir="rtl">
+                        <t name="cancelled_credit_note_title_en">Cancelled Credit Note</t>
+                    </span>
+                    <span t-elif="o.move_type == 'in_refund'" dir="rtl">
+                        <t name="vendor_credit_note_title_en">Vendor Credit Note</t>
+                    </span>
+                    <span t-elif="o.move_type == 'in_invoice'" dir="rtl">
+                        <t name="vendor_bill_title_en">Vendor Bill</t>
+                    </span>
+                </t>
+            </span>
+            <!-- End Arabic & English titles -->
+            <!-- Arabic & English information div -->
+            <xpath expr="//div[@name='invoice_date']/t" position="before">
+                <t t-if="display_in_en" t-translation="off">
+                    <t name="out_invoice_date_en" t-if="o.move_type == 'out_invoice'"><strong>Invoice Date</strong></t>
+                    <t name="out_refund_date_en" t-elif="o.move_type == 'out_refund'"><strong>Credit Note Date</strong></t>
+                    <t name="out_receipt_date_en" t-elif="o.move_type == 'out_receipt'"><strong>Receipt Date</strong></t>
+                    <t name="move_date_en" t-else=""><strong>Date</strong></t>
+                    <br/>
+                </t>
+                <t t-elif="display_in_ar" t-translation="off">
+                    <t name="out_invoice_date_ar" t-if="o.move_type == 'out_invoice'"><strong>تاريخ فاتورة العميل</strong></t>
+                    <t name="out_refund_date_ar" t-elif="o.move_type == 'out_refund'"><strong>تاريخ إشعار الدائن</strong></t>
+                    <t name="out_receipt_date_ar" t-elif="o.move_type == 'out_receipt'"><strong>تاريخ الإيصال</strong></t>
+                    <t name="move_date_ar" t-else=""><strong>تاريخ</strong></t>
+                    <br/>
+                </t>
+            </xpath>
+            <xpath expr="//div[@name='due_date']/strong" position="before">
+                <strong name="due_date_ar" t-if="display_in_ar" t-translation="off">تاريخ الاستحقاق<br/></strong>
+                <strong name="due_date_en" t-if="display_in_en" t-translation="off">Due Date<br/></strong>
+            </xpath>
+            <xpath expr="//div[@name='delivery_date']/strong" position="before">
+                <strong name="delivery_date_ar" t-if="display_in_ar" t-translation="off">تاريخ التوصيل<br/></strong>
+                <strong name="delivery_date_en" t-if="display_in_en" t-translation="off">Delivery Date<br/></strong>
+            </xpath>
+            <xpath expr="//div[@name='origin']/strong" position="before">
+                <strong name="origin_ar" t-if="display_in_ar" t-translation="off">المصدر<br/></strong>
+                <strong name="origin_en" t-if="display_in_en" t-translation="off">Source<br/></strong>
+            </xpath>
+            <xpath expr="//div[@name='customer_code']/strong" position="before">
+                <strong name="customer_code_ar" t-if="display_in_ar" t-translation="off">كود العميل<br/></strong>
+                <strong name="customer_code_en" t-if="display_in_en" t-translation="off">Customer Code<br/></strong>
+            </xpath>
+            <xpath expr="//div[@name='reference']/strong" position="before">
+                <strong name="reference_ar" t-if="display_in_ar" t-translation="off">رقم الإشارة<br/></strong>
+                <strong name="reference_en" t-if="display_in_en" t-translation="off">Reference<br/></strong>
+            </xpath>
+            <xpath expr="//div[@name='incoterm_id']/strong" position="before">
+                <strong name="incoterm_id_ar" t-if="display_in_ar" t-translation="off">شرط التجارة الدولي<br/></strong>
+                <strong name="incoterm_id_en" t-if="display_in_en" t-translation="off">Incoterm<br/></strong>
+            </xpath>
+            <!-- End Arabic & English information div -->
+            <!-- Arabic & English table headers -->
+            <xpath expr="//th[@name='th_description']/span" position="before">
+                <span name="th_description_ar" t-if="display_in_ar" t-translation="off">الوصف<br/></span>
+                <span name="th_description_en" t-if="display_in_en" t-translation="off">Description<br/></span>
+            </xpath>
+            <xpath expr="//th[@name='th_quantity']/span" position="before">
+                <span name="th_quantity_ar" t-if="display_in_ar" t-translation="off">الكمية<br/></span>
+                <span name="th_quantity_en" t-if="display_in_en" t-translation="off">Quantity<br/></span>
+            </xpath>
+            <xpath expr="//th[@name='th_priceunit']/span" position="before">
+                <span name="th_priceunit_ar" t-if="display_in_ar" t-translation="off">سعر الوحدة<br/></span>
+                <span name="th_priceunit_en" t-if="display_in_en" t-translation="off">Unit Price<br/></span>
+            </xpath>
+            <xpath expr="//th[@name='th_discount']/span" position="before">
+                <span name="th_discount_ar" t-if="display_in_ar" t-translation="off">٪ خصم<br/></span>
+                <span name="th_discount_en" t-if="display_in_en" t-translation="off">Disc.%<br/></span>
+            </xpath>
+            <xpath expr="//th[@name='th_taxes']/span" position="before">
+                <span name="th_taxes_ar" t-if="display_in_ar" t-translation="off">الضرائب<br/></span>
+                <span name="th_taxes_en" t-if="display_in_en" t-translation="off">Taxes<br/></span>
+            </xpath>
+            <xpath expr="//th[@name='th_subtotal']/span" position="before">
+                <span name="th_subtotal_ar" t-if="display_in_ar" t-translation="off">المبلغ<br/></span>
+                <span name="th_subtotal_en" t-if="display_in_en" t-translation="off">Amount<br/></span>
+            </xpath>
+            <!-- End Arabic & English table headers -->
+            <!-- Arabic & English payment terms -->
+            <span id="payment_terms_note_id" position="before">
+                <span id="payment_terms_note_id_lang_sec"
+                      t-if="o.invoice_payment_term_id.note and o.invoice_payment_term_id.note != o_sec.invoice_payment_term_id.note
+                      and display_in_lang_sec"
+                      t-out="o_sec.invoice_payment_term_id.note"
+                      name="payment_term_lang_sec"/>
+            </span>
+            <t t-set="payment_term_details" position="after">
+                <t t-set="payment_term_details_sec" t-value="o_sec.payment_term_details"/>
+            </t>
+            <xpath expr="//div[@id='total_payment_term_details_table']//td" position="before">
+                <td name="td_payment_term_ar" t-if="display_in_ar" t-translation="off">
+                    <span t-options='{"widget": "monetary", "display_currency": o_sec.currency_id}'
+                          t-out="o_sec.invoice_payment_term_id._get_amount_due_after_discount(o_sec.amount_total, o_sec.amount_tax)" dir="rtl">30.00</span> المبلغ المستحق إذا تم الدفع قبل
+                    <span t-out="o_sec.invoice_payment_term_id._get_last_discount_date_formatted(o_sec.invoice_date)" dir="rtl">2024-01-01</span>
+                </td>
+                <td name="td_payment_term_en" t-if="display_in_en" t-translation="off">
+                    <span t-options='{"widget": "monetary", "display_currency": o_sec.currency_id}'
+                          t-out="o_sec.invoice_payment_term_id._get_amount_due_after_discount(o_sec.amount_total, o_sec.amount_tax)" dir="ltr">30.00</span> due if paid before
+                    <span t-out="o_sec.invoice_payment_term_id._get_last_discount_date_formatted(o_sec.invoice_date)" dir="ltr">2024-01-01</span>
+                </td>
+            </xpath>
+            <xpath expr="//div[@id='total_payment_term_details_table']//t[2]" position="before">
+                <t name="div_payment_term_ar" t-if="len(payment_term_details_sec) > 1 and display_in_ar" t-foreach="payment_term_details_sec" t-as="term" t-translation="off">
+                    <div dir="rtl">
+                        <span t-out="term_index + 1">1</span> - دفعة من
+                        <t t-options='{"widget": "monetary", "display_currency": o_sec.currency_id}' t-out="term.get('amount')" class="text-end">31.05</t>
+                        <span> مستحق في </span>
+                        <t t-out="term.get('date')" class="text-start">2024-01-01</t>
                     </div>
-                </h3>
-
-                <div
-                    id="informations" class="pb-3"
-                    t-if="o.invoice_date or (o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted') or o.invoice_origin or o.partner_id.ref or o.ref">
-                    <div class="row" t-if="o.invoice_date" name="invoice_date">
-                        <div class="col-2 offset-6">
-                            <strong style="white-space:nowrap">Invoice Date:
-                            </strong>
-                        </div>
-                        <div class="col-2">
-                            <span t-field="o.invoice_date"/>
-                        </div>
-                        <div class="col-2 text-end">
-                            <strong style="white-space:nowrap">:
-                                تاريخ الفاتورة
-                            </strong>
-                        </div>
+                </t>
+                <t name="div_payment_term_en" t-if="len(payment_term_details_sec) > 1 and display_in_en" t-foreach="payment_term_details_sec" t-as="term" t-translation="off">
+                    <div dir="ltr">
+                        <span t-out="term_index + 1">1</span> - Installment of
+                        <t t-options='{"widget": "monetary", "display_currency": o_sec.currency_id}' t-out="term.get('amount')" class="text-end">31.05</t>
+                        <span> due on </span>
+                        <t t-out="term.get('date')" class="text-start">2024-01-01</t>
                     </div>
-                    <div class="row"
-                         t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'"
-                         name="due_date">
-                        <div class="col-2 offset-6">
-                            <strong style="white-space:nowrap">Due Date:
-                            </strong>
-                        </div>
-                        <div class="col-2">
-                            <span t-field="o.invoice_date_due"/>
-                        </div>
-                        <div class="col-2 text-end">
-                            <strong style="white-space:nowrap">:
-                                تاريخ الاستحقاق
-                            </strong>
-                        </div>
-                    </div>
-                    <div class="row" t-if="o.invoice_origin" name="origin">
-                        <div class="col-2 offset-6">
-                            <strong style="white-space:nowrap">Source:
-                            </strong>
-                        </div>
-                        <div class="col-2">
-                            <span t-field="o.invoice_origin"/>
-                        </div>
-                        <div class="col-2 text-end">
-                            <strong style="white-space:nowrap">:
-                                المصدر
-                            </strong>
-                        </div>
-                    </div>
-                    <div class="row" t-if="o.partner_id.ref" name="customer_code">
-                        <div class="col-2 offset-6">
-                            <strong style="white-space:nowrap">
-                                Customer Code:
-                            </strong>
-                        </div>
-                        <div class="col-2">
-                            <span t-field="o.partner_id.ref"/>
-                        </div>
-                        <div class="col-2 text-end">
-                            <strong style="white-space:nowrap">:
-                                كود العميل
-                            </strong>
-                        </div>
-                    </div>
-                    <div class="row" t-if="o.ref" name="reference">
-                        <div class="col-2 offset-6">
-                            <strong style="white-space:nowrap">Reference:
-                            </strong>
-                        </div>
-                        <div class="col-2">
-                            <span t-field="o.ref"/>
-                        </div>
-                        <div class="col-2 text-end">
-                            <strong style="white-space:nowrap">:
-                                رقم الإشارة
-                            </strong>
-                        </div>
-                    </div>
-                </div>
-
-                <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
-                <table class="o_has_total_table table table-borderless o_main_table" name="invoice_line_table">
-                    <thead>
-                        <tr>
-                            <t t-set="colspan" t-value="6"/>
-                            <th name="th_total" class="text-end fw-bold">
-                                <span>
-                                    السعر الاجمالي
-                                </span>
-                                <br/>
-                                <span>
-                                    Total Price
-                                </span>
-                            </th>
-                            <th name="th_tax_amount"
-                                class="text-end fw-bold">
-                                <span>
-                                    قيمة الضريبة
-                                </span>
-                                <br/>
-                                <span>
-                                    VAT Amount
-                                </span>
-                            </th>
-                            <th name="th_subtotal" class="text-end fw-bold">
-                                <span>
-                                    مبلغ
-                                </span>
-                                <br/>
-                                <span>
-                                    Amount
-                                </span>
-                            </th>
-                            <th name="th_taxes"
-                                class="text-end fw-bold">
-                                <span>
-                                    الضرائب
-                                </span>
-                                <br/>
-                                <span>
-                                    Taxes
-                                </span>
-                            </th>
-                            <th name="th_price_unit" t-if="display_discount"
-                                class="text-end fw-bold">
-                                <span>
-                                    خصم %
-                                </span>
-                                <br/>
-                                <span>
-                                    Disc.%
-                                </span>
-                                <t t-set="colspan" t-value="colspan+1"/>
-                            </th>
-                            <th name="th_priceunit"
-                                class="text-end fw-bold">
-                                <span>
-                                    سعر الوحدة
-                                </span>
-                                <br/>
-                                <span>
-                                    Unit price
-                                </span>
-                            </th>
-                            <th name="th_quantity" class="text-end fw-bold">
-                                <span>
-                                    الكمية
-                                </span>
-                                <br/>
-                                <span>
-                                    Quantity
-                                </span>
-                            </th>
-                            <th name="th_source" class="d-none text-start" t-if="0">
-                                <span>
-                                    المستند المصدر
-                                </span>
-                                <br/>
-                                <span>
-                                    Source Document
-                                </span>
-                            </th>
-                            <th name="th_description" class="text-end fw-bold">
-                                <span>
-                                    الوصف
-                                </span>
-                                <br/>
-                                <span>
-                                    Description
-                                </span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="invoice_tbody">
-                        <t t-set="current_subtotal" t-value="0"/>
-                        <t t-set="lines"
-                           t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
-
-                        <t t-foreach="lines" t-as="line">
-                            <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
-                            <t t-set="current_total" t-value="current_subtotal + line.price_total" t-if="o.tax_calculation_rounding_method == 'round_per_line'"/>
-
-                            <tr t-att-class="'fw-bolder o_line_section' if line.display_type == 'line_section' else 'fw-bold o_line_subsection' if line.display_type == 'line_subsection' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
-                                <t t-if="line.display_type not in ('line_section', 'line_subsection', 'line_note')" name="account_invoice_line_accountable">
-                                    <td class="text-end o_price_total">
-                                        <span class="text-nowrap" t-field="line.price_total"/>
-                                    </td>
-                                    <td class="text-end">
-                                        <span class="text-nowrap" t-field="line.l10n_gcc_invoice_tax_amount"/>
-                                    </td>
-                                    <td class="text-end o_price_total">
-                                        <span class="text-nowrap" t-field="line.price_subtotal"/>
-                                    </td>
-
-                                    <td class="text-end">
-                                        <span t-out="', '.join(tax.tax_label for tax in line.tax_ids if tax.tax_label)" id="line_tax_ids"/>
-                                    </td>
-                                    <td t-if="display_discount"
-                                        class="text-end">
-                                        <span class="text-nowrap" t-field="line.discount"/>
-                                    </td>
-                                    <td class="text-end">
-                                        <span class="text-nowrap" t-field="line.price_unit"/>
-                                    </td>
-                                    <td class="o_td_quantity text-end">
-                                        <span t-field="line.quantity" class="text-nowrap"/>
-                                        <span t-field="line.product_uom_id" groups="uom.group_uom"/>
-                                    </td>
-                                    <td name="account_invoice_line_name">
-                                        <t t-if="line.product_id">
-                                            <t t-set="english_name" t-value="line.with_context(lang='en_US').product_id.display_name"/>
-                                            <t t-set="arabic_name" t-value="line.with_context(lang=o.env['res.lang']._get_code('ar_001')).product_id.display_name"/>
-
-                                            <span t-out="arabic_name + '\n'" t-if="arabic_name not in line.name" t-options="{'widget': 'text'}" dir="rtl"/>
-                                            <span t-out="english_name + '\n'" t-if="(english_name != arabic_name) and (english_name not in line.name)" t-options="{'widget': 'text'}"/>
-                                        </t>
-                                        <span t-out="line.name" t-options="{'widget': 'text'}" t-att-dir="o.env['res.lang']._get_data(code=o.partner_id.lang).direction"/>
-                                    </td>
-
-                                </t>
-                                <t t-if="line.display_type in ('line_section', 'line_subsection')">
-                                    <td colspan="99">
-                                        <span t-field="line.name" t-options="{'widget': 'text'}"/>
-                                    </td>
-                                    <t t-set="current_section" t-value="line"/>
-                                    <t t-set="current_subtotal" t-value="0"/>
-                                </t>
-                                <t t-if="line.display_type == 'line_note'">
-                                    <td colspan="99">
-                                        <span t-field="line.name" t-options="{'widget': 'text'}"/>
-                                    </td>
-                                </t>
-                            </tr>
-                            <t t-if="current_section and (line_last or lines[line_index+1].display_type in ('line_section', 'line_subsection'))">
-                                <tr class="is-subtotal text-end">
-                                    <td colspan="99">
-                                        <strong class="mr16" style="display: inline-block">Subtotal/الإجمالي الفرعي</strong>
-                                        <span
-                                                t-out="current_subtotal"
-                                                t-options='{"widget": "monetary", "display_currency": o.currency_id}'
-                                        />
-                                    </td>
-                                </tr>
-                            </t>
-                        </t>
-                    </tbody>
-                </table>
-
-                <div class="clearfix pt-4 pb-3">
-                    <div id="total" class="row mt-n3">
-                        <div class="col-6">
-                            <table class="o_total_table table table-borderless" style="page-break-inside: avoid;">
-                                <tr class="o_subtotal">
-                                    <td class="text-end">
-                                        <span t-field="o.amount_untaxed"/>
-                                    </td>
-                                    <td class="text-end">
-                                        <strong>
-                                            Subtotal
-                                            /
-                                            الإجمالي الفرعي
-                                        </strong>
-                                    </td>
-                                </tr>
-                                <t t-set="tax_totals" t-value="o.tax_totals"/>
-                                <t t-set="currency" t-value="o.currency_id"/>
-                                <t t-set="same_tax_base" t-value="tax_totals['same_tax_base']"/>
-                                <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
-                                    <t t-foreach="subtotal['tax_groups']" t-as="tax_group">
-                                        <tr class="o_taxes">
-                                            <td class="text-end o_price_total">
-                                                <span class="text-nowrap"
-                                                      t-out="tax_group['tax_amount_currency']"
-                                                      t-options='{"widget": "monetary", "display_currency": currency}'
-                                                >1.05</span>
-                                            </td>
-                                            <t t-set="arabic_tax_group_name" t-value="o_sec.tax_totals['subtotals'][subtotal_index]['tax_groups'][tax_group_index]['group_name']"/>
-                                            <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is None">
-                                                <td class="text-end">
-                                                    <strong class="text-nowrap" t-out="tax_group['group_name']">Tax 15%</strong>
-                                                    <strong t-if="arabic_tax_group_name != tax_group['group_name']" class="text-nowrap">/
-                                                        <t t-esc="arabic_tax_group_name"/>
-                                                    </strong>
-                                                </td>
-                                            </t>
-                                            <t t-else="">
-                                                <td class="text-end o_price_total">
-                                                    <span class="text-nowrap"
-                                                          t-out="tax_group['display_base_amount_currency']"
-                                                          t-options='{"widget": "monetary", "display_currency": currency}'
-                                                    >4.05</span>
-                                                </td>
-                                                <td>
-                                                    <span t-out="tax_group['group_name']">Tax 15%</span>
-                                                    <strong t-if="arabic_tax_group_name != tax_group['group_name']" class="text-nowrap">/
-                                                        <t t-esc="arabic_tax_group_name"/>
-                                                    </strong>
-                                                    <span> on </span>
-                                                    <span class="text-nowrap"
-                                                          t-out="tax_group['display_base_amount_currency']"
-                                                          t-options='{"widget": "monetary", "display_currency": currency}'
-                                                    >27.00</span>
-                                                </td>
-                                            </t>
-                                        </tr>
-                                    </t>
-                                </t>
-                                <tr class="o_total">
-                                    <td class="text-end">
-                                        <span class="text-nowrap" t-field="o.amount_total"/>
-                                    </td>
-                                    <td class="text-end">
-                                        <strong>
-                                            Total
-                                            /
-                                            المجموع
-                                        </strong>
-                                    </td>
-                                </tr>
-
-                                <t t-if="print_with_payments">
-                                    <t t-if="o.payment_state != 'invoicing_legacy'">
-                                        <t t-set="payments_vals" t-value="o.sudo().invoice_payments_widget and o.sudo().invoice_payments_widget['content'] or []"/>
-                                        <t t-foreach="payments_vals" t-as="payment_vals">
-                                            <tr class="o_total">
-                                                <td>
-                                                    <i class="row">
-                                                        <div class="col-7 oe_form_field oe_payment_label">
-                                                            Paid on/دفعت في:
-                                                        </div>
-                                                        <div class="col-5 ps-0 oe_form_field oe_payment_label">
-                                                            <t t-out="payment_vals['date']"/>
-                                                        </div>
-                                                    </i>
-                                                </td>
-                                                <td class="text-end">
-                                                    <span t-out="payment_vals['amount']"
-                                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                                </td>
-                                            </tr>
-                                        </t>
-                                        <t t-if="len(payments_vals) > 0">
-                                            <tr class="border-top">
-                                                <td>
-                                                    <strong>
-                                                        Amount Due
-                                                        /
-                                                        المبلغ المستحق
-                                                    </strong>
-                                                </td>
-                                                <td class="text-end">
-                                                    <span t-field="o.amount_residual"/>
-                                                </td>
-                                            </tr>
-                                        </t>
-                                    </t>
-                                </t>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-2">
-                    <p class="lh-sm" t-if="o.company_id.display_invoice_amount_total_words">
-                        Total amount in words: <br/>
-                        <span class="text-muted" t-field="o.amount_total_words"/>
-                    </p>
-                    <p class="text-end lh-sm" t-if="o.company_id.display_invoice_amount_total_words">
-                        المبلغ الإجمالي <br/>
-                        <span class="text-muted" t-out="o._num2words(o.amount_total, 'ar_001')"/>
-                    </p>
-                </div>
-
-                <div t-if="o.currency_id != o.company_id.currency_id"
-                     class="row clearfix ms-auto text-nowrap border-top border-bottom p-2">
-                    <t t-set="exchange_rate"
-                       t-value="abs(o.amount_total_signed) / o.amount_total if o.amount_total else 0"/>
-                    <div name="exchange_rate" class="col">
-                        <strong>سعر الصرف</strong><br/>
-                        <strong>Exchange Rate</strong>
-                        <div
-                           t-out="exchange_rate"
-                           t-options='{"widget": "float", "precision": 5}'
-                        />
-                    </div>
-                    <div name="subtotal_company_currency" class="col">
-                        <strong>الإجمالي الفرعي</strong><br/>
-                        <strong>Subtotal</strong>
-                        <div
-                           t-out="abs(o.amount_untaxed_signed)"
-                           t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
-                        />
-                    </div>
-                    <div name="vat_amount_company_currency" class="col">
-                        <strong>قيمة الضريبة</strong><br/>
-                        <strong>VAT Amount</strong>
-                        <div
-                           t-out="abs(o.amount_tax_signed)"
-                           t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
-                        />
-                    </div>
-                    <div name="total_company_currency" class="col">
-                        <strong>المجموع</strong><br/>
-                        <strong>Total</strong>
-                        <div
-                           t-out="abs(o.amount_total_signed)"
-                           t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
-                        />
-                    </div>
-                </div>
-
-                <p name="payment_communication" t-if="0"></p>
-                <div class="row" t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
-                    <div class="col-2">
-                        <strong>Payment Reference:</strong>
-                    </div>
-                    <div class="col-2 text-center">
-                        <span class="fw-bold" t-field="o.payment_reference"/>
-                    </div>
-                    <div class="col-2 text-end">
-                        <strong style="white-space:nowrap">:رقم إشارة الدفعة</strong>
-                    </div>
-                </div>
-
-                <p t-if="o.invoice_payment_term_id" name="payment_term">
-                    <div class="row">
-                        <div class="col-3 text-start">
-                            <span t-out="o.invoice_payment_term_id.note"/>
-                        </div>
-                        <div class="col-3 text-end">
-                            <span t-if="o.invoice_payment_term_id.note != o_sec.invoice_payment_term_id.note" dir="rtl" t-out="o_sec.invoice_payment_term_id.note"/>
-                        </div>
-                    </div>
-                    <t t-if="o.invoice_payment_term_id.display_on_invoice and o.payment_term_details">
-                        <div t-if='o.show_payment_term_details' id="total_payment_term_details_table" class="row">
-                            <div t-attf-class="#{'col-10 offset-2' if report_type != 'html' else 'col-sm-10 col-md-9 offset-sm-2 offset-md-3'}">
-                                <t t-if="o._is_eligible_for_early_payment_discount(o.currency_id,o.invoice_date)">
-                                    <div class="text-end">
-                                        <span dir="rtl" style="white-space: normal;">
-                                            <span t-options='{"widget": "monetary", "display_currency": o.currency_id}'
-                                                    t-out="o.invoice_payment_term_id._get_amount_due_after_discount(o.amount_total, o.amount_tax)">30.00</span> مستحق إذا تم الدفع قبل
-                                            <span t-out="o.invoice_payment_term_id._get_last_discount_date_formatted(o.invoice_date)">2024-01-01</span>
-                                        </span>
-                                        <br/>
-                                        <span t-options='{"widget": "monetary", "display_currency": o.currency_id}'
-                                                t-out="o.invoice_payment_term_id._get_amount_due_after_discount(o.amount_total, o.amount_tax)">30.00</span> due if paid before
-                                        <span t-out="o.invoice_payment_term_id._get_last_discount_date_formatted(o.invoice_date)">2024-01-01</span>
-                                    </div>
-                                </t>
-                                <t t-if="len(o.payment_term_details) > 1" t-foreach="o.payment_term_details" t-as="term">
-                                    <div dir="rtl" class="text-end" style="white-space: normal;">
-                                        <span t-out="term_index + 1">1</span> - قسط
-                                        <t t-options='{"widget": "monetary", "display_currency": o.currency_id}' t-out="term.get('amount')">31.05</t> مستحق في
-                                        <t t-out="term.get('date')">2024-01-01</t>
-                                    </div>
-                                    <div class="text-end">
-                                        <span t-out="term_index + 1">1</span> - Installment of
-                                        <t t-options='{"widget": "monetary", "display_currency": o.currency_id}' t-out="term.get('amount')" class="text-end">31.05</t>
-                                        <span> due on </span>
-                                        <t t-out="term.get('date')" class="text-start">2024-01-01</t>
-                                    </div>
-                                </t>
-                            </div>
-                        </div>
-                    </t>
+                </t>
+            </xpath>
+            <!-- End Arabic & English payment terms -->
+            <!-- Arabic & English amount in words -->
+            <p t-if="o.company_id.display_invoice_amount_total_words" position="before">
+                <p name="amount_total_words_lang_sec" t-if="o.company_id.display_invoice_amount_total_words and display_in_lang_sec"
+                t-att-dir="env['res.lang']._get_data(code=lang_sec).direction or 'ltr'" t-translation="off">
+                    <span t-if="display_in_ar">المبلغ الإجمالي كتابةً: <br/></span>
+                    <span t-if="display_in_en">Total amount in words: <br/></span>
+                    <small class="text-muted lh-sm"><span t-out="o_sec.currency_id.amount_to_text(o_sec.amount_total).replace(' and ', ' و')"></span></small>
                 </p>
-                <p t-if="o.narration" name="comment">
-                    <div class="row">
-                        <div class="col-6 text-start">
-                            <span t-out="o.narration"/>
-                        </div>
-                        <div class="col-6 text-end">
-                            <span t-if="o.narration != o_sec.narration" dir="rtl" t-out="o_sec.narration"/>
-                        </div>
-                    </div>
-                </p>
-                <p t-if="o.fiscal_position_id.note" name="note">
-                    <div class="row">
-                        <div class="col-6 text-start">
-                            <span t-out="o.fiscal_position_id.note"/>
-                        </div>
-                        <div class="col-6 text-end">
-                            <span t-if="o.fiscal_position_id.note != o_sec.fiscal_position_id.note" dir="rtl" t-out="o_sec.fiscal_position_id.note"/>
-                        </div>
-                    </div>
-                </p>
+            </p>
+            <!-- End Arabic & English amount in words -->
+            <!-- Arabic & English amount in words -->
+            <p name="payment_communication" position="before">
+            <p name="payment_communication_ar" t-if="display_in_ar" t-translation="off">
+                <span class="fw-bold" t-out="o_sec.payment_reference">INV/2023/00001</span> :التواصل بشأن الدفع
+                <t t-if="o_sec.partner_bank_id">
+                    <br/><span t-out="o_sec.partner_bank_id.acc_number" class="fw-bold"/> :في هذا الحساب
+                </t>
+            </p>
+            <p name="payment_communication_en" t-if="display_in_en" t-translation="off">
+                Payment Communication: <span class="fw-bold" t-out="o_sec.payment_reference">INV/2023/00001</span>
+                <t t-if="o_sec.partner_bank_id">
+                    <br/> on this account: <span t-out="o_sec.partner_bank_id.acc_number" class="fw-bold"/>
+                </t>
+            </p>
+            </p>
+            <!-- End Arabic & English amount in words -->
+            <!-- Call custom tax totals templates -->
+            <t t-set="tax_totals" position="after">
+                <t t-set="tax_totals_sec" t-value="o_sec.tax_totals"/>
+            </t>
+            <t t-call="account.document_tax_totals" position="attributes">
+                <attribute name="t-call">l10n_gcc_invoice.l10n_gcc_document_tax_totals</attribute>
+            </t>
+            <xpath expr="(//t[@t-set='tax_totals'])[2]" position="after">
+                <t t-set="tax_totals_sec" t-value="o_sec.tax_totals"/>
+                <t t-set="show_exchange_rate" t-value="0"/>
+            </xpath>
+            <t t-call="account.document_tax_totals_company_currency_template" position="attributes">
+                <attribute name="t-call">l10n_gcc_invoice.l10n_gcc_document_tax_totals_company_currency_template</attribute>
+            </t>
+            <!-- End Call custom tax totals templates -->
+        </template>
 
-                <p name="incoterm" t-if="0"></p>
-                <div class="row" t-if="o.invoice_incoterm_id" name="incoterm">
-                    <div class="col-2 offset-6">
-                        <strong>Incoterm:</strong>
-                    </div>
-                    <div class="col-2 text-nowrap">
-                        <span t-out="o.invoice_incoterm_id.code"/>
-                        -
-                        <span t-out="o.invoice_incoterm_id.name"/>
-                        -
-                        <span t-if="o.incoterm_location" t-out="o.incoterm_location"/>
-                    </div>
-                    <div class="col-2 text-end">
-                        <strong>:شرط تجاري</strong>
-                    </div>
-                </div>
-            </div>
-        </t>
-    </template>
+        <template id="l10n_gcc_document_tax_totals" inherit_id="account.document_tax_totals" primary="True">
+            <xpath expr="//t[@t-set='same_tax_base']" position="after">
+                <t t-set="subtotal_index" t-value="0"/>
+            </xpath>
+            <xpath expr="//tr[hasclass('o_subtotal')]" position="before">
+                <t t-set="subtotal_sec" t-value="tax_totals_sec['subtotals'][subtotal_index]"/>
+                <t t-set="subtotal_index" t-value="subtotal_index + 1"/>
+                <t t-set="tax_group_index" t-value="0"/>
+            </xpath>
+            <xpath expr="//tr[hasclass('o_taxes')]" position="before">
+                <t t-set="tax_group_sec" t-value="subtotal_sec['tax_groups'][tax_group_index]"/>
+                <t t-set="tax_group_index" t-value="tax_group_index + 1"/>
+            </xpath>
+            <span t-out="subtotal['name']" position="after">
+                <span name="untaxed_amount_ar" t-if="display_in_ar" t-translation="off"> / بدون ضريبة</span>
+                <span name="untaxed_amount_en" t-if="display_in_en" t-translation="off"> / Untaxed Amount</span>
+            </span>
+            <xpath expr="//tr[hasclass('o_total')]/td" position="inside">
+                <strong name="total_ar" t-if="display_in_ar" t-translation="off"> / الإجمالي</strong>
+                <strong name="total_en" t-if="display_in_en" t-translation="off"> / Total</strong>
+            </xpath>
+        </template>
 
-    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
-    <template id="report_invoice" inherit_id="account.report_invoice">
-        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
-            <t t-elif="o._get_name_invoice_report() == 'l10n_gcc_invoice.arabic_english_invoice'"
-               t-call="l10n_gcc_invoice.arabic_english_invoice"
-               t-lang="lang"/>
-        </xpath>
-    </template>
+        <template id="l10n_gcc_document_tax_totals_company_currency_template" inherit_id="account.document_tax_totals_company_currency_template" primary="True">
+            <xpath expr="//t[@t-set='same_tax_base']" position="after">
+                <t t-set="subtotal_index" t-value="0"/>
+            </xpath>
+            <xpath expr="//t[@t-as='subtotal']" position="before">
+                <tr t-if="show_exchange_rate">
+                    <t t-set="exchange_rate" t-if="o.amount_total" t-value="abs(o.amount_total_signed) / o.amount_total"/>
+                    <t t-set="exchange_rate" t-else="" t-value="o.env['res.currency']._get_conversion_rate(o.currency_id, o.company_id.currency_id, o.company_id, o.invoice_date or datetime.date.today())"/>
+                    <td>
+                        <span>Exchange Rate</span>
+                        <span t-if="display_in_ar" t-translation="off"> / سعر الصرف</span>
+                        <span t-if="display_in_en" t-translation="off"> / Exchange Rate</span>
+                    </td>
+                    <td class="text-end" t-out="exchange_rate" t-options='{"widget": "float", "precision": 5}'/>
+                </tr>
+            </xpath>
+            <xpath expr="//tr[hasclass('o_subtotal')]" position="before">
+                <t t-set="subtotal_sec" t-value="tax_totals_sec['subtotals'][subtotal_index]"/>
+                <t t-set="subtotal_index" t-value="subtotal_index + 1"/>
+                <t t-set="tax_group_index" t-value="0"/>
+            </xpath>
+            <xpath expr="//tr[hasclass('o_taxes')]" position="before">
+                <t t-set="tax_group_sec" t-value="subtotal_sec['tax_groups'][tax_group_index]"/>
+                <t t-set="tax_group_index" t-value="tax_group_index + 1"/>
+            </xpath>
+            <span t-field="o.company_currency_id" position="after">
+                <t name="taxes_ar" t-if="display_in_ar" t-translation="off" dir="rtl">
+                    الضرائب
+                </t>
+            </span>
+            <span t-field="o.company_currency_id" position="after">
+                <t name="taxes_en" t-if="display_in_en" t-translation="off">
+                    Taxes 
+                </t>
+            </span>
+            <span t-out="subtotal['name']" position="after">
+                <span name="untaxed_amount_ar" t-if="display_in_ar" t-translation="off"> / المبلغ دون ضريبة</span>
+                <span name="untaxed_amount_en" t-if="display_in_en" t-translation="off"> / Untaxed Amount</span>
+            </span>
+            <xpath expr="//tr[hasclass('o_total')]/td" position="inside">
+                <strong name="total_ar" t-if="display_in_ar" t-translation="off"> / الإجمالي</strong>
+                <strong name="total_en" t-if="display_in_en" t-translation="off"> / Total</strong>
+            </xpath>
+        </template>
+
+        <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+        <template id="report_invoice" inherit_id="account.report_invoice">
+            <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+                <t t-elif="o._get_name_invoice_report() == 'l10n_gcc_invoice.l10n_gcc_report_invoice_document'"
+                   t-call="l10n_gcc_invoice.l10n_gcc_report_invoice_document"
+                   t-lang="lang"/>
+            </xpath>
+        </template>
+    </data>
 </odoo>

@@ -28,6 +28,14 @@ class AccountMove(models.Model):
       help="Technical field to know if the chain has been stopped by a previous invoice",
   )
 
+    def _l10n_gcc_get_invoice_title(self):
+        # EXTENDS l10n_gcc_invoice
+        self.ensure_one()
+        if self.company_id.country_code == 'SA' and self._l10n_sa_is_simplified():
+            return self.env._('Simplified Tax Invoice')
+
+        return super()._l10n_gcc_get_invoice_title()
+
     def _l10n_sa_is_simplified(self):
         """
             Returns True if the customer is an individual, i.e: The invoice is B2C

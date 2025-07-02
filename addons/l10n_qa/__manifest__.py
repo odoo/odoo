@@ -12,6 +12,7 @@ Activates:
     'version': '1.0',
     'depends': [
         'account',
+        'l10n_gcc_invoice',
     ],
     'demo': [
         'demo/demo_company.xml',

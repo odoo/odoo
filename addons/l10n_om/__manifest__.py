@@ -17,6 +17,7 @@ Activates:
     'countries': ['om'],
     'depends': [
         'account',
+        'l10n_gcc_invoice',
     ],
     'auto_install': True,
     'data': [
