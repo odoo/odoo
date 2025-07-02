@@ -12,7 +12,7 @@ class HtmlFieldHistoryMixin(models.AbstractModel):
     _description = "Field html History"
     _html_field_history_size_limit = 300
 
-    html_field_history = fields.Json("History data", prefetch=False)
+    html_field_history = fields.Json("History data", prefetch=False, readonly=True)
 
     html_field_history_metadata = fields.Json(
         "History metadata", compute="_compute_metadata"
@@ -40,8 +40,16 @@ class HtmlFieldHistoryMixin(models.AbstractModel):
                         history_metadata[field_name].append(metadata)
             rec.html_field_history_metadata = history_metadata
 
+    def copy_data(self, default=None):
+        vals = super().copy_data(default)
+        if 'html_field_history' in vals:
+            del vals['html_field_history']
+        return vals
+
     def write(self, vals):
         rec_db_contents = {}
+        if 'html_field_history' in vals:
+            del vals['html_field_history']
         versioned_fields = self._get_versioned_fields()
         vals_contain_versioned_fields = set(vals).intersection(versioned_fields)
 
