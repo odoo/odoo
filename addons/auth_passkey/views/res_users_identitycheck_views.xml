@@ -15,7 +15,7 @@
                 </div>
             </xpath>
             <xpath expr="//footer/button[@id='password_confirm']" position="before">
-                <button string="Use Passkey" type="object" name="run_check" class="btn btn-primary" data-hotkey="q" invisible="auth_method != 'webauthn'"/>
+                <button string="Use Passkey" type="object" name="run_check" class="btn btn-primary" data-hotkey="q" invisible="auth_method != 'webauthn'" context="{'password': password}"/>
             </xpath>
         </field>
     </record>
