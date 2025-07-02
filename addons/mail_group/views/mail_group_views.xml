@@ -114,10 +114,16 @@
                             <div class="oe_inline" name="alias_def">
                                 <field name="alias_id" class="oe_read_only oe_inline" string="Email Alias" required="0"/>
                                 <div class="oe_inline" name="edit_alias" style="display: inline;">
-                                    <div class="oe_edit_only" dir="ltr">
-                                        <field name="alias_name" placeholder="alias" class="oe_inline"/>@
-                                        <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
-                                               options="{'no_create': True, 'no_open': True}"/>
+                                    <div class="oe_edit_only row" dir="ltr">
+                                        <div class="d-flex col-10 p-0">
+                                            <field name="alias_name" placeholder="alias" class="o_field_highlight"/>@
+                                            <field name="alias_domain_id" class="o_field_highlight" placeholder="e.g. mycompany.com"
+                                                options="{'no_create': True, 'no_open': True}"/>
+                                        </div>
+                                        <div class="col-2 p-0" invisible="not alias_email">
+                                            <field name="alias_email" widget="CopyClipboardButton"
+                                                class="copy_alias_email" options="{'btn_class': 'link'}" string=""/>
+                                        </div>
                                     </div>
                                     <button icon="oi-arrow-right" type="action" name="%(base_setup.action_general_configuration)d"
                                             string="Choose or configure a custom domain" class="p-0 btn-link"

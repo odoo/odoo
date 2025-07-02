@@ -26,11 +26,17 @@
                                     </div>
                             </button>
                         </div>
-                        <div class="d-flex">
-                            <h2 class="flex-grow-1" dir="ltr">
-                                <field name="alias_name" placeholder="alias" class="oe_inline"/>@
-                                <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
-                                       options="{'no_create': True, 'no_open': True}"/>
+                        <div class="d-flex justify-content-between">
+                            <h2 class="row" dir="ltr">
+                                <div class="d-flex col-8">
+                                    <field name="alias_name" placeholder="alias" class="o_field_highlight"/>@
+                                    <field name="alias_domain_id" class="o_field_highlight" placeholder="e.g. mycompany.com"
+                                        options="{'no_create': True, 'no_open': True}"/>
+                                </div>
+                                <div class="col-2 p-0" invisible="not alias_name or not alias_domain_id">
+                                    <field name="alias_full_name" widget="CopyClipboardButton"
+                                        class="copy_alias_email" options="{'btn_class': 'link'}" string=""/>
+                                </div>
                             </h2>
                             <field name="alias_status" widget="badge"
                                    decoration-success="alias_status == 'valid'"
