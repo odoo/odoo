@@ -5056,6 +5056,12 @@ class AccountMove(models.Model):
         if len(original_invoice) == 1 and original_invoice._refunds_origin_required():
             credit_note.reversed_entry_id = original_invoice.id
 
+    def _get_debit_note_origin(self):
+        """ Return the original move for a debit note.
+        This method is overridden in the account_debit_note module to return the original move.
+        """
+        return False
+
     @api.model
     def get_invoice_localisation_fields_required_to_invoice(self, country_id):
         """ Returns the list of fields that needs to be filled when creating an invoice for the selected country.
