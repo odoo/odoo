@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class AccountAnalyticLine(models.Model):
@@ -51,7 +50,8 @@ class AccountAnalyticLine(models.Model):
         return  super()._check_can_create()
 
     def _get_favorite_project_id_domain(self, employee_id=False):
-        return expression.AND([
+        return Domain.AND([
             super()._get_favorite_project_id_domain(employee_id),
-            [('holiday_id', '=', False), ('global_leave_id', '=', False)],
+            Domain('holiday_id', '=', False),
+            Domain('global_leave_id', '=', False),
         ])
