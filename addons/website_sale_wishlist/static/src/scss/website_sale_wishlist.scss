@@ -1,34 +1,64 @@
-.oe_website_sale {
-    .td-wish-btn {
-        width: 140px;
+.o_wsale_wishlist {
+    .o_wish_rm_btn:hover i:before {
+        content: "\f08a";
     }
 
-    div.css_not_available .o_add_wishlist_dyn {
-        display: none;
-    }
+    // Card style for wishlist items
+    &.o_wsale_wishlist_card {
+        --o-wsale-wish-item-border: #{$border-width} solid #{$border-color};
+        --o-wsale-wish-item-border-radius: #{$border-radius};
+        --o-wsale-wish-item-padding: 0;
+        --o-wsale-wish-content-padding: #{map-get($spacers, 3)};
+        --o-wsale-wish-img-border-radius: #{$border-radius};
 
-    .o_add_wishlist_dyn {
-        &.disabled i::before {
-            content: "\f004";
-        }
-
-        &.btn-lg {
-            aspect-ratio: 1/1;
-            height: calc(#{$btn-padding-y-lg} * 2 + #{$btn-font-size-lg} * #{$btn-line-height} + #{$btn-border-width} * 2);
-        }
-    }
-}
-
-// XS size
-@include media-breakpoint-down(md) {
-    .oe_website_sale {
-        .td-wish-btn {
-            width: 100px;
+        &.o_wsale_wishlist_list {
+            --o-wsale-wish-img-border-radius: #{$border-radius} 0 0 #{$border-radius};
+            --o-wsale-wish-img-width: 8rem;
         }
     }
-}
 
-table.table-comparator .td-img img {
-    // allows sizing the placeholder image to the "image" size of 100px
-    max-height: 100px;
+    // List style for wishlist items
+    &.o_wsale_wishlist_list {
+        @include media-breakpoint-down(md) {
+            --o-wsale-wish-img-width: 4rem;
+
+            .o_wsale_wish_item_content {
+                @include o-line-clamp(1);
+            }
+        }
+    }
+
+    // Grid style for wishlist items
+    &.o_wsale_wishlist_grid {
+        --o-wsale-wish-item-padding: 0 0 #{map-get($spacers, 3)} 0;
+
+        .o_wish_add {
+            width: 100%;
+        }
+    }
+
+    // Default style for wishlist items
+    .o_wish_item {
+        border: var(--o-wsale-wish-item-border, none);
+        border-bottom: var(--o-wsale-wish-item-border-bottom, #{$border-width} solid #{$border-color});
+        padding: var(--o-wsale-wish-item-padding, #{map-get($spacers, 3)});
+        border-radius: var(--o-wsale-wish-item-border-radius, 0);
+
+        .o_wsale_wish_content {
+            padding: var(--o-wsale-wish-content-padding, 0);
+        }
+
+        .o_wsale_wish_img_link {
+            min-width: var(--o-wsale-wish-img-width, 6rem);
+            width: var(--o-wsale-wish-img-width, 6rem);
+
+            .img {
+                border-radius: var(--o-wsale-wish-img-border-radius, 0);
+            }
+        }
+
+        .o_wsale_wish_item_description {
+            @include o-line-clamp(2);
+        }
+    }
 }
