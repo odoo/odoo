@@ -1,10 +1,8 @@
 import { LinkPopover } from "@html_editor/main/link/link_popover";
-import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { patch } from "@web/core/utils/patch";
-import { useAutofocus, useChildRef } from "@web/core/utils/hooks";
-import wUtils from "@website/js/utils";
+import { useAutofocus, useChildRef, useService } from "@web/core/utils/hooks";
 
 /**
  * The goal of this patch is to handle the URL autocomplete in the LinkPopover
@@ -60,6 +58,7 @@ patch(LinkPopover, {
 patch(LinkPopover.prototype, {
     setup() {
         super.setup();
+        this.urlSource = useService("website_url_source");
         this.urlRef = useChildRef();
         useAutofocus({
             refName: this.state.isImage || this.state.label !== "" ? this.urlRef.name : "label",
@@ -74,51 +73,13 @@ patch(LinkPopover.prototype, {
     get optionsSource() {
         return {
             placeholder: _t("Loading..."),
-            options: this.loadOptionsSource.bind(this),
+            options: this.urlSource.loadOptionsSource.bind({
+                component: this,
+                targetElement: this.props.linkElement,
+                onSelect: this.onSelect,
+            }),
             optionSlot: "urlOption",
         };
-    },
-
-    async loadOptionsSource(term) {
-        const makeItem = (item) => ({
-            cssClass: "ui-autocomplete-item",
-            label: item.label,
-            onSelect: this.onSelect.bind(this, item.value),
-            data: { icon: item.icon || false, isCategory: false },
-        });
-
-        if (term[0] === "#") {
-            const anchors = await wUtils.loadAnchors(
-                term,
-                this.props.linkElement.ownerDocument.body
-            );
-            return anchors.map((anchor) => makeItem({ label: anchor, value: anchor }), this);
-        } else if (term.startsWith("http") || term.length === 0) {
-            // avoid useless call to /website/get_suggested_links
-            return [];
-        }
-
-        const res = await rpc("/website/get_suggested_links", {
-            needle: term,
-            limit: 15,
-        });
-        const choices = [];
-        for (const page of res.matching_pages) {
-            choices.push(makeItem(page));
-        }
-        for (const other of res.others) {
-            if (other.values.length) {
-                choices.push({
-                    cssClass: "ui-autocomplete-category",
-                    label: other.title,
-                    data: { icon: false, isCategory: true },
-                });
-                for (const page of other.values) {
-                    choices.push(makeItem(page));
-                }
-            }
-        }
-        return choices;
     },
 
     onSelect(value) {
