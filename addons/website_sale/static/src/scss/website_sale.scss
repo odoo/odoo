@@ -1109,6 +1109,11 @@ a.no-decoration {
 
         .o_description_line {
             @include o-line-clamp(2);
+
+            &.text-truncate {
+                text-overflow: clip;
+                white-space: normal;
+            }
         }
     }
 
