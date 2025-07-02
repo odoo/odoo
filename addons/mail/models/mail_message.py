@@ -671,8 +671,9 @@ class MailMessage(models.Model):
             if 'reply_to' not in values:
                 values['reply_to'] = self._get_reply_to(values)
 
-            if not values.get('attachment_ids'):
-                values['attachment_ids'] = []
+            if not values.get('attachment_ids', True):
+                # pop empty values
+                del values['attachment_ids']
             # extract base64 images
             if 'body' in values:
                 Attachments = self.env['ir.attachment'].with_context(clean_context(self.env.context))
@@ -693,7 +694,8 @@ class MailMessage(models.Model):
                             return match.group(3)  # group(3) is the url ending single/double quote matched by the regexp
                         else:
                             attachment.generate_access_token()
-                            values['attachment_ids'].append((4, attachment.id))
+                            attachments = values.setdefault('attachment_ids', [])
+                            attachments.append((4, attachment.id))
                             data_to_url[key] = ['/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token), name]
                     return '%s%s alt="%s"' % (data_to_url[key][0], match.group(3), data_to_url[key][1])
                 values['body'] = _image_dataurl.sub(base64_to_boundary, values['body'] or '')
@@ -710,10 +712,10 @@ class MailMessage(models.Model):
         doc_to_attachment_ids = defaultdict(set)
         if all(isinstance(command, int) or command[0] in (4, 6)
                for values in vals_list
-               for command in values['attachment_ids']):
+               for command in values.get('attachment_ids', ())):
             for values in vals_list:
                 message_attachment_ids = set()
-                for command in values['attachment_ids']:
+                for command in values.get('attachment_ids', ()):
                     if isinstance(command, int):
                         message_attachment_ids.add(command)
                     elif command[0] == 6:
