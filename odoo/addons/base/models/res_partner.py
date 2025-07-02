@@ -1188,8 +1188,8 @@ class ResPartner(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Customers'),
-            'template': '/base/static/xls/res_partner.xlsx'
+            'label': _('Import Template for Contacts'),
+            'template': '/base/static/xls/contacts_import_template.xlsx',
         }]
 
     @api.model
