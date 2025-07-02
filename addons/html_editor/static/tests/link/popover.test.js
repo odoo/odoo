@@ -441,6 +441,15 @@ describe("Link creation", () => {
             );
             expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="#">Hello[]</a></p>');
         });
+        test("discard should close the popover (in iframe)", async () => {
+            await setupEditor("<p>[Hello]</p>", { props: { iframe: true } });
+            await waitFor(".o-we-toolbar");
+            await click(".o-we-toolbar .fa-link");
+            await waitFor(".o-we-linkpopover", { timeout: 1500 });
+            await click(".o_we_discard_link");
+            await animationFrame();
+            expect(".o-we-linkpopover").toHaveCount(0);
+        });
         test("should convert valid url to https link", async () => {
             const { el } = await setupEditor("<p>[Hello]</p>");
             await waitFor(".o-we-toolbar");
