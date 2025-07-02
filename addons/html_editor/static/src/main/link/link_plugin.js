@@ -340,11 +340,14 @@ export class LinkPlugin extends Plugin {
      */
     createLink(url, label = "") {
         const link = this.document.createElement("a");
-        link.setAttribute("href", url);
+        if (url !== undefined) {
+            link.setAttribute("href", url);
+        }
         for (const [param, value] of Object.entries(this.config.defaultLinkAttributes || {})) {
             link.setAttribute(param, `${value}`);
         }
         link.innerText = label;
+        this.dispatchTo("create_link_handlers", link);
         return link;
     }
 
@@ -442,10 +445,7 @@ export class LinkPlugin extends Plugin {
         this.linkInDocument = linkElement;
         if (!linkElement) {
             // create a new link element
-            linkElement = this.document.createElement("a");
-            if (!selection.isCollapsed) {
-                linkElement.append(selection.textContent());
-            }
+            linkElement = this.createLink(undefined, selection.textContent());
         }
 
         const selectionTextContent = selection?.textContent();
