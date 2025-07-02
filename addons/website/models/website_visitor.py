@@ -223,26 +223,27 @@ class WebsiteVisitor(models.Model):
             # visitor is linked to a logged in user, in which case its partner_id is
             # used instead as the token.
             'partner_id': None if len(str(access_token)) == 32 else access_token,
+            'now': self.env.cr.now(),
         }
         query = """
             INSERT INTO website_visitor (
                 partner_id, access_token, last_connection_datetime, visit_count, lang_id,
                 website_id, timezone, write_uid, create_uid, write_date, create_date, country_id)
             VALUES (
-                %(partner_id)s, %(access_token)s, now() at time zone 'UTC', 1, %(lang_id)s,
+                %(partner_id)s, %(access_token)s, %(now)s at time zone 'UTC', 1, %(lang_id)s,
                 %(website_id)s, %(timezone)s, %(create_uid)s, %(write_uid)s,
-                now() at time zone 'UTC', now() at time zone 'UTC', (
+                %(now)s at time zone 'UTC', %(now)s at time zone 'UTC', (
                     SELECT id FROM res_country WHERE code = %(country_code)s
                 )
             )
             ON CONFLICT (access_token)
             DO UPDATE SET
                 last_connection_datetime=excluded.last_connection_datetime,
-                visit_count = CASE WHEN website_visitor.last_connection_datetime < NOW() AT TIME ZONE 'UTC' - INTERVAL '8 hours'
+                visit_count = CASE WHEN website_visitor.last_connection_datetime < %(now)s AT TIME ZONE 'UTC' - INTERVAL '8 hours'
                                     THEN website_visitor.visit_count + 1
                                     ELSE website_visitor.visit_count
                                 END
-            RETURNING id, CASE WHEN create_date = now() at time zone 'UTC' THEN 'inserted' ELSE 'updated' END AS upsert
+            RETURNING id, CASE WHEN create_date = %(now)s at time zone 'UTC' THEN 'inserted' ELSE 'updated' END AS upsert
         """
 
         if force_track_values:
@@ -253,7 +254,7 @@ class WebsiteVisitor(models.Model):
                     {query}, %(url)s AS url, %(page_id)s AS page_id
                 ), track AS (
                     INSERT INTO website_track (visitor_id, url, page_id, visit_datetime)
-                    SELECT id, url, page_id::integer, now() at time zone 'UTC' FROM visitor
+                    SELECT id, url, page_id::integer, %(now)s at time zone 'UTC' FROM visitor
                 )
                 SELECT id, upsert from visitor;
             """).format(query=sql.SQL(query))
