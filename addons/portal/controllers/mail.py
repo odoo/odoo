@@ -50,19 +50,19 @@ class PortalChatter(http.Controller):
             mode = request.env[thread_model]._get_mail_message_access([thread_id], "create")
             has_react_access = request.env[thread_model]._get_thread_with_access(thread_id, mode, **kwargs)
             can_react = has_react_access
-            if portal_partner := get_portal_partner(
-                thread, kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token")
-            ):
-                store.add(
-                    thread,
-                    {
-                        "portal_partner": Store.one(
-                            portal_partner, fields=["active", "avatar_128", "name", "user"]
-                        )
-                    },
-                    as_thread=True
-                )
             if request.env.user._is_public():
+                if portal_partner := get_portal_partner(
+                    thread, kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token")
+                ):
+                    store.add(
+                        thread,
+                        {
+                            "portal_partner": Store.one(
+                                portal_partner, fields=["active", "avatar_128", "name", "user"]
+                            )
+                        },
+                        as_thread=True,
+                    )
                 can_react = has_react_access and portal_partner
             store.add(
                 thread,

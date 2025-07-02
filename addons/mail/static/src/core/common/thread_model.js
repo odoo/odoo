@@ -765,6 +765,7 @@ export class Thread extends Record {
      * the cookie-authenticated persona and the partner authenticated with the
      * portal token in the context of this thread.
      *
+     * @deprecated
      * @returns {import("models").Persona[]}
      */
     get selves() {
