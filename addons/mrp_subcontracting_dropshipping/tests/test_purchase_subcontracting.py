@@ -146,7 +146,6 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         sub_location = self.env['stock.location'].create({
             'name': 'Super Location',
             'location_id': subcontract_location.id,
-            'is_subcontracting_location': True,
         })
 
         dropship_subcontractor_route = self.env['stock.route'].search([('name', '=', 'Dropship Subcontractor on Order')])

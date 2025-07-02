@@ -9,11 +9,12 @@ class ProductProduct(models.Model):
 
     @api.model
     def _get_monthly_demand_moves_location_domain(self):
+        subcontracting_location_ids = self.env.companies.subcontracting_location_id.child_internal_location_ids.ids
         domain = Domain.AND([
             Domain.OR([
                 super()._get_monthly_demand_moves_location_domain(),
-                [('location_dest_id.is_subcontracting_location', '=', True)],
+                [('location_dest_id', 'in', subcontracting_location_ids)],
             ]),
-            [('location_id.is_subcontracting_location', '!=', True)],
+            [('location_id', 'not in', subcontracting_location_ids)],
         ])
         return domain
