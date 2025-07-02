@@ -113,20 +113,21 @@ export class Operation {
     addLoadingElement(withLoadingEffect, loadingEffectDelay) {
         const loadingScreenEl = document.createElement("div");
         loadingScreenEl.classList.add(
-            ...["o_loading_screen", "d-flex", "justify-content-center", "align-items-center"]
+            "o_loading_screen",
+            "d-flex",
+            "justify-content-center",
+            "align-items-center",
+            "o_we_ui_loading"
         );
-        const spinnerEl = document.createElement("img");
-        spinnerEl.setAttribute("src", "/web/static/img/spin.svg");
-        loadingScreenEl.appendChild(spinnerEl);
         this.editableDocument.body.appendChild(loadingScreenEl);
-
         // If specified, add a loading effect on that element after a delay.
         let loadingTimeout;
         if (withLoadingEffect) {
-            loadingTimeout = setTimeout(
-                () => loadingScreenEl.classList.add("o_we_ui_loading"),
-                loadingEffectDelay
-            );
+            loadingTimeout = setTimeout(() => {
+                const spinnerEl = document.createElement("img");
+                spinnerEl.setAttribute("src", "/web/static/img/spin.svg");
+                loadingScreenEl.appendChild(spinnerEl);
+            }, loadingEffectDelay);
         }
 
         return () => {
