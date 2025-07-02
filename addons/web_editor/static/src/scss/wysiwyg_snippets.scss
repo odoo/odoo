@@ -2331,11 +2331,19 @@ we-select.o_we_border_preview_aligned_select {
                     inset: $o-we-handles-offset-to-hide auto $o-we-handles-offset-to-hide * -1 $o-we-handle-border-width * 0.5;
                     transform: translateX(-50%);
                     cursor: ew-resize;
+
+                    body[is-rtl-backend="true"] & {
+                        transform: translateX(50%);
+                    }
                 }
                 &.e {
                     inset: $o-we-handles-offset-to-hide $o-we-handle-border-width * 0.5 $o-we-handles-offset-to-hide * -1 auto;
                     transform: translateX(50%);
                     cursor: ew-resize;
+
+                    body[is-rtl-backend="true"] & {
+                        transform: translateX(-50%);
+                    }
                 }
                 &.n {
                     inset: $o-we-handles-offset-to-hide 0 auto 0;
@@ -2365,21 +2373,33 @@ we-select.o_we_border_preview_aligned_select {
                     inset: ($o-we-handles-offset-to-hide + $o-we-handle-border-width * 0.5) $o-we-handle-border-width * 0.5 auto auto;
                     transform: translate(50%, -50%);
                     cursor: nesw-resize;
+                    body[is-rtl-backend="true"] & {
+                        cursor: nwse-resize;
+                    }
                 }
                 &.se {
                     inset: auto $o-we-handle-border-width * 0.5 ($o-we-handles-offset-to-hide * -1 + $o-we-handle-border-width * 0.5) auto;
                     transform: translate(50%, 50%);
                     cursor: nwse-resize;
+                    body[is-rtl-backend="true"] & {
+                        cursor: nesw-resize;
+                    }
                 }
                 &.sw {
                     inset: auto auto ($o-we-handles-offset-to-hide * -1 + $o-we-handle-border-width * 0.5) $o-we-handle-border-width * 0.5;
                     transform: translate(-50%, 50%);
                     cursor: nesw-resize;
+                    body[is-rtl-backend="true"] & {
+                        cursor: nwse-resize;
+                    }
                 }
                 &.nw {
                     inset: ($o-we-handles-offset-to-hide + $o-we-handle-border-width * 0.5) auto auto $o-we-handle-border-width * 0.5;
                     transform: translate(-50%, -50%);
                     cursor: nwse-resize;
+                    body[is-rtl-backend="true"] & {
+                        cursor: nesw-resize;
+                    }
                 }
                 .o_handle_indicator {
                     position: absolute;
@@ -2634,11 +2654,13 @@ we-select.o_we_border_preview_aligned_select {
     display: none;
 }
 
+/* rtl:begin:ignore */
 @each $cursor in (nesw-resize, nwse-resize, ns-resize, ew-resize, move) {
     .#{$cursor}-important * {
         cursor: $cursor !important;
     }
 }
+/* rtl:end:ignore */
 
 .dropdown-menu label .o_switch {
     margin: 0;
