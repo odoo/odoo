@@ -37,12 +37,14 @@
 //-----------------------------------------------------------------------------
 
 const {
+    Array: { isArray: $isArray },
     matchMedia,
     navigator: { userAgent: $userAgent },
-    Object: { assign: $assign },
+    Object: { assign: $assign, getPrototypeOf: $getPrototypeOf },
     RegExp,
     SyntaxError,
 } = globalThis;
+const $toString = Object.prototype.toString;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -59,9 +61,9 @@ function makeInteractorFn(type, fn, name) {
     return {
         [name](...args) {
             const result = fn(...args);
-            if (result instanceof Promise) {
+            if (isInstanceOf(result, Promise)) {
                 for (let i = 0; i < args.length; i++) {
-                    if (args[i] instanceof Promise) {
+                    if (isInstanceOf(args[i], Promise)) {
                         // Get promise result for async arguments if possible
                         args[i].then((result) => (args[i] = result));
                     }
@@ -74,6 +76,10 @@ function makeInteractorFn(type, fn, name) {
             }
         },
     }[name];
+}
+
+function polyfillIsError(value) {
+    return $toString.call(value) === "[object Error]";
 }
 
 const GRAYS = {
@@ -204,6 +210,7 @@ const COLORS = {
 };
 const DEBUG_NAMESPACE = "hoot";
 
+const isError = typeof Error.isError === "function" ? Error.isError : polyfillIsError;
 const interactionBus = new EventTarget();
 const preferredColorScheme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 
@@ -308,6 +315,50 @@ export function isFirefox() {
 }
 
 /**
+ * Cross-realm equivalent to 'instanceof'.
+ * Can be called with multiple constructors, and will return true if the given object
+ * is an instance of any of them.
+ *
+ * @param {unknown} instance
+ * @param {...{ name: string }} classes
+ */
+export function isInstanceOf(instance, ...classes) {
+    if (!classes.length) {
+        return instance instanceof classes[0];
+    }
+    if (!instance || Object(instance) !== instance) {
+        // Object is falsy or a primitive (null, undefined and primitives cannot be the instance of anything)
+        return false;
+    }
+    for (const cls of classes) {
+        if (instance instanceof cls) {
+            return true;
+        }
+        const targetName = cls.name;
+        if (!targetName) {
+            return false;
+        }
+        if (targetName === "Array") {
+            return $isArray(instance);
+        }
+        if (targetName === "Error") {
+            return isError(instance);
+        }
+        if ($toString.call(instance) === `[object ${targetName}]`) {
+            return true;
+        }
+        let { constructor } = instance;
+        while (constructor) {
+            if (constructor.name === targetName) {
+                return true;
+            }
+            constructor = $getPrototypeOf(constructor);
+        }
+    }
+    return false;
+}
+
+/**
  * Returns whether the given object is iterable (*excluding strings*).
  *
  * @template T
@@ -332,7 +383,7 @@ export function parseRegExp(value, options) {
         try {
             return new RegExp(unified, flag);
         } catch (error) {
-            if (error instanceof SyntaxError && options?.safe) {
+            if (isInstanceOf(error, SyntaxError) && options?.safe) {
                 return value;
             } else {
                 throw error;
