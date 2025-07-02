@@ -837,7 +837,7 @@ export class PosStore extends Reactive {
         if (values.product_id.to_weight && this.config.iface_electronic_scale && configure) {
             if (values.product_id.isScaleAvailable) {
                 this.scale.setProduct(values.product_id, this.getProductPrice(values.product_id));
-                const weight = await makeAwaitable(this.env.services.dialog, ScaleScreen);
+                const weight = await this.weighProduct();
                 if (weight) {
                     values.qty = weight;
                 } else if (weight !== null) {
@@ -2219,6 +2219,10 @@ export class PosStore extends Reactive {
     async isSessionDeleted() {
         const session = await this.data.read("pos.session", [this.session.id]);
         return session[0] === undefined;
+    }
+
+    weighProduct() {
+        return makeAwaitable(this.env.services.dialog, ScaleScreen);
     }
 }
 
