@@ -30,7 +30,7 @@ test("send", async () => {
     await contains(".o-mail-Thread:not([data-transient])");
     await click(".o-mail-ChatWindow-command[title*='Close']");
     await click(".o-livechat-CloseConfirmation-leave");
-    await contains(".form-text", { text: "Receive a copy of this conversation." });
+    await contains("label", { text: "Receive a copy of this conversation" });
     await contains("button[data-action='sendTranscript']:disabled");
     await insertText("input[placeholder='mail@example.com']", "odoobot@odoo.com");
     await click("button[data-action='sendTranscript']:enabled");
