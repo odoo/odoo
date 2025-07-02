@@ -5,7 +5,7 @@ import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { cleanupDOM } from "@web/../lib/hoot-dom/helpers/dom";
 import { cleanupEvents, enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
 import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
-import { exposeHelpers, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
+import { exposeHelpers, isInstanceOf, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     CASE_EVENT_TYPES,
     Callbacks,
@@ -222,7 +222,7 @@ function handleConsoleIssues(test, shouldSuppress) {
         return logger.suppressIssues(`suppressed by "test.todo"`);
     } else {
         const cleanups = [];
-        if (globalThis.console instanceof EventTarget) {
+        if (isInstanceOf(globalThis.console, EventTarget)) {
             cleanups.push(
                 on(globalThis.console, "error", () => test.logs.error++),
                 on(globalThis.console, "warn", () => test.logs.warn++)
@@ -1723,7 +1723,7 @@ export class Runner {
         }
         handledErrors.add(error);
 
-        if (!(ev instanceof Event)) {
+        if (!isInstanceOf(ev, Event)) {
             ev = new ErrorEvent("error", { error });
         }
 

@@ -5,6 +5,7 @@ import {
     mockedCancelAnimationFrame,
     mockedRequestAnimationFrame,
 } from "@web/../lib/hoot-dom/helpers/time";
+import { isInstanceOf } from "../../hoot-dom/hoot_dom_utils";
 import { makeNetworkLogger } from "../core/logger";
 import { ensureArray, MIME_TYPE, MockEventTarget } from "../hoot_utils";
 import { getSyncValue, MockBlob, setSyncValue } from "./sync_values";
@@ -162,7 +163,7 @@ export function cleanupNetwork() {
 
     // Network instances
     for (const instance of openNetworkInstances) {
-        if (instance instanceof AbortController) {
+        if (isInstanceOf(instance, AbortController)) {
             instance.abort();
         } else if (
             instance instanceof MockBroadcastChannel ||
@@ -232,9 +233,9 @@ export async function mockedFetch(input, init) {
 
     /** @type {Headers} */
     let headers;
-    if (result && result.headers instanceof Headers) {
+    if (result && isInstanceOf(result.headers, Headers)) {
         headers = result.headers;
-    } else if (init.headers instanceof Headers) {
+    } else if (isInstanceOf(init.headers, Headers)) {
         headers = init.headers;
     } else {
         headers = new Headers(init.headers);
@@ -251,7 +252,7 @@ export async function mockedFetch(input, init) {
         return result;
     }
 
-    if (result instanceof Response) {
+    if (isInstanceOf(result, Response)) {
         // Actual fetch
         logResponse(() => "(go to network tab for request content)");
         return result;
@@ -264,7 +265,7 @@ export async function mockedFetch(input, init) {
     if (!contentType) {
         if (typeof result === "string") {
             contentType = MIME_TYPE.text;
-        } else if (result instanceof Blob) {
+        } else if (isInstanceOf(result, Blob)) {
             contentType = MIME_TYPE.blob;
         } else {
             contentType = MIME_TYPE.json;

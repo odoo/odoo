@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { getColorHex, getTag, isFirefox, isIterable } from "../hoot_dom_utils";
+import { getColorHex, getTag, isFirefox, isInstanceOf, isIterable } from "../hoot_dom_utils";
 import {
     getActiveElement,
     getDocument,
@@ -231,10 +231,11 @@ function constrainScrollY(target, y) {
  * @param {DataTransferOptions} options
  */
 function createDataTransfer(options) {
-    const dataTransfer =
-        options?.dataTransfer instanceof DataTransfer ? options.dataTransfer : new DataTransfer();
+    const dataTransfer = isInstanceOf(options?.dataTransfer, DataTransfer)
+        ? options.dataTransfer
+        : new DataTransfer();
     for (const file of options?.files || []) {
-        if (!(file instanceof File)) {
+        if (!isInstanceOf(file, File)) {
             throw new TypeError(`'DataTransfer.files' list only accepts 'File' objects`);
         }
         dataTransfer.items.add(file);
