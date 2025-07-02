@@ -695,7 +695,8 @@ class StockMove(models.Model):
         for move in self:
             analytic_line_vals = move._prepare_analytic_lines()
             if analytic_line_vals:
-                move.analytic_account_line_ids += self.env['account.analytic.line'].sudo().create(analytic_line_vals)
+                move = move.sudo()
+                move.analytic_account_line_ids += move.env['account.analytic.line'].create(analytic_line_vals)
 
     def _should_exclude_for_valuation(self):
         """Determines if this move should be excluded from valuation based on its partner.
