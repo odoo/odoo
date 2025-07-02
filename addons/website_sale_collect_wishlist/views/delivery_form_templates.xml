@@ -5,19 +5,19 @@
         inherit_id="website_sale_collect.unavailable_products_warning"
     >
         <div name="o_wsale_unavailable_line_button_container" position="inside">
-            <span t-if="available_qty == 0">
+            <span t-if="not available_qty">
                 <a
                     title="Add to Wishlist"
                     href="#"
-                    class="o_add_wishlist js_wsc_update_product_qty alert-link border-start ps-2 small"
+                    class="o_add_wishlist alert-link border-start ps-2 small"
                     t-att-data-product-template-id="order_line.product_id.product_tmpl_id.id"
                     t-att-data-product-product-id="order_line.product_id.id"
                     data-action="o_wishlist"
                 >
                     <span
+                        class="js_wsc_update_product_qty"
                         t-att-data-line-id="order_line.id"
                         t-att-data-product-id="order_line.product_id.id"
-                        t-att-data-available-qty="available_qty"
                     >
                         <i class="fa fa-fw fa-heart-o" role="presentation" aria-label="Add to Wishlist"/>
                         <span>Wishlist</span>

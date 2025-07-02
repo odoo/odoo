@@ -44,11 +44,10 @@ class WebsiteSaleCollect(WebsiteSale):
             return res
 
         res.update(order_sudo._prepare_in_store_default_location_data())
-        if order_sudo.carrier_id.delivery_type == 'in_store':
-            if order_sudo.pickup_location_data:
-                res['unavailable_order_lines'] = order_sudo._get_unavailable_order_lines(
-                    order_sudo.pickup_location_data.get('id')
-                )
+        if order_sudo.carrier_id.delivery_type == 'in_store' and order_sudo.pickup_location_data:
+            res['insufficient_stock_data'] = order_sudo._get_insufficient_stock_data(
+                order_sudo.pickup_location_data.get('id')
+            )
         return res
 
     def _get_shop_payment_errors(self, order):

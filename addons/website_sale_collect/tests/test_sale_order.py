@@ -104,8 +104,20 @@ class TestSaleOrder(ClickAndCollectCommon):
                 })
             ]
         )
-        unavailable_ol = cart._get_unavailable_order_lines(self.warehouse.id)
-        self.assertFalse(unavailable_ol.product_id.ids)
+        insufficient_stock_data = cart._get_insufficient_stock_data(self.warehouse.id)
+        self.assertFalse(insufficient_stock_data)
+
+    def test_product_insufficient_stock_is_unavailable(self):
+        cart = self._create_in_store_delivery_order(
+            order_line=[
+                Command.create({
+                    'product_id': self.storable_product.id,
+                    'product_uom_qty': 15.0,
+                })
+            ]
+        )
+        insufficient_stock_data = cart._get_insufficient_stock_data(self.warehouse.id)
+        self.assertEqual(insufficient_stock_data[cart.order_line], 10)
 
     def test_out_of_stock_product_is_unavailable(self):
         cart = self._create_in_store_delivery_order(
@@ -116,8 +128,8 @@ class TestSaleOrder(ClickAndCollectCommon):
                 }),
             ]
         )
-        unavailable_ol = cart._get_unavailable_order_lines(self.warehouse.id)
-        self.assertIn(self.product_2.id, unavailable_ol.product_id.ids)
+        insufficient_stock_data = cart._get_insufficient_stock_data(self.warehouse.id)
+        self.assertIn(cart.order_line, insufficient_stock_data)
 
     def test_product_in_different_warehouse_is_unavailable(self):
         self.warehouse_2 = self._create_warehouse()
@@ -129,5 +141,5 @@ class TestSaleOrder(ClickAndCollectCommon):
                 })
             ]
         )
-        unavailable_ol = cart._get_unavailable_order_lines(self.warehouse_2.id)
-        self.assertIn(self.storable_product.id, unavailable_ol.product_id.ids)
+        insufficient_stock_data = cart._get_insufficient_stock_data(self.warehouse_2.id)
+        self.assertIn(cart.order_line, insufficient_stock_data)

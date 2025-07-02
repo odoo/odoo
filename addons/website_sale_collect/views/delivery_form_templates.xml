@@ -10,7 +10,7 @@
                 Some of the products are not available at <strong><t t-out="wh_name"/></strong>.
             </div>
             <div
-                t-foreach="unavailable_order_lines.items()"
+                t-foreach="insufficient_stock_data.items()"
                 t-as="item"
                 t-attf-class="d-flex gap-3 mt-3 position-relative"
             >
@@ -29,15 +29,13 @@
                     <div class="fw-bold">
                         <t t-out="order_line.product_id.name"/> <t t-if="attrib_names" t-out="' - ' + attrib_names"/>
                     </div>
-                    <div>
-                        <t t-out="'%s/%s available in this location' % (available_qty, int(order_line.product_uom_qty))"/>
-                    </div>
+                    <div t-out="order_line.shop_warning"/>
                     <t t-set="buttonTitle" t-value="'Update cart' if available_qty else 'Remove from cart'"/>
                     <div name="o_wsale_unavailable_line_button_container" class="mt-2 mt-md-1">
                         <a
                             t-att-title="buttonTitle"
                             href='#'
-                            class="js_wsc_update_product_qty alert-link me-2 small"
+                            class="alert-link me-2 small"
                             aria-label="Remove from cart"
                         >
                             <i
@@ -46,6 +44,7 @@
                                 aria-label="Remove from cart"
                             />
                             <span
+                                class="js_wsc_update_product_qty"
                                 t-att-data-line-id="order_line.id"
                                 t-att-data-product-id="order_line.product_id.id"
                                 t-att-data-available-qty="available_qty"
@@ -69,15 +68,15 @@
                     t-value="default_pickup_locations[dm.id].get('pickup_location_data', {})"
                 />
                 <t
-                    t-set="unavailable_order_lines"
-                    t-value="default_pickup_locations[dm.id].get('unavailable_order_lines', {})"
+                    t-set="insufficient_stock_data"
+                    t-value="default_pickup_locations[dm.id].get('insufficient_stock_data', {})"
                 />
             </t>
         </t>
         <div name="o_pickup_location" position="after">
             <t t-if="dm.delivery_type=='in_store' and pickup_location_data">
                 <t
-                    t-if="unavailable_order_lines"
+                    t-if="insufficient_stock_data"
                     t-call="website_sale_collect.unavailable_products_warning"
                 >
                     <t t-set="wh_name" t-value="pickup_location_data.get('name')"/>

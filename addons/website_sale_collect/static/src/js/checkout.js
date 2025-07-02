@@ -24,29 +24,39 @@ publicWidget.registry.WebsiteSaleCheckout.include({
     // #=== EVENT HANDLERS ===#
 
     async _selectDeliveryMethod(ev) {
-        this._adaptDeliveryTitles();
         await this._super(...arguments);
+        this._adaptDeliveryTitles();
     },
 
     /**
-     * Remove a product from the cart.
+     * Remove a product from the cart or update its quantity to match the available quantity.
      *
      * @private
      * @param {Event} ev
      */
     async _onClickUpdateProduct(ev) {
         await rpc('/shop/cart/update', {
-            line_id: parseInt(ev.target.dataset.lineId, 10),
-            product_id: parseInt(ev.target.dataset.productId, 10),
-            quantity: parseInt(ev.target.dataset.availableQty || 0, 10),
+            line_id: parseInt(ev.currentTarget.dataset.lineId, 10),
+            product_id: parseInt(ev.currentTarget.dataset.productId, 10),
+            quantity: parseInt(ev.currentTarget.dataset.availableQty || 0, 10),
         });
         window.location.reload();  // Reload all cart values.
     },
 
     // #=== DOM MANIPULATION ===#
 
+    /**
+     * Change the delivery address title and the 'use delivery as billing' label depending on the
+     * selected delivery method.
+     *
+     * @private
+     * @return {void}
+     */
     _adaptDeliveryTitles() {
         const checkedRadio = document.querySelector('input[name="o_delivery_radio"]:checked');
+        if (!checkedRadio || !this.deliveryAddressTitle || !this.useDeliveryAsBillingLabel) {
+            return;
+        }
         if (checkedRadio.dataset.deliveryType === 'in_store') {
             this.deliveryAddressTitle.textContent = this.inStoreTitle;
             this.useDeliveryAsBillingLabel.textContent = this.useDeliveryAsBillingLabelInStoreText;

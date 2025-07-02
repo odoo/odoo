@@ -118,7 +118,7 @@ class SaleOrder(models.Model):
                 if pickup_location_data:
                     default_pickup_locations[dm.id] = {
                         'pickup_location_data': pickup_location_data,
-                        'unavailable_order_lines': self._get_unavailable_order_lines(
+                        'insufficient_stock_data': self._get_insufficient_stock_data(
                             pickup_location_data['id']
                         ),
                     }
@@ -132,26 +132,29 @@ class SaleOrder(models.Model):
         :return: Whether all storable products are in stock.
         :rtype: bool
         """
-        return not self._get_unavailable_order_lines(wh_id)
+        return not self._get_insufficient_stock_data(wh_id)
 
-    def _get_unavailable_order_lines(self, wh_id):
-        """ Return the order lines with unavailable products and their max available quantity for
-        the given warehouse.
+    def _get_insufficient_stock_data(self, wh_id):
+        """Return order lines where the requested quantity exceeds available stock in the
+        given warehouse, mapping each line to its maximum available quantity in the line's UoM.
 
         :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
-        :return: The order lines with unavailable products.
+        :return: The order lines with insufficient stock for the products and their max available
+                quantity.
         :rtype: dict
         """
-        unavailable_sol_max_qty_available = {}
-        for ol in self.order_line:
-            if ol.is_storable:
-                product = ol.product_id
-                cart_qty = self._get_cart_qty(product.id)
-                free_qty = product.with_context(warehouse_id=wh_id).free_qty
-                if cart_qty > free_qty:
-                    max_available_qty = max(free_qty, 0)
-                    unavailable_sol_max_qty_available[ol] = max_available_qty
-        return unavailable_sol_max_qty_available
+        insufficient_stock_data = {}
+        for ol in self.order_line.filtered('is_storable'):
+            product = ol.product_id
+            free_qty = product.with_context(warehouse_id=wh_id).free_qty
+            free_qty_in_uom = product.uom_id._compute_quantity(free_qty, ol.product_uom_id)
+            if ol.product_uom_qty > free_qty_in_uom:
+                insufficient_stock_data[ol] = max(free_qty_in_uom, 0)
+                ol.shop_warning = self.env._(
+                    "%(available_qty)s/%(cart_qty)s available in this location",
+                    available_qty=int(free_qty_in_uom), cart_qty=int(ol.product_uom_qty),
+                )
+        return insufficient_stock_data
 
     def _verify_updated_quantity(self, order_line, product_id, new_qty, uom_id, **kwargs):
         """ Override of `website_sale_stock` to skip the verification when click and collect
