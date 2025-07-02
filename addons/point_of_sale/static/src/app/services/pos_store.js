@@ -957,7 +957,7 @@ export class PosStore extends WithLazyGetterTrap {
                     decimalAccuracy,
                     this.getProductPrice(values.product_id)
                 );
-                const weight = await makeAwaitable(this.env.services.dialog, ScaleScreen);
+                const weight = await this.weighProduct();
                 if (weight) {
                     values.qty = weight;
                 } else if (weight !== null) {
@@ -2426,6 +2426,10 @@ export class PosStore extends WithLazyGetterTrap {
         } else {
             return `${pm.name} (${fmtAmount})`;
         }
+    }
+
+    weighProduct() {
+        return makeAwaitable(this.env.services.dialog, ScaleScreen);
     }
 }
 
