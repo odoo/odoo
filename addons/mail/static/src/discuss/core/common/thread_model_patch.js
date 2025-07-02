@@ -3,6 +3,7 @@ import { Thread } from "@mail/core/common/thread_model";
 import { useSequential } from "@mail/utils/common/hooks";
 import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 
+import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -76,6 +77,19 @@ const threadPatch = {
         });
         /** @type {"video_full_screen"|undefined} */
         this.default_display_mode = undefined;
+        this.displayToSelf = fields.Attr(false, {
+            compute() {
+                return (
+                    this.is_pinned ||
+                    (["channel", "group"].includes(this.channel_type) &&
+                        this.hasSelfAsMember &&
+                        !this.parent_channel_id)
+                );
+            },
+            onUpdate() {
+                this.onPinStateUpdated();
+            },
+        });
         /** @type {Deferred<Thread|undefined>} */
         this.fetchChannelInfoDeferred = undefined;
         /** @type {"not_fetched"|"fetching"|"fetched"} */
@@ -93,6 +107,8 @@ const threadPatch = {
                 return this.store.channel_types_with_seen_infos.includes(this.channel_type);
             },
         });
+        /** @type {"not_fetched"|"pending"|"fetched"} */
+        this.fetchMembersState = "not_fetched";
         this.firstUnreadMessage = fields.One("mail.message", {
             /** @this {import("models").Thread} */
             compute() {
@@ -117,6 +133,12 @@ const threadPatch = {
             inverse: "threadAsFirstUnread",
         });
         this.invited_member_ids = fields.Many("discuss.channel.member");
+        /** @type {Boolean} */
+        this.isLocallyPinned = fields.Attr(false, {
+            onUpdate() {
+                this.onPinStateUpdated();
+            },
+        });
         this.last_interest_dt = fields.Datetime();
         this.lastInterestDt = fields.Datetime({
             /** @this {import("models").Thread} */
@@ -171,6 +193,7 @@ const threadPatch = {
         this.markingAsRead = false;
         /** @type {number|undefined} */
         this.member_count = undefined;
+        this.mute_until_dt = fields.Datetime();
         /** @type {string} name: only for channel. For generic thread, @see display_name */
         this.name = undefined;
         this.onlineMembers = fields.Many("discuss.channel.member", {
@@ -220,6 +243,22 @@ const threadPatch = {
             (member) => !this.store.onlineMemberStatuses.includes(member.persona?.im_status)
         );
     },
+    get allowCalls() {
+        return (
+            !this.isTransient &&
+            this.typesAllowingCalls.includes(this.channel_type) &&
+            !this.correspondent?.persona.eq(this.store.odoobot)
+        );
+    },
+    get allowDescription() {
+        return ["channel", "group"].includes(this.channel_type);
+    },
+    get allowedToLeaveChannelTypes() {
+        return ["channel", "group"];
+    },
+    get allowedToUnpinChannelTypes() {
+        return ["chat"];
+    },
     get areAllMembersLoaded() {
         return this.member_count === this.channel_member_ids.length;
     },
@@ -234,8 +273,17 @@ const threadPatch = {
         }
         return super.avatarUrl;
     },
-    get showCorrespondentCountry() {
-        return false;
+    get canLeave() {
+        return (
+            this.allowedToLeaveChannelTypes.includes(this.channel_type) &&
+            this.group_ids.length === 0 &&
+            this.store.self?.type === "partner"
+        );
+    },
+    get canUnpin() {
+        return (
+            this.parent_channel_id || this.allowedToUnpinChannelTypes.includes(this.channel_type)
+        );
     },
     /** @returns {import("models").ChannelMember} */
     computeCorrespondent() {
@@ -271,6 +319,14 @@ const threadPatch = {
             return this.name;
         }
         return super.displayName;
+    },
+    executeCommand(command, body = "") {
+        return this.store.env.services.orm.call(
+            "discuss.channel",
+            command.methodName,
+            [[this.id]],
+            { body }
+        );
     },
     async fetchChannelMembers() {
         if (this.fetchMembersState === "pending") {
@@ -311,6 +367,9 @@ const threadPatch = {
             this.isLoadingAttachments = false;
         }
     },
+    get hasAttachmentPanel() {
+        return this.model === "discuss.channel";
+    },
     get hasMemberList() {
         return ["channel", "group"].includes(this.channel_type);
     },
@@ -324,6 +383,12 @@ const threadPatch = {
         }
         return super.importantCounter;
     },
+    get invitationLink() {
+        if (!this.uuid || this.channel_type === "chat") {
+            return undefined;
+        }
+        return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
+    },
     /** @override */
     isDisplayedOnUpdate() {
         super.isDisplayedOnUpdate(...arguments);
@@ -335,8 +400,43 @@ const threadPatch = {
             this.markedAsUnread = false;
         }
     },
+    get isChatChannel() {
+        return ["chat", "group"].includes(this.channel_type);
+    },
+    get isMuted() {
+        return this.mute_until_dt;
+    },
     get isUnread() {
         return this.selfMember?.message_unread_counter > 0 || super.isUnread;
+    },
+    async leave() {
+        await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
+            this.id,
+        ]);
+    },
+    async leaveChannel({ force = false } = {}) {
+        if (
+            this.channel_type !== "group" &&
+            this.create_uid?.eq(this.store.self.main_user_id) &&
+            !force
+        ) {
+            await this.askLeaveConfirmation(
+                _t("You are the administrator of this channel. Are you sure you want to leave?")
+            );
+        }
+        if (this.channel_type === "group" && !force) {
+            await this.askLeaveConfirmation(
+                _t(
+                    "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
+                )
+            );
+        }
+        this.leave();
+    },
+    async markAsFetched() {
+        await this.store.env.services.orm.silent.call("discuss.channel", "channel_fetched", [
+            [this.id],
+        ]);
     },
     /** @override */
     markAsRead() {
@@ -385,6 +485,22 @@ const threadPatch = {
             ? this.selfMember?.message_unread_counter ?? 0
             : super.needactionCounter;
     },
+    /** @param {string} data base64 representation of the binary */
+    async notifyAvatarToServer(data) {
+        await rpc("/discuss/channel/update_avatar", {
+            channel_id: this.id,
+            data,
+        });
+    },
+    async notifyDescriptionToServer(description) {
+        this.description = description;
+        return this.store.env.services.orm.call(
+            "discuss.channel",
+            "channel_change_description",
+            [[this.id]],
+            { description }
+        );
+    },
     /** @override */
     onNewSelfMessage(message) {
         if (!this.selfMember || message.id < this.selfMember.seen_message_id?.id) {
@@ -394,6 +510,18 @@ const threadPatch = {
         this.selfMember.new_message_separator = message.id + 1;
         this.selfMember.new_message_separator_ui = this.selfMember.new_message_separator;
         this.markedAsUnread = false;
+    },
+    pin() {
+        if (this.model !== "discuss.channel" || this.store.self.type !== "partner") {
+            return;
+        }
+        this.is_pinned = true;
+        return this.store.env.services.orm.silent.call(
+            "discuss.channel",
+            "channel_pin",
+            [this.id],
+            { pinned: true }
+        );
     },
     /** @param {string} body */
     async post(body) {
@@ -410,8 +538,42 @@ const threadPatch = {
         }
         return super.post(...arguments);
     },
+    /** @param {string} name */
+    async rename(name) {
+        const newName = name.trim();
+        if (
+            newName !== this.displayName &&
+            ((newName && this.channel_type === "channel") || this.isChatChannel)
+        ) {
+            if (this.channel_type === "channel" || this.channel_type === "group") {
+                this.name = newName;
+                await this.store.env.services.orm.call(
+                    "discuss.channel",
+                    "channel_rename",
+                    [[this.id]],
+                    { name: newName }
+                );
+            } else if (this.supportsCustomChannelName) {
+                if (this.selfMember) {
+                    this.selfMember.custom_channel_name = newName;
+                }
+                await this.store.env.services.orm.call(
+                    "discuss.channel",
+                    "channel_set_custom_name",
+                    [[this.id]],
+                    { name: newName }
+                );
+            }
+        }
+    },
+    get showCorrespondentCountry() {
+        return false;
+    },
     get showUnreadBanner() {
         return this.selfMember?.message_unread_counter_ui > 0;
+    },
+    get typesAllowingCalls() {
+        return ["chat", "channel", "group"];
     },
     get unknownMembersCount() {
         return (this.member_count ?? 0) - this.channel_member_ids.length;
