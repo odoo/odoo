@@ -152,7 +152,13 @@ async function livechat_init(request) {
 registerRoute("/im_livechat/email_livechat_transcript", email_livechat_transcript);
 /** @type {RouteCallback} */
 async function email_livechat_transcript(request) {
-    return true;
+    const DiscussChannel = this.env["discuss.channel"];
+    const { channel_id, email } = await parseRequestParams(request);
+    const [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
+    if (!channel) {
+        return;
+    }
+    DiscussChannel._email_livechat_transcript(channel_id, email);
 }
 
 registerRoute("/im_livechat/emoji_bundle", get_emoji_bundle);

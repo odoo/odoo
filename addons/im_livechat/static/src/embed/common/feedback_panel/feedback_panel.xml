@@ -21,9 +21,10 @@
             <textarea t-model="state.feedback" class="form-control my-2" placeholder="Explain your note"/>
             <button class="btn btn-primary align-self-end" t-on-click="onClickSendFeedback">Send</button>
         </div>
-        <div class="mb-5">
-            <TranscriptSender thread="props.thread"/>
-        </div>
+        <label class="mb-5 w-100">
+            Receive a copy of this conversation
+            <TranscriptSender thread="props.thread" disableOnSend="true"/>
+        </label>
         <div class="d-flex gap-2 justify-content-center">
             <button class="btn btn-outline-secondary" t-on-click="props.onClickClose">Close</button>
             <button t-if="allowNewSession" class="btn btn-outline-secondary" t-on-click="props.onClickNewSession">New Session</button>

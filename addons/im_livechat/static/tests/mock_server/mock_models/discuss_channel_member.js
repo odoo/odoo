@@ -21,7 +21,16 @@ export class DiscussChannelMember extends mailModels.DiscussChannelMember {
         const [member] = this.browse(ids);
         const [channel] = DiscussChannel.browse(member.channel_id);
         if (channel.channel_type === "livechat") {
-            return ["active", "avatar_128", "country_id", "is_public", "user_livechat_username"];
+            const fields = [
+                "active",
+                "avatar_128",
+                "country_id",
+                "is_public",
+                "user_livechat_username",
+            ];
+            if (this.livechat_member_type == "visitor") {
+                fields.push("offline_since", "email");
+            }
         }
         return super._get_store_partner_fields(...arguments);
     }
