@@ -29,25 +29,29 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         })
 
         Task = cls.env['project.task']
+
+        # html_field_history is always silently ignored.
+        field_exception = {"html_field_history"}
+
         cls.read_protected_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k in Task.SELF_READABLE_FIELDS
+            if k in Task.SELF_READABLE_FIELDS and k not in field_exception
         ])
         cls.write_protected_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k in Task.SELF_WRITABLE_FIELDS
+            if k in Task.SELF_WRITABLE_FIELDS and k not in field_exception
         ])
         cls.readonly_protected_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k in Task.SELF_READABLE_FIELDS and k not in Task.SELF_WRITABLE_FIELDS
+            if k in Task.SELF_READABLE_FIELDS and k not in Task.SELF_WRITABLE_FIELDS and k not in field_exception
         ])
         cls.other_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k not in Task.SELF_READABLE_FIELDS
+            if k not in Task.SELF_READABLE_FIELDS and k not in field_exception
         ])
 
     def test_mention_suggestions(self):
