@@ -97,14 +97,12 @@ class AccountChartTemplate(models.AbstractModel):
                 _logger.exception('Error while posting demo data')
 
         # We want the initial balance to be set in the equity_unaffected account
-        demo_bank_statement_1 = self.ref('demo_bank_statement_1', raise_if_not_found=False)
-        if demo_bank_statement_1:
-            cid = company.id or self.env.company.id
-            current_year_earnings_account = self.env['account.account'].search([
-                *self.env['account.account']._check_company_domain(cid),
-                ('account_type', '=', 'equity_unaffected')
-            ], limit=1)
-            demo_bank_statement_1.line_ids[0].line_ids[1]['account_id'] = current_year_earnings_account.id
+        cid = company.id or self.env.company.id
+        current_year_earnings_account = self.env['account.account'].search([
+            *self.env['account.account']._check_company_domain(cid),
+            ('account_type', '=', 'equity_unaffected')
+        ], limit=1)
+        self.ref('demo_bank_statement_1').line_ids[0].line_ids[1]['account_id'] = current_year_earnings_account.id
 
         # We want the "Line with Bank Fees" reco model to be applied on the bank fees statement line
         demo_bank_statement_line_5 = self.ref('demo_bank_statement_line_5', raise_if_not_found=False)
@@ -131,10 +129,7 @@ class AccountChartTemplate(models.AbstractModel):
     @api.model
     def _get_demo_data_partner(self):
         if self.env.ref('base.res_partner_2', raise_if_not_found=False):
-            if self.env.ref('base.res_partner_6', raise_if_not_found=False):
-                return {}
-            else:
-                return {'base.res_partner_6': {'name': 'Demo Partner 6'}}
+            return {}
         return {
             'base.res_partner_2': {'name': 'Demo Partner 2'},
             'base.res_partner_3': {'name': 'Demo Partner 3'},
@@ -452,7 +447,7 @@ class AccountChartTemplate(models.AbstractModel):
             },
             'demo_bank_statement_line_2': {
                 'journal_id': bnk_journal.id,
-                'payment_ref': time.strftime('Payment of your invoice #5'),
+                'payment_ref': 'Payment of your invoice #5',
                 'amount': 2000,
                 'partner_name': 'Open Wood Inc.',
             },
