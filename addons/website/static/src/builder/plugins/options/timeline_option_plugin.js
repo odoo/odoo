@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
+import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { after, before, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { WEBSITE_BACKGROUND_OPTIONS } from "@website/builder/option_sequence";
@@ -42,6 +43,11 @@ class TimelineOptionPlugin extends Plugin {
         is_movable_selector: { selector: ".s_timeline_row", direction: "vertical" },
     };
 
+    setup() {
+        this.isEditableRTL = this.config.isEditableRTL;
+        this.isBackendRTL = localization.direction === "rtl";
+    }
+
     getActiveOverlayButtons(target) {
         if (!isTimelineCard(target)) {
             this.overlayTarget = null;
@@ -52,11 +58,12 @@ class TimelineOptionPlugin extends Plugin {
         const timelineRowEl = this.overlayTarget.closest(".s_timeline_row");
         const firstContentEl = timelineRowEl.querySelector(".s_timeline_content");
         const hasPreviousCard = !firstContentEl.contains(this.overlayTarget);
-        const direction = hasPreviousCard ? "left" : "right";
+        const reverseButtons = this.isEditableRTL !== this.isBackendRTL;
+        const direction = hasPreviousCard !== reverseButtons ? "left" : "right";
         return [
             {
                 class: `fa fa-fw fa-angle-${direction}`,
-                title: _t("Move %s", direction),
+                title: hasPreviousCard !== this.isEditableRTL ? _t("Move left") : _t("Move right"),
                 handler: this.moveTimelineCard.bind(this),
             },
         ];
