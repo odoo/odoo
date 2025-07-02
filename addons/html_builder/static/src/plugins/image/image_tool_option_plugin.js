@@ -33,7 +33,6 @@ class ImageToolOptionPlugin extends Plugin {
         "media",
         "builderOptions",
     ];
-    static shared = ["canHaveHoverEffect"];
     resources = {
         builder_options: [
             withSequence(REPLACE_MEDIA, {
@@ -110,6 +109,7 @@ class ImageToolOptionPlugin extends Plugin {
                 }
             }
         },
+        hover_effect_forbidden_predicates: async (el) => !(await this.canHaveHoverEffect(el)),
         // TODO Remove in master.
         normalize_handlers: this.migrateImages.bind(this),
     };
