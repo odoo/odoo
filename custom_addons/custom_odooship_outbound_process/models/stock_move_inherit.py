@@ -52,11 +52,10 @@ class StockMoveLine(models.Model):
     def _ensure_pc_barcode_config(self):
         BarcodeConfig = self.env['pc.container.barcode.configuration']
         for move in self:
-            # Only if code and picking are set
-            if move.pc_container_code and move.picking_id:
+            if move.pc_container_code and move.picking_id and move.picking_id.site_code_id:
+                codes = [code.strip() for code in move.pc_container_code.split(',') if code.strip()]
                 picking = move.picking_id
-                if picking.site_code_id:
-                    code = move.pc_container_code.strip()
+                for code in codes:
                     exists = BarcodeConfig.search([
                         ('name', '=', code),
                         ('site_code_id', '=', picking.site_code_id.id)
@@ -67,4 +66,5 @@ class StockMoveLine(models.Model):
                             'site_code_id': picking.site_code_id.id,
                             'warehouse_id': picking.warehouse_id.id,
                         })
+
 

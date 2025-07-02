@@ -22,9 +22,21 @@ _logger = logging.getLogger(__name__)
 
 
 def _tote_codes(wizard):
+    print("\n\n\n tote codes====", wizard.pc_container_code_ids.mapped("name"))
     return wizard.pc_container_code_ids.mapped("name")
 
-
+def _split_codes(codes):
+    """
+    Takes a list of code strings (could be comma-separated), splits, strips, and returns set of codes.
+    E.g., ['Pc01,Pc02', 'Pc03'] → {'Pc01', 'Pc02', 'Pc03'}
+    """
+    result = set()
+    for code in codes:
+        for part in (code or '').split(','):
+            part = part.strip()
+            if part:
+                result.add(part)
+    return result
 
 class PackDeliveryReceiptWizard(models.TransientModel):
     _name = 'custom.pack.app.wizard'
@@ -134,182 +146,82 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         if not self.pc_container_code_ids or not self.site_code_id:
             return
 
-        tote_codes = _tote_codes(self)
-        scanned_tote = tote_codes[0] if tote_codes else None
-        if not scanned_tote:
+        tote_codes = _split_codes(self.pc_container_code_ids.mapped("name"))
+        if not tote_codes:
             return
 
-        # ==== Only look at pickings in assigned state ====
-        tote_pickings = self.env["stock.picking"].search([
-            ("move_ids_without_package.pc_container_code", "=", scanned_tote),
+        # Find all pickings for this site and assigned and not packed (possible merged)
+        all_pickings = self.env["stock.picking"].search([
             ("site_code_id", "=", self.site_code_id.id),
             ("state", "=", "assigned"),
-            ('current_state', '!=', 'pack')
+            ("current_state", "!=", "pack"),
         ])
 
-        if not tote_pickings:
+        # Step 1: Find all SOs involved in scanned totes (just like before)
+        sale_ids = set()
+        for picking in all_pickings:
+            for mv in picking.move_ids_without_package:
+                if bool(_split_codes([(mv.pc_container_code or "")]) & tote_codes):
+                    if picking.sale_id:
+                        sale_ids.add(picking.sale_id.id)
+
+        # Step 2: For those SOs, get ALL pickings with operation_process_type == 'pick'
+        if not sale_ids:
             raise ValidationError(
-                f"No picking found for scanned tote: {scanned_tote} at this site with state='Ready'. Please check the tote code or picking state."
+                (
+                    "No picking found for scanned tote(s): %s at this site with state='Ready'. Please check the tote code or picking state.")
+                % ', '.join(sorted(tote_codes))
             )
 
-        # Use first assigned picking for logic
-        first_picking = tote_pickings[0]
-        is_discrete = bool(first_picking and first_picking.discrete_pick)
-
-        if is_discrete:
-            sale_order = first_picking.sale_id
-            sale_order_id = sale_order.id
-
-            # Only assigned discrete picks for this SO
-            so_pickings = self.env["stock.picking"].search([
-                ("sale_id", "=", sale_order_id),
-                ("discrete_pick", "=", True),
-                ("site_code_id", "=", self.site_code_id.id),
-                ("state", "=", "assigned"),
-                ('current_state', '!=', 'pack')
-            ])
-
-            # ========== VALIDATE CURRENT STATE (must be 'pick') ==========
-            not_pick = so_pickings.filtered(lambda p: p.current_state != 'pick')
-            if not_pick:
-                lines = []
-                for p in not_pick:
-                    lines.append(
-                        f"Pick Number: {p.name}, SO: {sale_order.name}, Current State: {p.current_state}"
-                    )
-                raise ValidationError(
-                    f"The following discrete picks are not in current_state 'pick':\n" +
-                    "\n".join(lines) +
-                    "\nAll picks must be in 'pick' state to proceed."
-                )
-
-            for picking in so_pickings:
-                totes = picking.move_ids_without_package.mapped("pc_container_code")
-                if not any(totes):
-                    raise ValidationError(
-                        f"Picking is not done yet for Pick Number: {picking.name}, SO Number: {sale_order.name} (no tote assigned)"
-                    )
-
-            if sale_order.automation_manual_order == 'manual':
-                required_totes = set(so_pickings.mapped("move_ids_without_package.pc_container_code"))
-                scanned_totes = set(tote_codes) & required_totes
-                missing = required_totes - scanned_totes
-                if missing:
-                    picks_and_totes = []
-                    for pick in so_pickings:
-                        totes = pick.move_ids_without_package.mapped("pc_container_code")
-                        picks_and_totes.append(
-                            f"Pick: {pick.name} - Tote(s): {', '.join([t or '-' for t in totes])}"
-                        )
-                    missing_display = [m or '-' for m in missing]
-                    raise ValidationError((
-                            f"Scan ALL totes for Sale Order: {sale_order.name} before proceeding!\n"
-                            f"Missing tote(s): {', '.join(missing_display)}\n"
-                            "Picks for this order:\n" +
-                            "\n".join(picks_and_totes)
-                    ))
-
-            required_totes = set(so_pickings.mapped("move_ids_without_package.pc_container_code"))
-            scanned_totes = set(tote_codes) & required_totes
-            missing = required_totes - scanned_totes
-            if missing:
-                picks_and_totes = []
-                for pick in so_pickings:
-                    totes = pick.move_ids_without_package.mapped("pc_container_code")
-                    picks_and_totes.append(
-                        f"Pick: {pick.name} - Tote(s): {', '.join([t or '-' for t in totes])}"
-                    )
-                missing_display = [m or '-' for m in missing]
-                raise ValidationError((
-                        f"Scan ALL totes for Sale Order: {sale_order.name} before proceeding!\n"
-                        f"Missing tote(s): {', '.join(missing_display)}\n"
-                        "Picks for this order:\n" +
-                        "\n".join(picks_and_totes)
-                ))
-
-            pickings_to_load = so_pickings.filtered(
-                lambda p: any(tc in scanned_totes for tc in p.move_ids_without_package.mapped("pc_container_code"))
-            )
-
-        else:
-            pickings_to_load = self.env["stock.picking"].search([
-                ("move_ids_without_package.pc_container_code", "in", tote_codes),
-                ("site_code_id", "=", self.site_code_id.id),
-                ("state", "=", "assigned"),
-                ('current_state', '!=', 'pack')
-            ])
-
-            # ========== VALIDATE CURRENT STATE (must be 'pick') ==========
-            not_pick = pickings_to_load.filtered(lambda p: p.current_state != 'pick')
-            if not_pick:
-                lines = []
-                for p in not_pick:
-                    so = p.sale_id.name if p.sale_id else "-"
-                    lines.append(
-                        f"Pick Number: {p.name}, SO: {so}, Current State: {p.current_state}"
-                    )
-                raise ValidationError(
-                    f"The following picks are not in current_state 'pick':\n" +
-                    "\n".join(lines) +
-                    "\nAll picks must be in 'pick' state to proceed."
-                )
-
-            discrete_pickings = pickings_to_load.filtered(lambda p: p.discrete_pick)
-            if discrete_pickings:
-                error_lines = []
-                for pick in discrete_pickings:
-                    error_lines.append(
-                        f"Pick Number: {pick.name}, SO Number: {pick.sale_id.name if pick.sale_id else '-'}")
-                raise ValidationError(
-                    "You cannot scan totes belonging to a discrete order in non-discrete picking mode!\n"
-                    "The following picks are discrete and must be picked as a group:\n" +
-                    "\n".join(error_lines)
-                )
-
-            relevant_sos = pickings_to_load.mapped("sale_id")
-            if len(relevant_sos) > 1:
-                all_manual_slsu_false = all(
-                    (so.automation_manual_order == "manual" and not getattr(so, "slsu", False))
-                    for so in relevant_sos
-                )
-                if all_manual_slsu_false:
-                    so_names = ", ".join([so.name for so in relevant_sos])
-                    raise ValidationError(
-                        "This is a manual order and must be picked as a discrete order.\n"
-                        "Please scan only totes for a single sale order.\n"
-                        f"Detected sale orders: {so_names}"
-                    )
-
-            manual_pickings = pickings_to_load.filtered(
-                lambda p: p.automation_manual_order == 'manual' and getattr(p.sale_id, 'automation_manual_order',
-                                                                            '') == 'manual'
-            )
-            if manual_pickings:
-                required_totes = set(manual_pickings.mapped("move_ids_without_package.pc_container_code"))
-                scanned_totes = set(tote_codes) & required_totes
-                missing = required_totes - scanned_totes
-
-                if missing:
-                    picks_and_totes = []
-                    for pick in manual_pickings:
-                        totes = pick.move_ids_without_package.mapped("pc_container_code")
-                        picks_and_totes.append(
-                            f"Pick: {pick.name} - Tote(s): {', '.join([t or '-' for t in totes])}"
-                        )
-                    missing_display = [m or '-' for m in missing]
-                    raise ValidationError((
-                            f"Scan ALL totes for Sale Order: {manual_pickings.mapped('sale_id')[0].name} before proceeding!\n"
-                            f"Missing tote(s): {', '.join(missing_display)}\n"
-                            "Picks for this order:\n" +
-                            "\n".join(picks_and_totes)
-                    ))
-
-        # === No pick found after all logic ===
-        if not pickings_to_load:
+        relevant_pickings = self.env["stock.picking"].search([
+            ("site_code_id", "=", self.site_code_id.id),
+            ("state", "=", "assigned"),
+            ("current_state", "!=", "pack"),
+            ("operation_process_type", "=", "pick"),
+            ("sale_id", "in", list(sale_ids)),
+        ])
+        if not relevant_pickings:
             raise ValidationError(
-                "No pick found for the scanned tote(s) at this site in state='assigned'. Please check tote code and picking state."
+                ("No pickings found for involved Sale Orders at this site with state='Ready'.")
             )
 
+        # Step 3: Gather ALL required totes for these picks (including "-")
+        required_totes = set()
+        for picking in relevant_pickings:
+            for mv in picking.move_ids_without_package:
+                tote = (mv.pc_container_code or "").strip()
+                required_totes.update(_split_codes([tote]))
+                if not tote:
+                    required_totes.add("-")
+
+        # Step 4: Raise error if not all are scanned (shows all pick numbers and their totes)
+        missing = required_totes - tote_codes
+        if missing:
+            picks_and_totes = []
+            for picking in relevant_pickings:
+                pick_totes = []
+                for mv in picking.move_ids_without_package:
+                    code = (mv.pc_container_code or "").strip()
+                    pick_totes.append(code if code else "-")
+                picks_and_totes.append(
+                    f"Pick: {picking.name} - Tote(s): {', '.join(pick_totes) if pick_totes else '-'}"
+                )
+            missing_display = [m or '-' for m in missing]
+            raise ValidationError((
+                    f"You must scan ALL totes before packing!\n"
+                    f"Missing tote(s): {', '.join(missing_display)}\n"
+                    "Picks for this order:\n" +
+                    "\n".join(picks_and_totes)
+            ))
+
+        # All required totes are now scanned, proceed: only create lines for the actual scanned pickings
+        # (Still only pickings with a move that matches a scanned tote)
+        pickings_to_load = relevant_pickings.filtered(
+            lambda p: any(
+                bool(_split_codes([(mv.pc_container_code or "")]) & tote_codes)
+                for mv in p.move_ids_without_package
+            )
+        )
         self.picking_ids = [(6, 0, pickings_to_load.ids)]
 
         vals_list = []
@@ -321,7 +233,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 incoterm
             )
             moves = picking.move_ids_without_package.filtered(
-                lambda m: m.pc_container_code in tote_codes
+                lambda mv: bool(_split_codes([(mv.pc_container_code or "")]) & tote_codes)
             )
             for mv in moves:
                 qty_to_create = int(round(mv.remaining_qty or 0))
