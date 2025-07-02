@@ -169,7 +169,7 @@ class CrmLead(models.Model):
         compute='_compute_commercial_partner_id', readonly=False, store=False,
     )
     partner_id = fields.Many2one(
-        'res.partner', string='Customer', check_company=True, index=True, tracking=10,
+        'res.partner', string='Contact', check_company=True, index=True, tracking=10,
         help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
     partner_is_blacklisted = fields.Boolean('Partner is blacklisted', related='partner_id.is_blacklisted', readonly=True)
     contact_name = fields.Char(
