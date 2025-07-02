@@ -191,28 +191,20 @@ class StockWarehouseOrderpoint(models.Model):
             values['supplierinfo'] = self.supplier_id
         return values
 
-    def _get_replenishment_order_notification(self):
-        self.ensure_one()
+    def _get_replenishment_notification_links(self):
+        links = super()._get_replenishment_notification_links()
         domain = Domain('orderpoint_id', 'in', self.ids)
         if self.env.context.get('written_after'):
             domain &= Domain('write_date', '>=', self.env.context.get('written_after'))
-        order = self.env['purchase.order.line'].search(domain, limit=1).order_id
-        if order:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('The following replenishment order has been generated'),
-                    'message': '%s',
-                    'links': [{
-                        'label': order.display_name,
-                        'url': f'/odoo/action-purchase.action_rfq_form/{order.id}',
-                    }],
-                    'sticky': False,
-                    'next': {'type': 'ir.actions.act_window_close'},
-                }
-            }
-        return super()._get_replenishment_order_notification()
+        orders = self.env['purchase.order.line'].search(domain).order_id
+        if orders:
+            action = self.env.ref('purchase.action_rfq_form')
+            for order in orders:
+                links.append({
+                    'label': order.name,
+                    'url': f'/web#action={action.id}&id={order.id}&model=purchase.order'
+                })
+        return links
 
     def _prepare_procurement_values(self, date=False, group=False):
         values = super()._prepare_procurement_values(date=date, group=group)
