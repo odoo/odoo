@@ -95,7 +95,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_channel_rtc_session
     #       - search member (channel_member_ids)
     #       - fetch discuss_channel_member (manual prefetch)
-    #       17: member _to_store:
+    #       19: member _to_store:
     #           - search im_livechat_channel_member_history (livechat member type)
     #           - fetch im_livechat_channel_member_history (livechat member type)
     #           12: partner _to_store:
@@ -123,6 +123,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch res_groups (group_ids)
     #       - _compute_message_unread
     #       - fetch im_livechat_channel
+    #       2: fetch livechat_expertise_ids
     #   - _get_last_messages
     #   20: message _to_store:
     #       - search mail_message_schedule
@@ -145,7 +146,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_call_history
     #       - search mail_tracking_value
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 58
+    _query_count_discuss_channels = 60
 
     def setUp(self):
         super().setUp()
@@ -944,6 +945,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "livechat_channel_id": self.im_livechat_channel.id,
                 "livechat_note": False,
                 "livechat_status": "in_progress",
+                "livechat_expertise_ids": [],
                 "livechat_operator_id": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "member_count": 2,
                 "message_needaction_counter_bus_id": bus_last_id,
@@ -977,6 +979,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "livechat_channel_id": self.im_livechat_channel.id,
                 "livechat_note": False,
                 "livechat_status": "in_progress",
+                "livechat_expertise_ids": [],
                 "livechat_operator_id": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "member_count": 2,
                 "message_needaction_counter_bus_id": bus_last_id,

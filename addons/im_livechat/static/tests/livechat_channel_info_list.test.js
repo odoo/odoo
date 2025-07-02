@@ -166,3 +166,35 @@ test("editing livechat status is synced between tabs", async () => {
         target: tab2,
     }); // Status should be synced with bus
 });
+
+test("Shows expertise", async () => {
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ name: "James" });
+    pyEnv["res.partner"].create({
+        name: "James",
+        user_ids: [userId],
+    });
+    const countryId = pyEnv["res.country"].create({ code: "be", name: "Belgium" });
+    const guestId = pyEnv["mail.guest"].create({
+        name: "Visitor #20",
+    });
+    const expertiseIds = pyEnv["im_livechat.expertise"].create([
+        { name: "pricing" },
+        { name: "events" },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        anonymous_name: "Visitor #20",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        country_id: countryId,
+        channel_type: "livechat",
+        livechat_operator_id: serverState.partnerId,
+        livechat_expertise_ids: expertiseIds,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-livechat-ChannelInfoList .o_tag", { text: "pricing" });
+    await contains(".o-livechat-ChannelInfoList .o_tag", { text: "events" });
+});

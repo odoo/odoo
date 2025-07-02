@@ -7,9 +7,10 @@ import { Component, useEffect } from "@odoo/owl";
 
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
+import { TagsList } from "@web/core/tags_list/tags_list";
 
 export class LivechatChannelInfoList extends Component {
-    static components = { ActionPanel, TranscriptSender };
+    static components = { ActionPanel, TranscriptSender, TagsList };
     static template = "im_livechat.LivechatChannelInfoList";
     static props = ["thread"];
 
@@ -28,6 +29,17 @@ export class LivechatChannelInfoList extends Component {
             },
             () => [this.props.thread.id, this.props.thread.hasFetchedLivechatSessionData]
         );
+    }
+
+    get expertiseTags() {
+        return this.props.thread.livechat_expertise_ids.map((expertise) => {
+            return {
+                id: expertise.id,
+                text: expertise.name,
+                colorIndex: 0,
+                className: "me-1 mb-1",
+            };
+        });
     }
 
     onBlurNote() {
