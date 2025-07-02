@@ -189,7 +189,7 @@ export const treeProcessorService = {
             return (path) => pathDescriptions.get(path);
         }
 
-        async function makeGetConditionDescription(resModel, tree) {
+        async function makeGetConditionDescription(resModel, tree, limit) {
             tree = simplifyTree(tree);
             const [getFieldDef, getPathDescription] = await Promise.all([
                 makeGetFieldDef(resModel, tree),
@@ -197,10 +197,22 @@ export const treeProcessorService = {
             ]);
             const displayNames = await getDisplayNames(tree, getFieldDef);
             return (node) =>
-                _getConditionDescription(node, getFieldDef, getPathDescription, displayNames);
+                _getConditionDescription(
+                    node,
+                    getFieldDef,
+                    getPathDescription,
+                    displayNames,
+                    limit
+                );
         }
 
-        function _getConditionDescription(node, getFieldDef, getPathDescription, displayNames) {
+        function _getConditionDescription(
+            node,
+            getFieldDef,
+            getPathDescription,
+            displayNames,
+            limit = 5
+        ) {
             let { operator, negate, value, path } = node;
             if (["=", "!="].includes(operator) && value === false) {
                 operator = operator === "=" ? "not_set" : "set";
@@ -240,9 +252,11 @@ export const treeProcessorService = {
             const values = ["next", "not_next", "last", "not_last"].includes(operator)
                 ? [value[0], Within.options.find((option) => option[0] === value[1])[1]]
                 : (Array.isArray(value) ? value : [value])
-                      .slice(0, 5)
+                      .slice(0, limit)
                       .map((val, index) =>
-                          index < 4 ? formatValue(val, dis, fieldDef, coModeldisplayNames) : "..."
+                          index < limit - 1
+                              ? formatValue(val, dis, fieldDef, coModeldisplayNames)
+                              : "..."
                       );
             let join;
             let addParenthesis = Array.isArray(value);
@@ -323,7 +337,7 @@ export const treeProcessorService = {
                 return [connector, ...childrenTooltipLines].flat();
             }
             const getFieldDef = await makeGetFieldDef(resModel, tree);
-            const getConditionDescription = await makeGetConditionDescription(resModel, tree);
+            const getConditionDescription = await makeGetConditionDescription(resModel, tree, 20);
             const { pathDescription, operatorDescription, valueDescription } =
                 getConditionDescription(tree);
             const descr = [];
