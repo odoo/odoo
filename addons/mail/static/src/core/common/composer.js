@@ -569,6 +569,11 @@ export class Composer extends Component {
         }
     }
 
+    get fullComposerAdditionalContext() {
+        // To be overridden by inheriting classes
+        return {};
+    }
+
     async onClickFullComposer(ev) {
         const allRecipients = [...this.thread.suggestedRecipients];
         if (this.props.type !== "note") {
@@ -630,6 +635,7 @@ export class Composer extends Component {
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             clicked_on_full_composer: true,
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually
+            ...this.fullComposerAdditionalContext,
         };
         const action = {
             name: this.props.type === "note" ? _t("Log note") : _t("Compose Email"),
@@ -783,11 +789,12 @@ export class Composer extends Component {
         const thread = toRaw(this.props.composer.thread);
         const postThread = toRaw(this.thread);
         const post = postThread.post.bind(postThread, value, postData, extraData);
+        let message;
         if (postThread.model === "discuss.channel") {
             // feature of (optimistic) temp message
             post();
         } else {
-            await post();
+            message = await post();
         }
         if (thread.model === "mail.box") {
             this.notifySendFromMailbox();
@@ -797,6 +804,7 @@ export class Composer extends Component {
         this.props.composer.replyToMessage = undefined;
         this.props.composer.emailAddSignature = true;
         this.props.composer.thread.additionalRecipients = [];
+        return message;
     }
 
     async editMessage() {
