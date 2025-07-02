@@ -37,12 +37,17 @@
                     <i class="o-mail-DiscussSidebarCategory-chevronCompact position-absolute fa-fw o-xsmaller o-mt-0_5" t-att-class="{
                         'oi oi-chevron-down': category.open,
                         'oi oi-chevron-right': !category.open,
+                        'invisible': !hasVisibleThreads,
                     }"/>
                     <span class="rounded p-1"><i t-if="store.channels.status === 'fetching'" class="fa fa-fw fa-circle-o-notch fa-spin"/><i t-else="" class="fa-fw fa-lg" t-att-class="category.icon ?? 'fa fa-user'"/></span>
                 </t>
                 <t t-else="">
                     <span t-if="store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa fa-fw fa-circle-o-notch fa-spin opacity-50 o-mt-0_5"/></span>
-                    <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xsmaller fa-fw position-absolute ms-n3 align-self-center o-mt-0_5" t-att-class="category.open ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
+                    <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xsmaller fa-fw position-absolute ms-n3 align-self-center o-mt-0_5" t-att-class="{
+                        'oi oi-chevron-down': category.open,
+                        'oi oi-chevron-right': !category.open,
+                        'invisible': !hasVisibleThreads,
+                    }"/>
                     <span class="o-mail-DiscussSidebarCategory-title text-break smaller"
                         t-att-class="{
                             'fs-bold': category.open,
