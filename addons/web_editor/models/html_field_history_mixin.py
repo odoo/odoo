@@ -40,8 +40,24 @@ class HtmlFieldHistory(models.AbstractModel):
                         history_metadata[field_name].append(metadata)
             rec.html_field_history_metadata = history_metadata
 
+    def copy_data(self, default=None):
+        vals = super().copy_data(default)
+        if 'html_field_history' in vals:
+            del vals['html_field_history']
+        return vals
+
     def write(self, vals):
+<<<<<<< 333fcb93816a88f296828d1e3cf9b46b0820a67b
         rec_db_contents = {}
+||||||| 55c7feaae93651ac6ba5a000ac2493438d2317b4
+        new_revisions = False
+        db_contents = None
+=======
+        if 'html_field_history' in vals:
+            del vals['html_field_history']
+        new_revisions = False
+        db_contents = None
+>>>>>>> 9aa6ccdb8535786f5f6dc4cc60ebcf1161db0dcf
         versioned_fields = self._get_versioned_fields()
         vals_contain_versioned_fields = set(vals).intersection(versioned_fields)
 
