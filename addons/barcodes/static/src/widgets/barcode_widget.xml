@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="barcodes.barcode_image">
+        <img
+            t-if="barcode_src"
+            loading="lazy"
+            class="img img-fluid"
+            t-att-alt="string"
+            t-att-src="barcode_src"
+            t-att-height="90"
+            t-att-data-tooltip-template="hasZoom and zoomAttributes.template"
+            t-att-data-tooltip-info="hasZoom and zoomAttributes.info"
+            t-att-data-tooltip-delay="hasZoom and props.zoomDelay"
+        />
+    </t>
+
+    <t t-name="barcodes.BarcodeField">
+        <t >
+            <div class="d-inline-flex w-100" name="barcode_field_input">
+                <t t-if="props.readonly">
+                    <span t-if="props.barcodeDisplay != 'image'" name="barcode_field_readonly" t-esc="string" t-att-raw-value="value" />
+                </t>
+                <t t-else="">
+                    <input
+                        t-if="props.barcodeDisplay != 'image'"
+                        class="o_input"
+                        t-att-id="props.id"
+                        type="text"
+                        autocomplete="off"
+                        t-att-placeholder="props.placeholder"
+                        t-att-required="props.required"
+                        t-ref="input"
+                    />
+                    <a t-on-click="onBarcodeBtnClick" class="ms-3 d-inline-flex align-items-center" tabindex="-1" data-tooltip="Open Barcode Scan">
+                        <i t-att-class="icon_class"/>
+                    </a>
+                </t>
+                <a t-if="this.value" t-att-href="barcode_src" class="ms-3 d-inline-flex align-items-center" target="_blank">
+                    <i class="fa fa-globe" data-tooltip="Open Barcode Image"></i>
+                </a>
+            </div>
+        </t>
+        <t t-if="props.barcodeDisplay != 'text' &amp;&amp; this.value" t-call="barcodes.barcode_image"/>
+    </t>
+</templates>
