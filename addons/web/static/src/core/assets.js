@@ -9,19 +9,22 @@ import { registry } from "./registry";
  * }} BundleFileNames
  */
 
-/** @type {WeakMap<Document, Map<string, Promise<BundleFileNames | void>>>} */
-export const cacheMapByDocument = new WeakMap();
+export const globalBundleCache = new Map();
+export const assetCacheByDocument = new WeakMap();
 
-/** @returns {Map<string, Promise<BundleFileNames | void>>} */
-function getCacheMap(targetDoc) {
-    if (!cacheMapByDocument.has(targetDoc)) {
-        cacheMapByDocument.set(targetDoc, new Map());
+function getGlobalBundleCache() {
+    return globalBundleCache;
+}
+
+function getAssetCache(targetDoc) {
+    if (!assetCacheByDocument.has(targetDoc)) {
+        assetCacheByDocument.set(targetDoc, new Map());
     }
-    return cacheMapByDocument.get(targetDoc);
+    return assetCacheByDocument.get(targetDoc);
 }
 
 export function computeBundleCacheMap(targetDoc) {
-    const cacheMap = getCacheMap(targetDoc);
+    const cacheMap = getGlobalBundleCache();
     for (const script of targetDoc.head.querySelectorAll("script[src]")) {
         cacheMap.set(script.getAttribute("src"), Promise.resolve());
     }
@@ -121,12 +124,10 @@ export const assets = {
      * Get the files information as descriptor object from a public asset template.
      *
      * @param {string} bundleName Name of the bundle containing the list of files
-     * @param {Object} options
-     * @param {Document} [options.targetDoc=document] document to which the bundle will be applied (e.g. iframe document)
      * @returns {Promise<BundleFileNames>}
      */
-    getBundle(bundleName, { targetDoc = document } = {}) {
-        const cacheMap = getCacheMap(targetDoc);
+    getBundle(bundleName) {
+        const cacheMap = getGlobalBundleCache();
         if (cacheMap.has(bundleName)) {
             return cacheMap.get(bundleName);
         }
@@ -177,7 +178,7 @@ export const assets = {
                 )} as ${typeof bundleName}`
             );
         }
-        return getBundle(bundleName, { targetDoc }).then(({ cssLibs, jsLibs }) => {
+        return getBundle(bundleName).then(({ cssLibs, jsLibs }) => {
             const promises = [];
             if (css && cssLibs) {
                 promises.push(...cssLibs.map((url) => assets.loadCSS(url, { targetDoc })));
@@ -200,7 +201,7 @@ export const assets = {
      * @returns {Promise<void>} resolved when the stylesheet has been loaded
      */
     loadCSS(url, { retryCount = 0, targetDoc = document } = {}) {
-        const cacheMap = getCacheMap(targetDoc);
+        const cacheMap = getAssetCache(targetDoc);
         if (cacheMap.has(url)) {
             return cacheMap.get(url);
         }
@@ -241,7 +242,7 @@ export const assets = {
      * @returns {Promise<void>} resolved when the script has been loaded
      */
     loadJS(url, { targetDoc = document } = {}) {
-        const cacheMap = getCacheMap(targetDoc);
+        const cacheMap = getAssetCache(targetDoc);
         if (cacheMap.has(url)) {
             return cacheMap.get(url);
         }

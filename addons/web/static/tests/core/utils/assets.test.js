@@ -1,9 +1,16 @@
-import { after, describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import { mockFetch } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { assets, cacheMapByDocument, loadBundle, loadCSS, loadJS } from "@web/core/assets";
+import {
+    assets,
+    assetCacheByDocument,
+    globalBundleCache,
+    loadBundle,
+    loadCSS,
+    loadJS,
+} from "@web/core/assets";
 
 describe.current.tags("headless");
 
@@ -11,11 +18,6 @@ describe.current.tags("headless");
  * @param {(node: Node) => void} callback
  */
 const mockHeadAppendChild = (callback) => {
-    const currentDocumentMap = cacheMapByDocument.get(document);
-    cacheMapByDocument.set(document, new Map());
-    after(() => {
-        cacheMapByDocument.set(document, currentDocumentMap);
-    });
     patchWithCleanup(document.head, {
         appendChild: callback,
     });
@@ -29,6 +31,11 @@ const bundles = {
         { type: "script", src: "file2.js" },
     ],
 };
+
+beforeEach(() => {
+    globalBundleCache.clear();
+    assetCacheByDocument.delete(document);
+});
 
 test("loadJS: load invalid JS lib", async () => {
     expect.assertions(4);
@@ -171,7 +178,7 @@ test("loadBundle: load same bundle in main document and an iframe", async () => 
     loadBundle("test.bundle", { targetDoc: iframeDocument });
     await animationFrame();
     expect.verifySteps([
-        "fetch bundle: /web/bundle/test.bundle",
+        // no fetching as the bundle is cached globally
         "add iframe document LINK - text/css - file1.css",
         "add iframe document LINK - text/css - file2.css",
         "add iframe document SCRIPT - text/javascript - file1.js",
@@ -179,4 +186,67 @@ test("loadBundle: load same bundle in main document and an iframe", async () => 
     ]);
 
     iframe.remove();
+});
+
+test("loadBundle: load same bundles in 2 iframes", async () => {
+    mockFetch((route) => {
+        expect.step(`fetch bundle: ${route.pathname}`);
+        return bundles[route.pathname];
+    });
+
+    mockHeadAppendChild(async (node) => {
+        const srcAttribute = node.tagName === "LINK" ? "href" : "src";
+        expect.step(
+            `add document ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`
+        );
+    });
+
+    const iframeFirst = document.createElement("iframe");
+    const iframeSecond = document.createElement("iframe");
+    document.body.appendChild(iframeFirst);
+    document.body.appendChild(iframeSecond);
+    const iframeDocumentFirst = iframeFirst.contentDocument;
+    const iframeDocumentSecond = iframeSecond.contentDocument;
+    patchWithCleanup(iframeDocumentFirst.head, {
+        appendChild: (node) => {
+            const srcAttribute = node.tagName === "LINK" ? "href" : "src";
+            expect.step(
+                `add iframe document ${node.tagName} - ${node.type} - ${node.getAttribute(
+                    srcAttribute
+                )}`
+            );
+        },
+    });
+    patchWithCleanup(iframeDocumentSecond.head, {
+        appendChild: (node) => {
+            const srcAttribute = node.tagName === "LINK" ? "href" : "src";
+            expect.step(
+                `add iframe document ${node.tagName} - ${node.type} - ${node.getAttribute(
+                    srcAttribute
+                )}`
+            );
+        },
+    });
+
+    loadBundle("test.bundle", { targetDoc: iframeDocumentFirst });
+    await animationFrame();
+    expect.verifySteps([
+        "fetch bundle: /web/bundle/test.bundle",
+        "add iframe document LINK - text/css - file1.css",
+        "add iframe document LINK - text/css - file2.css",
+        "add iframe document SCRIPT - text/javascript - file1.js",
+        "add iframe document SCRIPT - text/javascript - file2.js",
+    ]);
+
+    loadBundle("test.bundle", { targetDoc: iframeDocumentSecond });
+    await animationFrame();
+    expect.verifySteps([
+        "add iframe document LINK - text/css - file1.css",
+        "add iframe document LINK - text/css - file2.css",
+        "add iframe document SCRIPT - text/javascript - file1.js",
+        "add iframe document SCRIPT - text/javascript - file2.js",
+    ]);
+
+    iframeFirst.remove();
+    iframeSecond.remove();
 });
