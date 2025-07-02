@@ -1,6 +1,6 @@
 import base64
 from odoo import http, fields
-from odoo.http import request
+from odoo.http import request, Controller
 import logging
 from dateutil.relativedelta import relativedelta
 from odoo.addons.portal.controllers.portal import CustomerPortal
@@ -570,4 +570,15 @@ class WebsiteCustom(http.Controller):
             'user': user,
         })
     
+class TermsController(Controller):
+    @http.route('/portal/accept_terms', type='json', auth='user', website=True, methods=['POST'])
+    def accept_terms(self):
+        user = request.env.user
+        user.sudo().x_terms_accepted = True
+        return {'success': True}
+
+    @http.route('/portal/terms_status', type='json', auth='user', website=True)
+    def terms_status(self):
+        user = request.env.user
+        return {'accepted': bool(user.sudo().x_terms_accepted)}
     

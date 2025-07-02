@@ -42,7 +42,7 @@ class NewsArticle(models.Model):
         ]
 
         self.search([]).unlink() 
-        MAX_ENTRIES_PER_FEED = 2
+        MAX_ENTRIES_PER_FEED = 1
         MAX_TOTAL_ARTICLES = 5 
         articles = []
 

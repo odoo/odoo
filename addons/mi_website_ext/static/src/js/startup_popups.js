@@ -16,36 +16,39 @@ publicWidget.registry.StartupModals = publicWidget.Widget.extend({
     });
   },
 
+
   _checkAndShowModals: function () {
     // 2. Usamos 'session.is_public' para comprobar si el usuario es un invitado
     if (session.is_public) {
       return; // No hacer nada para usuarios no logueados
     }
 
-    const termsCookie = "portal_terms_accepted_v1";
     const announcementCookie = "portal_announcements_shown_session";
-
     if (this._getCookie(announcementCookie)) {
       return;
     }
 
-    if (!this._getCookie(termsCookie)) {
-      this._showTermsModal(termsCookie);
-    } else {
-      this._showAnnouncementsModalIfNeeded();
-    }
+    // NUEVO: Consultar al backend si el usuario ya aceptó los términos
+    rpc("/portal/terms_status", {}).then((res) => {
+      if (res && res.accepted) {
+        this._showAnnouncementsModalIfNeeded();
+      } else {
+        this._showTermsModal();
+      }
+    });
   },
 
-  _showTermsModal: function (cookieName) {
+  _showTermsModal: function () {
     const modalElement = this.$("#terms_modal");
     if (modalElement.length) {
       modalElement.modal("show");
 
       modalElement.find("#accept_terms_btn").one("click", () => {
-        this._setCookie(cookieName, "true", 365);
-        modalElement.modal("hide");
-        // CORRECCIÓN: Llamamos a la función sin parámetros
-        this._showAnnouncementsModalIfNeeded();
+        // Llamar al backend para guardar la aceptación
+        rpc("/portal/accept_terms", {}).then(() => {
+          modalElement.modal("hide");
+          this._showAnnouncementsModalIfNeeded();
+        });
       });
     }
   },

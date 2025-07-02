@@ -9,6 +9,8 @@ _logger = logging.getLogger(__name__)
 class Users(models.Model):
     _inherit = 'res.users'
     
+    x_terms_accepted = fields.Boolean(string="Accepted Terms and Conditions", default=False)
+
     x_days_until_vacation_display = fields.Char(
         string="Días Para Próximas Vacaciones",
         compute='_compute_days_until_next_vacation',
@@ -279,4 +281,4 @@ class Users(models.Model):
 
             if first_contract:
                 delta = today - first_contract.date_start
-                user.x_days_in_company = delta.days   
+                user.x_days_in_company = delta.days 
