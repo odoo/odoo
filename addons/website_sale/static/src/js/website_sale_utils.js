@@ -73,6 +73,13 @@ function updateCartNavBar(data) {
     document.querySelectorAll('div.o_cart_total').forEach(
         div => div.innerHTML = data['website_sale.total']
     );
+    if (data['website_sale.quick_reorder_products']) {
+        document.querySelector('.quick_reorder')
+            ? $('.quick_reorder_products').first().before(data['website_sale.quick_reorder_products']).end().remove()
+            : $('.js_cart_lines').after(data['website_sale.quick_reorder']);
+    } else {
+        $('.quick_reorder').remove();
+    }
     if (data.cart_ready) {
         document.querySelector("a[name='website_sale_main_button']")?.classList.remove('disabled');
     } else {

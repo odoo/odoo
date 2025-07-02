@@ -2953,6 +2953,119 @@
         />
     </template>
 
+    <template id="quick_reorder_products">
+        <div class="quick_reorder_products mb-4 p-1" t-foreach="orders" t-as="order">
+            <div class="text-primary mb-2">
+                <b t-out="order['label']"/>
+            </div>
+            <div class="d-flex flex-column">
+                <div
+                    class="d-flex justify-content-between mb-3 quick-reorder-line"
+                    t-foreach="order['lines']"
+                    t-as="line"
+                >
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="o_cart_product_image">
+                            <div
+                                t-field="line.product_id.image_128"
+                                t-options="{
+                                    'widget': 'image',
+                                    'qweb_img_responsive': False,
+                                    'class': 'border rounded',
+                                }"
+                            />
+                        </div>
+                        <div>
+                            <b t-out="line.name_short"/>
+                            <ul
+                                t-if="line.product_type == 'combo'"
+                                class="list-group"
+                            >
+                                <t
+                                    t-foreach="line.linked_line_ids"
+                                    t-as="combo_item_line"
+                                >
+                                    <t t-call="website_sale.cart_combo_item_line"/>
+                                </t>
+                            </ul>
+                        </div>
+                        <div class="text-muted">
+                            in <t t-out="line.product_uom_id.name"/>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <t
+                            t-set="combination_info"
+                            t-value="line.product_id._get_combination_info_variant()"
+                        />
+                        <span
+                            t-att-id="'total_price_' + str(line.order_id.id) + '_' + str(line.id)"
+                            class="product-total-price"
+                            style="white-space: nowrap;"
+                            t-out="combination_info['price'] * line.product_uom_qty"
+                            t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                        />
+                        <div
+                            class="d-inline-flex align-items-center border rounded overflow-hidden"
+                        >
+                            <input
+                                type="text"
+                                class="h-100 py-2 border-0 rounded-0 form-control text-center quick-reorder-qty"
+                                style="width: 50px;"
+                                t-att-data-line-id="line.id"
+                                t-att-data-order-id="line.order_id.id"
+                                t-att-data-price-unit="combination_info['price']"
+                                t-att-value="int(line.product_uom_qty)"
+                                t-att-data-currency-digits="combination_info['currency'].decimal_places"
+                            />
+                            <button
+                                t-att-id="'quick_reorder_' + str(line.order_id.id) + '_' + str(line.id)"
+                                type="button"
+                                class="btn btn-primary border-0 js_add_quick_reorder_products"
+                                t-att-data-quantity="line.product_uom_qty"
+                                t-att-data-product-id="line.product_id.id"
+                                t-att-data-product-template-id="line.product_id.product_tmpl_id.id"
+                                t-att-data-product-type="line.product_id.type"
+                                t-att-data-selected-combo-items="json.dumps(line._get_selected_combo_items())"
+                            >
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="quick_reorder">
+        <div class="quick_reorder accordion bg-light rounded my-4">
+            <button
+                id="quick_reorder_dropdown"
+                type="button"
+                t-attf-class="accordion-button bg-transparent shadow-none {{'collapsed' if website_sale_order.website_order_line else ''}}"
+                data-bs-toggle="collapse"
+                aria-controls="quick_reorder_products"
+                data-bs-target="#quick_reorder_products"
+                t-attf-aria-expanded="{{'false' if website_sale_order.website_order_line else 'true'}}"
+            >
+                <div class="d-flex align-items-start">
+                    <i class="fa fa-shopping-cart fa-lg me-3 mt-1"/>
+                    <div>
+                        <h5 class="text-primary">Quick Reorder</h5>
+                        <p class="mb-0 text-muted">Reorder based on your last purchases</p>
+                    </div>
+                </div>
+            </button>
+            <div
+                id="quick_reorder_products"
+                t-attf-class="p-3 {{'collapse' if website_sale_order.website_order_line else 'show'}}"
+                aria-labelledby="quick_reorder_dropdown"
+            >
+                <t t-call="website_sale.quick_reorder_products"/>
+            </div>
+        </div>
+    </template>
+
     <!-- /shop/cart route -->
     <template id="cart" name="Shopping Cart">
         <t t-call="website_sale.checkout_layout">
@@ -2995,6 +3108,7 @@
                     </t>
                 </div>
                 <t t-call="website_sale.cart_lines"/>
+                <t t-if="orders" t-call="website_sale.quick_reorder"/>
                 <div class="clearfix" />
                 <div class="oe_structure" id="oe_structure_website_sale_cart_1"/>
             </div>
