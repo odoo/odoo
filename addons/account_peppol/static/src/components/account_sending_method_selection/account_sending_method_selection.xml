@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="account.AccountSendingMethodSelection" t-inherit="web.SelectionField" t-inherit-mode="primary">
+        <xpath expr="//select/option" position="attributes">
+            <attribute name="t-esc">this.props.placeholder || ''</attribute>
+        </xpath>
+    </t>
+</templates>
