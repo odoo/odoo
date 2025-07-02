@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 <t t-name="website.MetaImage">
-    <div class="my-1 me-2" t-att-class="props.active ? 'o_active_image o_meta_img' : 'o_meta_img'" t-on-click="() => props.selectImage(props.src)">
+    <div class="mb-2 me-2" t-att-class="props.active ? 'o_active_image o_meta_img' : 'o_meta_img'" t-on-click="() => props.selectImage(props.src)">
         <span t-if="props.custom" class="o-custom-label w-100 text-white text-center">Custom</span>
         <img t-att-src="props.src"/>
     </div>
@@ -10,11 +10,11 @@
 <t t-name="website.ImageSelector">
     <section>
         <div class="o_seo_og_image">
-            <div><label>Cover image</label></div>
+            <label class="d-block">Cover Image</label>
             <t t-foreach="state.images" t-as="image" t-key="image.src">
                 <MetaImage active="image.active" custom="image.custom" src="image.src" selectImage="src => this.selectImage(src)"/>
             </t>
-            <div class="o_meta_img_upload my-1 me-2" title="Click to choose more images" t-on-click="openMediaDialog">
+            <div class="o_meta_img_upload mb-2 me-2" title="Click to choose more images" t-on-click="openMediaDialog">
                 <i class="fa fa-upload"/>
             </div>
         </div>
@@ -56,9 +56,10 @@
         </td>
         <td class="o_seo_keyword_suggestion">
             <ul class="list-inline mb0">
+                <span t-if="!state.suggestions.length" class="small text-muted fst-italic">No related keywords found. Try a broader term.</span>
                 <t t-foreach="state.suggestions" t-as="suggestion" t-key="suggestion">
                     <li class="list-inline-item me-1 mb-1" t-on-click="() => props.addKeyword(suggestion)">
-                        <span class="o_seo_suggestion badge rounded py-1 text-bg-info" t-att-title="translatedStrings.suggestionTag(suggestion)" t-esc="suggestion"/>
+                        <span class="o_seo_suggestion badge rounded-pill py-1 text-bg-secondary" t-att-title="translatedStrings.suggestionTag(suggestion)" t-esc="suggestion"/>
                     </li>
                 </t>
             </ul>
@@ -73,37 +74,24 @@
 </t>
 
 <t t-name="website.SeoChecks">
-    <section class="mt-3 oe_seo_checks">
-        <h4>
-            SEO Checks
+    <section class="mt-3 o_seo_images_check">
+        <h4 class="border-bottom pb-2">
+            Images Optimization
         </h4>
-        <hr class="mt-0"/>
-        <t t-if="state.headingsScan.missingH1">
-            <p><i class="fa fa-times text-danger me-3"></i>H1 tag is missing, please add only one</p>
-        </t>
-        <t t-elif="state.headingsScan.multipleH1">
-            <p><i class="fa fa-times text-danger me-3"></i>Multiple H1 tags detected. Please update your content to include only one H1 heading</p>
-        </t>
-        <t t-if="state.headingsScan.misplacedH1 and !state.headingsScan.missingH1">
-            <p><i class="fa fa-times text-danger me-3"></i>Misplaced H1 tag. Please place the H1 heading at the top of the page</p>
-        </t>
-        <t t-if="state.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length > 0">
-            <p><i class="fa fa-times text-danger me-3"></i><span t-out="state.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length"></span> alt attribute(s) missing on image(s)</p>
-        </t>
-        <t t-else="">
-            <p><i class="fa fa-check text-success me-3"></i>No warning on images</p>
+        <t t-if="!state.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length > 0">
+            <p><i class="fa fa-check text-success me-2"></i>No warning on images</p>
         </t>
         <div class="row">
             <t t-foreach="state.altAttributes" t-as="img" t-key="img.id">
-                <div class="col-lg-6 col-sm-12 d-flex align-items-center justify-content start">
-                    <div>
+                <div class="col-lg-6 col-sm-12 d-flex mb-3">
+                    <div class="me-3">
                         <img class="o-img-thumbnail" alt="Preview image" t-att-src="img.src"></img>
                     </div>
                     <div role="form" class="flex-grow-1">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" t-att-id="'decorative-' + img.id" t-model="img.decorative" t-on-change="() => imgUpdated(img)"/>
                             <label t-att-for="'decorative-' + img.id">Mark as decorative
-                                <i class="fa fa-question-circle text-primary" title="The alt attribute is used to describe the image, optimizing both accessibility and SEO. If you select this option, the image will be hidden from screen readers and not considered for your SEO."/>
+                                <i class="fa fa-question-circle text-primary" data-tooltip-position="right" data-tooltip="The alt attribute is used to describe the image, optimizing both accessibility and SEO. If you select this option, the image will be hidden from screen readers and not considered for your SEO."/>
                             </label>
                         </div>
                         <div t-if="!img.decorative" class="input-group mt-2">
@@ -114,55 +102,62 @@
             </t>
         </div>
 
+        <h4 class="border-bottom pb-2">
+            Broken Links
+        </h4>
         <div class="mt-2" t-if="state.checkingLinks">
-            <div><i class="fa fa-spin fa-circle-o-notch text-info me-3"></i>Checking hyperlinks...</div>
-            <div class="progress bg-black-25 mt-2" style="height: 10px;">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" t-att-aria-valuenow="state.counterLinks" aria-valuemin="0" t-att-aria-valuemax="state.totalLinks" t-attf-style="width:#{(state.counterLinks / state.totalLinks) * 100}%;" aria-label="Progress bar"/>
+            <div><i class="fa fa-spin fa-circle-o-notch text-info me-2"></i>Checking hyperlinks...</div>
+            <div class="progress rounded mt-2" style="height: 10px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" t-att-aria-valuenow="state.counterLinks" aria-valuemin="0" t-att-aria-valuemax="state.totalLinks" t-attf-style="width:#{(state.counterLinks / state.totalLinks) * 100}%;" aria-label="Progress bar"/>
             </div>
         </div>
         <div class="mt-2" t-elif="state.checkedLinks">
             <t t-if="seoContext.brokenLinks.length > 0">
-                <t t-if="seoContext.brokenLinks.filter(link => link.broken).length">
-                    <p><i class="fa fa-times text-danger me-3"></i><span t-out="seoContext.brokenLinks.filter(link => link.broken).length"></span> broken link(s)</p>
-                </t>
-                <t t-else="">
-                    <p><i class="fa fa-check text-success me-3"></i>No broken link</p>
+                <t t-if="!seoContext.brokenLinks.filter(link => link.broken).length">
+                    <p><i class="fa fa-check text-success me-2"></i>No broken link</p>
                 </t>
                 <t t-foreach="seoContext.brokenLinks" t-as="link" t-key="link.oldLink">
-                    <div t-if="!link.remove" class="row align-items-center mb-2">
-                        <div class="col-12" role="form">
-                            <div class="input-group w-auto">
-                                <input t-model="link.newLink" type="text" t-att-class="'form-control ' + linkClass(link)" t-on-blur="() => this.modifyLink(link)"/>
-                                <button class="btn btn-primary" t-att-disabled="state.checkingLink || !link.newLink.trim().length || (link.newLink.trim() == link.oldLink)" t-on-click="() => this.modifyLink(link)">Check</button>
-                                <button class="btn btn-danger" t-on-click="() => this.removeLink(link)">Remove</button>
-                            </div>
-                        </div>
+                     <div t-if="!link.remove" class="row align-items-center mb-2">
+                        <BrokenLink link="link"/>
                     </div>
                 </t>
             </t>
             <t t-else="">
-                <p><i class="fa fa-check text-success me-3"></i>No broken link</p>
+                <p><i class="fa fa-check text-success me-2"></i>No broken link</p>
             </t>
         </div>
-        <div class="mt-2" t-else="">
-            <button class="btn btn-primary" t-on-click="getBrokenLinks">Check broken links</button>
-        </div>
-
     </section>
+</t>
+
+<t t-name="website.BrokenLink">
+    <div class="col-2">
+        <label class="align-middle text-truncate w-100" t-att-title="link.label">
+            <i t-if="link.isImageLink" class="fa fa-picture-o text-400 me-2"/>
+            <t t-esc="link.label"/>
+        </label>
+    </div>
+    <div class="col-10" role="form">
+        <div class="input-group w-auto">
+            <input t-model="link.newLink" type="text" class="form-control" t-ref="url-input"
+                    t-att-class="link.validLink == link.newLink.trim() ? 'is-valid' : 'is-invalid'"
+                    t-on-blur="() => this.modifyLink(link)"/>
+            <button class="btn btn-primary" t-on-click="() => this.modifyLink(link)"
+                    t-att-disabled="checkButtonDisabled(link)">
+                Check
+            </button>
+            <button class="btn btn-danger" t-on-click="() => this.removeLink(link)">Remove</button>
+        </div>
+    </div>
 </t>
 
 <t t-name="website.MetaKeywords">
     <section class="mt-3">
-        <h4 class="d-inline-block me-1">
-            Content Check
-        </h4>
-        <i class="fa fa-question-circle text-primary" data-tooltip-position="right" data-tooltip="Add up to 10 relevant keywords"/>
-        <hr class="mt-0"/>
+        <div t-if="!seoContext.keywords.length"><label>Keywords</label></div>
         <div class="table-responsive mt16" t-if="seoContext.keywords.length">
-            <table class="table table-sm">
+            <table class="table table-sm mb-2">
                 <thead>
                     <tr>
-                        <th class="w-25">Keyword</th>
+                        <th class="w-25">Keywords</th>
                         <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page first level heading">H1</abbr></th>
                         <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page second level heading">H2</abbr></th>
                         <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page title">T</abbr></th>
@@ -198,34 +193,38 @@
 
 <t t-name="website.SEOPreview">
     <div class="oe_seo_preview_g">
-        <div class="rc">
+        <div class="o_seo_preview_rc">
             <t t-if="props.isIndexed">
                 <div class="row">
                     <div class="col-9">
                         <div class="d-flex align-items-center justify-content-start">
-                            <img class="l me-2" t-att-src="logo"></img>
-                            <div class="s">
-                                <div class="st text-black" t-out="website.currentWebsite.name"></div>
-                                <div class="kv mb-1 text-muted"><t t-out="urlToBreadcrumbs"/></div>
+                            <img class="o_seo_preview_l border rounded-circle" t-att-src="logo"></img>
+                            <div class="o_seo_preview_s o_seo_preview_q w-100">
+                                <div class="o_seo_preview_st text-black text-truncate" t-out="website.currentWebsite.name"></div>
+                                <div class="o_seo_preview_kv text-muted text-truncate"><t t-out="urlToBreadcrumbs"/></div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <div class="r"><t t-esc="props.title"/></div>
-                                <div class="s">
-                                    <div class="st text-black"><t t-esc="description"/></div>
+                                <div class="o_seo_preview_r mt-1"><t t-esc="props.title"/></div>
+                                <div class="o_seo_preview_s">
+                                    <div class="o_seo_preview_st" t-att-class="this.props.description ? 'text-black' : 'text-muted fst-italic'">
+                                        <t t-esc="description"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-3">
-                        <img class="i" t-att-src="seoContext.metaImage"/>
+                        <div class="o_seo_preview_g">
+                            <img class="o_seo_preview_i" t-att-src="seoContext.metaImage"/>
+                        </div>
                     </div>
                 </div>
             </t>
             <t t-else="">
-                <div class="s">
-                    <div class="st">You have hidden this page from search results. It won't be indexed by search engines.</div>
+                <div class="o_seo_preview_s">
+                    <div class="o_seo_preview_st">You have hidden this page from search results. It won't be indexed by search engines.</div>
                 </div>
             </t>
         </div>
@@ -235,13 +234,16 @@
 <t t-name="website.TitleDescription">
     <section>
         <div class="row">
-            <div class="col-12">
-                <div class="mb-3 p-2 d-flex align-items-center bg-200 rounded">
-                    <button class="btn btn-primary me-2" t-on-click="autoFill">Auto-fill</button>
-                    <small class="text-primary">Use AI to optimize your page</small>
+            <div class="col-12 px-0">
+                <div class="alert alert-info py-2 rounded-0 border-0">
+                    <span class="text-info">Need help to optimize?</span>
+                    <button class="btn btn-link ps-1" t-on-click="autoFill">
+                        <i class="oi oi-fw oi-arrow-right me-1"/>
+                        <span>Fill with AI</span>
+                    </button>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-5">
                 <div class="mb-3">
                     <label for="website_meta_title">
                         Title <i class="fa fa-question-circle text-primary" data-tooltip-position="right" t-att-data-tooltip="titleTooltip"/>
@@ -249,14 +251,15 @@
                     <input type="text" t-model="seoContext.title" t-att-disabled="!props.canEditTitle" class="form-control" t-att-placeholder="props.defaultTitle" maxlength="70" size="70" t-ref="autofocus"/>
                 </div>
                 <div class="mb-3">
-                    <label for="website_meta_description">
-                        Description <i class="fa fa-question-circle text-primary" data-tooltip-position="right" t-att-data-tooltip="props.previewDescription"/>
-                    </label>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label for="website_meta_description">
+                            Description <i class="fa fa-question-circle text-primary" data-tooltip-position="right" t-att-data-tooltip="props.previewDescription"/>
+                        </label>
+                        <t t-if="descriptionWarning.length">
+                            <small class="text-warning" t-esc="descriptionWarning"/>
+                        </t>
+                    </div>
                     <textarea t-model="seoContext.description" t-att-disabled="!props.canEditDescription" name="website_meta_description" placeholder="Describe the content of this page" class="form-control" rows="4"/>
-                    <t t-if="descriptionWarning.length">
-                        <i class="fa fa-info-circle text-warning me-1"/>
-                        <span class="small text-warning" t-esc="descriptionWarning"/>
-                    </t>
                 </div>
                 <div class="mb-3" t-if='props.canEditUrl'>
                     <label for="website_seo_name">
@@ -274,7 +277,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-7">
                 <label>
                     Preview <i class="fa fa-question-circle text-primary" data-tooltip-position="right"
                         data-tooltip="See how this page might look in search results and on social media."/>
