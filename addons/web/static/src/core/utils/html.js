@@ -1,7 +1,8 @@
 import { htmlEscape, markup } from "@odoo/owl";
 
+import { formatList, normalizedMatches } from "@web/core/l10n/utils";
+import { unique } from "@web/core/utils/arrays";
 import { escapeRegExp, sprintf } from "@web/core/utils/strings";
-import { formatList } from "../l10n/utils";
 
 const Markup = markup().constructor;
 
@@ -32,7 +33,8 @@ export function createElementWithContent(elementName, content) {
 /**
  * Returns a markuped version of the input text where
  * the query is highlighted using the input classes
- * if it is part of the text.
+ * if it is part of the text. Will normalize the query
+ * for advanced symbols matching
  *
  * @param {string | ReturnType<markup>} query
  * @param {string | ReturnType<markup>} text
@@ -43,19 +45,30 @@ export function highlightText(query, text, classes) {
     if (!query) {
         return text;
     }
-    const regex = new RegExp(
-        `(${escapeRegExp(htmlEscape(query))})+(?=(?:[^>]*<[^<]*>)*[^<>]*$)`,
-        "ig"
+    const matches = unique(
+        normalizedMatches(text, query).map((m) =>
+            // normalizedMatch will remove Markup and return string matches
+            // so it is necessary to restore the removed Markup when needed
+            query instanceof Markup ? markup(m.match.toLowerCase()) : m.match.toLowerCase()
+        )
     );
-    return htmlReplace(text, regex, (_, match) => {
-        /**
-         * markup: text is a Markup object (either escaped inside htmlReplace or
-         * flagged safe), `match` is directly coming from this value,
-         * and the regex doesn't do anything crazy to unescape it.
-         */
-        match = markup(match);
-        return markup`<span class="${classes}">${match}</span>`;
-    });
+    let result = text;
+    for (const match of matches) {
+        const regex = new RegExp(
+            `(${escapeRegExp(htmlEscape(match))})+(?=(?:[^>]*<[^<]*>)*[^<>]*$)`,
+            "ig"
+        );
+        result = htmlReplace(result, regex, (_, match) => {
+            /**
+             * markup: text is a Markup object (either escaped inside htmlReplace or
+             * flagged safe), `match` is directly coming from this value,
+             * and the regex doesn't do anything crazy to unescape it.
+             */
+            match = markup(match);
+            return markup`<span class="${classes}">${match}</span>`;
+        });
+    }
+    return result;
 }
 
 /**
