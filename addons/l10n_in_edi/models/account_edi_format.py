@@ -24,6 +24,9 @@ DEFAULT_IAP_TEST_ENDPOINT = "https://l10n-in-edi-demo.api.odoo.com"
 class AccountEdiFormat(models.Model):
     _inherit = "account.edi.format"
 
+    def _l10n_in_get_debitnote(self, move):
+        return False
+
     def _is_enabled_by_default_on_journal(self, journal):
         self.ensure_one()
         if self.code == "in_einvoice_1_03":
