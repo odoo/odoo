@@ -72,9 +72,5 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_bank_fees_reco_account(self, company):
         # Belgian account for the bank fees reco model. We need to be as precise
         # as possible in case it's modified so it's missing and not replaced.
-        be_account = self.env['account.account'].with_company(company).search([
-            ('code', '=', '656000'),
-            ('account_type', '=', 'expense'),
-            ('name', '=', 'Provisions of a Financial Nature - Appropriations'),
-        ], limit=1)
+        be_account = self.with_company(company).ref('a6560', raise_if_not_found=False)
         return be_account or super()._get_bank_fees_reco_account(company)
