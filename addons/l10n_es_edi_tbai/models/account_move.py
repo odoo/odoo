@@ -288,6 +288,11 @@ class AccountMove(models.Model):
         tax_amls = self.line_ids.filtered(lambda x: x.display_type == 'tax')
         tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
         self.env['l10n_es_edi_tbai.document']._add_base_lines_tax_amounts(base_lines, self.company_id, tax_lines=tax_lines)
+        for base_line in base_lines:
+            sign = base_line['is_refund'] and -1 or 1
+            base_line['gross_price_unit'] = sign * base_line['gross_price_unit']
+            base_line['discount_amount'] = sign * base_line['discount_amount']
+            base_line['price_total'] = sign * base_line['price_total']
         taxes = self.invoice_line_ids.tax_ids.flatten_taxes_hierarchy()
         is_oss = any(tax._l10n_es_get_regime_code() == '17' for tax in taxes)
 
