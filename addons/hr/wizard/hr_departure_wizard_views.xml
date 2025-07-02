@@ -21,6 +21,10 @@
                                     <div>
                                         <field name="set_date_end"/><label for="set_date_end" string="Contract"/>
                                     </div>
+                                    <div invisible="not is_user_employee">
+                                        <field name="remove_related_user"/>
+                                        <label for="remove_related_user" string="Related User"/>
+                                    </div>
                                 </div>
                                 <div class="column" id="info"/>
                             </group>
