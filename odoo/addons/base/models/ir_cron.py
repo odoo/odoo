@@ -198,20 +198,21 @@ class ir_cron(models.Model):
     @classmethod
     def _get_all_ready_jobs(cls, cr):
         """ Return a list of all jobs that are ready to be executed """
+        now = cr.now()
         cr.execute("""
             SELECT *, cron_name->>'en_US' as cron_name
             FROM ir_cron
             WHERE active = true
               AND numbercall != 0
-              AND (nextcall <= (now() at time zone 'UTC')
+              AND (nextcall <= (%s) at time zone 'utc'
                 OR id in (
                     SELECT cron_id
                     FROM ir_cron_trigger
-                    WHERE call_at <= (now() at time zone 'UTC')
+                    WHERE call_at <= (%s) at time zone 'utc'
                 )
               )
             ORDER BY priority
-        """)
+        """, (now, now))
         return cr.dictfetchall()
 
     @classmethod
