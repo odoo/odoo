@@ -548,3 +548,17 @@ class HrVersion(models.Model):
         self.ensure_one()
         self_sudo = self.sudo()
         return self_sudo.structure_type_id and self_sudo.structure_type_id.country_id.code == country_code
+
+    def action_open_version(self):
+        self.ensure_one()
+
+        return {
+            'type': "ir.actions.act_window",
+            'res_model': "hr.employee",
+            'res_id': self.employee_id.id,
+            'views': [[False, "form"]],
+            'target': "current",
+            'context': {
+                'version_id': self.id,
+            },
+        }
