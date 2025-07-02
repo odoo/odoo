@@ -126,6 +126,7 @@ CHECK_BROWSER_ITERATIONS = 100
 BROWSER_WAIT = CHECK_BROWSER_SLEEP * CHECK_BROWSER_ITERATIONS # seconds
 DEFAULT_SUCCESS_SIGNAL = 'test successful'
 TEST_CURSOR_COOKIE_NAME = 'test_request_key'
+TIMEOUT_COEFFICIENT = float(os.getenv('TIMEOUT_COEFFICIENT', '1'))
 
 def get_db_name():
     dbnames = odoo.tools.config['db_name']
@@ -1805,6 +1806,8 @@ which leads to stray network requests and inconsistencies."""
             raise err
 
         if isinstance(err, concurrent.futures.TimeoutError):
+            if TIMEOUT_COEFFICIENT != 1:
+                self._logger.runbot("Timeout coefficient set to %0.2f. New timeout: %0.2f", TIMEOUT_COEFFICIENT, timeout)
             raise ChromeBrowserException('Script timeout exceeded') from err
         raise ChromeBrowserException("Unknown error") from err
 
@@ -2335,6 +2338,8 @@ class HttpCase(TransactionCase):
         if any(f.filename.endswith('/coverage/execfile.py') for f in inspect.stack()  if f.filename):
             timeout = timeout * 1.5
 
+        timeout *= TIMEOUT_COEFFICIENT
+
         if debug is not False:
             watch = True
             timeout = 1e6
@@ -2426,6 +2431,8 @@ class HttpCase(TransactionCase):
             'startUrl': url_path,
             'delayToCheckUndeterminisms': kwargs.pop('delay_to_check_undeterminisms', int(os.getenv("ODOO_TOUR_DELAY_TO_CHECK_UNDETERMINISMS", "0")) or 0),
         }
+        if TIMEOUT_COEFFICIENT != 1:
+            options['timeoutCoefficient'] = TIMEOUT_COEFFICIENT
         code = kwargs.pop('code', f"odoo.startTour({tour_name!r}, {json.dumps(options)})")
         ready = kwargs.pop('ready', f"odoo.isTourReady({tour_name!r})")
         timeout = kwargs.pop('timeout', 60)
