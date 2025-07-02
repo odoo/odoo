@@ -1533,6 +1533,7 @@ class Lead(models.Model):
 
         # Get the active followers (followers whose partner post a message on the
         # leads in the last 30 days) which should be moved on the destination lead
+        now = self.env.cr.now()
         self.env.cr.execute(
             '''
             SELECT MAX(mf.id) AS id
@@ -1541,7 +1542,7 @@ class Lead(models.Model):
                 ON mm.author_id = mf.partner_id
                AND mm.res_id = mf.res_id
                AND mm.model = 'crm.lead'
-               AND mm.date > NOW() - INTERVAL '30 DAY'
+               AND mm.date > %(now)s - INTERVAL '30 DAY'
                    /* Check if the partner is already
                       following the destination lead */
          LEFT JOIN mail_followers AS destf
@@ -1555,7 +1556,7 @@ class Lead(models.Model):
                AND destf IS NULL
           GROUP BY mf.partner_id
             ''',
-            {'lead_ids': tuple(opportunities.ids), 'lead_id': self.id},
+            {'lead_ids': tuple(opportunities.ids), 'lead_id': self.id, 'now': now},
         )
         followers_to_update = [r[0] for r in self.env.cr.fetchall()]
         followers_to_update = self.env['mail.followers'].browse(followers_to_update).sudo()
