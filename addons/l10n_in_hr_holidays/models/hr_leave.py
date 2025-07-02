@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from dateutil.rrule import rrule, DAILY
 from datetime import datetime, timedelta
 
 from odoo import models, fields
@@ -10,41 +10,70 @@ class HolidaysRequest(models.Model):
 
     l10n_in_contains_sandwich_leaves = fields.Boolean()
 
+    def _get_no_worked_days_list(self, request_date_from, request_date_to, public_holidays, calendar):
+        prev_was_a_worked_day = True
+        continue_no_worked_days_list = []
+        start_day_list = stop_day_list = request_date_from
+
+        for day in rrule(DAILY, dtstart=request_date_from, until=request_date_to):
+            if calendar._works_on_date(day) and not any(
+                datetime.date(holiday['date_from']) <= day.date() <= datetime.date(holiday['date_to'])
+                for holiday in public_holidays
+            ):
+                if prev_was_a_worked_day:
+                    continue
+                prev_was_a_worked_day = True
+                stop_day_list = day + timedelta(days=-1)
+                continue_no_worked_days_list.append((start_day_list, stop_day_list))
+            else:
+                if prev_was_a_worked_day:
+                    start_day_list = day
+                    prev_was_a_worked_day = False
+                if day.date() == request_date_to:
+                    stop_day_list = day
+                    continue_no_worked_days_list.append((start_day_list, stop_day_list))
+
+        return continue_no_worked_days_list
+
     def _l10n_in_apply_sandwich_rule(self, public_holidays, employee_leaves):
         self.ensure_one()
-        if not self.request_date_from or not self.request_date_to:
-            return
-        date_from = self.request_date_from
-        date_to = self.request_date_to
-        total_leaves = (self.request_date_to - self.request_date_from).days + 1
-
-        def is_non_working_day(calendar, date):
-            return not calendar._works_on_date(date) or any(
-                datetime.date(holiday['date_from']) <= date <= datetime.date(holiday['date_to']) for holiday in public_holidays
-            )
-
-        def count_sandwich_days(calendar, date, direction):
-            current_date = date + timedelta(days=direction)
-            days_count = 0
-            while is_non_working_day(calendar, current_date):
-                days_count += 1
-                current_date += timedelta(days=direction)
-            for leave in employee_leaves:
-                if leave['request_date_from'] <= current_date <= leave['request_date_to']:
-                    return days_count
-            return 0
-
-        calendar = self.resource_calendar_id
-        total_leaves += count_sandwich_days(calendar, date_from, -1) + count_sandwich_days(calendar, date_to, 1)
-        if is_non_working_day(calendar, date_from):
-            total_leaves -= 1
-            if is_non_working_day(calendar, date_from + timedelta(days=+1)):
-                total_leaves -= 1
-        if is_non_working_day(calendar, date_to):
-            total_leaves -= 1
-            if is_non_working_day(calendar, date_to + timedelta(days=-1)):
-                total_leaves -= 1
-        return total_leaves
+        calendar = self.employee_id._get_calendars(self.request_date_from)[self.employee_id.id]
+        duration = (self.request_date_to - self.request_date_from).days + 1
+        no_worked_days_list = self._get_no_worked_days_list(self.request_date_from, self.request_date_to, public_holidays, calendar)
+        if no_worked_days_list:
+            for (start, stop) in no_worked_days_list:
+                if start.date() > self.request_date_from and stop.date() < self.request_date_to:
+                    continue
+                duration -= ((stop - start).days) + 1
+        number_of_no_working_days_before = 0
+        number_of_no_working_days_after = 0
+        while True:
+            day = self.request_date_from - timedelta(days=number_of_no_working_days_before + 1)
+            if calendar._works_on_date(day) and not any(
+                datetime.date(holiday['date_from']) <= day <= datetime.date(holiday['date_to'])
+                for holiday in public_holidays
+            ):
+                break
+            number_of_no_working_days_before += 1
+        for day in rrule(DAILY, dtstart=self.request_date_to + timedelta(days=1)):
+            if calendar._works_on_date(day) and not any(
+                datetime.date(holiday['date_from']) <= day.date() <= datetime.date(holiday['date_to'])
+                for holiday in public_holidays
+            ):
+                break
+            number_of_no_working_days_after += 1
+        date_from_to_check = self.request_date_from - timedelta(days=number_of_no_working_days_before +1)
+        date_to_to_check = self.request_date_to + timedelta(days=number_of_no_working_days_after +1)
+        for employee_leave in employee_leaves:
+            if employee_leave.l10n_in_contains_sandwich_leaves:
+                continue
+            if employee_leave.request_date_from <= date_from_to_check <= employee_leave.request_date_to:
+                duration += number_of_no_working_days_before
+                break
+            if employee_leave.request_date_from <= date_to_to_check <= employee_leave.request_date_to:
+                duration += number_of_no_working_days_after
+                break
+        return duration
 
     def _get_durations(self, check_leave_type=True, resource_calendar=None):
         result = super()._get_durations(check_leave_type, resource_calendar)
