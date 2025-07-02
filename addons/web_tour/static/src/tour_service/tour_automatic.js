@@ -8,6 +8,7 @@ import * as hootDom from "@odoo/hoot-dom";
 
 export class TourAutomatic {
     mode = "auto";
+    allowUnload = true;
     constructor(data) {
         Object.assign(this, data);
         this.steps = this.steps.map((step, index) => new TourStepAutomatic(step, this, index));
@@ -63,7 +64,18 @@ export class TourAutomatic {
                         if (delayToCheckUndeterminisms > 0) {
                             await step.checkForUndeterminisms(trigger, delayToCheckUndeterminisms);
                         }
-                        const result = await step.doAction();
+                        this.allowUnload = false;
+                        if (!step.skipped && step.expectUnloadPage) {
+                            this.allowUnload = true;
+                            setTimeout(() => {
+                                const message = `
+                                    The key { expectUnloadPage } is defined but page has not been unloaded within 20000 ms. 
+                                    You probably don't need it.
+                                `.replace(/^\s+/gm, "");
+                                this.throwError(message);
+                            }, 20000);
+                        }
+                        await step.doAction();
                         if (this.debugMode) {
                             console.log(trigger);
                             if (step.skipped) {
@@ -77,7 +89,9 @@ export class TourAutomatic {
                             }
                         }
                         tourState.setCurrentIndex(step.index + 1);
-                        return result;
+                        if (this.allowUnload) {
+                            return "StopTheMacro!";
+                        }
                     },
                 },
             ]);
