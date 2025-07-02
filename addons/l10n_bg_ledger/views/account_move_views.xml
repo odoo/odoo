@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='sale_info_group']" position="after">
-                <group string="Bulgaria VAT Document" name="l10n_bg_documents">
+                <group string="Bulgaria VAT Document" name="l10n_bg_documents" invisible="country_code != 'BG'">
                     <field string="Document Type" name="l10n_bg_document_type"/>
                     <field string="Document Number" name="l10n_bg_document_number"/>
                     <field string="Exemption reason" name="l10n_bg_exemption_reason"/>

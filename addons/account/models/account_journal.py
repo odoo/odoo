@@ -160,6 +160,7 @@ class AccountJournal(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, index=True, default=lambda self: self.env.company,
         help="Company related to this journal")
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
+    account_fiscal_country_group_codes = fields.Json(related="company_id.account_fiscal_country_group_codes")
 
     refund_sequence = fields.Boolean(
         string="Dedicated Credit Note Sequence",

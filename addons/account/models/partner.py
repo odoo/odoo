@@ -335,6 +335,7 @@ class ResPartner(models.Model):
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')
     partner_company_registry_placeholder = fields.Char(compute='_compute_partner_company_registry_placeholder')
+    account_fiscal_country_group_codes = fields.Json(compute='_compute_account_fiscal_country_group_codes')
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
@@ -342,6 +343,11 @@ class ResPartner(models.Model):
         for record in self:
             allowed_companies = record.company_id or self.env.companies
             record.fiscal_country_codes = ",".join(allowed_companies.mapped('account_fiscal_country_id.code'))
+
+    @api.depends_context('company')
+    def _compute_account_fiscal_country_group_codes(self):
+        for partner in self:
+            partner.account_fiscal_country_group_codes = partner.env.company.account_fiscal_country_group_codes or ['']
 
     @property
     def _order(self):
