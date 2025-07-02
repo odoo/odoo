@@ -26,4 +26,5 @@ class HrDepartureWizard(models.TransientModel):
                 if field in whitelist and not self.env['hr.version']._fields[field].related
         }
         employee.write(val_list)
+        employee.version_id.contract_template_id = self.contract_template_id
         return
