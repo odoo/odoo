@@ -700,6 +700,7 @@ class SaleOrder(models.Model):
         # searching on website_published will also search for available website (_search method on computed field)
         return self.env['delivery.carrier'].sudo().search([
             ('website_published', '=', True),
+            *self.env['delivery.carrier']._check_company_domain(self.company_id),
         ]).filtered(lambda carrier: carrier._is_available_for_order(self))
 
     #=== TOOLING ===#
