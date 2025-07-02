@@ -52,8 +52,8 @@ export class LivechatService {
      *
      * @returns {Promise<import("models").Thread|undefined>}
      */
-    async open() {
-        const thread = await this._createThread({ persist: false });
+    async open(persist=false) {
+        const thread = await this._createThread({ persist: persist });
         await thread?.openChatWindow({ focus: true });
         return thread;
     }
@@ -109,12 +109,14 @@ export class LivechatService {
      * @param {import("models").Thread} [param0.originThread]
      * @returns {Promise<import("models").Thread>}
      */
-    async _createThread({ originThread, persist = false }) {
-        const operator_params = this.get_operator_params(originThread)
+    async _createThread({ originThread, persist = false, close_old_livechat_thread: closeOldLivechatThread = true }) {
+        const operator_params = this.getOperatorParams(originThread)
+        const channelInfo = this.getChannelInfo();
+        channelInfo['close_old_livechat_thread'] = closeOldLivechatThread
         const { store_data, channel_id } = await rpc(
             "/im_livechat/get_session",
             {
-                channel_id: this.options.channel_id,
+                channel_info: channelInfo,
                 anonymous_name: this.options.default_username ?? _t("Visitor"),
                 operator_params: operator_params,
                 persisted: persist,
@@ -136,10 +138,14 @@ export class LivechatService {
         return thread;
     }
 
-    get_operator_params(originThread){
-        const chatbot_script_id = originThread?.chatbot?.script.id ?? this.store.livechat_rule?.chatbot_script_id?.id
+    getOperatorParams(originThread){
+        const chatbot_script_id = originThread?.chatbot?.script.id ?? this.store.livechat_rule?.chatbot_script_id?.id // ?? this.store.test_chatbot_script_id;
         const previous_operator_id = expirableStorage.getItem(OPERATOR_STORAGE_KEY)
         return { chatbot_script_id, previous_operator_id }
+    }
+
+    getChannelInfo() {
+        return { channel_id: this.options.channel_id }
     }
 
     get options() {

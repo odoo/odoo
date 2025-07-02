@@ -265,7 +265,7 @@ class Im_LivechatChannel(models.Model):
     # Channel Methods
     # --------------------------
     def _get_livechat_discuss_channel_vals(
-        self, anonymous_name, operator_params=None, user_id=None, country_id=None, lang=None
+        self, anonymous_name, operator_params=None, user_id=None, country_id=None, lang=None, close_old_livechat_thread=True,
     ):
         if operator_params is None:
             operator_params = {}
@@ -285,7 +285,7 @@ class Im_LivechatChannel(models.Model):
         members_to_add = [
             Command.create(
                 {
-                    "chatbot_script_id": chatbot_script.id if not user_operator else False,
+                    "chatbot_script_id": chatbot_script.id if chatbot_script else False,
                     "last_interest_dt": last_interest_dt,
                     "livechat_member_type": "agent" if user_operator else "bot",
                     "partner_id": operator_partner_id,
@@ -294,7 +294,7 @@ class Im_LivechatChannel(models.Model):
             ),
         ]
         visitor_user = False
-        if user_id and user_id != user_operator.id:
+        if user_id and user_operator and user_id != user_operator.id:
             visitor_user = self.env["res.users"].browse(user_id)
             members_to_add.append(
                 Command.create(
@@ -349,6 +349,9 @@ class Im_LivechatChannel(models.Model):
 
     def _is_user_operator(self, operator_params):
         return not operator_params.get('chatbot_script')
+
+    # def _is_chatbot_script(self, operator_info):
+    #     return not operator_info['user_operator']
 
     def _get_channel_name(self, operator_info, visitor_info):
         chatbot_script = operator_info['chatbot_script']

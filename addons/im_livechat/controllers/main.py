@@ -4,7 +4,7 @@ from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 from urllib.parse import urlsplit
 
-from odoo import http, _
+from odoo import Command, http, _
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import replace_exceptions
@@ -78,12 +78,14 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/get_session', methods=["POST"], type="jsonrpc", auth='public')
     @add_guest_to_context
-    def get_session(self, channel_id, anonymous_name, operator_params=None, persisted=True):
+    def get_session(self, channel_info, anonymous_name, operator_params=None, persisted=True):
         store = Store()
         user_id = None
         country_id = None
         channel = request.env["discuss.channel"]
         guest = request.env["mail.guest"]
+        channel_id = channel_info.get("channel_id")
+        discuss_channel_id = channel_info.get("discuss_channel_id")
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
         if request.session.uid:
             user_id = request.env.user.id
@@ -115,13 +117,14 @@ class LivechatController(http.Controller):
             operator_params=operator_params,
             user_id=user_id,
             country_id=country_id,
-            lang=request.cookies.get('frontend_lang')
+            lang=request.cookies.get('frontend_lang'),
+            close_old_livechat_thread=channel_info['close_old_livechat_thread']
         )
         if not channel_vals:
             return False
 
         channel_id = -1  # only one temporary thread at a time, id does not matter.
-        if not persisted:
+        if not persisted and not discuss_channel_id:
             chatbot_data = None
             if chatbot_script:
                 welcome_steps = chatbot_script._get_welcome_steps()
@@ -146,13 +149,21 @@ class LivechatController(http.Controller):
             }
             store.add_model_values("discuss.channel", channel_info)
         else:
-            channel = request.env['discuss.channel'].with_context(
-                mail_create_nosubscribe=False,
-                lang=request.env['chatbot.script']._get_chatbot_language()
-            ).sudo().create(channel_vals)
+            if discuss_channel_id:
+                channel = request.env['discuss.channel'].browse(discuss_channel_id)
+                channel_vals['channel_member_ids'].insert(0, Command.clear())
+                channel.with_context(
+                    mail_create_nosubscribe=False,
+                    lang=request.env['chatbot.script']._get_chatbot_language()
+                ).sudo().write(channel_vals)
+            else:
+                channel = request.env['discuss.channel'].with_context(
+                    mail_create_nosubscribe=False,
+                    lang=request.env['chatbot.script']._get_chatbot_language()
+                ).sudo().create(channel_vals)
             channel_id = channel.id
             if chatbot_script:
-                chatbot_script._post_welcome_steps(channel)
+                chatbot_script._post_welcome_steps(channel.sudo())
             with replace_exceptions(UserError, by=NotFound()):
                 # sudo: mail.guest - creating a guest and their member in a dedicated channel created from livechat
                 __, guest = channel.sudo()._find_or_create_persona_for_channel(
@@ -172,13 +183,13 @@ class LivechatController(http.Controller):
         # Make sure not to send "isLoaded" value on the guest bus, otherwise it
         # could be overwritten.
         if channel:
-             store.add(
-                 channel,
-                 extra_fields={
-                     "isLoaded": not chatbot_script,
-                     "scrollUnread": False,
-                 },
-             )
+            store.add(
+                channel,
+                extra_fields={
+                    "isLoaded": not chatbot_script,
+                    "scrollUnread": False,
+                },
+            )
         return {
             "store_data": store.get_result(),
             "channel_id": channel_id,
@@ -257,3 +268,19 @@ class LivechatController(http.Controller):
         in conversation with an operator, it's not possible to send the visitor a chat request."""
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
             channel._close_livechat_session()
+
+    def _get_updated_channel_members(self, channel, channel_vals):
+        pass
+        # partner_to_channel_member = {}
+        # for channel_member in channel.channel_member_ids:
+        #     partner_to_channel_member[channel_member.partner_id.id] = channel_member.id
+
+        # old_channel_members_partner_ids = channel.channel_member_ids.mapped('partner_id.id')
+        # updated_channel_members = []
+        # for channel_member_create_command in channel_vals['channel_member_ids']:
+        #     _, _, channel_member_data = channel_member_create_command
+        #     if channel_member_data['partner_id'] in old_channel_members_partner_ids:
+        #         updated_channel_members.append(Command.update(partner_to_channel_member[channel_member_data['partner_id']], channel_member_data))
+        #     else:
+        #         updated_channel_members.append(channel_member_create_command)
+        # return updated_channel_members
