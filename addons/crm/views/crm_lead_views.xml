@@ -134,7 +134,6 @@
                             <group name="opportunity_partner" invisible="type == 'lead'">
                                 <field name="partner_id"
                                     widget="res_partner_many2one"
-                                    string="Contact"
                                     context="{'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
                                         'default_name': contact_name or partner_name,
                                         'default_street': street,
@@ -441,7 +440,6 @@
                                 nolabel="1"
                                 class="o_field_highlight w-100 mb-0"
                                 placeholder='Contact'
-                                string='Contact'
                                 context="{
                                 'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
                                 'partner_display_name_hide_company': commercial_partner_id,
