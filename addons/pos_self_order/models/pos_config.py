@@ -159,6 +159,12 @@ class PosConfig(models.Model):
                 vals['self_ordering_service_mode'] = 'table'
 
         res = super().write(vals)
+
+        if vals.get('self_ordering_mode', 'nothing') != 'nothing' or not vals.get('limit_categories', True) or not vals.get('iface_available_categ_ids', True):
+            for config in self:
+                if config.self_ordering_mode != 'nothing' and (not config.limit_categories or not config.iface_available_categ_ids):
+                    self.env['product.template'].search([]).write({'self_order_visible': True})
+                    break
         self._prepare_self_order_custom_btn()
         return res
 

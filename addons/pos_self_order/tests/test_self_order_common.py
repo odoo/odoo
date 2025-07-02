@@ -69,3 +69,65 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
             self.pos_config.write({"self_ordering_mode": mode})
             with self.assertRaises(UserError):
                 self.pos_config.write({"self_ordering_default_user_id": False})
+
+    def test_product_self_order_visible(self):
+        """
+        Test that the self_order_visible field is correctly computed and stored
+        for products based on their categories and self_ordering_mode.
+        """
+        pos_category = self.env['pos.category'].create({
+            'name': 'Test Category',
+        })
+        another_pos_category = self.env['pos.category'].create({
+            'name': 'Another Category',
+        })
+        product = self.env['product.template'].create({
+            'name': 'Test Product',
+            'list_price': 10.0,
+            'available_in_pos': True,
+            'pos_categ_ids': [(6, 0, [pos_category.id])],
+        })
+
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'iface_available_categ_ids': [(6, 0, [pos_category.id])],
+            'limit_categories': True,
+        })
+
+        self.assertTrue(product.self_order_visible, "the field should be visible when the pos config is set to kiosk and the category is available")
+
+        self.pos_config.write({
+            'iface_available_categ_ids': [(6, 0, [another_pos_category.id])],
+        })
+
+        self.assertFalse(product.self_order_visible, "the field should not be visible when the category is not available in the pos config")
+
+        self.pos_config.write({
+            'iface_available_categ_ids': [(4, pos_category.id)],
+        })
+
+        self.assertTrue(product.self_order_visible, "the field should be visible again when the category is added back to the pos config")
+
+        self.pos_config.write({
+            'self_ordering_mode': 'nothing',
+        })
+
+        self.assertFalse(product.self_order_visible, "the field should not be visible when the pos config is set to 'nothing'")
+
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+        })
+
+        self.assertTrue(product.self_order_visible, "the field should be visible again when the pos config is set to 'kiosk'")
+
+        self.pos_config.write({
+            'iface_available_categ_ids': [(3, pos_category.id)],
+        })
+
+        self.assertFalse(product.self_order_visible, "the field should not be visible when the pos config has no available categories")
+
+        self.pos_config.write({
+            'limit_categories': False,
+        })
+
+        self.assertTrue(product.self_order_visible, "the field should be visible when the pos config has no limit categories")
