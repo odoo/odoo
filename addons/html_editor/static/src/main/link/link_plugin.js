@@ -344,6 +344,7 @@ export class LinkPlugin extends Plugin {
             link.setAttribute(param, `${value}`);
         }
         link.innerText = label;
+        this.dispatchTo("create_link_handlers", link);
         return link;
     }
 
@@ -488,7 +489,7 @@ export class LinkPlugin extends Plugin {
                 if ((selectionTextContent && selectionTextContent === label) || isImage) {
                     const link = this.createLink(url);
                     if (classes) {
-                        link.className = classes;
+                        link.classList.add(...classes.split(" "));
                     }
                     const image = isImage && findInSelection(selection, "img");
                     const figure =
@@ -525,7 +526,7 @@ export class LinkPlugin extends Plugin {
                 } else if (label) {
                     const link = this.createLink(url, label);
                     if (classes) {
-                        link.className = classes;
+                        link.classList.add(...classes.split(" "));
                     }
                     if (customStyle) {
                         link.setAttribute("style", customStyle);
