@@ -19,7 +19,7 @@
             </field>
         </record>
 
-        <record id="res_users_view_form_profile" model="ir.ui.view">
+        <record id="res_users_view_form_preferences" model="ir.ui.view">
             <field name="name">res.users.preferences.form.inherit</field>
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
@@ -129,7 +129,7 @@
             <field name="res_model">res.users</field>
             <field name="view_mode">form</field>
             <field name="context">{'from_my_preferences': True}</field>
-            <field name="view_id" ref="hr.res_users_view_form_profile"/>
+            <field name="view_id" ref="hr.res_users_view_form_preferences"/>
         </record>
 
         <record id="res_users_view_form" model="ir.ui.view">
