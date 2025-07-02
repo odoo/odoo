@@ -109,6 +109,12 @@
     0% { background-position-x: var(--progress-height, #{$progress-height}); }
 }
 
+
+// Calendar
+
+$o-calendar-today-background-color: $o-danger;
+$o-calendar-today-color: color-contrast($o-calendar-today-background-color);
+
 // We need to compute the width to avoid decimals pixels (to avoid flickerin on hover).
 // To do so, we know that we have 7 or 8 columns (week number or not) and we multiply
 // by 5. This ratio has been chosen to have enough space for different language (e.g. Vietnamese)
