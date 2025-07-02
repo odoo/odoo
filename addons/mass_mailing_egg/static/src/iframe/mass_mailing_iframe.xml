@@ -8,11 +8,12 @@
                     <iframe scrolling="no" t-att-class="{'d-none': props.showThemeSelector}"
                         t-ref="iframeRef" t-on-blur="onBlur"/>
                 </div>
-                <div t-if="!props.readonly and props.themeOptions.withBuilder and !props.showThemeSelector"
-                    class="o_mass_mailing_egg-builder_sidebar border-start border-dark o_builder_sidebar_open">
-                    <LazyComponent t-if="state.ready" Component="'mass_mailing_egg.MassMailingBuilder'"
-                        props="() => ({ builderProps: this.getBuilderProps() })"
-                        bundle="'mass_mailing_egg.assets_builder'"/>
+                <div t-if="!props.readonly and props.themeOptions.withBuilder and !props.showThemeSelector">
+                    <div class="position-sticky o_mass_mailing_egg-builder_sidebar border-start border-dark o_builder_sidebar_open" t-ref="sidebarRef">
+                        <LazyComponent t-if="state.ready" Component="'mass_mailing_egg.MassMailingBuilder'"
+                            props="() => ({ builderProps: this.getBuilderProps() })"
+                            bundle="'mass_mailing_egg.assets_builder'"/>
+                    </div>
                 </div>
             </div>
         </div>

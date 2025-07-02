@@ -5,6 +5,7 @@ import {
     onWillDestroy,
     status,
     useEffect,
+    useRef,
     useState,
     useSubEnv,
 } from "@odoo/owl";
@@ -15,6 +16,8 @@ import { useChildRef, useForwardRefToParent, useService } from "@web/core/utils/
 import { renderToString } from "@web/core/utils/render";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { Editor } from "@html_editor/editor";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
+import { closestScrollableY } from "@web/core/utils/scrolling";
 
 const IFRAME_VALUE_SELECTOR = ".o_mass_mailing_value";
 
@@ -48,6 +51,7 @@ export class MassMailingIframe extends Component {
         this.hotkeyService = useService("hotkey");
         this.overlayRef = useChildRef();
         this.iframeRef = useForwardRefToParent("iframeRef");
+        this.sidebarRef = useRef("sidebarRef");
         useSubEnv({
             localOverlayContainerKey: uniqueId("mass_mailing_iframe"),
         });
@@ -88,6 +92,72 @@ export class MassMailingIframe extends Component {
             });
             this.setupBasicEditor();
         }
+        const iframeResize = () => {
+            const iframe = this.iframeRef.el;
+            if (this.state.showFullscreen) {
+                iframe.style.height = "100%";
+            } else {
+                const height = Math.trunc(
+                    iframe.contentDocument.body
+                        .querySelector(IFRAME_VALUE_SELECTOR)
+                        .getBoundingClientRect().height
+                );
+                iframe.style.height = height + "px";
+            }
+        };
+        const sidebarResize = () => {
+            const sidebar = this.sidebarRef.el;
+            const iframe = this.iframeRef.el;
+            if (!sidebar) {
+                return;
+            }
+            if (this.state.showFullscreen) {
+                sidebar.style.top = "0";
+                sidebar.style.height = "100%";
+            } else if (this.env.inDialog) {
+                // TODO EGGMAIL: test this for marketing automation
+                const scrollableY = closestScrollableY(sidebar);
+                if (scrollableY) {
+                    const rect = scrollableY.getBoundingClientRect();
+                    sidebar.style.height = `${rect.height}px`;
+                    sidebar.style.top = "0";
+                }
+            } else {
+                const scrollableY = closestScrollableY(sidebar);
+                let stickyHeight = 0;
+                let stickyZindex = 0;
+                if (scrollableY) {
+                    const statusBar = scrollableY.querySelector(".o_form_statusbar");
+                    if (statusBar) {
+                        const statusBarStyle = getComputedStyle(statusBar);
+                        if (statusBarStyle.position === "sticky") {
+                            stickyHeight += statusBar.getBoundingClientRect().height;
+                        }
+                        stickyZindex = parseInt(statusBarStyle.zIndex) || 0;
+                    }
+                }
+                const top = scrollableY
+                    ? `${
+                          -1 * (parseInt(getComputedStyle(scrollableY).paddingTop) || 0) +
+                          stickyHeight
+                      }px`
+                    : `${stickyHeight}px`;
+                const maxHeight = iframe.getBoundingClientRect().height;
+                const offsetHeight =
+                    window.innerHeight -
+                    stickyHeight -
+                    document.querySelector(".o_content").getBoundingClientRect().y;
+                sidebar.style.height = `${Math.min(maxHeight, offsetHeight)}px`;
+                sidebar.style.top = top;
+                if (stickyZindex > 0) {
+                    sidebar.style.zIndex = `${stickyZindex - 1}`;
+                }
+            }
+        };
+        this.throttledResize = useThrottleForAnimation(() => {
+            iframeResize();
+            sidebarResize();
+        });
     }
 
     async setupIframe() {
@@ -96,17 +166,7 @@ export class MassMailingIframe extends Component {
         if (status(this) === "destroyed") {
             return;
         }
-        const htmlResizeObserver = new ResizeObserver(() => {
-            const height = Math.trunc(
-                this.iframeRef.el.contentDocument.body
-                    .querySelector(IFRAME_VALUE_SELECTOR)
-                    .getBoundingClientRect().height
-            );
-            this.iframeRef.el.style.height = height + "px";
-            // this.iframeRef.el.style.height = height + "px";
-            // console.log('coucou');
-            // debugger;
-        });
+        const htmlResizeObserver = new ResizeObserver(this.throttledResize);
         // Set `ready` symbol for tours
         this.iframeRef.el.contentDocument.head.appendChild(this.renderHeadContent());
         this.iframeRef.el.contentDocument.body.appendChild(this.renderBodyContent());

@@ -7,7 +7,15 @@ body:not(.o_mass_mailing_iframe_fullscreen) {
     .note-editable {
         overflow: visible;
         height: auto;
-        border: none;
+        .o_layout {
+            min-height: 0 !important;
+        }
+    }
+}
+
+body {
+    .note-editable {
         padding: 0;
+        border: none;
     }
 }
