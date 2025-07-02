@@ -97,10 +97,15 @@ export function usePosition(refName, getTarget, options = {}) {
             const targetDocument = getTarget()?.ownerDocument;
             targetDocument?.addEventListener("scroll", scrollListener, { capture: true });
             targetDocument?.addEventListener("load", throttledUpdate, { capture: true });
+            const containerDocument = options.container?.()?.ownerDocument;
+            containerDocument?.addEventListener("scroll", scrollListener, { capture: true });
+            containerDocument?.addEventListener("load", throttledUpdate, { capture: true });
             window.addEventListener("resize", throttledUpdate);
             return () => {
                 targetDocument?.removeEventListener("scroll", scrollListener, { capture: true });
                 targetDocument?.removeEventListener("load", throttledUpdate, { capture: true });
+                containerDocument?.removeEventListener("scroll", scrollListener, { capture: true });
+                containerDocument?.removeEventListener("load", throttledUpdate, { capture: true });
                 window.removeEventListener("resize", throttledUpdate);
             };
         }

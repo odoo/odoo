@@ -218,6 +218,7 @@ export class BlockTab extends Component {
             el: this.blockTabRef.el,
             elements: ".o_snippet.o_draggable",
             scrollingElement,
+            externalScroll: () => Boolean(this.props.getExternalScrollableAncestor?.()),
             handle: ".o_snippet_thumbnail:not(.o_we_ongoing_insertion .o_snippet_thumbnail)",
             dropzones: () => dropzoneEls,
             helper: ({ element, helperOffset }) => {

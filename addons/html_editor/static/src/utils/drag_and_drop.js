@@ -102,6 +102,7 @@ const dragAndDropHookParams = {
         scrollingElement: [Function],
         helper: [Function],
         extraWindow: [Object, Function],
+        externalScroll: [Function],
     },
     edgeScrolling: { enabled: true },
     onComputeParams({ ctx, params }) {
@@ -110,10 +111,18 @@ const dragAndDropHookParams = {
         ctx.getScrollingElement = params.scrollingElement;
         ctx.getHelper = params.helper;
         ctx.getDropZones = params.dropzones;
+        ctx.hasExternalScroll = params.externalScroll;
     },
     onWillStartDrag: ({ ctx }) => {
         ctx.current.container = ctx.getScrollingElement();
-        ctx.current.helperOffset = { x: 0, y: 0 };
+        ctx.current.hasExternalScroll = ctx.hasExternalScroll();
+        ctx.current.helperOffset = {
+            x: 0,
+            y: 0,
+            originalScrollTop: ctx.current.hasExternalScroll
+                ? ctx.getScrollingElement().scrollTop
+                : 0,
+        };
     },
     onDragStart: ({ ctx, addStyle, addCleanup }) => {
         // Use the helper as the tracking element to properly update scroll values.
@@ -145,10 +154,12 @@ const dragAndDropHookParams = {
         updateElementPosition(ctx.current.helper, ctx.pointer, addStyle, ctx.current.helperOffset);
         // Unfortunately, DOMRect is not an Object, so spreading operator from
         // `touching` does not work, so convert DOMRect to plain object.
+        const scrollOffset =
+            ctx.current.container.scrollTop - ctx.current.helperOffset.originalScrollTop;
         let helperRect = ctx.current.helper.getBoundingClientRect();
         helperRect = {
             x: helperRect.x,
-            y: helperRect.y,
+            y: helperRect.y + (ctx.current.hasExternalScroll ? scrollOffset : 0),
             width: helperRect.width,
             height: helperRect.height,
         };

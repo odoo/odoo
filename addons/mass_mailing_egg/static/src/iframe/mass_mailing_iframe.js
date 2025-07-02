@@ -289,6 +289,7 @@ export class MassMailingIframe extends Component {
             // Plugins => provide plugins selection, properly filter excluded Plugins
             isMobile: this.state.isMobile,
             toggleMobile: () => {
+                this.iframeRef.el.contentDocument.body.scrollTop = 0;
                 this.state.isMobile = !this.state.isMobile;
                 this.throttledResize();
             },
