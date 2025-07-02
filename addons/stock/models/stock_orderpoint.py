@@ -535,9 +535,12 @@ class StockWarehouseOrderpoint(models.Model):
             else:
                 orderpoint_values = self.env['stock.warehouse.orderpoint']._get_orderpoint_values(product, location_id)
                 location = self.env['stock.location'].browse(location_id)
+                warehouse = location.warehouse_id or self.env['stock.warehouse'].search([('company_id', '=', location.company_id.id)], limit=1)
+                if not warehouse:
+                    self.env['stock.warehouse']._warehouse_redirect_warning()
                 orderpoint_values.update({
                     'name': _('Replenishment Report'),
-                    'warehouse_id': location.warehouse_id.id or self.env['stock.warehouse'].search([('company_id', '=', location.company_id.id)], limit=1).id,
+                    'warehouse_id': warehouse.id,
                     'company_id': location.company_id.id,
                 })
                 orderpoint_values_list.append(orderpoint_values)
