@@ -92,7 +92,7 @@ export class PosOrderline extends Base {
             unitPart = "" + this.qty;
         }
         return {
-            qtyStr: unitPart + (decimalPart ? decimalPoint + decimalPart : ""),
+            qtyStr: unitPart + (decimalPart || ""),
             unitPart: unitPart,
             decimalPart: decimalPart,
         };
