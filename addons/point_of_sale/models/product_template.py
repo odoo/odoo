@@ -6,7 +6,6 @@ from odoo.tools import SQL, is_html_empty
 from itertools import groupby
 from operator import itemgetter
 from datetime import date
-from odoo.osv import expression
 from odoo.fields import Domain
 
 
@@ -93,10 +92,10 @@ class ProductTemplate(models.Model):
             if product_tmpl.type == 'combo':
                 product_tmpls += product_tmpl.combo_ids.combo_item_ids.product_id.product_tmpl_id
 
-        combo_domain = [('id', 'in', product_tmpls.combo_ids.ids)]
+        combo_domain = Domain('id', 'in', product_tmpls.combo_ids.ids)
         combo_records = self.env['product.combo'].search(combo_domain)
         combo_read = self.env['product.combo']._load_pos_data_read(combo_records, config)
-        combo_item_domain = [('combo_id', 'in', product_tmpls.combo_ids.ids)]
+        combo_item_domain = Domain('combo_id', 'in', product_tmpls.combo_ids.ids)
         combo_item_records = self.env['product.combo.item'].search(combo_item_domain)
         combo_item_read = self.env['product.combo.item']._load_pos_data_read(combo_item_records, config)
 
@@ -129,14 +128,13 @@ class ProductTemplate(models.Model):
         product_tmpl_read = self._load_pos_data_read(product_tmpls, config)
 
         # product.uom loading
-        packaging_domain = Domain([('product_id', 'in', products.ids)])
-        conditions = list(domain_obj.iter_conditions())
-        barcode_in_domain = any('barcode' in condition.field_expr for condition in conditions)
+        packaging_domain = Domain('product_id', 'in', products.ids)
+        barcode_in_domain = any('barcode' in condition.field_expr for condition in domain.iter_conditions())
 
         if barcode_in_domain:
-            barcode = [condition.value for condition in conditions if 'barcode' in condition.field_expr]
+            barcode = [condition.value for condition in domain.iter_conditions() if 'barcode' in condition.field_expr]
             flat = [item for sublist in barcode for item in sublist]
-            packaging_domain = expression.OR([packaging_domain, [('barcode', 'in', flat)]])
+            packaging_domain |= Domain('barcode', 'in', flat)
 
         product_uom = self.env['product.uom']
         packaging = product_uom.search(packaging_domain)
@@ -145,8 +143,8 @@ class ProductTemplate(models.Model):
 
         # account.tax loading
         account_tax = self.env['account.tax']
-        tax_domain = account_tax._check_company_domain(config.company_id.id)
-        tax_domain = expression.AND([tax_domain, [['id', 'in', product_tmpls.taxes_id.ids]]])
+        tax_domain = Domain(account_tax._check_company_domain(config.company_id.id))
+        tax_domain &= Domain('id', 'in', product_tmpls.taxes_id.ids)
         tax_read = account_tax._load_pos_data_read(account_tax.search(tax_domain), config)
 
         return {

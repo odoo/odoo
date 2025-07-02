@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from odoo.osv.expression import AND
 
 
 class ProductAttribute(models.Model):
@@ -48,15 +47,16 @@ class ProductTemplateAttributeValue(models.Model):
     def _load_pos_data_domain(self, data, config):
         ptav_ids = {ptav_id for p in data['product.product'] for ptav_id in p['product_template_variant_value_ids']}
         ptav_ids.update({ptav_id for ptal in data['product.template.attribute.line'] for ptav_id in ptal['product_template_value_ids']})
-        return AND([
-            [('ptav_active', '=', True)],
-            [('attribute_id', 'in', [attr['id'] for attr in data['product.attribute']])],
-            [('id', 'in', list(ptav_ids))]
-        ])
+        return [
+            ('ptav_active', '=', True),
+            ('attribute_id', 'in', [attr['id'] for attr in data['product.attribute']]),
+            ('id', 'in', list(ptav_ids)),
+        ]
 
     @api.model
     def _load_pos_data_fields(self, config):
         return ['attribute_id', 'attribute_line_id', 'product_attribute_value_id', 'price_extra', 'name', 'is_custom', 'html_color', 'image', 'exclude_for']
+
 
 class ProductTemplateAttributeExclusion(models.Model):
     _name = 'product.template.attribute.exclusion'

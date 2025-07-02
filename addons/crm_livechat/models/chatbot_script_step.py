@@ -3,7 +3,7 @@
 from ast import literal_eval
 
 from odoo import models, fields
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import html2plaintext
 
 
@@ -84,14 +84,9 @@ class ChatbotScriptStep(models.Model):
         teams = lead.team_id
         if not teams:
             possible_teams = self.env["crm.team"].search(
-                expression.AND(
-                    [
-                        [("assignment_optout", "=", False)],
-                        expression.OR(
-                            [[("use_leads", "=", True)], [("use_opportunities", "=", True)]]
-                        ),
-                    ]
-                )
+                Domain("assignment_optout", "=", False) & (
+                    Domain("use_leads", "=", True) | Domain("use_opportunities", "=", True)
+                ),
             )
             teams = possible_teams.filtered(
                 lambda team: team.assignment_max

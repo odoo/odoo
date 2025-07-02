@@ -4,7 +4,6 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.fields import Domain
-from odoo.osv import expression
 from odoo.tools import formatLang
 
 
@@ -95,12 +94,12 @@ class ProductProduct(models.Model):
 
     def _get_lines_domain(self, location_ids=False, warehouse_ids=False):
         domains = []
-        rfq_domain = [
-            ('state', 'in', ('draft', 'sent', 'to approve')),
-            ('product_id', 'in', self.ids)
-        ]
+        rfq_domain = (
+            Domain('state', 'in', ('draft', 'sent', 'to approve'))
+            & Domain('product_id', 'in', self.ids)
+        )
         if location_ids:
-            domains.append([
+            domains.append(Domain([
                 '|',
                     '&',
                     ('orderpoint_id', '=', False),
@@ -114,9 +113,9 @@ class ProductProduct(models.Model):
                     '&',
                         ('move_dest_ids', '=', False),
                         ('orderpoint_id.location_id', 'in', location_ids)
-            ])
+            ]))
         if warehouse_ids:
-            domains.append([
+            domains.append(Domain([
                 '|',
                     '&',
                         ('orderpoint_id', '=', False),
@@ -124,9 +123,8 @@ class ProductProduct(models.Model):
                     '&',
                         ('move_dest_ids', '=', False),
                         ('orderpoint_id.warehouse_id', 'in', warehouse_ids)
-            ])
-        domains = expression.OR(domains) if domains else []
-        return expression.AND([rfq_domain, domains])
+            ]))
+        return rfq_domain & Domain.OR(domains or [Domain.TRUE])
 
 
 class ProductSupplierinfo(models.Model):

@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.osv.expression import AND
+from odoo.fields import Domain
 
 from odoo.addons.payment_custom import const
 
@@ -54,7 +54,7 @@ class PaymentProvider(models.Model):
     def _get_provider_domain(self, provider_code, *, custom_mode='', **kwargs):
         res = super()._get_provider_domain(provider_code, custom_mode=custom_mode, **kwargs)
         if provider_code == 'custom' and custom_mode:
-            return AND([res, [('custom_mode', '=', custom_mode)]])
+            return Domain.AND([res, [('custom_mode', '=', custom_mode)]])
         return res
 
     @api.model
