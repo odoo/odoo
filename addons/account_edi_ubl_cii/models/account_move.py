@@ -73,11 +73,12 @@ class AccountMove(models.Model):
             for partner in self.commercial_partner_id
             if (suggested_format := partner ._get_suggested_ubl_cii_edi_format())
         }
-        if self.state == 'posted' and (self.ubl_cii_xml_id or suggested_edi_formats):
+        posted_invoices = self.filtered(lambda move: move.state == 'posted')
+        if posted_invoices.ubl_cii_xml_id or suggested_edi_formats:
             print_items.append({
                 'key': 'download_ubl',
                 'description': _('Export XML'),
-                **self.action_invoice_download_ubl(),
+                **posted_invoices.action_invoice_download_ubl(),
             })
         return print_items
 
