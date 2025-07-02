@@ -2,7 +2,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { rpc } from "@web/core/network/rpc";
-import { startAuthentication } from "../../lib/simplewebauthn.js";
+import * as passkeyLib from "../../lib/simplewebauthn.js";
 
 export class PasskeyLogin extends Interaction {
     static selector = ".passkey_login_link";
@@ -12,7 +12,7 @@ export class PasskeyLogin extends Interaction {
 
     async onClick() {
         const serverOptions = await this.waitFor(rpc("/auth/passkey/start-auth"));
-        const auth = await this.waitFor(startAuthentication(serverOptions).catch(e => console.error(e)));
+        const auth = await this.waitFor(passkeyLib.startAuthentication(serverOptions).catch(e => console.error(e)));
         if (!auth) {
             return false;
         }
