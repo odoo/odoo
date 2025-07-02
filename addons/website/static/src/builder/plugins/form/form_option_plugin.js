@@ -60,6 +60,7 @@ export class FormOptionPlugin extends Plugin {
             {
                 Component: FormOptionAddFieldButton,
                 selector: ".s_website_form",
+                exclude: ".o_payment_form_field_container",
                 applyTo: "form",
                 props: {
                     addField: (formEl) => this.addFieldToForm(formEl),
@@ -1153,8 +1154,10 @@ export class SetVisibilityDependencyAction extends BuilderAction {
 export class SetFormCustomFieldValueListAction extends BuilderAction {
     static id = "setFormCustomFieldValueList";
     static dependencies = ["websiteFormOption"];
-    apply({ editingElement: fieldEl, value }) {
-        const fields = [];
+    load(context) {
+        return this.dependencies.websiteFormOption.prepareFields(context);
+    }
+    apply({ editingElement: fieldEl, value, loadResult: fields }) {
         const field = getActiveField(fieldEl, { fields });
         field.records = JSON.parse(value);
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);

@@ -7,7 +7,7 @@ import { renderToMarkup } from '@web/core/utils/render';
 import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
-    selector: '#o_payment_form',
+    selector: ".payment_form_container",
     events: Object.assign({}, publicWidget.Widget.prototype.events, {
         'click [name="o_payment_radio"]': '_selectPaymentOption',
         'click [name="o_payment_delete_token"]': '_fetchTokenData',
@@ -31,8 +31,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     async start() {
         // Synchronously initialize paymentContext before any await.
         this.paymentContext = {};
-        Object.assign(this.paymentContext, this.el.dataset);
-
+        Object.assign(this.paymentContext, this.el.querySelector("#o_payment_form").dataset);
         await this._super(...arguments);
 
         // Expand the payment form of the selected payment option if there is only one.
@@ -512,7 +511,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {Element | null} The inline form of the selected payment option, if any.
      */
     _getInlineForm(radio) {
-        const inlineFormContainer = radio.closest('[name="o_payment_option"]');
+        const inlineFormContainer = radio?.closest('[name="o_payment_option"]');
         return inlineFormContainer?.querySelector('[name="o_payment_inline_form"]');
     },
 
