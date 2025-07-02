@@ -25,7 +25,7 @@ PaymentForm.include({
             const otherAmountEl = this.el.querySelector("#other_amount");
             // Update paymentContext of second form as amount is mentioned
             // on second's dataset.
-            document.querySelector(".o_payment_form").dataset.amount = ev.target.value;
+            this.el.dataset.amount = ev.target.value;
             if (ev.target.id === "other_amount_value" && otherAmountEl) {
                 otherAmountEl.value = ev.target.value;
             }
@@ -53,8 +53,8 @@ PaymentForm.include({
         ev.stopPropagation();
         ev.preventDefault();
 
-        const donationAmountInputEl = document.querySelector("#other_amount_value");
-        const otherAmountRadioEl = document.querySelector("#other_amount");
+        const donationAmountInputEl = this.el.querySelector("#other_amount_value");
+        const otherAmountRadioEl = this.el.querySelector("#other_amount");
         const considerAmountInput = otherAmountRadioEl ? otherAmountRadioEl.checked : true;
         if (
             donationAmountInputEl &&
@@ -62,8 +62,8 @@ PaymentForm.include({
             (!donationAmountInputEl.value || parseFloat(donationAmountInputEl.value) <= 0)
         ) {
             // If the warning message is already displayed, we don't need to display it again.
-            if (document.querySelector("#warning_min_message_id").classList.contains("d-none")) {
-                document.querySelector("#warning_message_id").classList.remove("d-none");
+            if (this.el.querySelector("#warning_min_message_id").classList.contains("d-none")) {
+                this.el.querySelector("#warning_message_id").classList.remove("d-none");
             }
             return donationAmountInputEl.focus();
         }
@@ -95,8 +95,7 @@ PaymentForm.include({
             // This code is added here because setting a custom field as
             // required in the form does not work. So, we are manually checking
             // if thefield is mandatory.
-            const paymentFormFields = document.querySelector(".o_payment_form_field_container");
-            paymentFormFields.querySelectorAll(".s_website_form_required").forEach((field) => {
+            this.el.querySelectorAll(".s_website_form_required").forEach((field) => {
                 const inputEl = field.querySelector("input, select, textarea");
                 if (inputEl && inputEl.name) {
                     mandatoryFields[inputEl.name] = field.textContent.trim();
@@ -105,7 +104,7 @@ PaymentForm.include({
 
             let firstInvalidFieldEl;
             for (const id in mandatoryFields) {
-                const fieldEl = paymentFormFields.querySelector(`input[name="${id}"], select[name="${id}"], textarea[name="${id}"]`);
+                const fieldEl = this.el.querySelector(`input[name="${id}"], select[name="${id}"], textarea[name="${id}"]`);
                 const isInvalid =
                     !fieldEl.value.trim() || (id === "email" && !fieldEl.checkValidity());
                 fieldEl.classList.toggle("is-invalid", isInvalid);
@@ -136,22 +135,18 @@ PaymentForm.include({
     _prepareTransactionRouteParams() {
         const transactionRouteParams = this._super(...arguments);
 
-        // To update the amount after change it from form.
-        // The paymentContext['amount'] is in second form. So, The amount
-        // doesn't get updated after we change it through form.
-        transactionRouteParams.amount = parseFloat(
-            document.querySelector(".o_payment_form").dataset.amount
-        );
-
         const getFormData = (formSelector) => {
-            const form = document.querySelector(formSelector);
+            const form = this.el.querySelector(formSelector);
             if (!form) {
                 return {};
             }
-            const formData = new FormData(form)
+            const formData = new FormData(form);
             const partnerDetails = {};
             formData.forEach((value, key) => {
-                partnerDetails[key] = value;
+                const field = form.querySelector(`[name="${CSS.escape(key)}"]`);
+                if (form.querySelector(".s_website_form_rows")?.contains(field)) {
+                    partnerDetails[key] = value;
+                }
             });
             return partnerDetails;
         };
@@ -165,8 +160,8 @@ PaymentForm.include({
                     ? parseInt(this.paymentContext['currencyId']) : null,
             reference_prefix:this.paymentContext['referencePrefix']?.toString(),
             partner_details: partnerDetails,
-            donation_comment: document.querySelector("#donation_comment").value,
-            donation_recipient_email: document.querySelector(
+            donation_comment: this.el.querySelector("#donation_comment").value,
+            donation_recipient_email: this.el.querySelector(
                 'input[name="donation_recipient_email"]'
             ).value,
         } : transactionRouteParams;
