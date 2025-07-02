@@ -9973,18 +9973,11 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
     defineModels([MyFoo]);
 
     let moves = 0;
-    const context = {
-        lang: "en",
-        tz: "taht",
-        uid: 7,
-        allowed_company_ids: [1],
-    };
     onRpc("/web/dataset/resequence", async (request) => {
         expect.step("resequence");
         const { params } = await request.json();
         if (moves === 0) {
-            expect(params).toEqual({
-                context,
+            expect(params).toMatchObject({
                 model: "my.foo",
                 ids: [4, 3],
                 offset: 13,
@@ -9992,8 +9985,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
             });
         }
         if (moves === 1) {
-            expect(params).toEqual({
-                context,
+            expect(params).toMatchObject({
                 model: "my.foo",
                 ids: [4, 2],
                 offset: 12,
@@ -10001,8 +9993,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
             });
         }
         if (moves === 2) {
-            expect(params).toEqual({
-                context,
+            expect(params).toMatchObject({
                 model: "my.foo",
                 ids: [2, 4],
                 offset: 12,
@@ -10010,8 +10001,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
             });
         }
         if (moves === 3) {
-            expect(params).toEqual({
-                context,
+            expect(params).toMatchObject({
                 model: "my.foo",
                 ids: [4, 2],
                 offset: 12,

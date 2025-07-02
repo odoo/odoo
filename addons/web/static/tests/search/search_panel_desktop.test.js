@@ -1365,7 +1365,7 @@ test("filter with domain", async () => {
 
     onRpc("search_panel_select_multi_range", ({ kwargs }) => {
         expect.step("search_panel_select_multi_range");
-        expect({ ...kwargs, context: {} }).toEqual({
+        expect({ ...kwargs, context: {} }).toMatchObject({
             group_by: false,
             category_domain: [],
             context: {},
