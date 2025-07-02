@@ -2116,7 +2116,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
      * @override
      */
     isPreviewed: function () {
-        return this._super(...arguments) || this.picker.isOpen;
+        return this._super(...arguments) || this.picker.isOpen();
     },
     /**
      * @override

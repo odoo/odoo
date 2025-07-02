@@ -7,22 +7,25 @@ export class PurchaseDatetimePicker extends Interaction {
     static selector = ".o-purchase-datetimepicker";
 
     start() {
-        this.registerCleanup(this.services.datetime_picker
-            .create({
-                target: this.el,
-                onChange: (newDate) => {
-                    const { accessToken, orderId, lineId } = this.el.dataset;
-                    this.waitFor(
-                        rpc(`/my/purchase/${orderId}/update?access_token=${accessToken}`, {
-                            [lineId]: newDate.toISODate(),
-                        })
-                    );
-                },
-                pickerProps: {
-                    type: "date",
-                    value: luxon.DateTime.fromISO(this.el.dataset.value),
-                },
-            }).enable());
+        this.registerCleanup(
+            this.services.datetime_picker
+                .create({
+                    target: this.el,
+                    onChange: (newDate) => {
+                        const { accessToken, orderId, lineId } = this.el.dataset;
+                        this.waitFor(
+                            rpc(`/my/purchase/${orderId}/update?access_token=${accessToken}`, {
+                                [lineId]: newDate.toISODate(),
+                            })
+                        );
+                    },
+                    pickerProps: {
+                        type: "date",
+                        value: luxon.DateTime.fromISO(this.el.dataset.value),
+                    },
+                })
+                .enable()
+        );
     }
 }
 
