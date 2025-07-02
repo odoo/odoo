@@ -1681,6 +1681,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             if also_livechat:
                 res["offline_since"] = False
                 res["user_livechat_username"] = False
+                res["email"] = user.email
             return res
         if user == self.users[2]:
             if only_inviting:
