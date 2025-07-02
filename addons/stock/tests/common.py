@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 from odoo.tests import common
 
 
@@ -110,3 +111,8 @@ class TestStockCommon(common.TransactionCase):
             (4, cls.env.ref('base.group_multi_company').id),
             (4, cls.env.ref('stock.group_production_lot').id),
         ]})
+
+    def url_extract_rec_id_and_model(self, url):
+        rec_id = re.findall(r'[?&]id=([^&]+).*', url)
+        model_name = re.findall(r'[?&]model=([^&]+).*', url)
+        return rec_id, model_name
