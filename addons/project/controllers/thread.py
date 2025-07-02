@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 from odoo.addons.mail.controllers import thread
 
 
@@ -19,7 +19,7 @@ class ThreadController(thread.ThreadController):
                     ("res_id", "=", thread.project_id.id),
                     ("partner_id", "in", partners.ids),
                 ]
-                domain = expression.OR([domain, project_domain])
+                domain = Domain.OR([domain, project_domain])
             # sudo: mail.followers - filtering partners that are followers is acceptable
             return request.env["mail.followers"].sudo().search(domain).partner_id
         return super()._filter_message_post_partners(thread, partners)
