@@ -45,6 +45,8 @@ test("autocomplete should shown and able to edit the link", async () => {
     // autocomplete dropdown should be there
     await press(["ctrl", "a"]);
     await press("c");
+    // Should update preview with typed URL.
+    expect(cleanLinkArtifacts(getContent(el))).toBe('<p>this is a <a href="c">link</a></p>');
     await waitFor(".o-autocomplete--dropdown-menu", { timeout: 3000 });
     expect.verifySteps(["/website/get_suggested_links"]);
 
@@ -52,6 +54,10 @@ test("autocomplete should shown and able to edit the link", async () => {
     expect(".o-autocomplete--dropdown-item img").toHaveCount(1);
 
     await click(".o-autocomplete--dropdown-item:first");
+    // Should update preview with selected item.
+    expect(cleanLinkArtifacts(getContent(el))).toBe(
+        '<p>this is a <a href="/contactus">link</a></p>'
+    );
     await click(".o_we_apply_link");
     // the url should be applied after selecting a dropdown item
     expect(cleanLinkArtifacts(getContent(el))).toBe(

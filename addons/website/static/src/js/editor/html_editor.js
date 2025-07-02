@@ -123,9 +123,11 @@ patch(LinkPopover.prototype, {
 
     onSelect(value) {
         this.state.url = value;
+        this.onChange();
     },
 
     updateValue(val) {
         this.state.url = val;
+        this.onChange();
     },
 });
