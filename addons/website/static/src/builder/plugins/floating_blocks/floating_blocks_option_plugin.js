@@ -17,7 +17,7 @@ export class FloatingBlocksOptionPlugin extends Plugin {
         ],
         builder_actions: {
             FloatingBlocksRoundnessAction,
-            AddCardAction,
+            AddFloatingBlockCardAction,
         },
     };
 }
@@ -39,8 +39,8 @@ export class FloatingBlocksRoundnessAction extends BuilderAction {
         editingElement.classList.add(`rounded-${value}`);
     }
 }
-export class AddCardAction extends BuilderAction {
-    static id = "addCard";
+export class AddFloatingBlockCardAction extends BuilderAction {
+    static id = "addFloatingBlockCard";
     apply({ editingElement: el }) {
         const newCardEl = renderToElement("website.s_floating_blocks.new_card");
         const wrapperEl = el.querySelector(".s_floating_blocks_wrapper");
