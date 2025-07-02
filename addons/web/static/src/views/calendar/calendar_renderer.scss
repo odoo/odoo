@@ -229,8 +229,8 @@
         // ====== Both Day and Week agenda
         .fc-timeGridDay-view,
         .fc-timeGridWeek-view {
-            --o-cw-bg: #{$o-cw-color-today-accent};
-            --o-cw-color: #{color-contrast($o-cw-color-today-accent)};
+            --o-cw-bg: #{$o-calendar-today-background-color};
+            --o-cw-color: #{$o-calendar-today-color};
 
             .fc-scrollgrid-section-body {
                 &:not(.fc-scrollgrid-section-liquid) .fc-scroller-harness {
@@ -472,8 +472,8 @@
                     }
 
                     &.fc-day-today {
-                        --o-cw-color: #{color-contrast($o-cw-color-today-accent)};
-                        --o-cw-bg: #{$o-cw-color-today-accent};
+                        --o-cw-color: #{$o-calendar-today-color};
+                        --o-cw-bg: #{$o-calendar-today-background-color};
 
                     }
                 }
