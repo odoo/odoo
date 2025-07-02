@@ -18,6 +18,9 @@ logger = logging.getLogger(__name__)
 MODULES_TO_LINT = (
     'base',
 )
+MODULES_TO_LINT_ONLY_PUBLIC_METHODS = (
+    'helpdesk',
+)
 
 POSITIONAL_ONLY = inspect.Parameter.POSITIONAL_ONLY
 POSITIONAL_OR_KEYWORD = inspect.Parameter.POSITIONAL_OR_KEYWORD
@@ -189,10 +192,21 @@ class TestDocstring(BaseCase):
                 if not method.__doc__:
                     continue
 
-                settings = self.doctree_settings_verbose if (
-                    (model_cls._original_module or model_name).startswith(MODULES_TO_LINT)
-                    and not (parent_class._name or '').startswith('mail.')  # until we lint mail
-                ) else self.doctree_settings_silent
+                if (parent_class._name or '').startswith('mail.'):
+                    # don't lint the mail mixins (until we lint them)
+                    settings = self.doctree_settings_silent
+                elif (model_cls._original_module or model_name).startswith(MODULES_TO_LINT):
+                    # lint all methods
+                    settings = self.doctree_settings_verbose
+                elif (
+                    (model_cls._original_module or model_name).startswith(MODULES_TO_LINT_ONLY_PUBLIC_METHODS)
+                    and not method_name.startswith('_')
+                ):
+                    # lint only public methods
+                    settings = self.doctree_settings_verbose
+                else:
+                    # don't lint anything
+                    settings = self.doctree_settings_silent
 
                 with self.subTest(
                     module=parent_class._module,
