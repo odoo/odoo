@@ -2,8 +2,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.fields import Command
-from odoo.osv import expression
+from odoo.fields import Command, Domain
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING
@@ -137,10 +136,8 @@ class PaymentMethod(models.Model):
         blocking_tokenization = self._origin.support_tokenization and not self.support_tokenization
         if disabling or detached_providers or blocking_tokenization:
             related_tokens = self.env['payment.token'].with_context(active_test=True).search(
-                expression.AND([
-                    [('payment_method_id', 'in', (self._origin + self._origin.brand_ids).ids)],
-                    [('provider_id', 'in', detached_providers.ids)] if detached_providers else [],
-                ])
+                Domain('payment_method_id', 'in', (self._origin + self._origin.brand_ids).ids)
+                & (Domain('provider_id', 'in', detached_providers.ids) if detached_providers else Domain.TRUE),
             )  # Fix `active_test` in the context forwarded by the view.
             if related_tokens:
                 return {
@@ -202,10 +199,8 @@ class PaymentMethod(models.Model):
         blocking_tokenization = values.get('support_tokenization') is False
         if archiving or detached_provider_ids or blocking_tokenization:
             linked_tokens = self.env['payment.token'].with_context(active_test=True).search(
-                expression.AND([
-                    [('payment_method_id', 'in', (self + self.brand_ids).ids)],
-                    [('provider_id', 'in', detached_provider_ids)] if detached_provider_ids else [],
-                ])
+                Domain('payment_method_id', 'in', (self + self.brand_ids).ids)
+                & (Domain('provider_id', 'in', detached_provider_ids) if detached_provider_ids else Domain.TRUE),
             )  # Fix `active_test` in the context forwarded by the view.
             linked_tokens.active = False
 

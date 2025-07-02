@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, api
-from odoo.osv.expression import AND
+from odoo import api, models
+from odoo.fields import Domain
 
 
 class PosLoadMixin(models.AbstractModel):
@@ -36,7 +36,7 @@ class PosLoadMixin(models.AbstractModel):
         model_included = self._name not in ['pos.session', 'pos.config']
 
         if limited_loading and last_server_date and model_included:
-            domain = AND([domain, [('write_date', '>', last_server_date)]])
+            domain = Domain.AND([domain, [('write_date', '>', last_server_date)]])
 
         return domain
 
