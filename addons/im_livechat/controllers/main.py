@@ -173,6 +173,11 @@ class LivechatController(http.Controller):
                      "scrollUnread": False,
                  },
              )
+        if not request.env.user._is_public():
+            store.add(
+                request.env.user.partner_id,
+                {"email": request.env.user.partner_id.email},
+            )
         return {
             "store_data": store.get_result(),
             "channel_id": channel_id,
