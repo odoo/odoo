@@ -849,12 +849,14 @@ export class ListPlugin extends Plugin {
             ...params,
             blockToSplit: closestLI,
         });
-        if (closestLI.classList.contains("o_checked")) {
-            removeClass(newLI, "o_checked");
+        if (newLI) {
+            if (closestLI.classList.contains("o_checked")) {
+                removeClass(newLI, "o_checked");
+            }
+            const [anchorNode, anchorOffset] = getDeepestPosition(newLI, 0);
+            this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+            this.adjustListPadding(newLI.parentElement);
         }
-        const [anchorNode, anchorOffset] = getDeepestPosition(newLI, 0);
-        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
-        this.adjustListPadding(newLI.parentElement);
         return true;
     }
 
