@@ -1060,7 +1060,7 @@ export class ListPlugin extends Plugin {
             ) * 2; // 2rem
         // Align the whole list based on the item that requires the largest padding.
         const requiredPaddings = [...list.children].map((li) => {
-            const markerWidth = Math.floor(
+            const markerWidth = Math.round(
                 parseFloat(this.document.defaultView.getComputedStyle(li, "::marker").width)
             );
             // For `UL` with large font size the marker width is so big that more padding is needed.
