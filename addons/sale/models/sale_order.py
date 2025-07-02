@@ -2191,3 +2191,10 @@ class SaleOrder(models.Model):
         :return: None
         """
         self.with_context(send_email=True).action_confirm()
+
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Quotations'),
+            'template': '/sale/static/xls/quotations_import_template.xlsx',
+        }]

@@ -23,3 +23,4 @@ from . import test_sale_report
 from . import test_taxes_downpayment
 from . import test_taxes_global_discount
 from . import test_taxes_tax_totals_summary
+from . import test_import_files
