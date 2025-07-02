@@ -4,20 +4,18 @@
         <field name="name">cloud_storage_config_settings_view_form</field>
         <field name="model">res.config.settings</field>
         <field name="priority" eval="70"/>
-        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//form" position="inside" >
-                <app data-string="Cloud Storage" string="Cloud Storage" name="cloud_storage">
-                    <block title="Cloud Storage Settings">
-                        <setting id="cloud_storage_provider" help="Select the cloud storage provider to store new attachments.">
-                            <field name="cloud_storage_provider"/>
-                        </setting>
-                        <setting help="Minimum size(bytes) for attachments to be stored in the cloud storage"
-                                 id="cloud_storage_min_file_size">
-                            <field name="cloud_storage_min_file_size"/>
-                        </setting>
-                    </block>
-                </app>
+            <xpath expr="//block[@name='integration']" position="after">
+                <block title="Cloud Storage" name="cloud_storage">
+                    <setting id="cloud_storage_provider" help="Select the cloud storage provider to store new attachments.">
+                        <field name="cloud_storage_provider"/>
+                    </setting>
+                    <setting string="Minimum File Size"
+                             help="Minimum size for attachments to be stored in the cloud storage">
+                        <field name="cloud_storage_min_file_size_mb"/><span>MB</span>
+                    </setting>
+                </block>
             </xpath>
         </field>
     </record>
