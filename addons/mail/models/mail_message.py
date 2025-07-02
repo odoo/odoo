@@ -163,7 +163,7 @@ class MailMessage(models.Model):
     # user interface
     starred_partner_ids = fields.Many2many(
         'res.partner', 'mail_message_res_partner_starred_rel', string='Favorited By')
-    pinned_at = fields.Datetime('Pinned', help='Datetime at which the message has been pinned')
+    pinned_at = fields.Datetime('Pinned', help='Datetime at which the message has been pinned', index=True)
     starred = fields.Boolean(
         'Starred', compute='_compute_starred', search='_search_starred', compute_sudo=False,
         help='Current user has a starred notification linked to this message')
