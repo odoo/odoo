@@ -78,6 +78,30 @@ export function normalizedMatch(src, substr) {
     return { start: -1, end: -1, match: "" };
 }
 
+/**
+ * Searches for "substr" in "src" as is done in normalizedMatch
+ * but returns an array of all successful matches
+ *
+ * @param {string} src
+ * @param {string} substr
+ * @returns {Array<{match: string, start: number, end: number}>}
+ */
+export function normalizedMatches(src, substr) {
+    const matches = [];
+    let index = 0;
+    while (src.length) {
+        const { start, end, match } = normalizedMatch(src, substr);
+        if (match) {
+            matches.push({ start: index + start, end: index + end, match });
+            index += end;
+            src = src.slice(end);
+        } else {
+            break;
+        }
+    }
+    return matches;
+}
+
 const DECOMPOSITION_BY_LIGATURE = new Map([
     ["Æ", "Ae"], // Danish, Norwegian, Icelandic, French (rare)...
     ["æ", "ae"],
