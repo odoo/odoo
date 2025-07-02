@@ -49,6 +49,14 @@ describe("Selection collapsed", () => {
                 });
             });
 
+            test("should not split a list item if not content editable", async () => {
+                await testEditor({
+                    contentBefore: `<ol contenteditable="false"><li><span contenteditable="true">ab[]c</span></li></ol>`,
+                    stepFunction: splitBlock,
+                    contentAfter: `<ol contenteditable="false"><li><span contenteditable="true">ab<br>[]c</span></li></ol>`,
+                });
+            });
+
             test("should add an empty list item after a list item", async () => {
                 await testEditor({
                     contentBefore: "<ol><li>abc[]</li></ol>",
