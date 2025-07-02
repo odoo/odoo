@@ -38,6 +38,7 @@ import { reactive } from "@odoo/owl";
 import { composeToolbarButton } from "../toolbar/toolbar";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { pick } from "@web/core/utils/objects";
+import { weakMemoize } from "@html_editor/utils/functions";
 
 const listSelectorItems = [
     {
@@ -79,7 +80,7 @@ export class ListPlugin extends Plugin {
                 description: _t("Create a simple bulleted list"),
                 icon: "fa-list-ul",
                 run: () => this.toggleListCommand({ mode: "UL" }),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.canToggleList.bind(this),
             },
             {
                 id: "toggleListOL",
@@ -87,7 +88,7 @@ export class ListPlugin extends Plugin {
                 description: _t("Create a list with numbering"),
                 icon: "fa-list-ol",
                 run: () => this.toggleListCommand({ mode: "OL" }),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.canToggleList.bind(this),
             },
             {
                 id: "toggleListCL",
@@ -95,7 +96,7 @@ export class ListPlugin extends Plugin {
                 description: _t("Track tasks with a checklist"),
                 icon: "fa-check-square-o",
                 run: () => this.toggleListCommand({ mode: "CL" }),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.canToggleList.bind(this),
             },
         ],
         shortcuts: [
@@ -114,7 +115,7 @@ export class ListPlugin extends Plugin {
                     getListMode: this.getListMode.bind(this),
                     key: this.toolbarListSelectorKey,
                 },
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.canToggleList.bind(this),
             }),
         ],
         powerbox_items: [
@@ -179,11 +180,29 @@ export class ListPlugin extends Plugin {
         this.addDomListener(this.editable, "touchstart", this.onPointerdown);
         this.addDomListener(this.editable, "mousedown", this.onPointerdown);
         this.listSelectorButtons = this.getListSelectorButtons();
+        this.canToggleListMemoized = weakMemoize(
+            (selection) =>
+                isHtmlContentSupported(selection) && this.getBlocksToToggleList().length > 0
+        );
     }
 
     toggleListCommand({ mode } = {}) {
         this.toggleList(mode);
         this.dependencies.history.addStep();
+    }
+
+    getBlocksToToggleList() {
+        const targetedBlocks = [...this.dependencies.selection.getTargetedBlocks()];
+        return targetedBlocks.filter(
+            (block) =>
+                !descendants(block).some((descendant) => targetedBlocks.includes(descendant)) &&
+                block.isContentEditable &&
+                !["OL", "UL"].includes(block.tagName)
+        );
+    }
+
+    canToggleList(selection) {
+        return this.canToggleListMemoized(selection);
     }
 
     onInput(ev) {
@@ -261,23 +280,11 @@ export class ListPlugin extends Plugin {
         // @todo @phoenix: original implementation removed whitespace-only text nodes from targetedNodes.
         // Check if this is necessary.
 
-        const targetedBlocks = this.dependencies.selection.getTargetedBlocks();
-
-        // Keep deepest blocks only.
-        for (const block of targetedBlocks) {
-            if (descendants(block).some((descendant) => targetedBlocks.has(descendant))) {
-                targetedBlocks.delete(block);
-            }
-        }
-
         // Classify targeted blocks.
         const sameModeListItems = new Set();
         const nonListBlocks = new Set();
         const listsToSwitch = new Set();
-        for (const block of targetedBlocks) {
-            if (["OL", "UL"].includes(block.tagName) || !block.isContentEditable) {
-                continue;
-            }
+        for (const block of this.getBlocksToToggleList()) {
             const li = closestElement(block, isListItem);
             if (li) {
                 if (this.getListMode(li.parentElement) === mode) {
