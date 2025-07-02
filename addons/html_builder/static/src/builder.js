@@ -188,6 +188,7 @@ export class Builder extends Component {
                 getAnimateTextConfig: () => ({ editor: this.editor, editorBus: this.editorBus }),
                 baseContainers: ["P"],
                 cleanEmptyStructuralContainers: false,
+                isEditableRTL: false,
             },
             this.env.services
         );
@@ -205,6 +206,10 @@ export class Builder extends Component {
             this.editableEl = iframeEl.contentDocument.body.querySelector(
                 this.props.editableSelector
             );
+
+            if (this.editableEl.matches(".o_rtl")) {
+                this.editor.config.isEditableRTL = true;
+            }
 
             // Prevent image dragging in the website builder. Not via css because
             // if one of the image ancestor has a dragstart listener, the dragstart handler

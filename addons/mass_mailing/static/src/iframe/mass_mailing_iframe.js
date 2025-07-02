@@ -19,6 +19,7 @@ import { Editor } from "@html_editor/editor";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
+import { localization } from "@web/core/l10n/localization";
 
 const IFRAME_VALUE_SELECTOR = ".o_mass_mailing_value";
 
@@ -49,6 +50,7 @@ export class MassMailingIframe extends Component {
         this.overlayRef = useChildRef();
         this.iframeRef = useForwardRefToParent("iframeRef");
         this.sidebarRef = useRef("sidebarRef");
+        this.isRTL = localization.direction === "rtl";
         useSubEnv({
             localOverlayContainerKey: uniqueId("mass_mailing_iframe"),
         });

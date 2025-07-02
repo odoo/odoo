@@ -4,6 +4,7 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
+import { localization } from "@web/core/l10n/localization";
 
 class NavTabsStyleOptionPlugin extends Plugin {
     static id = "navTabsOptionStyle";
@@ -32,6 +33,12 @@ class NavTabsStyleOptionPlugin extends Plugin {
         is_unremovable_selector: ".nav-item",
         unsplittable_node_predicates: this.isUnsplittable,
     };
+
+    setup() {
+        this.isEditableRTL = this.config.isEditableRTL;
+        this.isBackendRTL = localization.direction === "rtl";
+    }
+
     isNavItem(el) {
         return el.matches(".nav-item") && !!el.closest(".s_tabs, .s_tabs_images");
     }
@@ -44,27 +51,32 @@ class NavTabsStyleOptionPlugin extends Plugin {
 
         this.overlayTarget = target;
         const buttons = [];
+        const reverseButtons = this.isEditableRTL !== this.isBackendRTL;
         const parentStyle = window.getComputedStyle(this.overlayTarget.parentElement);
         const isVertical = parentStyle.flexDirection === "column";
         const previousNavItemEl = this.overlayTarget.previousElementSibling;
         const nextNavItemEl = this.overlayTarget.nextElementSibling;
 
         if (previousNavItemEl) {
-            const direction = isVertical ? "up" : "left";
+            const direction = isVertical ? "up" : reverseButtons ? "right" : "left";
             buttons.push({
                 class: `fa fa-fw fa-angle-${direction}`,
-                title: _t("Move %s", direction),
+                title: isVertical ? _t("Move up") : this.isEditableRTL ? _t("Move right") : _t("Move left"),
                 handler: this.moveNavItem.bind(this, "prev"),
             });
         }
 
         if (nextNavItemEl) {
-            const direction = isVertical ? "down" : "right";
+            const direction = isVertical ? "down" : reverseButtons ? "left" : "right";
             buttons.push({
                 class: `fa fa-fw fa-angle-${direction}`,
-                title: _t("Move %s", direction),
+                title: isVertical ? _t("Move down") : this.isEditableRTL ? _t("Move left") : _t("Move right"),
                 handler: this.moveNavItem.bind(this, "next"),
             });
+        }
+
+        if (reverseButtons && !isVertical) {
+            buttons.reverse();
         }
 
         return buttons;
