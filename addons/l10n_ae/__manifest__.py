@@ -19,8 +19,8 @@ Activates:
 - Fiscal Positions
     """,
     'depends': [
-        'base',
         'account',
+        'l10n_gcc_invoice',
     ],
     'auto_install': ['account'],
     'data': [

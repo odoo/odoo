@@ -1,139 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
-        <xpath expr="//span[@name='payment_term']" position="after">
-            <p t-if="o.company_id.country_id.code == 'AE' and o.partner_id.country_id.code != 'AE' and o.env.ref('l10n_ae.gcc_countries_group') in o.partner_id.country_id.country_group_ids">
-                Supply between <b>United Arab Emirates</b> and
-                <b>
-                    <span t-field="o.partner_id.country_id.name"/>
-                </b>
-            </p>
-        </xpath>
-
-        <t name="invoice_title" position="before">
-            <t name="tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Tax Invoice</t>
-        </t>
-        <t name="invoice_title" position="attributes">
-            <attribute name="t-else"> </attribute>
-        </t>
-        <t name="draft_invoice_title" position="before">
-            <t name="draft_tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Draft Tax Invoice</t>
-        </t>
-        <t name="draft_invoice_title" position="attributes">
-            <attribute name="t-else"> </attribute>
-        </t>
-        <t name="cancelled_invoice_title" position="before">
-            <t name="cancelled_tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Cancelled Tax Invoice</t>
-        </t>
-        <t name="cancelled_invoice_title" position="attributes">
-            <attribute name="t-else"> </attribute>
-        </t>
-
-        <t name="credit_note_title" position="before">
-            <t name="tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Tax Credit Note</t>
-        </t>
-        <t name="credit_note_title" position="attributes">
-            <attribute name="t-else"> </attribute>
-        </t>
-        <t name="draft_credit_note_title" position="before">
-            <t name="draft_tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Draft Tax Credit Note</t>
-        </t>
-        <t name="draft_credit_note_title" position="attributes">
-            <attribute name="t-else"> </attribute>
-        </t>
-        <t name="cancelled_credit_note_title" position="before">
-            <t name="cancelled_tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Cancelled Tax Credit Note</t>
-        </t>
-        <t name="cancelled_credit_note_title" position="attributes">
-            <attribute name="t-else"> </attribute>
-        </t>
-
-        <t name="proforma_invoice_title" position="before">
-            <t name="proforma_tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Proforma Tax Invoice</t>
-        </t>
-        <t name="proforma_invoice_title" position="attributes">
-            <attribute name="t-else"> </attribute>
-        </t>
-        <t name="draft_proforma_invoice_title" position="before">
-            <t name="draft_proforma_tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Draft Proforma Tax Invoice</t>
-        </t>
-        <t name="draft_proforma_invoice_title" position="attributes">
-            <attribute name="t-else"> </attribute>
-        </t>
-        <t name="cancelled_proforma_invoice_title" position="before">
-            <t name="cancelled_proforma_tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Cancelled Proforma Tax Invoice</t>
-        </t>
-        <t name="cancelled_proforma_invoice_title" position="attributes">
-            <attribute name="t-else"> </attribute>
-        </t>
-
-        <t name="proforma_credit_note_title" position="before">
-            <t name="proforma_tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Proforma Tax Credit Note</t>
-        </t>
-        <t name="proforma_credit_note_title" position="attributes">
-            <attribute name="t-else"> </attribute>
-        </t>
-        <t name="draft_proforma_credit_note_title" position="before">
-            <t name="draft_proforma_tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Draft Proforma Tax Credit Note</t>
-        </t>
-        <t name="draft_proforma_credit_note_title" position="attributes">
-            <attribute name="t-else"> </attribute>
-        </t>
-        <t name="cancelled_proforma_credit_note_title" position="before">
-            <t name="cancelled_proforma_tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Cancelled Proforma Tax Credit Note</t>
-        </t>
-        <t name="cancelled_proforma_credit_note_title" position="attributes">
-            <attribute name="t-else"> </attribute>
-        </t>
-
-        <xpath expr="//thead//th[@name='th_taxes']" position="replace">
-            <th name="th_taxes"
-                t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                <span t-if="o.company_id.country_id.code == 'AE'">VAT</span>
-                <span t-else="">Taxes</span>
+    <template id="l10n_ae_report_invoice_document" inherit_id="l10n_gcc_invoice.l10n_gcc_report_invoice_document" primary="True">
+        <!-- Invoice table -->
+        <th name="th_taxes" position="after">
+            <th name="th_vat_amount" class="text-end">
+                <span name="th_vat_amount_span_ar" t-if="display_in_ar" t-translation="off">مبلغ الضريبة<br/></span>
+                <span name="th_vat_amount_span_en" t-if="display_in_en" t-translation="off">VAT Amount<br/></span>
+                <span name="th_vat_amount_span">VAT Amount</span>
             </th>
-            <th t-if="o.company_id.country_id.code == 'AE'" name="tax_amount"
-                t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                <span>VAT Amount</span>
-            </th>
-        </xpath>
-
-        <xpath expr="//span[@id='line_tax_ids']/.." position="after">
-            <td t-if="o.company_id.country_id.code == 'AE'">
-                <span t-field="line.l10n_ae_vat_amount" id="line_tax_amount"/>
+        </th>
+        <th name="th_subtotal" position="after">
+            <t t-if="o.currency_id != o.company_currency_id">
+                <th name="th_subtotal_curr" class="text-end">
+                    <span name="th_subtotal_curr_span_ar" t-if="display_in_ar" t-translation="off">(<span t-field="o.company_currency_id"/>) المبلغ<br/></span>
+                    <span name="th_subtotal_curr_span_en" t-if="display_in_en" t-translation="off" dir="ltr">Amount (<span t-field="o.company_currency_id"/>)<br/></span>
+                    <span name="th_subtotal_curr_span">Amount (<span t-field="o.company_currency_id"/>)</span>
+                </th>
+            </t>
+        </th>
+        <td name="td_taxes" position="after">
+            <td name="td_vat_amount" class="text-end">
+                <span t-if="not line.collapse_prices" name="td_vat_amount_span" t-field="line.l10n_gcc_invoice_tax_amount"/>
+            </td>
+        </td>
+        <td name="td_subtotal" position="after">
+            <t t-if="o.currency_id != o.company_currency_id">
+                <td name="td_subtotal_curr" class="text-end">
+                    <span name="td_subtotal_curr_excl_span" class="text-nowrap" t-if="o.company_price_include == 'tax_excluded' and not line.collapse_prices"
+                          t-out="line.currency_id._convert(line.price_subtotal, o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())"
+                          t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+                    <span name="td_subtotal_curr_incl_span" class="text-nowrap" t-if="o.company_price_include == 'tax_included' and not line.collapse_prices"
+                          t-out="line.currency_id._convert(line.price_total, o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())"
+                          t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+                </td>
+            </t>
+        </td>
+        <td name="td_subtotal_grouped" position="before">
+            <td name="td_vat_amount_grouped" t-attf-class="text-end">
+                <span t-if="not line.collapse_prices" t-out="grouped_line['l10n_gcc_invoice_tax_amount']"  t-options='{"widget": "monetary", "display_currency": o.currency_id}' class="text-nowrap">4.05</span>
+            </td>
+        </td>
+        <td name="td_subtotal_grouped" position="after">
+            <td name="th_subtotal_curr_grouped" class="text-end" t-if="o.currency_id != o.company_currency_id">
+                <span t-if="not line.collapse_prices and o.company_price_include == 'tax_excluded'" class="text-nowrap" t-out="line.currency_id._convert(grouped_line['price_subtotal'], o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>27.00</span>
+                <span t-if="not line.collapse_prices and o.company_price_include == 'tax_included'" class="text-nowrap" t-out="line.currency_id._convert(grouped_line['price_total'], o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>27.00</span>
+            </td>
+        </td>
+        <xpath expr="//t[@t-elif=&quot;line.display_type in ('line_section', 'line_subsection')&quot;]//span[@t-out='section_subtotal']/.." position="before">
+            <td colspan="1" class="text-end o_price_total">
+                <span t-out="line._l10n_gcc_get_section_tax_amount()" class="text-nowrap" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
             </td>
         </xpath>
-
-        <xpath expr="//td[@name='td_subtotal']/span" position="attributes">
-            <attribute name="t-if">o.company_id.country_id.code != 'AE' or o.company_price_include == 'tax_excluded'</attribute>
-        </xpath>
-        
-        <xpath expr="//td[@name='td_subtotal']/span" position="after">
-            <span t-if="o.company_id.country_id.code == 'AE' and o.company_price_include == 'tax_included'" class="text-nowrap" t-field="line.price_total">31.05</span>
-        </xpath>
-
-        <xpath expr="//th[@name='th_subtotal']" position="after">
-            <th class="text-end" t-if="o.company_id.country_id.code == 'AE' and o.currency_id != o.company_currency_id">
-                <span>Amount (<span t-field="o.company_currency_id"/>)</span>
-            </th>
-        </xpath>
-
-        <xpath expr="//td[@name='td_subtotal']" position="after">
-            <td class="text-end o_price_total" t-if="o.company_id.country_id.code == 'AE' and o.currency_id != o.company_currency_id">
-                <span class="text-nowrap" t-if="o.company_price_include == 'tax_excluded'" t-out="line.currency_id._convert(line.price_subtotal, o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())" t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
-                <span class="text-nowrap" t-if="o.company_price_include == 'tax_included'" t-out="line.currency_id._convert(line.price_total, o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())" t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+        <xpath expr="//t[@t-elif=&quot;line.display_type in ('line_section', 'line_subsection')&quot;]//span[@t-out='section_subtotal']/.." position="after">
+            <td colspan="1" class="text-end o_price_total" t-if="o.currency_id != o.company_currency_id">
+                <span class="text-nowrap"
+                      t-out="line.currency_id._convert(section_subtotal, o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())"
+                      t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
             </td>
         </xpath>
+        <!-- End Invoice table -->
+        <t t-set="show_exchange_rate" position="attributes">
+            <attribute name="t-value">1</attribute>
+        </t>
     </template>
-
-    <template id="document_tax_totals_company_currency_template" inherit_id="account.document_tax_totals_company_currency_template">
-        <xpath expr="//p[hasclass('tax_computation_company_currency')]" position="after">
-            <tr t-if="o.company_id.country_id.code == 'AE'">
-                <t t-set="exchange_rate" t-if="o.amount_total" t-value="abs(o.amount_total_signed) / o.amount_total"/>
-                <t t-set="exchange_rate" t-else="" t-value="o.env['res.currency']._get_conversion_rate(o.currency_id, o.company_id.currency_id, o.company_id, o.invoice_date or datetime.date.today())"/>
-                <td>Exchange Rate</td>
-                <td class="text-end" t-out="exchange_rate" t-options='{"widget": "float", "precision": 5}'/>
-            </tr>
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_ae.l10n_ae_report_invoice_document'"
+               t-call="l10n_ae.l10n_ae_report_invoice_document"
+               t-lang="lang"/>
         </xpath>
     </template>
 </odoo>
