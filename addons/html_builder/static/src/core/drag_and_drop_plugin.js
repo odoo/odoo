@@ -24,6 +24,7 @@ export class DragAndDropPlugin extends Plugin {
         this.dropzoneSelectors = this.getResource("dropzone_selector");
         this.overlayTarget = null;
         this.iframe = this.document.defaultView.frameElement;
+        this.isRtl = this.config.isEditableRTL;
     }
 
     destroy() {
@@ -173,7 +174,7 @@ export class DragAndDropPlugin extends Plugin {
                     targetRect.bottom - gridRowSize // height minus one grid row
                 );
                 this.dragState.mousePositionYOnElement = boundedYMousePosition - targetRect.y;
-                this.dragState.mousePositionXOnElement = x - targetRect.x;
+                this.dragState.mousePositionXOnElement = (x - targetRect.x) * (this.isRtl ? -1 : 1);
 
                 // Stop marking the elements with mutations as dirty and make
                 // some changes on the page to ease the drag and drop.

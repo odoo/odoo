@@ -98,6 +98,7 @@ export class BuilderOverlayPlugin extends Plugin {
                 history: this.dependencies.history,
                 hasOverlayOptions: checkElement(option.element, {}) && option.hasOverlayOptions,
                 next: this.dependencies.operation.next,
+                isRtl: this.config.isEditableRTL,
             });
             this.overlays.push(overlay);
             this.overlayContainer.append(overlay.overlayElement);
