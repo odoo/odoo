@@ -10,7 +10,6 @@ import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-dom";
 import {
     asyncStep,
-    getService,
     onRpc,
     patchWithCleanup,
     serverState,
@@ -24,26 +23,16 @@ describe.current.tags("desktop");
 test("list activity widget with no activity", async () => {
     const mailDataDoneDef = new Deferred();
     onRpc("/mail/data", async (request) => {
-        const companyService = getService("company");
         const { params } = await request.json();
-        expect(params).toEqual({
+        expect(params).toMatchObject({
             fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: {
-                lang: "en",
-                tz: "taht",
-                uid: serverState.userId,
-                allowed_company_ids: Object.values(companyService.allowedCompanies).map(
-                    (c) => c.id
-                ),
-            },
         });
         asyncStep("/mail/data");
         mailDataDoneDef.resolve();
     });
-    onRpc("res.users", "web_search_read", async (params) => {
+    onRpc("res.users", "web_search_read", async ({ kwargs }) => {
         await mailDataDoneDef; // Ensure order of steps.
-        const companyService = getService("company");
-        expect(params.kwargs).toEqual({
+        expect(kwargs).toMatchObject({
             specification: {
                 activity_ids: { fields: {} },
                 activity_exception_decoration: {},
@@ -56,15 +45,7 @@ test("list activity widget with no activity", async () => {
             offset: 0,
             order: "",
             limit: 80,
-            context: {
-                lang: "en",
-                tz: "taht",
-                uid: serverState.userId,
-                bin_size: true,
-                allowed_company_ids: Object.values(companyService.allowedCompanies).map(
-                    (c) => c.id
-                ),
-            },
+            context: { bin_size: true },
             count_limit: 10001,
             domain: [],
         });

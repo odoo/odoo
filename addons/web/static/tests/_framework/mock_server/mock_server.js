@@ -1,7 +1,6 @@
 import { before, createJobScopedGetter, expect, getCurrent, registerDebugInfo } from "@odoo/hoot";
 import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
 import { RPCError } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
 import { ensureArray, isIterable } from "@web/core/utils/arrays";
 import { isObject } from "@web/core/utils/objects";
 import { serverState } from "../mock_server_state.hoot";
@@ -68,10 +67,10 @@ const { DateTime } = luxon;
  * @typedef {{
  *  actions?: Partial<MockServer["actions"]>;
  *  lang?: string;
- *  lang_parameters?: Partial<MockServer["lang_parameters"]>;
+ *  lang_parameters?: Partial<MockServer["_lang_parameters"]>;
  *  menus?: MenuDefinition[];
  *  models?: Iterable<ModelConstructor>;
- *  modules?: Partial<MockServer["modules"]>;
+ *  modules?: Partial<MockServer["_modules"]>;
  *  multi_lang?: import("../mock_server_state.hoot").ServerState["multiLang"];
  *  routes?: Parameters<MockServer["_onRpc"]>;
  *  timezone?: string;
@@ -182,7 +181,7 @@ function getCurrentMockServer() {
 }
 
 /**
- * @param {MockServer["models"]}
+ * @param {MockServer["_models"]}
  * @returns {MockServerEnvironment}
  */
 function makeServerEnv(models) {
@@ -341,7 +340,6 @@ const R_ROUTE_PARAM = /<((?<type>\w+):)?(?<name>[\w-]+)>/g;
 const R_WILDCARD = /\*+/g;
 const R_WEBCLIENT_ROUTE = /(?<step>\/web\/webclient\/\w+)/;
 
-const mockRpcRegistry = registry.category("mock_rpc");
 /** @type {WeakMap<() => any, MockServer>} */
 const mockServers = new WeakMap();
 /** @type {WeakSet<typeof Model>} */
@@ -355,7 +353,7 @@ export class MockServer {
     /** @type {MockServer | null} */
     static get current() {
         const mockServer = getCurrentMockServer();
-        return mockServer?.started ? mockServer : null;
+        return mockServer?._started ? mockServer : null;
     }
 
     static get env() {
@@ -366,8 +364,17 @@ export class MockServer {
         return serverState;
     }
 
-    // Server params
-    lang_parameters = {
+    /** @type {ActionDefinition[]} */
+    actions = [];
+    /** @type {MenuDefinition[]} */
+    menus = [];
+
+    // Server parameters (private)
+
+    /**
+     * @private
+     */
+    _lang_parameters = {
         date_format: "%m/%d/%Y",
         decimal_point: ".",
         direction: "ltr",
@@ -377,37 +384,50 @@ export class MockServer {
         thousands_sep: ",",
         week_start: 7,
     };
-    modules = {
+    /**
+     * @private
+     * @type {Record<string, Model>}
+     */
+    _models = Object.create(null);
+    /**
+     * @private
+     * @type {Model[]}
+     */
+    _modelSpecs = [];
+    /**
+     * @private
+     * @type {Set<string>}
+     */
+    _modelNamesToFetch = new Set();
+    /**
+     * @private
+     */
+    _modules = {
         web: { messages: [] },
     };
-
-    // Data
-    /** @type {ActionDefinition[]} */
-    actions = [];
-    /** @type {MenuDefinition[]} */
-    menus = [];
-    /** @type {Record<string, Model>} */
-    models = Object.create(null);
-    /** @type {Model[]} */
-    modelSpecs = [];
-    /** @type {Set<string>} */
-    modelNamesToFetch = new Set();
-
-    // Routes
-    /** @type {[StringMatchers, StringMatchers, OrmCallback][]>} */
-    ormListeners = [];
-    /** @type {[RegExp[], RouteCallback, RouteOptions][]} */
-    routes = [];
-    started = false;
-
+    /**
+     * @private
+     * @type {[StringMatchers, StringMatchers, OrmCallback][]>}
+     */
+    _ormListeners = [];
+    /**
+     * @private
+     * @type {[RegExp[], RouteCallback, RouteOptions][]}
+     */
+    _routes = [];
+    /**
+     * @private
+     */
+    _started = false;
     /**
      * WebSocket connections
+     * @private
      * @type {ServerWebSocket[]}
      */
-    websockets = [];
+    _websockets = [];
 
-    // Server environment
-    env = makeServerEnv(this.models);
+    // Server environment (needs '_models' to be initialized first)
+    env = makeServerEnv(this._models);
 
     /**
      * @param {Partial<ServerParams>} params
@@ -423,7 +443,7 @@ export class MockServer {
         }
         if (params.lang_parameters) {
             // Never fully replace "lang_parameters"
-            Object.assign(this.lang_parameters, params.lang_parameters);
+            Object.assign(this._lang_parameters, params.lang_parameters);
         }
         if (params.menus) {
             assign(this, "menus", params.menus);
@@ -431,18 +451,18 @@ export class MockServer {
         if (params.models) {
             assign(
                 this,
-                "modelSpecs",
+                "_modelSpecs",
                 [...params.models].map((ModelClass) => this._getModelDefinition(ModelClass))
             );
-            if (this.started) {
+            if (this._started) {
                 await this._loadModels();
             }
         }
         if (params.modules) {
             for (const [module, values] in Object.entries(params.modules)) {
-                this.modules[module] ||= { messages: [] };
+                this._modules[module] ||= { messages: [] };
                 assign(
-                    this.modules[module],
+                    this._modules[module],
                     "messages",
                     parseTranslations(values.message || values)
                 );
@@ -455,7 +475,7 @@ export class MockServer {
             assign(serverState, "timezone", params.timezone);
         }
         if (params.translations) {
-            assign(this.modules.web, "messages", parseTranslations(params.translations));
+            assign(this._modules.web, "messages", parseTranslations(params.translations));
         }
         if (params.routes) {
             for (const args of params.routes) {
@@ -470,14 +490,14 @@ export class MockServer {
      * @param {string} [url]
      */
     getWebSockets(url) {
-        return url ? this.websockets.filter((ws) => ws.url.includes(url)) : this.websockets;
+        return url ? this._websockets.filter((ws) => ws.url.includes(url)) : this._websockets;
     }
 
     async start() {
-        if (this.started) {
-            throw new MockServerError("MockServer has already been started");
+        if (this._started) {
+            throw new MockServerError("MockServer has already been _started");
         }
-        this.started = true;
+        this._started = true;
 
         registerDebugInfo("mock server", this);
 
@@ -510,13 +530,6 @@ export class MockServer {
             pure: true,
         });
 
-        // Add routes from "mock_rpc" registry
-        for (const [route, callback] of mockRpcRegistry.getEntries()) {
-            if (typeof callback === "function") {
-                this._onRpc(route, callback);
-            }
-        }
-
         // Register ambiant parameters
         await this.configure(getCurrentParams());
 
@@ -532,9 +545,7 @@ export class MockServer {
      * @param {OrmParams} params
      */
     _callOrm(params) {
-        const { method, model: modelName } = params;
-        const args = params.args || [];
-        const kwargs = makeKwArgs(params.kwargs || {});
+        const { args, method, model: modelName, kwargs } = params;
 
         // Try to find a model method
         if (modelName) {
@@ -591,7 +602,7 @@ export class MockServer {
      */
     _findOrmListeners({ method, model }) {
         const callbacks = [this._callOrm];
-        for (const [modelMatchers, methodMatchers, callback] of this.ormListeners) {
+        for (const [modelMatchers, methodMatchers, callback] of this._ormListeners) {
             if (match(model, modelMatchers) && match(method, methodMatchers)) {
                 callbacks.unshift(callback);
             }
@@ -606,7 +617,7 @@ export class MockServer {
     _findRouteListeners(route) {
         /** @type {[RouteCallback, Record<string, string>, RouteOptions][]} */
         const listeners = [];
-        for (const [routeRegexes, callback, options] of this.routes) {
+        for (const [routeRegexes, callback, options] of this._routes) {
             for (const regex of routeRegexes) {
                 const argsMatch = route.match(regex);
                 if (argsMatch) {
@@ -715,7 +726,7 @@ export class MockServer {
 
         // Server model
         if (ModelClass._fetch) {
-            this.modelNamesToFetch.add(model._name);
+            this._modelNamesToFetch.add(model._name);
         }
 
         return model;
@@ -774,24 +785,25 @@ export class MockServer {
     }
 
     /**
+     * @private
      * @param {ServerWebSocket} webSocket
      */
     _handleWebSocket(webSocket) {
-        this.websockets.push(webSocket);
+        this._websockets.push(webSocket);
     }
 
     /**
      * @private
      */
     async _loadModels() {
-        const models = this.modelSpecs;
+        const models = this._modelSpecs;
         const serverModelInheritances = new Set();
-        this.modelSpecs = [];
+        this._modelSpecs = [];
 
         let serverModels = {};
-        if (this.modelNamesToFetch.size) {
-            serverModels = await fetchModelDefinitions(this.modelNamesToFetch);
-            this.modelNamesToFetch.clear();
+        if (this._modelNamesToFetch.size) {
+            serverModels = await fetchModelDefinitions(this._modelNamesToFetch);
+            this._modelNamesToFetch.clear();
         }
 
         // First iteration: set own properties and fields for each model
@@ -859,8 +871,8 @@ export class MockServer {
             }
 
             // Find duplicate models
-            if (model._name in this.models) {
-                Object.setPrototypeOf(Object.getPrototypeOf(model), this.models[model._name]);
+            if (model._name in this._models) {
+                Object.setPrototypeOf(Object.getPrototypeOf(model), this._models[model._name]);
             } else if (model._name in this.env) {
                 throw new MockServerError(
                     `cannot register model "${model._name}": a server environment property with the same name already exists`
@@ -868,7 +880,7 @@ export class MockServer {
             }
 
             // Register models on mock server
-            this.models[model._name] = model;
+            this._models[model._name] = model;
         }
 
         // Second iteration: model inheritance +
@@ -878,7 +890,7 @@ export class MockServer {
                 if (!modelName) {
                     continue;
                 }
-                const parentModel = this.models[modelName];
+                const parentModel = this._models[modelName];
                 if (parentModel) {
                     for (const fieldName in parentModel._fields) {
                         model._fields[fieldName] ??= parentModel._fields[fieldName];
@@ -896,7 +908,7 @@ export class MockServer {
             // Re-iterate over fields after inheritances have been applied
             for (const [fieldName, field] of Object.entries(model._fields)) {
                 // Check missing models
-                if (field.relation && !this.models[field.relation]) {
+                if (field.relation && !this._models[field.relation]) {
                     if (field[S_SERVER_FIELD]) {
                         delete model._fields[fieldName];
                         continue;
@@ -982,7 +994,7 @@ export class MockServer {
         }
 
         // creation of the ir.model.fields records, required for tracked fields
-        const IrModelFields = this.models["ir.model.fields"];
+        const IrModelFields = this._models["ir.model.fields"];
         if (IrModelFields) {
             for (const model of models) {
                 for (const field of Object.values(model._fields)) {
@@ -1031,7 +1043,7 @@ export class MockServer {
             throw new Error(`onRpc: expected callback to be a function, got: ${callback}`);
         }
 
-        this.ormListeners.push([model, method, callback]);
+        this._ormListeners.push([model, method, callback]);
     }
 
     /**
@@ -1053,7 +1065,7 @@ export class MockServer {
             return new RegExp(`^${regexString}$`, "i");
         });
 
-        this.routes.push([routeRegexes, callback, options || {}]);
+        this._routes.push([routeRegexes, callback, options || {}]);
     }
 
     /**
@@ -1116,6 +1128,8 @@ export class MockServer {
         };
 
         const { params } = await request.json();
+        params.args ||= [];
+        params.kwargs = makeKwArgs(params.kwargs || {});
         const callbackParams = {
             parent: callNextOrmCallback,
             request,
@@ -1234,14 +1248,14 @@ export class MockServer {
      * @type {RouteCallback<"unique">}
      */
     async loadTranslations() {
-        const langParameters = { ...this.lang_parameters };
+        const langParameters = { ...this._lang_parameters };
         if (typeof langParameters.grouping !== "string") {
             langParameters.grouping = JSON.stringify(langParameters.grouping);
         }
         return {
             lang: serverState.lang,
             lang_parameters: langParameters,
-            modules: this.modules,
+            modules: this._modules,
             multi_lang: serverState.multiLang,
         };
     }
