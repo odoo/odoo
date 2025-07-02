@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.CartPage">
-        <div class="o_self_cart_page d-flex flex-column vh-100 overflow-hidden o_self_background o_self_fade" t-attf-style="background-image:#{selfOrder.kioskBackgroundImage};background-size: cover; background-position: center;">
+        <div class="o_self_cart_page d-flex flex-column vh-100 overflow-hidden o_self_background o_self_fade" t-attf-style="background-image:#{selfOrder.kioskBackgroundImageUrl};background-size: cover; background-position: center;">
             <div class="d-flex flex-column flex-grow-1 overflow-y-auto pb-0 pb-sm-3 pt-3 py-lg-4" t-ref="scrollContainer">
                 <div class="d-flex justify-content-end px-3">
                     <button t-if="showCancelButton" t-on-click="() => this.cancelOrder()" class="btn btm-xs btn-secondary" type="button">
