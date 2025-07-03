@@ -16,8 +16,8 @@
                     <input
                         type="checkbox"
                         class="mt-1"
-                        t-att-checked="this.isDefaultImage(this.activeMetaImage)"
-                        t-on-click="() => this.setDefaultSocialImage(this.activeMetaImage)"
+                        t-att-checked="this.isSocialDefaultImageActive ? true : false"
+                        t-on-click="this.setDefaultCoverImage"
                     />
                     <span class="ms-2">Set as default</span>
                 </label>
@@ -293,6 +293,7 @@
         <ImageSelector t-if="canEditSeo" previewDescription="socialPreviewDescription"
             defaultTitle="defaultTitle"
             hasSocialDefaultImage="hasSocialDefaultImage"
+            socialDefaultImage="socialDefaultImage"
             pageImages="pageImages"
             url="url"/>
         <MetaKeywords t-if="canEditSeo"/>

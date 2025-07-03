@@ -79,5 +79,5 @@ class WebsiteBackend(http.Controller):
         website = request.env['website'].browse(website_id)
         if not website or not website.exists():
             return {'error': 'Website not found'}
-        website.sudo().write({'social_default_image': data})
+        website.social_default_image = data
         return {'status': 'ok'}

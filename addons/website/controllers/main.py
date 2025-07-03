@@ -906,6 +906,7 @@ class Website(Home):
 
         res.update(record.read(fields)[0])
         res['has_social_default_image'] = request.website.has_social_default_image
+        res['social_default_image'] = request.website.social_default_image
 
         if res_model not in ('website.page', 'ir.ui.view') and 'seo_name' in record:  # allow custom slugify
             res['seo_name_default'] = request.env['ir.http']._slugify(record.display_name or '')  # default slug, if seo_name become empty
