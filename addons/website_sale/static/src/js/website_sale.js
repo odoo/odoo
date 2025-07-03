@@ -14,7 +14,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
         'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
         'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': '_onClickAdd',
-        'click input.js_product_change': 'onChangeVariant',
         'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
         'click .o_product_page_reviews_link': '_onClickReviewsLink',
         'mousedown .o_wsale_filmstrip_wrapper': '_onMouseDown',
@@ -167,24 +166,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
                 .trigger("change");
         });
     },
-    /**
-     * This is overridden to handle the "List View of Variants" of the web shop.
-     * That feature allows directly selecting the variant from a list instead of selecting the
-     * attribute values.
-     *
-     * Since the layout is completely different, we need to fetch the product_id directly
-     * from the selected variant.
-     *
-     * @override
-     */
-    _getProductId: function ($parent) {
-        if ($parent.find('input.js_product_change').length !== 0) {
-            return parseInt($parent.find('input.js_product_change:checked').val());
-        }
-        else {
-            return VariantMixin._getProductId.apply(this, arguments);
-        }
-    },
     _getProductImageLayout: function () {
         return document.querySelector("#product_detail_main").dataset.image_layout;
     },
@@ -196,9 +177,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             'carousel': "#o-carousel-product",
             'grid': "#o-grid-product",
         }[this._getProductImageLayout()];
-    },
-    _getProductImageContainer: function () {
-        return document.querySelector(this._getProductImageContainerSelector());
     },
     _isEditorEnabled() {
         return document.body.classList.contains("editor_enable");
@@ -281,7 +259,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @override
      * @private
      */
-    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, newImages) {
+    _updateProductImage: function ($productContainer, newImages) {
         let $images = $productContainer.find(this._getProductImageContainerSelector());
         // When using the web editor, don't reload this or the images won't
         // be able to be edited depending on if this is done loading before
@@ -549,11 +527,9 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @returns {void}
      */
     _updateRootProduct(form) {
-        const productId = parseInt(form.querySelector([
-            'input[type="hidden"][name="product_id"]',
-            // Variants list view
-            'input[type="radio"][name="product_id"]:checked',
-        ].join(','))?.value);
+        const productId = parseInt(
+            form.querySelector('input[type="hidden"][name="product_id"]')?.value
+        );
         const quantity = parseFloat(form.querySelector('input[name="add_qty"]')?.value);
         const uomId = this._getUoMId(form);
         const isCombo = form.querySelector(
@@ -583,12 +559,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      *      `product.template.attribute.value` ids.
      */
     _getSelectedPTAV(form) {
-        // Variants list view
-        let combination = form.querySelector('input.js_product_change:checked')?.dataset.combination;
-        if (combination) {
-            return JSON.parse(combination);
-        }
-
         const selectedPTAVElements = form.querySelectorAll([
             '.js_product input.js_variant_change:not(.no_variant):checked',
             '.js_product select.js_variant_change:not(.no_variant)'
