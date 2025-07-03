@@ -210,7 +210,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             channel_data_join["discuss.channel"][0]["livechat_outcome"] = "no_agent"
             channel_data_join["discuss.channel"][0]["chatbot"]["currentStep"]["message"] = messages[1].id
             channel_data_join["discuss.channel"][0]["chatbot"]["steps"][0]["message"] = messages[1].id
-            channel_data_join["discuss.channel"][0]["is_pinned"] = True
             channel_data_join["discuss.channel"][0]["livechat_operator_id"] = self.chatbot_script.operator_partner_id.id
             channel_data_join["discuss.channel"][0]["member_count"] = 3
             channel_data_join["discuss.channel"][0]["name"] = "Testing Bot"
@@ -219,6 +218,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             channel_data_join["discuss.channel.member"][2]["fetched_message_id"] = False
             channel_data_join["discuss.channel.member"][2]["last_seen_dt"] = False
             channel_data_join["discuss.channel.member"][2]["seen_message_id"] = False
+            channel_data_join["discuss.channel.member"][2]["unpin_dt"] = False
             del channel_data_join["res.partner"][1]
             channel_data_join["res.partner"].insert(
                 0,
@@ -253,10 +253,8 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             )
             channels, message_items = (
                 [
-                    (self.cr.dbname, "discuss.channel", discuss_channel.id, "members"),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "res.partner", self.partner_employee.id),
-                    (self.cr.dbname, "discuss.channel", discuss_channel.id, "members"),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
@@ -266,12 +264,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     (self.cr.dbname, "res.partner", self.env.user.partner_id.id),
                 ],
                 [
-                    {
-                        "type": "mail.record/insert",
-                        "payload": {
-                            "discuss.channel": [{"id": discuss_channel.id, "is_pinned": True}]
-                        },
-                    },
                     {
                         "type": "discuss.channel/new_message",
                         "payload": {
@@ -285,12 +277,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                             "channel_id": discuss_channel.id,
                             "data": channel_data_join,
                             "invited_by_user_id": self.env.user.id,
-                        },
-                    },
-                    {
-                        "type": "mail.record/insert",
-                        "payload": {
-                            "discuss.channel": [{"id": discuss_channel.id, "is_pinned": True}]
                         },
                     },
                     {
@@ -342,12 +328,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                     ),
                                 }
                             ),
-                        },
-                    },
-                    {
-                        "type": "mail.record/insert",
-                        "payload": {
-                            "discuss.channel": [{"id": discuss_channel.id, "is_pinned": True}]
                         },
                     },
                     {

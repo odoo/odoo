@@ -465,7 +465,7 @@ export class Store extends BaseStore {
             return;
         }
         let chat = partner.searchChat();
-        if (!chat || !chat.is_pinned) {
+        if (!chat?.selfMember?.is_pinned) {
             chat = await this.joinChat(partner.id);
         }
         if (!chat) {

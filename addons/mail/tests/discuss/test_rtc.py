@@ -36,8 +36,6 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # message unread counter (message post)
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
-                # update members is_pinned (message post)
-                (self.cr.dbname, "discuss.channel", channel.id, "members"),
                 # start call notification message post
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # new call history (not asserted below)
@@ -184,8 +182,6 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # update new message separator
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
-                # update of pin state (not asserted below)
-                (self.cr.dbname, "discuss.channel", channel.id, "members"),
                 # update of last interest (not asserted below)
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # update call history (not asserted below)
@@ -297,8 +293,6 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # update new message separator
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
-                # update of pin state (not asserted below)
-                (self.cr.dbname, "discuss.channel", channel.id, "members"),
                 # update of last interest (not asserted below)
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # update call history (not asserted below)
@@ -957,16 +951,12 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # mail.record/insert - discuss.channel.member (message_unread_counter, new_message_separator, …)
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
-                # mail.record/insert - discuss.channel (is_pinned: true)
-                (self.cr.dbname, "discuss.channel", channel.id, "members"),
                 # discuss.channel/new_message
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # discuss.channel/joined
                 (self.cr.dbname, "mail.guest", test_guest.id),
                 # mail.record/insert - discuss.channel.member (message_unread_counter, new_message_separator, …)
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
-                # mail.record/insert - discuss.channel (is_pinned: true)
-                (self.cr.dbname, "discuss.channel", channel.id, "members"),
                 # discuss.channel/new_message
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # mail.record/insert - discuss.channel (member_count), discuss.channel.member
