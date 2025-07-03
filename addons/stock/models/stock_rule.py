@@ -244,7 +244,7 @@ class StockRule(models.Model):
             if new_move._should_bypass_reservation():
                 new_move.write({'procure_method': 'make_to_stock'})
             if not new_move.location_id.should_bypass_reservation():
-                move.write({'move_dest_ids': [(4, new_move.id)]})
+                move.sudo().write({'move_dest_ids': [(4, new_move.id)]})
             return new_move
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
