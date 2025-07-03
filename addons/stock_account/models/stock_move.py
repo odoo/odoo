@@ -54,6 +54,7 @@ class StockMove(models.Model):
             if self.origin_returned_move_id._is_dropshipped() or self.origin_returned_move_id._is_dropshipped_returned():
                 layers = layers.filtered(lambda l: float_compare(l.value, 0, precision_rounding=l.product_id.uom_id.rounding) <= 0)
             layers |= layers.stock_valuation_layer_ids
+<<<<<<< 459803bfe26679b046122bff505206eb3b609879
             if self.product_id.lot_valuated:
                 layers_by_lot = layers.grouped('lot_id')
                 prices = defaultdict(lambda: 0)
@@ -76,6 +77,15 @@ class StockMove(models.Model):
                 return {lot: lot.standard_price or self.product_id.standard_price for lot in self.lot_ids}
             else:
                 return {self.env['stock.lot']: self.product_id.standard_price}
+||||||| 211629b232861b960f6650f980d1e3b6acac94d9
+            quantity = sum(layers.mapped("quantity"))
+            return sum(layers.mapped("value")) / quantity if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
+        return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.standard_price
+=======
+            quantity = sum(layers.mapped("quantity"))
+            return sum(layers.mapped("value")) / quantity if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
+        return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.with_company(self.company_id).standard_price
+>>>>>>> 9f6002e4da9ac335ae6ce553dd9198615c0f034b
 
     @api.model
     def _get_valued_types(self):
