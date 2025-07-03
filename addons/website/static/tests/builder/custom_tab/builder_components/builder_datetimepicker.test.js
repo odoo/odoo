@@ -108,11 +108,13 @@ test("defaults to now when clicking on clear button", async () => {
     await contains(".we-bg-options-container input").edit("04/01/2019 10:00:00");
     expect(".we-bg-options-container input").toHaveValue("04/01/2019 10:00:00");
 
-    await contains(".we-bg-options-container input").click();
-    await contains(".o_datetime_buttons button .fa-eraser").click();
-    await contains(".options-container").click();
-    const dateString = queryOne(".we-bg-options-container input").value;
-    expect(isExpectedDateTime({ dateString })).toBe(true);
+    for (let i = 0; i < 3; i++) {
+        await contains(".we-bg-options-container input").click();
+        await contains(".o_datetime_buttons button .fa-eraser").click();
+        await contains(".options-container").click();
+        const dateString = queryOne(".we-bg-options-container input").value;
+        expect(isExpectedDateTime({ dateString })).toBe(true);
+    }
 });
 
 test("selects a date and properly applies it", async () => {
