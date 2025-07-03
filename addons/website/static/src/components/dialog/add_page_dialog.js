@@ -1,5 +1,4 @@
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
-import { ensureJQuery } from "@web/core/ensure_jquery";
 import { rpc } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
 import { renderToElement } from "@web/core/utils/render";
@@ -9,7 +8,7 @@ import { WebsiteDialog } from '@website/components/dialog/dialog';
 import { Switch } from '@html_editor/components/switch/switch';
 import { applyTextHighlight } from "@website/js/text_processing";
 import { useRef, useState, useSubEnv, Component, onWillStart, onMounted, status } from "@odoo/owl";
-import wUtils from '@website/js/utils';
+import { onceAllImagesLoaded } from "@website/utils/images";
 
 const NO_OP = () => {};
 
@@ -182,8 +181,7 @@ export class AddPageTemplatePreview extends Component {
                 imgEl.setAttribute("loading", "eager");
             }
             mainEl.appendChild(wrapEl);
-            await ensureJQuery();
-            await wUtils.onceAllImagesLoaded($(wrapEl));
+            await onceAllImagesLoaded(wrapEl);
             // Restore image lazy loading.
             for (const imgEl of lazyLoadedImgEls) {
                 imgEl.setAttribute("loading", "lazy");
