@@ -210,13 +210,17 @@
                                         <field name="emergency_contact" string="Contact"/>
                                         <field name="emergency_phone" class="o_force_ltr" string="Phone"/>
                                     </group>
-                                    <group string="Visa">
-                                        <field name="visa_no"/>
-                                        <field name="visa_expire"/>
-                                    </group>
-                                    <group string="Work Permit">
-                                        <field name="permit_no"/>
-                                        <field name="work_permit_expiration_date" string="Expiration Date"/>
+                                    <group string="Visa &amp; Work Permit">
+                                        <label for="visa_no"/>
+                                        <div class="o_row">
+                                            <field name="visa_no" class="o_hr_narrow_field"/>
+                                            <span invisible="not visa_no" class="o_form_label fw-medium ms-5">Expires on<field name="visa_expire" class="o_hr_narrow_field ms-4"/></span>
+                                        </div>
+                                        <label for="permit_no"/>
+                                        <div class="o_row">
+                                            <field name="permit_no" class="o_hr_narrow_field"/>
+                                            <span invisible="not permit_no" class="o_form_label fw-medium ms-5">Expires on<field name="work_permit_expiration_date" class="o_hr_narrow_field ms-4"/></span>
+                                        </div>
                                         <field name="work_permit_name" invisible="1"/>
                                         <field name="has_work_permit" widget="work_permit_upload" filename="work_permit_name" string="Document"/>
                                     </group>
@@ -224,7 +228,11 @@
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
                                         <field name="identification_id"/>
                                         <field name="ssnid"/>
-                                        <field name="passport_id"/>
+                                        <label for="passport_id"/>
+                                        <div class="o_row">
+                                            <field name="passport_id" class="o_hr_narrow_field"/>
+                                            <span invisible="not passport_id" class="o_form_label fw-medium ms-5">Expires on<field name="passport_expiration_date" class="o_hr_narrow_field ms-4"/></span>
+                                        </div>
                                     </group>
                                     <group string="Location" name="hr_location_group">
                                         <label for="private_street" string="Private Address"/>
