@@ -30,7 +30,6 @@ export class Wysiwyg extends Component {
         class: { type: String, optional: true },
         contentClass: { type: String, optional: true }, // on editable element
         style: { type: String, optional: true },
-        toolbar: { type: Boolean, optional: true },
         iframe: { type: Boolean, optional: true },
         copyCss: { type: Boolean, optional: true },
         onLoad: { type: Function, optional: true },
@@ -117,7 +116,6 @@ export class Wysiwyg extends Component {
                 key: this.env.localOverlayContainerKey,
                 ref: this.overlayRef,
             },
-            disableFloatingToolbar: this.props.toolbar,
         };
     }
 }

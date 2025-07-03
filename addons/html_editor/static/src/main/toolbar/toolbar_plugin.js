@@ -326,11 +326,9 @@ export class ToolbarPlugin extends Plugin {
 
     updateToolbar(selectionData = this.dependencies.selection.getSelectionData()) {
         this.updateNamespace();
-        if (!this.config.disableFloatingToolbar) {
-            this.updateToolbarVisibility(selectionData);
-            if (!this.overlay.isOpen) {
-                return;
-            }
+        this.updateToolbarVisibility(selectionData);
+        if (!this.overlay.isOpen) {
+            return;
         }
         this.updateButtonsStates(selectionData.editableSelection);
     }
