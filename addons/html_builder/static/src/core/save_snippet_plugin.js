@@ -1,3 +1,4 @@
+import { escapeTextNodes } from "@html_builder/utils/escaping";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { markup } from "@odoo/owl";
@@ -70,7 +71,10 @@ export class SaveSnippetPlugin extends Plugin {
     }
 
     async saveSnippet(el) {
-        const cleanForSaveHandlers = this.getResource("clean_for_save_handlers");
+        const cleanForSaveHandlers = [
+            ...this.getResource("clean_for_save_handlers"),
+            ({ root }) => escapeTextNodes(root),
+        ];
         const savedName = await this.config.saveSnippet(
             el,
             cleanForSaveHandlers,
