@@ -514,6 +514,10 @@ class StockMoveLine(models.Model):
             moves.with_prefetch()._recompute_state()
         return res
 
+    def _exclude_requiring_lot(self):
+        self.ensure_one()
+        return False
+
     def _action_done(self):
         """ This method is called during a move's `action_done`. It'll actually move a quant from
         the source location to the destination location, and unreserve if needed in the source
@@ -549,7 +553,7 @@ class StockMoveLine(models.Model):
                 if ml.product_id.tracking == 'none':
                     continue
                 picking_type_id = ml.move_id.picking_type_id
-                if not picking_type_id and not ml.is_inventory and not ml.lot_id and not self.env.context.get('is_scrap'):
+                if not picking_type_id and not ml.is_inventory and not ml.lot_id and not self.env.context.get('is_scrap') and not ml._exclude_requiring_lot():
                     ml_ids_tracked_without_lot.add(ml.id)
                     continue
                 if not picking_type_id or ml.lot_id or (not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots):
