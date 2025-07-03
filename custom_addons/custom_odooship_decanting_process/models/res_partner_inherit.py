@@ -7,3 +7,4 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     tenant_code_id = fields.Many2one('tenant.code.configuration', string='Tenant Code')
+    business_name = fields.Char(string='Business Name')
