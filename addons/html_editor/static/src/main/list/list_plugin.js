@@ -1067,7 +1067,7 @@ export class ListPlugin extends Plugin {
             })
             .reduce(Math.max);
         // For `UL` with large font size the marker width is so big that more padding is needed.
-        const largestMarkerPadding = Math.floor(largestMarker) * (list.nodeName === "UL" ? 2 : 1);
+        const largestMarkerPadding = Math.round(largestMarker) * (list.nodeName === "UL" ? 2 : 1);
 
         // bootstrap sets ul { padding-left: 2rem; }
         const defaultPadding =
