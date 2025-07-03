@@ -151,6 +151,13 @@ class CardCampaign(models.Model):
             'card_template_id',
         ]
 
+    @api.model
+    def _get_path_fields(self):
+        return [
+            'content_header_path', 'content_image1_path', 'content_image2_path', 'content_section_path',
+            'content_sub_header_path', 'content_sub_section1_path', 'content_sub_section2_path'
+        ]
+
     def _check_access_right_dynamic_template(self):
         """ `_unrestricted_rendering` being True means we trust the value on model
         when rendering. This means once created, rendering is done without restriction.
@@ -192,6 +199,16 @@ class CardCampaign(models.Model):
         for campaign in self:
             preview_model = campaign.preview_record_ref and campaign.preview_record_ref._name
             campaign.res_model = preview_model or campaign.res_model or 'res.partner'
+
+    @api.onchange('preview_record_ref')
+    def _onchange_model(self):
+        """Update with default values for the new model and reset field paths."""
+        reset_dict = dict.fromkeys(self._get_path_fields(), False)
+        for campaign in self:
+            model_name = campaign.preview_record_ref and campaign.preview_record_ref._name
+            model_name_origin = campaign._origin.preview_record_ref and campaign._origin.preview_record_ref._name
+            if model_name_origin and model_name != model_name_origin:
+                campaign.update(reset_dict)
 
     @api.model_create_multi
     def create(self, vals_list):
