@@ -2463,6 +2463,8 @@ class AccountMove(models.Model):
         return vals
 
     def _stolen_move(self, vals):
+        if isinstance(vals.get('line_ids'), bool):
+            return
         for command in vals.get('line_ids', ()):
             if command[0] == Command.LINK:
                 yield self.env['account.move.line'].browse(command[1]).move_id.id
