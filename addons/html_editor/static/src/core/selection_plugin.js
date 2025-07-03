@@ -24,6 +24,7 @@ import {
     normalizeSelfClosingElement,
 } from "../utils/selection";
 import { closestScrollableY } from "@web/core/utils/scrolling";
+import { weakMemoize } from "@html_editor/utils/functions";
 
 /**
  * @typedef { Object } EditorSelection
@@ -94,12 +95,12 @@ export function isNotAllowedContent(node) {
     return isArtificialVoidElement(node) || VOID_ELEMENT_NAMES.includes(node.nodeName);
 }
 
-export function isHtmlContentSupported(selection) {
+export const isHtmlContentSupported = weakMemoize((/** @type {EditorSelection} */ selection) => {
     return !closestElement(
         selection.focusNode,
         '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])'
     );
-}
+});
 
 /**
  * @returns edge text nodes if they do not have content selected
