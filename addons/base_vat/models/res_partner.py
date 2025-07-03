@@ -632,6 +632,27 @@ class ResPartner(models.Model):
 
         return self._check_vat_cr_re.match(vat) or False
 
+    __check_vat_vn_re = re.compile(r'^\d{10}(?:-?\d{3})?$|^\d{12}$')
+    __check_vat_vn_companies_re = re.compile(r'^\d{10}(?:-?\d{3})?$')
+
+    def check_vat_vn(self, vat):
+        """
+        VAT format validator for Vietnam.
+        Supported formats:
+        - 10-digit format (Enterprise tax ID): e.g., 0101243150
+        - 13-digit format with branch suffix: e.g., 0101243150-001
+        - 12-digit format (Personal ID / Citizen ID - CCCD): e.g., 079123456789
+        (used as tax ID for individuals from July 1st, 2025)
+
+        Note:
+        - stdnum.vn.mst.validate() currently only supports 10- and 13-digit VAT numbers
+        - and does not accept the 12-digit personal tax ID (CCCD) format introduced from 01/07/2025.
+        - This helper provides a lightweight format-level validator for use in the meantime.
+        - Can be removed once stdnum.vn.mst adds CCCD support.
+        """
+        vat = vat.strip()
+        return bool(self.__check_vat_vn_re.match(vat))
+
     def format_vat_eu(self, vat):
         # Foreign companies that trade with non-enterprises in the EU
         # may have a VATIN starting with "EU" instead of a country code.
@@ -659,7 +680,10 @@ class ResPartner(models.Model):
     def format_vat_vn(self, vat):
         """ It is better to always have the -"""
         stdnum_vat_format = stdnum.util.get_cc_module('vn', 'vat').format
-        return stdnum_vat_format(vat)
+        if self.__check_vat_vn_companies_re.match(vat):
+            return stdnum_vat_format(vat)
+        else:
+            return vat
 
     def format_vat_hu(self, vat):
         """ We put the - back as we require it for the EDI and the different parts will make it clear to the user"""
