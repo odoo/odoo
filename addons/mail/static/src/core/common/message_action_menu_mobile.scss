@@ -8,3 +8,8 @@
         border: none !important;
     }
 }
+
+.o_inactive_modal:has(.o-discuss-mobileContextMenu) {
+    // Avoid double modal backdrop
+    background-color: transparent;
+}
