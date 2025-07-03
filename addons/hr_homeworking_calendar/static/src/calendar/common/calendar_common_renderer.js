@@ -100,7 +100,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         if (this.props.model.scale === "month") {
             return {
                 ...super.headerTemplateProps(date),
-                showLocation: !this.context?.showLocation,
+                showLocation: this.context?.showLocation,
             }
         }
         const parsedDate = DateTime.fromJSDate(date).toISODate();
@@ -126,7 +126,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             worklocation : displayedWorkLocation,
             workLocationSetForCurrentUser,
             multiCalendar,
-            showLocation: !this.context?.showLocation,
+            showLocation: this.context?.showLocation,
             showLine,
             iconMap: {
                 "office": "fa-building",
