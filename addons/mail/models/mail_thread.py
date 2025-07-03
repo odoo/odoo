@@ -41,7 +41,8 @@ from odoo.tools import (
 from odoo.tools.mail import (
     append_content_to_html, decode_message_header,
     email_normalize, email_normalize_all, email_split,
-    email_split_and_format, formataddr, html_sanitize,
+    email_split_and_format, email_split_and_format_normalize,
+    formataddr, html_sanitize,
     generate_tracking_message_id,
     unfold_references,
 )
@@ -1363,8 +1364,7 @@ class MailThread(models.AbstractModel):
             # switch to odoobot for all incoming message creation
             # to have a high-privilege archived user so real_author_id is correctly computed
             thread_root = thread.with_user(self.env.ref('base.user_root'))
-            # replies to internal message are considered as notes, but parent message
-            # author is added in recipients to ensure they are notified of a private answer
+            # replies to internal message are considered as notes, otherwise they are comments
             parent_message = False
             if message_dict.get('parent_id'):
                 parent_message = self.env['mail.message'].sudo().browse(message_dict['parent_id'])
@@ -1372,20 +1372,29 @@ class MailThread(models.AbstractModel):
             if not subtype_id:
                 if message_dict.get('is_internal'):
                     subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
-                    if parent_message and parent_message.author_id:
-                        partner_ids = [parent_message.author_id.id]
                 else:
                     subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+            # additional recipients
+            # - internal: ping parent message author to ensure they are notified of a private answer
+            # - from a customer: ping parent message author to be sure he is notified (will be removed
+            # if already follower or notified through incoming_email_to/cc)
+            if parent_message and parent_message.author_id:
+                if message_dict.get('is_internal'):
+                    partner_ids = [parent_message.author_id.id]
+                elif parent_message.author_id.partner_share:
+                    partner_ids = [parent_message.author_id.id]
 
             post_params = dict(
-                incoming_email_cc=message_dict.pop('cc', False),
-                incoming_email_to=message_dict.pop('to', False),
+                incoming_email_cc=message_dict.pop('cc_filtered', False),
+                incoming_email_to=message_dict.pop('to_filtered', False),
                 subtype_id=subtype_id,
                 partner_ids=partner_ids,
                 **message_dict,
             )
             # remove computational values not stored on mail.message and avoid warnings when creating it
-            for x in ('from', 'recipients', 'references', 'in_reply_to', 'x_odoo_message_id',
+            for x in ('from', 'recipients',
+                      'cc', 'to',  # use cc_filtered, to_filtered
+                      'references', 'in_reply_to', 'x_odoo_message_id',
                       'is_bounce', 'bounced_email', 'bounced_message', 'bounced_msg_ids', 'bounced_partner'):
                 post_params.pop(x, None)
             new_msg = False
@@ -1807,13 +1816,25 @@ class MailThread(models.AbstractModel):
             ] if address
             for formatted_email in email_split_and_format(address))
         )
-        msg_dict['to'] = ','.join(set(formatted_email
+        email_to_list = list({
+            formatted_email
             for address in [
                 decode_message_header(message, 'Delivered-To', separator=','),
                 decode_message_header(message, 'To', separator=',')
             ] if address
-            for formatted_email in email_split_and_format(address))
+            for formatted_email in email_split_and_format(address)
+        })
+        msg_dict['to'] = ','.join(email_to_list)
+        # filtered to / cc, excluding aliases
+        recipients_normalized_all = email_normalize_all(f'{msg_dict["to"]},{msg_dict["cc"]}')
+        alias_emails = self.env['mail.alias.domain'].sudo()._find_aliases(recipients_normalized_all)
+        msg_dict['cc_filtered'] = ','.join(
+            cc for cc in email_cc_list if email_normalize(cc) not in alias_emails
         )
+        msg_dict['to_filtered'] = ','.join(
+            to for to in email_to_list if email_normalize(to) not in alias_emails
+        )
+
         # compute references to find if email_message is a reply to an existing thread
         msg_dict['references'] = decode_message_header(message, 'References')
         msg_dict['in_reply_to'] = decode_message_header(message, 'In-Reply-To').strip()
@@ -3745,15 +3766,29 @@ class MailThread(models.AbstractModel):
         if additional_values:
             base_mail_values.update(additional_values)
 
-        # prepare headers (as sudo as accessing mail.alias.domain, restricted)
+        # prepare headers
         headers = {}
-        # prepare external emails to modify Msg[To] and enable Reply-All including external people
+        # prepare external emails to modify Msg[To] and enable Reply-All by
+        # including external people (aka share partners to notify + emails
+        # notified by incoming email (incoming_email_cc and incoming_email_to)
+        # that were not transformed into partners to notify
         external_emails = [
             formataddr((r['name'], r['email_normalized']))
             for r in recipients_data if r['id'] and r['active'] and r['email_normalized'] and r['share']
         ]
+        external_emails_normalized = [
+            r['email_normalized']
+            for r in recipients_data if r['id'] and r['active'] and r['email_normalized'] and r['share']
+        ]
+        external_emails += list({
+            email for email in email_split_and_format_normalize(
+                f"{message_sudo.incoming_email_to or ''},{message_sudo.incoming_email_cc or ''}"
+            )
+            if email_normalize(email) not in external_emails_normalized
+        })
         if external_emails and len(external_emails) < self._CUSTOMER_HEADERS_LIMIT_COUNT:  # more than threshold = considered as public record (slide, forum, ...) -> do not leak
             headers['X-Msg-To-Add'] = ','.join(external_emails)
+        # sudo: access to mail.alias.domain, restricted
         if message_sudo.record_alias_domain_id.bounce_email:
             headers['Return-Path'] = message_sudo.record_alias_domain_id.bounce_email
         headers = self._notify_by_email_get_headers(headers=headers)
