@@ -68,7 +68,7 @@ WebsiteSale.include({
      * Recomputes the combination after adding a product to the cart
      * @override
      */
-    _onClickAdd(ev) {
+    onClickAdd(ev) {
         return this._super.apply(this, arguments).then(() => {
             if ($('div.availability_messages').length) {
                 this._getCombinationInfo(ev);
