@@ -64,7 +64,7 @@ class CardCampaign(models.Model):
     content_button = fields.Char('Button')
 
     # Dynamic Content fields
-    content_header = fields.Char('Header', translate=True)
+    content_header = fields.Char('Header', default=lambda self: _('Card Title'), translate=True)
     content_header_dyn = fields.Boolean('Is Dynamic Header')
     content_header_path = fields.Char('Header Path')
     content_header_color = fields.Char('Header Color')
@@ -74,7 +74,7 @@ class CardCampaign(models.Model):
     content_sub_header_path = fields.Char('Sub-Header Path')
     content_sub_header_color = fields.Char('Sub Header Color')
 
-    content_section = fields.Char('Section', translate=True)
+    content_section = fields.Char('Section', default=lambda self: _('Details'), translate=True)
     content_section_dyn = fields.Boolean('Is Dynamic Section')
     content_section_path = fields.Char('Section Path')
 
@@ -206,6 +206,9 @@ class CardCampaign(models.Model):
         for campaign in self:
             if campaign._origin.res_model and campaign.res_model != campaign._origin.res_model:
                 campaign.update(reset_dict)
+                # set some default here to show the possible layout of the template
+                if campaign.res_model and isinstance(self.env[campaign.res_model], self.env.registry['image.mixin']) and not campaign.content_image1_path:
+                    campaign.content_image1_path = 'image_512'
 
     @api.model_create_multi
     def create(self, vals_list):
