@@ -54,6 +54,12 @@ patch(PaymentScreen.prototype, {
     },
     //@override
     async _isOrderValid(isForceValidate) {
+        if (
+            this.currentOrder.refunded_order_id?.pos_reference.includes("Self-Order") &&
+            this.currentOrder.refunded_order_id?.payment_ids[0].online_account_payment_id
+        ) {
+            return await super._isOrderValid(...arguments);
+        }
         if (!(await super._isOrderValid(...arguments))) {
             return false;
         }
