@@ -2555,10 +2555,11 @@ export class Model extends Array {
      * @param {number} [offset]
      * @param {number} [limit]
      * @param {string} [order]
+     * @param {boolean} [load=true]
      */
-    search_read(domain, fields, offset, limit, order) {
-        const kwargs = getKwArgs(arguments, "domain", "fields", "offset", "limit", "order");
-        ({ domain, fields, offset, limit, order } = kwargs);
+    search_read(domain, fields, offset, limit, order, load = true) {
+        const kwargs = getKwArgs(arguments, "domain", "fields", "offset", "limit", "order", "load");
+        ({ domain, fields, offset, limit, order, load } = kwargs);
 
         if (!fields?.length) {
             fields = Object.keys(this._fields);
@@ -2572,7 +2573,8 @@ export class Model extends Array {
         });
         return this.read(
             records.map((r) => r.id),
-            unique([...fields, "id"])
+            unique([...fields, "id"]),
+            load
         );
     }
 

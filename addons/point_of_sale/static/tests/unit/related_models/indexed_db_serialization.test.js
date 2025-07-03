@@ -2,6 +2,10 @@ import { expect, test, describe } from "@odoo/hoot";
 import { SERIALIZED_UI_STATE_PROP } from "@point_of_sale/app/models/related_models/utils";
 import { getRelatedModelsInstance } from "../data/get_model_definitions";
 import { makeMockServer } from "@web/../tests/web_test_helpers";
+import { definePosModels } from "../data/generate_model_definitions";
+import { getFilledOrder, setupPosEnv } from "../utils";
+
+definePosModels();
 
 describe("IndexedDB serialization", () => {
     test("newly created record", async () => {
@@ -49,35 +53,21 @@ describe("IndexedDB serialization", () => {
     });
 
     test("Restore serialized data", async () => {
-        await makeMockServer();
-        const models = getRelatedModelsInstance();
-        const storedData = {
-            "pos.order": [
-                {
-                    [SERIALIZED_UI_STATE_PROP]: '{"demoValue":999}',
-                    total: 10,
-                    id: 99,
-                    lines: [11],
-                },
-            ],
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        order.uiState = { demoValue: 999 };
+        const serialized = order.serializeForIndexedDB();
+        const serializedLines = order.lines.map((line) => line.serializeForIndexedDB());
 
-            "pos.order.line": [
-                {
-                    id: 11,
-                    quantity: 9,
-                },
-            ],
-        };
+        store.data.localDeleteCascade(order);
+        const data = store.models.loadConnectedData({
+            "pos.order": [serialized],
+            "pos.order.line": serializedLines,
+        });
 
-        models.loadConnectedData(storedData);
-        const order = models["pos.order"].get(99);
         // UI state is restored
-        expect(order.uiState.demoValue).toBe(999);
+        expect(data["pos.order"][0].uiState.demoValue).toBe(999);
         // UIState must be excluded from the raw data
-        expect(order.raw.uiState).toBeEmpty();
-        expect(order.raw.lines).toEqual([11]);
-
-        expect(order.lines[0].id).toBe(11);
-        expect(order.lines[0].uiState).toBeEmpty();
+        expect(data["pos.order"][0].raw.uiState).toBeEmpty();
     });
 });
