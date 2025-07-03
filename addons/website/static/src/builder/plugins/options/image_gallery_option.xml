@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="website.ImageGalleryOption">
+<t t-name="website.ImageGalleryImagesOption">
     <BuilderRow label.translate="Images">
         <BuilderButton type="'success'" className="'flex-grow-1'" preview="false" title.translate="Add Image"  action="'addImage'"> Add </BuilderButton>
         <BuilderButton type="'danger'" className="'flex-grow-1'" preview="false" title.translate="Remove all images" action="'removeAllImages'"> Remove all </BuilderButton>
     </BuilderRow>
+</t>
+
+<t t-name="website.ImageGalleryOption">
     <BuilderRow label.translate="Mode" t-if="!this.state.isSlideShow">
         <BuilderSelect>
             <BuilderSelectItem id="'grid_mode_opt'" action="'setImageGalleryLayout'" actionParam="'grid'">Grid</BuilderSelectItem>
