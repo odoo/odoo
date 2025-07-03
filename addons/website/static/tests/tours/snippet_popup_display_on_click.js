@@ -1,3 +1,4 @@
+import { animationFrame } from "@odoo/hoot-dom";
 import {
     clickOnEditAndWaitEditMode,
     clickOnElement,
@@ -32,6 +33,7 @@ registerWebsitePreviewTour("snippet_popup_display_on_click", {
             const oldWriteText = browser.navigator.clipboard.writeText;
             browser.navigator.clipboard.writeText = () => { console.info('Copy in clipboard ignored!') };
             await helpers.click();
+            await animationFrame();
             browser.navigator.clipboard.writeText = oldWriteText;
         }
     },

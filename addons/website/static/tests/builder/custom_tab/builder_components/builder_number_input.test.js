@@ -96,6 +96,7 @@ test("input kept on async action", async () => {
     addActionOption({
         customAction: class extends BuilderAction {
             static id = "customAction";
+            suppressPreviewableAsyncWarning = true;
             getValue({ editingElement }) {
                 return editingElement.dataset.test;
             }

@@ -1,4 +1,4 @@
-import { convertParamToObject } from "@html_builder/core/utils";
+import { convertParamToObject, isActionPreviewable } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
@@ -21,7 +21,10 @@ export class CompositeActionPlugin extends Plugin {
 export class CompositeAction extends BuilderAction {
     static id = "composite";
     static dependencies = ["builderActions"];
+
+    suppressPreviewableAsyncWarning = true;
     loadOnClean = true;
+
     async prepare({ actionParam: { mainParam: actions }, actionValue }) {
         const proms = [];
         for (const actionDef of actions) {
@@ -85,12 +88,12 @@ export class CompositeAction extends BuilderAction {
         }
         return !!results.length && results.every((result) => result);
     }
-    async load({ editingElement, params: { mainParam: actions }, value }) {
+    async load({ isPreviewing, editingElement, params: { mainParam: actions }, value }) {
         const loadActions = [];
         const loadResults = [];
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
-            if (action.has("load")) {
+            if (action.has("load") && (!isPreviewing || isActionPreviewable(action))) {
                 const actionDescr = this._getActionDescription({
                     editingElement,
                     ...actionDef,
@@ -109,7 +112,9 @@ export class CompositeAction extends BuilderAction {
             return acc;
         }, {});
     }
+
     async apply({
+        isPreviewing,
         editingElement,
         params: { mainParam: actions },
         value,
@@ -117,22 +122,22 @@ export class CompositeAction extends BuilderAction {
         dependencyManager,
         selectableContext,
     }) {
-        for (const actionDef of actions) {
-            const action = this.dependencies.builderActions.getAction(actionDef.action);
-            if (action.has("apply")) {
-                const actionDescr = this._getActionDescription({
-                    editingElement,
-                    value,
-                    ...actionDef,
-                    loadResult,
-                    dependencyManager,
-                    selectableContext,
-                });
-                await action.apply(actionDescr);
-            }
-        }
+        return this.dependencies.builderActions.callSpecs(
+            this._getSpecsToCall(true, {
+                isPreviewing,
+                editingElement,
+                loadResult,
+                actions,
+                value,
+            }),
+            dependencyManager,
+            selectableContext,
+            isPreviewing
+        );
     }
-    clean({
+
+    async clean({
+        isPreviewing,
         editingElement,
         params: { mainParam: actions },
         value,
@@ -141,27 +146,23 @@ export class CompositeAction extends BuilderAction {
         selectableContext,
         nextAction,
     }) {
-        for (const actionDef of actions) {
-            const action = this.dependencies.builderActions.getAction(actionDef.action);
-            const actionDescr = this._getActionDescription({
+        return this.dependencies.builderActions.callSpecs(
+            this._getSpecsToCall(false, {
+                isPreviewing,
                 editingElement,
-                ...actionDef,
-                value,
                 loadResult,
-                dependencyManager,
-                selectableContext,
-                nextAction,
-            });
-            if (action.has("clean")) {
-                action.clean(actionDescr);
-            } else if (action.has("apply")) {
-                if (loadResult && loadResult[actionDef.action]) {
-                    actionDescr.loadResult = loadResult[actionDef.action];
-                }
-                action.apply(actionDescr);
-            }
-        }
+                actions,
+                value,
+            }),
+            dependencyManager,
+            selectableContext,
+            isPreviewing,
+            () => false,
+            true,
+            [nextAction]
+        );
     }
+
     _getActionDescription(action) {
         const { action: actionId, actionParam, actionValue, value, loadResult } = action;
         const actionDescr = {};
@@ -187,11 +188,62 @@ export class CompositeAction extends BuilderAction {
         }
         return actionDescr;
     }
+
+    _getActionSpec(action) {
+        const { editingElement, params, value, loadResult, nextAction } =
+            this._getActionDescription(action);
+
+        const spec = {
+            actionId: action.action,
+            editingElement,
+            actionParam: params,
+            actionValue: value,
+            loadResult,
+            nextAction,
+        };
+        const overridableMethods = ["apply", "clean", "load", "loadOnClean"];
+        for (const method of overridableMethods) {
+            if (!action.has || action.has(method)) {
+                spec[method] = action[method];
+            }
+        }
+        return spec;
+    }
+
+    _getSpecsToCall(
+        isApply,
+        { isPreviewing, editingElement, loadResult, actions, value, nextAction }
+    ) {
+        const allSpecs = this.dependencies.builderActions.getActionsSpecs(
+            actions.map((actionDef) => ({
+                actionId: actionDef.action,
+                actionParam: convertParamToObject(actionDef.actionParam),
+                actionValue: actionDef.actionValue || value,
+            })),
+            [editingElement]
+        );
+        const specsToCall = [];
+        for (const spec of allSpecs) {
+            if (
+                (!isApply || spec.action.has("apply")) &&
+                (!isPreviewing || isActionPreviewable(spec.action))
+            ) {
+                specsToCall.push({
+                    ...spec,
+                    loadResult: loadResult ? loadResult[spec.actionId] : undefined,
+                    nextAction,
+                });
+            }
+        }
+        return specsToCall;
+    }
 }
 
 export class ReloadCompositeAction extends CompositeAction {
     static id = "reloadComposite";
     setup() {
-        this.reload = {};
+        this.reload = {
+            previewable: true,
+        };
     }
 }

@@ -539,7 +539,7 @@ export class WebsiteConfigAction extends BuilderAction {
     async apply(action) {
         return this._toggleConfig(action, true);
     }
-    clean(action) {
+    async clean(action) {
         return this._toggleConfig(action, false);
     }
 
@@ -701,7 +701,7 @@ export class SelectTemplateAction extends BuilderAction {
     async apply(action) {
         return this.dependencies.customizeWebsite.toggleTemplate(action, true);
     }
-    clean(action) {
+    async clean(action) {
         return this.dependencies.customizeWebsite.toggleTemplate(action, false);
     }
 }
