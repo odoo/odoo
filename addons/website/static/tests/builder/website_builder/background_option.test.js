@@ -1,5 +1,5 @@
-import { BackgroundOption } from "@website/builder/plugins/background_option/background_option";
-import { BackgroundPositionOverlay } from "@website/builder/plugins/background_option/background_position_overlay";
+import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
+import { BackgroundPositionOverlay } from "@html_builder/plugins/background_option/background_position_overlay";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
