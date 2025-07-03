@@ -256,11 +256,7 @@ class DiscussChannelMember(models.Model):
 
     def _notify_mute(self):
         for member in self:
-            Store(
-                member.channel_id,
-                {"mute_until_dt": member.mute_until_dt},
-                bus_channel=member._bus_channel(),
-            ).bus_send()
+            Store(member, "mute_until_dt", bus_channel=member._bus_channel()).bus_send()
             if member.mute_until_dt and member.mute_until_dt != -1:
                 self.env.ref("mail.ir_cron_discuss_channel_member_unmute")._trigger(member.mute_until_dt)
 

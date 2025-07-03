@@ -16,7 +16,7 @@
                     datetime="message?.datetime"
                     iconSrc="thread.avatarUrl"
                     hasMarkAsReadButton="thread.isUnread"
-                    muted="thread.mute_until_dt ? 2 : !thread.isUnread ? 1 : 0"
+                    muted="thread.selfMember?.mute_until_dt ? 2 : !thread.isUnread ? 1 : 0"
                     onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread)"
                     onSwipeRight="hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
                     onSwipeLeft="hasTouch() and canUnpinItem(thread) ? { action: () => thread.unpin(), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"

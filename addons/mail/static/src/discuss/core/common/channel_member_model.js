@@ -57,6 +57,7 @@ export class ChannelMember extends Record {
     });
     message_unread_counter_ui = 0;
     message_unread_counter_bus_id = 0;
+    mute_until_dt = fields.Datetime();
     new_message_separator = fields.Attr(null, {
         /** @this {import("models").ChannelMember} */
         onUpdate() {

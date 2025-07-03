@@ -367,7 +367,7 @@ async function discuss_settings_mute(request) {
     BusBus._sendone(
         partner,
         "mail.record/insert",
-        new mailDataHelpers.Store(DiscussChannel.browse(member.channel_id), {
+        new mailDataHelpers.Store(DiscussChannelMember.browse([member.id]), {
             mute_until_dt,
         }).get_result()
     );
