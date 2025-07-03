@@ -210,6 +210,11 @@ class StockMoveLine(models.Model):
         else:
             return super()._get_linkable_moves()
 
+    def _exclude_requiring_lot(self):
+        if self.move_id.unbuild_id:
+            return True
+        return super()._exclude_requiring_lot()
+
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
