@@ -86,6 +86,7 @@ messageActionsRegistry
         title: _t("View Reactions"),
         onClick: (component) => component.openReactionMenu(),
         sequence: 50,
+        mobileCloseAfterClick: false,
         dropdown: true,
     })
     .add("unfollow", {
