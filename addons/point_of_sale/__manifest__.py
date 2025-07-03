@@ -94,30 +94,23 @@
             'point_of_sale/static/tests/customer_display/**/*',
             'point_of_sale/static/src/utils.js',
         ],
+        'web.assets_unit_tests_setup': [
+            ('include', 'point_of_sale.assets_prod'),
+            ('remove', 'point_of_sale/static/src/app/main.js'),
+
+            # Remove CSS files since we're not testing the UI with hoot in PoS
+            # CSS files make html_editor tests fail
+            ('remove', 'point_of_sale/static/src/**/*.css'),
+
+            # Adding error handler back since they are removed in the prod bundle
+            'web/static/src/core/errors/error_handlers.js',
+            'web/static/src/core/dialog/dialog.scss',
+        ],
         'web.assets_unit_tests': [
-            # Load it first to be sure models registry is loaded
-            'point_of_sale/static/src/app/models/**/*',
             'point_of_sale/static/tests/unit/**/*',
-
-            # for the data_service.test.js
-            'point_of_sale/static/src/utils.js',
-            'point_of_sale/static/src/proxy_trap.js',
-            'point_of_sale/static/src/lazy_getter.js',
-            'point_of_sale/static/src/app/services/data_service.js',
-            'point_of_sale/static/src/app/utils/numbers.js',
-
-            'point_of_sale/static/src/app/utils/html-to-image.js',
-            'point_of_sale/static/src/app/services/render_service.js',
-
-            'point_of_sale/static/src/app/components/odoo_logo/*',
-            'point_of_sale/static/src/app/components/centered_icon/*',
-            'point_of_sale/static/src/app/components/inputs/**/*',
-            'point_of_sale/static/tests/generic_components/**/*',
-
         ],
 
         # PoS assets
-
         'point_of_sale.base_app': [
             ("include", "web._assets_helpers"),
             ("include", "web._assets_backend_helpers"),
