@@ -40,27 +40,6 @@
         </field>
     </record>
 
-    <record id="view_hr_attendance_kanban" model="ir.ui.view">
-        <field name="name">hr.attendance.kanban</field>
-        <field name="model">hr.attendance</field>
-        <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" sample="1">
-                <field name="check_in"/>
-                <field name="check_out"/>
-                <templates>
-                    <t t-name="card">
-                        <field name="employee_id" widget="many2one_avatar_employee" options="{'display_avatar_name': True}" class="fs-5 fw-bold mb-2"/>
-                        <hr class="mt4 mb8"/>
-                        <div>
-                            <i class="fa fa-calendar me-1" aria-label="Period" role="img" title="Period"></i>
-                            <field name="check_in" /> - <field name="check_out" />
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
-
     <record id="hr_attendance_view_form" model="ir.ui.view">
         <field name="name">hr.attendance.form</field>
         <field name="model">hr.attendance</field>
