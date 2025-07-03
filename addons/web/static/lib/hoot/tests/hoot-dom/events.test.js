@@ -379,6 +379,25 @@ describe(parseUrl(import.meta.url), () => {
         expect("button:interactive").not.toHaveCount();
     });
 
+    test("click on inert element", async () => {
+        await mountForTest(/* xml */ `
+            <div class="container">
+                <button class="btn">Button</button>
+                <iframe inert="" srcdoc="&lt;button&gt;iframe button&lt;/button&gt;" />
+            </div>
+        `);
+
+        let events = await click(".btn");
+        expect(events.get("click")).not.toBe(null);
+
+        queryOne`.btn`.setAttribute("inert", "");
+
+        events = await click(".btn");
+        expect(events.get("click").target).toBe(queryOne`.container`);
+
+        await expect(click(":iframe button")).rejects.toThrow();
+    });
+
     test("click on common parent", async () => {
         await mountForTest(/* xml */ `
             <main class="parent">

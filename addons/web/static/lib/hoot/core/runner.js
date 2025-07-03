@@ -552,7 +552,7 @@ export class Runner {
         const runFn = this.dry ? null : fn;
         let test = markRaw(new Test(parentSuite, name, config));
         const originalTest = this.tests.get(test.id);
-        if (originalTest) {
+        if (originalTest && !originalTest.isMinimized) {
             if (this.dry || originalTest.run) {
                 throw testError(
                     { name, parent: parentSuite },
@@ -563,6 +563,9 @@ export class Runner {
             }
             test = originalTest;
         } else {
+            if (!this.dry && this._prepared) {
+                return null;
+            }
             parentSuite.addJob(test);
             this.tests.set(test.id, test);
         }
@@ -902,7 +905,7 @@ export class Runner {
 
                 /** @type {Suite} */
                 const suite = job;
-                if (!suite.config.skip) {
+                if (!suite.config.skip && suite.currentJobs.length) {
                     if (suite.currentJobIndex <= 0) {
                         // before suite code
                         this.suiteStack.push(suite);
@@ -926,13 +929,13 @@ export class Runner {
                         suite.runCount++;
                         if (suite.willRunAgain()) {
                             suite.reset();
+                            continue;
                         } else {
                             suite.cleanup();
                         }
-                        if (suite.runCount < (suite.config.multi || 0)) {
-                            continue;
-                        }
                     }
+                } else {
+                    suite.minimize();
                 }
                 job = this._nextJob(jobs, job);
                 continue;
@@ -1683,6 +1686,20 @@ export class Runner {
 
         if (!this.state.tests.length) {
             throw new HootError(`no tests to run`);
+        }
+
+        // Reduce non-included suites & tests info to a miminum
+        const includedSuites = new Set(this.state.suites);
+        for (const suite of this.suites.values()) {
+            if (!includedSuites.has(suite)) {
+                suite.minimize();
+            }
+        }
+        const includedTests = new Set(this.state.tests);
+        for (const test of this.tests.values()) {
+            if (!includedTests.has(test)) {
+                test.minimize();
+            }
         }
     }
 

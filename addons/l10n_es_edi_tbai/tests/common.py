@@ -55,8 +55,8 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
             cert_name = 'araba_1234.p12'
             cert_password = '1234'
         elif agency == 'bizkaia':
-            cert_name = 'bizkaia_111111.p12'
-            cert_password = '111111'
+            cert_name = 'Bizkaia-IZDesa2025.p12'
+            cert_password = 'IZDesa2025'
         elif agency == 'gipuzkoa':
             cert_name = 'gipuzkoa_Iz3np32024.p12'
             cert_password = 'Iz3np32024'

@@ -89,14 +89,8 @@ test("SelectCreateDialog use domain, group_by and search default", async () => {
     `;
     let search = 0;
     onRpc("web_read_group", ({ kwargs }) => {
-        expect(kwargs).toEqual(
+        expect(kwargs).toMatchObject(
             {
-                context: {
-                    allowed_company_ids: [1],
-                    lang: "en",
-                    tz: "taht",
-                    uid: 7,
-                },
                 domain: [
                     "&",
                     ["name", "like", "a"],
@@ -119,16 +113,8 @@ test("SelectCreateDialog use domain, group_by and search default", async () => {
     });
     onRpc("web_search_read", ({ kwargs }) => {
         if (search === 0) {
-            expect(kwargs).toEqual(
+            expect(kwargs).toMatchObject(
                 {
-                    context: {
-                        allowed_company_ids: [1],
-                        bin_size: true,
-                        current_company_id: 1,
-                        lang: "en",
-                        tz: "taht",
-                        uid: 7,
-                    }, // not part of the test, may change
                     domain: [
                         "&",
                         ["name", "like", "a"],
@@ -147,16 +133,8 @@ test("SelectCreateDialog use domain, group_by and search default", async () => {
                 }
             );
         } else if (search === 1) {
-            expect(kwargs).toEqual(
+            expect(kwargs).toMatchObject(
                 {
-                    context: {
-                        allowed_company_ids: [1],
-                        bin_size: true,
-                        current_company_id: 1,
-                        lang: "en",
-                        tz: "taht",
-                        uid: 7,
-                    }, // not part of the test, may change
                     domain: [["name", "like", "a"]],
                     specification: { name: {}, foo: {} },
                     limit: 80,

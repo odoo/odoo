@@ -127,7 +127,7 @@ class TestEdiZatca(TestSaEdiCommon):
             applied_xpath = self.credit_note_applied_xpath + \
             '''
                 <xpath expr="(//*[local-name()='AdditionalDocumentReference']/*[local-name()='UUID'])[1]" position="replace">
-                    <UUID>___ignore___</UUID>
+                    <cbc:UUID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:UUID>
                 </xpath>
             '''
 
@@ -149,7 +149,7 @@ class TestEdiZatca(TestSaEdiCommon):
             applied_xpath = self.debit_note_applied_xpath + \
             '''
                 <xpath expr="(//*[local-name()='AdditionalDocumentReference']/*[local-name()='UUID'])[1]" position="replace">
-                    <UUID>___ignore___</UUID>
+                    <cbc:UUID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:UUID>
                 </xpath>
             '''
 

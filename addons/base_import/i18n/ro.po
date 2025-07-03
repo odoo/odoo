@@ -3,10 +3,10 @@
 # 	* base_import
 # 
 # Translators:
-# Lyall Kindmurr, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
-# Alin Miclea, 2025
+# Alin Miclea, 2024
 # Wil Odoo, 2025
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
 msgid "%(number)s file(s) selected"
-msgstr ""
+msgstr "%(number)s fișier(e) selectat(e)"
 
 #. module: base_import
 #. odoo-python
@@ -53,14 +53,14 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect."
 msgstr ""
-"În fișier a fost găsită o singură coloană, ceea ce înseamnă adesea că "
-"separatorul de fișiere este incorect."
+"A fost găsită o singură coloană în fișier, ceea ce înseamnă adesea că "
+"separatorul este incorect."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 msgid "Additional Fields"
-msgstr "Câmpuri adiționale"
+msgstr "Câmpuri suplimentare"
 
 #. module: base_import
 #. odoo-javascript
@@ -74,6 +74,8 @@ msgstr "Avansat"
 msgid ""
 "After each batch import, this delay is applied to avoid unthrottled calls"
 msgstr ""
+"După fiecare import în lot, această întârziere este aplicată pentru a evita "
+"apelurile necontrolate"
 
 #. module: base_import
 #. odoo-javascript
@@ -92,19 +94,18 @@ msgid ""
 msgstr ""
 "A apărut o problemă necunoscută în timpul importului (posibil conexiune "
 "pierdută, limită de date depășită sau limite de memorie depășite). "
-"Reîncercați, în cazul în care problema este temporară. Dacă problema "
-"persistă, încercați să împărțiți fișierul în loc să îl importați dintr-o "
-"dată."
+"Reîncercați dacă problema este temporară. Dacă problema persistă, încercați "
+"să împărțiți fișierul în loc să îl importați dintr-o dată."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
 msgid "Base"
-msgstr "Baza"
+msgstr "Bază"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
 msgid "Base Import"
-msgstr "Import baza"
+msgstr "Import de bază"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
@@ -121,7 +122,7 @@ msgstr "Lot"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch Import"
-msgstr "Importați în masă"
+msgstr "Import în lot"
 
 #. module: base_import
 #. odoo-javascript
@@ -133,7 +134,7 @@ msgstr "Limită lot"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "But, you can also use .csv files"
-msgstr ""
+msgstr "Dar puteți folosi și fișiere .csv"
 
 #. module: base_import
 #. odoo-javascript
@@ -146,8 +147,7 @@ msgstr "Anulează"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
 msgstr ""
-"Faceți clic pe „Reluare” pentru a continua cu importul, reluând la rândul "
-"%s."
+"Faceți clic pe „Reluare” pentru a continua importul, reluând de la linia %s."
 
 #. module: base_import
 #. odoo-python
@@ -162,13 +162,13 @@ msgid ""
 "Column %(column)s contains incorrect values. Error in line %(line)d: "
 "%(error)s"
 msgstr ""
-"Coloana %(column)s conține valori incorecte. Eroare în linia %(line)d: "
+"Coloana %(column)s conține valori incorecte. Eroare la linia %(line)d: "
 "%(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr "Etichetă coloană"
+msgstr "Nume coloană"
 
 #. module: base_import
 #. odoo-javascript
@@ -208,19 +208,19 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_date
 msgid "Created on"
-msgstr "Creat pe"
+msgstr "Creat la"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Data to import"
-msgstr ""
+msgstr "Date de importat"
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Database ID"
-msgstr "ID-ul Bază date"
+msgstr "ID Bază de date"
 
 #. module: base_import
 #. odoo-javascript
@@ -232,25 +232,25 @@ msgstr "Format dată:"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Datetime Format:"
-msgstr "Format datetimp:"
+msgstr "Format dată/oră:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Decimals Separator:"
-msgstr "Separator zecimale"
+msgstr "Separator zecimal:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Defines how many megabytes can be imported in each batch import"
-msgstr ""
+msgstr "Definește câți megabytes pot fi importați la fiecare import în lot"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Delay after each batch"
-msgstr ""
+msgstr "Întârziere după fiecare lot"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -275,7 +275,7 @@ msgstr "Descarcă"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Drop or upload a file to import"
-msgstr ""
+msgstr "Trageți sau încărcați un fișier pentru import"
 
 #. module: base_import
 #. odoo-javascript
@@ -287,13 +287,13 @@ msgstr "Codificare:"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
-msgstr "Eroare procesare Dată  [%(field)s:L%(line)d]: %(error)s"
+msgstr "Eroare la procesarea datei [%(field)s:L%(line)d]: %(error)s"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Error at row %(row)s: \"%(error)s\""
-msgstr "Eroare la rândul%(row)s: \"%(error)s”"
+msgstr "Eroare la rândul %(row)s: \"%(error)s\""
 
 #. module: base_import
 #. odoo-python
@@ -313,21 +313,21 @@ msgid ""
 "%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "Eroare la importul înregistrărilor: toate rândurile trebuie să aibă aceeași "
-"dimensiune, dar rândul de titlu are %(title_row_entries)d intrări în timp ce"
-" primul rând are%(first_row_entries)d. Poate fi necesar să schimbați "
-"caracterul separatorului."
+"dimensiune, dar rândul de titlu are %(title_row_entries)d intrări iar primul"
+" rând are %(first_row_entries)d. Poate fi necesar să schimbați caracterul "
+"separator."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Estimated time left:"
-msgstr "Timp estimat rămas"
+msgstr "Timp estimat rămas:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Everything seems valid."
-msgstr "Totul pare valabil."
+msgstr "Totul pare valid."
 
 #. module: base_import
 #. odoo-javascript
@@ -376,19 +376,19 @@ msgstr "Dimensiunea fișierului depășește maximul configurat (%s bytes)"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "Fișier de verificat si/sau importat, binar prim (nu baza64)"
+msgstr "Fișier de verificat și/sau importat, binar brut (nu base64)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Files to import"
-msgstr ""
+msgstr "Fișiere de importat"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Finalizing current batch before interrupting..."
-msgstr "Finalizarea curentului lot înainte de a întrerupe..."
+msgstr "Se finalizează lotul curent înainte de întrerupere..."
 
 #. module: base_import
 #. odoo-javascript
@@ -412,19 +412,19 @@ msgid ""
 "base64-encoded data."
 msgstr ""
 "Datele imaginii nu sunt valide, imaginile trebuie importate ca URL-uri sau "
-"date codificate în baza64."
+"date codificate în base64."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Go to Import FAQ"
-msgstr "Du-te la Întrebări frecvente despre import"
+msgstr "Mergi la Întrebări frecvente despre import"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Help"
-msgstr "Asistență"
+msgstr "Ajutor"
 
 #. module: base_import
 #. odoo-javascript
@@ -448,9 +448,9 @@ msgid ""
 "                    simpler especially when the file has many columns."
 msgstr ""
 "Dacă fișierul conține\n"
-"numele coloanelor, Odoo poate încerca sa detecteze automat\n"
-"câmpul corespunzător coloanei. Astfel, importurile sunt\n"
-"mai ușor de efectuat, mai ales atunci când fișierul are multe coloane."
+"numele coloanelor, Odoo poate încerca să detecteze automat\n"
+"câmpul corespunzător coloanei. Acest lucru face importurile\n"
+"mai simple, mai ales când fișierul are multe coloane."
 
 #. module: base_import
 #. odoo-javascript
@@ -488,7 +488,7 @@ msgstr "Întrebări frecvente despre import"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Import a File"
-msgstr "Importă un Fișier"
+msgstr "Importă un fișier"
 
 #. module: base_import
 #. odoo-python
@@ -506,13 +506,13 @@ msgstr "Previzualizarea importului a eșuat din cauza: \""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_records/import_records.xml:0
 msgid "Import records"
-msgstr "Importați înregistrări"
+msgstr "Importă înregistrări"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Importing"
-msgstr "Importă"
+msgstr "Se importă"
 
 #. module: base_import
 #. odoo-python
@@ -521,6 +521,9 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
+"Format de celulă invalid la rândul %(row)s, coloana %(col)s: %(cell_value)s,"
+" cu format: %(cell_format)s, deoarece formatele de tip (%(format_type)s) nu "
+"sunt suportate."
 
 #. module: base_import
 #. odoo-python
@@ -534,19 +537,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_uid
 msgid "Last Updated by"
-msgstr "Ultima actualizare făcută de"
+msgstr "Ultima actualizare de către"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_date
 msgid "Last Updated on"
-msgstr "Ultima actualizare pe"
+msgstr "Ultima actualizare la"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Load Data File"
-msgstr ""
+msgstr "Încarcă fișier de date"
 
 #. module: base_import
 #. odoo-javascript
@@ -564,13 +567,13 @@ msgstr "Se încarcă..."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Max size per batch"
-msgstr ""
+msgstr "Dimensiune maximă per lot"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Mb"
-msgstr ""
+msgstr "Mb"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
@@ -599,7 +602,7 @@ msgstr "Fără separator"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
 msgid "No file selected"
-msgstr ""
+msgstr "Niciun fișier selectat"
 
 #. module: base_import
 #. odoo-javascript
@@ -617,19 +620,21 @@ msgstr "Câmp Odoo"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Please upload a single file."
-msgstr ""
+msgstr "Vă rugăm să încărcați un singur fișier."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Please upload an Excel (.xls or .xlsx) or .csv file to import."
 msgstr ""
+"Vă rugăm să încărcați un fișier Excel (.xls sau .xlsx) sau .csv pentru "
+"import."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Prevent import"
-msgstr "Prevenire import"
+msgstr "Previne importul"
 
 #. module: base_import
 #. odoo-javascript
@@ -653,30 +658,30 @@ msgstr "Reimportă"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 msgid "Relation Fields"
-msgstr "Campuri de Legatura"
+msgstr "Câmpuri de legătură"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
 msgid "Res Model"
-msgstr "Modelul de resurse"
+msgstr "Model resursă"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Resume"
-msgstr "Reluare"
+msgstr "Reia"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Search a field..."
-msgstr "Căutați un câmp..."
+msgstr "Caută un câmp..."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "See possible values"
-msgstr "A se vedea valorile posibile"
+msgstr "Vezi valorile posibile"
 
 #. module: base_import
 #. odoo-javascript
@@ -688,7 +693,7 @@ msgstr "Foaie selectată:"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Semicolon"
-msgstr "Punct și virgula"
+msgstr "Punct și virgulă"
 
 #. module: base_import
 #. odoo-javascript
@@ -700,25 +705,25 @@ msgstr "Separator:"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Set to: %s"
-msgstr "Setați la: %s"
+msgstr "Setează la: %s"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Set to: False"
-msgstr "Setați la: False"
+msgstr "Setează la: False"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Set to: True"
-msgstr "Setați la: True"
+msgstr "Setează la: True"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Set value as empty"
-msgstr "Setați valoarea ca fiind goală"
+msgstr "Setează valoarea ca goală"
 
 #. module: base_import
 #. odoo-javascript
@@ -730,7 +735,7 @@ msgstr "Foaie:"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Skip record"
-msgstr "Săriți înregistrarea"
+msgstr "Sari peste înregistrare"
 
 #. module: base_import
 #. odoo-javascript
@@ -748,7 +753,7 @@ msgstr "Câmpuri standard"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Start at line"
-msgstr "Începe de la linia"
+msgstr "Începe la linia"
 
 #. module: base_import
 #. odoo-javascript
@@ -778,7 +783,7 @@ msgstr "Test"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Testing"
-msgstr "Testare"
+msgstr "Se testează"
 
 #. module: base_import
 #. odoo-javascript
@@ -790,13 +795,13 @@ msgstr "Delimitator text:"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "The file contains blocking errors (see below)"
-msgstr "Fișierul conține erori blocaj (vezi mai jos)"
+msgstr "Fișierul conține erori blocante (vezi mai jos)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "The file will be imported by batches"
-msgstr "Fișierul va fi importat în loturi"
+msgstr "Fișierul va fi importat pe loturi"
 
 #. module: base_import
 #. odoo-javascript
@@ -820,13 +825,13 @@ msgstr "Pentru a importa mai multe valori, separați-le printr-o virgulă."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "To import, select a field..."
-msgstr "Pentru import, selectați un câmp"
+msgstr "Pentru a importa, selectați un câmp..."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Track history during import"
-msgstr "Urmărește istoric în timpul importului"
+msgstr "Urmărește istoricul în timpul importului"
 
 #. module: base_import
 #. odoo-python
@@ -842,8 +847,7 @@ msgstr ""
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
-"Format fișier nesuportat \"{}\", import suportat numai pentru  CSV, ODS, XLS"
-" și XLSX"
+"Format fișier nesuportat \"{}\", importul suportă doar CSV, ODS, XLS și XLSX"
 
 #. module: base_import
 #. odoo-javascript
@@ -855,13 +859,13 @@ msgstr "Fără titlu"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Upload Data File"
-msgstr ""
+msgstr "Încarcă fișier de date"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Upload your files"
-msgstr ""
+msgstr "Încărcați fișierele dvs."
 
 #. module: base_import
 #. odoo-javascript
@@ -871,10 +875,10 @@ msgid ""
 "system. You can use a custom format in addition to the suggestions provided."
 " Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
-"Utilizați HH timp de ore într-un sistem de 24 de ore, utilizați II în "
-"combinație cu „p” pentru un sistem de 12 ore. Puteți utiliza un format "
-"personalizat în plus față de sugestiile furnizate. Lăsați gol pentru a lăsa "
-"Odoo să ghicească formatul (recomandat)"
+"Utilizați HH pentru ore într-un sistem de 24h, utilizați II împreună cu 'p' "
+"pentru un sistem de 12h. Puteți folosi un format personalizat pe lângă "
+"sugestiile oferite. Lăsați gol pentru ca Odoo să ghicească formatul "
+"(recomandat)"
 
 #. module: base_import
 #. odoo-javascript
@@ -885,16 +889,16 @@ msgid ""
 "format in addition to the suggestions provided. Leave empty to let Odoo "
 "guess the format (recommended)"
 msgstr ""
-"Utilizați aaaa pentru a reprezenta anul, LL pentru lună și ZZ pentru zi. "
-"Include separatoare, cum ar fi un punct, o bară oblică înainte sau o bară "
-"oblică. Puteți utiliza un format personalizat în plus față de sugestiile "
-"furnizate. Lăsați gol pentru a lăsa Odoo să ghicească formatul (recomandat)"
+"Utilizați YYYY pentru an, MM pentru lună și DD pentru zi. Includeți "
+"separatori precum punct, slash sau cratimă. Puteți folosi un format "
+"personalizat pe lângă sugestiile oferite. Lăsați gol pentru ca Odoo să "
+"ghicească formatul (recomandat)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Use first row as header"
-msgstr "Utilizați primul rând ca antet"
+msgstr "Folosiți primul rând ca antet"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -908,8 +912,8 @@ msgid ""
 "Warning: ignores the labels line, empty lines and lines composed only of "
 "empty cells"
 msgstr ""
-"Atenție: ignoră linia de etichete, liniile goale și liniile compuse numai "
-"din celule goale"
+"Atenție: ignoră linia de etichete, liniile goale și liniile compuse doar din"
+" celule goale"
 
 #. module: base_import
 #. odoo-javascript
@@ -924,8 +928,8 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
-"Nu puteți importa imagini prin URL, verificați cu administratorul sau cu "
-"suportul pentru motivul acesta."
+"Nu puteți importa imagini prin URL, verificați cu administratorul sau "
+"suportul motivul."
 
 #. module: base_import
 #. odoo-javascript
@@ -937,7 +941,7 @@ msgstr "Puteți testa sau reîncărca fișierul înainte de a relua importul."
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "You must configure at least one field to import"
-msgstr "Trebuie să configurați cel puțin un câmp de importat"
+msgstr "Trebuie să configurați cel puțin un câmp pentru import"
 
 #. module: base_import
 #. odoo-javascript

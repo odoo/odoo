@@ -484,13 +484,13 @@ function getView(model, args, kwargs) {
     let [requestViewId, viewType] = args;
     if (!requestViewId) {
         const contextKey = `${viewType}_view_ref`;
-        if (contextKey in kwargs.context) {
+        if (kwargs.context && contextKey in kwargs.context) {
             requestViewId = kwargs.context[contextKey];
         }
     }
     const [arch, viewId] = findView(model, viewType, requestViewId);
-    const view = parseView(model, { arch, context: kwargs.context });
-    if (kwargs.options.toolbar) {
+    const view = parseView(model, { arch });
+    if (kwargs.options?.toolbar) {
         view.toolbar = model._toolbar;
     }
     if (viewId !== undefined) {
@@ -880,11 +880,11 @@ function parseView(model, params) {
         if (node.nodeType !== Node.ELEMENT_NODE) {
             return false;
         }
-        ["required", "readonly", "invisible", "column_invisible"].forEach((attr) => {
+        for (const attr of ["required", "readonly", "invisible", "column_invisible"]) {
             if (/^(true|1)$/i.test(node.getAttribute(attr))) {
                 node.setAttribute(attr, "True");
             }
-        });
+        }
         const isField = getTag(node) === "field";
         const isGroupby = getTag(node) === "groupby";
         if (isField) {
@@ -1760,8 +1760,8 @@ export class Model extends Array {
     }
 
     /**
-     * @param {Iterable<string>} fieldNames
-     * @param {Iterable<string>} attributes
+     * @param {Iterable<string>} [fieldNames]
+     * @param {Iterable<string>} [attributes]
      */
     fields_get(fieldNames, attributes) {
         const kwargs = getKwArgs(arguments, "allfields", "attributes");
@@ -2594,7 +2594,7 @@ export class Model extends Array {
         }
 
         // update value of relationnal fields pointing to the deleted records
-        for (const model of Object.values(MockServer.current.models)) {
+        for (const model of Object.values(MockServer.current._models)) {
             for (const [fieldName, field] of Object.entries(model._fields)) {
                 const coModel = getRelation(field);
                 if (coModel?._name === this._name) {
@@ -2802,7 +2802,9 @@ export class Model extends Array {
             }
             if (fieldName === "create_uid") {
                 // "Created by" field
-                record[fieldName] = this.env.uid;
+                if ("res.users" in MockServer.current._models) {
+                    record[fieldName] = this.env.uid;
+                }
                 continue;
             }
             const fieldDef = this._fields[fieldName];

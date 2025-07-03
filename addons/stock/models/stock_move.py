@@ -224,6 +224,8 @@ class StockMove(models.Model):
             location_dest = False
             if move.picking_id:
                 location_dest = move.picking_id.location_dest_id
+            elif move.rule_id.location_dest_from_rule:
+                location_dest = move.rule_id.location_dest_id
             elif move.picking_type_id:
                 location_dest = move.picking_type_id.default_location_dest_id
             is_move_to_interco_transit = False
@@ -1402,7 +1404,14 @@ Please change the quantity done or the rounding precision of your unit of measur
         if any(picking.partner_id != m.partner_id for m in self):
             vals['partner_id'] = False
         if any(picking.origin != m.origin for m in self):
-            vals['origin'] = False
+            current_origins = set(picking.origin.split(',') + [False]) if picking.origin else {False}
+            vals['origin'] = picking.origin
+            for move in self:
+                if move.origin not in current_origins:
+                    if not vals['origin']:
+                        vals['origin'] = move.origin
+                    else:
+                        vals['origin'] += f',{move.origin}'
         return vals
 
     def _assign_picking_post_process(self, new=False):

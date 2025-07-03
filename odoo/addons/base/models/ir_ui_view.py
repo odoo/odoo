@@ -2433,6 +2433,8 @@ class Model(models.AbstractModel):
         for fname, field in self._fields.items():
             if field.automatic:
                 continue
+            elif field.type == "binary" and not isinstance(field, fields.Image) and not field.store:
+                continue
             elif field.type in ('one2many', 'many2many', 'text', 'html'):
                 # append to sheet left and right group if needed
                 if len(left_group) > 0:

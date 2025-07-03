@@ -137,3 +137,14 @@ test("Convert self closing t elements to opening/closing tags", async () => {
         '<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>'
     );
 });
+
+test("Remove `width`, `height` attributes from image and apply them to style", async () => {
+    const { el } = await setupEditor(`
+        <div>
+            <img src="#" width="50%" height="50%">
+        </div>
+    `);
+    expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
+        `<div class="o-paragraph"> <img src="#" style="width: 50%; height: 50%;"> </div>`
+    );
+});

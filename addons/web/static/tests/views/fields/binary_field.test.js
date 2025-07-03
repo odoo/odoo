@@ -429,3 +429,22 @@ test("isUploading state should be set to false after upload", async () => {
     expect.verifyErrors([/RPC_ERROR/]);
     expect(`.o_select_file_button`).toHaveText("Upload your file");
 });
+
+test("doesn't crash if value is not a string", async () => {
+    class Dummy extends models.Model {
+        document = fields.Binary()
+        _applyComputesAndValidate() {}
+    }
+    defineModels([Dummy])
+    Dummy._records.push({ id: 1, document: {} });
+    await mountView({
+        type: "form",
+        resModel: "dummy",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="document"/>
+            </form>`,
+    });
+    expect(".o_field_binary input").toHaveValue("");
+});

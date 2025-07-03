@@ -1184,7 +1184,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
                         move_form.ref = '111' if w_bill_ref == 'w_bill_ref' else ''
                         move_form.payment_reference = '222' if w_payment_reference == 'w_payment_reference' else ''
                         move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_order.id).exists()
-                        payment_reference = move_form._values['payment_reference']
+                        payment_reference = move_form._values['payment_reference'] or ''
                         self.assertEqual(payment_reference, expected_value, "The payment reference should be %s" % expected_value)
 
     def test_invoice_user_id_on_bill(self):
