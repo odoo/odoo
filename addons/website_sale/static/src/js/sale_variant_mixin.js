@@ -67,9 +67,6 @@ var VariantMixin = {
             'context': this.context,
             ...this._getOptionalCombinationInfoParam($parent),
         }).then((combinationData) => {
-            if (this._shouldIgnoreRpcResult()) {
-                return;
-            }
             this._onChangeCombination(ev, $parent, combinationData);
             this._checkExclusions($parent, combination);
         });
@@ -387,11 +384,7 @@ var VariantMixin = {
         if (!combination.no_product_change) {
             const rootComponentSelectors = ['tr.js_product', '.oe_website_sale'];
             self._updateProductImage(
-                $parent.closest(rootComponentSelectors.join(', ')),
-                combination.display_image,
-                combination.product_id,
-                combination.product_template_id,
-                combination.carousel,
+                $parent.closest(rootComponentSelectors.join(', ')), combination.carousel
             );
             $parent
                 .find('.o_product_tags')
@@ -461,38 +454,6 @@ var VariantMixin = {
     _toggleDisable: function ($parent, isCombinationPossible) {
         $parent.toggleClass('css_not_available', !isCombinationPossible);
     },
-    /**
-     * Updates the product image.
-     * This will use the productId if available or will fallback to the productTemplateId.
-     *
-     * @private
-     * @param {$.Element} $productContainer
-     * @param {boolean} displayImage will hide the image if true. It will use the 'invisible' class
-     *   instead of d-none to prevent layout change
-     * @param {integer} product_id
-     * @param {integer} productTemplateId
-     */
-    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId) {
-        var model = productId ? 'product.product' : 'product.template';
-        var modelId = productId || productTemplateId;
-        var imageUrl = '/web/image/{0}/{1}/' + (this._productImageField ? this._productImageField : 'image_1024');
-        var imageSrc = imageUrl
-            .replace("{0}", model)
-            .replace("{1}", modelId);
-
-        var imagesSelectors = [
-            'span[data-oe-model^="product."][data-oe-type="image"] img:first',
-            'img.product_detail_img',
-        ];
-
-        var $img = $productContainer.find(imagesSelectors.join(', '));
-
-        if (displayImage) {
-            $img.removeClass('invisible').attr('src', imageSrc);
-        } else {
-            $img.addClass('invisible');
-        }
-    },
 
     /**
      * Highlight selected color
@@ -522,26 +483,6 @@ var VariantMixin = {
             .filter(':has(input:checked)')
             .addClass("active border-primary text-primary-emphasis bg-primary-subtle");
     },
-
-    /**
-     * Return true if the current object has been destroyed. Useful to know if
-     * the result of a rpc should be handled.
-     *
-     * @private
-     */
-    _shouldIgnoreRpcResult() {
-        return (typeof this.isDestroyed === "function" && this.isDestroyed());
-    },
-
-    /**
-     * Extension point for website_sale
-     *
-     * @private
-     * @param {string} uri The uri to adapt
-     */
-    _getUri: function (uri) {
-        return uri;
-    }
 };
 
 export default VariantMixin;
