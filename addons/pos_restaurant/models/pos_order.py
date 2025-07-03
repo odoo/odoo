@@ -60,3 +60,17 @@ class PosOrder(models.Model):
         if self.table_id:
             self.send_table_count_notification(self.table_id)
         return result
+
+    def set_tip(self, tip_amount, payment_line_id):
+        """Update tip state on `self` and the tip amount on the payment line."""
+
+        self.ensure_one()
+
+        payment_line = self.payment_ids.filtered(lambda line: line.id == payment_line_id)
+        payment_line.write({
+            'amount': payment_line.amount + tip_amount,
+        })
+        self.write({
+            "is_tipped": True,
+            "tip_amount": tip_amount,
+        })

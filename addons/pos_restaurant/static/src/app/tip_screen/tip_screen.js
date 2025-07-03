@@ -80,8 +80,8 @@ export class TipScreen extends Component {
         order.state = "paid";
 
         const paymentline = this.pos.get_order().payment_ids[0];
+        paymentline.amount += amount;
         if (paymentline.payment_method_id.payment_terminal) {
-            paymentline.amount += amount;
             await paymentline.payment_method_id.payment_terminal.send_payment_adjust(
                 paymentline.uuid
             );
@@ -90,10 +90,13 @@ export class TipScreen extends Component {
         const serializedTipLine = order.get_selected_orderline().serialize({ orm: true });
         order.get_selected_orderline().delete();
         const serverTipLine = await this.pos.data.create("pos.order.line", [serializedTipLine]);
-        await this.pos.data.write("pos.order", [serverId], {
-            is_tipped: true,
-            tip_amount: serverTipLine[0].price_subtotal_incl,
-        });
+
+        await this.pos.data.call("pos.order", "set_tip", [
+            serverId,
+            serverTipLine[0].price_subtotal_incl,
+            paymentline.id,
+        ]);
+
         this.goNextScreen();
     }
     goNextScreen() {
