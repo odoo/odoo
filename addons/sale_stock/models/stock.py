@@ -16,12 +16,6 @@ class StockMove(models.Model):
     _inherit = "stock.move"
     sale_line_id = fields.Many2one('sale.order.line', 'Sale Line', index='btree_not_null')
 
-    @api.model
-    def _prepare_merge_moves_distinct_fields(self):
-        distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
-        distinct_fields.append('sale_line_id')
-        return distinct_fields
-
     @api.depends('sale_line_id', 'sale_line_id.product_uom_id')
     def _compute_packaging_uom_id(self):
         super()._compute_packaging_uom_id()
@@ -29,6 +23,7 @@ class StockMove(models.Model):
             if move.sale_line_id:
                 move.packaging_uom_id = move.sale_line_id.product_uom_id
 
+<<<<<<< 5fa80189b178b8eda0a1900275314aa589c1f332
     @api.depends('sale_line_id')
     def _compute_description_picking(self):
         super()._compute_description_picking()
@@ -36,6 +31,60 @@ class StockMove(models.Model):
             if move.sale_line_id and not move.description_picking_manual:
                 sale_line_id = move.sale_line_id.with_context(lang=move.sale_line_id.order_id.partner_id.lang)
                 move.description_picking = (sale_line_id._get_sale_order_line_multiline_description_variants() + '\n' + move.description_picking).strip()
+||||||| f101a9b6d65e34cf3d3175a341b87e3f14c44a02
+=======
+    def _action_synch_order(self):
+        sale_order_lines_vals = []
+        for move in self:
+            sale_order = move.picking_id.sale_id
+            # Creates new SO line only when pickings linked to a sale order and
+            # for moves with qty. done and not already linked to a SO line.
+            if not sale_order or move.sale_line_id or not move.picked or not (
+                (move.location_dest_id.usage in ['customer', 'transit'] and not move.move_dest_ids)
+                or (move.location_id.usage == 'customer' and move.to_refund)
+            ):
+                continue
+
+            product = move.product_id
+
+            if line := sale_order.order_line.filtered(lambda l: l.product_id == product):
+                move.sale_line_id = line[:1]
+                continue
+
+            quantity = move.quantity
+            if move.location_id.usage in ['customer', 'transit']:
+                quantity *= -1
+
+            so_line_vals = {
+                'move_ids': [(4, move.id, 0)],
+                'name': product.display_name,
+                'order_id': sale_order.id,
+                'product_id': product.id,
+                'product_uom_qty': 0,
+                'qty_delivered': quantity,
+                'product_uom_id': move.product_uom.id,
+            }
+            if product.invoice_policy == 'delivery':
+                # Check if there is already a SO line for this product to get
+                # back its unit price (in case it was manually updated).
+                so_line = sale_order.order_line.filtered(lambda sol: sol.product_id == product)
+                if so_line:
+                    so_line_vals['price_unit'] = so_line[0].price_unit
+            elif product.invoice_policy == 'order':
+                # No unit price if the product is invoiced on the ordered qty.
+                so_line_vals['price_unit'] = 0
+            sale_order_lines_vals.append(so_line_vals)
+
+        if sale_order_lines_vals:
+            self.env['sale.order.line'].with_context(skip_procurement=True).create(sale_order_lines_vals)
+        return super()._action_synch_order()
+
+    @api.model
+    def _prepare_merge_moves_distinct_fields(self):
+        distinct_fields = super()._prepare_merge_moves_distinct_fields()
+        distinct_fields.append('sale_line_id')
+        return distinct_fields
+>>>>>>> c1c86182e4b28e929bf56e79f57f33aaa13e67f1
 
     def _get_related_invoices(self):
         """ Overridden from stock_account to return the customer invoices
@@ -131,6 +180,7 @@ class StockPicking(models.Model):
             create_column(self.env.cr, 'stock_picking', 'sale_id', 'int4')
         return super()._auto_init()
 
+<<<<<<< 5fa80189b178b8eda0a1900275314aa589c1f332
     def _action_done(self):
         res = super()._action_done()
         sale_order_lines_vals = []
@@ -175,6 +225,50 @@ class StockPicking(models.Model):
             self.env['sale.order.line'].with_context(skip_procurement=True).create(sale_order_lines_vals)
         return res
 
+||||||| f101a9b6d65e34cf3d3175a341b87e3f14c44a02
+    def _action_done(self):
+        res = super()._action_done()
+        sale_order_lines_vals = []
+        for move in self.move_ids:
+            sale_order = move.picking_id.sale_id
+            # Creates new SO line only when pickings linked to a sale order and
+            # for moves with qty. done and not already linked to a SO line.
+            if not sale_order or move.sale_line_id or not move.picked or not (
+                (move.location_dest_id.usage in ['customer', 'transit'] and not move.move_dest_ids)
+                or (move.location_id.usage == 'customer' and move.to_refund)
+            ):
+                continue
+            product = move.product_id
+            quantity = move.quantity
+            if move.to_refund:
+                quantity *= -1
+
+            so_line_vals = {
+                'move_ids': [(4, move.id, 0)],
+                'name': product.display_name,
+                'order_id': sale_order.id,
+                'product_id': product.id,
+                'product_uom_qty': 0,
+                'qty_delivered': quantity,
+                'product_uom_id': move.product_uom.id,
+            }
+            if product.invoice_policy == 'delivery':
+                # Check if there is already a SO line for this product to get
+                # back its unit price (in case it was manually updated).
+                so_line = sale_order.order_line.filtered(lambda sol: sol.product_id == product)
+                if so_line:
+                    so_line_vals['price_unit'] = so_line[0].price_unit
+            elif product.invoice_policy == 'order':
+                # No unit price if the product is invoiced on the ordered qty.
+                so_line_vals['price_unit'] = 0
+            sale_order_lines_vals.append(so_line_vals)
+
+        if sale_order_lines_vals:
+            self.env['sale.order.line'].with_context(skip_procurement=True).create(sale_order_lines_vals)
+        return res
+
+=======
+>>>>>>> c1c86182e4b28e929bf56e79f57f33aaa13e67f1
     def _log_less_quantities_than_expected(self, moves):
         """ Log an activity on sale order that are linked to moves. The
         note summarize the real processed quantity and promote a
