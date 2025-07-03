@@ -42,3 +42,20 @@ publicWidget.registry.ReadTrackerButton = publicWidget.Widget.extend({
     });
   },
 });
+
+$(window).on('popstate', function() {
+    var $modal = $('#announcement_popup_modal');
+    if ($modal.length) {
+        if ($modal.hasClass('show')) {
+            $modal.modal('hide');
+            setTimeout(function() {
+                $modal.modal('show');
+            }, 200); // Give time to hide before showing again
+        } else {
+            // If modal is not open, but should be (e.g., user navigated back to a state where it was open), you can decide to show it
+            // Optionally, you could check URL or state to decide
+        }
+    }
+});
+
+
