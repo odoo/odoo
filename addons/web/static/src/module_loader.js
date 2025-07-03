@@ -101,8 +101,8 @@
 
             /** @type {Record<string, Iterable<string>>} */
             const dependencyGraph = Object.create(null);
-            /** @type {Set<string>} */
-            const missing = new Set();
+            /** @type {Map<string, Set<string>>} */
+            const missing = new Map();
             /** @type {Set<string>} */
             const unloaded = new Set();
 
@@ -118,7 +118,11 @@
                 unloaded.add(moduleName);
                 for (const dep of deps) {
                     if (!this.factories.has(dep)) {
-                        missing.add(dep);
+                        if (missing.has(dep)) {
+                            missing.get(dep).add(moduleName);
+                        } else {
+                            missing.set(dep, new Set([moduleName]));
+                        }
                     }
                 }
             }
@@ -132,7 +136,7 @@
                 errors.failed = this.failed;
             }
             if (missing.size) {
-                errors.missing = missing;
+                errors.missing = [...missing.entries()].map(([key, value]) => [key, [...value]]);
             }
             if (unloaded.size) {
                 errors.unloaded = unloaded;
@@ -163,8 +167,14 @@
             }
             if (errors.missing) {
                 console.error(
-                    "The following modules are needed by other modules but have not been defined, they may not be present in the correct asset bundle:",
-                    [...errors.missing]
+                    "The following modules are needed by other modules but have not been defined, they may not be present in the correct asset bundle:\n",
+                    errors.missing
+                        .map(
+                            ([missingModule, importers]) =>
+                                `"${missingModule}" imported by ["${importers.join('", "')}"]`
+                        )
+                        .join("\n")
+                    // [...errors.missing]
                 );
             }
             if (errors.cycle) {
@@ -228,6 +238,11 @@
                 this.failed.add(name);
                 throw new Error(`Error while loading "${name}":\n${error}`);
             }
+
+            if (typeof module === "object") {
+                module = this.createModuleProxy(name, module);
+            }
+
             this.modules.set(name, module);
             this.bus.dispatchEvent(
                 new CustomEvent("module-started", {
@@ -235,6 +250,20 @@
                 })
             );
             return module;
+        }
+
+        createModuleProxy(moduleName, module) {
+            return new Proxy(module, {
+                get(target, key) {
+                    if (Reflect.has(target, key)) {
+                        return Reflect.get(target, key);
+                    } else {
+                        throw new Error(
+                            `module "${moduleName}" does not export a property named "${key}"`
+                        );
+                    }
+                },
+            });
         }
     }
 
