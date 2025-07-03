@@ -79,10 +79,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                         },
                     },
                     {
-                        "type": "mail.record/insert",
-                        "payload": {"discuss.channel": [{"id": channel.id, "is_pinned": True}]},
-                    },
-                    {
                         "type": "discuss.channel/new_message",
                         "payload": {
                             "data": {

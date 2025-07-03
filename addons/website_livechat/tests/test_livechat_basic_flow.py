@@ -336,7 +336,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "id": channel.id,
                     "invited_member_ids": [("ADD", [])],
                     "is_editable": False,
-                    "is_pinned": True,
                     "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
                     "livechat_end_dt": fields.Datetime.to_string(agent_left_dt),
                     "livechat_operator_id": {

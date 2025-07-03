@@ -429,6 +429,8 @@ export class MailThread extends models.ServerModel {
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").ResPartner} */
@@ -445,9 +447,10 @@ export class MailThread extends models.ServerModel {
                 notifications.push([
                     [channel, "members"],
                     "mail.record/insert",
-                    new mailDataHelpers.Store(DiscussChannel.browse(channel.id), {
-                        is_pinned: true,
-                    }).get_result(),
+                    new mailDataHelpers.Store(
+                        DiscussChannelMember.browse(channel.channel_member_ids),
+                        makeKwArgs({ fields: { is_pinned: true } })
+                    ).get_result(),
                 ]);
                 notifications.push([
                     channel,
@@ -462,12 +465,12 @@ export class MailThread extends models.ServerModel {
                 ]);
                 const memberOfCurrentUser = this._find_or_create_member_for_self(ids[0]);
                 if (memberOfCurrentUser) {
-                    this.env["discuss.channel.member"]._set_last_seen_message(
+                    DiscussChannelMember._set_last_seen_message(
                         [memberOfCurrentUser.id],
                         message.id,
                         false
                     );
-                    this.env["discuss.channel.member"]._set_new_message_separator(
+                    DiscussChannelMember._set_new_message_separator(
                         [memberOfCurrentUser.id],
                         message.id + 1,
                         true

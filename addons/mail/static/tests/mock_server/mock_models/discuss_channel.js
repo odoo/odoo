@@ -58,7 +58,6 @@ export class DiscussChannel extends models.ServerModel {
         const [channel] = this.browse(ids);
         const custom_store = new mailDataHelpers.Store(this.browse(channel.id), {
             close_chat_window: true,
-            is_pinned: false,
             isLocallyPinned: false,
         });
         const [partner] = ResPartner.read(this.env.user.partner_id);
@@ -82,6 +81,7 @@ export class DiscussChannel extends models.ServerModel {
             })
         );
         // send custom store after message_post to avoid is_pinned reset to True
+        custom_store.add(DiscussChannelMember.browse(channelMember.id), { is_pinned: false });
         BusBus._sendone(partner, "mail.record/insert", custom_store.get_result());
         const store = new mailDataHelpers.Store(this.browse(channel.id), {
             channel_member_ids: mailDataHelpers.Store.many(
@@ -127,20 +127,22 @@ export class DiscussChannel extends models.ServerModel {
         }
         const insertedChannelMembers = [];
         for (const partner of partners) {
-            insertedChannelMembers.push(
-                DiscussChannelMember.create({
-                    channel_id: channel.id,
-                    partner_id: partner.id,
-                    create_uid: this.env.uid,
-                })
-            );
+            const channelMember = DiscussChannelMember.create({
+                channel_id: channel.id,
+                partner_id: partner.id,
+                create_uid: this.env.uid,
+            });
+            insertedChannelMembers.push(channelMember);
             BusBus._sendone(partner, "discuss.channel/joined", {
                 channel_id: channel.id,
                 data: new mailDataHelpers.Store(this.browse(channel.id), {
                     ...this._channel_basic_info([channel.id]),
-                    is_pinned: true,
                     model: "discuss.channel",
-                }).get_result(),
+                })
+                    .add(DiscussChannelMember.browse(channelMember), {
+                        is_pinned: channelMember.is_pinned,
+                    })
+                    .get_result(),
                 invited_by_user_id: this.env.uid,
             });
         }
@@ -416,7 +418,6 @@ export class DiscussChannel extends models.ServerModel {
                 DiscussChannelMember.write([memberOfCurrentUser.id], {
                     message_unread_counter,
                 });
-                res.is_pinned = memberOfCurrentUser.is_pinned;
                 if (memberOfCurrentUser.rtc_inviting_session_id) {
                     res.rtcInvitingSession = mailDataHelpers.Store.one(
                         DiscussChannelMember.browse(memberOfCurrentUser.rtc_inviting_session_id)
@@ -427,6 +428,7 @@ export class DiscussChannel extends models.ServerModel {
                     makeKwArgs({
                         extra_fields: {
                             custom_channel_name: memberOfCurrentUser.custom_channel_name,
+                            is_pinned: memberOfCurrentUser.is_pinned,
                             message_unread_counter: true,
                         },
                     })
@@ -481,8 +483,11 @@ export class DiscussChannel extends models.ServerModel {
                 new mailDataHelpers.Store(DiscussChannel.browse(channel.id), {
                     close_chat_window: true,
                     id: channel.id,
-                    is_pinned: false,
-                }).get_result()
+                })
+                    .add(DiscussChannelMember.browse(memberOfCurrentUser.id), {
+                        is_pinned: false,
+                    })
+                    .get_result()
             );
         } else {
             BusBus._sendone(
