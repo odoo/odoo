@@ -1224,7 +1224,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
             </div>
             <div
-                if="is_view_active('website_sale.search') and (opt_wsale_attributes or opt_wsale_attributes_top)"
+                t-if="is_view_active('website_sale.search') and (opt_wsale_attributes or opt_wsale_attributes_top)"
                 class="offcanvas-body flex-grow-0 overflow-visible"
             >
                 <t t-call="website_sale.search">
