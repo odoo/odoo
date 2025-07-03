@@ -153,6 +153,7 @@ class StockMove(models.Model):
     is_inventory = fields.Boolean('Inventory')
     inventory_name = fields.Char(readonly=True)
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
+    package_ids = fields.One2many('stock.package', string='Packages', compute="_compute_package_ids")
     origin_returned_move_id = fields.Many2one(
         'stock.move', 'Origin return move', copy=False, index=True,
         help='Move that created the return move', check_company=True)
@@ -182,7 +183,6 @@ class StockMove(models.Model):
     reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
     move_lines_count = fields.Integer(compute='_compute_move_lines_count')
     package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True, copy=False, index='btree_not_null')
-    picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs', readonly=True)
     display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
     display_import_lot = fields.Boolean(compute='_compute_display_assign_serial')
     next_serial = fields.Char('First SN/Lot')
@@ -261,6 +261,11 @@ class StockMove(models.Model):
                 move.state not in ('done', 'cancel')
             )
             move.display_assign_serial = move.display_import_lot
+
+    @api.depends('move_line_ids', 'move_line_ids.result_package_id')
+    def _compute_package_ids(self):
+        for move in self:
+            move.package_ids = move.move_line_ids.result_package_id
 
     @api.depends('move_line_ids.picked', 'state')
     def _compute_picked(self):
@@ -847,6 +852,25 @@ Please change the quantity done or the rounding precision in your settings.""",
                 continue
             odoobot_id = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
             doc.message_post(body=msg, author_id=odoobot_id, subject=msg_subject)
+
+    def action_add_package(self):
+        """ Opens a list of suitable packages to add to a picking.
+        """
+        picking = self.env['stock.picking'].browse(self.env.context.get('default_picking_id'))
+        if not picking:
+            raise UserError(self.env._("You need a transfer to add these packages to."))
+        return {
+            'name': self.env._("Select Packages to Move"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.package',
+            'view_mode': 'list, form',
+            'views': [(self.env.ref('stock.view_stock_package_add_package_list').id, 'list'), (False, 'form')],
+            'target': 'new',
+            'domain': [('location_id', 'child_of', picking.location_id.id)],
+            'context': {
+                'picking_id': picking.id,
+            },
+        }
 
     def action_show_details(self):
         """ Returns an action that will open a form view (in a popup) allowing to work on all the
