@@ -4388,7 +4388,7 @@ class AccountMove(models.Model):
 
         company = self.company_id
         payment_term_line = self.line_ids.filtered(lambda x: x.display_type == 'payment_term')
-        tax_lines = self.line_ids.filtered(lambda x: x.display_type == 'tax')
+        tax_lines = self.line_ids.filtered('tax_repartition_line_id')
         invoice_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
         payment_term = self.invoice_payment_term_id
         early_pay_discount_computation = payment_term.early_pay_discount_computation
