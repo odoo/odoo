@@ -6,10 +6,6 @@ import { LayoutColumnOption } from "@html_builder/plugins/layout_column_option";
 
 class GenericBlockOptionPlugin extends Plugin {
     static id = "GenericBlockOption";
-    colorPickerSelector = `.note-editable .oe_structure > div:not(:has(> .o_mail_snippet_general)),
-        .note-editable .oe_structure > div.o_mail_snippet_general,
-        .note-editable .oe_structure > div.o_mail_snippet_general .o_cc,
-        .s_mail_color_blocks_2 .row > div`;
     resources = {
         mark_color_level_selector_params: [{ selector: ".o_mail_snippet_general" }],
         builder_options: [

@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
+import { registry } from "@web/core/registry";
 
-class BorderOptionPlugin extends Plugin {
+export class BorderOptionPlugin extends Plugin {
     static id = "mass_mailing.BorderOption";
     resources = {
         builder_options: [
@@ -22,3 +23,5 @@ class BorderOptionPlugin extends Plugin {
         ],
     }
 }
+
+registry.category("mass_mailing-plugins").add(BorderOptionPlugin.id, BorderOptionPlugin);

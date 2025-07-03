@@ -4,8 +4,8 @@ import { registry } from "@web/core/registry";
 class ColorPickerOptionPlugin extends Plugin {
     static id = "mass_mailing.ColorPicker";
     colorPickerSelector = `.note-editable .oe_structure > div:not(:has(> .o_mail_snippet_general)),
-        .note-editable .oe_structure > div.o_mail_snippet_general,
-        .note-editable .oe_structure > div.o_mail_snippet_general .o_cc,
+        .note-editable .oe_structure > .o_mail_snippet_general,
+        .note-editable .oe_structure > .o_mail_snippet_general .o_cc,
         .s_mail_color_blocks_2 .row > div`;
 
     resources = {
