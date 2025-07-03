@@ -6,9 +6,10 @@ import requests
 import json
 import logging
 
-from odoo import fields
+from odoo import fields, _
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
 from odoo.addons.google_account.models.google_service import TIMEOUT
+from odoo.exceptions import ValidationError
 
 
 _logger = logging.getLogger(__name__)
@@ -16,7 +17,7 @@ _logger = logging.getLogger(__name__)
 def requires_auth_token(func):
     def wrapped(self, *args, **kwargs):
         if not kwargs.get('token'):
-            raise AttributeError("An authentication token is required")
+            raise ValidationError(_("An authentication token is required"))
         return func(self, *args, **kwargs)
     return wrapped
 
