@@ -36,6 +36,13 @@ patch(Thread.prototype, {
                 }
             },
         });
+        this.livechat_active = Record.attr(undefined, {
+            onUpdate() {
+                if (!this.livechat_active) {
+                    this.markAsRead({ sync: true });
+                }
+            },
+        });
     },
     get autoOpenChatWindowOnNewMessage() {
         return (
