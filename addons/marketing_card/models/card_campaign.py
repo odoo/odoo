@@ -65,7 +65,7 @@ class CardCampaign(models.Model):
     content_button = fields.Char('Button')
 
     # Dynamic Content fields
-    content_header = fields.Char('Header', translate=True)
+    content_header = fields.Char('Header', default='Card Title', translate=True)
     content_header_dyn = fields.Boolean('Is Dynamic Header')
     content_header_path = fields.Char('Header Path')
     content_header_color = fields.Char('Header Color')
@@ -75,7 +75,7 @@ class CardCampaign(models.Model):
     content_sub_header_path = fields.Char('Sub-Header Path')
     content_sub_header_color = fields.Char('Sub Header Color')
 
-    content_section = fields.Char('Section', translate=True)
+    content_section = fields.Char('Section', default='Details', translate=True)
     content_section_dyn = fields.Boolean('Is Dynamic Section')
     content_section_path = fields.Char('Section Path')
 
@@ -209,6 +209,10 @@ class CardCampaign(models.Model):
             model_name_origin = campaign._origin.preview_record_ref and campaign._origin.preview_record_ref._name
             if model_name_origin and model_name != model_name_origin:
                 campaign.update(reset_dict)
+                # set some default here to show the possible layout of the template
+                model_name = campaign.preview_record_ref and campaign.preview_record_ref._name
+                if model_name and 'image_512' in self.env[model_name] and not campaign.content_image1_path:
+                    campaign.content_image1_path = 'image_512'
 
     @api.model_create_multi
     def create(self, vals_list):
