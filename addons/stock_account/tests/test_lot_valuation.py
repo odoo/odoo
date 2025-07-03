@@ -799,6 +799,102 @@ class TestLotValuation(TestStockValuationCommon):
             {'quantity': 5.0, 'state': 'done', 'lot_ids': self.lot1.ids}
         ])
 
+    def test_lot_valuation_with_neg_lot(self):
+        # -- Setup -- #
+        self.product1.categ_id.property_cost_method = 'average'
+        self.product1.lot_valuated = True
+        self._make_out_move(self.product1, 2, lot_ids=[self.lot1])
+        self._make_out_move(self.product1, 3, lot_ids=[self.lot2])
+
+        self.assertEqual(self.lot1.quantity_svl, -2)
+        self.assertEqual(self.lot2.quantity_svl, -3)
+
+        # -- Part 1: Disable lot_valuated with neg lots -- #
+        self.product1.lot_valuated = False
+
+        self.assertEqual(self.lot1.quantity_svl, 0)
+        self.assertEqual(self.lot2.quantity_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, -5)
+
+        # Ensure remaining_qty and value are correct !
+        remaining_lot_layers = self.env['stock.valuation.layer'].search([
+            ('lot_id', 'in', [self.lot1.id, self.lot2.id]),
+            '|', ('remaining_qty', '!=', 0), ('remaining_value', '!=', 0),
+        ])
+        remaining_product_layers = self.env["stock.valuation.layer"].search([
+            ('product_id', '=', self.product1.id),
+            "|", ("remaining_qty", "!=", 0), ("remaining_value", "!=", 0)
+        ])
+        self.assertFalse(bool(remaining_lot_layers))
+        self.assertEqual(len(remaining_product_layers), 1)
+        self.assertEqual(remaining_product_layers.remaining_qty, -5)
+
+        # -- Part 2: Enable lot_valuated with neg lots -- #
+        self.product1.lot_valuated = True
+
+        self.assertEqual(self.lot1.quantity_svl, -2)
+        self.assertEqual(self.lot2.quantity_svl, -3)
+
+        # Ensure remaining_qty and value are correct !
+        remaining_no_lot_layers = self.env['stock.valuation.layer'].search([
+            ('product_id', '=', self.product1.id), ('lot_id', '=', False),
+            '|', ('remaining_qty', '!=', 0), ('remaining_value', '!=', 0),
+        ])
+        self.assertFalse(bool(remaining_no_lot_layers))
+
+        lots_remaining_layers = self.env["stock.valuation.layer"].search([
+            ('lot_id', 'in', [self.lot1.id, self.lot2.id]),
+            "|", ("remaining_qty", "!=", 0), ("remaining_value", "!=", 0)
+        ], order="lot_id asc")
+        self.assertEqual(len(lots_remaining_layers), 2)
+        l1_layer, l2_layer = lots_remaining_layers
+
+        self.assertEqual(l1_layer.remaining_qty, -2)
+        self.assertEqual(l2_layer.remaining_qty, -3)
+
+    def test_lot_valuation_with_neg_lot_and_global_qty_zero(self):
+        # -- Setup -- #
+        self.product1.categ_id.property_cost_method = 'average'
+        self.product1.lot_valuated = True
+        self._make_out_move(self.product1, 2, lot_ids=[self.lot1])
+        self._make_out_move(self.product1, 3, lot_ids=[self.lot2])
+        self._make_in_move(self.product1, 5, lot_ids=[self.lot3])
+
+        self.assertEqual(self.lot1.quantity_svl, -2)
+        self.assertEqual(self.lot2.quantity_svl, -3)
+        self.assertEqual(self.lot3.quantity_svl, 5)
+
+        # -- Part 1: Disable lot_valuated with neg lots and global quantity to zero -- #
+        self.product1.lot_valuated = False
+
+        self.assertEqual(self.lot1.quantity_svl, 0)
+        self.assertEqual(self.lot2.quantity_svl, 0)
+        self.assertEqual(self.lot3.quantity_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+
+        # Ensure remaining_qty and value are correct !
+        remaining_layers = self.env['stock.valuation.layer'].search([
+            ('product_id', '=', self.product1.id),
+            '|', ('remaining_qty', '!=', 0), ('remaining_value', '!=', 0),
+        ])
+        self.assertFalse(bool(remaining_layers))
+
+        # -- Part 2: Enable lot_valuated with neg lots and global quantity to zero -- #
+        self.product1.lot_valuated = True
+
+        self.assertEqual(self.lot1.quantity_svl, -2)
+        self.assertEqual(self.lot2.quantity_svl, -3)
+        self.assertEqual(self.lot3.quantity_svl, 5)
+        lots_remaining_layers = self.env['stock.valuation.layer'].search([
+            ('lot_id', 'in', [self.lot1.id, self.lot2.id, self.lot3.id]),
+            '|', ('remaining_qty', '!=', 0), ('remaining_value', '!=', 0),
+        ])
+        self.assertEqual(len(lots_remaining_layers), 3)
+        l1_layer, l2_layer, l3_layer = lots_remaining_layers
+        self.assertEqual(l1_layer.remaining_qty, -2)
+        self.assertEqual(l2_layer.remaining_qty, -3)
+        self.assertEqual(l3_layer.remaining_qty, 5)
+
     def test_adjustment_post_validation(self):
         """
         On a picking order test the behavior of changing the quantity on a stock.move
