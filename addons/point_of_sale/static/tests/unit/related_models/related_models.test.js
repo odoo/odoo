@@ -2,12 +2,13 @@ import { expect, test, describe } from "@odoo/hoot";
 import { createRelatedModels, Base } from "@point_of_sale/app/models/related_models";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { SERIALIZED_UI_STATE_PROP } from "@point_of_sale/app/models/related_models/utils";
-import { getRelatedModelsInstance, getRelatedModelsParams } from "../data/get_model_definitions";
+import { getRelatedModelsInstance } from "../data/get_model_definitions";
 import { makeMockServer } from "@web/../tests/web_test_helpers";
 import { getPosModelDefinitions } from "../data/generate_model_definitions";
 
 const { DateTime } = luxon;
 
+describe.current.tags("pos");
 describe("Related Model", () => {
     test("Create simple model object", async () => {
         await makeMockServer();
@@ -962,7 +963,7 @@ describe("Related Model", () => {
             ],
         });
         const order = models["pos.order"].get(1);
-        expect(order.message_ids).toEqual();
+        expect(order.message_ids).toEqual([1, 2, 3]);
         expect(order.message_id).toBe();
         expect(order.raw.message_ids).toEqual([1, 2, 3]);
         expect(order.raw.message_id).toBe(99);
@@ -973,7 +974,7 @@ describe("Related Model", () => {
 
         order.message_ids = [1, 2];
         expect(order.message_ids).toEqual([1, 2]);
-        expect(order.raw.message_ids).toEqual([1, 2, 3]);
+        expect(order.raw.message_ids).toEqual([1, 2]);
 
         order.message_id = 12;
         expect(order.message_id).toEqual(12);
@@ -1086,7 +1087,7 @@ describe("Related Model", () => {
         await makeMockServer();
         let calls = [];
 
-        class PosOrder extends Base {
+        class PosOrderDummy extends Base {
             setup(vals) {
                 super.setup(vals);
                 calls.push("setup");
@@ -1101,32 +1102,43 @@ describe("Related Model", () => {
                 calls.push("restoreState");
             }
         }
-        const modelDefs = getRelatedModelsParams().relations;
+        const defDummyOrder = {
+            id: {
+                name: "id",
+                type: "integer",
+            },
+            total: {
+                name: "total",
+                type: "char",
+            },
+            uuid: {
+                name: "uuid",
+                type: "char",
+            },
+        };
         const { models } = createRelatedModels(
-            modelDefs,
-            { "pos.order": PosOrder },
+            { "pos.order.dummy": defDummyOrder },
+            { "pos.order.dummy": PosOrderDummy },
             {
-                dynamicModels: ["pos.order", "pos.order.line"],
+                dynamicModels: ["pos.order.dummy"],
                 databaseIndex: {
-                    "pos.order": ["uuid"],
-                    "pos.order.line": ["uuid"],
+                    "pos.order.dummy": ["uuid"],
                 },
                 databaseTable: {
-                    "pos.order": { key: "uuid" },
-                    "pos.order.line": { key: "uuid" },
+                    "pos.order.dummy": { key: "uuid" },
                 },
             }
         );
 
         // Create
-        const order1 = models["pos.order"].create({});
+        const order1 = models["pos.order.dummy"].create({});
         expect(calls).toEqual(["setup", "initState"]);
 
         // Update without state
         calls = [];
         models.loadConnectedData(
             {
-                "pos.order": [
+                "pos.order.dummy": [
                     {
                         id: 1,
                         total: 10,
@@ -1142,7 +1154,7 @@ describe("Related Model", () => {
         calls = [];
         models.loadConnectedData(
             {
-                "pos.order": [
+                "pos.order.dummy": [
                     {
                         id: 1,
                         total: 10,
@@ -1160,7 +1172,7 @@ describe("Related Model", () => {
         calls = [];
         models.loadConnectedData(
             {
-                "pos.order": [
+                "pos.order.dummy": [
                     {
                         id: 2,
                         total: 100,

@@ -61,6 +61,7 @@ class NumberBuffer extends EventBus {
         this.setup(...arguments);
     }
     setup(services) {
+        this.state = {};
         this.isReset = false;
         this.bufferHolderStack = [];
         this.sound = services["mail.sound_effects"];

@@ -3,6 +3,7 @@ import { SERIALIZED_UI_STATE_PROP } from "@point_of_sale/app/models/related_mode
 import { getRelatedModelsInstance } from "../data/get_model_definitions";
 import { makeMockServer } from "@web/../tests/web_test_helpers";
 
+describe.current.tags("pos");
 describe("IndexedDB serialization", () => {
     test("newly created record", async () => {
         await makeMockServer();

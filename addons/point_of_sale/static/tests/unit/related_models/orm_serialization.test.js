@@ -2,6 +2,7 @@ import { expect, test, describe } from "@odoo/hoot";
 import { getRelatedModelsInstance } from "../data/get_model_definitions";
 import { makeMockServer } from "@web/../tests/web_test_helpers";
 
+describe.current.tags("pos");
 describe("ORM serialization", () => {
     test("basic", async () => {
         await makeMockServer();
