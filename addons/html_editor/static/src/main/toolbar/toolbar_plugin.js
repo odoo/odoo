@@ -107,7 +107,7 @@ import { _t } from "@web/core/l10n/translation";
  * @typedef {Object} ToolbarCommandButton
  * @property {string} id
  * @property {string} groupId
- * @property {TranslatedString} description
+ * @property {TranslatedStringGetter} description
  * @property {Function} run
  * @property {string} [icon]
  * @property {string} [text]
@@ -115,7 +115,17 @@ import { _t } from "@web/core/l10n/translation";
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isDisabled]
  *
- * @typedef {ToolbarComponentItem} ToolbarComponentButton
+ * @typedef {Object} ToolbarComponentButton
+ * Adds a custom component to the toolbar (processed version with required fields).
+ * @property {string} id
+ * @property {string} groupId
+ * @property {string[]} [namespaces]
+ * @property {TranslatedStringGetter} description
+ * @property {Function} Component
+ * @property {Object} props
+ * @property {(selection: EditorSelection) => boolean} isAvailable
+ *
+ * @typedef {ToolbarCommandButton | ToolbarComponentButton} ToolbarButton
  */
 
 /** Delay in ms for toolbar open after keyup, double click or triple click. */
@@ -259,20 +269,27 @@ export class ToolbarPlugin extends Plugin {
     }
 
     /**
-     * @returns {(ToolbarCommandButton| ToolbarComponentButton)[]}
+     * @returns {ToolbarButton[]}
      */
     getButtons() {
         /** @type {ToolbarItem[]} */
         const toolbarItems = this.getResource("toolbar_items");
 
-        /** @returns {ToolbarCommandButton} */
-        const commandItemToButton = (/** @type {ToolbarCommandItem}*/ item) => {
+        /** @type {(item: ToolbarCommandItem) => ToolbarCommandButton} */
+        const commandItemToButton = (item) => {
             const command = this.dependencies.userCommand.getCommand(item.commandId);
             return composeToolbarButton(command, item);
         };
+        /** @type {(item: ToolbarComponentItem) => ToolbarComponentButton} */
+        const componentItemToButton = (item) => ({
+            isAvailable: () => true,
+            ...item,
+            description:
+                item.description instanceof Function ? item.description : () => item.description,
+        });
 
         return toolbarItems.map((item) =>
-            "Component" in item ? { isAvailable: () => true, ...item } : commandItemToButton(item)
+            "Component" in item ? componentItemToButton(item) : commandItemToButton(item)
         );
     }
 
@@ -406,10 +423,7 @@ export class ToolbarPlugin extends Plugin {
                 this.state.buttonsActiveState[button.id] = button.isActive?.(selection, nodes);
                 this.state.buttonsDisabledState[button.id] = button.isDisabled?.(selection, nodes);
                 this.state.buttonsAvailableState[button.id] = button.isAvailable(selection);
-                this.state.buttonsTitleState[button.id] =
-                    button.description instanceof Function
-                        ? button.description(selection, nodes)
-                        : button.description;
+                this.state.buttonsTitleState[button.id] = button.description(selection, nodes);
             }
         }
         this.updateSelection = null;
