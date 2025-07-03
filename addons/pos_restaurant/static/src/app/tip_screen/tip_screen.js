@@ -80,8 +80,11 @@ export class TipScreen extends Component {
         order.state = "paid";
 
         const paymentline = this.pos.get_order().payment_ids[0];
+        paymentline.amount += amount;
+        await this.pos.data.write("pos.payment", [paymentline.id], {
+            amount: paymentline.amount,
+        });
         if (paymentline.payment_method_id.payment_terminal) {
-            paymentline.amount += amount;
             await paymentline.payment_method_id.payment_terminal.send_payment_adjust(
                 paymentline.uuid
             );

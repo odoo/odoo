@@ -259,6 +259,7 @@ class TestFrontend(TestFrontendCommon):
         order5 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0005')], limit=1, order='id desc')
 
         self.assertTrue(order1.is_tipped and order1.tip_amount == 0.40)
+        self.assertEqual(order1.payment_ids.amount, 2.4)
         self.assertTrue(order2.is_tipped and order2.tip_amount == 1.00)
         self.assertTrue(order3.is_tipped and order3.tip_amount == 1.50)
         self.assertTrue(order4.is_tipped and order4.tip_amount == 1.00)
