@@ -31,12 +31,17 @@ export class ImageTransformButton extends Component {
                 this.mouseDownInsideTransform = false;
             }
         });
-        useExternalListener(this.props.document, "click", (ev) => {
-            if (!this.isNodeInsideTransform(ev.target) && !this.mouseDownInsideTransform) {
-                this.closeImageTransformation();
-            }
-            this.mouseDownInsideTransform = false;
-        });
+        useExternalListener(
+            this.props.document,
+            "click",
+            (ev) => {
+                if (!this.isNodeInsideTransform(ev.target) && !this.mouseDownInsideTransform) {
+                    this.closeImageTransformation();
+                }
+                this.mouseDownInsideTransform = false;
+            },
+            { capture: true }
+        );
     }
 
     isNodeInsideTransform(node) {
