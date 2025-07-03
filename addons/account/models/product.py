@@ -1,11 +1,25 @@
-# -*- coding: utf-8 -*-
+from collections import defaultdict
 
-from odoo import api, Command, fields, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools import format_amount
 
 ACCOUNT_DOMAIN = "[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
+
+
+def _sort_invoiced_products(products, limit=100):
+    # Helper function to sort invoiced products (template and variant.)
+    invoiced_products = products.filtered('last_invoice_date').sorted(lambda p:
+        (p.last_invoice_date, -p.id), reverse=True
+    )
+    remaining_limit = max(limit - len(invoiced_products), 0)
+    if remaining_limit:
+        remaining_products = (products - invoiced_products)[:remaining_limit]
+        products = invoiced_products + remaining_products.sorted()
+    else:
+        products = invoiced_products
+    return products[:limit]
 
 
 class ProductCategory(models.Model):
@@ -61,6 +75,17 @@ class ProductTemplate(models.Model):
         domain="[('applicability', '=', 'products')]",
         help="Tags to be set on the base and tax journal items created for this product.")
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
+    last_invoice_date = fields.Date(compute='_compute_last_invoice_date')
+
+    @api.depends_context('partner_id')
+    def _compute_last_invoice_date(self):
+        self.last_invoice_date = False
+        if not self._must_prioritize_invoiced_product():
+            return
+
+        for product_tmpl in self:
+            most_recent_date = max([p.last_invoice_date for p in product_tmpl.product_variant_ids if p.last_invoice_date], default=False)
+            product_tmpl.last_invoice_date = most_recent_date
 
     def _get_product_accounts(self):
         return {
@@ -183,11 +208,41 @@ class ProductTemplate(models.Model):
         included_computed_price = self.taxes_id.with_context(force_price_include=True).compute_all(price, self.currency_id)
         return included_computed_price['total_excluded']
 
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        if not name and self._must_prioritize_invoiced_product():
+            products = self.search(domain)
+            products = _sort_invoiced_products(products, limit)
+            return [(product.id, product.display_name) for product in products]
+        else:
+            return super().name_search(name, domain, operator, limit)
+
+    @api.model
+    def _must_prioritize_invoiced_product(self):
+        return bool(self.env.context.get('partner_id') and self.env.context.get('prioritize_for'))
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
     tax_string = fields.Char(compute='_compute_tax_string')
+    last_invoice_date = fields.Date(compute='_compute_last_invoice_date')
+
+    @api.depends_context('partner_id', 'prioritize_for')
+    def _compute_last_invoice_date(self):
+        self.last_invoice_date = False
+        if not self.env['product.template']._must_prioritize_invoiced_product():
+            return
+
+        today = fields.Date.today()
+        journal_type = self.env.context.get('prioritize_for')
+        partner_id = self.env.context.get('partner_id')
+        products_and_last_invoice_date = self._get_products_and_most_recent_invoice_date(partner_id, journal_type)
+        dates_by_product = defaultdict(lambda: False)
+        for product, date in products_and_last_invoice_date:
+            dates_by_product[product] = date if date <= today else today
+        for (product, date) in dates_by_product.items():
+            product.last_invoice_date = date
 
     def _get_product_accounts(self):
         return self.product_tmpl_id._get_product_accounts()
@@ -270,6 +325,20 @@ class ProductProduct(models.Model):
         for record in self:
             record.tax_string = record.product_tmpl_id._construct_tax_string(record.lst_price)
 
+    def _get_products_and_most_recent_invoice_date(self, partner_id, journal_type):
+        domain = [
+            ('product_id', 'in', self.ids),
+            ('move_id.state', '=', 'posted'),
+            ('move_id.partner_id', '=', partner_id),
+            ('journal_id.type', '=', journal_type),
+        ]
+        aml_data = self.env['account.move.line']._read_group(
+            domain=domain,
+            groupby=['product_id'],
+            aggregates=['invoice_date:max']
+        )
+        return aml_data
+
     # -------------------------------------------------------------------------
     # EDI
     # -------------------------------------------------------------------------
@@ -311,3 +380,13 @@ class ProductProduct(models.Model):
                 if products_by_domain := products.filtered_domain(domain):
                     return products_by_domain[0]
         return self.env['product.product']
+
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        ProductTemplate = self.env['product.template']
+        if not name and ProductTemplate._must_prioritize_invoiced_product():
+            products = self.search(domain)
+            products = _sort_invoiced_products(products, limit)
+            return [(product.id, product.display_name) for product in products]
+        else:
+            return super().name_search(name, domain, operator, limit)

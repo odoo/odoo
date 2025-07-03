@@ -1154,6 +1154,12 @@
                                         <field name="product_id"
                                                optional="conditional"
                                                widget="product_label_section_and_note_field"
+                                               context="{
+                                                'partner_id': parent.partner_id,
+                                                'prioritize_for': (context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt') and 'sale') or
+                                                                  (context.get('default_move_type') in ('in_invoice', 'in_refund', 'in_receipt') and 'purchase') or
+                                                                  False,
+                                               }"
                                                domain="
                                                     context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')
                                                     and [('sale_ok', '=', True)]

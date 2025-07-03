@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import timedelta
+from freezegun import freeze_time
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
@@ -109,6 +110,25 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
 
 @tagged('post_install', '-at_install')
 class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
+
+    def _create_purchase_and_invoice_for_product_at_date(self, product, date=False):
+        date = date or fields.Datetime.now()
+        with freeze_time(date):
+            purchase_order = self.env['purchase.order'].create({
+                'partner_id': self.partner_a.id,
+                'order_line': [Command.create({
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_qty': 1,
+                    'product_uom_id': product.uom_id.id,
+                    'price_unit': 10,
+                    'tax_ids': False,
+                })],
+            })
+            purchase_order.button_confirm()
+            purchase_order.order_line.qty_received = 1
+            purchase_order.action_create_invoice()
+            purchase_order.invoice_ids.action_post()
 
     def test_vendor_bill_delivered(self):
         """Test if a order of product invoiced by delivered quantity can be
@@ -483,6 +503,154 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.assertRecordValues(po.invoice_ids.invoice_line_ids, [{
             'analytic_distribution': analytic_distribution_model.analytic_distribution | analytic_distribution_manual
         }])
+
+    def test_purchase_order_prioritize_billed_products(self):
+        """ This test ensures the products' order is correctly sorted depending of the supplier.
+        """
+        today = fields.Datetime.now()
+        prioritize_context = {
+            'partner_id': self.partner_a.id,
+            'prioritize_for': 'purchase',
+        }
+        # Archive all existing products and create new products for testing purpose.
+        domain = [('type', '=', 'consu')]
+        ProductProduct = self.env['product.product']
+        ProductProduct.search(domain).active = False
+        product_a, product_b, product_c, product_d, product_e = ProductProduct.create([{
+            'name': f'Product {char}',
+            'purchase_ok': True,
+        } for char in 'ABCDE'])
+
+        # Create some PO in the past and invoice them.
+        self._create_purchase_and_invoice_for_product_at_date(product_b, date=today - timedelta(days=5))
+        self._create_purchase_and_invoice_for_product_at_date(product_d, date=today - timedelta(days=2))
+        # Check the products order is not affected when no supplier is given.
+        self.assertEqual(
+            [
+                (product_a.id, 'Product A'),
+                (product_b.id, 'Product B'),
+                (product_c.id, 'Product C'),
+                (product_d.id, 'Product D'),
+                (product_e.id, 'Product E'),
+            ],
+            ProductProduct.with_context(prioritize_for='purchase').name_search(domain=domain)
+        )
+        # Check the products order matches previous suplier's activities.
+        self.assertEqual(
+            [
+                (product_d.id, 'Product D'),
+                (product_b.id, 'Product B'),
+                (product_a.id, 'Product A'),
+                (product_c.id, 'Product C'),
+                (product_e.id, 'Product E'),
+            ],
+            ProductProduct.with_context(prioritize_context).name_search(domain=domain)
+        )
+        # Ensure right records are prioritized when there is a limit smaller than the recordset lenght.
+        self.assertEqual(
+            [
+                (product_a.id, 'Product A'),
+                (product_b.id, 'Product B'),
+                (product_c.id, 'Product C'),
+            ],
+            ProductProduct.with_context(prioritize_for='purchase').name_search(domain=domain, limit=3)
+        )
+        self.assertEqual(
+            [
+                (product_d.id, 'Product D'),
+                (product_b.id, 'Product B'),
+                (product_a.id, 'Product A'),
+            ],
+            ProductProduct.with_context(prioritize_context).name_search(domain=domain, limit=3)
+        )
+        # Ensure right records are prioritized when a custom domain is pass.
+        domain = domain + [('id', 'not in', [product_b.id, product_e.id])]
+        self.assertEqual(
+            [
+                (product_a.id, 'Product A'),
+                (product_c.id, 'Product C'),
+                (product_d.id, 'Product D'),
+            ],
+            ProductProduct.with_context(prioritize_for='purchase').name_search(domain=domain)
+        )
+        # Check the products order matches previous suplier's activities.
+        self.assertEqual(
+            [
+                (product_d.id, 'Product D'),
+                (product_a.id, 'Product A'),
+                (product_c.id, 'Product C'),
+            ],
+            ProductProduct.with_context(prioritize_context).name_search(domain=domain)
+        )
+
+    def test_purchase_order_prioritize_billed_variant_products(self):
+        """ This test ensures the products' order is correctly sorted depending of the supplier.
+        """
+        today = fields.Datetime.now()
+        prioritize_context = {
+            'partner_id': self.partner_a.id,
+            'prioritize_for': 'purchase',
+        }
+        # Enable and create some variant attirbutes.
+        self._enable_variants()
+        product_attr = self.env['product.attribute'].create({
+            'name': 'Grade',
+            'create_variant': 'always',
+            'value_ids': [Command.create({'name': c}) for c in 'AB'],
+        })
+        # Archive all existing products and create new products for testing purpose.
+        domain = [('type', '=', 'consu')]
+        ProductProduct = self.env['product.product']
+        ProductTemplate = self.env['product.template']
+        ProductTemplate.search(domain).active = False
+        product_1, product_2 = ProductTemplate.create([{
+            'name': f'Product {char}',
+            'attribute_line_ids': [Command.create({
+                'attribute_id': product_attr.id,
+                'value_ids': [Command.set(product_attr.value_ids.ids)],
+            })]
+        } for char in '12'])
+        product_1_a, product_1_b = product_1.product_variant_ids
+        product_2_a, product_2_b = product_2.product_variant_ids
+
+        # Create some PO in the past and invoice them.
+        self._create_purchase_and_invoice_for_product_at_date(product_1_b, date=today - timedelta(days=5))
+        self._create_purchase_and_invoice_for_product_at_date(product_2_a, date=today - timedelta(days=2))
+        # Check the products order is not affected when no supplier is given.
+        self.assertEqual(
+            [
+                (product_1_a.id, 'Product 1 (A)'),
+                (product_1_b.id, 'Product 1 (B)'),
+                (product_2_a.id, 'Product 2 (A)'),
+                (product_2_b.id, 'Product 2 (B)'),
+            ],
+            ProductProduct.with_context(prioritize_for='purchase').name_search(domain=domain)
+        )
+        # Check the products order matches previous suplier's activities.
+        self.assertEqual(
+            [
+                (product_2_a.id, 'Product 2 (A)'),
+                (product_1_b.id, 'Product 1 (B)'),
+                (product_1_a.id, 'Product 1 (A)'),
+                (product_2_b.id, 'Product 2 (B)'),
+            ],
+            ProductProduct.with_context(prioritize_context).name_search(domain=domain)
+        )
+        # Do the same checks but for product templates.
+        self.assertEqual(
+            [
+                (product_1_a.product_tmpl_id.id, 'Product 1'),
+                (product_2_b.product_tmpl_id.id, 'Product 2'),
+            ],
+            ProductTemplate.with_context(prioritize_for='purchase').name_search(domain=domain)
+        )
+        self.assertEqual(
+            [
+                (product_2_b.product_tmpl_id.id, 'Product 2'),
+                (product_1_a.product_tmpl_id.id, 'Product 1'),
+            ],
+            ProductTemplate.with_context(prioritize_context).name_search(domain=domain)
+        )
 
     def test_sequence_invoice_lines_from_multiple_purchases(self):
         """Test if the invoice lines are sequenced by purchase order when creating an invoice

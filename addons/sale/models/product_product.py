@@ -4,7 +4,6 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_round
 
 
 class ProductProduct(models.Model):
@@ -17,6 +16,28 @@ class ProductProduct(models.Model):
         compute='_compute_product_is_in_sale_order',
         search='_search_product_is_in_sale_order',
     )
+    last_invoice_since = fields.Char(compute="_compute_last_invoice_since")
+
+    @api.depends_context('formatted_display_name', 'partner_id', 'prioritize_for')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+
+        # Add last invoiced date beside the product's name.
+        if self.env.context.get('formatted_display_name') and\
+            self.env.context.get('prioritize_for') == 'sale' and\
+            self.env['product.template']._must_prioritize_invoiced_product():
+            for product in self:
+                if product.last_invoice_date:
+                    product.display_name = f'`{product.last_invoice_since}` **{product.display_name}**'
+
+    @api.depends('last_invoice_date')
+    def _compute_last_invoice_since(self):
+        self.last_invoice_since = False
+        today = fields.Date.today()
+        for product in self:
+            if product.last_invoice_date:
+                days_count = (today - product.last_invoice_date).days
+                product.last_invoice_since = self.env['product.template']._get_last_invoice_since(days_count)
 
     def _compute_sales_count(self):
         r = {}
@@ -113,7 +134,7 @@ class ProductProduct(models.Model):
             so_lines.product_uom_id = to_uom_id
         return super()._update_uom(to_uom_id)
 
-    def _trigger_uom_warning(self):        
+    def _trigger_uom_warning(self):
         res = super()._trigger_uom_warning()
         if res:
             return res
