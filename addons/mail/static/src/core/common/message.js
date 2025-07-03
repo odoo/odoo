@@ -451,7 +451,10 @@ export class Message extends Component {
                 openReactionMenu: () => this.openReactionMenu(),
                 state: this.state,
             },
-            { context: this, onClose: () => (this.state.actionMenuMobileOpen = false) }
+            {
+                context: this,
+                onClose: () => console.warn("close") || (this.state.actionMenuMobileOpen = false),
+            }
         );
     }
 
