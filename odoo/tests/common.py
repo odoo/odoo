@@ -1051,6 +1051,7 @@ class TransactionCase(BaseCase):
         cls.startClassPatcher(cls._signal_changes_patcher)
 
         cls.cr = cls.registry.cursor()
+        cls.cr._now = datetime.now()
         cls.addClassCleanup(cast(Cursor, cls.cr).close)
 
         def check_cursor_stack():
