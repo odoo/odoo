@@ -109,6 +109,10 @@ export class BackgroundVideo extends Interaction {
     }
 }
 
+const BackgroundVideoPreview = I => class extends I {
+    static selector = ".o_custom_snippet_wrap .o_background_video";
+};
+
 registry
     .category("public.interactions")
     .add("website.background_video", BackgroundVideo);
@@ -117,4 +121,11 @@ registry
     .category("public.interactions.edit")
     .add("website.background_video", {
         Interaction: BackgroundVideo,
+    });
+
+registry
+    .category("public.interactions.preview")
+    .add("website.background_video", {
+        Interaction: BackgroundVideo,
+        mixin: BackgroundVideoPreview,
     });
