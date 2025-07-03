@@ -57,9 +57,6 @@ export class IrWebSocket extends busModels.IrWebSocket {
         ]);
         for (const channel of allChannels) {
             channels.push(channel);
-            if (!discussChannelIds.includes(channel.id)) {
-                channels.push([channel, "members"]);
-            }
         }
         return channels;
     }

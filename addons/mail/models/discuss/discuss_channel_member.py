@@ -79,10 +79,8 @@ class DiscussChannelMember(models.Model):
         members = self.env["discuss.channel.member"].search(domain)
         members.unpin_dt = fields.Datetime.now()
         for member in members:
-            Store(
-                member.channel_id,
-                {"close_chat_window": True, "is_pinned": False},
-                bus_channel=member._bus_channel(),
+            Store(member, "is_pinned", bus_channel=member._bus_channel()).add(
+                member.channel_id, {"close_chat_window": True}
             ).bus_send()
 
     @api.constrains('partner_id')

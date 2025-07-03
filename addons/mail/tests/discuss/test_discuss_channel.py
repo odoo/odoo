@@ -52,6 +52,9 @@ class TestChannelInternals(MailCommon, HttpCase):
     @freeze_time("2020-03-22 10:42:06")
     def test_channel_members(self):
         test_group = self.env["discuss.channel"].create({"name": "Group", "channel_type": "group"})
+        member_creator = test_group.channel_member_ids.filtered(
+            lambda m: m.partner_id == test_group.create_uid.partner_id
+        )
         self.assertEqual(test_group.message_partner_ids, self.env["res.partner"])
         self.assertEqual(test_group.channel_partner_ids, self.partner_employee)
 
@@ -66,7 +69,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                     (self.cr.dbname, "res.partner", self.test_partner.id),
                     (self.cr.dbname, "discuss.channel", test_group.id),
                     (self.cr.dbname, "res.partner", self.partner_employee.id),
-                    (self.cr.dbname, "discuss.channel", test_group.id, "members"),
+                    (self.cr.dbname, "res.partner", test_group.create_uid.partner_id.id),
+                    (self.cr.dbname, "res.partner", self.test_partner.id),
                     (self.cr.dbname, "discuss.channel", test_group.id),
                     (self.cr.dbname, "discuss.channel", test_group.id),
                 ],
@@ -81,7 +85,15 @@ class TestChannelInternals(MailCommon, HttpCase):
                     },
                     {
                         "type": "mail.record/insert",
-                        "payload": {"discuss.channel": [{"id": test_group.id, "is_pinned": True}]},
+                        "payload": {
+                            "discuss.channel.member": [{"id": member_creator.id, "is_pinned": True}]
+                        },
+                    },
+                    {
+                        "type": "mail.record/insert",
+                        "payload": {
+                            "discuss.channel.member": [{"id": member.id, "is_pinned": True}]
+                        },
                     },
                     {
                         "type": "discuss.channel/new_message",
@@ -698,7 +710,8 @@ class TestChannelInternals(MailCommon, HttpCase):
         self._reset_bus()
         with self.assertBusNotificationType(
             [
-                ((self.cr.dbname, "res.partner", partner_id), "mail.message/inbox")
+                ((self.cr.dbname, "res.partner", partner_id), notification_type)
+                for notification_type in ["mail.message/inbox", "mail.record/insert"]
                 for partner_id in partner_ids
             ],
         ):
