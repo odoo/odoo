@@ -299,20 +299,7 @@ class StockPickingBatch(models.Model):
                 'target': 'new',
                 'context': {'default_picking_ids': self.picking_ids.ids},
             }
-        view = self.env.ref('stock.product_label_layout_form_picking')
-        return {
-            'name': _('Choose Labels Layout'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'product.label.layout',
-            'views': [(view.id, 'form')],
-            'view_id': view.id,
-            'target': 'new',
-            'context': {
-                'default_product_ids': self.move_line_ids.product_id.ids,
-                'default_move_ids': self.move_ids.ids,
-                'default_move_quantity': 'move'},
-        }
+        return self.picking_ids.action_open_label_layout()
 
     def action_merge(self):
         if not self:
