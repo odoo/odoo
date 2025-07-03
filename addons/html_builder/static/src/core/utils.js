@@ -663,7 +663,9 @@ export function useInputBuilderComponent({
 
     function commit(userInputValue) {
         if (defaultValue !== undefined) {
-            userInputValue ||= formatRawValue(defaultValue);
+            if (!userInputValue || (typeof userInputValue === "string" && !userInputValue.trim())) {
+                userInputValue = formatRawValue(defaultValue);
+            }
         }
         const rawValue = parseDisplayValue(userInputValue);
         if (reload) {
