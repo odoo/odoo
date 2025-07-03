@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessageReactionMenu">
-        <Dialog size="'md'" header="false" footer="false" contentClass="'o-mail-MessageReactionMenu h-50 d-flex'">
-            <div class="d-flex h-100" t-on-keydown="onKeydown" t-ref="root">
-                <div class="d-flex overflow-auto o-scrollbar-thin flex-column bg-100 p-2 h-100 border-end">
+        <Dialog size="'md'" header="false" footer="false" contentClass="contentClass">
+            <div class="d-flex h-100" t-on-keydown="onKeydown" t-att-class="{'flex-column': store.useMobileView}" t-ref="root">
+                <div class="d-flex overflow-auto o-scrollbar-thin bg-100 p-1 border-end" t-att-class="{'flex-column h-100 p-2': !store.useMobileView}">
                     <t t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content">
                         <button class="btn p-1 rounded-2 mx-2 py-0 d-flex align-items-center" t-att-class="{ 'bg-200 border-primary': reaction.eq(state.reaction) }" t-att-title="getEmojiShortcode(reaction)" t-on-click="() => state.reaction = reaction">
                             <span class="mx-1 fs-2" t-esc="reaction.content"/>
