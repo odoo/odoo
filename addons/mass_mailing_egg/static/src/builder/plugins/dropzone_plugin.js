@@ -43,4 +43,4 @@ class DropzonePlugin extends Plugin {
     }
 }
 
-registry.category("builder-plugins").add(DropzonePlugin.id, DropzonePlugin);
+registry.category("mass_mailing-plugins").add(DropzonePlugin.id, DropzonePlugin);

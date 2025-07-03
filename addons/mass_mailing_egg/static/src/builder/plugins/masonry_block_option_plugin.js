@@ -39,4 +39,6 @@ class ChangeMasonryTemplate extends BuilderAction {
     }
 }
 
-registry.category("builder-plugins").add(MasonryBlockTemplateOptionPlugin.id, MasonryBlockTemplateOptionPlugin)
+registry
+    .category("mass_mailing-plugins")
+    .add(MasonryBlockTemplateOptionPlugin.id, MasonryBlockTemplateOptionPlugin);

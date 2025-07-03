@@ -24,4 +24,4 @@ class ColorPickerOptionPlugin extends Plugin {
     }
 }
 
-registry.category("builder-plugins").add(ColorPickerOptionPlugin.id, ColorPickerOptionPlugin);
+registry.category("mass_mailing-plugins").add(ColorPickerOptionPlugin.id, ColorPickerOptionPlugin);

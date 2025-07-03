@@ -37,4 +37,6 @@ class GenericBlockOptionPlugin extends Plugin {
 }
 // TODO: as in master, the position of a background image does not work
 // correctly.
-registry.category("builder-plugins").add(GenericBlockOptionPlugin.id, GenericBlockOptionPlugin );
+registry
+    .category("mass_mailing-plugins")
+    .add(GenericBlockOptionPlugin.id, GenericBlockOptionPlugin);

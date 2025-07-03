@@ -19,4 +19,6 @@ class HorizontalPaddingOptionPlugin extends Plugin {
 }
 // TODO: as in master, the position of a background image does not work
 // correctly.
-registry.category("builder-plugins").add(HorizontalPaddingOptionPlugin.id, HorizontalPaddingOptionPlugin );
+registry
+    .category("mass_mailing-plugins")
+    .add(HorizontalPaddingOptionPlugin.id, HorizontalPaddingOptionPlugin);

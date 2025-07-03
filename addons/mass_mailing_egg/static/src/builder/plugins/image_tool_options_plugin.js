@@ -31,4 +31,4 @@ class MassMailingImageToolOption extends ImageToolOption {
     static template = "mass_mailing.ImageToolOption";
 }
 
-registry.category("builder-plugins").add(ImageToolOptionPlugin.id, ImageToolOptionPlugin);
+registry.category("mass_mailing-plugins").add(ImageToolOptionPlugin.id, ImageToolOptionPlugin);

@@ -13,4 +13,6 @@ class BlockAlignmentOptionPlugin extends Plugin {
     }
 }
 
-registry.category("builder-plugins").add(BlockAlignmentOptionPlugin.id, BlockAlignmentOptionPlugin);
+registry
+    .category("mass_mailing-plugins")
+    .add(BlockAlignmentOptionPlugin.id, BlockAlignmentOptionPlugin);
