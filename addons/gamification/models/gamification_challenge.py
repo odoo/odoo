@@ -275,7 +275,7 @@ class GamificationChallenge(models.Model):
                         FROM gamification_goal as gg
                         JOIN mail_presence as mp ON mp.user_id = gg.user_id
                        WHERE gg.write_date <= mp.last_presence
-                         AND mp.last_presence >= now() AT TIME ZONE 'UTC' - interval '%(session_lifetime)s seconds'
+                         AND mp.last_presence >= %(now)s - interval '%(session_lifetime)s seconds'
                          AND gg.closed IS NOT TRUE
                          AND gg.challenge_id IN %(challenge_ids)s
                          AND (gg.state = 'inprogress'
@@ -284,7 +284,8 @@ class GamificationChallenge(models.Model):
         """, {
             'session_lifetime': SESSION_LIFETIME,
             'challenge_ids': tuple(self.ids),
-            'yesterday': yesterday
+            'yesterday': yesterday,
+            'now': self.env.cr.now(),
         })
 
         Goals.browse(goal_id for [goal_id] in self.env.cr.fetchall()).update_goal()

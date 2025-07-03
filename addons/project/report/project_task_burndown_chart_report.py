@@ -83,6 +83,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         # Removing unexistant table name from the expression
         simple_date_groupby_sql = self.env.cr.mogrify(simple_date_groupby_sql).decode()
         simple_date_groupby_sql = simple_date_groupby_sql.replace('"project_task_burndown_chart_report".', '')
+        now = self.env.cr.now()
 
         burndown_chart_sql = SQL("""
             (
@@ -114,7 +115,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
                                             pt.project_id,
                                             COALESCE(LAG(mm.date) OVER (PARTITION BY mm.res_id ORDER BY mm.id), pt.create_date) as date_begin,
                                             CASE WHEN mtv.id IS NOT NULL THEN mm.date
-                                                ELSE (now() at time zone 'utc')::date + INTERVAL '%(interval)s'
+                                                ELSE (%(now)s)::date + INTERVAL '%(interval)s'
                                             END as date_end,
                                             CASE WHEN mtv.id IS NOT NULL THEN mtv.old_value_integer
                                                ELSE pt.stage_id
@@ -152,7 +153,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
                                    pt.allocated_hours,
                                    pt.project_id,
                                    last_stage_id_change_mail_message.date as date_begin,
-                                   (now() at time zone 'utc')::date + INTERVAL '%(interval)s' as date_end,
+                                   (%(now)s)::date + INTERVAL '%(interval)s' as date_end,
                                    pt.stage_id as old_value_integer,
                                    CASE WHEN pt.state IN ('1_done', '1_canceled') THEN 'closed'
                                        ELSE 'open'
@@ -195,6 +196,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
             date_end=SQL(simple_date_groupby_sql.replace('"date"', '"date_end"')),
             interval=SQL(sql_interval),
             field_id=field_id,
+            now=now,
         )
 
         # hardcode 'project_task_burndown_chart_report' as the query above

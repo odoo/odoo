@@ -1872,20 +1872,21 @@ class IrModelConstraint(models.Model):
             WHERE c.module = m.id AND c.name = %s AND m.name = %s
             """, conname, module
         ))
+        now = self.env.cr.now()
         if not rows:
             [[cons_id]] = self.env.execute_query(SQL(
                 """
                 INSERT INTO ir_model_constraint
                     (name, create_date, write_date, create_uid, write_uid, module, model, type, definition, message)
                 VALUES (%s,
-                        now() AT TIME ZONE 'UTC',
-                        now() AT TIME ZONE 'UTC',
+                        %s,
+                        %s,
                         %s, %s,
                         (SELECT id FROM ir_module_module WHERE name=%s),
                         (SELECT id FROM ir_model WHERE model=%s),
                         %s, %s, %s)
                 RETURNING id
-                """, conname, self.env.uid, self.env.uid, module, model._name, type, definition, Json({'en_US': message})
+                """, conname, now, now, self.env.uid, self.env.uid, module, model._name, type, definition, Json({'en_US': message})
             ))
             return self.browse(cons_id)
         [cons] = rows
@@ -1894,10 +1895,10 @@ class IrModelConstraint(models.Model):
             self.env.execute_query(SQL(
                 """
                 UPDATE ir_model_constraint
-                SET write_date=now() AT TIME ZONE 'UTC',
+                SET write_date=%s,
                     write_uid = %s, type = %s, definition = %s, message = %s
                 WHERE id = %s""",
-                self.env.uid, type, definition, Json({'en_US': message}), cons_id
+                now, self.env.uid, type, definition, Json({'en_US': message}), cons_id
             ))
             return self.browse(cons_id)
         return None
@@ -1985,15 +1986,17 @@ class IrModelRelation(models.Model):
                     WHERE r.module=m.id AND r.name=%s AND m.name=%s """
         cr.execute(query, (table, module))
         if not cr.rowcount:
-            query = """ INSERT INTO ir_model_relation
+            now = cr.now()
+            query = SQL(""" INSERT INTO ir_model_relation
                             (name, create_date, write_date, create_uid, write_uid, module, model)
                         VALUES (%s,
-                                now() AT TIME ZONE 'UTC',
-                                now() AT TIME ZONE 'UTC',
+                                %s,
+                                %s,
                                 %s, %s,
                                 (SELECT id FROM ir_module_module WHERE name=%s),
-                                (SELECT id FROM ir_model WHERE model=%s)) """
-            cr.execute(query, (table, self.env.uid, self.env.uid, module, model._name))
+                                (SELECT id FROM ir_model WHERE model=%s)) """, table, now, now, self.env.uid, self.env.uid, module, model._name
+            )
+            cr.execute(query)
 
 
 class IrModelAccess(models.Model):
@@ -2309,11 +2312,12 @@ class IrModelData(models.Model):
             noupdate = bool(data.get('noupdate'))
             rows.add((prefix, suffix, record._name, record.id, noupdate))
 
+        now = self.env.cr.now()
         for sub_rows in split_every(self.env.cr.IN_MAX, rows):
             # insert rows or update them
             query = self._build_update_xmlids_query(sub_rows, update)
             try:
-                self.env.cr.execute(query, [arg for row in sub_rows for arg in row])
+                self.env.cr.execute(query, [arg for row in sub_rows for arg in row] + [now])
                 result = self.env.cr.fetchall()
                 if result:
                     for module, name, model, res_id, create_date, write_date in result:
@@ -2359,7 +2363,7 @@ class IrModelData(models.Model):
             VALUES {row_placeholder}
             ON CONFLICT (module, name)
             DO UPDATE SET (model, res_id, write_date) =
-                (EXCLUDED.model, EXCLUDED.res_id, now() at time zone 'UTC')
+                (EXCLUDED.model, EXCLUDED.res_id, %s)
                 WHERE (ir_model_data.res_id != EXCLUDED.res_id OR ir_model_data.model != EXCLUDED.model) {and_where}
             RETURNING module, name, model, res_id, create_date, write_date
         """.format(

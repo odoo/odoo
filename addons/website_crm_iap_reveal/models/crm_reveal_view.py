@@ -39,14 +39,15 @@ class CrmRevealView(models.Model):
         # we are avoiding reveal if reveal_view already created for this IP
         rules = self.env['crm.reveal.rule']._match_url(website_id, url, country_code, state_code, rules_excluded)
         if rules:
+            now = self.env.cr.now()
             query = """
                     INSERT INTO crm_reveal_view (reveal_ip, reveal_rule_id, reveal_state, create_date)
-                    VALUES (%s, %s, 'to_process', now() at time zone 'UTC')
+                    VALUES (%s, %s, 'to_process', %s)
                     ON CONFLICT DO NOTHING;
                     """ * len(rules)
             params = []
             for rule in rules:
-                params += [ip_address, rule['id']]
+                params += [ip_address, rule['id'], now]
                 rules_excluded.append(str(rule['id']))
             self.env.cr.execute(query, params)
             return rules_excluded

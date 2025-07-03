@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools.sql import SQL
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
 
@@ -373,8 +374,9 @@ class DiscussChannel(models.Model):
 
     @api.autovacuum
     def _gc_empty_livechat_sessions(self):
+        now = self.env.cr.now()
         hours = 1  # never remove empty session created within the last hour
-        self.env.cr.execute("""
+        self.env.cr.execute(SQL("""
             SELECT id as id
             FROM discuss_channel C
             WHERE NOT EXISTS (
@@ -382,8 +384,8 @@ class DiscussChannel(models.Model):
                 FROM mail_message M
                 WHERE M.res_id = C.id AND m.model = 'discuss.channel'
             ) AND C.channel_type = 'livechat' AND livechat_channel_id IS NOT NULL AND
-                COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp
-                < ((now() at time zone 'UTC') - interval %s)""", ("%s hours" % hours,))
+                COALESCE(write_date, create_date, (%(now)s))::timestamp
+                < ((%(now)s) - interval %(hours)s hours)"""), hours=hours, now=now)
         empty_channel_ids = [item['id'] for item in self.env.cr.dictfetchall()]
         self.browse(empty_channel_ids).unlink()
 

@@ -3,7 +3,7 @@
 
 import json
 
-from odoo import _, api, models, modules
+from odoo import _, api, models, modules, fields
 
 
 class ResUsers(models.Model):
@@ -24,9 +24,9 @@ class ResUsers(models.Model):
         # 2. creating groups for todo and task seperately
         query = """SELECT BOOL(t.project_id) as is_task, count(*), act.res_model, act.res_id,
                        CASE
-                           WHEN CURRENT_DATE - act.date_deadline::date = 0 THEN 'today'
-                           WHEN CURRENT_DATE - act.date_deadline::date > 0 THEN 'overdue'
-                           WHEN CURRENT_DATE - act.date_deadline::date < 0 THEN 'planned'
+                           WHEN %(current_date)s::date - act.date_deadline::date = 0 THEN 'today'
+                           WHEN %(current_date)s::date - act.date_deadline::date > 0 THEN 'overdue'
+                           WHEN %(current_date)s::date - act.date_deadline::date < 0 THEN 'planned'
                         END AS states
                      FROM mail_activity AS act
                      JOIN project_task AS t ON act.res_id = t.id
@@ -36,6 +36,7 @@ class ResUsers(models.Model):
         self.env.cr.execute(query, {
             'user_id': self.env.uid,
             'active': self.env.context.get('active_test', True),
+            'current_date': fields.Date.context_today(self)
         })
         activity_data = self.env.cr.dictfetchall()
         view_type = self.env['project.task']._systray_view

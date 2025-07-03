@@ -1500,6 +1500,7 @@ class ResUsersApikeys(models.Model):
 
     def init(self):
         table = SQL.identifier(self._table)
+        now = self.env.cr.now()
         self.env.cr.execute(SQL("""
         CREATE TABLE IF NOT EXISTS %(table)s (
             id serial primary key,
@@ -1509,9 +1510,9 @@ class ResUsersApikeys(models.Model):
             expiration_date timestamp without time zone,
             index varchar(%(index_size)s) not null CHECK (char_length(index) = %(index_size)s),
             key varchar not null,
-            create_date timestamp without time zone DEFAULT (now() at time zone 'utc')
+            create_date timestamp without time zone DEFAULT (%(now)s)
         )
-        """, table=table, index_size=INDEX_SIZE))
+        """, table=table, index_size=INDEX_SIZE, now=now))
 
         index_name = self._table + "_user_id_index_idx"
         if len(index_name) > 63:
@@ -1543,6 +1544,7 @@ class ResUsersApikeys(models.Model):
     def _check_credentials(self, *, scope, key):
         assert scope and key, "scope and key required"
         index = key[:INDEX_SIZE]
+        now = self.env.cr.now()
         self.env.cr.execute('''
             SELECT user_id, key
             FROM {} INNER JOIN res_users u ON (u.id = user_id)
@@ -1551,10 +1553,10 @@ class ResUsersApikeys(models.Model):
                 AND (scope IS NULL OR scope = %s)
                 AND (
                     expiration_date IS NULL OR
-                    expiration_date >= now() at time zone 'utc'
+                    expiration_date >= %s
                 )
         '''.format(self._table),
-        [index, scope])
+        [index, scope, now])
         for user_id, current_key in self.env.cr.fetchall():
             if key and KEY_CRYPT_CONTEXT.verify(key, current_key):
                 return user_id
