@@ -186,6 +186,11 @@ class AccountAccount(models.Model):
                 account_first_company_root_id=SQL.identifier('account_first_company', 'root_company_id'),
                 to_flush=self._fields['code_store'],
             )
+        if field_expr == 'root_id':
+            return SQL(
+                "SUBSTRING(%(placeholder_code)s, 1, 2)",
+                placeholder_code=self._field_to_sql(alias, 'placeholder_code', query, flush),
+            )
 
         return super()._field_to_sql(alias, field_expr, query, flush)
 
