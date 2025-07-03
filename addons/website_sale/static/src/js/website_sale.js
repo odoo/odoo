@@ -7,7 +7,7 @@ import VariantMixin from "@website_sale/js/sale_variant_mixin";
 
 export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     selector: '.oe_website_sale',
-    events: Object.assign({}, VariantMixin.events || {}, {
+    events: {
         'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
         'click a.js_add_cart_json': '_onChangeQuantity',
         'click .a-submit': '_onClickSubmit',
@@ -24,7 +24,9 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'submit': '_onClickConfirmOrder',
         'input .o_wsale_attribute_search_bar': '_searchAttributeValues',
         'click .o_wsale_view_more_btn': '_onToggleViewMoreLabel',
-    }),
+        'change .css_attribute_color input': '_onChangeColorAttribute',
+        'click .o_variant_pills': '_onChangePillsAttribute',
+    },
 
     /**
      * @constructor
@@ -512,6 +514,35 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         const submitFormButton = $('form[name="o_wsale_confirm_order"]').find('button[type="submit"]');
         submitFormButton.attr('disabled', true);
         setTimeout(() => submitFormButton.attr('disabled', false), 5000);
+    },
+
+    /**
+     * Highlight selected color
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onChangeColorAttribute: function (ev) {
+        let $eventTarget = $(ev.target);
+        var $parent = $eventTarget.closest('.js_product');
+        $parent.find('.css_attribute_color')
+            .removeClass("active")
+            .filter(':has(input:checked)')
+            .addClass("active");
+        let $attrValueEl = $eventTarget.closest('.variant_attribute').find('.attribute_value')[0];
+        if ($attrValueEl) {
+            $attrValueEl.innerText = $eventTarget.data('value_name');
+        }
+    },
+
+    _onChangePillsAttribute: function (ev) {
+        const radio = ev.target.closest('.o_variant_pills').querySelector("input");
+        radio.click();  // Trigger onChangeVariant.
+        var $parent = $(ev.target).closest('.js_product');
+        $parent.find('.o_variant_pills')
+            .removeClass("active border-primary text-primary-emphasis bg-primary-subtle")
+            .filter(':has(input:checked)')
+            .addClass("active border-primary text-primary-emphasis bg-primary-subtle");
     },
 
     // -------------------------------------
