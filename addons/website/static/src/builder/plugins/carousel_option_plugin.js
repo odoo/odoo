@@ -4,6 +4,11 @@ import { registry } from "@web/core/registry";
 import { CarouselItemHeaderMiddleButtons } from "./carousel_item_header_buttons";
 import { renderToElement } from "@web/core/utils/render";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { withSequence } from "@html_editor/utils/resource";
+import { between } from "@html_builder/utils/option_sequence";
+import { WEBSITE_BACKGROUND_OPTIONS, BOX_BORDER_SHADOW } from "@website/builder/option_sequence";
+
+export const CAROUSEL_CARDS_SEQUENCE = between(WEBSITE_BACKGROUND_OPTIONS, BOX_BORDER_SHADOW);
 
 const carouselWrapperSelector =
     ".s_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_wrapper";
@@ -29,11 +34,11 @@ export class CarouselOptionPlugin extends Plugin {
                 selector: "section",
                 applyTo: ".s_carousel_intro, .s_quotes_carousel_compact",
             },
-            {
+            withSequence(CAROUSEL_CARDS_SEQUENCE, {
                 template: "website.CarouselCardsOption",
                 selector: "section",
                 applyTo: ".s_carousel_cards",
-            },
+            }),
         ],
         builder_header_middle_buttons: {
             Component: CarouselItemHeaderMiddleButtons,

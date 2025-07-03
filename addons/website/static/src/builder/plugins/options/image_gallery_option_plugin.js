@@ -5,6 +5,8 @@ import { ImageGalleryComponent } from "./image_gallery_option";
 import { renderToElement } from "@web/core/utils/render";
 import { updateCarouselIndicators } from "../carousel_option_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { withSequence } from "@html_editor/utils/resource";
+import { SNIPPET_SPECIFIC, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 
 class ImageGalleryOption extends Plugin {
     static id = "imageGalleryOption";
@@ -20,10 +22,14 @@ class ImageGalleryOption extends Plugin {
     static shared = ["processImages", "getMode", "setImages", "restoreSelection", "getColumns"];
     resources = {
         builder_options: [
-            {
+            withSequence(SNIPPET_SPECIFIC, {
+                template: "website.ImageGalleryImagesOption",
+                selector: ".s_image_gallery",
+            }),
+            withSequence(SNIPPET_SPECIFIC_END, {
                 OptionComponent: ImageGalleryComponent,
                 selector: ".s_image_gallery",
-            },
+            }),
         ],
         builder_actions: {
             AddImageAction,
