@@ -1,5 +1,5 @@
 export function escapeTextNodes(el) {
-    const walker = document.createTreeWalker(el, NodeFilter.SHOW_ALL, (node) => {
+    const nodeFilter = (node) => {
         if (
             node.nodeType === Node.ELEMENT_NODE &&
             (node.matches("object,iframe,script,style") ||
@@ -12,8 +12,11 @@ export function escapeTextNodes(el) {
             return NodeFilter.FILTER_ACCEPT;
         }
         return NodeFilter.FILTER_SKIP; // Skip other nodes, but visit their children
-    });
-
+    };
+    if (nodeFilter(el) === NodeFilter.FILTER_REJECT) {
+        return;
+    }
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_ALL, nodeFilter);
     const escaper = document.createElement("div");
     let node;
     while ((node = walker.nextNode())) {
