@@ -50,6 +50,7 @@ registry.category('web_tour.tours').add('donation_snippet_use', {
             content: "Donate with custom amount set",
             trigger: ".s_donation_donate_btn",
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "Check if custom amount radio input is selected",
@@ -165,6 +166,7 @@ registry.category('web_tour.tours').add('donation_snippet_use_2', {
             content: "Submit the donation form",
             trigger: "button[name='o_payment_submit_button']",
             run: "click",
+            expectUnloadPage: true,
         },
         {
             trigger: "body:contains(Your payment has been processed.)",
@@ -172,6 +174,7 @@ registry.category('web_tour.tours').add('donation_snippet_use_2', {
         {
             content: "Verify that the amount displayed is 67",
             trigger: 'span.oe_currency_value:contains("67.00")',
+            expectUnloadPage: true,
         },
         {
             trigger: "[name=o_payment_status_alert]:contains(thank you!)",

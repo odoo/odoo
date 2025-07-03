@@ -57,6 +57,7 @@ export function changeKioskLanguage(language) {
             content: `Check that the language is available`,
             trigger: `.self_order_language_popup .btn:contains(${language})`,
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: `Check that the language changed`,

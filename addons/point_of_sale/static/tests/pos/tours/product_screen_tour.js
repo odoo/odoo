@@ -256,8 +256,20 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
             ProductScreen.closeWithCashAmount("50.0"),
             ProductScreen.cashDifferenceIs("-1.00"),
             Dialog.confirm("Close Register"),
-            Dialog.confirm("Proceed Anyway", ".btn-primary"),
-            Chrome.clickBtn("Backend"),
+            {
+                trigger: ".modal .btn-primary:contains(Proceed Anyway)",
+                run: "click",
+                expectUnloadPage: true,
+            },
+            {
+                trigger: "button:contains(backend)",
+                run: "click",
+                expectUnloadPage: true,
+            },
+            {
+                trigger: "body",
+                expectUnloadPage: true,
+            },
             ProductScreen.lastClosingCashIs("50.00"),
         ].flat(),
 });

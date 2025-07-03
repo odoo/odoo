@@ -32,6 +32,7 @@ registry.category("web_tour.tours").add("test_company_switch_access_error", {
         {
             trigger: ".o_switch_company_menu_buttons button:contains(Confirm)",
             run: "click",
+            expectUnloadPage: true,
         },
         {
             trigger: ".o_view_controller.o_list_view",

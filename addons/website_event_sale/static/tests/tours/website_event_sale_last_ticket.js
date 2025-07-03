@@ -7,6 +7,7 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
         content: "Open the Last ticket test event page",
         trigger: '.o_wevent_events_list a:contains("Last ticket test")',
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "Open Registration Modal",
@@ -53,6 +54,7 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
         content: "Validate attendees details",
         trigger: ".modal:contains(Attendees) button[type=submit]:contains(Go to Payment)",
         run: "click",
+        expectUnloadPage: true,
     },
     ...wsTourUtils.payWithTransfer(true),
     ],
