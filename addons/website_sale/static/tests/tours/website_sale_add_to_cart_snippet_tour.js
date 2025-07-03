@@ -17,6 +17,13 @@ function editAddToCartSnippet() {
     ]
 }
 
+function checkQuanityInCart(quantity) {
+    return {
+        content: `Check if the cart quantity is ${quantity}`,
+        trigger: `:iframe .my_cart_quantity:contains(${quantity})`,
+    };
+}
+
 registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         url: '/',
         edition: true,
@@ -29,6 +36,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...changeOptionInPopover("Add to Cart Button", "Product", "Product No Variant", true),
         ...clickOnSave(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
+        checkQuanityInCart("1"),
 
         // Product with 2 variants with visitor choice (will open modal)
         ...editAddToCartSnippet(),
@@ -36,6 +44,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...clickOnSave(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
         clickOnElement("continue shopping", ":iframe .modal button:contains(Continue Shopping)"),
+        checkQuanityInCart("2"),
 
         // Product with 2 variants with a variant selected
         ...editAddToCartSnippet(),
@@ -61,6 +70,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
             trigger: ":iframe .modal li:contains(Pink) input:checked",
         },
         clickOnElement('continue shopping', ':iframe .modal button:contains(Continue Shopping)',),
+        checkQuanityInCart("3"),
 
         // Basic product with no variants and action=buy now
         ...editAddToCartSnippet(),
@@ -69,6 +79,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         // At this point the "Add to cart" button was changed to a "Buy Now" button
         ...clickOnSave(),
         clickOnElement('"Buy Now" button', ':iframe .s_add_to_cart_btn'),
+        checkQuanityInCart("4"),
         {
             // wait for the page to load, as the next check was sometimes too fast
             content: "Wait for the redirection to the cart page",
