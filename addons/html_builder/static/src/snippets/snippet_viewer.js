@@ -20,6 +20,7 @@ export class SnippetViewer extends Component {
         hasSearchResults: Function,
         snippetModel: { type: Object },
         installSnippetModule: { type: Function },
+        frontendDirection: { type: String },
     };
 
     setup() {
