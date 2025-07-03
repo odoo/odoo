@@ -41,6 +41,7 @@ import { rpc } from "@web/core/network/rpc";
 import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
+import { useLongPress } from "@mail/utils/common/hooks";
 
 /**
  * @typedef {Object} Props
@@ -110,6 +111,12 @@ export class Message extends Component {
         /** @type {ShadowRoot} */
         this.shadowRoot;
         this.root = useRef("root");
+        if (isMobileOS()) {
+            useLongPress("root", {
+                action: () => this.openMobileActions(),
+                predicate: () => !this.isEditing,
+            });
+        }
         onWillUpdateProps((nextProps) => {
             this.props.registerMessageRef?.(this.props.message, null);
         });
@@ -215,6 +222,7 @@ export class Message extends Component {
 
     get attClass() {
         return {
+            "user-select-none": isMobileOS(),
             [this.props.className]: true,
             "o-card p-2 ps-1 mx-1 mt-1 mb-1 border border-dark shadow-sm rounded-3":
                 this.props.asCard,

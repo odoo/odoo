@@ -11,12 +11,12 @@ import {
     xml,
 } from "@odoo/owl";
 
+import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { browser } from "@web/core/browser/browser";
+import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
-import { monitorAudio } from "@mail/utils/common/media_monitoring";
-import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
@@ -579,3 +579,61 @@ export const useMovable = makeDraggableHook({
         return { top, left };
     },
 });
+
+export const LONG_PRESS_DELAY = 400;
+
+/**
+ * Subscribes to long press events on the element matching the given ref name.
+ * It internally prevents false positives caused by scroll gestures.
+ *
+ * @param {string} refName The ref name of the element to listen for long presses on.
+ * @param {Object} options
+ * @param {() => void} [options.action] Function called when a long press is detected.
+ * @param {() => boolean} [options.predicate] Optional function to enable long press detection.
+ */
+export function useLongPress(refName, { action, predicate = () => true } = {}) {
+    const MOVE_TRESHOLD = 10;
+    const ref = useRef(refName);
+    let timer = null;
+    let startX = 0;
+    let startY = 0;
+
+    function reset() {
+        clearTimeout(timer);
+        timer = null;
+    }
+
+    useLazyExternalListener(
+        () => ref.el,
+        "touchstart",
+        (ev) => {
+            if (!predicate()) {
+                return;
+            }
+            const touch = ev.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
+            timer = setTimeout(() => {
+                action();
+                reset();
+            }, LONG_PRESS_DELAY);
+        }
+    );
+    useLazyExternalListener(
+        () => ref.el,
+        "touchmove",
+        (ev) => {
+            if (!timer) {
+                return;
+            }
+            const touch = ev.touches[0];
+            const dx = touch.screenX - startX;
+            const dy = touch.screenY - startY;
+            if (Math.hypot(dx, dy) > MOVE_TRESHOLD) {
+                reset();
+            }
+        }
+    );
+    useLazyExternalListener(() => ref.el, "touchend", reset);
+    useLazyExternalListener(() => ref.el, "touchcancel", reset);
+}
