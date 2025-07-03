@@ -48,6 +48,18 @@ export const modelsToLoad = [
 export class PosSession extends models.ServerModel {
     _name = "pos.session";
 
+    load_data() {
+        return [];
+    }
+
+    load_data_params() {
+        return [];
+    }
+
+    filter_local_data() {
+        return [];
+    }
+
     _load_pos_data_fields() {
         return [
             "id",
