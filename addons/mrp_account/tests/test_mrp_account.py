@@ -594,7 +594,7 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         workorder = production.workorder_ids
         workorder.duration = 0.03  # ~= 2 seconds (1.8 seconds exactly)
         workorder.time_ids.write({'duration': 0.03})  # Ensure that the duration is correct
-        self.assertEqual(workorder._cal_cost(), 0.005)  # 2 seconds at $10/h
+        self.assertEqual(workorder._cal_cost(), (2 / 3600) * 10)  # 2 seconds at $10/h
 
         mo_form = Form(production)
         mo_form.qty_producing = 1
@@ -676,7 +676,7 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         workorder = production.workorder_ids
         workorder.duration = 0.03  # ~= 2 seconds (1.8 seconds exactly)
         workorder.time_ids.write({'duration': 0.03})  # Ensure that the duration is correct
-        self.assertEqual(workorder._cal_cost(), 0.01)  # 2 seconds at $20/h
+        self.assertEqual(workorder._cal_cost(), (2 / 3600) * 20)  # 2 seconds at $20/h
 
         mo_form = Form(production)
         mo_form.qty_producing = 1
