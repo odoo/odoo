@@ -447,13 +447,6 @@ export class MailThread extends models.ServerModel {
             const channels = DiscussChannel.browse(message.res_id);
             for (const channel of channels) {
                 notifications.push([
-                    [channel, "members"],
-                    "mail.record/insert",
-                    new mailDataHelpers.Store(DiscussChannel.browse(channel.id), {
-                        is_pinned: true,
-                    }).get_result(),
-                ]);
-                notifications.push([
                     channel,
                     "discuss.channel/new_message",
                     {

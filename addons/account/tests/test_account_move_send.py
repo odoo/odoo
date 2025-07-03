@@ -1054,6 +1054,10 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue(all(invoice.sending_data.get('author_partner_id') == sp_partner_1.id for invoice in invoices_success))
         self.assertTrue(all(invoice.sending_data.get('author_partner_id') == sp_partner_2.id for invoice in invoices_error))
 
+        #  reset bus
+        self.env.cr.precommit.run()
+        self.env["bus.bus"].sudo().search([]).unlink()
+
         with patch(
             'odoo.addons.account.models.account_move_send.AccountMoveSend._hook_invoice_document_before_pdf_report_render',
             _hook_invoice_document_before_pdf_report_render,

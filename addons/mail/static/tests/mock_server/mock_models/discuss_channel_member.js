@@ -12,7 +12,9 @@ export class DiscussChannelMember extends models.ServerModel {
     is_pinned = fields.Generic({ compute: "_compute_is_pinned" });
     unpin_dt = fields.Datetime({ string: "Unpin date" });
     message_unread_counter = fields.Generic({ default: 0 });
-    last_interest_dt = fields.Datetime({ default: () => serializeDateTime(today()) });
+    last_interest_dt = fields.Datetime({
+        default: () => serializeDateTime(today().minus({ seconds: 1 })),
+    });
 
     create(values) {
         const idOrIds = super.create(values);
