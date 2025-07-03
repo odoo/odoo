@@ -712,9 +712,6 @@ class MailRenderMixin(models.AbstractModel):
                   field_name=field
                  )
             )
-        if options is None:
-            options = {}
-
         self.ensure_one()
         if compute_lang:
             templates_res_ids = self._classify_per_lang(res_ids)
@@ -729,20 +726,23 @@ class MailRenderMixin(models.AbstractModel):
             templates_res_ids = {self.env.context.get('lang'): (self, res_ids)}
 
         # rendering options (update default defined on field by asked options)
-        engine = getattr(self._fields[field], 'render_engine', engine)
-        field_options = getattr(self._fields[field], 'render_options', {})
-        if options:
-            field_options.update(**options)
+        f = self._fields[field]
+        if hasattr(f, 'render_engine') and f.render_engine:
+            engine = f.render_engine
 
-        return dict(
-            (res_id, rendered)
-            for lang, (template, tpl_res_ids) in templates_res_ids.items()
+        render_options = options.copy() if options else {}
+        if hasattr(f, 'render_options') and f.render_options:
+            render_options = {**f.render_options, **render_options}
+
+        return {
+            res_id: rendered
+            for (template, tpl_res_ids) in templates_res_ids.values()
             for res_id, rendered in template._render_template(
                 template[field],
                 template.render_model,
                 tpl_res_ids,
                 engine=engine,
                 add_context=add_context,
-                options=field_options,
+                options=render_options,
             ).items()
-        )
+        }
