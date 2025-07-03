@@ -154,6 +154,7 @@
         'website.website_builder_assets': [
             'website_sale/static/src/js/website_sale_form_editor.js',
             'website_sale/static/src/website_builder/**/*',
+            'website_sale/static/src/js/website_sale_utils.js',
             ('remove', 'website_sale/static/src/**/*.inside.scss'),
         ],
         'website.assets_wysiwyg': [
