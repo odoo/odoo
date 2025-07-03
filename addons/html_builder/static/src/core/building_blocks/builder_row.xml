@@ -6,6 +6,7 @@
         <div
             class="hb-row d-flex position-relative pe-2"
             t-att-class="this.getLevelClass()"
+            t-attf-class="{ 'vertical': this.props.vertical }"
             t-ref="root"
             t-att-data-label="props.label"
             >
