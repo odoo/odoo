@@ -22,6 +22,6 @@ patch(TicketScreen.prototype, {
                 destinationOrder.to_invoice = true;
             }
         }
-        super.addAdditionalRefundInfo(...arguments);
+        await super.addAdditionalRefundInfo(...arguments);
     },
 });
