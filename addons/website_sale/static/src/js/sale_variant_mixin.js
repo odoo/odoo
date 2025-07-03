@@ -7,16 +7,7 @@ import { insertThousandsSep } from "@web/core/utils/numbers";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 
-var VariantMixin = {
-    events: {
-        'change .css_attribute_color input': '_onChangeColorAttribute',
-        'click .o_variant_pills': '_onChangePillsAttribute',
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
+const VariantMixin = {
     /**
      * When a variant is changed, this will check:
      * - If the selected combination is available or not
@@ -456,35 +447,6 @@ var VariantMixin = {
      */
     _toggleDisable: function ($parent, isCombinationPossible) {
         $parent.toggleClass('css_not_available', !isCombinationPossible);
-    },
-
-    /**
-     * Highlight selected color
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onChangeColorAttribute: function (ev) {
-        let $eventTarget = $(ev.target);
-        var $parent = $eventTarget.closest('.js_product');
-        $parent.find('.css_attribute_color')
-            .removeClass("active")
-            .filter(':has(input:checked)')
-            .addClass("active");
-        let $attrValueEl = $eventTarget.closest('.variant_attribute').find('.attribute_value')[0];
-        if ($attrValueEl) {
-            $attrValueEl.innerText = $eventTarget.data('value_name');
-        }
-    },
-
-    _onChangePillsAttribute: function (ev) {
-        const radio = ev.target.closest('.o_variant_pills').querySelector("input");
-        radio.click();  // Trigger onChangeVariant.
-        var $parent = $(ev.target).closest('.js_product');
-        $parent.find('.o_variant_pills')
-            .removeClass("active border-primary text-primary-emphasis bg-primary-subtle")
-            .filter(':has(input:checked)')
-            .addClass("active border-primary text-primary-emphasis bg-primary-subtle");
     },
 
     /**
