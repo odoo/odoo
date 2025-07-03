@@ -19,6 +19,7 @@ patch(Thread.prototype, {
                 return this.livechatNoteText;
             },
         });
+        this.livechat_expertise_ids = fields.Many("im_livechat.expertise");
     },
     get livechatStatusLabel() {
         const status = this.livechat_status;
