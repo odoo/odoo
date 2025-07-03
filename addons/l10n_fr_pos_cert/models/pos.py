@@ -8,6 +8,7 @@ from odoo import models, api, fields
 from odoo.fields import Datetime
 from odoo.tools.translate import _, _lt
 from odoo.exceptions import UserError
+from collections import defaultdict
 
 
 class pos_config(models.Model):
@@ -76,23 +77,41 @@ class pos_order(models.Model):
         return hash_string.hexdigest()
 
     def _compute_string_to_hash(self):
-        def _getattrstring(obj, field_str):
+
+        def _get_sorted_ids(field_str, field_value, record_obj):
+            field_def = record_obj._fields.get(field_str)
+            comodel = record_obj.env[field_def.comodel_name]
+            records = comodel.browse(field_value)
+            return records.ids
+
+        def _getattrstring(obj, field_str, record_obj):
             field_value = obj[field_str]
-            if obj._fields[field_str].type == 'many2one':
-                field_value = field_value.id
-            if obj._fields[field_str].type in ['many2many', 'one2many']:
-                field_value = field_value.sorted().ids
+            if isinstance(obj[field_str], tuple):
+                field_value = field_value[0]
+            elif isinstance(obj[field_str], list):
+                field_value = _get_sorted_ids(field_str, field_value, record_obj)
             return str(field_value)
+
+        orders_data = self.read(ORDER_FIELDS + ['id'])
+        lines = self.lines.read(LINE_FIELDS + ['id', 'order_id'])
+        orders_by_id = {order['id']: order for order in orders_data}
+
+        lines_by_order = defaultdict(list)
+        for line in lines:
+            order_id = line['order_id'][0]
+            lines_by_order[order_id].append(line)
 
         for order in self:
             values = {}
-            for field in ORDER_FIELDS:
-                values[field] = _getattrstring(order, field)
+            order_data = orders_by_id[order.id]
 
-            for line in order.lines:
+            for field in ORDER_FIELDS:
+                values[field] = _getattrstring(order_data, field, order)
+
+            for line in lines_by_order[order.id]:
                 for field in LINE_FIELDS:
-                    k = 'line_%d_%s' % (line.id, field)
-                    values[k] = _getattrstring(line, field)
+                    k = 'line_%d_%s' % (line['id'], field)
+                    values[k] = _getattrstring(line, field, order.lines)
             #make the json serialization canonical
             #  (https://tools.ietf.org/html/draft-staykov-hu-json-canonical-form-00)
             order.l10n_fr_string_to_hash = dumps(values, sort_keys=True,
