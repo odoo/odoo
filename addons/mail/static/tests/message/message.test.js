@@ -14,9 +14,10 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, leave, press, queryFirst } from "@odoo/hoot-dom";
-import { mockDate, mockTouch, mockUserAgent, tick } from "@odoo/hoot-mock";
+import { animationFrame, leave, pointerDown, press, queryFirst } from "@odoo/hoot-dom";
+import { advanceTime, mockDate, mockTouch, mockUserAgent, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
     contains as webContains,
@@ -144,7 +145,8 @@ test("Can add reaction to a message on an ipad", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
-    await click(".o-mail-Message [title='Expand']");
+    await pointerDown(".o-mail-Message");
+    await advanceTime(LONG_PRESS_DELAY);
     await click("button:contains('Add a Reaction')");
     await click(".o-EmojiPicker-content .o-Emoji:contains('😀')");
     await contains(".o-mail-MessageReaction:contains('😀\n1')");

@@ -154,26 +154,16 @@
 </t>
 
 <t t-name="mail.Message.actions">
-    <div t-if="props.hasActions and message.hasActions and !isEditing and !env.inChatter?.disabled" class="o-mail-Message-actions d-print-none d-flex align-items-start"
+    <div t-if="props.hasActions and message.hasActions and !isEditing and !env.inChatter?.disabled" class="o-mail-Message-actions d-print-none d-flex align-items-start mx-1"
         t-att-class="{
             'start-0': isAlignedRight,
-            'mx-1': !isMobileOS,
             'mt-1': message.bubbleColor and !props.asCard and !isMobileOS,
             'my-n2': !message.bubbleColor and !props.asCard and !isMobileOS,
             'invisible': !isActive and !isMobileOS,
             'o-expanded': optionsDropdown.isOpen
         }"
     >
-        <t t-if="isMobileOS">
-            <t t-if="isAlignedRight">
-                <t t-call="mail.Message.emptyQuickAction"/>
-                <t t-if="!props.asCard" t-call="mail.Message.expandAction"/>
-            </t>
-            <t t-else="">
-                <t t-call="mail.Message.expandAction"/>
-                <t t-if="!props.asCard" t-call="mail.Message.emptyQuickAction"/>
-            </t>
-        </t>
+        <t t-if="isMobileOS" t-call="mail.Message.emptyQuickAction"/>
         <t t-else="">
             <t t-set="isReverse" t-value="env.inChatWindow and isAlignedRight"/>
             <div class="d-flex rounded-1 overflow-hidden gap-1" t-att-class="{ 'flex-row-reverse': isReverse }">
@@ -217,15 +207,9 @@
 </t>
 
 <t t-name="mail.Message.expandAction">
-    <button class="btn border-0 rounded-0 o-mail-Message-expandBtn" t-att-title="expandText" t-on-click="openMobileActions" t-att-class="{
-        'o-mail-Message-openActionMobile p-2 rounded-circle user-select-none': isMobileOS,
-        'me-n2': isMobileOS and (isAlignedRight and !props.asCard or !isAlignedRight and props.asCard),
-        'ms-n2': isMobileOS and (isAlignedRight and props.asCard or !isAlignedRight and !props.asCard),
-        'mt-n3': isMobileOS and props.asCard,
-        'mt-n1': isMobileOS and !props.asCard,
-        'p-0': !isMobileOS,
-        'rounded-start-1 me-n1': !isMobileOS and isReverse,
-        'rounded-end-1 ms-n1': !isMobileOS and !isReverse,
+    <button class="btn border-0 rounded-0 o-mail-Message-expandBtn p-0" t-att-title="expandText" t-att-class="{
+        'rounded-start-1 me-n1': isReverse,
+        'rounded-end-1 ms-n1': !isReverse,
     }">
         <i class="oi oi-large oi-ellipsis-v" t-att-class="{ 'order-1': props.isInChatWindow, 'fa-fw': isMobileOS }" tabindex="1"/>
     </button>
