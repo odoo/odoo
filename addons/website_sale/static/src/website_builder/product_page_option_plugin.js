@@ -7,6 +7,7 @@ import { isImageCorsProtected } from "@html_editor/utils/image";
 import { TABS } from "@html_editor/main/media/media_dialog/media_dialog";
 import { WebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import wSaleUtils from "@website_sale/js/website_sale_utils";
 
 export const productPageSelector = "main:has(.o_wsale_product_page)";
 class ProductPageOptionPlugin extends Plugin {
@@ -83,7 +84,7 @@ class ProductPageOptionPlugin extends Plugin {
             this.productPageGrid = mainEl.querySelector("#o-grid-product");
         }
     }
-    
+
     getZoomLevels() {
         const hasImages = this.productDetailMain.dataset.image_width != "none";
         const isFullImage = this.productDetailMain.dataset.image_width == "100_pc";
@@ -199,21 +200,7 @@ export class BaseProductPageAction extends BuilderAction {
     }
     getSelectedVariantValues(el) {
         const containerEl = el.querySelector(".js_add_cart_variants");
-        const fullCombinationEl = containerEl.querySelector(
-            "input.js_product_change:checked[data-combination]"
-        );
-        if (fullCombinationEl) {
-            return fullCombinationEl.dataset.combination;
-        }
-        const values = [];
-        const variantsValuesSelectors = [
-            "input.js_variant_change:checked",
-            "select.js_variant_change",
-        ];
-        for (const fieldEl of containerEl.querySelectorAll(variantsValuesSelectors.join(", "))) {
-            values.push(parseInt(fieldEl.value) || 0);
-        }
-        return values;
+        return wSaleUtils.getSelectedAttributeValues(containerEl);
     }
 
     async extraMediaSave(el, type, attachments, extraImageEls) {
