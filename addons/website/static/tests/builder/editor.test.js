@@ -3,7 +3,13 @@ import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
-import { click, manuallyDispatchProgrammaticEvent, waitFor, queryOne } from "@odoo/hoot-dom";
+import {
+    click,
+    manuallyDispatchProgrammaticEvent,
+    waitFor,
+    queryOne,
+    queryAllTexts,
+} from "@odoo/hoot-dom";
 import { isTextNode } from "@html_editor/utils/dom_info";
 import { parseHTML } from "@html_editor/utils/html";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
@@ -26,9 +32,31 @@ test("should add an icon from the media modal dialog", async () => {
     await insertText(editor, "/image");
     await animationFrame();
     await contains(".o-we-command").click();
-    await contains(".modal .modal-body .nav-item:nth-child(3) a").click();
+    await contains(".modal .modal-body .nav-item:nth-child(2) a").click();
     await contains(".modal .modal-body .fa-heart").click();
     expect(p).toHaveInnerHTML(`x<span class="fa fa-heart" contenteditable="false">\u200b</span>`);
+});
+
+test("MediaDialog does not contain 'Documents' tab", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`<p>x</p>`);
+    const editor = getEditor();
+    const p = editor.document.querySelector("p");
+    editor.shared.selection.focusEditable();
+    editor.shared.selection.setSelection({
+        anchorNode: p,
+        anchorOffset: 1,
+        focusNode: p,
+        focusOffset: 1,
+    });
+    await insertText(editor, "/image");
+    await animationFrame();
+    await contains(".o-we-command").click();
+    await animationFrame();
+    expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
+        "Images",
+        "Icons",
+        "Videos",
+    ]);
 });
 
 test("should delete text forward", async () => {

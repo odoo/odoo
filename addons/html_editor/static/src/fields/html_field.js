@@ -335,6 +335,9 @@ export const htmlField = {
         if ("allowMediaDialogVideo" in options) {
             editorConfig.allowMediaDialogVideo = Boolean(options.allowMediaDialogVideo);
         }
+        if ("allowMediaDocuments" in options) {
+            editorConfig.allowMediaDocuments = Boolean(options.allowMediaDocuments);
+        }
         if ("allowFile" in options) {
             editorConfig.allowFile = Boolean(options.allowFile);
         }
