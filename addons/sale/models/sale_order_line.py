@@ -70,7 +70,7 @@ class SaleOrderLine(models.Model):
     is_configurable_product = fields.Boolean(
         string="Is the product configurable?",
         related='product_template_id.has_configurable_attributes',
-        depends=['product_id'])
+        depends=['product_template_id'])
     is_downpayment = fields.Boolean(
         string="Is a down payment",
         help="Down payments are made when creating invoices from a sales order."
