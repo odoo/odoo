@@ -8,6 +8,7 @@ import { discussComponentRegistry } from "./discuss_component_registry";
 import { Deferred } from "@web/core/utils/concurrency";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
+import { htmlToTextContentInline } from "@mail/utils/common/format";
 
 const { DateTime } = luxon;
 
@@ -157,6 +158,14 @@ messageActionsRegistry
         title: (component) => (component.state.showTranslation ? _t("Revert") : _t("Translate")),
         onClick: (component) => component.onClickToggleTranslation(),
         sequence: 100,
+    })
+    .add("copy-text", {
+        condition: (component) => !component.message.isBodyEmpty && navigator.clipboard,
+        onClick: (component) =>
+            navigator.clipboard.writeText(htmlToTextContentInline(component.message.body)),
+        title: _t("Copy"),
+        icon: "fa fa-copy",
+        sequence: 15,
     })
     .add("copy-link", {
         condition: (component) =>

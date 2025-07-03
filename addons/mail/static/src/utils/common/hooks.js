@@ -592,7 +592,6 @@ export function useLongPress(refName, callback) {
         clearTimeout(timer);
         timer = null;
     }
-
     useLazyExternalListener(
         () => ref.el,
         "touchstart",
