@@ -51,6 +51,12 @@
                 <notebook position="replace">
                     <sheet>$0</sheet>
                 </notebook>
+                <xpath expr="//group[@name='other_preferences']" position="inside">
+                    <field name="pin" string="Attendance PIN" readonly="not is_hr_user"/>
+                </xpath>
+                <xpath expr="//group[@name='other_calendar_preferences']" position="inside">
+                    <field name="work_location_id" string="Main Work Location" readonly="not can_edit"/>
+                </xpath>
                 <notebook position="inside">
                     <page name="personal_information" string="Private Information">
                         <group>
@@ -72,12 +78,6 @@
                                 <field name="emergency_contact" readonly="not can_edit"/>
                                 <field name="emergency_phone" widget="phone" readonly="not can_edit"/>
                             </group>
-                        </group>
-                    </page>
-                     <page name="hr_settings" string="HR Settings">
-                        <group string="Attendance" name="identification_group">
-                            <field name="pin" readonly="not is_hr_user"/>
-                            <field name="barcode" readonly="not is_hr_user"/>
                         </group>
                     </page>
                 </notebook>

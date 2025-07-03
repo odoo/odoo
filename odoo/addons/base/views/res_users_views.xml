@@ -368,11 +368,7 @@
                     </div>
                     <notebook>
                         <page string="Preferences" name="preferences_page">
-                            <group name="preferences">
-                                <group>
-                                    <field name="email" widget="email" readonly="0"/>
-                                    <field name="phone"/>
-                                </group>
+                            <group>
                                 <group>
                                     <label for="lang"/>
                                     <div class="o_row">
@@ -386,18 +382,21 @@
                                             title="Add a language"
                                         />
                                     </div>
+                                    <field name="signature" readonly="0" options="{'codeview': true}"/>
+                                </group>
+                                <!-- This group is meant to be used by other modules -->
+                                <group name="other_preferences"/>
+                            </group>
+                        </page>
+                        <page name="calendar" string="Calendar">
+                            <group>
+                                <group name="calendar_preferences">
                                     <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
                                     <field name="tz_offset" invisible="1"/> <!-- needed for the timezone_mismatch widget -->
                                 </group>
+                                <!-- This group is meant to be used by other modules -->
+                                <group name="other_calendar_preferences"/>
                             </group>
-                            <group name="signature">
-                                <field name="signature" readonly="0" options="{'codeview': true}"/>
-                            </group>
-                            <group name="status" string="Status" invisible="1">
-                                <field name="company_id" options="{'no_create': True}" readonly="0"
-                                    groups="base.group_multi_company"/>
-                            </group>
-                            <group name="preference_contact"></group>
                         </page>
                         <page string="Account Security" name="page_account_security">
                             <group name="auth" string="Password Management">
