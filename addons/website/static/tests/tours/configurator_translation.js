@@ -2,6 +2,7 @@ import { localization } from "@web/core/l10n/localization";
 import { translatedTerms } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { clickOnEditAndWaitEditMode } from "@website/js/tours/tour_utils";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('configurator_translation', {
     url: '/website/configurator',
@@ -64,7 +65,8 @@ registry.category("web_tour.tours").add('configurator_translation', {
         run: "click",
     }, {
         content: "Loader should be shown",
-        trigger: '.o_website_loader_container',
+        trigger: ".o_website_loader_container",
+        expectUnloadPage: true,
     }, {
         content: "Wait until the configurator is finished",
         trigger: ":iframe [data-view-xmlid='website.homepage']",
@@ -81,12 +83,13 @@ registry.category("web_tour.tours").add('configurator_translation', {
         }
     },
     ...clickOnEditAndWaitEditMode(),
+    stepUtils.waitIframeIsReady(),
     {
         // Check the content of the save button to make sure the website is in
         // Parseltongue. (The editor should be in the website's default language,
         // which should be parseltongue in this test.)
         content: "exit edit mode",
-        trigger: '.o-snippets-top-actions button.btn-primary:contains("Save_Parseltongue")',
+        trigger: ".o-snippets-top-actions button.btn-success:contains('Save_Parseltongue')",
         run: "click",
     }, {
          content: "wait for editor to be closed",
