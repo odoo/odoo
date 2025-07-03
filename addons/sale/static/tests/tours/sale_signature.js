@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
+import { waitUntil } from "@odoo/hoot-dom";
 
 // This tour relies on data created on the Python test.
 registry.category("web_tour.tours").add('sale_signature', {
@@ -21,6 +22,18 @@ registry.category("web_tour.tours").add('sale_signature', {
     },
     {
         trigger: ".modal .o_web_sign_name_and_signature input:value(Joel Willis)"
+    },
+    {
+        trigger: ".modal canvas.o_web_sign_signature",
+        async run(helpers) {
+            await waitUntil(() => {
+                const canvas = helpers.anchor;
+                const context = canvas.getContext("2d");
+                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                const pixels = new Uint32Array(imageData.data.buffer);
+                return pixels.some((pixel) => pixel !== 0);
+            });
+        },
     },
     {
         content: "click select style",
