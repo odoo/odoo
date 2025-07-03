@@ -3,6 +3,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { _t } from "@web/core/l10n/translation";
 
 export async function handleSaleDetails(pos, hardwareProxy, dialog) {
     const saleDetails = await pos.data.call(
@@ -18,12 +19,16 @@ export async function handleSaleDetails(pos, hardwareProxy, dialog) {
             formatCurrency: pos.env.utils.formatCurrency,
         })
     );
-    const { successful, message } = await hardwareProxy.printer.printReceipt(report);
-    if (!successful) {
-        dialog.add(AlertDialog, {
-            title: message.title,
-            body: message.body,
-        });
+    if (hardwareProxy.printer) {
+        const { successful, message } = await hardwareProxy.printer.printReceipt(report);
+        if (!successful) {
+            dialog.add(AlertDialog, {
+                title: message.title,
+                body: message.body,
+            });
+        }
+    } else {
+        await pos.downloadReport(report);
     }
 }
 export class SaleDetailsButton extends Component {
@@ -39,6 +44,7 @@ export class SaleDetailsButton extends Component {
     }
 
     async onClick() {
+        this.pos.sessionReportType = _t("Z Report");
         await handleSaleDetails(this.pos, this.hardwareProxy, this.dialog);
     }
 }

@@ -77,7 +77,7 @@
                                     <span t-if="this.pos.scanning">Stop Barcode Scanner</span>
                                     <span t-else="">Barcode Scanner</span>
                                 </DropdownItem>
-                                <DropdownItem t-if="hardwareProxy.printer" onSelected="() => this.showSaleDetails()">
+                                <DropdownItem onSelected="() => this.showSaleDetails()">
                                     Print Report
                                 </DropdownItem>
                                 <DropdownItem onSelected="() => pos.closePos()">

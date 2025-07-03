@@ -38,8 +38,9 @@ import { unaccent } from "@web/core/utils/strings";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime, formatDateTime } from "@web/core/l10n/dates";
 import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
+import { htmlToCanvas } from "@point_of_sale/app/services/render_service";
 
 const { DateTime } = luxon;
 
@@ -61,6 +62,7 @@ export class PosStore extends WithLazyGetterTrap {
         "action",
         "alert",
         "mail.sound_effects",
+        "renderer",
     ];
     constructor({ traps, env, deps }) {
         super({ traps });
@@ -84,6 +86,7 @@ export class PosStore extends WithLazyGetterTrap {
             pos_scale,
             action,
             alert,
+            renderer,
         }
     ) {
         this.env = env;
@@ -98,6 +101,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.alert = alert;
         this.sound = env.services["mail.sound_effects"];
         this.notification = notification;
+        this.renderer = renderer;
         this.unwatched = markRaw({});
         this.pushOrderMutex = new Mutex();
 
@@ -149,6 +153,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.closeOtherTabs();
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
         this._searchTriggered = false;
+        this.sessionReportType = _t("X Report");
         window.addEventListener("online", () => {
             // Sync should be done before websocket connection when going online
             this.syncAllOrdersDebounced();
@@ -2426,6 +2431,18 @@ export class PosStore extends WithLazyGetterTrap {
         } else {
             return `${pm.name} (${fmtAmount})`;
         }
+    }
+
+    async downloadReport(report) {
+        const link = document.createElement("a");
+        const currentDate = formatDateTime(DateTime.now(), {
+            format: "MM_dd_yyyy-HH_mm_ss",
+        });
+        const companyName = this.company.name.replaceAll(" ", "_");
+        link.download = `${companyName}-${currentDate}.png`;
+        const canvas = await htmlToCanvas(report, {});
+        link.href = canvas.toDataURL().replace("data:image/jpeg;base64,", "");
+        link.click();
     }
 }
 
