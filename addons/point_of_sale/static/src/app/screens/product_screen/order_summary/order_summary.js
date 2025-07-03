@@ -7,7 +7,13 @@ import { _t } from "@web/core/l10n/translation";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { parseFloat } from "@web/views/fields/parsers";
+<<<<<<< 0012eb5e7ca2f08e4f22e64668ad6bead592274d
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
+||||||| 1b657cf1e1ce43874a3ede307b2f8ad68216aa56
+import { getButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
+=======
+import { enhancedButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
+>>>>>>> c3d660b4290c2a60453b8d08764df541b4783ec7
 
 export class OrderSummary extends Component {
     static template = "point_of_sale.OrderSummary";
@@ -57,11 +63,35 @@ export class OrderSummary extends Component {
             }, 300);
         }
     }
+<<<<<<< 0012eb5e7ca2f08e4f22e64668ad6bead592274d
 
     async updateSelectedOrderline({ buffer, key }) {
         const order = this.pos.getOrder();
         const selectedLine = order.getSelectedOrderline();
         // Handling negation of value on first input
+||||||| 1b657cf1e1ce43874a3ede307b2f8ad68216aa56
+    handleOrderLineQuantityChange(selectedLine, buffer, currentQuantity, lastId) {
+        const parsedInput = (buffer && parseFloat(buffer)) || 0;
+        if (lastId != selectedLine.cid || parsedInput < currentQuantity) {
+            this._showDecreaseQuantityPopup();
+        } else if (currentQuantity < parsedInput) {
+            this._setValue(buffer);
+        }
+    }
+    // Handle negation of value on first input
+    _handleNegationOnFirstInput(buffer, key, selectedLine) {
+=======
+    handleOrderLineQuantityChange(selectedLine, buffer, currentQuantity, lastId) {
+        const parsedInput = (buffer && parseFloat(buffer)) || 0;
+        if (lastId != selectedLine.uuid || parsedInput < currentQuantity) {
+            this._showDecreaseQuantityPopup();
+        } else if (currentQuantity < parsedInput) {
+            this._setValue(buffer);
+        }
+    }
+    // Handle negation of value on first input
+    _handleNegationOnFirstInput(buffer, key, selectedLine) {
+>>>>>>> c3d660b4290c2a60453b8d08764df541b4783ec7
         if (buffer === "-0" && key == "-") {
             if (this.pos.numpadMode === "quantity" && !selectedLine.refunded_orderline_id) {
                 buffer = selectedLine.getQuantity() * -1;
@@ -157,7 +187,19 @@ export class OrderSummary extends Component {
 
     setLinePrice(line, price) {
         line.price_type = "manual";
+<<<<<<< 0012eb5e7ca2f08e4f22e64668ad6bead592274d
         line.setUnitPrice(price);
+||||||| 1b657cf1e1ce43874a3ede307b2f8ad68216aa56
+        line.set_unit_price(price);
+    }
+    async _getShowDecreaseQuantityPopupButtons() {
+        return getButtons();
+=======
+        line.set_unit_price(price);
+    }
+    async _getShowDecreaseQuantityPopupButtons() {
+        return enhancedButtons();
+>>>>>>> c3d660b4290c2a60453b8d08764df541b4783ec7
     }
 
     async _showDecreaseQuantityPopup() {
