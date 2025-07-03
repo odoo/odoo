@@ -233,23 +233,19 @@ function constrainScrollY(target, y) {
 function createDataTransfer(options) {
     const dataTransfer =
         options?.dataTransfer instanceof DataTransfer ? options.dataTransfer : new DataTransfer();
-    const types = new Set();
     for (const file of options?.files || []) {
         if (!(file instanceof File)) {
             throw new TypeError(`'DataTransfer.files' list only accepts 'File' objects`);
         }
         dataTransfer.items.add(file);
-        types.add("Files");
     }
     for (const [data, type] of options?.items || []) {
         dataTransfer.items.add(data, type);
-        types.add(type);
     }
 
     $defineProperties(dataTransfer, {
         dropEffect: { value: options?.dropEffect || "none", writable: true },
         effectAllowed: { value: options?.effectAllowed || "all", writable: true },
-        types: { value: [...types], writable: true },
     });
 
     return dataTransfer;
