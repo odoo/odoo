@@ -1,14 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import itertools
 from collections import defaultdict
 from contextlib import contextmanager
+
 from dateutil.relativedelta import relativedelta
-import itertools
 from psycopg2 import OperationalError
 from odoo.exceptions import UserError
 
-from odoo import api, fields, models, tools, _
+from odoo import _, api, fields, models, tools
 from odoo.osv import expression
 
 
@@ -167,6 +167,14 @@ class HrWorkEntry(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        company_by_employee_id = {}
+        for vals in vals_list:
+            if vals.get('company_id'):
+                continue
+            if vals['employee_id'] not in company_by_employee_id:
+                employee = self.env['hr.employee'].browse(vals['employee_id'])
+                company_by_employee_id[employee.id] = employee.company_id.id
+            vals['company_id'] = company_by_employee_id[vals['employee_id']]
         work_entries = super().create(vals_list)
         work_entries._check_if_error()
         return work_entries

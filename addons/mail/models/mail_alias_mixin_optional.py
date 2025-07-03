@@ -186,7 +186,7 @@ class AliasMixinOptional(models.AbstractModel):
             'alias_parent_thread_id': self.id if self.id else False,
             'alias_parent_model_id': self.env['ir.model']._get_id(self._name),
         }
-        if self.env.context.get('default_alias_domain_id'):
+        if 'default_alias_domain_id' in self.env.context:
             values['alias_domain_id'] = self.env.context['default_alias_domain_id']
         return values
 

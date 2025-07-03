@@ -4,7 +4,6 @@ import io
 import logging
 import zipfile
 
-from contextlib import suppress
 from werkzeug.exceptions import NotFound
 
 from odoo import _, http
@@ -94,12 +93,11 @@ class AttachmentController(http.Controller):
             [("attachment_ids", "in", attachment.ids)], limit=1)
         message = request.env["mail.message"].sudo(False)._get_with_access(attachment_message.id,
                                                                            "create", **kwargs)
-        with suppress(AccessError):
-            if not request.env.user.share:
-                # Check through standard access rights/rules for internal users.
-                attachment._delete_and_notify(message)
-                return
-        # For non-internal users or internal users that didn't have access to the attachment (e.g. internal users accessing portal document with token), 2 cases are supported:
+        if not request.env.user.share:
+            # Check through standard access rights/rules for internal users.
+            attachment._delete_and_notify(message)
+            return
+        # For non-internal users 2 cases are supported:
         #   - Either the attachment is linked to a message: verify the request is made by the author of the message (portal user or guest).
         #   - Either a valid access token is given: also verify the message is pending (because unfortunately in portal a token is also provided to guest for viewing others' attachments).
         # sudo: ir.attachment: access is validated below with membership of message or access token

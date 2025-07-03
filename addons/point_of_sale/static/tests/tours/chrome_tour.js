@@ -229,3 +229,12 @@ registry.category("web_tour.tours").add("CustomerNoteIsPresentAfterRefresh", {
             ]),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_chrome_without_cash_move_permission", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.isCashMoveButtonHidden(),
+        ].flat(),
+});

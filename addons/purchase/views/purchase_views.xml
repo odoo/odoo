@@ -238,11 +238,13 @@
                                     <field name="product_uom_category_id" column_invisible="True"/>
                                     <field name="invoice_lines" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
+                                    <!-- optional="show" allows name (description) to be editable -->
                                     <field
                                         name="product_id"
                                         widget="product_label_section_and_note_field"
                                         readonly="state in ('purchase', 'to approve', 'done', 'cancel') or is_downpayment"
                                         required="not display_type and not is_downpayment"
+                                        optional="show"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)]"/>
                                     <field name="name" widget="section_and_note_text" optional="show"/>
