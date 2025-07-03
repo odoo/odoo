@@ -1,4 +1,5 @@
-import { AND, fields, Record } from "@mail/core/common/record";
+import { Store } from "@mail/core/common/store_service";
+import { fields, Record } from "@mail/core/common/record";
 import { imageUrl } from "@web/core/utils/urls";
 import { rpc } from "@web/core/network/rpc";
 import { debounce } from "@web/core/utils/timing";
@@ -17,50 +18,31 @@ const { DateTime } = luxon;
  * @property {ImStatus} im_status
  */
 
-export class Persona extends Record {
-    static id = AND("type", "id");
+export class MailGuest extends Record {
+    static id = "id";
+    static _name = "mail.guest";
     static new() {
         const record = super.new(...arguments);
         record.debouncedSetImStatus = debounce(
             (newStatus) => record.updateImStatus(newStatus),
-            this.IM_STATUS_DEBOUNCE_DELAY
+            Store.IM_STATUS_DEBOUNCE_DELAY
         );
         return record;
     }
-    static IM_STATUS_DEBOUNCE_DELAY = 1000;
 
     /** @type {string} */
     avatar_128_access_token;
-    /** @type {string} */
-    commercial_company_name;
-    /**
-     * function = job position (Frenchism)
-     *
-     * @type {string}
-     */
-    function;
     /** @type {number} */
     id;
-    /** @type {boolean | undefined} */
-    is_company;
-    /** @type {string} */
-    phone;
     debouncedSetImStatus;
     displayName = fields.Attr(undefined, {
         compute() {
             return this._computeDisplayName();
         },
     });
-    main_user_id = fields.One("res.users");
     monitorPresence = fields.Attr(false, {
         compute() {
-            if (!this.store.env.services.bus_service.isActive || this.id <= 0) {
-                return false;
-            }
-            return (
-                this.type === "guest" ||
-                (this.type === "partner" && this.im_status !== "im_partner" && !this.is_public)
-            );
+            return this.store.env.services.bus_service.isActive && this.id > 0;
         },
     });
     _triggerPresenceSubscription = fields.Attr(null, {
@@ -78,8 +60,6 @@ export class Persona extends Record {
         },
         eager: true,
     });
-    /** @type {'partner' | 'guest'} */
-    type;
     /** @type {string} */
     name;
     country_id = fields.One("res.country");
@@ -88,7 +68,7 @@ export class Persona extends Record {
     /** @type {ImStatus} */
     im_status = fields.Attr(null, {
         onUpdate() {
-            if (this.eq(this.store.self) && this.im_status === "offline") {
+            if (this.eq(this.store.self_guest) && this.im_status === "offline" && this.id < 0) {
                 this.store.env.services.im_status.updateBusPresence();
             }
         },
@@ -102,20 +82,18 @@ export class Persona extends Record {
     previousPresencechannel;
     presenceChannel = fields.Attr(null, {
         compute() {
-            const parts = [
-                "odoo-presence",
-                `${this.type === "partner" ? "res.partner" : "mail.guest"}_${this.id}`,
-            ];
-            if (this.im_status_access_token) {
-                parts.push(this.im_status_access_token);
+            if (this.id < 0) {
+                // Some guest have negative ids, like -1
+                return;
             }
-            return parts.join("-");
+            const channel = `odoo-presence-mail.guest_${this.id}`;
+            if (this.im_status_access_token) {
+                return channel + `-${this.im_status_access_token}`;
+            }
+            return channel;
         },
     });
-    /** @type {boolean} */
-    is_public;
     write_date = fields.Datetime();
-    group_ids = fields.Many("res.groups", { inverse: "personas" });
 
     _computeDisplayName() {
         return this.name;
@@ -126,32 +104,18 @@ export class Persona extends Record {
         if (this.store.self.main_user_id?.share !== false) {
             accessTokenParam.access_token = this.avatar_128_access_token;
         }
-        if (this.type === "partner") {
-            return imageUrl("res.partner", this.id, "avatar_128", {
-                ...accessTokenParam,
-                unique: this.write_date,
-            });
+        if (this.id === -1) {
+            return TRANSPARENT_AVATAR;
         }
-        if (this.type === "guest") {
-            if (this.id === -1) {
-                return TRANSPARENT_AVATAR;
-            }
-            return imageUrl("mail.guest", this.id, "avatar_128", {
-                ...accessTokenParam,
-                unique: this.write_date,
-            });
-        }
-        if (this.main_user_id) {
-            return imageUrl("res.users", this.main_user_id.id, "avatar_128", {
-                unique: this.write_date,
-            });
-        }
-        return this.store.DEFAULT_AVATAR;
+        return imageUrl("mail.guest", this.id, "avatar_128", {
+            ...accessTokenParam,
+            unique: this.write_date,
+        });
     }
 
     searchChat() {
         return Object.values(this.store.Thread.records).find(
-            (thread) => thread.channel_type === "chat" && thread.correspondent?.persona.eq(this)
+            (thread) => thread.channel_type === "chat" && thread.correspondent?.guest_id.eq(this)
         );
     }
 
@@ -168,10 +132,6 @@ export class Persona extends Record {
         }
         this.im_status = newStatus;
     }
-
-    _getActualModelName() {
-        return this.type === "partner" ? "res.partner" : "mail.guest";
-    }
 }
 
-Persona.register();
+MailGuest.register();

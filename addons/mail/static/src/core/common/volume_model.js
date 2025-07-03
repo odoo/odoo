@@ -1,10 +1,10 @@
-import { AND, fields, Record } from "./record";
+import { OR, fields, Record } from "./record";
 
 export class Volume extends Record {
-    static id = AND("partner_id", "guest_id");
+    static id = OR("partner_id", "guest_id");
 
-    partner_id = fields.One("Persona");
-    guest_id = fields.One("Persona");
+    partner_id = fields.One("res.partner");
+    guest_id = fields.One("mail.guest");
     get persona() {
         return this.partner_id || this.guest_id;
     }

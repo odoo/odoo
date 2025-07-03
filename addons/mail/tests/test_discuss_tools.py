@@ -77,7 +77,7 @@ class TestDiscussTools(TransactionCase):
                     },
                 ],
                 "res.users": [
-                    {"id": user.id, "partner_id": {"id": user.partner_id.id, "type": "partner"}},
+                    {"id": user.id, "partner_id": user.partner_id.id},
                 ],
             },
         )

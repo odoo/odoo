@@ -55,5 +55,5 @@ class TestResRole(MailCommon, HttpCase):
             )
             self.assertEqual(
                 data["mail.message"][0]["partner_ids"],
-                expected_users.partner_id.mapped(lambda p: {"id": p.id, "type": "partner"}),
+                expected_users.partner_id.ids
             )
