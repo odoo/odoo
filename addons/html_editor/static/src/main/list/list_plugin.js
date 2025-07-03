@@ -37,6 +37,7 @@ import { ListSelector } from "./list_selector";
 import { reactive } from "@odoo/owl";
 import { composeToolbarButton } from "../toolbar/toolbar";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { pick } from "@web/core/utils/objects";
 
 const listSelectorItems = [
     {
@@ -1252,9 +1253,12 @@ export class ListPlugin extends Plugin {
     getListSelectorButtons() {
         return listSelectorItems.map((item) => {
             const command = this.resources.user_commands.find((cmd) => cmd.id === item.commandId);
-            // We want short descriptions for these buttons.
-            item.description = command.title;
-            return composeToolbarButton(command, item);
+            const button = composeToolbarButton(command, item);
+            return {
+                ...pick(button, "id", "icon", "run", "mode"),
+                // We want short descriptions for these buttons.
+                description: command.title,
+            };
         });
     }
 }

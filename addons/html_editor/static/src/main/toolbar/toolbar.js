@@ -109,13 +109,15 @@ export const toolbarButtonProps = {
  * @returns {ToolbarCommandButton}
  */
 export function composeToolbarButton(userCommand, toolbarItem) {
+    const description = toolbarItem.description || userCommand.description;
     return {
-        ...pick(userCommand, "description", "icon"),
+        ...pick(userCommand, "icon"),
         ...omit(toolbarItem, "commandId", "commandParams"),
         run: () => userCommand.run(toolbarItem.commandParams),
         isAvailable: (selection) =>
             [userCommand.isAvailable, toolbarItem.isAvailable]
                 .filter(Boolean)
                 .every((predicate) => predicate(selection)),
+        description: description instanceof Function ? description : () => description,
     };
 }
