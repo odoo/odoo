@@ -32,6 +32,12 @@ export class PivotArchParser {
                             node.getAttribute("display_quantity")
                         );
                     }
+                    const action = node.getAttribute("action");
+                    const type = node.getAttribute("type");
+                    const openAction = action && type ? { action, type } : null;
+                    if (openAction) {
+                        archInfo.openAction = openAction;
+                    }
                     break;
                 }
                 case "field": {

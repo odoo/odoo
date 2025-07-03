@@ -44,6 +44,7 @@ export const pivotView = {
                 rowGroupBys: archInfo.rowGroupBys,
                 title: archInfo.title || _t("Untitled"),
                 widgets: archInfo.widgets,
+                openAction: archInfo.openAction || false,
             };
         }
 
