@@ -52,7 +52,7 @@ class AccountMoveLine(models.Model):
     move_name = fields.Char(
         string='Number',
         related='move_id.name', store=True,
-        index='btree',
+        index='trigram',
     )
     parent_state = fields.Selection(related='move_id.state', store=True)
     date = fields.Date(
