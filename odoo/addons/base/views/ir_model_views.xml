@@ -389,7 +389,7 @@
                     <separator/>
                     <filter string="Readonly" name="readonly" domain="[('readonly', '=', True)]"/>
                     <separator/>
-                    <filter string="Custom" name="custom" domain="[('state', '=', 'manual')]"/>
+                    <filter string="Custom" name="custom" domain="['|', ('state', '=', 'manual'), ('name', '=ilike', 'x\\_%')]"/>
                     <filter string="Base" name="base" domain="[('state', '=', 'base')]"/>
                     <separator/>
                     <filter string="Translate" name="translate" domain="[('translate', '=', True)]"/>
