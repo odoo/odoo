@@ -396,7 +396,7 @@ class EventTrack(models.Model):
         UTC as we compute only time deltas here. """
         now_utc = utc.localize(fields.Datetime.now().replace(microsecond=0))
         for track in self:
-            if not track.date:
+            if not (track.date or track.date_end):
                 track.is_track_live = track.is_track_soon = track.is_track_today = track.is_track_upcoming = track.is_track_done = False
                 track.track_start_relative = track.track_start_remaining = 0
                 continue
@@ -438,6 +438,9 @@ class EventTrack(models.Model):
         for track in self:
             # Need to localize because it could begin late and finish early in
             # another timezone
+            if not (track.date or track.date_end):
+                track.is_one_day = False
+                continue
             track = track.with_context(tz=track.event_id.date_tz or 'UTC')
             begin_tz = fields.Datetime.context_timestamp(track, track.date)
             end_tz = fields.Datetime.context_timestamp(track, track.date_end)
