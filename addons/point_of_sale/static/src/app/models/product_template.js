@@ -263,18 +263,10 @@ export class ProductTemplate extends Base {
     }
 
     exactMatch(searchWord) {
-        const fields = ["barcode"];
         const variantMatch = this.product_variant_ids.some(
-            (variant) =>
-                (variant.barcode && variant.barcode.toLowerCase() == searchWord) ||
-                variant.product_template_variant_value_ids.some((vv) =>
-                    vv.name.toLowerCase().includes(searchWord)
-                )
+            (variant) => variant.barcode && variant.barcode.toLowerCase() == searchWord
         );
-        return (
-            variantMatch ||
-            fields.some((field) => this[field] && this[field].toLowerCase() == searchWord)
-        );
+        return variantMatch || (this.barcode && this.barcode.toLowerCase() === searchWord);
     }
 
     _isArchivedCombination(attributeValueIds) {
