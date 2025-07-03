@@ -471,6 +471,7 @@
             'website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.js',
             'website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.scss',
             'website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.xml',
+            'website/static/src/utils/**/*',
             'website/static/src/components/dialog/*.js',
             'website/static/src/components/dialog/*.scss',
             'website/static/src/components/dialog/*.xml',
