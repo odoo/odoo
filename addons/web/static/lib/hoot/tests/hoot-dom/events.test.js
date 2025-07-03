@@ -785,6 +785,11 @@ describe(parseUrl(import.meta.url), () => {
         expect(dataTransfer.items).toHaveLength(2);
         expect(dataTransfer.types).toEqual(["text/plain", "text/html"]);
 
+        dataTransfer.setData("custom-data", "yes");
+
+        expect(dataTransfer.items).toHaveLength(3);
+        expect(dataTransfer.types).toEqual(["text/plain", "text/html", "custom-data"]);
+
         for (const event of dragEvents) {
             expect(event.dataTransfer).toBe(dataTransfer, {
                 message: `drag event "${event.type}" should share the same dataTransfer object`,
