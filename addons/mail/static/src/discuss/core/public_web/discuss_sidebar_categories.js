@@ -102,9 +102,9 @@ export class DiscussSidebarChannel extends Component {
         return {
             "bg-inherit": this.thread.notEq(this.store.discuss.thread),
             "o-active": this.thread.eq(this.store.discuss.thread),
-            "o-unread": this.thread.selfMember?.message_unread_counter > 0 && !this.thread.isMuted,
+            "o-unread": this.thread.selfMember?.message_unread_counter > 0 && !this.thread.selfMember?.mute_until_dt,
             "border-bottom-0 rounded-bottom-0": this.bordered,
-            "opacity-50": this.thread.isMuted,
+            "opacity-50": this.thread.selfMember?.mute_until_dt,
             "position-relative justify-content-center o-compact mt-0 p-1":
                 this.store.discuss.isSidebarCompact,
             "px-0": !this.store.discuss.isSidebarCompact,
@@ -132,9 +132,9 @@ export class DiscussSidebarChannel extends Component {
     get itemNameAttClass() {
         return {
             "o-unread fw-bolder":
-                this.thread.selfMember?.message_unread_counter > 0 && !this.thread.isMuted,
+                this.thread.selfMember?.message_unread_counter > 0 && !this.thread.selfMember?.mute_until_dt,
             "text-muted":
-                this.thread.selfMember?.message_unread_counter !== 0 || this.thread.isMuted,
+                this.thread.selfMember?.message_unread_counter !== 0 || this.thread.selfMember?.mute_until_dt,
         };
     }
 
@@ -158,10 +158,10 @@ export class DiscussSidebarChannel extends Component {
         if (!this.thread.discussAppCategory.open) {
             return false;
         }
-        if (!this.thread.isMuted || sub.selfMember?.message_unread_counter > 0) {
+        if (!this.thread.selfMember?.mute_until_dt || sub.selfMember?.message_unread_counter > 0) {
             return true;
         }
-        return this.isSelfOrThreadActive && !(this.thread.isMuted && sub.isMuted);
+        return this.isSelfOrThreadActive && !(this.thread.selfMember?.mute_until_dt && sub.selfMember?.mute_until_dt);
     }
 
     get isSelfOrThreadActive() {

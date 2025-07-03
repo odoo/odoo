@@ -1091,7 +1091,6 @@ class DiscussChannel(models.Model):
                 {"fetchChannelInfoState": "fetched"},
                 "is_editable",
                 forward_member_field("is_pinned"),
-                forward_member_field("mute_until_dt"),
                 "message_needaction_counter",
                 {"message_needaction_counter_bus_id": bus_last_id},
                 # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
@@ -1108,6 +1107,7 @@ class DiscussChannel(models.Model):
                         "last_interest_dt",
                         "message_unread_counter",
                         {"message_unread_counter_bus_id": bus_last_id},
+                        "mute_until_dt",
                         "new_message_separator",
                     ],
                     only_data=True,

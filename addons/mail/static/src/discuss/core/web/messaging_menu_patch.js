@@ -26,7 +26,7 @@ patch(MessagingMenu.prototype, {
                 : Object.values(this.store.Thread.records).filter(
                       (thread) =>
                           thread.displayToSelf &&
-                          !thread.isMuted &&
+                          !thread.selfMember?.mute_until_dt &&
                           (thread.selfMember?.message_unread_counter ||
                               thread.message_needaction_counter)
                   ).length;

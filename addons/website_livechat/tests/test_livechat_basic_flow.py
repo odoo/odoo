@@ -346,7 +346,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "member_count": 1,
                     "message_needaction_counter": 0,
                     "message_needaction_counter_bus_id": 0,
-                    "mute_until_dt": False,
                     "name": f"Visitor #{self.visitor.id} El Deboulonnator",
                     "parent_channel_id": False,
                     "requested_by_operator": False,
