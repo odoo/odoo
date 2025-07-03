@@ -103,6 +103,7 @@ registerWebsitePreviewTour("website_update_column_count", {
                 clientX: x,
                 clientY: y,
                 pointerType: 'mouse',
+                pointerId: 1,
             });
             (type === "pointermove" ? window : overlayEl).dispatchEvent(event);
         };

@@ -511,6 +511,10 @@ export class BuilderOverlay {
 
         this.overlayElement.classList.remove("o_handlers_idle");
 
+        if (handleEl.setPointerCapture && ev.pointerId !== undefined) {
+            handleEl.setPointerCapture(ev.pointerId);
+        }
+
         const onSizingMove = (ev) => {
             for (const dir of directions) {
                 const configValues = dir.config.values;
@@ -572,6 +576,9 @@ export class BuilderOverlay {
 
         const onSizingStop = (ev) => {
             ev.preventDefault();
+            if (handleEl.releasePointerCapture && ev.pointerId !== undefined) {
+                handleEl.releasePointerCapture(ev.pointerId);
+            }
             window.removeEventListener("pointermove", onSizingMove);
             window.removeEventListener("pointerup", onSizingStop);
             window.document.body.classList.remove(cursorClass);
