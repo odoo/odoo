@@ -15,6 +15,8 @@
                         <rng:value>bar</rng:value>
                         <rng:value>pie</rng:value>
                         <rng:value>line</rng:value>
+                        <rng:value>action</rng:value>
+                        <rng:value>object</rng:value>
                     </rng:choice>
                 </rng:attribute>
             </rng:optional>
@@ -26,6 +28,7 @@
             <rng:optional><rng:attribute name="sample"/></rng:optional>
             <rng:optional><rng:attribute name="cumulated"/></rng:optional>
             <rng:optional><rng:attribute name="cumulated_start"/></rng:optional>
+            <rng:optional><rng:attribute name="action"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:ref name="field"/>
             </rng:zeroOrMore>

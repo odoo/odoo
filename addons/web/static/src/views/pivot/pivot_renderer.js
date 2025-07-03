@@ -3,6 +3,7 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
@@ -312,6 +313,19 @@ export class PivotRenderer extends Component {
      * @param {Object} context
      */
     openView(domain, views, context, newWindow) {
+        if (this.model.metaData.openAction) {
+            const { action, type } = this.model.metaData.openAction;
+            if (type === "action") {
+                return this.actionService.loadAction(action).then(result => {
+                    result.domain = Domain.and([domain, result.domain]).toList();
+                    this.actionService.doAction(result);
+                });
+            } else {
+                return this.orm.call(this.model.metaData.resModel, action, [], {}).then(result => {
+                    this.actionService.doAction(result);
+                });
+            }
+        }
         this.actionService.doAction(
             {
                 type: "ir.actions.act_window",

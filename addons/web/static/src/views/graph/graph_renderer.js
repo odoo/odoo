@@ -124,7 +124,7 @@ export class GraphRenderer extends Component {
 
     setup() {
         this.model = this.props.model;
-
+        this.orm = useService("orm");
         this.rootRef = useRef("root");
         this.canvasRef = useRef("canvas");
         this.containerRef = useRef("container");
@@ -884,6 +884,19 @@ export class GraphRenderer extends Component {
      * @param {Object} context
      */
     openView(domain, views, context, newWindow) {
+        if (this.model.metaData.openAction) {
+            const { action, type } = this.model.metaData.openAction;
+            if (type === "action") {
+                return this.actionService.loadAction(action).then(result => {
+                    result.domain = Domain.and([domain, result.domain]).toList();
+                    this.actionService.doAction(result);
+                });
+            } else {
+                return this.orm.call(this.model.metaData.resModel, action, [], {}).then(result => {
+                    this.actionService.doAction(result);
+                });
+            }
+        }
         this.actionService.doAction(
             {
                 context,
