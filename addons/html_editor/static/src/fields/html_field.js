@@ -212,8 +212,7 @@ export class HtmlField extends Component {
         await this.commitChanges();
         this.state.showCodeView = !this.state.showCodeView;
         if (!this.state.showCodeView && this.editor) {
-            this.editor.editable.innerHTML = this.value;
-            this.editor.shared.history.addStep();
+            this.state.key++;
         }
     }
 

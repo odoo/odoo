@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { MassMailingIframe } from "@mass_mailing_egg/iframe/mass_mailing_iframe";
 import { ThemeSelector } from "@mass_mailing_egg/themes/theme_selector/theme_selector";
-import { onWillUpdateProps, status, toRaw } from "@odoo/owl";
+import { onWillUpdateProps, status, toRaw, useEffect, useRef } from "@odoo/owl";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useTransition } from "@web/core/transition";
 import { effect } from "@web/core/utils/reactive";
@@ -50,6 +50,7 @@ export class MassMailingHtmlField extends HtmlMailField {
 
         this.iframeLoadingRace = new Race();
         this.iframeRef = useChildRef();
+        this.codeViewButtonRef = useRef("codeViewButtonRef");
 
         // Use a transition to display the HtmlField only when the themes
         // service finished loading
@@ -103,6 +104,15 @@ export class MassMailingHtmlField extends HtmlMailField {
             },
             [this.state]
         );
+        useEffect(
+            () => {
+                if (!this.codeViewRef.el) {
+                    return;
+                }
+                this.codeViewRef.el.style.height = this.codeViewRef.el.scrollHeight + "px";
+            },
+            () => [this.codeViewRef.el]
+        );
     }
 
     resetIframe() {
@@ -116,6 +126,16 @@ export class MassMailingHtmlField extends HtmlMailField {
             this.state.activeTheme = themeOptions.name;
             this.state.themeOptions = themeOptions;
         }
+    }
+
+    getMassMailingIframeProps() {
+        const props = {};
+        if (this.env.debug) {
+            Object.assign(props, {
+                toggleCodeView: () => this.toggleCodeView(),
+            });
+        }
+        return props;
     }
 
     /**
@@ -195,6 +215,10 @@ export class MassMailingHtmlField extends HtmlMailField {
             ".o_mass_mailing_processing_container"
         );
         processingContainer.append(el);
+    }
+
+    onTextareaInput(ev) {
+        ev.target.style.height = ev.target.scrollHeight + "px";
     }
 
     /**

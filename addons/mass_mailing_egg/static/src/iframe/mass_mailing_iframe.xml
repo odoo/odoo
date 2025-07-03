@@ -5,10 +5,11 @@
             <div class="d-flex w-100 h-100">
                 <div class="flex-grow-1">
                     <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
-                    <iframe scrolling="no" t-att-class="{'d-none': props.showThemeSelector}"
+                    <iframe scrolling="no" t-att-class="{ 'd-none': props.showThemeSelector or props.showCodeView }"
                         t-ref="iframeRef" t-on-blur="onBlur"/>
                 </div>
-                <div t-if="!props.readonly and props.themeOptions.withBuilder and !props.showThemeSelector">
+                <div t-if="!props.readonly and props.themeOptions.withBuilder and !props.showThemeSelector"
+                    t-att-class="{ 'd-none': props.showCodeView }">
                     <div class="position-sticky o_mass_mailing_egg-builder_sidebar border-start border-dark o_builder_sidebar_open" t-ref="sidebarRef">
                         <LazyComponent t-if="state.ready" Component="'mass_mailing_egg.MassMailingBuilder'"
                             props="() => ({ builderProps: this.getBuilderProps() })"

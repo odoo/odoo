@@ -3,6 +3,7 @@ import {
     Component,
     onMounted,
     onWillDestroy,
+    onWillUpdateProps,
     status,
     useEffect,
     useRef,
@@ -33,6 +34,8 @@ export class MassMailingIframe extends Component {
         onIframeLoad: { type: Function },
         iframeRef: { type: Function },
         showThemeSelector: { type: Boolean },
+        showCodeView: { type: Boolean, optional: true },
+        toggleCodeView: { type: Function, optional: true },
         readonly: { type: Boolean, optional: true },
         onEditorLoad: { type: Function, optional: true },
         onBlur: { type: Function, optional: true },
@@ -67,6 +70,11 @@ export class MassMailingIframe extends Component {
                 this.iframeRef.el.addEventListener("load", () => this.setupIframe(), {
                     once: true,
                 });
+            }
+        });
+        onWillUpdateProps((nextProps) => {
+            if (nextProps.showCodeView) {
+                this.state.showFullscreen = false;
             }
         });
         useEffect(
@@ -271,6 +279,7 @@ export class MassMailingIframe extends Component {
             toggleFullscreen: () => {
                 this.state.showFullscreen = !this.state.showFullscreen;
             },
+            toggleCodeView: this.props.toggleCodeView,
             onEditorLoad: this.props.onEditorLoad,
             getExternalScrollableAncestor,
         };

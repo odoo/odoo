@@ -10,6 +10,8 @@
             </div>
             <div class="d-flex gap-1">
                 <button t-on-click="onMobilePreviewClick" type="button" class="o-hb-btn btn d-flex align-items-center" t-att-class="{active: props.isMobile}" data-action="mobile" title="Mobile Preview" accesskey="v" style="--btn-font-size: 20px"><span class="fa fa-mobile" role="img"/></button>
+                <button t-if="props.toggleCodeView" t-on-click="props.toggleCodeView"
+                    class="o-hb-btn btn d-flex align-items-center" title="Code View" accesskey="c"><i class="fa fa-code"/></button>
                 <button t-if="props.toggleFullscreen" t-on-click="props.toggleFullscreen"
                     class="o-hb-btn btn d-flex align-items-center" title="Fullscreen" accesskey="f">FS</button>
                 <button t-if="props.closeEditor" type="button"  t-on-click="discard" class="o-hb-btn btn" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
