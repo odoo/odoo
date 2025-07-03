@@ -1,8 +1,6 @@
 import { hasTouch, isBrowserFirefox } from "@web/core/browser/feature_detection";
-import { registry } from "@web/core/registry";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { Interaction } from "@web/public/interaction";
 import "@website/libs/zoomodoo/zoomodoo";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
@@ -650,99 +648,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
 
 publicWidget.registry.WebsiteSale = WebsiteSale
 
-publicWidget.registry.WebsiteSaleSearchModal = publicWidget.Widget.extend({
-    selector: '#o_wsale_search_modal',
-    disabledInEditableMode: true,
-
-    //--------------------------------------------------------------------------
-    // Overrides
-    //--------------------------------------------------------------------------
-    start() {
-        this._super(...arguments);
-
-        this.el.addEventListener("shown.bs.modal", (ev) => {
-            ev.target.querySelector('.oe_search_box').focus();
-        });
-    },
-});
-
-publicWidget.registry.WebsiteSaleAccordionProduct = publicWidget.Widget.extend({
-    selector: "#product_accordion",
-
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
-        this._updateAccordionActiveItem();
-    },
-
-    /**
-     * Replace the .SCSS styling applied awaiting Js for the default bootstrap classes,
-     * opening the first accordion entry and restoring flush behavior.
-     *
-     * @private
-     */
-    _updateAccordionActiveItem() {
-        const firstAccordionItemEl = this.el.querySelector('.accordion-item');
-        if (!firstAccordionItemEl) return;
-
-        const firstAccordionItemButtonEl = firstAccordionItemEl.querySelector('.accordion-button');
-        firstAccordionItemButtonEl.classList.remove('collapsed');
-        firstAccordionItemButtonEl.setAttribute('aria-expanded', 'true');
-        firstAccordionItemEl.querySelector('.accordion-collapse').classList.add('show');
-        this.target.classList.remove('o_accordion_not_initialized');
-    },
-});
-
-export class WebsiteSaleProductStickyCol extends Interaction {
-    static selector = ".oe_website_sale";
-
-    dynamicContent = {
-        ".o_wsale_product_sticky_col": {
-            "t-att-style": () => ({
-                "opacity": "1",
-                "top": `${this.position || 16}px`,
-            }),
-        }
-    };
-
-    setup() {
-        this.position = 16;
-    }
-
-    start() {
-        this._adaptToHeaderChange();
-        this.registerCleanup(this.services.website_menus.registerCallback(this._adaptToHeaderChange.bind(this)));
-    }
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-
-    _adaptToHeaderChange() {
-        let position = 16; // Add 1rem equivalent in px to provide a visual gap by default
-
-        for (const el of this.el.ownerDocument.querySelectorAll(".o_top_fixed_element")) {
-            position += el.offsetHeight;
-        }
-
-        if (this.position !== position) {
-            this.position = position;
-            this.updateContent();
-        }
-    }
-}
-registry
-    .category("public.interactions")
-    .add("website.website_sale_product_sticky_col", WebsiteSaleProductStickyCol);
-
 export default {
     WebsiteSale: publicWidget.registry.WebsiteSale,
-    WebsiteSaleSearchModal: publicWidget.registry.WebsiteSaleSearchModal,
-    WebsiteSaleProductPage: publicWidget.registry.WebsiteSaleAccordionProduct,
 };
