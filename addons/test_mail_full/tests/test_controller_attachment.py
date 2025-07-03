@@ -35,21 +35,3 @@ class TestPortalAttachmentController(MailControllerAttachmentCommon):
                 (self.user_admin, True, sign),
             ),
         )
-
-    def test_delete_attachment_as_internal_with_token(self):
-        record = self.env["mail.test.portal"].create(
-            {"name": "Test", "partner_id": self.partner_portal.id}
-        )
-        token_param = {"token": record._portal_ensure_token()}
-        self._authenticate_pseudo_user(self.user_portal)
-        attachment_id = self._upload_attachment(record, token_param)
-        attachment = self.env["ir.attachment"].sudo().search([("id", "=", attachment_id)])
-        message = record.message_post(
-            body="hello!", author_id=self.partner_portal.id, attachment_ids=attachment.ids
-        )
-        self.assertTrue(message.attachment_ids)
-        self._authenticate_pseudo_user(self.user_employee)
-        with self.assertRaises(odoo.tests.common.JsonRpcException) as exc:
-            self._delete_attachment(attachment, {})
-        self.assertEqual(exc.exception.args[0], "werkzeug.exceptions.NotFound")
-        self._delete_attachment(attachment, token_param)
