@@ -142,10 +142,10 @@ class HrVersion(models.Model):
                                  groups="hr.group_hr_user")
     date_start = fields.Date(compute='_compute_dates', groups="hr.group_hr_user")
     date_end = fields.Date(compute='_compute_dates', groups="hr.group_hr_user")
-    is_current = fields.Boolean(compute='_compute_state', groups="hr.group_hr_user")
-    is_past = fields.Boolean(compute='_compute_state', groups="hr.group_hr_user")
-    is_future = fields.Boolean(compute='_compute_state', groups="hr.group_hr_user")
-    is_in_contract = fields.Boolean(compute='_compute_state', groups="hr.group_hr_user")
+    is_current = fields.Boolean(compute='_compute_is_current', groups="hr.group_hr_user")
+    is_past = fields.Boolean(compute='_compute_is_past', groups="hr.group_hr_user")
+    is_future = fields.Boolean(compute='_compute_future', groups="hr.group_hr_user")
+    is_in_contract = fields.Boolean(compute='_compute_is_in_contract', groups="hr.group_hr_user")
 
     contract_template_id = fields.Many2one(
         'hr.version', string="Contract Template", groups="hr.group_hr_user",
@@ -327,21 +327,24 @@ class HrVersion(models.Model):
         for version in self:
             version.display_name = version.name if not version.employee_id else format_date(version.env, version.date_version, date_format='dd MMM yyyy')
 
-    def _compute_state(self):
+    def _compute_is_current(self):
+        today = fields.Date.today()
         for version in self:
-            version.is_current = version._is_current()
-            version.is_past = version._is_past()
-            version.is_future = version._is_future()
+            version.is_current = version.date_start <= today and (not version.date_end or version.date_end >= today)
+
+    def _compute_is_past(self):
+        today = fields.Date.today()
+        for version in self:
+            version.is_past = version.date_end and version.date_end < today
+
+    def _compute_is_future(self):
+        today = fields.Date.today()
+        for version in self:
+            version.is_future = version.date_start > today
+
+    def _compute_is_in_contract(self):
+        for version in self:
             version.is_in_contract = version._is_in_contract()
-
-    def _is_current(self, date=fields.Date.today()):
-        return self.date_start <= date and (not self.date_end or self.date_end >= date)
-
-    def _is_past(self, date=fields.Date.today()):
-        return self.date_end and self.date_end < date
-
-    def _is_future(self, date=fields.Date.today()):
-        return self.date_start > date
 
     def _is_in_contract(self, date=fields.Date.today()):
         # Return True if the employee is in contract on a given date
