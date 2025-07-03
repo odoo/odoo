@@ -132,13 +132,13 @@ const VariantMixin = {
     /**
      * Triggers the price computation and other variant specific changes
      *
-     * @param {$.Element} $container
+     * @param {Element} container
      */
-    triggerVariantChange: function ($container) {
-        $container.find('ul[data-attribute_exclusions]').trigger('change');
-        $container.find('input.js_variant_change:checked, select.js_variant_change').each(function () {
-            VariantMixin.handleCustomValues($(this));
-        });
+    triggerVariantChange(container) {
+        container.querySelectorAll('ul[data-attribute_exclusions]')
+            .forEach((el) => el.dispatchEvent(new Event('change')));
+        container.querySelectorAll('input.js_variant_change:checked, select.js_variant_change')
+            .forEach((_) => this.handleCustomValues($(this)));
     },
 
     //--------------------------------------------------------------------------
