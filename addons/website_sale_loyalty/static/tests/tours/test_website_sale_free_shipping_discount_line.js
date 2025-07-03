@@ -42,6 +42,7 @@ webTours.add("check_shipping_discount", {
             content: "select Plumbus",
             trigger: '.oe_product a:contains("Plumbus")',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "add 3 Plumbus into cart",
@@ -76,7 +77,7 @@ webTours.add("check_shipping_discount", {
             trigger: ".o_total_card a[name=website_sale_main_button]",
             run: "click",
         },
-        pay(),
+        ...pay(),
     ],
 });
 
@@ -89,6 +90,7 @@ webTours.add("update_shipping_after_discount", {
             content: "use eWallet to check it doesn't impact `free_over` shipping",
             trigger: "a.btn-primary:contains(Pay with eWallet)",
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "Check pay with eWallet is applied",

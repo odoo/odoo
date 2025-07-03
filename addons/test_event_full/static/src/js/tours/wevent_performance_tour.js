@@ -54,6 +54,7 @@ var registerSteps = [{
     content: "Validate attendees details",
     trigger: 'button[type=submit]',
     run: 'click',
+    expectUnloadPage: true,
 },
 wsTourUtils.fillAdressForm({
     name: "Raoulette Poiluchette",

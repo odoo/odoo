@@ -8,7 +8,7 @@ registry
     .add('website_sale_product_configurator_strikethrough_price', {
         url: '/shop?search=Main product',
         steps: () => [
-            ...wsTourUtils.addToCart({ productName: "Main product", search: false }),
+            ...wsTourUtils.addToCart({ productName: "Main product", search: false, expectUnloadPage: true }),
             configuratorTourUtils.assertProductPrice("Main product", '55.00'),
             websiteConfiguratorTourUtils.assertProductStrikethroughPrice("Main product", '110.00'),
             configuratorTourUtils.assertOptionalProductPrice("Optional product", '5.50'),

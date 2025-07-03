@@ -22,6 +22,7 @@ registry.category("web_tour.tours").add("invited_on_payment_course_public", {
         {
             trigger: ".o_wslides_identification_banner a.o_underline:contains(Log in)",
             run: "click",
+            expectUnloadPage: true,
         },
         {
             trigger: 'input[id="password"]',
@@ -30,6 +31,7 @@ registry.category("web_tour.tours").add("invited_on_payment_course_public", {
         {
             trigger: 'button:contains("Log in")',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             trigger: "a:contains(Gardening: The Know-How)",

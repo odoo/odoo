@@ -10,7 +10,8 @@ function openRoot() {
         run() {
             document.querySelector("body").classList.add("wait");
             window.location = '/odoo';
-        }
+        },
+        expectUnloadPage: true,
     }, {
         content: "wait for client reload",
         trigger: 'body:not(.wait)',
@@ -141,6 +142,7 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
     content: "check that we're on the login page or go to it",
     trigger: 'input#login, a:contains(Sign in)',
     run: "click",
+    expectUnloadPage: true,
 }, {
     content: "input login",
     trigger: 'input#login',
@@ -153,6 +155,7 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
     content: "click da button",
     trigger: 'button:contains("Log in")',
     run: "click",
+    expectUnloadPage: true,
 }, {
     content: "expect totp screen",
     trigger: 'label:contains(Authentication Code)',
@@ -207,6 +210,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     content: "check that we're on the login page or go to it",
     trigger: 'input#login, a:contains(Sign in)',
     run: "click",
+    expectUnloadPage: true,
 }, {
     content: "input login",
     trigger: 'input#login',
@@ -219,6 +223,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     content: "click da button",
     trigger: 'button:contains("Log in")',
     run: "click",
+    expectUnloadPage: true,
 }, {
     content: "expect totp screen",
     trigger: 'label:contains(Authentication Code)',
@@ -238,6 +243,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
 {
     trigger: "button:contains(Log in)",
     run: "click",
+    expectUnloadPage: true,
 },
 {
     content: "check we're logged in",
@@ -247,6 +253,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     content: "click the Log out button",
     trigger: '.dropdown-item[data-menu=logout]',
     run: "click",
+    expectUnloadPage: true,
 }, {
     content: "check that we're back on the login page or go to it",
     trigger: 'input#login, a:contains(Log in)',
@@ -263,6 +270,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     content: "click da button again",
     trigger: 'button:contains("Log in")',
     run: "click",
+    expectUnloadPage: true,
 },  {
     content: "check we're logged in without 2FA",
     trigger: ".o_user_menu .dropdown-toggle",
@@ -273,12 +281,11 @@ registry.category("web_tour.tours").add('totp_login_device', {
 ...openUserProfileAtSecurityTab(),
 {
     content: "Open totp wizard",
-    //TODO: remove when PIPU macro PR is merged: https://github.com/odoo/odoo/pull/194508
     trigger: 'a[role=tab]:contains("Account Security").active',
-    async run(actions) {
-        const el = await waitFor('button[name=action_totp_disable]', { timeout: 5000 });
-        await actions.click(el);
-    }
+},
+{
+    trigger: "button[name=action_totp_disable]",
+    run: "click",
 },
 {
     trigger: ".modal div:contains(entering your password)",
@@ -309,6 +316,7 @@ registry.category("web_tour.tours").add('totp_login_disabled', {
     content: "check that we're on the login page or go to it",
     trigger: 'input#login, a:contains(Sign in)',
     run: "click",
+    expectUnloadPage: true,
 }, {
     content: "input login",
     trigger: 'input#login',
@@ -321,6 +329,7 @@ registry.category("web_tour.tours").add('totp_login_disabled', {
     content: "click da button",
     trigger: 'button:contains("Log in")',
     run: "click",
+    expectUnloadPage: true,
 },
 // normally we'd end the tour here as it's all we care about but there are a
 // bunch of ongoing queries from the loading of the web client which cause

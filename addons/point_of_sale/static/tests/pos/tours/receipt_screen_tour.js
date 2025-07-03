@@ -176,7 +176,15 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
             ProductScreen.closeWithCashAmount("25"),
             ProductScreen.cashDifferenceIs("0.00"),
             Dialog.confirm("Close Register"),
-            Chrome.clickBtn("Backend"),
+            {
+                trigger: "button:contains(backend)",
+                run: "click",
+                expectUnloadPage: true,
+            },
+            {
+                trigger: "body",
+                expectUnloadPage: true,
+            },
             ProductScreen.lastClosingCashIs("25.00"),
         ].flat(),
 });

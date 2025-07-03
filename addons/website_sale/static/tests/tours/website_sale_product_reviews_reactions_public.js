@@ -8,6 +8,7 @@ registry
             {
                 trigger: '.oe_product_cart a:contains("Storage Box Test")',
                 run: "click",
+                expectUnloadPage: true,
             },
             {
                 trigger: '.o_product_page_reviews_title',

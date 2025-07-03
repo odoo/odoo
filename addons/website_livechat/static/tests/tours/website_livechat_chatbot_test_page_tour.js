@@ -33,6 +33,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
             run() {
                 window.location.reload();
             },
+            expectUnloadPage: true,
         },
         {
             trigger: messagesContain("Hello! I'm a bot!"),
