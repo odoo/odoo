@@ -839,6 +839,7 @@ class MailComposeMessage(models.TransientModel):
         batch_size = int(
             self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
         ) or self._batch_size or 50  # be sure to not have 0, as otherwise no iteration is done
+        counter_mails_done = 0
         for res_ids_iter in tools.split_every(batch_size, res_ids):
             prepared_mail_values_filtered = self._manage_mail_values(self._prepare_mail_values(res_ids_iter))
             iter_mails_sudo = self.env['mail.mail'].sudo().create(list(prepared_mail_values_filtered.values()))
@@ -864,6 +865,9 @@ class MailComposeMessage(models.TransientModel):
             # send better void the cache and commit what is already generated to avoid
             # running several times on same records in case of issue
             if auto_commit is True:
+                counter_mails_done += len(prepared_mail_values_filtered)
+                self.env['ir.cron']._notify_progress(done=counter_mails_done,
+                                                      remaining=len(res_ids) - counter_mails_done)
                 self.env.cr.commit()
             self.env.invalidate_all()
 
