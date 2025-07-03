@@ -258,6 +258,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
             'code': 'pa_GB',
             'iso_code': 'pa_GB',
             'url_code': 'pa_GB',
+            'direction': 'rtl',
         }, {
             'name': 'Fake User Lang',
             'code': 'fu_GB',
@@ -295,6 +296,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
         self.start_tour(f"/website/force/{website.id}", 'snippet_translation', login='admin')
         self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_changing_lang', login='admin')
         self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_switching_website', login='admin')
+        self.start_tour(f"/website/force/{website.id}", 'snippet_dialog_rtl', login='admin')
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')

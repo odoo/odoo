@@ -3,7 +3,7 @@
 
 
 <t t-name="html_builder.SnippetViewer">
-    <div t-ref="content" class="row g-0 o_snippets_preview_row">
+    <div t-ref="content" class="row g-0 o_snippets_preview_row" t-att-dir="this.props.frontendDirection">
         <div class="col-lg-6" t-foreach="this.getSnippetColumns()" t-as="snippetsColumn" t-key="snippetsColumn_index">
             <t t-foreach="snippetsColumn" t-as="snippet" t-key="snippet.id">
                 <div t-on-click="() => this.onClick(snippet)"
