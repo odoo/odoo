@@ -7,7 +7,7 @@ import psycopg2
 import psycopg2.errorcodes
 
 import odoo
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import common
 from odoo.tests.common import BaseCase
 from odoo.tools.misc import mute_logger
@@ -191,6 +191,35 @@ class TestIrSequenceGenerate(BaseCase):
 
             with self.assertRaises(UserError):
                 env['ir.sequence'].next_by_code('test_sequence_type_7')
+
+    def test_ir_sequence_prefix_and_suffix(self):
+        """ Test whether a validation error is raised for invalid sequence format strings """
+
+        with environment() as env:
+            IrSequence = env['ir.sequence']
+
+            invalid_sequences = [
+                {'name': 'Invalid prefix 1', 'prefix': '%(years)'},
+                {'name': 'Invalid prefix 2', 'prefix': '%(year'},
+                {'name': 'Invalid suffix 1', 'suffix': '%()'},
+                {'name': 'Invalid suffix 2', 'suffix': '%()s%'},
+            ]
+
+            for sequence in invalid_sequences:
+                with self.subTest("Create sequence: %s" % sequence['name']):
+                    with self.assertRaises(ValidationError):
+                        IrSequence.create(sequence)
+
+            # Valid sequence
+            sequence = IrSequence.create({
+                'name': 'Valid sequence',
+                'code': 'test_sequence_code',
+                'prefix': '%(sec)s',
+                'suffix': '%(range_year)s',
+            })
+            self.assertTrue(sequence)
+            result = sequence.next_by_code('test_sequence_code')
+            self.assertTrue(result)
 
     @classmethod
     def tearDownClass(cls):

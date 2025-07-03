@@ -4,11 +4,31 @@ from datetime import datetime, timedelta
 import logging
 import pytz
 from psycopg2 import sql
+import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
+
+
+BASE_LEGENDS = {
+    'year', 'y', 'month', 'day',
+    'doy', 'woy', 'weekday',
+    'h24', 'h12', 'min', 'sec',
+}
+ALLOWED_LEGENDS = {
+    f"%({prefix}{key})s"
+    for prefix in ("", "range_", "current_")
+    for key in BASE_LEGENDS
+}
+
+LEGEND_REGEX = re.compile(r'%\([a-zA-Z0-9_]+\)s')
+MALFORMED_REGEXES = [
+    re.compile(r'%\([^\)]*$'),                    # Incomplete: '%(year'
+    re.compile(r'%\([a-zA-Z0-9_]+\)(?!s)'),       # Missing 's': '%(year)'
+    re.compile(r'%\(\)'),                         # Empty: '%()'
+]
 
 
 def _create_sequence(cr, seq_name, number_increment, number_next):
@@ -154,6 +174,31 @@ class IrSequence(models.Model):
     use_date_range = fields.Boolean(string='Use subsequences per date_range')
     date_range_ids = fields.One2many('ir.sequence.date_range', 'sequence_id', string='Subsequences')
 
+    @api.constrains('prefix', 'suffix')
+    def _check_prefix_and_suffix(self):
+        for sequence in self:
+            for field_name in ['prefix', 'suffix']:
+                value = sequence[field_name]
+                if not value or '%' not in value:
+                    continue
+                # Find all valid-looking legends
+                found_legends = set(LEGEND_REGEX.findall(value))
+                # Check for malformed patterns
+                malformed_legends = {
+                    match
+                    for regex in MALFORMED_REGEXES
+                    for match in regex.findall(value)
+                }
+                invalid_legends = (found_legends - ALLOWED_LEGENDS).union(malformed_legends)
+                if invalid_legends:
+                    raise ValidationError(
+                        _(
+                            "The %(field)s contains invalid legends: %(legends)s",
+                            field=field_name,
+                            legends=", ".join(sorted(invalid_legends)),
+                        )
+                    )
+
     @api.model_create_multi
     def create(self, vals_list):
         """ Create a sequence, in implementation == standard a fast gaps-allowed PostgreSQL sequence is used.
@@ -234,7 +279,7 @@ class IrSequence(models.Model):
         try:
             interpolated_prefix = _interpolate(self.prefix, d)
             interpolated_suffix = _interpolate(self.suffix, d)
-        except (ValueError, TypeError):
+        except (ValueError, TypeError, KeyError):
             raise UserError(_('Invalid prefix or suffix for sequence %r', self.name))
         return interpolated_prefix, interpolated_suffix
 
