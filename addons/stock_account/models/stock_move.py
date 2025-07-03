@@ -73,9 +73,9 @@ class StockMove(models.Model):
                 return {self.env['stock.lot']: price_unit}
         else:
             if self.product_id.lot_valuated:
-                return {lot: lot.standard_price or self.product_id.standard_price for lot in self.lot_ids}
+                return {lot: lot.standard_price or self.product_id.with_company(self.company_id).standard_price for lot in self.lot_ids}
             else:
-                return {self.env['stock.lot']: self.product_id.standard_price}
+                return {self.env['stock.lot']: self.product_id.with_company(self.company_id).standard_price}
 
     @api.model
     def _get_valued_types(self):
