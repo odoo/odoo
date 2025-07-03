@@ -1273,7 +1273,7 @@ test("bold the searchValue on the commands", async () => {
     await animationFrame();
     expect(".o_command_palette").toHaveCount(1);
     expect(".o_command").toHaveCount(5);
-    expect(queryAllTexts(".o_command b")).toEqual([]);
+    expect(queryAllTexts(".o_command .fw-bolder")).toEqual([]);
 
     await click(".o_command_palette_search input");
     await edit("@test");
@@ -1281,7 +1281,7 @@ test("bold the searchValue on the commands", async () => {
     expect(".o_command").toHaveCount(5);
     expect(
         queryAll(".o_command").map((command) =>
-            queryAllTexts(".o_command_name b", { root: command })
+            queryAllTexts(".o_command_name .fw-bolder", { root: command })
         )
     ).toEqual([["Test"], ["test"], ["test"], ["Test"], ["TeSt", "Test", "TEST"]]);
 });
@@ -1310,7 +1310,34 @@ test("bold the searchValue on the commands with special char", async () => {
     expect(".o_command_palette").toHaveCount(1);
     expect(".o_command").toHaveCount(1);
     expect(queryAllTexts(".o_command")).toEqual(["Test&"]);
-    expect(queryAllTexts(".o_command b")).toEqual(["&"]);
+    expect(queryAllTexts(".o_command .fw-bolder")).toEqual(["&"]);
+});
+
+test("bold the searchValue on the commands with accents", async () => {
+    await mountWithCleanup(MainComponentsContainer);
+    const action = () => {};
+    const providers = [
+        {
+            provide: () => [
+                {
+                    name: "Cédric",
+                    action,
+                },
+            ],
+        },
+    ];
+    const config = {
+        searchValue: "èd",
+        providers,
+    };
+    getService("dialog").add(CommandPalette, {
+        config,
+    });
+    await animationFrame();
+    expect(".o_command_palette").toHaveCount(1);
+    expect(".o_command").toHaveCount(1);
+    expect(queryAllTexts(".o_command")).toEqual(["Cédric"]);
+    expect(queryAllTexts(".o_command .fw-bolder")).toEqual(["éd"]);
 });
 
 test("remove namespace with backspace", async () => {
