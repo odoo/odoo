@@ -177,12 +177,8 @@ Featuring
             'website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js',
             'website_slides/static/src/js/slides_embed.js',
         ],
-        'web.qunit_suite_tests': [
-            'website_slides/static/tests/legacy/**/*',
-        ],
         'web.assets_unit_tests': [
             'website_slides/static/tests/**/*',
-            ('remove', 'website_slides/static/tests/legacy/**/*'),
             ('remove', 'website_slides/static/tests/tours/**/*'),
         ],
         'web.assets_unit_tests_setup': [
