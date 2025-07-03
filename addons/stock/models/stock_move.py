@@ -154,6 +154,7 @@ class StockMove(models.Model):
     is_inventory = fields.Boolean('Inventory')
     inventory_name = fields.Char(readonly=True)
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
+    package_ids = fields.One2many('stock.package', string='Packages', compute="_compute_package_ids")
     origin_returned_move_id = fields.Many2one(
         'stock.move', 'Origin return move', copy=False, index=True,
         help='Move that created the return move', check_company=True)
@@ -169,6 +170,7 @@ class StockMove(models.Model):
         'stock.route', 'stock_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="the warehouse to consider for the route selection on the next procurement (if any).")
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
+    has_lines_without_result_package = fields.Boolean(compute="_compute_has_lines_without_result_package")
     quantity = fields.Float(
         'Quantity', compute='_compute_quantity', digits='Product Unit', inverse='_set_quantity', store=True)
     # TODO: delete this field `show_operations`
@@ -183,7 +185,6 @@ class StockMove(models.Model):
     reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
     move_lines_count = fields.Integer(compute='_compute_move_lines_count')
     package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True, copy=False, index='btree_not_null')
-    picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs', readonly=True)
     display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
     display_import_lot = fields.Boolean(compute='_compute_display_assign_serial')
     next_serial = fields.Char('First SN/Lot')
@@ -264,6 +265,20 @@ class StockMove(models.Model):
                 move.state not in ('done', 'cancel')
             )
             move.display_assign_serial = move.display_import_lot
+
+    @api.depends('move_line_ids.result_package_id')
+    def _compute_has_lines_without_result_package(self):
+        for move in self:
+            move.has_lines_without_result_package = move.move_line_ids.result_package_id and any(not line.result_package_id for line in move.move_line_ids)
+
+    @api.depends('move_line_ids', 'move_line_ids.result_package_id')
+    def _compute_package_ids(self):
+        for move in self:
+            if move.state in ['done', 'cancel']:
+                move.package_ids = move.move_line_ids.package_history_id.outermost_dest_id
+            else:
+                # Only display the top-level packages until the move is done.
+                move.package_ids = move.move_line_ids.result_package_id.mapped(lambda p: p.outermost_package_id or p)
 
     @api.depends('move_line_ids.picked', 'state')
     def _compute_picked(self):
@@ -845,6 +860,25 @@ Please change the quantity done or the rounding precision in your settings.""",
                 continue
             odoobot_id = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
             doc.message_post(body=msg, author_id=odoobot_id, subject=msg_subject)
+
+    def action_add_packages(self):
+        """ Opens a list of suitable packages to add to a picking.
+        """
+        picking = self.env['stock.picking'].browse(self.env.context.get('picking_id'))
+        if not picking:
+            raise UserError(self.env._("You need a transfer to add these packages to."))
+        return {
+            'name': self.env._("Select Packages to Move"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.package',
+            'view_mode': 'list',
+            'views': [(self.env.ref('stock.stock_package_view_add_list').id, 'list')],
+            'target': 'new',
+            'domain': [('location_id', 'child_of', picking.location_id.id)],
+            'context': {
+                'picking_id': picking.id,
+            },
+        }
 
     def action_show_details(self):
         """ Returns an action that will open a form view (in a popup) allowing to work on all the

@@ -7,9 +7,10 @@
         <field name="arch" type="xml">
             <search string="Package">
                 <field name="name" string="Package Name"/>
-                <field name="location_id"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations"/>
                 <field name="package_type_id"/>
                 <filter string="In internal locations" name="internal" domain="['|', ('location_id.usage', '=', 'internal'), ('location_id', '=', False)]" groups="stock.group_stock_multi_locations"/>
+                <filter string="Main Packages" name="main_packages" domain="[('package_dest_id', '=', False)]"/>
                 <group>
                    <filter string='Location' name="location" domain="[]" context="{'group_by' : 'location_id'}" groups="stock.group_stock_multi_locations"/>
                    <filter string='Package Type' name="package_type" domain="[]" context="{'group_by' : 'package_type_id'}"/>
@@ -35,23 +36,25 @@
                     </div>
                     <div class="oe_title">
                         <label for="name" string="Package Reference"/>
-                        <h1><field name="name" class="oe_inline" placeholder="e.g. PACK0000007"/></h1>
+                        <h1><field name="name" class="oe_inline" required="0" placeholder="e.g. PACK0000007"/></h1>
                     </div>
                     <group>
                         <group>
                             <field name="package_type_id"/>
-                            <field name='company_id' groups="base.group_multi_company"/>
                             <field name='owner_id' groups="stock.group_tracking_owner"/>
                             <field name="location_id" options="{'no_create': True}"/>
+                            <field name="parent_package_id" domain="[('id', '!=', id), '|', ('location_id', '=', location_id), ('location_id', '=', False)]" widget="package_m2o" context="{'show_src_package': 1}"/>
                         </group>
                         <group>
+                            <field name='company_id' groups="base.group_multi_company"/>
                             <field name="pack_date"/>
                         </group>
                     </group>
                     <separator string="Content"/>
-                    <field name="quant_ids">
+                    <field name="contained_quant_ids">
                         <list>
                             <field name="product_id"/>
+                            <field name="package_id" widget="package_m2o" context="{'show_src_package': 1}"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="quantity"/>
                             <field name="product_uom_id" groups="uom.group_uom"/>
@@ -80,10 +83,47 @@
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
             <list string="Package" sample="1">
-                <field name="display_name"/>
+                <field name="name" string="Package Name"/>
+                <field name="parent_package_id" string="Container" widget="package_m2o" context="{'show_src_package': 1}"/>
                 <field name="package_type_id"/>
                 <field name="location_id" options="{'no_create': True}"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="stock_package_view_list_editable" model="ir.ui.view">
+        <field name="name">stock.package.list.editable</field>
+        <field name="model">stock.package</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" create="0" js_class="stock_add_package_list_view" open_form_view="1">
+                <header>
+                    <button class="btn-primary" name="action_put_in_pack" type="object" string="Put in Pack"/>
+                    <button class="btn-secondary" name="action_remove_package" type="object" string="Remove"/>
+                </header>
+                <field name="name" string="Package"/>
+                <field name="package_type_id"/>
+                <field name="json_popover" widget="popover_widget" string=" " invisible="not json_popover" width="20px"/>
+                <field name="location_dest_id" options="{'no_create': True}"/>
+                <field name="parent_package_id" string="Origin Container" readonly="1"/>
+                <field name="package_dest_id" domain="[('id', '!=', id), '|', '|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', parent_package_id), ('location_dest_id', '=', location_dest_id)]"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="stock_package_view_add_list" model="ir.ui.view">
+        <field name="name">stock.package.add.package.list</field>
+        <field name="model">stock.package</field>
+        <field name="arch" type="xml">
+            <list create="0">
+                <header>
+                    <button name="action_add_to_picking" type="object" class="btn-primary" string="Select"/>
+                </header>
+                <field name="display_name" string="Package"/>
+                <field name="package_type_id" string="Type" optional="hide"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                <field name="content_description" width="500px"/>
             </list>
         </field>
     </record>
@@ -106,7 +146,8 @@
     <record id="action_package_view" model="ir.actions.act_window">
         <field name="name">Packages</field>
         <field name="res_model">stock.package</field>
-        <field name="view_mode">kanban,list,form</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="view_id" ref="stock_package_view_list"/>
         <field name="context">{
             'search_default_location': True,
             'search_default_internal': True,

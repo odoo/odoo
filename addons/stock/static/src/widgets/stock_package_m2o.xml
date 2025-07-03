@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="stock.PackageMany2One" t-inherit="web.Many2One">
+        <t t-if="props.value" position="replace">
+            <t t-if="props.value">
+                <span t-esc="displayName"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="stock.StockPackageMany2One">
+        <Many2One t-props="m2oProps"/>
+    </t>
+
+</templates>

@@ -69,7 +69,7 @@ class TestDeliveryPickingBatch(common.TransactionCase):
 
         pack_wizard_vals = batch.action_put_in_pack()
         pack_wizard = self.env[(pack_wizard_vals.get('res_model'))].with_context(pack_wizard_vals.get('context')).create({})
-        pack_wizard.delivery_package_type_id = self.package_type.id
+        pack_wizard.package_type_id = self.package_type.id
         self.assertEqual(pack_wizard.shipping_weight, 3.0)
         package = pack_wizard.action_put_in_pack()
         batch.action_done()

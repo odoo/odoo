@@ -69,7 +69,7 @@ class StockQuant(models.Model):
     sn_duplicated = fields.Boolean(string="Duplicated Serial Number", compute='_compute_sn_duplicated', help="If the same SN is in another Quant")
     package_id = fields.Many2one(
         'stock.package', 'Package',
-        domain="['|', ('location_id', '=', location_id), '&', ('location_id', '=', False), '&', ('package_use', '=', 'reusable'), ('quant_ids', '=', False)]",
+        domain="['|', ('location_id', '=', location_id), '&', ('location_id', '=', False), ('quant_ids', '=', False)]",
         help='The package containing this quant', ondelete='restrict', check_company=True, index=True)
     owner_id = fields.Many2one(
         'res.partner', 'Owner',
@@ -1017,7 +1017,7 @@ class StockQuant(models.Model):
                                                      quant.product_id.with_company(quant.company_id).property_stock_inventory,
                                                      package_id=quant.package_id))
         moves = self.env['stock.move'].with_context(inventory_mode=False).create(move_vals)
-        moves._action_done()
+        moves.with_context(ignore_dest_packages=True)._action_done()
         moves._trigger_assign()
         self.location_id.sudo().write({'last_inventory_date': fields.Date.today()})
         date_by_location = {loc: loc._get_next_inventory_date() for loc in self.mapped('location_id')}
@@ -1510,20 +1510,29 @@ class StockQuant(models.Model):
                         recommended_location = None
         return message, recommended_location
 
-    def move_quants(self, location_dest_id=False, package_dest_id=False, message=False, unpack=False):
+    def move_quants(self, location_dest_id=False, package_dest_id=False, message=False, unpack=False, up_to_parent_packages=False):
         """ Directly move a stock.quant to another location and/or package by creating a stock.move.
 
         :param location_dest_id: `stock.location` destination location for the quants
         :param package_dest_id: `stock.package` destination package for the quants
         :param message: String to fill the reference field on the generated stock.move
         :param unpack: set to True when needing to unpack the quant
+        :param up_to_parent_packages: `stock.package` that are the upper limit to keep the parents
         """
+        def set_parent_package(package, limit_ids):
+            if not package.parent_package_id or not limit_ids or package.id in limit_ids:
+                return
+            package.package_dest_id = package.parent_package_id
+            return set_parent_package(package.parent_package_id, limit_ids)
+
         message = message or _('Quantity Relocated')
         move_vals = []
+        limit_ids = set(up_to_parent_packages.ids if up_to_parent_packages else [])
         for quant in self:
             result_package_id = package_dest_id  # temp variable to keep package_dest_id unchanged
             if not unpack and not package_dest_id:
                 result_package_id = quant.package_id
+                set_parent_package(result_package_id, limit_ids)
             move_vals.append(quant.with_context(inventory_name=message)._get_inventory_move_values(
                 quant.quantity,
                 quant.location_id,
