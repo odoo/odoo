@@ -4,6 +4,7 @@ import datetime
 import json
 import os
 from tempfile import TemporaryDirectory
+from unittest import skipIf
 from unittest.mock import patch
 from urllib.parse import urlencode
 
@@ -331,6 +332,7 @@ class TestHttpSession(TestHttpBase):
         )
 
 
+@skipIf(os.getenv('ODOO_FAKETIME_MODE'), "This test does cannot work with faketime")
 class TestSessionStore(HttpCaseWithUserDemo):
     def setUp(self):
         super().setUp()
