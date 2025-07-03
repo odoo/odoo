@@ -8,6 +8,7 @@
                 <field name="value_text_box" />
                 <field name="value_answer_id" />
                 <field name="question_id" />
+                <field name="event_id"/>
             </search>
         </field>
     </record>
@@ -22,6 +23,7 @@
                 <field name="question_id" optional="show" />
                 <field name="value_text_box" />
                 <field name="value_answer_id" string="Selected answer" />
+                <field name="event_id" optional="hide"/>
             </list>
         </field>
     </record>
@@ -30,8 +32,9 @@
         <field name="name">event.registration.answer.view.graph</field>
         <field name="model">event.registration.answer</field>
         <field name="arch" type="xml">
-            <graph string="Answer Breakdown" sample="1">
-                <field name="value_answer_id" />
+            <graph string="Answer Breakdown" sample="1" type="bar">
+                <field name="value_answer_id" type="col"/>
+                <field name="event_id" type="row"/>
             </graph>
         </field>
     </record>
