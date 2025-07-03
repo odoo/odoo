@@ -75,6 +75,12 @@ class PosController(PortalAccount):
             return request.redirect('/odoo/action-point_of_sale.action_client_pos_menu')
 
         if not pos_config.has_active_session:
+            # Acquire an row-level lock on the pos_config record to prevent race conditions
+            # This prevents multiple concurrent processes from creating duplicate POS sessions
+            request.env.cr.execute(
+                "SELECT id FROM pos_config WHERE id = %s FOR UPDATE NOWAIT",
+                (pos_config.id,)
+            )
             pos_config.open_ui()
             pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
 
