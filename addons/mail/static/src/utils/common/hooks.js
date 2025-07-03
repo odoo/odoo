@@ -11,12 +11,12 @@ import {
     xml,
 } from "@odoo/owl";
 
+import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { browser } from "@web/core/browser/browser";
+import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
-import { monitorAudio } from "@mail/utils/common/media_monitoring";
-import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
@@ -579,3 +579,49 @@ export const useMovable = makeDraggableHook({
         return { top, left };
     },
 });
+
+export function useLongPress(refName, callback) {
+    const MOVE_TRESHOLD = 10;
+    const DELAY = 400;
+    const ref = useRef(refName);
+    let timer = null;
+    let startX = 0;
+    let startY = 0;
+
+    function reset() {
+        clearTimeout(timer);
+        timer = null;
+    }
+
+    useLazyExternalListener(
+        () => ref.el,
+        "touchstart",
+        (ev) => {
+            const touch = ev.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
+            timer = setTimeout(() => {
+                callback();
+                reset();
+            }, DELAY);
+        }
+    );
+    useLazyExternalListener(
+        () => ref.el,
+        "touchmove",
+        (ev) => {
+            if (!timer) {
+                return;
+            }
+            const touch = ev.touches[0];
+            const dx = touch.screenX - startX;
+            const dy = touch.screenY - startY;
+            if (Math.hypot(dx, dy) > MOVE_TRESHOLD) {
+                reset();
+            }
+        }
+    );
+    useLazyExternalListener(() => ref.el, "touchend", reset);
+    useLazyExternalListener(() => ref.el, "touchcancel", reset);
+    return ref;
+}
