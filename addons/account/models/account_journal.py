@@ -122,7 +122,7 @@ class AccountJournal(models.Model):
     non_deductible_account_id = fields.Many2one(
         comodel_name='account.account',
         check_company=True,
-        string='Private Part Account',
+        string='Private Share Account',
         readonly=False,
         store=True,
         help="Account used to register the private part of mixed expenses.",
