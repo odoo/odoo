@@ -3,7 +3,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(sizingX, {
     selector: sizingX.selector + ", .row > div",
-    exclude: sizingX.selector + ", .o_mail_no_resize, .o_mail_no_options, .s_col_no_resize.row > div, .s_col_no_resize",
+    exclude: sizingX.exclude + ", .o_mail_no_resize, .o_mail_no_options, .s_col_no_resize.row > div, .s_col_no_resize",
 })
 patch(sizingY, {
     selector: sizingY.selector + ", .o_mail_snippet_general, .o_mail_snippet_general .row > div",
