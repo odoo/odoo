@@ -64,6 +64,7 @@ import { TableOfContentPlugin } from "@html_editor/others/embedded_components/pl
 import { ToggleBlockPlugin } from "@html_editor/others/embedded_components/plugins/toggle_block_plugin/toggle_block_plugin";
 import { VideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/video_plugin";
 import { CaptionPlugin } from "@html_editor/others/embedded_components/plugins/caption_plugin/caption_plugin";
+import { EmbeddedFilePlugin } from "@html_editor/others/embedded_components/plugins/embedded_file_plugin/embedded_file_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
 import { EditorVersionPlugin } from "./core/editor_version_plugin";
 import { ImagePostProcessPlugin } from "./main/media/image_post_process_plugin";
@@ -170,7 +171,6 @@ export const MAIN_PLUGINS = [
     TextDirectionPlugin,
     InlineCodePlugin,
     TableResizePlugin,
-    FilePlugin,
     PlaceholderPlugin,
 ];
 
@@ -187,7 +187,10 @@ export const EMBEDDED_COMPONENT_PLUGINS = [
     ToggleBlockPlugin,
     VideoPlugin,
     CaptionPlugin,
+    EmbeddedFilePlugin,
 ];
+
+export const NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS = [FilePlugin];
 
 export const EXTRA_PLUGINS = [
     ...COLLABORATION_PLUGINS,
