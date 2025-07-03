@@ -1,3 +1,4 @@
+import { escapeTextNodes } from "@html_builder/utils/escaping";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { groupBy } from "@web/core/utils/arrays";
@@ -27,7 +28,6 @@ export class SavePlugin extends Plugin {
             //     clean DOM before save (leaving edit mode)
             //     root is the clone of a node that was o_dirty
             // }
-            withSequence(99, ({ root }) => this.escapeTextNodes(root)),
         ],
         group_element_save_handlers: withSequence(30, this.groupElementHandler.bind(this)),
         save_element_handlers: [
@@ -105,30 +105,6 @@ export class SavePlugin extends Plugin {
         this.lastSavedStep = this.dependencies.history.getHistorySteps().at(-1);
     }
 
-    escapeTextNodes(el) {
-        const walker = document.createTreeWalker(el, NodeFilter.SHOW_ALL, (node) => {
-            if (
-                node.nodeType === Node.ELEMENT_NODE &&
-                (node.matches("object,iframe,script,style") ||
-                    (node.hasAttribute("data-oe-model") &&
-                        node.getAttribute("data-oe-model") !== "ir.ui.view"))
-            ) {
-                return NodeFilter.FILTER_REJECT; // Skip this node and its descendants
-            }
-            if (node.nodeType === Node.TEXT_NODE) {
-                return NodeFilter.FILTER_ACCEPT;
-            }
-            return NodeFilter.FILTER_SKIP; // Skip other nodes, but visit their children
-        });
-
-        const escaper = document.createElement("div");
-        let node;
-        while ((node = walker.nextNode())) {
-            escaper.textContent = node.nodeValue;
-            node.nodeValue = escaper.innerHTML;
-        }
-    }
-
     groupElementHandler(model, field) {
         return model === "ir.ui.view" && field === "arch" ? uniqueId("view-part-to-save-") : "";
     }
@@ -160,6 +136,7 @@ export class SavePlugin extends Plugin {
             ...delay,
         };
 
+        escapeTextNodes(el);
         return this.services.orm.call(
             "ir.ui.view",
             "save",
