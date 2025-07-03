@@ -33,14 +33,15 @@ export const barcodeService = {
         const bus = new EventBus();
         let timeout = null;
 
+        let rawKeysBarcode = [];
         let bufferedBarcode = "";
         let currentTarget = null;
         let barcodeInput = null;
 
         function handleBarcode(barcode, target) {
-            bus.trigger('barcode_scanned', {barcode,target});
+            bus.trigger('barcode_scanned', {barcode, rawKeysBarcode, target});
             if (target.getAttribute('barcode_events') === "true") {
-                const barcodeScannedEvent = new CustomEvent("barcode_scanned", { detail: { barcode, target } });
+                const barcodeScannedEvent = new CustomEvent("barcode_scanned", { detail: { barcode, rawKeysBarcode, target } });
                 target.dispatchEvent(barcodeScannedEvent);
             }
         }
@@ -61,6 +62,7 @@ export const barcodeService = {
                 barcodeInput.value = "";
             }
             bufferedBarcode = "";
+            rawKeysBarcode = [];
             currentTarget = null;
         }
 
@@ -100,6 +102,7 @@ export const barcodeService = {
                 checkBarcode(ev);
             } else {
                 bufferedBarcode += ev.key;
+                rawKeysBarcode.push({code: ev.code, shiftKey: ev.shiftKey});
                 timeout = setTimeout(checkBarcode, barcodeService.maxTimeBetweenKeysInMs);
             }
         }
