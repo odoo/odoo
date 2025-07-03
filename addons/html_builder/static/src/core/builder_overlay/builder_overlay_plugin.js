@@ -127,6 +127,11 @@ export class BuilderOverlayPlugin extends Plugin {
     }
 
     removeBuilderOverlays() {
+        if (this.hoverOverlay) {
+            this.hoverOverlay.destroy();
+            this.hoverOverlay.overlayElement.remove();
+            this.resizeObserver.unobserve(this.hoverOverlay.overlayTarget);
+        }
         this.overlays.forEach((overlay) => {
             overlay.destroy();
             overlay.overlayElement.remove();
