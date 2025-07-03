@@ -33,6 +33,11 @@ export class MassMailingBuilder extends Component {
             [...MAIN_EDITOR_PLUGINS],
             mainEditorPluginsToRemove
         );
+        const coreBuilderPluginsToRemove = ["SavePlugin"];
+        const builderEditorPlugins = removePlugins(
+            [...CORE_BUILDER_PLUGINS],
+            coreBuilderPluginsToRemove
+        );
         const optionalPlugins = [
             ...(this.props.builderProps.config.dynamicPlaceholder
                 ? DYNAMIC_PLACEHOLDER_PLUGINS
@@ -40,7 +45,7 @@ export class MassMailingBuilder extends Component {
         ];
         const Plugins = [
             ...mainEditorPlugins,
-            ...CORE_BUILDER_PLUGINS,
+            ...builderEditorPlugins,
             ...massMailingPlugins,
             ...optionalPlugins,
         ];

@@ -105,7 +105,7 @@ export class Builder extends Component {
                     await this.props.closeEditor?.();
                 },
                 installSnippetModule: async (snippet) =>
-                    this.props.installSnippetModule(snippet, this.save.bind(this)),
+                    this.props.installSnippetModule?.(snippet, this.save.bind(this)),
                 resources: {
                     trigger_dom_updated: () => {
                         this.triggerDomUpdated();
@@ -248,6 +248,9 @@ export class Builder extends Component {
     }
 
     async save() {
+        if (!this.props.closeEditor) {
+            return;
+        }
         this.editor.shared.operation.next(this._save.bind(this), { withLoadingEffect: false });
     }
 
@@ -293,6 +296,9 @@ export class Builder extends Component {
     }
 
     onBeforeUnload(event) {
+        if (!this.props.closeEditor) {
+            return;
+        }
         if (!this.isSaving && this.state.canUndo) {
             event.preventDefault();
             event.returnValue = "Unsaved changes";
@@ -300,6 +306,9 @@ export class Builder extends Component {
     }
 
     async onBeforeLeave() {
+        if (!this.props.closeEditor) {
+            return true;
+        }
         if (this.state.canUndo && !this.editor.shared.savePlugin.isAlreadySaved()) {
             let continueProcess = true;
             await new Promise((resolve) => {

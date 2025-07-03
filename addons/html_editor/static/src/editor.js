@@ -230,7 +230,9 @@ export class Editor {
 
     getElContent() {
         const el = this.editable.cloneNode(true);
+        this.document.body.append(el);
         this.resources["clean_for_save_handlers"].forEach((cb) => cb({ root: el }));
+        el.remove();
         return el;
     }
 
