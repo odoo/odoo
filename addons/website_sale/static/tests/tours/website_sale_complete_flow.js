@@ -171,11 +171,44 @@ import { pay } from "@website_sale/js/tours/tour_utils";
         content: "Check selected billing address is same as typed in previous step",
         trigger: '#delivery_and_billing :contains(Billing):contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
     },
+<<<<<<< 3d4588798b4b52073d3b3e13c641ee70eb783709
     ...tourUtils.payWithTransfer({
         redirect: false,
         expectUnloadPage: true,
         waitFinalizeYourPayment: true,
     }),
+||||||| 60ec0ba98a3f73d4720ca68c77ed4c69623ee08e
+    {
+        content: "Select `Wire Transfer` payment method",
+        trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
+        run: "click",
+    },
+    {
+        trigger:
+            'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
+    },
+    {
+        content: "Pay Now",
+        trigger: 'button[name="o_payment_submit_button"]:not(:disabled)',
+        run: "click",
+    },
+=======
+    {
+        content: "Select `Wire Transfer` payment method",
+        trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
+        run: "click",
+    },
+    {
+        trigger:
+            'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
+    },
+    {
+        content: "Pay Now",
+        trigger: 'button[name="o_payment_submit_button"]:not(:disabled)',
+        run: "click",
+        expectUnloadPage: true,
+    },
+>>>>>>> cbc9bdd12612311e69015b6fb3bbd59e5adba20b
     {
         content: "Sign up",
         trigger: '.oe_cart a:contains("Sign Up")',

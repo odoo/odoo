@@ -35,6 +35,11 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
         });
         await helpers.edit(token, 'input[name="code"]');
     }
+},
+{
+    trigger: "button.btn-primary:contains(Activate)",
+    run: "click",
+    expectUnloadPage: true,
 }, {
     trigger: "button.btn-primary:contains(Activate)",
     run: "click",

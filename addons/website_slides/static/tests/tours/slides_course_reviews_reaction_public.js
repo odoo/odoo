@@ -24,7 +24,9 @@ registry.category("web_tour.tours").add("course_reviews_reaction_public", {
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Message-actions",
             run: async () => {
-                const addReactionButton = document.querySelector('#chatterRoot').shadowRoot.querySelector("[title='Add a Reaction']")
+                const addReactionButton = document
+                    .querySelector("#chatterRoot")
+                    .shadowRoot.querySelector("[title='Add a Reaction']");
                 if (addReactionButton) {
                     throw new Error("Public user is able to react");
                 }
@@ -33,7 +35,9 @@ registry.category("web_tour.tours").add("course_reviews_reaction_public", {
         {
             trigger: "#chatterRoot:shadow .o-mail-Message-core",
             run: () => {
-                const reactionButton = document.querySelector("#chatterRoot").shadowRoot.querySelector(".o-mail-MessageReaction")
+                const reactionButton = document
+                    .querySelector("#chatterRoot")
+                    .shadowRoot.querySelector(".o-mail-MessageReaction");
                 reactionButton.dispatchEvent(new Event("mouseenter"));
             },
         },
@@ -47,9 +51,13 @@ registry.category("web_tour.tours").add("course_reviews_reaction_public", {
         {
             trigger: "#chatterRoot:shadow .o-mail-Message-core",
             run: () => {
-                const addReaction = document.querySelector("#chatterRoot").shadowRoot.querySelector(".o-mail-MessageReactions-add")
+                const addReaction = document
+                    .querySelector("#chatterRoot")
+                    .shadowRoot.querySelector(".o-mail-MessageReactions-add");
                 if (addReaction) {
-                    throw new Error("Non-authenticated user should not be able to add a reaction to a message");
+                    throw new Error(
+                        "Non-authenticated user should not be able to add a reaction to a message"
+                    );
                 }
             },
         },

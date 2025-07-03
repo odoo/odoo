@@ -13,6 +13,7 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
             expectUnloadPage: true,
         },
         clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
+<<<<<<< 3d4588798b4b52073d3b3e13c641ee70eb783709
         {
             content: "Confirm",
             trigger: ".o_wsale_reorder_confirm",
@@ -21,6 +22,20 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         },
         ...assertCartContains({productName: 'Reorder Product 1'}),
         ...assertCartContains({productName: 'Reorder Product 2'}),
+||||||| 60ec0ba98a3f73d4720ca68c77ed4c69623ee08e
+        clickOnElement('Confirm', '.o_wsale_reorder_confirm'),
+        assertCartContains({productName: 'Reorder Product 1'}),
+        assertCartContains({productName: 'Reorder Product 2'}),
+=======
+        {
+            content: "Confirm",
+            trigger: ".o_wsale_reorder_confirm",
+            run: "click",
+            expectUnloadPage: true,
+        },
+        assertCartContains({productName: 'Reorder Product 1'}),
+        assertCartContains({productName: 'Reorder Product 2'}),
+>>>>>>> cbc9bdd12612311e69015b6fb3bbd59e5adba20b
         {
             content: "Check that quantity is 1",
             trigger: ".js_quantity[value='1']",
@@ -42,6 +57,7 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
             expectUnloadPage: true,
         },
         clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
+<<<<<<< 3d4588798b4b52073d3b3e13c641ee70eb783709
         {
             content: "Confirm",
             trigger: ".modal .o_wsale_reorder_confirm",
@@ -55,6 +71,26 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         },
         ...assertCartContains({productName: 'Reorder Product 1'}),
         ...assertCartContains({productName: 'Reorder Product 2'}),
+||||||| 60ec0ba98a3f73d4720ca68c77ed4c69623ee08e
+        clickOnElement('Confirm', '.o_wsale_reorder_confirm'),
+        clickOnElement('No', 'button:contains(No)'),
+        assertCartContains({productName: 'Reorder Product 1'}),
+        assertCartContains({productName: 'Reorder Product 2'}),
+=======
+        {
+            content: "Confirm",
+            trigger: ".modal .o_wsale_reorder_confirm",
+            run: "click",
+        },
+        {
+            content: "No",
+            trigger: ".modal button:contains(No)",
+            run: "click",
+            expectUnloadPage: true,
+        },
+        assertCartContains({productName: 'Reorder Product 1'}),
+        assertCartContains({productName: 'Reorder Product 2'}),
+>>>>>>> cbc9bdd12612311e69015b6fb3bbd59e5adba20b
         {
             content: "Check that quantity is 2",
             trigger: ".js_quantity[value='2']",
@@ -76,6 +112,7 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
             expectUnloadPage: true,
         },
         clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
+<<<<<<< 3d4588798b4b52073d3b3e13c641ee70eb783709
         {
             content: "Confirm",
             trigger: ".o_wsale_reorder_confirm",
@@ -89,6 +126,26 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         },
         ...assertCartContains({productName: 'Reorder Product 1'}),
         ...assertCartContains({productName: 'Reorder Product 2'}),
+||||||| 60ec0ba98a3f73d4720ca68c77ed4c69623ee08e
+        clickOnElement('Confirm', '.o_wsale_reorder_confirm'),
+        clickOnElement('Yes', 'button:contains(Yes)'),
+        assertCartContains({productName: 'Reorder Product 1'}),
+        assertCartContains({productName: 'Reorder Product 2'}),
+=======
+        {
+            content: "Confirm",
+            trigger: ".o_wsale_reorder_confirm",
+            run: "click",
+        },
+        {
+            content: "Yes",
+            trigger: ".modal button:contains(Yes)",
+            run: "click",
+            expectUnloadPage: true,
+        },
+        assertCartContains({productName: 'Reorder Product 1'}),
+        assertCartContains({productName: 'Reorder Product 2'}),
+>>>>>>> cbc9bdd12612311e69015b6fb3bbd59e5adba20b
         {
             content: "Check that quantity is 1",
             trigger: ".js_quantity[value='1']",
@@ -142,6 +199,7 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
             expectUnloadPage: true,
         },
         clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
+<<<<<<< 3d4588798b4b52073d3b3e13c641ee70eb783709
         {
             content: "Confirm",
             trigger: ".o_wsale_reorder_confirm",
@@ -149,6 +207,18 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
             expectUnloadPage: true,
         },
         ...assertCartContains({productName: 'Reorder Product 1'}),
+||||||| 60ec0ba98a3f73d4720ca68c77ed4c69623ee08e
+        clickOnElement('Confirm', '.o_wsale_reorder_confirm'),
+        assertCartContains({productName: 'Reorder Product 1'}),
+=======
+        {
+            content: "Confirm",
+            trigger: ".o_wsale_reorder_confirm",
+            run: "click",
+            expectUnloadPage: true,
+        },
+        assertCartContains({productName: 'Reorder Product 1'}),
+>>>>>>> cbc9bdd12612311e69015b6fb3bbd59e5adba20b
         {
             content: "Check that quantity is 1",
             trigger: ".js_quantity[value='1']",

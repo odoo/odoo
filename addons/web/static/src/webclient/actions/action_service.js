@@ -1143,8 +1143,14 @@ export function makeActionManager(env, router = _router) {
         }
         if (action.target === "self") {
             browser.location.assign(url);
+<<<<<<< 3d4588798b4b52073d3b3e13c641ee70eb783709
         } else if (action.target === "download") {
             _openURL(url);
+||||||| 60ec0ba98a3f73d4720ca68c77ed4c69623ee08e
+=======
+        } else if (action.target === "download") {
+            browser.open(url, "_blank");
+>>>>>>> cbc9bdd12612311e69015b6fb3bbd59e5adba20b
         } else {
             _openURL(url);
             if (action.close) {

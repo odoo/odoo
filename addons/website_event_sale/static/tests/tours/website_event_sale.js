@@ -90,10 +90,15 @@ registry.category("web_tour.tours").add("event_buy_tickets", {
             content: "Validate attendees details",
             trigger: ".modal#modal_attendees_registration button[type=submit]",
             run: "click",
+<<<<<<< 3d4588798b4b52073d3b3e13c641ee70eb783709
             expectUnloadPage: true,
         },
         {
             trigger: ".oe_cart:contains(payment method)",
+||||||| 60ec0ba98a3f73d4720ca68c77ed4c69623ee08e
+=======
+            expectUnloadPage: true,
+>>>>>>> cbc9bdd12612311e69015b6fb3bbd59e5adba20b
         },
         wsTourUtils.goToCart({ quantity: 3 }),
         wsTourUtils.goToCheckout(),

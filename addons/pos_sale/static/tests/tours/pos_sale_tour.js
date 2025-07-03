@@ -357,8 +357,16 @@ registry.category("web_tour.tours").add("PosSettleOrder5", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
+<<<<<<< 3d4588798b4b52073d3b3e13c641ee70eb783709
             ProductScreen.selectedOrderlineHas("Product A", 1),
             Chrome.clickMenuOption("Backend", { expectUnloadPage: true }),
+||||||| 60ec0ba98a3f73d4720ca68c77ed4c69623ee08e
+            ProductScreen.selectedOrderlineHas("Product A", 1),
+            Chrome.clickMenuOption("Backend"),
+=======
+            ProductScreen.selectedOrderlineHas("Product A", "1.00"),
+            Chrome.clickMenuOption("Backend", { expectUnloadPage: true }),
+>>>>>>> cbc9bdd12612311e69015b6fb3bbd59e5adba20b
         ].flat(),
 });
 

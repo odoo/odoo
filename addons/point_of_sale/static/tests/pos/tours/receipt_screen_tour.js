@@ -175,6 +175,7 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
             Chrome.clickMenuOption("Close Register"),
             ProductScreen.closeWithCashAmount("25"),
             ProductScreen.cashDifferenceIs("0.00"),
+<<<<<<< 3d4588798b4b52073d3b3e13c641ee70eb783709
             {
                 trigger: ".modal .modal-footer .btn:contains(close register)",
                 run: "click",
@@ -189,6 +190,21 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
                 trigger: "body",
                 expectUnloadPage: true,
             },
+||||||| 60ec0ba98a3f73d4720ca68c77ed4c69623ee08e
+            Dialog.confirm("Close Register"),
+            Chrome.clickBtn("Backend"),
+=======
+            Dialog.confirm("Close Register"),
+            {
+                trigger: "button:contains(backend)",
+                run: "click",
+                expectUnloadPage: true,
+            },
+            {
+                trigger: "body",
+                expectUnloadPage: true,
+            },
+>>>>>>> cbc9bdd12612311e69015b6fb3bbd59e5adba20b
             ProductScreen.lastClosingCashIs("25.00"),
         ].flat(),
 });
