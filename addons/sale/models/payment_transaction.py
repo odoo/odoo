@@ -152,7 +152,7 @@ class PaymentTransaction(models.Model):
                 lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
             )
             invoice_to_send.is_move_sent = True # Mark invoice as sent
-            self.env['account.move.send']._generate_and_send_invoices(
+            self.env['account.move.send']._generate_and_send_invoices_post_commit(
                 invoice_to_send,
                 allow_raising=False,
                 allow_fallback_pdf=True,
