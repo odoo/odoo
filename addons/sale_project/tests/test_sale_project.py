@@ -1443,3 +1443,56 @@ class TestSaleProject(TestSaleProjectCommon):
 
         self.assertEqual(project.reinvoiced_sale_order_id.id, sale_order.id, "The project should be linked to the SO.")
         self.assertFalse(project.sale_line_id, "The project should not be linked to sale order line.")
+
+    def test_analytics_on_so_confirmation_with_project_templates(self):
+        project_template_1, project_template_2 = self.env['project.project'].create([
+            {'name': 'Project Template 1', 'is_template': True},
+            {'name': 'Project Template 2', 'is_template': True},
+        ])
+        product_with_project_template_1, product_with_project_template_2 = self.env['product.product'].create([
+            {
+                'name': 'Product with Project Template 1',
+                'type': 'service',
+                'service_tracking': 'project_only',
+                'project_template_id': project_template_1.id,
+            },
+            {
+                'name': 'Product with Project Template 2',
+                'type': 'service',
+                'service_tracking': 'project_only',
+                'project_template_id': project_template_2.id,
+            },
+        ])
+        so = self.env['sale.order'].create({'partner_id': self.partner.id})
+        sol_1, sol_2 = self.env['sale.order.line'].create([
+            {'order_id': so.id, 'product_id': product_with_project_template_1.id, 'sequence': 1},
+            {'order_id': so.id, 'product_id': product_with_project_template_2.id, 'sequence': 2},
+        ])
+        n_analytic_accounts = self.env['account.analytic.account'].search_count([])
+        so.action_confirm()
+        self.assertEqual(
+            n_analytic_accounts + 1,
+            self.env['account.analytic.account'].search_count([]),
+            "Only one analytic account should have been created due to the generation of both `sol_1` and `sol_2` projects.",
+        )
+        self.assertEqual(len(so.order_line.project_id), 2, "Two projects should be linked to the SO.")
+        self.assertEqual(
+            so.project_id,
+            sol_1.project_id,
+            "The project of the SO should be set to the project with the lowest (sequence, id).",
+        )
+        self.assertEqual(
+            sol_1.project_id.account_id,
+            sol_2.project_id.account_id,
+            "As the projects of `sol_1` and `sol_2` were generated, they share the same AA which was created after SO confirmation.",
+        )
+        self.assertEqual(
+            sol_1.analytic_distribution,
+            {str(so.project_id.account_id.id): 100},
+            "The analytic distribution of `sol_1` should be set to the reference AA of the SO.",
+        )
+        self.assertEqual(
+            sol_2.analytic_distribution,
+            {str(so.project_id.account_id.id): 100},
+            "The analytic distribution of `sol_2` should be set to the reference AA of the SO.",
+        )
