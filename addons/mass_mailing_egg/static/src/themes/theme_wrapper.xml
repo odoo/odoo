@@ -10,8 +10,9 @@
     <t t-name="mass_mailing_egg.ThemeWrapper">
         <div class="container o_mail_wrapper o_mail_regular oe_unremovable">
             <div class="row">
-                <!-- TODO data-oe-model guarantees that o_editable class is added, this is bullshit -->
-                <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure" data-oe-model="" t-out="html"/>
+                <!-- TODO EGGMAIL to investigate if correct, but o_mail_wrapper will be responsible for the addition
+                 of o_editable, which is necessary in `setup_editor_plugin` -->
+                <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure" t-out="html"/>
             </div>
         </div>
     </t>
