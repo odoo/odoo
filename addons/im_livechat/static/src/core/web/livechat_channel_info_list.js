@@ -1,7 +1,7 @@
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
-import { Component } from "@odoo/owl";
+import { Component, useEffect } from "@odoo/owl";
 
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
@@ -17,6 +17,18 @@ export class LivechatChannelInfoList extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.ui = useService("ui");
+        useEffect(
+            () => {
+                if (this.props.thread.hasFetchedLivechatSessionData) {
+                    return;
+                }
+                this.store.fetchStoreData("/im_livechat/session/data", {
+                    channel_id: this.props.thread.id,
+                });
+                this.props.thread.hasFetchedLivechatSessionData = true;
+            },
+            () => [this.props.thread.id, this.props.thread.hasFetchedLivechatSessionData]
+        );
     }
 
     onBlurNote() {

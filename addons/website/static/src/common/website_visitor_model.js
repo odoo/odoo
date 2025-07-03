@@ -11,6 +11,7 @@ export class WebsiteVisitor extends Record {
         },
     });
     country_id = fields.One("res.country");
+    discuss_channel_ids = fields.Many("Thread");
     /** @type {string} */
     display_name;
     lang_id = fields.One("res.lang");
