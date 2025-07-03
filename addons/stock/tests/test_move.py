@@ -5715,6 +5715,7 @@ class TestStockMove(TestStockCommon):
         unpacked_ml = picking.move_line_ids.filtered(lambda ml: not ml.result_package_id)
         self.assertEqual(unpacked_ml.quantity_product_uom, 10)
         unpacked_ml.quantity = 10
+
         picking.action_put_in_pack()  # Create a second package
         self.assertEqual(len(picking.move_line_ids), 2)
 

@@ -304,7 +304,6 @@ class TestOldRules(TestStockCommon):
         moveB.picked = True
         picking.action_put_in_pack()
         picking.button_validate()
-        delivery_type.show_entire_packs = True
         picking, _, _ = create_picking(delivery_type, delivery_type.default_location_src_id, customer_location)
         packB = picking.package_level_ids[1]
         picking.package_level_ids_details[0].is_done = True

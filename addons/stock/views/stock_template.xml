@@ -65,13 +65,13 @@
                     <t t-esc="vals['package_name']"/>
                 </li>
             </t>
-            <t t-if="'result_package_name' in vals">
+            <t t-if="'result_package_dest_name' in vals">
                 <li>
                     Destination Package:
                     <t t-if="move.result_package_id">
                         <t t-esc="move.result_package_id.name"/> -&gt;
                     </t>
-                    <t t-esc="vals['result_package_name']"/>
+                    <t t-esc="vals['result_package_dest_name']"/>
                 </li>
             </t>
             <t t-if="'owner_name' in vals">
