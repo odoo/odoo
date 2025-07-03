@@ -7,9 +7,10 @@ import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { startUrl } from "@web/core/browser/router";
+import { TagsList } from "@web/core/tags_list/tags_list";
 
 export class LivechatChannelInfoList extends Component {
-    static components = { ActionPanel };
+    static components = { ActionPanel, TagsList };
     static template = "im_livechat.LivechatChannelInfoList";
     static props = ["thread"];
 
@@ -17,6 +18,17 @@ export class LivechatChannelInfoList extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.ui = useService("ui");
+    }
+
+    get expertiseTags() {
+        return this.props.thread.livechat_expertise_ids.map((expertise) => {
+            return {
+                id: expertise.id,
+                text: expertise.name,
+                colorIndex: 0,
+                className: "me-1 mb-1",
+            };
+        });
     }
 
     onBlurNote() {
