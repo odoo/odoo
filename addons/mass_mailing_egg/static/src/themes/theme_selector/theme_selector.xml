@@ -3,7 +3,7 @@
         <div class="o_mailing_template_preview_wrapper d-inline-block w-100">
             <div t-foreach="favoriteTemplates" t-as="template" t-key="template_index"
                 class="o_mail_template_preview d-inline-block dropdown-item"
-                t-on-click="() => this.onSelectTheme(favorite.html)">
+                t-on-click="() => this.onSelectTheme(template.html)">
                 <div class="text-white d-inline-flex flex-row align-items-center border px-2 py-2 w-100">
                     <i class="fa fa-star text-warning me-2"/>
                     <span class="text-truncate" t-out="template.subject"/>
