@@ -39,10 +39,10 @@ test("should apply font-size to completely selected list item", async () => {
         `),
         stepFunction: setFontSize("64px"),
         contentAfter: unformat(`
-            <ol style="padding-inline-start: 68px;">
+            <ol style="padding-inline-start: 69px;">
                 <li style="font-size: 64px;">[abc</li>
                 <li class="oe-nested">
-                    <ol style="padding-inline-start: 67px;">
+                    <ol style="padding-inline-start: 68px;">
                         <li style="font-size: 64px;">def</li>
                     </ol>
                 </li>
