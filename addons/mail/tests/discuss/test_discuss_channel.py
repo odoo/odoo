@@ -69,7 +69,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                     (self.cr.dbname, "res.partner", self.test_partner.id),
                     (self.cr.dbname, "discuss.channel", test_group.id),
                     (self.cr.dbname, "res.partner", self.partner_employee.id),
-                    (self.cr.dbname, "discuss.channel", test_group.id, "members"),
                     (self.cr.dbname, "discuss.channel", test_group.id),
                     (self.cr.dbname, "discuss.channel", test_group.id),
                 ],
@@ -81,10 +80,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 {"id": test_group.id, "last_interest_dt": "2020-03-22 10:42:06"},
                             ],
                         },
-                    },
-                    {
-                        "type": "mail.record/insert",
-                        "payload": {"discuss.channel": [{"id": test_group.id, "is_pinned": True}]},
                     },
                     {
                         "type": "discuss.channel/new_message",

@@ -474,6 +474,7 @@ class TestActivitySystrayBusNotify(TestActivityCommon):
             (expected_unlink_notif_channels, expected_unlink_notif_message_items),
         ) in zip(users, expected_create_notifs, expected_unlink_notifs):
             user_activity_vals = [vals | {'user_id': user.id} for vals in self.activity_vals]
+            self._reset_bus()
             with self.assertBus(expected_create_notif_channels, expected_create_notif_message_items):
                 activities = self.env['mail.activity'].create(user_activity_vals)
             self._reset_bus()

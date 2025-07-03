@@ -25,6 +25,7 @@ const threadPatch = {
                 return this._computeDiscussAppCategory();
             },
         });
+        this.isBusSubscribed = false;
         this.from_message_id = fields.One("mail.message");
         this.parent_channel_id = fields.One("Thread", {
             onDelete() {
@@ -125,15 +126,21 @@ const threadPatch = {
     },
     onPinStateUpdated() {
         super.onPinStateUpdated();
-        if (this.is_pinned) {
+        if (this.selfMember?.is_pinned) {
             this.isLocallyPinned = false;
         }
         if (this.isLocallyPinned) {
-            this.store.env.services["bus_service"].addChannel(this.busChannel);
+            if (!this.isBusSubscribed) {
+                this.store.env.services["bus_service"].addChannel(this.busChannel);
+                this.isBusSubscribed = true;
+            }
         } else {
-            this.store.env.services["bus_service"].deleteChannel(this.busChannel);
+            if (this.isBusSubscribed) {
+                this.store.env.services["bus_service"].deleteChannel(this.busChannel);
+                this.isBusSubscribed = false;
+            }
         }
-        if (!this.is_pinned && !this.isLocallyPinned) {
+        if (!this.selfMember?.is_pinned && !this.isLocallyPinned) {
             this.sub_channel_ids.forEach((c) => (c.isLocallyPinned = false));
         }
     },

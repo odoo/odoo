@@ -278,6 +278,7 @@ class TestEventNotifications(CalendarMailCommon):
             'duration': 30,
         })
         now = fields.Datetime.now()
+        self._reset_bus()
         with patch.object(fields.Datetime, 'now', lambda: now):
             with self.assertBus([(self.env.cr.dbname, 'res.partner', self.partner.id)], [
                 {
@@ -579,6 +580,7 @@ class TestEventNotifications(CalendarMailCommon):
         })
 
         now = fields.Datetime.now()
+        self._reset_bus()
         with patch.object(fields.Datetime, 'now', lambda: now):
             with self.assertBus([(self.env.cr.dbname, 'res.partner', self.partner.id)], [
                 {

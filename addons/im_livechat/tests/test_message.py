@@ -252,8 +252,6 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                     (self.env.cr.dbname, "discuss.channel", channel.id),
                     # unread counter/new message separator (not asserted below)
                     (self.env.cr.dbname, "res.partner", self.env.user.partner_id.id),
-                    # channel is_pinned (not asserted below)
-                    (self.env.cr.dbname, "discuss.channel", channel.id, "members"),
                     # new_message
                     (self.env.cr.dbname, "discuss.channel", channel.id),
                 ],
@@ -340,6 +338,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                 ],
             )
 
+        self._reset_bus()
         with self.assertBus(get_params=_get_feedback_bus):
             self.make_jsonrpc_request(
                 "/im_livechat/feedback",
