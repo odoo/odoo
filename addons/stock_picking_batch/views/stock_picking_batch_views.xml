@@ -70,7 +70,7 @@
                 <field name="location_id" column_invisible="True"/>
                 <field name="location_dest_id"/>
                 <field name="package_id" groups="stock.group_tracking_lot" column_invisible="True"/>
-                <field name="result_package_id" groups="stock.group_tracking_lot"/>
+                <field name="result_package_id" groups="stock.group_tracking_lot" widget="package_m2o" context="{'show_dest_package': 1}"/>
                 <field name="quantity"/>
                 <field name="product_uom_id" options="{'no_create': True}" widget="many2one_uom"
                     groups="uom.group_uom" readonly="1" force_save="1"/>
@@ -122,6 +122,13 @@
                             class="oe_stat_button" icon="fa-list"
                             invisible="not show_allocation"
                             groups="stock.group_reception_report"/>
+                        <button name="action_see_packages" string="Packages" type="object"
+                            class="oe_stat_button" icon="fa-cubes"
+                            invisible="state == 'done'" groups="stock.group_tracking_lot">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Packages</span>
+                            </div>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <h1><field name="name" class="oe_inline"/></h1>

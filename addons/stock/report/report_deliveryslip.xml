@@ -126,7 +126,7 @@
                                     product + description + uom combinations
                                 2. If any packages are assigned => split products up by package (or non-package) and then apply use case 1 -->
                             <!-- If has destination packages => create sections of corresponding products -->
-                            <t t-if="o.has_packages" name="has_packages">
+                            <t t-if="o.packages_count" name="has_packages">
                                 <t t-set="packages" t-value="o.move_line_ids.mapped('result_package_id')"/>
                                 <t t-foreach="packages" t-as="package">
                                     <t t-call="stock.stock_report_delivery_package_section_line"/>

@@ -12,12 +12,22 @@
                 <h1>
                     <field name="name"/>
                 </h1>
-                <group>
-                    <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location" options="{'no_create': True}"/>
-                </group>
                 <notebook>
+                    <page string="Configuration">
+                        <group>
+                            <group name="identification">
+                                <field name="barcode"/>
+                                <field name="sequence_id" groups="base.group_no_one"/>
+                                <field name="sequence_code"/>
+                                <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location" options="{'no_create': True}"/>
+                            </group>
+                            <group name="delivery">
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                    </page>
                     <page string="Dimensions">
-                        <group name="delivery">
+                        <group>
                             <group>
                                 <label for="length_uom_name" string="Size"/>
                                 <div class="o_row" name="size">
@@ -38,8 +48,6 @@
                                     <field name="max_weight"/>
                                     <span><field name="weight_uom_name"/></span>
                                 </div>
-                                <field name="barcode"/>
-                                <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                             </group>
                         </group>
                     </page>
@@ -70,6 +78,7 @@
             <field name="width"/>
             <field name="packaging_length"/>
             <field name="max_weight"/>
+            <field name="has_quants" optional="show"/>
             <field name="barcode" optional="hide"/>
         </list>
     </field>

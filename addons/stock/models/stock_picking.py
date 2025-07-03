@@ -43,7 +43,8 @@ class StockPickingType(models.Model):
         'stock.picking.type', 'Operation Type for Returns',
         index='btree_not_null',
         check_company=True)
-    show_entire_packs = fields.Boolean('Move Entire Packages', help="If ticked, you will be able to select entire packages to move")
+    show_entire_packs = fields.Boolean('Move Entire Packages', default=False, help="If ticked, you will be able to select entire packages to move")
+    set_package_type = fields.Boolean('Set Package Type', default=False, help="If ticked, you will be able to select which package or package type to use in a put in pack")
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse', compute='_compute_warehouse_id', store=True, readonly=False, ondelete='cascade',
         check_company=True)
@@ -642,12 +643,7 @@ class StockPicking(models.Model):
     )
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
     move_line_ids_without_package = fields.One2many('stock.move.line', 'picking_id', 'Operations without package', domain=['|',('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
-    move_line_exist = fields.Boolean(
-        'Has Pack Operations', compute='_compute_move_line_exist',
-        help='Check the existence of pack operation on the picking')
-    has_packages = fields.Boolean(
-        'Has Packages', compute='_compute_has_packages',
-        help='Check the existence of destination packages on move lines')
+    packages_count = fields.Integer('Packages Count', compute='_compute_packages_count')
     show_check_availability = fields.Boolean(
         compute='_compute_show_check_availability',
         help='Technical field used to compute whether the button "Check Availability" should be displayed.')
@@ -923,16 +919,26 @@ class StockPicking(models.Model):
         for picking in self:
             picking.has_scrap_move = picking._origin in result
 
-    def _compute_move_line_exist(self):
-        for picking in self:
-            picking.move_line_exist = bool(picking.move_line_ids)
+    def _compute_packages_count(self):
+        done_pickings = self.filtered(lambda picking: picking.state == 'done')
+        other_pickings = self - done_pickings
 
-    def _compute_has_packages(self):
-        domain = [('picking_id', 'in', self.ids), ('result_package_id', '!=', False)]
-        cnt_by_picking = self.env['stock.move.line']._read_group(domain, ['picking_id'], ['__count'])
-        cnt_by_picking = {picking.id: count for picking, count in cnt_by_picking}
-        for picking in self:
-            picking.has_packages = bool(cnt_by_picking.get(picking.id, False))
+        packages_by_pick = defaultdict(int)
+        # Cannot _read_group() as picking_ids isn't stored, nor grouped() because multiple pickings per package
+        packages = self.env['stock.package'].search([('picking_ids', 'in', other_pickings.ids)])
+        for pack in packages:
+            for picking in pack.picking_ids:
+                packages_by_pick[picking] += 1
+
+        histories_by_pick = self.env['stock.move.line']._read_group([
+            ('picking_id', 'in', done_pickings.ids), ('picking_id.state', '=', 'done')],
+            ['picking_id'], ['package_history_id:count_distinct'])
+        histories_by_pick = dict(histories_by_pick)
+
+        for picking in done_pickings:
+            picking.packages_count = histories_by_pick.get(picking, 0)
+        for picking in other_pickings:
+            picking.packages_count = packages_by_pick.get(picking, 0)
 
     @api.depends('state', 'move_ids.product_uom_qty', 'picking_type_code')
     def _compute_show_check_availability(self):
@@ -1284,43 +1290,23 @@ class StockPicking(models.Model):
             return False
         return location_dest_ids.id
 
+    def _is_single_transfer(self):
+        # Overriden for batches.
+        return len(self) == 1
+
     def _check_entire_pack(self):
         """ This function check if entire packs are moved in the picking"""
         for package in self.move_line_ids.package_id:
             pickings = self.move_line_ids.filtered(lambda ml: ml.package_id == package).picking_id
-            if pickings._check_move_lines_map_quant_package(package):
-                package_level_ids = pickings.package_level_ids.filtered(lambda pl: pl.package_id == package)
+            if pickings._is_single_transfer() and pickings._check_move_lines_map_quant_package(package):
                 move_lines_to_pack = pickings.move_line_ids.filtered(lambda ml: ml.package_id == package and not ml.result_package_id and ml.state not in ('done', 'cancel'))
-                if not package_level_ids:
-                    if len(pickings) == 1:
-                        package_location = pickings._get_entire_pack_location_dest(move_lines_to_pack) or pickings.location_dest_id.id
-                        self.env['stock.package_level'].create({
-                            'picking_id': pickings.id,
-                            'package_id': package.id,
-                            'location_id': package.location_id.id,
-                            'location_dest_id': package_location,
-                            'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
-                            'company_id': pickings.company_id.id,
-                        })
-                        # Propagate the result package in the next move for disposable packages only.
-                        if package.package_use == 'disposable':
-                            move_lines_to_pack.write({'result_package_id': package.id})
-                else:
-                    move_lines_in_package_level = move_lines_to_pack.filtered(lambda ml: ml.move_id.package_level_id)
-                    move_lines_without_package_level = move_lines_to_pack - move_lines_in_package_level
-                    if package.package_use == 'disposable':
-                        (move_lines_in_package_level | move_lines_without_package_level).result_package_id = package
-                    move_lines_in_package_level.result_package_id = package
-                    for ml in move_lines_in_package_level:
-                        ml.package_level_id = ml.move_id.package_level_id.id
-                    move_lines_without_package_level.package_level_id = package_level_ids[0].id
-
-                    for pl in package_level_ids:
-                        pl.location_dest_id = pickings._get_entire_pack_location_dest(pl.move_line_ids) or pickings.location_dest_id.id
-                    for move in move_lines_to_pack.move_id:
-                        if all(line.package_level_id for line in move.move_line_ids) \
-                                and len(move.move_line_ids.package_level_id) == 1:
-                            move.package_level_id = move.move_line_ids.package_level_id
+                if package.package_type_id.package_use != 'reusable':
+                    move_lines_to_pack.write({
+                        'result_package_id': package.id,
+                        'is_entire_pack': True,
+                    })
+        # If we move all packages within a package, we can consider that they keep their container as well
+        self.move_line_ids.result_package_id._apply_package_dest_for_entire_packs()
 
     def _get_lot_move_lines_for_sanity_check(self, none_done_picking_ids, separate_pickings=True):
         """ Get all move_lines with tracked products that need to be checked over in the sanity check.
@@ -1754,10 +1740,10 @@ class StockPicking(models.Model):
 
         return _explore(self.env['stock.picking'], self.env['stock.move'], moves)
 
-    def action_put_in_pack(self):
+    def action_put_in_pack(self, *, package_id=False, package_type_id=False, package_name=False):
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
-            return self.move_line_ids.action_put_in_pack()
+            return self.move_line_ids.action_put_in_pack(package_id=package_id, package_type_id=package_type_id, package_name=package_name)
 
     @api.model
     def get_action_click_graph(self):
@@ -1895,6 +1881,21 @@ class StockPicking(models.Model):
             'target': 'new',
         }
 
+    def action_add_entire_packs(self, packages):
+        self.ensure_one()
+        if self.state not in ('done', 'cancel'):
+            all_packages = self.env['stock.package'].search([('id', 'child_of', packages.ids)])
+            all_package_ids = set(all_packages.ids)
+            # Remove existing move lines that already pulled from these packages, as using them fully now.
+            self.move_line_ids.filtered(lambda ml: ml.package_id.id in all_package_ids).unlink()
+            move_line_vals = self._prepare_entire_pack_move_line_vals(all_packages)
+            pack_move_lines = self.env['stock.move.line'].create(move_line_vals)
+            pack_move_lines._apply_putaway_strategy()
+            # Need to set the right package dest for now fully contained packages
+            self.move_line_ids.result_package_id._apply_package_dest_for_entire_packs()
+            return True
+        return False
+
     def action_see_move_scrap(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_scrap")
@@ -1905,11 +1906,33 @@ class StockPicking(models.Model):
 
     def action_see_packages(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_package_view")
-        packages = self.move_line_ids.mapped('result_package_id')
-        action['domain'] = [('id', 'in', packages.ids)]
-        action['context'] = {'picking_id': self.id}
-        return action
+        return {
+            'name': self.env._("Packages"),
+            'res_model': 'stock.package',
+            'view_mode': 'list,kanban,form',
+            'views': [(self.env.ref('stock.stock_package_view_list_editable').id, 'list'), (False, 'kanban'), (False, 'form')],
+            'type': 'ir.actions.act_window',
+            'domain': [('picking_ids', 'in', self.ids)],
+            'context': {
+                'picking_id': self.id,
+                'show_entire_packs': self.picking_type_id.show_entire_packs,
+                'search_default_main_packages': True,
+            },
+        }
+
+    def action_see_package_histories(self):
+        self.ensure_one()
+        return {
+            'name': self.env._("Packages"),
+            'res_model': 'stock.package.history',
+            'view_mode': 'list',
+            'views': [(False, 'list')],
+            'type': 'ir.actions.act_window',
+            'domain': [('picking_ids', '=', self.id)],
+            'context': {
+                'search_default_main_packages': 1,
+            },
+        }
 
     def action_picking_move_tree(self):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_action")
@@ -2060,3 +2083,25 @@ class StockPicking(models.Model):
     def _can_return(self):
         self.ensure_one()
         return self.state == 'done'
+
+    def _prepare_entire_pack_move_line_vals(self, packages):
+        """ Prepares the move line values for every packages within packages and their children that contain products.
+        """
+        self.ensure_one()
+        move_line_vals = []
+        for package_quant in packages.quant_ids:
+            move_line_vals.append({
+                'product_id': package_quant.product_id.id,
+                'quantity': package_quant.quantity,
+                'product_uom_id': package_quant.product_uom_id.id,
+                'location_id': package_quant.location_id.id,
+                'location_dest_id': self.location_dest_id.id,
+                'picking_id': self.id,
+                'company_id': self.id,
+                'package_id': package_quant.package_id.id,
+                'result_package_id': package_quant.package_id.id,
+                'lot_id': package_quant.lot_id.id,
+                'owner_id': package_quant.owner_id.id,
+                'is_entire_pack': True,
+            })
+        return move_line_vals
