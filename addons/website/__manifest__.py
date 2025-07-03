@@ -341,9 +341,6 @@
             'website/static/src/scss/website.backend.dark.scss',
             'website/static/src/components/website_loader/website_loader.dark.scss'
         ],
-        'web.qunit_suite_tests': [
-            'website/static/tests/redirect_field_tests.js',
-        ],
         'web.assets_unit_tests': [
             'web/static/src/legacy/js/public/minimal_dom.js',
             'website/static/src/client_actions/website_preview/website_builder_action_test_mode.js',
@@ -352,6 +349,7 @@
             'website/static/tests/interactions/**/*',
             'website/static/tests/builder/**/*',
             'website/static/tests/mock_server/**/*',
+            'website/static/tests/redirect_field.test.js',
         ],
         'web.assets_unit_tests_setup': [
             'web/static/src/legacy/js/core/class.js',
