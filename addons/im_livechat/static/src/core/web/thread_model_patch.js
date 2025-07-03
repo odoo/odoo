@@ -9,6 +9,7 @@ import { patch } from "@web/core/utils/patch";
 patch(Thread.prototype, {
     setup() {
         super.setup();
+        this.hasFetchedLivechatSessionData = false;
         this.livechat_status = undefined;
         this.livechat_note = fields.Html();
         this.livechatNoteText = fields.Attr(undefined, {
