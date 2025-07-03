@@ -81,7 +81,7 @@ export class PosOrder extends Base {
     }
 
     get company() {
-        return this.models["res.company"].getFirst();
+        return this.config.company_id;
     }
 
     get config() {

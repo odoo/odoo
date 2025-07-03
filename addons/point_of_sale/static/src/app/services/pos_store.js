@@ -371,7 +371,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     get company() {
-        return this.data.models["res.company"].getFirst();
+        return this.config.company_id;
     }
 
     async processServerData() {
@@ -1392,7 +1392,10 @@ export class PosStore extends WithLazyGetterTrap {
             }
 
             if (error instanceof ConnectionLostError) {
-                console.warn("Offline mode active, order will be synced later");
+                console.info(
+                    "%cOffline mode active, order will be synced later",
+                    "color: red; font-weight: bold;"
+                );
             } else {
                 this.deviceSync.readDataFromServer();
             }
@@ -2255,7 +2258,6 @@ export class PosStore extends WithLazyGetterTrap {
      * Close other tabs that contain the same pos session.
      */
     closeOtherTabs() {
-        // FIXME POSREF use the bus?
         localStorage["message"] = "";
         localStorage["message"] = JSON.stringify({
             message: "close_tabs",

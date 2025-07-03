@@ -29,7 +29,7 @@ function rpcErrorHandler(env, error, originalError) {
         return true;
     }
 }
-registry.category("error_handlers").add("rpcErrorHandler", rpcErrorHandler);
+registry.category("error_handlers").add("pos-rpcErrorHandler", rpcErrorHandler);
 
 export function offlineErrorHandler(env, error, originalError) {
     if (originalError instanceof ConnectionLostError) {
@@ -47,7 +47,7 @@ export function offlineErrorHandler(env, error, originalError) {
         return true;
     }
 }
-registry.category("error_handlers").add("offlineErrorHandler", offlineErrorHandler);
+registry.category("error_handlers").add("pos-offlineErrorHandler", offlineErrorHandler);
 
 function defaultErrorHandler(env, error, originalError) {
     if (error instanceof Error) {
@@ -64,4 +64,4 @@ function defaultErrorHandler(env, error, originalError) {
 }
 registry
     .category("error_handlers")
-    .add("defaultErrorHandler", defaultErrorHandler, { sequence: 99 });
+    .add("pos-defaultErrorHandler", defaultErrorHandler, { sequence: 99 });
