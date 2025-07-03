@@ -46,6 +46,8 @@ class MrpBom(models.Model):
         'uom.uom', 'Unit',
         default=_get_default_product_uom_id, required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control")
+    component_qty = fields.Float('Component Quantity', compute='_compute_component_qty_and_uom')
+    component_uom_id = fields.Many2one('uom.uom', 'Component UoM', compute='_compute_component_qty_and_uom')
     sequence = fields.Integer('Sequence')
     operation_ids = fields.One2many('mrp.routing.workcenter', 'bom_id', 'Operations', copy=True)
     ready_to_produce = fields.Selection([
@@ -102,6 +104,44 @@ class MrpBom(models.Model):
     def _compute_possible_product_template_attribute_value_ids(self):
         for bom in self:
             bom.possible_product_template_attribute_value_ids = bom.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids._only_active()
+
+    @api.depends('bom_line_ids')
+    @api.depends_context('filter_bom_components_by', 'bom_component_id')
+    def _compute_component_qty_and_uom(self):
+        filter_bom_components_by = self.env.context.get('filter_bom_components_by', False)
+        bom_component_id = self.env.context.get('bom_component_id', False)
+        for bom in self:
+            if filter_bom_components_by == 'product_id':
+                bom_lines = bom.bom_line_ids.filtered(
+                    lambda bl: bl.product_id.id == bom_component_id
+                )
+            elif filter_bom_components_by == 'product_tmpl_id':
+                bom_lines = bom.bom_line_ids.filtered(
+                    lambda bl: bl.product_tmpl_id.id == bom_component_id
+                )
+            else:
+                bom_lines = []
+
+            if bom_lines:
+                if len(bom_lines.mapped('product_uom_id')) == 1:
+                    bom.component_uom_id = bom_lines.mapped('product_uom_id')
+                    bom.component_qty = sum(bom_lines.mapped('product_qty'))
+                else:
+                    # In case of multiple UoMs in BoM lines: use the product's UoM
+                    if filter_bom_components_by == 'product_id':
+                        default_uom = bom_lines.product_id.uom_id
+                    elif filter_bom_components_by == 'product_tmpl_id':
+                        default_uom = bom_lines.product_tmpl_id.uom_id
+
+                    bom.component_uom_id = default_uom
+                    # Recalculate each line's quantity based on it's UoM
+                    bom.component_qty = sum(
+                        bl.product_qty * bl.product_uom_id.factor / default_uom.factor
+                        for bl in bom_lines
+                    )
+            else:
+                bom.component_qty = 0
+                bom.component_uom_id = False
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
