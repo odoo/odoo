@@ -105,14 +105,31 @@ export class AddPageTemplatePreview extends Component {
                     iframeEl.contentDocument.body.onload = resolve;
                 });
             }
+            const mainIframe = document.querySelector(".o_iframe_container iframe:last-child");
+            const styleSheets = [...mainIframe.contentDocument.styleSheets];
             // Apply styles.
             for (const cssLinkEl of await this.env.getCssLinkEls()) {
-                const preloadLinkEl = document.createElement("link");
-                preloadLinkEl.setAttribute("rel", "preload");
-                preloadLinkEl.setAttribute("href", cssLinkEl.getAttribute("href"));
-                preloadLinkEl.setAttribute("as", "style");
-                iframeEl.contentDocument.head.appendChild(preloadLinkEl);
-                iframeEl.contentDocument.head.appendChild(cssLinkEl.cloneNode(true));
+                const sheet = styleSheets.find(s => s.href === cssLinkEl.href);
+                if (sheet) {
+                    let cssText = "";
+                    try {
+                        for (const rule of sheet.cssRules) {
+                        cssText += rule.cssText + "\n";
+                        }
+                    } catch (e) {
+                        console.warn("Cannot access cssRules (likely CORS issue):", e);
+                    }
+                    const style = iframeEl.contentDocument.createElement("style");
+                    style.textContent = cssText;
+                    iframeEl.contentDocument.head.appendChild(style);
+                } else {
+                    const preloadLinkEl = document.createElement("link");
+                    preloadLinkEl.setAttribute("rel", "preload");
+                    preloadLinkEl.setAttribute("href", cssLinkEl.getAttribute("href"));
+                    preloadLinkEl.setAttribute("as", "style");
+                    iframeEl.contentDocument.head.appendChild(preloadLinkEl);
+                    iframeEl.contentDocument.head.appendChild(cssLinkEl.cloneNode(true));
+                }
             }
             // Adjust styles.
             const styleEl = document.createElement("style");
