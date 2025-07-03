@@ -2,7 +2,7 @@ from datetime import date, datetime
 from itertools import combinations
 
 from odoo.fields import Command, Domain
-from odoo.tests import TransactionCase
+from odoo.tests import TransactionCase, users
 from odoo.tools import SQL, OrderedSet
 
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
@@ -929,3 +929,16 @@ class TestDomainOptimize(TransactionCase):
         domain = Domain('foo', '=', 4) | Domain('foo', '=', 5)
         domain = domain.optimize(bar, full=True)
         self.assertEqual(domain, Domain('name', 'in', OrderedSet(['(4, 5)'])))
+
+    @users('admin')  # just so it's not SUPERUSER to be able to de-escalate su.
+    def test_bypass_comodel_id_lookup(self):
+        model = self.env['test_orm.mixed']
+        expected_domain_by_su = [
+            (True, [('currency_id', 'in', [2])]),
+            (False, [('currency_id', 'any', [('id', 'in', [2])])]),
+        ]
+        for is_sudo, expected_domain in expected_domain_by_su:
+            self.assertEqual(
+                list(Domain('currency_id.id', '=', 2).optimize(model.sudo(is_sudo), full=True)),
+                expected_domain
+            )
