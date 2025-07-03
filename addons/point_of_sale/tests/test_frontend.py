@@ -1746,7 +1746,31 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'taxes_id': False,
                 'available_in_pos': True,
             },
+            {
+                'name': 'galaxy',
+                'list_price': 100,
+                'taxes_id': False,
+                'available_in_pos': True,
+            },
         ])
+
+        att_color = self.env['product.attribute'].create({'name': 'Color', 'sequence': 1})
+
+        att_color_values = self.env['product.attribute.value'].create([
+            {'name': 'galaxy variant', 'attribute_id': att_color.id, 'sequence': 1},
+            {'name': 'blue', 'attribute_id': att_color.id, 'sequence': 2},
+            ])
+
+        self.env['product.template'].create({
+            'name': 'Test Product variant',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': att_color.id,
+                    'value_ids': [Command.set(att_color_values.mapped('id'))],
+                }),
+            ],
+            'available_in_pos': True,
+        })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductSearchTour', login="pos_user")

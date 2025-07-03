@@ -2472,8 +2472,14 @@ export class PosStore extends WithLazyGetterTrap {
             return this.sortByWordIndex(exactMatches, words);
         }
 
-        const matches = products.filter((p) =>
-            unaccent(p.searchString, false).toLowerCase().includes(words)
+        const matches = products.filter(
+            (p) =>
+                unaccent(p.searchString, false).toLowerCase().includes(words) ||
+                p.product_variant_ids.some((variant) =>
+                    variant.product_template_variant_value_ids.some((vv) =>
+                        unaccent(vv.name, false).toLowerCase().includes(words)
+                    )
+                )
         );
 
         return this.sortByWordIndex(Array.from(new Set([...exactMatches, ...matches])), words);

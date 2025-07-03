@@ -542,6 +542,12 @@ registry.category("web_tour.tours").add("ProductSearchTour", {
             ProductScreen.searchProduct("TESTPROD2"),
             ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
             ProductScreen.productIsDisplayed("Test Product 2"),
+            ProductScreen.searchProduct("galaxy"),
+            ProductScreen.productIsDisplayed("galaxy"),
+            ProductScreen.productIsDisplayed("Test Product variant"),
+            ProductScreen.searchProduct("galaxy variant"),
+            ProductScreen.productIsDisplayed("galaxy").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product variant"),
         ].flat(),
 });
 registry.category("web_tour.tours").add("SortOrderlinesByCategories", {
