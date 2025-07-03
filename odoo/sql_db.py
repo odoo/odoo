@@ -264,6 +264,9 @@ class BaseCursor(_CursorProtocol):
     def now(self) -> datetime:
         """ Return the transaction's timestamp ``NOW() AT TIME ZONE 'UTC'``. """
         if self._now is None:
+            if os.getenv('ODOO_FAKETIME_MODE'):
+                self._now = datetime.now()
+                return self._now
             self.execute("SELECT (now() AT TIME ZONE 'UTC')")
             row = self.fetchone()
             assert row
