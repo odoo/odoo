@@ -582,6 +582,10 @@ class StockMoveLine(models.Model):
     def _sorting_move_lines(self):
         return (self.id,)
 
+    def _exclude_requiring_lot(self):
+        self.ensure_one()
+        return self.move_id.picking_type_id or self.is_inventory or self.lot_id or self.move_id.scrap_id
+
     def _action_done(self):
         """ This method is called during a move's `action_done`. It'll actually move a quant from
         the source location to the destination location, and unreserve if needed in the source
@@ -618,7 +622,7 @@ class StockMoveLine(models.Model):
                 if ml.product_id.tracking == 'none':
                     continue
                 picking_type_id = ml.move_id.picking_type_id
-                if not picking_type_id and not ml.is_inventory and not ml.lot_id and not ml.move_id.scrap_id:
+                if not ml._exclude_requiring_lot():
                     ml_ids_tracked_without_lot.add(ml.id)
                     continue
                 if not picking_type_id or ml.lot_id or (not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots):
