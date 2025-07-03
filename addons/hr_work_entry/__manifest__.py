@@ -1,4 +1,3 @@
-#-*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -17,6 +16,7 @@
         'data/ir_cron_data.xml',
         'views/hr_work_entry_views.xml',
         'views/hr_employee_views.xml',
+        'views/hr_contract_template_views.xml',
         'views/resource_calendar_views.xml',
         'wizard/hr_work_entry_regeneration_wizard_views.xml',
     ],

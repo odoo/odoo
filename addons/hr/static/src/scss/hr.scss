@@ -71,6 +71,14 @@
     }
 }
 
+.o_hr_percentage_narrow_field input {
+    max-width: 8rem !important;
+    width: 8rem !important;
+    * {
+        max-width: 100%;
+    }
+}
+
 @for $size from 1 through 15 {
     .o_hr_narrow_field-#{$size} {
         width: #{$size}rem!important;
