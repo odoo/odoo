@@ -21,7 +21,7 @@ patch(Thread.prototype, {
         const channel_notifications =
             this.selfMember?.custom_notifications || this.store.settings.channel_notifications;
         if (
-            !this.mute_until_dt &&
+            !this.selfMember?.mute_until_dt &&
             !this.store.self.im_status.includes("busy") &&
             (this.channel_type !== "channel" ||
                 (this.channel_type === "channel" &&

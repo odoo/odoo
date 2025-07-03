@@ -264,7 +264,6 @@ export class Thread extends Record {
     canPostOnReadonly;
     /** @type {Boolean} */
     is_editable;
-    mute_until_dt = fields.Datetime();
     /** @type {Boolean} */
     isLocallyPinned = fields.Attr(false, {
         onUpdate() {
@@ -319,10 +318,6 @@ export class Thread extends Record {
 
     get isUnread() {
         return this.needactionMessages.length > 0;
-    }
-
-    get isMuted() {
-        return this.mute_until_dt;
     }
 
     get typesAllowingCalls() {

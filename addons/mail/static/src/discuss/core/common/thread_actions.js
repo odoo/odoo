@@ -64,12 +64,12 @@ threadActionsRegistry
         },
         component: NotificationSettings,
         icon(component) {
-            return component.thread.isMuted
+            return component.thread.selfMember?.mute_until_dt
                 ? "fa fa-fw text-danger fa-bell-slash"
                 : "fa fa-fw fa-bell";
         },
         iconLarge(component) {
-            return component.thread.isMuted
+            return component.thread.selfMember?.mute_until_dt
                 ? "fa fa-fw fa-lg text-danger fa-bell-slash"
                 : "fa fa-fw fa-lg fa-bell";
         },
@@ -188,8 +188,9 @@ threadActionsRegistry
     })
     .add("mark-read", {
         condition: (component) =>
-            component.thread?.selfMember?.message_unread_counter > 0 &&
-            !component.thread?.mute_until_dt,
+            component.thread?.selfMember &&
+            component.thread.selfMember.message_unread_counter > 0 &&
+            !component.thread.selfMember.mute_until_dt,
         open: (component) => component.thread.markAsRead(),
         icon: "fa fa-fw fa-check",
         iconLarge: "fa fa-lg fa-fw fa-check",
