@@ -8,6 +8,12 @@ import {
 } from "./utils";
 import { Base } from "./base";
 
+// It allows us to track which fields have been dynamically added to the model.
+// This is usefull to avoid conflicts during Hoot tests, where the model class prototype
+// is shared across multiple tests, and we want to ensure that dynamic fields are not
+// redefined or conflict with existing properties.
+const INITIALIZED_CLASSES = new Set();
+
 /**
  * Processes model definitions to dynamically define getter and setter properties
  * on model fields, providing controlled access to the raw data.
@@ -15,10 +21,19 @@ import { Base } from "./base";
 export function processModelClasses(modelDefs, modelClasses = {}) {
     const modelNames = new Set(Object.keys(modelDefs));
     for (const modelName of modelNames) {
+        if (INITIALIZED_CLASSES.has(modelName)) {
+            continue; // Skip already initialized classes in the registry
+        }
+
         const fields = modelDefs[modelName];
         const ModelRecordClass = modelClasses[modelName] || class ModelRecord extends Base {};
-        modelClasses[modelName] = ModelRecordClass;
         const excludedLazyGetters = [];
+
+        if (modelClasses[modelName]) {
+            INITIALIZED_CLASSES.add(modelName);
+        }
+
+        modelClasses[modelName] = ModelRecordClass;
 
         for (const fieldName in fields) {
             const field = fields[fieldName];

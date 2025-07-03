@@ -1,10 +1,13 @@
 import { defineModels, MockServer, models } from "@web/../tests/web_test_helpers";
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
+import { baseData } from "./base_data";
+import { ResUsers } from "@web/../tests/_framework/mock_server/mock_models/res_users";
 
 export const modelsToLoad = [
     "pos.config",
     "pos.session",
-    "pos.preset",
     "resource.calendar.attendance",
+    "pos.preset",
     "pos.order",
     "pos.order.line",
     "pos.pack.operation.lot",
@@ -42,11 +45,13 @@ export const modelsToLoad = [
     "res.currency",
     "pos.note",
     "product.tag",
+    "account.move",
     "ir.module.module",
 ];
 
 export class PosSession extends models.ServerModel {
     _name = "pos.session";
+    _orderRef = 1;
 
     _load_pos_data_fields() {
         return [
@@ -63,6 +68,42 @@ export class PosSession extends models.ServerModel {
             "access_token",
         ];
     }
+
+    load_data_params() {
+        const data = getPosModelDefinitions();
+        const formattedData = {};
+        for (const [name, values] of Object.entries(data.fields)) {
+            formattedData[name] = {
+                fields: values,
+                relations: data.relations[name],
+            };
+        }
+        return formattedData;
+    }
+
+    load_data() {
+        return baseData;
+    }
+
+    filter_local_data() {
+        return {};
+    }
+
+    get_next_order_refs(login_number = 0, ref_prefix = "", tracking_prefix = "") {
+        const sequence_num = ++this._orderRef;
+
+        const now = new Date();
+        const YY = now.getFullYear().toString().slice(-2);
+        const LL = String(login_number % 100).padStart(2, "0");
+        const SSS = String(this.id).padStart(3, "0");
+        const F = 0;
+        const OOOO = String(sequence_num).padStart(4, "0");
+        const order_ref = ref_prefix
+            ? `${ref_prefix} ${YY}${LL}-${SSS}-${F}${OOOO}`
+            : `${YY}${LL}-${SSS}-${F}${OOOO}`;
+
+        return [order_ref, sequence_num, tracking_prefix + String(sequence_num).padStart(3, "0")];
+    }
 }
 
 export class PosConfig extends models.ServerModel {
@@ -70,6 +111,21 @@ export class PosConfig extends models.ServerModel {
 
     _load_pos_data_fields() {
         return [];
+    }
+
+    read_config_open_orders() {
+        return {
+            dynamic_records: {},
+            deleted_record_ids: {},
+        };
+    }
+}
+
+export class AccountMove extends models.ServerModel {
+    _name = "account.move";
+
+    _load_pos_data_fields() {
+        return ["id"];
     }
 }
 
@@ -412,7 +468,7 @@ export class ProductComboItem extends models.ServerModel {
     }
 }
 
-export class ResUsers extends models.ServerModel {
+export class PosResUsers extends ResUsers {
     _name = "res.users";
 
     _load_pos_data_fields() {
@@ -606,7 +662,12 @@ export class IrModuleModule extends models.ServerModel {
     }
 }
 
+export class ResourceCalendar extends models.ServerModel {
+    _name = "resource.calendar";
+}
+
 export const posModels = [
+    AccountMove,
     PosSession,
     PosConfig,
     PosPreset,
@@ -631,7 +692,7 @@ export const posModels = [
     ProductTemplateAttributeExclusion,
     ProductCombo,
     ProductComboItem,
-    ResUsers,
+    PosResUsers,
     ResPartner,
     ProductUom,
     DecimalPrecision,
@@ -651,7 +712,12 @@ export const posModels = [
     IrModuleModule,
 ];
 
+// PoS models
 defineModels(posModels);
+// Extra models for relations
+defineModels([ResourceCalendar]);
+// Define mail models
+defineMailModels();
 
 const prepareModelDefinitionObjects = () =>
     modelsToLoad.reduce((acc, modelName) => {
@@ -676,6 +742,7 @@ export const getPosModelDefinitions = () => {
             const field = allFields[fieldName];
 
             if (!field) {
+                console.debug(`Field ${fieldName} not found in model ${model._name}`);
                 continue;
             }
 

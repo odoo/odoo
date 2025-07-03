@@ -5,6 +5,7 @@ import { makeMockServer } from "@web/../tests/web_test_helpers";
 
 const { DateTime } = luxon;
 
+describe.current.tags("pos");
 describe("Dirty record", () => {
     test("field update", async () => {
         await makeMockServer();

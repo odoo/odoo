@@ -2,6 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { getRelatedModelsInstance } from "../data/get_model_definitions";
 import { makeMockServer } from "@web/../tests/web_test_helpers";
 
+describe.current.tags("pos");
 describe("models with backlinks", () => {
     describe("many2one and one2many field relations to other models", () => {
         test("create operation", async () => {

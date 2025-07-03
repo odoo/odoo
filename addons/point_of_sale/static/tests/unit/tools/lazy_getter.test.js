@@ -139,6 +139,7 @@ class Root extends Component {
     `;
 }
 
+test.tags("pos");
 test("each getter should only be called once and only when needed", async () => {
     patchWithCleanup(AppStore.prototype, {
         get ab() {
@@ -193,6 +194,7 @@ test("each getter should only be called once and only when needed", async () => 
     verifyUnorderedSteps(["cd"]);
 });
 
+test.tags("pos");
 test("only dependent components rerender", async () => {
     patchWithCleanup(WithStore.prototype, {
         onWillRender() {
@@ -229,6 +231,7 @@ test("only dependent components rerender", async () => {
     verifyUnorderedSteps(["d", "cd"]);
 });
 
+test.tags("pos");
 test("only dependent getters are called and in correct order", () => {
     patchWithCleanup(AppStore.prototype, {
         get ab() {
@@ -301,6 +304,7 @@ test("only dependent getters are called and in correct order", () => {
     verifyUnorderedSteps(["cd", "y"], [["cd", "y"]]);
 });
 
+test.tags("pos");
 test("dynamically creates a lazy getter", () => {
     class DemoClass extends WithLazyGetterTrap {
         constructor(params = {}) {
