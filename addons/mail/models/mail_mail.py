@@ -724,6 +724,9 @@ class MailMail(models.Model):
                     mail.id, mail.message_id)
                 # mail status will stay on ongoing since transaction will be rollback
                 raise
+            except (psycopg2.errors.InFailedSqlTransaction, psycopg2.errors.SerializationFailure) as e:
+                _logger.warning("Mail could not be sent due to follow error: \n%s", str(e))
+                self.env.cr.rollback()
             except (psycopg2.Error, smtplib.SMTPServerDisconnected):
                 # If an error with the database or SMTP session occurs, chances are that the cursor
                 # or SMTP session are unusable, causing further errors when trying to save the state.
@@ -772,6 +775,9 @@ class MailMail(models.Model):
                     raise
 
             if auto_commit is True:
-                self._cr.commit()
+                try:
+                    self._cr.commit()
+                except psycopg2.errors.SerializationFailure as e:
+                    _logger.warning(str(e))
             mail.invalidate_recordset(['body_html'])
         return True
