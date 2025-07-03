@@ -5,6 +5,7 @@ import { Component, onMounted, useEffect, useExternalListener, useRef, useState 
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 export class MessageReactionMenu extends Component {
     static props = ["close", "message", "initialReaction?"];
@@ -58,5 +59,16 @@ export class MessageReactionMenu extends Component {
 
     getEmojiShortcode(reaction) {
         return this.store.emojiLoader.loaded?.emojiValueToShortcodes?.[reaction.content][0] ?? "?";
+    }
+
+    get contentClass() {
+        const attClass = {
+            "o-mail-MessageReactionMenu h-50 d-flex": true,
+            "position-absolute bottom-0": this.store.useMobileView,
+        };
+        return Object.entries(attClass)
+            .filter(([classNames, value]) => value)
+            .map(([classNames]) => classNames)
+            .join(" ");
     }
 }
