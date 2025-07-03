@@ -1,10 +1,11 @@
 import { useNativeDraggable } from "@html_editor/utils/drag_and_drop";
-import { childNodeIndex, endPos } from "@html_editor/utils/position";
+import { childNodeIndex, endPos, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
 import { xml } from "@odoo/owl";
 import { Plugin } from "../plugin";
 import { closestElement } from "../utils/dom_traversal";
 import { _t } from "@web/core/l10n/translation";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
+import { getDeepestPosition, isContentEditable } from "@html_editor/utils/dom_info";
 
 const WIDGET_CONTAINER_WIDTH = 25;
 const WIDGET_MOVE_SIZE = 20;
@@ -267,9 +268,27 @@ export class MoveNodePlugin extends Plugin {
         this.services.tooltip.add(this.moveWidget, {
             template: xml`
                 <div class="o-tooltip tooltip-inner text-start px-3">
-                    ${_t("Drag to move")}
+                    ${_t("Drag to move")}<br/>
+                    ${_t("Click to select")}
                 </div>`,
             arrow: true,
+        });
+
+        this.addDomListener(this.moveWidget, "click", () => {
+            const isNodeContentEditable = isContentEditable(movableElement);
+            const [anchorNode, anchorOffset] = isNodeContentEditable
+                ? getDeepestPosition(movableElement, 0)
+                : leftPos(movableElement);
+            const [focusNode, focusOffset] = isNodeContentEditable
+                ? getDeepestPosition(movableElement, nodeSize(movableElement))
+                : rightPos(movableElement);
+            this.dependencies.selection.setSelection({
+                anchorNode,
+                anchorOffset,
+                focusNode,
+                focusOffset,
+            });
+            this.dependencies.selection.focusEditable();
         });
 
         if (this.scrollableElement) {

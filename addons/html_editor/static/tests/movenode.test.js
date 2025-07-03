@@ -1,9 +1,12 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { hover } from "@odoo/hoot-dom";
+import { hover, click } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
-import { setupEditor } from "./_helpers/editor";
+import { base64Img, setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
+import { unformat } from "./_helpers/format";
+import { expectElementCount } from "./_helpers/ui_expectations";
+import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 describe.current.tags("desktop");
 
@@ -31,6 +34,30 @@ test("should show the hook when hovering the second P", async () => {
     await hover(el.querySelector("p:last-child"));
     expect(".oe-sidewidget-move").toHaveCount(1);
     expect(".oe-sidewidget-move").toHaveRect({ top: 37, left: 5 });
+});
+test("should show the hook when hovering a signature", async () => {
+    const { el } = await setupEditor(
+        `<p>ab</p><div class="o-signature-container"><h1>Hello[]</h1></div><p>cd</p>`,
+        { styleContent: styles }
+    );
+    await hover(el.querySelector(".o-signature-container"));
+    expect(".oe-sidewidget-move").toHaveCount(1);
+});
+test("should show the hook when hovering a figure element", async () => {
+    const { el } = await setupEditor(
+        `<figure>
+            <img class="img-fluid test-image" src="${base64Img}">
+            <figcaption>Hello</figcaption>
+        </figure>`,
+        {
+            config: {
+                Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
+            },
+            styleContent: styles,
+        }
+    );
+    await hover(el.querySelector("figure"));
+    expect(".oe-sidewidget-move").toHaveCount(1);
 });
 test("should not show the hook when hovering a DIV which is not a baseContainer", async () => {
     const { el } = await setupEditor(`<p>a[]</p><div class="oe_unbreakable"><br></div><p>b</p>`, {
@@ -245,5 +272,98 @@ describe("drag", () => {
         expect(getContent(el)).toBe(
             `<p>a[]</p><div class="oe_unbreakable"><br></div><div class="o-paragraph">d</div><p>b</p><p>c</p>`
         );
+    });
+});
+
+describe("click", () => {
+    test("should select the text when clicked on a hook", async () => {
+        const { el } = await setupEditor(`<p>some text</p><p>[]other text</p>`, {
+            styleContent: styles,
+        });
+        await animationFrame();
+        const firstP = el.querySelector("p");
+        await hover(firstP);
+        await animationFrame();
+        expect(".oe-sidewidget-move").toHaveCount(1);
+        await click(".oe-sidewidget-move");
+        await animationFrame();
+        expect(getContent(el)).toBe(`<p>[some text]</p><p>other text</p>`);
+        await expectElementCount(".o-we-toolbar", 1);
+    });
+
+    test("should select the table when clicked on a hook", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><p>[]<br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><br></p>
+            `),
+            {
+                styleContent: styles,
+            }
+        );
+        await animationFrame();
+        const firstTable = el.querySelector("table");
+        await hover(firstTable);
+        await animationFrame();
+        expect(".oe-sidewidget-move").toHaveCount(1);
+        await click(".oe-sidewidget-move");
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <table class="o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td"><p>[<br></p></td>
+                            <td class="o_selected_td"><p><br></p></td>
+                            <td class="o_selected_td"><p>]<br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><br></p>
+            `)
+        );
+        await expectElementCount(".o-we-toolbar", 1);
+    });
+
+    test("should select a non-editable element completely when clicked on a hook", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<p>abc</p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                    <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                    <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
+                        <p>Some</p>
+                        <p>text[]</p>
+                    </div>
+                </div><p>def</p>`
+            ),
+            { styleContent: styles }
+        );
+        await animationFrame();
+        const banner = el.querySelector(".o_editor_banner");
+        await hover(banner);
+        await animationFrame();
+        expect(".oe-sidewidget-move").toHaveCount(1);
+        await click(".oe-sidewidget-move");
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p>abc</p>[<div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                    <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                    <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
+                        <p>Some</p>
+                        <p>text</p>
+                    </div>
+                </div>]<p>def</p>
+            `)
+        );
+        await expectElementCount(".o-we-toolbar", 1);
     });
 });

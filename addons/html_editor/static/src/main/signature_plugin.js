@@ -35,6 +35,7 @@ export class SignaturePlugin extends Plugin {
         is_empty_predicates: this.isEmpty.bind(this),
         unsplittable_node_predicates: (host) =>
             host.nodeType === Node.ELEMENT_NODE && host.matches(`.${SIGNATURE_CLASS}`),
+        move_node_whitelist_selectors: `.${SIGNATURE_CLASS}`,
     };
 
     cleanSignatures({ rootClone }) {
