@@ -46,3 +46,27 @@ class TestWebsiteEventTrack(TestEventOnlineCommon, HttpCase):
                 ]).mail_ids.filtered(lambda m: m.email_to == (user.email or "visitor@odoo.com"))
                 # Check that a mail with track reminders has been created with the submitted email address.
                 self.assertEqual(len(mails), 1)
+
+    def test_compute_is_one_day(self):
+        """Ensure is_one_day is False when both date and date_end are missing."""
+        track = self.env['event.track'].create({
+            'name': 'Track Without Dates',
+            'event_id': self.event_0.id,
+        })
+        self.assertFalse(track.is_one_day, "Expected Is One Day to be False when no date is set.")
+        self.assertTrue(track.name, "Track name should be correctly set.")
+        self.assertTrue(track.event_id, "Track should be linked to the correct event.")
+
+    def test_compute_track_time_data(self):
+        """Test that _compute_track_time_data sets defaults when no date or date_end is set."""
+        track = self.env['event.track'].create({
+            'name': 'Track Without Date Info',
+            'event_id': self.event_0.id,
+        })
+        self.assertFalse(track.is_track_live, "Track should not be live without date.")
+        self.assertFalse(track.is_track_soon, "Track should not be marked as soon without date.")
+        self.assertFalse(track.is_track_today, "Track should not be marked as today without date.")
+        self.assertFalse(track.is_track_upcoming, "Track should not be upcoming without date.")
+        self.assertFalse(track.is_track_done, "Track should not be done without date.")
+        self.assertEqual(track.track_start_relative, 0, "Track start relative should be 0.")
+        self.assertEqual(track.track_start_remaining, 0, "Track start remaining should be 0.")
