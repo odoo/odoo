@@ -25,24 +25,26 @@
                                        domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
                             </div>
                             <field name="resource_calendar_id"/>
+                            <field name="hr_responsible_id" widget="many2one_avatar_user" groups="hr.group_hr_user"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Salary Information" name="information" class="o_hr_contract_salary_information">
+                            <field name="currency_id" invisible="1"/> <!-- for monetary field-->
                             <group name="salary_info">
-                                <group name="salary">
-                                    <label for="wage"/>
-                                    <div class="o_row mw-50" name="wage">
+                                <group name="salary_left">
+                                    <label for="wage" groups="hr.group_hr_user"/>
+                                    <div class="o_row" name="wage" groups="hr.group_hr_user">
                                         <field name="wage" class="oe_inline o_hr_narrow_field" nolabel="1"/>
-                                        <div class="mb-3" name="wage_period_label">/ month</div>
+                                        <div name="wage_period_label">/ month</div>
                                     </div>
+                                </group>
+                                <group name="salary_right">
                                 </group>
                             </group>
                         </page>
                         <page string="Details" name="other" groups="hr.group_hr_manager">
-                            <group name="contract_details_0"/>
-                            <group name="contract_details" col="2"/>
-                            <group name="contract_details_2"/>
+                            <group name="other"/>
                         </page>
                     </notebook>
                 </sheet>
