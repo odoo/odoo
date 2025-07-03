@@ -114,6 +114,7 @@ export class SnippetModel extends Reactive {
                     this.updateSnippetContent(newSnippetEl);
                 },
                 installSnippetModule: editor.config.installSnippetModule,
+                editor,
             },
             { onClose }
         );

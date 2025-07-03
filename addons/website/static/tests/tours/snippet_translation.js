@@ -125,3 +125,29 @@ registerWebsitePreviewTour(
         },
     ]
 );
+registerWebsitePreviewTour(
+    "snippet_dialog_rtl",
+    {
+        url: "/",
+    },
+    () => [
+        ...clickOnEditAndWaitEditMode(),
+        {
+            trigger: ".o_builder_sidebar_open",
+        },
+        {
+            content: "Select a category snippet to show the snippet dialog",
+            trigger: `.o_block_tab:not(.o_we_ongoing_insertion) #snippet_groups .o_snippet[name="Intro"].o_draggable .o_snippet_thumbnail_area`,
+            run: "click",
+        },
+        {
+            content: "Check that the snippets preview is in rtl",
+            trigger: ":iframe .o_snippets_preview_row[dir=rtl]",
+        },
+        {
+            content: "Check that web.assets_frontend CSS bundle is in rtl",
+            trigger:
+                ":iframe link[type='text/css'][href*='/web.assets_frontend.rtl']:not(:visible)",
+        },
+    ],
+);

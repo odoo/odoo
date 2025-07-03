@@ -1,5 +1,5 @@
 import { Component, onMounted, onWillUnmount, onWillRender, useRef, useState } from "@odoo/owl";
-import { loadBundle } from "@web/core/assets";
+import { loadBundle, loadCSS } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
 import { localization } from "@web/core/l10n/localization";
@@ -14,6 +14,7 @@ export class AddSnippetDialog extends Component {
         snippetModel: { type: Object },
         close: { type: Function },
         installSnippetModule: { type: Function },
+        editor: { type: Object },
     };
 
     setup() {
@@ -35,6 +36,7 @@ export class AddSnippetDialog extends Component {
             },
             snippetModel: this.props.snippetModel,
             installSnippetModule: this.props.installSnippetModule,
+            frontendDirection: this.props.editor.editable.classList.contains("o_rtl") ? "rtl" : "ltr",
         };
 
         let root;
@@ -57,13 +59,7 @@ export class AddSnippetDialog extends Component {
             });
             root.mount(iframeDocument.body);
 
-            await Promise.all([
-                loadBundle("web.assets_frontend", { targetDoc: iframeDocument, js: false }),
-                loadBundle("html_builder.iframe_add_dialog", {
-                    targetDoc: iframeDocument,
-                    js: false,
-                }),
-            ]);
+            await this.insertStyle();
             this.state.showIframe = true;
         });
 
@@ -76,6 +72,28 @@ export class AddSnippetDialog extends Component {
         onWillUnmount(() => {
             root.destroy();
         });
+    }
+
+    /**
+     * Loads and injects the required styles into the iframe's <head>.
+     * The URL for web.assets_frontend CSS bundle is retrieved from the editor
+     * document to ensure consistency, especially when using the RTL version.
+     */
+    async insertStyle() {
+        const loadCSSBundleFromEditor = (bundleName, loadOptions) => {
+            const cssLinkEl = this.props.editor.document.head
+                .querySelector(`link[type="text/css"][href*="/${bundleName}."]`);
+            if (cssLinkEl) {
+                return loadCSS(cssLinkEl.getAttribute("href"), loadOptions);
+            }
+            return loadBundle(bundleName, loadOptions);
+        };
+
+        const loadOptions = { targetDoc: this.iframeRef.el.contentDocument, js: false };
+        await Promise.all([
+            loadCSSBundleFromEditor("web.assets_frontend", loadOptions),
+            loadBundle("html_builder.iframe_add_dialog", loadOptions),
+        ]);
     }
 
     get snippetGroups() {
