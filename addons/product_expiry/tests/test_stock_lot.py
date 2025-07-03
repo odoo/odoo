@@ -301,14 +301,14 @@ class TestStockLot(TestStockCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = partner
         picking_form.picking_type_id = self.picking_type_in
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.apple_product
             move.product_uom_qty = 4
         receipt = picking_form.save()
         receipt.action_confirm()
 
         # Defines a date during the receipt.
-        move_form = Form(receipt.move_ids_without_package, view="stock.view_stock_move_operations")
+        move_form = Form(receipt.move_ids, view="stock.view_stock_move_operations")
         with move_form.move_line_ids.edit(0) as line:
             line.lot_name = 'Apple Box #2'
             line.expiration_date = expiration_date
@@ -349,14 +349,14 @@ class TestStockLot(TestStockCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = partner
         picking_form.picking_type_id = self.picking_type_in
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.apple_product
             move.quantity = 4
             move.picked = True
         receipt = picking_form.save()
 
         # Defines a date during the receipt.
-        move = receipt.move_ids_without_package[0]
+        move = receipt.move_ids[0]
         line = move.move_line_ids[0]
         self.assertEqual(move.use_expiration_date, True)
         line.lot_name = 'Apple Box #3'
@@ -405,14 +405,14 @@ class TestStockLot(TestStockCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = partner
         picking_form.picking_type_id = self.picking_type_out
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.apple_product
             move.product_uom_qty = 4
         # Saves and confirms it...
         delivery_1 = picking_form.save()
         delivery_1.action_confirm()
         # ... then create a move line with the non-expired lot and valids the picking.
-        delivery_1.move_line_ids_without_package = [(5, 0), (0, 0, {
+        delivery_1.move_line_ids = [(5, 0), (0, 0, {
             'company_id': self.env.company.id,
             'location_id': delivery_1.move_ids.location_id.id,
             'location_dest_id': delivery_1.move_ids.location_dest_id.id,
@@ -430,7 +430,7 @@ class TestStockLot(TestStockCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = partner
         picking_form.picking_type_id = self.picking_type_out
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.apple_product
             move.product_uom_qty = 8
         # Saves and confirms it...
@@ -438,7 +438,7 @@ class TestStockLot(TestStockCommon):
         delivery_2.action_confirm()
         # ... then create a move line for the non-expired lot and for an expired
         # lot and valids the picking.
-        delivery_2.move_line_ids_without_package = [(5, 0), (0, 0, {
+        delivery_2.move_line_ids = [(5, 0), (0, 0, {
             'company_id': self.env.company.id,
             'location_id': delivery_2.move_ids.location_id.id,
             'location_dest_id': delivery_2.move_ids.location_dest_id.id,
@@ -465,14 +465,14 @@ class TestStockLot(TestStockCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = partner
         picking_form.picking_type_id = self.picking_type_out
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.apple_product
             move.product_uom_qty = 4
         # Saves and confirms it...
         delivery_3 = picking_form.save()
         delivery_3.action_confirm()
         # ... then create two move lines with expired lot and valids the picking.
-        delivery_3.move_line_ids_without_package = [(5, 0), (0, 0, {
+        delivery_3.move_line_ids = [(5, 0), (0, 0, {
             'company_id': self.env.company.id,
             'location_id': delivery_3.move_ids.location_id.id,
             'location_dest_id': delivery_3.move_ids.location_dest_id.id,
@@ -644,7 +644,7 @@ class TestStockLot(TestStockCommon):
 
         with Form(self.PickingObj) as picking_form:
             picking_form.picking_type_id = self.picking_type_out
-            with picking_form.move_ids_without_package.new() as move:
+            with picking_form.move_ids.new() as move:
                 move.product_id = self.apple_product
                 move.product_uom_qty = 10
             picking_out = picking_form.save()
@@ -667,7 +667,7 @@ class TestStockLot(TestStockCommon):
         picking_form.scheduled_date = new_date
         picking_form.picking_type_id = self.picking_type_in
 
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = self.apple_product
             move.product_uom_qty = 4
         delivery = picking_form.save()

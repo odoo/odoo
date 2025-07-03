@@ -41,11 +41,11 @@ class StockPicking(models.Model):
         for picking in self:
             picking.carrier_tracking_url = picking.carrier_id.get_tracking_link(picking) if picking.carrier_id and picking.carrier_tracking_ref else False
 
-    @api.depends('carrier_id', 'move_ids_without_package')
+    @api.depends('carrier_id', 'move_ids')
     def _compute_return_picking(self):
         for picking in self:
             if picking.carrier_id and picking.carrier_id.can_generate_return:
-                picking.is_return_picking = any(m.origin_returned_move_id for m in picking.move_ids_without_package)
+                picking.is_return_picking = any(m.origin_returned_move_id for m in picking.move_ids)
             else:
                 picking.is_return_picking = False
 

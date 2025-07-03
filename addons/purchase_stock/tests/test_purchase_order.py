@@ -539,13 +539,13 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         po.button_confirm()
         picking = po.picking_ids
         self.assertEqual(po.state, "purchase")
-        self.assertEqual(picking.move_line_ids_without_package.location_dest_id.id, sub_loc_01.id)
-        picking.move_line_ids_without_package.write({'quantity': 1})
+        self.assertEqual(picking.move_line_ids.location_dest_id.id, sub_loc_01.id)
+        picking.move_line_ids.write({'quantity': 1})
         picking.move_ids.write({'picked': True})
         res_dict = picking.button_validate()
         self.env[res_dict['res_model']].with_context(res_dict['context']).process()
         backorder = picking.backorder_ids
-        self.assertEqual(backorder.move_line_ids_without_package.location_dest_id.id, sub_loc_01.id)
+        self.assertEqual(backorder.move_line_ids.location_dest_id.id, sub_loc_01.id)
 
     def test_inventory_adjustments_with_po(self):
         """ check that the quant created by a PO can be applied in an inventory adjustment correctly """

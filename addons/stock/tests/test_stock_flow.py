@@ -1952,15 +1952,15 @@ class TestStockFlow(TestStockCommon):
 
         f = Form(self.env['stock.picking'], view='stock.view_picking_form')
         f.picking_type_id = warehouse_company_1.out_type_id
-        with f.move_ids_without_package.new() as move:
+        with f.move_ids.new() as move:
             move.product_id = product_from_company_2
             move.product_uom_qty = 5
-        with f.move_ids_without_package.new() as move:
+        with f.move_ids.new() as move:
             move.product_id = product_from_company_3
             move.product_uom_qty = 5
         picking = f.save()
 
-        picking.move_ids_without_package.write({'procure_method': 'make_to_order'})
+        picking.move_ids.write({'procure_method': 'make_to_order'})
         picking.action_confirm()
 
         incoming_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_2.id), ('picking_type_id', '=', warehouse_company_1.in_type_id.id)])
@@ -1993,7 +1993,7 @@ class TestStockFlow(TestStockCommon):
             })
         f = Form(picking, view='stock.view_picking_form')
         f.partner_id = partner
-        with f.move_ids_without_package.new() as move:
+        with f.move_ids.new() as move:
             move.product_id = product
             move.product_uom_qty = 5
         f.scheduled_date = fields.Datetime.now()
@@ -2062,7 +2062,7 @@ class TestStockFlow(TestStockCommon):
         # Creates two receipts using some lot names in common.
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.picking_type_in
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = product_lot
             move.product_uom_qty = 8
         receipt_1 = picking_form.save()
@@ -2083,7 +2083,7 @@ class TestStockFlow(TestStockCommon):
 
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.picking_type_in
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = product_lot
             move.product_uom_qty = 8
         receipt_2 = picking_form.save()
@@ -2130,7 +2130,7 @@ class TestStockFlow(TestStockCommon):
             'picking_type_id':  self.picking_type_in.id,
         })
         picking_form = Form(picking)
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = product_serial
             move.product_uom_qty = 2
         receipt_1 = picking_form.save()
@@ -2149,7 +2149,7 @@ class TestStockFlow(TestStockCommon):
             'picking_type_id': self.picking_type_in.id,
             })
         picking_form = Form(picking)
-        with picking_form.move_ids_without_package.new() as move:
+        with picking_form.move_ids.new() as move:
             move.product_id = product_serial
             move.product_uom_qty = 2
         receipt_2 = picking_form.save()
@@ -2292,7 +2292,7 @@ class TestStockFlow(TestStockCommon):
         f = Form(self.env['stock.picking'])
         f.partner_id = partner_1
         f.picking_type_id = wh.out_type_id
-        with f.move_ids_without_package.new() as move:
+        with f.move_ids.new() as move:
             move.product_id = product
             move.product_uom_qty = 5
         picking = f.save()
@@ -2366,7 +2366,7 @@ class TestStockFlow(TestStockCommon):
 
         receipt_form = Form(self.env['stock.picking'])
         receipt_form.picking_type_id = self.picking_type_in
-        with receipt_form.move_ids_without_package.new() as move_line:
+        with receipt_form.move_ids.new() as move_line:
             move_line.product_id = self.productA
         receipt = receipt_form.save()
 
@@ -2504,7 +2504,7 @@ class TestStockFlow(TestStockCommon):
 
         receipt_form = Form(self.env['stock.picking'])
         receipt_form.picking_type_id = self.picking_type_in
-        with receipt_form.move_ids_without_package.new() as move:
+        with receipt_form.move_ids.new() as move:
             move.product_id = self.productA
         receipt = receipt_form.save()
         receipt.action_confirm()

@@ -447,7 +447,6 @@ class StockForecasted_Product_Product(models.AbstractModel):
         move_ids = move_id.browse(move_id._rollup_move_origs()).filtered(lambda m: m.state not in ['draft', 'cancel', 'done'])
         if move_ids:
             move_ids._do_unreserve()
-            move_ids.picking_id.package_level_ids.filtered(lambda p: not p.move_ids).unlink()
         return move_ids
 
 
