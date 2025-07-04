@@ -4,6 +4,7 @@ import { isRemovable } from "./remove_plugin";
 import { isClonable } from "./clone_plugin";
 import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builderOptions";
@@ -44,6 +45,12 @@ export class BuilderOptionsPlugin extends Plugin {
             //     reasons.push(`I hate ${el.dataset.name}`);
             // }
         ],
+        reveal_target_handlers: withSequence(100, ({ newTarget }) => {
+            // Scroll to the target if not visible.
+            if (!isElementInViewport(newTarget)) {
+                newTarget.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }),
     };
 
     setup() {
@@ -325,6 +332,7 @@ export class BuilderOptionsPlugin extends Plugin {
      */
     restoreContainers(revertedStep, mode) {
         if (revertedStep && revertedStep.extraStepInfos.currentTarget) {
+            const oldTarget = this.target;
             let targetEl = revertedStep.extraStepInfos.currentTarget;
             // If the step was supposed to activate another target, activate
             // this one instead.
@@ -332,10 +340,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 targetEl = revertedStep.extraStepInfos.nextTarget;
             }
             this.updateContainers(targetEl, { forceUpdate: true });
-            // Scroll to the target if not visible.
-            if (!isElementInViewport(targetEl)) {
-                targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
-            }
+            this.dispatchTo("reveal_target_handlers", { oldTarget, newTarget: targetEl });
         }
     }
 

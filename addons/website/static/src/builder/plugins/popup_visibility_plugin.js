@@ -1,15 +1,17 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 
 export class PopupVisibilityPlugin extends Plugin {
     static id = "popupVisibilityPlugin";
-    static dependencies = ["visibility"];
+    static dependencies = ["visibility", "history"];
     static shared = ["onTargetShow", "onTargetHide"];
 
     resources = {
         target_show: this.onTargetShow.bind(this),
         target_hide: this.onTargetHide.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
+        reveal_target_handlers: this.invisibleWithoutTarget.bind(this),
     };
 
     setup() {
@@ -23,6 +25,25 @@ export class PopupVisibilityPlugin extends Plugin {
                 this.dependencies.visibility.onOptionVisibilityUpdate(popupEl, false);
             }
         });
+        const history = this.dependencies.history;
+        this.unpatchModal = this.window.Modal // null in tests without loadAssetsFrontendJS
+            ? patch(this.window.Modal.prototype, {
+                  _hideModal() {
+                      return history.ignoreDOMMutations(() => super._hideModal());
+                  },
+                  show() {
+                      return history.ignoreDOMMutations(() => super.show());
+                  },
+                  hide() {
+                      return history.ignoreDOMMutations(() => super.hide());
+                  },
+              })
+            : () => {};
+    }
+
+    destroy() {
+        super.destroy();
+        this.unpatchModal();
     }
 
     onTargetShow(target) {
@@ -48,6 +69,16 @@ export class PopupVisibilityPlugin extends Plugin {
             modalEl.classList.remove("show");
             this.window.Modal.getOrCreateInstance(modalEl)._hideModal();
             this.window.Modal.getInstance(modalEl).dispose();
+        }
+    }
+
+    invisibleWithoutTarget({ oldTarget, newTarget }) {
+        if (newTarget && oldTarget) {
+            const popupEl = oldTarget.closest(".s_popup:not([data-invisible])");
+            if (popupEl && !popupEl.contains(newTarget)) {
+                this.onTargetHide(popupEl);
+                this.dependencies.visibility.onOptionVisibilityUpdate(popupEl, false);
+            }
         }
     }
 }
