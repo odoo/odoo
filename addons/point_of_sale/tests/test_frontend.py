@@ -2368,6 +2368,46 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user",
         )
 
+    def test_paid_order_with_archived_product_loads(self):
+        """ Test that a paid order with archived products can be loaded in the POS. """
+
+        archived_product = self.env['product.product'].create({
+            'name': 'Archived Product',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'taxes_id': False,
+            'active': False,  # Archived product
+        })
+
+        self.env['pos.order'].create({
+            'config_id': self.main_pos_config.id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'company_id': self.main_pos_config.company_id.id,
+            'amount_total': 10.0,
+            'amount_paid': 10.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            'partner_id': False,
+            'pricelist_id': self.main_pos_config.pricelist_id.id,
+            'pos_reference': '1000-004-00002',
+            'name': 'Order 0002',
+            'state': 'paid',
+            'lines': [(0, 0, {
+                'name': 'Line 0001',
+                'product_id': archived_product.id,
+                'price_unit': 10.00,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': False,
+                'price_subtotal': 10.00,
+                'price_subtotal_incl': 10.00,
+            })],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_paid_order_with_archived_product_loads', login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
