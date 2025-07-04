@@ -92,8 +92,7 @@ test("input with classAction and styleAction", async () => {
                 <div class="test-options-target">10</div>
             `);
     await contains(":iframe .test-options-target").click();
-    await click(".options-container input");
-    await fill(2);
+    await contains(".options-container input").edit("2");
     expect(":iframe .test-options-target").toHaveStyle({
         "--custom-property": "2",
     });
@@ -181,8 +180,8 @@ describe("default value", () => {
 
         await clear();
         await click(".options-container");
-        expect("[data-action-id='customAction'] input").toHaveValue("");
-        expect(":iframe .test-options-target").toHaveInnerHTML("");
+        expect("[data-action-id='customAction'] input").toHaveValue("0");
+        expect(":iframe .test-options-target").toHaveInnerHTML("0");
     });
     test("clear BuilderNumberInput with default value", async () => {
         addActionOption({
@@ -211,6 +210,41 @@ describe("default value", () => {
         await click(".options-container");
         expect("[data-action-id='customAction'] input").toHaveValue("1");
         expect(":iframe .test-options-target").toHaveInnerHTML("1");
+    });
+    test("clear BuilderNumberInput with null default value", async () => {
+        addActionOption({
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerText;
+                }
+                apply({ editingElement, value }) {
+                    editingElement.innerText = value;
+                    if (value === null) {
+                        editingElement.innerText = "10";
+                    }
+                }
+            },
+        });
+        addOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" default="null"/>`,
+        });
+        await setupWebsiteBuilder(`
+                    <div class="test-options-target">10</div>
+                `);
+        await contains(":iframe .test-options-target").click();
+        await click("[data-action-id='customAction'] input");
+        expect("[data-action-id='customAction'] input").toHaveValue(10);
+
+        await contains("[data-action-id='customAction'] input").edit("5");
+        expect(":iframe .test-options-target").toHaveInnerHTML("5");
+
+        await clear();
+        await click(".options-container");
+        await animationFrame();
+        expect(":iframe .test-options-target").toHaveInnerHTML("10");
+        expect("[data-action-id='customAction'] input").toHaveValue("10");
     });
 });
 describe("operations", () => {
@@ -429,6 +463,7 @@ describe("keyboard triggers", () => {
         await setupWebsiteBuilder(`<div class="test-options-target">Non empty div.</div>`);
         await contains(":iframe .test-options-target").click();
         await click("[data-action-id='customAction'] input");
+        await clear();
         expect("[data-action-id='customAction'] input").toHaveValue("");
 
         await contains("[data-action-id='customAction'] input").keyDown("ArrowUp");
@@ -454,6 +489,7 @@ describe("keyboard triggers", () => {
         await setupWebsiteBuilder(`<div class="test-options-target">Non empty div.</div>`);
         await contains(":iframe .test-options-target").click();
         await click("[data-action-id='customAction'] input");
+        await clear();
         expect("[data-action-id='customAction'] input").toHaveValue("");
 
         await contains("[data-action-id='customAction'] input").keyDown("ArrowDown");
@@ -748,7 +784,7 @@ describe("sanitized values", () => {
         `);
         await contains(":iframe .test-options-target").click();
         await contains(".options-container input").edit(" a&$*+>");
-        expect(".options-container input").toHaveValue("");
+        expect(".options-container input").toHaveValue("0");
         expect(":iframe .test-options-target").not.toHaveAttribute("data-number");
     });
     test("after copy / pasting, displayed value is cleaned to match only numbers", async () => {
