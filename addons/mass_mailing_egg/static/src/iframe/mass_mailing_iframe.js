@@ -164,6 +164,9 @@ export class MassMailingIframe extends Component {
             }
         };
         this.throttledResize = useThrottleForAnimation(() => {
+            if (status(this) === "destroyed") {
+                return;
+            }
             iframeResize();
             sidebarResize();
         });
