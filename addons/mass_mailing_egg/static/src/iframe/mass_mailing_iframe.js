@@ -30,10 +30,10 @@ export class MassMailingIframe extends Component {
     };
     static props = {
         config: { type: Object },
-        themeOptions: { type: Object },
-        onIframeLoad: { type: Function },
-        iframeRef: { type: Function },
-        showThemeSelector: { type: Boolean },
+        themeOptions: { type: Object, optional: true },
+        iframeRef: { type: Function, optional: true },
+        showThemeSelector: { type: Boolean, optional: true },
+        onIframeLoad: { type: Function, optional: true },
         showCodeView: { type: Boolean, optional: true },
         toggleCodeView: { type: Function, optional: true },
         readonly: { type: Boolean, optional: true },
@@ -42,6 +42,7 @@ export class MassMailingIframe extends Component {
     };
     static defaultProps = {
         onEditorLoad: () => {},
+        themeOptions: {},
     };
 
     setup() {
@@ -191,7 +192,7 @@ export class MassMailingIframe extends Component {
             this.iframeRef.el.removeAttribute("is-ready");
         });
         this.iframeLoaded.resolve(this.iframeRef.el);
-        this.props.onIframeLoad(this.iframeLoaded);
+        this.props.onIframeLoad?.(this.iframeLoaded);
         this.state.ready = true;
     }
 
@@ -271,7 +272,6 @@ export class MassMailingIframe extends Component {
                 getExternalScrollableAncestor,
             },
             // codeView => make it an available option in the builder (optional), only in debug?
-            // getThemeTab => provide DesignTab
             // Plugins => provide plugins selection, properly filter excluded Plugins
             isMobile: false, // TODO EGGMAIL: investigate, is it the mobile display feature or the current page state
             toggleMobile: () => {}, // TODO EGGMAIL: is it the mobile display feature?
