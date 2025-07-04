@@ -116,6 +116,14 @@ export class PosOrder extends Base {
         return this.models["pos.order"].getBy("uuid", this.uiState.splittedOrderUuid);
     }
 
+    get presetDate() {
+        return this.preset_time?.toFormat(localization.dateFormat) || "";
+    }
+
+    get isFutureDate() {
+        return this.preset_time?.startOf("day") > DateTime.now().startOf("day");
+    }
+
     get presetTime() {
         return this.preset_time && this.preset_time.isValid
             ? this.preset_time.toFormat("HH:mm")
