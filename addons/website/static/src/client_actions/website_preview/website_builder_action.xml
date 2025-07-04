@@ -6,6 +6,7 @@
         <div class="o_website_preview border-top flex-grow-1" t-ref="website_preview">
             <div class="o_iframe_container">
                 <iframe t-if="!testMode" t-att-src="iframeFallbackUrl"
+                    class="o_ignore_in_tour"
                     t-ref="iframefallback"/>
                 <iframe t-att-src="initialUrl" t-ref="iframe" t-on-load="onIframeLoad" />
                 <div t-if="this.websiteContext.isMobile" class="o_mobile_preview_layout">
