@@ -254,6 +254,19 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                             this.pos.get_order().add_orderline(splitted_line);
                             remaining_quantity -= splitted_line.quantity;
                         }
+                    } else if (new_line.get_product().tracking == "lot") {
+                        for (const lot of line.lot_names) {
+                            const splitted_line = new Orderline({ env: this.env }, line_values);
+                            splitted_line.set_quantity(line.lot_qty_by_name[lot] || 0, true);
+                            splitted_line.set_unit_price(line.price_unit);
+                            splitted_line.set_discount(line.discount);
+                            splitted_line.setPackLotLines({
+                                modifiedPackLotLines: [],
+                                newPackLotLines: [{ lot_name: lot }],
+                                setQuantity: false,
+                            });
+                            this.pos.get_order().add_orderline(splitted_line);
+                        }
                     } else {
                         this.pos.get_order().add_orderline(new_line);
                     }
