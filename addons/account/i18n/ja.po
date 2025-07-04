@@ -6,8 +6,8 @@
 # 764374359f7a865bd0df682e21e54552_335e00f <6548f6be8d222d7d28a3e8d58aa819d1_1128047>, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2025
-# Junko Augias, 2025
 # Wil Odoo, 2025
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-27 02:30+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2048,7 +2048,7 @@ msgstr "アクション"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate to create purchase receipt"
-msgstr "有効にして購買領収書を作成します"
+msgstr "有効にして仕入受領書を作成します"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10805,12 +10805,12 @@ msgstr "支払QRコード"
 #. module: account
 #: model:ir.actions.report,name:account.action_report_payment_receipt
 msgid "Payment Receipt"
-msgstr "領収書"
+msgstr "入金領収書"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Receipt:"
-msgstr "領収書"
+msgstr "入金領収書:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
@@ -11340,7 +11340,7 @@ msgstr "プロダクト"
 #. module: account
 #: model:account.account,name:account.1_to_receive_rec
 msgid "Products to receive"
-msgstr "受け取るプロダクト"
+msgstr "未受領プロダクト"
 
 #. module: account
 #. odoo-javascript
@@ -11366,7 +11366,7 @@ msgstr "購買"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 #: model:res.groups,name:account.group_purchase_receipts
 msgid "Purchase Receipt"
-msgstr "購買領収書"
+msgstr "仕入受領書"
 
 #. module: account
 #. odoo-python
@@ -11679,7 +11679,7 @@ msgstr "銀行取引明細書の登録"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
 msgid "Register a new purchase receipt"
-msgstr "新規購買領収書を登録"
+msgstr "新規仕入受領書を登録"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_payments
@@ -16081,7 +16081,9 @@ msgstr "キャリーオーバーの対象となる式を指定する場合、そ
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
-msgstr "購買領収書が確認されると、この領収書に関連する顧客支払を記録できるようになります。"
+msgstr ""
+"仕入受領書が確定すると、この仕入受領書に関連する\n"
+"                仕入先への支払を記録することができます。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_receipt_type
