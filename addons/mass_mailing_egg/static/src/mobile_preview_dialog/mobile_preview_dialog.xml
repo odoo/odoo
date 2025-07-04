@@ -1,0 +1,16 @@
+<templates>
+    <t t-name="mass_mailing_egg.MobilePreviewDialog">
+        <Dialog bodyClass="'o_mailing_mobile_preview'">
+            <t t-set-slot="header">
+                <div class="d-flex align-items-center justify-content-between flex w-100 cursor-pointer" t-on-click="toggle">
+                    <h4 class="d-flex align-items-center justify-content-start">
+                        <span class="modal-title text-break" t-out="props.title"/>
+                        <span class="fa fa-refresh ms-3"/>
+                    </h4>
+                    <button class="btn btn-close" aria-label="Close" t-on-click="props.close"/>
+                </div>
+            </t>
+            <t t-component="props.IframeComponent" readonly="true" config="this.config" iframeRef="iframeRef" extraClass="'w-100'"/>
+        </Dialog>
+    </t>
+</templates>

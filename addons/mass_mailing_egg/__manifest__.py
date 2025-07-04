@@ -51,6 +51,7 @@
         'web.assets_backend': [
             'mass_mailing_egg/static/src/fields/**/*',
             'mass_mailing_egg/static/src/themes/**/*',
+            'mass_mailing_egg/static/src/mobile_preview_dialog/**/*',
             'mass_mailing_egg/static/src/iframe/**/*',
         ],
         'web.assets_unit_tests': [

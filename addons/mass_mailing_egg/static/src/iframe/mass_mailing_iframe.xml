@@ -1,7 +1,8 @@
 <templates>
     <t t-name="mass_mailing_egg.MassMailingIframe">
         <div class="o_mass_mailing_iframe_wrapper bg-200"
-            t-att-class="{'o_mass_mailing_fullscreen': state.showFullscreen}">
+            t-att-class="{'o_mass_mailing_fullscreen': state.showFullscreen}"
+            t-attf-class="#{props.extraClass}">
             <div class="d-flex w-100 h-100">
                 <div class="flex-grow-1">
                     <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
