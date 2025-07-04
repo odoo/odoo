@@ -173,3 +173,9 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         }
     }
 }
+
+.modal-open:has(.o_block_tab) {
+    .o_snippet {
+        z-index: 1056;
+    }
+}
