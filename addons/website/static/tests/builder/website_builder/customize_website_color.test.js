@@ -48,6 +48,7 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     expect.step("set preset");
     await contains("button.o_we_color_preview").click();
     await contains("button[data-color='o_cc4'").click();
+    await animationFrame();
     expect.verifySteps([
         "set preset",
         '/website/static/src/scss/options/colors/user_color_palette.scss {"test":4}',
@@ -59,6 +60,7 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     await contains("button.o_we_color_preview").click();
     await contains("button.custom-tab").click();
     await contains("button[data-color='400']").click();
+    await animationFrame();
     expect.verifySteps([
         "set solid color",
         '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"#CED4DA"}',
@@ -70,6 +72,7 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     expect.step("set preset on solid color");
     await contains("button.o_we_color_preview").click();
     await contains("button[data-color='o_cc3'").click();
+    await animationFrame();
     expect.verifySteps([
         "set preset on solid color",
         '/website/static/src/scss/options/colors/user_color_palette.scss {"test":3}',
@@ -81,6 +84,7 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     await contains("button.o_we_color_preview").click();
     await contains("button.gradient-tab").click();
     await contains("button.o_gradient_color_button").click();
+    await animationFrame();
     expect.verifySteps([
         "set gradient",
         '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"NULL"}',
@@ -92,6 +96,7 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     expect.step("set preset on gradient");
     await contains("button.o_we_color_preview").click();
     await contains("button[data-color='o_cc4'").click();
+    await animationFrame();
     expect.verifySteps([
         "set preset on gradient",
         '/website/static/src/scss/options/colors/user_color_palette.scss {"test":4}',
@@ -102,6 +107,7 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     expect.step("reset");
     await contains("button.o_we_color_preview").click();
     await contains(".o_font_color_selector .fa-trash").click();
+    await animationFrame();
     expect.verifySteps([
         "reset",
         '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"NULL","test":"NULL"}',
