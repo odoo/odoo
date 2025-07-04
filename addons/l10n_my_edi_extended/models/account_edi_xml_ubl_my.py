@@ -76,7 +76,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             counterpart_amls = payment_terms.matched_debit_ids.debit_move_id + payment_terms.matched_credit_ids.credit_move_id
             counterpart_move_type = 'out_invoice' if invoice.move_type == 'out_refund' else 'out_refund'
             has_payments = bool(counterpart_amls.move_id.filtered(lambda move: move.move_type != counterpart_move_type))
-            is_paid = invoice.payment_state == invoice.payment_state in ('in_payment', 'paid', 'reversed')
+            is_paid = invoice.payment_state in ('in_payment', 'paid', 'reversed')
             if is_paid and has_payments:
                 code = '04' if invoice.move_type == 'out_refund' else '14'
             else:
