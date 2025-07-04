@@ -863,42 +863,6 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             'rounding': rounding,
         })
 
-    def group_of_taxes(self, taxes, **kwargs):
-        self.number += 1
-        return self.env['account.tax'].create({
-            **kwargs,
-            'name': f"group_({self.number})",
-            'amount_type': 'group',
-            'children_tax_ids': [Command.set(taxes.ids)],
-        })
-
-    def percent_tax(self, amount, **kwargs):
-        self.number += 1
-        return self.env['account.tax'].create({
-            **kwargs,
-            'name': f"percent_{amount}_({self.number})",
-            'amount_type': 'percent',
-            'amount': amount,
-        })
-
-    def division_tax(self, amount, **kwargs):
-        self.number += 1
-        return self.env['account.tax'].create({
-            **kwargs,
-            'name': f"division_{amount}_({self.number})",
-            'amount_type': 'division',
-            'amount': amount,
-        })
-
-    def fixed_tax(self, amount, **kwargs):
-        self.number += 1
-        return self.env['account.tax'].create({
-            **kwargs,
-            'name': f"fixed_{amount}_({self.number})",
-            'amount_type': 'fixed',
-            'amount': amount,
-        })
-
     @contextmanager
     def with_tax_calculation_rounding_method(self, rounding_method):
         self.env.company.tax_calculation_rounding_method = rounding_method
