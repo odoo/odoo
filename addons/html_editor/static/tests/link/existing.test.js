@@ -8,85 +8,85 @@ import { contains } from "@web/../tests/_framework/dom_test_helpers";
 
 test("should parse correctly a span inside a Link", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="exist"><span class="a">b[]</span></a>c</p>',
-        contentAfter: '<p>a<a href="exist"><span class="a">b[]</span></a>c</p>',
+        contentBefore: '<p>a<a href="http://test.test/"><span class="a">b[]</span></a>c</p>',
+        contentAfter: '<p>a<a href="http://test.test/"><span class="a">b[]</span></a>c</p>',
     });
 });
 
 test("should parse correctly an empty span inside a Link", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="exist">b[]<span class="a"></span></a>c</p>',
-        contentAfter: '<p>a<a href="exist">b[]<span class="a"></span></a>c</p>',
+        contentBefore: '<p>a<a href="http://test.test/">b[]<span class="a"></span></a>c</p>',
+        contentAfter: '<p>a<a href="http://test.test/">b[]<span class="a"></span></a>c</p>',
     });
 });
 
 test("should parse correctly a span inside a Link 2", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="exist"><span class="a">b[]</span>c</a>d</p>',
-        contentAfter: '<p>a<a href="exist"><span class="a">b[]</span>c</a>d</p>',
+        contentBefore: '<p>a<a href="http://test.test/"><span class="a">b[]</span>c</a>d</p>',
+        contentAfter: '<p>a<a href="http://test.test/"><span class="a">b[]</span>c</a>d</p>',
     });
 });
 
 test("should parse correctly an empty span inside a Link then add a char", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="exist">b[]<span class="a"></span></a>c</p>',
+        contentBefore: '<p>a<a href="http://test.test/">b[]<span class="a"></span></a>c</p>',
         stepFunction: async (editor) => {
             await insertText(editor, "c");
         },
-        contentAfter: '<p>a<a href="exist">bc[]<span class="a"></span></a>c</p>',
+        contentAfter: '<p>a<a href="http://test.test/">bc[]<span class="a"></span></a>c</p>',
     });
 });
 
 test("should parse correctly a span inside a Link then add a char", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="exist"><span class="a">b[]</span></a>d</p>',
+        contentBefore: '<p>a<a href="http://test.test/"><span class="a">b[]</span></a>d</p>',
         stepFunction: async (editor) => {
             await insertText(editor, "c");
         },
-        // JW cAfter: '<p>a<span><a href="exist">b</a>c[]</span>d</p>',
-        contentAfter: '<p>a<a href="exist"><span class="a">bc[]</span></a>d</p>',
+        // JW cAfter: '<p>a<span><a href="http://test.test/">b</a>c[]</span>d</p>',
+        contentAfter: '<p>a<a href="http://test.test/"><span class="a">bc[]</span></a>d</p>',
     });
 });
 
 test("should parse correctly a span inside a Link then add a char 2", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="exist"><span class="a">b[]</span>d</a>e</p>',
+        contentBefore: '<p>a<a href="http://test.test/"><span class="a">b[]</span>d</a>e</p>',
         stepFunction: async (editor) => {
             await insertText(editor, "c");
         },
-        contentAfter: '<p>a<a href="exist"><span class="a">bc[]</span>d</a>e</p>',
+        contentAfter: '<p>a<a href="http://test.test/"><span class="a">bc[]</span>d</a>e</p>',
     });
 });
 
 test("should parse correctly a span inside a Link then add a char 3", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="exist"><span class="a">b</span>c[]</a>e</p>',
+        contentBefore: '<p>a<a href="http://test.test/"><span class="a">b</span>c[]</a>e</p>',
         stepFunction: async (editor) => {
             await insertText(editor, "d");
         },
-        // JW cAfter: '<p>a<a href="exist"><span class="a">b</span>c</a>d[]e</p>',
-        contentAfter: '<p>a<a href="exist"><span class="a">b</span>cd[]</a>e</p>',
+        // JW cAfter: '<p>a<a href="http://test.test/"><span class="a">b</span>c</a>d[]e</p>',
+        contentAfter: '<p>a<a href="http://test.test/"><span class="a">b</span>cd[]</a>e</p>',
     });
 });
 
 test("should add a character after the link", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="exist">b[]</a>d</p>',
+        contentBefore: '<p>a<a href="http://test.test/">b[]</a>d</p>',
         stepFunction: async (editor) => {
             await insertText(editor, "c");
         },
-        // JW cAfter: '<p>a<a href="exist">b</a>c[]d</p>',
-        contentAfter: '<p>a<a href="exist">bc[]</a>d</p>',
+        // JW cAfter: '<p>a<a href="http://test.test/">b</a>c[]d</p>',
+        contentAfter: '<p>a<a href="http://test.test/">bc[]</a>d</p>',
     });
 });
 
 test("should add two character after the link", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="exist">b[]</a>e</p>',
+        contentBefore: '<p>a<a href="http://test.test/">b[]</a>e</p>',
         stepFunction: async (editor) => {
             await insertText(editor, "cd");
         },
-        contentAfter: '<p>a<a href="exist">bcd[]</a>e</p>',
+        contentAfter: '<p>a<a href="http://test.test/">bcd[]</a>e</p>',
     });
 });
 
@@ -102,28 +102,28 @@ test("should add a character after the link if range just after link", async () 
 
 test("should add a character in the link after a br tag", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="exist">b<br>[]</a>d</p>',
+        contentBefore: '<p>a<a href="http://test.test/">b<br>[]</a>d</p>',
         stepFunction: async (editor) => {
             await insertText(editor, "c");
         },
-        contentAfter: '<p>a<a href="exist">b<br>c[]</a>d</p>',
+        contentAfter: '<p>a<a href="http://test.test/">b<br>c[]</a>d</p>',
     });
 });
 
 test("should remove an empty link on save", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="exist">b[]</a>c</p>',
+        contentBefore: '<p>a<a href="http://test.test/">b[]</a>c</p>',
         contentBeforeEdit:
-            '<p>a\ufeff<a href="exist" class="o_link_in_selection">\ufeffb[]\ufeff</a>\ufeffc</p>',
+            '<p>a\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeffb[]\ufeff</a>\ufeffc</p>',
         stepFunction: deleteBackward,
         contentAfterEdit:
-            '<p>a\ufeff<a href="exist" class="o_link_in_selection">\ufeff[]\ufeff</a>\ufeffc</p>',
+            '<p>a\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff[]\ufeff</a>\ufeffc</p>',
         contentAfter: "<p>a[]c</p>",
     });
     await testEditor({
-        contentBefore: '<p>a<a href="exist"></a>b</p>',
-        contentBeforeEdit: '<p>a\ufeff<a href="exist">\ufeff</a>\ufeffb</p>',
-        contentAfterEdit: '<p>a\ufeff<a href="exist">\ufeff</a>\ufeffb</p>',
+        contentBefore: '<p>a<a href="http://test.test/"></a>b</p>',
+        contentBeforeEdit: '<p>a\ufeff<a href="http://test.test/">\ufeff</a>\ufeffb</p>',
+        contentAfterEdit: '<p>a\ufeff<a href="http://test.test/">\ufeff</a>\ufeffb</p>',
         contentAfter: "<p>ab</p>",
     });
 });

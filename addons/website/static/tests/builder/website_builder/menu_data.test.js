@@ -13,6 +13,11 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 
 defineWebsiteModels();
 
+beforeEach(() => {
+    onRpc("/web/exists", () => ({}));
+    onRpc("/html_editor/link_preview_internal", () => ({}));
+});
+
 describe("NavbarLinkPopover", () => {
     test("should open a navbar popover when the selection is inside a top menu link and close outside of a top menu link", async () => {
         const { el } = await setupEditor(

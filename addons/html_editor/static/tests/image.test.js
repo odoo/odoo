@@ -528,7 +528,7 @@ test("can undo adding link to image", async () => {
 
 test("can remove the link of an image", async () => {
     await setupEditor(`
-        <a href="#"><img src="${base64Img}"></a>
+        <a href="http://test.test/"><img src="${base64Img}"></a>
     `);
     const img = queryOne("img");
     await click("img");
@@ -542,7 +542,7 @@ test("can remove the link of an image", async () => {
 
 test("can undo link removing of an image", async () => {
     const { editor } = await setupEditor(`
-        <a href="#"><img src="${base64Img}"></a>
+        <a href="http://test.test/"><img src="${base64Img}"></a>
     `);
     const img = queryOne("img");
     await click("img");
