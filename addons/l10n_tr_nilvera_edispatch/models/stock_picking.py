@@ -4,6 +4,17 @@ from lxml import etree
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import cleanup_xml_node
+from odoo.tools.xml_utils import find_xml_value
+from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
+
+
+class PickingType(models.Model):
+    _inherit = 'stock.picking.type'
+
+    def _get_action(self, action_xmlid):
+        action = super()._get_action(action_xmlid)
+        action['context']['restricted_picking_type_code'] = self.code
+        return action
 
 
 class StockPicking(models.Model):
@@ -241,3 +252,239 @@ class StockPicking(models.Model):
         self.filtered(
             lambda p: p.country_code == 'TR' and p.picking_type_code == 'outgoing'
         ).l10n_tr_nilvera_dispatch_state = 'sent'
+
+    def _get_tag_text(self, xpath, tree, default=''):
+        return find_xml_value(xpath, tree, UBL_NAMESPACES) or default
+
+    def _import_partner_vals(self, tree, xpath):
+        party = tree.find(xpath, namespaces=UBL_NAMESPACES)
+        if party is None:
+            return
+        return {
+            'name': self._get_tag_text('./cac:PartyName/cbc:Name', party) or
+                    f"{self._get_tag_text('./cac:Person/cbc:FirstName', party)} {self._get_tag_text('./cac:Person/cbc:FamilyName', party)}",
+            'vat': self._get_tag_text('./cac:PartyIdentification/cbc:ID', party),
+            'street': self._get_tag_text('./cac:PostalAddress/cbc:StreetName', party),
+            'city': self._get_tag_text('./cac:PostalAddress/cbc:CitySubdivisionName', party),
+            'state': self._get_tag_text('./cac:PostalAddress/cbc:CityName', party),
+            'zip': self._get_tag_text('./cac:PostalAddress/cbc:PostalZone', party),
+            'country': self._get_tag_text('./cac:PostalAddress/cac:Country/cbc:Name', party),
+            'phone': self._get_tag_text('./cac:Contact/cbc:Telephone', party),
+            'email': self._get_tag_text('./cac:Contact/cbc:ElectronicMail', party),
+        }
+
+    def _find_or_create_partner_from_xml(self, partner_vals):
+        partner = self.env['res.partner']._retrieve_partner(name=partner_vals['name'], vat=partner_vals['vat'])
+        if not partner:
+            vals_to_create = {k: v for k, v in partner_vals.items() if k not in ('country', 'state')}
+            if (state := partner_vals['state']) and (
+                state_id := self.env['res.country.state'].search([('name', '=', state)], limit=1)
+            ):
+                vals_to_create.update({
+                    'state_id': state_id.id,
+                    'country_id': state_id.country_id.id,
+                    'code': state_id.country_id.code
+                })
+            elif (country := partner_vals['country']) and (
+                country_id := self.env['res.country'].with_context(lang='tr_TR').search([('name', '=', country)], limit=1)
+            ):
+                vals_to_create.update({'country_id': country_id.id, 'code': country_id.code})
+
+            if (code := vals_to_create.pop('code', None)) and code != 'TR':
+                vals_to_create['l10n_tr_nilvera_edispatch_customs_zip'] = vals_to_create.pop('zip', '')
+
+            partner = self.env['res.partner'].with_context(no_vat_validation=True).create(vals_to_create)
+        return partner.id
+
+    def _find_or_create_product_from_xml(self, tree):
+        product = self.env['product.product']._retrieve_product(
+            name=self._get_tag_text('./cac:Item/cbc:Name', tree),
+        )
+        received_quantity = tree.find('./cbc:DeliveredQuantity', namespaces=UBL_NAMESPACES)
+        if product:
+            return product.product_tmpl_id
+        product = self.env['product.product'].create({
+            'name': self._get_tag_text('./cac:Item/cbc:Name', tree),
+            'detailed_type': 'product',
+            'default_code': self._get_tag_text('./cac:Item/cac:SellersItemIdentification/cbc:ID', tree),
+        })
+        unece_code = received_quantity.get('unitCode')
+        product.uom_id = product.uom_id._get_uom_from_unece_code(unece_code)
+        return product
+
+    def _import_receipt_lines(self, tree):
+        receipt_lines = tree.findall('./cac:DespatchLine', namespaces=UBL_NAMESPACES)
+        values = []
+        origin = self._get_tag_text('./cbc:ID', tree)
+        source_location = self.env.ref('stock.stock_location_suppliers', raise_if_not_found=False)
+
+        for receipt in receipt_lines:
+            product = self._find_or_create_product_from_xml(receipt)
+            values.append({
+                'name': origin,
+                'description_picking': product.name,
+                'product_id': product.id,
+                'product_uom_qty': self._get_tag_text('./cbc:DeliveredQuantity', receipt),
+                'picking_id': self.id,
+                'location_dest_id': self.location_dest_id.id,
+                'location_id': source_location.id,
+            })
+        return values
+
+    def _import_vehicle_plate(self, tree):
+        vehicle_plate = self._get_tag_text('.//cac:RoadTransport/cbc:LicensePlateID', tree)
+        vehicle_plate_id = self.env['l10n_tr.nilvera.trailer.plate'].search(
+            [('name', '=', vehicle_plate), ('plate_number_type', '=', 'vehicle')], limit=1
+        )
+        if not vehicle_plate_id:
+            vehicle_plate_id = self.env['l10n_tr.nilvera.trailer.plate'].create({
+                'name': vehicle_plate,
+                'plate_number_type': 'vehicle',
+            })
+        return vehicle_plate_id.id
+
+    def _import_trailer_plate_ids(self, tree):
+        plate_ids = []
+        vehicle_plates = tree.findall('.//cac:TransportHandlingUnit/cac:TransportEquipment', namespaces=UBL_NAMESPACES)
+        for plate in vehicle_plates:
+            if not (plate_name := self._get_tag_text('./cbc:ID', plate)):
+                continue
+            trailer_plate = self.env['l10n_tr.nilvera.trailer.plate'].search(
+                [('name', '=', plate_name), ('plate_number_type', '=', 'trailer')], limit=1
+            )
+            if not trailer_plate:
+                trailer_plate = self.env['l10n_tr.nilvera.trailer.plate'].create({
+                    'name': plate_name,
+                    'plate_number_type': 'trailer'
+                })
+            plate_ids.append(trailer_plate.id)
+        return plate_ids
+
+    def _import_drivers(self, tree):
+        ResPartner = self.env['res.partner']
+        country_id = self.env.ref('base.tr', raise_if_not_found=False)
+        driver_ids = []
+        for driver in tree.findall('.//cac:DriverPerson', namespaces=UBL_NAMESPACES):
+            name = f"{self._get_tag_text('./cbc:FirstName', driver)} {self._get_tag_text('./cbc:FamilyName', driver)}"
+            partner_id = ResPartner.search([('name', '=', name), ('country_id', '=', country_id.id)], limit=1)
+            if not partner_id:
+                partner_id = ResPartner.with_context(no_vat_validation=True).create({
+                    'name': name,
+                    'vat': self._get_tag_text('./cbc:NationalityID', driver),
+                    'country_id': country_id.id
+                })
+            driver_ids.append(partner_id.id)
+        return driver_ids
+
+    def _import_matbudan_data(self, tree):
+        additional_doc_infos = tree.findall('.//cac:AdditionalDocumentReference', namespaces=UBL_NAMESPACES)
+        for doc in additional_doc_infos:
+            if self._get_tag_text('./cbc:DocumentType', doc) == 'MATBU':
+                return {
+                    'l10n_tr_nilvera_delivery_date': self._get_tag_text('./cbc:IssueDate', doc),
+                    'l10n_tr_nilvera_delivery_printed_number': self._get_tag_text('./cbc:ID', doc)
+                }
+
+    def _import_edispatch_fields(self, tree):
+        vals = {
+            'l10n_tr_vehicle_plate': self._import_vehicle_plate(tree),
+            'l10n_tr_nilvera_trailer_plate_ids': self._import_trailer_plate_ids(tree),
+            'l10n_tr_nilvera_driver_ids': self._import_drivers(tree),
+            'l10n_tr_nilvera_delivery_notes': self._get_tag_text('./cbc:Note', tree),
+            'l10n_tr_nilvera_dispatch_type': self._get_tag_text('./cbc:DespatchAdviceTypeCode', tree),
+        }
+
+        if vals['l10n_tr_nilvera_dispatch_type'] == 'MATBUDAN' and (matbu_info := self._import_matbudan_data(tree)):
+            vals.update(matbu_info)
+
+        # Other E-Dispatch Partners
+        partners_dict = {
+            'l10n_tr_nilvera_carrier_id': './/cac:CarrierParty',
+            'l10n_tr_nilvera_buyer_id': './/cac:BuyerCustomerParty/cac:Party',
+            'l10n_tr_nilvera_seller_supplier_id': './/cac:SellerSupplierParty/cac:Party',
+            'l10n_tr_nilvera_buyer_originator_id': './/cac:OriginatorCustomerParty/cac:Party',
+        }
+        for key, xpath in partners_dict.items():
+            partner_vals = self._import_partner_vals(tree, xpath)
+            if not partner_vals:
+                continue
+            partner_id = self._find_or_create_partner_from_xml(partner_vals)
+            vals[key] = partner_id
+
+        return vals
+
+    def _update_data_from_xml(self, file_data):
+        tree = file_data['xml_tree']
+        # Dispatch Scheduled Date & Time
+        date = self._get_tag_text('cbc:IssueDate', tree) + " " + self._get_tag_text('cbc:IssueTime', tree)
+
+        # Store the sequence of the e-receipt obtained from XML.
+        origin = self._get_tag_text('./cbc:ID', tree)
+
+        # Receiver Partner
+        partner_vals = self._import_partner_vals(tree, './/cac:DespatchSupplierParty/cac:Party')
+        partner_id = self._find_or_create_partner_from_xml(partner_vals) if partner_vals else False
+
+        # Stock move lines
+        move_line_ids = self._import_receipt_lines(tree)
+        move_ids_without_package = [(0, 0, value) for value in move_line_ids]
+
+        vals_to_update = {
+            'scheduled_date': date,
+            'origin': origin,
+            'partner_id': partner_id,
+            'move_ids_without_package': move_ids_without_package,
+        }
+
+        # e-Dispatch Fields
+        edispatch_vals = self._import_edispatch_fields(tree)
+        vals_to_update.update(edispatch_vals)
+
+        self.write(vals_to_update)
+        self.message_post(body=_("e-Receipt uploaded successfully."), attachment_ids=[file_data['attachment'].id])
+
+    def _l10n_tr_create_receipts_from_attachment(self, attachments, warehouse):
+        file_data_list = attachments._unwrap_edi_attachments()
+        picking_ids = self
+
+        for file_data in file_data_list:
+            picking = self.create({
+                'picking_type_id': warehouse.in_type_id.id,
+                'location_dest_id': warehouse.lot_stock_id.id,
+            })
+            picking._update_data_from_xml(file_data)
+            picking_ids |= picking
+        return picking_ids
+
+    def l10n_tr_import_ereceipts(self, attachment_ids):
+        warehouse = self.env.user._get_default_warehouse_id()
+        if not warehouse:
+            return {
+                "result": False,
+                "msg": "Please create a warehouse first to import the e-receipts",
+            }
+
+        attachments_to_process = self.env['ir.attachment'].browse(attachment_ids)
+        picking_ids = self._l10n_tr_create_receipts_from_attachment(attachments_to_process, warehouse)
+        action_vals = {
+            'type': 'ir.actions.act_window',
+            'name': _("Imported E-Receipts"),
+            'res_model': 'stock.picking',
+            'domain': [('id', 'in', picking_ids.ids)],
+        }
+        if len(picking_ids) == 1:
+            action_vals.update({
+                'views': [[False, "form"]],
+                'view_mode': 'form',
+                'res_id': picking_ids[0].id,
+            })
+        else:
+            action_vals.update({
+                'views': [[False, "list"], [False, "form"]],
+                'view_mode': 'list, form',
+            })
+        return {
+            "result": True,
+            "msg": "E-Receipt(s) Imported Successfully",
+            "action": action_vals
+        }
