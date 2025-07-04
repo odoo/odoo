@@ -177,6 +177,22 @@ patch(PosStore.prototype, {
                     remaining_quantity -= splitted_line.qty;
                 }
             }
+
+            // Order line can only hold one lot, so we need to split the line if there are multiple lots
+            if (line.product_id.tracking == "lot") {
+                newLine.delete();
+                for (const lot of converted_line.lot_names) {
+                    const splitted_line = this.models["pos.order.line"].create({
+                        ...newLineValues,
+                    });
+                    splitted_line.setQuantity(converted_line.lot_qty_by_name[lot] || 0, true);
+                    splitted_line.setPackLotLines({
+                        modifiedPackLotLines: [],
+                        newPackLotLines: [{ lot_name: lot }],
+                        setQuantity: false,
+                    });
+                }
+            }
         }
     },
 
