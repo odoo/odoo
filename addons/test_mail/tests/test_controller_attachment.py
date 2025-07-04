@@ -64,24 +64,20 @@ class TestAttachmentController(MailControllerAttachmentCommon):
         # Subtest format: (user, token, {"author": message author})
         author, no_author = {"author": "self_author"}, {}
         self._execute_subtests_delete(
-            [
-                *product(
-                    (self.guest, self.user_portal, self.user_public),
-                    (self.WITH_TOKEN, self.NO_TOKEN),
-                    (author, no_author),
-                ),
-                (self.user_employee, self.WITH_TOKEN, no_author),
-                (self.user_employee, self.NO_TOKEN, no_author),
-            ],
+            product(
+                (self.guest, self.user_employee, self.user_portal, self.user_public),
+                (self.WITH_TOKEN, self.NO_TOKEN),
+                (author, no_author),
+            ),
             allowed=False,
             message=message,
         )
         self._execute_subtests_delete(
-            [
-                *product(self.user_admin, (self.WITH_TOKEN, self.NO_TOKEN), (author, no_author)),
-                (self.user_employee, self.WITH_TOKEN, author),
-                (self.user_employee, self.NO_TOKEN, author),
-            ],
+            product(
+                self.user_admin,
+                (self.WITH_TOKEN, self.NO_TOKEN),
+                (author, no_author),
+            ),
             allowed=True,
             message=message,
         )
