@@ -332,9 +332,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
     def _create_for_record(self, record_values, previous_record_identifier=None):
         """Note: In case we succesfully create a JSON we delete all linked documents that failed the JSON creation."""
         document_vals = record_values['document_vals']
+        error_title = _("The Veri*Factu document could not be created")
 
         if record_values['errors']:
-            error_title = _("The Veri*Factu document could not be created")
             document_vals['errors'] = self._format_errors(error_title, record_values['errors'])
         else:
             render_vals = self._render_vals(
@@ -361,6 +361,29 @@ class L10nEsEdiVerifactuDocument(models.Model):
                                 key=key, old=old, new=new)
                               for key, (old, new) in changed_identifiers.items()]
                     document_vals['errors'] = self._format_errors(error_title, errors)
+
+            create_message = None
+            try:
+                create_message, _zeep_info = self._get_zeep_registration_xml_operation()
+            except (zeep.exceptions.Error, requests.exceptions.RequestException) as error:
+                # The zeep client creation may cause a networking error
+                errors = [_("Networking error: %s", error)]
+                document_vals['errors'] = self._format_errors(error_title, errors)
+                _logger.error("%s\n%s\n%s", error_title, errors[0], json.dumps(document_dict, indent=4))
+
+            if create_message:
+                batch_dict = self.with_company(record_values['company'])._get_batch_dict([document_dict])
+                try:
+                    _xml_node = create_message(batch_dict['Cabecera'], batch_dict['RegistroFactura'])
+                except zeep.exceptions.ValidationError as error:
+                    errors = [_("Validation error: %s", error)]
+                    document_vals['errors'] = self._format_errors(error_title, errors)
+                    _logger.error("%s\n%s\n%s", error_title, errors[0], json.dumps(batch_dict, indent=4))
+                except zeep.exceptions.Error as error:
+                    errors = [error]
+                    document_vals['errors'] = self._format_errors(error_title, errors)
+                    _logger.error("%s\n%s\n%s", error_title, errors[0], json.dumps(batch_dict, indent=4))
+
             if not document_vals.get('errors'):
                 document_vals.update({
                     'chain_index': record_values['company']._l10n_es_edi_verifactu_get_next_chain_index(),
@@ -899,6 +922,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
     @api.model
     def _get_zeep_operations(self, operation):
         """The creation of the zeep client may raise (in case of networking issues)."""
+        if operation not in ('registration', 'registration_xml'):
+            raise NotImplementedError(_("Unsupported `operation` '%s'", operation))
+
         company = self.env.company
 
         session = requests.Session()
@@ -922,13 +948,26 @@ class L10nEsEdiVerifactuDocument(models.Model):
         session.mount('https://', PatchedHTTPAdapter())
 
         service = client.bind(wsdl['service'], wsdl['port'])
-        operation = service[wsdl[operation]]
+
+        if operation == 'registration':
+            operation = service[wsdl[operation]]
+        else:
+            # operation == 'registration_xml'
+            __client = client._Client__obj  # get the "real" zeep client from the odoo specific wrapper
+            service = __client.bind(wsdl['service'], wsdl['port'])
+
+            def operation(*args, **kwargs):
+                return __client.create_message(service, wsdl['registration'], *args, **kwargs)
 
         return operation, info
 
     @api.model
     def _get_zeep_registration_operations(self):
         return self._get_zeep_operations('registration')
+
+    @api.model
+    def _get_zeep_registration_xml_operation(self):
+        return self._get_zeep_operation('registration_xml')
 
     @api.model
     def _send_batch(self, batch_dict):
@@ -968,6 +1007,11 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 errors.append(_("The response of the server had the wrong format (HTML instead of XML). It is most likely a problem with the certificate."))
             else:
                 errors.append(_("Error while sending the batch document:\n%s", error))
+        except zeep.exceptions.ValidationError as error:
+            # TODO: This should not happen
+            error = _("Error while validating the batch document (before sending):\n%s", error)
+            errors.append(error)
+            _logger.error("%s:\n%s", error, batch_dict)
         except zeep.exceptions.Error as error:
             _logger.error("raw zeep response:\n%s", zeep_info.get('raw_response'))
             errors.append(_("Error while sending the batch document:\n%s", error))

@@ -73,6 +73,9 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
         # We do not want to hide access errors the user may have in production (i.e. with access to the certificates)
         cls.user.groups_id = [Command.unlink(cls.env.ref('base.group_system').id)]
 
+        # Do not do zeep xml / xsd validation during tests (needs network connection to create the client)
+        cls.startClassPatcher(cls._mock_zeep_registration_xml_operation(None, None))
+
     @classmethod
     def _read_file(cls, path, *args):
         with file_open(path, *args) as f:
@@ -112,6 +115,10 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
             raise zeep.exceptions.TransportError(certificate_error)
 
         return self._mock_zeep_registration_operation_function(_raise_certificate_error)
+
+    def _mock_zeep_registration_xml_operation(self, return_value):
+        request_function_path = 'odoo.addons.l10n_es_edi_verifactu.models.verifactu_document.L10nEsEdiVerifactuDocument._get_zeep_registration_xml_operation'
+        return mock.patch(request_function_path, return_value=(return_value, {}))
 
     def _mock_cron_trigger(self, cron_trigger_result_dict):
         trigger_function_path = 'odoo.addons.base.models.ir_cron.ir_cron._trigger'
