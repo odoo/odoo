@@ -33,6 +33,8 @@
                         domain="[('my_activity_date_deadline', '=', 'today')]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
+                    <filter string="Ongoing Activity Plan" name="filter_ongoing_activity_plan"
+                         domain="[('activity_plans_ids', '!=', False)]"/>
                     <separator/>
                     <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
                     <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>

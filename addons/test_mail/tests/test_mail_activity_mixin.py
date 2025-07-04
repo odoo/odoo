@@ -533,6 +533,81 @@ class TestActivityMixin(TestActivityCommon):
             self.assertNotIn(origin_1, result, 'The activity state miss calculated during the search')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_activity_plans_ids_search_semantics_single(self):
+        """
+        Test the search semantics of computed field `activity_plans_ids`:
+
+        Covers:
+            - Compute correctly deduplicates plan IDs from related activities.
+            - Searching by specific plan IDs (`in` / `not in`) returns expected records.
+            - Boolean-style domains (`= True`, `!= False`) correctly map to "has plan".
+            - Boolean-style domains (`in [False]`, `not in [True]`) correctly map to "no plan".
+        """
+
+        MailTestActivity = self.env['mail.test.activity']
+        todo_activity_type = self.env.ref('test_mail.mail_act_test_todo')
+        record_with_plan = self.test_record
+        record_without_plan = self.test_record_2
+        plan_a, plan_b = self.env['mail.activity.plan'].create([{
+            'name': 'Plan A',
+            'res_model': 'mail.test.activity',
+        }, {
+            'name': 'Plan B',
+            'res_model': 'mail.test.activity',
+        }])
+
+        # Attach two activities with two distinct plans to record_with_plan
+        today = fields.Date.today()
+        self.env['mail.activity'].create([{
+            'activity_type_id': todo_activity_type.id,
+            'res_id': record_with_plan.id,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'date_deadline': today,
+            'activity_plan_id': plan_a.id,
+            'summary': 'Activity with plan',
+        }, {
+            'activity_type_id': todo_activity_type.id,
+            'res_id': record_with_plan.id,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'date_deadline': today,
+            'activity_plan_id': plan_b.id,
+            'summary': 'Activity with plan',
+        }, {
+            'activity_type_id': todo_activity_type.id,
+            'res_id': record_without_plan.id,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'date_deadline': today,
+            'summary': 'Without Plan',
+        }])
+
+        self.assertSetEqual(set(record_with_plan.activity_plans_ids.ids), {plan_a.id, plan_b.id})
+        self.assertFalse(record_without_plan.activity_plans_ids)
+
+        records_in_plan_a = MailTestActivity.search([('activity_plans_ids', 'in', [plan_a.id])])
+        records_not_in_plans = MailTestActivity.search([('activity_plans_ids', 'not in', [plan_a.id, plan_b.id])])
+        self.assertIn(record_with_plan, records_in_plan_a)
+        self.assertNotIn(record_without_plan, records_in_plan_a)
+        self.assertIn(record_without_plan, records_not_in_plans)
+        self.assertNotIn(record_with_plan, records_not_in_plans)
+
+        # in [True] --> has plan
+        # not in [False] -> has plan
+        records_with_plan = MailTestActivity.search([('activity_plans_ids', '=', True)])
+        records_with_plan1 = MailTestActivity.search([('activity_plans_ids', '!=', False)])
+        self.assertEqual(record_with_plan, records_with_plan1)
+        self.assertIn(record_with_plan, records_with_plan)
+        self.assertIn(record_with_plan, records_with_plan1)
+        self.assertIn(record_with_plan, records_with_plan1)
+
+        # in [False]     -> no plan
+        # not in [False] -> has plan
+        records_without_plan = MailTestActivity.search([('activity_plans_ids', 'in', [False])])
+        records_without_plan_1 = MailTestActivity.search([('activity_plans_ids', 'not in', [True])])
+        self.assertEqual(records_without_plan, records_without_plan_1)
+        self.assertIn(record_without_plan, records_without_plan)
+        self.assertIn(record_without_plan, records_without_plan_1)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_my_activity_flow_employee(self):
         Activity = self.env['mail.activity']
         date_today = date.today()

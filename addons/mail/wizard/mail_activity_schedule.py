@@ -337,11 +337,12 @@ class MailActivitySchedule(models.TransientModel):
                 date_deadline = template._get_date_deadline(self.plan_date)
                 record.activity_schedule(
                     activity_type_id=template.activity_type_id.id,
+                    activity_plan_id=template.plan_id.id,
                     automated=False,
+                    date_deadline=date_deadline,
                     summary=template.summary,
                     note=template.note,
                     user_id=responsible.id,
-                    date_deadline=date_deadline
                 )
                 activity_descriptions.append(
                     _('%(activity)s, assigned to %(name)s, due on the %(deadline)s',

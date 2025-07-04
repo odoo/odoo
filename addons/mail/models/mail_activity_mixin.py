@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections.abc import Iterable
 from datetime import datetime
 
 import logging
@@ -92,6 +93,43 @@ class MailActivityMixin(models.AbstractModel):
         help="Type of the exception activity on record.")
     activity_exception_icon = fields.Char('Icon', help="Icon to indicate an exception activity.",
         compute='_compute_activity_exception_type')
+    activity_plans_ids = fields.Many2many(
+        'mail.activity.plan',
+        string="Activity Plans",
+        compute='_compute_activity_plans_ids',
+        search='_search_activity_plans_ids',
+    )
+
+    @api.depends('activity_ids')
+    def _compute_activity_plans_ids(self):
+        for record in self:
+            record.activity_plans_ids = record.activity_ids.activity_plan_id
+
+    def _search_activity_plans_ids(self, operator, value):
+        """
+            Search panel/filter domains like ('=', True) or ('in', [True])
+            would be passed to SQL as "IN (true)" on an integer column,causing type errors.
+            This method rewrites boolean-style queries into safe checks
+            (e.g. has any plan / has no plan) while still passing through normal ID-based domains.
+
+            * ``in [True]`` --> same as "has any plan"
+            * ``not in [False]`` --> same as "has any plan"
+            * ``in [False]`` --> same as "no plan"
+            * ``not in [True]`` --> same as "no plan"
+        """
+        if operator in ('in', 'not in'):
+            if isinstance(value, Iterable) and not isinstance(value, (str, bytes, bool)):
+                seq = list(value)
+            else:
+                seq = [value]
+            if len(seq) == 1 and isinstance(seq[0], bool):
+                if operator == 'in':
+                    operator = '!=' if seq[0] else '='
+                else:
+                    operator = '=' if seq[0] else '!='
+                return [('activity_ids.activity_plan_id', operator, False)]
+
+        return [('activity_ids.activity_plan_id', operator, value)]
 
     @api.depends('activity_ids.activity_type_id.decoration_type', 'activity_ids.activity_type_id.icon')
     def _compute_activity_exception_type(self):
