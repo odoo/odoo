@@ -24,6 +24,13 @@ class ResUsersSettings(models.Model):
     mute_until_dt = fields.Datetime(string="Mute notifications until", index=True, help="If set, the user will not receive notifications from all the channels until this date.")
 
     @api.model
+    def _cleanup_expired_mutes(self):
+        """ Unused and to be removed together with mute_until_dt """
+
+    def _notify_mute(self):
+        """ Unused and to be removed together with mute_until_dt """
+
+    @api.model
     def _format_settings(self, fields_to_format):
         res = super()._format_settings(fields_to_format)
         if 'volume_settings_ids' in fields_to_format:
