@@ -266,13 +266,25 @@ class TestMailComposerRendering(TestMailComposer):
 class TestMailComposerUI(MailCommon, HttpCase):
 
     def test_mail_composer_test_tour(self):
-        self.env['mail.template'].create({
-            'auto_delete': True,
-            'lang': '{{ object.lang }}',
-            'model_id': self.env['ir.model']._get_id('res.partner'),
-            'name': 'Test template',
-            'partner_to': '{{ object.id }}',
-        })
+        template_data = [
+            {
+                'name': 'Test template',
+                'partner_to': '{{ object.id }}',
+            },
+            {
+                'name': 'Test template for admin',
+                'user_id': self.env.ref('base.user_admin').id,
+            },
+        ]
+        self.env['mail.template'].create([
+            {
+                **data,
+                'auto_delete': True,
+                'lang': '{{ object.lang }}',
+                'model_id': self.env['ir.model']._get_id('res.partner'),
+            }
+            for data in template_data
+        ])
         partner = self.env["res.partner"].create({"name": "Jane", "email": "jane@example.com"})
         user_partner = self.env["res.partner"].create({"name": "Not A Demo User", "email":  "NotADemoUser@mail.com"})
         user = self.env["res.users"].create({
