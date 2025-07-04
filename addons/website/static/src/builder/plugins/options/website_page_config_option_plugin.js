@@ -14,7 +14,7 @@ export const HIDE_FOOTER = after(FOOTER_SCROLL_TO);
 class WebsitePageConfigOptionPlugin extends Plugin {
     static id = "websitePageConfigOptionPlugin";
     static dependencies = ["history", "visibility"];
-    static shared = ["setDirty", "getVisibilityItem", "getFooterVisibility"];
+    static shared = ["setDirty", "getVisibilityItem", "getFooterVisibility", "setFooterVisible"];
     resources = {
         builder_actions: {
             SetWebsiteHeaderVisibilityAction,

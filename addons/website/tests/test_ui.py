@@ -479,8 +479,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_18_website_snippets_menu_tabs(self):
         self.start_tour('/', 'website_snippets_menu_tabs', login='admin')
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_19_website_page_options(self):
         self.start_tour("/odoo", "website_page_options", login="admin")
 
