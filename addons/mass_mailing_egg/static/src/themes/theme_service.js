@@ -39,6 +39,9 @@ export class ThemeModel extends Reactive {
                 hideFromMobile: hasDataOption(theme, "hide-from-mobile"),
                 html: markup(theme.innerHTML.trim()),
                 imgPath: theme.dataset.img || "",
+                // TODO EGGMAIL: maybe clean this? Currently the style is split in 2 places:
+                // a data-layout-style for the o_layout element, and one id="design-element" for
+                // the other elements, I don't see the point in having style at 2 different places
                 layoutStyles: theme.dataset.layoutStyles || "",
                 name: theme.dataset.name,
                 nowrap: hasDataOption(theme, "nowrap"),

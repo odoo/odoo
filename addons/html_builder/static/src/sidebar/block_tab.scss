@@ -39,6 +39,12 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     }
 }
 
+body.modal-open:has(.o_block_tab) {
+    .o_snippet {
+        z-index: var(--modal-zindex) + 1;
+    }
+}
+
 .o_block_tab {
     background-color: $o-we-sidebar-blocks-content-bg;
     padding-left: map-get($spacers, 2) ;

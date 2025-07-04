@@ -1,6 +1,7 @@
 import { Component, useState } from "@odoo/owl";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { useOptionsSubEnv } from "@html_builder/utils/utils";
+import { _t } from "@web/core/l10n/translation";
 
 export class ThemeTab extends Component {
     static template = "website.ThemeTab";

@@ -292,6 +292,13 @@ export class MassMailingIframe extends Component {
             toggleCodeView: this.props.toggleCodeView,
             onEditorLoad: this.props.onEditorLoad,
             getExternalScrollableAncestor,
+            getThemeTab: () => {
+                const DesignTab = odoo.loader.modules.get(
+                    "@mass_mailing_egg/builder/tabs/design_tab"
+                ).DesignTab;
+                DesignTab.displayName = _t("Design");
+                return DesignTab;
+            },
         };
     }
 
