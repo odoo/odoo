@@ -356,3 +356,18 @@ registry.category("web_tour.tours").add("OrderTimeTour", {
         ].flat();
     },
 });
+
+registry.category("web_tour.tours").add("test_paid_order_with_archived_product_loads", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.nthRowContains(1, "0002"),
+            TicketScreen.selectOrder("0002"),
+            inLeftSide([
+                ...Order.hasLine({ productName: "Archived Product", withClass: ".selected" }),
+            ]),
+        ].flat(),
+});
