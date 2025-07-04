@@ -8,16 +8,16 @@
         <!-- We don't use `display-font-sizes.5` and `display-font-sizes.6` -->
         <t t-set="used_display_font_sizes" t-value="[1, 2, 3, 4]"/>
         <BuilderRow label.translate="Font Size" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput title.translate="Heading 1" actionParam="'h1-font-size'" unit="'px'" saveUnit="'rem'"/>
+            <BuilderNumberInput title.translate="Heading 1" actionParam="'h1-font-size'" default="null" unit="'px'" saveUnit="'rem'"/>
             <t t-set-slot="collapse">
                 <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'h' + depth + '-font-size'" unit="'px'" saveUnit="'rem'"/>
+                        <BuilderNumberInput actionParam="'h' + depth + '-font-size'" default="null" unit="'px'" saveUnit="'rem'"/>
                     </BuilderRow>
                 </t>
                 <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'display-' + depth + '-font-size'" unit="'px'" saveUnit="'rem'"/>
+                        <BuilderNumberInput actionParam="'display-' + depth + '-font-size'" default="null" unit="'px'" saveUnit="'rem'"/>
                     </BuilderRow>
                 </t>
             </t>
@@ -48,16 +48,16 @@
         </BuilderRow>
         <BuilderRow label.translate="Line Height" action="'customizeWebsiteVariable'">
             <!-- "× ": \u00D7\u2000 -->
-            <BuilderNumberInput title.translate="Heading 1" actionParam="'headings-line-height'" unit="'✕'" saveUnit="''"/>
+            <BuilderNumberInput title.translate="Heading 1" actionParam="'headings-line-height'" default="null" unit="'✕'" saveUnit="''"/>
             <t t-set-slot="collapse">
                 <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'h' + depth + '-line-height'" unit="'✕'" saveUnit="''"/>
+                        <BuilderNumberInput actionParam="'h' + depth + '-line-height'" default="null" unit="'✕'" saveUnit="''"/>
                     </BuilderRow>
                 </t>
                 <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'display-' + depth + '-line-height'" unit="'✕'" saveUnit="''"/>
+                        <BuilderNumberInput actionParam="'display-' + depth + '-line-height'" default="null" unit="'✕'" saveUnit="''"/>
                     </BuilderRow>
                 </t>
             </t>

@@ -684,6 +684,9 @@ export function useInputBuilderComponent({
                 withLoadingEffect: withLoadingEffect,
             });
         }
+        if (rawValue === null || (rawValue === defaultValue && rawValue === state.value)) {
+            state.value = rawValue;
+        }
         // If the parsed value is not equivalent to the user input, we want to
         // normalize the displayed value. It is useful in cases of invalid
         // input and allows to fall back to the output of parseDisplayValue.
