@@ -320,7 +320,9 @@ img, .media_iframe_video, .o_image {
 
 .o_portal_address {
     span[itemprop="name"] {
-        margin-bottom: 0.3em;
+        display: inline-block;
+        margin-bottom: map-get($spacers, 1);
+        font-weight: $font-weight-bold;
     }
 
     div[itemprop="address"] > div {
@@ -339,6 +341,19 @@ img, .media_iframe_video, .o_image {
                 display: block;
             }
         }
+    }
+}
+
+.o_address_card {
+    .o_portal_address {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: map-get($spacers, 2);
+    }
+
+    span[itemprop="streetAddress"] {
+        color: var(--#{$prefix}secondary-color);
     }
 }
 
@@ -457,18 +472,8 @@ img, .media_iframe_video, .o_image {
 }
 
 // Address
-.o_portal_address_row {
-    @include media-breakpoint-down(md) {
-        overflow-x: auto;
-
-        > div {
-            width: auto;
-        }
-    }
-
-    .o_address_kanban_add_new, .o_address_kanban_card {
-        min-height: 12rem;
-    }
+.o_portal .o_portal_addresses {
+    max-width: map-get($grid-breakpoints, xxl) / 2;
 }
 
 .o_customer_address_fill {
