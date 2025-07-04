@@ -252,7 +252,10 @@ class HTML_Editor(http.Controller):
             # This approach is beneficial when the URL doesn't conclude with an
             # image extension. By verifying the MIME type, the code ensures that
             # only supported image types are incorporated into the data.
-            response = requests.head(url, timeout=10)
+            try:
+                response = requests.head(url, timeout=10)
+            except requests.exceptions.InvalidSchema:
+                raise UserError(_('The url that this service requested returned an error. The URL it tried to connect was %s', url))
             if response.status_code == 200:
                 mime_type = response.headers.get('content-type')
                 if mime_type in SUPPORTED_IMAGE_MIMETYPES:
