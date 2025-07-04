@@ -1463,3 +1463,71 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.assertEqual(pos_order.lines[0].qty, 12.0, "quantity should be 12.0")
         self.assertEqual(pos_order.lines[0].price_unit, 0.83, "price of product should be 0.83")
+
+    def test_multiple_lots_sale_order(self):
+        self.product = self.env['product.product'].create({
+            'name': 'Product',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 10.0,
+            'taxes_id': False,
+            'categ_id': self.product_category.id,
+            'tracking': 'lot',
+        })
+
+        self.warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        self.shelf_1 = self.env['stock.location'].create({
+            'name': 'Shelf 1',
+            'usage': 'internal',
+            'location_id': self.warehouse.lot_stock_id.id,
+        })
+        self.shelf_2 = self.env['stock.location'].create({
+            'name': 'Shelf 2',
+            'usage': 'internal',
+            'location_id': self.warehouse.lot_stock_id.id,
+        })
+
+        quants = self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product.id,
+            'inventory_quantity': 1,
+            'location_id': self.shelf_1.id,
+            'lot_id': self.env['stock.lot'].create({
+                'name': '1001',
+                'product_id': self.product.id,
+                'location_id': self.shelf_1.id,
+            }).id,
+        })
+        quants |= self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product.id,
+            'inventory_quantity': 2,
+            'location_id': self.shelf_2.id,
+            'lot_id': self.env['stock.lot'].create({
+                'name': '1002',
+                'product_id': self.product.id,
+                'location_id': self.shelf_2.id,
+            }).id,
+        })
+        quants.action_apply_inventory()
+
+        partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
+
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': partner_test.id,
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+                'name': self.product.name,
+                'product_uom_qty': 3,
+                'price_unit': self.product.lst_price,
+            })],
+        })
+        sale_order.action_confirm()
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_multiple_lots_sale_order', login="accountman")
+        self.main_pos_config.current_session_id.action_pos_session_close()
+        picking = sale_order.pos_order_line_ids.order_id.picking_ids
+        self.assertEqual(picking.move_ids.quantity, 3)
+        self.assertEqual(len(picking.move_ids.move_line_ids), 2)
+        self.assertEqual(picking.move_ids.move_line_ids[0].lot_id.name, '1001')
+        self.assertEqual(picking.move_ids.move_line_ids[0].quantity, 1)
+        self.assertEqual(picking.move_ids.move_line_ids[1].lot_id.name, '1002')
+        self.assertEqual(picking.move_ids.move_line_ids[1].quantity, 2)
