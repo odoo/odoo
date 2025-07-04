@@ -12,9 +12,11 @@ from random import randint
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, _, Command
+from odoo.tools import SQL
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 import typing
+
 if typing.TYPE_CHECKING:
     from .res_users import ResUsers
     from .res_bank import ResPartnerBank
@@ -326,6 +328,21 @@ class ResPartner(models.Model):
         "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )",
         "Contacts require a name",
     )
+
+    def init(self):
+        if self.env.registry.has_trigram:
+            index_part = []
+            for fname_searched in self._rec_names_search:
+                field_identifier = SQL.identifier(fname_searched)
+                if self.env.registry.has_unaccent:
+                    index_part.append(SQL("unaccent(%s) gin_trgm_ops", field_identifier))
+                else:
+                    index_part.append(SQL("%s gin_trgm_ops", field_identifier))
+
+            self.env.execute_query(SQL('''
+                CREATE INDEX IF NOT EXISTS res_partner__name_search_trigram ON res_partner
+                USING gin (%s)
+            ''', SQL(", ").join(index_part)))
 
     def _get_street_split(self):
         self.ensure_one()
