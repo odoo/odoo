@@ -161,7 +161,7 @@
                                 <label for="birthday"/>
                                         <div class="oe_inline">
                                             <field name="birthday" class="o_hr_narrow_field" readonly="not can_edit"/>
-                                            <span invisible="not birthday" groups="hr.group_hr_user">
+                                            <span invisible="not birthday" groups="hr.group_hr_responsible">
                                                 <label for="birthday_public_display" class="fw-bold text-900 form-check-label ms-3"/>
                                                 <field name="birthday_public_display" class="ms-3" readonly="not can_edit"/>
                                             </span>
@@ -228,7 +228,7 @@
                 </xpath>
                 <xpath expr="//group[@name='access_groups']" position="inside">
                     <field name="create_employee_id" force_save="1" invisible="1"/>
-                    <field name="create_employee" force_save="1" string="Create Employee" invisible="1" groups="hr.group_hr_user"/>
+                    <field name="create_employee" force_save="1" string="Create Employee" invisible="1" groups="hr.group_hr_responsible"/>
                     <!-- It is required to stay create_employee field defined here to make it true because store value is false -->
                 </xpath>
             </field>

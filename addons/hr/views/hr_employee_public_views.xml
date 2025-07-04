@@ -39,7 +39,21 @@
                     <header/>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <!-- Used by other modules-->
+                            <button name="%(open_view_employee_list_my)d"
+                                    type="action"
+                                    class="oe_stat_button"
+                                    icon="fa-sitemap"
+                                    invisible="not is_user"
+                                    groups="hr.group_hr_responsible">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value" id="child_count">
+                                        <!-- To be added in `hr_org_chart` as its the one has the childs count -->
+                                    </span>
+                                    <span class="o_stat_text">
+                                        My Team
+                                    </span>
+                                </div>
+                            </button>
                         </div>
                         <div class="row align-items-center">
                             <div class="o_employee_avatar ms-2 p-0 h-100 mw-25">

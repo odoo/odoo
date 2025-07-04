@@ -15,7 +15,7 @@
         <field name="name">Resume: HR user: all</field>
         <field name="model_id" ref="model_hr_resume_line"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4,ref('hr.group_hr_user'))]"/>
+        <field name="groups" eval="[(4,ref('hr.group_hr_responsible'))]"/>
     </record>
 
     <record id="hr_skills_rule_employee_update" model="ir.rule">
@@ -40,7 +40,7 @@
         <field name="name">Employee skill: HR user: read all</field>
         <field name="model_id" ref="model_hr_employee_skill"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4,ref('hr.group_hr_user'))]"/>
+        <field name="groups" eval="[(4,ref('hr.group_hr_responsible'))]"/>
     </record>
 
     <record id="hr_skill_rule_employee_update" model="ir.rule">
@@ -55,7 +55,7 @@
         <field name="name">Employee Skill Report: HR user</field>
         <field name="model_id" ref="model_hr_employee_skill_report"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="groups" eval="[(4, ref('hr.group_hr_responsible'))]"/>
     </record>
 
     <record id="hr_employee_skill_report_manager" model="ir.rule">
@@ -69,7 +69,7 @@
         <field name="name">Employee Skill History Report: HR user</field>
         <field name="model_id" ref="model_hr_employee_skill_history_report"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="groups" eval="[(4, ref('hr.group_hr_responsible'))]"/>
     </record>
 
     <record id="hr_employee_skill_history_report_manager" model="ir.rule">

@@ -28,7 +28,7 @@ class HrEmployee(models.Model):
              'If empty, the approval is done by an Administrator or Approver (determined in settings/users).',
     )
 
-    filter_for_expense = fields.Boolean(store=False, search='_search_filter_for_expense', groups="hr.group_hr_user")
+    filter_for_expense = fields.Boolean(store=False, search='_search_filter_for_expense', groups="hr.group_hr_responsible")
 
     def _search_filter_for_expense(self, operator, value):
         if operator != 'in':

@@ -18,21 +18,21 @@ class HrVersion(models.Model):
 
     date_generated_from = fields.Datetime(string='Generated From', readonly=True, required=True,
         default=lambda self: datetime.now().replace(hour=0, minute=0, second=0, microsecond=0), copy=False,
-        groups="hr.group_hr_user")
+        groups="hr.group_hr_responsible")
     date_generated_to = fields.Datetime(string='Generated To', readonly=True, required=True,
         default=lambda self: datetime.now().replace(hour=0, minute=0, second=0, microsecond=0), copy=False,
-        groups="hr.group_hr_user")
-    last_generation_date = fields.Date(string='Last Generation Date', readonly=True, groups="hr.group_hr_user")
+        groups="hr.group_hr_responsible")
+    last_generation_date = fields.Date(string='Last Generation Date', readonly=True, groups="hr.group_hr_responsible")
     work_entry_source = fields.Selection([('calendar', 'Working Schedule')], required=True, default='calendar', help='''
         Defines the source for work entries generation
 
         Working Schedule: Work entries will be generated from the working hours below.
         Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)
         Planning: Work entries will be generated from the employee's planning. (requires Planning app)
-    ''', groups="hr.group_hr_user")
+    ''', groups="hr.group_hr_responsible")
     work_entry_source_calendar_invalid = fields.Boolean(
         compute='_compute_work_entry_source_calendar_invalid',
-        groups="hr.group_hr_user",
+        groups="hr.group_hr_responsible",
     )
 
     @api.depends('work_entry_source', 'resource_calendar_id')

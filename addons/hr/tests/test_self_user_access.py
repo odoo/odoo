@@ -133,13 +133,13 @@ class TestSelfAccessRights(TestHrCommon):
             'user_id': cls.hubert.id,
         })
 
-        cls.protected_fields_emp = OrderedDict([(k, v) for k, v in cls.env['hr.employee']._fields.items() if v.groups == 'hr.group_hr_user'])
+        cls.protected_fields_emp = OrderedDict([(k, v) for k, v in cls.env['hr.employee']._fields.items() if v.groups == 'hr.group_hr_responsible'])
         # Compute fields and id field are always readable by everyone
         cls.read_protected_fields_emp = OrderedDict([(k, v) for k, v in cls.env['hr.employee']._fields.items() if not v.compute and k != 'id'])
         cls.self_protected_fields_user = OrderedDict([
             (k, v)
             for k, v in cls.env['res.users']._fields.items()
-            if v.groups == 'hr.group_hr_user' and k in cls.env['res.users'].SELF_READABLE_FIELDS
+            if v.groups == 'hr.group_hr_responsible' and k in cls.env['res.users'].SELF_READABLE_FIELDS
         ])
 
     # Read hr.employee #

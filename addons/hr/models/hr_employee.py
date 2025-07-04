@@ -21,7 +21,7 @@ from odoo.tools.intervals import Intervals
 class HrEmployee(models.Model):
     """
     NB: Any field only available on the model hr.employee (i.e. not on the
-    hr.employee.public model) should have `groups="hr.group_hr_user"` on its
+    hr.employee.public model) should have `groups="hr.group_hr_responsible"` on its
     definition to avoid being prefetched when the user hasn't access to the
     hr.employee model. Indeed, the prefetch loads the data for all the fields
     that are available according to the group defined on them.
@@ -43,26 +43,26 @@ class HrEmployee(models.Model):
         required=True,
         store=False,
         compute_sudo=True,
-        groups="hr.group_hr_user")
+        groups="hr.group_hr_responsible")
     current_version_id = fields.Many2one(
         'hr.version',
         compute='_compute_current_version_id',
         store=True,
-        groups="hr.group_hr_user",
+        groups="hr.group_hr_responsible",
     )
     current_date_version = fields.Date(
         related="current_version_id.date_version",
         string="Current Date Version",
-        groups="hr.group_hr_user"
+        groups="hr.group_hr_responsible"
     )
     version_ids = fields.One2many(
         'hr.version',
         'employee_id',
         string='Employee Versions',
-        groups="hr.group_hr_user",
+        groups="hr.group_hr_responsible",
         required=True
     )
-    versions_count = fields.Integer(compute='_compute_versions_count', groups="hr.group_hr_user")
+    versions_count = fields.Integer(compute='_compute_versions_count', groups="hr.group_hr_responsible")
 
     @api.model
     def _lang_get(self):
@@ -106,47 +106,47 @@ class HrEmployee(models.Model):
 
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
     company_id = fields.Many2one('res.company', required=True)
-    company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True, groups="base.group_system,hr.group_hr_user")
-    company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True, groups="base.group_system,hr.group_hr_user", string='Company Country Code')
+    company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True, groups="base.group_system,hr.group_hr_responsible")
+    company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True, groups="base.group_system,hr.group_hr_responsible", string='Company Country Code')
     work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False, tracking=True)
     mobile_phone = fields.Char('Work Mobile', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False, index='btree_not_null')
     # private info
-    legal_name = fields.Char(compute='_compute_legal_name', store=True, readonly=False, groups="hr.group_hr_user")
-    private_phone = fields.Char(string="Private Phone", groups="hr.group_hr_user")
-    private_email = fields.Char(string="Private Email", groups="hr.group_hr_user")
-    lang = fields.Selection(selection=_lang_get, string="Lang", groups="hr.group_hr_user")
-    place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user", tracking=True)
-    country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user", tracking=True)
-    birthday = fields.Date('Birthday', groups="hr.group_hr_user", tracking=True)
-    birthday_public_display = fields.Boolean('Show to all employees', groups="hr.group_hr_user", default=False)
+    legal_name = fields.Char(compute='_compute_legal_name', store=True, readonly=False, groups="hr.group_hr_responsible")
+    private_phone = fields.Char(string="Private Phone", groups="hr.group_hr_responsible")
+    private_email = fields.Char(string="Private Email", groups="hr.group_hr_responsible")
+    lang = fields.Selection(selection=_lang_get, string="Lang", groups="hr.group_hr_responsible")
+    place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_responsible", tracking=True)
+    country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_responsible", tracking=True)
+    birthday = fields.Date('Birthday', groups="hr.group_hr_responsible", tracking=True)
+    birthday_public_display = fields.Boolean('Show to all employees', groups="hr.group_hr_responsible", default=False)
     birthday_public_display_string = fields.Char("Public Date of Birth", compute="_compute_birthday_public_display_string", default="hidden")
     bank_account_id = fields.Many2one(
         'res.partner.bank', 'Bank Account',
         domain="[('partner_id', '=', work_contact_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        groups="hr.group_hr_user",
+        groups="hr.group_hr_responsible",
         tracking=True,
         help='Employee bank account to pay salaries')
-    permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user", tracking=True)
-    visa_no = fields.Char('Visa No', groups="hr.group_hr_user", tracking=True)
-    visa_expire = fields.Date('Visa Expiration Date', groups="hr.group_hr_user", tracking=True)
-    work_permit_expiration_date = fields.Date('Work Permit Expiration Date', groups="hr.group_hr_user", tracking=True)
-    has_work_permit = fields.Binary(string="Work Permit", groups="hr.group_hr_user")
-    work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_user")
-    work_permit_name = fields.Char('work_permit_name', compute='_compute_work_permit_name', groups="hr.group_hr_user")
-    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
+    permit_no = fields.Char('Work Permit No', groups="hr.group_hr_responsible", tracking=True)
+    visa_no = fields.Char('Visa No', groups="hr.group_hr_responsible", tracking=True)
+    visa_expire = fields.Date('Visa Expiration Date', groups="hr.group_hr_responsible", tracking=True)
+    work_permit_expiration_date = fields.Date('Work Permit Expiration Date', groups="hr.group_hr_responsible", tracking=True)
+    has_work_permit = fields.Binary(string="Work Permit", groups="hr.group_hr_responsible")
+    work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_responsible")
+    work_permit_name = fields.Char('work_permit_name', compute='_compute_work_permit_name', groups="hr.group_hr_responsible")
+    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_responsible", tracking=True)
     certificate = fields.Selection([
         ('graduate', 'Graduate'),
         ('bachelor', 'Bachelor'),
         ('master', 'Master'),
         ('doctor', 'Doctor'),
         ('other', 'Other'),
-    ], 'Certificate Level', groups="hr.group_hr_user", tracking=True)
-    study_field = fields.Char("Field of Study", groups="hr.group_hr_user", tracking=True)
-    study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
-    emergency_contact = fields.Char(groups="hr.group_hr_user", tracking=True)
-    emergency_phone = fields.Char(groups="hr.group_hr_user", tracking=True)
+    ], 'Certificate Level', groups="hr.group_hr_responsible", tracking=True)
+    study_field = fields.Char("Field of Study", groups="hr.group_hr_responsible", tracking=True)
+    study_school = fields.Char("School", groups="hr.group_hr_responsible", tracking=True)
+    emergency_contact = fields.Char(groups="hr.group_hr_responsible", tracking=True)
+    emergency_phone = fields.Char(groups="hr.group_hr_responsible", tracking=True)
 
     # employee in company
     parent_id = fields.Many2one('hr.employee', 'Manager', tracking=True, index=True,
@@ -159,45 +159,45 @@ class HrEmployee(models.Model):
              'The "Coach" has no specific rights or responsibilities by default.')
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
-        'employee_id', 'category_id', groups="hr.group_hr_user",
+        'employee_id', 'category_id', groups="hr.group_hr_responsible",
         string='Tags')
     # misc
     color = fields.Integer('Color Index', default=0)
-    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", groups="hr.group_hr_user", copy=False)
-    pin = fields.Char(string="PIN", groups="hr.group_hr_user", copy=False,
+    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", groups="hr.group_hr_responsible", copy=False)
+    pin = fields.Char(string="PIN", groups="hr.group_hr_responsible", copy=False,
         help="PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if enabled in Configuration) and to change the cashier in the Point of Sale application.")
-    message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
-    id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_user")
-    driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_user")
-    private_car_plate = fields.Char(groups="hr.group_hr_user", help="If you have more than one car, just separate the plates by a space.")
-    currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, groups="hr.group_hr_user")
-    related_partners_count = fields.Integer(compute="_compute_related_partners_count", groups="hr.group_hr_user")
+    message_main_attachment_id = fields.Many2one(groups="hr.group_hr_responsible")
+    id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_responsible")
+    driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_responsible")
+    private_car_plate = fields.Char(groups="hr.group_hr_responsible", help="If you have more than one car, just separate the plates by a space.")
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, groups="hr.group_hr_responsible")
+    related_partners_count = fields.Integer(compute="_compute_related_partners_count", groups="hr.group_hr_responsible")
     # properties
-    employee_properties = fields.Properties('Properties', definition='company_id.employee_properties_definition', precompute=False, groups="hr.group_hr_user")
+    employee_properties = fields.Properties('Properties', definition='company_id.employee_properties_definition', precompute=False, groups="hr.group_hr_responsible")
 
     # mail.activity.mixin
-    activity_ids = fields.One2many(groups="hr.group_hr_user")
-    activity_state = fields.Selection(groups="hr.group_hr_user")
-    activity_user_id = fields.Many2one(groups="hr.group_hr_user")
-    activity_type_id = fields.Many2one(groups="hr.group_hr_user")
-    activity_type_icon = fields.Char(groups="hr.group_hr_user")
-    activity_date_deadline = fields.Date(groups="hr.group_hr_user")
-    my_activity_date_deadline = fields.Date(groups="hr.group_hr_user")
-    activity_summary = fields.Char(groups="hr.group_hr_user")
-    activity_exception_decoration = fields.Selection(groups="hr.group_hr_user")
-    activity_exception_icon = fields.Char(groups="hr.group_hr_user")
+    activity_ids = fields.One2many(groups="hr.group_hr_responsible")
+    activity_state = fields.Selection(groups="hr.group_hr_responsible")
+    activity_user_id = fields.Many2one(groups="hr.group_hr_responsible")
+    activity_type_id = fields.Many2one(groups="hr.group_hr_responsible")
+    activity_type_icon = fields.Char(groups="hr.group_hr_responsible")
+    activity_date_deadline = fields.Date(groups="hr.group_hr_responsible")
+    my_activity_date_deadline = fields.Date(groups="hr.group_hr_responsible")
+    activity_summary = fields.Char(groups="hr.group_hr_responsible")
+    activity_exception_decoration = fields.Selection(groups="hr.group_hr_responsible")
+    activity_exception_icon = fields.Char(groups="hr.group_hr_responsible")
 
     # mail.thread mixin
-    message_is_follower = fields.Boolean(groups="hr.group_hr_user")
-    message_follower_ids = fields.One2many(groups="hr.group_hr_user")
-    message_partner_ids = fields.Many2many(groups="hr.group_hr_user")
-    message_ids = fields.One2many(groups="hr.group_hr_user")
-    has_message = fields.Boolean(groups="hr.group_hr_user")
-    message_needaction = fields.Boolean(groups="hr.group_hr_user")
-    message_needaction_counter = fields.Integer(groups="hr.group_hr_user")
-    message_has_error = fields.Boolean(groups="hr.group_hr_user")
-    message_has_error_counter = fields.Integer(groups="hr.group_hr_user")
-    message_attachment_count = fields.Integer(groups="hr.group_hr_user")
+    message_is_follower = fields.Boolean(groups="hr.group_hr_responsible")
+    message_follower_ids = fields.One2many(groups="hr.group_hr_responsible")
+    message_partner_ids = fields.Many2many(groups="hr.group_hr_responsible")
+    message_ids = fields.One2many(groups="hr.group_hr_responsible")
+    has_message = fields.Boolean(groups="hr.group_hr_responsible")
+    message_needaction = fields.Boolean(groups="hr.group_hr_responsible")
+    message_needaction_counter = fields.Integer(groups="hr.group_hr_responsible")
+    message_has_error = fields.Boolean(groups="hr.group_hr_responsible")
+    message_has_error_counter = fields.Integer(groups="hr.group_hr_responsible")
+    message_attachment_count = fields.Integer(groups="hr.group_hr_responsible")
 
     _barcode_uniq = models.Constraint(
         'unique (barcode)',
@@ -225,7 +225,7 @@ class HrEmployee(models.Model):
         # if we try to read them directly (very uncommon use case). Don't add your field on this
         # list if you can specify the group on the field directly (as all the other fields).
         result = super().check_field_access_rights(operation, field_names)
-        if not self.env.user.has_group("hr.group_hr_user"):
+        if not self.env.user.has_group("hr.group_hr_responsible"):
             result = [field for field in result if field not in ['activity_calendar_event_id', 'rating_ids', 'website_message_ids', 'message_has_sms_error']]
         return result
 
@@ -236,7 +236,7 @@ class HrEmployee(models.Model):
         # list if you can specify the group on the field directly (as all the other fields).
         return super()._has_field_access(field, operation) and (
             self.env.su
-            or self.env.user.has_group("hr.group_hr_user")
+            or self.env.user.has_group("hr.group_hr_responsible")
             or field.name not in ('activity_calendar_event_id', 'rating_ids', 'website_message_ids', 'message_has_sms_error')
         )
 
@@ -292,7 +292,7 @@ class HrEmployee(models.Model):
 
     def _get_first_version_date(self, no_gap=True):
         self.ensure_one()
-        if not self.env.user.has_group("hr.group_hr_user"):
+        if not self.env.user.has_group("hr.group_hr_responsible"):
             raise AccessError(_("Only HR users can access first version date on an employee."))
 
         def remove_gap(versions):

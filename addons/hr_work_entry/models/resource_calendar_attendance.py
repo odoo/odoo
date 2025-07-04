@@ -11,7 +11,7 @@ class ResourceCalendarAttendance(models.Model):
 
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type', 'Work Entry Type', default=_default_work_entry_type_id,
-        groups="hr.group_hr_user")
+        groups="hr.group_hr_responsible")
 
     def _copy_attendance_vals(self):
         res = super()._copy_attendance_vals()

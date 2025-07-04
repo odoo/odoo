@@ -8,9 +8,9 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     employee_ids = fields.One2many(
-        'hr.employee', 'work_contact_id', string='Employees', groups="hr.group_hr_user",
+        'hr.employee', 'work_contact_id', string='Employees', groups="hr.group_hr_responsible",
         help="Related employees based on their private address")
-    employees_count = fields.Integer(compute='_compute_employees_count', groups="hr.group_hr_user")
+    employees_count = fields.Integer(compute='_compute_employees_count', groups="hr.group_hr_responsible")
     employee = fields.Boolean(help="Whether this contact is an Employee.", compute='_compute_employee', store=True, readonly=False)
 
     def _compute_employees_count(self):

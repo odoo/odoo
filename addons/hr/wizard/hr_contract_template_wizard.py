@@ -8,7 +8,7 @@ class HrDepartureWizard(models.TransientModel):
     _description = 'Contract Template Wizard'
 
     contract_template_id = fields.Many2one(
-            'hr.version', string="Contract Template", groups="hr.group_hr_user", required=True,
+            'hr.version', string="Contract Template", groups="hr.group_hr_responsible", required=True,
             domain=lambda self: [('company_id', '=', self.env.company.id), ('employee_id', '=', False)],
             help="Select a contract template to auto-fill the contract form with predefined values. You can still edit the fields as needed after applying the template.")
 

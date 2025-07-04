@@ -13,7 +13,7 @@
         <record id="homeworking_admin_rule" model="ir.rule">
             <field name="name">homeworking: admin</field>
             <field name="model_id" ref="model_hr_employee_location"/>
-            <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+            <field name="groups" eval="[(4, ref('hr.group_hr_responsible'))]"/>
             <field name="domain_force">[(1, '=', 1)]</field>
         </record>
     </data>

@@ -6,7 +6,7 @@ from odoo import api, fields, models
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
-    applicant_ids = fields.One2many('hr.applicant', 'employee_id', 'Applicants', groups="hr.group_hr_user")
+    applicant_ids = fields.One2many('hr.applicant', 'employee_id', 'Applicants', groups="hr.group_hr_responsible")
 
     def _get_partner_count_depends(self):
         return super()._get_partner_count_depends() + ['applicant_ids']

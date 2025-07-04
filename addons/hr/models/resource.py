@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -35,7 +34,7 @@ class ResourceResource(models.Model):
 
     @api.depends('employee_id')
     def _compute_avatar_128(self):
-        is_hr_user = self.env.user.has_group('hr.group_hr_user')
+        is_hr_user = self.env.user.has_group('hr.group_hr_responsible')
         if not is_hr_user:
             public_employees = self.env['hr.employee.public'].with_context(active_test=False).search([
                 ('resource_id', 'in', self.ids),

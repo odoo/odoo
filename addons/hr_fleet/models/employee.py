@@ -11,9 +11,9 @@ class HrEmployee(models.Model):
     employee_cars_count = fields.Integer(compute="_compute_employee_cars_count", string="Cars", groups="fleet.fleet_group_manager")
     car_ids = fields.One2many(
         'fleet.vehicle', 'driver_employee_id', string='Vehicles (private)',
-        groups="fleet.fleet_group_manager,hr.group_hr_user",
+        groups="fleet.fleet_group_manager,hr.group_hr_responsible",
     )
-    license_plate = fields.Char(compute="_compute_license_plate", search="_search_license_plate", groups="hr.group_hr_user")
+    license_plate = fields.Char(compute="_compute_license_plate", search="_search_license_plate", groups="hr.group_hr_responsible")
     mobility_card = fields.Char(groups="fleet.fleet_group_user")
 
     def action_open_employee_cars(self):

@@ -118,7 +118,7 @@ class TestUnstoredInheritsParent(models.Model):
         required=True,
         store=False,
         compute_sudo=True,
-        groups="hr.group_hr_user")
+        groups="hr.group_hr_responsible")
 
     @api.depends('name')
     def _compute_child_id(self):

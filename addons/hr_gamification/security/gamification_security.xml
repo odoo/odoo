@@ -4,7 +4,7 @@
     <record id="goal_gamification_hr_user_visibility" model="ir.rule">
         <field name="name">HR Officer can see any goal</field>
         <field name="model_id" ref="gamification.model_gamification_goal"/>
-        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="groups" eval="[(4, ref('hr.group_hr_responsible'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_create" eval="False"/>
