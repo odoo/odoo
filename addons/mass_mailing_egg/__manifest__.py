@@ -49,7 +49,6 @@
             # dark mode, but these colors are not pretty when the dark mode is not there anymore after sending the mail).
         ],
         'web.assets_backend': [
-            'mass_mailing_egg/static/src/interaction_service/**/*',
             'mass_mailing_egg/static/src/fields/**/*',
             'mass_mailing_egg/static/src/themes/**/*',
             'mass_mailing_egg/static/src/iframe/**/*',
