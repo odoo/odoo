@@ -727,7 +727,7 @@
             <field name="name">project.task.view.list.main.base</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <list string="Tasks" editable="bottom" open_form_view="True" sample="1" default_order="priority desc, sequence, state, date_deadline asc, id desc">
+                <list string="Tasks" sample="1" default_order="priority desc, sequence, state, date_deadline asc, id desc">
                     <field name="sequence" readonly="1" column_invisible="True"/>
                     <field name="allow_milestones" column_invisible="True"/>
                     <field name="subtask_count" column_invisible="True"/>
@@ -738,7 +738,7 @@
                     <field name="milestone_id" invisible="not allow_milestones" context="{'default_project_id': project_id}" groups="project.group_project_milestone" optional="hide"/>
                     <field name="partner_id" optional="hide" widget="res_partner_many2one" invisible="not project_id" options="{'no_open': True}" column_invisible="context.get('default_is_template', False)"/>
                     <field name="user_ids" optional="show" widget="many2many_avatar_user"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show" column_invisible="context.get('default_project_id')" options="{'no_create': True}"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide" column_invisible="context.get('default_project_id')" options="{'no_create': True}"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" invisible="state in ['1_done', '1_canceled']"/>
                     <field name="priority" widget="priority" optional="show" width="70px"/>
