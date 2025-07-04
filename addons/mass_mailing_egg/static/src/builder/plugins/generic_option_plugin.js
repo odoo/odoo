@@ -19,11 +19,6 @@ class GenericBlockOptionPlugin extends Plugin {
                 selector: ".o_mail_snippet_general",
                 exclude: ".o_mail_snippet_general .row > div *"
             },
-            {
-                template: "mass_mailing.ColorPickerOption",
-                selector: this.colorPickerSelector,
-                exclude: ".o_mail_no_colorpicker, .o_mail_no_options, .s_mail_color_blocks_2"
-            },
         ],
         so_snippet_addition_selector: [".o_mail_snippet_general"],
         so_content_addition_selector: [

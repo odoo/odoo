@@ -24,7 +24,7 @@ export class BorderConfigurator extends BaseOptionComponent {
     }
 
     get showBorderRadiusOption() {
-        return this.props.withRoundCorner && parseInt(this.getItemValue("border_width_opt")) > 0;
+        return this.props.withRoundCorner && this.state.hasBorder;
     }
 
     getStyleActionParam(param) {

@@ -2,6 +2,12 @@
     <t t-name="mass_mailing.BorderOption">
         <BorderConfigurator label.translate="Border"/>
     </t>
+    <t t-name="mass_mailing.BorderOptionNoRoundedCornersDependency">
+        <BorderConfigurator label.translate="Border" withRoundCorner="false"/>
+        <BuilderRow label.translate="Round Corners">
+            <BuilderNumberInput action="'styleAction'" actionParam="{ mainParam: 'border-radius', extraClass: props.withBSClass and 'rounded' }" unit="'px'" default="0" min="0" composable="true"/>
+        </BuilderRow>
+    </t>
     <t t-name="mass_mailing.BorderOptionNoRoundedCorners">
         <BorderConfigurator label.translate="Border" withRoundCorner="false"/>
     </t>

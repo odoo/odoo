@@ -6,7 +6,7 @@ export class BorderOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             {
-                template: "mass_mailing.BorderOptionNoRoundedCorners",
+                template: "mass_mailing.BorderOptionNoRoundedCornersDependency",
                 selector: ".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div",
                 applyTo: ".card",
             },
