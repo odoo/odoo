@@ -41,6 +41,7 @@ import { rpc } from "@web/core/network/rpc";
 import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
+import { ForwardedMessage } from "./forwarded_message";
 
 /**
  * @typedef {Object} Props
@@ -72,6 +73,7 @@ export class Message extends Component {
         Popover: MessageNotificationPopover,
         RelativeTime,
         NotificationMessage,
+        ForwardedMessage,
     };
     static defaultProps = {
         hasActions: true,

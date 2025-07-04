@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ForwardedMessage">
+        <div class="o-mail-MessageInReply o-mail-Forward-core o-muted position-relative px-2 py-1 rounded-3 rounded-start-0"
+            t-att-class="{
+                'o-blue': props.message?.bubbleColor === 'blue',
+                'o-green': props.message?.bubbleColor === 'green',
+                'o-orange': props.message?.bubbleColor === 'orange',
+            }"
+        >
+            <small>
+                <div t-if="props.message?.forwarded_from_id and !props.inDialog" class="text-muted fst-italic"> <i class="fa fa-share"/> Forwarded message</div>
+                <div t-if="!props.message?.isBodyEmpty" class="d-inline-flex align-items-center text-muted opacity-75" t-att-class="{ 'cursor-pointer opacity-100-hover': props.onClick }" t-on-click="() => this.props.onClick?.()">
+                    <span class="o-mail-MessageInReply-content overflow-hidden smaller">
+                        <span class="o-mail-MessageInReply-message ms-1 text-break">
+                            <t t-if="!props.message?.isBodyEmpty">
+                                <t t-out="props.message?.richBody"/>
+                                <em t-if="props.message?.edited" class="smaller fw-bold text-500"> (edited)</em>
+                            </t>
+                        </span>
+                    </span>
+                </div>
+                <div>
+                    <AttachmentList
+                        t-if="props.message.attachment_ids.length > 0"
+                        attachments="props.message.attachment_ids.map((a) => a)"
+                        unlinkAttachment="()=>{}"
+                    />
+                </div>
+                <MessageLinkPreviewList t-if="props.message.message_link_preview_ids.length > 0 and store.hasLinkPreviewFeature and !props.message.linkPreviewSquash" messageLinkPreviews="props.message.message_link_preview_ids"/>
+                <div t-if="!props.inDialog and props.message.is_forwarded_message_accessible" class="d-inline-flex align-items-center gap-1 p-1 text-muted cursor-pointer rounded-1 custom-hover-transition"
+                 role="button"
+                 t-on-click="openRecord">
+                    <t t-out="state.displayName"/>
+                    <i class="fa fa-chevron-right"></i>
+                    <t t-out="props.message.forwarded_from_id.dateSimpleWithDay"/>
+                </div>
+            </small>
+        </div>
+    </t>
+</templates>

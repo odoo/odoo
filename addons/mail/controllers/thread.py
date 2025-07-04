@@ -232,6 +232,53 @@ class ThreadController(http.Controller):
         )
         return Store(message, for_current_user=True).get_result()
 
+    @http.route("/mail/message/forward_to", methods=["POST"], type="jsonrpc", auth="user")
+    def mail_message_forward_to(self, forwarded_from_id, current_body, target_channels_ids, **kwargs):
+        message = self._get_message_with_access(forwarded_from_id, mode="create", **kwargs)
+
+        preview_messages = []  # collect messages that need link preview
+
+        for id in target_channels_ids:
+            channel = request.env["discuss.channel"].browse(id)
+            new_attachment_ids = []
+            for attachment in message.attachment_ids:
+                new_attachment = attachment.copy({
+                    'res_model': 'discuss.channel',
+                    'res_id': channel.id,
+                })
+                new_attachment_ids.append(new_attachment.id)
+
+            # Post original forwarded message
+            original_msg = channel.message_post(
+                body=message.body,
+                message_type="comment",
+                forwarded_from_id=forwarded_from_id,
+                subtype_xmlid="mail.mt_comment",
+                attachment_ids=new_attachment_ids
+            )
+            preview_messages.append(original_msg)
+
+            # Post optional custom body
+            if current_body:
+                forwarded_msg = channel.message_post(
+                    body=current_body,
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_comment",
+                    body_is_html=True
+                )
+                preview_messages.append(forwarded_msg)
+
+        # Trigger link preview for all messages
+        if request.env["mail.link.preview"]._is_link_preview_enabled():
+            guest = request.env["mail.guest"]._get_guest_from_context()
+            for msg in preview_messages:
+                if not msg:
+                    continue
+                if msg.is_current_user_or_guest_author or (guest and guest.env.user._is_admin()):
+                    request.env["mail.link.preview"].sudo()._create_from_message_and_notify(
+                        msg, request_url=request.httprequest.url_root
+                    )
+
     # side check for access
     # ------------------------------------------------------------
 
