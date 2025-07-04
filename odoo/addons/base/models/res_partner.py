@@ -191,6 +191,19 @@ class PartnerTitle(models.Model):
 
 
 class Partner(models.Model):
+    @api.constrains('phone', 'email', 'website')
+    def _check_contact_fields(self):
+        import re
+        email_regex = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
+        website_regex = r"^(https?://)?([\w.-]+)\.([a-zA-Z]{2,})(/\S*)?$"
+        phone_regex = r"^[0-9+()\-\s]{6,}$"  # Basic check: at least 6 digits or symbols
+        for rec in self:
+            if rec.email and not re.match(email_regex, rec.email):
+                raise ValidationError(_("Invalid email address: %s" % rec.email))
+            if rec.website and not re.match(website_regex, rec.website):
+                raise ValidationError(_("Invalid website URL: %s" % rec.website))
+            if rec.phone and not re.match(phone_regex, rec.phone):
+                raise ValidationError(_("Invalid phone number: %s" % rec.phone))
     _description = 'Contact'
     _inherit = ['format.address.mixin', 'format.vat.label.mixin', 'avatar.mixin']
     _name = "res.partner"
