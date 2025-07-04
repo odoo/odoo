@@ -218,6 +218,7 @@ registry.category("services").add("website_edit", {
                         // parent node, you do not want the inserted node to be
                         // reinserted upon undo of the option's action.
                         el.dataset.skipHistoryHack = "true";
+                        el.setAttribute("contenteditable", "false");
                     },
                 }),
                 patch(publicInteractions.constructor.prototype, {
