@@ -6,6 +6,7 @@ import itertools
 
 from odoo import api, fields, models, Command
 from odoo.addons.mail.tools.discuss import Store
+from odoo.tools import SQL
 
 
 class MailFollowers(models.Model):
@@ -154,7 +155,10 @@ class MailFollowers(models.Model):
         """
         self.env['mail.followers'].flush_model(['partner_id', 'subtype_ids'])
         self.env['mail.message.subtype'].flush_model(['internal'])
-        self.env['res.users'].flush_model(['notification_type', 'active', 'partner_id', 'group_ids'])
+        self.env['res.users'].flush_model([
+            'notification_type', 'active', 'partner_id', 'group_ids',
+            'out_of_office_from', 'out_of_office_to', 'out_of_office_message',
+        ])
         self.env['res.partner'].flush_model(['active', 'email_normalized', 'name', 'partner_share'])
         self.env['res.groups'].flush_model(['user_ids'])
         # if we have records and a subtype: we have to fetch followers, unless being
@@ -174,10 +178,10 @@ class MailFollowers(models.Model):
                    subtype.internal AS internal
               FROM mail_followers_mail_message_subtype_rel m
          LEFT JOIN mail_message_subtype subtype ON subtype.id = m.mail_message_subtype_id
-             WHERE m.mail_followers_id = fol.id AND m.mail_message_subtype_id = %s
+             WHERE m.mail_followers_id = fol.id AND m.mail_message_subtype_id = %(subtype_id)s
             ) subrel ON TRUE
-         WHERE fol.res_model = %s
-               AND fol.res_id IN %s
+         WHERE fol.res_model = %(model_name)s
+               AND fol.res_id IN %(record_ids)s
 
      UNION ALL
 
@@ -188,7 +192,7 @@ class MailFollowers(models.Model):
                FALSE as subtype_follower,
                FALSE as internal
           FROM res_partner
-         WHERE res_partner.id = ANY(%s)
+         WHERE res_partner.id = ANY(%(pids)s)
     )
     SELECT partner.id as pid,
            partner.active as active,
@@ -197,6 +201,8 @@ class MailFollowers(models.Model):
            partner.name as name,
            partner.partner_share as pshare,
            sub_user.uid as uid,
+           sub_user.ooo_activated as ooo_activated,
+           sub_user.ooo_msg as ooo_msg,
            COALESCE(sub_user.share, FALSE) as ushare,
            COALESCE(sub_user.notification_type, 'email') as notif,
            sub_user.groups as groups,
@@ -208,6 +214,16 @@ class MailFollowers(models.Model):
  LEFT JOIN LATERAL (
         WITH RECURSIVE all_groups AS (
             SELECT users.id AS uid,
+                   CASE WHEN users.out_of_office_from IS NOT NULL
+                        THEN CASE WHEN users.out_of_office_to IS NOT NULL AND users.out_of_office_to < %(now)s AND users.out_of_office_from < %(now)s THEN FALSE
+                                  WHEN users.out_of_office_to IS NOT NULL AND users.out_of_office_to > %(now)s AND users.out_of_office_from < %(now)s THEN TRUE
+                                  WHEN users.out_of_office_to IS NULL AND users.out_of_office_from < %(now)s THEN TRUE
+                                  ELSE FALSE
+                                  END
+                        ELSE FALSE
+                        END
+                   AS ooo_activated,
+                   users.out_of_office_message AS ooo_msg,
                    users.share AS share,
                    users.notification_type AS notification_type,
                    groups_rel.gid
@@ -215,26 +231,37 @@ class MailFollowers(models.Model):
          LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
              WHERE users.partner_id = partner.id AND users.active
           UNION
-            SELECT ag.uid, ag.share, ag.notification_type, implied.hid
+            SELECT ag.uid, ag.ooo_activated, ag.ooo_msg, ag.share, ag.notification_type, implied.hid
               FROM all_groups ag
               JOIN res_groups_implied_rel implied ON ag.gid = implied.gid
         )
         SELECT uid,
+               ooo_activated,
+               ooo_msg,
                share,
                notification_type,
                ARRAY_AGG(DISTINCT gid) AS groups
           FROM all_groups
       GROUP BY uid,
+               ooo_activated,
+               ooo_msg,
                share,
                notification_type
       ORDER BY share ASC NULLS FIRST, uid ASC
          FETCH FIRST ROW ONLY
          ) sub_user ON TRUE
 
-     WHERE sub_followers.subtype_follower OR partner.id = ANY(%s)
+     WHERE sub_followers.subtype_follower OR partner.id = ANY(%(pids)s)
 """
-            params = [subtype_id, records._name, tuple(records.ids), list(pids or []), list(pids or [])]
-            self.env.cr.execute(query, tuple(params))
+            # NOTE: using cr.now instead of hardcoding now() to enable mocks
+            params = {
+                'model_name': records._name,
+                'now': self.env.cr.now(),
+                'record_ids': tuple(records.ids),
+                'pids': list(pids or []),
+                'subtype_id': subtype_id,
+            }
+            self.env.cr.execute(SQL(query, **params))
             res = self.env.cr.fetchall()
         # partner_ids and records: no sub query for followers but check for follower status
         elif pids and records:
@@ -247,17 +274,29 @@ class MailFollowers(models.Model):
            partner.name as name,
            partner.partner_share as pshare,
            sub_user.uid as uid,
+           sub_user.ooo_activated as ooo_activated,
+           sub_user.ooo_msg as ooo_msg,
            COALESCE(sub_user.share, FALSE) as ushare,
            COALESCE(sub_user.notification_type, 'email') as notif,
            sub_user.groups as groups,
            ARRAY_AGG(fol.res_id) FILTER (WHERE fol.res_id IS NOT NULL) AS res_ids
       FROM res_partner partner
  LEFT JOIN mail_followers fol ON fol.partner_id = partner.id
-                              AND fol.res_model = %s
-                              AND fol.res_id IN %s
+                              AND fol.res_model = %(model_name)s
+                              AND fol.res_id IN %(record_ids)s
  LEFT JOIN LATERAL (
         WITH RECURSIVE all_groups AS (
             SELECT users.id AS uid,
+                   CASE WHEN users.out_of_office_from IS NOT NULL
+                        THEN CASE WHEN users.out_of_office_to IS NOT NULL AND users.out_of_office_to < %(now)s AND users.out_of_office_from < %(now)s THEN FALSE
+                                  WHEN users.out_of_office_to IS NOT NULL AND users.out_of_office_to > %(now)s AND users.out_of_office_from < %(now)s THEN TRUE
+                                  WHEN users.out_of_office_to IS NULL AND users.out_of_office_from < %(now)s THEN TRUE
+                                  ELSE FALSE
+                                  END
+                        ELSE FALSE
+                        END
+                   AS ooo_activated,
+                   users.out_of_office_message AS ooo_msg,
                    users.share AS share,
                    users.notification_type AS notification_type,
                    groups_rel.gid
@@ -265,31 +304,43 @@ class MailFollowers(models.Model):
          LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
              WHERE users.partner_id = partner.id AND users.active
           UNION
-            SELECT ag.uid, ag.share, ag.notification_type, implied.hid
+            SELECT ag.uid, ag.ooo_activated, ag.ooo_msg, ag.share, ag.notification_type, implied.hid
               FROM all_groups ag
               JOIN res_groups_implied_rel implied ON ag.gid = implied.gid
         )
         SELECT uid,
+               ooo_activated,
+               ooo_msg,
                share,
                notification_type,
                ARRAY_AGG(DISTINCT gid) AS groups
           FROM all_groups
       GROUP BY uid,
+               ooo_activated,
+               ooo_msg,
                share,
                notification_type
       ORDER BY share ASC NULLS FIRST, uid ASC
          FETCH FIRST ROW ONLY
          ) sub_user ON TRUE
 
-     WHERE partner.id IN %s
+     WHERE partner.id = ANY(%(pids)s)
   GROUP BY partner.id,
            sub_user.uid,
+           sub_user.ooo_activated,
+           sub_user.ooo_msg,
            sub_user.share,
            sub_user.notification_type,
            sub_user.groups
 """
-            params = [records._name, tuple(records.ids), tuple(pids)]
-            self.env.cr.execute(query, tuple(params))
+            # NOTE: using cr.now instead of hardcoding now() to enable mocks
+            params = {
+                'model_name': records._name,
+                'now': self.env.cr.now(),
+                'record_ids': tuple(records.ids),
+                'pids': list(pids or []),
+            }
+            self.env.cr.execute(SQL(query, **params))
             simplified_res = self.env.cr.fetchall()
             # simplified query contains res_ids -> flatten it by making it a list
             # with res_id and add follower status
@@ -312,6 +363,8 @@ class MailFollowers(models.Model):
            partner.name as name,
            partner.partner_share as pshare,
            sub_user.uid as uid,
+           sub_user.ooo_activated as ooo_activated,
+           sub_user.ooo_msg as ooo_msg,
            COALESCE(sub_user.share, FALSE) as ushare,
            COALESCE(sub_user.notification_type, 'email') as notif,
            sub_user.groups as groups,
@@ -321,6 +374,16 @@ class MailFollowers(models.Model):
  LEFT JOIN LATERAL (
         WITH RECURSIVE all_groups AS (
             SELECT users.id AS uid,
+                   CASE WHEN users.out_of_office_from IS NOT NULL
+                        THEN CASE WHEN users.out_of_office_to IS NOT NULL AND users.out_of_office_to < %(now)s AND users.out_of_office_from < %(now)s THEN FALSE
+                                  WHEN users.out_of_office_to IS NOT NULL AND users.out_of_office_to > %(now)s AND users.out_of_office_from < %(now)s THEN TRUE
+                                  WHEN users.out_of_office_to IS NULL AND users.out_of_office_from < %(now)s THEN TRUE
+                                  ELSE FALSE
+                                  END
+                        ELSE FALSE
+                        END
+                   AS ooo_activated,
+                   users.out_of_office_message AS ooo_msg,
                    users.share AS share,
                    users.notification_type AS notification_type,
                    groups_rel.gid
@@ -328,31 +391,41 @@ class MailFollowers(models.Model):
          LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
              WHERE users.partner_id = partner.id AND users.active
           UNION
-            SELECT ag.uid, ag.share, ag.notification_type, implied.hid
+            SELECT ag.uid, ag.ooo_activated, ag.ooo_msg, ag.share, ag.notification_type, implied.hid
               FROM all_groups ag
               JOIN res_groups_implied_rel implied ON ag.gid = implied.gid
         )
         SELECT uid,
+               ooo_activated,
+               ooo_msg,
                share,
                notification_type,
                ARRAY_AGG(DISTINCT gid) AS groups
           FROM all_groups
       GROUP BY uid,
+               ooo_activated,
+               ooo_msg,
                share,
                notification_type
       ORDER BY share ASC NULLS FIRST, uid ASC
          FETCH FIRST ROW ONLY
          ) sub_user ON TRUE
 
-     WHERE partner.id IN %s
+     WHERE partner.id = ANY(%(pids)s)
   GROUP BY partner.id,
            sub_user.uid,
+           sub_user.ooo_activated,
+           sub_user.ooo_msg,
            sub_user.share,
            sub_user.notification_type,
            sub_user.groups
 """
-            params = [tuple(pids)]
-            self.env.cr.execute(query, tuple(params))
+            # NOTE: using cr.now instead of hardcoding now() to enable mocks
+            params = {
+                'now': self.env.cr.now(),
+                'pids': list(pids or []),
+            }
+            self.env.cr.execute(SQL(query, **params))
             res = self.env.cr.fetchall()
         else:
             res = []
@@ -361,7 +434,8 @@ class MailFollowers(models.Model):
         doc_infos = dict((res_id, {}) for res_id in res_ids)
         for (
             partner_id, is_active, email_normalized, lang, name,
-            pshare, uid, ushare, notif, groups, res_id, is_follower
+            pshare, uid, u_ooo_activated, u_ooo_msg,
+            ushare, notif, groups, res_id, is_follower,
         ) in res:
             to_update = [res_id] if res_id else res_ids
             for res_id_to_update in to_update:
@@ -377,6 +451,8 @@ class MailFollowers(models.Model):
                     'name': name,
                     'groups': set(groups or []),
                     'notif': notif,
+                    'ooo_activated': u_ooo_activated,
+                    'ooo_msg': u_ooo_msg,
                     'share': pshare,
                     'uid': uid,
                     'ushare': ushare,
