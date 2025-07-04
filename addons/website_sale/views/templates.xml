@@ -3222,10 +3222,28 @@
     </template>
 
     <template id="delivery_address_row">
+        <t t-set="address_type" t-valuef="delivery"/>
+        <t
+            t-set="new_address_url"
+            t-valuef="{{address_url}}?address_type={{address_type}}&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
+        />
         <div id="delivery_address_row" class="mb-4">
-            <h4 class="mb-3">Delivery address</h4>
+            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                <h4 class="mb-0">Delivery address</h4>
+                <!-- We don't allow public users to have multiple delivery addresses. -->
+                <a
+                    t-if="not order.website_id.is_public_user()"
+                    role="button"
+                    t-att-href="new_address_url"
+                    t-att-data-address-type="address_type"
+                    class="o_address_kanban_add_new btn btn-outline-primary btn-sm"
+                    title="Add an address"
+                    aria-label="Add an address"
+                >
+                    <i class="oi oi-plus me-2"/>Add Address
+                </a>
+            </div>
             <t t-call="website_sale.address_row">
-                <t t-set="address_type" t-value="'delivery'"/>
                 <t t-set="addresses" t-value="delivery_addresses"/>
                 <t t-set="selected_address" t-value="order.partner_shipping_id"/>
             </t>
@@ -3233,12 +3251,27 @@
     </template>
 
     <template id="billing_address_row">
-        <div id="billing_address_row" class="mb-3">
-            <p t-attf-class="{{only_services and 'h4 mb-3' or 'h5'}}">
-                Billing address
-            </p>
-            <t t-set="has_delivery" t-value="order._has_deliverable_products()"/>
-            <div t-if="has_delivery" class="form-check form-switch mt-2 mb-3">
+        <t t-set="address_type" t-value="'billing'"/>
+        <t t-set="new_address_url" t-valuef="{{address_url}}?address_type={{address_type}}"/>
+        <t t-set="has_delivery" t-value="order._has_deliverable_products()"/>
+        <div id="billing_address_row" class="pt-2 mb-3">
+
+            <div class="d-flex justify-content-between align-items-start gap-3">
+                <p t-attf-class="mb-0 {{only_services and 'h4' or 'h5'}}">
+                    Billing address
+                </p>
+                <a
+                    role="button"
+                    t-att-href="new_address_url"
+                    t-att-data-address-type="address_type"
+                    t-attf-class="o_address_kanban_add_new o_add_billing_address_btn btn btn-outline-primary btn-sm {{'d-none' if use_delivery_as_billing and has_delivery else ''}}"
+                    title="Add an address"
+                    aria-label="Add an address"
+                >
+                    <i class="oi oi-plus me-2"/>Add Address
+                </a>
+            </div>
+            <div t-if="has_delivery" class="form-check form-switch mt-2">
                 <label id="use_delivery_as_billing_label">
                     <input
                         type="checkbox"
@@ -3250,10 +3283,9 @@
             </div>
             <div
                 id="billing_container"
-                t-attf-class="{{'d-none' if use_delivery_as_billing and has_delivery else ''}}"
+                t-attf-class="mt-3 {{'d-none' if use_delivery_as_billing and has_delivery else ''}}"
             >
                 <t t-call="website_sale.address_row">
-                    <t t-set="address_type" t-value="'billing'"/>
                     <t t-set="addresses" t-value="billing_addresses"/>
                     <t t-set="selected_address" t-value="order.partner_invoice_id"/>
                 </t>
@@ -3274,12 +3306,6 @@
                 <t t-set="selected" t-value="address == selected_address"/>
             </t>
         </t>
-        <!-- We don't allow public users to have multiple delivery addresses. -->
-        <div name="add_address" position="attributes">
-            <attribute name="t-if">
-                address_type == 'billing' or not order.website_id.is_public_user()
-            </attribute>
-        </div>
     </template>
 
     <!-- To ensure modification dones in the checkout are not applied on the portal -->
