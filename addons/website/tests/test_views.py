@@ -29,6 +29,141 @@ class TestViewSavingCommon(common.TransactionCase):
         })
 
 
+@tagged('-at_install', 'post_install')
+class TestCustomizeView(common.HttpCase):
+    def url_open_authenticate(self, url, data):
+        self.authenticate('admin', 'admin')
+        response = self.url_open(url, json={'params': {**data, 'is_view_data': True}}, headers={"Content-Type": "application/json"})
+        data = json.loads(response.text)
+        self.logout()
+        return data.get("result")
+
+    def test_disabled_optional_template_t_call(self):
+        website = self.env['website'].search([], limit=1)
+        View = self.env['ir.ui.view']
+        default = View.create({
+            'name': 'test_view',
+            'type': 'qweb',
+            'key': 'website.test_view',
+            'arch_db': '<span>Default</span>'
+        })
+        custo = View.create({
+            'name': 'test_view',
+            'type': 'qweb',
+            'key': 'website.test_view',
+            'website_id': website.id,
+            'arch_db': '<span>Customized</span>'
+        })
+        template = View.create({
+            'name': 'test_root',
+            'type': 'qweb',
+            'key': 'website.test_root',
+            'arch_db': '''<div><t t-if="is_view_active('website.test_view')"> is active </t><t t-call="website.test_view"/></div>'''
+        })
+        page = self.env['website.page'].create({
+            'view_id': template.id,
+            'url': '/test_root',
+            'is_published': True,
+        })
+
+        website._force()
+
+        actives = self.url_open_authenticate('/website/theme_customize_data_get', {'keys': ['website.test_root', 'website.test_view']})
+        self.assertEqual(set(actives), {'website.test_root', 'website.test_view'})
+        self.assertEqual([custo.active, default.active], [True, True])
+        self.assertEqual(self.url_open(page.url).text, '<div> is active <span>Customized</span></div>')
+
+        self.url_open_authenticate('/website/theme_customize_data', {'enable': [], 'disable': ['website.test_view']})
+
+        actives = self.url_open_authenticate('/website/theme_customize_data_get', {'keys': ['website.test_root', 'website.test_view']})
+        self.assertEqual(set(actives), {'website.test_root'})
+        self.assertEqual([custo.active, default.active], [False, True])
+        self.assertEqual(self.url_open(page.url).text, '<div><span>Default</span></div>')
+
+        self.url_open_authenticate('/website/theme_customize_data', {'enable': ['website.test_view'], 'disable': []})
+
+        actives = self.url_open_authenticate('/website/theme_customize_data_get', {'keys': ['website.test_root', 'website.test_view']})
+        self.assertEqual(set(actives), {'website.test_root', 'website.test_view'})
+        self.assertEqual([custo.active, default.active], [True, True])
+        self.assertEqual(self.url_open(page.url).text, '<div> is active <span>Customized</span></div>')
+
+        self.url_open_authenticate('/website/theme_customize_data', {'enable': [], 'disable': ['website.test_view']})
+        custo.unlink()
+        self.assertEqual(self.url_open(page.url).text, '<div> is active <span>Default</span></div>')
+
+        # theme_customize_data will clone the default view to save the configuration
+        self.url_open_authenticate('/website/theme_customize_data', {'enable': [], 'disable': ['website.test_view']})
+        new_custo = View.with_context(active_test=False).search([('key', '=', 'website.test_view'), ('website_id', '=', website.id)])
+        self.assertEqual(bool(new_custo), True)
+        self.assertNotEqual(custo.id, new_custo.id)
+        self.assertEqual([new_custo.active, default.active], [False, True])
+        self.assertEqual(self.url_open(page.url).text, '<div><span>Default</span></div>')
+
+    def test_disabled_optional_template_xpath(self):
+        website = self.env.ref('website.default_website')
+        View = self.env['ir.ui.view']
+        template = View.create({
+            'name': 'test_root',
+            'type': 'qweb',
+            'key': 'website.test_root',
+            'arch_db': '''<div><t t-if="is_view_active('website.test_view')"> is active </t></div>'''
+        })
+
+        default = View.create({
+            'name': 'test_view',
+            'mode': 'extension',
+            'inherit_id': template.id,
+            'arch_db': '<div position="inside"><span>Default</span></div>',
+            'key': 'website.test_view',
+        })
+        custo = View.create({
+            'name': 'test_view',
+            'mode': 'extension',
+            'inherit_id': template.id,
+            'arch_db': '<div position="inside"><span>Customized</span></div>',
+            'key': 'website.test_view',
+            'website_id': website.id,
+        })
+        page = self.env['website.page'].create({
+            'view_id': template.id,
+            'url': '/test_root',
+            'is_published': True,
+        })
+
+        website._force()
+
+        actives = self.url_open_authenticate('/website/theme_customize_data_get', {'keys': ['website.test_root', 'website.test_view']})
+        self.assertEqual(set(actives), {'website.test_root', 'website.test_view'})
+        self.assertEqual([custo.active, default.active], [True, True])
+        self.assertEqual(self.url_open(page.url).text, '<div> is active <span>Customized</span></div>')
+
+        self.url_open_authenticate('/website/theme_customize_data', {'enable': [], 'disable': ['website.test_view']})
+
+        actives = self.url_open_authenticate('/website/theme_customize_data_get', {'keys': ['website.test_root', 'website.test_view']})
+        self.assertEqual(set(actives), {'website.test_root'})
+        self.assertEqual([custo.active, default.active], [False, True])
+        self.assertEqual(self.url_open(page.url).text, '<div></div>')
+
+        self.url_open_authenticate('/website/theme_customize_data', {'enable': ['website.test_view'], 'disable': []})
+
+        actives = self.url_open_authenticate('/website/theme_customize_data_get', {'keys': ['website.test_root', 'website.test_view']})
+        self.assertEqual(set(actives), {'website.test_root', 'website.test_view'})
+        self.assertEqual([custo.active, default.active], [True, True])
+        self.assertEqual(self.url_open(page.url).text, '<div> is active <span>Customized</span></div>')
+
+        self.url_open_authenticate('/website/theme_customize_data', {'enable': [], 'disable': ['website.test_view']})
+        custo.unlink()
+        self.assertEqual(self.url_open(page.url).text, '<div> is active <span>Default</span></div>')
+
+        # theme_customize_data will clone the default view to save the configuration
+        self.url_open_authenticate('/website/theme_customize_data', {'enable': [], 'disable': ['website.test_view']})
+        new_custo = View.with_context(active_test=False).search([('key', '=', 'website.test_view'), ('website_id', '=', website.id)])
+        self.assertEqual(bool(new_custo), True)
+        self.assertNotEqual(custo.id, new_custo.id)
+        self.assertEqual([new_custo.active, default.active], [False, True])
+        self.assertEqual(self.url_open(page.url).text, '<div></div>')
+
+
 class TestViewSaving(TestViewSavingCommon):
 
     def eq(self, a, b):
