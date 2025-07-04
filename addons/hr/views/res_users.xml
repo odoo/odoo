@@ -57,10 +57,10 @@
                 <xpath expr="//group[@name='other_calendar_preferences']" position="inside">
                     <field name="work_location_id" string="Main Work Location" readonly="not can_edit"/>
                 </xpath>
-                <notebook position="inside">
-                    <page name="personal_information" string="Private Information">
+                <xpath expr="//page[@name='calendar']" position="after">
+                    <page name="private_information" string="Private">
                         <group>
-                            <group string="Contact Information">
+                            <group string="Private Information">
                                 <field name="employee_ids" invisible="1"/>
                                 <label for="private_street" string="Private Address"/>
                                 <div class="o_address_format">
@@ -71,16 +71,17 @@
                                     <field name="private_zip" placeholder="ZIP" class="o_address_zip" readonly="not can_edit"/>
                                     <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="not can_edit"/>
                                 </div>
-                                <field name="private_email" string="Email" readonly="not can_edit"/>
-                                <field name="private_phone" string="Phone" class="o_force_ltr" readonly="not can_edit"/>
+                                <field name="private_email" string="Private Email" readonly="not can_edit"/>
+                                <field name="private_phone" string="Private Phone" class="o_force_ltr" readonly="not can_edit"/>
+                                <field name="bank_account_id" readonly="not is_hr_user"/>
                             </group>
-                            <group string="Emergency">
-                                <field name="emergency_contact" readonly="not can_edit"/>
-                                <field name="emergency_phone" widget="phone" readonly="not can_edit"/>
+                            <group string="Emergency Contact">
+                                <field name="emergency_contact" string="Contact Name" placeholder="e.g. John Doe" readonly="not can_edit"/>
+                                <field name="emergency_phone" string="Contact Phone" widget="phone" readonly="not can_edit"/>
                             </group>
                         </group>
                     </page>
-                </notebook>
+                </xpath>
             </field>
         </record>
 

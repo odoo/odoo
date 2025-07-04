@@ -92,7 +92,7 @@ class ResUsers(models.Model):
     last_activity = fields.Date(related='employee_id.last_activity')
     last_activity_time = fields.Char(related='employee_id.last_activity_time')
     employee_resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Employee's Working Hours", readonly=True)
-    bank_account_id = fields.Many2one(related="employee_id.bank_account_id")
+    bank_account_id = fields.Many2one(related="employee_id.bank_account_id", domain="[('partner_id', '=', work_contact_id)]")
 
     create_employee = fields.Boolean(store=False, default=False, copy=False, string="Technical field, whether to create an employee")
     create_employee_id = fields.Many2one('hr.employee', store=False, copy=False, string="Technical field, bind user to this employee on create")
