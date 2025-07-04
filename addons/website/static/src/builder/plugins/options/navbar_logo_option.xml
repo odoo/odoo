@@ -10,10 +10,10 @@
             </BuilderSelect>
         </BuilderRow>
         <BuilderRow label.translate="Height" level="1" t-if="!isActiveItem('option_header_brand_none')" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput actionParam="'logo-height'" unit="'px'" saveUnit="'rem'" />
+            <BuilderNumberInput actionParam="'logo-height'" default="null" unit="'px'" saveUnit="'rem'" />
         </BuilderRow>
         <BuilderRow label.translate="Height (Scrolled)" level="1" t-if="!isActiveItem('!header_effect_scroll_opt')" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput actionParam="'fixed-logo-height'" unit="'px'" saveUnit="'rem'"/>
+            <BuilderNumberInput actionParam="'fixed-logo-height'" default="null" unit="'px'" saveUnit="'rem'"/>
         </BuilderRow>
     </t>
 </templates>
