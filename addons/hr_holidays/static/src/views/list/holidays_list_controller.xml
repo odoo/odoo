@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="hr_holidays.HolidaysListView" t-inherit="web.ListView" t-inherit-mode="primary">
+        <xpath expr="//t[@t-set-slot='control-panel-selection-actions']//MultiRecordViewButton" position="attributes">
+            <attribute name="t-if">displayButton(button)</attribute>
+        </xpath>
+    </t>
+</templates>

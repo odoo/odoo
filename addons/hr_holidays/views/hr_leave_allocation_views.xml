@@ -288,6 +288,18 @@
                         string="New Group Allocation" class="btn btn-secondary"
                         groups="hr_holidays.group_hr_holidays_responsible" display="always"
                     />
+                    <button type="object"
+                        name="action_approve"
+                        string="Approve"
+                        icon="fa-thumbs-up"
+                        class="btn btn-outline-success"
+                    />
+                    <button type="object"
+                        name="action_refuse"
+                        string="Refuse"
+                        icon="fa-times"
+                        class="btn btn-outline-danger"
+                    />
                 </header>
                 <field name="employee_id" decoration-muted="not active_employee" widget="many2one_avatar_employee" readonly="state in ['refuse', 'validate']"/>
                 <field name="department_id" optional="hide" readonly="state not in ['confirm']"/>
@@ -586,18 +598,6 @@
             </p><p>
                 You can create a new allocation or follow the approval status of the current ones.
             </p>
-        </field>
-    </record>
-
-    <record id="ir_actions_server_approve_allocations" model="ir.actions.server">
-        <field name="name">Approve Allocations</field>
-        <field name="model_id" ref="hr_holidays.model_hr_leave_allocation"/>
-        <field name="binding_model_id" ref="hr_holidays.model_hr_leave_allocation"/>
-        <field name="binding_view_types">list,kanban</field>
-        <field name="state">code</field>
-        <field name="code">
-            if records:
-                records.action_approve()
         </field>
     </record>
 </odoo>
