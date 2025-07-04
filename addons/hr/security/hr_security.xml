@@ -44,6 +44,20 @@
         ]</field>
     </record>
 
+    <record id="ir_rule_hr_employee_user" model="ir.rule">
+        <field name="name">Employee: Employee Manager</field>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="domain_force">['|', ('parent_id.user_id', '=', user.id), ('user_id', '=', user.id)]</field>
+    </record>
+
+    <record id="ir_rule_hr_employee_officer" model="ir.rule">
+        <field name="name">Employee: Officer</field>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="groups" eval="[(4, ref('hr.group_hr_officer'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
     <record id="hr_dept_comp_rule" model="ir.rule">
         <field name="name">Department multi company rule</field>
         <field name="model_id" ref="model_hr_department"/>
@@ -59,6 +73,20 @@
             ('id', '=', user.employee_id.parent_id.id),
             ('user_id', '=', user.id)
         ]</field>
+    </record>
+
+    <record id="ir_rule_hr_employee_public_user" model="ir.rule">
+        <field name="name">Employee: Employee Manager</field>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="domain_force">['|', ('parent_id.user_id', '=', user.id), ('user_id', '=', user.id)]</field>
+    </record>
+
+    <record id="ir_rule_hr_employee_public_officer" model="ir.rule">
+        <field name="name">Employee: Officer</field>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="groups" eval="[(4, ref('hr.group_hr_officer'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
     </record>
 
     <record id="hr_job_comp_rule" model="ir.rule">
@@ -107,6 +135,13 @@
         <field name="name">Departure Reason: multi company</field>
         <field name="model_id" ref="model_hr_departure_reason"/>
         <field name="domain_force">[('country_code', 'in', user.env.companies.mapped('country_code') + [False])]</field>
+    </record>
+
+    <record id="ir_rule_hr_contract_employee_manager" model="ir.rule">
+        <field name="name">HR Contract: Employee Manager</field>
+        <field name="model_id" ref="model_hr_version"/>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="domain_force">['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.user_id', '=', user.id)]</field>
     </record>
 
     <record id="ir_rule_hr_contract_manager" model="ir.rule">
