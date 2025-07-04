@@ -890,42 +890,6 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         super().setUp()
         self.js_tests = []
 
-    def group_of_taxes(self, taxes, **kwargs):
-        self.number += 1
-        return self.env['account.tax'].create({
-            **kwargs,
-            'name': f"group_({self.number})",
-            'amount_type': 'group',
-            'children_tax_ids': [Command.set(taxes.ids)],
-        })
-
-    def percent_tax(self, amount, **kwargs):
-        self.number += 1
-        return self.env['account.tax'].create({
-            **kwargs,
-            'name': f"percent_{amount}_({self.number})",
-            'amount_type': 'percent',
-            'amount': amount,
-        })
-
-    def division_tax(self, amount, **kwargs):
-        self.number += 1
-        return self.env['account.tax'].create({
-            **kwargs,
-            'name': f"division_{amount}_({self.number})",
-            'amount_type': 'division',
-            'amount': amount,
-        })
-
-    def fixed_tax(self, amount, **kwargs):
-        self.number += 1
-        return self.env['account.tax'].create({
-            **kwargs,
-            'name': f"fixed_{amount}_({self.number})",
-            'amount_type': 'fixed',
-            'amount': amount,
-        })
-
     def _ensure_rate(self, currency, date, rate):
         currency_rate = currency.rate_ids.filtered(lambda x: x.name == fields.Date.from_string(date))
         if currency_rate:
