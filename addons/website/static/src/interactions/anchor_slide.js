@@ -1,7 +1,6 @@
+import { scrollTo } from "@html_builder/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-
-import { scrollTo } from "@web_editor/js/common/scrolling";
 
 export class AnchorSlide extends Interaction {
     static selector = "a[href^='/'][href*='#'], a[href^='#']";

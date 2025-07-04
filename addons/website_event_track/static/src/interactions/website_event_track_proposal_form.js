@@ -1,9 +1,9 @@
+import { scrollTo } from "@html_builder/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
 import { post } from "@web/core/network/http_service";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 import { Interaction } from "@web/public/interaction";
-import { scrollTo } from "@web_editor/js/common/scrolling";
 
 export class WebsiteEventTrackProposalForm extends Interaction {
     static selector = ".o_website_event_track_proposal_form";
