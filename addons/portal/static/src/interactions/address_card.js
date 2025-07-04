@@ -11,6 +11,7 @@ export class AddressCard extends Interaction {
 
      setup() {
         this.billingContainer = this.el.querySelector('#billing_container');
+        this.addBillingAddressBtn = this.el.querySelector('.o_add_billing_address_btn');
     }
 
     /**
@@ -36,7 +37,7 @@ export class AddressCard extends Interaction {
         const useDeliveryAsBilling = ev.target.checked;
 
         const addDeliveryAddressButton = this.el.querySelector(
-            '.o_address_kanban_add_new[data-address-type="delivery"]'
+            '.o_address_card_add_new[data-address-type="delivery"]'
         );
         if (addDeliveryAddressButton) {  // If `Add address` button for delivery.
             // Update the `use_delivery_as_billing` query param for a new delivery address URL.
@@ -53,6 +54,7 @@ export class AddressCard extends Interaction {
         } else {
             this.billingContainer.classList.remove('d-none');  // Show the billing address row.
         }
+        this.addBillingAddressBtn.classList.toggle('d-none', useDeliveryAsBilling);
     }
 }
 
