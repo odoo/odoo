@@ -700,12 +700,16 @@ export class PosData extends Reactive {
             try {
                 if (["product.product", "product.template"].includes(model)) {
                     const domain = model === "product.product" ? "product_variant_ids.id" : "id";
-                    await this.callRelated("product.template", "load_product_from_pos", [
-                        odoo.pos_config_id,
-                        [[domain, "in", Array.from(ids)]],
-                        0,
-                        0,
-                    ]);
+                    await this.callRelated(
+                        "product.template",
+                        "load_product_from_pos",
+                        [odoo.pos_config_id, [[domain, "in", Array.from(ids)]], 0, 0],
+                        {
+                            context: {
+                                load_archived: true,
+                            },
+                        }
+                    );
                     continue;
                 }
 
