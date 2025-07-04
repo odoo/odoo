@@ -1629,6 +1629,18 @@ header {
     }
 }
 
+.o_portal_index_card > a {
+    @include o-apply-colors('menu-portal-card');
+    @include o-apply-colors('portal-custom');
+    @include o-add-gradient('menu-portal-gradient');
+
+    @if o-website-value('menu-border-card-width') {
+        border: o-website-value('menu-border-card-style') o-color('menu-border-card-color') !important;
+        border-width: o-website-value('menu-border-card-width') !important;
+    }
+    border-radius: o-website-value('menu-border-card-radius') !important;
+}
+
 @if o-website-value('header-template') == 'sidebar' {
     @include media-breakpoint-up(lg) {
         #wrapwrap {

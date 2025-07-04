@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+         <!-- Portal Card Data -->
+         <record id="portal_quotations_to_review" model="portal.entry">
+            <field name="name">Quotations to review</field>
+            <field name="description">Review your quotations</field>
+            <field name="url">/my/quotes</field>
+            <field name="placeholder_count">quotation_count</field>
+        </record>
+        <record id="portal_your_orders" model="portal.entry">
+            <field name="name">Your Orders</field>
+            <field name="description">Follow, view or pay your orders</field>
+            <field name="url">/my/orders</field>
+            <field name="image" type="base64" file="sale/static/src/img/bag.svg"/>
+            <field name="placeholder_count">order_count</field>
+        </record>
+
         <!-- Sale-related subtypes for messaging / Chatter -->
         <record id="mt_order_sent" model="mail.message.subtype">
             <field name="name">Quotation sent</field>

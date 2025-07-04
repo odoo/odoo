@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.PortalOption">
+        <BuilderRow label.translate="Background Color" level="1">
+            <BuilderColorPicker
+            action="'customizeWebsiteColor'" 
+            actionParam="{
+                mainParam: 'portal-custom',
+                gradientColor: 'menu-portal-gradient',
+                combinationColor: 'menu-portal-card',
+            }"/>
+        </BuilderRow>
+        <BorderConfigurator label.translate="Border" action="'styleActionPortal'"/>
+    </t>
+</templates>
