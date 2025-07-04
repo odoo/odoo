@@ -221,6 +221,7 @@
             "website/static/src/**/common/**/*",
         ],
         'web.assets_frontend': [
+            'html_builder/static/src/utils/scrolling.js',
             'website/static/src/interactions/**/*',
             'website/static/src/core/**/*',
             'website/static/src/utils/**/*',
@@ -352,6 +353,7 @@
             'website/static/tests/mock_server/**/*',
         ],
         'web.assets_unit_tests_setup': [
+            'html_builder/static/src/utils/scrolling.js',
             'web/static/src/legacy/js/core/class.js',
             'web/static/src/legacy/js/public/lazyloader.js',
             'web/static/src/legacy/js/public/minimal_dom.js',

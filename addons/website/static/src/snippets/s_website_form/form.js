@@ -1,3 +1,4 @@
+import { scrollTo } from "@html_builder/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
@@ -17,7 +18,6 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
-import { scrollTo } from "@web_editor/js/common/scrolling";
 import wUtils from "@website/js/utils";
 
 const { DateTime } = luxon;
