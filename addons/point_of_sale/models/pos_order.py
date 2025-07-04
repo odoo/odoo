@@ -1157,6 +1157,7 @@ class PosOrder(models.Model):
         return order.read_pos_data([], order.config_id)
 
     def read_pos_data(self, data, config):
+        account_moves = self.sudo().account_move | self.sudo().payment_ids.account_move_id
         return {
             'pos.order': self._load_pos_data_read(self, config) if config else [],
             'pos.session': [],
@@ -1164,6 +1165,7 @@ class PosOrder(models.Model):
             'pos.order.line': self.env['pos.order.line']._load_pos_data_read(self.lines, config) if config else [],
             'pos.pack.operation.lot': self.env['pos.pack.operation.lot']._load_pos_data_read(self.lines.pack_lot_ids, config) if config else [],
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_data_read(self.lines.custom_attribute_value_ids, config) if config else [],
+            'account.move': self.env['account.move'].sudo()._load_pos_data_read(account_moves, config) if config else [],
         }
 
     @api.model
