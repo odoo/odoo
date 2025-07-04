@@ -143,8 +143,6 @@ class TestPortalAttachmentController(MailControllerAttachmentCommon):
             (self.user_portal, self.WITH_TOKEN, {"author": portal_partner, "route_kw": token}),
             (self.user_portal, self.NO_TOKEN, {"author": portal_partner, "route_kw": sign}),
             (self.user_portal, self.WITH_TOKEN, {"author": portal_partner, "route_kw": sign}),
-            (self.user_portal, self.NO_TOKEN, {"author": doc_partner, "route_kw": sign}),
-            (self.user_portal, self.WITH_TOKEN, {"author": doc_partner, "route_kw": sign}),
             (self.user_public, self.NO_TOKEN, {"author": doc_partner, "route_kw": sign}),
             (self.user_public, self.WITH_TOKEN, {"author": doc_partner, "route_kw": sign}),
         ]
@@ -153,8 +151,6 @@ class TestPortalAttachmentController(MailControllerAttachmentCommon):
                 [
                     (self.user_public, self.NO_TOKEN, {"author": doc_partner, "route_kw": token}),
                     (self.user_public, self.WITH_TOKEN, {"author": doc_partner, "route_kw": token}),
-                    (self.user_portal, self.NO_TOKEN, {"author": doc_partner, "route_kw": token}),
-                    (self.user_portal, self.WITH_TOKEN, {"author": doc_partner, "route_kw": token}),
                 ]
             )
         forbidden_subtests = filter(

@@ -18,7 +18,7 @@ class ThreadController(thread.ThreadController):
 
     @classmethod
     def _can_edit_message(cls, message, hash=None, pid=None, token=None, **kwargs):
-        if message.model and message.res_id:
+        if message.model and message.res_id and message.env.user._is_public():
             thread = request.env[message.model].browse(message.res_id)
             partner = get_portal_partner(thread, _hash=hash, pid=pid, token=token)
             if partner and message.author_id == partner:
