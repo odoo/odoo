@@ -838,6 +838,14 @@ class HrExpenseSheet(models.Model):
 
     def _prepare_bills_vals(self):
         self.ensure_one()
+        # Compute correct currency
+        currencies = self.expense_line_ids.mapped("currency_id")
+        if len(currencies) > 1:
+            raise UserError(
+                "You cannot create a bill with multiple currencies. Please make sure all expense lines use the same currency."
+            )
+
+        currency = currencies[0] if currencies else self.currency_id
         move_vals = self._prepare_move_vals()
         if self.employee_id.sudo().bank_account_id:
             move_vals['partner_bank_id'] = self.employee_id.sudo().bank_account_id.id
@@ -848,7 +856,7 @@ class HrExpenseSheet(models.Model):
             'move_type': 'in_invoice',
             'partner_id': self.employee_id.sudo().work_contact_id.id,
             'commercial_partner_id': self.employee_id.user_partner_id.id,
-            'currency_id': self.currency_id.id,
+            'currency_id': currency.id,
             'line_ids': [Command.create(expense._prepare_move_lines_vals()) for expense in self.expense_line_ids],
             'attachment_ids': [
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
