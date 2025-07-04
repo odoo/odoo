@@ -1,23 +1,38 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, test, beforeEach } from "@odoo/hoot";
 import { queryAllTexts, queryAllValues, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import { contains, mockService } from "@web/../tests/web_test_helpers";
+import { addBuilderOption, setupHTMLBuilder, addBuilderPlugin } from "./helpers";
+import { ShadowOptionPlugin } from "@html_builder/plugins/shadow_option_plugin";
 
-defineWebsiteModels();
+beforeEach(() => {
+    mockService("website", () => ({
+        currentWebsite: {
+            id: 1,
+            metadata: {
+                lang: "en_US",
+            },
+            default_lang_id: {
+                code: "en_US",
+            },
+        },
+    }));
+});
 
 test("edit box-shadow with ShadowOption", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<ShadowOption/>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    addBuilderPlugin(ShadowOptionPlugin);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await waitFor(".hb-row");
     expect(queryAllTexts(".hb-row .hb-row-label")).toEqual(["Shadow"]);
     expect(":iframe .test-options-target").toHaveOuterHTML(
         '<div class="test-options-target o-paragraph">b</div>'
     );
+
     await contains('.options-container button[title="Outset"]').click();
     expect(queryAllTexts(".hb-row .hb-row-label")).toEqual([
         "Shadow",
