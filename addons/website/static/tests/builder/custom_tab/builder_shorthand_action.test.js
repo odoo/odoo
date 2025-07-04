@@ -102,7 +102,7 @@ describe("styleAction", () => {
         expect(":iframe .test-options-target").toHaveAttribute("style", "width: 101px;"); // no !important
 
         await contains("input").edit("");
-        expect(":iframe .test-options-target").toHaveAttribute("style", "");
+        expect(":iframe .test-options-target").toHaveAttribute("style", "width: 0px;");
     });
     test("should set a style with its associated class", async () => {
         addOption({
