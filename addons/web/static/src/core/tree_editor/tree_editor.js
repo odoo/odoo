@@ -1,7 +1,7 @@
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { cloneTree, connector, isTree, TRUE_TREE } from "@web/core/tree_editor/condition_tree";
+import { cloneTree, Condition, ConditionTree, connector, isTree, TRUE_TREE } from "@web/core/tree_editor/condition_tree";
 import {
     getDefaultValue,
     getValueEditorInfo,
@@ -19,7 +19,7 @@ export class TreeEditor extends Component {
         TreeEditor,
     };
     static props = {
-        tree: Object,
+        tree: ConditionTree,
         resModel: String,
         update: Function,
         getDefaultCondition: Function,
@@ -52,7 +52,7 @@ export class TreeEditor extends Component {
         if (this.tree) {
             this.previousTree = this.tree;
         }
-        this.tree = cloneTree(props.tree);
+        this.tree = props.tree.clone();
         if (shallowEqual(this.tree, TRUE_TREE)) {
             this.tree = connector(props.defaultConnector);
         } else if (this.tree.type !== "connector") {
