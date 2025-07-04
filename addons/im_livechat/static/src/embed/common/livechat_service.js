@@ -135,7 +135,6 @@ export class LivechatService {
             thread.livechat_operator_id.id,
             ONE_DAY_TTL * 7
         );
-        debugger;
         return thread;
     }
     
