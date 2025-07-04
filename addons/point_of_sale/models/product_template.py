@@ -57,9 +57,10 @@ class ProductTemplate(models.Model):
 
     @api.model
     def load_product_from_pos(self, config_id, domain, offset=0, limit=0):
+        load_archived = self.env.context.get('load_archived', False)
         domain_obj = Domain(domain)
         config = self.env['pos.config'].browse(config_id)
-        product_tmpls = self._load_product_with_domain(domain_obj, False, offset, limit)
+        product_tmpls = self._load_product_with_domain(domain_obj, load_archived, offset, limit)
 
         # product.combo and product.combo.item loading
         for product_tmpl in product_tmpls:
