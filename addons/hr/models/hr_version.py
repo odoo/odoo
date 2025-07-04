@@ -241,7 +241,7 @@ class HrVersion(models.Model):
                         'Overlapping contracts for %(employee)s:\n%(overlaps)s',
                         employee=version.employee_id.display_name,
                         overlaps='\n'.join(
-                            [f'Version {format_date(v.env, v.date_version, date_format="MMM d, y")}: '
+                            [f'Employee Record {format_date(v.env, v.date_version, date_format="MMM d, y")}: '
                              f'from {format_date(v.env, v.contract_date_start, date_format="MMM d, y")} '
                              f'to {format_date(v.env, v.contract_date_end, date_format="MMM d, y") if v.contract_date_end else "Indefinite"}'
                              for v in (versions | version)])))

@@ -1376,7 +1376,7 @@ class HrEmployee(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': self.employee_id.name + ' Versions',
+            'name': self.employee_id.name + ' Records',
             'path': 'versions',
             'res_model': 'hr.version',
             'view_mode': 'list,graph,pivot',
