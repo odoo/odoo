@@ -19,11 +19,11 @@ registerWebsitePreviewTour(
             groupName: "Contact & Forms",
         }),
         ...clickOnSave(),
-    ],
+    ]
 );
 
-registry.category('web_tour.tours').add('donation_snippet_use', {
-    url: '/',
+registry.category("web_tour.tours").add("donation_snippet_use", {
+    url: "/",
     steps: () => [
         // -- Testing the minimum amount --
         {
@@ -130,11 +130,11 @@ registerWebsitePreviewTour(
         },
         ...changeOptionInPopover("Donation Button", "Custom Amount", "[data-action-param='slider']"),
         ...clickOnSave(),
-    ],
+    ]
 );
 
-registry.category('web_tour.tours').add('donation_snippet_use_2', {
-    url: '/',
+registry.category("web_tour.tours").add("donation_snippet_use_2", {
+    url: "/",
     steps: () => [
         {
             content: "Click on $10 button",
@@ -169,11 +169,9 @@ registry.category('web_tour.tours').add('donation_snippet_use_2', {
             expectUnloadPage: true,
         },
         {
-            trigger: "body:contains(Your payment has been processed.)",
-        },
-        {
             content: "Verify that the amount displayed is 67",
-            trigger: 'span.oe_currency_value:contains("67.00")',
+            trigger:
+                'body:contains(Your payment has been processed.) span.oe_currency_value:contains("67.00")',
             expectUnloadPage: true,
         },
         {
