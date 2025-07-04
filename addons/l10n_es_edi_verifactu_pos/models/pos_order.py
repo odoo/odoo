@@ -7,7 +7,7 @@ class PosOrder(models.Model):
 
     l10n_es_edi_verifactu_required = fields.Boolean(
         string="Veri*Factu Required",
-        compute='_compute_l10n_es_edi_verifactu_required',
+        related='company_id.l10n_es_edi_verifactu_required',
     )
     l10n_es_edi_verifactu_document_ids = fields.One2many(
         comodel_name='l10n_es_edi_verifactu.document',
@@ -28,17 +28,13 @@ class PosOrder(models.Model):
                 - Accepted: Registered by the AEAT without errors
                 - Cancelled: Registered by the AEAT as cancelled""",
     )
-    l10n_es_edi_verifactu_error_level = fields.Selection(
-        string="Veri*Factu Error Level",
-        selection=[
-            ('rejected', "Rejected"),
-            ('registered_with_errors', "Registered with Errors"),
-        ],
-        compute="_compute_l10n_es_edi_verifactu_errors_and_error_level",
+    l10n_es_edi_verifactu_warning_level = fields.Char(
+        string="Veri*Factu Warning Level",
+        compute="_compute_l10n_es_edi_verifactu_warning",
     )
-    l10n_es_edi_verifactu_errors = fields.Html(
-        string="Veri*Factu Errors",
-        compute="_compute_l10n_es_edi_verifactu_errors_and_error_level",
+    l10n_es_edi_verifactu_warning = fields.Html(
+        string="Veri*Factu Warning",
+        compute="_compute_l10n_es_edi_verifactu_warning",
     )
     l10n_es_edi_verifactu_qr_code = fields.Char(
         string="Veri*Factu QR Code",
@@ -60,18 +56,35 @@ class PosOrder(models.Model):
         copy=False,
     )
 
-    @api.depends('country_code')
-    def _compute_l10n_es_edi_verifactu_required(self):
-        for order in self:
-            order.l10n_es_edi_verifactu_required = order.country_code == 'ES' and order.company_id.l10n_es_edi_verifactu_required
-
-    @api.depends('l10n_es_edi_verifactu_document_ids', 'l10n_es_edi_verifactu_document_ids.state', 'l10n_es_edi_verifactu_document_ids.errors')
-    def _compute_l10n_es_edi_verifactu_errors_and_error_level(self):
+    @api.depends('state', 'l10n_es_edi_verifactu_state', 'l10n_es_edi_verifactu_document_ids',
+                 'l10n_es_edi_verifactu_document_ids.state', 'l10n_es_edi_verifactu_document_ids.errors')
+    def _compute_l10n_es_edi_verifactu_warning(self):
         for order in self:
             last_document = order.l10n_es_edi_verifactu_document_ids.sorted()[:1]
-            error_level = False if last_document.state == 'accepted' else last_document.state
-            order.l10n_es_edi_verifactu_error_level = error_level
-            order.l10n_es_edi_verifactu_errors = last_document.errors
+
+            warning = False
+            warning_level = False
+            if last_document.state == 'registered_with_errors':
+                warning = last_document.errors
+                warning_level = 'warning'
+            elif last_document.errors:
+                warning = last_document.errors
+                warning_level = 'danger'
+            elif order.state == 'draft':
+                if order.l10n_es_edi_verifactu_state:
+                    warning = _("You are modifying an order for which a Veri*Factu document has been sent to the AEAT already.")
+                    warning_level = 'warning'
+                elif last_document._filter_waiting():
+                    warning = _("You are modifying an order for which a Veri*Factu document is waiting to be sent.")
+                    warning_level = 'warning'
+
+            if last_document._filter_waiting():
+                warning = _("%(existing_warning)sA Veri*Factu document is waiting to be sent as soon as possible.",
+                            existing_warning=(warning + '\n' if warning else ''))
+                warning_level = warning_level or 'info'
+
+            order.l10n_es_edi_verifactu_warning = warning
+            order.l10n_es_edi_verifactu_warning_level = warning_level
 
     @api.depends('l10n_es_edi_verifactu_document_ids', 'l10n_es_edi_verifactu_document_ids.state')
     def _compute_l10n_es_edi_verifactu_state(self):
@@ -79,7 +92,7 @@ class PosOrder(models.Model):
             state = order.l10n_es_edi_verifactu_document_ids._get_state()
             order.l10n_es_edi_verifactu_state = state
 
-    @api.depends('l10n_es_edi_verifactu_document_ids', 'l10n_es_edi_verifactu_document_ids.json_attachment_base64')
+    @api.depends('l10n_es_edi_verifactu_document_ids', 'l10n_es_edi_verifactu_document_ids.json_attachment')
     def _compute_l10n_es_edi_verifactu_qr_code(self):
         for order in self:
             invoice = order.account_move
@@ -106,7 +119,7 @@ class PosOrder(models.Model):
             return False
 
         taxes = self.lines.tax_ids.flatten_taxes_hierarchy()
-        return taxes._l10n_es_edi_verifactu_get_verifactu_tax_type()
+        return taxes._l10n_es_edi_verifactu_get_tax_type()
 
     def _l10n_es_edi_verifactu_get_clave_regimen(self):
         """
@@ -181,8 +194,8 @@ class PosOrder(models.Model):
             'invoice_date': self.date_order.date(),
             'is_simplified': True,
             # NOTE: invoice with negative amounts possible (when no `refunded_order` specified)
-            'move_type': 'out_refund' if refunded_order else 'out_invoice',
             'verifactu_move_type': 'correction_incremental' if refunded_order else 'invoice',
+            'sign': 1,
             'name': self.name,
             'partner': self.partner_id.commercial_partner_id,
             'refund_reason': self.l10n_es_edi_verifactu_refund_reason,
@@ -258,15 +271,18 @@ class PosOrder(models.Model):
     def _process_saved_order(self, draft):
         self.ensure_one()
         if self.l10n_es_edi_verifactu_required:
-            simplified_limit = self.config_id.l10n_es_simplified_invoice_limit
-            if not self.to_invoice and self.amount_total > simplified_limit:
-                raise UserError(_("Please create an invoice for an amount over %s.", simplified_limit))
+            if not self.to_invoice and self.amount_total > 400:
+                raise UserError(_("The order needs to be invoiced since its total amount is above 400€."))
             refunded_order = self.refunded_order_ids
             if len(refunded_order) > 1:
                 raise UserError(_("You can only refund products from the same order."))
             if refunded_order:
-                if refunded_order and not self.l10n_es_edi_verifactu_refund_reason:
+                if not self.l10n_es_edi_verifactu_refund_reason:
                     raise UserError(_("You have to specify a refund reason."))
+                simplified_partner = self.env.ref('l10n_es.partner_simplified', raise_if_not_found=False)
+                partner_specified = self.partner_id and self.partner_id != simplified_partner
+                if not partner_specified and self.l10n_es_edi_verifactu_refund_reason != 'R5':
+                    raise UserError(_("A partner has to be specified for the selected Veri*Factu Refund Reason."))
                 if self.to_invoice and refunded_order.state != 'invoiced':
                     raise UserError(_("You cannot invoice a refund whose linked order hasn't been invoiced."))
                 if not self.to_invoice and refunded_order.state == 'invoiced':
@@ -283,7 +299,21 @@ class PosOrder(models.Model):
         return res
 
     def _generate_pos_order_invoice(self):
+        # Extend 'point_of_sale'
+        # Add the simplified partner in case no partner is set.
+        # We can not do this in `_prepare_invoice_vals` because there is a check in
+        # `_generate_pos_order_invoice` that is called before `_prepare_invoice_vals` is called.
+        if self.config_id.l10n_es_edi_verifactu_required:
+            simplified_partner = self.env.ref('l10n_es.partner_simplified', raise_if_not_found=False)
+            if simplified_partner:
+                for order in self:
+                    if order.partner_id or order.account_move or not order.to_invoice or order.amount_total > 400:
+                        continue
+                    order.partner_id = simplified_partner
+
         res = super()._generate_pos_order_invoice()
+        if not self.config_id.l10n_es_edi_verifactu_required:
+            return res
 
         for order in self:
             new_documents = False
@@ -314,5 +344,12 @@ class PosOrder(models.Model):
 
     def _prepare_invoice_vals(self):
         res = super()._prepare_invoice_vals()
+        if not self.config_id.l10n_es_edi_verifactu_required:
+            return res
+
         res['l10n_es_edi_verifactu_refund_reason'] = self.l10n_es_edi_verifactu_refund_reason
+        # We rely on the compute to determine whether the invoice is simplified for the other cases
+        if self.amount_total > 400:
+            res['l10n_es_is_simplified'] = False
+
         return res

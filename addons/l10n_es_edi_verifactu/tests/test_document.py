@@ -55,8 +55,8 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         expected_record_values = {
             'l10n_es_edi_verifactu_state': False,
-            'l10n_es_edi_verifactu_errors': expected_document_values['errors'],
-            'l10n_es_edi_verifactu_error_level': False,
+            'l10n_es_edi_verifactu_warning': expected_document_values['errors'],
+            'l10n_es_edi_verifactu_warning_level': 'danger',
         }
         self.assertRecordValues(invoice, [expected_record_values])
 
@@ -83,10 +83,11 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         }
         self.assertRecordValues(document, [expected_document_values])
 
+        waiting_warning = "A Veri*Factu document is waiting to be sent as soon as possible."
         expected_record_values = {
             'l10n_es_edi_verifactu_state': False,
-            'l10n_es_edi_verifactu_errors': expected_document_values['errors'],
-            'l10n_es_edi_verifactu_error_level': False,
+            'l10n_es_edi_verifactu_warning': expected_document_values['errors'] + "\n" + waiting_warning,
+            'l10n_es_edi_verifactu_warning_level': 'danger',
         }
         self.assertRecordValues(invoice, [expected_record_values])
 
@@ -123,8 +124,8 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         expected_record_values = {
             'l10n_es_edi_verifactu_state': 'rejected',
-            'l10n_es_edi_verifactu_errors': expected_document_values['errors'],
-            'l10n_es_edi_verifactu_error_level': 'rejected',
+            'l10n_es_edi_verifactu_warning': expected_document_values['errors'],
+            'l10n_es_edi_verifactu_warning_level': 'danger',
         }
         self.assertRecordValues(invoice, [expected_record_values])
 
@@ -163,8 +164,8 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         expected_record_values = {
             'l10n_es_edi_verifactu_state': 'accepted',
-            'l10n_es_edi_verifactu_errors': '',
-            'l10n_es_edi_verifactu_error_level': False,
+            'l10n_es_edi_verifactu_warning': '',
+            'l10n_es_edi_verifactu_warning_level': False,
         }
         self.assertRecordValues(invoice, [expected_record_values])
 
@@ -208,8 +209,8 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         expected_record_values = {
             'l10n_es_edi_verifactu_state': 'cancelled',
-            'l10n_es_edi_verifactu_errors': '',
-            'l10n_es_edi_verifactu_error_level': False,
+            'l10n_es_edi_verifactu_warning': '',
+            'l10n_es_edi_verifactu_warning_level': False,
             'state': 'cancel',  # The Veri*Factu cancellation cancels the move
         }
         self.assertRecordValues(invoice, [expected_record_values])
@@ -252,8 +253,8 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         expected_record_values = {
             'l10n_es_edi_verifactu_state': 'rejected',
-            'l10n_es_edi_verifactu_errors': expected_document_values['errors'],
-            'l10n_es_edi_verifactu_error_level': 'rejected',
+            'l10n_es_edi_verifactu_warning': expected_document_values['errors'],
+            'l10n_es_edi_verifactu_warning_level': 'danger',
         }
         self.assertRecordValues(invoice, [expected_record_values])
 
@@ -295,8 +296,51 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         expected_record_values = {
             'l10n_es_edi_verifactu_state': 'registered_with_errors',
-            'l10n_es_edi_verifactu_errors': expected_document_values['errors'],
-            'l10n_es_edi_verifactu_error_level': 'registered_with_errors',
+            'l10n_es_edi_verifactu_warning': expected_document_values['errors'],
+            'l10n_es_edi_verifactu_warning_level': 'warning',
+        }
+        self.assertRecordValues(invoice, [expected_record_values])
+
+    def test_batch_single_duplicate_original_registered_with_errors_registration(self):
+        invoice = self._create_dummy_invoice(name='INV/2019/00006', invoice_date='2024-12-11')
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
+        with self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_duplicate_original_registered_with_errors.json'):
+            _batch_xml, info = document._send_as_batch()
+
+        record_info = {
+            'state': 'registered_with_errors',
+            'cancellation': False,
+            'errors': [
+                '[2005] El campo ImporteTotal tiene un valor incorrecto para el valor de los campos BaseImponibleOimporteNoSujeto, CuotaRepercutida y CuotaRecargoEquivalencia suministrados.',
+            ],
+        }
+        expected_response_info = {
+            'state': 'registered_with_errors',
+            'response_csv': False,
+            'waiting_time_seconds': 60,
+            'errors': [],
+            'record_info': {
+                "('A39200019', 'INV/2019/00007')": record_info,
+            },
+        }
+        self.assertDictEqual(info, expected_response_info | info)
+
+        self.assertEqual(self.company.l10n_es_edi_verifactu_next_batch_time,
+                         datetime.datetime(2024, 12, 5, 0, 1, 0))
+
+        expected_document_values = {
+            'document_type': 'submission',
+            'response_csv': False,
+            'state': 'registered_with_errors',
+            'errors': self._mock_format_document_aeat_errors(record_info['errors']),
+        }
+        self.assertRecordValues(document, [expected_document_values])
+
+        expected_record_values = {
+            'l10n_es_edi_verifactu_state': 'registered_with_errors',
+            'l10n_es_edi_verifactu_warning': expected_document_values['errors'],
+            'l10n_es_edi_verifactu_warning_level': 'warning',
         }
         self.assertRecordValues(invoice, [expected_record_values])
 
@@ -337,10 +381,11 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         }
         self.assertRecordValues(document, [expected_document_values])
 
+        waiting_warning = "A Veri*Factu document is waiting to be sent as soon as possible."
         expected_record_values = {
             'l10n_es_edi_verifactu_state': False,
-            'l10n_es_edi_verifactu_errors': expected_document_values['errors'],
-            'l10n_es_edi_verifactu_error_level': False,
+            'l10n_es_edi_verifactu_warning': expected_document_values['errors'] + "\n" + waiting_warning,
+            'l10n_es_edi_verifactu_warning_level': 'danger',
         }
         self.assertRecordValues(invoice, [expected_record_values])
 
@@ -364,8 +409,8 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         expected_record_values = {
             'l10n_es_edi_verifactu_state': 'accepted',
-            'l10n_es_edi_verifactu_errors': '',
-            'l10n_es_edi_verifactu_error_level': False,
+            'l10n_es_edi_verifactu_warning': '',
+            'l10n_es_edi_verifactu_warning_level': False,
         }
         self.assertRecordValues(invoice, [expected_record_values])
 

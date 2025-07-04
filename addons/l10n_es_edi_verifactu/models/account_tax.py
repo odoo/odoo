@@ -1,4 +1,4 @@
-from odoo import api, fields, models, tools
+from odoo import _, api, fields, models
 
 
 class AccountTax(models.Model):
@@ -6,58 +6,39 @@ class AccountTax(models.Model):
 
     l10n_es_applicability = fields.Selection(
         selection=[
-            ('iva', 'VAT'),
-            ('igic', 'IGIC'),
-            ('ipsi', 'IPSI'),
-            ('other', 'Other'),
+            ('01', "VAT"),
+            ('02', "IPSI"),
+            ('03', "IGIC"),
         ],
         string="Applicability (Spain)",
-        default='iva',
     )
 
     @api.model
-    @tools.ormcache()
-    def _l10n_es_edi_verifactu_get_tax_types_map(self):
-        """Return dict: l10n_es_applicability -> verifactu tax type"""
-        return {
-            'iva': '01',
-            'ipsi': '02',
-            'igic': '03',
-            'other': '05',
-        }
-
-    @api.model
-    @tools.ormcache()
     def _l10n_es_edi_verifactu_get_tax_types_name_map(self):
         """Return dict: verifactu tax type -> human readable string
         """
         # We use the applicability selection strings since every applicability is mapped to a single verifactu tax type
+        # No applicability is mapped to '05' / "Other"
         applicability_string = dict(self.env['account.tax']._fields['l10n_es_applicability'].get_description(self.env)['selection'])
         return {
             '01': applicability_string['iva'],
             '02': applicability_string['ipsi'],
             '03': applicability_string['igic'],
-            '05': applicability_string['other'],
+            '05': _("Other"),
         }
 
-    def _l10n_es_edi_verifactu_filter_main_taxes(self):
-        return self.filtered(
-            lambda tax: tax.l10n_es_type not in ('retencion', 'recargo', 'dua', 'ignore')
-                        and tax.l10n_es_applicability
-        )
-
-    def _l10n_es_edi_verifactu_get_verifactu_tax_type(self):
+    def _l10n_es_edi_verifactu_get_tax_type(self):
         """
         Return the Veri*Factu Tax Type for the "first" main tax in self
+        Fallback to '05' ("Other")
         Note: Currently we only support one Veri*Factu Tax Type for the whole invoice.
         """
-
-        main_taxes = self._l10n_es_edi_verifactu_filter_main_taxes()
-        # Main taxes always have a `l10n_es_applicability`
+        main_tax_types = self._l10n_es_get_main_tax_types()
+        main_taxes = self.filtered(lambda tax: tax.l10n_es_type in main_tax_types)
         if not main_taxes:
-            return False
-        verifactu_tax_type_map = self.env['account.tax']._l10n_es_edi_verifactu_get_tax_types_map()
-        return verifactu_tax_type_map.get(main_taxes[0].l10n_es_applicability, False)
+            return '05'
+        # We fall back to 'Other' tax type in case the field is not set
+        return main_taxes[0].l10n_es_applicability
 
     def _l10n_es_edi_verifactu_get_suggested_clave_regimen(self, special_regime, forced_verifactu_tax_type=None):
         """
@@ -67,11 +48,13 @@ class AccountTax(models.Model):
         taxes = self
         if forced_verifactu_tax_type:
             # Remove main taxes with different a Veri*Factu tax type
-            taxes = self - self._l10n_es_edi_verifactu_filter_main_taxes().filtered(
-                lambda tax: tax._l10n_es_edi_verifactu_get_verifactu_tax_type == forced_verifactu_tax_type
+            main_tax_types = self._l10n_es_get_main_tax_types()
+            taxes = taxes.filtered(
+                lambda tax: (tax.l10n_es_type not in main_tax_types
+                             or tax._l10n_es_edi_verifactu_get_tax_type() != forced_verifactu_tax_type)
             )
 
-        verifactu_tax_type = forced_verifactu_tax_type or taxes._l10n_es_edi_verifactu_get_verifactu_tax_type()
+        verifactu_tax_type = forced_verifactu_tax_type or taxes._l10n_es_edi_verifactu_get_tax_type()
         if not verifactu_tax_type:
             return False
 
@@ -84,21 +67,21 @@ class AccountTax(models.Model):
         oss_tag = self.env.ref('l10n_eu_oss.tag_oss', raise_if_not_found=False)
 
         regimen_key = None
-        if VAT and special_regime == 'simplified':
-            # simplified
-            regimen_key = '20_iva'
-        elif VAT and special_regime == 'reagyp':
-            # REAGYP
-            regimen_key = '19_iva'
-        elif VAT and recargo_taxes:
-            # recargo
-            regimen_key = '18_iva'
-        elif VAT and oss_tag and oss_tag.id in taxes.repartition_line_ids.tag_ids.ids:
+        if VAT and oss_tag and oss_tag.id in taxes.repartition_line_ids.tag_ids.ids:
             # oss
             regimen_key = '17_iva'
         elif taxes.filtered(lambda tax: tax.l10n_es_type == 'exento' and tax.l10n_es_exempt_reason == 'E2'):
             # export
             regimen_key = '02'
+        elif VAT and recargo_taxes:
+            # recargo
+            regimen_key = '18_iva'
+        elif VAT and special_regime == 'simplified':
+            # simplified
+            regimen_key = '20_iva'
+        elif VAT and special_regime == 'reagyp':
+            # REAGYP
+            regimen_key = '19_iva'
         else:
             regimen_key = '01'
 
@@ -126,8 +109,7 @@ class AccountTax(models.Model):
                 'l10n_es_bien_inversion': tax.l10n_es_bien_inversion,
                 'l10n_es_exempt_reason': l10n_es_exempt_reason,
                 'l10n_es_type': tax.l10n_es_type,
-                'verifactu_tax_type': tax._l10n_es_edi_verifactu_get_verifactu_tax_type(),
-                'is_main_tax': bool(tax._l10n_es_edi_verifactu_filter_main_taxes()),
+                'verifactu_tax_type': tax._l10n_es_edi_verifactu_get_tax_type(),
             }
             return grouping_key
 

@@ -18,6 +18,9 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        cls.config = cls.basic_config
+
         # Ensure the date of all orders is in the past.
         # Else the associated move does not get posted (since it will be in the future / on the order date).
         cls.fakenow = datetime.datetime(2025, 1, 1)
@@ -34,11 +37,8 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
         date_order = data.pop('date_order', None)
         name = data.pop('name', None)
         account_move = data.pop('account_move', None)
-        is_l10n_es_simplified_invoice = data.pop('is_l10n_es_simplified_invoice', None)
 
         order_data = self.create_ui_order_data(**data)
-        if is_l10n_es_simplified_invoice:
-            order_data['data']['is_l10n_es_simplified_invoice'] = is_l10n_es_simplified_invoice
 
         # In case the Veri*Factu document is created for the pos order:
         # We have to fix the record identifier related fields on the order
@@ -107,10 +107,8 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
             self.assertDictEqual(record_identifier, expected_record_identifier | record_identifier)
 
     def test_error_above_simplified_limit(self):
-        with self.with_pos_session() as session:
-            self.assertEqual(session.config_id.l10n_es_simplified_invoice_limit, 400.0)
-
-            with self.assertRaisesRegex(UserError, 'Please create an invoice for an amount over 400.0'), \
+        with self.with_pos_session():
+            with self.assertRaisesRegex(UserError, "The order needs to be invoiced since its total amount is above 400€."), \
                  mute_logger('odoo.addons.point_of_sale.models.pos_order'):
                 self._create_order({
                     'pos_order_lines_ui_args': [
@@ -146,14 +144,11 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
         }])
 
     def test_order_invoiced_simplified(self):
-        with self.with_pos_session() as session:
-            self.assertEqual(session.config_id.l10n_es_simplified_invoice_limit, 400.0)
-
+        with self.with_pos_session():
             with self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json'):
                 order = self._create_order({
                     # Note: The total is not above the simplified invoice limit
                     'is_invoiced': True,
-                    'is_l10n_es_simplified_invoice': True,
                     'pos_order_lines_ui_args': [
                         (self.product, 1.0),
                     ],
@@ -169,7 +164,7 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
         # (even though we did not specify a customer).
         invoice = order.account_move
         self.assertTrue(invoice)
-        simplified_partner = order.config_id.simplified_partner_id
+        simplified_partner = self.env.ref('l10n_es.partner_simplified')
         self.assertTrue(invoice.partner_id == simplified_partner)
 
         self.assertRecordValues(order, [{
@@ -188,14 +183,11 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
         }])
 
     def test_order_invoiced_not_simplified(self):
-        with self.with_pos_session() as session:
-            self.assertEqual(session.config_id.l10n_es_simplified_invoice_limit, 400.0)
-
+        with self.with_pos_session():
             with self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json'):
                 order = self._create_order({
                     # Note: The total is above the simplified invoice limit
                     'is_invoiced': True,
-                    'is_l10n_es_simplified_invoice': False,
                     'customer': self.partner_b,  # Spanish customer
                     'pos_order_lines_ui_args': [
                         (self.product, 10.0),

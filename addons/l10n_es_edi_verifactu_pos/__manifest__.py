@@ -7,7 +7,7 @@
     'summary': "Add Veri*Factu support to Point of Sale",
     'depends': [
         'l10n_es_edi_verifactu',
-        'l10n_es_pos',
+        'point_of_sale',
     ],
     'data': [
         'security/ir.model.access.csv',

@@ -1,7 +1,6 @@
 import datetime
 import json
 
-from base64 import b64encode
 from freezegun import freeze_time
 
 from odoo import Command
@@ -360,7 +359,7 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
         dummy_start_document = self.env['l10n_es_edi_verifactu.document'].sudo().create([{
             'company_id': self.company.id,
             'document_type': 'submission',
-            'json_attachment_base64': b64encode(json.dumps(dummy_start_document_dict, indent=4).encode()),
+            'json_attachment': json.dumps(dummy_start_document_dict, indent=4).encode(),
         }])
         with self._mock_last_document(dummy_start_document):
             document1_reversed = invoices[0]._l10n_es_edi_verifactu_create_documents()[invoices[0]]

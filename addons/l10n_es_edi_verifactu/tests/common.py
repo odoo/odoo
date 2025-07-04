@@ -101,7 +101,7 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
         return mock.patch(request_function_path, return_value=mock_response)
 
     def _mock_zeep_registration_operation_function(self, register_function):
-        request_function_path = 'odoo.addons.l10n_es_edi_verifactu.models.verifactu_document.L10nEsEdiVerifactuDocument._get_zeep_registration_operations'
+        request_function_path = 'odoo.addons.l10n_es_edi_verifactu.models.verifactu_document.L10nEsEdiVerifactuDocument._get_zeep_registration_operation'
         return mock.patch(request_function_path, return_value=(register_function, {}))
 
     def _mock_zeep_registration_operation(self, response_file_json):

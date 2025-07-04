@@ -11,7 +11,6 @@ class ResCompany(models.Model):
     )
     l10n_es_edi_verifactu_required = fields.Boolean(
         string="Enable Veri*Factu",
-        default=False,
         copy=False,
     )
     l10n_es_edi_verifactu_test_environment = fields.Boolean(
@@ -38,6 +37,7 @@ class ResCompany(models.Model):
             ('reagyp', "REAGYP (Special Regime for Agriculture, Livestock and Fisheries)"),
             ('recargo', "Recargo de Equivalencia"),
         ],
+        help="Leave empty for the normal regimen.",
     )
 
     def _l10n_es_edi_verifactu_get_endpoints(self):

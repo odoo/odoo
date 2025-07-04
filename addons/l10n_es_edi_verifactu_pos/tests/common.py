@@ -9,7 +9,6 @@ class TestL10nEsEdiVerifactuPosCommon(TestL10nEsEdiVerifactuCommon, TestPoSCommo
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.config = cls.basic_config
 
         cls.product = cls.env['product.product'].create({
             'name': 'verifactu_pos_product',

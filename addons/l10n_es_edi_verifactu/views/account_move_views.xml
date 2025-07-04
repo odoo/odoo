@@ -66,7 +66,7 @@
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//header" position="after">
-                   <field name="l10n_es_edi_verifactu_warning_level" invisible="1"/>
+                    <field name="l10n_es_edi_verifactu_warning_level" invisible="1"/>
                     <div class="alert alert-info" role="alert"
                         invisible="not l10n_es_edi_verifactu_warning or l10n_es_edi_verifactu_warning_level != 'info'">
                         <field class="d-inline-block" name="l10n_es_edi_verifactu_warning"/>
@@ -75,14 +75,9 @@
                         invisible="not l10n_es_edi_verifactu_warning or l10n_es_edi_verifactu_warning_level != 'warning'">
                         <field class="d-inline-block" name="l10n_es_edi_verifactu_warning"/>
                     </div>
-                    <field name="l10n_es_edi_verifactu_error_level" invisible="1"/>
                     <div class="alert alert-danger" role="alert"
-                        invisible="not l10n_es_edi_verifactu_errors or l10n_es_edi_verifactu_error_level == 'registered_with_errors'">
-                        <field class="d-inline-block" name="l10n_es_edi_verifactu_errors"/>
-                    </div>
-                    <div class="alert alert-warning" role="alert"
-                        invisible="not l10n_es_edi_verifactu_errors or l10n_es_edi_verifactu_error_level != 'registered_with_errors'">
-                        <field name="l10n_es_edi_verifactu_errors"/>
+                        invisible="not l10n_es_edi_verifactu_warning or l10n_es_edi_verifactu_warning_level != 'danger'">
+                        <field class="d-inline-block" name="l10n_es_edi_verifactu_warning"/>
                     </div>
                 </xpath>
                 <xpath expr="//button[@name='button_cancel']" position="after">
@@ -105,9 +100,6 @@
                                    readonly="state != 'draft'"/>
                             <field name="l10n_es_edi_verifactu_substituted_entry_id" invisible="not l10n_es_edi_verifactu_substituted_entry_id"/>
                             <field name="reversed_entry_id" invisible="not reversed_entry_id"/>
-                            <field name="l10n_es_edi_verifactu_errors" groups="base.group_no_one"/>
-                            <field name="l10n_es_edi_verifactu_error_level" groups="base.group_no_one"/>
-                            <field name="l10n_es_edi_verifactu_required" groups="base.group_no_one"/>
                             <field name="l10n_es_edi_verifactu_required" invisible="1"/>
                             <field name="l10n_es_edi_verifactu_available_clave_regimens" invisible="1"/>
                             <field name="l10n_es_edi_verifactu_clave_regimen"

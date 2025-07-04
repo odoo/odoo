@@ -48,14 +48,18 @@
                             invisible="not l10n_es_edi_verifactu_show_cancel_button"/>
                 </xpath>
                 <xpath expr="//header" position="after">
-                    <field name="l10n_es_edi_verifactu_error_level" invisible="1"/>
-                    <div class="alert alert-danger" role="alert"
-                        invisible="l10n_es_edi_verifactu_error_level in (False, 'registered_with_errors')">
-                        <field class="d-inline-block" name="l10n_es_edi_verifactu_errors"/>
+                    <field name="l10n_es_edi_verifactu_warning_level" invisible="1"/>
+                    <div class="alert alert-info" role="alert"
+                        invisible="not l10n_es_edi_verifactu_warning or l10n_es_edi_verifactu_warning_level != 'info'">
+                        <field class="d-inline-block" name="l10n_es_edi_verifactu_warning"/>
                     </div>
                     <div class="alert alert-warning" role="alert"
-                        invisible="l10n_es_edi_verifactu_error_level != 'registered_with_errors'">
-                        <field name="l10n_es_edi_verifactu_errors"/>
+                        invisible="not l10n_es_edi_verifactu_warning or l10n_es_edi_verifactu_warning_level != 'warning'">
+                        <field class="d-inline-block" name="l10n_es_edi_verifactu_warning"/>
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                        invisible="not l10n_es_edi_verifactu_warning or l10n_es_edi_verifactu_warning_level != 'danger'">
+                        <field class="d-inline-block" name="l10n_es_edi_verifactu_warning"/>
                     </div>
                 </xpath>
                 <xpath expr="//notebook" position="inside">
@@ -69,10 +73,6 @@
                             <field name="l10n_es_edi_verifactu_refund_reason"
                                    invisible="amount_total >= 0"
                                    readonly="state != 'draft'"/>
-                            <field name="refunded_order_ids" invisible="not refunded_order_ids"/>
-                            <field name="l10n_es_edi_verifactu_errors" groups="base.group_no_one"/>
-                            <field name="l10n_es_edi_verifactu_error_level" groups="base.group_no_one"/>
-                            <field name="l10n_es_edi_verifactu_required" groups="base.group_no_one"/>
                             <field name="l10n_es_edi_verifactu_required" invisible="1"/>
                             <field name="l10n_es_edi_verifactu_state"
                                    invisible="   not l10n_es_edi_verifactu_required and not l10n_es_edi_verifactu_state
