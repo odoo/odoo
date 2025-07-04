@@ -15,4 +15,9 @@
         'templates/l10n_tr_nilvera_edispatch.xml',
     ],
     'author': 'Odoo S.A.',
+    'assets': {
+        'web.assets_backend': [
+            'l10n_tr_nilvera_edispatch/static/src/views/**/*',
+        ],
+    },
 }
