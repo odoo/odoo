@@ -321,7 +321,7 @@ class HrEmployeeBase(models.AbstractModel):
             employee_remaining_leaves = 0
             employee_max_leaves = 0
             for leave_type in leaves_taken[employee]:
-                if leave_type.requires_allocation == 'no':
+                if leave_type.requires_allocation == 'no' or not leave_type.active:
                     continue
                 for allocation in leaves_taken[employee][leave_type]:
                     if allocation and allocation.date_from <= current_date\
