@@ -11,6 +11,7 @@ export class AddressCard extends Interaction {
 
      setup() {
         this.billingContainer = this.el.querySelector('#billing_container');
+        this.addBillingAddressBtnEl = this.el.querySelector('.o_add_billing_address_btn');
     }
 
     /**
@@ -53,6 +54,7 @@ export class AddressCard extends Interaction {
         } else {
             this.billingContainer.classList.remove('d-none');  // Show the billing address row.
         }
+        this.addBillingAddressBtnEl.classList.toggle('d-none', useDeliveryAsBilling);
     }
 }
 

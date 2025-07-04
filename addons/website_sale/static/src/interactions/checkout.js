@@ -26,6 +26,7 @@ export class Checkout extends Interaction {
             .find(button => button.offsetParent !== null);
         this.useDeliveryAsBillingToggle = document.querySelector('#use_delivery_as_billing');
         this.billingContainer = this.el.querySelector('#billing_container');
+        this.addBillingAddressBtnEl = this.el.querySelector('.o_add_billing_address_btn');
     }
 
     async willStart() {
@@ -40,7 +41,7 @@ export class Checkout extends Interaction {
      */
     async changeAddress(ev) {
         const newAddress = ev.currentTarget;
-        if (newAddress.classList.contains('bg-primary')) { // If the card is already selected.
+        if (newAddress.classList.contains('bg-400')) { // If the card is already selected.
             return;
         }
         const addressType = newAddress.dataset.addressType;
@@ -109,6 +110,7 @@ export class Checkout extends Interaction {
             this._disableMainButton();
             this.billingContainer.classList.remove('d-none'); // Show the billing address row.
         }
+        this.addBillingAddressBtnEl.classList.toggle('d-none', useDeliveryAsBilling);
 
         this._enableMainButton();  // Try to enable the main button.
     }
@@ -207,7 +209,7 @@ export class Checkout extends Interaction {
      */
     _tuneDownAddressCard(card) {
         if (!card) return;
-        card.classList.remove('bg-primary', 'border', 'border-primary');
+        card.classList.remove('bg-400', 'border', 'border-primary');
     }
 
     /**
@@ -219,7 +221,7 @@ export class Checkout extends Interaction {
      */
     _highlightAddressCard(card) {
         if (!card) return;
-        card.classList.add('bg-primary', 'border', 'border-primary');
+        card.classList.add('bg-400', 'border', 'border-primary');
     }
 
     /**
@@ -543,7 +545,7 @@ export class Checkout extends Interaction {
      * @return {Element}
      */
     _getSelectedAddress(addressType) {
-        return this.el.querySelector(`.card.bg-primary[data-address-type="${addressType}"]`);
+        return this.el.querySelector(`.card.bg-400[data-address-type="${addressType}"]`);
     }
 
     /**
@@ -555,7 +557,7 @@ export class Checkout extends Interaction {
      */
     _isBillingAddressSelected() {
         const billingAddressSelected = Boolean(
-            this.el.querySelector('.card.bg-primary[data-address-type="billing"]')
+            this.el.querySelector('.card.bg-400[data-address-type="billing"]')
         );
         return billingAddressSelected || this.useDeliveryAsBillingToggle?.checked;
     }
