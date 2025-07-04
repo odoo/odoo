@@ -37,10 +37,6 @@ export const callPipService = {
                 return;
             }
             state.active = true;
-            if (!window.documentPictureInPicture) {
-                /** Application-level PiP. @see CallPip **/
-                return;
-            }
             const isShadowRoot = context?.root?.el?.getRootNode() instanceof ShadowRoot;
             pipWindow = await popout.pip(Call, {
                 props: { isPip: true, thread: rtc.channel },

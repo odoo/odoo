@@ -45,7 +45,7 @@ callActionsRegistry
         isTracked: true,
         icon: "fa-video-camera",
         activeClass: "text-success",
-        select: (component) => component.rtc.toggleVideo("camera"),
+        select: (component) => component.rtc.toggleVideo("camera", { env: component.env }),
         sequence: 30,
     })
     .add("raise-hand", {
@@ -73,7 +73,7 @@ callActionsRegistry
         isActive: (component) => component.rtc.selfSession?.is_screen_sharing_on,
         icon: "fa-desktop",
         activeClass: "text-success",
-        select: (component) => component.rtc.toggleVideo("screen"),
+        select: (component) => component.rtc.toggleVideo("screen", { env: component.env }),
         sequence: 40,
     })
     .add("blur-background", {

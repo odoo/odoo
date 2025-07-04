@@ -397,7 +397,7 @@ export class Rtc extends Record {
         this.p2pService = services["discuss.p2p"];
         onChange(this.store.settings, "useBlur", () => {
             if (this.state.sendCamera) {
-                this.toggleVideo("camera", true);
+                this.toggleVideo("camera", { force: true });
             }
         });
         onChange(this.store.settings, ["edgeBlurAmount", "backgroundBlurAmount"], () => {
@@ -1634,9 +1634,19 @@ export class Rtc extends Record {
 
     /**
      * @param {string} type
-     * @param {boolean} [force]
+     * @param {Object} [param1]
+     * @param {boolean} [param1.force]
+     * @param {boolean} [param1.env]
      */
-    async toggleVideo(type, force) {
+    async toggleVideo(type, options) {
+        let force;
+        let env;
+        if (typeof options === "boolean") {
+            force = options;
+        } else {
+            force = options?.force;
+            env = options?.env;
+        }
         if (this.isRemote) {
             this.notification.add(UNAVAILABLE_AS_REMOTE, {
                 type: "warning",
@@ -1651,14 +1661,14 @@ export class Rtc extends Record {
                 const track = this.state.cameraTrack;
                 const sendCamera = force ?? !this.state.sendCamera;
                 this.state.sendCamera = false;
-                await this.setVideo(track, type, sendCamera);
+                await this.setVideo(track, type, { activateVideo: sendCamera, env });
                 break;
             }
             case "screen": {
                 const track = this.state.screenTrack;
                 const sendScreen = force ?? !this.state.sendScreen;
                 this.state.sendScreen = false;
-                await this.setVideo(track, type, sendScreen);
+                await this.setVideo(track, type, { activateVideo: sendScreen, env });
                 break;
             }
         }
@@ -1728,8 +1738,19 @@ export class Rtc extends Record {
 
     /**
      * @param {String} type 'camera' or 'screen'
+     * @param {Object} [param1] options
+     * @param {Boolean} [param1.activateVideo=false] options
+     * @param {Env} [param1.env] options
      */
-    async setVideo(track, type, activateVideo = false) {
+    async setVideo(track, type, options) {
+        let activateVideo;
+        let env;
+        if (typeof options === "boolean") {
+            activateVideo = options ?? false;
+        } else {
+            activateVideo = options?.activateVideo ?? false;
+            env = options?.env;
+        }
         const stopVideo = () => {
             if (track) {
                 track.stop();
@@ -1761,12 +1782,13 @@ export class Rtc extends Record {
             return;
         }
         let sourceStream;
+        const sourceWindow = env?.pipWindow ?? browser;
         try {
             if (type === "camera") {
                 if (this.state.sourceCameraStream) {
                     sourceStream = this.state.sourceCameraStream;
                 } else {
-                    sourceStream = await browser.navigator.mediaDevices.getUserMedia({
+                    sourceStream = await sourceWindow.navigator.mediaDevices.getUserMedia({
                         video: CAMERA_CONFIG,
                     });
                 }
@@ -1775,7 +1797,7 @@ export class Rtc extends Record {
                 if (this.state.sourceScreenStream) {
                     sourceStream = this.state.sourceScreenStream;
                 } else {
-                    sourceStream = await browser.navigator.mediaDevices.getDisplayMedia({
+                    sourceStream = await sourceWindow.navigator.mediaDevices.getDisplayMedia({
                         video: SCREEN_CONFIG,
                         audio: true,
                     });
@@ -1795,7 +1817,7 @@ export class Rtc extends Record {
         const screenAudioTrack = sourceStream ? sourceStream.getAudioTracks()[0] : undefined;
         if (outputTrack) {
             outputTrack.addEventListener("ended", async () => {
-                await this.toggleVideo(type, false);
+                await this.toggleVideo(type, { force: false });
             });
         }
         if (this.store.settings.useBlur && type === "camera") {
@@ -1821,6 +1843,7 @@ export class Rtc extends Record {
                     sourceCameraStream: sourceStream,
                     cameraTrack: outputTrack,
                     sendCamera: Boolean(outputTrack),
+                    isCameraSourceExternal: Boolean(sourceStream) && env?.pipWindow,
                 });
                 break;
             }
@@ -1830,6 +1853,7 @@ export class Rtc extends Record {
                     screenTrack: outputTrack,
                     screenAudioTrack: screenAudioTrack,
                     sendScreen: Boolean(outputTrack),
+                    isScreenSourceExternal: Boolean(sourceStream) && env?.pipWindow,
                 });
                 break;
             }
@@ -2154,12 +2178,10 @@ export const rtcService = {
                 rtc.channel?.openChatWindow();
             }
             rtc.state.isPipMode = isPipMode;
-            if (rtc.pipService.isNativePipAvailable) {
-                rtc._postToTabs({
-                    type: CROSS_TAB_HOST_MESSAGE.PIP_CHANGE,
-                    changes: { isPipMode },
-                });
-            }
+            rtc._postToTabs({
+                type: CROSS_TAB_HOST_MESSAGE.PIP_CHANGE,
+                changes: { isPipMode },
+            });
         });
         rtc.p2pService = services["discuss.p2p"];
         rtc.p2pService.acceptOffer = async (id, sequence) => {
