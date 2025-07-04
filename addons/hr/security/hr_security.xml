@@ -7,7 +7,7 @@
         <field name="category_id" ref="base.module_category_human_resources"/>
     </record>
 
-    <record id="group_hr_user" model="res.groups">
+    <record id="group_hr_employee_manager" model="res.groups">
         <field name="name">Employee Manager</field>
         <field name="sequence">5</field>
         <field name="comment">Enable the user to see and manage the contracts from Employee application.</field>
@@ -15,11 +15,11 @@
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
-    <record id="group_hr_officer" model="res.groups">
+    <record id="group_hr_user" model="res.groups">
         <field name="name">Officer: Manage all employees</field>
         <field name="sequence">10</field>
         <field name="privilege_id" ref="res_groups_privilege_employees"/>
-        <field name="implied_ids" eval="[(6, 0, [ref('hr.group_hr_user')])]"/>
+        <field name="implied_ids" eval="[(6, 0, [ref('hr.group_hr_employee_manager')])]"/>
         <field name="comment">The user will be able to create and edit employees.</field>
     </record>
 
@@ -47,14 +47,14 @@
     <record id="ir_rule_hr_employee_user" model="ir.rule">
         <field name="name">Employee: Employee Manager</field>
         <field name="model_id" ref="model_hr_employee"/>
-        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="groups" eval="[(4, ref('hr.group_hr_employee_manager'))]"/>
         <field name="domain_force">['|', ('parent_id.user_id', '=', user.id), ('user_id', '=', user.id)]</field>
     </record>
 
     <record id="ir_rule_hr_employee_officer" model="ir.rule">
         <field name="name">Employee: Officer</field>
         <field name="model_id" ref="model_hr_employee"/>
-        <field name="groups" eval="[(4, ref('hr.group_hr_officer'))]"/>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
         <field name="domain_force">[(1, '=', 1)]</field>
     </record>
 
