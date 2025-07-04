@@ -1,5 +1,6 @@
 import datetime
 import json
+import psycopg2
 import unittest
 from collections import abc
 from unittest.mock import patch
@@ -117,6 +118,40 @@ class TestPropertiesMixin(TransactionCase):
 
 
 class PropertiesCase(TestPropertiesMixin):
+
+    @mute_logger('odoo.sql_db')
+    def test_base_properties_model_access(self):
+        with self.assertRaises(AccessError):
+            self.env['res.partner'].with_user(self.test_user).create({
+                'name': 'test', 'properties': [{'name': 'test', 'type': 'char', 'definition_changed': True}]})
+
+        definition_record = self.env['properties.base.definition']._get_definition_for_property_field('res.partner', 'properties')
+        self.assertEqual(definition_record.properties_definition, [])
+
+        field = self.env["ir.model.fields"].sudo()._get('test_orm.emailmessage', 'properties')
+        with self.assertRaises(psycopg2.errors.UniqueViolation):
+            self.env['properties.base.definition'].create({'properties_field_id': field.id})
+
+        with self.assertRaises(AccessError):
+            # Even in SUDO, we can not change the field
+            definition_record.sudo().properties_field_id = field.id
+
+        with self.assertRaises(AccessError):
+            definition_record.with_user(self.test_user).unlink()
+
+        record_0 = self.env['res.partner'].create([{'properties': [{'name': 'test', 'type': 'char', 'definition_changed': True, 'value': 'test'}], 'name': 'test'}, {'name': 'test'}])[0]
+        self.assertEqual(record_0.properties_base_definition_id, definition_record)
+        self.assertEqual(definition_record.properties_definition, [{'name': 'test', 'type': 'char'}])
+
+        record_2 = self.env['test_orm.emailmessage'].create([{}, {}])[0]
+        record_2.write({'properties': [{'name': 'test_2', 'type': 'char', 'definition_changed': True, 'value': 'test'}]})
+        self.assertNotEqual(definition_record, record_2.properties_base_definition_id)
+        self.assertEqual(record_2.properties_base_definition_id.properties_definition, [{'name': 'test_2', 'type': 'char'}])
+        self.assertEqual(definition_record.properties_definition, [{'name': 'test', 'type': 'char'}])
+
+        with self.assertRaises(AccessError):
+            self.env['res.partner'].with_user(self.test_user).create({
+                'name': 'test', 'properties': [{'name': 'test', 'type': 'char', 'definition_deleted': True}]})
 
     def test_properties_field(self):
         self.assertIsInstance(self.message_1.attributes, abc.Mapping)
@@ -1868,7 +1903,7 @@ class PropertiesCase(TestPropertiesMixin):
         with self.assertRaises(ValidationError) as ve:
             action.update_path = 'attributes.discussion_color_code'
         self.assertEqual(ve.exception.args[0],
-            "The path contained by the field 'Field to Update Path' contains a non-relational field (Properties) that is not the last field in the path. You can't traverse non-relational fields (even in the quantum realm). Make sure only the last field in the path is non-relational.",
+            "The path contained by the field 'Field to Update Path' contains a non-relational field (Discussion Properties) that is not the last field in the path. You can't traverse non-relational fields (even in the quantum realm). Make sure only the last field in the path is non-relational.",
         )
 
     def test_getitem_property(self):

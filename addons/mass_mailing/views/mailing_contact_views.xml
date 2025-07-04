@@ -10,6 +10,7 @@
                     string="Name / Email"/>
                 <field name="tag_ids"/>
                 <field name="list_ids"/>
+                <field name="properties"/>
                 <separator/>
                 <filter string="Valid Email Recipients"
                     name="filter_valid_email_recipient"
@@ -31,6 +32,8 @@
                 <group string="Group By">
                     <filter string="Creation Date" name="group_create_date"
                         context="{'group_by': 'create_date'}"/>
+                    <filter string="Properties" name="group_properties"
+                        context="{'group_by': 'properties'}"/>
                 </group>
             </search>
         </field>
@@ -56,6 +59,7 @@
                 <field name="message_bounce" sum="Total Bounces" readonly="1"/>
                 <field name="opt_out" readonly="1" column_invisible="'default_list_ids' not in context"/>
                 <field name="list_ids" widget="many2many_tags" optional="hide"/>
+                <field name="properties" optional="hide"/>
             </list>
         </field>
     </record>
@@ -78,10 +82,9 @@
                             </div>
                         </div>
                         <field name="tag_ids"/>
-                        <footer class="pt-1">
-                            <field name="email" class="fw-bolder"/>
-                            <field name="company_name" class="ms-auto"/>
-                        </footer>
+                        <field name="email" class="fw-bolder"/>
+                        <field name="company_name" class="ms-auto"/>
+                        <field name="properties" widget="properties"/>
                     </t>
                 </templates>
             </kanban>
@@ -123,6 +126,9 @@
                                    placeholder="e.g. &quot;VIP&quot;, &quot;Roadshow&quot;, ..." style="width: 100%"/>
                         </group>
                     </group>
+                    <div class="d-flex">
+                        <field name="properties" nolabel="1" columns="2"/>
+                    </div>
                     <notebook>
                         <page string="Subscriptions">
                             <field name="subscription_ids">

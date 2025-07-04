@@ -28,6 +28,8 @@ from . import ir_logging
 from . import ir_module
 from . import ir_demo
 from . import ir_demo_failure
+from . import properties_base_definition
+from . import properties_base_definition_mixin
 from . import report_layout
 from . import report_paperformat
 
