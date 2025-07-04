@@ -75,5 +75,9 @@ registerWebsitePreviewTour(
             content: "Verify that the video is set as the background of the snippet.",
             trigger: ":iframe #wrap section.o_background_video",
         },
+        {
+            content: "Check that the video container is not editable.",
+            trigger: ":iframe #wrap section.o_background_video > .o_bg_video_container[contenteditable=false]",
+        },
     ]
 );
