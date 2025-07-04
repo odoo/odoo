@@ -544,6 +544,18 @@
                         string="New Group Time Off" class="btn btn-secondary"
                         groups="hr_holidays.group_hr_holidays_responsible" display="always"
                     />
+                    <button type="object"
+                        name="action_approve"
+                        string="Approve"
+                        icon="fa-thumbs-up"
+                        class="btn btn-outline-success"
+                    />
+                    <button type="object"
+                        name="action_refuse"
+                        string="Refuse"
+                        icon="fa-times"
+                        class="btn btn-outline-danger"
+                    />
                 </header>
                 <field name="employee_id" widget="many2one_avatar_employee" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
                 <field name="department_id" optional="hidden" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
