@@ -69,7 +69,7 @@ webTours.add("check_shipping_discount", {
         ...assertCartAmounts({ delivery: "5.00" }),
         ...assertRewardAmounts({ discount: "- 300.00", shipping: "- 5.00" }),
         {
-            content: "confirm shipping method",
+            content: "confirm delivery method",
             trigger: ".o_total_card a[name=website_sale_main_button]",
             run: "click",
             expectUnloadPage: true,
