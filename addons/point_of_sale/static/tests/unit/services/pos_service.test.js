@@ -131,24 +131,55 @@ describe("pos_store.js", () => {
         expect(store.models["pos.order"].getBy("uuid", order1.uuid).state).toBe("cancel");
     });
 
-    // TODO - ADD IT BACK
-    // test("productsToDisplay", async () => {
-    //     const store = await setupPosEnv();
-    //     store.selectedCategory = store.models["pos.category"].get(1);
-    //     let products = store.productsToDisplay;
-    //     expect(products.length).toBe(1);
-    //     expect(products[0].id).toBe(5);
-    //     expect(store.selectedCategory.id).toBe(1);
-    //     store.selectedCategory = store.models["pos.category"].get(1);
-    //     store.searchProductWord = "TEST";
-    //     products = store.productsToDisplay;
-    //     expect(products.length).toBe(2);
-    //     expect(products[0].id).toBe(5);
-    //     expect(products[1].id).toBe(6);
-    //     expect(store.selectedCategory).toBe(undefined);
-    //     store.searchProductWord = "TEST 2";
-    //     products = store.productsToDisplay;
-    //     expect(products.length).toBe(1);
-    //     expect(products[0].id).toBe(6);
-    // });
+    test("productsToDisplay", async () => {
+        const store = await setupPosEnv();
+        store.selectedCategory = store.models["pos.category"].get(1);
+        let products = store.productsToDisplay;
+        expect(products.length).toBe(1);
+        expect(products[0].id).toBe(5);
+        expect(store.selectedCategory.id).toBe(1);
+        store.selectedCategory = store.models["pos.category"].get(1);
+        store.searchProductWord = "TEST";
+        products = store.productsToDisplay;
+        expect(products.length).toBe(2);
+        expect(products[0].id).toBe(5);
+        expect(products[1].id).toBe(6);
+        expect(store.selectedCategory).toBe(undefined);
+        store.searchProductWord = "TEST 2";
+        products = store.productsToDisplay;
+        expect(products.length).toBe(1);
+        expect(products[0].id).toBe(6);
+    });
+
+    test("productToDisplayByCateg", async () => {
+        const store = await setupPosEnv();
+
+        // Case 1: Grouping disabled
+        store.config.iface_group_by_categ = false;
+        let grouped = store.productToDisplayByCateg;
+        expect(grouped.length).toBe(1); //Only one group
+        expect(grouped[0][0]).toBe(0);
+        expect(grouped[0][1].length).toBe(10); //10 products in same group
+
+        // Case 2: Grouping enabled
+        store.config.iface_group_by_categ = true;
+        grouped = store.productToDisplayByCateg;
+        expect(grouped.length).toBe(5);
+        // Confirm grouping structure
+        for (const [catId, prods] of grouped) {
+            expect(Array.isArray(prods)).toBe(true);
+            expect(prods.length).toBeGreaterThan(0);
+            for (const prod of prods) {
+                const categoryIds = prod.pos_categ_ids.map((c) => c.id);
+                expect(categoryIds).toInclude(parseInt(catId));
+            }
+        }
+
+        // Case 3: Grouping with search filtering
+        store.searchProductWord = "TEST";
+        grouped = store.productToDisplayByCateg;
+        expect(grouped.length).toBe(2);
+        expect(grouped[0][1][0].name).toBe("TEST");
+        expect(grouped[1][1][0].name).toBe("TEST 2");
+    });
 });
