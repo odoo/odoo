@@ -3443,38 +3443,70 @@
             <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
             <div id="shop_checkout">
                 <t t-if="order._has_deliverable_products()">
-                    <t t-call="website_sale.delivery_address_row">
+                    <t t-call="website_sale.delivery_address_list">
                         <t t-set="addresses" t-value="delivery_addresses"/>
                     </t>
                     <t t-call="website_sale.delivery_form">
                         <t t-set="selected_dm_id" t-value="order.carrier_id.id"/>
                     </t>
                 </t>
-                <t t-call="website_sale.billing_address_row">
+                <t t-call="website_sale.billing_address_list">
                     <t t-set="addresses" t-value="billing_addresses"/>
                 </t>
             </div>
         </t>
     </template>
 
-    <template id="delivery_address_row">
-        <div id="delivery_address_row" class="mb-4">
-            <h4 class="mb-3">Delivery address</h4>
-            <t t-call="website_sale.address_row">
-                <t t-set="address_type" t-value="'delivery'"/>
+    <template id="delivery_address_list">
+        <t t-set="address_type" t-value="'delivery'"/>
+        <t
+            t-set="new_address_url"
+            t-valuef="{{address_url}}?address_type={{address_type}}&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
+        />
+        <div id="delivery_address_list" class="mb-4">
+            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                <h4 class="mb-0">Delivery address</h4>
+                <!-- We don't allow public users to have multiple delivery addresses. -->
+                <a
+                    t-if="not order.website_id.is_public_user()"
+                    role="button"
+                    t-att-href="new_address_url"
+                    t-att-data-address-type="address_type"
+                    class="o_address_card_add_new btn btn-outline-primary btn-sm"
+                    title="Add an address"
+                    aria-label="Add an address"
+                >
+                    <i class="oi oi-plus me-2"/>Add Address
+                </a>
+            </div>
+            <t t-call="website_sale.address_list">
                 <t t-set="addresses" t-value="delivery_addresses"/>
                 <t t-set="selected_address" t-value="order.partner_shipping_id"/>
             </t>
         </div>
     </template>
 
-    <template id="billing_address_row">
-        <div id="billing_address_row" class="mb-3">
-            <p t-attf-class="{{only_services and 'h4 mb-3' or 'h5'}}">
-                Billing address
-            </p>
-            <t t-set="has_delivery" t-value="order._has_deliverable_products()"/>
-            <div t-if="has_delivery" class="form-check form-switch mt-2 mb-3">
+    <template id="billing_address_list">
+        <t t-set="address_type" t-value="'billing'"/>
+        <t t-set="new_address_url" t-valuef="{{address_url}}?address_type={{address_type}}"/>
+        <t t-set="has_delivery" t-value="order._has_deliverable_products()"/>
+        <div id="billing_address_list" class="mb-3 pt-2">
+            <div class="d-flex justify-content-between align-items-start gap-3">
+                <p t-attf-class="mb-0 {{only_services and 'h4' or 'h5'}}">
+                    Billing address
+                </p>
+                <a
+                    role="button"
+                    t-att-href="new_address_url"
+                    t-att-data-address-type="address_type"
+                    t-attf-class="o_address_card_add_new o_add_billing_address_btn btn btn-outline-primary btn-sm {{'d-none' if use_delivery_as_billing and has_delivery else ''}}"
+                    title="Add an address"
+                    aria-label="Add an address"
+                >
+                    <i class="oi oi-plus me-2"/>Add Address
+                </a>
+            </div>
+            <div t-if="has_delivery" class="form-check form-switch mt-2">
                 <label id="use_delivery_as_billing_label">
                     <input
                         type="checkbox"
@@ -3486,10 +3518,9 @@
             </div>
             <div
                 id="billing_container"
-                t-attf-class="{{'d-none' if use_delivery_as_billing and has_delivery else ''}}"
+                t-attf-class="mt-3 {{'d-none' if use_delivery_as_billing and has_delivery else ''}}"
             >
-                <t t-call="website_sale.address_row">
-                    <t t-set="address_type" t-value="'billing'"/>
+                <t t-call="website_sale.address_list">
                     <t t-set="addresses" t-value="billing_addresses"/>
                     <t t-set="selected_address" t-value="order.partner_invoice_id"/>
                 </t>
@@ -3497,10 +3528,10 @@
         </div>
     </template>
 
-    <template id="website_sale.address_row" inherit_id="portal.address_row" primary="True">
-        <t t-call="portal.address_kanban" position="replace">
-            <t t-call="website_sale.address_kanban">
-                <!-- Drop show_removal and address_update_url which were in the base call to portal.address_kanban -->
+    <template id="website_sale.address_list" inherit_id="portal.address_list" primary="True">
+        <t t-call="portal.address_card" position="replace">
+            <t t-call="website_sale.address_card">
+                <!-- Drop show_removal and address_update_url which were in the base call to portal.address_card -->
                 <t t-set="is_user_address" t-value="address == request.env.user.partner_id"/>
                 <t t-set="contact" t-value="address"/>
                 <t
@@ -3510,16 +3541,10 @@
                 <t t-set="selected" t-value="address == selected_address"/>
             </t>
         </t>
-        <!-- We don't allow public users to have multiple delivery addresses. -->
-        <div name="add_address" position="attributes">
-            <attribute name="t-if">
-                address_type == 'billing' or not order.website_id.is_public_user()
-            </attribute>
-        </div>
     </template>
 
     <!-- To ensure modification dones in the checkout are not applied on the portal -->
-    <template id="website_sale.address_kanban" inherit_id="portal.address_kanban" primary="True"/>
+    <template id="website_sale.address_card" inherit_id="portal.address_card" primary="True"/>
 
     <!-- /shop/address route -->
     <template id="website_sale.address_form_fields" inherit_id="portal.address_form_fields" primary="True">
@@ -3610,6 +3635,7 @@
         <div class="card">
             <div class="card-body" id="delivery_and_billing">
                 <t t-call="website_sale.address_edit_button"/>
+                <t t-set="delivery_title_classes" t-value="'badge text-bg-info mb-2'"/>
                 <t
                     t-set="use_delivery_as_billing"
                     t-value="order.partner_invoice_id == order.partner_shipping_id and not order.pickup_location_data"
@@ -3617,10 +3643,10 @@
                 <div class="row g-0">
                     <div
                         t-if="not use_delivery_as_billing and order._has_deliverable_products()"
-                        t-attf-class="{{not use_delivery_as_billing and not only_services and 'col-md-6 ps-1'}}"
+                        t-attf-class="{{not use_delivery_as_billing and not only_services and 'col-md-6'}}"
                     >
                         <t t-if="order.pickup_location_data">
-                            <b>Deliver to pickup point</b>
+                            <p t-att-class="delivery_title_classes">Deliver to pickup point</p>
                             <div
                                 t-out="order.pickup_location_data.get('name', '')
                                     + ', ' + order.pickup_location_data.get('street', '')
@@ -3630,7 +3656,7 @@
                             />
                         </t>
                         <t t-else="">
-                            <b>Delivery</b>
+                            <p t-att-class="delivery_title_classes">Delivery</p>
                             <t
                                 t-out="order.partner_shipping_id"
                                 t-options="dict(
@@ -3641,9 +3667,9 @@
                             />
                         </t>
                     </div>
-                    <div t-attf-class="ps-1 {{not use_delivery_as_billing and not only_services and 'col-md-6'}}">
-                        <b t-if="use_delivery_as_billing and not only_services">Delivery &amp; Billing</b>
-                        <b t-else="">Billing</b>
+                    <div t-attf-class="{{not use_delivery_as_billing and not only_services and 'col-md-6'}}">
+                        <p t-if="use_delivery_as_billing and not only_services" t-att-class="delivery_title_classes">Delivery &amp; Billing</p>
+                        <p t-else="" t-att-class="delivery_title_classes">Billing</p>
                         <t
                             t-out="order.partner_invoice_id"
                             t-options="dict(

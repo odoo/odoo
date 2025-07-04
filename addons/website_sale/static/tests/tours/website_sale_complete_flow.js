@@ -81,7 +81,7 @@ import { pay } from "@website_sale/js/tours/tour_utils";
     },
     {
         content: "Add a billing address",
-        trigger: '.o_portal_address_row a[href^="/shop/address?address_type=billing"]:contains("Add address")',
+        trigger: '.o_portal_address_list a[href^="/shop/address?address_type=billing"]:contains("Add address")',
         run: "click",
         expectUnloadPage: true,
     },
@@ -125,15 +125,15 @@ import { pay } from "@website_sale/js/tours/tour_utils";
     },
     {
         content: "Check selected delivery address is same as typed in previous step",
-        trigger: '#delivery_address_row:contains(SO1 Delivery Street, 33):contains(SO1DeliveryCity):contains(Afghanistan)',
+        trigger: '#delivery_address_list:contains(SO1 Delivery Street, 33):contains(SO1DeliveryCity):contains(Afghanistan)',
     },
     {
         content: "Check selected billing address is same as typed in previous step",
-        trigger: '#billing_address_row:contains(17, SO1 Billing Road):contains(SO1BillingCity):contains(Afghanistan)',
+        trigger: '#billing_address_list:contains(17, SO1 Billing Road):contains(SO1BillingCity):contains(Afghanistan)',
     },
     {
         content: "Click for edit billing address",
-        trigger: '#billing_container .o_portal_address_row a[href^="/shop/address?address_type=billing"].js_edit_address:first',
+        trigger: '#billing_container .o_portal_address_list a[href^="/shop/address?address_type=billing"].js_edit_address:first',
         run: "click",
         expectUnloadPage: true,
     },
@@ -333,7 +333,7 @@ import { pay } from "@website_sale/js/tours/tour_utils";
     },
     {
         content: "Add new delivery address",
-        trigger: '#delivery_address_row a[href^="/shop/address"]:contains("Add address")',
+        trigger: '#delivery_address_list a[href^="/shop/address"]:contains("Add address")',
         run: "click",
         expectUnloadPage: true,
     },
