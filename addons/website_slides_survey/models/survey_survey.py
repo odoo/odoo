@@ -32,7 +32,7 @@ class SurveySurvey(models.Model):
         certifications = self.sudo().slide_ids.filtered(lambda slide: slide.slide_type == "certification").mapped('survey_id').exists()
         if certifications:
             certifications_course_mapping = [
-                _(
+                self.env._(
                     "- %(certification)s (Courses - %(courses)s)",
                     certification=certi.title,
                     courses=certi.slide_channel_ids.mapped("name"),
