@@ -400,3 +400,23 @@ registry.category("web_tour.tours").add("test_paid_order_with_archived_product_l
             ]),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_order_invoice_search", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.search("Invoice Number", "00001"),
+            TicketScreen.nthRowContains(1, "001", false),
+        ].flat(),
+});
