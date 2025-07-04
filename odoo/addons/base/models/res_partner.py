@@ -12,9 +12,11 @@ from random import randint
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, _, Command
+from odoo.tools import SQL
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 import typing
+
 if typing.TYPE_CHECKING:
     from .res_users import ResUsers
     from .res_bank import ResPartnerBank
@@ -29,6 +31,20 @@ EU_EXTRA_VAT_CODES = {
     'GR': 'EL',
     'GB': 'XI',
 }
+
+
+def _res_partner_name_search_index(registry):
+    if not registry.has_trigram:
+        return ''  # Skip index creation
+    index_part = []
+    ResPartner = registry['res.partner']
+    for fname_searched in ResPartner._rec_names_search:
+        field_identifier = SQL.identifier(fname_searched)
+        if registry.has_unaccent:
+            index_part.append(SQL("unaccent(%s) gin_trgm_ops", field_identifier))
+        else:
+            index_part.append(SQL("%s gin_trgm_ops", field_identifier))
+    return SQL("USING GIN (%s)", SQL(", ").join(index_part))
 
 
 @api.model
@@ -326,6 +342,7 @@ class ResPartner(models.Model):
         "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )",
         "Contacts require a name",
     )
+    _name_search = models.Index(_res_partner_name_search_index)
 
     def _get_street_split(self):
         self.ensure_one()
