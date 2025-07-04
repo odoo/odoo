@@ -12,7 +12,7 @@ class HrEmployee(models.Model):
         domain=[('skill_type_id.active', '=', True)])
     current_employee_skill_ids = fields.One2many('hr.employee.skill',
         compute='_compute_current_employee_skill_ids', readonly=False)
-    skill_ids = fields.Many2many('hr.skill', compute='_compute_skill_ids', store=True, groups="hr.group_hr_user")
+    skill_ids = fields.Many2many('hr.skill', compute='_compute_skill_ids', store=True, groups="hr.group_hr_responsible")
     certification_ids = fields.One2many('hr.employee.skill', compute='_compute_certification_ids', readonly=False)
 
     @api.depends('employee_skill_ids')
