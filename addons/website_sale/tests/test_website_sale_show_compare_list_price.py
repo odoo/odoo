@@ -103,5 +103,8 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
         })
 
     def test_compare_list_price_price_list_display(self):
-        self.env['res.config.settings'].create({'group_product_price_comparison': True}).execute()
+        self.env['res.config.settings'].create({
+            'group_product_pricelist': True,
+            'group_product_price_comparison': True,
+        }).execute()
         self.start_tour("/", 'compare_list_price_price_list_display', login=self.env.user.login)
