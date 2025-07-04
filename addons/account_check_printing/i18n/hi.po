@@ -217,12 +217,12 @@ msgstr "पत्रिका"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "इन्होंने आखिरी बार अपडेट किया"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "आखिरी बार अपडेट हुआ"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
@@ -240,6 +240,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"मैनुअल: आप Odoo सिस्टम के बाहर किसी भी तरीके से भुगतान प्राप्त कर सकते हैं और पेमेंट कर सकत हैं, जैसे कैश या सीधा बैंक ट्रांसफर.\n"
+"पेमेंट प्रोवाइडर्स: हर पेमेंट प्रोवाइडर का अपना तरीका होता है. आप ग्राहक के सेव किए गए कार्ड के 'पेमेंट टोकन' का इस्तेमाल करके, ऑनलाइन खरीद या सदस्यता के लिए लेन-देन का अनुरोध कर सकते हैं.\n"
+"चेक: आप बिलों का भुगतान चेक के द्वारा कर सकते हैं और उन चेक को Odoo से ही प्रिंट भी कर सकते हैं.\n"
+"बैच डिपॉज़िट: यह सुविधा आपको एक ही बार में कई ग्राहकों के चेक इकट्ठा करके, उन्हें अपने बैंक में एक साथ जमा करने की अनुमति देती है. इस प्रक्रिया को करने के लिए आपको account_batch_payment नाम का मॉड्यूल चाहिए होगा.\n"
+"SEPA क्रेडिट ट्रांसफ़र: इस सुविधा से आप SEPA में भुगतान कर सकते हैं. इसके लिए आपको अपने बैंक में एक SEPA क्रेडिट ट्रांसफर फ़ाइल जमा करनी होगी. इस सुविधा का उपयोग करने के लिए account_sepa मॉड्यूल की ज़रूरत होगी.\n"
+"SEPA डायरेक्ट डेबिट: इस सुविधा से आप SEPA में भुगतान प्राप्त कर सकते हैं. यह तब संभव होगा जब आपके पार्टनर ने आपको इसके लिए मैंडेट दिया हो. इस सुविधा का उपयोग करने के लिए account_sepa मॉड्यूल की ज़रूरत होगी.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -268,17 +274,17 @@ msgstr "कोई नहीं"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
 msgid "Payment Method"
-msgstr ""
+msgstr "पेमेंट के तरीके"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment_method
 msgid "Payment Methods"
-msgstr ""
+msgstr "पेमेंट मेथड"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payments"
-msgstr ""
+msgstr "पेमेंट"
 
 #. module: account_check_printing
 #. odoo-python
@@ -328,7 +334,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "Refunds"
-msgstr ""
+msgstr "रिफ़ंड"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
@@ -346,7 +352,7 @@ msgstr ""
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Sent"
-msgstr ""
+msgstr "भेजा गया"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number

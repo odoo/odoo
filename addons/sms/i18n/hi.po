@@ -642,7 +642,7 @@ msgstr "भाषा"
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "इन्होंने आखिरी बार अपडेट किया"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__write_date
@@ -657,7 +657,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "आखिरी बार अपडेट हुआ"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_tracker
@@ -690,7 +690,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_resend__mail_message_id
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Message"
-msgstr ""
+msgstr "मैसेज"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_notification
@@ -759,7 +759,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__number
 msgid "Number"
-msgstr ""
+msgstr "संख्या"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
@@ -786,6 +786,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"यह एक वैकल्पिक भाषा (ISO कोड) है जिसे आप ईमेल भेजते समय चुन सकते हैं, ताकि "
+"ईमेल उस भाषा में अनुवादित हो. अगर आप इसे सेट नहीं करते हैं, तो ईमेल अंग्रेजी"
+" में जाएगा. इसे आमतौर पर एक प्लेसहोल्डर (जैसे {{ object.partner_id.lang }}) "
+"के रूप में सेट करना चाहिए, जो अपने-आप सही भाषा कोड ले लेगा."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -904,12 +908,12 @@ msgstr ""
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_rejected
 msgid "Rejected"
-msgstr ""
+msgstr "अस्वीकार किया गया"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model
 msgid "Related Document Model"
-msgstr ""
+msgstr "इससे जुड़े हुए डॉक्यूमेंट मॉड"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -919,7 +923,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "रेंडरिंग मॉडल"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_actions_server_sms_sms_resend
@@ -1031,7 +1035,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "एसएमएस डिलीवरी में गड़बड़ी"
 
 #. module: sms
 #. odoo-javascript
@@ -1153,7 +1157,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send"
-msgstr ""
+msgstr "भेजें"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -1254,7 +1258,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__pending
 msgid "Sent"
-msgstr ""
+msgstr "भेजा गया"
 
 #. module: sms
 #: model:ir.model,name:sms.model_ir_actions_server
