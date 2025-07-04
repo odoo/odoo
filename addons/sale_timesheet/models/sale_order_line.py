@@ -194,3 +194,7 @@ class SaleOrderLine(models.Model):
             if sol.is_service and len(timesheet_ids) > 0:
                 action_per_sol[sol.id] = timesheet_action, timesheet_ids[0] if len(timesheet_ids) == 1 else False
         return action_per_sol
+
+    @api.model
+    def _get_product_service_policy(self):
+        return super()._get_product_service_policy() + ['delivered_timesheet']
