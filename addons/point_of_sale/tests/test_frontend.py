@@ -2201,6 +2201,15 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.start_pos_tour('test_preset_timing_retail')
 
+    def test_group_product_by_categ(self):
+        """
+        Test the settings to group product by categories in POS
+        """
+        self.main_pos_config.write({
+            'iface_group_by_categ': True,
+        })
+        self.start_pos_tour('test_group_product_by_categ')
+
     def test_pricelists_in_pos(self):
         pos_limited_category = self.env['pos.category'].create({'name': 'Limited Category'})
         pos_category = self.env['pos.category'].create({'name': 'test_pricelists_in_pos'})

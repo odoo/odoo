@@ -897,6 +897,15 @@ export function longPressProduct(productName) {
     ];
 }
 
+export function checkProductInGroup(groupIndex, productName) {
+    return [
+        {
+            content: `Check that group ${groupIndex} contains product "${productName}"`,
+            trigger: `div.overflow-y-auto > div:nth-child(${groupIndex}).product-list:contains("${productName}")`,
+        },
+    ];
+}
+
 export function isEmpty() {
     return {
         content: "Verify that the Product Screen is empty",

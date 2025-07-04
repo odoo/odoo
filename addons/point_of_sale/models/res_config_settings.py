@@ -69,6 +69,7 @@ class ResConfigSettings(models.TransientModel):
     pos_has_active_session = fields.Boolean(related='pos_config_id.has_active_session')
     pos_iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories', compute='_compute_pos_iface_available_categ_ids', readonly=False, store=True)
     pos_iface_big_scrollbars = fields.Boolean(related='pos_config_id.iface_big_scrollbars', readonly=False)
+    pos_iface_group_by_categ = fields.Boolean(related='pos_config_id.iface_group_by_categ', readonly=False)
     pos_iface_cashdrawer = fields.Boolean(string='Cashdrawer', compute='_compute_pos_iface_cashdrawer', readonly=False, store=True)
     pos_iface_electronic_scale = fields.Boolean(string='Electronic Scale', compute='_compute_pos_iface_electronic_scale', readonly=False, store=True)
     pos_iface_print_auto = fields.Boolean(related='pos_config_id.iface_print_auto', readonly=False)

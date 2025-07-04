@@ -2460,6 +2460,34 @@ export class PosStore extends WithLazyGetterTrap {
               });
     }
 
+    get productToDisplayByCateg() {
+        const sortedProducts = this.productsToDisplay;
+        if (!this.config.iface_group_by_categ) {
+            return new Map(sortedProducts.length ? [[0, sortedProducts]] : []);
+        } else {
+            const groupedByCategory = {};
+            for (const product of sortedProducts) {
+                for (const categ of product.pos_categ_ids) {
+                    if (!groupedByCategory[categ.id]) {
+                        groupedByCategory[categ.id] = [];
+                    }
+                    groupedByCategory[categ.id].push(product);
+                }
+            }
+            return new Map(
+                Object.entries(groupedByCategory).sort(([a], [b]) => {
+                    const catA = this.models["pos.category"].get(a);
+                    const catB = this.models["pos.category"].get(b);
+
+                    const isRootA = !catA.parent_id;
+                    const isRootB = !catB.parent_id;
+
+                    return isRootA !== isRootB ? (isRootA ? -1 : 1) : catA.sequence - catB.sequence;
+                })
+            );
+        }
+    }
+
     sortByWordIndex(products, words) {
         return products.sort((a, b) => {
             const nameA = normalize(a.name);
