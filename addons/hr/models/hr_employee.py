@@ -218,6 +218,7 @@ class HrEmployee(models.Model):
     activity_user_id = fields.Many2one(groups="hr.group_hr_user")
     activity_type_id = fields.Many2one(groups="hr.group_hr_user")
     activity_type_icon = fields.Char(groups="hr.group_hr_user")
+    activity_plans_ids = fields.Many2many(groups="hr.group_hr_user")
     activity_date_deadline = fields.Date(groups="hr.group_hr_user")
     my_activity_date_deadline = fields.Date(groups="hr.group_hr_user")
     activity_summary = fields.Char(groups="hr.group_hr_user")
