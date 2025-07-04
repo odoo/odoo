@@ -552,7 +552,7 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Demo Preparation Process\", \"Qualification\", ...)"
 msgstr ""
-"Планы задач используются для назначения списка задач всего за несколько кликов\n"
+"Планы дел позволяют назначать список дел в несколько кликов\n"
 "                    (например, «Процесс подготовки демо», «Квалификация», ...)"
 
 #. module: crm
@@ -670,7 +670,7 @@ msgid ""
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
 "Поскольку вы не являетесь членом отдела продаж, вам по умолчанию показывается воронка <b>первой команды</b>.\n"
-"                                        Чтобы работать с CRM, вам следует <a name=\"%d\" type=\"action\" tabindex=\"-1\">присоединиться к команде.</a>"
+"                                        Чтобы работать с модулем CRM, вам следует <a name=\"%d\" type=\"action\" tabindex=\"-1\">присоединиться к команде.</a>"
 
 #. module: crm
 #. odoo-python
@@ -680,7 +680,7 @@ msgid ""
 "                                        To work with the CRM, you should join a team."
 msgstr ""
 "Поскольку вы не являетесь членом отдела продаж, вам по умолчанию показывается воронка <b>первой команды</b>.\n"
-"                                        Чтобы работать с CRM, вам следует присоединиться к команде."
+"                                        Чтобы работать с модулем CRM, вам следует присоединиться к команде."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -1332,8 +1332,8 @@ msgid ""
 msgstr ""
 "Знаете ли вы, что вы можете искать компанию по названию или номеру НДС, "
 "чтобы мгновенно заполнить все ее данные? Odoo автоматически заполняет все: "
-"логотип, адрес, размер компании, бизнес-информацию, аккаунты в соцсетях и "
-"т.д."
+"логотип, адрес, размер компании, бизнес-информацию, аккаунты в соцсетях и т."
+" д."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_5
@@ -1344,7 +1344,7 @@ msgid ""
 msgstr ""
 "Знаете ли вы, что список возможностей можно преобразовать в вид карты, "
 "используя значок карты в правом верхнем углу? Многие экраны в Odoo можно "
-"превратить в карту: задачи, контакты, заказы на доставку и т.д."
+"превратить в карту: задачи, контакты, заказы на доставку и т. д."
 
 #. module: crm
 #: model:ir.model,name:crm.model_digest_digest
@@ -1783,8 +1783,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Если адрес электронной почты в черном списке, контакт больше не будет "
-"получать массовые рассылки из любого списка."
+"Если адрес электронной почты находится в черном списке, контакт больше не "
+"будет получать массовые рассылки из какого-либо списка"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_sanitized_blacklisted
@@ -1792,8 +1792,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"Если обработанный номер телефона в черном списке, контакт больше не будет "
-"получать массовые SMS-рассылки из любого списка."
+"Если обработанный номер телефона находится в черном списке, контакт больше "
+"не будет получать массовые СМС-рассылки из какого-либо списка"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
@@ -1824,9 +1824,10 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Указывает, является ли занесенный в черный список номер телефона мобильным. "
-"Помогает определить, какой номер занесен в черный список, если в модели "
-"присутствуют поля \"мобильный\" и \"телефон\"."
+"Указывает, является ли обработанный номер телефона из черного списка "
+"мобильным номером телефона. Помогает различить, какой номер в черном списке,"
+"             когда в модели присутствуют поля мобильного и стационарного "
+"телефона."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_blacklisted
@@ -1835,9 +1836,10 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Указывает, является ли обработанный номер телефона из черного списка номером"
-" телефона. Помогает различить, какой номер в черном списке, когда в модели "
-"присутствуют поля мобильного и стационарного телефона."
+"Указывает, является ли обработанный номер телефона из черного списка "
+"мобильным номером телефона. Помогает различить, какой номер в черном списке,"
+"             когда в модели присутствуют поля мобильного и стационарного "
+"телефона."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2143,9 +2145,9 @@ msgid ""
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
 msgstr ""
-"Анализ лидов позволяет проверять различную информацию, связанную с CRM, "
-"например, задержки обработки или количество лидов по статусу. Вы можете "
-"сортировать анализ лидов по разным группам для получения детализированного "
+"Анализ лидов позволяет проверять различную информацию, связанную с модулем "
+"CRM, например, задержки обработки или количество лидов по статусу. Вы можете"
+" сортировать анализ лидов по разным группам для получения детализированного "
 "анализа."
 
 #. module: crm
@@ -2240,7 +2242,7 @@ msgid ""
 " find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
 "Связанный партнер (необязательно). Обычно создается при преобразовании лида."
-" Партнера можно найти по имени, ИНН, email или внутренней ссылке."
+" Партнера можно найти по имени, ИНН, e-mail адресу или внутренней ссылке."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_incoming_local
@@ -2264,8 +2266,8 @@ msgid ""
 "Looks like nothing is planned. :(<br><br><i>Tip: Schedule activities to keep"
 " track of everything you have to do!</i>"
 msgstr ""
-"Похоже, ничего не запланировано. :(<br><br><i>Совет: планируй задачи, чтобы "
-"отслеживать все, что нужно сделать!</i>"
+"Похоже, ничего не запланировано. :(<br><br><i>Совет: планируйте дела, чтобы "
+"отслеживать всё, что нужно сделать!</i>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2328,9 +2330,8 @@ msgid ""
 "Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS "
 "messages, and get AI-powered transcripts of your conversations."
 msgstr ""
-"Совершайте и принимайте звонки в Odoo с помощью звонилки Ringover. "
-"Отслеживайте звонки, SMS-сообщения и получайте расшифровки разговоров, "
-"созданные с помощью ИИ."
+"Совершайте и принимайте звонки из Odoo с помощью Ringover. Отслеживайте "
+"звонки, СМС и получайте расшифровки разговоров на базе ИИ."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2616,8 +2617,8 @@ msgid ""
 "No allocated leads to %(team_name)s team and its salespersons because no "
 "unassigned lead matches its domain."
 msgstr ""
-"Команде %(team_name)s и её продавцам не назначены лиды, так как ни один "
-"неназначенный лид не соответствует её домену."
+"Команде %(team_name)s и ее продавцам не назначены лиды, так как ни один "
+"неназначенный лид не соответствует ее домену."
 
 #. module: crm
 #. odoo-python
@@ -2627,7 +2628,7 @@ msgid ""
 "capacity to its salespersons."
 msgstr ""
 "Команде %(team_name)s не назначены лиды из-за отсутствия емкости. Добавьте "
-"емкость её продавцам."
+"емкость ее продавцам."
 
 #. module: crm
 #. odoo-python
@@ -2965,9 +2966,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Родительская модель, содержащая псевдоним. Модель, на которую ссылается "
-"псевдоним, не обязательно совпадает с моделью, указанной в alias_model_id "
-"(пример: проект (родительская модель) и задача (модель))."
+"Родительская модель, содержащая псевдоним. Модель, содержащая ссылку на "
+"псевдоним, не обязательно является моделью, указанной в alias_model_id "
+"(например: проект (parent_model) и задача (model))"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_email_update
@@ -3057,10 +3058,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Политика отправки сообщений в документ через почтовый шлюз.\n"
-"- все: любой может отправлять\n"
+"Правило публикации сообщений в документе через почтовый шлюз:\n"
+"- все: публиковать могут все\n"
 "- партнеры: только аутентифицированные партнеры\n"
-"- подписчики: только подписчики связанного документа или участники каналов\n"
+"- наблюдатели: только наблюдатели связанного документа или участники каналов\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_ids
@@ -3507,7 +3508,7 @@ msgid ""
 "Stages allow salespersons to easily track how a specific opportunity\n"
 "            is positioned in the sales cycle."
 msgstr ""
-"Этапы помогают менеджерам по продажам отслеживать, на каком этапе цикла продаж\n"
+"Стадии помогают менеджерам по продажам отслеживать, на каком этапе цикла продаж\n"
 "            находится конкретная возможность."
 
 #. module: crm
@@ -3524,10 +3525,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Статус на основе задач:\n"
-"Просрочено: срок истек\n"
-"Сегодня: задача на сегодня\n"
-"Запланировано: будущие задачи."
+"Статус дел\n"
+"Просроченные: Срок выполнения уже прошел\n"
+"Сегодня: Срок выполнения сегодня\n"
+"Запланированные: Будущие дела."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duration_tracking
@@ -3604,7 +3605,7 @@ msgid ""
 "The contacts below have been added as followers of this lead\n"
 "                        because they have been contacted less than 30 days ago on"
 msgstr ""
-"Контакты ниже добавлены как подписчики этого лида,\n"
+"Контакты ниже добавлены как наблюдатели в карточку лида,\n"
 "                        так как с ними связывались менее 30 дней назад"
 
 #. module: crm
@@ -3705,7 +3706,7 @@ msgid ""
 " contain more than strictly an email address."
 msgstr ""
 "Поле для поиска по адресу эл. почты, так как основное поле может содержать "
-"не только адрес."
+"не только адрес электронной почты."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__lang_code
@@ -4156,7 +4157,7 @@ msgid ""
 "                    documents, track all discussions, and much more."
 msgstr ""
 "Из возможностей можно планировать встречи и звонки,\n"
-"                    создавать предложения, прикреплять документы,\n"
+"                    создавать коммерческие предложения, прикреплять документы,\n"
 "                    отслеживать обсуждения и многое другое."
 
 #. module: crm

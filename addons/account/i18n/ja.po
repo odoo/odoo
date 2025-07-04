@@ -2309,7 +2309,7 @@ msgstr "自動検証を有効化"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate to create purchase receipt"
-msgstr "有効にして購買領収書を作成します"
+msgstr "有効にして仕入受領書を作成します"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6524,7 +6524,7 @@ msgstr "ドラフトの支払"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft Purchase Receipt"
-msgstr "ドラフト購買領収書"
+msgstr "ドラフト仕入受領書"
 
 #. module: account
 #. odoo-python
@@ -11759,7 +11759,7 @@ msgstr "支払QRコード"
 #: model:ir.actions.report,name:account.action_report_payment_receipt
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Receipt"
-msgstr "領収書"
+msgstr "入金領収書"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_receipt_title
@@ -12315,7 +12315,7 @@ msgstr "プロダクト"
 #. module: account
 #: model:account.account,name:account.1_to_receive_rec
 msgid "Products to receive"
-msgstr "受け取るプロダクト"
+msgstr "未受領プロダクト"
 
 #. module: account
 #. odoo-javascript
@@ -12345,47 +12345,47 @@ msgstr "資金出金支払方法明細"
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__purchase
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Purchase"
-msgstr "購買"
+msgstr "仕入"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__purchase_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__purchase_lock_date
 msgid "Purchase Lock Date"
-msgstr "購買ロック日"
+msgstr "仕入ロック日"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__purchase_lock_date
 msgid "Purchase Lock date"
-msgstr "購買ロック日"
+msgstr "仕入ロック日"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_purchase_receipts
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 #: model:res.groups,name:account.group_purchase_receipts
 msgid "Purchase Receipt"
-msgstr "購買領収書"
+msgstr "仕入受領書"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Purchase Receipt Created"
-msgstr "購買領収書が作成されました"
+msgstr "仕入受領書が作成されました"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Purchase Representative"
-msgstr "購買担当者"
+msgstr "仕入担当者"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Purchase Tax"
-msgstr "購入税"
+msgstr "仕入税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__supplier_taxes_id
 msgid "Purchase Taxes"
-msgstr "購買税"
+msgstr "仕入税"
 
 #. module: account
 #: model:account.account,name:account.1_expense_invest
@@ -12399,7 +12399,7 @@ msgstr "設備購入"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Purchases"
-msgstr "購買"
+msgstr "仕入"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12689,7 +12689,7 @@ msgstr "銀行取引明細書の登録"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
 msgid "Register a new purchase receipt"
-msgstr "新規購買領収書を登録"
+msgstr "新規仕入受領書を登録"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_payments
@@ -16777,7 +16777,7 @@ msgstr "信頼できない支払カウント"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
-msgstr "測定単位"
+msgstr "単位"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
@@ -17347,7 +17347,9 @@ msgstr "キャリーオーバーの対象となる式を指定する場合、そ
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
-msgstr "購買領収書が確認されると、この領収書に関連する顧客支払を記録できるようになります。"
+msgstr ""
+"仕入受領書が確定すると、この仕入受領書に関連する\n"
+"                仕入先への支払を記録することができます。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_receipt_type
