@@ -133,7 +133,7 @@ class IrFieldsConverter(models.AbstractModel):
                         log(field, w)
                 except (UnicodeEncodeError, UnicodeDecodeError) as e:
                     log(field, ValueError(str(e)))
-                except ValueError as e:
+                except (ValueError, TypeError) as e:
                     if import_file_context:
                         # if the error is linked to a matching error, the error is a tuple
                         # E.g.:("Value X cannot be found for field Y at row 1", {
