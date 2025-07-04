@@ -5,7 +5,6 @@ import { Component, onMounted, useEffect, useExternalListener, useRef, useState 
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
-import { isMobileOS } from "@web/core/browser/feature_detection";
 
 export class MessageReactionMenu extends Component {
     static props = ["close", "message", "initialReaction?"];
