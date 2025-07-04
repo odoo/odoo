@@ -3,6 +3,7 @@ from datetime import date, datetime
 from pytz import timezone
 
 from odoo import fields
+from odoo.exceptions import UserError
 
 from odoo.addons.test_resource.tests.common import TestResourceCommon
 
@@ -581,3 +582,31 @@ class TestCalendar(TestResourceCommon):
             'attendance_ids': create_attendance_ids([{'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}]),
         })
         self.assertAlmostEqual(resource_calendar.work_time_rate, 100, 2)
+
+    def test_archive_used_calendar(self):
+        no_one_calendar = self._define_calendar_2_weeks(
+            "Week 1: 30 Hours - Week 2: 16 Hours",
+            [
+                (8, 16, 0, "0"),
+                (9, 17, 1, "0"),
+                (8, 16, 0, "1"),
+                (7, 15, 2, "1"),
+                (8, 16, 3, "1"),
+                (10, 16, 4, "1"),
+            ],
+            "Europe/Brussels",
+        )
+
+        # with 0 resources using the calendar it should be archived wihtout Exception
+        no_one_calendar.action_archive()
+        no_one_calendar.action_unarchive()
+
+        self.env["resource.resource"].create(
+            {
+                "name": "Test resource",
+                "calendar_id": no_one_calendar.id,
+            },
+        )
+
+        with self.assertRaises(UserError):
+            no_one_calendar.action_archive()
