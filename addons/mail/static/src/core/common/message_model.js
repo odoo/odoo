@@ -489,6 +489,19 @@ export class Message extends Record {
         this.store.env.services.notification.add(notification, { type });
     }
 
+    async copyMessageText() {
+        const messageBody = convertBrToLineBreak(this.body);
+        try {
+            await browser.navigator.clipboard.writeText(messageBody);
+        } catch {
+            this.store.env.services.notification.add(
+                _t("Message Copy Failed (Permission denied?)!"),
+                { type: "danger" }
+            );
+        }
+        this.store.env.services.notification.add(_t("Message Copied!"), { type: "info" });
+    }
+
     async edit(
         body,
         attachments = [],
