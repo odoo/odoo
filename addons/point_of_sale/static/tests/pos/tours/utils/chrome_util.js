@@ -176,3 +176,10 @@ export function freezeDateTime(millis) {
         },
     ];
 }
+
+export function selectPresetDateButton(formattedDate) {
+    return {
+        trigger: `.modal-body button:contains("${formattedDate}")`,
+        run: "click",
+    };
+}
