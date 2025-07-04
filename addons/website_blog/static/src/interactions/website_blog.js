@@ -1,9 +1,9 @@
+import { scrollTo } from "@html_builder/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-import { scrollTo } from "@web_editor/js/common/scrolling";
 import { verifyHttpsUrl } from "@website/utils/misc";
 
 export class WebsiteBlog extends Interaction {

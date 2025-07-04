@@ -1,3 +1,4 @@
+import { scrollTo, closestScrollable } from "@html_builder/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { markup } from "@odoo/owl";
@@ -9,7 +10,6 @@ import { rpc } from "@web/core/network/rpc";
 import { htmlJoin } from "@web/core/utils/html";
 import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
-import { scrollTo, closestScrollable } from "@web_editor/js/common/scrolling";
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 import { FlagMarkAsOffensiveDialog } from "../components/flag_mark_as_offensive/flag_mark_as_offensive";
 import { WebsiteForumTagsWrapper } from "../components/website_forum_tags_wrapper";
