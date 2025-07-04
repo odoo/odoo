@@ -1,6 +1,5 @@
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { rpc } from "@web/core/network/rpc";
-import { Deferred } from "@web/core/utils/concurrency";
 import { renderToElement } from "@web/core/utils/render";
 import { useAutofocus, useService } from '@web/core/utils/hooks';
 import { _t } from "@web/core/l10n/translation";
@@ -12,7 +11,7 @@ import { onceAllImagesLoaded } from "@website/utils/images";
 
 const NO_OP = () => {};
 
-export class AddPageConfirmDialog extends Component {
+class AddPageConfirmDialog extends Component {
     static template = "website.AddPageConfirmDialog";
     static props = {
         close: Function,
@@ -43,7 +42,7 @@ export class AddPageConfirmDialog extends Component {
     }
 }
 
-export class AddPageTemplateBlank extends Component {
+class AddPageTemplateBlank extends Component {
     static template = "website.AddPageTemplateBlank";
     static props = {
         firstRow: {
@@ -66,7 +65,7 @@ export class AddPageTemplateBlank extends Component {
     }
 }
 
-export class AddPageTemplatePreview extends Component {
+class AddPageTemplatePreview extends Component {
     static template = "website.AddPageTemplatePreview";
     static props = {
         template: Object,
@@ -250,7 +249,7 @@ export class AddPageTemplatePreview extends Component {
     }
 }
 
-export class AddPageTemplatePreviews extends Component {
+class AddPageTemplatePreviews extends Component {
     static template = "website.AddPageTemplatePreviews";
     static props = {
         isCustom: {
@@ -282,7 +281,7 @@ export class AddPageTemplatePreviews extends Component {
     }
 }
 
-export class AddPageTemplates extends Component {
+class AddPageTemplates extends Component {
     static template = "website.AddPageTemplates";
     static props = {
         onTemplatePageChanged: Function,
@@ -293,6 +292,7 @@ export class AddPageTemplates extends Component {
 
     setup() {
         super.setup();
+        this.website = useService("website");
         this.tabsRef = useRef("tabs");
         this.panesRef = useRef("panes");
 
@@ -319,6 +319,8 @@ export class AddPageTemplates extends Component {
     }
 
     async preparePages() {
+        const loadTemplates = rpc("/website/get_new_page_templates", { context: { website_id: this.website.currentWebsiteId}}, { cached: true, silent: true });
+
         // Forces the correct website if needed before fetching the templates.
         // Displaying the correct images in the previews also relies on the
         // website id having been forced.
@@ -331,7 +333,7 @@ export class AddPageTemplates extends Component {
             return this.pages;
         }
 
-        const newPageTemplates = await rpc("/website/get_new_page_templates");
+        const newPageTemplates = await loadTemplates;
         newPageTemplates[0].templates.unshift({
             isBlank: true,
         });
@@ -458,22 +460,20 @@ export class AddPageDialog extends Component {
 
     getCssLinkEls() {
         if (!this.cssLinkEls) {
-            this.cssLinkEls = new Deferred();
-            (async () => {
-                let contentDocument;
-                // Already in DOM ?
-                const pageIframeEl = document.querySelector("iframe.o_iframe");
-                if (pageIframeEl?.contentDocument.body.getAttribute("is-ready") === "true") {
+            this.cssLinkEls = new Promise((resolve) => {
+                const container = document.querySelector(".o_website_preview .o_iframe_container");
+                const iframe = container?.lastElementChild;
+                if (iframe?.contentDocument.body.getAttribute("is-ready") === "true") {
                     // If there is a fully loaded website preview, use it.
-                    contentDocument = pageIframeEl.contentDocument;
-                }
-                if (!contentDocument) {
+                    resolve(iframe.contentDocument.head.querySelectorAll("link[type='text/css']"));
+                } else {
                     // If there is no website preview or it was not ready yet, fetch page.
-                    const html = await this.http.get(`/website/force/${this.props.websiteId}?path=/`, "text");
-                    contentDocument = new DOMParser().parseFromString(html, "text/html");
+                    this.http.get(`/website/force/${this.props.websiteId}?path=/`, "text").then(html => {
+                        const doc = new DOMParser().parseFromString(html, "text/html");
+                        resolve(doc.head.querySelectorAll("link[type='text/css']"));
+                    });
                 }
-                this.cssLinkEls.resolve(contentDocument.head.querySelectorAll("link[type='text/css']"));
-            })();
+            });
         }
         return this.cssLinkEls;
     }
