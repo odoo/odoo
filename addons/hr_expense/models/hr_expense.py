@@ -1016,7 +1016,7 @@ class HrExpense(models.Model):
             'name': self._get_move_line_name(),
             'account_id': account.id,
             'quantity': self.quantity or 1,
-            'price_unit': self.price_unit,
+            'price_unit': self.total_amount_currency,
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom_id.id,
             'analytic_distribution': self.analytic_distribution,
