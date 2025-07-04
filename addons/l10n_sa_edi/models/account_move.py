@@ -298,7 +298,11 @@ class AccountMoveLine(models.Model):
             global discount line. These can be created either manually, or through a promotions program.
         """
         self.ensure_one()
-        return not self._get_downpayment_lines() and self.price_subtotal < 0
+        return (
+            not self._get_downpayment_lines()
+            and self.price_subtotal < 0
+            and self.display_type != 'line_section'
+        )
 
     @api.depends('price_subtotal', 'price_total')
     def _compute_tax_amount(self):

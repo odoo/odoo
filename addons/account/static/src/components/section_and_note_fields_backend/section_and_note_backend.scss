@@ -10,16 +10,24 @@ div.o_is_line_note {
 table.o_section_and_note_list_view tr.o_data_row.o_is_line_section,
 div.o_is_line_section {
     font-weight: bold;
-    background-color: #DDDDDD;
+    --table-bg: var(--gray-black-25);
 }
-table.o_section_and_note_list_view tr.o_data_row.o_is_line_section {
-    border-top: 1px solid #BBB;
-    border-bottom: 1px solid #BBB;
+table.o_section_and_note_list_view tr.o_data_row.o_is_line_subsection,
+div.o_is_line_subsection {
+    --table-bg: var(--gray-black-15);
+}
+table.o_section_and_note_list_view tr.o_data_row {
+    &.o_is_line_section
+    &.o_is_line_subsection {
+        border-top: 1px solid #BBB;
+        border-bottom: 1px solid #BBB;
+    }
 }
 
 table.o_section_and_note_list_view tr.o_data_row {
     &.o_is_line_note,
-    &.o_is_line_section {
+    &.o_is_line_section
+    &.o_is_line_subsection {
         td {
             // There is an undeterministic CSS behaviour in Chrome related to
             // the combination of the row's and its children's borders.

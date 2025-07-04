@@ -582,10 +582,12 @@
                                 editable="bottom"
                                 limit="200"
                                 decoration-warning="(state in ['draft', 'sent'] and is_product_archived) or sale_line_warn_msg"
+                                decoration-muted="is_linked_section_hidden"
                             >
                                 <control>
                                     <create name="add_product_control" string="Add a product"/>
                                     <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                    <create name="add_subsection_control" string="Add a subsection" context="{'default_display_type': 'line_subsection'}"/>
                                     <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                                     <button
                                         string="Catalog"
@@ -611,6 +613,9 @@
                                 <field name="selected_combo_items" column_invisible="1"/>
                                 <field name="virtual_id" column_invisible="1"/>
                                 <field name="linked_virtual_id" column_invisible="1"/>
+                                <field name="show_composition" column_invisible="1"/>
+                                <field name="show_section_line_amount" column_invisible="1"/>
+                                <field name="linked_section_line_id" column_invisible="1"/>
 
                                 <!-- Currency, needed for monetary widgets to display the currency symbol -->
                                 <field name="currency_id" column_invisible="True"/>
@@ -692,7 +697,11 @@
                                     optional="hide"
                                     width="80px"
                                     readonly="parent.state not in ['draft', 'sent', 'sale'] or is_downpayment or product_type != 'consu'"/>
-                                <field name="price_unit" readonly="qty_invoiced &gt; 0"/>
+                                <field
+                                    name="price_unit"
+                                    readonly="qty_invoiced &gt; 0"
+                                    decoration-muted="is_linked_section_amount_hidden"
+                                />
                                 <field
                                     name="tax_ids"
                                     widget="many2many_tax_tags"
@@ -705,32 +714,41 @@
                                     string="Disc.%"
                                     groups="sale.group_discount_per_so_line"
                                     width="50px"
-                                    optional="show"/>
+                                    optional="show"
+                                    decoration-muted="is_linked_section_amount_hidden"
+                                />
                                 <field
                                     name="price_subtotal"
                                     string="Amount"
                                     column_invisible="parent.company_price_include == 'tax_included'"
-                                    invisible="is_downpayment"/>
+                                    invisible="is_downpayment or (display_type in ('line_section', 'line_subsection') and show_section_line_amount)"
+                                    decoration-muted="is_linked_section_amount_hidden"
+                                />
                                 <field
                                     name="price_total"
                                     string="Amount"
                                     column_invisible="parent.company_price_include == 'tax_excluded'"
-                                    invisible="is_downpayment"/>
+                                    invisible="is_downpayment or (display_type in ('line_section', 'line_subsection') and show_section_line_amount)"
+                                    decoration-muted="is_linked_section_amount_hidden"
+                                />
                                 <!-- Optional amounts columns -->
                                 <field
                                     name="price_total"
                                     string="Tax Incl."
                                     column_invisible="parent.company_price_include == 'tax_included'"
-                                    invisible="is_downpayment"
+                                    invisible="is_downpayment or (display_type in ('line_section', 'line_subsection') and show_section_line_amount)"
                                     optional="hide"
+                                    decoration-muted="is_linked_section_amount_hidden"
                                 />
                                 <field
                                     name="price_subtotal"
                                     string="Tax Excl."
                                     column_invisible="parent.company_price_include == 'tax_excluded'"
-                                    invisible="is_downpayment"
+                                    invisible="is_downpayment or (display_type in ('line_section', 'line_subsection') and show_section_line_amount)"
                                     optional="hide"
+                                    decoration-muted="is_linked_section_amount_hidden"
                                 />
+                                <widget name="section_settings"/>
                             </list>
                             <kanban class="o_kanban_mobile">
                                 <field name="display_type"/>

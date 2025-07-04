@@ -11,7 +11,7 @@ import { markRaw } from "@odoo/owl";
  * @typedef {import("./record").Record} RelationalRecord
  */
 
-function compareFieldValues(v1, v2, fieldType) {
+function    compareFieldValues(v1, v2, fieldType) {
     if (fieldType === "many2one") {
         v1 = v1 ? v1.display_name : "";
         v2 = v2 ? v2.display_name : "";
@@ -969,6 +969,71 @@ export class StaticList extends DataPoint {
             }
         }
         if (!asc) {
+            toReorder.reverse();
+        }
+
+        const sequences = toReorder.map(getSequence);
+        const offset = sequences.length && Math.min(...sequences);
+
+        const proms = [];
+        for (const [i, record] of Object.entries(toReorder)) {
+            proms.push(
+                record._update(
+                    { [this.handleField]: offset + Number(i) },
+                    { withoutParentUpdate: true }
+                )
+            );
+        }
+        await Promise.all(proms);
+
+        await this._sort();
+        await this._onUpdate();
+    }
+
+    async _resequenceMultiple(movedIds, targetId) {
+        const records = [...this.records];
+        const order = this.orderBy.find((o) => o.name === this.handleField);
+        const asc = !order || order.asc;
+
+        // Find Indices
+        const fromIndexStart = records.findIndex((r) => r.id === movedIds[0]);
+        const fromIndexEnd = records.findIndex((r) => r.id === movedIds[movedIds.length - 1]);
+        let toIndex = 0;
+        if (targetId !== null) {
+            const targetIndex = records.findIndex((r) => r.id === targetId);
+            toIndex = fromIndexStart > targetIndex ? targetIndex + 1 : targetIndex;
+        }
+        
+        const getSequence = (rec) => rec && rec.data[this.handleField];
+
+        //Determine what records need to be modified
+        const firstIndex = Math.min(fromIndexStart, toIndex);
+        const lastIndex = Math.max(fromIndexEnd, toIndex) + 1;
+        let reorderAll = false;
+        let lastSequence = (asc ? -1 : 1) * Infinity;
+        for (let index = 0; index < records.length; index++) {
+            const sequence = getSequence(records[index]);
+            if ((asc && lastSequence >= sequence) || (!asc && lastSequence <= sequence)) {
+                reorderAll = true;
+                break;
+            }
+            lastSequence = sequence;
+        }
+        //Perform the resequence in the list of records
+        const movedRecords = records.splice(fromIndexStart, movedIds.length);
+        records.splice(toIndex, 0, ...movedRecords);
+        
+        // Creates list to modify
+        let toReorder = records;
+        if (!reorderAll){
+            toReorder = toReorder.slice(firstIndex, lastIndex).filter((r) => !movedIds.includes(r.id));
+            if (fromIndexStart < toIndex) {
+                toReorder.push(...movedRecords);
+            } else {
+                toReorder.unshift(...movedRecords);
+            }
+        }
+        if(!asc){
             toReorder.reverse();
         }
 

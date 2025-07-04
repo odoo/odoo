@@ -15,10 +15,10 @@
                     t-ref="labelNodeRef"
                 />
             </t>
-            <t t-elif="isSection()">
+            <t t-elif="isSection() || isSubsection()">
                 <input
                     type="text"
-                    class="o_input text-wrap border-0 fst-italic fw-bold"
+                    class="o_input text-wrap border-0 fst-italic"
                     placeholder="Enter a description"
                     t-att-class="sectionAndNoteClasses"
                     t-att-readonly="sectionAndNoteIsReadonly"

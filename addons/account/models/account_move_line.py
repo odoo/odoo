@@ -7,7 +7,7 @@ import re
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.fields import Domain
-from odoo.tools import frozendict, float_compare, Query, SQL, OrderedSet
+from odoo.tools import frozendict, float_compare, groupby, Query, SQL, OrderedSet
 from odoo.addons.web.controllers.utils import clean_action
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
@@ -325,6 +325,7 @@ class AccountMoveLine(models.Model):
             ('rounding', "Rounding"),
             ('payment_term', 'Payment Term'),
             ('line_section', 'Section'),
+            ('line_subsection', 'Subsection'),
             ('line_note', 'Note'),
             ('epd', 'Early Payment Discount'),
             ('non_deductible_product_total', 'Non Deductible Products Total'),
@@ -427,6 +428,33 @@ class AccountMoveLine(models.Model):
         string='Discount Balance',
         store=True,
         currency_field='company_currency_id',
+    )
+
+    # === Section related fields === #
+    show_composition = fields.Boolean(
+        string="Show Composition",
+        default=True,
+        help="Show and print the invoice lines under particular section or subsection.",
+    )
+    show_section_line_amount = fields.Boolean(
+        string="Show Section Amount",
+        default=True,
+        help="Show and print Amount of particular section or subsection.",
+    )
+    linked_section_line_id = fields.Many2one(
+        'account.move.line',
+        string="Linked Section Line",
+        compute='_compute_linked_section_line_id',
+    )
+    is_linked_section_hidden = fields.Boolean(
+        string="Is Linked Section Hidden",
+        compute='_compute_is_linked_section_hidden',
+        help="If true, the line is muted in the UI and not printed.",
+    )
+    is_linked_section_amount_hidden = fields.Boolean(
+        string="Is Linked Section Price Hidden",
+        compute='_compute_is_linked_section_amount_hidden',
+        help="If true, the column is muted in the UI and not printed.",
     )
 
     # === Payment Fields === #
@@ -863,22 +891,52 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.sequence = seq_map.get(line.display_type, 100)
 
-    @api.depends('quantity', 'discount', 'price_unit', 'tax_ids', 'currency_id')
+    @api.depends('quantity', 'discount', 'price_unit', 'tax_ids', 'currency_id', 'move_id.invoice_line_ids')
     def _compute_totals(self):
         """ Compute 'price_subtotal' / 'price_total' outside of `_sync_tax_lines` because those values must be visible for the
         user on the UI with draft moves and the dynamic lines are synchronized only when saving the record.
         """
         AccountTax = self.env['account.tax']
         for line in self:
-            # TODO remove the need of cogs lines to have a price_subtotal/price_total
-            if line.display_type not in ('product', 'cogs', 'non_deductible_product', 'non_deductible_product_total'):
-                line.price_total = line.price_subtotal = False
-                continue
+            if line.display_type in ('line_section', 'line_subsection') and line.move_type == 'out_invoice':
+                subtotal = 0.0
+                total = 0.0
+                section_seq = line.sequence
 
-            base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
-            AccountTax._add_tax_details_in_base_line(base_line, line.company_id)
-            line.price_subtotal = base_line['tax_details']['raw_total_excluded_currency']
-            line.price_total = base_line['tax_details']['raw_total_included_currency']
+                sorted_lines = line.move_id.invoice_line_ids.filtered(
+                    lambda l: l.sequence > section_seq,
+                ).sorted('sequence')
+
+                for sorted_line in sorted_lines:
+                    if (
+                        line.display_type == 'line_subsection'
+                        and sorted_line.display_type
+                        in ('line_subsection', 'line_section')
+                    ) or (
+                        line.display_type == 'line_section'
+                        and sorted_line.display_type == 'line_section'
+                    ):
+                        break
+                    if (
+                        line.display_type == 'line_section'
+                        and sorted_line.display_type == 'line_subsection'
+                    ):
+                        continue
+                    subtotal += sorted_line.price_subtotal
+                    total += sorted_line.price_total
+
+                line.update({
+                    'price_subtotal': subtotal,
+                    'price_total': total,
+                })
+            # TODO remove the need of cogs lines to have a price_subtotal/price_total
+            elif line.display_type not in ('product', 'cogs', 'non_deductible_product', 'non_deductible_product_total'):
+                line.price_total = line.price_subtotal = False
+            else:
+                base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
+                AccountTax._add_tax_details_in_base_line(base_line, line.company_id)
+                line.price_subtotal = base_line['tax_details']['raw_total_excluded_currency']
+                line.price_total = base_line['tax_details']['raw_total_included_currency']
 
     @api.depends('product_id', 'product_uom_id')
     def _compute_price_unit(self):
@@ -1188,6 +1246,71 @@ class AccountMoveLine(models.Model):
             'target': 'new',
             'type': 'ir.actions.act_window',
         }
+
+    def _compute_linked_section_line_id(self):
+        for line in self:
+            if line.display_type not in ('line_section', 'line_subsection'):
+                qualified_lines = line.move_id.invoice_line_ids.filtered(
+                    lambda l: l.display_type in ('line_section', 'line_subsection') and l.sequence < line.sequence,
+                )
+                if qualified_lines:
+                    line.linked_section_line_id = max(qualified_lines, key=lambda l: l.sequence)
+                else:
+                    line.linked_section_line_id = False
+            elif line.display_type == 'line_subsection':
+                qualified_lines = line.move_id.invoice_line_ids.filtered(
+                    lambda l: l.display_type == 'line_section' and l.sequence < line.sequence,
+                )
+                if qualified_lines:
+                    line.linked_section_line_id = max(qualified_lines, key=lambda l: l.sequence)
+                else:
+                    line.linked_section_line_id = False
+            else:
+                line.linked_section_line_id = False
+
+    def _compute_is_linked_section_hidden(self):
+        for line in self:
+            if (
+                line.display_type not in ('line_subsection', 'line_section')
+                and line.linked_section_line_id
+            ):
+                if line.linked_section_line_id.display_type == 'line_subsection':
+                    line.is_linked_section_hidden = (
+                        line.linked_section_line_id.is_linked_section_hidden
+                    )
+                else:
+                    line.is_linked_section_hidden = not line.linked_section_line_id.show_composition
+            elif line.display_type == 'line_subsection':
+                line.is_linked_section_hidden = (
+                    not line.linked_section_line_id.show_composition
+                    if line.linked_section_line_id
+                    and not line.linked_section_line_id.show_composition
+                    else not line.show_composition
+                )
+            else:
+                line.is_linked_section_hidden = False
+
+    def _compute_is_linked_section_amount_hidden(self):
+        for line in self:
+            if (
+                line.display_type not in ('line_subsection', 'line_section')
+                and line.linked_section_line_id
+            ):
+                if line.linked_section_line_id.display_type == 'line_subsection':
+                    line.is_linked_section_amount_hidden = (
+                        line.linked_section_line_id.is_linked_section_amount_hidden
+                    )
+                else:
+                    line.is_linked_section_amount_hidden = not line.linked_section_line_id.show_section_line_amount
+            elif line.display_type == 'line_subsection':
+                line.is_linked_section_amount_hidden = (
+                    not line.linked_section_line_id.show_section_line_amount
+                    if line.linked_section_line_id
+                    and not line.linked_section_line_id.show_section_line_amount
+                    else not line.show_section_line_amount
+                )
+            else:
+                line.is_linked_section_amount_hidden = not line.show_section_line_amount
 
     # -------------------------------------------------------------------------
     # SEARCH METHODS
@@ -3240,6 +3363,37 @@ class AccountMoveLine(models.Model):
         """
         self.ensure_one()
         return self.move_id.state == 'posted'
+
+    def _get_grouped_section_summary(self):
+        """
+        Return a tax-wise summary of invoice lines linked to section.
+
+        Groups lines by their tax IDs and computes subtotal and total for each group.
+        """
+        self.ensure_one()
+
+        section_lines = self.move_id.invoice_line_ids.filtered(
+            lambda l: l.linked_section_line_id == self,
+        )
+        result = []
+        for taxes, lines in groupby(section_lines, key=lambda l: l.tax_ids):
+            tax_labels = [tax.tax_label for tax in taxes if tax.tax_label]
+            subtotal = sum(l.price_subtotal for l in lines)
+            total = sum(l.price_total for l in lines)
+
+            result.append({
+                'name': self.name,
+                'taxes': tax_labels,
+                'price_subtotal': subtotal,
+                'price_total': total,
+            })
+
+        return result or [{
+            'name': self.name,
+            'taxes': [],
+            'price_subtotal': 0.0,
+            'price_total': 0.0,
+        }]
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
