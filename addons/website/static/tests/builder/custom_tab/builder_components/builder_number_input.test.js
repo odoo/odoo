@@ -84,8 +84,7 @@ test("input with classAction and styleAction", async () => {
                 <div class="test-options-target">10</div>
             `);
     await contains(":iframe .test-options-target").click();
-    await click(".options-container input");
-    await fill(2);
+    await contains(".options-container input").edit("2");
     expect(":iframe .test-options-target").toHaveStyle({
         "--custom-property": "2",
     });
@@ -173,8 +172,8 @@ describe("default value", () => {
 
         await clear();
         await click(".options-container");
-        expect("[data-action-id='customAction'] input").toHaveValue("");
-        expect(":iframe .test-options-target").toHaveInnerHTML("");
+        expect("[data-action-id='customAction'] input").toHaveValue("0");
+        expect(":iframe .test-options-target").toHaveInnerHTML("0");
     });
     test("clear BuilderNumberInput with default value", async () => {
         addActionOption({
@@ -421,6 +420,7 @@ describe("keyboard triggers", () => {
         await setupWebsiteBuilder(`<div class="test-options-target">Non empty div.</div>`);
         await contains(":iframe .test-options-target").click();
         await click("[data-action-id='customAction'] input");
+        await clear();
         expect("[data-action-id='customAction'] input").toHaveValue("");
 
         await contains("[data-action-id='customAction'] input").keyDown("ArrowUp");
@@ -446,6 +446,7 @@ describe("keyboard triggers", () => {
         await setupWebsiteBuilder(`<div class="test-options-target">Non empty div.</div>`);
         await contains(":iframe .test-options-target").click();
         await click("[data-action-id='customAction'] input");
+        await clear();
         expect("[data-action-id='customAction'] input").toHaveValue("");
 
         await contains("[data-action-id='customAction'] input").keyDown("ArrowDown");
@@ -687,7 +688,7 @@ describe("sanitized values", () => {
         `);
         await contains(":iframe .test-options-target").click();
         await contains(".options-container input").edit(" a&$*+>");
-        expect(".options-container input").toHaveValue("");
+        expect(".options-container input").toHaveValue("0");
         expect(":iframe .test-options-target").not.toHaveAttribute("data-number");
     });
     test("after copy / pasting, displayed value is cleaned to match only numbers", async () => {
