@@ -4,9 +4,9 @@
 # 
 # Translators:
 # 何彬 <vnsoft.he@gmail.com>, 2025
-# Wil Odoo, 2025
 # Raymond Yu <cl_yu@hotmail.com>, 2025
 # Chloe Wang, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-26 18:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Chloe Wang, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1514,7 +1514,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign VAT already exists in this region."
-msgstr "该地区已经存在具有外国增值税的应税设定。"
+msgstr "该地区已经存在外国增值税的财政状况。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1544,7 +1544,7 @@ msgstr "同一行内不能同时存在子项和分组值（'%s'）。"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "A line of this move is using a deprecated account, you cannot post it."
-msgstr "该分录的其中一行用于已弃用的科目，无法过账。"
+msgstr "此凭证的一个明细正在使用已弃用的科目，您不能过帐它."
 
 #. module: account
 #. odoo-python
@@ -1563,14 +1563,14 @@ msgstr "备注，其内容通常适用于上述部分或产品。"
 msgid ""
 "A payment tolerance defined as a percentage should always be between 0 and "
 "100"
-msgstr "付款容差的百分比应始终介于0~100之间"
+msgstr "定义为百分比的付款容差应始终介于0和100之间"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 msgid ""
 "A payment tolerance defined as an amount should always be higher than 0"
-msgstr "付款容差的金额应始终大于0"
+msgstr "定义为金额的付款容差应始终大于0"
 
 #. module: account
 #. odoo-python
@@ -1623,7 +1623,7 @@ msgstr "这个国家已经有了一个名称和适用性相同的标签。"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
-msgstr "同一税项只能定义一条税项的应税设定。"
+msgstr "一种税只能定义一个财政状况"
 
 #. module: account
 #. odoo-python
@@ -1634,7 +1634,7 @@ msgstr "临时号码不能用于实际匹配"
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr "可以针对合作伙伴设置警告消息（会计科目）"
+msgstr "可以针对业务伙伴设置预警消息（会计科目）"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
@@ -2298,7 +2298,7 @@ msgstr "有效"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Active Account"
-msgstr "有效的科目"
+msgstr "活动帐户"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_ids
@@ -3783,7 +3783,7 @@ msgstr "受阻"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
-msgstr "阻止消息"
+msgstr "阻塞消息"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body_has_template_value
@@ -3856,7 +3856,7 @@ msgstr "CABA"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "CAMT Import"
-msgstr "CAMT导入"
+msgstr "CAMT 导入"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CIP
@@ -4207,7 +4207,7 @@ msgstr "现金对账单"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Cash basis rounding difference"
-msgstr "现金收付舍入差额"
+msgstr "现金收付舍入差异"
 
 #. module: account
 #. odoo-python
@@ -5792,7 +5792,7 @@ msgstr "小数精度"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__decimal_separator
 msgid "Decimal Separator"
-msgstr "小数分隔符"
+msgstr "小数分割符"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
@@ -5957,7 +5957,7 @@ msgstr "递延收入"
 msgid ""
 "Define in which journals this account can be used. If empty, can be used in "
 "all journals."
-msgstr "定义可以使用该科的目记账。如果留空，则可用于所有日记账。"
+msgstr "定义可以在哪些日记账中使用此帐户。如果为空，可用于所有日记账。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6026,22 +6026,22 @@ msgstr "交付日期"
 #. module: account
 #: model:account.account.tag,name:account.demo_ceo_wages_account
 msgid "Demo CEO Wages Account"
-msgstr "演示首席执行官（CEO）工资科目"
+msgstr "Demo CEO Wages Account"
 
 #. module: account
 #: model:account.account.tag,name:account.demo_capital_account
 msgid "Demo Capital Account"
-msgstr "演示资本科目"
+msgstr "Demo Capital Account"
 
 #. module: account
 #: model:account.account.tag,name:account.demo_sale_of_land_account
 msgid "Demo Sale of Land Account"
-msgstr "演示土地销售科目"
+msgstr "Demo Sale of Land Account"
 
 #. module: account
 #: model:account.account.tag,name:account.demo_stock_account
 msgid "Demo Stock Account"
-msgstr "演示库存科目"
+msgstr "Demo Stock Account"
 
 #. module: account
 #. odoo-python
@@ -6116,7 +6116,7 @@ msgstr "差额科目"
 #: model:ir.model.fields,help:account.field_account_reconcile_model__allow_payment_tolerance
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__allow_payment_tolerance
 msgid "Difference accepted in case of underpayment."
-msgstr "未足额付款时接受的差额。"
+msgstr "如果未足额支付，则接受差额。"
 
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
@@ -7009,7 +7009,7 @@ msgstr "欧盟增值税"
 msgid ""
 "Every character that is nor a digit nor this separator will be removed from "
 "the matching string"
-msgstr "不是数字或分隔符的字符将从匹配的字符串删除"
+msgstr "将从匹配的字符串中删除不是数字或此分隔符的每个字符"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_amount
@@ -7244,7 +7244,7 @@ msgstr "填写产品详情或查看建议。"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
 msgid "Filter Multivat"
-msgstr "多增值税筛选器"
+msgstr "筛选多缸"
 
 #. module: account
 #. odoo-python
@@ -7281,7 +7281,7 @@ msgstr "在标签中查找文本"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__narration_regex
 msgid "Find Text in Notes"
-msgstr "在通知中查找文本"
+msgstr "在备注中查找文本"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_date
@@ -7387,7 +7387,7 @@ msgstr "会计年度结束日期"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "Fiscal position"
-msgstr "应税设定"
+msgstr "财政状况"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__fiscal_position_id
@@ -7647,7 +7647,7 @@ msgstr "从最后一个会计年度"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_tax_period
 msgid "From previous tax period"
-msgstr "从上一纳税期间"
+msgstr "从上一个纳税期开始"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__from_fiscalyear
@@ -7759,7 +7759,7 @@ msgstr "获得散列完整性结果PDF。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Get warnings when invoicing specific customers"
-msgstr "在为特定客户开具发票时获得警告"
+msgstr "在给特定的客户开开票单时的警告"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__fiscalyear_lock_date
@@ -8313,7 +8313,7 @@ msgid ""
 "If you sell goods and services to customers in a foreign EU country, you "
 "must charge VAT based on the delivery address. This rule applies regardless "
 "of where you are located."
-msgstr "如果向欧盟成员国以外的客户销售商品和服务，须根据送货地址收取增值税。该规则适用于所有国家/地区。"
+msgstr "如果您向欧盟国家以外的客户销售商品和服务，必须根据送货地址收取增值税。无论您在哪里，这条规则都适用。"
 
 #. module: account
 #. odoo-python
@@ -8380,17 +8380,17 @@ msgstr "以.csv、.xls和.xlsx格式导入"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_ofx
 msgid "Import in .ofx format"
-msgstr "以.ofx格式导入"
+msgstr "导入.ofx格式"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_camt
 msgid "Import in CAMT.053 format"
-msgstr "以CAMT.053 格式导入"
+msgstr "用 CAMT.053 格式导入"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in CAMT.053"
-msgstr "以CAMT.053格式导入银行对账单"
+msgstr "用CAMT.053格式导入银行对账单"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8400,7 +8400,7 @@ msgstr "以CSV、XLS和XLSX格式导入银行对账单"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in OFX"
-msgstr "以OFX格式导入银行对账单"
+msgstr "用OFX格式导入银行对账单"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9084,14 +9084,14 @@ msgstr "应收结算单会计分录已核对这些支付对账."
 #: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_partial_underpaid
 msgid "Invoices/Bills Partial Match if Underpaid"
-msgstr "未足额付款时发票/账单部分匹配"
+msgstr "如果工资未足额发放，结算单/账单部分匹配"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_perfect_match
 msgid "Invoices/Bills Perfect Match"
-msgstr "发票/账单完全匹配"
+msgstr "结算单/账单完美匹配"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_invoicing_menu
@@ -9197,7 +9197,7 @@ msgstr "是导入的"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
 msgid "Is Lower Than"
-msgstr "低于"
+msgstr "大于"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_manually_modified
@@ -9893,7 +9893,7 @@ msgstr "行 “%s” 将自己设为其母项。"
 #. module: account
 #: model:account.reconcile.model,name:account.1_reconcile_from_label
 msgid "Line with Bank Fees"
-msgstr "与银行收费一致"
+msgstr "Line with Bank Fees"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__line_ids
@@ -10173,7 +10173,7 @@ msgstr "匹配文本位置注释"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_reference
 msgid "Match Text Location Reference"
-msgstr "匹配文本位置参考号"
+msgstr "匹配文本位置编号"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
@@ -10226,7 +10226,7 @@ msgstr "匹配中#"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__matching_order
 msgid "Matching Order"
-msgstr "正在匹配订单"
+msgstr "匹配订单"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matching_number
@@ -10318,7 +10318,7 @@ msgstr "消息发送错误"
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn_msg
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_warn_msg
 msgid "Message for Invoice"
-msgstr "发票消息"
+msgstr "结算单消息"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_ids
@@ -10647,7 +10647,7 @@ msgstr "新值"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
-msgstr "最新首个"
+msgstr "最新第一"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
@@ -10721,7 +10721,7 @@ msgstr "无银行交易"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__no-message
 msgid "No Message"
-msgstr "无消息"
+msgstr "没消息"
 
 #. module: account
 #. odoo-python
@@ -10904,7 +10904,7 @@ msgstr "备注"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_note_param
 msgid "Note Parameter"
-msgstr "通知参数"
+msgstr "注意参数"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
@@ -10986,7 +10986,7 @@ msgstr "提前支付提议过期前的天数"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__number_entries
 msgid "Number of entries related to this model"
-msgstr "与该模型相关的分录的数量"
+msgstr "与此模型相关的分录数"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error_counter
@@ -11035,7 +11035,7 @@ msgstr "发送错误的消息的数量"
 msgid ""
 "Number of months in the past to consider entries from when applying this "
 "model."
-msgstr "应用该模型时要考虑分录的之前月份的数量。"
+msgstr "应用此模型时要考虑分录的过去月份数。"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__number
@@ -11050,7 +11050,7 @@ msgstr "数值"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "OFX Import"
-msgstr "OFX导入"
+msgstr "OFX 导入"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__10
@@ -11095,12 +11095,12 @@ msgstr "资产负债表外"
 #. module: account
 #: model:account.account.tag,name:account.demo_office_furniture_account
 msgid "Office Furniture"
-msgstr "办公家具"
+msgstr "Office Furniture"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 msgid "Oldest first"
-msgstr "先进先出"
+msgstr "最老的第一个"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__included
@@ -11311,7 +11311,7 @@ msgstr "操作模板"
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/mail_message.py:0
 msgid "Operation not supported"
-msgstr "不支持的操作"
+msgstr "不支持该作业"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hide_0_lines__optional
@@ -11689,12 +11689,12 @@ msgstr "合作伙伴限制"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Mapping"
-msgstr "合作伙伴映射"
+msgstr "业务伙伴映射"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__partner_mapping_line_ids
 msgid "Partner Mapping Lines"
-msgstr "合作伙伴映射行"
+msgstr "业务伙伴映射行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
@@ -11726,7 +11726,7 @@ msgstr "合作伙伴已设置"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
-msgstr "对账模型的合作伙伴映射"
+msgstr "对账模型的业务伙伴映射"
 
 #. module: account
 #. odoo-python
@@ -11785,7 +11785,7 @@ msgstr "应付账款"
 #: model:ir.model.fields,field_description:account.field_res_partner__debit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__debit_limit
 msgid "Payable Limit"
-msgstr "应付账款限额"
+msgstr "应付限额"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_account_type__both
@@ -11967,12 +11967,12 @@ msgstr "付款条款行"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__allow_payment_tolerance
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__allow_payment_tolerance
 msgid "Payment Tolerance"
-msgstr "付款容差"
+msgstr "支付容忍度"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__payment_tolerance_type
 msgid "Payment Tolerance Type"
-msgstr "付款容差类型"
+msgstr "支付容忍度种类"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_type
@@ -12016,7 +12016,7 @@ msgstr "付款条款：30天内付款，7天内付款享受2%的提前付款折�
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance
 msgid "Payment terms: 30% Advance End of Following Month"
-msgstr "付款条款：次月月底前预付30%"
+msgstr "Payment terms: 30% Advance End of Following Month"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
@@ -12185,7 +12185,7 @@ msgstr "请设置正舍入值。"
 #: code:addons/account/models/account_reconcile_model.py:0
 msgid ""
 "Please set at least one of the match texts to create a partner mapping."
-msgstr "请设置至少一个匹配文本，以创建合作伙伴映射。"
+msgstr "请设置至少一个匹配文本以创建业务伙伴映射。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -13052,7 +13052,7 @@ msgstr "限制对某类产品使用税项。"
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_same_currency
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
-msgstr "限于与对账单行使用相同币别的提议。"
+msgstr "残值总计金额应该匹配资产折旧明细行合计的金额。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -13242,7 +13242,7 @@ msgstr "舍入策略"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
 msgid "Rule to suggest counterpart entry"
-msgstr "对应科目建议规则"
+msgstr "对应科目的建议规则"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
@@ -13388,7 +13388,7 @@ msgstr "与产品相同的账户"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_same_currency
 msgid "Same Currency"
-msgstr "相同币别"
+msgstr "相同货币"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -13504,18 +13504,18 @@ msgstr "搜索产品"
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_label
 msgid ""
 "Search in the Statement's Label to find the Invoice/Payment's reference"
-msgstr "搜索对账单标签，以找到发票/付款参考号"
+msgstr "搜索对账单标签以搜索结算单/付款的编号"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_note
 msgid "Search in the Statement's Note to find the Invoice/Payment's reference"
-msgstr "搜索对账单备注，以找到发票/付款参考号"
+msgstr "搜索对账单注释以搜索结算单/付款的编号"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_reference
 msgid ""
 "Search in the Statement's Reference to find the Invoice/Payment's reference"
-msgstr "搜索对账单参考号，以找到发票/付款参考号"
+msgstr "搜索对账单的编号以搜索结算单/付款的编号"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_merge_wizard_line__display_type__line_section
@@ -13654,7 +13654,10 @@ msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
-msgstr "选择该“警告”选项，将通过消息通知用户，选择“阻塞消息”选项，将发送异常通知消息，并阻断流。须将该消息写入下一字段。"
+msgstr ""
+"选择此“警告“选项，将通知用户此消息。\n"
+"选择“阻塞消息“选项，将在流程阻塞时将抛出一个消息，并阻塞此流程。\n"
+"此消息将写入下一个字段。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14059,7 +14062,7 @@ msgstr "显示有效的税项"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Show all records which has next action date is before today"
-msgstr "显示下一操作日期早于今天的所有记录"
+msgstr "显示所有的在今天之前的下一个行动日期的记录"
 
 #. module: account
 #. odoo-python
@@ -14099,7 +14102,7 @@ msgstr "部分文件已经通过另一个程序发送。"
 msgid ""
 "Some journal items already exist with this account but in other journals "
 "than the allowed ones."
-msgstr "某些日记账项目已经存在于该科目中，但属于其他日记账，而非允许日记账。"
+msgstr "某些会计分录已存在于此帐户中，但存在于允许的其他日记帐中。"
 
 #. module: account
 #. odoo-python
@@ -14564,12 +14567,12 @@ msgstr "税项配对"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Tax Mapping"
-msgstr "税项映射"
+msgstr "税映射"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "应税设定的税项映射"
+msgstr "税的科目调整"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
@@ -14693,12 +14696,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_src_id
 msgid "Tax on Product"
-msgstr "产品税项"
+msgstr "产品上的税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_id
 msgid "Tax to Apply"
-msgstr "要应用的税项"
+msgstr "应用的税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__is_used
@@ -15162,7 +15165,7 @@ msgstr "该税项适用的国家/地区。"
 msgid ""
 "The country set on the foreign VAT fiscal position must match the one set on"
 " the report."
-msgstr "在外国增值税应税设定中设置的国家/地区须与报表中设置的国家/地区相匹配。"
+msgstr "外国增值税财政状况上设置的国家/地区必须与报表上设置的国家/地区相匹配."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -15356,7 +15359,7 @@ msgstr "虽然侦测到“%(candidate)s” 符合资格，但以下错误导致�
 #: code:addons/account/models/account_reconcile_model.py:0
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
-msgstr "以下正则表达式对于创建合作伙伴映射无效：%s"
+msgstr "以下正则表达式对于创建业务伙伴映射无效: %s"
 
 #. module: account
 #. odoo-python
@@ -15375,7 +15378,7 @@ msgstr "在日记账“%(journal)s”和科目“%(account)s”中设置的外�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "The foreign fiscal position for which this external value is made."
-msgstr "为其生成该外部值的外国应税设定。"
+msgstr "产生此外部价值的外国财政状况。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -15475,9 +15478,9 @@ msgid ""
 "  e.g: .*N°48748 abc123.*"
 msgstr ""
 "映射使用正则表达式。\n"
-"- 要匹配行首的文本（标签或备注），只需填写文本即可。\n"
-"- 要匹配任意位置的文本（标签或备注），应将文本放在两个.*中间\n"
-"例如：.*N°48748 abc123.*"
+"- 要匹配行初的文本（在标签或注释中），只需填写文本即可。\n"
+"- 要匹配任意位置的文本（在标签或注释中），请将文本放在 .* 之间。\n"
+"  例如: .*N°48748 abc123.*"
 
 #. module: account
 #. odoo-python
@@ -15567,7 +15570,7 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be applied to the selected "
 "customer/vendor categories."
-msgstr "该对账模型仅应用于选定的客户/供应商类别。"
+msgstr "对账模型只能应用在选择的客户/供应商类别."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_ids
@@ -15580,7 +15583,7 @@ msgstr "该对账模型仅应用于选定客户/供应商。"
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner
 msgid ""
 "The reconciliation model will only be applied when a customer/vendor is set."
-msgstr "该对账模型仅在设置了客户/供应商时应用。"
+msgstr "对账模型只能在设置了客户/供应商时被应用."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -15597,10 +15600,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"该对账模型仅在标签满足以下条件时应用：\n"
-"        * 包含：建议标签须包含该字符串（不区分大小写）。\n"
-"        * 不包含：“包含”的反义词。\n"
-"        * 匹配表达式：定义您的正则表达式。"
+"调整模型只能被用于下面的标签：\n"
+"* 包含：建议标签中包含该文字（不敏感）。\n"
+"* 不包含：“”包含”的反义。\n"
+"* 匹配表达式：定义您自己的规则表达式。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_note
@@ -15610,10 +15613,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"该对账模型仅在满足以下条件时适用：\n"
-"        * 包含：建议标签须包含该字符串（不区分大小写）。\n"
-"        * 不包含：“包含”的反义词。\n"
-"        * 匹配表达式：定义您的正则表达式。"
+"对账模式只适用于以下情况:\n"
+"        *包含：命题说明必须包含此字符串（不区分大小写）。\n"
+"        *不包含: \"Contains\"的否定。\n"
+"        * 匹配正则表达式：定义自己的正则表达式。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_transaction_details
@@ -15840,7 +15843,7 @@ msgstr "创建该分录的对账单行"
 msgid ""
 "The sum of total residual amount propositions and the statement line amount "
 "allowed gap type."
-msgstr "剩余总额建议之和及对账单行金额允许的差额类型。"
+msgstr "总剩余金额提案和允许差额类型的报表行金额之和。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__payment_tolerance_param
@@ -15848,7 +15851,7 @@ msgstr "剩余总额建议之和及对账单行金额允许的差额类型。"
 msgid ""
 "The sum of total residual amount propositions matches the statement line "
 "amount under this amount/percentage."
-msgstr "剩余总额建议之和与该金额/百分比下的对账单行金额相匹配。"
+msgstr "剩余金额总额与该金额/百分比下的报表行金额相匹配。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
@@ -16207,7 +16210,7 @@ msgstr "该行及其子将在所有列为0时隐藏。"
 msgid ""
 "This matching rule is used when the user is not certain of all the "
 "information of the counterpart."
-msgstr "用户不确定对方的所有信息时，使用该匹配规则。"
+msgstr "当用户不确定对方的所有信息时，使用此匹配规则。"
 
 #. module: account
 #. odoo-python
@@ -16702,7 +16705,7 @@ msgstr "类型名称"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Type a message..."
-msgstr "输入消息......"
+msgstr "输入消息..."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__qr_code_method
@@ -17367,7 +17370,7 @@ msgstr "警告"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Warning for %s"
-msgstr "警告%s"
+msgstr "警告 %s"
 
 #. module: account
 #. odoo-python
@@ -17378,7 +17381,7 @@ msgstr "四舍五入法提示：%s"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Warning on the Invoice"
-msgstr "发票上的警告"
+msgstr "结算单警告"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__warnings
@@ -17389,7 +17392,7 @@ msgstr "警告"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_warning_account
 msgid "Warnings in Invoices"
-msgstr "发票中的警告"
+msgstr "结算单警告"
 
 #. module: account
 #. odoo-python
@@ -18150,7 +18153,7 @@ msgstr "文件一经发布或过账，便不可切换其类型。"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot use a deprecated account."
-msgstr "不能使用已弃用科目。"
+msgstr "您不能使用作废的科目。"
 
 #. module: account
 #. odoo-python
@@ -18172,7 +18175,7 @@ msgstr "如果表达式中的标签不是以 _carryover_ 开头，则不能使�
 msgid ""
 "You cannot use this account (%s) in this journal, check the field 'Allowed "
 "Journals' on the related account."
-msgstr "不能在该日记账中使用该科目（%s），请检查相关科目中的“允许的日记账”字段。"
+msgstr "您不能在此日记账中使用此科目  (%s)，请检查相关科目上的字段 'Allowed Journals'。"
 
 #. module: account
 #. odoo-python

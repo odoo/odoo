@@ -3,8 +3,8 @@
 # 	* purchase
 # 
 # Translators:
-# Wil Odoo, 2025
 # Sarah Park, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-20 18:39+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Sarah Park, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,7 +128,7 @@ msgstr ""
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        다음의 발주서에 대한 배송 일정 관련하여 연락드립니다: <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span> \n"
+"        다음 발주서에 대한 배송 일정과 관련하여 연락드립니다: <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span> \n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
 "        </t>\n"
@@ -139,7 +139,7 @@ msgstr ""
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">미정</span>.\n"
 "        </t>\n"
-"        정시 배송 가능 여부를 확인해 주시기 바랍니다?\n"
+"        정시 배송 가능 여부를 확인 부탁드립니다.\n"
 "        <br/><br/>\n"
 "        <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "            확인</a>\n"
@@ -1097,7 +1097,7 @@ msgstr "국가 코드"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Create Bill"
-msgstr "청구서 발행"
+msgstr "청구서 만들기"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3106,7 +3106,7 @@ msgstr "구매발주서에 추가할 품목이 없습니다. 선결제 금액인
 msgid ""
 "There is no invoiceable line. If a product has a control policy based on "
 "received quantity, please make sure that a quantity has been received."
-msgstr "청구서를 발행할 항목이 없습니다. 입고 수량을 기준으로 품목을 관리하는 경우, 해당 수량의 입고 여부를 확인하세요."
+msgstr "청구서 발행가능한 내역이 없습니다. 만약 품목의 관리정책이 입고된 수량일 경우, 수량이 입고되었는지 확인하십시오."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -3445,7 +3445,7 @@ msgstr "이 문서를 Odoo로 가져오시겠습니까?"
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__warning
 #: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__warning
 msgid "Warning"
-msgstr "주의"
+msgstr "경고"
 
 #. module: purchase
 #. odoo-python

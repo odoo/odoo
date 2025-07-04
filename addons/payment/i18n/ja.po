@@ -3,8 +3,8 @@
 # 	* payment
 # 
 # Translators:
-# Wil Odoo, 2025
 # Junko Augias, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-07 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Junko Augias, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -175,7 +175,7 @@ msgid ""
 "                    moment for it to be processed. Check your payment provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
-"<strong>警告！</strong>部分的なキャプチャは保留中です。処理されるまで\n"
+"<strong>警告！</strong>部分キャプチャは保留中です。処理されるまで\n"
 "                    しばらくお待ち下さい。数分経ってもキャプチャが保留中の場合は、\n"
 "                    決済プロバイダ設定を確認して下さい。"
 
@@ -687,12 +687,12 @@ msgstr "キャンセル"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__cancel
 msgid "Canceled"
-msgstr "取消済"
+msgstr "キャンセル済"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__cancel_msg
 msgid "Cancelled Message"
-msgstr "取消済メッセージ"
+msgstr "キャンセル済メッセージ"
 
 #. module: payment
 #. odoo-javascript
@@ -1866,7 +1866,7 @@ msgstr "Pace."
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__partial
 msgid "Partial"
-msgstr "部分消込"
+msgstr "一部"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_id
@@ -2654,7 +2654,7 @@ msgstr "支払が認証されたら表示されるメッセージ"
 #: model:ir.model.fields,help:payment.field_payment_provider__cancel_msg
 msgid ""
 "The message displayed if the order is cancelled during the payment process"
-msgstr "支払手続き中にオーダが取消された場合に表示されるメッセージ"
+msgstr "支払手続き中にオーダがキャンセルされた場合に表示されるメッセージ"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__done_msg
@@ -3118,7 +3118,7 @@ msgstr "Xendit"
 msgid ""
 "You can't unarchive tokens linked to inactive payment methods or disabled "
 "providers."
-msgstr "非アクティブな支払方法または無効なプロバイダーにリンクされたトークンをアーカイブ取消することはできません。"
+msgstr "非アクティブな支払方法または無効なプロバイダーにリンクされたトークンをアーカイブ解除することはできません。"
 
 #. module: payment
 #. odoo-python
@@ -3230,7 +3230,7 @@ msgstr "お支払いはキャンセルされました。"
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_xendit
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
-msgstr "お支払いは正常に処理されましたが、承認待ちです。"
+msgstr "お支払いは無事処理されましたが、承認待ちとなっています。"
 
 #. module: payment
 #. odoo-python

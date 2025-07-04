@@ -36,7 +36,7 @@ msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
 msgstr ""
-"Alle medarbejderes badges er linket til medarbejderen, enten direkte eller "
+"Alle medarbejderes badges er knyttet til medarbejderen, enten direkte eller "
 "gennem en bruger"
 
 #. module: hr_gamification
@@ -47,8 +47,8 @@ msgid ""
 "                    The goals are created for the specified users or member of the group."
 msgstr ""
 "Tildel en liste af mål til udvalgte brugere for at evaluere dem.\n"
-"                    En udfordring kan anvende periode (uge, måned...) til automatisk at generere mål.\n"
-"                    Mål oprettes for de specificerede brugere eller medlemmer af en gruppen."
+"                    En udfordring kan anvende en periode (f.eks. uge, måned osv.) til automatisk at generere mål.\n"
+"                    Mål oprettes for de specificerede brugere eller medlemmer af gruppen."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__badge_ids
@@ -70,12 +70,12 @@ msgstr ""
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__direct_badge_ids
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Badges directly linked to the employee"
-msgstr "Badges der er linket direkte til medarbejderen"
+msgstr "Badges knyttet direkte til medarbejderen"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee_base
 msgid "Basic Employee"
-msgstr "Standard medarbejder"
+msgstr "Standardmedarbejder"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -103,7 +103,8 @@ msgstr "Opret et nyt mål"
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Describe what they did and why it matters (will be public)"
 msgstr ""
-"Beskriv hvad de gjorde og hvilken forskel det gjorde (vil være offentlig)"
+"Beskriv, hvad de gjorde, og hvilken forskel det gjorde (vil blive "
+"offentliggjort)"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__direct_badge_ids
@@ -132,29 +133,29 @@ msgstr "Medarbejder"
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__badge_ids
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__badge_ids
 msgid "Employee Badges"
-msgstr "Medarbejder badges"
+msgstr "Medarbejderbadges"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__goal_ids
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__goal_ids
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__goal_ids
 msgid "Employee HR Goals"
-msgstr "Medarbejder HR mål"
+msgstr "Medarbejdermål"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
 msgid "Gamification Badge"
-msgstr "Gamificerings emblem"
+msgstr "Gamificeringsbadge"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr "Gamificering Bruger emblem"
+msgstr "Gamificering--brugerbadges"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user_wizard
 msgid "Gamification User Badge Wizard"
-msgstr "Gamificering Bruger emblem guide"
+msgstr "Guide til gamificering--brugerbadges"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__goal_ids
@@ -187,7 +188,7 @@ msgstr "Tildelt"
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__granted_employees_count
 msgid "Granted Employees Count"
-msgstr "Tildelte medarbejdere antal"
+msgstr "Antal tildelte medarbejdere"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__has_badges
@@ -209,7 +210,7 @@ msgstr "ID"
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Received Badges"
-msgstr "Belønning"
+msgstr "Modtog badges"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
@@ -226,7 +227,7 @@ msgstr "Beløn medarbejder med"
 #. odoo-python
 #: code:addons/hr_gamification/models/gamification.py:0
 msgid "The selected employee does not correspond to the selected user."
-msgstr "Den valgte medarbejder svarer ikke til den benyttede bruger."
+msgstr "Den valgte medarbejder matcher ikke den valgte bruger."
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_res_users
@@ -243,7 +244,7 @@ msgstr "Hvad er du taknemmelig for?"
 #. odoo-python
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 msgid "You can not send a badge to yourself."
-msgstr "Du kan ikke tildele dig selv et emblem."
+msgstr "Du kan ikke tildele dig selv et badge."
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form

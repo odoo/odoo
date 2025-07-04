@@ -66,7 +66,7 @@ msgstr "Deltagere er oprettet"
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__confirm
 msgid "Attendees are registered"
-msgstr ""
+msgstr "Deltagere er tilmeldt"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__done
@@ -93,6 +93,8 @@ msgstr "Tildel automatisk de oprettede kundeemner til denne Salgsperson."
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Aww! No Leads created, check your Lead Generation Rules and try again."
 msgstr ""
+"Hov! Ingen kundeemner blev oprettet. Kontrollér venligst dine "
+"genereringsregler for kundeemner."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
@@ -146,6 +148,9 @@ msgid ""
 "Registered: at attendee registration, manually or automatically;\n"
 "Attended: when attendance is confirmed and registration set to done;"
 msgstr ""
+"Oprettelse: Når deltageren oprettes.\n"
+"Tilmelding: Når deltageren tilmeldes, enten manuelt eller automatisk.\n"
+"Deltog: Når fremmødet er bekræftet, og tilmeldingen er markeret som gennemført."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_type
@@ -171,12 +176,12 @@ msgstr "Arrangement"
 #. module: event_crm
 #: model:ir.actions.server,name:event_crm.ir_cron_generate_leads_ir_actions_server
 msgid "Event CRM: Generate Leads based on Rules"
-msgstr ""
+msgstr "CRM til arrangementer: Generér kundeemner baseret på regler"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_request
 msgid "Event Lead Request"
-msgstr ""
+msgstr "Kundeemneanmodning til arrangementer "
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_rule
@@ -206,7 +211,7 @@ msgstr "Begivenhed der udløser reglen der oprettede dette kundeemne"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
 msgid "Event:"
-msgstr ""
+msgstr "Arrangement:"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_registration_filter
@@ -247,6 +252,7 @@ msgstr "Genrer potentielle kunder"
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Got it! We've noted your request. Your leads will be created soon!"
 msgstr ""
+"Forstået! Vi har modtaget din anmodning. Dine kundeemner oprettes snart!"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__id
@@ -348,13 +354,13 @@ msgstr "Ingen registreringer fundet"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_event__has_lead_request
 msgid "Ongoing Generation Request"
-msgstr ""
+msgstr "Anmodningen om generering behandles"
 
 #. module: event_crm
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Only Event Managers are allowed to re-generate all leads."
-msgstr ""
+msgstr "Kun eventmanagere kan gengenerere alle kundeemner."
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
@@ -378,6 +384,8 @@ msgid ""
 "Per Attendee: A Lead is created for each Attendee (B2C).\n"
 "Per Order: A single Lead is created per Ticket Batch/Sale Order (B2B)"
 msgstr ""
+"Pr. deltager: Et kundeemne oprettes for hver deltager (B2C).\n"
+"Pr. ordre: Et enkelt kundeemne oprettes pr. billetgruppe/salgsordre (B2B)"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
@@ -387,7 +395,7 @@ msgstr "Per Ordre"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__processed_registration_id
 msgid "Processed Registration"
-msgstr ""
+msgstr "Tilmelding behandlet"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_lead_rule_id
@@ -397,7 +405,7 @@ msgstr "Registrerings Regel"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
 msgid "Registration Rule:"
-msgstr ""
+msgstr "Registreringsregel:"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_registration_filter
@@ -452,6 +460,7 @@ msgstr "Søg Kundeemne Genererings Regler"
 #: model:ir.model.fields,help:event_crm.field_event_event__has_lead_request
 msgid "Set to True when a Lead Generation Request is currently running."
 msgstr ""
+"Angiv som Sandt, når en anmodning om generering af kundeemne behandles."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
@@ -474,6 +483,8 @@ msgid ""
 "The ID of the last processed event.registration, used to know where to "
 "resume."
 msgstr ""
+"ID’et på den senest behandlede event.registration, der angiver, hvor man "
+"fortsætter."
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
@@ -505,12 +516,12 @@ msgstr "Tidspunkt"
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Yee-ha, %(leads_count)s Leads have been created!"
-msgstr ""
+msgstr "Hurra, %(leads_count)s kundeemner er blevet oprettet!"
 
 #. module: event_crm
 #: model:ir.model.constraint,message:event_crm.constraint_event_lead_request_uniq_event
 msgid "You can only have one generation request per event at a time."
-msgstr ""
+msgstr "Du kan kun have én genereringsanmodning pr. arrangement ad gangen."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form

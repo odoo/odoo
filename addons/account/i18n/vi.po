@@ -5,8 +5,8 @@
 # Translators:
 # Quang Trinh <trinhvanquangf1@gmail.com>, 2025
 # Thomas Becquevort, 2025
-# Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-26 18:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1538,7 +1538,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign VAT already exists in this region."
-msgstr "Vị trí tài chính với thuế GTGT nước ngoài đã tồn tại ở khu vực này."
+msgstr "Vị thế tài chính với thuế VAT nước ngoài đã tồn tại ở khu vực này."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1570,8 +1570,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "A line of this move is using a deprecated account, you cannot post it."
 msgstr ""
-"Một dòng của bút toán này đang dùng tài khoản đã ngừng sử dụng, nên bạn "
-"không thể vào sổ."
+"Một dòng bút toán này đang sử dụng tài khoản không dùng nữa, bạn không thể "
+"vào sổ nó."
 
 #. module: account
 #. odoo-python
@@ -1593,16 +1593,15 @@ msgid ""
 "A payment tolerance defined as a percentage should always be between 0 and "
 "100"
 msgstr ""
-"Dung sai thanh toán được xác định dưới dạng tỷ lệ phần trăm phải luôn nằm "
-"trong khoảng từ 0 đến 100"
+"Hạn độ thanh toán được xác định là phần trăm phải luôn nằm trong khoảng từ 0"
+" đến 100"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 msgid ""
 "A payment tolerance defined as an amount should always be higher than 0"
-msgstr ""
-"Dung sai thanh toán được xác định dưới dạng số tiền phải luôn lớn hơn 0"
+msgstr "Hạn độ thanh toán được xác định là số tiền phải luôn cao hơn 0"
 
 #. module: account
 #. odoo-python
@@ -1660,8 +1659,7 @@ msgstr "Thẻ có cùng tên và khả năng áp dụng đã tồn tại trên q
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
-"Một vị trí tài chính thuế chỉ có thể được xác định một lần cho cùng loại "
-"thuế."
+"Một vị thế tài khoản thuế chỉ có thể được xác định một lần cho cùng thuế."
 
 #. module: account
 #. odoo-python
@@ -1672,7 +1670,7 @@ msgstr "Không thể sử dụng số tạm thời trong so khớp thực tế"
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr "Có thể đặt cảnh báo đối với đối tác (Tài khoản)"
+msgstr "Cảnh báo có thể được thiết lập ở đối tác (Tài khoản)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
@@ -2360,7 +2358,7 @@ msgstr "Đang hoạt động"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Active Account"
-msgstr "Tài khoản hoạt động"
+msgstr "Kích hoạt tài khoản"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_ids
@@ -3336,7 +3334,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Auto-validate"
-msgstr "Tự động xác thực"
+msgstr "Tự động xác nhận"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__autopost_bills
@@ -3901,7 +3899,7 @@ msgstr "Đã bị chặn"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
-msgstr "Chặn tin nhắn"
+msgstr "Khóa tin nhắn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body_has_template_value
@@ -3980,7 +3978,7 @@ msgstr "CABA"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "CAMT Import"
-msgstr "Import dưới dạng CAMT"
+msgstr "Import dạng file CAMT"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CIP
@@ -4343,7 +4341,7 @@ msgstr "Báo cáo lưu chuyển tiền tệ"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Cash basis rounding difference"
-msgstr "Chênh lệch làm tròn cơ sở dòng tiền"
+msgstr "Chênh lệch làm tròn kế toàn dòng tiền"
 
 #. module: account
 #. odoo-python
@@ -5852,7 +5850,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_date_range
 msgid "Date Range"
-msgstr "Khoảng thời gian"
+msgstr "Phạm vi ngày"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__date_scope
@@ -5963,7 +5961,7 @@ msgstr "Độ chính xác thập phân"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__decimal_separator
 msgid "Decimal Separator"
-msgstr "Dấu thập phân"
+msgstr "Phân cách thập phân"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
@@ -6131,8 +6129,8 @@ msgid ""
 "Define in which journals this account can be used. If empty, can be used in "
 "all journals."
 msgstr ""
-"Xác định sổ nhật ký mà tài khoản này được dùng. Nếu trống, có thể được dùng "
-"ở tất cả các sổ nhật ký."
+"Quy định sổ nhật ký tài khoản này được dùng. Nếu trống, có thể được dùng ở "
+"tất cả các sổ nhật ký."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6304,7 +6302,7 @@ msgstr "Tài khoản ghi chênh lệch"
 #: model:ir.model.fields,help:account.field_account_reconcile_model__allow_payment_tolerance
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__allow_payment_tolerance
 msgid "Difference accepted in case of underpayment."
-msgstr "Chênh lệch được chấp nhận trong trường hợp thanh toán thiếu."
+msgstr "Chênh lệch được chấp nhận trong trường hợp thanh toán thấp hơn."
 
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
@@ -7451,7 +7449,7 @@ msgstr "Điền thông tin sản phẩm hoặc xem gợi ý."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
 msgid "Filter Multivat"
-msgstr "Lọc đa năng"
+msgstr "Lọc Multivat"
 
 #. module: account
 #. odoo-python
@@ -7594,7 +7592,7 @@ msgstr "Kết thúc năm tài chính"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "Fiscal position"
-msgstr "Vị trí tài chính"
+msgstr "Vị thế tài khóa"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__fiscal_position_id
@@ -7938,7 +7936,7 @@ msgstr "Tài khoản lãi tỷ giá"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__payment_tolerance_param
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__payment_tolerance_param
 msgid "Gap"
-msgstr "Chênh lệch"
+msgstr "Gap"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -8568,7 +8566,7 @@ msgid ""
 "of where you are located."
 msgstr ""
 "Nếu bạn bán hàng hóa và dịch vụ cho khách hàng ở nước ngoài thuộc EU, bạn "
-"phải tính thuế GTGT dựa trên địa chỉ giao hàng. Quy tắc này áp dụng bất kể "
+"phải tính thuế VAT dựa trên địa chỉ giao hàng. Quy tắc này áp dụng bất kể "
 "bạn đang ở đâu."
 
 #. module: account
@@ -8638,17 +8636,17 @@ msgstr "Nhập theo định dạng .csv, .xls và .xlsx"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_ofx
 msgid "Import in .ofx format"
-msgstr "Nhập theo định dạng .ofx"
+msgstr "Import theo định dạng .ofx"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_camt
 msgid "Import in CAMT.053 format"
-msgstr "Nhập theo định dạng CAMT.053"
+msgstr "Import theo định dạng CAMT.053"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in CAMT.053"
-msgstr "Nhập sao kê ngân hàng theo định dạng CAMT.053"
+msgstr "Import sao kê ngân hàng tự động theo dạng CAMT.053"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8658,7 +8656,7 @@ msgstr "Nhập sao kê ngân hàng của bạn ở định dạng CSV, XLS và X
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in OFX"
-msgstr "Nhập sao kê ngân hàng theo định dạng OFX"
+msgstr "Import sao kê ngân hàng tự động theo dạng OFX"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9368,14 +9366,14 @@ msgstr "Hóa đơn có bút toán đã được đối chiếu với khoản tha
 #: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_partial_underpaid
 msgid "Invoices/Bills Partial Match if Underpaid"
-msgstr "Hóa đơn khớp một phần nếu thanh toán thiếu"
+msgstr "Hóa đơn Khớp một phần nếu Thanh toán Thấp hơn"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_perfect_match
 msgid "Invoices/Bills Perfect Match"
-msgstr "Hóa đơn khớp hoàn toàn"
+msgstr "Hóa đơn Kết hợp hoàn hảo"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_invoicing_menu
@@ -9429,7 +9427,7 @@ msgstr "Đang được gửi"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
 msgid "Is Between"
-msgstr "Trong khoảng"
+msgstr "Trong khoản"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
@@ -10461,17 +10459,17 @@ msgstr "Khớp Regex"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_label
 msgid "Match Text Location Label"
-msgstr "Khớp văn bản nhãn vị trí"
+msgstr "Khớp với tên nhãn vị trí"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_note
 msgid "Match Text Location Note"
-msgstr "Khớp văn bản ghi chú vị trí"
+msgstr "Khớp với tên vị trí ghi chú"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_reference
 msgid "Match Text Location Reference"
-msgstr "Khớp văn bản tham chiếu vị trí"
+msgstr "Khớp với tên vị trí tham chiếu"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
@@ -10524,7 +10522,7 @@ msgstr "# khớp"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__matching_order
 msgid "Matching Order"
-msgstr "Thứ tự khớp"
+msgstr "Khớp lệnh"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matching_number
@@ -11022,7 +11020,7 @@ msgstr "Không có giao dịch ngân hàng"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__no-message
 msgid "No Message"
-msgstr "Không có tin nhắn"
+msgstr "Không tin nhắn"
 
 #. module: account
 #. odoo-python
@@ -11208,7 +11206,7 @@ msgstr "Ghi chú"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_note_param
 msgid "Note Parameter"
-msgstr "Tham số ghi chú"
+msgstr "Tham số xử lý"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
@@ -11292,7 +11290,7 @@ msgstr "Số ngày trước khi đề xuất thanh toán sớm hết hạn"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__number_entries
 msgid "Number of entries related to this model"
-msgstr "Số bút toán liên quan đến mô hình này"
+msgstr "Số bút toán liên quan đối tượng này"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error_counter
@@ -11342,7 +11340,7 @@ msgid ""
 "Number of months in the past to consider entries from when applying this "
 "model."
 msgstr ""
-"Số tháng trong quá khứ cần xem xét các bút toán, khi áp dụng mô hình này."
+"Số tháng trong quá khứ để xem xét các bút toán từ khi áp dụng đối tượng này."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__number
@@ -11357,7 +11355,7 @@ msgstr "Giá trị kiểu số"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "OFX Import"
-msgstr "Nhập tệp OFX"
+msgstr "Import dạng file OFX"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__10
@@ -11654,7 +11652,7 @@ msgid ""
 "object.partner_id.lang }}."
 msgstr ""
 "Ngôn ngữ dịch tuỳ chọn (mã ISO) để chọn khi gửi email. Nếu không đặt, phiên "
-"bản tiếng Anh sẽ được sử dụng. Đây luôn là biểu thức placeholder cung cấp "
+"bản tiếng Anh sẽ được sử dụng. Đây luôn là biểu thức phần giữ chỗ cung cấp "
 "ngôn ngữ thích hợp, VD: {{ object.partner_id.lang }}."
 
 #. module: account
@@ -12016,12 +12014,12 @@ msgstr "Hạn mức đối tác"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Mapping"
-msgstr "Mapping đối tác"
+msgstr "Khớp đối tác"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__partner_mapping_line_ids
 msgid "Partner Mapping Lines"
-msgstr "Dòng mapping đối tác"
+msgstr "Chi tiết khớp đối tác"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
@@ -12053,7 +12051,7 @@ msgstr "Đối tác đã được thiết lập"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
-msgstr "Mapping đối tác cho mẫu đối chiếu"
+msgstr "Khớp đối tác cho đố tượng đối soát"
 
 #. module: account
 #. odoo-python
@@ -12299,7 +12297,7 @@ msgstr "Hạn độ thanh toán"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__payment_tolerance_type
 msgid "Payment Tolerance Type"
-msgstr "Loại hạn độ thanh toán"
+msgstr "Các loại hạn độ thanh toán"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_type
@@ -12526,8 +12524,7 @@ msgstr "Vui lòng chọn một giá trị làm tròn dương hoàn toàn."
 msgid ""
 "Please set at least one of the match texts to create a partner mapping."
 msgstr ""
-"Vui lòng điền ít nhất một văn bản so khớp để tạo một tiêu chí mapping đối "
-"tác."
+"Vui lòng điền ít nhất một nội dung nào đó cho việc khớp lệnh với đối tác."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -13403,7 +13400,7 @@ msgstr "Hạn chế việc sử dụng thuế chỉ cho một loại sản phẩ
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_same_currency
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
-msgstr "Hạn chế chỉ áp dụng cho đề xuất có cùng loại tiền tệ với dòng sao kê."
+msgstr "Hạn chế chỉ áp dụng cho ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -13593,7 +13590,7 @@ msgstr "Chiến lược làm tròn"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
 msgid "Rule to suggest counterpart entry"
-msgstr "Quy tắc đề xuất bút toán đối ứng"
+msgstr "Quy tắc đề xuất bút toán đối xứng"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
@@ -13739,7 +13736,7 @@ msgstr "Cùng tài khoản với sản phẩm"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_same_currency
 msgid "Same Currency"
-msgstr "Cùng tiền tệ"
+msgstr "Cùng tỷ giá"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -13855,18 +13852,18 @@ msgstr "Tìm kiếm sản phẩm"
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_label
 msgid ""
 "Search in the Statement's Label to find the Invoice/Payment's reference"
-msgstr "Tìm kiếm mã hóa đơn/thanh toán trong nhãn của sao kê"
+msgstr "Tìm kiếm trong nhãn của sao kê để tìm ra mã của Hóa đơn/Thanh toán"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_note
 msgid "Search in the Statement's Note to find the Invoice/Payment's reference"
-msgstr "Tìm kiếm mã hóa đơn/thanh toán trong ghi chú của sao kê"
+msgstr "Tìm kiếm trong ghi chú của sao kê để tìm ra mã của Hóa đơn/Thanh toán"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_reference
 msgid ""
 "Search in the Statement's Reference to find the Invoice/Payment's reference"
-msgstr "Tìm kiếm mã hóa đơn/thanh toán trong tham chiếu của sao kê"
+msgstr "Tìm kiếm trong mã của sao kê để tìm ra mã của Hóa đơn/Thanh toán"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_merge_wizard_line__display_type__line_section
@@ -14019,9 +14016,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"Chọn tuỳ chọn \"Cảnh báo\" sẽ thông báo cho người dùng qua một tin nhắn. "
-"Chọn \"Chặn tin nhắn\" sẽ tạo ra ngoại lệ cho tin nhắn và chặn luồng hoạt "
-"động. Nội dung tin nhắn cần được điền ở trường kế tiếp."
+"Chọn \"Cảnh báo\" sẽ thông báo cho người qua một tin nhắn, Chọn \"Thông báo "
+"chặn\" sẽ đưa ra một thông báo và khóa lại việc xử lý tiếp. Nội dung tin "
+"nhắn thông báo bạn có thể điền ở trường kế tiếp."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14372,7 +14369,7 @@ msgstr "Hiển thị hạn mức tín dụng"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
 msgid "Show Decimal Separator"
-msgstr "Hiển thị dấu thập phân"
+msgstr "Xem phân cách thập phân"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_delivery_date
@@ -14440,7 +14437,7 @@ msgstr "Hiển thị thuế đang hoạt động"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Show all records which has next action date is before today"
-msgstr "Hiển thị tất cả bản ghi có ngày xử lý tiếp theo trước ngày hôm nay"
+msgstr "Hiển thị tất cả dữ liệu có ngày xử lý tiếp theo trước ngày hôm nay"
 
 #. module: account
 #. odoo-python
@@ -14482,7 +14479,7 @@ msgid ""
 "than the allowed ones."
 msgstr ""
 "Một số bút toán đã tồn tại với tài khoản này nhưng trong các sổ nhật ký khác"
-" sổ nhật ký được phép."
+" với các sổ nhật ký được phép."
 
 #. module: account
 #. odoo-python
@@ -14956,12 +14953,12 @@ msgstr "Map thuế"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Tax Mapping"
-msgstr "Mapping thuế"
+msgstr "Thuế tương ứng"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "Mapping thuế của vị trí tài chính"
+msgstr "Thuế tương ứng theo Vị thế tài chính"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
@@ -15094,7 +15091,7 @@ msgstr "Thuế trên sản phẩm"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_id
 msgid "Tax to Apply"
-msgstr "Thuế áp dụng"
+msgstr "Thuế để áp dụng"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__is_used
@@ -15607,8 +15604,8 @@ msgid ""
 "The country set on the foreign VAT fiscal position must match the one set on"
 " the report."
 msgstr ""
-"Quốc gia trên vị trí tài chính GTGT nước ngoài phải khớp với quốc gia trên "
-"báo cáo."
+"Quốc gia được đặt trên vị trí tài chính VAT nước ngoài phải khớp với quốc "
+"gia được đặt trên báo cáo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -15823,7 +15820,7 @@ msgstr ""
 #: code:addons/account/models/account_reconcile_model.py:0
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
-msgstr "Biểu thức chính quy sau không hợp lệ để tạo mapping đối tác: %s"
+msgstr "Biểu thức chính quy sau không hợp lệ để tạo ánh xạ đối tác: %s"
 
 #. module: account
 #. odoo-python
@@ -15844,7 +15841,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "The foreign fiscal position for which this external value is made."
-msgstr "Vị trí tài chính nước ngoài mà giá trị ngoài này được tạo ra."
+msgstr "Vị thế tài chính nước ngoài mà giá trị bên ngoài này được tạo ra."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -15948,10 +15945,10 @@ msgid ""
 "- To Match the text anywhere (in label or notes), put your text between .*\n"
 "  e.g: .*N°48748 abc123.*"
 msgstr ""
-"Mapping sử dụng biểu thức chính quy.\n"
-"- Để khớp văn bản ở đầu dòng (trong nhãn hoặc ghi chú), chỉ cần điền văn bản của bạn.\n"
-"- Để khớp văn bản ở bất kỳ đâu (trong nhãn hoặc ghi chú), hãy đặt văn bản của bạn ở giữa dấu .*\n"
-"  VD: .*N°48748 abc123.*"
+"Biểu thức khớp được dùng.\n"
+"- Để Khớp văn bản ở đầu dòng (trong nhãn hoặc ghi chú), chỉ cần điền vào văn bản của bạn.\n"
+"- Để khớp văn bản ở bất kỳ đâu (trong nhãn hoặc ghi chú), hãy đặt văn bản của bạn ở giữa.*\n"
+"  ví dụ: .*N°48748 abc123.*"
 
 #. module: account
 #. odoo-python
@@ -16051,8 +16048,8 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customer/vendor categories."
 msgstr ""
-"Mẫu đối chiếu sẽ chỉ được áp dụng cho các danh mục khách hàng/nhà cung cấp "
-"đã chọn."
+"Cơ chế đối soát sẽ chỉ áp dụng cho các đối tượng thuộc nhóm khách hàng/nhà "
+"cung cấp."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_ids
@@ -16067,8 +16064,8 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be applied when a customer/vendor is set."
 msgstr ""
-"Mẫu đối chiếu sẽ chỉ được áp dụng khi một khách hàng/nhà cung cấp được thiết"
-" lập."
+"Cơ chế đối soát sẽ chỉ áp dụng cho các đối tượng thuộc loại khách hàng/nhà "
+"cung cấp."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -16087,10 +16084,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Mẫu đối chiếu sẽ chỉ được áp dụng khi nhãn:\n"
-"        * Chứa: Nhãn phải chứa chuỗi này (không phân biệt chữ hoa chữ thường).\n"
+"Đối tượng đối soát sẽ được tự động quy định nếu trong phần nội dung giao dịch có:\n"
+"        * Chứa: Trong chuỗi phải có một đoạn nội dung nào đó (trường hợp không nhạy cảm).\n"
 "        * Không chứa: Ngược lại của \"Chứa\".\n"
-"        * Khớp Regex: Tự xác định biểu thức chính quy của bạn."
+"        * Khớp Regex: Quy định theo mong muốn của bạn."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_note
@@ -16100,10 +16097,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Mẫu đối chiếu sẽ chỉ được áp dụng khi ghi chú:\n"
-"        * Chứa: Ghi chú phải chứa chuỗi này (không phân biệt chữ hoa chữ thường).\n"
-"        * Không chứa: Ngược lại của \"Chứa\".\n"
-"        * Khớp Regex: Tự xác định biểu thức chính quy của bạn."
+"Đối tượng đối soát sẽ chỉ được áp dụng khi ghi chú:\n"
+"        * Chứa: Ghi chú đề xuất phải chứa chuỗi này (trường hợp không nhạy cảm).\n"
+"        * Không chứa: Ngược với \"Chứa\".\n"
+"        * Chỉ mục khớp: Xác định biểu thức chính quy của riêng bạn."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_transaction_details
@@ -16348,8 +16345,8 @@ msgid ""
 "The sum of total residual amount propositions and the statement line amount "
 "allowed gap type."
 msgstr ""
-"Tổng của đề xuất số tiền còn lại và số tiền của dòng sao kê cho phép loại "
-"chênh lệch."
+"Tổng của các mệnh đề tổng số tiền còn lại và số lượng dòng báo cáo loại "
+"khoảng trống cho phép."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__payment_tolerance_param
@@ -16358,7 +16355,7 @@ msgid ""
 "The sum of total residual amount propositions matches the statement line "
 "amount under this amount/percentage."
 msgstr ""
-"Tổng của đề xuất số tiền còn lại khớp với số tiền của dòng sao kê theo số "
+"Tổng của mệnh đề tổng số tiền còn lại khớp với số tiền dòng báo cáo dưới số "
 "tiền/tỷ lệ phần trăm này."
 
 #. module: account
@@ -16763,7 +16760,7 @@ msgid ""
 "information of the counterpart."
 msgstr ""
 "Quy tắc khớp này được sử dụng khi người dùng không chắc chắn về tất cả thông"
-" tin của tài khoản đối ứng."
+" tin của khoản đối ứng."
 
 #. module: account
 #. odoo-python
@@ -17280,7 +17277,7 @@ msgstr "Tên loại"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Type a message..."
-msgstr "Nhập tin nhắn..."
+msgstr "Đang nhập tin nhắn..."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__qr_code_method
@@ -18860,7 +18857,7 @@ msgstr "Bạn không thể chuyển đổi loại chứng từ đã được ghi
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot use a deprecated account."
-msgstr "Bạn không thể dùng tài khoản đã ngừng sử dụng."
+msgstr "Bạn không được phép sử dụng tài khoản đã đánh dấu không dùng nữa."
 
 #. module: account
 #. odoo-python
@@ -18886,8 +18883,8 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the field 'Allowed "
 "Journals' on the related account."
 msgstr ""
-"Bạn không thể sử dụng tài khoản này (%s) trong sổ nhật ký này, hãy chọn "
-"trường 'Sổ nhật ký được phép' trong tài khoản liên quan."
+"Bạn không thể dùng tài khoản này (%s) trong sổ nhật ký này, hãy chọn sổ nhật"
+" ký này vào trong 'Các sổ nhật ký cho phép' ở cấu hình của tài khoản này."
 
 #. module: account
 #. odoo-python
@@ -19283,7 +19280,7 @@ msgstr "id"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__fixed_amount
 msgid "in amount"
-msgstr "theo số tiền"
+msgstr "số lượng"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -19297,7 +19294,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
 msgid "in percentage"
-msgstr "theo phần trăm"
+msgstr "phần trăm"
 
 #. module: account
 #. odoo-python

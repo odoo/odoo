@@ -3,8 +3,8 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Wil Odoo, 2025
 # Sarah Park, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-30 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Sarah Park, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1338,7 +1338,7 @@ msgstr "새 휴가 할당 만들기"
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid "Create a new time off allocation request"
-msgstr "새 연차 부여 요청 생성하기"
+msgstr "새 휴가 할당 요청 만들기"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__create_uid
@@ -1909,7 +1909,7 @@ msgstr "직원별 휴가 요약 보고서"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__type_request_unit__half_day
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__request_unit__half_day
 msgid "Half Day"
-msgstr "반차"
+msgstr "반나절"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__has_department_manager_access
@@ -3491,10 +3491,10 @@ msgid ""
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
-"휴가 신청서를 작성하면 상태는 '기안 작성'으로 설정됩니다.\n"
-"작성자가 확인 버튼을 누르면 신청서는 자동으로 제출되어 '결재 대기' 상태로 전환됩니다.\n"
-"관리자가 휴가 요청을 거부하면 '반려됨' 상태로 바뀌며,\n"
-"휴가 요청이 정상적으로 승인되면 '결재 완료' 표시가 뜹니다."
+"휴가 요청을 최초로 작성하면 상태는 '제출 대기'로 설정됩니다.\n"
+"휴가 요청이 작성자에 의해 확인하면 자동으로 제출되어 '승인 대기' 상태로 됩니다.\n"
+"관리자가 휴가 요청을 거부하면 '반려됨' 상태가 됩니다.\n"
+"휴가 요청이 관리자에 의해 승인되면 '승인됨' 상태가 됩니다."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3693,8 +3693,8 @@ msgid ""
 "Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
-"인사 담당자는 직원에게 휴가를 부여합니다. (예: 연차)<br>\n"
-"직원은 인사 담당자에게 휴가를 부여하도록 요청할 수 있습니다. (예: 병가)"
+"휴가 책임자는 직원에게 휴가를 할당합니다(예 : 유급 휴가).<br>\n"
+"직원은 휴가 책임자에게 할당을 요청합니다(예 : 회복 일)."
 
 #. module: hr_holidays
 #. odoo-javascript

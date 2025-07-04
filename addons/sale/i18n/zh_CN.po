@@ -4,8 +4,8 @@
 # 
 # Translators:
 # 何彬 <vnsoft.he@gmail.com>, 2025
-# Wil Odoo, 2025
 # Chloe Wang, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-20 18:40+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Chloe Wang, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1250,7 +1250,7 @@ msgstr "折扣前金额"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr "待开票报价单金额"
+msgstr "结算单金额"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1412,7 +1412,7 @@ msgstr "以惊人的报价，击败竞争对手！"
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
 #: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__block
 msgid "Blocking Message"
-msgstr "阻止消息"
+msgstr "阻塞消息"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -3160,7 +3160,7 @@ msgstr "否"
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__no-message
 #: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__no-message
 msgid "No Message"
-msgstr "无消息"
+msgstr "没消息"
 
 #. module: sale
 #. odoo-python
@@ -3237,12 +3237,12 @@ msgstr "出现发送错误的消息的数量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_count
 msgid "Number of quotations to invoice"
-msgstr "待开票报价单的数量"
+msgstr "结算单报价"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sales_to_invoice_count
 msgid "Number of sales to invoice"
-msgstr "待开票销售的数量"
+msgstr "销售到结算单的数量"
 
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
@@ -3435,7 +3435,7 @@ msgstr "订单状态"
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
 msgid "Order Upsell"
-msgstr "订单加售"
+msgstr "加售订单"
 
 #. module: sale
 #. odoo-python
@@ -3446,7 +3446,7 @@ msgstr "订单由%s签名"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 msgid "Order to Invoice"
-msgstr "待开票订单"
+msgstr "订单到结算单"
 
 #. module: sale
 #. odoo-python
@@ -4304,7 +4304,7 @@ msgstr "销售团队"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
-msgstr "销售警告信息"
+msgstr "销售警告"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
@@ -4407,7 +4407,10 @@ msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
-msgstr "如果选择该“警告消息”选项，将通过消息通知用户，如果选择“阻止消息”选项，将通过消息引发异常，并阻目流。须将该消息写入下一字段。"
+msgstr ""
+"选择此“警告“选项，将通知用户此消息。\r\n"
+"选择“阻塞消息“选项，将在流程阻塞时将抛出一个消息，并阻塞此流程。\r\n"
+"此消息将写入下一个字段。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4439,7 +4442,7 @@ msgstr "发送EMail"
 #: code:addons/sale/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send by Email"
-msgstr "通过电子邮件发送"
+msgstr "通过EMail发送"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
@@ -4517,7 +4520,7 @@ msgstr "Shopee 同步"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records which has next action date is before today"
-msgstr "显示下一操作日期早于今天的所有记录"
+msgstr "显示所有的在今天之前的下一个动作日期的记录"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5166,7 +5169,7 @@ msgstr "类型名称"
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Type a message..."
-msgstr "输入消息......"
+msgstr "输入一个消息……"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
@@ -5367,7 +5370,7 @@ msgstr "警告消息"
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Warning for %s"
-msgstr "%s的警告消息"
+msgstr "警告 %s"
 
 #. module: sale
 #. odoo-python
@@ -5378,12 +5381,12 @@ msgstr "公司报价单变更警告消息"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on the Sales Order"
-msgstr "销售订单警告消息"
+msgstr "销售订单警告"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Warning when Selling this Product"
-msgstr "销售该产品时的警告消息"
+msgstr "销售该产品时的警告"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids

@@ -3,8 +3,8 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Wil Odoo, 2025
 # Junko Augias, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-30 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Junko Augias, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,14 +84,14 @@ msgstr "%(employee_name)s -  %(date_from)s から %(date_to)s まで- %(state)s"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(holiday_name)s has been refused."
-msgstr "%(holiday_name)sは否認されました。 "
+msgstr "%(holiday_name)sは却下されました。 "
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s."
-msgstr "%(leave_name)sは以下の理由で取消されました: <br/> %(reason)s"
+msgstr "%(leave_name)sは以下の理由でキャンセルされました: <br/> %(reason)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -364,7 +364,7 @@ msgstr "<strong>部署と従業員</strong>"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "A cancelled leave cannot be modified."
-msgstr "取消済の休暇は変更できません。"
+msgstr "キャンセル済の休暇は変更できません。"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
@@ -412,7 +412,7 @@ msgstr "本日で不在"
 msgid ""
 "Absent Employee(s), Whose time off requests are either confirmed or "
 "validated on today"
-msgstr "不在の従業員、その休暇申請は本日確認または検証されます"
+msgstr "本日、休暇申請が確定済または最終確定された不在従業員"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -582,7 +582,7 @@ msgstr "理由を記述してください..."
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Add some description for the people that will validate it"
-msgstr "それを検証する人用に説明を追加します"
+msgstr "それを最終確定する担当者向けの説明を追加してください"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value_type
@@ -736,7 +736,7 @@ msgstr "以下での割当"
 msgid ""
 "Allocation request must be confirmed, second approval or validated in order "
 "to refuse it."
-msgstr "休暇申請を拒否するには、確認済、２次承認または検証済である必要があります。"
+msgstr "休暇割当申請を拒否するには、申請が「確定済」、「二次承認」または「最終確定」されている必要があります。 "
 
 #. module: hr_holidays
 #. odoo-python
@@ -1098,12 +1098,12 @@ msgstr "キャンセル"
 #: code:addons/hr_holidays/static/src/views/hooks.js:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Cancel Time Off"
-msgstr "休暇を取消"
+msgstr "休暇をキャンセル"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_cancel_leave
 msgid "Cancel Time Off Wizard"
-msgstr "休暇ウィザード取消"
+msgstr "休暇ウィザードキャンセル"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__cancel
@@ -1117,7 +1117,7 @@ msgstr "休暇ウィザード取消"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Cancelled"
-msgstr "取消済"
+msgstr "キャンセル済"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1276,7 +1276,7 @@ msgstr "確認済および承認済"
 #. module: hr_holidays
 #: model_terms:web_tour.tour,rainbow_man_message:hr_holidays.hr_holidays_tour
 msgid "Congrats, we can see that your request has been validated."
-msgstr "おめでとうございます。あなたの申請は承認されました。"
+msgstr "おめでとうございます。あなたの申請は最終確定されました。"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_partner
@@ -1331,13 +1331,13 @@ msgstr "顧客を作成する"
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
 msgid "Create a new time off allocation"
-msgstr "新しい休暇割当を作成する"
+msgstr "新しい休暇の割当を作成する"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid "Create a new time off allocation request"
-msgstr "新しい休暇割当申請を作成します"
+msgstr "新しい休暇割り当てリクエストを作成します"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__create_uid
@@ -1580,7 +1580,7 @@ msgid ""
 "Due to a change in global time offs, this leave no longer has the required "
 "amount of available allocation and has been set to refused. Please review "
 "this leave."
-msgstr "全体休暇の変更により、この休暇は必要な割当がなくなり否認に設定されました。この休暇を見直して下さい。"
+msgstr "全体休暇の変更により、この休暇は必要な割当がなくなり却下に設定されました。この休暇を見直して下さい。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2024,7 +2024,7 @@ msgstr "例外活動を示すアイコン"
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
 msgid "Idle"
-msgstr "アイドル"
+msgstr "オフライン状態"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
@@ -2225,7 +2225,7 @@ msgstr "休暇アプリケーションを試してみましょう。"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Let's go validate it"
-msgstr "検証しましょう"
+msgstr "最終確定しましょう"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2756,7 +2756,7 @@ msgstr "休暇管理者または管理者のみが、自身の申請を承認/�
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a manager can modify a canceled leave."
-msgstr "取消済休暇を変更できるのはマネジャーのみです。"
+msgstr "キャンセル済休暇を変更できるのはマネジャーのみです。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2902,7 +2902,7 @@ msgstr "理由"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Refuse"
-msgstr "否認"
+msgstr "却下"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2921,13 +2921,13 @@ msgstr "否認"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Refused"
-msgstr "否認"
+msgstr "却下"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Refused Time Off"
-msgstr "否認された休暇"
+msgstr "却下された休暇"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
@@ -2984,7 +2984,7 @@ msgstr "申請タイプ"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__duration_display
 msgid "Requested (Days/Hours)"
-msgstr "申請（日数/時間数）"
+msgstr "リクエスト(日数/時間数)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__requires_allocation
@@ -3190,7 +3190,7 @@ msgstr "移行モードを表示"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Show all records which has next action date is before today"
-msgstr "次のアクションの日付が今日より前のすべてのレコードを表示"
+msgstr "次のアクションの日付が今日より前のすべてのレコードを表示する"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_sl
@@ -3211,7 +3211,7 @@ msgstr "一部の休暇は、どの割当にもリンクできません。それ
 msgid ""
 "Some of the accrual plans you're trying to delete are linked to an existing "
 "allocation. Delete or cancel them first."
-msgstr "削除しようとしている休暇累積プランの中には、既存の割当にリンクされているものがあります。まず、それらを削除または取消して下さい。"
+msgstr "削除しようとしている休暇累積プランの中には、既存の割当にリンクされているものがあります。まず、それらを削除またはキャンセルして下さい。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
@@ -3484,7 +3484,7 @@ msgid ""
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
-"休暇申請が作成されると、ステータスは'未申請'に設定されます。ユーザが休暇申請を確定すると、ステータスは'承認待ち'になります。マネージャーが休暇申請を否認した場合、ステータスは'否認'です。休暇申請がマネージャーによって承認されると、ステータスは'承認済'になります。"
+"休暇申請が作成されると、ステータスは'送信予定'に設定されます。ユーザが休暇申請を確認すると、ステータスは'承認中'になります。マネージャーが休暇申請を否認した場合、ステータスは'否認'です。休暇申請がマネージャーによって承認されると、ステータスは'承認済み'になります。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3496,7 +3496,7 @@ msgstr "休暇は自動的に承認されました"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "The time off has been cancelled: %s"
-msgstr "休暇が取消されました: %s"
+msgstr "休暇がキャンセルされました: %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -3526,33 +3526,33 @@ msgid ""
 "to the days allocated to the employee. If you need to change the "
 "configuration of the allocation, delete and create a new one."
 msgstr ""
-"この割当は一度実行されているため、どのような変更を加えても、その従業員に割当てられた日数には反映されません。割当の設定を変更する必要がある場合は、取消して新しい割当を作成して下さい。"
+"この割当は一度実行されているため、どのような変更を加えても、その従業員に割当てられた日数には反映されません。割当の設定を変更する必要がある場合は、キャンセルして新しい割当を作成して下さい。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
 msgid ""
 "This area is automatically filled by the user who validate the time off"
-msgstr "この領域は、休暇を検証するユーザーによって自動的に入力されます"
+msgstr "この欄は、休暇を最終確定したユーザによって自動的に入力されます。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
 msgid ""
 "This area is automatically filled by the user who validate the time off with"
 " second level (If time off type need second validation)"
-msgstr "この領域は、休暇を2番目のレベルで検証するユーザーによって自動的に入力されます(休暇タイプに2番目の検証が必要な場合)"
+msgstr "この欄は、(休暇タイプに二次承認が必要な場合)二次レベルで休暇を最終確定したユーザーによって自動的に入力されます。 "
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__approver_id
 msgid ""
 "This area is automatically filled by the user who validates the allocation"
-msgstr "この領域は、割り当てを検証するユーザーによって自動的に入力されます"
+msgstr "この欄は、休暇割当を最終確定したユーザーによって自動的に入力されます"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
 msgid ""
 "This area is automatically filled by the user who validates the allocation "
 "with second level (If time off type need second validation)"
-msgstr "このエリアは、2次レベルで休暇割当を検証するユーザによって自動的に入力されます(休暇タイプが2次承認を必要とする場合)。"
+msgstr "この欄は、（休暇タイプに二次承認が必要な場合）二次レベルで休暇割当をを最終確定したユーザーによって自動的に入力されます。 "
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
@@ -3579,7 +3579,7 @@ msgstr "現在の状態では、この変更は許可されていません。"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "This time off cannot be cancelled."
-msgstr "この休暇は取消できません。"
+msgstr "この休暇はキャンセルできません。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -3683,7 +3683,7 @@ msgid ""
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
 "休暇担当者は、従業員に休暇日を割り当てます(例:有給休暇)。<br>\n"
-"従業員は、休暇担当者へ割り当てを要求します(例:休暇日)。"
+"従業員は、休暇担当者へ割り当てを要求します(例:回復日)。"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3794,7 +3794,7 @@ msgstr "休暇."
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.hr_leave_cron_cancel_invalid_ir_actions_server
 msgid "Time Off: Cancel invalid leaves"
-msgstr "休暇: 無効な休暇を取消"
+msgstr "休暇: 無効な休暇をキャンセル"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -3833,19 +3833,19 @@ msgstr "あなたがマネージャーである人々の休暇"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "Time off request must be confirmed (\"To Approve\") in order to approve it."
-msgstr "休暇申請を承認するには、休暇申請を確認する必要があります('承認待ち')。"
+msgstr "休暇申請を承認するには、休暇申請を確認する必要があります('承認するには')。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Time off request must be confirmed in order to approve it."
-msgstr "休暇申請を承認するには、休暇申請が確認する必要があります。"
+msgstr "休暇申請を承認するには、休暇申請を確認する必要があります。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Time off request must be confirmed or validated in order to refuse it."
-msgstr "休暇申請を否認するには、休暇申請を確認または検証する必要があります。"
+msgstr "休暇申請を却下するには、申請が「確定」または「最終確定」されている必要があります。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3932,7 +3932,7 @@ msgid ""
 "to create allocation/time off request. Total based on all the time off types"
 " without overriding limit."
 msgstr ""
-"この従業員に割当てられている有給休暇の合計数。この値を変更すると、割当/休暇申請が作成されます。合計は、制限を超えることなく、全ての休暇タイプに基づいています。"
+"この従業員に割り当てられた有給休暇の総数。この値を変更して、割り当て/休暇リクエストを作成します。制限を上書きせずに、すべてのタイムオフタイプに基づく合計。"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_training
@@ -4033,7 +4033,7 @@ msgstr "ユーザ"
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
 msgid "User is idle"
-msgstr "ユーザーはアイドル状態です"
+msgstr "ユーザはオフライン状態です"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4061,13 +4061,13 @@ msgstr "ユーザーが不在です"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Validate"
-msgstr "検証"
+msgstr "最終確定"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 msgid "Validated"
-msgstr "検証済"
+msgstr "最終確定済"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__validation_type
@@ -4185,12 +4185,12 @@ msgstr "このフィールドを選択すると、年間累計休暇数合計が
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
 msgid "Worked Time"
-msgstr "就業時間"
+msgstr "勤務時間"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_mandatory_day__resource_calendar_id
 msgid "Working Hours"
-msgstr "労働時間"
+msgstr "勤務時間"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__yearly
@@ -4336,7 +4336,7 @@ msgstr "従業員が既に取得した休暇の期間より短くすることは
 msgid ""
 "You cannot refuse this allocation request since the employee has already "
 "taken leaves for it. Please refuse or delete those leaves first."
-msgstr "従業員がすでに休暇を取得しているため、この割当申請を否認することはできません。まず、これらの休暇を否認または削除して下さい。"
+msgstr "従業員がすでに休暇を取得しているため、この割当申請を却下することはできません。まず、これらの休暇を却下または削除して下さい。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4410,7 +4410,7 @@ msgstr "%(date)sに計画された%(leave_type)sが受け入れられました"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Your %(leave_type)s planned on %(date)s has been refused"
-msgstr "%(date)s に計画されている %(leave_type)s は否認されました"
+msgstr "%(date)s に予定した %(leave_type)s は却下されました"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4422,7 +4422,7 @@ msgstr "あなたの休暇"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 msgid "Your time off has been cancelled."
-msgstr "あなたの休暇が取消されました。"
+msgstr "あなたの休暇がキャンセルされました。"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4554,7 +4554,7 @@ msgstr "ID"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "in"
-msgstr ":"
+msgstr "に"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form

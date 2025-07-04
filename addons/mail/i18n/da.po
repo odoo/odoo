@@ -6,6 +6,7 @@
 # Mads Søndergaard, 2025
 # Larissa Manderfeld, 2025
 # Mikkel_Justesen, 2025
+# Sanne Kristensen <sanne@vkdata.dk>, 2025
 # Wil Odoo, 2025
 # Kira Petersen, 2025
 # 
@@ -885,7 +886,7 @@ msgstr "Aktivitets indstillinger"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_state
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_state
 msgid "Activity State"
-msgstr "Aktivitetstilstand"
+msgstr "Aktivitetsstatus"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_type
@@ -933,7 +934,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr "Assistent til aktivitetsplanlægning"
+msgstr "Guide til aktivitetsplanlægning"
 
 #. module: mail
 #. odoo-javascript
@@ -1441,7 +1442,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_chatgpt.xml:0
 msgid "Ask AI"
-msgstr ""
+msgstr "Spørg KI"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
@@ -1645,22 +1646,22 @@ msgstr "Avatar"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_1024
 msgid "Avatar 1024"
-msgstr "Profilikon 1024"
+msgstr "Avatar 1024"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_128
 msgid "Avatar 128"
-msgstr "Profilikon 128"
+msgstr "Avatar 128"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_256
 msgid "Avatar 256"
-msgstr "Profilikon 256"
+msgstr "Avatar 256"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_512
 msgid "Avatar 512"
-msgstr "Profilikon 512"
+msgstr "Avatar 512"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__avatar_cache_key
@@ -2459,7 +2460,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurer opsætning"
+msgstr "Konfigurér indstillinger"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__configuration
@@ -4318,7 +4319,7 @@ msgstr "Following"
 #: model:ir.model.fields,help:mail.field_res_partner__activity_type_icon
 #: model:ir.model.fields,help:mail.field_res_users__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Skrifttype awesome icon f.eks. fa-opgaver"
+msgstr "Font Awesome-ikon, f.eks. fa-opgaver"
 
 #. module: mail
 #. odoo-python
@@ -5624,7 +5625,7 @@ msgstr "Seneste meningsmåling"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_presence__last_presence
 msgid "Last Presence"
-msgstr "Sidste tilstedeværelse"
+msgstr "Sidste fremmøde"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__seen_message_id
@@ -5741,7 +5742,7 @@ msgstr "Overskredet"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Late Activities"
-msgstr "Overskredet aktiviteter"
+msgstr "Forfaldne aktiviteter"
 
 #. module: mail
 #. odoo-python
@@ -5971,7 +5972,7 @@ msgstr "Mail kanal formular"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_composer_mixin
 msgid "Mail Composer Mixin"
-msgstr ""
+msgstr "Mixin til mail-editor"
 
 #. module: mail
 #. odoo-javascript
@@ -6150,7 +6151,7 @@ msgstr "Marc Demo"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/notification_item.xml:0
 msgid "Mark As Read"
-msgstr ""
+msgstr "Markér som læst"
 
 #. module: mail
 #. odoo-javascript
@@ -6188,7 +6189,7 @@ msgstr "Mærk som To do"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/message_actions.js:0
 msgid "Mark as Unread"
-msgstr ""
+msgstr "Markér som ulæst"
 
 #. module: mail
 #. odoo-javascript
@@ -6321,7 +6322,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Message Link Copy Failed (Permission denied?)!"
-msgstr ""
+msgstr "Meddelelsen kunne ikke kopieres (manglende adgang?)!"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
@@ -6567,8 +6568,8 @@ msgid ""
 "Modifying the model can have an impact on existing activities using this "
 "activity type, be careful."
 msgstr ""
-"Modificering af modellen kan have en indvirkning på eksisterende aktiviteter"
-" der bruger denne aktivitets type; vær forsigtig."
+"Ændringer i modellen kan påvirke eksisterende aktiviteter, der bruger denne "
+"aktivitetstype. Vær derfor forsigtig."
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
@@ -7682,9 +7683,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Overordnet model der holder aliaset. Modellen med aliasreferencen er ikke "
-"nødvendigvis den model, der er givet af alias_model_id (eksempel: projekt "
-"(parent_model) og opgave (model))."
+"Den overordnede model for aliasset. Denne model, som indeholder "
+"aliasreferencen, er ikke nødvendigvis den samme som den model, der er "
+"angivet i alias_model_id (f.eks. projekt (parent_model) og opgave (model))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -8062,7 +8063,7 @@ msgstr "Foretrukket respons adresse"
 #: model:ir.model.fields,field_description:mail.field_mail_guest__presence_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__presence_ids
 msgid "Presence"
-msgstr "Tilstedeværelse"
+msgstr "Fremmøde"
 
 #. module: mail
 #. odoo-javascript
@@ -9322,7 +9323,7 @@ msgstr "Sæt aktiv til falsk for at skjule kanalen uden at fjerne den."
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Settings"
-msgstr "Opsætning"
+msgstr "Indstillinger"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__sfu_channel_uuid
@@ -10073,7 +10074,7 @@ msgid ""
 msgstr ""
 "Modellen (Odoo Document Kind), som dette alias svarer til. Enhver indgående "
 "e-mail, der ikke svarer til en eksisterende post, vil medføre oprettelse af "
-"en ny rekord af denne model (fx en projektopgave)"
+"en ny rekord af denne model (f.eks. en projektopgave)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
@@ -11548,7 +11549,7 @@ msgstr "Du kan kun chatte med eksisterende brugere."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "You can only chat with partners that have a dedicated user."
-msgstr "Du kan kun chatte med partnere der har en dedikeret bruger."
+msgstr "Du kan kun chatte med partnere, der har en tilknyttet bruger."
 
 #. module: mail
 #. odoo-python

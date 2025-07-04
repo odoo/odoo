@@ -3,8 +3,8 @@
 # 	* mail
 # 
 # Translators:
-# Wil Odoo, 2025
 # Junko Augias, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-23 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Junko Augias, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -202,7 +202,7 @@ msgid ""
 "%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)s%(close_samp)s %(open_em)sをエスケープして "
-"%(open_cancel)s%(close_cancel)s%(close_em)sを取消、%(open_samp)sCTRL-"
+"%(open_cancel)s%(close_cancel)s%(close_em)sをキャンセル、%(open_samp)sCTRL-"
 "Enter%(close_samp)s %(open_em)sして、 "
 "%(open_save)s%(close_save)s%(close_em)sを保存"
 
@@ -467,7 +467,7 @@ msgstr "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
 msgid "<i class=\"fa fa-times\"/> Cancel"
-msgstr "<i class=\"fa fa-times\"/> 取消"
+msgstr "<i class=\"fa fa-times\"/> キャンセル"
 
 #. module: mail
 #. odoo-javascript
@@ -1169,7 +1169,7 @@ msgstr "詳細オプション"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__after_plan_date
 msgid "After Plan Date"
-msgstr "計画日後"
+msgstr "予定日後"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_exception_decoration__warning
@@ -1457,7 +1457,7 @@ msgstr "アーカイブされました。%(user_name)s (#%(user_id)s) がポー�
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/scheduled_message.js:0
 msgid "Are you sure you want to cancel the scheduled message?"
-msgstr "スケジュールしたメッセージを本当に取消しますか?"
+msgstr "スケジュールしたメッセージを本当にキャンセルしますか?"
 
 #. module: mail
 #. odoo-javascript
@@ -1774,7 +1774,7 @@ msgstr "Bcc"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__before_plan_date
 msgid "Before Plan Date"
-msgstr "計画日前"
+msgstr "予定日前"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
@@ -1966,7 +1966,7 @@ msgstr "カメラは通話タブ以外では使用できません。"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_cancel
 msgid "Can Cancel"
-msgstr "取消可能"
+msgstr "キャンセル可能"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
@@ -2017,13 +2017,13 @@ msgstr "キャンセル"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Cancel Email"
-msgstr "Eメール取消"
+msgstr "Eメールキャンセル"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/scheduled_message.js:0
 msgid "Cancel Message"
-msgstr "メッセージを取消"
+msgstr "メッセージをキャンセル"
 
 #. module: mail
 #. odoo-javascript
@@ -2031,7 +2031,7 @@ msgstr "メッセージを取消"
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__cancel
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__canceled
 msgid "Cancelled"
-msgstr "取消済"
+msgstr "キャンセル済"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_canned_response
@@ -2323,7 +2323,7 @@ msgstr "オンデマンド割当で活動の割当を選択します。"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "City, Region, Country"
-msgstr "都市、地方、国"
+msgstr "市町村、都道府県(地域)、国"
 
 #. module: mail
 #. odoo-javascript
@@ -3535,13 +3535,13 @@ msgstr "期日"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range
 msgid "Due Date In"
-msgstr "期日"
+msgstr "期日までの残り日数:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "Due in"
-msgstr "期限"
+msgstr "期日まであと"
 
 #. module: mail
 #. odoo-javascript
@@ -3553,7 +3553,7 @@ msgstr "期日まであと%s日"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "Due on"
-msgstr "期限"
+msgstr "期日"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
@@ -4740,7 +4740,7 @@ msgstr "ホスト名あるいはEメールサーバのIP"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid "Hover on your message and mark as todo"
-msgstr "メッセージにカーソルを合わせ、ToDoとしてマークします。"
+msgstr "メッセージにカーソルを合わせ、ToDoとします。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__voice_active_duration
@@ -5317,28 +5317,28 @@ msgid ""
 "Invalid template or view source %(svalue)s (type %(stype)s), should be a "
 "record or an XMLID"
 msgstr ""
-"無効なテンプレートまたはビューソース %(svalue)s (タイプ %(stype)s)、はレコードであるかXMLIDである必要があります。"
+"テンプレートまたはビューのソース %(svalue)s (タイプ %(stype)s)が無効です。レコードまたはXML IDである必要があります。"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
 "Invalid template or view source Xml ID %(source_ref)s does not exist anymore"
-msgstr "無効なテンプレートまたはビューソース Xml ID %(source_ref)sはもう存在しません。 "
+msgstr "無効なテンプレートまたはビューのソース Xml ID %(source_ref)sはもう存在しません。 "
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
 "Invalid template or view source record %(svalue)s, is %(model)s instead"
-msgstr "無効なテンプレートまたはビューソース  %(svalue)s は %(model)s 代わりに"
+msgstr "無効なテンプレートまたはビューのソース  %(svalue)s は %(model)s 代わりに"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
 "Invalid template or view source reference %(svalue)s, is %(model)s instead"
-msgstr "無効なテンプレートまたはビューソース %(svalue)s、は%(model)s 代わりに"
+msgstr "無効なテンプレートまたはビューのソース %(svalue)s、は%(model)s 代わりに"
 
 #. module: mail
 #. odoo-python
@@ -8381,7 +8381,7 @@ msgstr "参照"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
 msgid "Refuse"
-msgstr "不採用"
+msgstr "拒否"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -8855,7 +8855,7 @@ msgstr "選択済レコード上で活動をスケジュール"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_cron
 msgid "Scheduled Actions"
-msgstr "スケジュール済アクション"
+msgstr "スケジュールされたアクション"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__scheduled_date
@@ -9408,7 +9408,7 @@ msgstr "全ての受信者を表示"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Show all records which has next action date is before today"
-msgstr "次のアクションの日付が今日より前のすべてのレコードを表示"
+msgstr "次のアクションの日付が今日より前のすべてのレコードを表示する"
 
 #. module: mail
 #. odoo-javascript
@@ -9468,12 +9468,12 @@ msgstr "だから......お気に入りのGIFを探しに行くなどでしょう
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
 msgid "Source"
-msgstr "情報源"
+msgstr "発生元"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__source_lang
 msgid "Source Language"
-msgstr "ソース言語"
+msgstr "元の言語"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__followers_type__specific
@@ -10029,7 +10029,7 @@ msgid ""
 "The following email templates could not be reset because their related source files could not be found:\n"
 "- %s"
 msgstr ""
-"次のEメールテンプレートは、関連するソースファイルが見つからないため、再設定できませんでした:\n"
+"次のEメールテンプレートは、関連する発生元ファイルが見つからないため、再設定できませんでした:\n"
 "- %s"
 
 #. module: mail
@@ -10137,7 +10137,7 @@ msgid ""
 msgstr ""
 "セキュリティ上の制限により、要求された操作を完了できません。システム管理者に連絡して下さい。\n"
 "\n"
-"(ドキュメントタイプ: %(type)s, オペレーション: %(operation)s)\n"
+"(ドキュメントタイプ: %(type)s, 処理: %(operation)s)\n"
 "\n"
 "レコード: %(records)s, ユーザ: %(user)s"
 
@@ -11426,19 +11426,19 @@ msgstr "/field と入力して動的コンテンツを挿入"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
 msgid "Write Feedback"
-msgstr "フィードバックを書く"
+msgstr "フィードバックを記入"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
 msgid "Write your message here..."
-msgstr "ここにメッセージを書いてください..."
+msgstr "ここにメッセージを記入してください..."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_message.py:0
 msgid "Wrong operation name (%s)"
-msgstr "誤ったオペレーション名 (%s)"
+msgstr "誤った処理名 (%s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form

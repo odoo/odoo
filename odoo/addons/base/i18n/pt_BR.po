@@ -3,9 +3,9 @@
 # 	* base
 # 
 # Translators:
-# Wil Odoo, 2025
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2025
 # Maitê Dietze, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-14 06:42+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Maitê Dietze, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -547,7 +547,7 @@ msgstr ""
 "\n"
 "\n"
 "Este módulo adiciona vários recursos ao ponto de venda que são específicos para o gerenciamento de restaurantes:\n"
-"- Impressão de contas: permite imprimir um recibo antes do pagamento do pedido\n"
+"- Impressão de faturas: permite imprimir um recibo antes do pagamento do pedido\n"
 "- Divisão de contas: permite que você divida um pedido em diferentes pedidos\n"
 "- Impressão de pedidos de cozinha: permite que você imprima atualizações de pedidos em impressoras de cozinha ou bar\n"
 "\n"
@@ -968,16 +968,16 @@ msgstr ""
 "\n"
 "Em **Configurações avançadas**, certifique-se de que a Transferência de crédito ABA esteja marcada.\n"
 "\n"
-"Na aba **Conta do banco**, insira o **Número da conta**.\n"
+"Na guia **Conta do banco**, insira o **Número da conta**.\n"
 "\n"
-"Na mesma aba, verifique se as informações de transferência ABA estão configuradas.\n"
+"Na mesma guia, verifique se as informações de transferência ABA estão configuradas.\n"
 "\n"
 "**BSB** - Obrigatório, com 6 dígitos, e será formatado automaticamente.\n"
 "\n"
 "**Código da instituição financeira** - Obrigatório (fornecido pelo banco ou pode ser encontrado\n"
 "no Google). São três caracteres maiúsculos.\n"
 "\n"
-"**Nome do usuário fornecedor** - Alguns bancos permitem usar formatos livres, alguns bancos\n"
+"**Nome do usuário fornecedor** - Alguns bancos permitem que isso seja livre, alguns bancos\n"
 "podem rejeitar o arquivo ABA se o nome do usuário fornecedor não for o esperado. Ele não pode ter mais de 26 caracteres.\n"
 "\n"
 "**Número de identificação da ABA** - O número de identificação do usuário é alocado pelo banco. Ele tem 6 dígitos.\n"
@@ -985,25 +985,25 @@ msgstr ""
 "**Incluir transação de autoequilíbrio** - Algumas instituições exigem que a\n"
 "última seja uma transação de autoequilíbrio, que é usada como verificação.\n"
 "\n"
-"- *Financeiro > Configuração > Pagamentos > Contas bancárias*\n"
+"- *Accounting > Configuration > Payments > Bank Accounts*\n"
 "\n"
 "A conta aparecerá na lista como o nome do diário.\n"
 "\n"
 "A edição mostrará o **Número da conta**. Isso é importante, pois é usado pelo processo ABA.\n"
 "\n"
-"**Banco** é opcional.\n"
+"**Bank** é opcional.\n"
 "\n"
-"- *Contatos > Configuração > Contas bancárias > Contas bancárias*\n"
+"- *Contacts > Configuration > Bank Accounts > Bank Accounts*\n"
 "\n"
 "A conta de pagamento aparecerá na lista como o número da conta.\n"
 "\n"
-"**Nome do titular da conta** - Pode ser inserido aqui, se necessário. Geralmente não é validado pelos bancos nas transferências de arquivos ABA, mas pode aparecer no extrato bancário do beneficiário em relação ao pagamento.\n"
+"**Account Holder Name** - Pode ser inserido aqui, se necessário. Geralmente não é validado pelos bancos nas transferências de arquivos ABA, mas pode aparecer no extrato bancário do beneficiário em relação ao pagamento.\n"
 "\n"
 "- As contas bancárias do fornecedor podem ser configuradas no mesmo local; no entanto, geralmente é mais fácil configurá-las no parceiro do fornecedor.\n"
 "\n"
-"- *Financeiro > Fornecedores > Fornecedores*\n"
+"- *Accounting > Vendors > Vendors*\n"
 "\n"
-"Na aba **Contabilidade**, clique em *\"Ver detalhes das contas\"*, onde é possível criar ou editar uma conta bancária de fornecedor.\n"
+"Na guia **Accounting**, clique em *\"View accounts detail \"* (Exibir detalhes das contas)*, onde é possível criar ou editar uma conta bancária de fornecedor.\n"
 "\n"
 "**Account Number** - Obrigatório, deve ter menos de 9 dígitos.\n"
 "\n"
@@ -1022,20 +1022,20 @@ msgstr ""
 "\n"
 "Selecione o botão de opção **Transferência de crédito ABA**.\n"
 "\n"
-"Se o fornecedor tiver várias contas bancárias, talvez seja necessário selecionar a **Conta bancária do destinatário** correta. Ou, se estiver pagando uma conta de fornecedor, pode ser necessário associar a conta bancária correta a ela.\n"
+"Se o fornecedor tiver várias contas bancárias, talvez seja necessário selecionar a **Conta bancária do destinatário** correta. Ou, se estiver pagando uma fatura de fornecedor, pode ser necessário associar a conta bancária correta a ela.\n"
 "\n"
 "Insira o valor do pagamento, etc.\n"
 "\n"
-"- *Fornecedores > Pagamentos*\n"
+"- *Vendors > Payments*\n"
 "\n"
 "Depois que os pagamentos forem confirmados, eles serão exibidos na lista de pagamentos.\n"
 "\n"
-"Usando os filtros ou a ordenação, selecione os pagamentos a serem incluídos. Em \n"
-"*Ações*, selecione *Criar pagamento em lote*.\n"
+"Usando filtros ou ordenação, selecione os pagamentos a serem incluídos. Em \n"
+"*Actions*, selecione *Create batch payment*.\n"
 "\n"
-"- *Fornecedores > Pagamentos em lote*\n"
+"- *Vendors > Batch Payments*\n"
 "\n"
-"Ao validar um pagamento em lote, será gerado o arquivo ABA. É possível gerá-lo novamente. Esse arquivo pode então ser carregado no banco.\n"
+"Ao validar um pagamento em lote, o arquivo ABA será gerado. Ele pode ser gerado novamente. Esse arquivo pode então ser carregado no banco.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_reports_ats
@@ -2591,7 +2591,7 @@ msgstr ""
 "\n"
 "Permite o cálculo de algumas seções para a lucratividade do projeto\n"
 "==================================================================================================\n"
-"Este módulo permite o cálculo das seções 'Contas de fornecedor', 'Outros custos' e 'Outras receitas' para a lucratividade do projeto, na visualização de atualização do projeto.\n"
+"Este módulo permite o cálculo das seções 'Faturas de fornecedor', 'Outros custos' e 'Outras receitas' para a lucratividade do projeto, na visualização de atualização do projeto.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase
@@ -5498,11 +5498,11 @@ msgstr ""
 "\n"
 "Observação: A partir da visualização do formulário do diário, podemos forçar uma sincronização entre as sequências do Odoo para cada um dos tipos de documentos com os últimos números registrados na AFIP.\n"
 "\n"
-"A partir das contas de fornecedores, adicionamos uma funcionalidade que pode ser configurada nas definições do Financeiro para poder verificar as contas de fornecedores na AFIP para verificar se ão reais (mais informações, consulte a descrição da configuração).\n"
+"A partir das faturas de fornecedores, adicionamos uma funcionalidade que pode ser configurada nas configurações de contabilidade para poder verificar as faturas de fornecedores na AFIP para verificar se as faturas de fornecedores são reais (mais informações, consulte a descrição da configuração).\n"
 "\n"
 "Configuração:\n"
 "\n"
-"1. Vá para a seção Definições do Financeiro > Localização argentina\n"
+"1. Vá para a seção Configurações de contabilidade > Localização argentina\n"
 "\n"
 "1.1. Configure o modo AFIP Web Services:\n"
 "\n"
@@ -6022,9 +6022,9 @@ msgid ""
 "So this module is to get the warehouse address if the bill is created from Purchase Order\n"
 msgstr ""
 "\n"
-"Obtenha o endereço do armazém se a conta for criada a partir do pedido de compra\n"
+"Obtenha o endereço do armazém se a fatura for criada a partir do pedido de compra\n"
 "\n"
-"Este módulo visa obter o endereço do armazém se a conta for criada a partir do pedido de compra\n"
+"Este módulo visa obter o endereço do armazém se a fatura for criada a partir do pedido de compra\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_sale_stock
@@ -6895,17 +6895,17 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Gerencie a correspondência de 3 vias nas contas de fornecedores\n"
+"Gerencie a correspondência de 3 vias nas faturas de fornecedores\n"
 "=====================================\n"
 "\n"
-"No setor de fabricação, as pessoas muitas vezes recebem as contas de fornecedores antes de receberem a compra, mas não querem pagar a conta até que as mercadorias tenham sido entregues. A solução para essa situação é criar a conta de fornecedor quando você a recebe (com base nas quantidades pedidas), mas só pagar a conta quando as quantidades recebidas (nas linhas de pedido) corresponderem à conta de fornecedor registrada.\n"
+"Na indústria de fabricação, as pessoas muitas vezes recebem as faturas de fornecedores antes de receberem a compra, mas não querem pagar a fatura até que as mercadorias tenham sido entregues. A solução para essa situação é criar a fatura de fornecedor quando você a recebe (com base nas quantidades pedidas), mas só pagar a fatura quando as quantidades recebidas (nas linhas de pedido) corresponderem à fatura de fornecedor registrada.\n"
 "\n"
-"Este módulo introduz um mecanismo de \"liberação para pagamento\" que marca, para cada conta de fornecedor, se ela pode ser paga ou não.\n"
+"Este módulo introduz um mecanismo de \"liberação para pagamento\" que marca, para cada fatura de fornecedor, se ela pode ser paga ou não.\n"
 "\n"
-"Cada conta de fornecedor recebe um dos três status a seguir:\n"
+"Cada fatura de fornecedor recebe um dos três status a seguir:\n"
 "\n"
-"- Sim (a conta pode ser paga)\n"
-"- Não (a conta não pode ser paga, nada foi entregue ainda)\n"
+"- Sim (a fatura pode ser paga)\n"
+"- Não (a fatura não pode ser paga, nada foi entregue ainda)\n"
 "- Exceção (as quantidades recebidas e faturadas diferem)\n"
 
 #. module: base
@@ -7221,12 +7221,19 @@ msgid ""
 "procure.\n"
 msgstr ""
 "\n"
-"Plano Mestre de Produção\n"
+"Cronograma de Produção Principal\n"
 "==========================\n"
 "\n"
-"Às vezes, você precisa criar os pedidos de compra para componentes de ordens de produção que só serão criadas mais tarde, ou para ordens de produção em que você só terá as ordens de venda mais tarde. A solução é prever suas previsões de venda e, com base nisso, você já criará algumas ordens de produção ou pedidos de compra.\n"
+"Às vezes você precisa criar as ordens de compra para os componentes de\n"
+"ordens de produção que só serão criadas mais tarde.  Ou para ordens de produção\n"
+"onde você só terá as ordens de vendas mais tarde.  A solução é antecipar\n"
+"suas previsões de venda e com base em que você já vai criar alguma produção\n"
+"ordens ou ordens de compra.\n"
 "\n"
-"Você deve escolher os produtos que deseja adicionar ao relatório. Você pode escolher o período para o relatório: dia, semana, mês... Também é possível definir o estoque de segurança, o mínimo/máximo a ser fornecido e substituir manualmente a quantidade que será adquirida.\n"
+"Você precisa escolher os produtos que deseja adicionar ao relatório.  Você pode escolher\n"
+"o período para o relatório: dia, semana, mês, ...  Também é possível definir\n"
+"estoque de segurança, min/max para fornecer e para substituir manualmente a quantidade que você vai\n"
+"Obter.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_hr_payroll
@@ -11785,7 +11792,7 @@ msgstr ""
 "======================\n"
 "\n"
 "* Documentos de contingência não implementados\n"
-"* A implementação futura terá sincronização automática das contas do fornecedor.\n"
+"* A implementação futura terá sincronização automática das faturas do fornecedor.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_pos_urban_piper
@@ -13150,7 +13157,7 @@ msgstr "- %(description)s (%(model)s)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- domain ="
-msgstr "- domain ="
+msgstr "- domínio ="
 
 #. module: base
 #. odoo-python
@@ -13161,7 +13168,7 @@ msgstr "- O elemento \"%(node)s\" é exibido na visualização de grupos: %(grou
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- field ="
-msgstr "- field ="
+msgstr "- campo ="
 
 #. module: base
 #. odoo-python
@@ -13178,7 +13185,7 @@ msgstr "- O campo \"%(name)s\" está acessível para grupos: %(field_groups)s"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- groups ="
-msgstr "- groups ="
+msgstr "- grupos ="
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -13188,17 +13195,17 @@ msgstr "- ondelete ="
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- relation ="
-msgstr "- relation ="
+msgstr "- relação ="
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- selection = ["
-msgstr "- selection = ["
+msgstr "- seleção = ["
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- size ="
-msgstr "- size ="
+msgstr "- tamanho ="
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__days_1
@@ -14436,7 +14443,7 @@ msgstr "Acesse o perfil de site dos usuários"
 #. module: base
 #: model:res.groups,name:base.group_allow_export
 msgid "Access to export feature"
-msgstr "Acesso ao recurso de exportar"
+msgstr "Acesso para exportar recurso"
 
 #. module: base
 #. odoo-python
@@ -18285,7 +18292,7 @@ msgid ""
 "Automatically finds the purchase order linked to a vendor bill when using "
 "invoice extraction"
 msgstr ""
-"Encontra automaticamente o pedido de compra vinculado a uma conta de "
+"Encontra automaticamente o pedido de compra vinculado a uma fatura do "
 "fornecedor ao usar a extração de fatura"
 
 #. module: base
@@ -18731,7 +18738,7 @@ msgstr "Objeto de base"
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Base Properties"
-msgstr "Propriedades de base"
+msgstr "Propriedades Base"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_base
@@ -18871,7 +18878,7 @@ msgstr "Bélgica - Relatórios financeiros"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports_post_wizard
 msgid "Belgium - Accounting Reports (post wizard)"
-msgstr "Bélgica - Relatórios financeiros (post wizard)"
+msgstr "Bélgica - Relatórios de Contabilidade (post wizard)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports_prorata
@@ -19004,7 +19011,7 @@ msgstr "Aluguel de bicicletas"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_ups
 msgid "Bill to your UPS account number"
-msgstr "Cobrar no seu número de conta UPS"
+msgstr "Faturar no seu número de conta UPS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_billboard_rental
@@ -19538,7 +19545,7 @@ msgstr "Burundi"
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Button must have a name"
-msgstr "O botão deve ter um nome"
+msgstr "O Botão deve ter um nome"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.GMD
@@ -20114,10 +20121,10 @@ msgid ""
 "a new contact should be created under that new company. You can use the "
 "\"Discard\" button to abandon this change."
 msgstr ""
-"A alteração da empresa de um contato só deve ser feita se ela nunca tiver "
-"sido definida corretamente. Se um contato existente começar a trabalhar para"
-" uma nova empresa, um novo contato deverá ser criado sob essa nova empresa. "
-"Você pode usar o botão \"Descartar\" para abandonar essa alteração."
+"A empresa de um contato só deve ser alterada caso a configuração não tenha "
+"sido feita corretamente. Se um contato existente começa a trabalhar em uma "
+"nova empresa, em seguida, um novo contato deve ser criado sob essa nova "
+"empresa. Você pode usar o botão \"Descartar\" para excluir essa alteração."
 
 #. module: base
 #. odoo-python
@@ -21087,7 +21094,7 @@ msgstr "Contato/endereço"
 #. module: base
 #: model:res.groups,name:base.group_partner_manager
 msgid "Contact Creation"
-msgstr "Criação de contato"
+msgstr "Criação de Contato"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm
@@ -21128,7 +21135,7 @@ msgstr "Contatos"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contacts & Addresses"
-msgstr "Contatos e endereços"
+msgstr "Contatos & Endereços"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_contacts_enterprise
@@ -22729,7 +22736,7 @@ msgid ""
 "Disabling this option will also uninstall the following modules \n"
 "%s"
 msgstr ""
-"A desativação dessa opção também desinstalará os seguintes módulos \n"
+"Desabilitando esta opção também vai desinstalar os seguintes módulos\n"
 "%s"
 
 #. module: base
@@ -23612,7 +23619,7 @@ msgstr "E-mail"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "Email Address"
-msgstr "Endereço de e-mail"
+msgstr "Endereço de Email"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_email_marketing
@@ -24587,7 +24594,7 @@ msgstr "Expositores de eventos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_meet
 msgid "Event Meeting / Rooms"
-msgstr "Reuniões em eventos/salas"
+msgstr "Reuniões de Evento / Salas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_social
@@ -25003,7 +25010,7 @@ msgstr "Extra"
 #. module: base
 #: model:ir.module.category,name:base.module_category_usability
 msgid "Extra Rights"
-msgstr "Direitos adicionais"
+msgstr "Acessos Extra"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra_tools
@@ -25457,7 +25464,7 @@ msgstr "Domínio do filtro"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_filters_name_model_uid_unique
 msgid "Filter names must be unique"
-msgstr "Os nomes de filtros devem ser exclusivos"
+msgstr "Nome do filtro precisa ser único"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -26304,7 +26311,7 @@ msgstr "Obtenha a aparência do Enterprise"
 #: model:ir.module.module,summary:base.module_l10n_in_purchase_stock
 msgid "Get warehouse address if the bill is created from Purchase Order"
 msgstr ""
-"Obtenha o endereço do armazém se a conta for criada a partir do pedido de "
+"Obtenha o endereço do armazém se a fatura for criada a partir do pedido de "
 "compra"
 
 #. module: base
@@ -28081,7 +28088,7 @@ msgstr "Índia - Ponto de venda"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_purchase
 msgid "Indian - Purchase Report(GST)"
-msgstr "Índia - Relatório de compra (GST)"
+msgstr "Indian - Purchase Report(GST)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_sale
@@ -28161,7 +28168,7 @@ msgstr "Individual"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Individuals"
-msgstr "Pessoa física"
+msgstr "Pessoa Física"
 
 #. module: base
 #: model:res.country,name:base.id
@@ -28499,12 +28506,12 @@ msgstr "Grupos internos"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Internal Notes"
-msgstr "Anotações internas"
+msgstr "Anotações Internas"
 
 #. module: base
 #: model:res.groups,name:base.group_user
 msgid "Internal User"
-msgstr "Usuário interno"
+msgstr "Usuário Interno"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
@@ -33680,7 +33687,7 @@ msgstr ""
 "----------------------------- Nenhum produto ou pedido é deixado para trás, "
 "o controle de estoque permite gerenciar pedidos pendentes, reembolsos, "
 "recebimento de produtos e controle de qualidade. Escolha o método de "
-"controle correto de acordo com sua necessidade. Controle contas de "
+"controle correto de acordo com sua necessidade. Controle faturas de "
 "fornecedores sem esforço. Escolha o método certo de acordo com sua "
 "necessidade: gere faturas provisórias com base em pedidos de compra, em "
 "recebimentos de produtos ou crie faturas manualmente e importe linhas a "
@@ -34373,7 +34380,7 @@ msgstr "Vagas de emprego online"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_membership
 msgid "Online Members Directory"
-msgstr "Diretório de membros online"
+msgstr "Online Members Directory"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_project
@@ -36558,7 +36565,7 @@ msgstr "Privacidade"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
 msgid "Private Address Form"
-msgstr "Formulário de endereço pessoal"
+msgstr "Private Address Form"
 
 #. module: base
 #. odoo-python
@@ -37128,7 +37135,7 @@ msgstr "Publique as indicações de seus clientes"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_membership
 msgid "Publish your members directory"
-msgstr "Publique seu diretório de membros"
+msgstr "Publique seus membros/diretório de associação publicamente"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign
@@ -37183,7 +37190,7 @@ msgstr "Matriz de compra"
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_stock
 msgid "Purchase Orders, Receipts, Vendor Bills for Stock"
-msgstr "Pedidos de compra, recibos, contas de fornecedores para estoque"
+msgstr "Pedidos de compra, recibos, faturas de fornecedores para estoque"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_repair
@@ -37877,7 +37884,7 @@ msgstr "Ponte entre Locações/Planejamento"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting_sign
 msgid "Rental/Sign Bridge"
-msgstr "Módulo de ponte entre Locação e Assinatura"
+msgstr "Ponte Aluguel/Assinatura"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing_repair
@@ -41447,7 +41454,7 @@ msgstr "Testes"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_apikeys
 msgid "Tests flow of API keys"
-msgstr "Testes de fluxo de chaves de API"
+msgstr "Testes Fluxo de Chaves API"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_read_group
@@ -42020,7 +42027,7 @@ msgstr "O nome do grupo não pode iniciar com \"-\""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_groups_name_uniq
 msgid "The name of the group must be unique within an application!"
-msgstr "O nome de um grupo deve ser exclusivo em um aplicativo."
+msgstr "O nome do grupo deve ser único como uma aplicação!"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_name_uniq
@@ -42353,8 +42360,8 @@ msgid ""
 "There is already a shared filter set as default for %(model)s, delete or "
 "change it before setting a new default"
 msgstr ""
-"Já existe um filtro compartilhado definido como padrão para %(model)s, "
-"exclua ou altere-o antes de definir um novo padrão"
+"Já existe um filtro padrão compartilhado para %(model)s, remova ou altere-o "
+"antes de atribuir um novo padrão."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_latam_check
@@ -43645,7 +43652,7 @@ msgstr "Envio UPS (legado)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_ups
 msgid "UPS: Bill My Account"
-msgstr "UPS: Debitar minha conta"
+msgstr "UPS: Faturar minha conta"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url
@@ -44676,7 +44683,7 @@ msgstr "Fornecedor"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
 msgid "Vendor Bill: Release to Pay"
-msgstr "Conta de fornecedor: liberação para pagamento"
+msgstr "Fatura de fornecedor: liberação para pagamento"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
@@ -45139,7 +45146,7 @@ msgstr "Site – IM – Chat ao Vivo – Central de Ajuda"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_jitsi
 msgid "Website Jitsi"
-msgstr "Website – Jitsi"
+msgstr "Jitsi no Site"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__website

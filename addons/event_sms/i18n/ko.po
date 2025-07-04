@@ -61,7 +61,7 @@ msgid ""
 "Ready for \"{{ object.event_id.name }}\" {{ object.event_date_range }}?\n"
 "{{ 'It starts at %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', at %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nSee you there!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Join us on %s/event/%i!' % (object.get_base_url(), object.event_id.id) }}"
 msgstr ""
-"\"{{ object.event_id.name }}\" {{ object.event_date_range }}를 위한 준비가 되셨나요?\n"
+"\"{{ object.event_id.name }}\" {{ object.event_date_range }} 준비가 되셨나요?\n"
 "{{ '행사 시작 시간: %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', at %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\n곧 만나뵐게요!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else '저희 웹사이트 %s/event/%i에서 자세한 내용을 확인하실 수 있습니다!' % (object.get_base_url(), object.event_id.id) }}"
 
 #. module: event_sms

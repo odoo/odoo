@@ -8,9 +8,9 @@
 # Radim Bílý, 2025
 # Vojtěch Olšan, 2025
 # Aleš Fiala <f.ales1@seznam.cz>, 2025
-# Wil Odoo, 2025
 # Denis Gobin, 2025
 # Marta Wacławek, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-16 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Marta Wacławek, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -375,7 +375,7 @@ msgid ""
 "             %(pos_name)s amounting in %(amount)s from %(company_name)s. "
 "</p>"
 msgstr ""
-"<p>Vážený %(client_name)s,<br/>Zde je váš doklad %(is_invoiced)sk"
+"<p>Dobrý den %(client_name)s,<br/>Zde je váš doklad %(is_invoiced)sk"
 "             %(pos_name)s ve výši %(amount)s od %(company_name)s. </p>"
 
 #. module: point_of_sale
@@ -393,7 +393,7 @@ msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
 "                                <i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<span class=\"o_form_label\">Čárové kṕdy</span>\n"
+"<span class=\"o_form_label\">Čárové kódy</span>\n"
 "                                <i class=\"fa fa-info-circle me-1\" title=\"Toto nastavení je společné pro všechny PoS.\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
@@ -490,7 +490,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "? Clicking \"Confirm\" will validate the payment."
-msgstr "? Kliknutím na tlačítko Potvrdit platbu potvrdíte."
+msgstr "? Kliknutím na tlačítko \"Potvrdit\" platbu potvrdíte."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
@@ -512,7 +512,7 @@ msgid ""
 "A session is a period of time, usually one day, during which you sell "
 "through the Point of Sale."
 msgstr ""
-"Session je časové období, obvykle jeden den, během kterého prodáváte přes "
+"Relace je časové období, obvykle jeden den, během kterého prodáváte přes "
 "prodejní místo."
 
 #. module: point_of_sale
@@ -713,7 +713,7 @@ msgstr "Přidat %s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Add Tip"
-msgstr "přidat tip"
+msgstr "Přidat spropitné"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_unique_code
@@ -729,7 +729,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Add a closing note..."
-msgstr "Přidat uzavřenou poznámku..."
+msgstr "Přidat závěrečnou poznámku..."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -761,7 +761,7 @@ msgstr "Přidat novou tiskárnu pro objednávky v restauraci"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "Add an opening note..."
-msgstr "Přidat otevřenou poznámku..."
+msgstr "Přidat úvodní poznámku..."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -778,7 +778,7 @@ msgstr "Přidat k objednávce"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Added %(payment_method)s with %(amount)s"
-msgstr "Přidána %(payment_method)s s %(amount)s"
+msgstr "Přidáno %(payment_method)s s %(amount)s"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -1410,7 +1410,7 @@ msgstr "HOTOVOST"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "CHANGE"
-msgstr "VRÁTIT"
+msgstr "ZMĚNA"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1768,7 +1768,7 @@ msgstr "Židle"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Change"
-msgstr "Změnit"
+msgstr "Vrátit"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3033,7 +3033,7 @@ msgid ""
 "Display and update your products information through electronic price tags"
 msgstr ""
 "Zobrazujte a aktualizujte své produktové informace pomocí elektronických "
-"produktových štítků."
+"cenovek."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3991,7 +3991,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__invoice_status
 msgid "Invoice Status"
-msgstr "Stav faktury"
+msgstr "Stav fakturace"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7266,8 +7266,8 @@ msgstr "Naskenovat EAN-13"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Scan a barcode to create automatically, or load our sample data."
 msgstr ""
-"Sladký koláč plněný pekanovými ořechy, s bohatou máslovou náplní a křupavou "
-"slanou krustou."
+"Naskenujte čárový kód a položka se vytvoří automaticky, nebo načtěte naše "
+"vzorová data."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_scan_via_proxy
@@ -9113,7 +9113,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__trusted_config_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_trusted_config_ids
 msgid "Trusted Point of Sale Configurations"
-msgstr "Konfigurace důvěryhodných prodejních míst"
+msgstr "Důvěryhodné nastavení prodejních míst"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
@@ -9650,7 +9650,7 @@ msgid ""
 "You cannot archive '%(picking_type)s' as it is used by POS configuration "
 "'%(config)s'."
 msgstr ""
-"Nelze archivovat '%(picking_type)s', protože ho používá nastavení POS "
+"Nelze archivovat '%(picking_type)s', protože je použiváno nastavení POS "
 "'%(config)s'."
 
 #. module: point_of_sale
