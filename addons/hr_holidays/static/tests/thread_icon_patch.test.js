@@ -21,7 +21,7 @@ test("thread icon of a chat when correspondent is on leave & online", async () =
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
         contains: [".o-mail-ThreadIcon .fa-plane[title='On Leave (Online)']"],
-        text: "Demo",
+        text: "DemoBack on Jan 1, 2023",
     });
 });
 
@@ -40,7 +40,7 @@ test("thread icon of a chat when correspondent is on leave & away", async () => 
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
         contains: [".o-mail-ThreadIcon .fa-plane[title='On Leave (Idle)']"],
-        text: "Demo",
+        text: "DemoBack on Jan 1, 2023",
     });
 });
 
@@ -59,6 +59,6 @@ test("thread icon of a chat when correspondent is on leave & offline", async () 
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
         contains: [".o-mail-ThreadIcon .fa-plane[title='On Leave']"],
-        text: "Demo",
+        text: "DemoBack on Jan 1, 2023",
     });
 });
