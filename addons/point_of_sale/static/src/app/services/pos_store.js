@@ -1925,10 +1925,27 @@ export class PosStore extends WithLazyGetterTrap {
             }
         );
     }
-    async loadSampleData() {
-        await this.data.call("pos.config", "load_demo_data", [[this.config.id]]);
-        await this.reloadData(true);
+
+    showAccessDeniedDialog(body) {
+        this.dialog.add(AlertDialog, {
+            title: _t("Access Denied"),
+            body: _t("It seems like you don't have enough rights to load data"),
+        });
     }
+
+    async loadSampleData() {
+        try {
+            await this.data.call("pos.config", "load_demo_data", [[this.config.id]]);
+            await this.reloadData(true);
+        } catch (e) {
+            if (e.exceptionName === "odoo.exceptions.AccessError") {
+                this.showAccessDeniedDialog(e.data.message);
+            } else {
+                throw e;
+            }
+        }
+    }
+
     async allowProductCreation() {
         return await user.hasGroup("base.group_system");
     }

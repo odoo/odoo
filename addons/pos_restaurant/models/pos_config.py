@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import AccessError
 from odoo.tools import convert
 
 
@@ -140,6 +141,8 @@ class PosConfig(models.Model):
 
     def _load_restaurant_demo_data(self):
         self.ensure_one()
+        if not self.env.user.has_group('base.group_system'):
+            raise AccessError(_("You must have 'Administration Settings' access to load Restaurant data."))
         if not self.env.ref('pos_restaurant.food', raise_if_not_found=False):
             convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_demo_data.xml', idref=None, mode='init', noupdate=True)
         restaurant_categories = self.get_record_by_ref([
