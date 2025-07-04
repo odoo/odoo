@@ -333,7 +333,9 @@ test("Image transformation disappears on backspace/delete", async () => {
     `);
     click("img.test-image");
     await expectElementCount(".o-we-toolbar", 1);
-    await contains(".o-we-toolbar div[name='image_modifiers'] button[name='image_transform']").click();
+    await contains(
+        ".o-we-toolbar div[name='image_modifiers'] button[name='image_transform']"
+    ).click();
     await expectElementCount(".transfo-container", 1);
     press("backspace");
     await expectElementCount(".transfo-container", 0);
@@ -341,12 +343,13 @@ test("Image transformation disappears on backspace/delete", async () => {
     click("img.test-image");
     await waitFor(".o-we-toolbar");
     await expectElementCount(".o-we-toolbar", 1);
-    await contains(".o-we-toolbar div[name='image_modifiers'] button[name='image_transform']").click();
+    await contains(
+        ".o-we-toolbar div[name='image_modifiers'] button[name='image_transform']"
+    ).click();
     await expectElementCount(".transfo-container", 1);
     press("delete");
     await expectElementCount(".transfo-container", 0);
 });
-
 
 test("Image transformation disappears on character key press", async () => {
     const { editor } = await setupEditor(`
@@ -354,7 +357,9 @@ test("Image transformation disappears on character key press", async () => {
     `);
     click("img.test-image");
     await expectElementCount(".o-we-toolbar", 1);
-    await contains(".o-we-toolbar div[name='image_modifiers'] button[name='image_transform']").click();
+    await contains(
+        ".o-we-toolbar div[name='image_modifiers'] button[name='image_transform']"
+    ).click();
     await expectElementCount(".transfo-container", 1);
     insertText(editor, "a");
     await expectElementCount(".transfo-container", 0);
@@ -531,7 +536,7 @@ test("can undo adding link to image", async () => {
 
 test("can remove the link of an image", async () => {
     await setupEditor(`
-        <a href="#"><img src="${base64Img}"></a>
+        <a href="http://test.test/"><img src="${base64Img}"></a>
     `);
     const img = queryOne("img");
     await click("img");
@@ -545,7 +550,7 @@ test("can remove the link of an image", async () => {
 
 test("can undo link removing of an image", async () => {
     const { editor } = await setupEditor(`
-        <a href="#"><img src="${base64Img}"></a>
+        <a href="http://test.test/"><img src="${base64Img}"></a>
     `);
     const img = queryOne("img");
     await click("img");

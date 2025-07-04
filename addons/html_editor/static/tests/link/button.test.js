@@ -33,16 +33,22 @@ describe("button style", () => {
 
 describe("button edit", () => {
     test("button link should be editable with double click select", async () => {
-        const { el, editor } = await setupEditor('<p>this is a <a href="#">link</a></p>');
+        const { el, editor } = await setupEditor(
+            '<p>this is a <a href="http://test.test/">link</a></p>'
+        );
         await waitForNone(".o-we-linkpopover");
         const button = el.querySelector("a");
         // simulate double click selection
         await simulateDoubleClickSelect(button);
         expect(getContent(el)).toBe(
-            '<p>this is a \ufeff<a href="#" class="o_link_in_selection">[\ufefflink]\ufeff</a>\ufeff</p>'
+            '<p>this is a \ufeff<a href="http://test.test/" class="o_link_in_selection">[\ufefflink]\ufeff</a>\ufeff</p>'
         );
-        expect(cleanLinkArtifacts(getContent(el))).toBe('<p>this is a <a href="#">[link]</a></p>');
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.test/">[link]</a></p>'
+        );
         await insertText(editor, "X");
-        expect(cleanLinkArtifacts(getContent(el))).toBe('<p>this is a <a href="#">X[]</a></p>');
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.test/">X[]</a></p>'
+        );
     });
 });
