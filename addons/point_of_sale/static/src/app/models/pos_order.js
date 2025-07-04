@@ -800,6 +800,10 @@ export class PosOrder extends Base {
         return this.partner_id ? this.partner_id.name : "";
     }
 
+    getInvoiceNumber() {
+        return this.account_move ? this.account_move.name : "";
+    }
+
     getCardHolderName() {
         const card_payment_line = this.payment_ids.find((pl) => pl.cardholder_name);
         return card_payment_line ? card_payment_line.cardholder_name : "";
