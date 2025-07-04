@@ -7,6 +7,7 @@
 # lhmflexerp <lhm@flexerp.dk>, 2023
 # Martin Trigaux, 2023
 # Ejner Sønniksen <ejner@vkdata.dk>, 2024
+# Kira Petersen, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2024\n"
+"Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,7 +94,7 @@ msgstr "Deltagere"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Before updating the linked registrations of"
-msgstr ""
+msgstr "Før du opdaterer de tilknyttede registreringer fra"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -138,6 +139,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
 msgid "Come back once tickets have been sold to overview your sales income."
 msgstr ""
+"Kom tilbage, når billetter er solgt for at få en oversigt over dine "
+"salgsindtægter."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__company_id
@@ -251,12 +254,12 @@ msgstr "Tillmelding til arrangement"
 #. module: event_sale
 #: model:product.template,name:event_sale.product_product_event_standard_product_template
 msgid "Event Registration - Standard"
-msgstr ""
+msgstr "Tilmelding til arrangement – standard"
 
 #. module: event_sale
 #: model:product.template,name:event_sale.product_product_event_vip_product_template
 msgid "Event Registration - VIP"
-msgstr ""
+msgstr "Tilmelding til arrangement – VIP"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
@@ -266,12 +269,12 @@ msgstr "Tillmeldinger til arrangement"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event Sales Analysis"
-msgstr ""
+msgstr "Salgsanalyse for arrangementer"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_sale_report
 msgid "Event Sales Report"
-msgstr ""
+msgstr "Salgsrapport for arrangementer"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
@@ -352,7 +355,7 @@ msgstr "Fakturaadresse"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
 msgid "Is registration active (not archived)?"
-msgstr ""
+msgstr "Er tilmeldingen aktiv (ikke arkiveret)?"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_uid
@@ -381,12 +384,12 @@ msgstr "Navn"
 #. module: event_sale
 #: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
 msgid "No Event Revenues yet!"
-msgstr ""
+msgstr "Arrangementet har endnu ikke genereret indtægter!"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Non-free tickets"
-msgstr ""
+msgstr "Betalingsbilletter"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__to_pay
@@ -443,6 +446,8 @@ msgid ""
 "Please make sure all your event related lines are configured before "
 "confirming this order:%s"
 msgstr ""
+"Sørg for, at alle linjer er konfigureret til dit arrangement, inden du "
+"bekræfter ordren:%s"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
@@ -464,7 +469,7 @@ msgstr "Prisreduktion inkl. moms"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_incl
 msgid "Price include"
-msgstr ""
+msgstr "Pris inkl."
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_template
@@ -518,7 +523,7 @@ msgstr "Registreringsstatus"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
 msgid "Registration revenues"
-msgstr ""
+msgstr "Indtægter fra tilmeldinger"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__registration_ids
@@ -561,7 +566,7 @@ msgstr "Salgsordre status"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_status
 msgid "Sale Status"
-msgstr ""
+msgstr "Salgsstatus"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
@@ -664,11 +669,15 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
+"Ubekræftet: Tilmeldinger, der afventer handling (typisk i forbindelse med salgsstatus).\n"
+"Tilmeldt: Tilmeldinger, der anses som bekræftede af kunden.\n"
+"Deltaget: Tilmeldinger, hvor deltageren har deltaget i arrangementet.\n"
+"Annulleret: Tilmeldinger, der er blevet annulleret manuelt."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed
 msgid "Untaxed Revenues"
-msgstr ""
+msgstr "Ikke-beskattede indtægter"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search

@@ -261,6 +261,9 @@ class MrpBom(models.Model):
             for bom_line in res.bom_line_ids:
                 if bom_line.operation_id:
                     bom_line.operation_id = operations_mapping[bom_line.operation_id]
+            for byproduct in res.byproduct_ids:
+                if byproduct.operation_id:
+                    byproduct.operation_id = operations_mapping[byproduct.operation_id]
             for operation in self.operation_ids:
                 if operation.blocked_by_operation_ids:
                     copied_operation = operations_mapping[operation]
