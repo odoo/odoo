@@ -928,7 +928,7 @@ test("link preview in Link Popover", async () => {
     Partner._records = [
         {
             id: 1,
-            txt: "<p class='test_target'>abc<a href='/test'>This website</a></p>",
+            txt: "<p class='test_target'>abc<a href='http://test.test'>This website</a></p>",
         },
     ];
     await mountView({

@@ -35,6 +35,8 @@ test("autocomplete should shown and able to edit the link", async () => {
             ],
         };
     });
+    onRpc("/contactus", () => ({}));
+    onRpc("/html_editor/link_preview_internal", () => ({}));
 
     const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
 

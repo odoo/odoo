@@ -348,7 +348,7 @@ describe("Selection collapsed", () => {
 
         test("should delete only the button", async () => {
             await testEditor({
-                contentBefore: `<p><a class="btn" href="#">[]</a>a</p>`,
+                contentBefore: `<p><a class="btn" href="http://test.test/">[]</a>a</p>`,
                 stepFunction: deleteForward,
                 contentAfter: `<p>[]a</p>`,
             });

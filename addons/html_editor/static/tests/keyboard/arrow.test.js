@@ -298,11 +298,11 @@ describe("Around links", () => {
 
     test("should move out of a link (ArrowRight)", async () => {
         await testEditor({
-            contentBefore: '<p>ab<a href="#">cd[]</a>ef</p>',
+            contentBefore: '<p>ab<a href="http://test.test/">cd[]</a>ef</p>',
             contentBeforeEdit:
                 "<p>ab" +
                 "\ufeff" + // before zwnbsp
-                '<a href="#" class="o_link_in_selection">' +
+                '<a href="http://test.test/" class="o_link_in_selection">' +
                 "\ufeff" + // start zwnbsp
                 "cd[]" + // content
                 "\ufeff" + // end zwnbsp
@@ -313,24 +313,24 @@ describe("Around links", () => {
             contentAfterEdit:
                 "<p>ab" +
                 "\ufeff" + // before zwnbsp
-                '<a href="#">' +
+                '<a href="http://test.test/">' +
                 "\ufeff" + // start zwnbsp
                 "cd" + // content
                 "\ufeff" + // end zwnbsp
                 "</a>" +
                 "\ufeff" + // after zwnbsp
                 "[]ef</p>",
-            contentAfter: '<p>ab<a href="#">cd</a>[]ef</p>',
+            contentAfter: '<p>ab<a href="http://test.test/">cd</a>[]ef</p>',
         });
     });
 
     test("should move out of a link (ArrowLeft)", async () => {
         await testEditor({
-            contentBefore: '<p>ab<a href="#">[]cd</a>ef</p>',
+            contentBefore: '<p>ab<a href="http://test.test/">[]cd</a>ef</p>',
             contentBeforeEdit:
                 "<p>ab" +
                 "\ufeff" + // before zwnbsp
-                '<a href="#" class="o_link_in_selection">' +
+                '<a href="http://test.test/" class="o_link_in_selection">' +
                 "\ufeff" + // start zwnbsp
                 "[]cd" + // content
                 "\ufeff" + // end zwnbsp
@@ -341,14 +341,14 @@ describe("Around links", () => {
             contentAfterEdit:
                 "<p>ab[]" +
                 "\ufeff" + // before zwnbsp
-                '<a href="#">' +
+                '<a href="http://test.test/">' +
                 "\ufeff" + // start zwnbsp
                 "cd" + // content
                 "\ufeff" + // end zwnbsp
                 "</a>" +
                 "\ufeff" + // after zwnbsp
                 "ef</p>",
-            contentAfter: '<p>ab[]<a href="#">cd</a>ef</p>',
+            contentAfter: '<p>ab[]<a href="http://test.test/">cd</a>ef</p>',
         });
     });
 });
