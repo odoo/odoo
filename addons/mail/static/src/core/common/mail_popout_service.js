@@ -95,17 +95,25 @@ export const mailPopoutService = {
                 height =
                     height || (width ? width / aspectRatio : Math.min(240, window.innerHeight));
                 width = width || height * aspectRatio;
-                externalWindow = await window.documentPictureInPicture.requestWindow({
-                    width,
-                    height,
-                });
+                if (window.documentPictureInPicture) {
+                    externalWindow = await window.documentPictureInPicture.requestWindow({
+                        width,
+                        height,
+                    });
+                } else {
+                    externalWindow = browser.open(
+                        "about:blank",
+                        "_blank",
+                        `popup=yes,width=${width},height=${height}`
+                    );
+                }
                 popout.externalWindow = externalWindow;
                 pollClosedWindow(id);
             }
             await reset(id, { useAlternativeAssets });
             popout.app = new App(component, {
                 name: "Popout",
-                env: Object.assign(env, {
+                env: Object.assign({}, env, {
                     /**
                      * Some sub components may need a reference to the external window to
                      * access window information such as its dimensions, or to attach event listeners.
