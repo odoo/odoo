@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
+     <!--
+          Tab-limited Call PiP.
+          @deprecated: was used for browsers that do no support documentPictureInPicture web API but they now use popout window,
+          which is a better experience over the tab-limited Call PiP.
+     -->
     <t t-name="discuss.CallPip">
-        <div t-if="pipService.state.active and !pipService.isNativePipAvailable and rtc.channel"
+        <t t-if="true"/> <!-- disabled component, xpath kept for stable policy -->
+        <div t-elif="pipService.state.active and !pipService.isNativePipAvailable and rtc.channel"
              class="o-discuss-CallPip position-fixed d-flex overflow-hidden shadow-lg rounded-3"
              t-att-class="{
                 'o-dragging': state.isDragging,

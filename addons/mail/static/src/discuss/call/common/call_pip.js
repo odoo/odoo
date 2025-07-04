@@ -18,7 +18,11 @@ const MIN_HEIGHT = 120;
 const PADDING = 5;
 
 /**
+ * Tab-limited Call PiP.
  * Serves as a backup to the browser picture-in-picture feature when not supported by the current browser.
+ *
+ * @deprecated: was used for browsers that do no support documentPictureInPicture web API but they now use popout window,
+ * which is a better experience over the tab-limited Call PiP.
  */
 export class CallPip extends Component {
     static props = [];
