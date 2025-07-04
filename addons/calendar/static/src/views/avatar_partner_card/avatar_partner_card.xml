@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="calendar.AvatarPartnerCardPopover" t-inherit="mail.AvatarCardPopover" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_avatar')]/img" position="attributes">
+            <attribute name="t-attf-src" t-if="displayAvatar">/web/image/res.partner/{{props.id}}/avatar_128</attribute>
+        </xpath>
+    </t>
+</templates>
