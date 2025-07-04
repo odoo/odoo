@@ -16,7 +16,15 @@ export class Follower extends Record {
     /** @returns {boolean} */
     get isEditable() {
         const hasWriteAccess = this.thread ? this.thread.hasWriteAccess : false;
+<<<<<<< 5f8ef4b0b9278e8ad6cf9c355daf7c08fefa7297
         return this.partner_id.eq(this.store.self) ? this.thread.hasReadAccess : hasWriteAccess;
+||||||| 5a1fff2cc61bd8676049879039defa3fb2a3f13d
+        return this.partner.in(this.thread?.selves) ? this.thread.hasReadAccess : hasWriteAccess;
+=======
+        return this.partner.eq(this.thread?.effectiveSelf)
+            ? this.thread.hasReadAccess
+            : hasWriteAccess;
+>>>>>>> 128d52d8437fff794754e730d07d0a877328b927
     }
 
     async remove() {

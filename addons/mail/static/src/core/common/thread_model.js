@@ -556,6 +556,53 @@ export class Thread extends Record {
         this.pendingNewMessages = [];
     }
 
+<<<<<<< 5f8ef4b0b9278e8ad6cf9c355daf7c08fefa7297
+||||||| 5a1fff2cc61bd8676049879039defa3fb2a3f13d
+    /**
+     * Get the effective persona performing actions on this thread.
+     * Priority order: logged-in user, portal partner (token-authenticated), guest.
+     *
+     * @returns {import("models").Persona}
+     */
+    get effectiveSelf() {
+        return this.store.self;
+    }
+
+    /**
+     * Get the current user's active identities.These identities include both
+     * the cookie-authenticated persona and the partner authenticated with the
+     * portal token in the context of this thread.
+     *
+     * @returns {import("models").Persona[]}
+     */
+    get selves() {
+        return [this.store.self];
+    }
+
+=======
+    /**
+     * Get the effective persona performing actions on this thread.
+     * Priority order: logged-in user, portal partner (token-authenticated), guest.
+     *
+     * @returns {import("models").Persona}
+     */
+    get effectiveSelf() {
+        return this.store.self;
+    }
+
+    /**
+     * Get the current user's active identities.These identities include both
+     * the cookie-authenticated persona and the partner authenticated with the
+     * portal token in the context of this thread.
+     *
+     * @deprecated
+     * @returns {import("models").Persona[]}
+     */
+    get selves() {
+        return [this.store.self];
+    }
+
+>>>>>>> 128d52d8437fff794754e730d07d0a877328b927
     async fetchNewMessages() {
         if (
             this.status === "loading" ||

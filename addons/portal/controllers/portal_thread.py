@@ -38,9 +38,25 @@ class PortalChatter(ThreadController):
             has_react_access = self._get_thread_with_access(thread_model, thread_id, mode, **kwargs)
             can_react = has_react_access
             if request.env.user._is_public():
+<<<<<<< 5f8ef4b0b9278e8ad6cf9c355daf7c08fefa7297
                 portal_partner = get_portal_partner(
                     thread, kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token")
                 )
+||||||| 5a1fff2cc61bd8676049879039defa3fb2a3f13d
+=======
+                if portal_partner := get_portal_partner(
+                    thread, kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token")
+                ):
+                    store.add(
+                        thread,
+                        {
+                            "portal_partner": Store.One(
+                                portal_partner, fields=["active", "avatar_128", "name", "user"]
+                            )
+                        },
+                        as_thread=True
+                    )
+>>>>>>> 128d52d8437fff794754e730d07d0a877328b927
                 can_react = has_react_access and portal_partner
                 partner = portal_partner or partner
             store.add(thread, {"can_react": bool(can_react)}, as_thread=True)
