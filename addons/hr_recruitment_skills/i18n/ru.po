@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Anastasiia Koroleva, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-27 20:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr "Кандидат"
 #: model:ir.model,name:hr_recruitment_skills.model_hr_candidate
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__candidate_id
 msgid "Candidate"
-msgstr ""
+msgstr "Кандидат"
 
 #. module: hr_recruitment_skills
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_candidate_view_tree
@@ -46,7 +47,10 @@ msgid "Created on"
 msgstr "Создано"
 
 #. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate__display_name
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
@@ -56,7 +60,10 @@ msgid "Expected Skills"
 msgstr ""
 
 #. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__id
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate__id
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__id
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__id
 msgid "ID"
 msgstr "ID"
 
@@ -170,7 +177,7 @@ msgid "The skill level %(level)s is not valid for skill type: %(type)s"
 msgstr "Уровень навыка %(level)s не действителен для типа навыка: %(type)s"
 
 #. module: hr_recruitment_skills
-#: model:ir.model.constraint,message:hr_recruitment_skills.constraint_hr_candidate_skill__unique_skill
+#: model:ir.model.constraint,message:hr_recruitment_skills.constraint_hr_candidate_skill_HrCandidateSkill__unique_skill
 msgid "Two levels for the same skill is not allowed"
 msgstr "Два уровня для одного навыка не допускаются"
 

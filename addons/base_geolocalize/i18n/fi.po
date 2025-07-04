@@ -3,8 +3,7 @@
 # 	* base_geolocalize
 # 
 # Translators:
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-# Wil Odoo, 2025
+# Wil Odoo, 2024
 # Jessica Jakara, 2025
 # 
 msgid ""
@@ -54,7 +53,7 @@ msgstr "Laske osoitteen perusteella"
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_config_settings
 msgid "Config Settings"
-msgstr "Asetukset"
+msgstr "Kokoonpanoasetukset"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
@@ -83,17 +82,17 @@ msgstr "Näyttönimi"
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 msgid "Error with geolocation server: %s"
-msgstr "Virhe geopaikannuspalvelimen kanssa: %s"
+msgstr "Virhe maantieteellisen paikannuspalvelimen kanssa: %s"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
 msgid "Geo Coder"
-msgstr "Paikannuskoodaaja"
+msgstr "Maantieteellisen sijainnin koodaaja"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geo Location"
-msgstr "Paikannuspaikka"
+msgstr "Maantieteellinen sijainti"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geo_provider
@@ -103,13 +102,13 @@ msgstr "Paikannuspalveluntarjoaja"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geolocation"
-msgstr "Geolokaatio"
+msgstr "Maantieteellinen sijainti"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__date_localization
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_users__date_localization
 msgid "Geolocation Date"
-msgstr "Sijaintitiedon päiväys"
+msgstr "Maantieteellisen sijainnin päivämäärä"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
@@ -122,7 +121,7 @@ msgstr "Google kartan API-avain"
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__id
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
@@ -158,18 +157,20 @@ msgstr "Nimi"
 #. odoo-python
 #: code:addons/base_geolocalize/models/res_partner.py:0
 msgid "No match found for %(partner_names)s address(es)."
-msgstr "Ei löytynyt kohdetta %(partner_names)s osoitteelle."
+msgstr "Kohteen %(partner_names)s osoitteelle ei löytynyt täsmääviä."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignment"
-msgstr "Partnerin asetus"
+msgstr "Kumppanin määrääminen"
 
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 msgid "Provider %s is not implemented for geolocation service."
-msgstr "Palveluntarjoajaa %s ei ole toteutettu paikannuspalvelulle."
+msgstr ""
+"Palveluntarjoajaa %s ei ole implementoitu maantieteellisen sijainnin "
+"paikannuspalvelulle."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -202,9 +203,9 @@ msgstr ""
 "Paikantaminen ei onnistu, virheilmoitus:\n"
 "%s\n"
 "\n"
-"Tämä Googlne palvelu on muuttunut maksulliseksi.\n"
+"Tämä Googlen palvelu on muuttunut maksulliseksi.\n"
 "Sinun tulee ensin ottaa laskutus käyttöön Google-tililläsi.\n"
-"Siirry sitten kehittäjäkonsoliin ja ota sovellusliittymistä käyttöön:\n"
+"Siirry sitten kehittäjäkonsoliin ja ota API käyttöön:\n"
 "Geokoodaus, Maps Static, Maps Javascript.\n"
 
 #. module: base_geolocalize

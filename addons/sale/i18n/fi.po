@@ -1019,7 +1019,7 @@ msgstr "<strong>Vanhentuminen:</strong><br/>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>Verokannan huomautus:</strong>"
+msgstr "<strong>Huomautus verovelvollisuusasemasta:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1807,7 +1807,7 @@ msgstr "Vahvistusviesti"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
-msgstr "Liitännäiset"
+msgstr "Liittimet"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__consolidated_billing
@@ -1965,17 +1965,17 @@ msgstr "Valuuttakurssi"
 #. module: sale
 #: model:product.attribute.value,name:sale.product_attribute_value_7
 msgid "Custom"
-msgstr "Mukautettu"
+msgstr "Räätälöi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "Custom Values"
-msgstr "Muokatut arvot"
+msgstr "Räätälöi arvot"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
-msgstr "Mukautetut maksuohjeet"
+msgstr "Räätälöidyt maksuohjeet"
 
 #. module: sale
 #. odoo-python
@@ -2008,7 +2008,7 @@ msgstr "Asiakkaan toimiala"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
 msgid "Customer Portal URL"
-msgstr "Asiakasportaalin osoite"
+msgstr "Asiakasportaalin URL-osoite"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__client_order_ref
@@ -2046,7 +2046,7 @@ msgstr "Asiakkaat"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr "DHL Express Liitin"
+msgstr "DHL Express -liitin"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2084,7 +2084,7 @@ msgstr "Tarjouksen oletusvoimassaolo"
 #: model:ir.model.fields,field_description:sale.field_sale_order__company_price_include
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__company_price_include
 msgid "Default Sales Price Include"
-msgstr "Myyntihinnan oletusarvo sisältää"
+msgstr "Oletusmyyntihinta sisällytetty"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__company_price_include
@@ -2129,7 +2129,7 @@ msgstr "Toimitettu määrä: %s"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
 msgid "Delivered quantities"
-msgstr "Toimitettu määrä"
+msgstr "Toimitetut määrät"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_shipping_id
@@ -2140,7 +2140,7 @@ msgstr "Toimitusosoite"
 #: model:ir.model.fields,field_description:sale.field_sale_order__commitment_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivery Date"
-msgstr "Toimituspvm"
+msgstr "Toimituspäivämäärä"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
@@ -2160,10 +2160,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"Toimituspäivä jonka voit luvata asiakkaalle, laskettu myyntirivien "
-"minimiliidiajan perusteella, jos rivillä on palvelutuote. Jos tarvitaan "
-"toimitusta, tilauksen toimitusehdot otetaan huomioon laskettaessa rivien "
-"minimi- tai maksimiliidiaikoja."
+"Toimituspäivä, jonka voit luvata asiakkaalle, joka on laskettu myyntirivien "
+"minimiltoimitusajan perusteella, jos kyseessä on palvelutuote. Toimituksen "
+"kohdalla tilauksen toimitusehdot otetaan huomioon laskettaessa rivien "
+"minimi- tai maksimitoimitusaikoja."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2224,7 +2224,7 @@ msgstr "Alennus (%)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount_amount
 msgid "Discount Amount"
-msgstr "Alennuksen summa"
+msgstr "Alennuksen määrä"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_discount_product_id
@@ -2265,7 +2265,7 @@ msgstr "Alennukset"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
 msgid "Display Draft Invoice Warning"
-msgstr "Näytä laskun luonnoksen varoitus"
+msgstr "Näytä luonnoslaskun varoitus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__display_name
@@ -2318,7 +2318,7 @@ msgstr "Asiakirjat"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__business_domain
 msgid "Domain"
-msgstr "Verkkotunnus"
+msgstr "Domain"
 
 #. module: sale
 #. odoo-python
@@ -2361,7 +2361,7 @@ msgstr "Ennakkomaksut"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
-msgstr "Ennakkomaksu (tasasumma)"
+msgstr "Ennakkomaksu (kiinteä summa)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__percentage
@@ -2391,8 +2391,8 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
-"Etumaksu suoritetaan laskuja luotaessa myyntitilauksesta. Niitä ei kopioida,"
-" kun myyntitilausta kopioidaan."
+"Ennakkomaksu suoritetaan, kun laskuja luodaan myyntitilauksesta. Niitä ei "
+"kopioida, kun myyntitilaus monistetaan."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_category__property_account_downpayment_categ_id
@@ -2414,12 +2414,12 @@ msgstr "Päällekkäiset asiakirjat"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__duplicated_order_ids
 msgid "Duplicated Order"
-msgstr "Tilauksen kopio"
+msgstr "Monistettu tilaus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr "Easypost Connector"
+msgstr "Easypost -liitin"
 
 #. module: sale
 #. odoo-javascript
@@ -2501,12 +2501,12 @@ msgstr "Lisärivi, jossa %s"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
 msgid "FedEx Connector"
-msgstr "FedEx Connector"
+msgstr "FedEx-liitin"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
 msgid "Fiscal Position"
-msgstr "Verokanta"
+msgstr "Verovelvollisuusasema"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
@@ -2515,8 +2515,9 @@ msgid ""
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
 msgstr ""
-"Verokantoja käytetään muokkaamaan veroja ja kirjanpidon tilejä tietyille "
-"asiakkaille tai myyntitilauksille/laskuille. Oletusarvo tulee asiakkaalta."
+"Verovelvollisuusasemia käytetään muokkaamaan veroja ja kirjanpidon tilejä "
+"tietyille asiakkaille tai myyntitilauksille/laskuille. Oletusarvo tulee "
+"asiakkaalta."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
@@ -2541,12 +2542,12 @@ msgstr "Seuraajat (kumppanit)"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome -ikoni esim.. fa-tasks"
+msgstr "Font awesome -kuvake, esim. fa-tasks"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
-msgstr "Kielletyt arvot ei-myymättömällä myyntitilauksen rivillä"
+msgstr "Kielletyt arvot ei-tilitettävällä myyntitilauksen rivillä"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -2555,8 +2556,8 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Tästä raportista näet yleiskatsauksen asiakkaan laskutukseen. Hakutyökalulla"
-" voit muokata laskutusraportit tarpeitasi vastaaviksi."
+"Tämä raportti antaa yleiskatsauksen asiakkaan laskutuksesta. Hakutyökalulla "
+"voit muokata laskutusraportteja tarpeitasi vastaaviksi."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2602,7 +2603,7 @@ msgstr "Luodut tilaukset"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
-msgstr "Hanki varoituksia tuotteiden tai asiakkaiden tilauksissa"
+msgstr "Saa tilauksissa varoituksia tuotteista tai asiakkaista"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__so_discount
@@ -2659,7 +2660,7 @@ msgstr "On vahvistanut tilauksen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr "Onko verokanta muuttunut"
+msgstr "On muuttunut verovelvollisuusasema"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2674,7 +2675,7 @@ msgstr "Hinnasto muuttunut"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
-msgstr "On ennakkomaksuja"
+msgstr "Sisältää ennakkomaksuja"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__hidden
@@ -2712,7 +2713,7 @@ msgstr "Piilotettu"
 #: model:ir.model.fields,field_description:sale.field_sale_report__id
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_icon
@@ -2722,7 +2723,7 @@ msgstr "Kuvake"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Kuvake joka kertoo poikkeustoiminnosta."
+msgstr "Kuvake, joka kertoo poikkeustoiminnosta."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
@@ -2741,8 +2742,8 @@ msgid ""
 "If set, the SO will invoice in this journal; otherwise the sales journal "
 "with the lowest sequence is used."
 msgstr ""
-"Jos asetettu, SO laskutetaan tässä myyntipäiväkirjassa; muussa tapauksessa "
-"käytetään myyntipäiväkirjaa, jonka järjestys on alhaisin."
+"Jos asetettu, myyntitilaus laskutetaan tässä myyntipäiväkirjassa; muussa "
+"tapauksessa käytetään myyntipäiväkirjaa, jonka järjestysnumero on pienin."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2751,7 +2752,7 @@ msgid ""
 "still be able to invoice or deliver."
 msgstr ""
 "Jos myyntitilaus on lukittu, et voi enää muuttaa sitä. Voit silti vielä "
-"laskuttaa ja toimittaa tälle myyntitilaukselle."
+"laskuttaa ja tehdä toimituksia."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -2761,7 +2762,7 @@ msgstr "Hinnaston muuttaminen vaikuttaa ainoastaan uusiin riveihin."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Immediate"
-msgstr "Viiveetön"
+msgstr "Välitön"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2772,7 +2773,7 @@ msgstr "Tuo Amazon-tilauksia ja synkronoi toimitukset"
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "Import Template for Products"
-msgstr "Tuo tuotteiden malli"
+msgstr "Tuo mallioihja tuotteille"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
@@ -2794,13 +2795,13 @@ msgstr "Virheellinen alennuksen määrä"
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Invalid order."
-msgstr "Puutteellinen tilaus."
+msgstr "Epäkelvollinen tilaus."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Invalid signature data."
-msgstr "Puutteellinen allekirjoitus."
+msgstr "Epäkelvollinen allekirjoitus."
 
 #. module: sale
 #. odoo-python
@@ -3959,7 +3960,8 @@ msgstr "Tuotteiden hinnat on laskettu uudelleen."
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr "Tuoteverot on laskettu uudelleen verokannan %s mukaisesti."
+msgstr ""
+"Tuoteverot on laskettu uudelleen verovelvollisuusaseman %s mukaisesti."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
@@ -4166,7 +4168,7 @@ msgstr "Laske uudelleen hinnoittelu tämän hinnaston perusteella"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr "Laske kaikki verot uudelleen tämän verokannan perusteella"
+msgstr "Laske kaikki verot uudelleen tämän verovelvollisuusaseman perusteella"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
@@ -4659,7 +4661,7 @@ msgstr "Lähetä sähköpostilla"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr "Sendcloud-yhteys"
+msgstr "Sendcloud-liitin"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5340,7 +5342,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
-msgstr "Tämä päivittää kaikki verot nykyisen verokannan perusteella."
+msgstr ""
+"Tämä päivittää kaikki verot nykyisen verovelvollisuusaseman perusteella."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5842,7 +5845,7 @@ msgstr "automaattinen laskutus: lähetä valmis lasku"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr "bpost Connector"
+msgstr "bpost-liitin"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

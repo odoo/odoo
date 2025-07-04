@@ -512,6 +512,9 @@ msgid ""
 "- Register as a PEPPOL participant\n"
 "- Send and receive documents via PEPPOL network in Peppol BIS Billing 3.0 format\n"
 msgstr ""
+"\n"
+"- Register as a PEPPOL participant\n"
+"- Send and receive documents via PEPPOL network in Peppol BIS Billing 3.0 format\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -4045,6 +4048,24 @@ msgid ""
 "the \"Factur-X PDF/A-3\" option on the journal. This option will also validate the xml against the Factur-X and Chorus\n"
 "Pro rules and show the errors.\n"
 msgstr ""
+"\n"
+"Electronic invoicing module\n"
+"===========================\n"
+"\n"
+"Allows to export and import formats: E-FFF, UBL Bis 3, EHF3, NLCIUS, Factur-X (CII), XRechnung (UBL).\n"
+"When generating the PDF on the invoice, the PDF will be embedded inside the xml for all UBL formats. This allows the\n"
+"receiver to retrieve the PDF with only the xml file. Note that **EHF3 is fully implemented by UBL Bis 3** (`reference\n"
+"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_implementation>`_).\n"
+"\n"
+"The formats can be chosen from the journal (Journal > Advanced Settings) linked to the invoice.\n"
+"\n"
+"Note that E-FFF, NLCIUS and XRechnung (UBL) are only available for Belgian, Dutch and German companies,\n"
+"respectively. UBL Bis 3 is only available for companies which country is present in the `EAS list\n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
+"\n"
+"Note also that in order for Chorus Pro to automatically detect the \"PDF/A-3 (Factur-X)\" format, you need to activate\n"
+"the \"Factur-X PDF/A-3\" option on the journal. This option will also validate the xml against the Factur-X and Chorus\n"
+"Pro rules and show the errors.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_edi_ubl
@@ -7372,6 +7393,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Australia & New Zealand is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"The UBL PINT e-invoicing format for Australia & New Zealand is based on the Peppol International (PINT) model for Billing.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp_ubl_pint
@@ -7379,6 +7402,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Japan is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"The UBL PINT e-invoicing format for Japan is based on the Peppol International (PINT) model for Billing.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_my_ubl_pint
@@ -7386,6 +7411,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Malaysia is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"The UBL PINT e-invoicing format for Malaysia is based on the Peppol International (PINT) model for Billing.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg_ubl_pint
@@ -7393,6 +7420,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Singapore is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"The UBL PINT e-invoicing format for Singapore is based on the Peppol International (PINT) model for Billing.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_repair
@@ -8235,6 +8264,9 @@ msgid ""
 "This module adds 2 useful fields on the taxes for electronic invoicing: the tax category code and the tax exemption reason code.\n"
 "These fields will be read when generating Peppol Bis 3 or Factur-X xml, for instance.\n"
 msgstr ""
+"\n"
+"This module adds 2 useful fields on the taxes for electronic invoicing: the tax category code and the tax exemption reason code.\n"
+"These fields will be read when generating Peppol Bis 3 or Factur-X xml, for instance.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_comparison
@@ -8324,6 +8356,13 @@ msgid ""
 "- Encryption features allows to decrypt all the user's data when receiving it from the proxy.\n"
 "- Authentication offers an additionnal level of security to avoid impersonification, in case someone gains to the user's database.\n"
 msgstr ""
+"\n"
+"This module adds generic features to register an Odoo DB on the proxy responsible for receiving data (via requests from web-services).\n"
+"- An edi_proxy_user has a unique identification on a specific proxy type (e.g. l10n_it_edi, peppol) which\n"
+"allows to identify him when receiving a document addressed to him. It is linked to a specific company on a specific\n"
+"Odoo database.\n"
+"- Encryption features allows to decrypt all the user's data when receiving it from the proxy.\n"
+"- Authentication offers an additionnal level of security to avoid impersonification, in case someone gains to the user's database.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -9584,6 +9623,19 @@ msgid ""
 "We also test that generating xml from odoo with given parameters gives exactly the same xml as the expected,\n"
 "valid ones.\n"
 msgstr ""
+"\n"
+"This module tests the module 'account_edi_ubl_cii', it is separated since dependencies to some\n"
+"localizations were required. Its name begins with 'l10n' to not overload runbot.\n"
+"\n"
+"The test files are separated by sources, they were taken from:\n"
+"\n"
+"* the factur-x doc (form the FNFE)\n"
+"* the peppol-bis-invoice-3 doc (the github repository: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples contains examples)\n"
+"* odoo, these files pass all validation tests (using ecosio or the FNFE validator)\n"
+"\n"
+"We test that the external examples are correctly imported (currency, total amount and total tax match).\n"
+"We also test that generating xml from odoo with given parameters gives exactly the same xml as the expected,\n"
+"valid ones.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website_slides_full
@@ -10180,7 +10232,7 @@ msgstr "%(company_currency_name)s başına %(rate_currency_name)s"
 #. odoo-python
 #: code:addons/base/models/res_currency.py:0
 msgid "%(integral_amount)s %(currency_unit)s"
-msgstr ""
+msgstr "%(integral_amount)s %(currency_unit)s"
 
 #. module: base
 #. odoo-python
@@ -39912,7 +39964,7 @@ msgstr "Bu modül, çevrim içi banka senkronizasyonu için kullanılır."
 #. module: base
 #: model:ir.module.module,summary:base.module_account_peppol
 msgid "This module is used to send/receive documents with PEPPOL"
-msgstr ""
+msgstr "This module is used to send/receive documents with PEPPOL"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_appointment

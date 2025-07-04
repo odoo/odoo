@@ -38,8 +38,8 @@ msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
 msgstr ""
-"Valitse tämä varmistaaksesi, että jokainen osoite sisältää kaupungin, joka "
-"on tämän maan kaupunkien luettelossa."
+"Valitse tämä ruutu varmistaaksesi, että jokainen luotu osoite sisältää "
+"kaupungin, joka on tämän maan kaupunkien luettelossa."
 
 #. module: base_address_extended
 #: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
@@ -60,7 +60,7 @@ msgstr "Kaupunki"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__city_id
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__city_id
 msgid "City ID"
-msgstr "Kaupunki ID"
+msgstr "Kaupungin tunnus"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_partner
@@ -98,9 +98,9 @@ msgid ""
 "                your partner records. Note that an option can be set on each country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
-"Näytä ja hallitse partneritietueisiin liitettäviä kaupunkeja.\n"
-"                Huomaa, että kunkin maan osalta voidaan valita erikseen pakollinen\n"
-"                tarkistus siitä, että kyseisessä maassa on listalla oleva kaupunki."
+"Näytä ja hallitse listaa kaupungeista, joita voi kohdistaa\n"
+"                kumppanikirjauksiin. Huomaa, että kunkin maan osalta voidaan valita erikseen pakollinen\n"
+"                tarkistus, että kaupunki löytyy kyseisen maan listalta."
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
@@ -118,7 +118,7 @@ msgstr "Ovi #"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
-msgstr "Pakota kaupunkien tarkistus"
+msgstr "Pakota kaupunki"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
@@ -136,7 +136,7 @@ msgstr "Talo #"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_uid
@@ -156,13 +156,13 @@ msgstr "Nimi"
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter
 msgid "Search City"
-msgstr "Etsi kaupunkia"
+msgstr "Hae kaupunkia"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__state_id
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "State"
-msgstr "Alue"
+msgstr "Osavaltio/Kunta"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form

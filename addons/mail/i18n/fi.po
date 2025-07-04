@@ -2375,7 +2375,7 @@ msgstr "Suljettu"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_sidebar.xml:0
 msgid "Collapse panel"
-msgstr "Sulje paneeli"
+msgstr "Pienennä paneeli"
 
 #. module: mail
 #. odoo-javascript
@@ -2405,7 +2405,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated ids of recipient partners"
-msgstr "Pilkulla erotettu lista vastaanottajien id:istä"
+msgstr "Pilkulla erotettu lista vastaanottajien tunnuksista"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__partner_to
@@ -2482,14 +2482,14 @@ msgstr "Konferenssi: %s"
 #. module: mail
 #: model:ir.model,name:mail.model_res_config_settings
 msgid "Config Settings"
-msgstr "Asetukset"
+msgstr "Kokoonpanoasetukset"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__configuration
 #: model:ir.ui.menu,name:mail.menu_configuration
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Configuration"
-msgstr "Asetukset"
+msgstr "Kokoonpanoasetukset"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2528,7 +2528,7 @@ msgstr "Vahvistettu"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
 msgid "Congratulations, you're done with your activities."
-msgstr "Olet suorittanut kaikki toimenpiteesi."
+msgstr "Onneksi olkoon, olet suorittanut kaikki toimenpiteesi."
 
 #. module: mail
 #. odoo-javascript
@@ -2573,7 +2573,7 @@ msgstr "Yhteystyyppi:"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Connection:"
-msgstr "Tunnistus epäonnistui:"
+msgstr "Yhteys:"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__is_ssl
@@ -2587,7 +2587,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_force_new
 msgid "Considers answers as new thread"
-msgstr "Pitää vastauksia uutena lankana"
+msgstr "Tulkitsee vastaukset uutena ketjuna"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -2615,9 +2615,9 @@ msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel for this user. This includes: creating, joining, pinning"
 msgstr ""
-"Sisältää sen viimeisimmän mielenkiintoisen tapahtuman päivämäärän ja "
-"kellonajan, joka tapahtui tällä kanavalla tälle käyttäjälle. Tämä sisältää: "
-"luomisen, liittymisen, kiinnittämisen"
+"Sisältää viimeisimmän mielenkiintoisen tapahtuman päivämäärän ja kellonajan,"
+" joka tapahtui tällä kanavalla tälle käyttäjälle. Tämä sisältää: luomisen, "
+"liittymisen, kiinnittämisen"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__last_interest_dt
@@ -2626,14 +2626,15 @@ msgid ""
 "this channel. This updates itself when new message posted."
 msgstr ""
 "Sisältää tässä kanavassa viimeksi tapahtuneen mielenkiintoisen tapahtuman "
-"päivämäärän ja kellonajan. Tämä päivittyy, kun uusi viesti lähetetään."
+"päivämäärän ja kellonajan. Tämä päivittyy automaattisesti, kun uusi viesti "
+"lähetetään."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__unpin_dt
 msgid "Contains the date and time when the channel was unpinned by the user."
 msgstr ""
 "Sisältää päivämäärän ja kellonajan, jolloin käyttäjä poisti kanavan "
-"linkityksen."
+"kiinnityksen ."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__content
@@ -2649,7 +2650,7 @@ msgid ""
 "Content that will automatically replace the shortcut of your choosing. This "
 "content can still be adapted before sending your message."
 msgstr ""
-"Sisältö, joka korvaa automaattisesti valitsemasi pikakuvakkeen. Tätä "
+"Sisältö, joka korvaa automaattisesti valitsemasi pikanäppäimen. Tätä "
 "sisältöä voidaan vielä muokata ennen viestin lähettämistä."
 
 #. module: mail
@@ -2674,7 +2675,7 @@ msgid ""
 "Couldn't get your emails. Check out the error message below for more info:\n"
 "%s"
 msgstr ""
-"En saanut sähköpostejanne. Katso lisätietoja alla olevasta virheilmoituksesta:\n"
+"Sähköpostejasi ei voitu noutaa. Katso lisätietoja alla olevasta virheilmoituksesta:\n"
 "%s"
 
 #. module: mail
@@ -2682,7 +2683,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner__message_bounce
 #: model:ir.model.fields,help:mail.field_res_users__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr "Tämän yhteystiedon bounced-tilassa olevien sähköpostien laskuri"
+msgstr "Tämän yhteystiedon palautunut-tilassa olevien sähköpostien luku"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__country_id
@@ -2699,7 +2700,7 @@ msgstr "Luo"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__next_activity
 msgid "Create Activity"
-msgstr "Luo aktiviteetti"
+msgstr "Luo toimenpide"
 
 #. module: mail
 #. odoo-javascript
@@ -2748,7 +2749,7 @@ msgstr "Luo sähköpostimalli"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__object_id
 msgid "Create a New Record"
-msgstr "Luo uusi tietue"
+msgstr "Luo uusi kirjaus"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
@@ -2862,7 +2863,7 @@ msgstr "Luotu"
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web_portal/chatter.js:0
 msgid "Creating a new record..."
-msgstr "Luo uusi tietue..."
+msgstr "Luo uusi kirjaus..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -2872,7 +2873,7 @@ msgstr "Luontipäivä"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_search
 msgid "Creator"
-msgstr "Kirjoittaja"
+msgstr "Luonut"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_ice_server__credential
@@ -5747,7 +5748,7 @@ msgstr "Myöhässä olevat toimenpiteet"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Launch Plans"
-msgstr "Laukaise suunnitelmat"
+msgstr "Käynnistä suunnitelmat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_layout_xmlid
@@ -5761,25 +5762,25 @@ msgstr "Ulkoasu"
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_list
 msgid "Leave"
-msgstr "Poissaolo"
+msgstr "Loma"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
 msgid "Leave Channel"
-msgstr "Poistu kanavalta"
+msgstr "Poistu kanavasta"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/thread_model_patch.js:0
 msgid "Leave Conversation"
-msgstr "Jätä keskustelu"
+msgstr "Poistu keskustelusta"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_commands.js:0
 msgid "Leave this channel"
-msgstr "Eroa kanavalta"
+msgstr "Poistu kanavasta"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_link_preview_action
@@ -10337,14 +10338,14 @@ msgstr "Ketjun kuva"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__model_is_thread
 msgid "Thread-Enabled"
-msgstr "Säie-aktivoitu"
+msgstr "Ketju-aktivoitu"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/thread_actions.js:0
 msgid "Threads"
-msgstr "Säikeet"
+msgstr "Ketjut"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__user_tz
@@ -10479,7 +10480,7 @@ msgstr "Tänään:"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/quick_reaction_menu.xml:0
 msgid "Toggle Emoji Picker"
-msgstr "Vaihda emojivalitsinta"
+msgstr "Vaihda emojivalitsin"
 
 #. module: mail
 #. odoo-javascript
@@ -10508,7 +10509,7 @@ msgstr "Huomenna:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Topics discussed in this group..."
-msgstr "Aiheet tämän ryhmän keskusteltavaksi..."
+msgstr "Aiheet, joista on keskusteltu tässä ryhmässä..."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__track_recipients
