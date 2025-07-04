@@ -9,6 +9,13 @@ from odoo.addons.account.models.account_payment_method import AccountPaymentMeth
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import Form, tagged, HttpCase
 from odoo.exceptions import UserError, ValidationError
+<<<<<<< 0671a0581cbf32586d789a0a4fb0c45a63d4260f
+||||||| 509d14d168f3e23af3bc9c50f165c2eea3682dd7
+from odoo import Command
+=======
+from odoo import fields
+from odoo import Command
+>>>>>>> e4a09467a20f282d28baa09091c10a6aea6d0094
 
 
 @tagged('post_install', '-at_install')
@@ -323,3 +330,120 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
         })
         self.assertEqual(journal.alias_name, f'test-journal-{company_name}')
         self.assertEqual(journal2.alias_name, f'test-journal-{company_name}-b')
+<<<<<<< 0671a0581cbf32586d789a0a4fb0c45a63d4260f
+||||||| 509d14d168f3e23af3bc9c50f165c2eea3682dd7
+
+    def test_use_default_account_from_journal(self):
+        """
+        Test that the autobalance uses the default account id of the journal
+        """
+        autobalance_account = self.env['account.account'].create({
+            'name': 'Autobalance Account',
+            'account_type': 'income',
+            'code': 'A',
+        })
+        journal = self.env['account.journal'].create({
+            'name': 'Test Journal',
+            'type': 'general',
+            'code': 'B',
+            'default_account_id': autobalance_account.id,
+        })
+
+        entry = self.env['account.move'].create({
+            'move_type': 'entry',
+            'journal_id': journal.id,
+            'line_ids': [
+                Command.create({
+                    'debit': 100.0,
+                    'credit': 0.0,
+                    'tax_ids': (self.company_data['default_tax_sale']),
+                    'account_id': self.company_data['default_account_revenue'].id
+                })
+            ]
+        })
+
+        entry.action_post()
+        self.assertRecordValues(entry.line_ids, [
+            {'balance': 100.0, 'account_id': self.company_data['default_account_revenue'].id},
+            {'balance': 15.0, 'account_id': self.company_data['default_account_tax_sale'].id},
+            {'balance': -115.0, 'account_id': autobalance_account.id},
+        ])
+=======
+
+    def test_non_latin_journal_code_payment_reference(self):
+        """ Ensure non-Latin journal codes do not cause errors and payment references are valid """
+        non_latin_code = 'TΠY'
+        latin_code = 'TPY'
+
+        journal_non_latin = self.env['account.journal'].create({
+            'name': 'Test Journal',
+            'type': 'sale',
+            'code': non_latin_code,
+            'invoice_reference_model': 'euro'
+        })
+        journal_latin = self.env['account.journal'].create({
+            'name': 'Test Journal',
+            'type': 'sale',
+            'code': latin_code,
+            'invoice_reference_model': 'euro'
+        })
+
+        invoice_non_latin = TestAccountJournalAlias.init_invoice(
+            move_type='out_invoice',
+            partner=self.partner_a,
+            invoice_date=fields.Date.today(),
+            post=True,
+            products=[self.product_a],
+            journal=journal_non_latin,
+        )
+        invoice_latin = TestAccountJournalAlias.init_invoice(
+            move_type='out_invoice',
+            partner=self.partner_a,
+            invoice_date=fields.Date.today(),
+            post=True,
+            products=[self.product_a],
+            journal=journal_latin,
+        )
+
+        ref_parts_non_latin = invoice_non_latin.payment_reference.split()
+        self.assertEqual(ref_parts_non_latin[1][:3], str(invoice_non_latin.journal_id.id), "The reference should start with " + str(invoice_non_latin.journal_id.id))
+
+        ref_parts_latin = invoice_latin.payment_reference.split()
+        self.assertIn(ref_parts_latin[1][:3], latin_code, f"Expected journal code '{latin_code}' in second part of reference")
+
+    def test_use_default_account_from_journal(self):
+        """
+        Test that the autobalance uses the default account id of the journal
+        """
+        autobalance_account = self.env['account.account'].create({
+            'name': 'Autobalance Account',
+            'account_type': 'income',
+            'code': 'A',
+        })
+        journal = self.env['account.journal'].create({
+            'name': 'Test Journal',
+            'type': 'general',
+            'code': 'B',
+            'default_account_id': autobalance_account.id,
+        })
+
+        entry = self.env['account.move'].create({
+            'move_type': 'entry',
+            'journal_id': journal.id,
+            'line_ids': [
+                Command.create({
+                    'debit': 100.0,
+                    'credit': 0.0,
+                    'tax_ids': (self.company_data['default_tax_sale']),
+                    'account_id': self.company_data['default_account_revenue'].id
+                })
+            ]
+        })
+
+        entry.action_post()
+        self.assertRecordValues(entry.line_ids, [
+            {'balance': 100.0, 'account_id': self.company_data['default_account_revenue'].id},
+            {'balance': 15.0, 'account_id': self.company_data['default_account_tax_sale'].id},
+            {'balance': -115.0, 'account_id': autobalance_account.id},
+        ])
+>>>>>>> e4a09467a20f282d28baa09091c10a6aea6d0094
