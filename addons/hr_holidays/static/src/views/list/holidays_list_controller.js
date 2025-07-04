@@ -2,59 +2,63 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from '@web/core/registry';
 import { listView } from '@web/views/list/list_view';
 import { ListController } from "@web/views/list/list_controller";
-import { _t } from "@web/core/l10n/translation";
+import { useSubEnv } from "@odoo/owl";
 
 export class HolidaysListController extends ListController {
+    static template = "hr_holidays.HolidaysListView";
+
     setup() {
         super.setup();
         this.orm = useService("orm");
-    }
+        this.onClickViewButton = this.env.onClickViewButton;
 
-    getStaticActionMenuItems() {
-        const menuItems = super.getStaticActionMenuItems();
-
-        if (this.model.root.selection.every((record) => record.data.can_approve)) {
-            menuItems.approve = {
-                isAvailable: () => { return true;},
-                sequence: 50,
-                description: _t('Approve'),
-                callback: async () => await this.launchAction('action_approve'),
-            };
-        }
-
-        if (this.model.root.selection.every((record) => record.data.can_validate)) {
-            menuItems.validate = {
-                isAvailable: () => { return true; },
-                sequence: 60,
-                description: _t('Validate'),
-                callback: async () => await this.launchAction('action_approve'),
-            };
-        }
-
-        if (this.model.root.selection.every((record) => record.data.can_refuse)) {
-            menuItems.refuse = {
-                sequence: 70,
-                description: _t('Refuse'),
-                callback: async () => await this.launchAction('action_refuse'),
-            };
-        }
-
-        return menuItems;
-    }
-
-    async launchAction(functionName) {
-        await this.orm.call(
-            this.props.resModel,
-            functionName,
-            [this.model.root.selection.map((a) => a.resId)],
-        );
-        await this.actionService.doAction({
-            'type': 'ir.actions.client',
-            'tag': 'soft_reload',
+        useSubEnv({
+            onClickViewButton: (params) => this.handleViewButtonClick(params),
         });
     }
 
+    get actionFilters() {
+        return {
+            action_approve: (record) => record.data.can_approve || record.data.can_validate,
+            action_refuse: (record) => record.data.can_refuse,
+        };
+    }
+
+    handleViewButtonClick(params) {
+        const actionName = params.clickParams.name;
+        const filter = this.actionFilters[actionName];
+        if (filter) {
+            const eligibleRecords = this.model.root.selection.filter(filter);
+            if (eligibleRecords.length) {
+                this.executeAction(actionName, eligibleRecords);
+            } else {
+                this.onClickViewButton(params);
+            }
+        }
+    }
+
+    displayButton(button) {
+        const { selection } = this.model.root;
+        if (!selection.length) {
+            return false;
+        }
+        const filter = this.actionFilters[button.clickParams.name];
+        return filter ? selection.some(filter) : false;
+    }
+
+    async executeAction(functionName, records) {
+        await this.orm.call(
+            this.props.resModel,
+            functionName,
+            [records.map((record) => record.resId)],
+        );
+        await this.actionService.doAction({
+            type: "ir.actions.client",
+            tag: "soft_reload",
+        });
+    }
 }
+
 export const holidaysListView = {
     ...listView,
     Controller: HolidaysListController,
