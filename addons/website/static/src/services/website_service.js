@@ -1,16 +1,15 @@
-import { jsToPyLocale } from "@web/core/l10n/utils";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from '@web/core/registry';
-import { user } from "@web/core/user";
 import { loadBundle } from "@web/core/assets";
-import { ensureJQuery } from "@web/core/ensure_jquery";
+import { _t } from "@web/core/l10n/translation";
+import { jsToPyLocale } from "@web/core/l10n/utils";
+import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { isVisible } from "@web/core/utils/ui";
 
-import { FullscreenIndication } from '../components/fullscreen_indication/fullscreen_indication';
-import { WebsiteLoader } from '../components/website_loader/website_loader';
-import { reactive, EventBus } from "@odoo/owl";
+import { EventBus, reactive } from "@odoo/owl";
+import { FullscreenIndication } from "../components/fullscreen_indication/fullscreen_indication";
+import { WebsiteLoader } from "../components/website_loader/website_loader";
 
-const websiteSystrayRegistry = registry.category('website_systray');
+const websiteSystrayRegistry = registry.category("website_systray");
 
 // TODO this is duplicated in website_root at least, it should be a shared util
 export const unslugHtmlDataObject = (repr) => {
@@ -24,14 +23,14 @@ export const unslugHtmlDataObject = (repr) => {
     };
 };
 
-const ANONYMOUS_PROCESS_ID = 'ANONYMOUS_PROCESS_ID';
+const ANONYMOUS_PROCESS_ID = "ANONYMOUS_PROCESS_ID";
 
 export const websiteService = {
-    dependencies: ['orm', 'action', 'hotkey'],
+    dependencies: ["orm", "action", "hotkey"],
     start(env, { orm, action, hotkey }) {
         let websites = [];
         let currentWebsiteId;
-        let currentWebsiteIdList = [];
+        const currentWebsiteIdList = [];
         let currentMetadata = {};
         let fullscreen;
         let pageDocument;
@@ -42,7 +41,7 @@ export const websiteService = {
         let isDesigner;
         let hasMultiWebsites;
         let actionJsId;
-        let blockingProcesses = [];
+        const blockingProcesses = [];
         let modelNamesProm = null;
         const modelNames = {};
         let invalidateSnippetCache = false;
@@ -58,27 +57,33 @@ export const websiteService = {
         });
         const bus = new EventBus();
 
-        hotkey.add("escape", () => {
-            // Toggle fullscreen mode when pressing escape.
-            if (
-                (!currentWebsiteId && !fullscreen)
-                || (pageDocument && isVisible(pageDocument.querySelector(".modal")))
-            ) {
-                // Only allow to use this feature while on the website app, or
-                // while it is already fullscreen (in case you left the website
-                // app in fullscreen mode, thanks to CTRL-K), or if a modal
-                // is open within the preview and could be closed with escape.
-                return;
-            }
-            fullscreen = !fullscreen;
-            document.body.classList.toggle('o_website_fullscreen', fullscreen);
-            bus.trigger(fullscreen ? 'FULLSCREEN-INDICATION-SHOW' : 'FULLSCREEN-INDICATION-HIDE');
-        }, { global: true });
-        registry.category('main_components').add('FullscreenIndication', {
+        hotkey.add(
+            "escape",
+            () => {
+                // Toggle fullscreen mode when pressing escape.
+                if (
+                    (!currentWebsiteId && !fullscreen) ||
+                    (pageDocument && isVisible(pageDocument.querySelector(".modal")))
+                ) {
+                    // Only allow to use this feature while on the website app, or
+                    // while it is already fullscreen (in case you left the website
+                    // app in fullscreen mode, thanks to CTRL-K), or if a modal
+                    // is open within the preview and could be closed with escape.
+                    return;
+                }
+                fullscreen = !fullscreen;
+                document.body.classList.toggle("o_website_fullscreen", fullscreen);
+                bus.trigger(
+                    fullscreen ? "FULLSCREEN-INDICATION-SHOW" : "FULLSCREEN-INDICATION-HIDE"
+                );
+            },
+            { global: true }
+        );
+        registry.category("main_components").add("FullscreenIndication", {
             Component: FullscreenIndication,
             props: { bus },
         });
-        registry.category('main_components').add('WebsiteLoader', {
+        registry.category("main_components").add("WebsiteLoader", {
             Component: WebsiteLoader,
             props: { bus },
         });
@@ -110,7 +115,7 @@ export const websiteService = {
                     lastWebsiteId = id;
                 }
                 addWebsiteId(id);
-                websiteSystrayRegistry.trigger('EDIT-WEBSITE');
+                websiteSystrayRegistry.trigger("EDIT-WEBSITE");
             },
             /**
              * This represents the current website being edited in the
@@ -119,13 +124,13 @@ export const websiteService = {
              * not displayed.
              */
             get currentWebsite() {
-                const currentWebsite = websites.find(w => w.id === currentWebsiteId);
+                const currentWebsite = websites.find((w) => w.id === currentWebsiteId);
                 if (currentWebsite) {
                     currentWebsite.metadata = currentMetadata;
                 }
                 return currentWebsite;
             },
-            get currentWebsiteId(){
+            get currentWebsiteId() {
                 return currentWebsiteId;
             },
             get websites() {
@@ -151,7 +156,18 @@ export const websiteService = {
                 if (!isWebsitePage) {
                     currentMetadata = {};
                 } else {
-                    const { mainObject, seoObject, isPublished, canOptimizeSeo, canPublish, editableInBackend, translatable, viewXmlid, defaultLangName, langName } = dataset;
+                    const {
+                        mainObject,
+                        seoObject,
+                        isPublished,
+                        canOptimizeSeo,
+                        canPublish,
+                        editableInBackend,
+                        translatable,
+                        viewXmlid,
+                        defaultLangName,
+                        langName,
+                    } = dataset;
                     // We ignore multiple menus with the same `content_menu_id`
                     // in the DOM, since it's possible to have different
                     // templates for the same content menu (E.g. used for a
@@ -170,10 +186,10 @@ export const websiteService = {
                         path: document.location.href,
                         mainObject: unslugHtmlDataObject(mainObject),
                         seoObject: unslugHtmlDataObject(seoObject),
-                        isPublished: isPublished === 'True',
-                        canOptimizeSeo: canOptimizeSeo === 'True',
-                        canPublish: canPublish === 'True',
-                        editableInBackend: editableInBackend === 'True',
+                        isPublished: isPublished === "True",
+                        canOptimizeSeo: canOptimizeSeo === "True",
+                        canPublish: canPublish === "True",
+                        editableInBackend: editableInBackend === "True",
                         title: document.title,
                         translatable: !!translatable,
                         contentMenus,
@@ -181,16 +197,18 @@ export const websiteService = {
                         // a page is editable or not. For now, we use
                         // the editable selector because it's the common
                         // denominator of editable pages.
-                        editable: !!document.getElementById('wrapwrap'),
+                        editable: !!document.getElementById("wrapwrap"),
                         viewXmlid: viewXmlid,
                         lang: jsToPyLocale(document.documentElement.getAttribute("lang")),
                         defaultLangName: defaultLangName,
                         langName: langName,
-                        direction: document.documentElement.querySelector('#wrapwrap.o_rtl') ? 'rtl' : 'ltr',
+                        direction: document.documentElement.querySelector("#wrapwrap.o_rtl")
+                            ? "rtl"
+                            : "ltr",
                     };
                 }
                 contentWindow = document.defaultView;
-                websiteSystrayRegistry.trigger('CONTENT-UPDATED');
+                websiteSystrayRegistry.trigger("CONTENT-UPDATED");
             },
             get pageDocument() {
                 return pageDocument;
@@ -250,13 +268,15 @@ export const websiteService = {
                 this.websiteRootInstance = undefined;
                 if (lang) {
                     invalidateSnippetCache = true;
-                    path = `/website/lang/${encodeURIComponent(lang)}?r=${encodeURIComponent(path)}`;
+                    path = `/website/lang/${encodeURIComponent(lang)}?r=${encodeURIComponent(
+                        path
+                    )}`;
                 }
                 action.doAction("website.website_preview", {
                     clearBreadcrumbs: true,
                     props: {
                         websiteId: websiteId || currentWebsiteId,
-                        path: path || (contentWindow && contentWindow.location.href) || '/',
+                        path: path || (contentWindow && contentWindow.location.href) || "/",
                         enableEditor: edition,
                         editTranslations: translation,
                     },
@@ -265,21 +285,26 @@ export const websiteService = {
             async fetchUserGroups() {
                 // Fetch user groups, before fetching the websites.
                 [isRestrictedEditor, isDesigner, hasMultiWebsites] = await Promise.all([
-                    user.hasGroup('website.group_website_restricted_editor'),
-                    user.hasGroup('website.group_website_designer'),
-                    user.hasGroup('website.group_multi_website'),
+                    user.hasGroup("website.group_website_restricted_editor"),
+                    user.hasGroup("website.group_website_designer"),
+                    user.hasGroup("website.group_multi_website"),
                 ]);
             },
             async fetchWebsites() {
-                websites = [...(await orm.searchRead('website', [], ['domain', 'id', 'name', 'language_ids']))];
+                websites = [
+                    ...(await orm.searchRead(
+                        "website",
+                        [],
+                        ["domain", "id", "name", "language_ids"]
+                    )),
+                ];
             },
             async loadWysiwyg() {
-                await ensureJQuery();
-                await loadBundle('website.backend_assets_all_wysiwyg');
+                await loadBundle("website.backend_assets_all_wysiwyg");
             },
             blockPreview(showLoader, processId) {
                 if (!blockingProcesses.length) {
-                    bus.trigger('BLOCK', { showLoader });
+                    bus.trigger("BLOCK", { showLoader });
                 }
                 blockingProcesses.push(processId || ANONYMOUS_PROCESS_ID);
             },
@@ -288,15 +313,15 @@ export const websiteService = {
                 if (processIndex > -1) {
                     blockingProcesses.splice(processIndex, 1);
                     if (blockingProcesses.length === 0) {
-                        bus.trigger('UNBLOCK');
+                        bus.trigger("UNBLOCK");
                     }
                 }
             },
             showLoader(props) {
-                bus.trigger('SHOW-WEBSITE-LOADER', props);
+                bus.trigger("SHOW-WEBSITE-LOADER", props);
             },
             hideLoader() {
-                bus.trigger('HIDE-WEBSITE-LOADER');
+                bus.trigger("HIDE-WEBSITE-LOADER");
             },
             prepareOutLoader() {
                 bus.trigger("PREPARE-OUT-WEBSITE-LOADER");
@@ -315,10 +340,11 @@ export const websiteService = {
                     // with another helper to map a model functional name from
                     // its technical map without the need of the right access
                     // rights (which is why I cannot use search_read here).
-                    modelNamesProm = orm.call("ir.model", "get_available_models")
-                        .then(modelsData => {
+                    modelNamesProm = orm
+                        .call("ir.model", "get_available_models")
+                        .then((modelsData) => {
                             for (const modelData of modelsData) {
-                                modelNames[modelData['model']] = modelData['display_name'];
+                                modelNames[modelData["model"]] = modelData["display_name"];
                             }
                         })
                         // Precaution in case the util is simply removed without
@@ -333,4 +359,4 @@ export const websiteService = {
     },
 };
 
-registry.category('services').add('website', websiteService);
+registry.category("services").add("website", websiteService);

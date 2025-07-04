@@ -466,6 +466,7 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
+            'website/static/src/utils/images.js',
             'website/static/src/components/resource_editor/**/*',
             'website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.js',
             'website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.scss',
