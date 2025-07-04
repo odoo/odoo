@@ -125,7 +125,7 @@ class StockPicking(models.Model):
             # for moves with qty. done and not already linked to a SO line.
             if not sale_order or move.sale_line_id or not move.picked or not (
                 (move.location_dest_id.usage in ['customer', 'transit'] and not move.move_dest_ids)
-                or (move.location_id.usage == 'customer' and move.to_refund)
+                or (not move.location_id.warehouse_id and move.to_refund)
             ):
                 continue
             product = move.product_id
