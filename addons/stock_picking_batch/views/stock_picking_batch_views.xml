@@ -12,6 +12,9 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done"/>
                 </header>
             </xpath>
+            <xpath expr="//button[@name='action_show_details']" position="attributes">
+                <attribute name="context">{'show_picking': True}</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -39,7 +42,7 @@
             <xpath expr="//field[@name='product_uom']" position="after">
                 <field name="picked" optional="hide"/>
                 <button name="action_show_details" type="object" title="Details"
-                        icon="fa-list" invisible="not show_details_visible"/>
+                    string="Details" context="{'show_picking': True}" invisible="not show_details_visible"/>
             </xpath>
         </field>
     </record>
