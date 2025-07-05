@@ -1,15 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import pytz
-
 from collections import defaultdict
 from contextlib import contextmanager
-from dateutil.relativedelta import relativedelta
 from itertools import chain
+
+import pytz
+from dateutil.relativedelta import relativedelta
 from psycopg2 import OperationalError
 
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, UserError
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.intervals import Intervals
 
@@ -335,6 +335,14 @@ class HrWorkEntry(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         vals_list = [self._set_current_contract(vals) for vals in vals_list]
+        company_by_employee_id = {}
+        for vals in vals_list:
+            if vals.get('company_id'):
+                continue
+            if vals['employee_id'] not in company_by_employee_id:
+                employee = self.env['hr.employee'].browse(vals['employee_id'])
+                company_by_employee_id[employee.id] = employee.company_id.id
+            vals['company_id'] = company_by_employee_id[vals['employee_id']]
         work_entries = super().create(vals_list)
         work_entries._check_if_error()
         return work_entries
