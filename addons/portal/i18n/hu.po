@@ -12,8 +12,8 @@
 # Tamás Németh <ntomasz81@gmail.com>, 2024
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2024
 # A . <tibor@inventati.org>, 2024
-# gezza <geza.nagy@oregional.hu>, 2025
 # 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2025
+# gezza <geza.nagy@oregional.hu>, 2025
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-23 18:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2025\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +32,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "\" to validate your action."
-msgstr ""
+msgstr "\" az akció jóváhagyásához."
 
 #. module: portal
 #. odoo-javascript
@@ -51,6 +51,8 @@ msgid ""
 "2. Confirm you want to delete your account by\n"
 "                                        copying down your login ("
 msgstr ""
+"2. Erősítse meg,  hogy törölni szeretné a fiókját\n"
+"                                        a bejelentkezési név bemásolásával ("
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -58,6 +60,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary text-primary-"
 "emphasis\"/> My Account"
 msgstr ""
+"<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary text-primary-"
+"emphasis\"/> Fiókom"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
@@ -65,6 +69,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-sign-out me-1 small text-primary text-primary-"
 "emphasis\"/> Logout"
 msgstr ""
+"<i class=\"fa fa-fw fa-sign-out me-1 small text-primary text-primary-"
+"emphasis\"/> Kijelentkezés"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
@@ -72,6 +78,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-th me-1 small text-primary text-primary-emphasis\"/> "
 "Apps"
 msgstr ""
+"<i class=\"fa fa-fw fa-th me-1 small text-primary text-primary-emphasis\"/> "
+"Alkalmazások"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
@@ -120,6 +128,10 @@ msgid ""
 "                <br/>Please contact us directly for that operation.\n"
 "            </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                A vállalat nevét, adószámát és országát nem lehet megváltoztatni, ha már dokumentumok kerültek kiállításra a fiókhoz.\n"
+"                <br/>Kérjük, vegye fel a kapcsolatot velünk ehhez a művelethez.\n"
+"            </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -127,11 +139,13 @@ msgid ""
 "<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
 msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -235,23 +249,101 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<t t-set=\"user_name\" t-value=\"object.user_id.name or object.partner_id.name or ''\"/>\n"
+"            <t t-set=\"company_name\" t-value=\"object.user_id.company_id.name or object.partner_id.company_id.name or ''\"/>\n"
+"            <t t-set=\"signup_url\" t-value=\"object.user_id.partner_id and object.user_id.partner_id._get_signup_url() or object.partner_id and object.partner_id._get_signup_url()\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Az Ön fiókja</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"user_name\">Marc Demo</span>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not object.user_id.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.user_id.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.user_id.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Kedves <t t-out=\"user_name\">Marc Demo</t>,<br/> <br/>\n"
+"                        Üdvözöjük a(z) <t t-out=\"company_name\">YourCompany</t>ügyfélportálján!<br/><br/>\n"
+"                        Egy fiók került létrehozásra a következő bejelentkezési névvel: <t t-out=\"object.user_id.login\">demo</t><br/><br/>\n"
+"                        Kattintson az alábbi gombra jelszó megadásához és a fiók aktiváláshoz.\n"
+"                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                            <a t-att-href=\"signup_url\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                <strong>Fiók aktiválás</strong>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <t t-out=\"object.wizard_id.welcome_message or ''\">Üdvözöljük az ügyfélportálon!</t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"company_name\">Vállalatom</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.user_id.company_id.phone or ''\">+36 1 123-4567</t>\n"
+"                    <t t-if=\"object.user_id.company_id.email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ object.user_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.email or ''\">info@example.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.user_id.company_id.website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ object.user_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Üzemelteti: <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_users_apikeys_description
 msgid "API Key Description"
-msgstr ""
+msgstr "API kulcs leírás"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_security.js:0
 msgid "API Key Ready"
-msgstr ""
+msgstr "API kulcs elkészült"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/signature_form/signature_form.js:0
 msgid "Accept & Sign"
-msgstr "Elfogad és aláír"
+msgstr "Elfogadás és aláírás"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
@@ -311,7 +403,7 @@ msgstr "Avatár"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Cancel"
-msgstr "Visszavonás"
+msgstr "Mégsem"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -326,9 +418,9 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"Az adószám módosítása az önkiszolgáló portálon keresztül nem lehetséges, "
-"amennyiben már rendelt tőlünk. Változtatáshoz kérjük vegye fel velünk a "
-"kapcsolatot."
+"Az adószám módosítása nem lehetséges az ügyfélportálon keresztül, amennyiben"
+" már dokumentumok kerültek kiállításra a fiókhoz. Változtatáshoz kérjük, "
+"vegye fel velünk a kapcsolatot."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -336,9 +428,9 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"A cégnév módosítása az önkiszolgáló portálon keresztül nem lehetséges, "
-"amennyiben már rendelt tőlünk. Változtatáshoz kérjük vegye fel velünk a "
-"kapcsolatot."
+"A cégnév módosítása nem lehetséges az ügyfélportálon keresztül, amennyiben "
+"már dokumentumok kerültek kiállításra a fiókhoz. Változtatáshoz kérjük, "
+"vegye fel velünk a kapcsolatot."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -346,6 +438,8 @@ msgid ""
 "Changing the country is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Az ország megváltoztatása nem lehetséges, ha már dokumentumok kerültek "
+"kiállításra a fiókhoz. Kérjük, vegye fel velünk a kapcsolatot a művelethez."
 
 #. module: portal
 #. odoo-javascript
@@ -429,7 +523,7 @@ msgstr "Kapcsolatok"
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_composer.js:0
 msgid "Could not save file <strong>%s</strong>"
-msgstr "Nem methető file <strong>%s</strong>"
+msgstr "Nem methető fájl: <strong>%s</strong>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -453,17 +547,17 @@ msgstr "Létrehozva"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
 msgid "Customer API Keys"
-msgstr ""
+msgstr "Ügyfél API kulcsok"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
-msgstr "Ügyfélportál webcíme"
+msgstr "Ügyfélportál URL"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
 msgid "Customers can generate API Keys"
-msgstr ""
+msgstr "Az ügyfelek generálhatnak API kulcsot"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -494,7 +588,7 @@ msgstr "Részletek"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Developer API Keys"
-msgstr ""
+msgstr "Fejlesztői API kulcsok"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -505,10 +599,10 @@ msgid ""
 "                                            This action cannot be undone.\n"
 "                                        </b>"
 msgstr ""
-"A fiók megszüntetésével Önnek nincs többé lehetősége a belépésre.<br/>\n"
+"A fiók megszüntetésével nem lesz többé lehetősége a belépésre.<br/>\n"
 "                                        <b>\n"
 "                                            <i class=\"fa fa-exclamation-triangle text-danger\"/>\n"
-"                                            Később nem helyreállítható.\n"
+"                                            Ezt az akciót nem lehet visszavonni.\n"
 "                                        </b>"
 
 #. module: portal
@@ -544,12 +638,12 @@ msgstr "Email"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Email Address already taken by another user"
-msgstr "Az Email cím már használatban van egy regisztráció alatt."
+msgstr "Ezt az email címet már használja egy másik felhasználó."
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr "E-mail szál"
+msgstr "Email szál"
 
 #. module: portal
 #. odoo-javascript
@@ -572,28 +666,28 @@ msgstr "Elfelejtette a jelszavát?"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Give a duration for the key's validity"
-msgstr ""
+msgstr "Kulcs érvényességi idejének megadása"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Go Back"
-msgstr "Visszatérés"
+msgstr "Visszalépés"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Access"
-msgstr "Hozzáférés"
+msgstr "Hozzáférés megadása"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
 msgid "Grant Portal Access"
-msgstr "Portál hozzáférés biztosítása"
+msgstr "Portál hozzáférés megadása"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: model:ir.actions.server,name:portal.partner_wizard_action_create_and_open
 msgid "Grant portal access"
-msgstr "Portál hozzáférés biztosítása"
+msgstr "Portál hozzáférés megadása"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
@@ -641,13 +735,13 @@ msgstr "Érvénytelen"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Invalid Email Address"
-msgstr "Érvénytelen Email cím"
+msgstr "Érvénytelen email cím"
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "Invalid Email! Please enter a valid email address."
-msgstr "Érvénytelen e-mail! Kérjük, adjon meg egy érvényes e-mail címet."
+msgstr "Érvénytelen email! Kérjük, adjon meg egy érvényes email címet."
 
 #. module: portal
 #. odoo-python
@@ -664,12 +758,13 @@ msgstr "Meghívó szövege"
 #: model:mail.template,description:portal.mail_template_data_portal_welcome
 msgid "Invitation email to contacts to create a user account"
 msgstr ""
+"Meghívó email küldése kapcsolatok számára felhasználói fiók létrehozásához"
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_share.py:0
 msgid "Invitation to access %s"
-msgstr ""
+msgstr "Meghívó hozzáféréshez: %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
@@ -714,12 +809,12 @@ msgstr "Utolsó hitelesítés"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "Leave a comment"
-msgstr "Írjon kommentárt"
+msgstr "Írjon megjegyzést"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
 msgid "Link"
-msgstr "Hivatkozás"
+msgstr "Link"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -738,6 +833,8 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
 msgstr ""
+"%(model_name)s nevű modell nem támogatja a token aláírást, mivel nem "
+"rendelkezik ezzel a mezővel: %(field_name)s."
 
 #. module: portal
 #. odoo-python
@@ -800,7 +897,7 @@ msgstr "Csak belső és portál felhasználók hozhatnak létre API kulcsokat"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
-"Upsz! Valami félresiklott. Az oldal frissítése után próbáljon meg újra "
+"Upsz! Valami félrement. Az oldal frissítése után próbáljon meg újra "
 "bejelentkezni!"
 
 #. module: portal
@@ -844,7 +941,7 @@ msgstr "Portál hozzáférés kezelése"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
 msgid "Portal Access URL"
-msgstr "Portálelérés webcíme"
+msgstr "Portál hozzáférés URL"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
@@ -883,7 +980,7 @@ msgid ""
 "Put my email and phone in a block list to make sure I'm never contacted "
 "again"
 msgstr ""
-"Adja hozzá az e-mail-címemet és a telefonomat egy tiltólistához, hogy soha "
+"Adja hozzá az email címemet és a telefonomat egy tiltólistához, hogy soha "
 "többé ne lépjenek velem kapcsolatba"
 
 #. module: portal
@@ -904,7 +1001,7 @@ msgstr "Címzettek"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__resource_ref
 msgid "Related Document"
-msgstr "Kapcsolódó Dokumentum"
+msgstr "Kapcsolódó dokumentum"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_id
@@ -919,7 +1016,7 @@ msgstr "Vonatkozó dokumentum modell"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr "Hozzáférés Visszavonása"
+msgstr "Hozzáférés visszavonása"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -964,9 +1061,9 @@ msgid ""
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
-"Válassza ki, hogy melyik felhasználónak kell hozzátartoznia az alábbi listán felsorolt portálhoz.\n"
-"                        Minden kiválasztott kapcsolathoz tartozó e-mailnek érvényesnek és egyedinek kell lennie.\n"
-"                        Ha szükséges, kijavíthatja a kapcsolatok e-mail címeit a listában."
+"Válassza ki az alábbi listából, hogy mely felhasználóknak legyen portálhozzáférése.\n"
+"                        Minden kiválasztott kapcsolathoz tartozó email címnek érvényesnek és egyedinek kell lennie.\n"
+"                        Ha szükséges, kijavíthatja a kapcsolatok email címeit a listában."
 
 #. module: portal
 #. odoo-javascript
@@ -999,7 +1096,7 @@ msgstr "Bejelentkezés"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Skip to Content"
-msgstr ""
+msgstr "Kihagyás és továbblépés a tartalomhoz"
 
 #. module: portal
 #. odoo-javascript
@@ -1068,7 +1165,7 @@ msgstr "A melléklet nem található, vagy Önnek nincs hozzáférése."
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "The contact \"%s\" does not have a valid email."
-msgstr "A(z) \"%s\" kapcsolatnak nincs érvényes Email címe."
+msgstr "A(z) \"%s\" kapcsolatnak nincs érvényes email címe."
 
 #. module: portal
 #. odoo-python
@@ -1086,7 +1183,7 @@ msgstr "A kulcsot később nem lehet előhívni és"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "The key will be deleted once this period has elapsed."
-msgstr ""
+msgstr "A kulcs törlésre kerül az időszak letelte után."
 
 #. module: portal
 #. odoo-python
@@ -1120,6 +1217,8 @@ msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
 msgstr ""
+"A \"Portál: új felhasználó\" sablon nem található a portálfelhasználó "
+"számára küldendő emailhez."
 
 #. module: portal
 #. odoo-python
@@ -1130,7 +1229,7 @@ msgstr "Ez a dokumentum nem létezik."
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "This is a preview of the customer portal."
-msgstr "Ez az Ügyfél Portál előnézete."
+msgstr "Ez az ügyfélportál előnézete."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1138,7 +1237,7 @@ msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
 msgstr ""
-"Ez a pertner már össze van kötve egg belső felhasználóval és van portál "
+"Ez a partner már össze van kötve egy belső felhasználóval és van portál "
 "hozzáférése."
 
 #. module: portal
@@ -1152,7 +1251,8 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
-msgstr "Ez a szöveg belekerül a portál új felhasználójához küldött e-mailre."
+msgstr ""
+"Ez a szöveg belekerül a portál új felhasználóinak küldött email tartalmába."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -1182,7 +1282,7 @@ msgstr "Érvényes"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Valid Email Address"
-msgstr "Érvényes Email cím"
+msgstr "Érvényes email cím"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1283,7 +1383,7 @@ msgstr "Írjon egy üzenetet..."
 #. odoo-javascript
 #: code:addons/portal/static/src/chatter/core/composer_patch.js:0
 msgid "Write a message…"
-msgstr ""
+msgstr "Üzenet írása..."
 
 #. module: portal
 #. odoo-javascript
@@ -1311,7 +1411,7 @@ msgstr "Önnek kell lennie"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "You should enter \""
-msgstr ""
+msgstr "Meg kell adnia: \""
 
 #. module: portal
 #. odoo-python
@@ -1325,6 +1425,8 @@ msgid ""
 "Your account at {{ object.user_id.company_id.name or "
 "object.partner_id.company_id.name }}"
 msgstr ""
+"Fiókja itt: {{ object.user_id.company_id.name or "
+"object.partner_id.company_id.name }}"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact

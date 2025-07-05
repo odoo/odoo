@@ -8,7 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
 import { parseFloat } from "@web/views/fields/parsers";
-import { getButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
+import { enhancedButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
 
 export class OrderSummary extends Component {
     static template = "point_of_sale.OrderSummary";
@@ -60,7 +60,7 @@ export class OrderSummary extends Component {
     }
     handleOrderLineQuantityChange(selectedLine, buffer, currentQuantity, lastId) {
         const parsedInput = (buffer && parseFloat(buffer)) || 0;
-        if (lastId != selectedLine.cid || parsedInput < currentQuantity) {
+        if (lastId != selectedLine.uuid || parsedInput < currentQuantity) {
             this._showDecreaseQuantityPopup();
         } else if (currentQuantity < parsedInput) {
             this._setValue(buffer);
@@ -199,7 +199,7 @@ export class OrderSummary extends Component {
         line.set_unit_price(price);
     }
     async _getShowDecreaseQuantityPopupButtons() {
-        return getButtons();
+        return enhancedButtons();
     }
     async _showDecreaseQuantityPopup() {
         this.numberBuffer.reset();

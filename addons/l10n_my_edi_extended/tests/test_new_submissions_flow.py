@@ -612,7 +612,7 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
                     'success': True,
                 }]
             }
-        elif endpoint == 'api/l10n_my_edi/1/get_submission_statuses' and self.get_submission_status_count == 0:
+        elif endpoint == 'api/l10n_my_edi/1/get_submission_statuses' and self.get_submission_status_count < 4:
             self.get_submission_status_count += 1
             return {
                 'statuses': {
@@ -625,7 +625,7 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
                 },
                 'document_count': 1,
             }
-        elif endpoint == 'api/l10n_my_edi/1/get_submission_statuses' and self.get_submission_status_count == 1:
+        elif endpoint == 'api/l10n_my_edi/1/get_submission_statuses' and self.get_submission_status_count == 4:
             self.get_submission_status_count += 1
             return {
                 'statuses': {

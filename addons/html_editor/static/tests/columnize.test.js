@@ -2,16 +2,25 @@ import { describe, expect, test } from "@odoo/hoot";
 import { press, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "./_helpers/editor";
-import { getContent } from "./_helpers/selection";
+import { getContent, setSelection } from "./_helpers/selection";
 import { insertText, redo, undo } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
+import { nodeSize } from "@html_editor/utils/position";
 
 function columnsContainer(contents) {
-    return `<div class="container o_text_columns"><div class="row">${contents}</div></div>`;
+    return `<div class="container o_text_columns o-contenteditable-false"><div class="row">${contents}</div></div>`;
 }
 
 function column(size, contents) {
-    return `<div class="col-${size}">${contents}</div>`;
+    return `<div class="col-${size} o-contenteditable-true">${contents}</div>`;
+}
+
+function columsDuringEditContainer(contents) {
+    return `<div class="container o_text_columns o-contenteditable-false" contenteditable="false"><div class="row">${contents}</div></div>`;
+}
+
+function columnDuringEdit(size, contents) {
+    return `<div class="col-${size} o-contenteditable-true" contenteditable="true">${contents}</div>`;
 }
 
 function columnize(numberOfColumns) {
@@ -30,9 +39,9 @@ describe("2 columns", () => {
                     column(6, "<p><br></p>")
                 ),
             contentAfterEdit:
-                columnsContainer(
-                    column(6, `<p placeholder="Empty column" class="o-we-hint">[]<br></p>`) +
-                    column(6, `<p><br></p>`)
+                columsDuringEditContainer(
+                    columnDuringEdit(6, `<p placeholder="Empty column" class="o-we-hint">[]<br></p>`) +
+                    columnDuringEdit(6, `<p><br></p>`)
                 ),
             /* eslint-enable */
         });
@@ -47,9 +56,9 @@ describe("2 columns", () => {
                     column(6, "<p><br></p>")
                 ),
             contentAfterEdit:
-                columnsContainer(
-                    column(6, `<table><tbody><tr><td><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td></tr></tbody></table>`) +
-                    column(6, `<p><br></p>`)
+                columsDuringEditContainer(
+                    columnDuringEdit(6, `<table><tbody><tr><td><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td></tr></tbody></table>`) +
+                    columnDuringEdit(6, `<p><br></p>`)
                 ),
             /* eslint-enable */
         });
@@ -73,9 +82,9 @@ describe("2 columns", () => {
             stepFunction: columnize(2),
             contentAfterEdit:
             /* eslint-disable */
-                columnsContainer(
-                    column(6, "<p>[]abcd</p>") +
-                    column(6, `<p><br></p>`)
+                columsDuringEditContainer(
+                    columnDuringEdit(6, "<p>[]abcd</p>") +
+                    columnDuringEdit(6, `<p><br></p>`)
                 ) +
                 "<p><br></p>",
             contentAfter:
@@ -125,7 +134,7 @@ describe("2 columns", () => {
 
         await press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns"><div class="row"><div class="col-6"><p>ab[]cd</p></div><div class="col-6"><p><br></p></div></div></div><p><br></p>`
+            `<div class="container o_text_columns o-contenteditable-false" contenteditable="false"><div class="row"><div class="col-6 o-contenteditable-true" contenteditable="true"><p>ab[]cd</p></div><div class="col-6 o-contenteditable-true" contenteditable="true"><p><br></p></div></div></div><p><br></p>`
         );
 
         await insertText(editor, "/columns");
@@ -145,10 +154,10 @@ describe("3 columns", () => {
             ),
             /* eslint-disable */
             contentBeforeEdit:
-                columnsContainer(
-                    column(4, "<p>abcd</p>") +
-                    column(4, `<p><br></p>`) +
-                    column(4, `<p placeholder="Empty column" class="o-we-hint">[]<br></p>`)
+                columsDuringEditContainer(
+                    columnDuringEdit(4, "<p>abcd</p>") +
+                    columnDuringEdit(4, `<p><br></p>`) +
+                    columnDuringEdit(4, `<p placeholder="Empty column" class="o-we-hint">[]<br></p>`)
                 ),
             /* eslint-enable */
             stepFunction: columnize(3),
@@ -164,10 +173,10 @@ describe("3 columns", () => {
             stepFunction: columnize(3),
             /* eslint-disable */
             contentAfterEdit:
-                columnsContainer(
-                    column(4, "<p>ab[]cd</p>") +
-                    column(4, `<p><br></p>`) +
-                    column(4, `<p><br></p>`)
+                columsDuringEditContainer(
+                    columnDuringEdit(4, "<p>ab[]cd</p>") +
+                    columnDuringEdit(4, `<p><br></p>`) +
+                    columnDuringEdit(4, `<p><br></p>`)
                 ) + "<p><br></p>",
             contentAfter:
                 columnsContainer(
@@ -218,7 +227,7 @@ describe("3 columns", () => {
 
         await press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns"><div class="row"><div class="col-4"><p>ab[]cd</p></div><div class="col-4"><p><br></p></div><div class="col-4"><p><br></p></div></div></div><p><br></p>`
+            `<div class="container o_text_columns o-contenteditable-false" contenteditable="false"><div class="row"><div class="col-4 o-contenteditable-true" contenteditable="true"><p>ab[]cd</p></div><div class="col-4 o-contenteditable-true" contenteditable="true"><p><br></p></div><div class="col-4 o-contenteditable-true" contenteditable="true"><p><br></p></div></div></div><p><br></p>`
         );
 
         await insertText(editor, "/columns");
@@ -304,7 +313,7 @@ describe("4 columns", () => {
 
         await press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns"><div class="row"><div class="col-3"><p>ab[]cd</p></div><div class="col-3"><p><br></p></div><div class="col-3"><p><br></p></div><div class="col-3"><p><br></p></div></div></div><p><br></p>`
+            `<div class="container o_text_columns o-contenteditable-false" contenteditable="false"><div class="row"><div class="col-3 o-contenteditable-true" contenteditable="true"><p>ab[]cd</p></div><div class="col-3 o-contenteditable-true" contenteditable="true"><p><br></p></div><div class="col-3 o-contenteditable-true" contenteditable="true"><p><br></p></div><div class="col-3 o-contenteditable-true" contenteditable="true"><p><br></p></div></div></div><p><br></p>`
         );
 
         await insertText(editor, "/columns");
@@ -374,7 +383,7 @@ describe("remove columns", () => {
         // add 2 columns
         await press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns"><div class="row"><div class="col-6"><p>ab[]cd</p></div><div class="col-6"><p><br></p></div></div></div><p><br></p>`
+            `<div class="container o_text_columns o-contenteditable-false" contenteditable="false"><div class="row"><div class="col-6 o-contenteditable-true" contenteditable="true"><p>ab[]cd</p></div><div class="col-6 o-contenteditable-true" contenteditable="true"><p><br></p></div></div></div><p><br></p>`
         );
 
         await insertText(editor, "/removecolumns");
@@ -406,17 +415,17 @@ describe("complex", () => {
     test("should not add a container when one already exists", async () => {
         await testEditor({
             contentBefore:
-                '<div class="container"><div class="row"><div class="col">' +
+                '<div class="container o-contenteditable-false"><div class="row"><div class="col o-contenteditable-true">' +
                 "<p>ab[]cd</p>" +
                 "</div></div></div>",
             stepFunction: columnize(2),
             contentAfter:
-                '<div class="container"><div class="row"><div class="col">' +
-                '<div class="o_text_columns"><div class="row">' + // no "container" class
-                '<div class="col-6">' +
+                '<div class="container o-contenteditable-false"><div class="row"><div class="col o-contenteditable-true">' +
+                '<div class="o_text_columns o-contenteditable-false"><div class="row">' + // no "container" class
+                '<div class="col-6 o-contenteditable-true">' +
                 "<p>ab[]cd</p>" +
                 "</div>" +
-                '<div class="col-6"><p><br></p></div>' +
+                '<div class="col-6 o-contenteditable-true"><p><br></p></div>' +
                 "</div></div>" +
                 "<p><br></p>" +
                 "</div></div></div>",
@@ -449,6 +458,46 @@ describe("undo", () => {
             contentAfter:
                 columnsContainer(column(6, "<p>x[]</p>") + column(6, "<p><br></p>")) +
                 "<p><br></p>",
+        });
+    });
+});
+
+describe("selection", () => {
+    test("should be able to select across columns using Shift + ArrowUp", async () => {
+        await testEditor({
+            contentBefore: "<p>a</p><p>b[]</p>",
+            stepFunction: async (editor) => {
+                columnize(2)(editor);
+                const editable = editor.editable;
+                const children = editable.querySelectorAll("p");
+                const lastP = children[children.length - 1];
+                lastP.innerHTML = "ab";
+                setSelection({ anchorNode: lastP.firstChild, anchorOffset: 0 });
+                await press(["shift", "arrowUp"]);
+            },
+            contentAfter:
+                "<p>a]</p>" +
+                columnsContainer(column(6, "<p>b</p>") + column(6, "<p><br></p>")) +
+                "<p>[ab</p>",
+        });
+    });
+    test("should be able to select across columns using Shift + ArrowDown", async () => {
+        await testEditor({
+            contentBefore: "<p>a</p><p>b[]</p>",
+            stepFunction: async (editor) => {
+                columnize(2)(editor);
+                const editable = editor.editable;
+                const children = editable.querySelectorAll("p");
+                const lastP = children[children.length - 1];
+                lastP.innerHTML = "ab";
+                const firstP = children[0];
+                setSelection({ anchorNode: firstP.lastChild, anchorOffset: nodeSize(firstP) });
+                await press(["shift", "arrowDown"]);
+            },
+            contentAfter:
+                "<p>a[</p>" +
+                columnsContainer(column(6, "<p>b</p>") + column(6, "<p><br></p>")) +
+                "<p>]ab</p>",
         });
     });
 });

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="myinvois_product_product_view_form_normalized_pos" model="ir.ui.view">
+        <field name="name">myinvois.product.product.view.form.normalized.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='color']" position="after">
+                <field name="l10n_my_edi_classification_code" invisible="'MY' not in fiscal_country_codes"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

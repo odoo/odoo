@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="myinvois_document_form_view" model="ir.ui.view">
+            <field name="name">myinvois.document.form.view</field>
+            <field name="model">myinvois.document</field>
+            <field name="arch" type="xml">
+                <form string="MyInvois Document" create="false">
+                    <header>
+                        <button name="action_submit_to_myinvois"
+                                type="object"
+                                string="Submit To MyInvois"
+                                class="oe_highlight"
+                                invisible="myinvois_state and myinvois_state != 'invalid'"/>
+                        <button name="action_update_submission_status"
+                                type="object"
+                                string="Update Submission Status"
+                                class="oe_highlight"
+                                invisible="not myinvois_state or (myinvois_state not in ['in_progress', 'valid'])"/>
+                        <button name="action_cancel_submission"
+                                type="object"
+                                string="Cancel Submission"
+                                invisible="myinvois_state not in ['valid', 'rejected']"/>
+                        <field name="myinvois_state" widget="statusbar" statusbar_visible="in_progress,valid"/>
+                    </header>
+                    <sheet>
+                        <widget name="web_ribbon" title="Processing" bg_color="text-bg-info" invisible="myinvois_state != 'in_progress'"/>
+                        <widget name="web_ribbon" title="Rejected" bg_color="text-bg-warning" invisible="myinvois_state != 'rejected'"/>
+                        <div class="oe_button_box" name="button_box"/>  <!-- Add the box to make it easier to add buttons in there when inheriting. -->
+                        <div class="oe_title">
+                            <h1>
+                                <field name="display_name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="myinvois_issuance_date"/>
+                                <field name="myinvois_submission_uid"/>
+                                <field name="myinvois_external_uuid"/>
+                                <field name="myinvois_validation_time"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="invoice_ids" invisible="1"/>
+                                <field name="myinvois_exemption_reason" invisible="not myinvois_exemption_reason" readonly="invoice_ids"/>
+                                <field name="myinvois_custom_form_reference" invisible="not myinvois_custom_form_reference" readonly="invoice_ids"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <!-- Chatter -->
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="myinvois_document_list_view" model="ir.ui.view">
+            <field name="name">myinvois.document.list.view</field>
+            <field name="model">myinvois.document</field>
+            <field name="arch" type="xml">
+                <list string="MyInvois Documents" create="false" sample="1">
+                    <header>
+                        <button name="action_submit_to_myinvois" string="Submit To MyInvois" type="object" class="btn-primary"/>
+                        <button name="action_update_submission_status" string="Fetch Status From MyInvois" type="object"/>
+                    </header>
+                    <field name="display_name"/>
+                    <field name="myinvois_issuance_date"/>
+                    <field name="myinvois_state"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="action_generate_myinvois_document_file" model="ir.actions.server">
+            <field name="name">Generate Document File</field>
+            <field name="model_id" ref="l10n_my_edi_pos.model_myinvois_document"/>
+            <field name="binding_model_id" ref="l10n_my_edi_pos.model_myinvois_document"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_generate_xml_file()</field>
+        </record>
+    </data>
+</odoo>

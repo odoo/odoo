@@ -24,6 +24,17 @@ class TestMailAliasCommon(MailCommon):
             'alias_name': 'test.alias',
         })
 
+        cls.company_no_alias = cls.env['res.company'].create({
+            'alias_domain_id': False,
+            'country_id': cls.env.ref('base.be').id,
+            'currency_id': cls.env.ref('base.EUR').id,
+            'email': 'company_no_alias@test.example.com',
+            'name': 'No Alias Company',
+        })
+        cls.user_erp_manager.write({
+            'company_ids': [(4, cls.company_no_alias.id)],
+        })
+
 
 @tagged('mail_gateway', 'mail_alias', 'multi_company')
 class TestMailAlias(TestMailAliasCommon):
@@ -504,6 +515,7 @@ class TestAliasCompany(TestMailAliasCommon):
         """ Test initial setup values: currently all companies share the same
         alias configuration as it is unique. """
         self.assertEqual(self.test_alias_mc.alias_domain_id, self.mail_alias_domain)
+        self.assertFalse(self.company_no_alias.alias_domain_id)
 
         self.assertEqual(self.company_admin.alias_domain_id, self.mail_alias_domain)
         self.assertEqual(self.company_admin.bounce_email, f'{self.alias_bounce}@{self.alias_domain}')
@@ -942,6 +954,8 @@ class TestMailAliasMixin(TestMailAliasCommon):
             (False, self.env['res.company'], self.mail_alias_domain_c2),
             (self.env.user.company_id.id, self.company_2, self.mail_alias_domain_c2),
             (self.company_admin.id, self.company_admin, self.mail_alias_domain),
+            # company without alias domain -> set False on alias also, to avoid MC issues
+            (self.company_no_alias.id, self.company_no_alias, self.env['mail.alias.domain']),
         ]:
             with self.subTest(create_cid=create_cid, exp_company=exp_company, exp_alias_domain=exp_alias_domain):
                 counter += 1

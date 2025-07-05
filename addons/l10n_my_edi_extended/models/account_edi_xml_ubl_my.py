@@ -50,10 +50,6 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
     def _export_invoice_constraints(self, invoice, vals):
         # EXTENDS 'l10n_my_edi'
         constraints = super()._export_invoice_constraints(invoice, vals)
-        # The credit/debit note error would trigger for self billed invoice, we check if it's the case and remove it if needed.
-        document_type_code, original_document = self._l10n_my_edi_get_document_type_code(invoice)
-        if document_type_code == '11' and f"myinvois_{invoice.id}_adjustment_origin" in constraints:
-            del constraints[f'myinvois_{invoice.id}_adjustment_origin']
         # The classification check was only looking at the product, we also want to validate lines without product
         for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section')):
             # If there are no products, we still expect a classification to be manually set.
@@ -80,7 +76,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             counterpart_amls = payment_terms.matched_debit_ids.debit_move_id + payment_terms.matched_credit_ids.credit_move_id
             counterpart_move_type = 'out_invoice' if invoice.move_type == 'out_refund' else 'out_refund'
             has_payments = bool(counterpart_amls.move_id.filtered(lambda move: move.move_type != counterpart_move_type))
-            is_paid = invoice.payment_state == invoice._get_invoice_in_payment_state()
+            is_paid = invoice.payment_state in ('in_payment', 'paid', 'reversed')
             if is_paid and has_payments:
                 code = '04' if invoice.move_type == 'out_refund' else '14'
             else:

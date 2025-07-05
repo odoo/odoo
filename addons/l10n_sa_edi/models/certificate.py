@@ -42,7 +42,7 @@ class Certificate(models.Model):
             # Organization Name
             (NameOID.ORGANIZATION_NAME, company_id.name),
             # Subject Common Name
-            (NameOID.COMMON_NAME, company_id.name),
+            (NameOID.COMMON_NAME, "%s-%s-%s" % (journal.code, journal.name, company_id.name)),
             # Organization Identifier
             (ObjectIdentifier('2.5.4.97'), company_id.vat),
             # State/Province Name

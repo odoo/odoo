@@ -204,6 +204,7 @@ class PaymentTransaction(models.Model):
             invoices = self.source_transaction_id.invoice_ids
         else:
             invoices = self.invoice_ids
+        invoices = invoices.filtered(lambda inv: inv.state != 'cancel')
         if invoices:
             invoices.filtered(lambda inv: inv.state == 'draft').action_post()
 

@@ -40,6 +40,7 @@
 # Cengiz Cokay Global Nonwoven, 2025
 # Hakan Türkün, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -47,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2685,12 +2686,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Bu konum için ürünlerin tam olarak nereden alınacağını (raf), hangi lot vb. önermek için kullanılan varsayılan yöntemi tanımlar. Bu yöntem, ürün kategorisi düzeyinde uygulanabilir ve burada hiçbiri ayarlanmazsa üst konumlarda bir geri dönüş yapılır.\n"
+"Bu konum için, ürünlerin hangi raftan, hangi partiden vb. alınacağını önermek üzere varsayılan olarak kullanılacak yöntemi tanımlar. Bu yöntem, ürün kategori seviyesinde zorunlu kılınabilir ve burada bir yöntem belirtilmediğinde üst konumlara başvurularak yedeklenir.\n"
 "\n"
-"FIFO: İlk stoklanan ürünler/lotlar ilk önce taşınacaktır.\n"
-"LIFO: En son stoklanan ürünler/lotlar ilk önce taşınacaktır.\n"
-"Dolap konumu: Hedef konuma en yakın ürünler/partiler ilk önce taşınacaktır.\n"
-"FEFO: çıkarma tarihi en yakın olan ürünler/lotlar ilk önce çıkarılacaktır (bu yöntemin kullanılabilirliği \"Son Kullanma Tarihleri\" ayarına bağlıdır)."
+"FIFO: İlk giren ürün/parti ilk çıkar.\n"
+"LIFO: Son giren ürün/parti ilk çıkar.\n"
+"En yakın konum: Hedef konuma en yakın ürün/parti ilk çıkar.\n"
+"FEFO: Çıkış tarihi en yakın olan ürün/parti ilk çıkar (bu yöntemin kullanılabilirliği \"Son Kullanma Tarihleri\" ayarına bağlıdır)."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -8236,6 +8237,9 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
+"Seri numarası (%(serial_number)s) %(source_location)s konumunda bulunmuyor ama şu konumlarda bulunur: %(other_locations)s.\n"
+"\n"
+"Bu hareket için kaynak konumu %(recommended_location)s olarak değiştirilecek."
 
 #. module: stock
 #. odoo-javascript
