@@ -1,5 +1,5 @@
 .o-mail-Discuss-header {
-    background-color: mix($white, $o-webclient-background-color, 15%);
+    background-color: var(--mail-Discuss-surface-dark);
 }
 
 .o-mail-Discuss-headerActions button {
@@ -15,13 +15,11 @@
     }
 }
 
-.o_web_client:has(.o-mail-Discuss) {
+.o_web_client:where(:has(.o-mail-Discuss)) {
+    --mail-Discuss-surface-dark: #{mix($white, $o-webclient-background-color, 15%)};
+    --NavBar-entry-backgroundColor: var(--mail-Discuss-surface-dark);
 
-    .o_main_navbar {
-        background-color: mix($white, $o-webclient-background-color, 15%);
-    }
-
-    .o_control_panel {
-        background-color: mix($white, $o-webclient-background-color, 15%);
+    .o_main_navbar, .o_control_panel {
+        background-color: var(--mail-Discuss-surface-dark);
     }
 }
