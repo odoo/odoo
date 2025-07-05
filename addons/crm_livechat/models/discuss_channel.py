@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
+from odoo.addons.mail.tools.discuss import Store
 
 from odoo import api, fields, models, _
 from odoo.tools import html2plaintext
@@ -69,3 +70,13 @@ class DiscussChannel(models.Model):
             'referred': partner.name,
             'source_id': utm_source and utm_source.id,
         })
+
+    def _get_livechat_session_fields_to_store(self):
+        fields_to_store = super()._get_livechat_session_fields_to_store()
+        fields_to_store.append(
+            Store.Many(
+                "livechat_customer_partner_ids",
+                [Store.Many("opportunity_ids", ["id", "name"])],
+            ),
+        )
+        return fields_to_store
