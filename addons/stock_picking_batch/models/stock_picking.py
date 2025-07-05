@@ -316,3 +316,11 @@ class StockPicking(models.Model):
             'res_id': self.batch_id.id,
             'view_mode': 'form'
         }
+
+    @api.depends('partner_id')
+    @api.depends_context('show_picking_display_name')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        for picking in self:
+            if self.env.context.get('show_picking_display_name') and picking.partner_id:
+                picking.display_name = f"{picking.name} - {picking.partner_id.name}"
