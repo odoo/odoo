@@ -139,6 +139,8 @@ class SaleOrderLine(models.Model):
         for line in self:
             project = line.product_id.project_id or line.order_id.project_id
             if line.display_type or not line.product_id or not project:
+                # fallback when linked project is deleted.
+                line.analytic_distribution = False
                 continue
 
             if line.analytic_distribution:
