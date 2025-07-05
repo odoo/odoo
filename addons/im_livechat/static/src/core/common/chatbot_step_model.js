@@ -1,4 +1,5 @@
 import { AND, fields, Record } from "@mail/core/common/record";
+import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 
 export class ChatbotStep extends Record {
     static id = AND("scriptStep", "message");
@@ -9,10 +10,10 @@ export class ChatbotStep extends Record {
     answer_ids = fields.Many("chatbot.script.answer", {
         compute() {
             return this.scriptStep?.answer_ids;
-
         },
     });
     selectedAnswer = fields.One("chatbot.script.answer");
+    rawAnswer = fields.Html("");
     step_type = fields.Attr("", {
         compute() {
             return this.scriptStep?.step_type;
@@ -28,6 +29,20 @@ export class ChatbotStep extends Record {
             "question_email",
             "question_phone",
         ].includes(this.step_type);
+    }
+
+    get answer() {
+        switch (this.step_type) {
+            case "free_input_multi":
+            case "free_input_single":
+            case "question_email":
+            case "question_phone":
+                return createDocumentFragmentFromContent(this.rawAnswer).body.textContent;
+            case "question_selection":
+                return this.selectedAnswer?.label;
+            default:
+                return "";
+        }
     }
 }
 ChatbotStep.register();
