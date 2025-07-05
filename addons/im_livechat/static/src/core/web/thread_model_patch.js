@@ -23,6 +23,9 @@ patch(Thread.prototype, {
         this.livechat_expertise_ids = fields.Many("im_livechat.expertise");
     },
     get livechatStatusLabel() {
+        if (this.livechat_end_dt) {
+            return _t("Conversation has ended");
+        }
         const status = this.livechat_status;
         if (status === "waiting") {
             return _t("Waiting for customer");
