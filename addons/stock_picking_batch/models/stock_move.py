@@ -42,6 +42,8 @@ class StockMove(models.Model):
 
     def action_show_details(self):
         action = super().action_show_details()
-        if self.picking_id.batch_id:
+        if self.env.context.get('show_picking') and self.picking_id.batch_id:
+            action['name'] = self.env._('Open: Stock Move')
             action['context']['default_picking_id'] = self.picking_id.id
+            action['context']['display_name_partner'] = True
         return action
