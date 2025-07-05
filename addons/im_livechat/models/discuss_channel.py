@@ -340,6 +340,7 @@ class DiscussChannel(models.Model):
             fields.append(Store.One("livechat_channel_id", ["name"], sudo=True))
             fields.extend([
                 Store.Attr("livechat_note", predicate=lambda c: c.channel_type == "livechat"),
+                Store.Attr("livechat_outcome", predicate=lambda c: c.channel_type == "livechat"),
                 Store.Attr("livechat_status", predicate=lambda c: c.channel_type == "livechat"),
                 Store.Many("livechat_expertise_ids", ["name"], predicate=lambda c: c.channel_type == "livechat"),
             ])
