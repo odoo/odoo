@@ -313,7 +313,12 @@ class ChatbotScriptStep(models.Model):
             # if this error is raised, display an error message but do not go to next step
             raise ValidationError(_('"%s" is not a valid email.', user_text_answer))
 
-        if self.step_type in ['question_email', 'question_phone']:
+        if self.step_type in [
+            "question_email",
+            "question_phone",
+            "free_input_single",
+            "free_input_multi",
+        ]:
             chatbot_message = self.env['chatbot.message'].search([
                 ('discuss_channel_id', '=', discuss_channel.id),
                 ('script_step_id', '=', self.id),

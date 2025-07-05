@@ -34,6 +34,12 @@ export class LivechatChannelInfoList extends Component {
         );
     }
 
+    get expectAnswerSteps() {
+        return this.props.thread.messages
+            .filter((m) => m.chatbotStep?.expectAnswer)
+            .map((m) => m.chatbotStep);
+    }
+
     get expertiseTags() {
         return this.props.thread.livechat_expertise_ids.map((expertise) => {
             return {

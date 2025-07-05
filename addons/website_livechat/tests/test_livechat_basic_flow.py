@@ -213,6 +213,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "livechat_end_dt": False,
                         "livechat_note": False,
                         "livechat_status": "in_progress",
+                        "livechat_outcome": "no_failure",
                         "livechat_expertise_ids": [],
                         "livechat_operator_id": {
                             "id": self.operator.partner_id.id,

@@ -50,12 +50,36 @@ class MailMessage(models.Model):
                     step_data = {
                         "id": (step.id, message.id),
                         "message": message.id,
-                        "scriptStep": step.id,
+                        "scriptStep": Store.One(step, ["id", "message", "step_type"]),
                         "operatorFound": step.is_forward_operator
                         and channel.livechat_operator_id != chatbot,
                     }
                     if answer := chatbot_message.user_script_answer_id:
-                        step_data["selectedAnswer"] = answer.id
+                        step_data["selectedAnswer"] = {
+                            "id": answer.id,
+                            "label": answer.name,
+                        }
+                    if step.step_type in [
+                        "free_input_multi",
+                        "free_input_single",
+                        "question_email",
+                        "question_phone",
+                    ]:
+                        user_answer_message = (
+                            self.env["chatbot.message"]
+                            .sudo()
+                            .search(
+                                [
+                                    ("script_step_id", "=", step.id),
+                                    ("id", "!=", chatbot_message.id),
+                                ],
+                                limit=1,
+                            )
+                        )
+                        step_data["rawAnswer"] = [
+                            "markup",
+                            user_answer_message.user_raw_answer,
+                        ]
                     store.add_model_values("ChatbotStep", step_data)
                     store.add(
                         message, {"chatbotStep": {"scriptStep": step.id, "message": message.id}}
