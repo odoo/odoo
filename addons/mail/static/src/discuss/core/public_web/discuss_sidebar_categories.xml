@@ -162,11 +162,11 @@
         >
             <div class="o-mail-DiscussSidebarChannel-itemMain border-0 rounded-start-2 text-reset d-flex align-items-center p-0" t-att-class="{ 'overflow-hidden': !store.discuss.isSidebarCompact }" t-att-title="store.discuss.isSidebarCompact ? undefined : thread.displayName">
                 <div class="bg-inherit position-relative d-flex flex-shrink-0 o-my-0_5 rounded-3" style="width:32px;height:32px;" name="threadAvatar" t-att-class="{ 'ms-2': !store.discuss.isSidebarCompact }">
-                    <img class="w-100 h-100 rounded-3 object-fit-cover shadow-sm" t-att-src="thread.avatarUrl" alt="Thread Image"/>
+                    <img class="w-100 h-100 rounded-3 object-fit-cover shadow-sm" t-att-class="threadAvatarAttClass" t-att-src="thread.avatarUrl" alt="Thread Image"/>
                     <ThreadIcon t-if="thread.channel_type?.includes('chat') or (thread.channel_type === 'channel' and !thread.group_public_id)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute top-100 start-100 translate-middle mt-n1 ms-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
                     <CountryFlag t-if="thread.showCorrespondentCountry" country="thread.correspondentCountry" class="'position-absolute o-mail-DiscussSidebarChannel-country border shadow-sm'"/>
                 </div>
-                <span t-if="!store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarChannel-itemName mx-2 text-truncate" t-att-class="thread.selfMember?.message_unread_counter > 0 and !thread.isMuted ? 'o-unread fw-bolder' : 'text-muted'">
+                <span t-if="!store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarChannel-itemName mx-2 text-truncate" t-att-class="itemNameAttClass">
                     <t t-esc="thread.displayName"/>
                 </span>
             </div>

@@ -30,7 +30,7 @@
     </t>
 
     <t t-name="im_livechat.LivechatStatusLabelOfThread">
-        <span t-if="livechatThread.channel_type === 'livechat' and ['waiting', 'need_help'].includes(livechatThread.livechat_status)" class="o-livechat-LivechatStatusLabel fa fa-stack" t-att-title="livechatThread.livechatStatusLabel" t-att-class="{
+        <span t-if="livechatThread.channel_type === 'livechat' and (['waiting', 'need_help'].includes(livechatThread.livechat_status) or livechatThread.livechat_end_dt)" class="o-livechat-LivechatStatusLabel fa fa-stack" t-att-title="livechatThread.livechatStatusLabel" t-att-class="{
             'position-absolute top-0 start-0 z-1': env.inDiscussSidebar or env.inChatBubble,
             'm-n1': env.inDiscussSidebar,
             'm-n2': env.inChatBubble,
@@ -40,11 +40,12 @@
             <i class="fa fa-circle o-livechat-LivechatStatusLabel-bubble fa-stack-1x" t-att-class="{
                 'o-warning': livechatThread.livechat_status === 'waiting',
                 'o-info': livechatThread.livechat_status === 'need_help',
+                'o-secondary o-white': livechatThread.livechat_end_dt,
             }"/>
-            <i class="fa-stack-1x o-livechat-LivechatStatusLabel-icon" t-attf-class="{{ store.livechatStatusButtons.find(btn => btn.status === livechatThread.livechat_status)?.icon }}" t-att-class="{
+            <i class="fa-stack-1x o-livechat-LivechatStatusLabel-icon" t-attf-class="{{ livechatThread.livechat_end_dt ? 'fa fa-flag-checkered' : store.livechatStatusButtons.find(btn => btn.status === livechatThread.livechat_status)?.icon }}" t-att-class="{
                 'o-warning': livechatThread.livechat_status === 'waiting',
                 'o-info': livechatThread.livechat_status === 'need_help',
-                'o-white': livechatThread.livechat_status === 'in_progress',
+                'o-white': livechatThread.livechat_end_dt,
             }"/>
         </span>
     </t>

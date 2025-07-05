@@ -1,4 +1,7 @@
-import { DiscussSidebarCategory } from "@mail/discuss/core/public_web/discuss_sidebar_categories";
+import {
+    DiscussSidebarCategory,
+    DiscussSidebarChannel,
+} from "@mail/discuss/core/public_web/discuss_sidebar_categories";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarCategory} */
@@ -30,4 +33,27 @@ const DiscussSidebarCategoryPatch = {
     },
 };
 
+/** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarChannel} */
+const DiscussSidebarChannelPatch = {
+    get attClassContainer() {
+        return {
+            ...super.attClassContainer,
+            "bg-100": this.thread.livechat_end_dt,
+        };
+    },
+    get itemNameAttClass() {
+        return {
+            ...super.itemNameAttClass,
+            "fst-italic text-muted fw-normal": this.thread.livechat_end_dt,
+        };
+    },
+    get threadAvatarAttClass() {
+        return {
+            ...super.threadAvatarAttClass,
+            "o-opacity-65": this.thread.livechat_end_dt,
+        };
+    },
+};
+
 patch(DiscussSidebarCategory.prototype, DiscussSidebarCategoryPatch);
+patch(DiscussSidebarChannel.prototype, DiscussSidebarChannelPatch);

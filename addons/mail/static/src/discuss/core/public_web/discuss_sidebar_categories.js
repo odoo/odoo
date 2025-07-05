@@ -129,9 +129,22 @@ export class DiscussSidebarChannel extends Component {
         return discussSidebarChannelIndicatorsRegistry.getAll();
     }
 
+    get itemNameAttClass() {
+        return {
+            "o-unread fw-bolder":
+                this.thread.selfMember?.message_unread_counter > 0 && !this.thread.isMuted,
+            "text-muted":
+                this.thread.selfMember?.message_unread_counter !== 0 || this.thread.isMuted,
+        };
+    }
+
     /** @returns {import("models").Thread} */
     get thread() {
         return this.props.thread;
+    }
+
+    get threadAvatarAttClass() {
+        return {};
     }
 
     get subChannels() {
