@@ -2,7 +2,7 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 
 export class ProductVariantPreviewImageHover extends Interaction {
-    static selector = '.oe_product_cart';
+    static selector = '.oe_product_cart.o_has_variations';
     dynamicContent = {
         '.o_product_variant_preview': {
             't-on-mouseenter': this._mouseEnter,
@@ -12,7 +12,7 @@ export class ProductVariantPreviewImageHover extends Interaction {
     };
 
     setup() {
-        this.productImg = this.el.querySelector('.oe_product_image_img_wrapper img');
+        this.productImg = this.el.querySelector('.oe_product_image_img_wrapper_primary img');
         this.originalImgSrc = this.productImg.getAttribute('src');
     }
 

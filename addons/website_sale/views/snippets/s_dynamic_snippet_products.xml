@@ -3,12 +3,32 @@
     <template id="s_dynamic_snippet_products" name="Products">
         <t t-call="website.s_dynamic_snippet_template">
             <t t-set="snippet_name" t-value="'s_dynamic_snippet_products'"/>
+
+            <t
+                t-set="default_design_classes"
+                t-value="request and request.env['website'].get_current_website().shop_opt_products_design_classes or ''"
+            />
+            <t
+                t-if="'o_wsale_products_opt_layout_catalog' not in default_design_classes"
+                t-set="default_design_classes"
+                t-value="'o_wsale_products_opt_name_color_regular o_wsale_products_opt_thumb_6_5
+                    o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show
+                    o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_cc1
+                    o_wsale_products_opt_rounded_2 o_wsale_products_opt_layout_catalog
+                    o_wsale_products_opt_design_thumbs o_wsale_products_opt_has_description
+                    o_wsale_products_opt_name_size_body o_wsale_products_opt_actions_onhover
+                    o_wsale_products_opt_wishlist_fixed o_wsale_products_opt_actions_theme
+                    o_wsale_products_opt_has_cta'"
+            />
             <!--
                 TODO: `.oe_website_sale` is used as a selector in `tracking.js`. This
                 is a temporary solution to load the tracking utilities and will be removed once
                 tracking utilities will be fully integrated into a service.
             -->
-            <t t-set="snippet_classes" t-value="'oe_website_sale'"/>
+            <t
+                t-set="snippet_classes"
+                t-value="'oe_website_sale ' + default_design_classes"
+            />
             <t t-set="main_page_url" t-value="'/shop'"/>
             <t t-call="website_sale.s_dynamic_snippet_products_preview_data"/>
         </t>

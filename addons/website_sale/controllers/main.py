@@ -1748,7 +1748,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         writable_fields = {
             'shop_ppg', 'shop_ppr', 'shop_default_sort', 'shop_gap',
             'product_page_image_layout', 'product_page_image_width',
-            'product_page_grid_columns', 'product_page_image_spacing'
+            'product_page_grid_columns', 'product_page_image_spacing',
+            'shop_opt_products_design_classes',
         }
         # Default ppg to 1.
         if 'ppg' in options and not options['ppg']:

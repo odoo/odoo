@@ -2,9 +2,6 @@
 <templates xml:space="preserve">
 
 <t t-name="website_sale.ProductsListPageOption">
-    <!-- Dummy element to allow styling this specific option container with .o_wsale_products_list_page_options -->
-    <div class="d-none o_wsale_products_list_page_options"/>
-
     <BuilderRow label.translate="Content Width">
         <BuilderButtonGroup action="'previewableWebsiteConfig'">
             <BuilderButton
@@ -20,23 +17,30 @@
         </BuilderButtonGroup>
     </BuilderRow>
 
-    <BuilderRow label.translate="Layout">
-        <BuilderButtonGroup action="'websiteConfig'">
-            <BuilderButton
-                title.translate="Catalog of products"
-                id="'grid_view_opt'"
-                classAction="'o_wsale_layout_catalog'"
-                actionParam="{views: []}"
-                icon="'oi-apps'"
-            />
-            <BuilderButton
-                title.translate="List of products"
-                classAction="'o_wsale_layout_list'"
-                actionParam="{views: ['website_sale.products_list_view']}"
-                icon="'oi-view-list'"
-            />
-        </BuilderButtonGroup>
-    </BuilderRow>
+
+    <BuilderContext applyTo="'#o_wsale_products_grid'">
+        <ProductsDesignPanel
+            recordName="'shop_opt_products_design_classes'"
+            label.translate="Products Design"
+            showSecondaryImage="true"
+        />
+        <div class="d-none">
+            <!--
+                Dummy controller to detect in this context which layout class is applied to the DOM.
+                The actual layout classes toggling phase is managed by the ProductsDesignPanel
+                component.
+            -->
+            <BuilderRow label.translate="Layout">
+                <BuilderButtonGroup>
+                    <BuilderButton
+                        id="'grid_view_opt'"
+                        classAction="'o_wsale_products_opt_layout_catalog'"
+                    />
+                    <BuilderButton classAction="'o_wsale_products_opt_layout_list'"/>
+                </BuilderButtonGroup>
+            </BuilderRow>
+        </div>
+    </BuilderContext>
 
     <BuilderRow label.translate="Size" level="1">
         <BuilderNumberInput action="'setPpg'" step="1"/>
@@ -56,102 +60,6 @@
             <BuilderSelectItem actionParam="{views: ['website_sale.products_mobile_cols_single']}">1 Column</BuilderSelectItem>
             <BuilderSelectItem actionParam="{views: []}">2 Columns</BuilderSelectItem>
         </BuilderSelect>
-    </BuilderRow>
-
-    <BuilderRow label.translate="Gap" level="1">
-        <BuilderRange
-            action="'setGap'"
-            min="0"
-            max="28"
-            unit="'px'"
-            displayRangeValue="true"/>
-    </BuilderRow>
-
-    <BuilderRow label.translate="Style">
-        <BuilderSelect action="'reloadComposite'">
-            <t t-set="defaultLabel">Default</t>
-            <t t-set="cardsLabel">Cards</t>
-            <t t-set="thumbnailsLabel">Thumbnails</t>
-            <t t-set="gridLabel">Grid</t>
-            <t t-set="styles" t-value="[
-                {
-                    label: defaultLabel,
-                    className: '',
-                    views: [],
-                    gap: 16,
-                },
-                {
-                    label: cardsLabel,
-                    className: 'o_wsale_design_cards',
-                    views: ['website_sale.products_design_card'],
-                    gap: 16,
-                },
-                {
-                    label: thumbnailsLabel,
-                    className: 'o_wsale_design_thumbs',
-                    views: ['website_sale.products_design_thumbs'],
-                    gap: 16,
-                },
-                {
-                    label: gridLabel,
-                    className: 'o_wsale_design_grid',
-                    views: ['website_sale.products_design_grid'],
-                    gap: 0,
-                },
-            ]"/>
-            <t t-foreach="styles" t-as="style" t-key="style_index">
-                <BuilderSelectItem
-                        classAction="style.className"
-                        actionParam="[
-                            {action: 'websiteConfig', actionParam: {views: style.views}},
-                            {action: 'setGap', actionValue: style.gap + 'px'},
-                        ]"
-                        t-out="style.label"
-                />
-            </t>
-        </BuilderSelect>
-    </BuilderRow>
-
-    <BuilderRow label.translate="Images Size" level="1">
-        <BuilderSelect action="'previewableWebsiteConfig'">
-            <BuilderSelectItem actionParam="{views: ['website_sale.products_thumb_4_3'], previewClass: 'o_wsale_context_thumb_4_3'}">Landscape (4/3)</BuilderSelectItem>
-            <BuilderSelectItem actionParam="{views: [], previewClass: ''}">Default (1/1)</BuilderSelectItem>
-            <BuilderSelectItem actionParam="{views: ['website_sale.products_thumb_4_5'], previewClass: 'o_wsale_context_thumb_4_5'}">Portrait (4/5)</BuilderSelectItem>
-            <BuilderSelectItem actionParam="{views: ['website_sale.products_thumb_2_3'], previewClass: 'o_wsale_context_thumb_2_3'}">Vertical (2/3)</BuilderSelectItem>
-        </BuilderSelect>
-
-        <t t-set-slot="collapse">
-            <BuilderRow label.translate="Images Fill" level="2">
-                <BuilderButtonGroup action="'previewableWebsiteConfig'">
-                    <BuilderButton
-                            title.translate="Contain within the box"
-                            actionParam="{views: [], previewClass: ''}"
-                            iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
-                    />
-                    <BuilderButton
-                            title.translate="Always Fill the box"
-                            id="'thumb_cover'"
-                            actionParam="{views: ['website_sale.products_thumb_cover'], previewClass: 'o_wsale_context_thumb_cover'}"
-                            iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
-                    />
-                </BuilderButtonGroup>
-            </BuilderRow>
-        </t>
-    </BuilderRow>
-
-    <BuilderRow label.translate="Description" level="1">
-        <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_sale.products_description']}"/>
-    </BuilderRow>
-
-    <BuilderRow label.translate="Actions" level="1">
-        <BuilderButton
-                title.translate="Add to Cart"
-                icon="'fa-shopping-cart'"
-                action="'websiteConfig'"
-                actionParam="{views: ['website_sale.products_add_to_cart']}"
-                id="'button_add_to_cart_opt'"
-        />
-        <div class="flex-basis-100"/>
     </BuilderRow>
 
     <BuilderRow label.translate="Categories" action="'websiteConfig'">
