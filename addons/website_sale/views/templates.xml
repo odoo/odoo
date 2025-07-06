@@ -360,206 +360,66 @@
     </template>
 
     <template id="product_variant_preview">
-        <t
-            t-set="product_ptavs_data"
-            t-value="previewed_attribute_values[product.id]"
-        />
-        <t t-if="product_ptavs_data">
-            <t
-                t-set="product_ptavs"
-                t-value="product_ptavs_data.get('ptavs_data')"
-            />
-            <div
-                t-attf-class="o_wsale_attribute_previewer d-flex align-items-center gap-1 flex-nowrap z-1 overflow-hidden {{
-                    'show_on_hover' if product_ptavs[0]['ptav'].attribute_id.preview_variants == 'hover' and layout_mode != 'list' else ''
-                }}"
-                t-att-data-hidden-ptav-count="product_ptavs_data.get('hidden_ptavs_count')"
-            >
-                <t t-foreach="product_ptavs" t-as="previewed_ptav">
-                    <t t-set="ptav" t-value="previewed_ptav['ptav']"/>
-                    <t t-set="selected_attribute_value"
-                        t-value="ptav.product_attribute_value_id.id"/>
-                    <t
-                        t-set="variant_href"
-                        t-value="product_href.split('#')[0] + '#attribute_values=%s' % (selected_attribute_value)"
-                    />
-                    <a
-                        class="o_product_variant_preview my-2 d-none"
-                        t-att-data-variant-image="previewed_ptav['variant_image_url']"
-                        t-att-href="variant_href"
-                    >
-                        <div
-                            t-if="ptav.attribute_id.is_thumbnail_visible"
-                            class="d-flex"
-                        >
-                            <label
-                                class="css_attribute_preview_thumbnail cursor-pointer d-block"
-                                t-att-style="'background:url(%s); background-size:cover; background-position: center center;' % previewed_ptav['variant_image_url']"
-                                t-att-title="ptav.name"
-                            />
-                        </div>
-                        <div
-                            t-elif="ptav.display_type == 'color'"
-                            class="d-flex"
-                        >
-                            <t
-                                t-if="ptav.product_attribute_value_id.image"
-                                t-set="background_style"
-                                t-value="'background:url(/web/image/product.attribute.value/%s/image); background-size:cover;' % ptav.product_attribute_value_id.id"
-                            />
-                            <t
-                                t-elif="not ptav.is_custom"
-                                t-set="background_style"
-                                t-value="'background: ' + str(ptav.html_color or ptav.name)"
-                            />
-                            <label
-                                t-att-style="background_style"
-                                class="css_attribute_color cursor-pointer d-block"
-                                t-att-title="ptav.name"
-                            />
-                        </div>
-                        <span
-                            t-else=""
-                            t-attf-class="{{'' if ppr == 2 and layout_mode != 'list' else 'btn-sm'}} btn bg-body w-100 text-body text-truncate"
-                            t-out="ptav.name"
-                        />
-                    </a>
-                </t>
-                <span name="hidden_ptavs_count" class="d-none ms-1 small">
-                    <a t-att-href="product_href"/>
-                </span>
-            </div>
-        </t>
-    </template>
-
-    <template id="website_sale.shop_product_buttons">
-        <t name="buttons_container"/>
-    </template>
-
-    <template id="products_item" name="Products item">
-        <form
-            class="oe_product_cart h-100 d-flex"
-            t-att-data-publish="product.website_published and 'on' or 'off'"
+        <div
+            t-attf-class="o_wsale_attribute_previewer d-flex align-items-center gap-1 flex-nowrap z-1 overflow-hidden {{
+                'show_on_hover' if product_ptavs[0]['ptav'].attribute_id.preview_variants == 'hover' and layout_mode != 'list' else ''
+            }}"
+            t-att-data-hidden-ptav-count="product_ptavs_data.get('hidden_ptavs_count')"
         >
-            <t
-                t-set="product_path"
-                t-value="'%s/%s/%s' % (shop_path, slug(category), slug(product)) if category else '%s/%s' % (shop_path, slug(product))"
-            />
-            <t
-                t-set="product_href"
-                t-value="product_path + (product_query_string and '?' + product_query_string) + selected_attributes_hash"
-            />
-            <t t-set="image_type" t-value="product._get_suitable_image_size(ppr, td_product['x'], td_product['y'])"/>
-
-            <div class="oe_product_image position-relative flex-grow-0 overflow-hidden">
-                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
+            <t t-foreach="product_ptavs" t-as="previewed_ptav">
+                <t t-set="ptav" t-value="previewed_ptav['ptav']"/>
+                <t t-set="selected_attribute_value"
+                    t-value="ptav.product_attribute_value_id.id"/>
+                <t
+                    t-set="variant_href"
+                    t-value="product_href.split('#')[0] + '#attribute_values=%s' % (selected_attribute_value)"
+                />
                 <a
-                    t-att-href="product_href"
-                    class="oe_product_image_link d-block position-relative"
-                    contenteditable="false"
+                    class="o_product_variant_preview d-none"
+                    t-att-data-variant-image="previewed_ptav['variant_image_url']"
+                    t-att-href="variant_href"
                 >
-                    <t t-set="image_holder" t-value="product._get_image_holder()"/>
-                    <span t-field="image_holder.image_1920"
-                        t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'h-100 w-100 position-absolute'}"
-                        class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center position-absolute"/>
-                    <t t-set="bg_color" t-value="ribbon.bg_color"/>
-                    <t t-set="text_color" t-value="ribbon.text_color"/>
-                    <span
-                        t-att-data-ribbon-id="ribbon.id"
-                        t-attf-class="o_ribbons o_not_editable #{ribbon._get_css_classes()}"
-                        t-attf-style="#{text_color and ('color: %s;' % text_color)} #{bg_color and 'background-color:' + bg_color}"
-                        t-out="ribbon.name or ''"
-                    />
-                </a>
-            </div>
-            <div class="o_wsale_product_information position-relative d-flex flex-grow-1 flex-shrink-1">
-                <div class="o_wsale_product_information_text">
-                    <h6 class="o_wsale_products_item_title mb-2 text-break">
-                        <a
-                            class="text-decoration-none"
-                            t-att-href="product_href"
-                            t-att-content="product.name"
-                            t-field="product.name"
+                    <div
+                        t-if="ptav.attribute_id.is_thumbnail_visible"
+                        class="d-flex"
+                    >
+                        <label
+                            class="css_attribute_preview_thumbnail cursor-pointer d-block"
+                            t-att-style="'background:url(%s); background-size:cover; background-position: center center;' % previewed_ptav['variant_image_url']"
+                            t-att-title="ptav.name"
                         />
-                        <a
-                            t-if="not product.website_published"
-                            role="button"
-                            t-att-href="product_href"
-                            class="btn btn-sm btn-danger"
-                            title="This product is unpublished."
-                        >
-                            Unpublished
-                        </a>
-                    </h6>
-
-                    <t t-call="website_sale.product_variant_preview" />
-                </div>
-                <div class="o_wsale_product_sub d-flex align-items-center justify-content-between flex-nowrap gap-3">
-                    <div class="product_price">
-                        <span class="h6 mb-0"
-                              t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale"
-                              t-out="template_price_vals['price_reduce']"
-                              t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                        <t
-                            t-if="'base_price' in template_price_vals and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce']) and (template_price_vals['price_reduce'] or not website.prevent_zero_price_sale)"
-                            name="product_base_price"
-                        >
-                            <del t-attf-class="text-muted me-1 h6 mb-0" style="white-space: nowrap;">
-                                <em class="small" t-esc="template_price_vals['base_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
-                            </del>
-                        </t>
                     </div>
                     <div
-                        t-if="layout_mode == 'list'"
-                        class="o_wsale_product_btn o_wsale_product_btn_list d-flex gap-2"
-                        t-call="website_sale.shop_product_buttons"
+                        t-elif="ptav.display_type == 'color'"
+                        class="d-flex"
+                    >
+                        <t
+                            t-if="ptav.product_attribute_value_id.image"
+                            t-set="background_style"
+                            t-value="'background:url(/web/image/product.attribute.value/%s/image); background-size:cover;' % ptav.product_attribute_value_id.id"
+                        />
+                        <t
+                            t-elif="not ptav.is_custom"
+                            t-set="background_style"
+                            t-value="'background: ' + str(ptav.html_color or ptav.name)"
+                        />
+                        <label
+                            t-att-style="background_style"
+                            class="css_attribute_color cursor-pointer d-block"
+                            t-att-title="ptav.name"
+                        />
+                    </div>
+                    <span
+                        t-else=""
+                        t-attf-class="{{'' if ppr == 2 and layout_mode != 'list' else 'btn-sm'}} btn bg-body w-100 text-body text-truncate"
+                        t-out="ptav.name"
                     />
-                </div>
-            </div>
-            <div
-                t-if="layout_mode != 'list'"
-                class="o_wsale_product_btn o_wsale_product_btn_catalog d-flex gap-2"
-                t-call="website_sale.shop_product_buttons"
-            />
-        </form>
-    </template>
-
-    <template id="products_description" inherit_id="website_sale.products_item" active="False" name="Product Description">
-         <xpath expr="//form" position="attributes">
-            <attribute name="class" add="oe_product_cart_has_description" separator=" "/>
-        </xpath>
-        <xpath expr="//*[hasclass('o_wsale_products_item_title')]" position="after">
-            <div class="oe_subdescription mb-2 text-muted small" contenteditable="false">
-                <div t-field="product.description_sale"/>
-            </div>
-        </xpath>
-    </template>
-
-    <template
-        id="products_add_to_cart"
-        inherit_id="website_sale.shop_product_buttons"
-        active="False"
-        name="Add to Cart"
-    >
-        <t name="buttons_container" position="inside">
-            <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
-            <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
-            <input name="product_template_id" t-att-value="product.id" type="hidden"/>
-            <input name="product_type" t-att-value="product.type" type="hidden"/>
-            <t t-if="product_variant_id and template_price_vals['price_reduce'] or not website.prevent_zero_price_sale">
-                <a
-                    t-if="product._website_show_quick_add()"
-                    href="#"
-                    role="button"
-                    class="btn btn-light a-submit"
-                    aria-label="Shopping cart"
-                    title="Shopping cart"
-                    t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
-                >
-                    <span class="fa fa-shopping-cart"/>
                 </a>
             </t>
-        </t>
+            <span name="hidden_ptavs_count" class="d-none ms-1 small">
+                <a t-att-href="product_href"/>
+            </span>
+        </div>
     </template>
 
     <template id="pricelist_list" name="Pricelists Dropdown">
@@ -636,7 +496,7 @@
             <t t-set="opt_wsale_attributes" t-value="is_view_active('website_sale.products_attributes')"/>
             <t t-set="opt_wsale_filter_price" t-value="is_view_active('website_sale.filter_products_price')"/>
             <t t-set="opt_wsale_filter_tags" t-value="is_view_active('website_sale.filter_products_tags')"/>
-            <t t-set="opt_wsale_design_grid" t-value="is_view_active('website_sale.products_design_grid')"/>
+            <t t-set="opt_wsale_design_grid" t-value="'o_wsale_products_opt_design_grid' in website.shop_opt_products_design_classes"/>
 
             <t t-set="opt_wsale_categories_top" t-value="is_view_active('website_sale.products_categories_top')"/>
             <t t-set="opt_wsale_attributes_top" t-value="is_view_active('website_sale.products_attributes_top')"/>
@@ -666,12 +526,11 @@
                     id="o_wsale_container"
                     t-attf-class="oe_website_sale
                         {{opt_wsale_fullwidth and 'container-fluid o_wsale_page_fluid' or 'o_wsale_page_contained container'}}
-                        {{layout_mode == 'list' and 'o_wsale_layout_list' or 'o_wsale_layout_catalog'}}
                         {{opt_wsale_categories_top and 'o_wsale_has_filmstrip'}}
                         {{opt_wsale_floating_bar and 'o_wsale_has_floating_bar'}}
                         {{hasLeftColumn and 'o_wsale_has_sidebar'}}
-                        {{editionPreviews and 'o_wsale_edit_preview_enabled'}}"
-                    t-attf-style="--o-wsale-products-grid-gap: {{gap}};"
+                        {{editionPreviews and 'o_wsale_edit_preview_enabled'}}
+                        {{opt_wsale_design_grid and 'o_wsale_uses_grid_design'}}"
                     t-att-data-ppg="ppg"
                     t-att-data-ppr="ppr"
                     t-att-data-default-sort="website.shop_default_sort"
@@ -868,8 +727,10 @@
 
                                 <section
                                     id="o_wsale_products_grid"
-                                    t-attf-class="o_wsale_products_grid_table grid {{grid_md_allow_custom_cols and 'o_wsale_products_grid_table_md'}}"
-                                    t-attf-style="--o-wsale-ppr: {{ppr}}; --o-wsale-ppg: {{ppg}}"
+                                    t-attf-class="o_wsale_products_grid_table grid
+                                        {{grid_md_allow_custom_cols and 'o_wsale_products_grid_table_md'}}
+                                        {{website.shop_opt_products_design_classes}}"
+                                    t-attf-style="--o-wsale-ppr: {{ppr}}; --o-wsale-ppg: {{ppg}}; --o-wsale-products-grid-gap: {{gap}};"
                                     t-att-data-name="grid_block_name"
                                 >
                                     <t t-foreach="bins" t-as="tr_product">
@@ -904,7 +765,12 @@
                                                     t-att-data-name="product_block_name"
                                                 >
                                                     <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
-                                                        <t t-call="website_sale.products_item"/>
+                                                        <t t-call="website_sale.products_item">
+                                                            <t
+                                                                t-set="design_field"
+                                                                t-value="website.shop_opt_products_design_classes"
+                                                            />
+                                                        </t>
                                                     </div>
                                                 </div>
                                             </t>
@@ -1017,47 +883,6 @@
     >
         <xpath expr="//t[@t-set='col_class']" position="attributes">
             <attribute name="t-valuef">g-col-12</attribute>
-        </xpath>
-    </template>
-
-    <!-- (Option) Products: Enable "Card" or "Thumbnails" designs -->
-    <template id="products_design_card" name="Card Design" inherit_id="website_sale.products" active="False">
-        <xpath expr="//div[@id='o_wsale_container']" position="attributes">
-            <attribute name="t-attf-class" add="o_wsale_design_cards" separator=" "/>
-        </xpath>
-    </template>
-    <template id="products_design_thumbs" name="Thumbnails Design" inherit_id="website_sale.products" active="False">
-        <xpath expr="//div[@id='o_wsale_container']" position="attributes">
-            <attribute name="t-attf-class" add="o_wsale_design_thumbs" separator=" "/>
-        </xpath>
-    </template>
-    <template id="products_design_grid" name="Grid Design" inherit_id="website_sale.products" active="False">
-        <xpath expr="//div[@id='o_wsale_container']" position="attributes">
-            <attribute name="t-attf-class" add="o_wsale_design_grid" separator=" "/>
-        </xpath>
-    </template>
-
-    <!-- (Options) Products: Define products' default image ratio -->
-    <template id="products_thumb_4_3" name="thumb_4_3" inherit_id="website_sale.products" active="False">
-        <xpath expr="//div[@id='o_wsale_container']" position="attributes">
-            <attribute name="t-attf-class" add="o_wsale_context_thumb_4_3" separator=" "/>
-        </xpath>
-    </template>
-    <template id="products_thumb_4_5" name="thumb_4_5" inherit_id="website_sale.products" active="False">
-        <xpath expr="//div[@id='o_wsale_container']" position="attributes">
-            <attribute name="t-attf-class" add="o_wsale_context_thumb_4_5" separator=" "/>
-        </xpath>
-    </template>
-    <template id="products_thumb_2_3" name="thumb_2_3" inherit_id="website_sale.products" active="False">
-        <xpath expr="//div[@id='o_wsale_container']" position="attributes">
-            <attribute name="t-attf-class" add="o_wsale_context_thumb_2_3" separator=" "/>
-        </xpath>
-    </template>
-
-    <!-- (Option) Products: Define products' images filling mode -->
-    <template id="products_thumb_cover" name="thumb_cover" inherit_id="website_sale.products" active="True">
-        <xpath expr="//div[@id='o_wsale_container']" position="attributes">
-            <attribute name="t-attf-class" add="o_wsale_context_thumb_cover" separator=" "/>
         </xpath>
     </template>
 
@@ -3152,9 +2977,11 @@
             <div
                 id="shop_cart"
                 t-att-class="'col ' + (
-                        'o_img_ratio_4_3' if is_view_active('website_sale.products_thumb_4_3') else
-                        'o_img_ratio_4_5' if is_view_active('website_sale.products_thumb_4_5') else
-                        'o_img_ratio_2_3' if is_view_active('website_sale.products_thumb_2_3') else
+                        'o_img_ratio_16_9' if 'o_wsale_products_opt_thumb_16_9' in website.shop_opt_products_design_classes else
+                        'o_img_ratio_4_3' if 'o_wsale_products_opt_thumb_4_3' in website.shop_opt_products_design_classes else
+                        'o_img_ratio_6_5' if 'o_wsale_products_opt_thumb_6_5' in website.shop_opt_products_design_classes else
+                        'o_img_ratio_4_5' if 'o_wsale_products_opt_thumb_4_5' in website.shop_opt_products_design_classes else
+                        'o_img_ratio_2_3' if 'o_wsale_products_opt_thumb_2_3' in website.shop_opt_products_design_classes else
                         '')
             ">
                 <div class="d-flex align-items-center mb-3">
