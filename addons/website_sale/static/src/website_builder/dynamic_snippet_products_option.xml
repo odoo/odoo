@@ -3,6 +3,9 @@
 
 <t t-name="website_sale.DynamicSnippetProductsOption" t-inherit="website.DynamicSnippetCarouselOption">
     <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
+
+        <ProductsDesignPanel showLists="false" label.translate="Cards Design"/>
+
         <BuilderRow label.translate="Category" t-if="!this.domState.isAlternative">
             <BuilderSelect dataAttributeAction="'productCategoryId'" preview="false" id="'product_category_opt'">
                 <BuilderSelectItem dataAttributeActionValue="'all'">All Products</BuilderSelectItem>

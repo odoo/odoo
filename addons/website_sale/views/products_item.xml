@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- ==== Main template ==== -->
+<template id="products_item" name="Products item">
+
+    <!-- URLs -->
+    <t t-if="not product_href">
+        <t
+            t-set="product_path"
+            t-value="'%s/%s/%s' % (shop_path, slug(category), slug(product)) if category else '%s/%s' % (shop_path, slug(product))"
+        />
+        <t
+            t-set="product_href"
+            t-value="product_path + (product_query_string and '?' + product_query_string) + selected_attributes_hash"
+        />
+    </t>
+    <!-- Variations/Attributes -->
+    <t t-if="not hide_variations">
+        <t
+            t-set="product_ptavs_data"
+            t-value="previewed_attribute_values[product.id]"
+        />
+        <t t-if="product_ptavs_data">
+            <t
+                t-set="product_ptavs"
+                t-value="product_ptavs_data.get('ptavs_data')"
+            />
+            <t
+                t-set="ptavsClasses"
+                t-value="'o_has_variations o_has_variations_onhover' if product_ptavs[0]['ptav'].attribute_id.preview_variants == 'hover' else 'o_has_variations o_has_variations_static'"
+            />
+        </t>
+    </t>
+
+    <form
+        t-attf-class="oe_product_cart d-flex {{ptavsClasses}}"
+        t-att-data-publish="product.website_published and 'on' or 'off'"
+        role="article"
+        t-att-aria-label="product.name"
+        >
+
+        <div t-attf-class="oe_product_image position-relative flex-grow-0 overflow-hidden">
+            <input
+                type="hidden"
+                name="csrf_token"
+                t-att-value="request.csrf_token()"
+                t-nocache="The csrf token must always be up to date."
+            />
+
+            <!-- Fetch Images Data -->
+            <t t-if="not product_image_url">
+                <t
+                    t-set="image_type"
+                    t-value="product._get_suitable_image_size(ppr, td_product['x'], td_product['y'])"
+                />
+                <t
+                    t-set="image_holder"
+                    t-value="product._get_image_holder()"
+                />
+                <t
+                    t-set="product_variant_id"
+                    t-value="product._get_first_possible_variant_id()"
+                />
+                <t
+                    t-set="product_variant"
+                    t-value="request.env['product.product'].browse(product_variant_id) if product_variant_id else None"
+                />
+                <t
+                    t-set="all_images"
+                    t-value="product_variant._get_images() if product_variant else product._get_images()"
+                />
+                <t
+                    t-set="primary_image"
+                    t-value="all_images[0] if all_images else image_holder"
+                />
+                <t
+                    t-set="secondary_image"
+                    t-value="all_images[1] if len(all_images) > 1 else None"
+                />
+            </t>
+
+            <a
+                t-att-href="product_href"
+                t-attf-class="oe_product_image_link position-relative {{secondary_image and 'oe_product_image_link_has_secondary'}}"
+                contenteditable="false"
+                t-att-title="product.name"
+            >
+                <t t-if="not product_image_url">
+                    <!-- Primary image -->
+                    <span t-field="primary_image.image_1920"
+                        t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'oe_product_image_img h-100 w-100'}"
+                        class="oe_product_image_img_wrapper oe_product_image_img_wrapper_primary d-flex h-100 justify-content-center align-items-center"
+                    />
+
+                    <!-- Secondary image -->
+                    <span t-if="secondary_image"
+                        t-field="secondary_image.image_1920"
+                        t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'oe_product_image_img_secondary h-100 w-100'}"
+                        class="oe_product_image_img_wrapper oe_product_image_img_wrapper_secondary h-100 justify-content-center align-items-center"
+                    />
+                </t>
+                <t t-else="">
+                    <span
+                        class="oe_product_image_img_wrapper oe_product_image_img_wrapper_primary d-flex h-100 justify-content-center align-items-center"
+                    >
+                        <img
+                            t-att-src="product_image_url"
+                            class="oe_product_image_img h-100 w-100"
+                            alt="Product image"
+                        />
+                    </span>
+                </t>
+
+                <!-- Ribbon -->
+                <t t-if="handleRibbons">
+                    <t t-set="bg_color" t-value="ribbon.bg_color"/>
+                    <t t-set="text_color" t-value="ribbon.text_color"/>
+                    <span
+                        t-att-data-ribbon-id="ribbon.id"
+                        t-attf-class="o_ribbons o_not_editable #{ribbon._get_css_classes()}"
+                        t-attf-style="#{text_color and ('color: %s;' % text_color)} #{bg_color and 'background-color:' + bg_color}"
+                        t-out="ribbon.name or ''"
+                    />
+                </t>
+            </a>
+        </div>
+        <div class="o_wsale_product_information flex-grow-1 flex-shrink-1">
+            <div class="o_wsale_product_info_attributes_wrapper">
+                <!-- Variations/Attributes -->
+                <t
+                    t-if="product_ptavs_data"
+                    t-call="website_sale.product_variant_preview"
+                />
+
+                <!-- Information -->
+                <div class="o_wsale_product_information_text">
+                    <!-- Product Name -->
+                    <h2 class="o_wsale_products_item_title text-break">
+                        <a
+                            class="text-decoration-none"
+                            t-att-href="product_href"
+                            t-att-content="product.name"
+                            t-att-title="product.name"
+                            t-field="product.name"
+                        >
+                            <span t-if="product_name_static" t-out="product_name_static"/>
+                            <span t-else="" t-field="product.name"/>
+                        </a>
+                        <a
+                            t-if="not product.website_published"
+                            role="button"
+                            t-att-href="product_href"
+                            class="btn btn-sm btn-danger"
+                            title="This product is unpublished."
+                        >
+                            Unpublished
+                        </a>
+                    </h2>
+                    <!-- Description -->
+                    <t t-call="website_sale.products_item_element_visibility">
+                        <t t-set="matchingClass" t-value="'o_wsale_products_opt_has_description'"/>
+
+                        <div class="oe_subdescription_wrapper">
+                            <div
+                                class="oe_subdescription text-muted small"
+                                contenteditable="false"
+                            >
+                                <div t-field="product.description_sale"/>
+                            </div>
+                        </div>
+                    </t>
+                    <!-- Rating -->
+                    <t
+                        t-if="is_view_active('website_sale.product_comment')"
+                        t-call="website_sale.products_item_element_visibility"
+                    >
+                        <t t-set="matchingClass" t-value="'o_wsale_products_opt_has_rating'"/>
+
+                        <div class="o_wsale_product_rating_wrapper">
+                            <t t-call="portal_rating.rating_widget_stars_static">
+                                <!-- sudo: product.product - visitor can access product average rating -->
+                                <t t-set="rating_avg" t-value="product.sudo().rating_avg"/>
+                                <t t-set="rating_count" t-value="product.rating_count"/>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <div class="o_wsale_product_sub justify-content-between gap-2">
+                <!-- Price(s) -->
+                <t t-if="not product_price">
+                    <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
+                    <div class="product_price" aria-label="Price information">
+                        <span
+                            class="mb-0 fw-bold"
+                            aria-label="Sale price"
+                            t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale"
+                            t-out="template_price_vals['price_reduce']"
+                            t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                        />
+                        <t
+                            t-if="'base_price' in template_price_vals and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce']) and (template_price_vals['price_reduce'] or not website.prevent_zero_price_sale)"
+                            name="product_base_price"
+                        >
+                            <del
+                                aria-label="Original price"
+                                t-attf-class="text-muted me-1 mb-0"
+                                style="white-space: nowrap;"
+                            >
+                                <small
+                                    t-esc="template_price_vals['base_price']"
+                                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                                />
+                            </del>
+                        </t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <t t-out="product_price"/>
+                </t>
+                <!-- Actions -->
+                <div class="o_wsale_product_btn">
+                    <t t-if="not product_actions" t-call="website_sale.shop_product_buttons"/>
+                    <t t-else="" t-out="product_actions"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</template>
+
+
+<template id="website_sale.shop_product_buttons" name="Products Actions">
+    <t name="buttons_container">
+        <div class="o_wsale_product_btn_row">
+            <t t-call="website_sale.products_item_element_visibility">
+                <t t-set="matchingClass" t-value="'o_wsale_products_opt_has_cta'"/>
+                <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
+                <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
+                <input name="product_template_id" t-att-value="product.id" type="hidden"/>
+                <input name="product_type" t-att-value="product.type" type="hidden"/>
+                <a
+                    t-if="product._website_show_quick_add()"
+                    href="#"
+                    role="button"
+                    class="o_wsale_product_btn_primary a-submit btn btn-primary"
+                    aria-label="Shopping cart"
+                    title="Shopping cart"
+                    t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                >
+                    <i class="fa fa-fw fa-shopping-cart o_not-animable" role="presentation"/>
+                    <span class="o_label small ms-1">Add to Cart</span>
+                </a>
+            </t>
+        </div>
+    </t>
+</template>
+
+<!-- Utilities -->
+
+<!--
+/// Product elements visibility control:
+
+Default behavior: All elements are injected into product cards and visibility is controlled
+through CSS classes.
+
+Complex scenarios (/shop page): Disabled elements are injected ONLY during edit mode to:
+- Ensure smooth editing (eg., activating "Description" shows it immediately)
+- Avoid DOM bloat for non-editors
+-->
+<template id="website_sale.products_item_element_visibility" name="Product elements visibility">
+    <t t-set="forEditionOnly"
+        t-value="matchingClass and designField and matchingClass not in designField"
+    />
+    <t
+        t-set="userIsEditor"
+        t-value="request.env.user.has_group('website.group_website_designer')"
+    />
+
+    <t t-if="(forEditionOnly and userIsEditor) or not forEditionOnly">
+        <t t-out="0"/>
+    </t>
+</template>
+
+</odoo>

@@ -45,7 +45,7 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
      * @override
      */
     onFocus: function () {
-        var listLayoutEnabled = this.$target.closest('#products_grid').hasClass('o_wsale_layout_list');
+        var listLayoutEnabled = this.$target.closest('#products_grid').hasClass('o_wsale_products_opt_layout_list');
         this.$el.filter('.o_wsale_ppr_submenu').toggleClass('d-none', listLayoutEnabled);
     },
 
@@ -204,7 +204,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      */
     willStart: async function () {
         const _super = this._super.bind(this);
-        this.isLayoutList = this.$target[0].closest('#o_wsale_container').classList.contains('o_wsale_layout_list');
+        this.isLayoutList = this.$target[0].closest('#o_wsale_container').classList.contains('o_wsale_products_opt_layout_list');
         this.ppr = this.$target.closest('[data-ppr]').data('ppr');
         this.defaultSort = this.$target[0].closest('[data-default-sort]').dataset.defaultSort
         this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
@@ -217,7 +217,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @override
      */
     onFocus: function () {
-        var listLayoutEnabled = this.$target.closest('#products_grid').hasClass('o_wsale_layout_list');
+        var listLayoutEnabled = this.$target.closest('#products_grid').hasClass('o_wsale_products_opt_layout_list');
         this.$el.find('.o_wsale_soptions_menu_sizes')
             .toggleClass('d-none', listLayoutEnabled);
         // Ribbons may have been edited or deleted in another products' option, need to make sure they're up to date

@@ -1,5 +1,5 @@
 .css_attribute_color {
-    --o-wsale-css-attribute-color__height: 2rem;
+    --o-wsale-css-attribute-color__height: 1.6rem;
     --o-wsale-css-attribute-color__border-width: .25rem;
 
     position: relative;
@@ -8,8 +8,9 @@
     width: calc(var(--o-wsale-css-attribute-color__height) - var(--o-wsale-css-attribute-color__border-width));
     border: var(--o-wsale-css-attribute-color__border-width) solid var(--body-bg);
     border-radius: 50%;
-    transition: $input-transition;
-    outline: $border-width solid $input-border-color;
+    transition: $transition-base;
+    outline: $border-width solid var(--o-wsale-css-attribute-color__outline-color, transparent);
+    outline-offset: calc(var(--o-wsale-css-attribute-color__border-width) * -0.5) ;
     box-shadow: inset 0 0 0 $border-width $border-color;
     box-sizing: content-box;
 
@@ -17,9 +18,14 @@
         opacity: 0;
     }
 
-    &.active, &:hover {
-        border-color: var(--body-bg);
-        outline-color: map-get($theme-colors, 'primary');
+    &:hover {
+        --o-wsale-css-attribute-color__outline-color: var(--body-color);
+        outline-offset: $border-width * -1;
+    }
+
+    &.active, &.active:hover {
+        --o-wsale-css-attribute-color__outline-color: #{map-get($theme-colors, 'primary')};
+        outline-offset: $border-width * -1;
     }
 
     &:has(input:focus-visible)::before {
@@ -32,10 +38,6 @@
         z-index: -1;
         background-color: $focus-ring-color;
         transform: translate(-50%, -50%);
-    }
-
-    &.active {
-        outline-color: map-get($theme-colors, 'primary');
     }
 
     &.custom_value {

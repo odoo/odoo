@@ -28,7 +28,26 @@
     }
 }
 
-table.table-comparator .td-img img {
-    // allows sizing the placeholder image to the "image" size of 100px
-    max-height: 100px;
+#o_comparelist_table {
+    --gap: var(--o-wsale-products-grid-gap);
+
+    &.o_wsale_products_opt_layout_list article {
+        grid-column: auto/span 12;
+    }
+
+    &.o_wsale_products_opt_layout_catalog article {
+        position: relative;
+        grid-column: auto/span 6;
+
+        @include media-breakpoint-up(md) {
+            grid-column: auto/span 4;
+        }
+
+        @include media-breakpoint-up(lg) {
+            grid-column: auto/span 3;
+        }
+        @include media-breakpoint-up(xxl) {
+            grid-column: auto/span 2;
+        }
+    }
 }
