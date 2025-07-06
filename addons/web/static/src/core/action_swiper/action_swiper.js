@@ -5,14 +5,12 @@ import { clamp } from "@web/core/utils/numbers";
 import { Component, onMounted, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { Deferred } from "@web/core/utils/concurrency";
 
-const isScrollSwipable = (scrollables) => {
-    return {
-        left: !scrollables.filter((e) => e.scrollLeft !== 0).length,
-        right: !scrollables.filter(
-            (e) => e.scrollLeft + Math.round(e.getBoundingClientRect().width) !== e.scrollWidth
-        ).length,
-    };
-};
+const isScrollSwipable = (scrollables) => ({
+    left: !scrollables.filter((e) => e.scrollLeft !== 0).length,
+    right: !scrollables.filter(
+        (e) => e.scrollLeft + Math.round(e.getBoundingClientRect().width) !== e.scrollWidth
+    ).length,
+});
 
 /**
  * Action Swiper
@@ -219,6 +217,7 @@ export class ActionSwiper extends Component {
                 }, 100);
             }, 100);
         } else {
+            this._reset();
             return action(Promise.resolve());
         }
     }
