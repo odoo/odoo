@@ -1,7 +1,7 @@
-import { Interaction } from '@web/public/interaction';
-import { registry } from '@web/core/registry';
 import { rpc } from '@web/core/network/rpc';
+import { registry } from '@web/core/registry';
 import { redirect } from '@web/core/utils/urls';
+import { Interaction } from '@web/public/interaction';
 import wishlistUtils from '@website_sale_wishlist/js/website_sale_wishlist_utils';
 
 export class ProductWishlist extends Interaction {
@@ -56,12 +56,12 @@ export class ProductWishlist extends Interaction {
      * @param {String} emptyRedirectUrl The URL to redirect to if the wishlist is empty.
      */
     async _removeProduct(button, emptyRedirectUrl) {
-        const tr = button.closest('tr');
-        const wish = tr.dataset.wishId;
-        const productId = parseInt(tr.dataset.productId);
+        const article = button.closest('article');
+        const wish = article.dataset.wishId;
+        const productId = parseInt(article.dataset.productId);
 
         await this.waitFor(rpc(`/shop/wishlist/remove/${wish}`));
-        tr.style.display = 'none';
+        article.style.display = 'none';
 
         wishlistUtils.removeWishlistProduct(productId);
         if (!wishlistUtils.getWishlistProductIds().length) {

@@ -19,6 +19,7 @@ Allow shoppers of your eCommerce store to create personalized collections of pro
     'assets': {
         'web.assets_frontend': [
             'website_sale_wishlist/static/src/interactions/**/*',
+            'website_sale_wishlist/static/src/scss/**/*',
             'website_sale_wishlist/static/src/js/**/*',
         ],
         'web.assets_tests': [

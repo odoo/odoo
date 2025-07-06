@@ -61,16 +61,16 @@ registry.category("web_tour.tours").add('category_page_and_products_snippet_use'
     {
         content: "Check that the snippet displays the right products",
         // Wait for at least one shown product
-        trigger: '#category_header .s_dynamic_snippet_products:has(.o_carousel_product_img_link)',
+        trigger: '#category_header .s_dynamic_snippet_products:has(.oe_product_image_link)',
         run() {
             // Fetch the category's id from the url.
-            const productCategoryId = window.location.href.match('/shop/category/test-category-(\\d+)')[1]
-            const productGridEl = this.anchor.closest('#products_grid');
+            const productCategoryId = window.location.href.match('/shop/category/test-category-(\\d+)')[1];
+            const productGridEl = document.getElementById('o_wsale_products_grid');
             const regex = new RegExp(`^/shop/test-category-${productCategoryId}/[\\w-/]+-(\\d+)$`);
             const allPageProductIDs = [...productGridEl.querySelectorAll('.oe_product_image_link')]
                 .map(el => el.getAttribute('href').match(regex)[1]);
 
-            const $shownProductLinks = this.anchor.querySelectorAll(".o_carousel_product_img_link");
+            const $shownProductLinks = this.anchor.querySelectorAll(".s_dynamic_snippet_products .oe_product_image_link");
             const regex2 = new RegExp(`^/shop/[\\w-/]+-(\\d+)(?:#attribute_values=\\d*)?$`);
             for (const shownProductLinkEl of $shownProductLinks) {
                 const productID = shownProductLinkEl.getAttribute('href').match(regex2)[1];

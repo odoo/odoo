@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- Inject the comparison button in products cards -->
     <template
         id="website_sale_comparison.add_to_compare"
         inherit_id="website_sale.shop_product_buttons"
-        name="Comparison List"
-        priority="22"
+        name="Comparison List Button"
+        priority="32"
     >
-        <t name="buttons_container" position="inside">
-            <t t-set="attrib_categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
-            <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
-            <button
-                t-if="product_variant_id and attrib_categories"
-                type="button"
-                role="button"
-                class="btn btn-light o_add_compare"
-                title="Compare"
-                aria-label="Compare"
-                t-att-data-product-template-id="product.id"
-                t-att-data-product-product-id="product_variant_id"
-                data-action="o_comparelist"
-            >
-                <span class="fa fa-exchange o_not-animable"/>
-            </button>
-        </t>
+        <xpath expr="//div[hasclass('o_wsale_product_action_row')]" position="inside">
+            <t
+                t-set="isCompareAvailable"
+                t-value="product and product.valid_product_template_attribute_line_ids"
+            />
+
+            <t t-if="isCompareAvailable" t-call="website_sale.product_tile_element_visibility">
+                <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_comparison'"/>
+
+                <t
+                    t-set="attrib_categories"
+                    t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"
+                />
+                <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
+                <button
+                    t-if="product_variant_id and attrib_categories"
+                    type="button"
+                    role="button"
+                    class="btn o_add_compare"
+                    title="Compare"
+                    aria-label="Compare"
+                    t-att-data-product-template-id="product.id"
+                    t-att-data-product-product-id="product_variant_id"
+                    data-action="o_comparelist"
+                >
+                    <span class="fa fa-exchange fa-fw o_not-animable"/>
+                    <span class="o_label small ms-2">Compare</span>
+                </button>
+
+            </t>
+            <t t-else="" t-call="website_sale.product_tile_element_visibility">
+                <!--
+                    Render a placeholder to ensure alignment between entries with and without
+                    comparison button
+                -->
+                <div class="o_add_compare_placeholder pe-none opacity-0 btn">
+                    <span class="fa fa-exchange fa-fw"/>
+                </div>
+            </t>
+        </xpath>
     </template>
 
     <template
