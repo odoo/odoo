@@ -7,6 +7,7 @@
 # Cozmin Candea <office@terrabit.ro>, 2023
 # Foldi Robert <foldirobert@nexterp.ro>, 2023
 # Martin Trigaux, 2023
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2023-07-13 13:02+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +39,18 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    Filtru folosit pentru a căuta conturi de utilizator în baza de date LDAP. Este un    filtru LDAP arbitrar sub formă de șir de caractere. Orice placeholder `%s`    va fi înlocuit cu login-ul (identificatorul) furnizat de utilizator, filtrul    trebuie să conțină cel puțin un astfel de placeholder.\n"
+"\n"
+"    Filtrul trebuie să returneze exact un (1) rezultat, altfel autentificarea va    fi considerată invalidă.\n"
+"\n"
+"    Exemplu (atributele reale depind de serverul și configurația LDAP):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    sau\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -89,6 +102,8 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
+"DN al domeniului de căutare a utilizatorilor: toți descendenții acestei baze"
+" vor fi căutați pentru utilizatori."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name

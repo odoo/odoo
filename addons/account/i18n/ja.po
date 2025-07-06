@@ -11,17 +11,17 @@
 # Tatsuki Kanda, 2023
 # 764374359f7a865bd0df682e21e54552_335e00f <6548f6be8d222d7d28a3e8d58aa819d1_1128047>, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
-# Wil Odoo, 2025
 # Ryoko Tsuda <ryoko@quartile.co>, 2025
 # Junko Augias, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-27 03:35+0000\n"
+"POT-Creation-Date: 2025-07-04 01:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Junko Augias, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2038,7 +2038,7 @@ msgstr "アクション"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate to create purchase receipt"
-msgstr "領収書作成のために有効化してください"
+msgstr "有効にして仕入受領書を作成します"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5839,7 +5839,7 @@ msgstr "ドラフトの支払"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Purchase Receipt"
-msgstr "購買記録の下書き"
+msgstr "ドラフト仕入受領書"
 
 #. module: account
 #. odoo-python
@@ -10600,12 +10600,12 @@ msgstr "支払QRコード"
 #. module: account
 #: model:ir.actions.report,name:account.action_report_payment_receipt
 msgid "Payment Receipt"
-msgstr "領収書"
+msgstr "入金領収書"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Receipt:"
-msgstr "領収書"
+msgstr "入金領収書:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
@@ -11207,7 +11207,7 @@ msgstr "購買"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 #: model:res.groups,name:account.group_purchase_receipts
 msgid "Purchase Receipt"
-msgstr "購買記録"
+msgstr "仕入受領書"
 
 #. module: account
 #. odoo-python
@@ -11520,7 +11520,7 @@ msgstr "銀行取引明細書の登録"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
 msgid "Register a new purchase receipt"
-msgstr "購買記録を登録"
+msgstr "新規仕入受領書を登録"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_payments
@@ -14737,8 +14737,8 @@ msgstr "この仕訳には、お使いの財政状態と合わない税が含ま
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "This entry has been duplicated from %s%s"
-msgstr ""
+msgid "This entry has been duplicated from %s"
+msgstr "この仕訳は%sより複製されました"
 
 #. module: account
 #. odoo-python
@@ -15852,14 +15852,16 @@ msgstr "チェックを入れると、この式の値を表示する際に0値�
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
-msgstr "購買記録では経費計上とともに仕入先支払を記録することが可能です。"
+msgstr ""
+"仕入受領書が確定すると、この仕入受領書に関連する\n"
+"                仕入先への支払を記録することができます。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_receipt_type
 msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
-msgstr "販売記録では売上計上とともに顧客支払を記録することが可能です。"
+msgstr "販売領収書が確認されると、この領収書に関連する顧客支払を記録できるようになります。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form

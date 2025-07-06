@@ -24,6 +24,7 @@
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
 # Ilya Rozhkov, 2024
 # Wil Odoo, 2025
+# Anastasiia Koroleva, 2025
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -307,7 +308,7 @@ msgstr "<span class=\"o_stat_text\">Подключен с</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton
 msgid "<span class=\"o_stat_text\">Contacts</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Контакты</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
@@ -372,7 +373,7 @@ msgstr "Полная занятость <br>Привлекательный па�
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
 msgid "A user cannot be linked to multiple employees in the same company."
 msgstr ""
-"Пользователь не может быть привязан к нескольким работникам в одной "
+"Пользователь не может быть связан с несколькими сотрудниками одной и той же "
 "компании."
 
 #. module: hr
@@ -2345,9 +2346,9 @@ msgid ""
 " enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
 msgstr ""
-"PIN-код, используемый для регистрации входа/выхода в режиме киоска "
-"приложения посещаемости (если он включен в конфигурации) и для смены кассира"
-" в кассовом приложении."
+"PIN-код, используемый для регистрации входа/выхода в режиме киоска в модуле "
+"Посещаемость (если он включен в конфигурации) и для смены кассира в модуле "
+"POS."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -2657,7 +2658,7 @@ msgstr "Записать увольнение"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contact_ids
 #, python-format
 msgid "Related Contacts"
-msgstr ""
+msgstr "Связанные контакты"
 
 #. module: hr
 #. odoo-python
@@ -2783,8 +2784,8 @@ msgid ""
 "Select the \"Employee\" who is the coach of this employee.\n"
 "The \"Coach\" has no specific rights or responsibilities by default."
 msgstr ""
-"Выберите «Сотрудника», который является наставником этого сотрудника.\n"
-"По умолчанию «Тренер» не имеет особых прав или обязанностей."
+"Выберите «Сотрудника», который является куратором этого сотрудника. \n"
+"У «Куратора» по умолчанию нет специальных прав или обязанностей."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__sequence
@@ -3087,7 +3088,8 @@ msgstr "Пользователь тренера %s не установлен."
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
 msgid "The user will be able to approve document created by employees."
-msgstr "Пользователь сможет утвердить документ, созданный сотрудниками."
+msgstr ""
+"Данный пользователь сможет утверждать документы, созданные сотрудниками."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager
