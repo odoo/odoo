@@ -31,6 +31,7 @@ Also:
     ],
     'demo': [
         'demo/demo_company.xml',
+        'demo/res_bank.xml',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
