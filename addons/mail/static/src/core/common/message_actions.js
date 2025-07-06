@@ -8,6 +8,7 @@ import { discussComponentRegistry } from "./discuss_component_registry";
 import { Deferred } from "@web/core/utils/concurrency";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
+import { ForwardDialog } from "@mail/core/common/forward_dialog";
 
 const { DateTime } = luxon;
 
@@ -63,6 +64,19 @@ messageActionsRegistry
             component.props.message.isSelfAuthored
                 ? 55
                 : 20,
+    })
+    .add("forward message", {
+        condition: (component) => true,
+        icon: "fa fa-share",
+        title: _t("Forward"),
+        onClick: (component) => {
+            const dialogService = component.dialog;
+            dialogService.add(ForwardDialog, {
+                message: component.props.message,
+                thread: component.props.thread,
+            });
+        },
+        sequence: 15,
     })
     .add("toggle-star", {
         condition: (component) => component.props.message.canToggleStar,

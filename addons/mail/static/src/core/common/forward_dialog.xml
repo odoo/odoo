@@ -1,0 +1,82 @@
+<t t-name="mail.ForwardDialog">
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center bg-dark bg-opacity-50 justify-content-center z-3">
+        <div t-att-class="{ 'w-100 h-100': isMobileOS, 'w-25 h-75': !isMobileOS }" class="bg-white bg-opacity-100 d-flex flex-column rounded shadow-lg border border-light-subtle p-3 overflow-hidden">
+
+            <!-- Header -->
+            <div class="mb-2">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h4 class="mb-0">Forward To</h4>
+                    <button class="btn btn-link btn-sm" t-on-click="cancel">
+                        <i class="fa fa-lg fa-times"/>
+                    </button>
+                </div>
+                <em class="text-muted">Select where you want to share this message:</em>
+            </div>
+
+            <!-- Search Input -->
+            <div class="input-group mb-2 border rounded">
+                <input type="text"
+                    t-model="state.search"
+                    class="form-control form-control-sm border-0"
+                    placeholder="Search..."
+                    t-on-input="onSearch"/>
+                <button class="btn btn-link" t-on-click="clearSearch">
+                    <i class="fa p-1" t-att-class="{'fa-search': !state.search, 'fa-times': state.search}"/>
+                </button>
+            </div>
+
+            <!-- Scrollable Target List -->
+            <div class="list-group mb-2 overflow-auto d-flex flex-column align-items-center text-center"
+                t-att-class="{ 'flex-grow-1':isMobileOS, 'justify-content-center h-100': !filteredTargets.length }">
+
+                <t t-if="filteredTargets.length">
+                    <t t-foreach="filteredTargets" t-as="target" t-key="target.id">
+                        <label class="list-group-item border-0 p-1 justify-content-between d-flex align-items-center w-100">
+                            <div class="d-flex align-items-center gap-1">
+                                <div class="o-mail-Discuss-threadAvatar position-relative align-self-center mx-2 my-1 bg-inherit">
+                                    <img class="rounded-3 o_object_fit_cover"
+                                        t-att-src="target.parent_channel_id?.avatarUrl ?? target.avatarUrl"
+                                        alt="Thread Image"/>
+                                </div>
+                                <span class="fw-bold"><t t-out="target.displayName" /></span>
+                            </div>
+                            <input class="form-check-input p-2 cursor-pointer rounded me-2"
+                                type="checkbox"
+                                t-if="state.selected.length &lt; 5 or state.selected.includes(target.id)"
+                                t-att-checked="state.selected.includes(target.id)"
+                                t-on-change="() => toggleSelection(target.id)"/>
+                        </label>
+                    </t>
+                </t>
+
+                <!-- Placeholder if empty -->
+                <t t-if="!filteredTargets.length">
+                    <div class="text-muted d-flex justify-content-center align-items-center p-3">
+                        <i class="fa fa-search fa-2x mb-2"></i>
+                        <div>No results found</div>
+                    </div>
+                </t>
+            </div>
+
+
+            <!-- Footer: Forwarded Message + Send Button -->
+            <div class="mt-auto">
+                <div class="border border-light-subtle rounded mb-2">
+                    <ForwardedMessage inDialog="true" message="props.message" onClick="()=>{}"/>
+                </div>
+                <div class="d-flex gap-1">
+                    <input type="text"
+                           class="form-control w-75"
+                           placeholder="Add an optional message..."
+                           t-model="message.text"/>
+                    <button t-att-disabled="!state.selected.length"
+                            class="btn btn-primary btn-sm flex-grow-1"
+                            t-on-click="confirm">
+                        Send <span t-if="state.selected.length">(<t t-out="state.selected.length"/>)</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</t>

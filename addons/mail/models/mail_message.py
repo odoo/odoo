@@ -105,6 +105,10 @@ class MailMessage(models.Model):
     parent_id = fields.Many2one(
         'mail.message', 'Parent Message', index='btree_not_null', ondelete='set null')
     child_ids = fields.One2many('mail.message', 'parent_id', 'Child Messages')
+    forwarded_from_id = fields.Many2one(
+        'mail.message', 'Forwarded From', index='btree_not_null', ondelete='set null')
+    is_forwarded_message_accessible = fields.Boolean(
+        compute='_compute_is_forwarded_message_accessible')
     # related document
     model = fields.Char('Related Document Model')
     res_id = fields.Many2oneReference('Related Document ID', model_field='model')
@@ -204,6 +208,20 @@ class MailMessage(models.Model):
         for message in self:
             plaintext_ct = tools.mail.html_to_inner_content(message.body)
             message.preview = textwrap.shorten(plaintext_ct, 190)
+
+    @api.depends('forwarded_from_id')
+    def _compute_is_forwarded_message_accessible(self):
+        """ Compute if the forwarded message is accessible to the current user.
+        This is used to determine if the forwarded message should be displayed
+        in the discussion thread. """
+        for message in self:
+            if message.forwarded_from_id:
+                # if message.forwarded_from_id.res_id == 2:
+                #     pass
+                # channel = self.env["discuss.channel"].sudo().browse(message.forwarded_from_id.res_id)
+                message.is_forwarded_message_accessible = message.forwarded_from_id.has_access('read')
+            else:
+                message.is_forwarded_message_accessible = False
 
     @api.depends('author_id', 'author_guest_id')
     @api.depends_context('guest', 'uid')
@@ -974,6 +992,8 @@ class MailMessage(models.Model):
             # sudo: mail.message.subtype - reading subtype on accessible message is allowed
             Store.One("subtype_id", ["description"], sudo=True),
             "write_date",
+            Store.One("forwarded_from_id"),
+            "is_forwarded_message_accessible"
         ]
         if self.env.user._is_internal():
             # sudo - mail.notification: internal users can access notifications.
@@ -1085,7 +1105,8 @@ class MailMessage(models.Model):
                 "scheduledDatetime": scheduled_dt_by_msg_id.get(message.id, False),
                 "thread": Store.One(record, [], as_thread=True),
             }
-
+            # if message.forwarded_from_id:
+            #     data["is_forwarded_message_accessible"] = message.forwarded_from_id.has_access('read')
             if message.incoming_email_cc:
                 data["incoming_email_cc"] = tools.mail.email_split_tuples(message.incoming_email_cc)
             if message.incoming_email_to:
