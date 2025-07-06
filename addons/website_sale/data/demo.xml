@@ -986,4 +986,40 @@
             />
         </record>
 
+        <!-- Products' secondary images -->
+        <record id="product_delivery_01_extra_image" model="product.image">
+            <field name="name">Office Chair - Context View</field>
+            <field name="sequence">10</field>
+            <field name="product_variant_id" ref="product.product_delivery_01"/>
+            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/table02_02.jpg"/>
+        </record>
+
+        <record id="product_product_16_extra_image" model="product.image">
+            <field name="name">Drawer Black - Context View</field>
+            <field name="sequence">10</field>
+            <field name="product_variant_id" ref="product.product_product_16"/>
+            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_product_16-image_02.jpg"/>
+        </record>
+
+        <record id="product_delivery_02_extra_image" model="product.image">
+            <field name="name">Office Lamp - Context View</field>
+            <field name="sequence">10</field>
+            <field name="product_variant_id" ref="product.product_delivery_02"/>
+            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_lamp_02.jpg"/>
+        </record>
+
+        <record id="product_product_4_extra_image" model="product.image">
+            <field name="name">Customizable Desk Steel - Context View</field>
+            <field name="sequence">10</field>
+            <field name="product_variant_id" ref="product.product_product_4"/>
+            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/table02_02.jpg"/>
+        </record>
+
+        <record id="product_product_1_product_template_extra_image" model="product.image">
+            <field name="name">Chair floor protection - Context View</field>
+            <field name="sequence">10</field>
+            <field name="product_tmpl_id" ref="sale.product_product_1_product_template"/>
+            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/floor_protection-image_02.jpg"/>
+        </record>
+
 </odoo>

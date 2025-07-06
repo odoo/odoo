@@ -1,6 +1,6 @@
-import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { SNIPPET_SPECIFIC_NEXT } from "@html_builder/utils/option_sequence";
+import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { reactive } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -272,7 +272,7 @@ class SetRibbonAction extends BuilderAction {
     }
     isApplied({ editingElement, value }) {
         const ribbonId = parseInt(
-            editingElement.querySelector('.o_ribbons').dataset.ribbonId,
+            editingElement.querySelector('.o_ribbons')?.dataset.ribbonId,
         );
         const match = !ribbonId || !this.ribbonOptions.getRibbonsObject().hasOwnProperty(ribbonId)
             ? ''
@@ -346,7 +346,7 @@ class ModifyRibbonAction extends BuilderAction {
     }
     getValue({ editingElement, params }) {
         const ribbonId = parseInt(
-            editingElement.querySelector('.o_ribbons').dataset.ribbonId
+            editingElement.querySelector('.o_ribbons')?.dataset.ribbonId
         );
         if (!ribbonId || !this.ribbonOptions.getRibbonsObject().hasOwnProperty(ribbonId)) {
             return;
@@ -356,7 +356,7 @@ class ModifyRibbonAction extends BuilderAction {
     }
     isApplied({ editingElement, params, value }) {
         let ribbonId = parseInt(
-            editingElement.querySelector('.o_ribbons').dataset.ribbonId
+            editingElement.querySelector('.o_ribbons')?.dataset.ribbonId
         );
         if (!ribbonId || !this.ribbonOptions.getRibbonsObject().hasOwnProperty(ribbonId)) {
             return;
