@@ -749,7 +749,7 @@ class SaleOrder(models.Model):
                 "Your cart is not ready to be paid, please verify previous steps."
             ))
 
-        if not self.only_services and not self.carrier_id:
+        if not self._is_delivery_ready():
             raise ValidationError(_("No shipping method is selected."))
 
     def _is_delivery_ready(self):
