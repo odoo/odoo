@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale_wishlist.ProductsDesignPanelContent" t-inherit="website_sale.ProductsDesignPanelContent" t-inherit-mode="extension">
+    <BuilderButton id="'button_add_to_cart_opt'" position="after">
+        <BuilderButton t-if="props.isShop" title.translate="Wishlist" icon="'fa-heart'"
+            action="'templateConfig'"
+            actionParam="{
+                views: [
+                    'website_sale_wishlist.add_to_wishlist_button_enable',
+                    'website_sale_wishlist.add_to_wishlist_shop_class'
+                ],
+                templateClass: 'o_wsale_products_opt_has_wishlist'
+            }"
+        />
+    </BuilderButton>
+</t>
+
+</templates>

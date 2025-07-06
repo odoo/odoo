@@ -1755,6 +1755,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Restrict options we can write to.
         writable_fields = {
             'shop_ppg', 'shop_ppr', 'shop_default_sort', 'shop_gap',
+            'shop_opt_products_roundness_class', 'shop_opt_products_thumb_ratio_class',
+            'shop_opt_products_design_class', 'shop_opt_products_hover_effect_class',
+            'shop_opt_products_text_align_class', 'shop_opt_products_name_color_class',
+            'shop_opt_products_img_secondary_class', 'shop_opt_products_img_hover_class',
+            'shop_opt_products_colors_class',
             'product_page_image_layout', 'product_page_image_width',
             'product_page_grid_columns', 'product_page_image_spacing'
         }

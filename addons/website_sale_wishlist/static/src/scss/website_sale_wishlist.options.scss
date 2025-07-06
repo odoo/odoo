@@ -1,0 +1,51 @@
+// ======= Options
+
+// By default, hide `o_add_wishlist` buttons when inside a product
+// entry. Show them when `o_wsale_products_opt_has_wishlist` is applied.
+:where(.oe_product_cart) .o_add_wishlist {
+    display: var(--o-wsale-wishlist-btn-display, none);
+}
+
+.o_wsale_products_opt_has_wishlist :where(.oe_product_cart) {
+    --o-wsale-wishlist-btn-display: inline-block;
+
+    .o_add_wishlist {
+        // Arbitrary since `$danger` may differ from the desired "red"
+        $_wish_red: #ff3d3a;
+
+        --btn-disabled-border-color: #{$border-color};
+
+        .fa-heart {
+            color: var(--addWishlist-color-active, #{$_wish_red});
+        }
+
+        &:hover .fa-heart-o:before {
+            content: "\f004";
+        }
+    }
+}
+
+.o_wsale_products_opt_has_wishlist.o_wsale_layout_catalog.o_wsale_products_opt_actions_onhover :where(.oe_product_cart) {
+    --o-wsale-wishlist-btn-display: flex;
+
+    .o_add_wishlist {
+        $_wish_red: #ff3d3a;
+
+        &:hover .fa-heart-o:before {
+            color: var(--addWishlist-color-active, #{$_wish_red});
+        }
+
+        --btn-disabled-opacity: 1;
+        --btn-disabled-border-color: transparent;
+        --btn-bg: transparent;
+        --btn-border-width: 0;
+        --btn-hover-bg: transparent;
+        --btn-color: currentColor;
+        --btn-hover-color: currentColor;
+
+        @include o-position-absolute(
+            calc(var(--o-wsale-card-border-radius, 0px) * 0.1),
+            calc(var(--o-wsale-card-border-radius, 0px) * 0.2)
+        );
+    }
+}

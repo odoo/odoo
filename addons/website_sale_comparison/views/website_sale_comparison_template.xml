@@ -1,29 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- Inject the comparison button in products cards -->
     <template
         id="website_sale_comparison.add_to_compare"
         inherit_id="website_sale.shop_product_buttons"
-        name="Comparison List"
+        name="Comparison List Button"
         priority="22"
     >
-        <t name="buttons_container" position="inside">
-            <t t-set="attrib_categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
-            <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
-            <button
-                t-if="product_variant_id and attrib_categories"
-                type="button"
-                role="button"
-                class="btn btn-light o_add_compare"
-                title="Compare"
-                aria-label="Compare"
-                t-att-data-product-template-id="product.id"
-                t-att-data-product-product-id="product_variant_id"
-                data-action="o_comparelist"
-            >
-                <span class="fa fa-exchange o_not-animable"/>
-            </button>
-        </t>
+        <xpath expr="//div[hasclass('o_wsale_product_btn_row')]" position="inside">
+            <t t-call="website_sale_comparison.add_to_compare_button"/>
+        </xpath>
+    </template>
+
+    <!-- Define the button's logic and design -->
+    <template
+        id="website_sale_comparison.add_to_compare_button"
+        name="Comparison Button Template"
+    >
+        <t t-set="attrib_categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
+        <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
+        <button
+            groups="website.group_website_designer"
+            t-if="product_variant_id and attrib_categories"
+            type="button"
+            role="button"
+            class="btn o_add_compare"
+            title="Compare"
+            aria-label="Compare"
+            t-att-data-product-template-id="product.id"
+            t-att-data-product-product-id="product_variant_id"
+            data-action="o_comparelist"
+        >
+            <span class="fa fa-exchange o_not-animable"/>
+            <span class="o_label small ms-2">Compare</span>
+        </button>
+
+        <!-- Render a placeholder to ensure alignment between entries with and without comparison -->
+        <div t-else="" class="o_add_compare_placeholder pe-none opacity-0 btn">
+            <span class="fa fa-exchange"/>
+        </div>
+    </template>
+
+    <!-- Removes 'group' attribute, making the button available for any user -->
+    <template
+        id="website_sale_comparison.add_to_compare_button_button_enabler"
+        inherit_id="website_sale_comparison.add_to_compare_button"
+        name="Comparison Button Enabler"
+    >
+        <xpath expr="//button" position="attributes">
+            <attribute name="groups" remove="website.group_website_designer" separator=" "/>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale_comparison.add_to_compare_shop_class"
+        inherit_id="website_sale.products"
+        name="Shop page: show comparison button"
+    >
+        <xpath expr="//div[@id='o_wsale_container']" position="attributes">
+            <attribute name="t-attf-class" add="o_wsale_products_opt_has_comparison" separator=" "/>
+        </xpath>
     </template>
 
     <template

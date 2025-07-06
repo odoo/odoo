@@ -3,12 +3,24 @@
     <template id="s_dynamic_snippet_products" name="Products">
         <t t-call="website.s_dynamic_snippet_template">
             <t t-set="snippet_name" t-value="'s_dynamic_snippet_products'"/>
+
+            <!--
+                TODO: `defaultDesignClasses` should inherit the /shop ones by accessing data stored
+                in the DB for the current website, eg. `website.shop_opt_products_design_class`.
+            -->
+            <t
+                t-set="defaultDesignClasses"
+                t-value="'o_wsale_layout_catalog o_wsale_design_thumbs o_wsale_products_opt_rounded_2 o_wsale_products_opt_name_color_regular o_wsale_products_opt_has_cta o_wsale_products_opt_actions_onhover o_wsale_products_opt_img_hover_zoom_out_light'"
+            />
             <!--
                 TODO: `.oe_website_sale` is used as a selector in `website_sale_tracking.js`. This
                 is a temporary solution to load the tracking utilities and will be removed once
                 tracking utilities will be fully integrated into a service.
             -->
-            <t t-set="snippet_classes" t-value="'oe_website_sale'"/>
+            <t
+                t-set="snippet_classes"
+                t-value="'oe_website_sale ' + defaultDesignClasses"
+            />
             <t t-set="main_page_url" t-value="'/shop'"/>
             <t t-call="website_sale.s_dynamic_snippet_products_preview_data"/>
         </t>

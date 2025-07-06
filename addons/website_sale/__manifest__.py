@@ -28,6 +28,7 @@
         'report/sale_report_views.xml',
 
         # QWeb templates
+        'views/products_list_entry.xml',
         'views/delivery_form_templates.xml',
         'views/gmc_templates.xml',
         'views/templates.xml',
@@ -84,6 +85,7 @@
             ('remove', 'website_sale/static/src/snippets/**/000.js'),
             ('remove', 'website_sale/static/src/snippets/**/options.js'),
             'website_sale/static/src/js/tours/tour_utils.js',
+            'website_sale/static/src/scss/product_list_entry.scss',
             'website_sale/static/src/scss/website_sale.scss',
             'website_sale/static/src/scss/website_sale_frontend.scss',
             'website_sale/static/src/scss/website_sale_delivery.scss',
@@ -155,6 +157,7 @@
         ],
         'website.website_builder_assets': [
             'website_sale/static/src/js/website_sale_form_editor.js',
+            'website_sale/static/src/components/**/*',
             'website_sale/static/src/website_builder/**/*',
         ],
         'website.assets_wysiwyg': [

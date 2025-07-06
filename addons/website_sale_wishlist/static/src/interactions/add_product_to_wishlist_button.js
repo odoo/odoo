@@ -1,6 +1,7 @@
 import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { rpc } from '@web/core/network/rpc';
+import { _t } from '@web/core/l10n/translation';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 import wishlistUtils from '@website_sale_wishlist/js/website_sale_wishlist_utils';
 
@@ -59,6 +60,14 @@ export class AddProductToWishlistButton extends Interaction {
             25,
             40,
         );
+        if (el.classList.contains('o_add_wishlist')) {
+            const iconEl = el.querySelector('.fa');
+            if (iconEl) {
+                iconEl.classList.remove('fa-heart-o');
+                iconEl.classList.add('fa-heart');
+            }
+            el.title = _t("Handle your wishlist from the top-bar icon.");
+        }
     }
 
     /**
