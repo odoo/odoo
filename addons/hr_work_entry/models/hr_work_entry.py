@@ -75,33 +75,6 @@ class HrWorkEntry(models.Model):
     # FROM 7s by query to 2ms (with 2.6 millions entries)
     _contract_date_start_stop_idx = models.Index("(version_id, date_start, date_stop) WHERE state IN ('draft', 'validated')")
 
-    def _init_column(self, column_name):
-        if column_name != 'version_id':
-            super()._init_column(column_name)
-        else:
-            self.env.cr.execute("""
-                UPDATE hr_work_entry AS _hwe
-                SET version_id = result.version_id
-                FROM (
-                    SELECT
-                        hc.id AS version_id,
-                        array_agg(hwe.id) AS entry_ids
-                    FROM
-                        hr_work_entry AS hwe
-                    LEFT JOIN
-                        hr_version AS hc
-                    ON
-                        hwe.employee_id=hc.employee_id AND
-                        hwe.date_start >= hc.date_start AND
-                        hwe.date_stop < COALESCE(hc.date_end + integer '1', '9999-12-31 23:59:59')
-                    WHERE
-                        hwe.version_id IS NULL
-                    GROUP BY
-                        hwe.employee_id, hc.id
-                ) AS result
-                WHERE _hwe.id = ANY(result.entry_ids)
-            """)
-
     @api.depends('work_entry_type_id', 'employee_id')
     def _compute_name(self):
         for work_entry in self:
