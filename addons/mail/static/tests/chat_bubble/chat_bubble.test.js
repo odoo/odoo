@@ -11,7 +11,9 @@ import {
     onRpcBefore,
     openDiscuss,
     openFormView,
+    patchUiSize,
     setupChatHub,
+    SIZES,
     start,
     startServer,
     triggerEvents,
@@ -322,6 +324,17 @@ test("Don't show chat hub in discuss app", async () => {
     await start();
     await contains(".o-mail-ChatBubble", { count: 8 }); // max reached
     await contains(".o-mail-ChatBubble", { text: "+13" });
+    await openDiscuss();
+    await contains(".o-mail-ChatBubble", { count: 0 });
+});
+
+test("Don't show chat hub in discuss app on mobile", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    patchUiSize({ size: SIZES.SM });
+    setupChatHub({ folded: [channelId] });
+    await start();
+    await contains(".o-mail-ChatBubble");
     await openDiscuss();
     await contains(".o-mail-ChatBubble", { count: 0 });
 });
