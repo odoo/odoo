@@ -56,7 +56,7 @@ class StockMove(models.Model):
             layers |= layers.stock_valuation_layer_ids
             quantity = sum(layers.mapped("quantity"))
             return sum(layers.mapped("value")) / quantity if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
-        return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.standard_price
+        return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.with_company(self.company_id).standard_price
 
     @api.model
     def _get_valued_types(self):

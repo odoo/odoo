@@ -263,8 +263,8 @@ class TestMultiCompanySetup(TestMailMCCommon):
                 {"name": "Test2", "company_id": self.company_2.id},
             ]
         )
-        test_records[0].activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
-        test_records[1].activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
+        test_records[0].activity_schedule("test_mail.mail_act_test_todo_generic", user_id=user_admin.id)
+        test_records[1].activity_schedule("test_mail.mail_act_test_todo_generic", user_id=user_admin.id)
         test_activity = next(
             a for a in user_admin.systray_get_activities()
             if a['model'] == 'mail.test.multi.company.with.activity'
