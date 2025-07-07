@@ -8,10 +8,10 @@
                 <form string="Password Confirmation">
                     <sheet>
                         <div invisible="auth_method != 'password'">
-                            <h3><strong>Please confirm your identity by entering your password</strong></h3>
+                            <h3><strong>Let's first confirm it's you. Enter your current password:</strong></h3>
                             <div>
                                 <field class="o_field_highlight col-10 col-md-6 px-0" name="password" autocomplete="current-password"
-                                    required="auth_method == 'password'" password="True" placeholder="************"/>
+                                    required="auth_method == 'password'" password="True" placeholder="Enter your password"/>
                             </div>
                             <a href="/web/reset_password/" class="btn btn-link ps-0" role="button">Forgot password?</a>
                         </div>
@@ -20,7 +20,7 @@
                         <button string="Confirm Password" id="password_confirm" type="object" name="run_check"
                             class="btn btn-primary" data-hotkey="q" invisible="auth_method != 'password'"
                             context="{'password': password}"/>
-                        <button string="Cancel" special="cancel" data-hotkey="z" class="btn btn-secondary"/>
+                        <button string="Discard" special="cancel" data-hotkey="z" class="btn btn-secondary"/>
                     </footer>
                 </form>
             </field>
