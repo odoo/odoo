@@ -2422,7 +2422,7 @@ class AccountMove(models.Model):
                     if command == Command.CREATE
                 ]
             elif move.move_type == 'entry':
-                if 'partner_id' not in data:
+                if 'partner_id' not in data or not self._context.get('move_reverse_cancel'):
                     data['partner_id'] = False
         if not self.journal_id.active and 'journal_id' in data_list:
             del default['journal_id']
