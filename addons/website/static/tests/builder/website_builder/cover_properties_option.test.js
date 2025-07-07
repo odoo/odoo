@@ -23,7 +23,7 @@ const websiteServiceWithUserModelName = {
         return "Blog Post";
     },
     // Minimal context to avoid crashes.
-    context: { showNewContentModal: false },
+    context: { newContentDropdown: { isOpen: false } },
     websites: [
         {
             id: 1,
@@ -31,6 +31,10 @@ const websiteServiceWithUserModelName = {
         },
     ],
 };
+websiteServiceWithUserModelName.context.newContentDropdown.open = () =>
+    (websiteServiceWithUserModelName.context.newContentDropdown.isOpen = true);
+websiteServiceWithUserModelName.context.newContentDropdown.close = () =>
+    (websiteServiceWithUserModelName.context.newContentDropdown.isOpen = false);
 
 test("Add image as cover", async () => {
     patchWithCleanup(Builder.prototype, {

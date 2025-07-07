@@ -23,7 +23,7 @@ const websiteServiceInTranslateMode = {
         },
     },
     // Minimal context to avoid crashes.
-    context: { showNewContentModal: false },
+    context: { newContentDropdown: { isOpen: false } },
     websites: [
         {
             id: 1,
@@ -31,6 +31,10 @@ const websiteServiceInTranslateMode = {
         },
     ],
 };
+websiteServiceInTranslateMode.context.newContentDropdown.open = () =>
+    (websiteServiceInTranslateMode.context.newContentDropdown.isOpen = true);
+websiteServiceInTranslateMode.context.newContentDropdown.close = () =>
+    (websiteServiceInTranslateMode.context.newContentDropdown.isOpen = false);
 
 test("systray in translate mode", async () => {
     mockService("website", {
