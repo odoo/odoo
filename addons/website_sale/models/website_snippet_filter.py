@@ -17,7 +17,7 @@ class WebsiteSnippetFilter(models.Model):
             " cross selling",
     )
 
-    def _prepare_values(self, limit=None, search_domain=None):
+    def _prepare_values(self, limit=None, search_domain=None, offset=0):
         website = self.env['website'].get_current_website()
         if self.model_name == 'product.product' and not website.has_ecommerce_access():
             return []
@@ -41,7 +41,7 @@ class WebsiteSnippetFilter(models.Model):
         res = super(
             WebsiteSnippetFilter,
             self.with_context(hide_variants=hide_variants, product_limit=product_limit),
-        )._prepare_values(limit=limit, search_domain=search_domain)
+        )._prepare_values(limit=limit, search_domain=search_domain, offset=offset)
         if update_limit_cache:
             update_limit_cache(value=stored_limit)
         return res
