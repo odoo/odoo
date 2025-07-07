@@ -17,6 +17,7 @@
                 class="btn btn-light o_add_compare"
                 title="Compare"
                 aria-label="Compare"
+                t-att-data-product-template-id="product.id"
                 t-att-data-product-product-id="product_variant_id"
                 data-action="o_comparelist"
             >
@@ -55,6 +56,7 @@
                 t-att-class="_button_classes"
                 aria-label="Add to Compare"
                 title="Add to compare"
+                t-att-data-product-template-id="product.id"
                 t-att-data-product-product-id="product_variant_id"
                 data-action="o_comparelist"
             >
@@ -200,7 +202,7 @@
                                 <tr>
                                     <td t-if="len(attrib_categories)" class='o_ws_compare_image td-top-left border-bottom-0'/>
                                     <td t-foreach="products" t-as="product" class="o_ws_compare_image position-relative border-bottom-0">
-                                        <a href="#" t-att-data-product_product_id="product.id" class="o_comparelist_remove" t-if="len(products) &gt; 2">
+                                        <a href="#" t-att-data-product-product-id="product.id" class="o_comparelist_remove" t-if="len(products) &gt; 2">
                                             <strong>x</strong>
                                         </a>
                                         <a t-att-href="product.website_url">
@@ -237,30 +239,23 @@
                                                     </t>
                                                 </small>
                                             </span>
-                                            <form
-                                                class="text-center o_add_cart_form_compare"
-                                                t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
-                                            >
-                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                                <input
-                                                    name="product_template_id"
-                                                    type="hidden"
-                                                    t-att-value="product.product_tmpl_id.id"
-                                                />
-                                                <input
-                                                    name="product_id"
-                                                    type="hidden"
-                                                    t-att-value="product.id"
-                                                />
+                                            <div class="text-center">
                                                 <a t-if="combination_info['prevent_zero_price_sale']"
                                                    t-att-href="website.contact_us_button_url + '?subject=' + combination_info['display_name']"
                                                    class="btn btn-primary btn_cta">
                                                    Contact Us
                                                 </a>
-                                                <a t-else="" role="button" class="btn btn-primary a-submit" href="#">
+                                                <button
+                                                    t-else=""
+                                                    name="comparison_add_to_cart"
+                                                    class="btn btn-primary"
+                                                    t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                                                    t-att-data-product-template-id="product.product_tmpl_id.id"
+                                                    t-att-data-product-product-id="product.id"
+                                                >
                                                     <i class="fa fa-shopping-cart me-2"/>Add to Cart
-                                                </a>
-                                            </form>
+                                                </button>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -306,39 +301,6 @@
                 <div class="oe_structure" id="oe_structure_website_sale_comparison_product_compare_2"/>
             </div>
         </t>
-    </template>
-
-    <template id="product_product" name="Comparator - Product row in comparator popover">
-        <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
-        <div class="row g-0 align-items-center my-1 o_product_row" t-att-data-category_ids="product.public_categ_ids.ids">
-            <div class="col-3 text-center">
-                <img class="img o_image_64_max" t-att-src="website.image_url(product, 'image_128')" alt="Product image"/>
-            </div>
-            <div class="col-8 ps-2">
-                <h6>
-                    <a t-att-href="product.website_url"><t t-esc="combination_info['display_name']" /></a><br/>
-                    <div t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else ''}}">
-                        <span t-out="combination_info['price']"
-                              t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                        <del t-if="combination_info.get('compare_list_price') and (combination_info['compare_list_price'] &gt; combination_info['price'])"
-                             t-attf-class="text-muted me-1 h6 mb-0 small"
-                             style="white-space: nowrap;"
-                             t-esc="combination_info['compare_list_price']"
-                             t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
-                        <del t-else=""
-                             t-attf-class="text-muted me-1 h6 mb-0 small {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
-                             style="white-space: nowrap;"
-                             t-esc="combination_info['list_price']"
-                             t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                    </div>
-                </h6>
-            </div>
-            <div class="col-1 text-end">
-                <a href='#' class="o_remove" title="Remove" t-att-data-product_product_id="product.id">
-                    <i class="fa fa-trash" role="img" aria-label="Remove"></i>
-                </a>
-            </div>
-        </div>
     </template>
 
 </odoo>
