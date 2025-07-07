@@ -674,6 +674,11 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True) +
             self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
         )
+        template = self.env.ref('account.email_template_edi_invoice')
+        template.write({
+            'use_default_to': False,
+            'email_cc': 'demo@gmail.com',
+        })
 
         move_send_batch_wizard = Form(self.env['account.move.send.batch.wizard'].with_context(
             active_model='account.move', active_ids=invoices.ids))
