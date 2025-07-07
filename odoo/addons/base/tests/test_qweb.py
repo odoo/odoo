@@ -1548,7 +1548,7 @@ class TestQWebBasic(TransactionCase):
             self.env['ir.qweb']._render(view1.id)
         except QWebException as e:
             error = str(e)
-            self.assertIn('Template not found: base.dummy', error)
+            self.assertIn("Template not found: 'base.dummy'", error)
             self.assertIn('<t t-call="base.dummy"/>', error)
 
     def test_call_infinity_error(self):
