@@ -58,6 +58,9 @@ class EventController(Controller):
         if len(event_registrations_sudo) == 1:
             report_name += f" - {event_registrations_sudo[0].name}"
 
+        if event_registrations_sudo.child_ids:
+            event_registrations_sudo = event_registrations_sudo.child_ids
+
         # sudo is necessary for accesses in templates.
         if responsive_html:
             html = request.env['ir.actions.report'].sudo()._render_qweb_html(
