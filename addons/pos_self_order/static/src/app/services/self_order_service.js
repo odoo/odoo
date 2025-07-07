@@ -151,9 +151,8 @@ export class SelfOrder extends Reactive {
     computeAvailableCategories() {
         let now = luxon.DateTime.now();
         now = now.hour + now.minute / 60;
-        const prodByCategIds = this.productByCategIds;
         const availableCategories = this.productCategories
-            .filter((c) => prodByCategIds[c.id])
+            .filter((c) => this.productByCategIds[c.id]?.length > 0)
             .sort((a, b) => a.sequence - b.sequence);
 
         this.categoryList = new Set(availableCategories);
@@ -171,7 +170,7 @@ export class SelfOrder extends Reactive {
                 return !(now >= hourStart && now <= hourUntil);
             }
         });
-        this.currentCategory = this.productCategories[0] || null;
+        this.currentCategory = this.availableCategories[0];
     }
 
     isCategoryAvailable(categId) {
@@ -454,14 +453,20 @@ export class SelfOrder extends Reactive {
     initData() {
         this.productCategories = this.models["pos.category"].getAll();
         this.productByCategIds = this.models["product.template"].getAllBy("pos_categ_ids");
-        const isSpecialProduct = (p) => this.config._pos_special_products_ids.includes(p.id);
+
+        const excludedProductTemplateIds = new Set(
+            this.config._pos_special_products_ids
+                .map((id) => this.models["product.product"].get(id)?.product_tmpl_id?.id)
+                .filter(Boolean)
+        );
+
         for (const category_id in this.productByCategIds) {
             this.productByCategIds[category_id] = this.productByCategIds[category_id].filter(
-                (p) => !isSpecialProduct(p)
+                (p) => !excludedProductTemplateIds.has(p.id)
             );
         }
         const productWoCat = this.models["product.template"].filter(
-            (p) => p.pos_categ_ids.length === 0 && !isSpecialProduct(p)
+            (p) => p.pos_categ_ids.length === 0 && !excludedProductTemplateIds.has(p.id)
         );
 
         if (productWoCat.length && !this.config.iface_available_categ_ids.length) {
