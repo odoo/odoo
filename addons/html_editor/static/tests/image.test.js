@@ -189,6 +189,189 @@ test("Can undo the image sizing", async () => {
     expect(queryOne("img").style.width).toBe("");
 });
 
+test("can change image alignment to wrap text", async () => {
+    await setupEditor(`
+        <img class="img-fluid test-image" src="${base64Img}">
+    `);
+    await click("img.test-image");
+    await waitFor(".o-we-toolbar");
+
+    // Initially should have no alignment classes
+    expect("img").not.toHaveClass("me-auto");
+    expect("img").not.toHaveClass("float-start");
+
+    await click(".o-we-toolbar [name='image_align'].dropdown-toggle");
+    await animationFrame();
+    await click(".o-dropdown--menu button[title='Wrap text']");
+    await animationFrame();
+
+    expect("img").toHaveClass("me-auto float-start");
+});
+
+test("can change image alignment to break text", async () => {
+    await setupEditor(`
+        <img class="img-fluid test-image" src="${base64Img}">
+    `);
+    await click("img.test-image");
+    await waitFor(".o-we-toolbar");
+
+    await click(".o-we-toolbar [name='image_align'].dropdown-toggle");
+    await animationFrame();
+    await click(".o-dropdown--menu button[title='Break text']");
+    await animationFrame();
+
+    expect("img").toHaveClass("d-block");
+    expect("img").not.toHaveClass("me-auto float-start");
+});
+
+test("can reset image alignment to inline", async () => {
+    await setupEditor(`
+        <img class="img-fluid test-image me-auto float-start" src="${base64Img}">
+    `);
+    await click("img.test-image");
+    await waitFor(".o-we-toolbar");
+
+    // Initially has wrap text alignment
+    expect("img").toHaveClass("me-auto float-start");
+
+    await click(".o-we-toolbar [name='image_align'].dropdown-toggle");
+    await animationFrame();
+    await click(".o-dropdown--menu button[title='In line']");
+    await animationFrame();
+
+    expect("img").not.toHaveClass("float-start me-auto d-block");
+});
+
+test("image alignment properly removes old classes when changing", async () => {
+    await setupEditor(`
+        <img class="img-fluid test-image" src="${base64Img}">
+    `);
+    await click("img.test-image");
+    await waitFor(".o-we-toolbar");
+
+    // Apply wrap text alignment
+    await click(".o-we-toolbar [name='image_align'].dropdown-toggle");
+    await animationFrame();
+    await click(".o-dropdown--menu button[title='Wrap text']");
+    await animationFrame();
+    expect("img").toHaveClass("me-auto float-start");
+
+    // Change to break text alignment
+    await click(".o-dropdown--menu button[title='Break text']");
+    await animationFrame();
+
+    // Should remove old classes and add new ones
+    expect("img").toHaveClass("d-block");
+    expect("img").not.toHaveClass("me-auto float-start");
+});
+
+test("can undo image alignment changes", async () => {
+    const { editor } = await setupEditor(`
+        <img class="img-fluid test-image" src="${base64Img}">
+    `);
+    await click("img.test-image");
+    await waitFor(".o-we-toolbar");
+
+    // Apply alignment
+    await click(".o-we-toolbar [name='image_align'].dropdown-toggle");
+    await animationFrame();
+    await click(".o-dropdown--menu button[title='Wrap text']");
+    await animationFrame();
+    expect("img").toHaveClass("me-auto float-start");
+
+    // Undo
+    undo(editor);
+    await animationFrame();
+    expect("img").not.toHaveClass("me-auto float-start");
+});
+
+test("image alignment state persists when reselecting image", async () => {
+    await setupEditor(`
+        <p><img class="img-fluid image1" src="${base64Img}"></p>
+        <p><img class="img-fluid image2 d-block" src="${base64Img}"></p>
+        <p>text</p>
+    `);
+
+    // Select first image (inline alignment)
+    await click("img.image1");
+    await waitFor(".o-we-toolbar");
+    // Check that alignment selector shows correct state
+
+    // Click away to deselect
+    await click("p:nth-child(3)");
+    await animationFrame();
+
+    // Select second image (break text alignment)
+    await click("img.image2");
+    await waitFor(".o-we-toolbar");
+    expect("img.image2").toHaveClass("d-block");
+
+    // Select first image again
+    await click("img.image1");
+    await waitFor(".o-we-toolbar");
+    expect("img.image1").not.toHaveClass("d-block me-auto float-start");
+});
+
+test("multiple images can have different alignments", async () => {
+    await setupEditor(`
+        <p class="dummy"></p>
+        <p><img class="img-fluid test-image image1" src="${base64Img}"></p>
+        <p><img class="img-fluid test-image image2" src="${base64Img}"></p>
+    `);
+
+    // Set first image to wrap text
+    await click("img.image1");
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar [name='image_align'].dropdown-toggle");
+    await animationFrame();
+    await click(".o-dropdown--menu button[title='Wrap text']");
+    await animationFrame();
+
+    // Set second image to break text
+    await click("img.image2");
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar [name='image_align'].dropdown-toggle");
+    await click(".o-dropdown--menu button[title='Break text']");
+    await animationFrame();
+
+    // Verify both images have their respective alignments
+    expect("img.image1").toHaveClass("me-auto float-start");
+    expect("img.image1").not.toHaveClass("d-block");
+
+    expect("img.image2").toHaveClass("d-block");
+    expect("img.image2").not.toHaveClass("me-auto float-start");
+});
+
+test("image alignment toolbar not shown when text is selected", async () => {
+    await setupEditor(`
+        <p>[Some text with] <img class="img-fluid test-image" src="${base64Img}"> more text</p>
+    `);
+    await waitFor(".o-we-toolbar");
+
+    // Should not show image alignment when text is selected
+    expect(".o-we-toolbar [name='image_align'].dropdown-toggle").toHaveCount(0);
+});
+
+test("image alignment works with image that has existing classes", async () => {
+    await setupEditor(`
+        <img class="img-fluid test-image rounded shadow" src="${base64Img}">
+    `);
+    await click("img.test-image");
+    await waitFor(".o-we-toolbar");
+
+    // Initially has shape classes but no alignment
+    expect("img").toHaveClass("rounded shadow");
+    expect("img").not.toHaveClass("me-auto");
+
+    // Apply alignment - should preserve other classes
+    await click(".o-we-toolbar [name='image_align'].dropdown-toggle");
+    await animationFrame();
+    await click(".o-dropdown--menu button[title='Wrap text']");
+    await animationFrame();
+
+    expect("img").toHaveClass("rounded shadow me-auto float-start");
+});
+
 test("Can change the padding of an image", async () => {
     await setupEditor(`
         <img class="img-fluid test-image" src="${base64Img}">
