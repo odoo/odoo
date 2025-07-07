@@ -117,7 +117,7 @@ describe("AccountFileUploader", () => {
 
         expect(".o_widget_account_file_uploader").toHaveCount(1);
         const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
-        await contains(".o_widget_account_file_uploader a").click();
+        await contains(".o_widget_account_file_uploader button").click();
         await setInputFiles([file]);
         await expect.waitForSteps([
             "create ir.attachment",

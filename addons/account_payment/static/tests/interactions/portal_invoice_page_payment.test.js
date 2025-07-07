@@ -65,7 +65,7 @@ test("portal_invoice_page_payment is started with #portal_pay", async () => {
                                     </div>
                                     <div class="d-flex flex-column gap-4 mt-3">
                                         <div class="d-flex flex-column gap-2">
-                                            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pay_with" data-oe-id="868" data-oe-xpath="/data/xpath[2]/a" data-oe-model="ir.ui.view" data-oe-field="arch">
+                                            <a href="#test" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pay_with" data-oe-id="868" data-oe-xpath="/data/xpath[2]/a" data-oe-model="ir.ui.view" data-oe-field="arch">
                                             <i class="fa fa-fw fa-arrow-circle-right"></i> Pay Now
                                             </a>
                                             <div class="o_download_pdf d-flex flex-lg-column flex-xl-row flex-wrap gap-2">
