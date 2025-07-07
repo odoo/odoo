@@ -6,6 +6,7 @@ import textwrap
 import uuid
 
 from dateutil.relativedelta import relativedelta
+from pytz import timezone
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -651,7 +652,9 @@ class SurveyUserInputLine(models.Model):
             elif line.answer_type == 'date':
                 line.display_name = fields.Date.to_string(line.value_date)
             elif line.answer_type == 'datetime':
-                line.display_name = fields.Datetime.to_string(line.value_datetime)
+                tz = timezone(self.env.user.tz or 'UTC')
+                local_value_datetime = line.value_datetime.astimezone(tz).replace(tzinfo=None)
+                line.display_name = fields.Datetime.to_string(local_value_datetime)
             elif line.answer_type == 'suggestion':
                 if line.matrix_row_id:
                     line.display_name = '%s: %s' % (
