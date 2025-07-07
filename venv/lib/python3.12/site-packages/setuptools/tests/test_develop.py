@@ -70,6 +70,7 @@ class TestNamespaces:
         platform.python_implementation() == 'PyPy',
         reason="https://github.com/pypa/setuptools/issues/1202",
     )
+    @pytest.mark.uses_network
     def test_namespace_package_importable(self, tmpdir):
         """
         Installing two packages sharing the same namespace, one installed

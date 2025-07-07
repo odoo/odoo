@@ -1,4 +1,4 @@
-"""Constants used in the API"""
+"""Constants used in the API."""
 
 MODE_AUTO = 0
 MODE_MMAP_EXT = 1

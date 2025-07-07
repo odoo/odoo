@@ -106,7 +106,7 @@ class build_scripts(Command):
             log.info("copying and adjusting %s -> %s", script, self.build_dir)
             if not self.dry_run:
                 post_interp = shebang_match.group(1) or ''
-                shebang = f"#!python{post_interp}\n"
+                shebang = "#!" + self.executable + post_interp + "\n"
                 self._validate_shebang(shebang, f.encoding)
                 with open(outfile, "w", encoding=f.encoding) as outf:
                     outf.write(shebang)

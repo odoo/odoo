@@ -3,6 +3,7 @@ from __future__ import annotations
 import itertools
 import os
 import sys
+import textwrap
 from collections.abc import Iterator
 from importlib.machinery import EXTENSION_SUFFIXES
 from importlib.util import cache_from_source as _compiled_file_name
@@ -72,10 +73,6 @@ elif os.name != 'nt':
         use_stubs = have_rtld = hasattr(dl, 'RTLD_NOW')
     except ImportError:
         pass
-
-
-def if_dl(s):
-    return s if have_rtld else ''
 
 
 def get_abi3_suffix():
@@ -355,30 +352,34 @@ class build_ext(_build_ext):
             raise BaseError(stub_file + " already exists! Please delete.")
         if not self.dry_run:
             with open(stub_file, 'w', encoding="utf-8") as f:
-                content = '\n'.join([
-                    "def __bootstrap__():",
-                    "   global __bootstrap__, __file__, __loader__",
-                    "   import sys, os, pkg_resources, importlib.util" + if_dl(", dl"),
-                    "   __file__ = pkg_resources.resource_filename"
-                    f"(__name__,{os.path.basename(ext._file_name)!r})",
-                    "   del __bootstrap__",
-                    "   if '__loader__' in globals():",
-                    "       del __loader__",
-                    if_dl("   old_flags = sys.getdlopenflags()"),
-                    "   old_dir = os.getcwd()",
-                    "   try:",
-                    "     os.chdir(os.path.dirname(__file__))",
-                    if_dl("     sys.setdlopenflags(dl.RTLD_NOW)"),
-                    "     spec = importlib.util.spec_from_file_location(",
-                    "                __name__, __file__)",
-                    "     mod = importlib.util.module_from_spec(spec)",
-                    "     spec.loader.exec_module(mod)",
-                    "   finally:",
-                    if_dl("     sys.setdlopenflags(old_flags)"),
-                    "     os.chdir(old_dir)",
-                    "__bootstrap__()",
-                    "",  # terminal \n
-                ])
+                content = (
+                    textwrap.dedent(f"""
+                    def __bootstrap__():
+                       global __bootstrap__, __file__, __loader__
+                       import sys, os, importlib.resources as irs, importlib.util
+                    #rtld   import dl
+                       with irs.files(__name__).joinpath(
+                         {os.path.basename(ext._file_name)!r}) as __file__:
+                          del __bootstrap__
+                          if '__loader__' in globals():
+                              del __loader__
+                    #rtld      old_flags = sys.getdlopenflags()
+                          old_dir = os.getcwd()
+                          try:
+                            os.chdir(os.path.dirname(__file__))
+                    #rtld        sys.setdlopenflags(dl.RTLD_NOW)
+                            spec = importlib.util.spec_from_file_location(
+                                       __name__, __file__)
+                            mod = importlib.util.module_from_spec(spec)
+                            spec.loader.exec_module(mod)
+                          finally:
+                    #rtld        sys.setdlopenflags(old_flags)
+                            os.chdir(old_dir)
+                    __bootstrap__()
+                    """)
+                    .lstrip()
+                    .replace('#rtld', '#rtld' * (not have_rtld))
+                )
                 f.write(content)
         if compile:
             self._compile_and_remove_stub(stub_file)

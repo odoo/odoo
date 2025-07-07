@@ -97,8 +97,11 @@ if TYPE_CHECKING:
 
 warnings.warn(
     "pkg_resources is deprecated as an API. "
-    "See https://setuptools.pypa.io/en/latest/pkg_resources.html",
-    DeprecationWarning,
+    "See https://setuptools.pypa.io/en/latest/pkg_resources.html. "
+    "The pkg_resources package is slated for removal as early as "
+    "2025-11-30. Refrain from using this package or pin to "
+    "Setuptools<81.",
+    UserWarning,
     stacklevel=2,
 )
 
@@ -440,11 +443,7 @@ def _macos_arch(machine):
 
 
 def get_build_platform():
-    """Return this platform's string for platform-specific distributions
-
-    XXX Currently this is the same as ``distutils.util.get_platform()``, but it
-    needs some hacks for Linux and macOS.
-    """
+    """Return this platform's string for platform-specific distributions"""
     from sysconfig import get_platform
 
     plat = get_platform()

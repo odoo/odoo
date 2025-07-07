@@ -9,6 +9,7 @@ import posixpath
 import re
 import zipfile
 
+from packaging.requirements import Requirement
 from packaging.tags import sys_tags
 from packaging.utils import canonicalize_name
 from packaging.version import Version as parse_version
@@ -17,6 +18,8 @@ import setuptools
 from setuptools.archive_util import _unpack_zipfile_obj
 from setuptools.command.egg_info import _egg_basename, write_requirements
 
+from ._discovery import extras_from_deps
+from ._importlib import metadata
 from .unicode_utils import _read_utf8_with_fallback
 
 from distutils.util import get_platform
@@ -133,8 +136,6 @@ class Wheel:
 
     @staticmethod
     def _convert_metadata(zf, destination_eggdir, dist_info, egg_info):
-        import pkg_resources
-
         def get_metadata(name):
             with zf.open(posixpath.join(dist_info, name)) as fp:
                 value = fp.read().decode('utf-8')
@@ -148,30 +149,10 @@ class Wheel:
             raise ValueError(f'unsupported wheel format version: {wheel_version}')
         # Extract to target directory.
         _unpack_zipfile_obj(zf, destination_eggdir)
-        # Convert metadata.
         dist_info = os.path.join(destination_eggdir, dist_info)
-        dist = pkg_resources.Distribution.from_location(
-            destination_eggdir,
-            dist_info,
-            metadata=pkg_resources.PathMetadata(destination_eggdir, dist_info),
+        install_requires, extras_require = Wheel._convert_requires(
+            destination_eggdir, dist_info
         )
-
-        # Note: Evaluate and strip markers now,
-        # as it's difficult to convert back from the syntax:
-        # foobar; "linux" in sys_platform and extra == 'test'
-        def raw_req(req):
-            req.marker = None
-            return str(req)
-
-        install_requires = list(map(raw_req, dist.requires()))
-        extras_require = {
-            extra: [
-                req
-                for req in map(raw_req, dist.requires((extra,)))
-                if req not in install_requires
-            ]
-            for extra in dist.extras
-        }
         os.rename(dist_info, egg_info)
         os.rename(
             os.path.join(egg_info, 'METADATA'),
@@ -189,6 +170,50 @@ class Wheel:
                 None,
                 os.path.join(egg_info, 'requires.txt'),
             )
+
+    @staticmethod
+    def _convert_requires(destination_eggdir, dist_info):
+        md = metadata.Distribution.at(dist_info).metadata
+        deps = md.get_all('Requires-Dist') or []
+        reqs = list(map(Requirement, deps))
+
+        extras = extras_from_deps(deps)
+
+        # Note: Evaluate and strip markers now,
+        # as it's difficult to convert back from the syntax:
+        # foobar; "linux" in sys_platform and extra == 'test'
+        def raw_req(req):
+            req = Requirement(str(req))
+            req.marker = None
+            return str(req)
+
+        def eval(req, **env):
+            return not req.marker or req.marker.evaluate(env)
+
+        def for_extra(req):
+            try:
+                markers = req.marker._markers
+            except AttributeError:
+                markers = ()
+            return set(
+                marker[2].value
+                for marker in markers
+                if isinstance(marker, tuple) and marker[0].value == 'extra'
+            )
+
+        install_requires = list(
+            map(raw_req, filter(eval, itertools.filterfalse(for_extra, reqs)))
+        )
+        extras_require = {
+            extra: list(
+                map(
+                    raw_req,
+                    (req for req in reqs if for_extra(req) and eval(req, extra=extra)),
+                )
+            )
+            for extra in extras
+        }
+        return install_requires, extras_require
 
     @staticmethod
     def _move_data_entries(destination_eggdir, dist_data):

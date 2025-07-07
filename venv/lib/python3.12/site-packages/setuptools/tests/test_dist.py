@@ -8,7 +8,7 @@ import pytest
 from setuptools import Distribution
 from setuptools.dist import check_package_data, check_specifier
 
-from .test_easy_install import make_trivial_sdist
+from .fixtures import make_trivial_sdist
 from .test_find_packages import ensure_files
 from .textwrap import DALS
 
@@ -56,7 +56,7 @@ def test_dist_fetch_build_egg(tmpdir):
         dist = Distribution()
         dist.parse_config_files()
         resolved_dists = [dist.fetch_build_egg(r) for r in reqs]
-    assert [dist.key for dist in resolved_dists if dist] == reqs
+    assert [dist.name for dist in resolved_dists if dist] == reqs
 
 
 EXAMPLE_BASE_INFO = dict(

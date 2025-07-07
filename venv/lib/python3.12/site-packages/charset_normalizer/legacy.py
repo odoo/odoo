@@ -37,9 +37,7 @@ def detect(
 
     if not isinstance(byte_str, (bytearray, bytes)):
         raise TypeError(  # pragma: nocover
-            "Expected object of type bytes or bytearray, got: " "{}".format(
-                type(byte_str)
-            )
+            f"Expected object of type bytes or bytearray, got: {type(byte_str)}"
         )
 
     if isinstance(byte_str, bytearray):

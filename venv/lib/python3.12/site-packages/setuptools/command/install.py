@@ -22,7 +22,7 @@ def __getattr__(name: str):  # pragma: no cover
     if name == "_install":
         SetuptoolsDeprecationWarning.emit(
             "`setuptools.command._install` was an internal implementation detail "
-            + "that was left in for numpy<1.9 support.",
+            "that was left in for numpy<1.9 support.",
             due_date=(2025, 5, 2),  # Originally added on 2024-11-01
         )
         return orig.install

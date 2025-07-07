@@ -51,3 +51,9 @@ def rmtree(path, ignore_errors=False, onexc=_auto_chmod):
 def rmdir(path, **opts):
     if os.path.isdir(path):
         rmtree(path, **opts)
+
+
+def current_umask():
+    tmp = os.umask(0o022)
+    os.umask(tmp)
+    return tmp

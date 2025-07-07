@@ -1,16 +1,17 @@
 from __future__ import annotations
 
 import glob
+import itertools
 import os
 import subprocess
 import sys
 import tempfile
-from functools import partial
 
-from pkg_resources import Distribution
+import packaging.requirements
+import packaging.utils
 
 from . import _reqs
-from ._reqs import _StrOrIter
+from ._importlib import metadata
 from .warnings import SetuptoolsDeprecationWarning
 from .wheel import Wheel
 
@@ -35,25 +36,38 @@ def fetch_build_egg(dist, req):
     return _fetch_build_egg_no_warn(dist, req)
 
 
-def _fetch_build_eggs(dist, requires: _StrOrIter) -> list[Distribution]:
-    import pkg_resources  # Delay import to avoid unnecessary side-effects
+def _present(req):
+    return any(_dist_matches_req(dist, req) for dist in metadata.distributions())
 
+
+def _fetch_build_eggs(dist, requires: _reqs._StrOrIter) -> list[metadata.Distribution]:
     _DeprecatedInstaller.emit(stacklevel=3)
     _warn_wheel_not_available(dist)
 
-    resolved_dists = pkg_resources.working_set.resolve(
-        _reqs.parse(requires, pkg_resources.Requirement),  # required for compatibility
-        installer=partial(_fetch_build_egg_no_warn, dist),  # avoid warning twice
-        replace_conflicting=True,
+    parsed_reqs = _reqs.parse(requires)
+
+    missing_reqs = itertools.filterfalse(_present, parsed_reqs)
+
+    needed_reqs = (
+        req for req in missing_reqs if not req.marker or req.marker.evaluate()
     )
+    resolved_dists = [_fetch_build_egg_no_warn(dist, req) for req in needed_reqs]
     for dist in resolved_dists:
-        pkg_resources.working_set.add(dist, replace=True)
+        # dist.locate_file('') is the directory containing EGG-INFO, where the importabl
+        # contents can be found.
+        sys.path.insert(0, str(dist.locate_file('')))
     return resolved_dists
 
 
-def _fetch_build_egg_no_warn(dist, req):  # noqa: C901  # is too complex (16)  # FIXME
-    import pkg_resources  # Delay import to avoid unnecessary side-effects
+def _dist_matches_req(egg_dist, req):
+    return (
+        packaging.utils.canonicalize_name(egg_dist.name)
+        == packaging.utils.canonicalize_name(req.name)
+        and egg_dist.version in req.specifier
+    )
 
+
+def _fetch_build_egg_no_warn(dist, req):  # noqa: C901  # is too complex (16)  # FIXME
     # Ignore environment markers; if supplied, it is required.
     req = strip_marker(req)
     # Take easy_install options into account, but do not override relevant
@@ -78,9 +92,9 @@ def _fetch_build_egg_no_warn(dist, req):  # noqa: C901  # is too complex (16)  #
     if dist.dependency_links:
         find_links.extend(dist.dependency_links)
     eggs_dir = os.path.realpath(dist.get_egg_cache_dir())
-    environment = pkg_resources.Environment()
-    for egg_dist in pkg_resources.find_distributions(eggs_dir):
-        if egg_dist in req and environment.can_add(egg_dist):
+    cached_dists = metadata.Distribution.discover(path=glob.glob(f'{eggs_dir}/*.egg'))
+    for egg_dist in cached_dists:
+        if _dist_matches_req(egg_dist, req):
             return egg_dist
     with tempfile.TemporaryDirectory() as tmpdir:
         cmd = [
@@ -110,12 +124,7 @@ def _fetch_build_egg_no_warn(dist, req):  # noqa: C901  # is too complex (16)  #
         wheel = Wheel(glob.glob(os.path.join(tmpdir, '*.whl'))[0])
         dist_location = os.path.join(eggs_dir, wheel.egg_name())
         wheel.install_as_egg(dist_location)
-        dist_metadata = pkg_resources.PathMetadata(
-            dist_location, os.path.join(dist_location, 'EGG-INFO')
-        )
-        return pkg_resources.Distribution.from_filename(
-            dist_location, metadata=dist_metadata
-        )
+        return metadata.Distribution.at(dist_location + '/EGG-INFO')
 
 
 def strip_marker(req):
@@ -124,20 +133,16 @@ def strip_marker(req):
     calling pip with something like `babel; extra == "i18n"`, which
     would always be ignored.
     """
-    import pkg_resources  # Delay import to avoid unnecessary side-effects
-
     # create a copy to avoid mutating the input
-    req = pkg_resources.Requirement.parse(str(req))
+    req = packaging.requirements.Requirement(str(req))
     req.marker = None
     return req
 
 
 def _warn_wheel_not_available(dist):
-    import pkg_resources  # Delay import to avoid unnecessary side-effects
-
     try:
-        pkg_resources.get_distribution('wheel')
-    except pkg_resources.DistributionNotFound:
+        metadata.distribution('wheel')
+    except metadata.PackageNotFoundError:
         dist.announce('WARNING: The wheel package is not available.', log.WARN)
 
 
@@ -147,4 +152,4 @@ class _DeprecatedInstaller(SetuptoolsDeprecationWarning):
     Requirements should be satisfied by a PEP 517 installer.
     If you are using pip, you can try `pip install --use-pep517`.
     """
-    # _DUE_DATE not decided yet
+    _DUE_DATE = 2025, 10, 31

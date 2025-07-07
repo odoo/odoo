@@ -75,20 +75,6 @@ def save_user_site_setting():
 
 
 @contextlib.contextmanager
-def save_pkg_resources_state():
-    import pkg_resources
-
-    pr_state = pkg_resources.__getstate__()
-    # also save sys.path
-    sys_path = sys.path[:]
-    try:
-        yield pr_state, sys_path
-    finally:
-        sys.path[:] = sys_path
-        pkg_resources.__setstate__(pr_state)
-
-
-@contextlib.contextmanager
 def suppress_exceptions(*excs):
     try:
         yield
