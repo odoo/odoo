@@ -229,3 +229,58 @@ class TestReportStockQuantity(tests.TransactionCase):
             1.0, 2.0,   # in two days
         ]):
             self.assertEqual(qty_rd, qty, f"Incorrect qty for Date '{date_day}' Warehouse '{warehouse.display_name}'")
+
+    def test_past_date_quantity_with_multistep_delivery(self):
+        """
+        Verify that available quantities are correctly computed at different past dates
+        when using multi-step delivery.
+        """
+        def get_inv_qty_at_date(product_id, inv_datetime):
+            inventory_at_date_wizard = self.env['stock.quantity.history'].create({'inventory_datetime': inv_datetime})
+            r = inventory_at_date_wizard.open_at_date()
+            return self.env[r['res_model']].with_context(r['context']).search_read(
+                domain=(r['domain'] + [('id', '=', product_id)]),
+                fields=['qty_available']
+            )[0]['qty_available']
+
+        warehouse = self.wh
+        warehouse.delivery_steps = 'pick_ship'
+        product = self.env['product.product'].create({'name': 'Test', 'is_storable': True})
+
+        with freeze_time(fields.Date.today() - timedelta(days=7)):
+            move_in = self.env['stock.move'].create({
+                'inventory_name': 'test_in',
+                'picking_type_id': warehouse.in_type_id.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': warehouse.lot_stock_id.id,
+                'product_id': product.id,
+                'product_uom_qty': 100.0,
+            })
+            move_in._action_confirm()
+            move_in.write({'quantity': 100.0, 'picked': True})
+            move_in._action_done()
+
+        move_pick = self.env['stock.move'].create({
+            'inventory_name': 'pick',
+            'picking_type_id': warehouse.pick_type_id.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': warehouse.wh_output_stock_loc_id.id,
+            'location_final_id': self.customer_location.id,
+            'product_id': product.id,
+            'product_uom_qty': 60.0,
+        })
+        move_pick._action_confirm()
+        move_pick.write({'quantity': 60.0, 'picked': True})
+        move_pick._action_done()
+
+        move_out = move_pick.move_dest_ids
+        move_out.write({'quantity': 25.0, 'picked': True})
+        move_out._action_done()
+
+        for date, expected_qty in (
+            (move_in.date - timedelta(days=1), 0.0),
+            (move_out.date - timedelta(days=1), 100.0),
+            (move_out.date, 75.0)
+        ):
+            qty = get_inv_qty_at_date(product.id, date)
+            self.assertEqual(qty, expected_qty)
