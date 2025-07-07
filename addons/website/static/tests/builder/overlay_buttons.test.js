@@ -327,3 +327,26 @@ test("The overlay buttons should only appear for elements in editable areas, unl
     expect(".overlay .button-a").toHaveCount(1);
     expect(".overlay .button-b").toHaveCount(1);
 });
+
+test("Should hide 'move up' button when previous sibling is 'o_we_no_overlay'", async () => {
+    await setupWebsiteBuilder(`
+        <section class="o_we_no_overlay">
+            <h1>No overlay section</h1>
+        </section>
+        <section class="first">
+            <h1>First section</h1>
+        </section>
+        <section class="second">
+            <h1>Second section</h1>
+        </section>
+    `);
+
+    await contains(":iframe .first").click();
+    expect(".overlay .o_overlay_options").toHaveCount(1);
+
+    // Can't move up since the previous sibling is excluded
+    expect(".overlay .fa-angle-up").toHaveCount(0);
+
+    // Moving down is still valid
+    expect(".overlay .fa-angle-down").toHaveCount(1);
+});
