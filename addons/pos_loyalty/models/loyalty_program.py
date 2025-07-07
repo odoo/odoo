@@ -29,6 +29,11 @@ class LoyaltyProgram(models.Model):
             'portal_visible', 'portal_point_name', 'trigger_product_ids', 'rule_ids', 'reward_ids'
         ]
 
+    def _load_pos_data(self, data):
+        domain = self._server_date_to_domain(self._load_pos_data_domain(data))
+        fields = self._load_pos_data_fields(data['pos.config'][0]['id'])
+        return self.sudo().search_read(domain, fields, load=False)
+
     def _unrelevant_records(self):
         config_id = self.env.context.get('config_id')
         if config_id:
