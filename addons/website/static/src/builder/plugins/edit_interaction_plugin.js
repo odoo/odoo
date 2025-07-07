@@ -3,9 +3,9 @@ import { registry } from "@web/core/registry";
 
 export class EditInteractionPlugin extends Plugin {
     static id = "edit_interaction";
+    static shared = ["restartInteractions", "disableRefreshOnSnippetSave"];
 
-    static shared = ["restartInteractions"];
-
+    refreshOnSnippetSave = true;
     resources = {
         normalize_handlers: this.refreshInteractions.bind(this),
         content_manually_updated_handlers: this.refreshInteractions.bind(this),
@@ -19,10 +19,16 @@ export class EditInteractionPlugin extends Plugin {
             // inserted content.
         },
         on_will_save_snippet_handlers: ({ snippetEl }) => {
-            this.stopInteractions(snippetEl);
+            if (this.refreshOnSnippetSave) {
+                this.stopInteractions(snippetEl);
+            }
         },
         on_saved_snippet_handlers: ({ snippetEl }) => {
-            this.restartInteractions(snippetEl);
+            if (this.refreshOnSnippetSave) {
+                this.restartInteractions(snippetEl);
+            } else {
+                this.refreshOnSnippetSave = true;
+            }
         },
     };
 
@@ -70,6 +76,10 @@ export class EditInteractionPlugin extends Plugin {
             throw new Error("website edit service not loaded");
         }
         this.websiteEditService.stop(element);
+    }
+
+    disableRefreshOnSnippetSave() {
+        this.refreshOnSnippetSave = false;
     }
 }
 

@@ -11,7 +11,9 @@ export const DYNAMIC_SNIPPET = SNIPPET_SPECIFIC_END;
 
 class DynamicSnippetOptionPlugin extends Plugin {
     static id = "dynamicSnippetOption";
+    static dependencies = ["edit_interaction"];
     static shared = [
+        "disableRefreshOnSnippetSave",
         "fetchDynamicFilters",
         "fetchDynamicFilterTemplates",
         "setOptionsDefaultValues",
@@ -35,6 +37,7 @@ class DynamicSnippetOptionPlugin extends Plugin {
             CustomizeTemplateAction,
         },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        clone_snippet_for_save: this.onCloneSnippetForSave.bind(this),
     };
     setup() {
         this.dynamicFiltersCache = new Cache(this._fetchDynamicFilters, JSON.stringify);
@@ -52,6 +55,14 @@ class DynamicSnippetOptionPlugin extends Plugin {
         if (snippetEl.matches(this.selector)) {
             await this.setOptionsDefaultValues(snippetEl, this.modelNameFilter);
         }
+    }
+    onCloneSnippetForSave({ snippetEl }) {
+        if (snippetEl.matches(this.selector)) {
+            this.disableRefreshOnSnippetSave();
+        }
+    }
+    disableRefreshOnSnippetSave() {
+        return this.dependencies.edit_interaction.disableRefreshOnSnippetSave();
     }
     async setOptionsDefaultValues(snippetEl, modelNameFilter, contextualFilterDomain = []) {
         const fetchedDynamicFilters = await this.fetchDynamicFilters({
