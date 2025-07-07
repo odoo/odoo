@@ -156,7 +156,20 @@ export class DynamicSnippet extends Interaction {
     renderContent() {
         const templateAreaEl = this.el.querySelector(".dynamic_snippet_template");
         this.services["public.interactions"].stopInteractions(templateAreaEl);
-        templateAreaEl.replaceChildren(this.renderedContentNode);
+        const newInner = this.renderedContentNode.querySelector(".carousel-inner");
+        const oldInner = templateAreaEl.querySelector(".carousel-inner");
+        if (newInner && oldInner) {
+            const oldSlides = [...oldInner.children];
+            const activeIndex = oldSlides.findIndex((slide) => slide.classList.contains("active"));
+            oldInner.replaceChildren(...newInner.children);
+            const newSlides = [...oldInner.children];
+            if (activeIndex >= 0 && newSlides[activeIndex]) {
+                newSlides.forEach((slide) => slide.classList.remove("active"));
+                newSlides[activeIndex].classList.add("active");
+            }
+        } else {
+            templateAreaEl.replaceChildren(this.renderedContentNode);
+        }
         // TODO this is probably not the only public widget which creates DOM
         // which should be attached to another public widget. Maybe a generic
         // method could be added to properly do this operation of DOM addition.
