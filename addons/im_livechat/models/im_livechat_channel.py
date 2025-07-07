@@ -92,14 +92,16 @@ class Im_LivechatChannel(models.Model):
 
     @api.depends("channel_ids.livechat_end_dt")
     def _compute_ongoing_sessions_count(self):
-        count_by_channel = self.env["discuss.channel"]._read_group(
-            [
-                ("channel_type", "=", "livechat"),
-                ("livechat_end_dt", "=", False),
-                ("livechat_channel_id", "in", self.ids),
-            ],
-            ["livechat_channel_id"],
-            ["__count"],
+        count_by_channel = dict(
+            self.env["discuss.channel"]._read_group(
+                [
+                    ("channel_type", "=", "livechat"),
+                    ("livechat_end_dt", "=", False),
+                    ("livechat_channel_id", "in", self.ids),
+                ],
+                ["livechat_channel_id"],
+                ["__count"],
+            )
         )
         for channel in self:
             channel.ongoing_session_count = count_by_channel.get(channel, 0)
