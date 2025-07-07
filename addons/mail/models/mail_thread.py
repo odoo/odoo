@@ -1979,7 +1979,7 @@ class MailThread(models.AbstractModel):
             self.ensure_one()
         return self._partner_find_from_emails(
             {self: emails}, avoid_alias=avoid_alias, filter_found=filter_found, additional_values=additional_values, no_create=no_create
-        )[self._origin.id]
+        )[self.id]
 
     def _partner_find_from_emails(self, records_emails, avoid_alias=True, ban_emails=None,
                                   filter_found=None, additional_values=None, no_create=False):
