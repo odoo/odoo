@@ -45,7 +45,14 @@ export class CourseTagAddDialog extends Component {
         this.state.canCreateTag = tags.can_create;
         this.choices.tagGroupIds = groups.choices;
         this.state.canCreateTagGroup = groups.can_create;
-
+        this.handleClickOutside = (event) => {
+            const isInsideDialog = event.target.closest(".modal-content");
+            const isInsideDropdown = event.target.closest(".dropdown-menu");
+            if (!isInsideDialog && !isInsideDropdown) {
+                this.props.close();
+            }
+        };
+        document.addEventListener("click", this.handleClickOutside);
         if (this.props.defaultTag) {
             // Note: when a default tag is passed to the props we want the tag SelectMenu to behave
             // like a 'readonly' selectMenu dropdown (can see the options but cannot change the selection)

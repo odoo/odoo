@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, useState, onWillUnmount } from "@odoo/owl";
 import { SlideXPProgressBar } from "@website_slides/js/public/components/slide_quiz_finish_dialog/slide_xp_progress_bar";
 
 export class SlideQuizFinishDialog extends Component {
@@ -24,7 +24,20 @@ export class SlideQuizFinishDialog extends Component {
             showRankMotivational: false,
         });
         this.title = this.props.quiz.rankProgress.level_up ? _t("Level up!") : _t("Amazing!");
-        onMounted(() => this.animateText());
+        this.onOutsideClick = (event) => {
+            const isInsideDialog = event.target.closest(".modal-content");
+            if (!isInsideDialog) {
+                this.props.close();
+            }
+        };
+        onMounted(() => {
+            document.addEventListener("click", this.onOutsideClick);
+            this.animateText();
+        });
+        onWillUnmount(() => {
+            document.removeEventListener("click", this.onOutsideClick);
+        });
+
     }
 
     //--------------------------------
