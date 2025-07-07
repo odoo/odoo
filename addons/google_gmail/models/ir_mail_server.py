@@ -39,7 +39,6 @@ class IrMail_Server(models.Model):
             self.smtp_encryption = 'starttls'
             self.smtp_port = 587
         else:
-            self.google_gmail_authorization_code = False
             self.google_gmail_refresh_token = False
             self.google_gmail_access_token = False
             self.google_gmail_access_token_expiration = False
