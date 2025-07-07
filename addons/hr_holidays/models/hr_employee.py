@@ -139,6 +139,7 @@ class HrEmployee(models.Model):
             ('employee_id', 'in', self.ids),
             ('date_from', '<=', fields.Datetime.now()),
             ('date_to', '>=', fields.Datetime.now()),
+            ('holiday_status_id.time_type', '=', 'leave'),
             ('state', '=', 'validate'),
         ])
         leave_data = {}
