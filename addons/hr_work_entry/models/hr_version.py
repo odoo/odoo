@@ -191,7 +191,7 @@ class HrVersion(models.Model):
             real_attendances = attendances - leaves
             if not calendar:
                 real_leaves = leaves
-            elif calendar.flexible_hours:
+            elif calendar.schedule_type == 'flexible':
                 # Flexible hours case
                 # For multi day leaves, we want them to occupy the virtual working schedule 12 AM to average working days
                 # For one day leaves, we want them to occupy exactly the time it was taken, for a time off in days

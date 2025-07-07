@@ -558,7 +558,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             'tz': 'UTC',
             'hours_per_day': 8.0,
             'full_time_required_hours': 80.0,
-            'flexible_hours': True,
+            'schedule_type': 'flexible',
         })
         logged_in_emp = self.env.user.employee_id
         logged_in_emp.resource_calendar_id = self.flex_40h_calendar

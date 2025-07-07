@@ -1508,7 +1508,7 @@ is approved, validated or refused.')
             ('day_period', '!=', 'lunch'),
         ]
         # In the case of flexible hours, we resort to centering the holiday hours around 12pm
-        if self.resource_calendar_id.flexible_hours:
+        if self.resource_calendar_id.schedule_type == 'flexible':
             hours_per_day = self.resource_calendar_id.hours_per_day
             attendances = []
             default_start = 12.0 - (hours_per_day / 2)

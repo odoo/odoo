@@ -1,34 +1,33 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
-
 from collections import defaultdict
-from datetime import datetime, timedelta, time
+from datetime import datetime, time, timedelta
 from functools import partial
 from itertools import chain
 
 from dateutil.relativedelta import relativedelta
-from dateutil.rrule import rrule, DAILY
+from dateutil.rrule import DAILY, rrule
 from pytz import timezone, utc
 
-from odoo import api, fields, models, _
-from odoo.addons.base.models.res_partner import _tz_get
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools.intervals import Intervals
+from odoo.tools import date_utils, float_compare, ormcache
 from odoo.tools.date_utils import float_to_time, localized, to_timezone
 from odoo.tools.float_utils import float_round
+from odoo.tools.intervals import Intervals
 
-from odoo.tools import date_utils, float_compare, ormcache
+from odoo.addons.base.models.res_partner import _tz_get
 
 
 class ResourceCalendar(models.Model):
     """ Calendar model for a resource. It has
 
-     - attendance_ids: list of resource.calendar.attendance that are a working
-                       interval in a given weekday.
-     - leave_ids: list of leaves linked to this calendar. A leave can be general
-                  or linked to a specific resource, depending on its resource_id.
+    - attendance_ids: list of resource.calendar.attendance that are a working
+                    interval in a given weekday.
+    - leave_ids: list of leaves linked to this calendar. A leave can be general
+                or linked to a specific resource, depending on its resource_id.
 
     All methods in this class use intervals. An interval is a tuple holding
     (begin_datetime, end_datetime). A list of intervals is therefore a list of
@@ -84,7 +83,7 @@ class ResourceCalendar(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean("Active", default=True,
-                            help="If the active field is set to false, it will allow you to hide the Working Time without removing it.")
+        help="If the active field is set to false, it will allow you to hide the Working Time without removing it.")
     company_id = fields.Many2one(
         'res.company', 'Company', domain=lambda self: [('id', 'in', self.env.companies.ids)],
         default=lambda self: self.env.company, index='btree_not_null')
@@ -99,7 +98,7 @@ class ResourceCalendar(models.Model):
         domain=[('resource_id', '=', False)], copy=True,
     )
     hours_per_day = fields.Float("Average Hour per Day", store=True, compute="_compute_hours_per_day", digits=(2, 2), readonly=False,
-                                 help="Average hours per day a resource is supposed to work with this calendar.")
+        help="Average hours per day a resource is supposed to work with this calendar.")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
         default=lambda self: self.env.context.get('tz') or self.env.user.tz or self.env.ref('base.user_admin').tz or 'UTC',
@@ -107,10 +106,21 @@ class ResourceCalendar(models.Model):
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset')
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
-    flexible_hours = fields.Boolean(string="Flexible Hours",
-                                    help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours).")
-    hours_per_week = fields.Float(compute="_compute_hours_per_week", string="Hours per Week", store=True)
-    full_time_required_hours = fields.Float(string="Company Full Time", help="Number of hours to work on the company schedule to be considered as fulltime.")
+    schedule_type = fields.Selection(
+        [
+            ('flexible', 'Flexible'),
+            ('fully_fixed', 'Fully Fixed'),
+        ],
+        string='Schedule Type',
+        required=True,
+        default='fully_fixed',
+        help="Choose which level of definition you want to define on your Schedule\n"
+            "- Flexible : Define an amount of hours to work on the week.\n"
+            "- Fully Fixed : Define the days and the start & end time for each day of the week",
+    )
+    hours_per_week = fields.Float(compute="_compute_hours_per_week", string="Hours per Week", store=True, readonly=False, copy=False)
+    full_time_required_hours = fields.Float(string="Company Full Time", compute="_compute_full_time_required_hours", store=True, readonly=False,
+        help="Number of hours to work on the company schedule to be considered as fulltime.")
     is_fulltime = fields.Boolean(compute='_compute_work_time_rate', string="Is Full Time")
     work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', search='_search_work_time_rate',
         help='Work time rate versus full time working schedule, should be between 0 and 100 %.')
@@ -125,17 +135,27 @@ class ResourceCalendar(models.Model):
         for calendar in self:
             calendar.work_resources_count = mapped_counts.get(calendar.id, 0)
 
-    @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar', 'flexible_hours')
+    @api.depends('hours_per_week', 'company_id.resource_calendar_id.hours_per_week')
+    def _compute_full_time_required_hours(self):
+        for calendar in self:
+            if calendar.company_id and calendar != calendar.company_id.resource_calendar_id:
+                calendar.full_time_required_hours = calendar.company_id.resource_calendar_id.hours_per_week
+            else:
+                calendar.full_time_required_hours = calendar.hours_per_week
+
+    @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar', 'schedule_type')
     def _compute_hours_per_day(self):
         for calendar in self:
-            if calendar.flexible_hours:
+            if calendar.schedule_type == 'flexible':
                 continue
             attendances = calendar._get_global_attendances()
             calendar.hours_per_day = calendar._get_hours_per_day(attendances)
 
-    @api.depends('attendance_ids.hour_from', 'attendance_ids.hour_to')
+    @api.depends('attendance_ids.hour_from', 'attendance_ids.hour_to', 'schedule_type')
     def _compute_hours_per_week(self):
         for calendar in self:
+            if calendar.schedule_type:
+                continue
             sum_hours = sum(
                 (attendance.hour_to - attendance.hour_from) for attendance in calendar.attendance_ids if attendance._is_work_period())
             calendar.hours_per_week = sum_hours / 2 if calendar.two_weeks_calendar else sum_hours
@@ -414,7 +434,6 @@ class ResourceCalendar(models.Model):
                 else:
                     base_result.append((day_from, day_to, attendance))
 
-
         # Copy the result localized once per necessary timezone
         # Strictly speaking comparing start_dt < time or start_dt.astimezone(tz) < time
         # should always yield the same result. however while working with dates it is easier
@@ -424,7 +443,7 @@ class ResourceCalendar(models.Model):
                 min(bounds_per_tz[tz][1], tz.localize(val[1])),
                 val[2])
                     for val in base_result]
-            for tz in resources_per_tz.keys()
+            for tz in resources_per_tz
         }
         result_per_resource_id = dict()
         for tz, resources in resources_per_tz.items():
@@ -444,7 +463,7 @@ class ResourceCalendar(models.Model):
                         'duration_days': days,
                     })
                     result_per_resource_id[resource.id] = Intervals([(start_dt, end_dt, dummy_attendance)], keep_distinct=True)
-                elif resource and resource.calendar_id.flexible_hours:
+                elif resource and resource.calendar_id.schedule_type == 'flexible':
                     # For flexible Calendars, we create intervals to fill in the weekly intervals with the average daily hours
                     # until the full time required hours are met. This gives us the most correct approximation when looking at a daily
                     # and weekly range for time offs and overtime calculations and work entry generation
@@ -641,7 +660,7 @@ class ResourceCalendar(models.Model):
             # take durations in days proportionally to what is left of the interval.
             interval_hours = (stop - start).total_seconds() / 3600
             day_hours[start.date()] += interval_hours
-            if len(self) == 1 and self.flexible_hours:
+            if len(self) == 1 and self.schedule_type == 'flexible':
                 day_days[start.date()] += interval_hours / self.hours_per_day if self.hours_per_day else 0
             else:
                 day_days[start.date()] += sum(meta.mapped('duration_days')) * interval_hours / sum(meta.mapped('duration_hours'))
@@ -742,7 +761,7 @@ class ResourceCalendar(models.Model):
         domain = []
         if company_id:
             domain = [('company_id', 'in', (company_id.id, False))]
-        if self.flexible_hours:
+        if self.schedule_type == 'flexible':
             works = {d[0].date() for d in self._leave_intervals_batch(start_dt, end_dt, domain=domain)[False]}
             return {fields.Date.to_string(day.date()): (day.date() in works) for day in rrule(DAILY, start_dt, until=end_dt)}
         works = {d[0].date() for d in self._work_intervals_batch(start_dt, end_dt, domain=domain)[False]}

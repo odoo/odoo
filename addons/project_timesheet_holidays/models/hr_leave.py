@@ -27,7 +27,7 @@ class HrLeave(models.Model):
             if not leave.employee_id:
                 continue
 
-            if leave.employee_id.resource_calendar_id.flexible_hours and (leave.request_unit_hours or leave.request_unit_half):
+            if leave.employee_id.resource_calendar_id.schedule_type == 'flexible' and (leave.request_unit_hours or leave.request_unit_half):
                 calendar_timezone = pytz.timezone(leave.employee_id.resource_calendar_id.tz)
                 if leave.request_unit_hours:
                     work_hours_data = [(leave.date_from.astimezone(calendar_timezone).date(), leave.request_hour_to - leave.request_hour_from)]

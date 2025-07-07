@@ -208,7 +208,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
             'name': 'Flexible 40h/week',
             'hours_per_day': 8.0,
             'full_time_required_hours': 40.0,
-            'flexible_hours': True,
+            'schedule_type': 'flexible',
         })
 
         self.jules_emp.resource_calendar_id = flex_40h_calendar

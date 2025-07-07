@@ -81,7 +81,7 @@ class TestHrAttendanceOvertime(TransactionCase):
             'name': 'Flexible 40 hours/week',
             'company_id': cls.company.id,
             'hours_per_day': 8,
-            'flexible_hours': True,
+            'schedule_type': 'flexible',
             'full_time_required_hours': 40,
         })
         cls.flexible_employee = cls.env['hr.employee'].create({

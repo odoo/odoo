@@ -1362,7 +1362,7 @@ class TestTimezones(TestResourceCommon):
         flexible_calendar = self.env['resource.calendar'].create({
             'name': 'Flex Calendar',
             'tz': 'UTC',
-            'flexible_hours': True,
+            'schedule_type': 'flexible',
             'full_time_required_hours': 40,
             'hours_per_day': 8
         })

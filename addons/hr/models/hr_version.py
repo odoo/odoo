@@ -375,11 +375,11 @@ class HrVersion(models.Model):
         self.ensure_one()
         return not self.resource_calendar_id
 
-    @api.depends('resource_calendar_id.flexible_hours')
+    @api.depends('resource_calendar_id.schedule_type')
     def _compute_is_flexible(self):
         for version in self:
             version.is_fully_flexible = version._is_fully_flexible()
-            version.is_flexible = version.is_fully_flexible or version.resource_calendar_id.flexible_hours
+            version.is_flexible = version.is_fully_flexible or version.resource_calendar_id.schedule_type == 'flexible'
 
     @api.model
     def _get_whitelist_fields_from_template(self):

@@ -501,7 +501,7 @@ class TestHrEmployee(TestHrCommon):
         self.assertFalse(employee.is_flexible)
         self.assertFalse(employee.is_fully_flexible)
 
-        employee.resource_calendar_id.flexible_hours = True
+        employee.resource_calendar_id.schedule_type = 'flexible'
         self.assertTrue(employee.is_flexible)
         self.assertFalse(employee.is_fully_flexible)
 
@@ -512,7 +512,7 @@ class TestHrEmployee(TestHrCommon):
     def test_resource_calendar_sync_with_employee_one(self):
         calendar = self.env['resource.calendar'].create({
             'name': 'test calendar',
-            'flexible_hours': True,
+            'schedule_type': 'flexible',
         })
         self.assertTrue(self.employee.resource_id)
         self.assertTrue(self.employee.resource_calendar_id)
@@ -566,7 +566,7 @@ class TestHrEmployee(TestHrCommon):
             {
                 'tz': "Europe/Brussels",
                 'name': 'flexible hours',
-                'flexible_hours': "True",
+                'schedule_type': 'flexible',
             },
         ])
         employeeA = self.env['hr.employee'].create({

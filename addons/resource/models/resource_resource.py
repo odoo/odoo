@@ -218,8 +218,8 @@ class ResourceResource(models.Model):
         return not self.calendar_id
 
     def _is_flexible(self):
-        """ An employee is considered flexible if the field flexible_hours is True on the calendar
+        """ An employee is considered flexible if the field schedule_type is 'flexible' on the calendar
             or the employee is not assigned any calendar, in which case is considered as Fully flexible.
         """
         self.ensure_one()
-        return self._is_fully_flexible() or (self.calendar_id and self.calendar_id.flexible_hours)
+        return self._is_fully_flexible() or (self.calendar_id and self.calendar_id.schedule_type == 'flexible')

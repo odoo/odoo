@@ -433,7 +433,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertAlmostEqual(leave0.number_of_hours, 24, 2)
 
         calendar.write({
-            'flexible_hours': True,
+            'schedule_type': 'flexible',
             'hours_per_day': 8.0,
             'full_time_required_hours': 40
         })
@@ -1225,7 +1225,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'Flexible 40h/week',
             'hours_per_day': 8.0,
             'full_time_required_hours': 40,
-            'flexible_hours': True,
+            'schedule_type': 'flexible',
         })
         employee.resource_calendar_id = calendar
         allocation = self.env['hr.leave.allocation'].create({
@@ -1392,7 +1392,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'Test calendar',
             'hours_per_day': 8,
             'full_time_required_hours': 56,
-            'flexible_hours': True
+            'schedule_type': 'flexible',
         })
         self.employee_emp.resource_calendar_id = calendar
         # Create a public holiday for the flexible calendar

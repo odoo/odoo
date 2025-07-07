@@ -44,4 +44,16 @@
             </form>
         </field>
     </record>
+
+    <record id="view_resource_calendar_attendance_search" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.search</field>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="week_type"/>
+                <filter string="1st Week" domain="[('week_type', '=', '0')]" name="week_0"/>
+                <filter string="2nd Week" domain="[('week_type', '=', '1')]" name="week_1"/>
+            </search>
+        </field>
+    </record>
 </odoo>
