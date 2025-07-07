@@ -61,7 +61,7 @@ export class AlignPlugin extends Plugin {
         selectionchange_handlers: this.updateAlignmentParams.bind(this),
         post_undo_handlers: this.updateAlignmentParams.bind(this),
         post_redo_handlers: this.updateAlignmentParams.bind(this),
-        remove_format_handlers: this.setAlignment.bind(this),
+        remove_all_formats_handlers: this.setAlignment.bind(this),
 
         /** Predicates */
         has_format_predicates: (node) => closestBlock(node)?.style.textAlign,
