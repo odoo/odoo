@@ -794,6 +794,33 @@ test("should remove backgroundColor from selected cells using removeFormat (2)",
     });
 });
 
+test("should remove all formats when having multiple formats", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><span class="display-4-fs"><font style="color: rgb(255, 156, 0);"><strong>[test]</strong></font></span></p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<p>[test]</p>",
+    });
+});
+
+test("should remove all formats when having multiple formats (2)", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><span style="font-size: 24px"><font style="color: rgb(255, 156, 0);"><strong>[test]</strong></font></span></p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<p>[test]</p>",
+    });
+});
+
+test("should remove all formats when having multiple formats (3)", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><span class="display-4-fs"><font class="text-o-color-1"><strong>[test]</strong></font></span></p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<p>[test]</p>",
+    });
+});
+
 describe("Toolbar", () => {
     async function removeFormatClick() {
         await expandToolbar();
