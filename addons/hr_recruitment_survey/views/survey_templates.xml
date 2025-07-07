@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="survey_applicant_link_expired" name="Applicant state or stage change">
+            <t t-call="web.frontend_layout">
+                <div
+                class="h-100 w-100 w-md-75 m-auto py-3 px-5 d-flex flex-column align-items-center text-center gap-3"
+                >
+                    <div class="card text-bg-light px-5 py-2 justify-content-center">
+                        <h2>Interview Link Unavailable</h2>
+                        <h6>
+                            This interview is no longer active
+                        </h6>
+                    </div>
+                    <p class="text-muted small">
+                        <i class="fa fa-info-circle"/>
+                        It may have expired because your application process has already been completed or closed.
+                    </p>
+                    <p>
+                        If you believe this is a mistake or have questions, feel free to reply to the
+                        original email or contact the recruitment team directly.
+                    </p>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>
