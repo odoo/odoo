@@ -26,7 +26,7 @@ class HrVersion(models.Model):
     work_entry_source = fields.Selection([('calendar', 'Working Schedule')], required=True, default='calendar', help='''
         Defines the source for work entries generation
 
-        Working Schedule: Work entries will be generated from the working hours below.
+        Working Schedule: Work entries will be generated from the work hours below, unless it's a flexible working schedule.
         Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)
         Planning: Work entries will be generated from the employee's planning. (requires Planning app)
     ''', groups="hr.group_hr_user")
@@ -166,7 +166,7 @@ class HrVersion(models.Model):
                     # Global time off is not for this calendar, can happen with multiple calendars in self
                     if resource and leave.calendar_id and leave.calendar_id != calendar and not leave.resource_id:
                         continue
-                    tz = tz if tz else pytz.timezone((resource or version).tz)
+                    tz = tz or pytz.timezone((resource or version).tz)
                     if (tz, start_dt) in tz_dates:
                         start = tz_dates[tz, start_dt]
                     else:
@@ -367,6 +367,8 @@ class HrVersion(models.Model):
         })
         utc = pytz.timezone('UTC')
         for version in self:
+            if version.resource_calendar_id.flexible_hours and version.work_entry_source == 'calendar':
+                continue
             version_tz = (version.resource_calendar_id or version.company_id.resource_calendar_id).tz
             tz = pytz.timezone(version_tz) if version_tz else pytz.utc
             version_start = tz.localize(fields.Datetime.to_datetime(version.date_start)).astimezone(utc).replace(tzinfo=None)
