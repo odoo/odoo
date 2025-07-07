@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { stepUtils } from "@web_tour/tour_utils";
 import { delay } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour", {
@@ -34,9 +34,9 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "Wait for the autocomplete RPC",
             trigger: 'div[name="model_id"] .ui-autocomplete:contains("Contact")',
-            run: async() => {
+            run: async () => {
                 await delay(300);
-            }
+            },
         },
         {
             content: "Click on contact",
@@ -196,12 +196,14 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         },
         {
             content: "Click on the first entry of the dynamic placeholder",
-            trigger: 'div.o_model_field_selector_popover li:first-child button:contains("Created on")',
+            trigger:
+                'div.o_model_field_selector_popover li:first-child button:contains("Created on")',
             run: "click",
         },
         {
             content: "Enter a default value",
-            trigger: "div.o_model_field_selector_popover .o_model_field_selector_default_value_input input[type='text']",
+            trigger:
+                "div.o_model_field_selector_popover .o_model_field_selector_default_value_input input[type='text']",
             run: "edit localTime",
         },
         {

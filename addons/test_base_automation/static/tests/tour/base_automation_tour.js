@@ -1,6 +1,6 @@
 import { waitUntil } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { stepUtils } from "@web_tour/tour_utils";
 
 function assertEqual(actual, expected) {
     if (actual !== expected) {
