@@ -17,7 +17,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on the 'Arvo' font we-button from the font selection list.",
-            trigger: ".o_popover [data-action-value='Arvo']",
+            trigger: `.o_popover [data-action-value="'Arvo'"]`,
             run: "click",
         },
         {
