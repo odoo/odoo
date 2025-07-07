@@ -28,17 +28,28 @@
         <field name="model">hr.leave.report.calendar</field>
         <field name="arch" type="xml">
             <form string="Time Off">
-                <sheet >
+                <sheet class="pt-2" style="min-height: 10rem">
                     <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
                     <widget name="web_ribbon" title="Refused" bg_color="bg-danger" invisible="state != 'refuse'"/>
                     <widget name="web_ribbon" title="Approved" bg_color="bg-success" invisible="state != 'validate'"/>
                     <group class="py-0 pe-0 overflow-hidden">
-                        <field name="name"/>
-                        <field name="start_datetime"/>
-                        <field name="stop_datetime"/>
-                        <field name="employee_id" />
-                        <field name="description"/>
+                        <field name="employee_id" widget="many2one_avatar_employee"/>
+                        <field name="holiday_status_id"/>
+                        <label for="start_datetime" string="Dates" />
+                        <div id="full_date" class="o_row">
+                            <field
+                                string='dates'
+                                name="start_datetime"
+                                widget="daterange"
+                                readonly='1'
+                                options="{'end_date_field': 'stop_datetime', 'show_time': false}"/>
+                            <field name="start_datetime" invisible="1"/>
+                            <div style="margin-left: 4.82rem;">
+                            ( <field name="duration_display" readonly="1" class="w-auto"/> )
+                            </div>
+                        </div>
                     </group>
+                    <field name="description"/>
                     <footer class="d-flex justify-content-end gap-1">
                         <button name="action_approve" string="Approve" type="object" close="1" invisible="state not in ['confirm', 'refuse'] or not is_manager"/>
                         <button name="action_refuse" string="Refuse" type="object" close="1" invisible="state == 'refuse' or not is_manager"/>
