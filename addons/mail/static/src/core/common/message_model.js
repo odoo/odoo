@@ -231,12 +231,22 @@ export class Message extends Record {
         return this.date || DateTime.now();
     }
 
+    /**
+     * Get the effective persona performing actions on this message.
+     * Priority order: logged-in user, portal partner (token-authenticated), guest.
+     *
+     * @returns {import("models").Persona}
+     */
+    get effectiveSelf() {
+        return this.thread?.effectiveSelf ?? this.store.self;
+    }
+
     get datetimeShort() {
         return this.datetime.toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
     }
 
     get isSelfMentioned() {
-        return this.store.self.in(this.partner_ids);
+        return this.effectiveSelf.in(this.partner_ids);
     }
 
     get isHighlightedFromMention() {
@@ -248,7 +258,7 @@ export class Message extends Record {
             if (!this.author) {
                 return false;
             }
-            return this.author.eq(this.store.self);
+            return this.author.eq(this.effectiveSelf);
         },
     });
 
