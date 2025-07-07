@@ -28,7 +28,7 @@ const websiteServiceInTranslateMode = {
         },
     },
     // Minimal context to avoid crashes.
-    context: { showNewContentModal: false },
+    context: {},
     websites: [
         {
             id: 1,
