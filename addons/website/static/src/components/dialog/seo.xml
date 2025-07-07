@@ -203,12 +203,6 @@
 <t t-name="website.TitleDescription">
     <section>
         <div class="row">
-            <div class="col-12">
-                <div class="mb-3 p-2 d-flex align-items-center bg-200 rounded">
-                    <button class="btn btn-primary me-2" t-on-click="autoFill">Auto-fill</button>
-                    <small class="text-primary">Use AI to optimize your page</small>
-                </div>
-            </div>
             <div class="col-lg-6">
                 <div class="mb-3">
                     <label for="website_meta_title">
@@ -221,11 +215,13 @@
                     <label for="website_meta_description">
                         Description <i class="fa fa-question-circle text-primary" data-tooltip-position="right" t-att-data-tooltip="props.previewDescription"/>
                     </label>
-                    <textarea t-model="seoContext.description" t-att-disabled="!props.canEditDescription" name="website_meta_description" placeholder="Describe the content of this page" class="form-control" rows="4"/>
-                    <t t-if="descriptionWarning.length">
-                        <i class="fa fa-info-circle text-warning me-1"/>
-                        <span class="small text-warning" t-esc="descriptionWarning"/>
-                    </t>
+                    <textarea t-model="seoContext.description" t-att-disabled="!props.canEditDescription"
+                        name="website_meta_description" placeholder="Describe the content of this page"
+                        t-att-class="`form-control ${descriptionWarning.length ? 'is-invalid' : ''}`" rows="4"
+                    />
+                    <div t-if="descriptionWarning.length" class="invalid-feedback">
+                        <t t-esc="descriptionWarning"/>
+                    </div>
                 </div>
                 <div class="mb-3" t-if='props.canEditUrl'>
                     <label for="website_seo_name">
@@ -252,6 +248,10 @@
                     <div class="card-body">
                         <SEOPreview isIndexed="props.isIndexed" title="title" description="description" url="url"/>
                     </div>
+                </div>
+                <div class="mt-3 p-2 d-flex align-items-center bg-200 rounded">
+                    <button class="btn btn-primary me-2" t-on-click="autoFill" data-tooltip-position="bottom" t-att-data-tooltip="'Use AI to write a optimized title and description for you'">Auto-fill</button>
+                    <small class="text-primary">Use AI to optimize your page</small>
                 </div>
             </div>
         </div>
