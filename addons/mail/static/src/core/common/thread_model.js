@@ -229,6 +229,9 @@ export class Thread extends Record {
         inverse: "threadAsNeedaction",
         sort: (message1, message2) => message1.id - message2.id,
     });
+    // FIXME: should be in the portal/frontend bundle but live chat can be loaded
+    // before portal resulting in the field not being properly initialized.
+    portal_partner = fields.One("Persona");
     status = "new";
     /**
      * Stored scoll position of thread from top in ASC order.
@@ -556,6 +559,16 @@ export class Thread extends Record {
         this.pendingNewMessages = [];
     }
 
+    /**
+     * Get the effective persona performing actions on this thread.
+     * Priority order: logged-in user, portal partner (token-authenticated), guest.
+     *
+     * @returns {import("models").Persona}
+     */
+    get effectiveSelf() {
+        return this.store.self;
+    }
+
     async fetchNewMessages() {
         if (
             this.status === "loading" ||
@@ -806,7 +819,7 @@ export class Thread extends Record {
 
     addOrReplaceMessage(message, tmpMsg) {
         // The message from other personas (not self) should not replace the tmpMsg
-        if (tmpMsg && tmpMsg.in(this.messages) && message.author.eq(this.store.self)) {
+        if (tmpMsg && tmpMsg.in(this.messages) && this.effectiveSelf.eq(message.author)) {
             this.messages.splice(this.messages.indexOf(tmpMsg), 1, message);
             return;
         }
@@ -839,10 +852,10 @@ export class Thread extends Record {
                 model: "discuss.channel",
             };
             if (this.store.self.type === "partner") {
-                tmpData.author_id = this.store.self;
+                tmpData.author_id = this.effectiveSelf;
             }
             if (this.store.self.type === "guest") {
-                tmpData.author_guest_id = this.store.self;
+                tmpData.author_guest_id = this.effectiveSelf;
             }
             if (parentId) {
                 tmpData.parent_id = this.store["mail.message"].get(parentId);

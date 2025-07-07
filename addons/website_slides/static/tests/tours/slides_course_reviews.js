@@ -82,7 +82,8 @@ registry.category("web_tour.tours").add("course_reviews", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-QuickReactionMenu-emoji span:contains('👍')",
+            trigger:
+                "#chatterRoot:shadow .o-mail-QuickReactionMenu-emoji span:contains('👍'):not(:visible)",
             run: "click",
         },
         {
@@ -92,6 +93,18 @@ registry.category("web_tour.tours").add("course_reviews", {
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-MessageReaction",
             run: "click",
+        },
+        { trigger: '#chatterRoot:shadow .o-mail-Message button:contains("Comment")', run: "click" },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer textarea",
+            run: "edit Thanks for enjoying my 'mid' course, you mid student",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer textarea",
+            run: "press ctrl+Enter",
+        },
+        {
+            trigger: `#chatterRoot:shadow .o_wrating_publisher_comment:contains("Thanks for enjoying my 'mid' course, you mid student")`,
         },
     ],
 });

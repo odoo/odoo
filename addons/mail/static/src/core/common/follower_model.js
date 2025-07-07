@@ -16,7 +16,9 @@ export class Follower extends Record {
     /** @returns {boolean} */
     get isEditable() {
         const hasWriteAccess = this.thread ? this.thread.hasWriteAccess : false;
-        return this.partner_id.eq(this.store.self) ? this.thread.hasReadAccess : hasWriteAccess;
+        return this.partner_id.eq(this.thread?.effectiveSelf)
+            ? this.thread.hasReadAccess
+            : hasWriteAccess;
     }
 
     async remove() {
