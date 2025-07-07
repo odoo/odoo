@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv import expression
-from odoo.tools import float_compare, OrderedSet
+from odoo.tools import float_compare, groupby, OrderedSet, frozendict
 
 
 class StockRule(models.Model):
@@ -194,44 +194,82 @@ class StockRule(models.Model):
             date_planned = date_planned - relativedelta(hours=1)
         return date_planned
 
+    @api.model
+    def _get_lead_days_for_combinations(self, combinations):
+        """Batched version of _get_lead_days taking a sequence of
+        triplets (stock.rules, product, value_dict)
+        """
+        combinations = {(rules, product, frozendict(value_dict)) for rules, product, value_dict in combinations}
+        lead_days_delays = super()._get_lead_days_for_combinations(combinations)
+        bypass_delay_description = self.env.context.get('bypass_delay_description')
+        seen_manufacture_rule = {}
+        bom_by_product_rule = {}
+        # Find all manufacture rules:
+        for rules, product, value_dict in combinations:
+            if rules not in seen_manufacture_rule:
+                seen_manufacture_rule[rules] = rules.filtered(lambda r: r.action == 'manufacture')
+            manufacture_rule = seen_manufacture_rule[rules]
+            if not manufacture_rule:
+                continue
+            manufacture_rule.ensure_one()
+            bom_by_product_rule[product, manufacture_rule] = value_dict.get('bom')
+            # Retrieve warehouse_rules for pre-production delays
+        # Get (product, manufacture_rule) for which value_dict.get('bom') was Falsy.
+        products_rules_missing_bom = [t[0] for t in bom_by_product_rule.items() if not t[1]]
+        # Batch (product, rule) pairs in bom_by_product_rule by rule.picking_type_id, rule.company_id.
+        # This let us call self.env['mrp.bom]._bom_find in batch.
+        for (picking_type_id, company_id), group in groupby(products_rules_missing_bom, key=lambda p: (p[1].picking_type_id, p[1].company_id)):
+            products = self.env['product.product'].union(*[p[0] for p in group])
+            bom_by_product = self.env['mrp.bom']._bom_find(products, picking_type=picking_type_id, company_id=company_id.id)
+            for product, manufacture_rule in group:
+                bom_by_product_rule[product, manufacture_rule] = bom_by_product[product]
+        # Process the combinations, add delays
+        for rules, product, value_dict in combinations:
+            manufacture_rule = seen_manufacture_rule[rules]
+            if not manufacture_rule:
+                continue
+            bom = bom_by_product_rule[product, manufacture_rule]
+            manufacture_delay = bom.produce_delay
+            delays, delay_description = lead_days_delays[rules, product, value_dict]
+            delays['total_delay'] += manufacture_delay
+            delays['manufacture_delay'] += manufacture_delay
+            if not bypass_delay_description:
+                delay_description.append((_('Manufacturing Lead Time'), _('+ %d day(s)', manufacture_delay)))
+            if bom.type == 'normal':
+                # pre-production rules
+                warehouse = self.location_dest_id.warehouse_id
+                warehouse_combinations = []  # Cannot be a set as duplicate combinations are still accounted for extra_delays.
+                for wh in warehouse:
+                    if wh.manufacture_steps != 'mrp_one_step':
+                        wh_manufacture_rules = product._get_rules_from_location(product.property_stock_production, route_ids=wh.pbm_route_id)
+                        warehouse_combinations.append((wh_manufacture_rules - rules, product, value_dict))
+                extra_lead_days_delays = (
+                    self.env["stock.rule"]
+                    .with_context(global_visibility_days=0)
+                    ._get_lead_days_for_combinations(warehouse_combinations)
+                )
+                for warehouse_combination in warehouse_combinations:
+                    extra_delays, extra_delay_description = extra_lead_days_delays[warehouse_combination]
+                    for key, value in extra_delays.items():
+                        delays[key] += value
+                    delay_description += extra_delay_description
+                for comp in rules.picking_type_id.company_id:
+                    security_delay = comp.manufacturing_lead
+                    delays['total_delay'] += security_delay
+                    delays['security_lead_days'] += security_delay
+                if not bypass_delay_description:
+                    delay_description.append((_('Manufacture Security Lead Time'), _('+ %d day(s)', delays['security_lead_days'])))
+            days_to_order = value_dict.get('days_to_order', bom.days_to_prepare_mo)
+            delays['total_delay'] += days_to_order
+            if not bypass_delay_description:
+                delay_description.append((_('Days to Supply Components'), _('+ %d day(s)', days_to_order)))
+        return lead_days_delays
+
     def _get_lead_days(self, product, **values):
         """Add the product and company manufacture delay to the cumulative delay
         and cumulative description.
         """
-        delays, delay_description = super()._get_lead_days(product, **values)
-        bypass_delay_description = self.env.context.get('bypass_delay_description')
-        manufacture_rule = self.filtered(lambda r: r.action == 'manufacture')
-        if not manufacture_rule:
-            return delays, delay_description
-        manufacture_rule.ensure_one()
-        bom = values.get('bom') or self.env['mrp.bom']._bom_find(product, picking_type=manufacture_rule.picking_type_id, company_id=manufacture_rule.company_id.id)[product]
-        manufacture_delay = bom.produce_delay
-        delays['total_delay'] += manufacture_delay
-        delays['manufacture_delay'] += manufacture_delay
-        if not bypass_delay_description:
-            delay_description.append((_('Manufacturing Lead Time'), _('+ %d day(s)', manufacture_delay)))
-        if bom.type == 'normal':
-            # pre-production rules
-            warehouse = self.location_dest_id.warehouse_id
-            for wh in warehouse:
-                if wh.manufacture_steps != 'mrp_one_step':
-                    wh_manufacture_rules = product._get_rules_from_location(product.property_stock_production, route_ids=wh.pbm_route_id)
-                    extra_delays, extra_delay_description = (wh_manufacture_rules - self).with_context(global_visibility_days=0)._get_lead_days(product, **values)
-                    for key, value in extra_delays.items():
-                        delays[key] += value
-                    delay_description += extra_delay_description
-            # manufacturing security lead time
-            for comp in self.picking_type_id.company_id:
-                security_delay = comp.manufacturing_lead
-                delays['total_delay'] += security_delay
-                delays['security_lead_days'] += security_delay
-            if not bypass_delay_description:
-                delay_description.append((_('Manufacture Security Lead Time'), _('+ %d day(s)', security_delay)))
-        days_to_order = values.get('days_to_order', bom.days_to_prepare_mo)
-        delays['total_delay'] += days_to_order
-        if not bypass_delay_description:
-            delay_description.append((_('Days to Supply Components'), _('+ %d day(s)', days_to_order)))
-        return delays, delay_description
+        return super()._get_lead_days(product, **values)
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
         new_move_vals = super(StockRule, self)._push_prepare_move_copy_values(move_to_copy, new_date)

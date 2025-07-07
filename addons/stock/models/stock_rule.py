@@ -11,7 +11,7 @@ from odoo.modules.registry import Registry
 from odoo.osv import expression
 from odoo.sql_db import BaseCursor
 from odoo.tools import float_compare, float_is_zero
-from odoo.tools.misc import split_every
+from odoo.tools.misc import split_every, frozendict
 
 _logger = logging.getLogger(__name__)
 
@@ -380,6 +380,45 @@ class StockRule(models.Model):
                 move_values[field] = values.get(field)
         return move_values
 
+    @api.model
+    def _get_lead_days_for_combinations(self, combinations):
+        """Batched version of _get_lead_days for a sequence of
+        triplets (stock.rules, product, values_dict)
+
+        :return: a dict of cumulative delay and cumulative delay's description,
+        one for each (stock.rules, product, frozendict(values_dict)) key.
+        :rtype: dict[tuple[defaultdict(float), list[str, str]]]
+        """
+        _ = self.env._
+        seen_rules_delay = {}
+        global_visibility_days = int(self.env.context.get(
+            "global_visibility_days",
+            self.env["ir.config_parameter"].sudo().get_param("stock.visibility_days", 0),
+        ))
+        bypass_delay_description = self.env.context.get('bypass_delay_description')
+        # Uniquify combinations
+        combinations = {(rules, product, frozendict(value_dict)) for rules, product, value_dict in combinations}
+        result = {}
+        for rules, product, value_dict in combinations:
+            delays = defaultdict(float)
+            if rules not in seen_rules_delay:
+                seen_rules_delay[rules] = sum(rules.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
+            delays['total_delay'] = seen_rules_delay[rules]
+            if global_visibility_days:
+                delays['total_delay'] += global_visibility_days
+            if bypass_delay_description:
+                delay_description = []
+            else:
+                delay_description = [
+                    (_('Delay on %s', rule.name), _('+ %d day(s)', rule.delay))
+                    for rule in self
+                    if rule.action in ['pull', 'pull_push'] and rule.delay
+                ]
+            if global_visibility_days:
+                delay_description.append((_('Time Horizon'), _('+ %d day(s)', int(global_visibility_days))))
+            result[rules, product, frozendict(value_dict)] = (delays, delay_description)
+        return result
+
     def _get_lead_days(self, product, **values):
         """Returns the cumulative delay and its description encountered by a
         procurement going through the rules in `self`.
@@ -389,24 +428,8 @@ class StockRule(models.Model):
         :return: the cumulative delay and cumulative delay's description
         :rtype: tuple[defaultdict(float), list[str, str]]
         """
-        _ = self.env._
-        delays = defaultdict(float)
-        delay = sum(self.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
-        delays['total_delay'] += delay
-        global_visibility_days = self.env.context.get('global_visibility_days', self.env['ir.config_parameter'].sudo().get_param('stock.visibility_days', 0))
-        if global_visibility_days:
-            delays['total_delay'] += int(global_visibility_days)
-        if self.env.context.get('bypass_delay_description'):
-            delay_description = []
-        else:
-            delay_description = [
-                (_('Delay on %s', rule.name), _('+ %d day(s)', rule.delay))
-                for rule in self
-                if rule.action in ['pull', 'pull_push'] and rule.delay
-            ]
-        if global_visibility_days:
-            delay_description.append((_('Time Horizon'), _('+ %d day(s)', int(global_visibility_days))))
-        return delays, delay_description
+        lead_days_delays = self._get_lead_days_for_combinations([(self, product, values)])
+        return lead_days_delays[self, product, frozendict(values)]
 
 
 class ProcurementGroup(models.Model):
