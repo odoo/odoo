@@ -103,7 +103,14 @@
                 }
                 odoo.__session_info__ = Object.assign(odoo.__session_info__, {
                     livechatData: {
+<<<<<<< 3b472f43ccaf7931bd57f505181ba567ffe92759
                         can_load_livechat: <t t-out="'true' if info['available'] else 'false'"/>,
+||||||| f6478dc6c849177ee85beb75f595fd6048cbef43
+                        isAvailable: <t t-out="'true' if info['available'] else 'false'"/>,
+=======
+                        isAvailable: <t t-out="'true' if info['available'] else 'false'"/>,
+                        can_load_livechat: <t t-out="'true' if info['available'] else 'false'"/>,
+>>>>>>> 1ec4d102319a3e1b4ad5d97deb8a25e5b0e0cdb1
                         serverUrl: "<t t-out="info['server_url']"/>",
                         options: <t t-out="json.dumps(info.get('options', {}))"/>,
                     },
