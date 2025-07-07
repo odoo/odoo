@@ -171,6 +171,40 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             lambda answer: answer.question_id.title == 'How did you learn about this event?'
         ).value_answer_id.name, 'A friend')
 
+    def test_filters_persist_on_page_change_or_search(self):
+        '''
+        Ensure filters are not reset when changing pages or performing a search.
+        '''
+        tag_category = self.env['event.tag.category'].create({'name': 'Test Category'})
+
+        tags = self.env['event.tag'].create([{'name': 'tag 1', 'category_id': tag_category.id}, {'name': 'tag 2', 'category_id': tag_category.id}])
+
+        # Need to create a bunch of events to have severals pages
+        self.env['event.event'].create(
+            [
+                *[{
+                    'name': 'Event 0 - Sitemap test',
+                    'website_published': True,
+                    'date_begin': datetime.today() - timedelta(days=1),
+                    'date_end': datetime.today() + timedelta(days=1),
+                    'tag_ids': tags[0],
+                }
+                for _ in range(0, 20)
+                ],
+                *[{
+                    'name': 'Event 1 - Sitemap test other',
+                    'website_published': True,
+                    'date_begin': datetime.today() - timedelta(days=1),
+                    'date_end': datetime.today() + timedelta(days=1),
+                    'tag_ids': tags[1],
+                }
+                for _ in range(0, 20)
+                ],
+            ],
+        )
+
+        self.start_tour('/event', 'test_filters_persist_on_page_change_or_search', login='admin')
+
 
 @tagged('post_install', '-at_install')
 class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):

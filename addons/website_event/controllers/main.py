@@ -59,6 +59,7 @@ class WebsiteEventController(http.Controller):
         searches.setdefault('search', '')
         searches.setdefault('date', 'upcoming')
         searches.setdefault('tags', '')
+        searches.setdefault('slug_tags', '')
         searches.setdefault('type', 'all')
         searches.setdefault('country', 'all')
 
@@ -66,7 +67,10 @@ class WebsiteEventController(http.Controller):
 
         step = 12  # Number of events per page
 
-        options = self._get_events_search_options(slug_tags, **searches)
+        if slug_tags:
+            searches["slug_tags"] = slug_tags
+
+        options = self._get_events_search_options(**searches)
         order = 'date_begin'
         if searches.get('date', 'upcoming') == 'old':
             order = 'date_begin desc'
