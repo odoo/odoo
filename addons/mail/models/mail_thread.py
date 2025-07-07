@@ -459,15 +459,19 @@ class MailThread(models.AbstractModel):
         DocModel = self.env[model_name] if model_name else self
         create_allow = getattr(DocModel, '_mail_post_access', 'write')
 
-        if operation in ['write', 'unlink']:
-            check_operation = 'write'
-        elif operation == 'create' and create_allow in ['create', 'read', 'write', 'unlink']:
-            check_operation = create_allow
+        valid_operations = {'read', 'write', 'unlink', 'create'}
+        if operation not in valid_operations:
+            raise ValueError(_('Invalid message operation, should be a valid ORM operation type'))
+        if create_allow not in valid_operations:
+            raise ValueError(_('Invalid _mail_post_access, should be a valid ORM operation type'))
+
+        if operation == 'read':
+            check_access = 'read'
         elif operation == 'create':
-            check_operation = 'write'
+            check_access = create_allow
         else:
-            check_operation = operation
-        return check_operation
+            check_access = 'write'
+        return check_access
 
     def _valid_field_parameter(self, field, name):
         # allow tracking on models inheriting from 'mail.thread'
