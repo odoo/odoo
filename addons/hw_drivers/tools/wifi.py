@@ -6,6 +6,7 @@ import base64
 from io import BytesIO
 import logging
 import qrcode
+import re
 import secrets
 import subprocess
 import time
@@ -71,17 +72,20 @@ def _reload_network_manager():
 
 
 def get_current():
-    """Get the SSID of the currently connected network.
-    If no network is connected, generate a unique SSID for the access point.
+    """Get the SSID of the currently connected network, or None if it is not connected
 
-    :return: The connected network's or access point's SSID
-    :rtype: str
+    :return: The connected network's SSID, or None
+    :rtype: str | None
     """
-    return next((
-        _logger.debug("Current network: %s", ssid) or
-        ssid for (active, ssid) in _scan_network()
-        if active
-    ), None)
+    nmcli_output = _nmcli(['-f', 'GENERAL.CONNECTION,GENERAL.STATE', 'dev', 'show', 'wlan0'])
+    if not nmcli_output:
+        return None
+
+    ssid_match = re.match(r'GENERAL\.CONNECTION:(\S+)\n', nmcli_output)
+    if not ssid_match:
+        return None
+
+    return ssid_match[1] if '(connected)' in nmcli_output else None
 
 
 def get_available_ssids():
