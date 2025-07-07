@@ -31,6 +31,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_account_id': 'sa_account_500001',
                 'deferred_expense_account_id': 'sa_account_104020',
                 'deferred_revenue_account_id': 'sa_account_201018',
+                'account_cash_basis_base_account_id': 'sa_account_201030',
             },
         }
 
