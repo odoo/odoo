@@ -57,6 +57,11 @@ export class ImageTransformation extends Component {
         });
         useExternalListener(window, "mousemove", this.mouseMove);
         useExternalListener(window, "mouseup", this.mouseUp);
+        if (this.document.defaultView.frameElement) {
+            const iframeWindow = this.document.defaultView;
+            useExternalListener(iframeWindow, "mousemove", this.mouseMove);
+            useExternalListener(iframeWindow, "mouseup", this.mouseUp);
+        }
         // When a character key is pressed and the image gets deleted,
         // close the image transform via selectionchange.
         useExternalListener(this.document, "selectionchange", () => this.props.destroy());
