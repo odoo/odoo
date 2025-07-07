@@ -147,8 +147,8 @@ let getNetworkDelay = null;
 let mockFetchFn = null;
 /** @type {((websocket: ServerWebSocket) => any) | null} */
 let mockWebSocketConnection = null;
-/** @type {((worker: MockSharedWorker | MockWorker) => any) | null} */
-let mockWorkerConnection = null;
+/** @type {Array<(worker: MockSharedWorker | MockWorker) => any>} */
+let mockWorkerConnection = [];
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -158,7 +158,7 @@ export function cleanupNetwork() {
     // Mocked functions
     mockFetchFn = null;
     mockWebSocketConnection = null;
-    mockWorkerConnection = null;
+    mockWorkerConnection = [];
 
     // Network instances
     for (const instance of openNetworkInstances) {
@@ -338,7 +338,7 @@ export function mockWebSocket(onWebSocketConnected) {
  *  });
  */
 export function mockWorker(onWorkerConnected) {
-    mockWorkerConnection = onWorkerConnected;
+    mockWorkerConnection.push(onWorkerConnected);
 }
 
 /**
@@ -731,7 +731,9 @@ export class MockSharedWorker extends MockEventTarget {
         // First port has to be started manually
         this._messageChannel.port2.start();
 
-        mockWorkerConnection?.(this);
+        for (const onWorkerConnected of mockWorkerConnection) {
+            onWorkerConnected(this);
+        }
     }
 }
 
@@ -832,8 +834,13 @@ export class MockWorker extends MockEventTarget {
 
         this._messageChannel.port1.start();
         this._messageChannel.port2.start();
+        this._messageChannel.port1.addEventListener("message", (ev) => {
+            this.dispatchEvent(new MessageEvent("message", { data: ev.data }));
+        });
 
-        mockWorkerConnection?.(this);
+        for (const onWorkerConnected of mockWorkerConnection) {
+            onWorkerConnected(this);
+        }
     }
 
     /** @type {Worker["postMessage"]} */
