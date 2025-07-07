@@ -155,9 +155,8 @@ export class FormOptionPlugin extends Plugin {
             SetVisibilityDependencyAction,
             SetFormCustomFieldValueListAction,
         },
-        system_classes: ["o_builder_form_show_message"],
-        normalize_handlers: (el) => {
-            for (const formEl of el.querySelectorAll(".s_website_form form")) {
+        normalize_handlers: (rootEl) => {
+            for (const formEl of rootEl.querySelectorAll(".s_website_form form")) {
                 // Disable text edition
                 formEl.contentEditable = "false";
                 // Identify editable elements of the form: buttons, description,
@@ -175,12 +174,14 @@ export class FormOptionPlugin extends Plugin {
                 }
             }
         },
-        clean_for_save_handlers: ({ root: el }) => {
+        clean_for_save_handlers: ({ root: rootEl }) => {
             // Maybe useless if all contenteditable are removed
-            for (const formEl of el.querySelectorAll(".s_website_form form")) {
+            for (const formEl of rootEl.querySelectorAll(".s_website_form form")) {
                 formEl.removeAttribute("contenteditable");
             }
+            this.removeSuccessMessagePreviews(rootEl);
         },
+        on_cloned_handlers: ({ cloneEl }) => this.removeSuccessMessagePreviews(cloneEl),
         dropzone_selector: [
             {
                 selector: ".s_website_form",
@@ -468,7 +469,7 @@ export class FormOptionPlugin extends Plugin {
             ".s_website_form_submit, .s_website_form_recaptcha"
         );
         locationEl.insertAdjacentElement("beforebegin", fieldEl);
-        this.dependencies["builderOptions"].updateContainers(fieldEl);
+        this.dependencies.builderOptions.setNextTarget(fieldEl);
     }
     addFieldAfterField(fieldEl) {
         const formEl = fieldEl.closest("form");
@@ -479,7 +480,7 @@ export class FormOptionPlugin extends Plugin {
         field.formatInfo.mark = getMark(formEl);
         const newFieldEl = renderField(field);
         fieldEl.insertAdjacentElement("afterend", newFieldEl);
-        this.dependencies["builderOptions"].updateContainers(newFieldEl);
+        this.dependencies["builderOptions"].setNextTarget(newFieldEl);
     }
     /**
      * To be used in load for any action that uses getActiveField or
@@ -715,6 +716,16 @@ export class FormOptionPlugin extends Plugin {
             conditionValueList,
         };
     }
+    /**
+     * Removes all the success form message previews that are in the given root
+     * element.
+     *
+     * @param {HTMLElement} rootEl
+     */
+    removeSuccessMessagePreviews(rootEl) {
+        const toCleanEls = rootEl.querySelectorAll(".o_show_form_success_message");
+        toCleanEls.forEach((el) => el.classList.remove("o_show_form_success_message"));
+    }
 }
 
 // Form actions
@@ -870,8 +881,8 @@ export class OnSuccessAction extends BuilderAction {
             }
         } else {
             messageEl?.remove();
-            messageEl?.classList.remove("o_builder_form_show_message");
-            el.classList.remove("o_builder_form_show_message");
+            messageEl?.classList.remove("o_show_form_success_message");
+            el.classList.remove("o_show_form_success_message");
         }
     }
     isApplied({ editingElement: el, value }) {
@@ -881,20 +892,21 @@ export class OnSuccessAction extends BuilderAction {
 }
 export class ToggleEndMessageAction extends BuilderAction {
     static id = "toggleEndMessage";
+    static dependencies = ["builderOptions"];
     apply({ editingElement: el }) {
         const messageEl = el.parentElement.querySelector(".s_website_form_end_message");
-        messageEl.classList.add("o_builder_form_show_message");
-        el.classList.add("o_builder_form_show_message");
-        this.dependencies["builderOptions"].updateContainers(messageEl);
+        messageEl.classList.add("o_show_form_success_message");
+        el.classList.add("o_show_form_success_message");
+        this.dependencies.builderOptions.setNextTarget(messageEl);
     }
     clean({ editingElement: el }) {
         const messageEl = el.parentElement.querySelector(".s_website_form_end_message");
-        messageEl.classList.remove("o_builder_form_show_message");
-        el.classList.remove("o_builder_form_show_message");
-        this.dependencies["builderOptions"].updateContainers(el);
+        messageEl.classList.remove("o_show_form_success_message");
+        el.classList.remove("o_show_form_success_message");
+        this.dependencies.builderOptions.setNextTarget(el);
     }
     isApplied({ editingElement: el, value }) {
-        return el.classList.contains("o_builder_form_show_message");
+        return el.classList.contains("o_show_form_success_message");
     }
 }
 export class FormToggleRecaptchaLegalAction extends BuilderAction {
