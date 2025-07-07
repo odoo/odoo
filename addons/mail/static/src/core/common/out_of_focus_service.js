@@ -54,7 +54,7 @@ export class OutOfFocusService {
         const notificationContent = message.previewText
             .toString()
             .substring(0, PREVIEW_MSG_MAX_SIZE);
-        this.sendNotification({
+        await this.sendNotification({
             message: notificationContent,
             sound: message.thread?.model === "discuss.channel",
             title: notificationTitle,
@@ -89,8 +89,8 @@ export class OutOfFocusService {
      * @param {string} [param0.icon] The icon to be displayed in the
      * notification.
      */
-    sendNotification({ message, sound = true, title, type, icon }) {
-        if (!this.canSendNativeNotification || !this.multiTab.isOnMainTab()) {
+    async sendNotification({ message, sound = true, title, type, icon }) {
+        if (!this.canSendNativeNotification || !(await this.multiTab.isOnMainTab())) {
             if (sound) {
                 this._playSound();
             }
@@ -144,8 +144,12 @@ export class OutOfFocusService {
         }
     }
 
-    _playSound() {
-        if (this.canPlayAudio && this.multiTab.isOnMainTab() && this.store.settings.messageSound) {
+    async _playSound() {
+        if (
+            this.canPlayAudio &&
+            this.store.settings.messageSound &&
+            (await this.multiTab.isOnMainTab())
+        ) {
             this.soundEffectService.play("new-message");
         }
     }

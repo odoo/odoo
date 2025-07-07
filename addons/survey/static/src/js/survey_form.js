@@ -47,7 +47,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     start: function () {
         var self = this;
         this.fadeInOutDelay = 400;
-        return this._super.apply(this, arguments).then(function () {
+        return this._super.apply(this, arguments).then(async function () {
             self.options = self.$("form.o_survey-fill-form").data();
             self.readonly = self.options.readonly;
             self.selectedAnswers = self.options.selectedAnswers;
@@ -75,7 +75,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 (self.options.isStartScreen || self.options.hasAnswered || self.options.isPageDescription)) {
                 self.preventEnterSubmit = true;
             }
-            self._initSessionManagement();
+            await self._initSessionManagement();
 
             // Needs global selector as progress/navigation are not within the survey form, but need
             //to be updated at the same time
@@ -950,15 +950,15 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
      *
      * @private
      */
-    _initSessionManagement: function () {
+    _initSessionManagement: async function () {
         var self = this;
         if (this.options.surveyToken && this.options.sessionInProgress) {
             this.call('bus_service', 'addChannel', this.options.surveyToken);
 
-            if (!this._checkisOnMainTab()) {
+            if (!(await this._checkisOnMainTab())) {
                 this.shouldReloadMasterTab = true;
-                this.masterTabCheckInterval = setInterval(function () {
-                     if (self._checkisOnMainTab()) {
+                this.masterTabCheckInterval = setInterval(async function () {
+                     if (await self._checkisOnMainTab()) {
                         clearInterval(self.masterTabCheckInterval);
                      }
                 }, 2000);
@@ -1061,8 +1061,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     *
     * @private
     */
-    _checkisOnMainTab: function () {
-        var isOnMainTab = this.call('multi_tab', 'isOnMainTab');
+    _checkisOnMainTab: async function () {
+        var isOnMainTab = await this.call('multi_tab', 'isOnMainTab');
         var $errorModal = this.$('#MasterTabErrorModal');
         if (isOnMainTab) {
             // Force reload the page when survey is ready to be followed, to force restart long polling
