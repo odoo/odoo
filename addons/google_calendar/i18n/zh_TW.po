@@ -7,10 +7,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -171,15 +171,7 @@ msgid "Discard"
 msgstr "捨棄"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_alarm_manager__display_name
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__display_name
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__display_name
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__display_name
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__display_name
-#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:google_calendar.field_res_users__display_name
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -188,11 +180,6 @@ msgstr "顯示名稱"
 #: code:addons/google_calendar/models/calendar.py:0
 msgid "Email"
 msgstr "電郵"
-
-#. module: google_calendar
-#: model:ir.model,name:google_calendar.model_calendar_alarm_manager
-msgid "Event Alarm Manager"
-msgstr "活動提醒管理"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_recurrence
@@ -260,15 +247,7 @@ msgid "Guests Event Modification Permission"
 msgstr "賓客修改活動許可"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_alarm_manager__id
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__id
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__id
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__id
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__id
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__id
-#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__id
-#: model:ir.model.fields,field_description:google_calendar.field_res_users__id
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__id
 msgid "ID"
 msgstr "識別號"
 
@@ -381,6 +360,12 @@ msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
 msgstr "使用前需要管理員配置 Google 同步專案, 您想現在配置嗎 ? !"
+
+#. module: google_calendar
+#. odoo-python
+#: code:addons/google_calendar/models/res_users_settings.py:0
+msgid "The account for the Google Calendar service is not configured."
+msgstr "未配置 Google 日曆服務的帳戶。"
 
 #. module: google_calendar
 #. odoo-python

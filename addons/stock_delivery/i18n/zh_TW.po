@@ -3,15 +3,14 @@
 # 	* stock_delivery
 # 
 # Translators:
-# Tony Ng, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
-"PO-Revision-Date: 2025-05-06 12:04+0000\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2025-07-01 13:07+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -48,12 +47,8 @@ msgid "<span>Shipping Weight: </span>"
 msgstr "<span>裝運重量: </span>"
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
-msgid "<strong>Carrier:</strong>"
-msgstr "<strong>載體：</strong>"
-
-#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
 msgstr "<strong>運輸服務商</strong>"
 
@@ -93,12 +88,8 @@ msgstr "<strong>重量</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
-msgid ""
-"<strong>Weight:</strong>\n"
-"                <br/>"
-msgstr ""
-"<strong>重量：</strong>\n"
-"                <br>"
+msgid "<strong>Weight</strong>"
+msgstr "<strong>重量</strong>"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
@@ -193,19 +184,7 @@ msgid "Discard"
 msgstr "捨棄"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__display_name
-#: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__display_name
-#: model:ir.model.fields,field_description:stock_delivery.field_product_template__display_name
-#: model:ir.model.fields,field_description:stock_delivery.field_sale_order__display_name
-#: model:ir.model.fields,field_description:stock_delivery.field_sale_order_line__display_name
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_move__display_name
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__display_name
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__display_name
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__display_name
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__display_name
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_return_picking__display_name
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_route__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -249,19 +228,7 @@ msgid "HS Code"
 msgstr "HS編碼"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__id
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__id
-#: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__id
-#: model:ir.model.fields,field_description:stock_delivery.field_product_template__id
-#: model:ir.model.fields,field_description:stock_delivery.field_sale_order__id
-#: model:ir.model.fields,field_description:stock_delivery.field_sale_order_line__id
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_move__id
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__id
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__id
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__id
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__id
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_return_picking__id
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_route__id
 msgid "ID"
 msgstr "識別號"
 
@@ -297,11 +264,6 @@ msgid "Manual actions might be needed."
 msgstr "可能需要手動操作。"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__move_line_ids
-msgid "Move Line"
-msgstr "移動資料行"
-
-#. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
 msgstr "沒有承運商整合功能"
@@ -324,7 +286,7 @@ msgstr "貨件"
 
 #. module: stock_delivery
 #. odoo-python
-#: code:addons/stock_delivery/models/stock_move.py:0
+#: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Package Details"
 msgstr "包裝詳情"
 
@@ -340,6 +302,11 @@ msgid "Packages"
 msgstr "貨件"
 
 #. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__picking_id
+msgid "Picking"
+msgstr "揀貨"
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Print Return Label"
@@ -353,7 +320,7 @@ msgstr "商品"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "產品移動(移庫明細)"
+msgstr "產品移動（庫存移動資料行）"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
@@ -587,7 +554,7 @@ msgstr "重量："
 
 #. module: stock_delivery
 #. odoo-python
-#: code:addons/stock_delivery/models/stock_move.py:0
+#: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
 "You cannot pack products into the same package when they have different "
 "carriers (i.e. check that all of their transfers have a carrier assigned and"
@@ -628,18 +595,6 @@ msgid "^FO310,200"
 msgstr "^FO310,200"
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label
-msgid "^FO35, 180 ^A0N,15^FDHS:"
-msgstr "^FO35, 180 ^A0N,15^FDHS:"
-
-#. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.normal_zpl_label
-msgid "^FO35, 220 ^A0N,15^FDHS:"
-msgstr "^FO35, 220 ^A0N,15^FDHS:"
-
-#. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.normal_zpl_label
 msgid "^FS"
 msgstr "^FS"

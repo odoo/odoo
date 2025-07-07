@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
-"PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"PO-Revision-Date: 2025-07-01 13:07+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,11 +35,6 @@ msgstr "（運行："
 #: model:ir.model.constraint,message:web_tour.constraint_web_tour_tour_uniq_name
 msgid "A tour already exists with this name . Tour's name must be unique!"
 msgstr "已有相同名稱的導覽。導覽名稱必須獨一無二。"
-
-#. module: web_tour
-#: model:ir.model.fields.selection,name:web_tour.selection__web_tour_tour_step__tooltip_position__bottom
-msgid "Bottom"
-msgstr "底部"
 
 #. module: web_tour
 #. odoo-javascript
@@ -83,8 +77,6 @@ msgid "Custom tour '%s' has been added."
 msgstr "已加入自訂導覽「%s」。"
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_ir_http__display_name
-#: model:ir.model.fields,field_description:web_tour.field_res_users__display_name
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__display_name
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__display_name
 msgid "Display Name"
@@ -101,8 +93,6 @@ msgid "HTTP Routing"
 msgstr "HTTP 路由"
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_ir_http__id
-#: model:ir.model.fields,field_description:web_tour.field_res_users__id
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__id
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__id
 msgid "ID"
@@ -138,6 +128,7 @@ msgstr "名稱:"
 
 #. module: web_tour
 #. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_service.js:0
 #: code:addons/web_tour/static/src/widgets/tour_start.xml:0
 #: model:ir.model.fields,field_description:web_tour.field_res_users__tour_enabled
 msgid "Onboarding"
@@ -167,11 +158,6 @@ msgid "Record Tour"
 msgstr "錄影導覽"
 
 #. module: web_tour
-#: model:ir.model.fields.selection,name:web_tour.selection__web_tour_tour_step__tooltip_position__right
-msgid "Right"
-msgstr "右"
-
-#. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__run
 msgid "Run"
 msgstr "執行"
@@ -187,18 +173,6 @@ msgstr "儲存"
 #: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
 msgid "Scroll down to reach the next step."
 msgstr "向下捲動，以進入下一步驟。"
-
-#. module: web_tour
-#. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
-msgid "Scroll left to reach the next step."
-msgstr "向左捲動以到達下一步。"
-
-#. module: web_tour
-#. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
-msgid "Scroll right to reach the next step."
-msgstr "向右捲動以到達下一步。"
 
 #. module: web_tour
 #. odoo-javascript
@@ -264,16 +238,6 @@ msgid "Tip"
 msgstr "小費"
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__tooltip_position
-msgid "Tooltip Position"
-msgstr "工具提示位置"
-
-#. module: web_tour
-#: model:ir.model.fields.selection,name:web_tour.selection__web_tour_tour_step__tooltip_position__top
-msgid "Top"
-msgstr "頂部"
-
-#. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__tour_id
 msgid "Tour"
 msgstr "導覽"
@@ -315,11 +279,6 @@ msgstr "使用者已消耗"
 #: model_terms:ir.ui.view,arch_db:web_tour.tour_form
 msgid "e.g. My_Tour"
 msgstr "例：我的導覽"
-
-#. module: web_tour
-#: model:ir.model.fields.selection,name:web_tour.selection__web_tour_tour_step__tooltip_position__left
-msgid "left"
-msgstr "左"
 
 #. module: web_tour
 #. odoo-javascript

@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
-"PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2025-07-01 13:07+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,12 +95,6 @@ msgstr ""
 "                            <span>*</span>"
 
 #. module: website_event_booth
-#. odoo-python
-#: code:addons/website_event_booth/models/event_event.py:0
-msgid "Become exhibitor"
-msgstr "成為參展商"
-
-#. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_type_view_form
 msgid "Booth Menu Item"
 msgstr "攤位清單項目"
@@ -119,7 +112,7 @@ msgstr "攤位註冊完成！"
 
 #. module: website_event_booth
 #. odoo-javascript
-#: code:addons/website_event_booth/static/src/interactions/booth_registration.js:0
+#: code:addons/website_event_booth/static/src/js/booth_register.js:0
 msgid "Booth registration failed."
 msgstr "展位註冊失敗。"
 
@@ -130,13 +123,8 @@ msgstr "網站攤位"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
-msgid ""
-"Check our <a class=\"o_translate_inline\" href=\"/event\" title=\"List of "
-"Future Events\" aria-label=\"Link to list of future events\">list of future "
-"events</a>."
-msgstr ""
-"看看我們的<a class=\"o_translate_inline\" href=\"/event\" title=\"未來活動清單\" aria-"
-"label=\"未來活動清單連結\">未來活動清單</a>。"
+msgid "Check our"
+msgstr "請看看我們的"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
@@ -161,13 +149,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
 msgid "Contact Us"
 msgstr "聯絡我們"
-
-#. module: website_event_booth
-#: model:ir.model.fields,field_description:website_event_booth.field_event_event__display_name
-#: model:ir.model.fields,field_description:website_event_booth.field_event_type__display_name
-#: model:ir.model.fields,field_description:website_event_booth.field_website_event_menu__display_name
-msgid "Display Name"
-msgstr "顯示名稱"
 
 #. module: website_event_booth
 #: model:ir.model,name:website_event_booth.model_event_event
@@ -200,6 +181,8 @@ msgid "Exhibition Map"
 msgstr "展覽地圖"
 
 #. module: website_event_booth
+#. odoo-python
+#: code:addons/website_event_booth/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
 msgid "Get A Booth"
@@ -211,22 +194,22 @@ msgid "Go back"
 msgstr "返回"
 
 #. module: website_event_booth
-#: model:ir.model.fields,field_description:website_event_booth.field_event_event__id
-#: model:ir.model.fields,field_description:website_event_booth.field_event_type__id
-#: model:ir.model.fields,field_description:website_event_booth.field_website_event_menu__id
-msgid "ID"
-msgstr "識別碼"
-
-#. module: website_event_booth
 #. odoo-javascript
-#: code:addons/website_event_booth/static/src/interactions/booth_registration.js:0
+#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
+#: code:addons/website_event_booth/static/src/js/booth_register.js:0
+#, python-format
 msgid "It looks like your email is linked to an existing account."
 msgstr "你的電郵地址似乎已有現有帳戶使用。"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
-msgid "It's no longer possible to book a booth."
-msgstr "已不可再預訂展位。"
+msgid "Link to list of future events"
+msgstr "未來活動列表連結"
+
+#. module: website_event_booth
+#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
+msgid "List of Future Events"
+msgstr "未來活動列表"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
@@ -250,7 +233,7 @@ msgstr "請登入。"
 
 #. module: website_event_booth
 #. odoo-javascript
-#: code:addons/website_event_booth/static/src/interactions/booth_registration.js:0
+#: code:addons/website_event_booth/static/src/js/booth_register.js:0
 msgid "Please fill out the form correctly."
 msgstr "請正確填寫表格。"
 
@@ -266,7 +249,7 @@ msgstr "對不起，所有的攤位都賣完了。"
 
 #. module: website_event_booth
 #. odoo-javascript
-#: code:addons/website_event_booth/static/src/interactions/booth_registration.js:0
+#: code:addons/website_event_booth/static/src/js/booth_register.js:0
 msgid "The booth category doesn't exist."
 msgstr "沒有這個展位類別。"
 
@@ -284,3 +267,8 @@ msgstr "網站活動功能表"
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
 msgid "if you have any question."
 msgstr "如果你有任何問題。"
+
+#. module: website_event_booth
+#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
+msgid "list of future events"
+msgstr "未來活動列表"

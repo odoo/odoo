@@ -3,16 +3,16 @@
 # 	* account_peppol
 # 
 # Translators:
-# Tony Ng, 2025
 # Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:35+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"PO-Revision-Date: 2025-07-01 13:06+0000\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -203,7 +203,7 @@ msgstr "由於捆綁組合內有相關的訊息單元引致錯誤，因此組合
 msgid ""
 "A participant with these details has already been registered on the network."
 " If you have previously registered to a Peppol service, please deregister."
-msgstr ""
+msgstr "Peppol 網絡上已有參與者使用相同的資料註冊。如果你之前已註冊使用 Peppol 服務，請取消註冊。"
 
 #. module: account_peppol
 #. odoo-python
@@ -353,7 +353,7 @@ msgstr "雖然訊息是按照保證傳遞要求的規定去發送，但可靠性
 msgid ""
 "An Intermediary MSH was unable to route an ebMS message and stopped "
 "processing the message."
-msgstr ""
+msgstr "中間 MSH 未能為 ebMS 訊息安排路由，並已停止處理該訊息。"
 
 #. module: account_peppol
 #. odoo-python
@@ -361,7 +361,7 @@ msgstr ""
 msgid ""
 "An MSH has determined that the message is expired and will not attempt to "
 "forward or deliver it."
-msgstr ""
+msgstr "有 MSH 已斷定該訊息已過期，不會再嘗試轉發或傳送該訊息。"
 
 #. module: account_peppol
 #. odoo-python
@@ -370,19 +370,19 @@ msgid ""
 "An entry in the routing function is matched that assigns the message to an "
 "MPC for pulling, but the intermediary MSH is unable to store the message "
 "with this MPC"
-msgstr ""
+msgstr "路由功能中已有記項相符，將訊息分配給 MPC 進行拉取，但中間的 MSH 無法使用此 MPC 將訊息儲存"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An error occurred during the decompression."
-msgstr ""
+msgstr "解壓縮時發生錯誤。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An error occurred while decompressing the reassembled message."
-msgstr ""
+msgstr "為重新組合的訊息解壓縮時，發生錯誤。"
 
 #. module: account_peppol
 #. odoo-python
@@ -390,7 +390,7 @@ msgstr ""
 msgid ""
 "An incoming message fragment has a a value greater than the known "
 "FragmentCount."
-msgstr ""
+msgstr "傳入訊息片段的值，大於已知的 FragmentCount 片段數目。"
 
 #. module: account_peppol
 #. odoo-python
@@ -401,6 +401,7 @@ msgid ""
 "was prepared to wait for the message to be pulled, and that limit has been "
 "reached."
 msgstr ""
+"有一個中間 MSH 已將訊息指派給 MPC 以進行拉取，並成功儲存該訊息。不過，中間程式設定了自身會等待訊息被拉取的時間限制，而該時間限制已經到達。"
 
 #. module: account_peppol
 #. odoo-python
@@ -529,7 +530,7 @@ msgstr "必須填寫聯絡電郵和電話號碼。"
 msgid ""
 "Could not find an XSD with which to validate the document with identifier "
 "\"%s\"."
-msgstr ""
+msgstr "找不到 XSD 可用於驗證以下識別碼的文件：\"%s\""
 
 #. module: account_peppol
 #: model:ir.model,website_form_label:account_peppol.model_res_partner
@@ -756,7 +757,7 @@ msgstr "實時"
 msgid ""
 "Message properties were present in the fragment SOAP header that were not "
 "specified in %s"
-msgstr ""
+msgstr "片段的 SOAP 標頭中，出現了一些未在 %s 中指定的訊息屬性"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_migration_key
@@ -778,7 +779,7 @@ msgstr "流動電話號碼"
 msgid ""
 "More time than %s has passed since the first fragment was received but not "
 "all other fragments are received."
-msgstr ""
+msgstr "收到第一個片段後，已過了超過 %s 的時間，但尚未完全收齊所有其他片段。"
 
 #. module: account_peppol
 #. odoo-python
@@ -790,7 +791,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "No valid AS4 participant endpoint were found."
-msgstr ""
+msgstr "找不到有效的 AS4 參與者終端點。"
 
 #. module: account_peppol
 #. odoo-python
@@ -798,7 +799,7 @@ msgstr ""
 msgid ""
 "Not enough disk space available to store all (expected) fragments of the "
 "group."
-msgstr ""
+msgstr "沒有足夠的磁碟空間，去儲存該組別的所有（預期）片段。"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
@@ -818,7 +819,7 @@ msgstr "尚未驗證"
 #. module: account_peppol
 #: model:mail.template,description:account_peppol.mail_template_peppol_registration
 msgid "Notification email for peppol registration state update"
-msgstr ""
+msgstr "peppol 註冊狀態更新的通知電郵"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -1008,12 +1009,6 @@ msgid "Peppol status"
 msgstr "Peppol 狀態"
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-msgid "Peppol status update: %s"
-msgstr "Peppol 狀態更新： %s"
-
-#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_warnings
 msgid "Peppol warnings"
 msgstr "Peppol 警告"
@@ -1057,7 +1052,7 @@ msgstr "請安裝電話號碼程式庫。"
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid ""
 "Please set a journal for Peppol invoices on %s before receiving documents."
-msgstr ""
+msgstr "開始接收文件之前，請在 %s 設定 Peppol 發票使用的日記賬。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1092,7 +1087,7 @@ msgstr "代理類型"
 msgid ""
 "Proxy error, please contact Odoo (missing \"%s\" - please make sure that it "
 "was loaded from the configuration panel)"
-msgstr ""
+msgstr "代理錯誤，請聯絡 Odoo。（\"%s\" 缺漏：請確保已在配置面板載入它）"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
@@ -1196,7 +1191,7 @@ msgid ""
 "Some reliability function as implemented by the Reliability module, is not "
 "operational, or the reliability state associated with this message sequence "
 "is not valid."
-msgstr ""
+msgstr "由可靠性模組實施的部份可靠性功能未能運行，或與此訊息序列相關聯的可靠性狀態無效。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1211,7 +1206,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Something went wrong with your request"
-msgstr ""
+msgstr "執行你的請求時，出現問題"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
@@ -1239,7 +1234,7 @@ msgstr "Peppol 不適用於該國家/地區。"
 msgid ""
 "The MSH is experiencing temporary or permanent failure in trying to open a "
 "transport connection with a remote MSH."
-msgstr ""
+msgstr "MSH 嘗試開始與遠端 MSH 的傳輸連線時，遇到暫時或永久故障。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1248,7 +1243,7 @@ msgid ""
 "The MSH is unable to resolve an external payload reference (i.e. a Part that"
 " is not contained within the ebMS Message, as identified by a PartInfo/href "
 "URI)."
-msgstr ""
+msgstr "MSH 未能理解外部的有效負載參照（即 ebMS 訊息未包含的部份，以 PartInfo 或 href URI 識別）。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1256,19 +1251,19 @@ msgstr ""
 msgid ""
 "The Peppol Participant DNS lookup resulted in an URL address that does not "
 "belong to this server."
-msgstr ""
+msgstr "經 Peppol 參與者 DNS 查找後，得出不屬於此伺服器的網址。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The Peppol Participant cannot receive this document type."
-msgstr ""
+msgstr "Peppol 參與者無法接收此類型的文件。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The Peppol Participant certificate is invalid."
-msgstr ""
+msgstr "Peppol 參與者證書無效。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1276,7 +1271,7 @@ msgstr ""
 msgid ""
 "The Peppol Participant service group found on his Service Metadata Provider "
 "is invalid."
-msgstr ""
+msgstr "在 Peppol 參與者的服務元資料提供程式上找到的服務組別無效。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1296,7 +1291,7 @@ msgstr "所使用的 Peppol 服務是 %s。"
 msgid ""
 "The Service Metadata Publisher associated to this participant is not "
 "reachable. url: %s"
-msgstr ""
+msgstr "未能存取與此參與者相關的服務元資料發佈者。網址： %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -1314,13 +1309,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document is not valid according to the XSD Schema."
-msgstr ""
+msgstr "根據 XSD 資料架構，該 XML 文件無效。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document is not valid according to the schematron."
-msgstr ""
+msgstr "根據 schematron 資料架構，該 XML 文件無效。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1332,19 +1327,19 @@ msgstr "找不到該文件"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The document could not be sent to the Peppol Participant."
-msgstr ""
+msgstr "文件未能傳送給 Peppol 參與者。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The document could not be validated."
-msgstr ""
+msgstr "未能驗證該文件。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The document has been sent to the Peppol Access Point for processing"
-msgstr "文件已發送至 Peppol 接入點進行處理"
+msgid "The document has been sent to Peppol for processing"
+msgstr "文件已傳送至 Peppol 進行處理"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1358,7 +1353,7 @@ msgstr "電子發票網絡"
 msgid ""
 "The eb3:Message header copied to the fragment header does not match the "
 "eb3:Message header in the reassembled source message."
-msgstr ""
+msgstr "複製至片段標頭的 eb3:Message 標頭，與重組得出的來源訊息中的 eb3:Message 標頭不符。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1366,7 +1361,7 @@ msgstr ""
 msgid ""
 "The ebMS header is either not well formed as an XML document, or does not "
 "conform to the ebMS packaging rules."
-msgstr ""
+msgstr "該 ebMS 標頭作為 XML 文件的格式欠佳，或不符合 ebMS 的包裝規則。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1375,7 +1370,7 @@ msgid ""
 "The ebMS header or another header (e.g. reliability, security) expected by "
 "the MSH is not compatible with the expected content, based on the associated"
 " P-Mode."
-msgstr ""
+msgstr "根據相關聯的 P-Mode，MSH 期望的 ebMS 標頭或另一標頭（例如：可靠性、安全性），與預期的內容不相容。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1383,7 +1378,7 @@ msgstr ""
 msgid ""
 "The encrypted data reference the Security header intended for the \"ebms\" "
 "SOAP actor could not be decrypted by the Security Module."
-msgstr ""
+msgstr "對於原意給 \"ebms\" SOAP 操作器使用的安全性標頭，安全性模組未能解密其加密資料參照。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1410,18 +1405,20 @@ msgid ""
 "other than the fragment header and a data part are in the message. are added"
 " or the SOAP Body is not empty."
 msgstr ""
+"請留意，href 屬性未有引用有效的 MIME 資料部份，除了片段標頭及資料部份之外的 MIME 部份，已放在訊息中、已被新增，或 SOAP 的 "
+"Body 部份並非空白。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The incoming message could not be decompressed."
-msgstr ""
+msgstr "傳入的訊息未能解壓縮。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The message does not comply with the AS4 policy."
-msgstr ""
+msgstr "該訊息不符合 AS4 政策規定。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1436,7 +1433,7 @@ msgid ""
 "The processor determined that the message's security methods, parameters, "
 "scope or other security policy-level requirements or agreements were not "
 "satisfied."
-msgstr ""
+msgstr "處理程式已斷定訊息的安全性方法、參數、範圍或其他安全性政策等級的要求或協議，未獲滿足或遵守。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -1451,13 +1448,13 @@ msgstr "就比利時業務而言，建議的識別方式是你的公司註冊號
 msgid ""
 "The signature in the Security header intended for the \"ebms\" SOAP actor, "
 "could not be validated by the Security module."
-msgstr ""
+msgstr "對於原意給 \"ebms\" SOAP 操作器使用的安全性標頭，安全性模組未能驗證其簽名。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The size of the data part in a fragment message is greater than %s"
-msgstr ""
+msgstr "有一個片段訊息的資料部份，大小超過 %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -1465,7 +1462,7 @@ msgstr ""
 msgid ""
 "The structure of a received bundle is not in accordance with the bundling "
 "rules."
-msgstr ""
+msgstr "收到的資料捆綁組合，結構不符合資料捆綁規則。"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -1479,7 +1476,7 @@ msgstr "識別此用戶的唯一識別碼，通常是增值稅(VAT)編號"
 msgid ""
 "The use of MIME is not consistent with the required usage in this "
 "specification."
-msgstr ""
+msgstr "使用 MIME 的方式，不符合此規範所要求的用法。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1522,7 +1519,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "This invoice has also been"
-msgstr ""
+msgstr "此發票也已經"
 
 #. module: account_peppol
 #. odoo-python
@@ -1536,7 +1533,7 @@ msgstr ""
 msgid ""
 "This user's is not a Peppol User. The proxy_type associated must be "
 "\"peppol\". This is required to create a peppol participant."
-msgstr ""
+msgstr "此使用者不是 Peppol 用戶。關聯的 proxy_type 必須為 \"peppol\"。建立新的 peppol 參與者時，必須如此設定。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1575,7 +1572,7 @@ msgstr "BIS 賬單 3.0 及其衍生產品所使用的唯一標識符，又稱為
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unknown Peppol Error: %s"
-msgstr ""
+msgstr "未知的 Peppol 錯誤：%s"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
@@ -1694,7 +1691,7 @@ msgstr "你沒有足夠點數"
 msgid ""
 "You have reached the limit of documents you can send today. Retry later. "
 "Please contact the support if you think you need to increase that limit."
-msgstr ""
+msgstr "你已到達今天可發送的文件數量上限，請稍後再試。若需要提高上限，請聯絡支援團隊。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1726,7 +1723,7 @@ msgstr ""
 msgid ""
 "Your company is already registered on an Access Point (%s) for receiving "
 "invoices. We will register you on Odoo as a sender only."
-msgstr ""
+msgstr "你的公司已註冊使用接入點（%s）接收發票。Odoo 系統只會將你註冊為發送人。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1791,4 +1788,4 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
-msgstr ""
+msgstr "使用"

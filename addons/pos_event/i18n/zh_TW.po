@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2025-07-01 13:06+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,13 +21,13 @@ msgstr ""
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
-msgid " for this slot"
-msgstr "為此時段"
+#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid " (%s seats available)"
+msgstr "（尚餘 %s 個名額）"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "--- Select ---"
 msgstr "--- 請選擇 ---"
 
@@ -43,11 +42,6 @@ msgid "<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>Print Event Tick
 msgstr "<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/> 列印活動門票"
 
 #. module: pos_event
-#: model_terms:ir.ui.view,arch_db:pos_event.event_registration_ticket_view_form
-msgid "<span class=\"o_stat_text\">PoS Order</span>"
-msgstr "<span class=\"o_stat_text\">PoS 銷售點訂單</span>"
-
-#. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_pos_order__attendee_count
 msgid "Attendee Count"
 msgstr "參加人數"
@@ -59,38 +53,21 @@ msgstr "參加者"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
-#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
-#: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.xml:0
+#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "Cancel"
 msgstr "取消"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
-#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
-#: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.xml:0
+#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "Confirm"
 msgstr "確認"
 
 #. module: pos_event
-#: model:ir.model.fields,field_description:pos_event.field_event_event__display_name
-#: model:ir.model.fields,field_description:pos_event.field_event_event_ticket__display_name
-#: model:ir.model.fields,field_description:pos_event.field_event_question__display_name
-#: model:ir.model.fields,field_description:pos_event.field_event_question_answer__display_name
-#: model:ir.model.fields,field_description:pos_event.field_event_registration__display_name
-#: model:ir.model.fields,field_description:pos_event.field_event_registration_answer__display_name
-#: model:ir.model.fields,field_description:pos_event.field_event_slot__display_name
-#: model:ir.model.fields,field_description:pos_event.field_pos_config__display_name
-#: model:ir.model.fields,field_description:pos_event.field_pos_order__display_name
-#: model:ir.model.fields,field_description:pos_event.field_pos_order_line__display_name
-#: model:ir.model.fields,field_description:pos_event.field_pos_session__display_name
-msgid "Display Name"
-msgstr "顯示名稱"
-
-#. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
 msgid "Error"
 msgstr "錯誤"
 
@@ -127,11 +104,6 @@ msgid "Event Registrations"
 msgstr "活動報名"
 
 #. module: pos_event
-#: model:ir.model,name:pos_event.model_event_slot
-msgid "Event Slot"
-msgstr "活動時段"
-
-#. module: pos_event
 #: model:ir.model,name:pos_event.model_event_event_ticket
 #: model:ir.model.fields,field_description:pos_event.field_pos_order_line__event_ticket_id
 msgid "Event Ticket"
@@ -156,36 +128,9 @@ msgstr "從 %s"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "Global questions"
 msgstr "全域問題"
-
-#. module: pos_event
-#: model:ir.model.fields,field_description:pos_event.field_event_event__id
-#: model:ir.model.fields,field_description:pos_event.field_event_event_ticket__id
-#: model:ir.model.fields,field_description:pos_event.field_event_question__id
-#: model:ir.model.fields,field_description:pos_event.field_event_question_answer__id
-#: model:ir.model.fields,field_description:pos_event.field_event_registration__id
-#: model:ir.model.fields,field_description:pos_event.field_event_registration_answer__id
-#: model:ir.model.fields,field_description:pos_event.field_event_slot__id
-#: model:ir.model.fields,field_description:pos_event.field_pos_config__id
-#: model:ir.model.fields,field_description:pos_event.field_pos_order__id
-#: model:ir.model.fields,field_description:pos_event.field_pos_order_line__id
-#: model:ir.model.fields,field_description:pos_event.field_pos_session__id
-msgid "ID"
-msgstr "識別碼"
-
-#. module: pos_event
-#. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.xml:0
-msgid "No Slot Selected"
-msgstr "未選取時段"
-
-#. module: pos_event
-#. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
-msgid "No slots"
-msgstr "沒有時段"
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_event_event__image_1024
@@ -236,39 +181,20 @@ msgstr "列印全頁門票"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.js:0
-msgid "Select a slot for %(event)s"
-msgstr "為以下活動選取時段：%(event)s"
+#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid "Select tickets for %s"
+msgstr "選擇門票給 %s"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
-msgid "Select tickets for %(event)s"
-msgstr "為以下活動選取門票：%(event)s"
-
-#. module: pos_event
-#. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
-msgid "Select tickets for %(event)s (%(seats)s seats available%(suffix)s)"
-msgstr "為以下活動選取門票：%(event)s（有 %(seats)s 個名額可用 %(suffix)s）"
-
-#. module: pos_event
-#. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
-#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
-msgid "Sold out"
-msgstr "售完"
-
-#. module: pos_event
-#. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
 msgid ""
 "The selected ticket (%s) is not available. Please select a different ticket."
 msgstr "所選的門票（%s）不可用。請選擇不同的門票。"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "Ticket #"
 msgstr "門票編號"
 
@@ -280,14 +206,13 @@ msgstr "門票錯誤"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "Tickets"
 msgstr "支援請求"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
-#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
+#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
 msgid "Unlimited"
 msgstr "無限"
 
@@ -300,25 +225,13 @@ msgstr "你不可更改與活動註冊連結的資料行的數量"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "for"
 msgstr "給予"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
-#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
+#: code:addons/pos_event/static/src/app/generic_components/product_card/product_card.xml:0
+#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
 msgid "left"
 msgstr "左方"
-
-#. module: pos_event
-#. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
-msgid "slot"
-msgstr "角子機"
-
-#. module: pos_event
-#. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
-msgid "slots"
-msgstr "時段"

@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2025-07-01 13:06+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,16 +50,6 @@ msgstr "<span class=\"o_stat_text\"> 潛在商機</span>"
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__active
 msgid "Active"
 msgstr "啟用"
-
-#. module: event_crm
-#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
-msgid "All Event templates"
-msgstr "所有活動範本"
-
-#. module: event_crm
-#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
-msgid "All Events"
-msgstr "所有活動"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
@@ -125,11 +114,6 @@ msgid "Create a Lead Generation Rule"
 msgstr "創建線索生成規則"
 
 #. module: event_crm
-#: model:ir.model,website_form_label:event_crm.model_crm_lead
-msgid "Create an Opportunity"
-msgstr "建立銷售機會"
-
-#. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
 msgid "Created Leads"
 msgstr "已創建線索"
@@ -166,11 +150,8 @@ msgid "Default lead type when this rule is applied."
 msgstr "應用此規則時預設線索類型"
 
 #. module: event_crm
-#: model:ir.model.fields,field_description:event_crm.field_crm_lead__display_name
-#: model:ir.model.fields,field_description:event_crm.field_event_event__display_name
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__display_name
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__display_name
-#: model:ir.model.fields,field_description:event_crm.field_event_registration__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -222,16 +203,6 @@ msgid "Event:"
 msgstr "活動："
 
 #. module: event_crm
-#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
-msgid "Execute Rule"
-msgstr "執行規則"
-
-#. module: event_crm
-#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
-msgid "Execute this rule for all ongoing and future events."
-msgstr "為所有正在進行及將來的活動，執行此規則。"
-
-#. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_registration_filter
 msgid "Filter the attendees that will or not generate leads."
 msgstr "篩選將生成或不會生成線索的出席者。"
@@ -256,7 +227,7 @@ msgid "For any of these Events"
 msgstr "對於任何這些活動"
 
 #. module: event_crm
-#: model:ir.actions.server,name:event_crm.action_generate_leads
+#: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
 msgid "Generate Leads"
 msgstr "產生潛在客戶"
 
@@ -267,11 +238,8 @@ msgid "Got it! We've noted your request. Your leads will be created soon!"
 msgstr "知道，我們已記下你的請求。你的潛在客戶很快就會建立！"
 
 #. module: event_crm
-#: model:ir.model.fields,field_description:event_crm.field_crm_lead__id
-#: model:ir.model.fields,field_description:event_crm.field_event_event__id
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__id
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__id
-#: model:ir.model.fields,field_description:event_crm.field_event_registration__id
 msgid "ID"
 msgstr "識別號"
 
@@ -291,7 +259,6 @@ msgid "Last Updated on"
 msgstr "最後更新於"
 
 #. module: event_crm
-#: model:ir.model,name:event_crm.model_crm_lead
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__lead
 msgid "Lead"
 msgstr "潛在商機"
@@ -323,14 +290,14 @@ msgid "Lead Generation Rules"
 msgstr "線索生成規則"
 
 #. module: event_crm
-#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__event_lead_rule_ids
-msgid "Lead Rules"
-msgstr "潛在客戶規則"
-
-#. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
 msgid "Lead Type"
 msgstr "提前類型"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "潛在商機/商機"
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.crm_lead_action_from_event
@@ -367,6 +334,11 @@ msgstr "未找到線索"
 #: model_terms:ir.actions.act_window,help:event_crm.event_registration_action_from_lead
 msgid "No registration found"
 msgstr "未找到註冊"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_event__has_lead_request
+msgid "Ongoing Generation Request"
+msgstr "持續生成請求"
 
 #. module: event_crm
 #. odoo-python
@@ -444,6 +416,11 @@ msgid "Rule Name"
 msgstr "規則名稱"
 
 #. module: event_crm
+#: model:event.lead.rule,name:event_crm.event_lead_rule_0
+msgid "Rule on @example.com"
+msgstr "規則 使用於 @example.com "
+
+#. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__event_lead_rule_id
 msgid "Rule that created this lead"
 msgstr "創建此線索的規則"
@@ -462,6 +439,11 @@ msgstr "銷售員"
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Search Lead Generation Rules"
 msgstr "搜索線索生成規則"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_event__has_lead_request
+msgid "Set to True when a Lead Generation Request is currently running."
+msgstr "如果目前正在運行潛在客戶生成請求，設定為 True（真）。"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
@@ -500,11 +482,6 @@ msgstr "觸發類型"
 #: code:addons/event_crm/models/event_registration.py:0
 msgid "Updated registrations"
 msgstr "更新的註冊"
-
-#. module: event_crm
-#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
-msgid "Visible to all"
-msgstr "向全部人顯示"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_trigger

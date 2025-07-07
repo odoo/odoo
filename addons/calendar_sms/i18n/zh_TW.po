@@ -7,10 +7,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
+"POT-Creation-Date: 2024-09-26 12:52+0000\n"
+"PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -28,13 +28,6 @@ msgstr "日曆活動"
 #: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
 msgid "Calendar Event: Reminder"
 msgstr "日曆：活動提醒"
-
-#. module: calendar_sms
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__display_name
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__display_name
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__display_name
-msgid "Display Name"
-msgstr "顯示名稱"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
@@ -62,11 +55,11 @@ msgstr ""
 "}}"
 
 #. module: calendar_sms
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__id
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__id
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__id
-msgid "ID"
-msgstr "識別碼"
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_alarm.py:0
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_notify_responsible
+msgid "Notify Responsible"
+msgstr "通知負責人"
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited

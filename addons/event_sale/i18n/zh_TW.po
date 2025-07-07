@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"PO-Revision-Date: 2025-07-01 13:06+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +20,13 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+msgid "%(event_name)s - Tickets"
+msgstr "%(event_name)s - 門票"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid ""
 ".\n"
 "            <span>Manual actions may be needed.</span>"
@@ -45,7 +50,7 @@ msgid "<span class=\"o_stat_text\">Sales</span>"
 msgstr "<span class=\"o_stat_text\">銷售</span>"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
+#: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "<span>Registration modification for attendee:</span>"
 msgstr "<span>參加者報名修改：</span>"
 
@@ -55,25 +60,9 @@ msgid "Add"
 msgstr "加入"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
-#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
-#: model_terms:ir.ui.view,arch_db:event_sale.sale_order_view_form
-msgid "All Events"
-msgstr "所有活動"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_order_lines_ids
 msgid "All sale order lines pointing to this event"
 msgstr "指向此活動的所有銷售訂單資料行"
-
-#. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_event_event_configurator__is_multi_slots
-#: model:ir.model.fields,help:event_sale.field_sale_order_line__is_multi_slots
-msgid ""
-"Allow multiple time slots. The communications, the maximum number of "
-"attendees and the maximum number of tickets registrations are defined for "
-"each time slot instead of the whole event."
-msgstr "允許有多個時段。通訊、參加人數上限及門票註冊數量上限，可針對個別時段定義，而非整個活動劃一。"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
@@ -122,13 +111,6 @@ msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
 msgstr "選擇一個活動，它將會自動為此活動建立報名。"
-
-#. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_slot_id
-msgid ""
-"Choose an event slot and it will automatically create a registration for "
-"this event slot."
-msgstr "選擇一個活動時段，系統將會自動為此活動時段建立一項報名登記。"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
@@ -195,16 +177,10 @@ msgid "Discard"
 msgstr "捨棄"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event__display_name
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__display_name
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__display_name
-#: model:ir.model.fields,field_description:event_sale.field_event_registration__display_name
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__display_name
-#: model:ir.model.fields,field_description:event_sale.field_product_template__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
-#: model:ir.model.fields,field_description:event_sale.field_sale_order__display_name
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -272,12 +248,6 @@ msgid "Event Sales Report"
 msgstr "活動銷售報告"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_slot_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_slot_id
-msgid "Event Slot"
-msgstr "活動時段"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event Start Date"
@@ -302,15 +272,22 @@ msgid "Events that have ended"
 msgstr "已結束的活動"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
+#: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "Exception:"
 msgstr "例外："
 
 #. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__free
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__free
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Free"
 msgstr "免費"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+msgid "Get Your Tickets"
+msgstr "取得門票"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -323,24 +300,12 @@ msgid "Has Available Tickets"
 msgstr "有可用門票"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event__id
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__id
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__id
-#: model:ir.model.fields,field_description:event_sale.field_event_registration__id
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__id
-#: model:ir.model.fields,field_description:event_sale.field_product_template__id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order__id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__id
 msgid "ID"
 msgstr "識別號"
-
-#. module: event_sale
-#. odoo-python
-#: code:addons/event_sale/wizard/event_configurator.py:0
-msgid "Invalid slot choice \"%(slot_name)s\" for event \"%(event_name)s\"."
-msgstr "活動 %(event_name)s 的時段選擇 %(slot_name)s 無效。"
 
 #. module: event_sale
 #. odoo-python
@@ -352,12 +317,6 @@ msgstr "活動 %(event_name)s 的門票選擇 %(ticket_name)s 無效。"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__invoice_partner_id
 msgid "Invoice Address"
 msgstr "發票地址"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__is_multi_slots
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__is_multi_slots
-msgid "Is Multi Slots"
-msgstr "是有多個時段"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
@@ -399,7 +358,9 @@ msgid "Non-free tickets"
 msgstr "非免費門票"
 
 #. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__to_pay
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__to_pay
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 msgid "Not Sold"
 msgstr "非供出售"
 
@@ -526,14 +487,19 @@ msgid "Sale Order Status"
 msgstr "銷售訂單狀態"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_status
+msgid "Sale Status"
+msgstr "銷售狀態"
+
+#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Sales"
 msgstr "銷售"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_total
-msgid "Sales (Tax Included)"
-msgstr "銷售（連稅）"
+#: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_subtotal
+msgid "Sales (Tax Excluded)"
+msgstr "銷售額（未連稅）"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
@@ -561,16 +527,9 @@ msgid "Select an Event"
 msgstr "選擇一個活動"
 
 #. module: event_sale
-#. odoo-python
-#: code:addons/event_sale/models/event_registration.py:0
-#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_slot_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_slot_id
-#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
-msgid "Slot"
-msgstr "時段"
-
-#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__sold
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__sold
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Sold"
 msgstr "已售出"
@@ -589,13 +548,11 @@ msgstr "狀態"
 #. odoo-python
 #: code:addons/event_sale/models/sale_order_line.py:0
 msgid ""
-"The sale order line with the product %(product_name)s needs an event, a "
-"ticket and a slot in case the event has multiple time slots."
-msgstr "如果活動有多個時段，產品 %(product_name)s 的銷售單資料行就需要有活動、門票及時段資料。"
+"The sale order line with the product %(product_name)s needs an event and a "
+"ticket."
+msgstr "包含產品 %(product_name)s 的銷售訂單資料行，需要活動及門票。"
 
 #. module: event_sale
-#. odoo-python
-#: code:addons/event_sale/models/event_registration.py:0
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Ticket"
 msgstr "門票"
@@ -607,6 +564,11 @@ msgid "Ticket Type"
 msgstr "門票類型"
 
 #. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
+msgid "Ticket changed from"
+msgstr "門票修改自"
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_ticket_price
 msgid "Ticket price"
 msgstr "門票價格"
@@ -615,6 +577,11 @@ msgstr "門票價格"
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Total sales for this event"
 msgstr "本次活動總銷售額"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
+msgid "Transaction"
+msgstr "交易"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__draft
@@ -655,16 +622,11 @@ msgid "We could not find a matching event ticket for this product. <br/>"
 msgstr "找不到符合此產品的活動門票。<br/>"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
-msgid "changed from"
-msgstr "已變更，由"
-
-#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please provide attendee details."
 msgstr "請提供參加者詳情。"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
+#: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "to"
 msgstr "到"

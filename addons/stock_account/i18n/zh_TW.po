@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:28+0000\n"
-"PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"PO-Revision-Date: 2025-07-01 13:07+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -265,6 +264,12 @@ msgid ""
 msgstr "更改您的成本方法是一個重要的更改, 將影響您的庫存評估。是否確實要進行此更改？"
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__is_scrap
+msgid ""
+"Check this box to allow using this location to put scrapped/damaged goods."
+msgstr "若勾選此方格，將允許使用此位置存放已報廢/已損壞的貨物。"
+
+#. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 msgid "Choose a date to get the valuation at that date"
 msgstr "選擇一個日期，以獲得當日的估值"
@@ -347,6 +352,7 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
+#: model:ir.model.fields,field_description:stock_account.field_stock_picking_type__country_code
 msgid "Country Code"
 msgstr "國家/地區代碼"
 
@@ -426,6 +432,7 @@ msgstr "在發票上顯示批次和序號"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_line__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_quantity_history__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_request_count__display_name
@@ -486,6 +493,7 @@ msgstr "有剩餘數量"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_line__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__id
+#: model:ir.model.fields,field_description:stock_account.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_quantity_history__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_request_count__id
@@ -501,6 +509,11 @@ msgstr "識別號"
 #: model:ir.model.fields,help:stock_account.field_stock_lot__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr "若勾選，估值將按個別批次/序號獨立進行。"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__is_inventory
+msgid "Inventory"
+msgstr "庫存"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -668,6 +681,11 @@ msgid "Other Info"
 msgstr "其他資訊"
 
 #. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_picking_type
+msgid "Picking Type"
+msgstr "提貨類型"
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_id
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -694,7 +712,7 @@ msgstr "產品分類"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "產品移動(移庫明細)"
+msgstr "產品移動（庫存移動資料行）"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -801,6 +819,11 @@ msgstr "%s 的重估"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Revalue"
 msgstr "重估"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__is_scrap
+msgid "Scrapped"
+msgstr "已報廢"
 
 #. module: stock_account
 #. odoo-python
@@ -916,6 +939,7 @@ msgstr "技術欄位，用於正確顯示目前所選公司的貨幣，該貨幣
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
+#: model:ir.model.fields,help:stock_account.field_stock_picking_type__country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
@@ -1058,6 +1082,11 @@ msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale"
 " Order/Purchase Order"
 msgstr "觸發相關銷售訂單/採購訂單中已交貨/已收貨數量的減少"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__picking_code
+msgid "Type of Operation"
+msgstr "作業的類型"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id

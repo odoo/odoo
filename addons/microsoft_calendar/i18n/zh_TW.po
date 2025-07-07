@@ -7,10 +7,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -155,15 +155,7 @@ msgid "Discard"
 msgstr "捨棄"
 
 #. module: microsoft_calendar
-#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_alarm_manager__display_name
-#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee__display_name
-#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__display_name
-#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__display_name
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__display_name
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__display_name
-#: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__display_name
-#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users_settings__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -194,11 +186,6 @@ msgid ""
 msgstr "由於 Outlook 日曆的限制，必須直接在 Outlook 日曆中建立重複事項。"
 
 #. module: microsoft_calendar
-#: model:ir.model,name:microsoft_calendar.model_calendar_alarm_manager
-msgid "Event Alarm Manager"
-msgstr "活動提醒管理"
-
-#. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
 msgstr "活動循環規則"
@@ -224,15 +211,7 @@ msgid ""
 msgstr "若要為活動設定不同的舉辦者，舉辦者必須將 Odoo 日曆與 Outlook 日曆同步。"
 
 #. module: microsoft_calendar
-#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_alarm_manager__id
-#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee__id
-#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__id
-#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__id
-#: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__id
-#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__id
-#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users_settings__id
 msgid "ID"
 msgstr "識別號"
 
@@ -423,6 +402,12 @@ msgid ""
 "The Outlook Synchronization needs to be configured before you can use it, do"
 " you want to do it now?"
 msgstr "Outlook 同步需要先配置後才能使用，現在要配置嗎？"
+
+#. module: microsoft_calendar
+#. odoo-python
+#: code:addons/microsoft_calendar/models/res_users.py:0
+msgid "The account for the Outlook Calendar service is not configured."
+msgstr "未設置 Outlook 日曆服務的帳戶。"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy

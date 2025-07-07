@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2025-07-01 13:06+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,17 +20,8 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_homeworking
-#: model_terms:ir.ui.view,arch_db:hr_homeworking.view_employee_form
-msgid ""
-"<span class=\"text-muted fst-italic oe_inline mb-1\" colspan=\"2\">Specify "
-"your default work location for each day of the week. This schedule will "
-"repeat itself each week.</span>"
-msgstr ""
-"<span class=\"text-muted fst-italic oe_inline mb-1\" "
-"colspan=\"2\">為一星期中的每一天設定預設工作地點。此時間表會每週重複。</span>"
-
-#. module: hr_homeworking
 #: model_terms:ir.ui.view,arch_db:hr_homeworking.res_useurs_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr_homeworking.view_employee_form
 msgid ""
 "<span class=\"text-muted fst-italic oe_inline\" colspan=\"2\">Specify your "
 "default work location for each day of the week. This schedule will repeat "
@@ -143,6 +133,12 @@ msgid "At Other - Online"
 msgstr "其他地方 - 線上"
 
 #. module: hr_homeworking
+#. odoo-javascript
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+msgid "At {{location}} - {{status}}"
+msgstr "在 {{location}} - {{status}}"
+
+#. module: hr_homeworking
 #: model:ir.model,name:hr_homeworking.model_hr_employee_base
 msgid "Basic Employee"
 msgstr "一般員工"
@@ -153,19 +149,9 @@ msgid "Contact"
 msgstr "聯絡人"
 
 #. module: hr_homeworking
-#: model_terms:ir.ui.view,arch_db:hr_homeworking.view_employee_form
-msgid "Copy to all"
-msgstr "複製至所有"
-
-#. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__work_location_type
 msgid "Cover Image"
 msgstr "封面圖像"
-
-#. module: hr_homeworking
-#: model:ir.model,website_form_label:hr_homeworking.model_res_partner
-msgid "Create a Customer"
-msgstr "建立客戶"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__create_uid
@@ -195,11 +181,7 @@ msgid "Day Week String"
 msgstr "日週字串"
 
 #. module: hr_homeworking
-#: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_base__display_name
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__display_name
-#: model:ir.model.fields,field_description:hr_homeworking.field_hr_work_location__display_name
-#: model:ir.model.fields,field_description:hr_homeworking.field_res_partner__display_name
-#: model:ir.model.fields,field_description:hr_homeworking.field_res_users__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -234,11 +216,7 @@ msgid "Hr Icon Display"
 msgstr "小時圖示顯示"
 
 #. module: hr_homeworking
-#: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_base__id
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__id
-#: model:ir.model.fields,field_description:hr_homeworking.field_hr_work_location__id
-#: model:ir.model.fields,field_description:hr_homeworking.field_res_partner__id
-#: model:ir.model.fields,field_description:hr_homeworking.field_res_users__id
 msgid "ID"
 msgstr "識別號"
 
@@ -347,6 +325,12 @@ msgstr "未指定"
 #: model:ir.model,name:hr_homeworking.model_res_users
 msgid "User"
 msgstr "使用者"
+
+#. module: hr_homeworking
+#. odoo-javascript
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+msgid "User work at {{location}} and is {{status}}"
+msgstr "使用者工作地點為 {{location}}，狀態為 {{status}}"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__wednesday_location_id

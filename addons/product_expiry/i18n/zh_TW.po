@@ -4,33 +4,20 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2025-07-01 13:06+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: product_expiry
-#. odoo-python
-#: code:addons/product_expiry/models/production_lot.py:0
-msgid "\t--Expire on %(date)s--"
-msgstr "\t-- 到期日：%(date)s --"
-
-#. module: product_expiry
-#. odoo-python
-#: code:addons/product_expiry/models/production_lot.py:0
-msgid "\t--Expired--"
-msgstr "\t-- 已逾期 --"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -44,11 +31,11 @@ msgstr ""
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
 msgid ""
-"<span title=\"Alert\" class=\"fa fa-exclamation-triangle text-danger me-2\" "
+"<span title=\"Alert\" class=\"fa fa-exclamation-triangle text-danger ms-2\" "
 "invisible=\"product_qty &lt;= 0 or not product_expiry_alert or not "
 "expiration_date\"/>"
 msgstr ""
-"<span title=\"警報\" class=\"fa fa-exclamation-triangle text-danger me-2\" "
+"<span title=\"警報\" class=\"fa fa-exclamation-triangle text-danger ms-2\" "
 "invisible=\"product_qty &lt;= 0 or not product_expiry_alert or not "
 "expiration_date\"/>"
 
@@ -70,8 +57,7 @@ msgid "Alert Date"
 msgstr "警示日期"
 
 #. module: product_expiry
-#. odoo-python
-#: code:addons/product_expiry/models/production_lot.py:0
+#: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
 msgid "Alert Date Reached"
 msgstr "已到達過期通知日期"
 
@@ -153,15 +139,6 @@ msgstr "在交貨單上顯示到期日期"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
-#: model:ir.model.fields,field_description:product_expiry.field_procurement_group__display_name
-#: model:ir.model.fields,field_description:product_expiry.field_product_product__display_name
-#: model:ir.model.fields,field_description:product_expiry.field_product_template__display_name
-#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__display_name
-#: model:ir.model.fields,field_description:product_expiry.field_stock_move__display_name
-#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__display_name
-#: model:ir.model.fields,field_description:product_expiry.field_stock_picking__display_name
-#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -214,15 +191,6 @@ msgstr "先到期先出（FEFO）"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
-#: model:ir.model.fields,field_description:product_expiry.field_procurement_group__id
-#: model:ir.model.fields,field_description:product_expiry.field_product_product__id
-#: model:ir.model.fields,field_description:product_expiry.field_product_template__id
-#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__id
-#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__id
-#: model:ir.model.fields,field_description:product_expiry.field_stock_move__id
-#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__id
-#: model:ir.model.fields,field_description:product_expiry.field_stock_picking__id
-#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__id
 msgid "ID"
 msgstr "識別號"
 
@@ -315,7 +283,7 @@ msgstr "產品過期警告"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "產品移動(移庫明細)"
+msgstr "產品移動（庫存移動資料行）"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_product

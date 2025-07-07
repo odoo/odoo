@@ -4,16 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Pak Wai Ho, 2025
-# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
-"PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"PO-Revision-Date: 2025-07-01 13:06+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,10 +78,6 @@ msgstr "<span>天</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
-msgid "<strong class=\"d-block mt-3\">Shipping address:</strong>"
-msgstr "<strong class=\"d-block mt-3\">送貨地址：</strong>"
-
-#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
 msgstr "<strong class=\"d-block mt-3\">送貨地址</strong>"
@@ -121,6 +115,11 @@ msgid "Action"
 msgstr "動作"
 
 #. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_suggest__based_on__actual_demand
+msgid "Actual Demand"
+msgstr "實際需求"
+
+#. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_suggest__based_on__last_year_3
 msgid "After next month last year"
 msgstr "去年下個月後"
@@ -129,6 +128,13 @@ msgstr "去年下個月後"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
 msgid "All Warehouses"
 msgstr "全部倉庫"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+msgid ""
+"Allow Make to Order, or automate PO, when a product is sold and get direct "
+"links between documents."
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
@@ -350,6 +356,21 @@ msgstr "生效日期-去年"
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__days_to_arrival
 msgid "Effective Days To Arrival"
 msgstr "抵達前有效天數"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
+msgid ""
+"Estimate the sales volume based on a past period or order what you need "
+"based on actual demand. Use the percentage to take into account seasonality "
+"or business growth."
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_suggest__based_on
+msgid ""
+"Estimate the sales volume for the period based on past period or order the "
+"forecasted quantity for that period."
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -893,13 +914,6 @@ msgid "Schedule request for quotations earlier to avoid delays"
 msgstr "提早安排報價請求,以避免延誤"
 
 #. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
-msgid ""
-"Set a reference period to estimate sales, and use the percentage to take "
-"into account seasonability and the increase/decrease of business."
-msgstr "設定一個參考期，以估算銷售額，並使用百分比將季節性影響及業務的增加/減少納入考慮。"
-
-#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
 msgid "Set as Supplier"
 msgstr "設為供應商"
@@ -970,16 +984,9 @@ msgstr "根據銷售及需求建議數量"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_suggest__number_of_days
 msgid ""
-"Suggested quantities to replenish will be computed for all filtered products"
-"              in this catalog in order to cover this amount of days of "
-"average demand."
-msgstr "系統會為此目錄中所有篩選出的產品，              計算可以滿足此天數平均需求的建議補貨數量。"
-
-#. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
-msgid "Supplier"
-msgstr "供應商"
+"Suggested quantities to replenish will be computed to cover this amount of "
+"days for all filtered products in this catalog."
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_supplierinfo
@@ -1049,6 +1056,16 @@ msgstr "此賬戶用於記錄採購價格及會計成本之間的價格差額估
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
+"This adds a Replenish On Order (MTO) route to apply on products in order to "
+"generate on-demand replenishment linked to your sales orders (for example) "
+"as soon as they are confirmed, with a direct link. Purchase orders, "
+"manufacturing orders, etc. are triggered based on what way to replenish is "
+"set on the product (Buy or Manufacture route)."
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+msgid ""
 "This adds a dropshipping route to apply on products in order to request your"
 " vendors to deliver to your customers. A product to dropship will generate a"
 " purchase request for quotation once the sales order confirmed. This is a "
@@ -1082,6 +1099,11 @@ msgstr "這些日期已在收貨單 %s 上相應更新。"
 #: code:addons/purchase_stock/static/src/js/time_period_selection_fields.js:0
 msgid "Time Perdiod Selection"
 msgstr "選取時期"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_search_catalog
+msgid "To Order"
+msgstr "訂購"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
@@ -1139,6 +1161,12 @@ msgid "Vendor On-time Delivery analysis"
 msgstr "供應商準交分析"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
+msgid "Vendor Pricelist"
+msgstr ""
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.view_stock_replenishment_info_stock_purchase_inherit
 msgid "Vendors"
 msgstr "供應商"
@@ -1181,9 +1209,18 @@ msgid "You must set a Vendor Location for this partner %s"
 msgstr "您必須為此合作夥伴設定一個供應商的位置%s"
 
 #. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order_line.py:0
+msgid ""
+"You're trying to decrease the ordered quantity below the received quantity, you goofball.\n"
+"\n"
+"Try creating a return first silly billy!"
+msgstr ""
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
-msgid "based on stock on hand, and expected sales volumes."
-msgstr "根據現有庫存及預期銷售量。"
+msgid "based on stock on hand, and expected sales volumes or actual demand."
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form

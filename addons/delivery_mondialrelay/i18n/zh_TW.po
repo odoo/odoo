@@ -7,10 +7,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -36,30 +36,9 @@ msgid "Country Code"
 msgstr "國家/地區代碼"
 
 #. module: delivery_mondialrelay
-#: model:ir.model,website_form_label:delivery_mondialrelay.model_res_partner
-msgid "Create a Customer"
-msgstr "建立客戶"
-
-#. module: delivery_mondialrelay
 #: model:ir.model,name:delivery_mondialrelay.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
 msgstr "貨運承運商選擇介面"
-
-#. module: delivery_mondialrelay
-#: model:ir.model.fields,field_description:delivery_mondialrelay.field_choose_delivery_carrier__display_name
-#: model:ir.model.fields,field_description:delivery_mondialrelay.field_delivery_carrier__display_name
-#: model:ir.model.fields,field_description:delivery_mondialrelay.field_res_partner__display_name
-#: model:ir.model.fields,field_description:delivery_mondialrelay.field_sale_order__display_name
-msgid "Display Name"
-msgstr "顯示名稱"
-
-#. module: delivery_mondialrelay
-#: model:ir.model.fields,field_description:delivery_mondialrelay.field_choose_delivery_carrier__id
-#: model:ir.model.fields,field_description:delivery_mondialrelay.field_delivery_carrier__id
-#: model:ir.model.fields,field_description:delivery_mondialrelay.field_res_partner__id
-#: model:ir.model.fields,field_description:delivery_mondialrelay.field_sale_order__id
-msgid "ID"
-msgstr "識別碼"
 
 #. module: delivery_mondialrelay
 #: model:ir.model.fields,field_description:delivery_mondialrelay.field_choose_delivery_carrier__is_mondialrelay
@@ -79,7 +58,6 @@ msgstr "最後選擇的Relay"
 #: model:delivery.carrier,name:delivery_mondialrelay.delivery_carrier_mondialrelay_es
 #: model:delivery.carrier,name:delivery_mondialrelay.delivery_carrier_mondialrelay_fr_nl
 #: model:product.template,name:delivery_mondialrelay.product_product_delivery_mondialrelay_product_template
-#: model_terms:ir.ui.view,arch_db:delivery_mondialrelay.address_kanban
 msgid "Mondial Relay"
 msgstr "Mondial Relay"
 
@@ -105,6 +83,12 @@ msgstr "Mondialrelay 最後選擇"
 #: model:ir.model.fields,field_description:delivery_mondialrelay.field_delivery_carrier__mondialrelay_packagetype
 msgid "Mondialrelay Packagetype"
 msgstr "Mondialrelay 封裝類型"
+
+#. module: delivery_mondialrelay
+#. odoo-python
+#: code:addons/delivery_mondialrelay/models/delivery_carrier.py:0
+msgid "Operation not supported"
+msgstr "不支援該操作"
 
 #. module: delivery_mondialrelay
 #. odoo-python

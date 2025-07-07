@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2025-07-01 13:06+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,6 +63,18 @@ msgid "Banned"
 msgstr "已封禁"
 
 #. module: iap
+#. odoo-javascript
+#: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
+msgid "Buy credits"
+msgstr "購買點數"
+
+#. module: iap
+#. odoo-javascript
+#: code:addons/iap/static/src/xml/iap_templates.xml:0
+msgid "Cancel"
+msgstr "取消"
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_ids
 msgid "Company"
 msgstr "公司"
@@ -93,7 +104,6 @@ msgstr "說明"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
-#: model:ir.model.fields,field_description:iap.field_iap_enrich_api__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_service__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
@@ -146,10 +156,15 @@ msgstr "IAP 服務"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
-#: model:ir.model.fields,field_description:iap.field_iap_enrich_api__id
 #: model:ir.model.fields,field_description:iap.field_iap_service__id
 msgid "ID"
 msgstr "識別號"
+
+#. module: iap
+#. odoo-javascript
+#: code:addons/iap/static/src/xml/iap_templates.xml:0
+msgid "Insufficient credit to perform this service."
+msgstr "額度不足，無法執行此服務。"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
@@ -179,12 +194,6 @@ msgstr "管理服務及購買點數"
 #: model:ir.model.fields,field_description:iap.field_iap_service__name
 msgid "Name"
 msgstr "名稱"
-
-#. module: iap
-#. odoo-python
-#: code:addons/iap/models/iap_account.py:0
-msgid "No service exists with the provided technical name"
-msgstr "沒有服務使用所提供的技術名稱"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
@@ -224,6 +233,12 @@ msgstr "服務"
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_locked
 msgid "Service Locked"
 msgstr "服務已鎖定"
+
+#. module: iap
+#. odoo-javascript
+#: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
+msgid "Start a Trial at Odoo"
+msgstr "在odoo中開始試用"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state

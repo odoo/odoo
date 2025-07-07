@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
-"PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2025-07-01 13:07+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,18 +30,29 @@ msgstr ""
 "            可能需要手動操作."
 
 #. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
+msgid "<span class=\"o_stat_text\">Purchase</span>"
+msgstr "<span class=\"o_stat_text\">採購</span>"
+
+#. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
 msgid "<span class=\"o_stat_text\">Sale</span>"
 msgstr "<span class=\"o_stat_text\">銷售</span>"
 
 #. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_template__display_name
-#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__display_name
-#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__display_name
-#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__display_name
-#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__display_name
-msgid "Display Name"
-msgstr "顯示名稱"
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_cancel_view_form
+msgid ""
+"<span id=\"display_invoice_alert\" position=\"after\">\n"
+"                <span id=\"display_purchase_orders_alert\" invisible=\"not display_purchase_orders_alert\" groups=\"purchase.group_purchase_user\">\n"
+"                    There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>\n"
+"                </span>\n"
+"            </span>"
+msgstr ""
+"<span id=\"display_invoice_alert\" position=\"after\">\n"
+"                <span id=\"display_purchase_orders_alert\" invisible=\"not display_purchase_orders_alert\" groups=\"purchase.group_purchase_user\">\n"
+"                    有一些連結至此銷售單的生效採購單，不會自動取消。<br/>\n"
+"                </span>\n"
+"            </span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
@@ -66,15 +76,6 @@ msgstr "異常:"
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_ids
 msgid "Generated Purchase Lines"
 msgstr "生成的採購訂單明細"
-
-#. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_template__id
-#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__id
-#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__id
-#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__id
-#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__id
-msgid "ID"
-msgstr "識別碼"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
@@ -136,14 +137,14 @@ msgid "Product that is not a service can not create RFQ."
 msgstr "非服務類型的產品，不可建立報價請求。"
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
-msgid "Purchase"
-msgstr "採購"
-
-#. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
 msgid "Purchase Order"
 msgstr "採購訂單"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_cancel__display_purchase_orders_alert
+msgid "Purchase Order Alert"
+msgstr "採購訂單警示"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line
@@ -179,6 +180,11 @@ msgid "Sales Order"
 msgstr "銷售訂單"
 
 #. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_sale_order_cancel
+msgid "Sales Order Cancel"
+msgstr "銷售訂單取消"
+
+#. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "銷售訂單明細"
@@ -194,12 +200,6 @@ msgstr "來源銷售訂單%s"
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
 msgid "Subcontract Service"
 msgstr "外包服務"
-
-#. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__has_sale_order
-msgid ""
-"Technical field for whether the purchase order has associated sale orders"
-msgstr "技術欄位，表示採購訂單是否有關聯的銷售單"
 
 #. module: sale_purchase
 #. odoo-python

@@ -8,10 +8,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
-"PO-Revision-Date: 2025-05-06 12:04+0000\n"
+"POT-Creation-Date: 2024-10-25 07:50+0000\n"
+"PO-Revision-Date: 2025-07-01 13:07+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -23,8 +23,8 @@ msgstr ""
 #. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid ""
-"<i>Your order has been confirmed.</i><br>Please come to the store to pay for"
-" your products."
+"<i>Your order has been confirmed.</i><br> Please come to the store to pay "
+"for your products."
 msgstr "<b>你的訂單已確認。</b><i></i><br>請前往實體商店，支付產品費用。"
 
 #. module: website_sale_collect
@@ -42,14 +42,8 @@ msgstr "可用"
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
-msgid "Change store"
-msgstr "變更商店"
-
-#. module: website_sale_collect
-#. odoo-javascript
-#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
-msgid "Click and Collect"
-msgstr "網購店取"
+msgid "Check availability"
+msgstr "檢查可用"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_res_config_settings
@@ -67,40 +61,10 @@ msgid "Custom Mode"
 msgstr "自訂模式"
 
 #. module: website_sale_collect
-#. odoo-javascript
-#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
-msgid "Delivery"
-msgstr "送貨"
-
-#. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/res_config_settings.py:0
 msgid "Delivery Methods"
 msgstr "送貨方式"
-
-#. module: website_sale_collect
-#: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__display_name
-#: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__display_name
-#: model:ir.model.fields,field_description:website_sale_collect.field_payment_transaction__display_name
-#: model:ir.model.fields,field_description:website_sale_collect.field_product_template__display_name
-#: model:ir.model.fields,field_description:website_sale_collect.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:website_sale_collect.field_sale_order__display_name
-#: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__display_name
-#: model:ir.model.fields,field_description:website_sale_collect.field_website__display_name
-msgid "Display Name"
-msgstr "顯示名稱"
-
-#. module: website_sale_collect
-#: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__id
-#: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__id
-#: model:ir.model.fields,field_description:website_sale_collect.field_payment_transaction__id
-#: model:ir.model.fields,field_description:website_sale_collect.field_product_template__id
-#: model:ir.model.fields,field_description:website_sale_collect.field_res_config_settings__id
-#: model:ir.model.fields,field_description:website_sale_collect.field_sale_order__id
-#: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__id
-#: model:ir.model.fields,field_description:website_sale_collect.field_website__id
-msgid "ID"
-msgstr "識別碼"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__in_store_dm_id
@@ -119,6 +83,12 @@ msgstr "不可用"
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 msgid "Only"
 msgstr "僅"
+
+#. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/sale_order.py:0
+msgid "Only %(new_qty)s available"
+msgstr "只剩 %(new_qty)s 件可用"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__opening_hours
@@ -148,11 +118,8 @@ msgid "Payment Provider"
 msgstr "付款服務商"
 
 #. module: website_sale_collect
-#: model:ir.model,name:website_sale_collect.model_payment_transaction
-msgid "Payment Transaction"
-msgstr "付款交易"
-
-#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: model:delivery.carrier,name:website_sale_collect.carrier_pick_up_in_store
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__delivery_carrier__delivery_type__in_store
 #: model:product.template,name:website_sale_collect.product_pick_up_in_store_product_template
@@ -177,30 +144,13 @@ msgstr "服務商"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
-msgid "Remove"
-msgstr "移除"
-
-#. module: website_sale_collect
-#: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "Remove from cart"
 msgstr "從購物車中移除"
-
-#. module: website_sale_collect
-#. odoo-javascript
-#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
-msgid "Restrictions may apply"
-msgstr "可能有適用限制"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_sale_order
 msgid "Sales Order"
 msgstr "銷售訂單"
-
-#. module: website_sale_collect
-#. odoo-javascript
-#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
-msgid "Select store"
-msgstr "選擇商店"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_delivery_carrier
@@ -273,8 +223,8 @@ msgstr "您的付款已被取消。"
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,done_msg:website_sale_collect.payment_provider_on_site
-msgid "Your payment has been processed."
-msgstr "你的付款已處理。"
+msgid "Your payment has been successfully processed."
+msgstr "你的付款已成功處理。"
 
 #. module: website_sale_collect
 #. odoo-javascript

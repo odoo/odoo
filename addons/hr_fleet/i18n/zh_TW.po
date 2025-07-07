@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"POT-Creation-Date: 2024-01-08 06:51+0000\n"
+"PO-Revision-Date: 2025-07-01 13:06+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,11 +44,6 @@ msgid "Assignment"
 msgstr "指派"
 
 #. module: hr_fleet
-#: model:ir.model,name:hr_fleet.model_ir_attachment
-msgid "Attachment"
-msgstr "附件"
-
-#. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_view_list
 msgid "Attachments"
@@ -78,29 +72,9 @@ msgid "Current Driver"
 msgstr "目前的駕駛人"
 
 #. module: hr_fleet
-#: model_terms:ir.ui.view,arch_db:hr_fleet.view_attachment_kanban_inherit_hr
-msgid "Delete"
-msgstr "刪除"
-
-#. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_departure_wizard
 msgid "Departure Wizard"
 msgstr "離職作業"
-
-#. module: hr_fleet
-#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__display_name
-#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__display_name
-#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_contract__display_name
-#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_services__display_name
-#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__display_name
-#: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__display_name
-#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__display_name
-#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__display_name
-#: model:ir.model.fields,field_description:hr_fleet.field_ir_attachment__display_name
-#: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__display_name
-#: model:ir.model.fields,field_description:hr_fleet.field_res_users__display_name
-msgid "Display Name"
-msgstr "顯示名稱"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_contract_view_form_inherit_hr
@@ -161,27 +135,6 @@ msgid "Future Driver (Employee)"
 msgstr "未來司機（員工）"
 
 #. module: hr_fleet
-#. odoo-python
-#: code:addons/hr_fleet/models/employee.py:0
-msgid "History Employee Cars"
-msgstr "員工車輛歷史"
-
-#. module: hr_fleet
-#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__id
-#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__id
-#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_contract__id
-#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_services__id
-#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__id
-#: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__id
-#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__id
-#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__id
-#: model:ir.model.fields,field_description:hr_fleet.field_ir_attachment__id
-#: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__id
-#: model:ir.model.fields,field_description:hr_fleet.field_res_users__id
-msgid "ID"
-msgstr "識別碼"
-
-#. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__license_plate
 msgid "License Plate"
 msgstr "車輛牌照"
@@ -228,10 +181,8 @@ msgstr "車輛服務"
 #. module: hr_fleet
 #. odoo-python
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
-msgid ""
-"The vehicle of employee %(employee)s is not linked to a fleet manager, "
-"assigning to you."
-msgstr "員工 %(employee)s 的車輛未連結至車隊經理，故此指派給你。"
+msgid "The vehicle of employee %(employee)s is not linked to a fleet manager."
+msgstr "員工 %(employee)s 的車輛未連結至車隊經理。"
 
 #. module: hr_fleet
 #. odoo-javascript

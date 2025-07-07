@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:27+0000\n"
-"PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"POT-Creation-Date: 2025-07-03 12:08+0000\n"
+"PO-Revision-Date: 2025-07-01 13:07+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -445,7 +444,7 @@ msgstr "2 x 7 含價格"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
-msgid "2021-9-01"
+msgid "2021-09-01"
 msgstr "2021 年 9 月 1 日"
 
 #. module: stock
@@ -1217,9 +1216,23 @@ msgid "All at once"
 msgstr "一次性全部"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"All our contractual relations will be governed exclusively by United States "
+"law."
+msgstr "我們全部的合作關係都將受國家法律管轄."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "全部退回移動"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Allow Make to Order, or automate PO, when a product is sold and get direct "
+"links between documents."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
@@ -1542,11 +1555,13 @@ msgid "Available Quantity"
 msgstr "可用數量"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/product.py:0
+#: model:ir.model.fields,help:stock.field_product_product__free_qty
 msgid ""
-"Available quantity should be set to zero before changing inventory tracking"
-msgstr "更改庫存追蹤前，可用數量應設為零"
+"Available quantity (computed as Quantity On Hand - reserved quantity - quantity to remove)\n"
+"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
@@ -1637,6 +1652,13 @@ msgid "Before scheduled date"
 msgstr "在預定日期之前"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr "以下文字僅作為建議，不涉及 Odoo S.A. 的責任."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__quant_ids
 msgid "Bulk Content"
 msgstr "大量內容"
@@ -1683,6 +1705,11 @@ msgstr "通過取消勾選有效欄位，您能隱藏一個位置而不是刪除
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "COPY"
 msgstr "COPY"
+
+#. module: stock
+#: model:product.template,name:stock.product_cable_management_box_product_template
+msgid "Cable Management Box"
+msgstr "理線盒"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -1769,6 +1796,21 @@ msgstr "類別"
 #: model:ir.model.fields,field_description:stock.field_product_template__route_from_categ_ids
 msgid "Category Routes"
 msgstr "類別路線"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can My "
+"Company (Chicago) become involved in costs related to a country's "
+"legislation. The amount of the invoice will therefore be due to My Company "
+"(Chicago) in its entirety and does not include any costs relating to the "
+"legislation of the country in which the client is located."
+msgstr ""
+"某些國家根據其國內立法對應收憑單金額實行源頭預扣.任何源頭預扣稅將由客戶支付給稅務機關.在任何情況下，My Company (Chicago) "
+"都不得捲入與某個國家/地區的立法相關的費用.因此，應收憑單金額將全部支付給 My Company "
+"(Chicago)，不包括與客戶所在國家/地區的法律相關的任何費用."
 
 #. module: stock
 #. odoo-python
@@ -1888,6 +1930,12 @@ msgstr "選擇您的日期"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Clear"
 msgstr "清除"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
+msgid "Click or press enter to add a description"
+msgstr "按一下此處，或按輸入鍵，以加入描述"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
@@ -2102,11 +2150,6 @@ msgid "Control panel buttons"
 msgstr "控制面板按鈕"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_location__posx
-msgid "Corridor (X)"
-msgstr "通道(X)"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__set_count
 msgid "Count"
 msgstr "個數"
@@ -2206,11 +2249,9 @@ msgstr "建立客戶"
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid ""
 "Create a backorder if you expect to process the remaining\n"
-"                            products later. Do not create a backorder if you will not\n"
-"                            process the remaining products."
+"                    products later. Do not create a backorder if you will not\n"
+"                    process the remaining products."
 msgstr ""
-"如果您希望稍後處理剩餘產品，請建立逾期交貨.\n"
-"                            如果您不處理剩餘產品，請不要建立逾期交貨."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -2506,13 +2547,7 @@ msgid "Date Category"
 msgstr "日期類別"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_move_form
-msgid "Date Processing"
-msgstr "處理日期"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__date
-#: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Date Scheduled"
 msgstr "預定日期"
 
@@ -2721,6 +2756,17 @@ msgid "Delay on %s"
 msgstr "逾期於 %s"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+msgid ""
+"Deleting product moves after the transfer is done?\n"
+"\n"
+"That would be like going back in time to revert all operations triggered after this move. Who knows what the end result would be, So let's not do it.\n"
+"\n"
+"Try changing the “done” quantity to 0 instead."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__ship_only
 msgid "Deliver (1 step)"
 msgstr "送貨（1 步）"
@@ -2860,11 +2906,21 @@ msgstr "根據所安裝的模組，這將允許您定義產品的補貨路線：
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__note
-#: model:ir.model.fields,field_description:stock.field_stock_move__name
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Description"
 msgstr "說明"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
+msgid "Description Of Picking"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__description_picking_manual
+msgid "Description Picking Manual"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -2880,11 +2936,6 @@ msgstr "內部調撥的描述"
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Receipts"
 msgstr "收貨單描述"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
-msgid "Description of Picking"
-msgstr "揀貨描述"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingout
@@ -2909,11 +2960,6 @@ msgstr "收貨描述"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Description on transfer"
 msgstr "調撥描述"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
-msgid "Description picking"
-msgstr "揀貨描述"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_location_id
@@ -3305,6 +3351,12 @@ msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr "確保倉庫內可儲存產品的可追蹤性。"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
+msgid "Enter a description"
+msgstr "輸入描述"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_envia
 msgid "Envia.com Connector"
 msgstr "Envia.com 連接器"
@@ -3484,7 +3536,7 @@ msgstr "可用性預測"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Forecast Description"
-msgstr "預估說明"
+msgstr "預測描述"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -3494,28 +3546,11 @@ msgstr "預測報表"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__virtual_available
 msgid ""
-"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
+"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming - Quantity to Remove)\n"
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"預測數量(計算為手上數量 - 出庫 + 入庫) \n"
-"對於單一庫存位置來說, 這包括了存儲在此位置及其子位置的貨物.\n"
-"對於單一倉庫來說, 這包括了存儲在此倉庫的庫存位置及其子位置的貨物.\n"
-"否則, 這包括存儲在任何「內部」類型的任何庫存位置的貨物."
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_product_product__free_qty
-msgid ""
-"Forecast quantity (computed as Quantity On Hand - reserved quantity)\n"
-"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
-"預測數量(計算為在庫數量 - 預留數量)\n"
-"在具有單個庫存位置的上下文中，這包括儲存在此位置或其任何子項中的貨物.\n"
-"在單個倉庫的上下文中，這包括儲存在此倉庫的庫存位置或其任何子倉庫中的貨物.\n"
-"否則，這包括儲存在任何庫存位置具有\"內部\"類型的貨物."
 
 #. module: stock
 #. odoo-javascript
@@ -3607,7 +3642,7 @@ msgstr "可用數量"
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.js:0
 msgid "Free Stock"
 msgstr "可用庫存"
 
@@ -3818,11 +3853,6 @@ msgid "Height"
 msgstr "高"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_location__posz
-msgid "Height (Z)"
-msgstr "高(Z)"
-
-#. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_height
 msgid "Height must be positive"
 msgstr "高度必須是大於 0 的正數"
@@ -3934,6 +3964,15 @@ msgstr "圖示"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "用於指示異常活動的圖示。"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"If a payment is still outstanding more than sixty (60) days after the due "
+"payment date, My Company (Chicago) reserves the right to call on the "
+"services of a debt recovery company. All legal expenses will be payable by "
+"the client."
+msgstr "如果在到期付款日後六十天仍未付款，My Company (Chicago) 保留要求債務追償公司提供服務的權利.全部法律費用將由客戶支付."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4180,6 +4219,16 @@ msgid "In internal locations"
 msgstr "在內部位置"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"In order for it to be admissible, My Company (Chicago) must be notified of "
+"any claim by means of a letter sent by recorded delivery to its registered "
+"office within 8 days of the delivery of the goods or the provision of the "
+"services."
+msgstr ""
+"為了使其被受理，必須在交付貨物或提供服務後 8 天內通過以掛號信方式將任何索賠通知 My Company (Chicago) 到其註冊辦事處."
+
+#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__incoming_qty
@@ -4363,7 +4412,6 @@ msgstr "庫存數量"
 #: model:ir.ui.menu,name:stock.menu_stock_root
 #: model:res.groups.privilege,name:stock.res_groups_privilege_inventory
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_pivot
@@ -4371,7 +4419,6 @@ msgid "Inventory"
 msgstr "庫存"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_stock_inventory_adjustement_name
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Inventory Adjustment"
 msgstr "庫存盤點"
@@ -4389,8 +4436,7 @@ msgid "Inventory Adjustment Warning"
 msgstr "庫存調整警告"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
+#: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 msgid "Inventory Adjustments"
 msgstr "庫存盤點"
 
@@ -4431,6 +4477,11 @@ msgstr "盤點損失"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_view_inherit_stock
 msgid "Inventory Management"
 msgstr "庫存管理"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__inventory_name
+msgid "Inventory Name"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -5226,6 +5277,11 @@ msgid "May"
 msgstr "五月"
 
 #. module: stock
+#: model:res.company,partnership_label:stock.res_company_1
+msgid "Members"
+msgstr "成員"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_error
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_has_error
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_error
@@ -5283,6 +5339,11 @@ msgstr "Mitchel Admin"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__move_ids
 msgid "Move"
 msgstr "分錄"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_move_form
+msgid "Move Date"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -5382,6 +5443,19 @@ msgid "My Activity Deadline"
 msgstr "我的活動截止時間"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"My Company (Chicago) undertakes to do its best to supply performant services"
+" in due time in accordance with the agreed timeframes. However, none of its "
+"obligations can be considered as being an obligation to achieve results. My "
+"Company (Chicago) cannot under any circumstances, be required by the client "
+"to appear as a third party in the context of any claim for damages filed "
+"against the client by an end consumer."
+msgstr ""
+"My Company (Chicago) 承諾盡最大努力在約定的時間範圍內及時提供高效服務.但是，其任何義務都不能被視為實現結果的義務. My "
+"Company (Chicago) 在任何情況下都不能被客戶要求在最終消費者向客戶提出的任何損害索賠的背景下作為第三方出現."
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
 msgstr "我的盤點操作"
@@ -5453,12 +5527,6 @@ msgstr "從不賦予值"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "New"
 msgstr "新增"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid "New Move: %(product)s"
-msgstr "新的移動：%(product)s"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_form
@@ -5788,9 +5856,9 @@ msgstr "手上數量"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__available_quantity
 msgid ""
-"On hand quantity which hasn't been reserved on a transfer, in the default "
-"unit of measure of the product"
-msgstr "未在調撥時保留的現有數量，採用產品的預設計量單位"
+"On hand quantity which hasn't been reserved on a transfer and is still "
+"fresh, in the default unit of measure of the product"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -5901,13 +5969,6 @@ msgid ""
 msgstr "用於送貨的可選地址，專門用於配發"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_location__posx
-#: model:ir.model.fields,help:stock.field_stock_location__posy
-#: model:ir.model.fields,help:stock.field_stock_location__posz
-msgid "Optional localization details, for information purpose only"
-msgstr "可選的位置細節，僅供參考"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__returned_move_ids
 msgid "Optional: all returned moves created from this move"
 msgstr "可選: 全部從此移動建立的退貨移動"
@@ -5988,6 +6049,20 @@ msgstr "原始重新排序規則"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Other Information"
 msgstr "其他資訊"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Our invoices are payable within 21 working days, unless another payment "
+"timeframe is indicated on either the invoice or the order. In the event of "
+"non-payment by the due date, My Company (Chicago) reserves the right to "
+"request a fixed interest payment amounting to 10% of the sum remaining due. "
+"My Company (Chicago) will be authorized to suspend any provision of services"
+" without prior warning in the event of late payment."
+msgstr ""
+"我們的應收憑單應在 21 個工作日內支付，除非應收憑單或訂單上註明了另一個付款時間範圍.如果在到期日之前未付款，My Company (Chicago)"
+" 保留要求支付固定利息的權利，金額為剩餘到期金額的 10% o.如果逾期付款，My Company (Chicago) "
+"將被授權在沒有事先警告的情況下暫停任何服務的提供."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
@@ -6361,6 +6436,9 @@ msgid "Partner-Specific Instructions"
 msgstr "合作夥伴特定指示"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.action_stock_inventory_adjustement_name
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
 msgid "Physical Inventory"
 msgstr "實物庫存"
@@ -6712,17 +6790,17 @@ msgstr "產品批次篩選"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "產品移動(移庫明細)"
+msgstr "產品移動（庫存移動資料行）"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
+#: code:addons/stock/models/stock_move.py:0
 msgid "Product Quantity Confirmed"
 msgstr "產品數量已確認"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
+#: code:addons/stock/models/stock_move.py:0
 msgid "Product Quantity Updated"
 msgstr "產品數量已更新"
 
@@ -7474,6 +7552,7 @@ msgstr "補貨數量"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:ir.model.fields,field_description:stock.field_res_config_settings__replenish_on_order
 #: model:stock.route,name:stock.route_warehouse0_mto
 msgid "Replenish on Order (MTO)"
 msgstr "訂單補給（特別訂製）"
@@ -7733,6 +7812,12 @@ msgid "Revert Inventory Adjustment"
 msgstr "恢復庫存調整"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+msgid "Reverted Moves"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__route_id
 #: model:ir.model.fields,field_description:stock.field_stock_route__name
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_id
@@ -7862,6 +7947,11 @@ msgid "SSCC:"
 msgstr "SSCC(系列貨運包裝箱代碼):"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "STANDARD TERMS AND CONDITIONS OF SALE"
+msgstr "標准銷售條款和條件"
+
+#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Sales History"
@@ -7884,6 +7974,7 @@ msgstr "更新在庫數量之前，請儲存產品表單。"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__scheduled_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking__scheduled_date
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_date
+#: model_terms:ir.ui.view,arch_db:stock.view_move_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Scheduled Date"
@@ -7899,6 +7990,11 @@ msgstr "移動完成前的調度日期，然後是實際移動處理的日期"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Scheduled or processing date"
 msgstr "預定或處理日期"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_move_form
+msgid "Scheduled time for the first part of the shipment to be processed."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__scheduled_date
@@ -8200,11 +8296,6 @@ msgstr "設定"
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "Shelf A"
 msgstr "貨架 A"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_location__posy
-msgid "Shelves (Y)"
-msgstr "貨架(Y)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -8883,6 +8974,11 @@ msgstr ""
 "這是符合預期的嗎?例如，如果在運作相應的收貨操作之前運作送貨操作，則會發生這種情況.在這種情況下，一旦完成全部步驟，問題將自動解決.否則，應更正序號以防止資料不一致."
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_move_form
+msgid "The actual date when the transfer was processed."
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "The backorder %s has been created."
@@ -8892,6 +8988,15 @@ msgstr "逾期交貨單 %s 已建立."
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
 msgstr "一間公司內的位置條碼，必須獨一無二！"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"The client explicitly waives its own standard terms and conditions, even if "
+"these were drawn up after these standard terms and conditions of sale. In "
+"order to be valid, any derogation must be expressly agreed to in advance in "
+"writing."
+msgstr "客戶明確放棄其自己的標準條款和條件，即使這些是在這些標准銷售條款和條件之後製定的. 為了有效，任何減損必須事先以書面形式明確同意."
 
 #. module: stock
 #. odoo-python
@@ -8958,12 +9063,6 @@ msgstr "預估的存量"
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "The inter-warehouse transfers have been generated"
 msgstr "已產生倉庫間轉移"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid "The inventory adjustments have been reverted."
-msgstr "庫存調整已恢復."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
@@ -9156,6 +9255,16 @@ msgstr "還沒有產品移動"
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
 msgid "This SN is already in another location."
 msgstr "該序列號已使用在其他位置."
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"This adds a Replenish On Order (MTO) route to apply on products in order to "
+"generate on-demand replenishment linked to your sales orders (for example) "
+"as soon as they are confirmed, with a direct link. Purchase orders, "
+"manufacturing orders, etc. are triggered based on what way to replenish is "
+"set on the product (Buy or Manufacture route)."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9632,6 +9741,14 @@ msgstr "轉移"
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Transfer to"
 msgstr "調撥至"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid ""
+"Transfer trouble alert! Validating a zero quantity transfer? You're not moving invisible goods around are you?\n"
+"Set some quantities and let's get moving!"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10477,23 +10594,6 @@ msgstr "你還可以:"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
-msgid ""
-"You can not change the inventory tracking of a product that is currently "
-"reserved on a stock move. If you need to change the inventory tracking, you "
-"should first unreserve the stock move."
-msgstr "你不可更改目前在庫存移動中保留的產品的庫存追蹤。若要更改庫存追蹤，應先取消保留庫存移動。"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/product.py:0
-msgid ""
-"You can not change the inventory tracking of a product that was already "
-"used."
-msgstr "你不可變更已被使用產品的庫存追蹤。"
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid ""
 "You can not create a snoozed orderpoint that is not manually triggered."
@@ -10504,14 +10604,6 @@ msgstr "你不可建立並非手動觸發的延後訂單點。"
 #: code:addons/stock/models/stock_move.py:0
 msgid "You can not delete moves linked to another operation"
 msgstr "不可刪除關聯至另一操作的移動"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid ""
-"You can not delete product moves if the picking is done. You can only "
-"correct the done quantities."
-msgstr "如果揀貨已完成，不能刪除產品移動.您可以糾正完成數量."
 
 #. module: stock
 #. odoo-python
@@ -10700,14 +10792,6 @@ msgstr "您不能使用兩次相同的序號. 請更正序號編碼."
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid ""
-"You cannot validate a transfer if no quantities are reserved. To force the "
-"transfer, encode quantities."
-msgstr "如果沒有保留數量，則無法驗證調撥。若要強制調撥，請對有關數量進行編碼。"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-msgid ""
 "You can’t validate an empty transfer. Please add some products to move "
 "before proceeding."
 msgstr "您無法驗證空的調撥。請在繼續之前,加入一些要調撥的產品。"
@@ -10778,20 +10862,17 @@ msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "您需要提供產品 %s 的批號/序號."
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "You should update this document to reflect your T&amp;C."
+msgstr "您應該更新此文件以反映您的 T&amp;C."
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
 msgstr "倉庫仍有 %(operations)s 類型的操作正在進行。相關倉庫：%(warehouse)s"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/product.py:0
-msgid ""
-"You still have some active reordering rules on this product. Please archive "
-"or delete them first."
-msgstr "您對此產品仍然有一些有效的重訂貨規則. 請先封存歸檔或刪除它們."
 
 #. module: stock
 #. odoo-javascript
@@ -10811,6 +10892,15 @@ msgstr ""
 "您將在此處找到基於庫存預測的智能補貨建議.\n"
 "            選擇要購買或製造的數量，然後點選下單.\n"
 "            如要在將來節省時間，請將規則設定為“自動”."
+
+#. module: stock
+#: model_terms:res.company,lunch_notify_message:stock.res_company_1
+msgid ""
+"Your lunch has been delivered.\n"
+"Enjoy your meal!"
+msgstr ""
+"您的午餐已送達.\n"
+"請享用您的午餐!"
 
 #. module: stock
 #. odoo-python
@@ -11076,6 +11166,7 @@ msgstr "來自位置"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "id"
 msgstr "id"
