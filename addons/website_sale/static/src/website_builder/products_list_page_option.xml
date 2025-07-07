@@ -6,17 +6,15 @@
     <div class="d-none o_wsale_products_list_page_options"/>
 
     <BuilderRow label.translate="Content Width">
-        <BuilderButtonGroup action="'websiteConfig'">
+        <BuilderButtonGroup action="'previewableWebsiteConfig'">
             <BuilderButton
                     title.translate="Regular"
-                    classAction="'container'"
-                    actionParam="{views: []}"
+                    actionParam="{views: [], previewClass: 'container'}"
                     iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
             />
             <BuilderButton
                     title.translate="Full"
-                    classAction="'container-fluid o_wsale_page_fluid'"
-                    actionParam="{views: ['website_sale.shop_fullwidth']}"
+                    actionParam="{views: ['website_sale.shop_fullwidth'], previewClass: 'container-fluid o_wsale_page_fluid'}"
                     iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
             />
         </BuilderButtonGroup>
@@ -115,27 +113,25 @@
     </BuilderRow>
 
     <BuilderRow label.translate="Images Size" level="1">
-        <BuilderSelect action="'websiteConfig'">
-            <BuilderSelectItem classAction="'o_wsale_context_thumb_4_3'" actionParam="{views: ['website_sale.products_thumb_4_3']}">Landscape (4/3)</BuilderSelectItem>
-            <BuilderSelectItem classAction="''" actionParam="{views: []}">Default (1/1)</BuilderSelectItem>
-            <BuilderSelectItem classAction="'o_wsale_context_thumb_4_5'" actionParam="{views: ['website_sale.products_thumb_4_5']}">Portrait (4/5)</BuilderSelectItem>
-            <BuilderSelectItem classAction="'o_wsale_context_thumb_2_3'" actionParam="{views: ['website_sale.products_thumb_2_3']}">Vertical (2/3)</BuilderSelectItem>
+        <BuilderSelect action="'previewableWebsiteConfig'">
+            <BuilderSelectItem actionParam="{views: ['website_sale.products_thumb_4_3'], previewClass: 'o_wsale_context_thumb_4_3'}">Landscape (4/3)</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{views: [], previewClass: ''}">Default (1/1)</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{views: ['website_sale.products_thumb_4_5'], previewClass: 'o_wsale_context_thumb_4_5'}">Portrait (4/5)</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{views: ['website_sale.products_thumb_2_3'], previewClass: 'o_wsale_context_thumb_2_3'}">Vertical (2/3)</BuilderSelectItem>
         </BuilderSelect>
 
         <t t-set-slot="collapse">
             <BuilderRow label.translate="Images Fill" level="2">
-                <BuilderButtonGroup action="'websiteConfig'">
+                <BuilderButtonGroup action="'previewableWebsiteConfig'">
                     <BuilderButton
                             title.translate="Contain within the box"
-                            classAction="''"
-                            actionParam="{views: []}"
+                            actionParam="{views: [], previewClass: ''}"
                             iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
                     />
                     <BuilderButton
                             title.translate="Always Fill the box"
                             id="'thumb_cover'"
-                            classAction="'o_wsale_context_thumb_cover'"
-                            actionParam="{views: ['website_sale.products_thumb_cover']}"
+                            actionParam="{views: ['website_sale.products_thumb_cover'], previewClass: 'o_wsale_context_thumb_cover'}"
                             iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
                     />
                 </BuilderButtonGroup>

@@ -32,6 +32,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "setPendingThemeRequests",
         "isPluginDestroyed",
         "reloadBundles",
+        "setViewsOnSave",
     ];
 
     resources = {
@@ -44,6 +45,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             RemoveFontAction,
             CustomizeButtonStyleAction,
             WebsiteConfigAction,
+            PreviewableWebsiteConfigAction,
             SelectTemplateAction,
         },
         color_combination_getters: withSequence(5, (el, actionParam) => {
@@ -53,11 +55,24 @@ export class CustomizeWebsitePlugin extends Plugin {
                 return `o_cc${getCSSVariableValue(combination, style)}`;
             }
         }),
+        save_handlers: this.onSave.bind(this),
     };
 
+    async onSave() {
+        if (this.viewsToEnableOnSave.size || this.viewsToDisableOnSave.size) {
+            await rpc("/website/theme_customize_data", {
+                is_view_data: true,
+                enable: [...this.viewsToEnableOnSave],
+                disable: [...this.viewsToDisableOnSave],
+                reset_view_arch: false,
+            });
+        }
+    }
     cache = {};
     activeRecords = {};
     activeTemplateViews = {};
+    viewsToEnableOnSave = new Set();
+    viewsToDisableOnSave = new Set();
     pendingViewRequests = new Set();
     pendingAssetRequests = new Set();
     /**
@@ -338,6 +353,26 @@ export class CustomizeWebsitePlugin extends Plugin {
         value.then((resolvedValue) => {
             this.activeRecords[record] = resolvedValue;
         });
+    }
+    setViewsOnSave(views, to_enable) {
+        const initialViewsToEnableOnSave = new Set(this.viewsToEnableOnSave);
+        const initialViewsToDisableOnSave = new Set(this.viewsToDisableOnSave);
+        for (let view of views) {
+            const toEnable = view.startsWith("!") ? !to_enable : to_enable;
+            view = view.startsWith("!") ? view.substring(1) : view;
+            if (toEnable) {
+                this.viewsToEnableOnSave.add(view);
+                this.viewsToDisableOnSave.delete(view);
+            } else {
+                this.viewsToDisableOnSave.add(view);
+                this.viewsToEnableOnSave.delete(view);
+            }
+        }
+        return () => {
+            // "Undo" callback
+            this.viewsToEnableOnSave = initialViewsToEnableOnSave;
+            this.viewsToDisableOnSave = initialViewsToDisableOnSave;
+        };
     }
     isPluginDestroyed() {
         return this.isDestroyed;
@@ -680,6 +715,60 @@ export class WebsiteConfigAction extends BuilderAction {
             }
         }, 0);
         return def;
+    }
+}
+
+export class PreviewableWebsiteConfigAction extends BuilderAction {
+    static id = "previewableWebsiteConfig";
+    static dependencies = ["customizeWebsite", "history"];
+    getPriority({ params }) {
+        return (params.previewClass || "")?.trim().split(/\s+/).filter(Boolean).length || 0;
+    }
+    isApplied({ editingElement: el, params }) {
+        if (params.previewClass === undefined || params.previewClass === "") {
+            return true;
+        }
+        return params.previewClass.split(/\s+/).every((cls) => el.classList.contains(cls));
+    }
+    apply({ editingElement: el, isPreviewing, params }) {
+        if (params.previewClass) {
+            params.previewClass.split(/\s+/).forEach((cls) => el.classList.add(cls));
+        }
+        if (!isPreviewing) {
+            const viewsToApply = params["views"] || [];
+            let undoApplyCallback;
+            this.dependencies.history.applyCustomMutation({
+                apply: () => {
+                    undoApplyCallback = this.dependencies.customizeWebsite.setViewsOnSave(
+                        viewsToApply,
+                        true
+                    );
+                },
+                revert: () => {
+                    undoApplyCallback();
+                },
+            });
+        }
+    }
+    clean({ editingElement: el, isPreviewing, params }) {
+        if (params.previewClass) {
+            params.previewClass.split(/\s+/).forEach((cls) => el.classList.remove(cls));
+        }
+        if (!isPreviewing) {
+            const viewsToClean = params["views"] || [];
+            let undoCleanCallback;
+            this.dependencies.history.applyCustomMutation({
+                apply: () => {
+                    undoCleanCallback = this.dependencies.customizeWebsite.setViewsOnSave(
+                        viewsToClean,
+                        false
+                    );
+                },
+                revert: () => {
+                    undoCleanCallback();
+                },
+            });
+        }
     }
 }
 

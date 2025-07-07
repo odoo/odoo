@@ -50,14 +50,14 @@
 
 <t t-name="website.FooterWidthOption">
     <BuilderRow label.translate="Content width">
-        <BuilderButtonGroup action="'websiteConfig'">
-            <BuilderButton classAction="'o_container_small'" actionParam="{ views: ['website.footer_copyright_content_width_small'] }">
+        <BuilderButtonGroup action="'previewableWebsiteConfig'">
+            <BuilderButton actionParam="{ views: ['website.footer_copyright_content_width_small'], previewClass: 'o_container_small'}">
                 <Img src="'/website/static/src/img/snippets_options/content_width_small.svg'"/>
             </BuilderButton>
-            <BuilderButton classAction="'container'" actionParam="{ views: [] }">
+            <BuilderButton actionParam="{ views: [], previewClass: 'container'}">
                 <Img src="'/website/static/src/img/snippets_options/content_width_normal.svg'"/>
             </BuilderButton>
-            <BuilderButton classAction="'container-fluid'" actionParam="{ views: ['website.footer_copyright_content_width_fluid'] }">
+            <BuilderButton actionParam="{ views: ['website.footer_copyright_content_width_fluid'], previewClass: 'container-fluid'}">
                 <Img src="'/website/static/src/img/snippets_options/content_width_full.svg'"/>
             </BuilderButton>
         </BuilderButtonGroup>
