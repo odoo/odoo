@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:38+0000\n"
+"POT-Creation-Date: 2025-07-04 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -19,22 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"Pemindahan (%(move)s) tidak seimbang.\n"
-"Total debit sesuai %(debit_total)s dan total kredit sesuai %(credit_total)s.\n"
-"Anda mungkin ingin menentukan akun default pada jurnal \"%(journal)s\" untuk secara otomatis menyeimbangkan setiap pemindahan."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -253,7 +237,6 @@ msgstr "%s (Salinan)"
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_payment_term.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
-#: code:addons/account/models/account_report.py:0
 msgid "%s (copy)"
 msgstr "%s (salin)"
 
@@ -368,11 +351,6 @@ msgstr ""
 "    <br/>\n"
 "    --\n"
 "    <br/>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid ". Please make sure that this is a wanted behavior."
-msgstr ". Harap pastikan bahwa ini adalah perilaku yang diinginkan."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -626,6 +604,13 @@ msgid ""
 msgstr ""
 "<b>%(count)s#</b> Cicilan sebesar <b>%(amount)s</b> jatuh tempo pada <b "
 "style='color: #704A66;'>%(date)s</b>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid ""
+"<br/>\n"
+"                        <span>Please make sure that this is a wanted behavior.</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1328,6 +1313,13 @@ msgid "<span>New</span>"
 msgstr "<span>Baru</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid ""
+"<span>One or more Bank Accounts set on this partner are also used by "
+"others:</span>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Operations</span>"
 msgstr "<span>Kegiatan</span>"
@@ -1358,6 +1350,11 @@ msgstr "<span>Pajak 0%</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Taxes</span>"
 msgstr "<span>Pajak</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
+msgid "<span>The Bank Account could be a duplicate of</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3187,12 +3184,6 @@ msgstr ""
 "                utama: neraca dan laporan laba rugi (akun laba rugi). Akun tahunan\n"
 "                perusahaan diwajibkan oleh hukum untuk melaporkan sejumlah\n"
 "                informasi tertentu."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "Telah terjadi kesalahan."
 
 #. module: account
 #. odoo-python
@@ -7106,6 +7097,14 @@ msgstr "Batas Waktu"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Due Terms"
 msgstr "Due Terms"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_users__duplicate_bank_partner_ids
+msgid "Duplicate Bank Partner"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicate_payment_ids
@@ -11687,13 +11686,6 @@ msgid "Once your invoice is ready, confirm it."
 msgstr "Setelah faktur Anda siap, konfirmasi."
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid "One or more Bank Accounts set on this partner are also used by other"
-msgstr ""
-"Satu atau lebih Akun Bank yang ditetapkan pada mitra ini sudah digunakan "
-"oleh "
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "One or more invoices couldn't be processed."
@@ -12270,7 +12262,6 @@ msgstr "Partner seharusnya memiliki alamat email."
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_report__filter_partner
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Partners"
 msgstr "Rekanan"
 
@@ -12284,6 +12275,12 @@ msgstr "Partner Kekurangan akun bank"
 #: code:addons/account/models/partner.py:0
 msgid "Partners that are used in hashed entries cannot be merged."
 msgstr "Partner yang digunakan di entri hash tidak dapat digabungkan."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "Partners with same bank"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -13991,6 +13988,11 @@ msgstr "Scan kode QR<br/>atau klik untuk membayar online"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
 msgid "Scan this QR Code with<br/>your banking application"
 msgstr "Scan Kode QR ini dengan<br/>aplikasi bank Anda"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__search_account_id
+msgid "Search Account"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -15903,6 +15905,12 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "Entri %(name)s (id %(id)s) harus dalam draft."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is not balanced."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -15968,6 +15976,14 @@ msgid ""
 msgstr ""
 "Akun-akun berikut harus ditugaskan ke setidaknya satu perusahaan:\n"
 "%(accounts)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
+msgstr ""
 
 #. module: account
 #. odoo-python

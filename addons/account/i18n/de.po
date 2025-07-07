@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:38+0000\n"
+"POT-Creation-Date: 2025-07-04 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -19,21 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"\n"
-"\n"
-"The move (%(move)s) is not balanced.\n"
-"The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
-"You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
-msgstr ""
-"\n"
-"\n"
-"Die Buchungszeile (%(move)s) ist nicht ausgeglichen. Die Summe der Belastungen liegt bei %(debit_total)s und die Summe der Gutschriften liegt bei %(credit_total)s. \n"
-"Sie können ein Standardkonto im Journal „%(journal)s“ angeben, um jede Buchungszeile automatisch auszugleichen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -251,7 +236,6 @@ msgstr "%s (Kopie)"
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_payment_term.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
-#: code:addons/account/models/account_report.py:0
 msgid "%s (copy)"
 msgstr "%s (Kopie)"
 
@@ -367,11 +351,6 @@ msgstr ""
 "    <br/>\n"
 "    --\n"
 "    <br/>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid ". Please make sure that this is a wanted behavior."
-msgstr ". Bitte stellen Sie sicher, dass dieses Verhalten erwünscht ist."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -625,6 +604,15 @@ msgid ""
 msgstr ""
 "<b>%(count)s#</b> Teilzahlung von <b>%(amount)s</b> fällig am <b "
 "style='color: #704A66;'>%(date)s</b>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid ""
+"<br/>\n"
+"                        <span>Please make sure that this is a wanted behavior.</span>"
+msgstr ""
+"<br/>\n"
+"                        <span>Stellen Sie sicher, dass diese gewollt ist.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1329,6 +1317,15 @@ msgid "<span>New</span>"
 msgstr "<span>Neu</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid ""
+"<span>One or more Bank Accounts set on this partner are also used by "
+"others:</span>"
+msgstr ""
+"<span>Ein oder mehrere Bankkonten, die auf diesem Partner eingestellt sind, "
+"werden auch von anderen genutzt:</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Operations</span>"
 msgstr "<span>Geschäftsvorfälle</span>"
@@ -1359,6 +1356,11 @@ msgstr "<span>Steuer 0 %</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Taxes</span>"
 msgstr "<span>Steuern</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
+msgid "<span>The Bank Account could be a duplicate of</span>"
+msgstr "<span>Das Bankkonto könnte ein Duplikat sein von</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3203,12 +3205,6 @@ msgid ""
 msgstr ""
 "Ein Konto ist ein Teil der Finanzbücher, der es einem Unternehmen möglich macht, alle Arten der Soll- und Habenstellungen festzuhalten.\n"
 "Unternehmen stellen Ihre Hauptkonten oder das Hauptbuch in zwei Teilen dar: der Bilanz und der Erfolgsrechnung (Gewinn und Verlustrechnung). Das Hauptbuch eines Unternehmens ist per Gesetz erforderlich, um einen Grundlage an Information aufzunehmen."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "An error has occurred."
-msgstr "Es ist ein Fehler aufgetreten."
 
 #. module: account
 #. odoo-python
@@ -7149,6 +7145,14 @@ msgstr "Fälligkeitsdatum"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Due Terms"
 msgstr "Fälligkeitsfristen"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_users__duplicate_bank_partner_ids
+msgid "Duplicate Bank Partner"
+msgstr "Bankpartner duplizieren"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicate_payment_ids
@@ -11755,13 +11759,6 @@ msgid "Once your invoice is ready, confirm it."
 msgstr "Sobald Ihre Rechnung bereit ist, bestätigen Sie sie."
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid "One or more Bank Accounts set on this partner are also used by other"
-msgstr ""
-"Ein oder mehrere Bankkonten, die auf diesem Partner eingestellt sind, werden"
-" auch genutzt von anderen"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "One or more invoices couldn't be processed."
@@ -12344,7 +12341,6 @@ msgstr "Partner sollten eine E-Mail-Adresse haben."
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_report__filter_partner
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Partners"
 msgstr "Partner"
 
@@ -12360,6 +12356,12 @@ msgid "Partners that are used in hashed entries cannot be merged."
 msgstr ""
 "Partner, die in Hash-Einträgen verwendet werden, können nicht "
 "zusammengeführt werden."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "Partners with same bank"
+msgstr "Partner mit derselben Bank"
 
 #. module: account
 #. odoo-python
@@ -14082,6 +14084,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
 msgid "Scan this QR Code with<br/>your banking application"
 msgstr "Scannen Sie diesen QR-Code mit<br/>Ihrer Banking-App"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__search_account_id
+msgid "Search Account"
+msgstr "Konto suchen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -16023,6 +16030,12 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "Der Posten %(name)s (Id %(id)s) muss im Entwurf sein."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is not balanced."
+msgstr "Die Buchung ist nicht ausgeglichen."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -16090,6 +16103,16 @@ msgid ""
 msgstr ""
 "Die folgenden Konten müssen mindestens einem Unternehmen zugewiesen sein:\n"
 "%(accounts)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The following entries are unbalanced:\n"
+"\n"
+msgstr ""
+"Die folgenden Buchungen sind nicht ausgeglichen:\n"
+"\n"
 
 #. module: account
 #. odoo-python
