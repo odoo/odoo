@@ -11,6 +11,7 @@ export const imageShapeDefinitions = {
                     // hovering an image without shape.
                     "html_builder/geometric/geo_square": {
                         transform: false,
+                        isTechnical: true,
                     },
                     "html_builder/geometric/geo_shuriken": {
                         selectLabel: _t("Shuriken"),

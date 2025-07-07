@@ -34,6 +34,7 @@ export class ImageShapeOptionPlugin extends Plugin {
     static shared = [
         "getImageShapeGroups",
         "isTransformableShape",
+        "isTechnicalShape",
         "isAnimableShape",
         "isTogglableRatioShape",
         "getShapeLabel",
@@ -337,6 +338,12 @@ export class ImageShapeOptionPlugin extends Plugin {
         }
         const canTransform = this.imageShapes[shapeId].transform;
         return typeof canTransform === "undefined" ? true : canTransform;
+    }
+    isTechnicalShape(shapeId) {
+        if (!shapeId) {
+            return false;
+        }
+        return this.imageShapes[shapeId].isTechnical;
     }
     getShapeLabel(shapeId) {
         if (!shapeId) {
