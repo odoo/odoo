@@ -1,8 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
-    <t t-name="account.sectionAndNoteListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+    <t t-name="account.SectionAndNoteListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
         <xpath expr="//table" position="attributes">
             <attribute name="class" add="o_section_and_note_list_view" separator=" "/>
+        </xpath>
+    </t>
+    <t t-name="account.SectionAndNoteListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow">
+        <xpath expr="//td[hasclass('o_list_record_remove')]" position="attributes">
+            <attribute name="t-if">!isSection(record) or props.list.count gt props.list.limit</attribute>
+        </xpath>
+        <xpath expr="//td[hasclass('o_list_record_remove')]" position="after">
+            <td t-else="" class="o_list_section_options w-print-0 p-print-0 text-center">
+                <Dropdown position="'bottom-end'" t-if="!props.readonly">
+                    <button class="btn px-1">
+                        <i class="fa fa-ellipsis-v"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <DropdownItem onSelected="() => this.addRowInSection(record, false)">
+                            <i class="me-1 fa fa-fw fa-plus"/><span>Add a product</span>
+                        </DropdownItem>
+                        <t t-if="this.isTopSection(record)">
+                            <DropdownItem onSelected="() => this.addRowAfterSection(record, false)">
+                                <i class="me-1 fa fa-fw fa-level-down"/><span>Add a section</span>
+                            </DropdownItem>
+                            <t t-if="this.canAddSubSection()">
+                                <DropdownItem onSelected="() => this.addRowInSection(record, true)">
+                                    <i class="me-1 fa fa-fw fa-level-down"/><span>Add a subsection</span>
+                                </DropdownItem>
+                            </t>
+                        </t>
+                        <t t-elif="this.canAddSubSection()">
+                            <DropdownItem onSelected="() => this.addRowAfterSection(record, true)">
+                                <i class="me-1 fa fa-fw fa-level-down"/><span>Add a subsection</span>
+                            </DropdownItem>
+                        </t>
+                        <DropdownItem onSelected="() => this.addNoteInSection(record)">
+                            <i class="me-1 fa fa-fw fa-sticky-note-o"/><span>Add a note</span>
+                        </DropdownItem>
+                        <DropdownItem t-if="this.hasPreviousSection(record)" onSelected="() => this.moveSectionUp(record)">
+                            <i class="me-1 fa fa-fw fa-arrow-up"/><span>Move Up</span>
+                        </DropdownItem>
+                        <DropdownItem t-if="this.hasNextSection(record)" onSelected="() => this.moveSectionDown(record)">
+                            <i class="me-1 fa fa-fw fa-arrow-down"/><span>Move Down</span>
+                        </DropdownItem>
+                        <DropdownItem onSelected="() => this.duplicateSection(record)">
+                            <i class="me-1 fa fa-fw fa-clone"/><span>Duplicate</span>
+                        </DropdownItem>
+                        <t t-if="hasDeleteButton">
+                            <DropdownItem class="'text-danger'" onSelected="() => this.deleteSection(record)">
+                                <i class="me-1 fa fa-fw fa-trash"/><span>Delete</span>
+                            </DropdownItem>
+                        </t>
+                    </t>
+                </Dropdown>
+            </td>
         </xpath>
     </t>
 
