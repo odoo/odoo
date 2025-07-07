@@ -51,7 +51,7 @@ _ref_vat = {
     'in': "12AAAAA1234AAZA",
     'is': 'IS062199',
     'it': 'IT12345670017',
-    'jp': 'T1010401114875',
+    'jp': 'T7000012050002',
     'kr': '123-45-67890 or 1234567890',
     'lt': 'LT123456715',
     'lu': 'LU12345613',
@@ -79,7 +79,6 @@ _ref_vat = {
     've': 'V-12345678-1, V123456781, V-12.345.678-1',
     'xi': 'XI123456782',
     'sa': _lt('310175397400003 [Fifteen digits, first and last digits should be "3"]'),
-    'jp': 'T7000012050002',
 }
 
 
@@ -677,7 +676,7 @@ class ResPartner(models.Model):
 
         # VAT could be 15 (old numbers) or 16 digits. If there are 15 digits long, the 10th digit is a luhn checksum
         # In some cases, the 15 digits can be transformed in a 16-digit by adding a 0 in front. In such case, we
-        # we can verify the luhn checksum like for the 15 digits by removing the 0. 
+        # we can verify the luhn checksum like for the 15 digits by removing the 0.
         # However, for newly created VAT 16-digits VAT number, there is no checksum.
         if (len(vat) == 16 and vat[0] != '0'):
             return True
