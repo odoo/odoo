@@ -23,6 +23,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "remove first item in whishlist",
             trigger: '.o_wish_rm:first',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "hover card && click on add to wishlist",
@@ -36,6 +37,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "check value of wishlist and go to login",
             trigger: 'a[href="/web/login"]',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "submit login",
@@ -46,6 +48,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
                 document.querySelector('.oe_login_form input[name="redirect"]').value = "/shop?search=Customizable Desk";
                 document.querySelector(".oe_login_form").submit();
             },
+            expectUnloadPage: true,
         },
         {
             content: "check that logged in",
@@ -84,6 +87,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "check that wishlist contains 2 items and go to wishlist",
             trigger: 'a[href="/shop/wishlist"]',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "remove Customizable Desk (TEST)",
@@ -123,7 +127,12 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             trigger: '.o_wish_add:eq(1)',
             run: "click",
         },
-        clickOnElement('Continue Shopping', 'button:contains("Continue Shopping")'),
+        {
+            content: "Clicking on the Continue Shopping",
+            trigger: "button:contains(\"Continue Shopping\")",
+            run: "click",
+            expectUnloadPage: true,
+        },
         {
             content: "check that user is redirect - wishlist is empty",
             trigger: "#wrap #cart_products",
@@ -263,6 +272,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
                 document.querySelector('.oe_login_form input[name="redirect"]').value = "/";
                 document.querySelector(".oe_login_form").submit();
             },
+            expectUnloadPage: true,
         },
         // Test one impossible combination while other combinations are possible
         {
@@ -338,6 +348,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
                 document.querySelector('.oe_login_form input[name="redirect"]').value = "/";
                 document.querySelector(".oe_login_form").submit();
             },
+            expectUnloadPage: true,
         },
         // test when all combinations are impossible
         {
@@ -394,6 +405,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Click on the product",
             trigger: '.oe_product_image_link img',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "Add the product in the wishlist",
@@ -408,6 +420,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Go to '/shop",
             trigger: 'header#top a[href="/shop"]',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "Search the product Customizable Desk'",
@@ -418,20 +431,23 @@ registry.category("web_tour.tours").add('shop_wishlist', {
                 ).value = "Customizable Desk";
                 document.querySelector("form.o_wsale_products_searchbar_form button").click();
             },
+            expectUnloadPage: true,
         },
         {
             content: "The product is in the wishlist",
-            trigger: '.oe_product_cart .o_wsale_product_information:has(.o_add_wishlist[disabled])',
+            trigger: '.oe_product_cart .o_wsale_product_btn:has(.o_add_wishlist[disabled]):not(:visible)',
         },
         {
             content: "Go to the wishlist",
             trigger: 'a[href="/shop/wishlist"]',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "Remove the product from the wishlist",
             trigger: '.o_wish_rm',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "Search the product Customizable Desk'",
@@ -442,10 +458,11 @@ registry.category("web_tour.tours").add('shop_wishlist', {
                 ).value = "Customizable Desk";
                 document.querySelector("form.o_wsale_products_searchbar_form button").click();
             },
+            expectUnloadPage: true,
         },
         {
             content: "The product is not in the wishlist",
-            trigger: '.oe_product_cart .o_wsale_product_information:not(:has(.o_add_wishlist[disabled]))',
+            trigger: '.oe_product_cart .o_wsale_product_btn:not(:has(.o_add_wishlist[disabled])):not(:visible)',
         },
     ]
 });
