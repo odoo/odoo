@@ -5,7 +5,6 @@ import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { RPCError } from "@web/core/network/rpc";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { Cache } from "@web/core/utils/cache";
 import {
     useBus,
     useChildRef,
@@ -41,6 +40,7 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 import {
     Component,
     onWillUpdateProps,
+    status,
     useComponent,
     useEffect,
     useEnv,
@@ -151,17 +151,27 @@ export function useActiveActions({
 export function useSpecialData(loadFn) {
     const component = useComponent();
     const record = component.props.record;
-    const key = `${record.resModel}-${component.props.name}`;
     const { specialDataCaches } = record.model;
     const orm = component.env.services.orm;
     const ormWithCache = Object.create(orm);
-    if (!specialDataCaches[key]) {
-        specialDataCaches[key] = new Cache(
-            (...args) => orm.call(...args),
-            (...path) => JSON.stringify(path)
-        );
-    }
-    ormWithCache.call = (...args) => specialDataCaches[key].read(...args);
+    ormWithCache.call = async (...args) => {
+        const key = JSON.stringify(args);
+        if (!specialDataCaches[key]) {
+            return await orm
+                .cached({
+                    onFinish: (hasChanged, res) => {
+                        specialDataCaches[key] = Promise.resolve(res);
+                        if (status(component) !== "destroyed" && hasChanged) {
+                            loadFn(ormWithCache, component.props).then((res) => {
+                                result.data = res;
+                            });
+                        }
+                    },
+                })
+                .call(...args);
+        }
+        return specialDataCaches[key];
+    };
 
     /** @type {{ data: Record<string, T> }} */
     const result = useState({ data: {} });
