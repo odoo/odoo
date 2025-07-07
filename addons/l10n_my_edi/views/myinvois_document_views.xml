@@ -38,14 +38,11 @@
                                 <field name="myinvois_submission_uid"/>
                                 <field name="myinvois_external_uuid"/>
                                 <field name="myinvois_validation_time"/>
-                                <field name="company_id" invisible="1"/>
-                                <field name="invoice_ids" invisible="1"/>
                                 <field name="myinvois_exemption_reason" invisible="not myinvois_exemption_reason" readonly="invoice_ids"/>
                                 <field name="myinvois_custom_form_reference" invisible="not myinvois_custom_form_reference" readonly="invoice_ids"/>
                             </group>
                         </group>
                     </sheet>
-                    <!-- Chatter -->
                     <chatter/>
                 </form>
             </field>
@@ -55,7 +52,7 @@
             <field name="name">myinvois.document.list.view</field>
             <field name="model">myinvois.document</field>
             <field name="arch" type="xml">
-                <list string="MyInvois Documents" create="false" sample="1">
+                <list string="MyInvois Documents" create="false" sample="1" decoration-muted="myinvois_state == 'cancelled'">
                     <header>
                         <button name="action_submit_to_myinvois" string="Submit To MyInvois" type="object" class="btn-primary"/>
                         <button name="action_update_submission_status" string="Fetch Status From MyInvois" type="object"/>
@@ -69,8 +66,8 @@
 
         <record id="action_generate_myinvois_document_file" model="ir.actions.server">
             <field name="name">Generate Document File</field>
-            <field name="model_id" ref="l10n_my_edi_pos.model_myinvois_document"/>
-            <field name="binding_model_id" ref="l10n_my_edi_pos.model_myinvois_document"/>
+            <field name="model_id" ref="l10n_my_edi.model_myinvois_document"/>
+            <field name="binding_model_id" ref="l10n_my_edi.model_myinvois_document"/>
             <field name="binding_view_types">form</field>
             <field name="state">code</field>
             <field name="code">action = records.action_generate_xml_file()</field>
