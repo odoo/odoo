@@ -281,13 +281,10 @@ class AccountMoveLine(models.Model):
         if self.product_uom_id.is_zero(self.quantity):
             return self.price_unit
 
-        if self.discount != 100:
-            if not any(t.price_include for t in self.tax_ids) and self.discount:
-                price_unit = self.price_unit * (1 - self.discount / 100)
-            else:
-                price_unit = self.price_subtotal / self.quantity
+        if not any(t.price_include for t in self.tax_ids) and self.discount:
+            price_unit = self.price_unit * (1 - self.discount / 100)
         else:
-            price_unit = self.price_unit
+            price_unit = self.price_subtotal / self.quantity
 
         return -price_unit if self.move_id.move_type == 'in_refund' else price_unit
 
