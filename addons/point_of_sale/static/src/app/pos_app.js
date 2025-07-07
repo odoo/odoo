@@ -75,6 +75,6 @@ export class Chrome extends Component {
 
     // GETTERS //
     get showCashMoveButton() {
-        return Boolean(this.pos.config.cash_control);
+        return Boolean(this.pos.config.cash_control && this.session._has_cash_move_perm);
     }
 }
