@@ -104,6 +104,7 @@ class AccountAccount(models.Model):
         context={'append_type_to_tax_name': True})
     note = fields.Text('Internal Notes', tracking=True)
     company_ids = fields.Many2many('res.company', string='Companies', required=True, readonly=False,
+        depends_context=('uid',),  # To avoid cache pollution between sudo / non-sudo uses of the field
         default=lambda self: self.env.company)
     code_mapping_ids = fields.One2many(comodel_name='account.code.mapping', inverse_name='account_id')
     # Ensure `code_mapping_ids` is written before `company_ids` so we don't trigger the `_ensure_code_is_unique`
@@ -1035,6 +1036,10 @@ class AccountAccount(models.Model):
         res = super(AccountAccount, self.with_context(defer_account_code_checks=True)).write(vals)
 
         if not self.env.context.get('defer_account_code_checks') and {'company_ids', 'code', 'code_mapping_ids'} & vals.keys():
+            if 'company_ids' in vals:
+                # Because writing on the field without sudo won't update the sudo cache (and vice versa)
+                # we need to invalidate so that the sudo cache is up-to-date
+                self.invalidate_recordset(fnames=['company_ids'])
             self._ensure_code_is_unique()
 
         return res
