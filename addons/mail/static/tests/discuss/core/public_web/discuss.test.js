@@ -10,7 +10,7 @@ import {
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
 import { EventBus } from "@odoo/owl";
-import { Command, patchWithCleanup, withUser } from "@web/../tests/web_test_helpers";
+import { Command, patchWithCleanup, withUser, mockService } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
 import { rpc } from "@web/core/network/rpc";
@@ -113,6 +113,7 @@ test("notify message to user as non member", async () => {
             addEventListener() {}
         },
     });
+    mockService("multi_tab", { isOnMainTab: () => true });
     const pyEnv = await startServer();
     const johnUser = pyEnv["res.users"].create({ name: "John" });
     const johnPartner = pyEnv["res.partner"].create({ name: "John", user_ids: [johnUser] });

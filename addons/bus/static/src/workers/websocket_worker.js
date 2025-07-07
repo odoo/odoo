@@ -1,4 +1,4 @@
-import { debounce, Deferred, Logger } from "@bus/workers/websocket_worker_utils";
+import { debounce, Deferred, Logger } from "@bus/workers/bus_worker_utils";
 
 /**
  * Type of events that can be sent from the worker to its clients.
@@ -117,9 +117,9 @@ export class WebsocketWorker {
      * @param {MessagePort} messagePort
      */
     registerClient(messagePort) {
-        messagePort.onmessage = (ev) => {
+        messagePort.addEventListener("message", (ev) => {
             this._onClientMessage(messagePort, ev.data);
-        };
+        });
         this.channelsByClient.set(messagePort, []);
     }
 

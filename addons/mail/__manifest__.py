@@ -229,8 +229,8 @@ For more specific needs, you may also assign custom-defined actions
 
             'bus/static/src/*.js',
             'bus/static/src/services/**/*.js',
-            'bus/static/src/workers/websocket_worker.js',
-            'bus/static/src/workers/websocket_worker_utils.js',
+            'bus/static/src/workers/*.js',
+            ('remove', 'bus/static/src/workers/bus_worker_script.js'),
 
             'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',

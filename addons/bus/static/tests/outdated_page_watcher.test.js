@@ -27,8 +27,9 @@ test("disconnect during vacuum should ask for reload", async () => {
     );
     onRpc("/bus/has_missed_notifications", () => true);
     await mountWithCleanup(WebClient);
-    getService("multi_tab").setSharedValue("last_notification_id", 1);
+    getService("legacy_multi_tab").setSharedValue("last_notification_id", 1);
     startBusService();
+    expect(await getService("multi_tab").isOnMainTab()).toBe(true);
     await runAllTimers();
     await waitForSteps(["BUS:CONNECT"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
@@ -50,8 +51,9 @@ test("reconnect after going offline after bus gc should ask for reload", async (
     );
     onRpc("/bus/has_missed_notifications", () => true);
     await mountWithCleanup(WebClient);
-    getService("multi_tab").setSharedValue("last_notification_id", 1);
+    getService("legacy_multi_tab").setSharedValue("last_notification_id", 1);
     startBusService();
+    expect(await getService("multi_tab").isOnMainTab()).toBe(true);
     await runAllTimers();
     await waitForSteps(["BUS:CONNECT"]);
     browser.dispatchEvent(new Event("offline"));
