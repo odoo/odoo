@@ -88,7 +88,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: _get_channels_as_member
     #       - search discuss_channel (member_domain)
     #       - search discuss_channel (pinned_member_domain)
-    #   31: channel _to_store_defaults:
+    #   33: channel _to_store_defaults:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
