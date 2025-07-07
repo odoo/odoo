@@ -370,11 +370,10 @@ export class SetAnimationModeAction extends BuilderAction {
             delete editingElement.dataset.scrollZoneEnd;
         }
         if (effectName === "onHover") {
-            // todo: to implement
-            // this.trigger_up("option_update", {
-            //     optionName: "ImageTools",
-            //     name: "disable_hover_effect",
-            // });
+            delete editingElement.dataset.hoverEffect;
+            delete editingElement.dataset.hoverEffectColor;
+            delete editingElement.dataset.hoverEffectStrokeWidth;
+            delete editingElement.dataset.hoverEffectIntensity;
         }
 
         const isNextAnimationFadein = this.animationWithFadein.includes(nextAction.value);
