@@ -60,7 +60,7 @@ const ThreadPatch = {
                 if (
                     !hadSelfSession || // sound for self-join is played instead
                     !this.hadSelfSession || // sound for self-leave is played instead
-                    !this.store.env.services["multi_tab"].isOnMainTab() // another tab playing sound
+                    !this.store.env.services["main_tab"].isOnMainTab() // another tab playing sound
                 ) {
                     return;
                 }

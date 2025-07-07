@@ -14,7 +14,7 @@ export class DiscussCoreWeb {
         this.notificationService = services.notification;
         this.ui = services.ui;
         this.store = services["mail.store"];
-        this.multiTab = services.multi_tab;
+        this.mainTab = services.main_tab;
     }
 
     setup() {
@@ -27,7 +27,7 @@ export class DiscussCoreWeb {
                 { user: username }
             );
             this.notificationService.add(notification, { type: "info" });
-            if (!this.multiTab.isOnMainTab()) {
+            if (!this.mainTab.isOnMainTab()) {
                 return;
             }
             const chat = await this.store.getChat({ partnerId });
@@ -45,7 +45,7 @@ export class DiscussCoreWeb {
 }
 
 export const discussCoreWeb = {
-    dependencies: ["bus_service", "mail.store", "notification", "ui", "multi_tab"],
+    dependencies: ["bus_service", "mail.store", "notification", "ui", "main_tab"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services

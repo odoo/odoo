@@ -1062,7 +1062,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     * @private
     */
     _checkisOnMainTab: function () {
-        var isOnMainTab = this.call('multi_tab', 'isOnMainTab');
+        var isOnMainTab = this.call('main_tab', 'isOnMainTab');
         var $errorModal = this.$('#MasterTabErrorModal');
         if (isOnMainTab) {
             // Force reload the page when survey is ready to be followed, to force restart long polling

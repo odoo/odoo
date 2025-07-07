@@ -12,8 +12,9 @@ export class OutdatedPageWatcherService {
      * @param {import("@web/env").OdooEnv}
      * @param {Partial<import("services").Services>} services
      */
-    setup(env, { bus_service, multi_tab, notification }) {
+    setup(env, { bus_service, main_tab, multi_tab, notification }) {
         this.notification = notification;
+        this.main_tab = main_tab;
         this.multi_tab = multi_tab;
         this.lastNotificationId = multi_tab.getSharedValue("last_notification_id");
         this.closeNotificationFn;
@@ -44,7 +45,7 @@ export class OutdatedPageWatcherService {
     }
 
     async checkHasMissedNotifications() {
-        if (!this.multi_tab.isOnMainTab() || !this.lastNotificationId) {
+        if (!this.main_tab.isOnMainTab() || !this.lastNotificationId) {
             return;
         }
         const hasMissedNotifications = await rpc(
@@ -79,7 +80,7 @@ export class OutdatedPageWatcherService {
 }
 
 export const outdatedPageWatcherService = {
-    dependencies: ["bus_service", "multi_tab", "notification"],
+    dependencies: ["bus_service", "main_tab", "multi_tab", "notification"],
     start(env, services) {
         return new OutdatedPageWatcherService(env, services);
     },

@@ -23,9 +23,9 @@ export const BACK_ONLINE_RECONNECT_DELAY = 5000;
  *  @emits worker_state_updated
  */
 export const busService = {
-    dependencies: ["bus.parameters", "localization", "multi_tab", "notification"],
+    dependencies: ["bus.parameters", "localization", "main_tab", "multi_tab", "notification"],
 
-    start(env, { multi_tab: multiTab, notification, "bus.parameters": params }) {
+    start(env, { main_tab: mainTab, multi_tab: multiTab, notification, "bus.parameters": params }) {
         const bus = new EventBus();
         const notificationBus = new EventBus();
         const subscribeFnToWrapper = new Map();
@@ -103,7 +103,7 @@ export const busService = {
                     state.workerState = data;
                     break;
                 case "outdated": {
-                    multiTab.unregister();
+                    mainTab.unregister();
                     notification.add(
                         _t(
                             "Save your work and refresh to get the latest updates and avoid potential issues."

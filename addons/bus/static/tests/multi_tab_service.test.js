@@ -13,7 +13,7 @@ describe.current.tags("desktop");
 
 test("multi tab service elects new main on pagehide", async () => {
     const firstTabEnv = await makeMockEnv();
-    expect(firstTabEnv.services.multi_tab.isOnMainTab()).toBe(true);
+    expect(firstTabEnv.services.main_tab.isOnMainTab()).toBe(true);
     // Prevent second tab from receiving pagehide event.
     patchWithCleanup(browser, {
         addEventListener(eventName, callback) {
@@ -24,21 +24,21 @@ test("multi tab service elects new main on pagehide", async () => {
     });
     restoreRegistry(registry);
     const secondTabEnv = await makeMockEnv(null, { makeNew: true });
-    expect(secondTabEnv.services.multi_tab.isOnMainTab()).toBe(false);
-    firstTabEnv.services.multi_tab.bus.addEventListener("no_longer_main_tab", () =>
+    expect(secondTabEnv.services.main_tab.isOnMainTab()).toBe(false);
+    firstTabEnv.services.main_tab.bus.addEventListener("no_longer_main_tab", () =>
         asyncStep("tab1 no_longer_main_tab")
     );
-    secondTabEnv.services.multi_tab.bus.addEventListener("no_longer_main_tab", () =>
+    secondTabEnv.services.main_tab.bus.addEventListener("no_longer_main_tab", () =>
         asyncStep("tab2 no_longer_main_tab")
     );
-    secondTabEnv.services.multi_tab.bus.addEventListener("become_main_tab", () =>
+    secondTabEnv.services.main_tab.bus.addEventListener("become_main_tab", () =>
         asyncStep("tab2 become_main_tab")
     );
     browser.dispatchEvent(new Event("pagehide"));
 
     await waitForSteps(["tab1 no_longer_main_tab", "tab2 become_main_tab"]);
-    expect(firstTabEnv.services.multi_tab.isOnMainTab()).toBe(false);
-    expect(secondTabEnv.services.multi_tab.isOnMainTab()).toBe(true);
+    expect(firstTabEnv.services.main_tab.isOnMainTab()).toBe(false);
+    expect(secondTabEnv.services.main_tab.isOnMainTab()).toBe(true);
 });
 
 test("multi tab allow to share values between tabs", async () => {
