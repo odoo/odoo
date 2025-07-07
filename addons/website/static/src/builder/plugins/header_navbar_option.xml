@@ -139,17 +139,16 @@
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Sub Menus" t-if="!hasSomeViews(['website.template_header_hamburger'])">
-        <BuilderSelect action="'websiteConfig'">
+        <!-- <t t-set="previewSelectorParent" t-value="'header'"/> -->
+        <BuilderSelect action="'previewableWebsiteConfig'">
             <BuilderSelectItem
                 id="header_dropdown_on_click_opt"
                 label.translate="On Click"
-                actionParam="{views: []}"
-                className=""
+                actionParam="{views: [], previewClass: ''}"
             >On Click</BuilderSelectItem>
             <BuilderSelectItem
                 label.translate="On Hover"
-                actionParam="{views: ['website.header_hoverable_dropdown']}"
-                className="'o_hoverable_dropdown'"
+                actionParam="{views: ['website.header_hoverable_dropdown'], previewClass: 'o_hoverable_dropdown'}"
             >On Hover</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>

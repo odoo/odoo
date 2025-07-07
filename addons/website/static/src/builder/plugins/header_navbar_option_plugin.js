@@ -14,7 +14,7 @@ class HeaderNavbarOptionPlugin extends Plugin {
                 },
                 OptionComponent: HeaderNavbarOption,
                 editableOnly: false,
-                selector: "#wrapwrap > header nav.navbar",
+                selector: "#wrapwrap > header",
                 groups: ["website.group_website_designer"],
                 reloadTarget: true,
             },

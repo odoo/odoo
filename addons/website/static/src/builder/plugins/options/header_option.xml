@@ -188,16 +188,16 @@
 
 <t t-name="website.headerContentWidthOption">
     <BuilderRow t-if="!isActiveItem('header_sidebar_opt')" label.translate="Content Width">
-        <BuilderButtonGroup action="'websiteConfig'">
+        <BuilderButtonGroup action="'previewableWebsiteConfig'" applyTo="'#o_main_nav'">
             <BuilderButton title.translate="Small"
                 iconImg="'/website/static/src/img/snippets_options/content_width_small.svg'"
-                actionParam="{ views: ['website.header_width_small'] }"/>
+                actionParam="{ views: ['website.header_width_small'], previewClass: `o_container_small`}"/>
             <BuilderButton title.translate="Regular"
                 iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
-                actionParam="{ views: [] }"/>
+                actionParam="{ views: [], previewClass: `container`}"/>
             <BuilderButton title.translate="Full"
                 iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
-                actionParam="{ views: ['website.header_width_full'] }"/>
+                actionParam="{ views: ['website.header_width_full'], previewClass: `container-fluid`}"/>
         </BuilderButtonGroup>
     </BuilderRow>
 </t>
