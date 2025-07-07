@@ -385,6 +385,9 @@
         <field name="mode">primary</field>
         <field name="priority">100</field>
         <field name="arch" type="xml">
+            <field name="holiday_status_id" position="before">
+                <field name="employee_id" widget="many2one_avatar_employee" readonly="1"/>
+            </field>
             <xpath expr="//header" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -428,9 +431,11 @@
         <field name="mode">primary</field>
         <field name="priority">17</field>
         <field name="arch" type="xml">
+            <xpath expr="//field[@widget='many2one_avatar_employee']" position="attributes"> 
+                <attribute name="readonly">0</attribute>
+            </xpath>
             <field name="holiday_status_id" position="before">
                 <field name="user_id" invisible="1"/> <!-- Used in HolidaysFormViewDialog -->
-                <field name="employee_id" widget="many2one_avatar_employee"/>
             </field>
         </field>
     </record>
