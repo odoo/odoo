@@ -217,7 +217,7 @@ class TestAccountAccount(TestAccountMergeCommon):
         ''' Test the constraint on `account.company_ids`. '''
         # Test that at least one company is required on accounts.
         with self.assertRaises(UserError):
-            self.company_data['default_account_revenue'].company_ids = False
+            self.company_data['default_account_revenue'].sudo().company_ids = False
 
         # Test that unassigning a company from an account fails if there already are journal items
         # for that company and that account.
