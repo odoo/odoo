@@ -1,11 +1,14 @@
+from datetime import timedelta
+
 from odoo.tests import new_test_user, tagged
 from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
-from odoo.fields import Command
+from odoo.addons.im_livechat.tests.test_get_operator import TestGetOperator
+from odoo.fields import Command, Datetime
 
 
 @tagged("-at_install", "post_install")
-class TestImLivechatChannel(TestImLivechatCommon):
+class TestImLivechatChannel(TestImLivechatCommon, TestGetOperator):
     def test_user_cant_join_livechat_channel(self):
         bob_user = new_test_user(self.env, "bob_user", groups="base.group_user")
         with self.assertRaises(AccessError):
@@ -96,3 +99,13 @@ class TestImLivechatChannel(TestImLivechatCommon):
             self.livechat_channel.review_link = "https://"
         self.livechat_channel.review_link = "https://www.odoo.com"
         self.assertEqual(self.livechat_channel.review_link, "https://www.odoo.com")
+
+    def test_ongoing_session_count(self):
+        livechat_channel = self.livechat_channel
+        session_1 = self._create_chat(livechat_channel, livechat_channel.user_ids[0])
+        session_2 = self._create_chat(livechat_channel, livechat_channel.user_ids[0])
+        self.assertEqual(livechat_channel.ongoing_session_count, 2)
+        session_1.livechat_end_dt = Datetime.now() - timedelta(minutes=4)
+        self.assertEqual(livechat_channel.ongoing_session_count, 1)
+        session_2.livechat_end_dt = Datetime.now() - timedelta(minutes=2)
+        self.assertEqual(livechat_channel.ongoing_session_count, 0)
