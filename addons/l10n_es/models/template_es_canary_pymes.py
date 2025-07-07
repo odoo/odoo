@@ -26,4 +26,11 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('es_canary_pymes', 'account.account')
     def _get_es_canary_pymes_account_account(self):
-        return self._parse_csv('es_pymes', 'account.account', module='l10n_es')
+        res = self._parse_csv('es_pymes', 'account.account', module='l10n_es')
+
+        # Voluntarily remove the `tax_ids` since those are defined for the mainland and not the canaries
+        for data in res.values():
+            if 'tax_ids' in data:
+                del data['tax_ids']
+
+        return res
