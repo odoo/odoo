@@ -17,7 +17,8 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
 
     get sectionAndNoteClasses() {
         return {
-            "fw-bold": this.isSection(),
+            "fw-bolder": this.isTopSection(),
+            "fw-bold": this.isSection() && !this.isTopSection(),
             "fst-italic": this.isNote(),
             "text-warning": this.shouldShowWarning(),
         };
@@ -33,6 +34,11 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
     }
 
     isSection(record = null) {
+        record = record || this.props.record;
+        return ["line_section", "line_subsection"].includes(record.data.display_type);
+    }
+
+    isTopSection(record = null) {
         record = record || this.props.record;
         return record.data.display_type === "line_section";
     }

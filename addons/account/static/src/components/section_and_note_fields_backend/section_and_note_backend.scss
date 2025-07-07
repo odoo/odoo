@@ -2,24 +2,35 @@
 // The goal of this file is to contain CSS hacks related to allowing
 // section and note on sale order and invoice.
 
-table.o_section_and_note_list_view tr.o_data_row.o_is_line_note,
-table.o_section_and_note_list_view tr.o_data_row.o_is_line_note textarea[name="name"],
-div.o_is_line_note {
-    font-style: italic;
-}
-table.o_section_and_note_list_view tr.o_data_row.o_is_line_section,
-div.o_is_line_section {
-    font-weight: bold;
-    background-color: #DDDDDD;
-}
-table.o_section_and_note_list_view tr.o_data_row.o_is_line_section {
-    border-top: 1px solid #BBB;
-    border-bottom: 1px solid #BBB;
-}
-
 table.o_section_and_note_list_view tr.o_data_row {
-    &.o_is_line_note,
+    &.o_is_line_note {
+        font-style: italic;
+    }
     &.o_is_line_section {
+        font-weight: bold;
+        background-color: #DDDDDD;
+        --table-bg: var(--300);
+    }
+    &.o_is_line_subsection {
+        --table-bg: var(--200);
+    }
+    &.o_is_line_section, &.o_is_line_subsection {
+        border-top: 1px solid #BBB;
+        border-bottom: 1px solid #BBB;
+        .o_list_section_options {
+            width: 1px;  // to prevent the column to expand
+            button {
+                padding: 0px;
+                background: none;
+                border-style: none;
+                display: table-cell;
+                cursor: pointer;
+            }
+        }
+    }
+    &.o_is_line_note,
+    &.o_is_line_section,
+    &.o_is_line_subsection {
         td {
             // There is an undeterministic CSS behaviour in Chrome related to
             // the combination of the row's and its children's borders.
