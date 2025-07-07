@@ -171,6 +171,30 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             lambda answer: answer.question_id.title == 'How did you learn about this event?'
         ).value_answer_id.name, 'A friend')
 
+    def test_website_event_search(self):
+        """ Ensure filters are not reset when changing pages or performing a search. """
+        tag_category = self.env['event.tag.category'].create({'name': 'Test Category'})
+
+        tags = self.env['event.tag'].create([
+            {'name': 'tag 1', 'category_id': tag_category.id},
+            {'name': 'tag 2', 'category_id': tag_category.id},
+        ])
+
+        # Need to create a bunch of events to have severals pages
+        self.env['event.event'].create([
+            {
+                'name': f'Filter Test Event - {tag.name}',
+                'website_published': True,
+                'date_begin': datetime.today() - timedelta(days=1),
+                'date_end': datetime.today() + timedelta(days=1),
+                'tag_ids': tag,
+            }
+            for tag in tags
+            for _ in range(20)
+        ])
+
+        self.start_tour('/event', 'test_website_event_search', login='admin')
+
 
 @tagged('post_install', '-at_install')
 class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
