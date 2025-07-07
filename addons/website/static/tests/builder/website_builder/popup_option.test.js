@@ -56,7 +56,7 @@ describe("Popup options: popup in page before edit", () => {
         await contains(".o_we_invisible_entry .fa-eye-slash").click();
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
         // Sometimes bootstrap.js takes a bit of time to display the popup
-        await waitFor(":iframe .s_popup div.js_close_popup", { timeout: 500 });
+        await waitFor(":iframe .s_popup div.js_close_popup", { timeout: 500, visible: true });
         await contains(":iframe .s_popup div.js_close_popup").click();
         expect(":iframe .s_popup").not.toBeVisible();
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
