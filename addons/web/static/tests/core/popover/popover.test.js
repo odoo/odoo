@@ -365,6 +365,26 @@ test("popover with arrow and onPositioned", async () => {
     expect(".o_popover > .popover-arrow").toHaveClass("position-absolute z-n1");
 });
 
+test("popover closes when navigating", async () => {
+    history.pushState({}, "", "/"); // Need non-null state
+    history.pushState(null, "", "/aaa"); // Head to other page
+
+    await mountWithCleanup(Popover, {
+        props: {
+            close: () => expect.step("close"),
+            target: getFixture(),
+            component: Content,
+        },
+    });
+
+    expect(".o_popover").toHaveCount(1);
+
+    history.back(); // Head back
+    await animationFrame();
+
+    expect.verifySteps(["close"]);
+});
+
 test("arrow follows target and can get sucked", async () => {
     let container;
     patch(Popover, { animationTime: 0 });
