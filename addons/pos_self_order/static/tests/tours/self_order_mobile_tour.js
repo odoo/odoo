@@ -262,3 +262,23 @@ registry.category("web_tour.tours").add("SelfOrderOrderNumberTour", {
         Utils.checkIsNoBtn("Ok"),
     ],
 });
+
+registry.category("web_tour.tours").add("self_order_mobile_special_products_category", {
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-Takeout"),
+        {
+            content: "Category 'Miscellaneous' is displayed",
+            trigger: ".category_btn:contains('Miscellaneous')",
+        },
+        {
+            content: "Category 'Specials' is not displayed",
+            trigger: ".category_btn:not(:contains('Specials'))",
+        },
+        {
+            content: "Product 'Special 1' is not displayed",
+            trigger: ".self_order_product_name:not(:contains('Special 1'))",
+        },
+    ],
+});
