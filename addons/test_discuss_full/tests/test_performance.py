@@ -432,7 +432,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "self_partner": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "settings": {
                     "channel_notifications": False,
-                    "mute_until_dt": False,
                     "id": self.env["res.users.settings"]._find_or_create_for_user(self.users[0]).id,
                     "is_discuss_sidebar_category_channel_open": True,
                     "is_discuss_sidebar_category_chat_open": True,

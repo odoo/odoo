@@ -21,7 +21,6 @@ class ResUsersSettings(models.Model):
         "Channel Notifications",
         help="This setting will only be applied to channels. Mentions only if not specified.",
     )
-    mute_until_dt = fields.Datetime(string="Mute notifications until", index=True, help="If set, the user will not receive notifications from all the channels until this date.")
 
     @api.model
     def _format_settings(self, fields_to_format):
