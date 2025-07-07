@@ -93,6 +93,8 @@ export class ColorPlugin extends Plugin {
             (node) => hasColor(closestElement(node), "color"),
             (node) => hasColor(closestElement(node), "backgroundColor"),
         ],
+        format_class_predicates: (className) =>
+            TEXT_CLASSES_REGEX.test(className) || BG_CLASSES_REGEX.test(className),
         normalize_handlers: this.normalize.bind(this),
     };
 
