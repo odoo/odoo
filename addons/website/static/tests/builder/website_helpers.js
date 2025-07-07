@@ -571,3 +571,50 @@ export async function waitForEndOfOperation() {
     await waitForNone(":iframe .o_loading_screen", { timeout: 600 });
     await animationFrame();
 }
+
+/**
+ * Mocks the RPC call to "/website/get_suggested_links" and returns a set of
+ * suggested links for testing purposes. Optionally executes a callback
+ * after the mock is triggered.
+ *
+ * @param {Function} [callback] - Optional callback function to execute when
+ *                                the mock is triggered.
+ */
+export function mockGetSuggestedLinks(callback = undefined) {
+    onRpc("/website/get_suggested_links", () => {
+        callback?.();
+        return {
+            matching_pages: [
+                {
+                    value: "/page1",
+                    label: "/page1 (Page 1)",
+                },
+                {
+                    value: "/page2",
+                    label: "/page2 (Page 2)",
+                },
+            ],
+            others: [
+                {
+                    title: "Last modified pages",
+                    values: [
+                        {
+                            value: "/page3",
+                            label: "/page3 (Page 3)",
+                        },
+                    ],
+                },
+                {
+                    title: "Apps url",
+                    values: [
+                        {
+                            value: "/app1",
+                            label: "/app1 (App 1)",
+                            icon: "app1_icon",
+                        },
+                    ],
+                },
+            ],
+        };
+    });
+}
