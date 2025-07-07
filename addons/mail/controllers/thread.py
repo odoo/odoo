@@ -52,7 +52,7 @@ class ThreadController(http.Controller):
             ("model", "=", thread_model),
             ("message_type", "!=", "user_notification"),
         ]
-        res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
+        res = request.env["mail.message"]._message_fetch(domain, res_id=thread_id, res_model=thread_model, **(fetch_params or {}))
         messages = res.pop("messages")
         if not request.env.user._is_public():
             messages.set_message_done()
