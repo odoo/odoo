@@ -15,28 +15,20 @@ class StockWarehouseOrderpoint(models.Model):
         domain="[('type', '=', 'normal'), '&', '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
     manufacturing_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the manufacturing routes.")
 
-    def _get_replenishment_order_notification(self):
-        self.ensure_one()
+    def _get_replenishment_notification_links(self):
+        links = super()._get_replenishment_notification_links()
         domain = Domain('orderpoint_id', 'in', self.ids)
         if self.env.context.get('written_after'):
             domain &= Domain('write_date', '>=', self.env.context.get('written_after'))
-        production = self.env['mrp.production'].search(domain, limit=1)
-        if production:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('The following replenishment order has been generated'),
-                    'message': '%s',
-                    'links': [{
-                        'label': production.name,
-                        'url': f'/odoo/action-mrp.action_mrp_production_form/{production.id}'
-                    }],
-                    'sticky': False,
-                    'next': {'type': 'ir.actions.act_window_close'},
-                }
-            }
-        return super()._get_replenishment_order_notification()
+        productions = self.env['mrp.production'].search(domain)
+        if productions:
+            action = self.env.ref('mrp.action_mrp_production_form')
+            for production in productions:
+                links.append({
+                    'label': production.name,
+                    'url': f'/web#action={action.id}&id={production.id}&model=mrp.production'
+                })
+        return links
 
     def _compute_allowed_replenishment_uom_ids(self):
         super()._compute_allowed_replenishment_uom_ids()
