@@ -69,13 +69,14 @@ class SaleComboConfiguratorController(Controller):
                        date,
                        currency,
                        pricelist,
+                       quantity=quantity,
                        **kwargs,
                    ) for combo_item in combo.combo_item_ids if combo_item.product_id.active
                 ],
             } for combo in product_template.combo_ids.sudo()],
             'currency_id': currency_id,
             **product_template._get_additional_configurator_data(
-                product_template, date, currency, pricelist, **kwargs
+                product_template, date, currency, pricelist, quantity=quantity, **kwargs
             ),
         }
 
