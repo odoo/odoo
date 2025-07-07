@@ -3564,7 +3564,7 @@ class AccountMove(models.Model):
                     if command == Command.CREATE
                 ]
             elif move.move_type == 'entry':
-                if 'partner_id' not in vals:
+                if 'partner_id' not in vals or not self.env.context.get('move_reverse_cancel', False):
                     vals['partner_id'] = False
             user_fiscal_lock_date = move.company_id._get_user_fiscal_lock_date(move.journal_id)
             if (default_date or move.date) <= user_fiscal_lock_date:
