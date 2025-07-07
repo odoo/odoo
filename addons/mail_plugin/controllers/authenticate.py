@@ -106,7 +106,7 @@ class Authenticate(http.Controller):
             'name': name,
             'timestamp': int(datetime.datetime.utcnow().timestamp()),
             # <- elapsed time should be < 3 mins when verifying
-            'uid': request.uid,
+            'uid': request.env.uid,
         }
         auth_message = json.dumps(auth_dict, sort_keys=True).encode()
         signature = odoo.tools.misc.hmac(request.env(su=True), 'mail_plugin', auth_message).encode()

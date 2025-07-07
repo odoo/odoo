@@ -42,7 +42,7 @@ class WebsiteTest(Home):
 
     @http.route('/multi_company_website', type='http', auth="public", website=True, sitemap=False)
     def test_company_context(self):
-        return request.make_response(json.dumps(request.context.get('allowed_company_ids')))
+        return request.make_response(json.dumps(request.env.context.get('allowed_company_ids')))
 
     @http.route('/test_lang_url/<model("res.country"):country>', type='http', auth='public', website=True, sitemap=False)
     def test_lang_url(self, **kwargs):

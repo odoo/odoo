@@ -46,8 +46,8 @@ class TestLangUrl(HttpCase):
 
     def test_04_url_cook_lang_not_available(self):
         """ `nearest_lang` should filter out lang not available in frontend.
-        Eg: 1. go in backend in english -> request.context['lang'] = `en_US`
-            2. go in frontend, the request.context['lang'] is passed through
+        Eg: 1. go in backend in english -> request.env.context['lang'] = `en_US`
+            2. go in frontend, the request.env.context['lang'] is passed through
                `nearest_lang` which should not return english. More then a
                misbehavior it will crash in website language selector template.
         """

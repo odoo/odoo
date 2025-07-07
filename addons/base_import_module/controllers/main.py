@@ -16,8 +16,8 @@ class ImportModule(Controller):
                 raise Exception(_("Could not select database '%s'", request.db))
             credential = {'login': login, 'password': password, 'type': 'password'}
             request.session.authenticate(request.env, credential)
-            # request.uid is None in case of MFA
-            if request.uid and request.env.user._is_admin():
+            # request.env.uid is None in case of MFA
+            if request.env.uid and request.env.user._is_admin():
                 return request.env['ir.module.module']._import_zipfile(mod_file, force=force == '1')[0]
             raise AccessError(_("Only administrators can upload a module"))
         except Exception as e:

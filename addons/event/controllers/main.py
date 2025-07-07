@@ -13,7 +13,7 @@ class EventController(Controller):
 
     @route(['''/event/<model("event.event"):event>/ics'''], type='http', auth="public")
     def event_ics_file(self, event, **kwargs):
-        lang = request.context.get('lang', request.env.user.lang)
+        lang = request.env.context.get('lang', request.env.user.lang)
         if request.env.user._is_public():
             lang = request.cookies.get('frontend_lang')
         event = event.with_context(lang=lang)
