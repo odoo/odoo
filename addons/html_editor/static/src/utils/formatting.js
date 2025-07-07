@@ -1,7 +1,8 @@
 import { normalizeCSSColor } from "@web/core/utils/colors";
 import { removeClass } from "./dom";
 import { isBold, isDirectionSwitched, isItalic, isStrikeThrough, isUnderline } from "./dom_info";
-import { closestElement } from "./dom_traversal";
+import { closestElement, closestPath, findNode } from "./dom_traversal";
+import { isBlock } from "./blocks";
 
 /**
  * Array of all the classes used by the editor to change the font size.
@@ -94,9 +95,10 @@ export const formatsSpecs = {
     },
     fontSize: {
         isFormatted: (node, props) => {
-            const fontSize =
-                closestElement(node)?.style["font-size"] ||
-                closestElement(node, "li")?.style["font-size"];
+            const fontSize = (
+                findNode(closestPath(node), (el) => el.style?.["font-size"], isBlock) ||
+                closestElement(node, "li")
+            )?.style["font-size"];
             return props?.size ? fontSize === props.size : fontSize;
         },
         hasStyle: (node) => node.style && node.style["font-size"],
@@ -110,12 +112,20 @@ export const formatsSpecs = {
         isFormatted: (node, props) =>
             props?.className
                 ? FONT_SIZE_CLASSES.includes(props.className) &&
-                  (closestElement(node)?.classList.contains(props.className) ||
-                      closestElement(node, "LI")?.classList?.contains(props.className))
-                : FONT_SIZE_CLASSES.find(
-                      (cls) =>
-                          closestElement(node)?.classList?.contains(cls) ||
-                          closestElement(node, "LI")?.classList?.contains(cls)
+                  !!(
+                      findNode(
+                          closestPath(node),
+                          (el) => el.classList?.contains(props.className),
+                          isBlock
+                      ) || closestElement(node, "li")?.classList?.contains(props.className)
+                  )
+                : !!findNode(
+                      closestPath(node),
+                      (el) => FONT_SIZE_CLASSES.find((cls) => el.classList?.contains(cls)),
+                      isBlock
+                  ) ||
+                  FONT_SIZE_CLASSES.find((cls) =>
+                      closestElement(node, "li")?.classList.contains(cls)
                   ),
         hasStyle: (node, props) => FONT_SIZE_CLASSES.find((cls) => node.classList.contains(cls)),
         addStyle: (node, props) => {

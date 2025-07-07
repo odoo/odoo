@@ -180,19 +180,20 @@ export class FormatPlugin extends Plugin {
             }
             this.formatSelection(format, { applyStyle: false, removeFormat: true });
         }
-        this.dependencies.history.addStep();
     }
 
     removeAllFormats() {
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        this.dispatchTo("remove_all_formats_handlers");
         this.removeFormats(Object.keys(formatsSpecs), targetedNodes);
+        this.dispatchTo("remove_all_formats_handlers");
+        this.dependencies.history.addStep();
     }
 
     removeFontSizeFormat(els) {
         if (els.every((el) => isParagraphRelatedElement(el))) {
             const targetedNodes = this.dependencies.selection.getTargetedNodes();
             this.removeFormats(["fontSize", "setFontSizeClassName"], targetedNodes);
+            this.dependencies.history.addStep();
         }
     }
 
