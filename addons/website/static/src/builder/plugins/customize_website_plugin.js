@@ -715,7 +715,10 @@ export class CustomizeWebsiteVariableAction extends BuilderAction {
     }
     isApplied({ params: { mainParam: variable } = {}, value }) {
         const currentValue = this.dependencies.customizeWebsite.getWebsiteVariableValue(variable);
-        return currentValue === value;
+        return (
+            // There might be unquoted values in existing databases.
+            currentValue === value || `'${currentValue}'` === value
+        );
     }
     getValue({ params: { mainParam: variable } }) {
         const currentValue = this.dependencies.customizeWebsite.getWebsiteVariableValue(variable);
