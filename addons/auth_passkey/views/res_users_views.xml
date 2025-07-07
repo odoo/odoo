@@ -31,33 +31,34 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
         <field name="arch" type="xml">
-            <page name="page_account_security" position="inside">
-                <group string="Passkeys">
-                    <div colspan="2">
-                        <div class="text-muted mb-3" colspan="2">
-                            Passkeys are a replacement for your username and password, offering a more secure way of logging in.
+            <xpath expr="//div[@name='api_keys']" position="after">
+                <div class="mt-3">
+                    <div class="d-flex">
+                        <div class="w-25 d-flex flex-column">
+                            <label for="action_create_passkey" string="Passkeys" class="o_form_label"/>
+                            <span class="text-muted">
+                                Recommended for extra security.
+                            </span>
                         </div>
-                        <div class="mb-2 gap-1" style="display: flex;" colspan="4">
-                            <button colspan="2" type="object" name="action_create_passkey" class="btn-secondary" string="Add Passkey"/>
-                        </div>
-                        <field colspan="4" name="auth_passkey_key_ids">
-                            <kanban create="false" can_open="false">
-                                <templates>
-                                    <t t-name="menu">
-                                        <a role="menuitem" type="object" name="action_rename_passkey" class="dropdown-item">Rename</a>
-                                        <a role="menuitem" type="object" name="action_delete_passkey" class="dropdown-item">Delete</a>
-                                    </t>
-                                    <t t-name="card">
-                                        <field name="name" class="fw-bold fs-5"/>
-                                        <small>Created: <field name="create_date"/></small>
-                                        <small>Last used: <field name="write_date"/></small>
-                                    </t>
-                                </templates>
-                            </kanban>
-                        </field>
+                        <button type="object" name="action_create_passkey" class="btn btn-secondary h-100" string="Add Passkey"/>
                     </div>
-                </group>
-            </page>
+                    <field colspan="4" name="auth_passkey_key_ids" invisible="not auth_passkey_key_ids">
+                        <kanban create="false" can_open="false">
+                            <templates>
+                                <t t-name="menu">
+                                    <a role="menuitem" type="object" name="action_rename_passkey" class="dropdown-item">Rename</a>
+                                    <a role="menuitem" type="object" name="action_delete_passkey" class="dropdown-item">Delete</a>
+                                </t>
+                                <t t-name="card">
+                                    <field name="name" class="fw-bold fs-5"/>
+                                    <small>Created: <field name="create_date"/></small>
+                                    <small>Last used: <field name="write_date"/></small>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>

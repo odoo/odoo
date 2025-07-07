@@ -399,20 +399,24 @@
                             </group>
                         </page>
                         <page string="Account Security" name="page_account_security">
-                            <group name="auth" string="Password Management">
-                                <div colspan="2">
-                                    <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary"/>
+                            <div name="auth" class="d-flex">
+                                <div class="w-25 d-flex flex-column">
+                                    <label for="preference_change_password" string="Change Password" class="o_form_label"/>
+                                    <span class="text-muted">
+                                        Update if compromised.
+                                    </span>
                                 </div>
-                            </group>
-                            <group name="access" string="Other Devices">
-                                <div colspan="2">
-                                    <button name="action_revoke_all_devices" type="object" string="Log out from all devices" class="btn btn-secondary"/>
-                                </div>
-                            </group>
-                            <group string="API Keys">
-                                <div class="text-muted" colspan="2">
-                                    API Keys are used to connect to Odoo from external tools without the need for a password or Two-factor Authentication.
-                                    <widget name="documentation_link" path="/developer/misc/api/external_api.html#api-keys" lable="Learn more" icon="fa-fw o_button_icon fa-info-circle"/>
+                                <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary h-100"/>
+                            </div>
+                            <div name="api_keys" class="mt-3">
+                                <div class="d-flex">
+                                    <div class="w-25 d-flex flex-column">
+                                        <label for="api_key_wizard" string="API Keys" class="o_form_label"/>
+                                        <span class="text-muted">
+                                            Connect external services.
+                                        </span>
+                                    </div>
+                                    <button name="api_key_wizard" string="New API Key" type="object" class="btn btn-secondary h-100"/>
                                 </div>
                                 <div colspan="2" invisible="not api_key_ids">
                                     <field name="api_key_ids" nolabel="1" colspan="4" readonly="0">
@@ -426,13 +430,19 @@
                                         </list>
                                     </field>
                                 </div>
-                                <div colspan="2">
-                                    <button name="api_key_wizard" string="New API Key" type="object" class="btn btn-secondary"/>
+                            </div>
+                            <div>
+                                <div class="d-flex mt-3">
+                                    <div class="w-25 d-flex flex-column">
+                                        <label for="action_revoke_all_devices" string="Devices" class="o_form_label"/>
+                                        <span class="text-muted">
+                                            Check if they are yours.
+                                        </span>
+                                    </div>
+                                    <button name="action_revoke_all_devices" type="object" string="Log out from all devices" class="btn btn-secondary h-100"/>
                                 </div>
-                            </group>
-                        </page>
-                        <page string="Devices" name="page_devices">
-                            <field name="device_ids" mode="kanban"/>
+                                <field name="device_ids" mode="kanban"/>
+                            </div>
                         </page>
                     </notebook>
                     <footer>
