@@ -1,12 +1,3 @@
-.o_builder_form_show_message {
-    &.d-none {
-        display: block !important;
-    }
-    &:not(.d-none) {
-        display: none !important;
-    }
-}
-
 .s_website_form {
     // Hidden field is only partially hidden in editor
     .s_website_form_field_hidden {
@@ -20,5 +11,14 @@
     }
     .s_website_form_label, .s_website_form_check_label {
         pointer-events: none;
+    }
+
+    .o_show_form_success_message {
+        &.d-none {
+            display: block !important;
+        }
+        &:not(.d-none) {
+            display: none !important;
+        }
     }
 }

@@ -1,7 +1,11 @@
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
+} from "../website_helpers";
 import { patch } from "@web/core/utils/patch";
 import { IrModel } from "@web/../tests/_framework/mock_server/mock_models/ir_model";
 import { _t } from "@web/core/l10n/translation";
@@ -145,4 +149,19 @@ test("empty placeholder selection input for selection field", async () => {
     await contains(".o_we_table_wrapper input[type='checkbox']").click();
     expect(":iframe select option").toHaveCount(4);
     expect(":iframe select option:eq(0)").toHaveText("");
+});
+
+test("Set 'Message' as form success action and show/hide the message preview", async () => {
+    await setupWebsiteBuilderWithSnippet("s_website_form");
+    await contains(":iframe section.s_website_form").click();
+    expect(".options-container[data-container-title='Form']").toHaveCount(1);
+
+    await contains(".options-container [data-label='On Success'] button").click();
+    await contains("div[data-action-id='onSuccess'][data-action-value='message']").click();
+    expect(":iframe .s_website_form_end_message.d-none").toHaveCount(1);
+
+    await contains(".options-container [data-action-id='toggleEndMessage']").click();
+    expect(":iframe .o_show_form_success_message").toHaveCount(2);
+    await contains(".options-container [data-action-id='toggleEndMessage']").click();
+    expect(":iframe .o_show_form_success_message").toHaveCount(0);
 });

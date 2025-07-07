@@ -32,9 +32,11 @@
             <BuilderSelectItem actionValue="'redirect'" id="'show_redirect_opt'">Redirect</BuilderSelectItem>
             <BuilderSelectItem actionValue="'message'" id="'show_message_opt'">Show Message</BuilderSelectItem>
         </BuilderSelect>
-        <BuilderButton className="'fa fa-fw fa-eye align-self-end toggle-edit-message'" title.translate="Edit Message" id="'message_opt'"
-            t-if="isActiveItem('show_message_opt')" preview="false" action="'toggleEndMessage'"
-        />
+        <BuilderButton t-if="isActiveItem('show_message_opt')"
+                       title.translate="Edit Message"
+                       icon="'fa-eye'"
+                       preview="false"
+                       action="'toggleEndMessage'"/>
     </BuilderRow>
     <BuilderRow label.translate="URL">
         <WebsiteUrlPicker dataAttributeAction="'successPage'" default="'/contactus-thank-you'" id="'url_opt'" t-if="isActiveItem('show_redirect_opt')"/>
