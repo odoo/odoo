@@ -35,6 +35,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "setPendingThemeRequests",
         "isPluginDestroyed",
         "reloadBundles",
+        "setViewOnSave",
     ];
 
     resources = {
@@ -47,6 +48,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             RemoveFontAction,
             CustomizeButtonStyleAction,
             WebsiteConfigAction,
+            PreviewableWebsiteConfigAction,
             SelectTemplateAction,
         },
         color_combination_getters: withSequence(5, (el, actionParam) => {
@@ -56,11 +58,22 @@ export class CustomizeWebsitePlugin extends Plugin {
                 return `o_cc${getCSSVariableValue(combination, style)}`;
             }
         }),
+        save_handlers: this.onSave.bind(this),
     };
 
+    async onSave() {
+        await rpc("/website/theme_customize_data", {
+            is_view_data: true,
+            enable: [...this.viewsToEnableOnSave],
+            disable: [...this.viewsToDisableOnSave],
+            reset_view_arch: false,
+        });
+    }
     cache = {};
     activeRecords = {};
     activeTemplateViews = {};
+    viewsToEnableOnSave = new Set();
+    viewsToDisableOnSave = new Set();
     pendingViewRequests = new Set();
     pendingAssetRequests = new Set();
     /**
@@ -341,6 +354,15 @@ export class CustomizeWebsitePlugin extends Plugin {
         value.then((resolvedValue) => {
             this.activeRecords[record] = resolvedValue;
         });
+    }
+    setViewOnSave(view, to_disable = false) {
+        if (!to_disable) {
+            this.viewsToEnableOnSave.add(view);
+            this.viewsToDisableOnSave.delete(view);
+        } else {
+            this.viewsToEnableOnSave.delete(view);
+            this.viewsToDisableOnSave.add(view);
+        }
     }
     isPluginDestroyed() {
         return this.isDestroyed;
@@ -683,6 +705,70 @@ export class WebsiteConfigAction extends BuilderAction {
             }
         }, 0);
         return def;
+    }
+}
+
+export class PreviewableWebsiteConfigAction extends BuilderAction {
+    static id = "previewableWebsiteConfig";
+    static dependencies = ["customizeWebsite", "history"];
+    setup() {
+        this.preview = true;
+    }
+    getPriority({ params }) {
+        return (params.previewClass || "")?.trim().split(/\s+/).filter(Boolean).length || 0;
+    }
+    isApplied({ editingElement: el, params }) {
+        if (params.previewClass === undefined || params.previewClass === "") {
+            return true;
+        }
+        return el.classList.contains(params.previewClass);
+    }
+    apply({ editingElement: el, isPreviewing, params, selectableContext }) {
+        if (params.previewClass) {
+            el.classList.add(params.previewClass);
+        }
+        if (!isPreviewing) {
+            const applyViewAction = (reverting) => {
+                const prepareRecord = (record, disable) => {
+                    if (record.startsWith("!")) {
+                        const recordKey = record.substring(1);
+                        this.dependencies.customizeWebsite.setViewOnSave(recordKey, !disable);
+                    } else {
+                        this.dependencies.customizeWebsite.setViewOnSave(record, disable);
+                    }
+                };
+                const records = params["views"] || [];
+                if (selectableContext) {
+                    for (const item of selectableContext.items) {
+                        for (const a of item.getActions()) {
+                            if (a.actionId === "previewableWebsiteConfig") {
+                                for (const record of a.actionParam["views"] || []) {
+                                    // Start by disabling them all...
+                                    prepareRecord(record, !reverting);
+                                }
+                            }
+                        }
+                    }
+                    for (const record of records) {
+                        // ...then enable the selected one
+                        prepareRecord(record, reverting);
+                    }
+                }
+            };
+            this.dependencies.history.applyCustomMutation({
+                apply: () => {
+                    applyViewAction(false);
+                },
+                revert: () => {
+                    applyViewAction(true);
+                },
+            });
+        }
+    }
+    clean({ editingElement: el, params }) {
+        if (params.previewClass) {
+            el.classList.remove(params.previewClass);
+        }
     }
 }
 
