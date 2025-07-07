@@ -83,12 +83,14 @@ export class ImageShapeOptionPlugin extends Plugin {
     async processImageWarmup(img, newDataset) {
         const getData = (propName) =>
             propName in newDataset ? newDataset[propName] : img.dataset[propName];
-        const shapeId = getData("shape");
+        const combinedDataset = { ...img.dataset, ...newDataset };
+        const previousShapeId = this.getDefaultShapeId(img.dataset);
+        const shapeId = combinedDataset.shape || this.getDefaultShapeId(combinedDataset);
         // todo: should we reset some data if shapeName is not defined?
         if (!shapeId) {
             return;
         }
-        const isNewShape = "shape" in newDataset && newDataset.shape !== img.dataset.shape;
+        const isNewShape = previousShapeId !== shapeId;
         const shapeSvgText = await this.getShapeSvgText(shapeId);
 
         // Get colors.
@@ -375,6 +377,14 @@ export class ImageShapeOptionPlugin extends Plugin {
             )
             .flat();
         return Object.fromEntries(entries);
+    }
+    getDefaultShapeId(dataset) {
+        for (const fn of this.getResource("default_shape_handlers")) {
+            const shapeId = fn(dataset);
+            if (shapeId) {
+                return shapeId;
+            }
+        }
     }
 }
 

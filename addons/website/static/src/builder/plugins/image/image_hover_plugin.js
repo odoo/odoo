@@ -1,3 +1,4 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
@@ -8,20 +9,19 @@ export class ImageHoverPlugin extends Plugin {
     static dependencies = ["imagePostProcess"];
     resources = {
         builder_actions: {
-            setHoverEffect: {
-                load: async ({ editingElement: imgEl }) => {},
-                apply: async ({ editingElement: imgEl }) => {},
-            },
+            SetHoverEffectAction,
         },
         system_attributes: ["data-original-src-before-hover"],
+        default_shape_handlers: (dataset) =>
+            dataset.hoverEffect && "html_builder/geometric/geo_square",
         post_compute_shape_listeners: async (svg, params) => {
             let rgba = null;
             let rbg = null;
             let opacity = null;
             // Add the required parts for the hover effects to the SVG.
             const hoverEffectName = params.hoverEffect;
-            await this.getSvgHoverEffects();
-            const hoverEffectEls = this.hoverEffectsSvg.querySelectorAll(`#${hoverEffectName} > *`);
+            const hoverEffectsSvg = await this.getSvgHoverEffects();
+            const hoverEffectEls = hoverEffectsSvg.querySelectorAll(`#${hoverEffectName} > *`);
             hoverEffectEls.forEach((hoverEffectEl) => {
                 svg.appendChild(hoverEffectEl.cloneNode(true));
             });
@@ -161,9 +161,6 @@ export class ImageHoverPlugin extends Plugin {
             hoverEffectIntensity: "20",
             hoverEffect: "overlay",
         };
-        if (!imgEl.dataset.shape) {
-            newData.shape = "html_builder/geometric/geo_square";
-        }
         const updateAttributes = await this.dependencies.imagePostProcess.processImage({
             img: imgEl,
             newDataset: newData,
@@ -187,5 +184,10 @@ export class ImageHoverPlugin extends Plugin {
         this.hoverEffectsSvg = xmlDoc.getElementsByTagName("svg")[0];
         return this.hoverEffectsSvg;
     }
+}
+export class SetHoverEffectAction extends BuilderAction {
+    static id = "setHoverEffect";
+    async load({ editingElement: imgEl }) {}
+    async apply({ editingElement: imgEl }) {}
 }
 registry.category("website-plugins").add(ImageHoverPlugin.id, ImageHoverPlugin);

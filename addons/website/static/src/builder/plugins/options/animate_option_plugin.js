@@ -13,7 +13,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
-    static dependencies = ["imageToolOption", "history", "selection", "split", "imageHover"];
+    static dependencies = ["imageToolOption", "history", "selection", "split"];
     static shared = ["forceAnimation", "getDirectionsItems", "getEffectsItems"];
     animateOptionProps = {
         getDirectionsItems: this.getDirectionsItems.bind(this),
@@ -342,7 +342,7 @@ class AnimateOptionPlugin extends Plugin {
 
 export class SetAnimationModeAction extends BuilderAction {
     static id = "setAnimationMode";
-    static dependencies = ["animateOption"];
+    static dependencies = ["animateOption", "imageHover"];
     setup() {
         this.animationWithFadein = ["onAppearance", "onScroll"];
         this.scrollingElement = getScrollingElement(this.document);
