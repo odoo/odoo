@@ -461,7 +461,6 @@ export class Store extends BaseStore {
             mentionedChannels = [],
             mentionedPartners = [],
             mentionedRoles = [],
-            specialMentions = [],
         } = {}
     ) {
         const validMentions = {};
