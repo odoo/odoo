@@ -1006,10 +1006,13 @@ class ResPartner(models.Model):
     @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name')
     @api.depends_context(
         'show_address', 'partner_show_db_id',
-        'show_email', 'show_vat', 'lang', 'formatted_display_name'
+        'show_email', 'show_vat', 'lang', 'formatted_display_name', 'simple_display_name',
     )
     def _compute_display_name(self):
         for partner in self:
+            if partner.env.context.get("simple_display_name"):
+                partner.display_name = partner.name or ""
+                continue
             if partner.env.context.get("formatted_display_name"):
                 name = partner.name or ''
                 if partner.parent_id or partner.company_name:
