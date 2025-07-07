@@ -66,12 +66,12 @@
             </div>
         </t>
         <t t-else="">
-            <div class="o_we_version_control alert alert-info d-flex flex-column p-3 pt-4 align-items-center text-center text-white">
-                <div>This block is outdated.</div>
+            <div class="o_we_version_control d-flex flex-column p-3 pt-4 align-items-center text-center text-white">
+                <div class="title">This block is outdated.</div>
                 <div>You might not be able to customize it anymore.</div>
-                <button type="button" class="btn o_we_bg_brand_primary py-2 my-4 border-0" t-on-click="() => this.replaceElementWithNewVersion()">REPLACE BY NEW VERSION</button>
+                <button type="button" class="btn btn-primary py-2 my-4 border-0" t-on-click="() => this.replaceElementWithNewVersion()">REPLACE BY NEW VERSION</button>
                 <div>You can still access the block options but it might be ineffective.</div>
-                <button type="button" class="btn o_we_bg_brand_primary py-2 my-4 border-0" t-on-click="() => this.accessOutdated()">ACCESS OPTIONS ANYWAY</button>
+                <button type="button" class="btn btn-primary py-2 my-4 border-0" t-on-click="() => this.accessOutdated()">ACCESS OPTIONS ANYWAY</button>
             </div>
         </t>        
     </div>

@@ -45,7 +45,7 @@ registerWebsitePreviewTour("snippet_version_2", {
 },
 {
     trigger:
-        ".o_customize_tab .options-container[data-container-title='Test snip'] .o_we_version_control.alert",
+        ".o_customize_tab .options-container[data-container-title='Test snip'] .o_we_version_control",
 },
 {
     content: "Edit text_image",
@@ -54,7 +54,7 @@ registerWebsitePreviewTour("snippet_version_2", {
 },
 {
     trigger:
-        ".o_customize_tab .options-container[data-container-title='Text - Image'] .o_we_version_control.alert",
+        ".o_customize_tab .options-container[data-container-title='Text - Image'] .o_we_version_control",
 },
 {
     content: "Edit s_share",
@@ -63,7 +63,7 @@ registerWebsitePreviewTour("snippet_version_2", {
 },
 {
     trigger:
-        ".o_customize_tab .options-container[data-container-title='Block'] .o_we_version_control.alert",
+        ".o_customize_tab .options-container[data-container-title='Block'] .o_we_version_control",
 },
 {
     content: "s_share is outdated",
