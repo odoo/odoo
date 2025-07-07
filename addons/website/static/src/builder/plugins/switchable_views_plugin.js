@@ -16,6 +16,7 @@ export class SwitchableViewsPlugin extends Plugin {
             },
             groups: ["website.group_website_designer"],
             editableOnly: false,
+            reloadTarget: true, // TODO: make sure that needed
         },
     };
 

@@ -55,7 +55,7 @@ export class WebsiteBuilderClientAction extends Component {
             path: action.params?.path,
             websiteId: action.params?.website_id || false,
             withLoader: action.params?.with_loader || false,
-        }
+        };
     }
 
     setup() {
@@ -171,7 +171,9 @@ export class WebsiteBuilderClientAction extends Component {
                     setTimeout(() => {
                         websiteSystrayRegistry.remove("website.WebsiteSystrayItem");
                         websiteSystrayRegistry.trigger("EDIT-WEBSITE");
-                        document.querySelector(".o_builder_open .o_main_navbar").classList.add("d-none");
+                        document
+                            .querySelector(".o_builder_open .o_main_navbar")
+                            .classList.add("d-none");
                     }, 200);
                 } else {
                     document.querySelector(".o_main_navbar")?.classList.remove("d-none");
@@ -447,7 +449,6 @@ export class WebsiteBuilderClientAction extends Component {
         return this.props.websiteId || router.current.website_id || false;
     }
 
-
     get withLoader() {
         return this.props.withLoader || !!router.current.with_loader;
     }
@@ -595,8 +596,10 @@ export class WebsiteBuilderClientAction extends Component {
 
     toggleIsMobile(isMobile) {
         this.websitePreviewRef.el.classList.toggle("o_is_mobile", isMobile);
-        this.websiteContent.el?.contentDocument.documentElement
-            .classList.toggle("o_is_mobile", isMobile);
+        this.websiteContent.el?.contentDocument.documentElement.classList.toggle(
+            "o_is_mobile",
+            isMobile
+        );
     }
 
     get aceEditorWidth() {
