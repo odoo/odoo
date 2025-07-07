@@ -19,8 +19,8 @@
 # Hed Shefer <hed@laylinetech.com>, 2024
 # Ha Ketem <haketem@gmail.com>, 2025
 # Eyal arkush, 2025
-# Yoram Lavi, 2025
 # or balmas, 2025
+# Yoram Lavi, 2025
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-06 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: or balmas, 2025\n"
+"Last-Translator: Yoram Lavi, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -136,7 +136,7 @@ msgstr ""
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Based on Milestones"
-msgstr ""
+msgstr "מבוסס על אבני דרך"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__allow_billable
@@ -169,7 +169,7 @@ msgstr "מחיר של טובין שנמכרו"
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Cost of Goods Sold Items"
-msgstr ""
+msgstr " עלות המוצרים שנמכרו"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
@@ -554,7 +554,7 @@ msgstr "אבן דרך בפרויקט"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr ""
+msgstr "אבן דרך לפרויקט"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -696,6 +696,8 @@ msgid ""
 "Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
 "It can be modified on each task and timesheet entry individually if necessary."
 msgstr ""
+"פריט הזמנת לקוח שייבחר כברירת מחדל במשימות ובדיווחי השעות של פרויקט זה, אלא אם העובד שצויין בדיווחי השעות מקושר במפורש לפריט הזמנת לקוח אחר בפרויקט..\n"
+"ניתן לשנות זאת, במדית הצורך,  בכל משימה או דיווח שעות ."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -720,7 +722,7 @@ msgstr "חיפוש בחשבונית"
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "חפש בהזמנות לקוח"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -730,7 +732,7 @@ msgstr "בחר פרויקט שאינו ניתן לחיוב עליו ניתן ל�
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 msgid "Select who to bill..."
-msgstr ""
+msgstr "בחר את מי לחייב "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
@@ -771,7 +773,7 @@ msgstr "משימה"
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "Task Created (%s): %s"
-msgstr ""
+msgstr "משימה נוצרה (%s): %s"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
@@ -828,7 +830,7 @@ msgstr ""
 #: code:addons/sale_project/models/sale_order.py:0
 #, python-format
 msgid "This Sales Order must contain at least one product of type \"Service\"."
-msgstr ""
+msgstr "הזמנת המכירה חייבת להכיל לפחות מוצר אחד מסוג \"שירות\"."
 
 #. module: sale_project
 #. odoo-python
@@ -883,7 +885,7 @@ msgstr "חשבוניות הספק"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr ""
+msgstr "הצג הזמנות מכירה"
 
 #. module: sale_project
 #. odoo-python
@@ -893,3 +895,5 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"אינך יכול לקשר את פריט ההזמנה %(order_id)s - %(product_id)s למשימה זו מכיוון"
+" שמדובר בהוצאה עם חשבונית מתוקנת."
