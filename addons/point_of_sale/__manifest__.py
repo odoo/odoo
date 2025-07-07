@@ -136,6 +136,8 @@
             'bus/static/src/bus_parameters_service.js',
             'bus/static/src/multi_tab_service.js',
             'bus/static/src/main_tab_service.js',
+            'bus/static/src/main_tab_election_worker_service.js',
+            'bus/static/src/main_tab_local_storage_service.js',
             'bus/static/src/workers/*',
             'iot_base/static/src/network_utils/*',
             'iot_base/static/src/device_controller.js',

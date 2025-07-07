@@ -331,9 +331,10 @@ test("fallback on simple worker when shared worker failed to initialize", async 
         SharedWorker: class extends browser.SharedWorker {
             constructor() {
                 super(...arguments);
-
-                asyncStep("shared-worker-creation");
-                setTimeout(() => this.dispatchEvent(new Event("error")));
+                if (arguments[0].includes("websocket_worker")) {
+                    asyncStep("shared-worker-creation");
+                    setTimeout(() => this.dispatchEvent(new Event("error")));
+                }
             }
         },
         Worker: class extends browser.Worker {
@@ -436,7 +437,7 @@ test("remove from main tab candidates when version is outdated", async () => {
     );
     startBusService();
     await waitForSteps(["connect"]);
-    expect(getService("main_tab").isOnMainTab()).toBe(true);
+    expect(await getService("main_tab").isOnMainTab()).toBe(true);
     MockServer.env["bus.bus"]._simulateDisconnection(
         WEBSOCKET_CLOSE_CODES.CLEAN,
         "OUTDATED_VERSION"

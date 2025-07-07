@@ -38,7 +38,13 @@ function getWebSocketCallbacks() {
  * @param {SharedWorker | Worker} worker
  */
 function onWorkerConnected(worker) {
-    currentWebSocketWorker.registerClient(worker._messageChannel.port2);
+    let url = worker.url;
+    if (url.startsWith("data:application/javascript;base64,")) {
+        url = window.atob(url.split(",")[1]);
+    }
+    if (url.includes("websocket_worker")) {
+        currentWebSocketWorker.registerClient(worker._messageChannel.port2);
+    }
 }
 
 function setupWebSocketWorker() {

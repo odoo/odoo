@@ -54,7 +54,7 @@ export class OutOfFocusService {
         const notificationContent = message.previewText
             .toString()
             .substring(0, PREVIEW_MSG_MAX_SIZE);
-        this.sendNotification({
+        await this.sendNotification({
             message: notificationContent,
             sound: message.thread?.model === "discuss.channel",
             title: notificationTitle,
@@ -89,15 +89,15 @@ export class OutOfFocusService {
      * @param {string} [param0.icon] The icon to be displayed in the
      * notification.
      */
-    sendNotification({ message, sound = true, title, type, icon }) {
-        if (!this.canSendNativeNotification || !this.mainTab.isOnMainTab()) {
+    async sendNotification({ message, sound = true, title, type, icon }) {
+        if (!this.canSendNativeNotification || !(await this.mainTab.isOnMainTab())) {
             if (sound) {
-                this._playSound();
+                await this._playSound();
             }
             return;
         }
         try {
-            this.sendNativeNotification(title, message, icon, { sound });
+            await this.sendNativeNotification(title, message, icon, { sound });
         } catch (error) {
             // Notification without Serviceworker in Chrome Android doesn't works anymore
             // So we fallback to the notification service in this case
@@ -122,7 +122,7 @@ export class OutOfFocusService {
             this.closeFuncs.shift()();
         }
         if (sound) {
-            this._playSound();
+            await this._playSound();
         }
     }
 
@@ -130,7 +130,7 @@ export class OutOfFocusService {
      * @param {string} title
      * @param {string} message
      */
-    sendNativeNotification(title, message, icon, { sound = true } = {}) {
+    async sendNativeNotification(title, message, icon, { sound = true } = {}) {
         const notification = new Notification(title, {
             body: message,
             icon,
@@ -140,12 +140,16 @@ export class OutOfFocusService {
             notification.close();
         });
         if (sound) {
-            this._playSound();
+            await this._playSound();
         }
     }
 
-    _playSound() {
-        if (this.canPlayAudio && this.mainTab.isOnMainTab() && this.store.settings.messageSound) {
+    async _playSound() {
+        if (
+            this.canPlayAudio &&
+            this.store.settings.messageSound &&
+            (await this.mainTab.isOnMainTab())
+        ) {
             this.soundEffectService.play("new-message");
         }
     }
