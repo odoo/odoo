@@ -1606,6 +1606,33 @@ export class ListRenderer extends Component {
         return false;
     }
 
+    editNextRecord(record, group) {
+        const list = this.props.list;
+        const topReCreate = this.props.editable === "top" && record.isNew;
+        const index = list.records.indexOf(record);
+        let futureRecord = list.records[index + 1];
+        if (topReCreate && index === 0) {
+            futureRecord = null;
+        }
+
+        if (!futureRecord && !this.canCreate) {
+            futureRecord = list.records[0];
+        }
+
+        if (futureRecord) {
+            list.leaveEditMode({ validate: true }).then((canProceed) => {
+                if (canProceed) {
+                    list.enterEditMode(futureRecord);
+                }
+            });
+        } else if (this.lastIsDirty || !record.canBeAbandoned || this.displayRowCreates) {
+            this.add({ group });
+        } else {
+            futureRecord = list.records.at(0);
+            list.enterEditMode(futureRecord);
+        }
+    }
+
     /**
      * @param {string} hotkey
      * @param {HTMLTableCellElement} cell
@@ -1699,28 +1726,7 @@ export class ListRenderer extends Component {
                 break;
             }
             case "enter": {
-                const index = list.records.indexOf(record);
-                let futureRecord = list.records[index + 1];
-                if (topReCreate && index === 0) {
-                    futureRecord = null;
-                }
-
-                if (!futureRecord && !this.canCreate) {
-                    futureRecord = list.records[0];
-                }
-
-                if (futureRecord) {
-                    list.leaveEditMode({ validate: true }).then((canProceed) => {
-                        if (canProceed) {
-                            list.enterEditMode(futureRecord);
-                        }
-                    });
-                } else if (this.lastIsDirty || !record.canBeAbandoned || this.displayRowCreates) {
-                    this.add({ group });
-                } else {
-                    futureRecord = list.records.at(0);
-                    list.enterEditMode(futureRecord);
-                }
+                this.editNextRecord(record, group);
                 break;
             }
             case "escape": {

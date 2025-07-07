@@ -1,6 +1,6 @@
 import { x2ManyCommands } from "@web/core/orm_service";
 import { intersection } from "@web/core/utils/arrays";
-import { pick } from "@web/core/utils/objects";
+import { omit, pick } from "@web/core/utils/objects";
 import { completeActiveFields } from "@web/model/relational_model/utils";
 import { DataPoint } from "./datapoint";
 import { fromUnityToServerValues, getBasicEvalContext, getId, patchActiveFields } from "./utils";
@@ -36,6 +36,41 @@ function compareRecords(r1, r2, orderBy, fields) {
         return compareRecords(r1, r2, orderBy.slice(1), fields);
     }
     return 0;
+}
+
+function copyRecordData(record) {
+    const data = {};
+    for (const [name, value] of Object.entries(record.data)) {
+        if (
+            !["display_type", "display_name"].includes(name) &&
+            (record._isReadonly(name) || record._isInvisible(name))
+        ) {
+            continue;
+        }
+        switch (record.fields[name].type) {
+            case "many2many": {
+                const list = record.data[name];
+                data[name] = list.currentIds.map((id) => {
+                    let data;
+                    if (list._cache[id]) {
+                        data = copyRecordData(list._cache[id]);
+                    }
+                    return [x2ManyCommands.LINK, id, data];
+                });
+                break;
+            }
+            case "many2one":
+            case "many2one_reference":
+            case "reference":
+                data[name] = value && Object.assign({}, value);
+            case "one2many":
+                // Not supported => that field is left empty
+                break;
+            default:
+                data[name] = value;
+        }
+    }
+    return data;
 }
 
 export class StaticList extends DataPoint {
@@ -147,6 +182,37 @@ export class StaticList extends DataPoint {
         });
     }
 
+    /**
+     * @param {number} index
+     * @param {Object} [options]
+     * @param {Object} [options.context]
+     * @param {"edit" | "readonly"} [options.mode]
+     */
+    addNewRecordAtIndex(index, options = {}) {
+        return this.model.mutex.exec(async () => {
+            const newRecord = await this._addNewRecordAtIndex(index, options);
+            await this._onUpdate();
+            return newRecord;
+        });
+    }
+
+    /**
+     * @param {[number, any, any][]} commands
+     * @param {Object} [options]
+     * @param {boolean} [options.canAddOverLimit]
+     * @param {boolean} [options.sort]
+     * @returns {Promise<void>}
+     */
+    applyCommands(commands, options = {}) {
+        return this.model.mutex.exec(async () => {
+            await this._applyCommands(commands, omit(options, "sort"));
+            if (options.sort) {
+                await this._sort();
+            }
+            await this._onUpdate();
+        });
+    }
+
     canResequence() {
         return this.handleField && this.orderBy.length && this.orderBy[0].name === this.handleField;
     }
@@ -154,6 +220,17 @@ export class StaticList extends DataPoint {
     delete(record) {
         return this.model.mutex.exec(async () => {
             await this._applyCommands([[x2ManyCommands.DELETE, record.resId || record._virtualId]]);
+            await this._onUpdate();
+        });
+    }
+
+    /**
+     * @param {RelationalRecord[]} records
+     * @returns {Promise<void>}
+     */
+    duplicateRecords(records = []) {
+        return this.model.mutex.exec(async () => {
+            await this._duplicateRecords(records);
             await this._onUpdate();
         });
     }
@@ -409,7 +486,7 @@ export class StaticList extends DataPoint {
         }
     }
 
-    async _addRecord(record, { position } = {}) {
+    async _addRecord(record, { position, sort = true } = {}) {
         const command = [x2ManyCommands.CREATE, record._virtualId];
         if (position === "top") {
             this.records.unshift(record);
@@ -429,7 +506,7 @@ export class StaticList extends DataPoint {
             this._commands.push(command);
         } else {
             const currentIds = [...this._currentIds, record._virtualId];
-            if (this.orderBy.length) {
+            if (this.orderBy.length && sort) {
                 await this._sort(currentIds);
             } else {
                 if (this.records.length < this.limit) {
@@ -441,6 +518,23 @@ export class StaticList extends DataPoint {
         }
         this.count++;
         this._needsReordering = true;
+    }
+
+    async _addNewRecordAtIndex(index, options = {}) {
+        const newRecord = await this._createNewRecordDatapoint({
+            context: options.context,
+            manuallyAdded: true,
+            mode: options.mode || "edit",
+        });
+        if (this.records.length === this.limit) {
+            this._tmpIncreaseLimit++;
+            const nextLimit = this.limit + 1;
+            this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
+        }
+        await this._addRecord(newRecord);
+        await this._resequence(newRecord.id, this.records[index].id);
+        newRecord.dirty = false;
+        return newRecord;
     }
 
     _addSavePoint() {
@@ -815,6 +909,48 @@ export class StaticList extends DataPoint {
             this._applyCommands(this._initialCommands);
         }
         this._savePoint = undefined;
+    }
+
+    /**
+     * @fixme: this method is naive and ineffective (it triggers a lot of onchange rpcs)
+     */
+    async _duplicateRecords(records) {
+        const proms = records.map(async (record, index) => {
+            const newRecord = await this._createNewRecordDatapoint({
+                mode: "readonly",
+            });
+            await newRecord._update({
+                ...copyRecordData(record),
+                [this.handleField]: records.at(-1).data[this.handleField] + index + 1,
+            });
+            return newRecord;
+        });
+        const newRecords = await Promise.all(proms);
+
+        const localIncreaseLimit = this.records.length + records.length - this.limit;
+        if (localIncreaseLimit > 0) {
+            this._tmpIncreaseLimit += localIncreaseLimit;
+            const nextLimit = this.limit + localIncreaseLimit;
+            this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
+        }
+
+        const index = this.records.indexOf(records.at(-1)) + 1;
+        const commands = [];
+        for (const record of this.records.slice(index)) {
+            commands.push(
+                x2ManyCommands.update(record.resId || record._virtualId, {
+                    [this.handleField]:
+                        record.data[this.handleField] + records.length,
+                })
+            );
+        }
+        await this._applyCommands(commands);
+
+        for (const record of newRecords) {
+            await this._addRecord(record, { sort: false });
+        }
+
+        await this._sort();
     }
 
     _getCommands({ withReadonly } = {}) {

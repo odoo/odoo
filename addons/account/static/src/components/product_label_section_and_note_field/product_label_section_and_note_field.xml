@@ -13,18 +13,20 @@
                     t-att-value="label"
                     t-on-change="(ev) => this.updateLabel(ev.target.value)"
                     t-ref="labelNodeRef"
+                    t-key="props.readonly"
                 />
             </t>
             <t t-elif="isSection()">
                 <input
                     type="text"
-                    class="o_input text-wrap border-0 fst-italic fw-bold"
+                    class="o_input text-wrap border-0 fst-italic"
                     placeholder="Enter a description"
                     t-att-class="sectionAndNoteClasses"
                     t-att-readonly="sectionAndNoteIsReadonly"
                     t-att-value="label"
                     t-on-change="(ev) => this.updateLabel(ev.target.value)"
                     t-ref="labelNodeRef"
+                    t-key="props.readonly"
                 />
             </t>
             <t t-else="">
@@ -50,6 +52,7 @@
                     t-att-value="label"
                     t-on-change="(ev) => this.updateLabel(ev.target.value)"
                     t-ref="labelNodeRef"
+                    t-key="props.readonly"
                 />
             </t>
             <t t-if="isPrintMode.value">
