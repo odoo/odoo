@@ -7,9 +7,10 @@ from lxml import etree, html
 from lxml.builder import E
 from textwrap import dedent
 
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.addons.base.models.ir_qweb import QWebException, render
+from odoo.addons.base.models.ir_qweb import QWebError, render
 from odoo.tools import file_open, misc, mute_logger
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.exceptions import UserError, MissingError
@@ -17,6 +18,7 @@ from odoo.exceptions import UserError, MissingError
 unsafe_eval = eval
 
 
+@tagged('post_install', '-at_install')
 class TestQWebTField(TransactionCase):
     def setUp(self):
         super(TestQWebTField, self).setUp()
@@ -57,13 +59,13 @@ class TestQWebTField(TransactionCase):
     def test_reject_crummy_tags(self):
         field = etree.Element('td', {'t-field': 'company.name'})
 
-        with self.assertRaisesRegex(QWebException, r'QWeb widgets do not work correctly'):
+        with self.assertRaisesRegex(QWebError, r'QWeb widgets do not work correctly'):
             self.engine._render(field, {'company': None})
 
     def test_reject_t_tag(self):
         field = etree.Element('t', {'t-field': 'company.name'})
 
-        with self.assertRaisesRegex(QWebException, r't-field can not be used on a t element'):
+        with self.assertRaisesRegex(QWebError, r't-field can not be used on a t element'):
             self.engine._render(field, {'company': None})
 
     def test_render_t_options(self):
@@ -157,6 +159,7 @@ class TestQWebTField(TransactionCase):
         self.assertEqual(str(rendered.strip()), result.strip())
 
 
+@tagged('post_install', '-at_install')
 class TestQWebNS(TransactionCase):
     def test_render_static_xml_with_namespace(self):
         """ Test the rendering on a namespaced view with no static content. The resulting string should be untouched.
@@ -663,7 +666,7 @@ class TestQWebNS(TransactionCase):
         except TypeError as e:
             error_msg = e.args[0]
 
-        with self.assertRaises(QWebException, msg=error_msg):
+        with self.assertRaises(QWebError, msg=error_msg):
             self.env['ir.qweb']._render(view1.id)
 
 
@@ -697,6 +700,7 @@ class TestQWebNS(TransactionCase):
         self.assertEqual(etree.fromstring(rendering), etree.fromstring(expected_result))
 
 
+@tagged('post_install', '-at_install')
 class TestQWebBasic(TransactionCase):
     def test_compile_expr(self):
         tests = [
@@ -760,15 +764,14 @@ class TestQWebBasic(TransactionCase):
             </t>'''
         })
 
-        with self.assertRaises(QWebException):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(t.id)
 
         try:
             self.env['ir.qweb']._render(t.id)
-        except QWebException as e:
-            error = str(e)
-            self.assertIn("KeyError: 't-as'", error)
-            self.assertIn('<t t-foreach="[3, 2, 1]"/>', error)
+        except QWebError as e:
+            self.assertIn("KeyError: 't-as'", str(e))
+            self.assertIn('<t t-foreach="[3, 2, 1]"/>', str(e.qweb))
 
     def test_foreach_as_error_2(self):
         t = self.env['ir.ui.view'].create({
@@ -780,12 +783,12 @@ class TestQWebBasic(TransactionCase):
             </t>'''
         })
 
-        with self.assertRaises(QWebException):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(t.id)
 
         try:
             self.env['ir.qweb']._render(t.id)
-        except QWebException as e:
+        except QWebError as e:
             error = str(e)
             self.assertIn("KeyError: 't-as'", error)
             self.assertIn('<t t-foreach="[3, 2, 1]" t-as=""/>', error)
@@ -800,12 +803,12 @@ class TestQWebBasic(TransactionCase):
             </t>'''
         })
 
-        with self.assertRaises(QWebException):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(t.id)
 
         try:
             self.env['ir.qweb']._render(t.id)
-        except QWebException as e:
+        except QWebError as e:
             error = str(e)
             self.assertIn("The varname 'b-2' can only contain alphanumeric characters and underscores", error)
             self.assertIn('<t t-foreach="[3, 2, 1]" t-as="b-2"/>', error)
@@ -1085,12 +1088,12 @@ class TestQWebBasic(TransactionCase):
             </t>'''
         })
 
-        with self.assertRaises(QWebException):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(t.id)
 
         try:
             self.env['ir.qweb']._render(t.id)
-        except QWebException as e:
+        except QWebError as e:
             error = str(e)
             self.assertIn("KeyError: 't-set'", error)
             self.assertIn('<t t-set="" t-value="1"/>', error)
@@ -1105,12 +1108,12 @@ class TestQWebBasic(TransactionCase):
             </t>'''
         })
 
-        with self.assertRaises(QWebException):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(t.id)
 
         try:
             self.env['ir.qweb']._render(t.id)
-        except QWebException as e:
+        except QWebError as e:
             error = str(e)
             self.assertIn("The varname can only contain alphanumeric characters and underscores", error)
             self.assertIn('<t t-set="b-2" t-value="1"/>', error)
@@ -1413,12 +1416,12 @@ class TestQWebBasic(TransactionCase):
                 </section>
             </t>'''
         })
-        with self.assertRaises(QWebException):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(t.id)
 
         try:
             self.env['ir.qweb']._render(t.id)
-        except QWebException as e:
+        except QWebError as e:
             error = str(e)
             self.assertIn('<div t-esc="abc + def"/>', error)
 
@@ -1434,12 +1437,12 @@ class TestQWebBasic(TransactionCase):
                 </section>
             </t>'''
         })
-        with self.assertRaises(QWebException):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(t.id)
 
         try:
             self.env['ir.qweb']._render(t.id)
-        except QWebException as e:
+        except QWebError as e:
             error = str(e)
             self.assertIn('Can not compile expression', error)
             self.assertIn('<div t-esc="abc + def + ("/>', error)
@@ -1451,19 +1454,19 @@ class TestQWebBasic(TransactionCase):
                         <span>content</span>
                     </div>
                 </section>'''
-        with self.assertRaises(ValueError):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(template)
         try:
             self.env['ir.qweb']._render(template)
-        except ValueError as e:
+        except QWebError as e:
             self.assertIn('Inline templates must be passed as `etree` documents', str(e))
 
         template = '''toto <t t-esc="content"/>'''
-        with self.assertRaises(ValueError):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(template)
         try:
             self.env['ir.qweb']._render(template)
-        except ValueError as e:
+        except QWebError as e:
             self.assertIn('Inline templates must be passed as `etree` documents', str(e))
 
     def test_error_message_4(self):
@@ -1482,11 +1485,11 @@ class TestQWebBasic(TransactionCase):
         except MissingError as e:
             self.assertIn('Template not found', str(e))
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(False)
         try:
             self.env['ir.qweb']._render(False)
-        except AssertionError as e:
+        except QWebError as e:
             self.assertIn('template is required', str(e))
 
     def test_error_message_5(self):
@@ -1585,14 +1588,14 @@ class TestQWebBasic(TransactionCase):
             """
         })
 
-        with self.assertRaises(QWebException):
+        with self.assertRaises(MissingError):
             self.env['ir.qweb']._render(view1.id)
 
         try:
             self.env['ir.qweb']._render(view1.id)
-        except QWebException as e:
-            error = str(e)
-            self.assertIn('Template not found: base.dummy', error)
+        except MissingError as e:
+            error = str(e.qweb)
+            self.assertIn("Template not found: 'base.dummy'", error)
             self.assertIn('<t t-call="base.dummy"/>', error)
 
     def test_call_infinity_error(self):
@@ -1608,12 +1611,12 @@ class TestQWebBasic(TransactionCase):
             'arch': '<div><t t-call="base.dummy"/></div>'
         })
 
-        with self.assertRaises(QWebException):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(view1.id)
 
         try:
             self.env['ir.qweb']._render(view1.id)
-        except QWebException as e:
+        except QWebError as e:
             error = str(e)
             self.assertIn('Qweb template infinity loop', error)
             self.assertIn("""'/article/t', '<t t-call="base.dummy"/>'""", error)
@@ -1850,11 +1853,11 @@ class TestQWebBasic(TransactionCase):
         })
 
         # Check that we cannot bypass the templates subfolder. We should only be able to read file under this specific subfolder
-        with self.assertRaises(ValueError):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render('base/tests/file_template/templates/../unreadable_file_template.xml', values={})
 
         # Check that as above, if we do not have a parent called templates, the file become unreadable for security reasons.
-        with self.assertRaises(ValueError):
+        with self.assertRaises(QWebError):
             self.env['ir.qweb']._render('base/tests/file_template/unreadable_file_template.xml', values={})
 
     def test_void_element(self):
@@ -2033,6 +2036,7 @@ class TestQWebBasic(TransactionCase):
         self.assertEqual(str(rendered), result)
 
 
+@tagged('post_install', '-at_install')
 class TestQwebPerformance(TransactionCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
@@ -2174,6 +2178,7 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
         check(view.id, 'test-cold-id-3', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE - 1)  # 7
 
 
+@tagged('post_install', '-at_install')
 class TestQwebCache(TransactionCase):
     def test_render_xml_cache_base(self):
         view1 = self.env['ir.ui.view'].create({
@@ -2978,7 +2983,7 @@ class TestQwebCache(TransactionCase):
             """
         })
 
-        with self.assertRaisesRegex(QWebException, "The value type of 't-nocache-record' cannot be cached"):
+        with self.assertRaisesRegex(QWebError, "The value type of 't-nocache-record' cannot be cached"):
             self.env['ir.qweb'].with_context(is_t_cache_disabled=False)._render(template_page.id, {
                 'cache_id': 1,
                 'view_record': self.env['ir.ui.view'].search([], limit=1),

@@ -392,24 +392,21 @@ class IrHttp(models.AbstractModel):
     def _get_values_500_error(cls, env, values, exception):
         View = env["ir.ui.view"]
         values = super()._get_values_500_error(env, values, exception)
-        if 'qweb_exception' in values:
-            try:
-                # exception.name might be int, string
-                exception_template = int(exception.name)
-            except ValueError:
-                exception_template = exception.name
-            view = View.sudo()._get_template_view(exception_template)
-            if exception.html and exception.html in view.arch:
+        if hasattr(exception, 'qweb'):
+            qweb_error = exception.qweb
+            exception_template = qweb_error.ref
+            view = exception_template and View.sudo()._get_template_view(exception_template)
+            if not view or qweb_error.element and qweb_error.element in view.arch:
                 values['view'] = view
             else:
                 # There might be 2 cases where the exception code can't be found
                 # in the view, either the error is in a child view or the code
                 # contains branding (<div t-att-data="request.browse('ok')"/>).
                 et = view.with_context(inherit_branding=False)._get_combined_arch()
-                node = et.xpath(exception.path) if exception.path else et
+                node = et.xpath(qweb_error.path) if qweb_error.path else et
                 line = node is not None and len(node) > 0 and etree.tostring(node[0], encoding='unicode')
                 if line:
-                    values['view'] = View._views_get(exception_template).filtered(
+                    values['view'] = View.sudo()._views_get(view.id).filtered(
                         lambda v: line in v.arch
                     )
                     values['view'] = values['view'] and values['view'][0]
