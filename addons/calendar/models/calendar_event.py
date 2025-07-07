@@ -541,6 +541,13 @@ class Meeting(models.Model):
             dict(vals, user_id=defaults.get('user_id', self.env.user.id)) if not 'user_id' in vals else vals
             for vals in vals_list
         ]
+
+        default_res_id = defaults.get('res_id')
+        if default_res_id:
+            for vals in vals_list:
+                if not vals.get('res_id'):
+                    vals['res_id'] = default_res_id
+
         meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
         # get list of models ids and filter out None values directly
         model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
