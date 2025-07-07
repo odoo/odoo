@@ -40,8 +40,7 @@ class PrinterDriver(Driver):
         super().__init__(identifier, device)
         self.device_type = 'printer'
         self.device_connection = self._compute_device_connection(device)
-        connection_prefix = "[USB] " if self.device_connection == 'direct' else ""
-        self.device_name = connection_prefix + device.get('identifier')
+        self.device_name = device.get('identifier')
         self.printer_handle = device.get('printer_handle')
         self.state = {
             'status': 'connecting',
