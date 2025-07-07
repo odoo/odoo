@@ -158,6 +158,9 @@ export function strikeThrough(editor) {
 export function setFontSize(size) {
     return (editor) => execCommand(editor, "formatFontSize", { size });
 }
+export function setFontSizeClassName(className) {
+    return (editor) => execCommand(editor, "formatFontSizeClassName", { className });
+}
 export function setFontFamily(fontFamily) {
     return (editor) => {
         editor.shared.format.formatSelection("fontFamily", {

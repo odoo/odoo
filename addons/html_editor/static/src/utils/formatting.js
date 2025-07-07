@@ -93,7 +93,13 @@ export const formatsSpecs = {
         removeStyle: (node) => removeStyle(node, "font-family"),
     },
     fontSize: {
-        isFormatted: (node) => closestElement(node)?.style["font-size"],
+        isFormatted: (node, props) => {
+            const hasFontSize = closestElement(node)?.style["font-size"];
+            if (props?.size) {
+                return hasFontSize && closestElement(node).style["font-size"] === props.size;
+            }
+            return hasFontSize;
+        },
         hasStyle: (node) => node.style && node.style["font-size"],
         addStyle: (node, props) => {
             node.style["font-size"] = props.size;
@@ -102,9 +108,16 @@ export const formatsSpecs = {
         removeStyle: (node) => removeStyle(node, "font-size"),
     },
     setFontSizeClassName: {
-        isFormatted: (node) =>
-            FONT_SIZE_CLASSES.find((cls) => closestElement(node)?.classList?.contains(cls)),
-        hasStyle: (node, props) => FONT_SIZE_CLASSES.find((cls) => node.classList.contains(cls)),
+        isFormatted: (node, props) => {
+            if (props?.className) {
+                return (
+                    FONT_SIZE_CLASSES.includes(props.className) &&
+                    closestElement(node)?.classList.contains(props.className)
+                );
+            }
+            return FONT_SIZE_CLASSES.find((cls) => closestElement(node)?.classList?.contains(cls));
+        },
+        hasStyle: (node) => FONT_SIZE_CLASSES.find((cls) => node.classList.contains(cls)),
         addStyle: (node, props) => {
             node.style.removeProperty("font-size");
             node.classList.add(props.className);
