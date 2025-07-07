@@ -28,7 +28,7 @@ test("dynamic snippet blog posts loads items and displays them through template"
         expect(json.params.template_key).toBe(
             "website_blog.dynamic_filter_template_blog_post_big_picture"
         );
-        expect(json.params.limit).toBe(16);
+        expect(json.params.limit).toBe(8);
         expect(json.params.search_domain).toEqual([["blog_id", "=", 1]]);
         return [
             `
