@@ -39,9 +39,9 @@ export class BuilderTextInputBase extends Component {
         });
     }
 
-    onChange(ev) {
+    async onChange(ev) {
         this.isEditing = false;
-        const normalizedDisplayValue = this.props.commit(ev.target.value);
+        const normalizedDisplayValue = await this.props.commit(ev.target.value);
         ev.target.value = normalizedDisplayValue;
     }
 

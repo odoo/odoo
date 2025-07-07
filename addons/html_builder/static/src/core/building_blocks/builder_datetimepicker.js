@@ -40,9 +40,9 @@ export class BuilderDateTimePicker extends Component {
         this.state = state;
         this.oldValue = this.state.value;
 
-        this.commit = (userInputValue) => {
+        this.commit = async (userInputValue) => {
             this.isPreviewing = false;
-            const result = commit(userInputValue);
+            const result = await commit(userInputValue);
             if (result) {
                 this.oldValue = parseDateTime(result).toUnixInteger().toString();
             }
