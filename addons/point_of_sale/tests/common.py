@@ -523,7 +523,6 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                 }
             )
             return (0, 0, {
-                **kwargs,
                 'id': randint(1, 1000000),
                 'pack_lot_ids': [],
                 'price_unit': price_unit,
@@ -531,7 +530,8 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                 'price_subtotal': tax_values['total_excluded'],
                 'price_subtotal_incl': tax_values['total_included'],
                 'qty': quantity,
-                'tax_ids': [(6, 0, tax_ids.ids)]
+                'tax_ids': [(6, 0, tax_ids.ids)],
+                **kwargs
             })
 
         def create_payment(payment_method, amount):
