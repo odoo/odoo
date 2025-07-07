@@ -1,5 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import test_resource
-from . import test_performance
+from . import (
+    test_calendar,
+    test_mixin,
+    test_performance,
+    test_resource,
+    test_resource_errors,
+    test_timezones,
+)
