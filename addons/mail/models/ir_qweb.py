@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models
+from odoo.addons.base.models.ir_qweb import QWebException
+
+
+class QwebPermissionError(QWebException, PermissionError):
+    pass
 
 
 class IrQweb(models.AbstractModel):
