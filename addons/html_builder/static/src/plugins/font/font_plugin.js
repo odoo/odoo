@@ -102,7 +102,7 @@ export class BuilderFontPlugin extends Plugin {
             const fontKey = getCSSVariableValue(`font-number-${realFontNb}`, style);
             allFonts.push(fontKey);
             let fontName = fontKey.slice(1, -1); // Unquote
-            const fontFamilyValue = fontName;
+            const fontFamilyValue = `'${fontName}'`;
             let styleFontFamily = fontName;
             const isSystemFonts = fontName === "SYSTEM_FONTS";
             if (isSystemFonts) {
