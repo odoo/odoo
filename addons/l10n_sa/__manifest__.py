@@ -24,6 +24,7 @@ Activates:
         'l10n_gcc_invoice',
         'account',
         'account_debit_note',
+        'l10n_account_withholding_tax',
     ],
     'auto_install': ['account'],
     'data': [
