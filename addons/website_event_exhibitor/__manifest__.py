@@ -12,8 +12,6 @@
         'website_event',
     ],
     'data': [
-        'security/security.xml',
-        'security/ir.model.access.csv',
         'data/event_sponsor_data.xml',
         'report/website_event_exhibitor_reports.xml',
         'report/website_event_exhibitor_templates.xml',
@@ -25,6 +23,7 @@
         'views/event_type_views.xml',
         'views/event_menus.xml',
         'views/snippets.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/event_demo.xml',

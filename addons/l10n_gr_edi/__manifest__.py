@@ -15,7 +15,6 @@
     'data': [
         'data/ir_cron.xml',
         'data/template.xml',
-        'security/ir.model.access.csv',
         'views/account_fiscal_position_views.xml',
         'views/account_move_views.xml',
         'views/account_tax_views.xml',
@@ -23,6 +22,7 @@
         'views/report_invoice.xml',
         'views/res_company_views.xml',
         'views/res_partner_views.xml',
+        'security/ir.access.csv',
     ],
     'installable': True,
     'auto_install': True,

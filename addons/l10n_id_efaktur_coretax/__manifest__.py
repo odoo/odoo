@@ -23,7 +23,6 @@
         "data/ir_action.xml",
 
         # Accesses
-        "security/ir.model.access.csv",
 
         # Views
         "views/product_template.xml",
@@ -33,6 +32,7 @@
         "views/account_move.xml",
         "views/efaktur_document.xml",
         "views/uom_uom.xml",
+        'security/ir.access.csv',
     ],
     'installable': True,
     'auto_install': True,

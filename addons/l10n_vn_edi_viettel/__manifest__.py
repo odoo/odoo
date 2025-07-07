@@ -16,13 +16,13 @@ Vietnam - E-invoicing
 Using SInvoice by Viettel
     """,
     "data": [
-        'security/ir.model.access.csv',
         "views/account_move_views.xml",
         "views/res_config_settings_views.xml",
         "views/res_partner_views.xml",
         "views/sinvoice_views.xml",
         "wizard/account_move_reversal_view.xml",
         "wizard/l10n_vn_edi_cancellation_request_views.xml",
+        'security/ir.access.csv',
     ],
     "installable": True,
     "author": "Odoo S.A.",

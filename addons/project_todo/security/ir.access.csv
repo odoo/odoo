@@ -1,0 +1,6 @@
+id,model_id,group_id/id,operation,domain,name
+access_project_task_type_group_user,project.task.type,base.group_user,rwcd,,project.task.type.user
+access_project_task_group_user,project.task,base.group_user,rwcd,"[('project_id', '=', False), ('user_ids', 'in', user.id), ('parent_id', '=', False)]",Project/Task: employees: Full access to own private task only
+access_project_task_group_project_user,project.task,project.group_project_user,rwcd,"[('project_id', '=', False), ('user_ids', 'in', user.id), ('parent_id', '=', False)]",Project/Task: employees: Full access to own private task only
+access_project_tags_group_user,project.tags,base.group_user,rwcd,,project.project_tags_user
+access_mail_activity_todo_create_group_user,mail.activity.todo.create,base.group_user,rwc,,mail.activity.todo.create

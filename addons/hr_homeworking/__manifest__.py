@@ -6,10 +6,9 @@
     'category': 'Human Resources/Remote Work',
     'depends': ['hr'],
     'data': [
-        'security/security.xml',
-        'security/ir.model.access.csv',
         'views/hr_employee_views.xml',
         'views/res_users.xml',
+        'security/ir.access.csv',
     ],
     'installable': True,
     'auto_install': True,

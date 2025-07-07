@@ -11,9 +11,8 @@
 
     'depends': ['hr_timesheet', 'hr_attendance'],
     'data': [
-        'security/ir.model.access.csv',
-        'security/hr_timesheet_attendance_report_security.xml',
         'report/hr_timesheet_attendance_report_view.xml',
+        'security/ir.access.csv',
     ],
     'auto_install': True,
     'author': 'Odoo S.A.',

@@ -7,7 +7,6 @@
     "depends": ["pos_restaurant", "http_routing", "link_tracker"],
     "auto_install": ["pos_restaurant"],
     "data": [
-        "security/ir.model.access.csv",
         "data/mail_template_data.xml",
         "data/preset_data.xml",
         "views/pos_self_order.index.xml",
@@ -22,6 +21,7 @@
         "data/init_access.xml",
         "views/res_config_settings_views.xml",
         "views/point_of_sale_dashboard.xml",
+        'security/ir.access.csv',
     ],
     "demo": [
         "data/kiosk_demo_data.xml",

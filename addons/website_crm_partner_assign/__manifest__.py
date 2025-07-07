@@ -28,8 +28,6 @@ The automatic assignment is figured from the weight of partner levels and the ge
         'data/crm_tag_data.xml',
         'data/mail_template_data.xml',
         'data/res_partner_activation_data.xml',
-        'security/ir.model.access.csv',
-        'security/ir_rule.xml',
         'wizard/crm_forward_to_partner_view.xml',
         'views/res_partner_views.xml',
         'views/res_partner_activation_views.xml',
@@ -39,6 +37,7 @@ The automatic assignment is figured from the weight of partner levels and the ge
         'views/partner_assign_menus.xml',
         'report/crm_partner_report_view.xml',
         'views/snippets.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/res_partner_demo.xml',

@@ -21,8 +21,6 @@
     'data': [
         'data/res_groups_privilege_data.xml',
         'security/res_groups_data.xml',
-        'security/security.xml',
-        'security/ir.model.access.csv',
         'data/digest_data.xml',
         'data/ir_attachment_data.xml',
         'data/ir_config_parameter_data.xml',
@@ -83,6 +81,7 @@
         'views/snippets/s_text_image.xml',
         'views/snippets/s_three_columns.xml',
         'views/snippets/s_title.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/utm.xml',

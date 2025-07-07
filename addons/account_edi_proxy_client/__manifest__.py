@@ -13,9 +13,8 @@ Odoo database.
     'category': 'Accounting/Accounting',
     'depends': ['account', 'certificate'],
     'data': [
-        'security/ir.model.access.csv',
-        'security/account_edi_proxy_client_security.xml',
         'views/account_edi_proxy_user_views.xml',
+        'security/ir.access.csv',
     ],
     'installable': True,
     'author': 'Odoo S.A.',

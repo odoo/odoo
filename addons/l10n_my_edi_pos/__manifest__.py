@@ -14,9 +14,6 @@
         "data/ir_cron.xml",
         "data/res_partner.xml",
 
-        "security/myinvois_security.xml",
-        "security/ir.model.access.csv",
-
         "views/account_tax_view.xml",
         "views/myinvois_document_views.xml",
         "views/myinvois_document_pos_views.xml",
@@ -25,6 +22,7 @@
 
         "wizard/myinvois_consolidate_invoice_wizard.xml",
         "wizard/myinvois_status_update_wizard.xml",
+        'security/ir.access.csv',
     ],
     "installable": True,
     'auto_install': True,

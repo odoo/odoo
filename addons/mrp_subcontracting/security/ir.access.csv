@@ -1,0 +1,55 @@
+id,model_id,group_id/id,operation,domain,name
+access_stock_picking_group_portal,stock.picking,base.group_portal,r,"[('partner_id.commercial_partner_id', '=', user.partner_id.commercial_partner_id.id)]",Stock Pickings Subcontractor
+access_stock_picking_type_group_portal,stock.picking.type,base.group_portal,r,"['|', ('id', 'in', user.partner_id.commercial_partner_id.picking_ids.picking_type_id.ids), ('id', 'in', user.partner_id.commercial_partner_id.production_ids.picking_type_id.ids)]",Stock Picking Types Subcontractor
+access_stock_move_group_portal,stock.move,base.group_portal,rwc,"[
+        '|', 
+            '|',
+                ('production_id.subcontractor_id', '=', user.partner_id.commercial_partner_id.id),
+                ('move_orig_ids.production_id.subcontractor_id', 'in', user.partner_id.commercial_partner_id.ids),
+            ('raw_material_production_id.subcontractor_id', 'in', user.partner_id.commercial_partner_id.ids)
+        ]",Stock Moves Subcontractor
+access_stock_move_line_group_portal,stock.move.line,base.group_portal,rwcd,"[
+        '|', 
+            '|',
+                ('move_id.production_id.subcontractor_id', '=', user.partner_id.commercial_partner_id.id),
+                ('move_id.move_orig_ids.production_id.subcontractor_id', 'in', user.partner_id.commercial_partner_id.ids),
+            ('move_id.raw_material_production_id.subcontractor_id', 'in', user.partner_id.commercial_partner_id.ids),
+        ]",Stock Move Lines Subcontractor
+access_stock_warehouse_group_portal,stock.warehouse,base.group_portal,r,"[('id', 'in', user.partner_id.commercial_partner_id.picking_ids.picking_type_id.warehouse_id.ids)]",Warehouses Subcontractor
+access_stock_lot_group_portal,stock.lot,base.group_portal,rc,"[
+        '|',
+            '|',
+                ('product_id', 'in', user.partner_id.commercial_partner_id.bom_ids.product_id.ids),
+                ('product_id', 'in', user.partner_id.commercial_partner_id.bom_ids.product_tmpl_id.product_variant_ids.ids),
+            ('product_id', 'in', user.partner_id.commercial_partner_id.bom_ids.bom_line_ids.product_id.ids),
+            ]",Stock Lot Subcontractor
+access_stock_location_group_portal,stock.location,base.group_portal,r,"[
+            '|',
+                '|',
+                    '|',
+                        '|', 
+                            ('child_ids', 'in', user.partner_id.commercial_partner_id.picking_ids.location_id.ids), 
+                            ('child_ids', 'in', user.partner_id.commercial_partner_id.picking_ids.location_dest_id.ids),
+                        '|', 
+                            ('id', 'in', user.partner_id.commercial_partner_id.picking_ids.location_id.ids), 
+                            ('id', 'in', user.partner_id.commercial_partner_id.picking_ids.location_dest_id.ids),
+                    '|',
+                        ('id', 'in', user.partner_id.commercial_partner_id.picking_ids.picking_type_id.warehouse_id.view_location_id.ids),
+                        ('id', 'in', user.partner_id.commercial_partner_id.production_ids.production_location_id.ids),
+                ('id', 'in', user.partner_id.commercial_partner_id.production_ids.move_finished_ids.move_dest_ids.location_id.ids),
+        ]",Stock Locations Subcontractor
+access_mrp_production_group_portal,mrp.production,base.group_portal,rw,"[('subcontractor_id', '=', user.partner_id.commercial_partner_id.id)]",MRP Productions Subcontractor
+access_mrp_bom_group_portal,mrp.bom,base.group_portal,r,"[('id', 'in', user.partner_id.commercial_partner_id.bom_ids.ids)]",MRP BoMs Subcontractor
+access_mrp_bom_line_group_portal,mrp.bom.line,base.group_portal,r,"[('id', 'in', user.partner_id.commercial_partner_id.bom_ids.bom_line_ids.ids)]",MRP BoM Lines Subcontractor
+access_mrp_consumption_warning_group_portal,mrp.consumption.warning,base.group_portal,rwc,"[('mrp_production_ids', 'in', user.partner_id.commercial_partner_id.production_ids.ids)]",MRP Consumption Warnings Subcontractor
+access_mrp_consumption_warning_line_group_portal,mrp.consumption.warning.line,base.group_portal,rwc,"[('mrp_production_id', 'in', user.partner_id.commercial_partner_id.production_ids.ids)]",MRP Consumption Warning Lines Subcontractor
+access_product_product_group_portal,product.product,base.group_portal,r,,subcontracting.portal.product
+access_product_template_group_portal,product.template,base.group_portal,r,"[
+        '|',
+            '|',
+                ('id', 'in', user.partner_id.commercial_partner_id.bom_ids.product_id.product_tmpl_id.ids),
+                ('id', 'in', user.partner_id.commercial_partner_id.bom_ids.product_tmpl_id.ids),
+            ('id', 'in', user.partner_id.commercial_partner_id.bom_ids.bom_line_ids.product_id.product_tmpl_id.ids),
+            ]",Product Template Subcontractor
+access_uom_uom_group_portal,uom.uom,base.group_portal,r,,subcontracting.portal.uom
+access_barcode_nomenclature_group_portal,barcode.nomenclature,base.group_portal,r,,subcontracting.portal.barcode.nomenclature

@@ -15,8 +15,6 @@
         'data/ir_cron.xml',
         'data/l10n_my_edi.industry_classification.csv',
 
-        'security/ir.model.access.csv',
-
         'views/account_move_view.xml',
         'views/account_tax_view.xml',
         'views/l10n_my_edi_industrial_classification_views.xml',
@@ -28,6 +26,7 @@
         'views/account_portal_templates.xml',
 
         'wizard/l10n_my_edi_status_update_wizard.xml',
+        'security/ir.access.csv',
     ],
     'installable': True,
     'author': 'Odoo S.A.',

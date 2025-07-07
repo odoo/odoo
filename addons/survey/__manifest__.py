@@ -30,7 +30,6 @@ sent mails with personal token for the invitation of the survey.
         'data/mail_template_data.xml',
         'data/survey_tour.xml',
         'security/survey_security.xml',
-        'security/ir.model.access.csv',
         'views/survey_menus.xml',
         'views/survey_survey_views.xml',
         'views/survey_user_views.xml',
@@ -43,6 +42,7 @@ sent mails with personal token for the invitation of the survey.
         'views/gamification_badge_views.xml',
         'wizard/survey_invite_views.xml',
         'views/res_partner_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/gamification_badge_demo.xml',

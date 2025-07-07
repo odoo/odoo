@@ -12,10 +12,10 @@
     "license": "LGPL-3",
     "data": [
         "security/security.xml",
-        "security/ir.model.access.csv",
         "views/spreadsheet_dashboard_views.xml",
         "views/menu_views.xml",
         "data/dashboard.xml",
+        'security/ir.access.csv',
     ],
     "assets": {
         "spreadsheet.o_spreadsheet": [

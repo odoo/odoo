@@ -15,7 +15,7 @@ tests independently to functional aspects of other models. """,
         'test_orm',
     ],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'installable': True,
     'author': 'Odoo S.A.',

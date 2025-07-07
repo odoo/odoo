@@ -7,11 +7,11 @@
     'depends': ['microsoft_account', 'calendar'],
     'data': [
         'data/microsoft_calendar_data.xml',
-        'security/ir.model.access.csv',
         'wizard/reset_account_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_users_views.xml',
         'views/microsoft_calendar_views.xml',
+        'security/ir.access.csv',
         ],
     'installable': True,
     'post_init_hook': 'init_initiating_microsoft_uuid',

@@ -17,7 +17,7 @@ The wizard used is similar as the one for the credit note.
         'wizard/account_debit_note_view.xml',
         'views/account_move_view.xml',
         'views/account_journal_views.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'installable': True,
     'author': 'Odoo S.A.',

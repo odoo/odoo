@@ -1,0 +1,15 @@
+id,model_id,group_id/id,operation,domain,name
+access_resource_calendar_group_user,resource.calendar,base.group_user,r,,resource.calendar.user
+access_resource_calendar_group_system,resource.calendar,base.group_system,rwcd,,resource.calendar.system
+access_resource_calendar_attendance_group_user,resource.calendar.attendance,base.group_user,r,,resource.calendar.attendance.user
+access_resource_calendar_attendance_group_system,resource.calendar.attendance,base.group_system,rwcd,,resource.calendar.attendance.system
+access_resource_resource_group_system,resource.resource,base.group_system,r,,resource.resource
+access_resource_resource_group_user,resource.resource,base.group_user,r,,resource.resource all
+access_resource_resource_global,resource.resource,,rwcd,"[('company_id', 'in', company_ids + [False])]",resource.resource multi-company
+access_resource_calendar_leaves_group_user_r,resource.calendar.leaves,base.group_user,r,"['|', ('resource_id', '=', False), ('resource_id.user_id', 'in', [False, user.id])]",resource.calendar.leaves: employee reads own or global
+access_resource_calendar_leaves_group_user_wcd,resource.calendar.leaves,base.group_user,wcd,"[('resource_id', '!=', False), ('resource_id.user_id', 'in', [False, user.id])]",resource.calendar.leaves: employee modifies own
+access_resource_calendar_leaves_group_system_r,resource.calendar.leaves,base.group_system,r,"['|', ('resource_id', '=', False), ('resource_id.user_id', 'in', [False, user.id])]",resource.calendar.leaves: employee reads own or global
+access_resource_calendar_leaves_group_system_wcd,resource.calendar.leaves,base.group_system,wcd,"[('resource_id', '!=', False), ('resource_id.user_id', 'in', [False, user.id])]",resource.calendar.leaves: employee modifies own
+access_resource_calendar_leaves_group_system_wcd1,resource.calendar.leaves,base.group_system,wcd,"[('resource_id', '=', False)]",resource.calendar.leaves: admin modifies global
+access_resource_calendar_leaves_group_erp_manager,resource.calendar.leaves,base.group_erp_manager,wcd,"[('resource_id', '=', False)]",resource.calendar.leaves: admin modifies global
+access_resource_calendar_leaves_global,resource.calendar.leaves,,rwcd,"[('company_id', 'in', company_ids + [False])]",resource.calendar.leaves: multi-company rule

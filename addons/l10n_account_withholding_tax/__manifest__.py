@@ -6,7 +6,6 @@
     'category': 'Accounting/Localizations',
     'depends': ['account'],
     'data': [
-        'security/ir.model.access.csv',
 
         'views/account_payment_views.xml',
         'views/account_tax_views.xml',
@@ -14,6 +13,7 @@
         'views/res_config_settings.xml',
 
         'wizards/account_payment_register_views.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

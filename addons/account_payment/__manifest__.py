@@ -11,9 +11,6 @@
         'data/ir_config_parameter.xml',
         'data/onboarding_data.xml',
 
-        'security/ir.model.access.csv',
-        'security/ir_rules.xml',
-
         'views/account_payment_menus.xml',
         'views/account_portal_templates.xml',
         'views/account_move_views.xml',
@@ -27,6 +24,7 @@
         'wizards/payment_link_wizard_views.xml',
         'wizards/payment_refund_wizard_views.xml',
         'wizards/res_config_settings_views.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_unit_tests': [

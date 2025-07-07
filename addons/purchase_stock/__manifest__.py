@@ -9,7 +9,6 @@
     'summary': 'Purchase Orders, Receipts, Vendor Bills for Stock',
     'depends': ['stock_account', 'purchase'],
     'data': [
-        'security/ir.model.access.csv',
         'data/purchase_stock_data.xml',
         'data/mail_templates.xml',
         'report/vendor_delay_report.xml',
@@ -28,6 +27,7 @@
         'wizard/stock_replenishment_info.xml',
         'wizard/product_replenish_views.xml',
         'wizard/purchase_order_suggest_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/purchase_stock_demo.xml',

@@ -6,10 +6,9 @@
     'depends': ['base', 'web', 'web_tour'],
     'installable': True,
     'data': [
-        'security/ir.model.access.csv',
-        'security/test_orm_security.xml',
         'views/test_orm_views.xml',
         'data/test_orm_data.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_tests': [

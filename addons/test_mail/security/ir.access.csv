@@ -1,0 +1,83 @@
+id,model_id,group_id/id,operation,domain,name
+access_mail_performance_thread_group_user,mail.performance.thread,base.group_user,rwcd,,access_mail_performance_thread
+access_mail_performance_thread_recipients_group_user,mail.performance.thread.recipients,base.group_user,rwcd,,access_mail_performance_thread_recipients
+access_mail_performance_tracking_group_user,mail.performance.tracking,base.group_user,rwcd,,mail.performance.tracking
+access_mail_test_access_group_portal_r,mail.test.access,base.group_portal,r,"[
+            '|', ('access', 'in', ('public', 'logged', 'logged_ro')),
+            '&', ('access', '=', 'followers'), ('message_partner_ids', 'in', [user.partner_id.id])]",Portal: public/logged/logged readonly only
+access_mail_test_access_group_portal_rw,mail.test.access,base.group_portal,rw,"[
+            '|', ('access', '=', 'logged'),
+            '&', ('access', '=', 'followers'), ('message_partner_ids', 'in', [user.partner_id.id])]",Portal: update logged only
+access_mail_test_access_group_public,mail.test.access,base.group_public,r,"[('access', '=', 'public')]",Public: public only
+access_mail_test_access_group_user_r,mail.test.access,base.group_user,r,"[('access', '!=', 'admin')]",Internal: read not admin
+access_mail_test_access_group_user_wcd,mail.test.access,base.group_user,wcd,"[('access', 'not in', ('internal_ro', 'admin'))]",Internal: update not admin and not readonly
+access_mail_test_access_group_system,mail.test.access,base.group_system,rwcd,,Admin: all
+access_mail_test_access_custo_group_portal,mail.test.access.custo,base.group_portal,r,,mail.access.portal.portal
+access_mail_test_access_custo_group_user,mail.test.access.custo,base.group_user,rwcd,,mail.access.portal.user
+access_mail_test_access_public_group_public,mail.test.access.public,base.group_public,rw,,mail.test.access.public.public
+access_mail_test_access_public_group_portal,mail.test.access.public,base.group_portal,rw,,mail.test.access.public.portal
+access_mail_test_access_public_group_user,mail.test.access.public,base.group_user,rwcd,,mail.test.access.public.user
+access_mail_test_alias_optional_group_portal,mail.test.alias.optional,base.group_portal,r,,mail.test.alias.optional.portal
+access_mail_test_alias_optional_group_user,mail.test.alias.optional,base.group_user,rwcd,,mail.test.alias.optional.user
+access_mail_test_simple_group_portal,mail.test.simple,base.group_portal,r,,mail.test.simple.portal
+access_mail_test_simple_group_user,mail.test.simple,base.group_user,rwcd,,mail.test.simple.user
+access_mail_test_simple_unnamed_group_portal,mail.test.simple.unnamed,base.group_portal,r,,mail.test.simple.unnamed.portal
+access_mail_test_simple_unnamed_group_user,mail.test.simple.unnamed,base.group_user,rwcd,,mail.test.simple.unnamed.user
+access_mail_test_simple_unfollow_group_user,mail.test.simple.unfollow,base.group_user,rwcd,,mail.test.simple.unfollow.user
+access_mail_test_simple_main_attachment_group_portal,mail.test.simple.main.attachment,base.group_portal,r,,mail.test.simple.main.attachment.portal
+access_mail_test_simple_main_attachment_group_user,mail.test.simple.main.attachment,base.group_user,rwcd,,mail.test.simple.main.attachment.user
+access_mail_test_gateway_group_portal,mail.test.gateway,base.group_portal,r,,mail.test.gateway.portal
+access_mail_test_gateway_group_user,mail.test.gateway,base.group_user,rwcd,,mail.test.gateway.user
+access_mail_test_gateway_company_group_user,mail.test.gateway.company,base.group_user,rwcd,,mail.test.gateway.company.user
+access_mail_test_gateway_main_attachment_group_user,mail.test.gateway.main.attachment,base.group_user,rwcd,,mail.test.gateway.main.attachment.user
+access_mail_test_gateway_groups_group_portal,mail.test.gateway.groups,base.group_portal,r,,mail.test.gateway.groups.portal
+access_mail_test_gateway_groups_group_user,mail.test.gateway.groups,base.group_user,rwcd,,mail.test.gateway.groups.user
+access_mail_test_track_group_user,mail.test.track,base.group_user,rwcd,,mail.test.track.user.employee
+access_mail_test_activity_group_portal,mail.test.activity,base.group_portal,r,,mail.test.activity.portal
+access_mail_test_activity_group_user,mail.test.activity,base.group_user,rwcd,,mail.test.activity.user
+access_mail_test_field_type_group_user,mail.test.field.type,base.group_user,rwcd,,mail.test.field.type.user
+access_mail_test_lead_group_user,mail.test.lead,base.group_user,rwcd,,mail.test.lead.user
+access_mail_test_ticket_group_portal,mail.test.ticket,base.group_portal,r,"[('message_partner_ids', 'in', [user.partner_id.id])]",Portal Mail Test Ticket
+access_mail_test_ticket_group_user,mail.test.ticket,base.group_user,rwcd,,mail.test.ticket.user
+access_mail_test_ticket_el_group_portal,mail.test.ticket.el,base.group_portal,r,,mail.test.ticket.el.portal
+access_mail_test_ticket_el_group_user,mail.test.ticket.el,base.group_user,rwcd,,mail.test.ticket.el.user
+access_mail_test_ticket_mc_group_portal,mail.test.ticket.mc,base.group_portal,r,"[('message_partner_ids', 'in', [user.partner_id.id])]",Portal Mail Test Ticket Multi Company
+access_mail_test_ticket_mc_group_user,mail.test.ticket.mc,base.group_user,rwcd,,mail.test.ticket.mc.user
+access_mail_test_ticket_mc_global,mail.test.ticket.mc,,rwcd,"[('company_id', 'in', company_ids + [False])]",Mail Test Ticket Multi Company
+access_mail_test_ticket_partner_group_portal,mail.test.ticket.partner,base.group_portal,r,"[('message_partner_ids', 'in', [user.partner_id.id])]",Portal Mail Test Ticket Multi Company Partner
+access_mail_test_ticket_partner_group_user,mail.test.ticket.partner,base.group_user,rwcd,,mail.test.ticket.partner.user
+access_mail_test_ticket_partner_global,mail.test.ticket.partner,,rwcd,"[('company_id', 'in', company_ids + [False])]",Mail Test Ticket Multi Company Partner
+access_mail_test_composer_mixin_group_user,mail.test.composer.mixin,base.group_user,rwcd,,mail.test.composer.mixin.user
+access_mail_test_composer_source_group_user_r,mail.test.composer.source,base.group_user,r,,mail.test.composer.source.all
+access_mail_test_composer_source_group_user_rwcd,mail.test.composer.source,base.group_user,rwcd,,mail.test.composer.source.user
+access_mail_test_container_group_portal,mail.test.container,base.group_portal,r,"[('message_partner_ids', 'in', [user.partner_id.id])]",Portal Mail Test Container
+access_mail_test_container_group_user,mail.test.container,base.group_user,rwcd,,mail.test.container.user
+access_mail_test_container_mc_group_portal,mail.test.container.mc,base.group_portal,r,"[('message_partner_ids', 'in', [user.partner_id.id])]",Portal Mail Test Container Multi Company
+access_mail_test_container_mc_group_user,mail.test.container.mc,base.group_user,rwcd,,mail.test.container.mc.user
+access_mail_test_container_mc_global,mail.test.container.mc,,rwcd,"[('company_id', 'in', company_ids + [False])]",Mail Test Container Multi Company
+access_mail_test_cc_group_portal,mail.test.cc,base.group_portal,r,,mail.test.cc.portal
+access_mail_test_cc_group_user,mail.test.cc,base.group_user,rwcd,,mail.test.cc.user
+access_mail_test_lang_group_portal,mail.test.lang,base.group_portal,r,,mail.test.lang.portal
+access_mail_test_lang_group_user,mail.test.lang,base.group_user,rwcd,,mail.test.lang.user
+access_mail_test_multi_company_group_user,mail.test.multi.company,base.group_user,rwcd,,mail.test.multi.company.user
+access_mail_test_multi_company_group_portal,mail.test.multi.company,base.group_portal,r,,mail.test.multi.company.portal
+access_mail_test_multi_company_global,mail.test.multi.company,,rwcd,"[('company_id', 'in', company_ids + [False])]",Mail Test Multi Company
+access_mail_test_multi_company_read_group_user,mail.test.multi.company.read,base.group_user,rwcd,,mail.test.multi.company.read.user
+access_mail_test_multi_company_read_group_portal,mail.test.multi.company.read,base.group_portal,r,,mail.test.multi.company.read.portal
+access_mail_test_multi_company_read_global,mail.test.multi.company.read,,wcd,"[('company_id', 'in', company_ids + [False])]",MC Readonly Rule
+access_mail_test_multi_company_with_activity_group_user,mail.test.multi.company.with.activity,base.group_user,rwcd,,mail.test.multi.company.with.activity.user
+access_mail_test_multi_company_with_activity_group_portal,mail.test.multi.company.with.activity,base.group_portal,r,,mail.test.multi.company.with.activity.portal
+access_mail_test_multi_company_with_activity_global,mail.test.multi.company.with.activity,,rwcd,"[('company_id', 'in', company_ids + [False])]",Mail Test Multi Company With Activity
+access_mail_test_nothread_group_user,mail.test.nothread,base.group_user,rwcd,,mail.test.nothread.user
+access_mail_test_nothread_group_portal,mail.test.nothread,base.group_portal,r,,mail.test.nothread.portal
+access_mail_test_recipients_group_user,mail.test.recipients,base.group_user,rwcd,,mail.test.recipients.user
+access_mail_test_thread_customer_group_user,mail.test.thread.customer,base.group_user,rwcd,,mail.test.thread.customer.user
+access_mail_test_track_all_group_user,mail.test.track.all,base.group_user,rwcd,,mail.test.track.all
+access_mail_test_track_all_m2m_group_user,mail.test.track.all.m2m,base.group_user,rwcd,,mail.test.track.all.m2m
+access_mail_test_track_all_o2m_group_user,mail.test.track.all.o2m,base.group_user,rwcd,,mail.test.track.all.o2m
+access_mail_test_track_compute_group_user,mail.test.track.compute,base.group_user,rwcd,,mail.test.track.compute
+access_mail_test_track_groups_group_user,mail.test.track.groups,base.group_user,rwcd,,mail.test.track.groups
+access_mail_test_track_monetary_group_user,mail.test.track.monetary,base.group_user,rwcd,,mail.test.track.monetary
+access_mail_test_track_selection_group_user,mail.test.track.selection,base.group_user,rwcd,,mail.test.track.selection.user
+access_mail_test_properties_group_user,mail.test.properties,base.group_user,rwcd,,mail.test.properties.user
+access_mail_test_track_duration_mixin_group_user,mail.test.track.duration.mixin,base.group_user,rwcd,,mail.test.track.duration.mixin

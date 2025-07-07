@@ -6,7 +6,6 @@
     'description': """A module to test translation import.""",
     'depends': ['base'],
     'data': [
-        'security/ir.model.access.csv',
         'view.xml',
         'data/test_translation_import_data.xml',
         'data/test.translation.import.model1.csv',
