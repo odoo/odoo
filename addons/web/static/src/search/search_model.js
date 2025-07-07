@@ -1426,8 +1426,8 @@ export class SearchModel extends EventBus {
             categories.map(async (category) => {
                 const result = await this.orm
                     .cached({
-                        onUpdate: (result) => {
-                            if (categoriesLoadId !== this.categoriesLoadId) {
+                        onFinish: (hasChanged, result) => {
+                            if (!hasChanged || categoriesLoadId !== this.categoriesLoadId) {
                                 return;
                             }
                             this._createCategoryTree(category.id, result);
@@ -1468,8 +1468,8 @@ export class SearchModel extends EventBus {
             filters.map(async (filter) => {
                 const result = await this.orm
                     .cached({
-                        onUpdate: (result) => {
-                            if (filtersLoadId !== this.filtersLoadId) {
+                        onFinish: (hasChanged, result) => {
+                            if (!hasChanged || filtersLoadId !== this.filtersLoadId) {
                                 return;
                             }
                             this._createFilterTree(filter.id, result);
