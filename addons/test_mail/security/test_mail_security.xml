@@ -55,14 +55,29 @@
         <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
 
-
-    <record id="mail_test_multi_company_rule" model="ir.rule">
-        <field name="name">Mail Test Multi Company</field>
-        <field name="model_id" ref="test_mail.model_mail_test_multi_company"/>
-        <field eval="True" name="global"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    <!-- mail.test.access.custo -->
+    <record id="ir_rule_mail_test_access_custo_update_internal" model="ir.rule">
+        <field name="name">Internal: write/unlink unlocked</field>
+        <field name="model_id" ref="test_mail.model_mail_test_access_custo"/>
+        <field name="domain_force">[('is_locked', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+    <record id="ir_rule_mail_test_access_custo_update_admin" model="ir.rule">
+        <field name="name">Admin: all</field>
+        <field name="model_id" ref="test_mail.model_mail_test_access_custo"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
     </record>
 
+    <!-- MAIL.TEST.MULTI.COMPANY(.*) -->
     <record id="mail_test_multi_company_rule" model="ir.rule">
         <field name="name">Mail Test Multi Company</field>
         <field name="model_id" ref="test_mail.model_mail_test_multi_company"/>
