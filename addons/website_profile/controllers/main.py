@@ -116,7 +116,7 @@ class WebsiteProfile(http.Controller):
         if 'image_1920' in kwargs:
             values['image_1920'] = kwargs.get('image_1920')
 
-        if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
+        if request.env.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
             values['website_published'] = kwargs.get('website_published')
         return values
 
