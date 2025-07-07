@@ -150,6 +150,22 @@ class TestImportModule(odoo.tests.TransactionCase):
         ):
             self.import_zipfile(files)
 
+    def test_import_zip_wildcard_assets(self):
+        """Assert the expected behavior when import a ZIP module with assets using glob wildcard"""
+        files = [
+            ('foo/__manifest__.py', self.manifest_content(assets={
+                'web.assets_backend': [
+                    'test_module/static/src/js/*'
+                ]
+            })),
+            ('foo/static/js/foo.js', b"console.log('foo')"),
+        ]
+        with (
+            mute_logger("odoo.addons.base_import_module.models.ir_module"),
+            self.assertRaises(UserError, msg="modules with assets path containing glob wildcards shouldn't be successcully imported"),
+        ):
+            self.import_zipfile(files)
+
     def test_import_zip_invalid_data(self):
         """Assert no data remains in the db if module import fails"""
         files = [

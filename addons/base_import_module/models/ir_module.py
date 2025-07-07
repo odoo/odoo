@@ -24,6 +24,8 @@ from odoo.tools import file_open, file_path, file_open_temporary_directory, ormc
 from odoo.tools.misc import OrderedSet, topological_sort
 from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT, CodeTranslations, TranslationImporter, get_base_langs
 
+from odoo.addons.base.models.ir_asset import is_wildcard_glob
+
 _logger = logging.getLogger(__name__)
 
 APPS_URL = "https://apps.odoo.com"
@@ -257,6 +259,10 @@ class IrModuleModule(models.Model):
         for bundle, commands in terp.get('assets', {}).items():
             for command in commands:
                 directive, target, path = IrAsset._process_command(command)
+                if is_wildcard_glob(path):
+                    raise UserError(_(
+                        "The assets path in the manifest of imported module '%(module_name)s' "
+                        "cannot contain glob wildcards (e.g., *, **).", module_name=module))
                 path = path if path.startswith('/') else '/' + path # Ensures a '/' at the start
                 assets_vals.append({
                     'name': f'{module}.{bundle}.{path}',
