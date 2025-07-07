@@ -97,6 +97,10 @@ export class Toolbar extends Component {
 export const toolbarButtonProps = {
     title: [String, Function],
     getSelection: Function,
+    isDisabled: { optional: true, type: Boolean },
+};
+export const toolbarButtonPropsDefaults = {
+    isDisabled: false,
 };
 
 /** @typedef {import("@html_editor/core/user_command_plugin").UserCommand} UserCommand */

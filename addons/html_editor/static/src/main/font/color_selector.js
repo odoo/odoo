@@ -6,7 +6,7 @@ import {
     DEFAULT_THEME_COLOR_VARS,
 } from "@web/core/color_picker/color_picker";
 import { effect } from "@web/core/utils/reactive";
-import { toolbarButtonProps } from "../toolbar/toolbar";
+import { toolbarButtonProps, toolbarButtonPropsDefaults } from "../toolbar/toolbar";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 
 export class ColorSelector extends Component {
@@ -23,6 +23,7 @@ export class ColorSelector extends Component {
         colorPrefix: { type: String },
         onClose: Function,
     };
+    static defaultProps = { ...toolbarButtonPropsDefaults };
 
     setup() {
         this.state = useState({});
