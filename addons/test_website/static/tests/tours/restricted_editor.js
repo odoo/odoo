@@ -7,13 +7,15 @@ import {
 } from '@website/js/tours/tour_utils';
 import { stepUtils } from "@web_tour/tour_utils";
 
+const EDIT_BUTTON_SELECTOR = "body .o_menu_systray button.o-website-btn-custo-primary:contains(edit)";
+
 const checkNoTranslate = {
     content: "Check there is no translate button",
-    trigger: ".o_menu_systray:not(:has(.o-dropdown-toggle-custo)):contains(edit)",
+    trigger: `${EDIT_BUTTON_SELECTOR}:not(.o-dropdown-toggle-custo)`,
 };
 const translate = [{
     content: "Open Edit menu",
-    trigger: "body .o_menu_systray button.o-website-btn-custo-primary:contains(edit)",
+    trigger: `${EDIT_BUTTON_SELECTOR}.o-dropdown-toggle-custo`,
     run: "click",
 }, {
     content: "Click on translate button",

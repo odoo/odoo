@@ -1,18 +1,26 @@
-import { InstallModuleDialog } from "./install_module_dialog";
-import { MODULE_STATUS, NewContentElement } from "./new_content_element";
-import { Component, onWillStart, useState, xml } from "@odoo/owl";
+import { Component, useState, xml } from "@odoo/owl";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { useActiveElement } from "@web/core/ui/ui_service";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { redirect } from "@web/core/utils/urls";
+import { InstallModuleDialog } from "./install_module_dialog";
 
-export class NewContentModal extends Component {
-    static template = "website.NewContentModal";
-    static components = { NewContentElement };
+export const MODULE_STATUS = {
+    NOT_INSTALLED: "NOT_INSTALLED",
+    INSTALLING: "INSTALLING",
+    FAILED_TO_INSTALL: "FAILED_TO_INSTALL",
+    INSTALLED: "INSTALLED",
+};
+
+export class NewContentSystrayItem extends Component {
+    static template = "website.NewContentSystrayItem";
+    static components = { Dropdown, DropdownItem };
     static props = {
         onNewPage: Function,
     };
@@ -21,11 +29,10 @@ export class NewContentModal extends Component {
         this.orm = useService("orm");
         this.dialogs = useService("dialog");
         this.website = useService("website");
-        // preload the new page templates so they are ready as soon as possible
-        rpc("/website/get_new_page_templates", { context: { website_id: this.website.currentWebsiteId}}, { cache: true, silent: true });
         this.action = useService("action");
-        this.isSystem = user.isSystem;
-        useActiveElement("modalRef");
+
+        this.isDesigner = this.website.isDesigner;
+        this.dropdown = useDropdownState();
 
         this.newContentText = {
             failed: _t('Failed to install "%s"'),
@@ -40,67 +47,95 @@ export class NewContentModal extends Component {
                     moduleName: "website_blog",
                     moduleXmlId: "base.module_website_blog",
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa fa-newspaper-o"/>`,
+                    icon: "/website_blog/static/description/icon.png",
                     title: _t("Blog Post"),
+                    description: _t("Write a new article"),
                 },
                 {
                     moduleName: "website_event",
                     moduleXmlId: "base.module_website_event",
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa fa-ticket"/>`,
+                    icon: "/website_event/static/description/icon.png",
                     title: _t("Event"),
+                    description: _t("Launch an event, start registrations"),
                 },
                 {
                     moduleName: "website_forum",
                     moduleXmlId: "base.module_website_forum",
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa fa-comment"/>`,
+                    icon: "/website_forum/static/description/icon.png",
                     redirectUrl: "/forum",
                     title: _t("Forum"),
+                    description: _t("Set up a new forum"),
                 },
                 {
                     moduleName: "website_hr_recruitment",
                     moduleXmlId: "base.module_website_hr_recruitment",
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa fa-briefcase"/>`,
+                    icon: "/website_hr_recruitment/static/description/icon.png",
                     title: _t("Job Position"),
+                    description: _t("Post a new job offer"),
                 },
                 {
                     moduleName: "website_sale",
                     moduleXmlId: "base.module_website_sale",
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa fa-shopping-cart"/>`,
+                    icon: "/website_sale/static/description/icon.png",
                     title: _t("Product"),
+                    description: _t("Sell online"),
                 },
                 {
                     moduleName: "website_slides",
                     moduleXmlId: "base.module_website_slides",
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa module_icon" style="background-image: url('/website/static/src/img/apps_thumbs/website_slide.svg');background-repeat: no-repeat; background-position: center;"/>`,
+                    icon: "/website_slides/static/description/icon.png",
                     title: _t("Course"),
+                    description: _t("Teach with videos, slides and PDF"),
                 },
                 {
                     moduleName: "website_livechat",
                     moduleXmlId: "base.module_website_livechat",
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa fa-comments"/>`,
+                    icon: "/website_livechat/static/description/icon.png",
                     title: _t("Livechat Widget"),
+                    description: _t("Add a livechat widget"),
                 },
             ],
         });
 
-        this.websiteContext = useState(this.website.context);
         useHotkey("escape", () => {
-            if (this.websiteContext.showNewContentModal) {
-                this.websiteContext.showNewContentModal = false;
+            if (this.dropdown.isOpen) {
+                this.dropdown.close();
             }
         });
-
-        onWillStart(this.onWillStart.bind(this));
     }
 
-    async onWillStart() {
-        this.isDesigner = await user.hasGroup("website.group_website_designer");
+    get newPageAttrs() {
+        return {
+            'aria-label': _t("New Page"),
+            'style': 'width: 300px',
+        };
+    }
+
+    swapDescription(element) {
+        if (element.status !== MODULE_STATUS.NOT_INSTALLED) {
+            return;
+        }
+        if (!element.description2) {
+            element.description2 = sprintf(_t('Install "%s"'), this.modulesInfo[element.moduleName].name);
+        }
+        const tmp = element.description;
+        element.description = element.description2;
+        element.description2 = tmp;
+    }
+
+    async toggleDropdown() {
+        if (this.dropdownWasAlreadyOpened) {
+            this.dropdown.isOpen = !this.dropdown.isOpen;
+            return;
+        }
+        this.dropdownWasAlreadyOpened = true;
+
         this.canInstall = user.isAdmin;
         if (this.canInstall) {
             const moduleNames = this.state.newContentElements
@@ -115,6 +150,7 @@ export class NewContentModal extends Component {
                 this.modulesInfo[record.name] = { id: record.id, name: record.shortdesc };
             }
         }
+
         const modelsToCheck = [];
         const elementsToUpdate = {};
         for (const element of this.state.newContentElements) {
@@ -129,6 +165,15 @@ export class NewContentModal extends Component {
         for (const [model, access] of Object.entries(accesses)) {
             elementsToUpdate[model].isDisplayed = access;
         }
+
+        this.dropdown.open();
+
+        // Preload the new page templates so they are ready as soon as possible
+        rpc(
+            "/website/get_new_page_templates",
+            { context: { 'website_id': this.website.currentWebsiteId } },
+            { cache: true, silent: true }
+        );
     }
 
     get sortedNewContentElements() {
@@ -138,14 +183,15 @@ export class NewContentModal extends Component {
                 this.state.newContentElements.filter(
                     ({ status }) => status === MODULE_STATUS.NOT_INSTALLED
                 )
-            );
+            )
+            .filter(el => ('isDisplayed' in el ? el.isDisplayed : user.isSystem));
     }
 
     async installModule(id, redirectUrl) {
         await this.orm.silent.call("ir.module.module", "button_immediate_install", [id]);
         if (redirectUrl) {
             this.website.prepareOutLoader();
-            window.location.replace(redirectUrl);
+            redirect(redirectUrl);
         } else {
             const {
                 id,
@@ -156,13 +202,10 @@ export class NewContentModal extends Component {
                 url.pathname = "";
             }
             // A reload is needed after installing a new module, to instantiate
-            // a NewContentModal with patches from the installed module.
+            // the feature with patches from the installed module.
             this.website.prepareOutLoader();
-            redirect(
-                `/odoo/action-website.website_preview?website_id=${id}&path=${encodeURIComponent(
-                    url.toString()
-                )}&display_new_content=true`
-            );
+            const encodedPath = encodeURIComponent(url.toString());
+            redirect(`/odoo/action-website.website_preview?website_id=${id}&path=${encodedPath}`);
         }
     }
 
@@ -218,7 +261,7 @@ export class NewContentModal extends Component {
             onClose: (infos) => {
                 if (infos && !infos.dismiss) {
                     this.website.goToWebsite({ path: infos.path, edition: edition });
-                    this.websiteContext.showNewContentModal = false;
+                    this.dropdown.close();
                 }
             },
             props: {

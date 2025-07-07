@@ -1,9 +1,11 @@
-import { NewContentModal } from '@website/client_actions/website_preview/new_content_systray_item';
-import { MODULE_STATUS } from "@website/client_actions/website_preview/new_content_element";
+import {
+    NewContentSystrayItem,
+    MODULE_STATUS,
+} from "@website/client_actions/website_preview/new_content_systray_item";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
-patch(NewContentModal.prototype, {
+patch(NewContentSystrayItem.prototype, {
     setup() {
         super.setup();
 
@@ -16,6 +18,5 @@ patch(NewContentModal.prototype, {
     async createNewJob() {
         const url = await rpc('/jobs/add');
         this.website.goToWebsite({ path: url, edition: true });
-        this.websiteContext.showNewContentModal = false;
-    }
+    },
 });

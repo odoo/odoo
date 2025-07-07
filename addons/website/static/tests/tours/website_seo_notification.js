@@ -20,7 +20,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on new page",
-            trigger: ".o_new_content_element button",
+            trigger: "button.o_new_content_element",
             run: "click",
         },
         {

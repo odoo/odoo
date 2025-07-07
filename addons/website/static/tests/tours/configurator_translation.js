@@ -117,7 +117,7 @@ registry.category("web_tour.tours").add("configurator_page_creation", {
         },
         {
             content: "Create a new page",
-            trigger: "button[title='New Page']",
+            trigger: "button[aria-label='New Page']",
             run: "click",
         },
         {

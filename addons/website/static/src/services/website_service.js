@@ -49,7 +49,6 @@ export const websiteService = {
         let lastWebsiteId = null;
 
         const context = reactive({
-            showNewContentModal: false,
             showResourceEditor: false,
             edition: false,
             isPublicRootReady: false,
@@ -125,7 +124,7 @@ export const websiteService = {
                 }
                 return currentWebsite;
             },
-            get currentWebsiteId(){
+            get currentWebsiteId() {
                 return currentWebsiteId;
             },
             get websites() {

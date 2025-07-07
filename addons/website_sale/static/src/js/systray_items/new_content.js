@@ -1,8 +1,10 @@
 import { patch } from "@web/core/utils/patch";
-import { NewContentModal } from '@website/client_actions/website_preview/new_content_systray_item';
-import { MODULE_STATUS } from "@website/client_actions/website_preview/new_content_element";
+import {
+    NewContentSystrayItem,
+    MODULE_STATUS,
+} from "@website/client_actions/website_preview/new_content_systray_item";
 
-patch(NewContentModal.prototype, {
+patch(NewContentSystrayItem.prototype, {
     setup() {
         super.setup();
 

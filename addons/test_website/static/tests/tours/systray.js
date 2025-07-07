@@ -63,7 +63,6 @@ const canSwitchWebsiteNoCheck = () => [{
     trigger: '.o-dropdown--menu .dropdown-item:contains("Other")',
 }];
 
-
 const canSwitchWebsite = () => [{
     content: "Open website switcher",
     trigger: '.o_menu_systray .o_menu_systray_item.o_website_switcher_container .dropdown-toggle:contains("My Website"):not(:contains("My Website 2"))',
@@ -79,11 +78,11 @@ const canSwitchWebsite = () => [{
 
 const canAddNewContent = () => [{
     content: "Open +New content",
-    trigger: '.o_menu_systray .o_menu_systray_item.o_new_content_container',
+    trigger: '.o_menu_systray .o_menu_systray_item.o_new_content_container button',
     run: "click",
 }, {
     content: "Close +New content",
-    trigger: '#o_new_content_menu_choices',
+    trigger: '.o_new_content_menu_choices',
     run: "click",
 }];
 

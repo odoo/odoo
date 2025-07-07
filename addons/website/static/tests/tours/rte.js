@@ -58,11 +58,11 @@ registerWebsitePreviewTour('rte_translator', {
 },
 {
     content: "Open new page menu",
-    trigger: ".o_menu_systray .o_new_content_container > button",
+    trigger: ".o_menu_systray .o_new_content_container button",
     run: "click",
 }, {
     content: "click on new page",
-    trigger: ".o_new_content_element button",
+    trigger: 'button.o_new_content_element',
     run: "click",
 }, {
     content: "click on Use this template",
@@ -90,11 +90,11 @@ registerWebsitePreviewTour('rte_translator', {
     run: "click",
 }, {
     content: "Open new page menu",
-    trigger: ".o_menu_systray .o_new_content_container > button",
+    trigger: ".o_menu_systray .o_new_content_container button",
     run: "click",
 }, {
     content: "click on new page",
-    trigger: '.o_new_content_element button',
+    trigger: 'button.o_new_content_element',
     run: "click",
 }, {
     content: "click on Use this template",
