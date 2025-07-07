@@ -1412,13 +1412,16 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(leave.number_of_days, 2)
 
     def test_get_default_leave_type(self):
+        # Description: If the user is applying for leave from the calendar dashboard and has selected a duration in weeks or days.
+        # This indicates that the user intends to apply for an hourly leave type.
+        # As a result, only hourly leave types should be shown, if available.
         #  ===================================================================
         #  | Case 1 -> Choose hour leave type if hour leave type exists      |
         #  | Case 2 -> Choose first leave type if hour leave type not exists |
         #  | Case 3 -> Choose none if not leave type exists                  |
         #  ===================================================================
+        self.env['hr.leave.type'].search([]).action_archive()
 
-        self.env['hr.leave.type'].search([]).unlink()
         half_day_leave_type = self.env['hr.leave.type'].create({
             'name': 'Test half day Leave Type',
             'requires_allocation': False,
@@ -1444,7 +1447,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         }).default_get(list(self.env['hr.leave'].fields_get()) + ['holiday_status_id'])
         self.assertEqual(hr_leave_default_value.get('holiday_status_id'), half_day_leave_type.id)
 
-        self.env['hr.leave.type'].search([]).unlink()
+        self.env['hr.leave.type'].search([('id', '=', half_day_leave_type.id)]).unlink()
         hr_leave_default_value = self.env['hr.leave'].with_context({
             'default_request_unit_hours': True,
         }).default_get(list(self.env['hr.leave'].fields_get()) + ['holiday_status_id'])
