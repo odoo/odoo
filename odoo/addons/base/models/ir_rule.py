@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
@@ -15,7 +14,7 @@ class IrRule(models.Model):
     _name = 'ir.rule'
     _description = 'Record Rule'
     _order = 'model_id DESC,id'
-    _MODES = ['read', 'write', 'create', 'unlink']
+    _MODES = ('read', 'write', 'create', 'unlink')
     _allow_sudo_commands = False
 
     name = fields.Char()

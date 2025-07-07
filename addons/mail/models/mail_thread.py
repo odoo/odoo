@@ -14,6 +14,7 @@ from collections import defaultdict, namedtuple
 from collections.abc import Iterable
 from email import message_from_string
 from email.message import EmailMessage
+from typing import Any, NamedTuple
 from xmlrpc import client as xmlrpclib
 
 import dateutil
@@ -64,6 +65,12 @@ from odoo.addons.mail.tools.web_push import (
 MAX_DIRECT_PUSH = 5
 
 _logger = logging.getLogger(__name__)
+
+
+class _Attachment(NamedTuple):
+    fname: str
+    content: str
+    info: dict[str, Any]
 
 
 class MailThread(models.AbstractModel):
@@ -139,8 +146,6 @@ class MailThread(models.AbstractModel):
     _primary_email = 'email'  # Must be set for the models that can be created by alias
 
     _CUSTOMER_HEADERS_LIMIT_COUNT = 50
-
-    _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
 
     message_is_follower = fields.Boolean(
         'Is Follower', compute='_compute_message_is_follower', search='_search_message_is_follower')
@@ -1615,7 +1620,7 @@ class MailThread(models.AbstractModel):
         attachments = []
         body = ''
         if save_original:
-            attachments.append(self._Attachment('original_email.eml', message.as_string(), {}))
+            attachments.append(_Attachment('original_email.eml', message.as_string(), {}))
 
         # Be careful, content-type may contain tricky content like in the
         # following example so test the MIME type with startswith()
@@ -1667,11 +1672,11 @@ class MailThread(models.AbstractModel):
                 # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
                 if filename and part.get('content-id'):
                     info['cid'] = part.get('content-id').strip('><')
-                    attachments.append(self._Attachment(filename, content, info))
+                    attachments.append(_Attachment(filename, content, info))
                     continue
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append(self._Attachment(filename or 'attachment', content, info))
+                    attachments.append(_Attachment(filename or 'attachment', content, info))
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and not (alternative and body):
@@ -1690,7 +1695,7 @@ class MailThread(models.AbstractModel):
                     body = html_sanitize(body, sanitize_tags=False, strip_classes=True)
                 # 4) Anything else -> attachment
                 else:
-                    attachments.append(self._Attachment(filename or 'attachment', content, info))
+                    attachments.append(_Attachment(filename or 'attachment', content, info))
 
         return self._message_parse_extract_payload_postprocess(message, {'body': body, 'attachments': attachments})
 

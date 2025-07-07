@@ -12,8 +12,8 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL
 
-from ...tools import discuss, jwt
-from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools import jwt
+from odoo.addons.mail.tools.discuss import Store, get_sfu_key, get_sfu_url
 from odoo.addons.mail.tools.web_push import (
     PUSH_NOTIFICATION_ACTION,
     PUSH_NOTIFICATION_TYPE,
@@ -21,6 +21,7 @@ from odoo.addons.mail.tools.web_push import (
 
 _logger = logging.getLogger(__name__)
 SFU_MODE_THRESHOLD = 3
+BYPASS_CREATE_CHECK = object()
 
 
 class DiscussChannelMember(models.Model):
@@ -28,7 +29,6 @@ class DiscussChannelMember(models.Model):
     _inherit = ["bus.listener.mixin"]
     _description = "Channel Member"
     _rec_names_search = ["channel_id", "partner_id", "guest_id"]
-    _bypass_create_check = {}
 
     # identity
     partner_id = fields.Many2one("res.partner", "Partner", ondelete="cascade", index=True)
@@ -193,7 +193,7 @@ class DiscussChannelMember(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        if self.env.context.get("mail_create_bypass_create_check") is self._bypass_create_check:
+        if self.env.context.get("mail_create_bypass_create_check") is BYPASS_CREATE_CHECK:
             self = self.sudo()
         for vals in vals_list:
             if "channel_id" not in vals:
@@ -354,7 +354,7 @@ class DiscussChannelMember(models.Model):
             return
         elif self.channel_id.sfu_channel_uuid and self.channel_id.sfu_server_url:
             return
-        sfu_server_url = discuss.get_sfu_url(self.env)
+        sfu_server_url = get_sfu_url(self.env)
         if not sfu_server_url:
             return
         sfu_local_key = self.env["ir.config_parameter"].sudo().get_param("mail.sfu_local_key")
@@ -363,7 +363,7 @@ class DiscussChannelMember(models.Model):
             self.env["ir.config_parameter"].sudo().set_param("mail.sfu_local_key", sfu_local_key)
         json_web_token = jwt.sign(
             {"iss": f"{self.get_base_url()}:channel:{self.channel_id.id}", "key": sfu_local_key},
-            key=discuss.get_sfu_key(self.env),
+            key=get_sfu_key(self.env),
             ttl=30,
             algorithm=jwt.Algorithm.HS256,
         )

@@ -7,6 +7,10 @@ from werkzeug.urls import url_join
 
 from odoo import api, fields, models, tools, _
 
+from .. import (
+    IAP_TO_SMS_FAILURE_TYPE,
+    IAP_TO_SMS_STATE_SUCCESS,
+)
 from odoo.addons.sms.tools.sms_api import SmsApi
 
 _logger = logging.getLogger(__name__)
@@ -17,24 +21,6 @@ class SmsSms(models.Model):
     _description = 'Outgoing SMS'
     _rec_name = 'number'
     _order = 'id DESC'
-
-    IAP_TO_SMS_STATE_SUCCESS = {
-        'processing': 'process',
-        'success': 'pending',
-        # These below are not returned in responses from IAP API in _send but are received via webhook events.
-        'sent': 'pending',
-        'delivered': 'sent',
-    }
-    IAP_TO_SMS_FAILURE_TYPE = {
-        'insufficient_credit': 'sms_credit',
-        'wrong_number_format': 'sms_number_format',
-        'country_not_supported': 'sms_country_not_supported',
-        'server_error': 'sms_server',
-        'unregistered': 'sms_acc'
-    }
-
-    BOUNCE_DELIVERY_ERRORS = {'sms_invalid_destination', 'sms_not_allowed', 'sms_rejected'}
-    DELIVERY_ERRORS = {'sms_expired', 'sms_not_delivered', *BOUNCE_DELIVERY_ERRORS}
 
     uuid = fields.Char('UUID', copy=False, readonly=True, default=lambda self: uuid4().hex,
                        help='Alternate way to identify a SMS record, used for delivery reports')
@@ -180,12 +166,12 @@ class SmsSms(models.Model):
 
         for iap_state, results_group in tools.groupby(results, key=lambda result: result['state']):
             sms_sudo = all_sms_sudo.filtered(lambda s: s.uuid in {result['uuid'] for result in results_group})
-            if success_state := self.IAP_TO_SMS_STATE_SUCCESS.get(iap_state):
+            if success_state := IAP_TO_SMS_STATE_SUCCESS.get(iap_state):
                 sms_sudo.sms_tracker_id._action_update_from_sms_state(success_state)
                 to_delete = {'to_delete': True} if unlink_sent else {}
                 sms_sudo.write({'state': success_state, 'failure_type': False, **to_delete})
             else:
-                failure_type = self.IAP_TO_SMS_FAILURE_TYPE.get(iap_state, 'unknown')
+                failure_type = IAP_TO_SMS_FAILURE_TYPE.get(iap_state, 'unknown')
                 if failure_type != 'unknown':
                     sms_sudo.sms_tracker_id._action_update_from_sms_state('error', failure_type=failure_type)
                 else:

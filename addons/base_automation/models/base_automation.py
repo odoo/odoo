@@ -246,8 +246,8 @@ class BaseAutomation(models.Model):
              "If empty, all fields are watched.")
 
     # which fields have an impact on the registry and the cron
-    CRITICAL_FIELDS = ['model_id', 'active', 'trigger', 'on_change_field_ids']
-    RANGE_FIELDS = ['trg_date_range', 'trg_date_range_type']
+    CRITICAL_FIELDS = frozenset({'model_id', 'active', 'trigger', 'on_change_field_ids'})
+    RANGE_FIELDS = frozenset({'trg_date_range', 'trg_date_range_type'})
 
     @api.constrains('model_id', 'action_server_ids')
     def _check_action_server_model(self):
@@ -493,14 +493,14 @@ class BaseAutomation(models.Model):
 
     def write(self, vals: dict):
         clear_templates = self._has_trigger_onchange()
-        res = super(BaseAutomation, self).write(vals)
-        if set(vals).intersection(self.CRITICAL_FIELDS):
+        res = super().write(vals)
+        if self.CRITICAL_FIELDS.intersection(vals):
             self._update_cron()
             self._update_registry()
             if clear_templates or self._has_trigger_onchange():
                 # Invalidate templates cache to update on_change attributes if needed
                 self.env.registry.clear_cache('templates')
-        elif set(vals).intersection(self.RANGE_FIELDS):
+        elif self.RANGE_FIELDS.intersection(vals):
             self._update_cron()
         return res
 

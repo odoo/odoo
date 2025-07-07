@@ -8,15 +8,16 @@ class CalendarAlarm(models.Model):
     _name = 'calendar.alarm'
     _description = 'Event Alarm'
 
-    _interval_selection = {'minutes': 'Minutes', 'hours': 'Hours', 'days': 'Days'}
-
     name = fields.Char('Name', translate=True, required=True)
     alarm_type = fields.Selection(
         [('notification', 'Notification'), ('email', 'Email')],
         string='Type', required=True, default='email')
     duration = fields.Integer('Remind Before', required=True, default=1)
-    interval = fields.Selection(
-        list(_interval_selection.items()), 'Unit', required=True, default='hours')
+    interval = fields.Selection([
+        ('minutes', 'Minutes'),
+        ('hours', 'Hours'),
+        ('days', 'Days'),
+    ], 'Unit', required=True, default='hours')
     duration_minutes = fields.Integer(
         'Duration in minutes', store=True,
         search='_search_duration_minutes', compute='_compute_duration_minutes')
@@ -68,10 +69,8 @@ class CalendarAlarm(models.Model):
     def _onchange_duration_interval(self):
         if self.notify_responsible and self.alarm_type in ('email', 'notification'):
             self.notify_responsible = False
-        display_interval = self._interval_selection.get(self.interval, '')
-        display_alarm_type = {
-            key: value for key, value in self._fields['alarm_type']._description_selection(self.env)
-        }[self.alarm_type]
+        display_interval = dict(self._fields['interval']._description_selection(self.env))[self.interval]
+        display_alarm_type = dict(self._fields['alarm_type']._description_selection(self.env))[self.alarm_type]
         self.name = "%s - %s %s" % (display_alarm_type, self.duration, display_interval)
         if self.notify_responsible:
             self.name += " - " + _("Notify Responsible")

@@ -2,18 +2,18 @@
 
 from odoo import fields, models
 
+SMS_STATE_TO_TRACE_STATUS = {
+    'error': 'error',
+    'process': 'process',
+    'outgoing': 'outgoing',
+    'canceled': 'cancel',
+    'pending': 'pending',
+    'sent': 'sent',
+}
+
 
 class SmsTracker(models.Model):
     _inherit = "sms.tracker"
-
-    SMS_STATE_TO_TRACE_STATUS = {
-        'error': 'error',
-        'process': 'process',
-        'outgoing': 'outgoing',
-        'canceled': 'cancel',
-        'pending': 'pending',
-        'sent': 'sent',
-    }
 
     mailing_trace_id = fields.Many2one('mailing.trace', ondelete='cascade', index='btree_not_null')
 
@@ -24,7 +24,7 @@ class SmsTracker(models.Model):
 
     def _action_update_from_sms_state(self, sms_state, failure_type=False, failure_reason=False):
         super()._action_update_from_sms_state(sms_state, failure_type=failure_type, failure_reason=failure_reason)
-        trace_status = self.SMS_STATE_TO_TRACE_STATUS[sms_state]
+        trace_status = SMS_STATE_TO_TRACE_STATUS[sms_state]
         traces = self._update_sms_traces(trace_status, failure_type=failure_type, failure_reason=failure_reason)
         self._update_sms_mailings(trace_status, traces)
 

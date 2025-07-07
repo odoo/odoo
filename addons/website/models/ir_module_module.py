@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
 
 import werkzeug
 
@@ -9,7 +9,7 @@ from odoo import api, fields, models
 from odoo.exceptions import MissingError
 from odoo.http import request
 from odoo.modules import Manifest
-from odoo.tools import SQL, escape_psql, split_every
+from odoo.tools import SQL, ReadonlyDict, split_every
 
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
@@ -22,17 +22,17 @@ class IrModuleModule(models.Model):
     _inherit = ['ir.module.module']
 
     # The order is important because of dependencies (page need view, menu need page)
-    _theme_model_names = OrderedDict([
+    _theme_model_names = ReadonlyDict([
         ('ir.ui.view', 'theme.ir.ui.view'),
         ('ir.asset', 'theme.ir.asset'),
         ('website.page', 'theme.website.page'),
         ('website.menu', 'theme.website.menu'),
         ('ir.attachment', 'theme.ir.attachment'),
     ])
-    _theme_translated_fields = {
-        'theme.ir.ui.view': [('theme.ir.ui.view,arch', 'ir.ui.view,arch_db')],
-        'theme.website.menu': [('theme.website.menu,name', 'website.menu,name')],
-    }
+    _theme_translated_fields = ReadonlyDict({
+        'theme.ir.ui.view': (('theme.ir.ui.view,arch', 'ir.ui.view,arch_db')),
+        'theme.website.menu': (('theme.website.menu,name', 'website.menu,name')),
+    })
 
     image_ids = fields.One2many('ir.attachment', 'res_id',
                                 domain=[('res_model', '=', 'ir.module.module'), ('mimetype', '=like', 'image/%')],

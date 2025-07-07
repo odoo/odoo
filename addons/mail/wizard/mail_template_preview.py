@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
@@ -8,7 +7,7 @@ from odoo.exceptions import UserError
 class MailTemplatePreview(models.TransientModel):
     _name = 'mail.template.preview'
     _description = 'Email Template Preview'
-    _MAIL_TEMPLATE_FIELDS = ['attachment_ids',
+    _MAIL_TEMPLATE_FIELDS = ('attachment_ids',
                              'body_html',
                              'subject',
                              'email_cc',
@@ -18,7 +17,7 @@ class MailTemplatePreview(models.TransientModel):
                              'report_template_ids',
                              'reply_to',
                              'scheduled_date',
-                            ]
+                            )
 
     @api.model
     def _selection_target_model(self):

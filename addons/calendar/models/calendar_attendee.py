@@ -24,13 +24,6 @@ class CalendarAttendee(models.Model):
     def _default_access_token(self):
         return uuid.uuid4().hex
 
-    STATE_SELECTION = [
-        ('needsAction', 'Needs Action'),
-        ('tentative', 'Maybe'),
-        ('declined', 'No'),
-        ('accepted', 'Yes'),
-    ]
-
     # event
     event_id = fields.Many2one('calendar.event', 'Meeting linked', required=True, index=True, ondelete='cascade')
     recurrence_id = fields.Many2one('calendar.recurrence', related='event_id.recurrence_id')
@@ -42,7 +35,12 @@ class CalendarAttendee(models.Model):
     access_token = fields.Char('Invitation Token', default=_default_access_token)
     mail_tz = fields.Selection(_tz_get, compute='_compute_mail_tz', help='Timezone used for displaying time in the mail template')
     # state
-    state = fields.Selection(STATE_SELECTION, string='Status', default='needsAction')
+    state = fields.Selection([
+        ('needsAction', 'Needs Action'),
+        ('tentative', 'Maybe'),
+        ('declined', 'No'),
+        ('accepted', 'Yes'),
+    ], string='Status', default='needsAction')
     availability = fields.Selection(
         [('free', 'Available'), ('busy', 'Busy')], 'Available/Busy', readonly=True)
 

@@ -19,7 +19,6 @@ from odoo.tools.misc import get_lang
 from odoo.tools.translate import _
 
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.addons.calendar.models.calendar_attendee import CalendarAttendee
 from odoo.addons.calendar.models.calendar_recurrence import (
     BYDAY_SELECTION,
     END_TYPE_SELECTION,
@@ -78,7 +77,7 @@ class CalendarEvent(models.Model):
 
     @api.model
     def get_state_selections(self):
-        return CalendarAttendee.STATE_SELECTION
+        return self.env['calendar.attendee']._fields['state'].selection
 
     @api.model
     def default_get(self, fields):

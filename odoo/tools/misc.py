@@ -58,12 +58,9 @@ from .which import which
 K = typing.TypeVar('K')
 T = typing.TypeVar('T')
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable, Collection, Sequence
-
+    from collections.abc import Callable, Collection, Sequence  # noqa: I001
     from odoo.api import Environment
-
     from odoo.addons.base.models.res_lang import LangData
-
     P = typing.TypeVar('P')
 
 __all__ = [
@@ -75,6 +72,7 @@ __all__ = [
     'DotDict',
     'LastOrderedSet',
     'OrderedSet',
+    'ReadonlyDict',
     'Reverse',
     'babel_locale_parse',
     'clean_context',
@@ -96,9 +94,8 @@ __all__ = [
     'get_iso_codes',
     'get_lang',
     'groupby',
-    'hmac',
     'hash_sign',
-    'verify_hash_signed',
+    'hmac',
     'html_escape',
     'human_size',
     'is_list_of',
@@ -108,6 +105,7 @@ __all__ = [
     'parse_date',
     'partition',
     'posix_to_ldml',
+    'real_time',
     'remove_accents',
     'replace_exceptions',
     'reverse_enumerate',
@@ -117,7 +115,7 @@ __all__ = [
     'topological_sort',
     'unique',
     'ustr',
-    'real_time',
+    'verify_hash_signed',
 ]
 
 _logger = logging.getLogger(__name__)
