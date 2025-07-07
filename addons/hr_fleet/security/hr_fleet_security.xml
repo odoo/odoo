@@ -8,7 +8,7 @@
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
-            <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+            <field name="groups" eval="[(4, ref('hr.group_hr_responsible'))]"/>
             <field name="domain_force">['|', ('driver_employee_id', '!=', False), ('future_driver_employee_id', '!=', False)]</field>
         </record>
     </data>

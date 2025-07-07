@@ -4,7 +4,7 @@
         <menuitem
             id="menu_hr_root"
             name="Employees"
-            groups="group_hr_manager,group_hr_user,base.group_user"
+            groups="group_hr_responsible,group_hr_manager,group_hr_user,base.group_user"
             web_icon="hr,static/description/icon.png"
             sequence="185"/>
 
@@ -77,14 +77,13 @@
             id="menu_human_resources_configuration"
             name="Configuration"
             parent="menu_hr_root"
-            groups="hr.group_hr_user"
+            groups="hr.group_hr_manager"
             sequence="100"/>
 
             <menuitem
                 id="menu_config_employee"
                 name="Employee"
                 parent="menu_human_resources_configuration"
-                groups="group_hr_user"
                 sequence="10"/>
 
             <menuitem
@@ -98,30 +97,26 @@
                 name="Onboarding / Offboarding"
                 action="mail_activity_plan_action"
                 parent="menu_config_employee"
-                groups="group_hr_manager"
                 sequence="1"/>
 
             <menuitem
                 id="menu_hr_work_location_tree"
                 action="hr_work_location_action"
                 parent="menu_config_employee"
-                sequence="5"
-                groups="group_hr_user"/>
+                sequence="5"/>
 
             <menuitem
                 id="menu_resource_calendar_view"
                 action="resource.action_resource_calendar_form"
                 parent="menu_config_employee"
                 name="Working Schedules"
-                sequence="6"
-                groups="group_hr_user"/>
+                sequence="6"/>
 
             <menuitem
                 id="menu_hr_departure_reason_tree"
                 action="hr_departure_reason_action"
                 parent="menu_config_employee"
-                sequence="7"
-                groups="group_hr_user"/>
+                sequence="7"/>
 
             <menuitem
                 id="menu_view_employee_category_form"
@@ -135,7 +130,6 @@
                 id="menu_config_recruitment"
                 name="Recruitment"
                 parent="menu_human_resources_configuration"
-                groups="group_hr_user"
                 sequence="20"/>
 
                 <menuitem
@@ -149,7 +143,6 @@
                     action="hr_contract_type_action"
                     parent="menu_config_recruitment"
                     sequence="2"
-                    groups="group_hr_user"
                     active="0"/>
 
     </data>

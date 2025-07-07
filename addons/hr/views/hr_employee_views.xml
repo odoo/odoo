@@ -17,7 +17,7 @@
                     <field name="contract_date_start"/>
                     <field name="job_id"/>
                     <field name="coach_id" domain="[('company_id', 'in', allowed_company_ids)]"/>
-                    <field name="category_ids" groups="hr.group_hr_user"/>
+                    <field name="category_ids" groups="hr.group_hr_responsible"/>
                     <field name="private_car_plate" />
                     <field name="resource_calendar_id" domain="[('company_id', 'in', allowed_company_ids)]"/>
                     <field name="company_id"/>
@@ -85,12 +85,12 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <form string="Employee" js_class="hr_employee_form" duplicate="false">
-                    <header groups="hr.group_hr_user">
+                    <header groups="hr.group_hr_responsible">
                         <button string="Create User" name="action_create_user" type="object"
-                                class="btn btn-primary" invisible="user_id" groups="hr.group_hr_user"
+                                class="btn btn-primary" invisible="user_id" groups="hr.group_hr_responsible"
                                 context="{'default_create_employee': True}"/>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
-                            groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
+                            groups="hr.group_hr_responsible" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
                         <field name="version_id" widget="versions_timeline" invisible="not id" options="{'clickable': True}" readonly="False"/>
                     </header>
                     <sheet>
@@ -99,7 +99,7 @@
                                 class="oe_stat_button"
                                 icon="fa-address-book"
                                 type="object"
-                                groups="hr.group_hr_user">
+                                groups="hr.group_hr_responsible">
                                 <div class="o_stat_info">
                                     Versions
                                     <span class="o_stat_value">
@@ -139,7 +139,7 @@
                                         <i class="fa fa-tags fa-fw me-1 text-primary" title="Tags"/>
                                         <field name="category_ids" widget="many2many_tags"
                                             options="{'color_field': 'color', 'no_create_edit': True}"
-                                            placeholder="e.g. Founder, Motorized, Building B, ..." groups="hr.group_hr_user"/>
+                                            placeholder="e.g. Founder, Motorized, Building B, ..." groups="hr.group_hr_responsible"/>
                                     </h5>
                                 </div>
                             </div>
@@ -180,7 +180,7 @@
                                     <div id="o_work_information_right" class="o_hr_skills_editable o_hr_skills_group o_group_skills col-lg-5 px-0 ps-lg-5 pe-lg-0"></div>
                                 </div>
                             </page>
-                            <page name="personal_information" string="Personal" groups="hr.group_hr_user">
+                            <page name="personal_information" string="Personal" groups="hr.group_hr_responsible">
                                 <group>
                                     <group string="Private Contact">
                                         <field name="private_email" placeholder="e.g. myprivateemail@example.com" string="Email"/>
@@ -256,9 +256,9 @@
                                     </group>
                                 </group>
                             </page>
-                            <page name="payroll_information" string="Payroll" groups="hr.group_hr_user">
+                            <page name="payroll_information" string="Payroll" groups="hr.group_hr_responsible">
                                 <group name="payroll_group">
-                                    <group name="contract" string="Contract Overview" groups="hr.group_hr_user">
+                                    <group name="contract" string="Contract Overview" groups="hr.group_hr_responsible">
                                         <label for="contract_date_start" string="Contract"/>
                                         <div class="o_row" name="contract_dates">
                                             <field name="contract_date_start" string="Start Date" placeholder="Not Employed" class="o_hr_narrow_field me-3"/>to
@@ -292,7 +292,7 @@
 
                                 </group>
                             </page>
-                            <page name="hr_settings" string="Settings" groups="hr.group_hr_user">
+                            <page name="hr_settings" string="Settings" groups="hr.group_hr_responsible">
                                 <group>
                                     <group string="User" name="user">
                                         <field name="user_id" string="User" placeholder="Not linked to an user"
@@ -384,7 +384,7 @@
             <field name="arch" type="xml">
                 <list string="Employees" expand="context.get('expand', False)" multi_edit="1" duplicate="false" sample="1" js_class="hr_employee_list">
                     <header>
-                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
+                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_responsible"/>
                     </header>
                     <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
                     <field name="name" readonly="1"/>

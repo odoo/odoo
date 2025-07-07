@@ -43,53 +43,53 @@ class HrVersion(models.Model):
     display_name = fields.Char(compute='_compute_display_name')
     active = fields.Boolean(default=True)
 
-    date_version = fields.Date(required=True, default=fields.Date.today, tracking=True, groups="hr.group_hr_user")
+    date_version = fields.Date(required=True, default=fields.Date.today, tracking=True, groups="hr.group_hr_responsible")
     last_modified_uid = fields.Many2one('res.users', string='Last Modified by',
-                                        default=lambda self: self.env.uid, required=True, groups="hr.group_hr_user")
+                                        default=lambda self: self.env.uid, required=True, groups="hr.group_hr_responsible")
     last_modified_date = fields.Datetime(string='Last Modified on', default=fields.Datetime.now, required=True,
-                                         groups="hr.group_hr_user")
+                                         groups="hr.group_hr_responsible")
 
     # Personal Information
     country_id = fields.Many2one(
-        'res.country', 'Nationality (Country)', groups="hr.group_hr_user", tracking=True)
-    identification_id = fields.Char(string='Identification No', groups="hr.group_hr_user", tracking=True)
-    ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_user", tracking=True)
-    passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=True)
+        'res.country', 'Nationality (Country)', groups="hr.group_hr_responsible", tracking=True)
+    identification_id = fields.Char(string='Identification No', groups="hr.group_hr_responsible", tracking=True)
+    ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_responsible", tracking=True)
+    passport_id = fields.Char('Passport No', groups="hr.group_hr_responsible", tracking=True)
     sex = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other'),
-    ], groups="hr.group_hr_user", tracking=True, help="This is the legal sex recognized by the state.", string='Gender')
+    ], groups="hr.group_hr_responsible", tracking=True, help="This is the legal sex recognized by the state.", string='Gender')
 
-    private_street = fields.Char(string="Private Street", groups="hr.group_hr_user", tracking=True)
-    private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_user", tracking=True)
-    private_city = fields.Char(string="Private City", groups="hr.group_hr_user", tracking=True)
+    private_street = fields.Char(string="Private Street", groups="hr.group_hr_responsible", tracking=True)
+    private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_responsible", tracking=True)
+    private_city = fields.Char(string="Private City", groups="hr.group_hr_responsible", tracking=True)
     private_state_id = fields.Many2one(
         "res.country.state", string="Private State",
         domain="[('country_id', '=?', private_country_id)]",
-        groups="hr.group_hr_user", tracking=True)
-    private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_user", tracking=True)
+        groups="hr.group_hr_responsible", tracking=True)
+    private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_responsible", tracking=True)
     private_country_id = fields.Many2one("res.country", string="Private Country",
-                                         groups="hr.group_hr_user", tracking=True)
+                                         groups="hr.group_hr_responsible", tracking=True)
 
-    distance_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=True)
-    km_home_work = fields.Integer(string="Home-Work Distance in Km", groups="hr.group_hr_user",
+    distance_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_responsible", tracking=True)
+    km_home_work = fields.Integer(string="Home-Work Distance in Km", groups="hr.group_hr_responsible",
                                   compute="_compute_km_home_work", inverse="_inverse_km_home_work", store=True)
     distance_home_work_unit = fields.Selection([
         ('kilometers', 'km'),
         ('miles', 'mi'),
-    ], 'Home-Work Distance unit', groups="hr.group_hr_user", default='kilometers', required=True, tracking=True)
+    ], 'Home-Work Distance unit', groups="hr.group_hr_responsible", default='kilometers', required=True, tracking=True)
 
     marital = fields.Selection(
         selection='_get_marital_status_selection',
         string='Marital Status',
-        groups="hr.group_hr_user",
+        groups="hr.group_hr_responsible",
         default='single',
         required=True,
         tracking=True)
-    spouse_complete_name = fields.Char(string="Spouse Legal Name", groups="hr.group_hr_user", tracking=True)
-    spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_user", tracking=True)
-    children = fields.Integer(string='Dependent Children', groups="hr.group_hr_user", tracking=True)
+    spouse_complete_name = fields.Char(string="Spouse Legal Name", groups="hr.group_hr_responsible", tracking=True)
+    spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_responsible", tracking=True)
+    children = fields.Integer(string='Dependent Children', groups="hr.group_hr_responsible", tracking=True)
 
     # Work Information
     employee_type = fields.Selection([
@@ -99,14 +99,14 @@ class HrVersion(models.Model):
             ('trainee', 'Trainee'),
             ('contractor', 'Contractor'),
             ('freelance', 'Freelancer'),
-        ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user", tracking=True)
+        ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_responsible", tracking=True)
     department_id = fields.Many2one('hr.department', check_company=True, tracking=True)
     member_of_department = fields.Boolean("Member of department", compute='_compute_part_of_department', search='_search_part_of_department',
         help="Whether the employee is a member of the active user's department or one of it's child department.")
     job_id = fields.Many2one('hr.job', check_company=True, tracking=True)
     job_title = fields.Char(compute="_compute_job_title", inverse="_inverse_job_title", store=True, readonly=False,
         string="Job Title", tracking=True)
-    is_custom_job_title = fields.Boolean(compute='_compute_is_custom_job_title', store=True, default=False, groups="hr.group_hr_user")
+    is_custom_job_title = fields.Boolean(compute='_compute_is_custom_job_title', store=True, default=False, groups="hr.group_hr_responsible")
     address_id = fields.Many2one(
         'res.partner',
         string='Work Address',
@@ -124,54 +124,54 @@ class HrVersion(models.Model):
         ("other", "Other")], compute="_compute_work_location_name_type", tracking=True)
 
     departure_reason_id = fields.Many2one("hr.departure.reason", string="Departure Reason",
-                                          groups="hr.group_hr_user", copy=False, ondelete='restrict', tracking=True)
-    departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False)
-    departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
+                                          groups="hr.group_hr_responsible", copy=False, ondelete='restrict', tracking=True)
+    departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_responsible", copy=False)
+    departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_responsible", copy=False, tracking=True)
 
     resource_calendar_id = fields.Many2one('resource.calendar', inverse='_inverse_resource_calendar_id', check_company=True, string="Working Hours", tracking=True)
-    is_flexible = fields.Boolean(compute='_compute_is_flexible', store=True, groups="hr.group_hr_user")
-    is_fully_flexible = fields.Boolean(compute='_compute_is_flexible', store=True, groups="hr.group_hr_user")
+    is_flexible = fields.Boolean(compute='_compute_is_flexible', store=True, groups="hr.group_hr_responsible")
+    is_fully_flexible = fields.Boolean(compute='_compute_is_flexible', store=True, groups="hr.group_hr_responsible")
     tz = fields.Selection(related='employee_id.tz')
 
     # Contract Information
-    contract_date_start = fields.Date('Contract Start Date', tracking=True, groups="hr.group_hr_user")
+    contract_date_start = fields.Date('Contract Start Date', tracking=True, groups="hr.group_hr_responsible")
     contract_date_end = fields.Date(
         'Contract End Date', tracking=True, help="End date of the contract (if it's a fixed-term contract).",
-        groups="hr.group_hr_user")
+        groups="hr.group_hr_responsible")
     trial_date_end = fields.Date('End of Trial Period', help="End date of the trial period (if there is one).",
-                                 groups="hr.group_hr_user")
-    date_start = fields.Date(compute='_compute_dates', groups="hr.group_hr_user")
-    date_end = fields.Date(compute='_compute_dates', groups="hr.group_hr_user")
-    is_current = fields.Boolean(compute='_compute_state', groups="hr.group_hr_user")
-    is_past = fields.Boolean(compute='_compute_state', groups="hr.group_hr_user")
-    is_future = fields.Boolean(compute='_compute_state', groups="hr.group_hr_user")
-    is_in_contract = fields.Boolean(compute='_compute_state', groups="hr.group_hr_user")
+                                 groups="hr.group_hr_responsible")
+    date_start = fields.Date(compute='_compute_dates', groups="hr.group_hr_responsible")
+    date_end = fields.Date(compute='_compute_dates', groups="hr.group_hr_responsible")
+    is_current = fields.Boolean(compute='_compute_state', groups="hr.group_hr_responsible")
+    is_past = fields.Boolean(compute='_compute_state', groups="hr.group_hr_responsible")
+    is_future = fields.Boolean(compute='_compute_state', groups="hr.group_hr_responsible")
+    is_in_contract = fields.Boolean(compute='_compute_state', groups="hr.group_hr_responsible")
 
     contract_template_id = fields.Many2one(
-        'hr.version', string="Contract Template", groups="hr.group_hr_user",
+        'hr.version', string="Contract Template", groups="hr.group_hr_responsible",
         domain="[('company_id', '=', company_id), ('employee_id', '=', False)]", tracking=True,
         help="Select a contract template to auto-fill the contract form with predefined values. You can still edit the fields as needed after applying the template.")
     structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type",
                                         compute="_compute_structure_type_id", readonly=False, store=True, tracking=True,
-                                        groups="hr.group_hr_user", default=_default_salary_structure)
-    active_employee = fields.Boolean(related="employee_id.active", string="Active Employee", groups="hr.group_hr_user")
+                                        groups="hr.group_hr_responsible", default=_default_salary_structure)
+    active_employee = fields.Boolean(related="employee_id.active", string="Active Employee", groups="hr.group_hr_responsible")
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     wage = fields.Monetary('Wage', tracking=True, help="Employee's monthly gross wage.", aggregator="avg",
-                           groups="hr.group_hr_user")
-    contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage', groups="hr.group_hr_user")
+                           groups="hr.group_hr_responsible")
+    contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage', groups="hr.group_hr_responsible")
     company_country_id = fields.Many2one('res.country', string="Company country",
                                          related='company_id.country_id', readonly=True)
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     contract_type_id = fields.Many2one('hr.contract.type', "Contract Type", tracking=True,
-                                       groups="hr.group_hr_user")
+                                       groups="hr.group_hr_responsible")
 
     def _get_hr_responsible_domain(self):
-        return "[('share', '=', False), ('company_ids', 'in', company_id), ('all_group_ids', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
+        return "[('share', '=', False), ('company_ids', 'in', company_id), ('all_group_ids', 'in', %s)]" % self.env.ref('hr.group_hr_responsible').id
 
     hr_responsible_id = fields.Many2one(
         'res.users', 'HR Responsible', tracking=True,
         help='Person responsible for validating the employee\'s contracts.', domain=_get_hr_responsible_domain,
-        default=lambda self: self.env.user, required=True, groups="hr.group_hr_user")
+        default=lambda self: self.env.user, required=True, groups="hr.group_hr_responsible")
 
     _check_contract_start_date_defined = models.Constraint(
         'CHECK(contract_date_end IS NULL OR contract_date_start IS NOT NULL)',

@@ -266,7 +266,7 @@
                                    context="{'default_company_id': company_id}" widget="many2one_avatar_employee"
                                    options="{'relation': 'hr.employee.public', 'no_create': True}"
                                    readonly="not is_editable"/>
-                            <field name="employee_id" groups="hr.group_hr_user"
+                            <field name="employee_id" groups="hr.group_hr_responsible"
                                    context="{'default_company_id': company_id}" widget="many2one_avatar_employee"
                                    options="{'relation': 'hr.employee'}"
                                readonly="not is_editable"/>

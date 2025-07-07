@@ -22,7 +22,7 @@ class HrEmployee(models.Model):
         help='Select the user responsible for approving "Time Off" of this employee.\n'
              'If empty, the approval is done by an Administrator or Approver (determined in settings/users).')
     current_leave_id = fields.Many2one('hr.leave.type', compute='_compute_current_leave', string="Current Time Off Type",
-                                       groups="hr.group_hr_user")
+                                       groups="hr.group_hr_responsible")
     current_leave_state = fields.Selection(compute='_compute_leave_status', string="Current Time Off Status",
         selection=[
             ('confirm', 'Waiting Approval'),
@@ -30,13 +30,13 @@ class HrEmployee(models.Model):
             ('validate1', 'Waiting Second Approval'),
             ('validate', 'Approved'),
             ('cancel', 'Cancelled'),
-        ], groups="hr.group_hr_user")
-    leave_date_from = fields.Date('From Date', compute='_compute_leave_status', groups="hr.group_hr_user")
+        ], groups="hr.group_hr_responsible")
+    leave_date_from = fields.Date('From Date', compute='_compute_leave_status', groups="hr.group_hr_responsible")
     leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
     allocation_count = fields.Float('Total number of days allocated.', compute='_compute_allocation_count',
-                                    groups="hr.group_hr_user")
+                                    groups="hr.group_hr_responsible")
     allocations_count = fields.Integer('Total number of allocations', compute="_compute_allocation_count",
-                                       groups="hr.group_hr_user")
+                                       groups="hr.group_hr_responsible")
     show_leaves = fields.Boolean('Able to see Remaining Time Off', compute='_compute_show_leaves')
     is_absent = fields.Boolean('Absent Today', compute='_compute_leave_status', search='_search_absent_employee')
     allocation_display = fields.Char(compute='_compute_allocation_remaining_display')

@@ -18,7 +18,7 @@ class HrEmployee(models.Model):
     exceptional_location_id = fields.Many2one(
         'hr.work.location', string='Current',
         compute='_compute_exceptional_location_id',
-        help='This is the exceptional, non-weekly, location set for today.', groups="hr.group_hr_user")
+        help='This is the exceptional, non-weekly, location set for today.', groups="hr.group_hr_responsible")
     hr_icon_display = fields.Selection(selection_add=[('presence_home', 'At Home'),
                                                       ('presence_office', 'At Office'),
                                                       ('presence_other', 'At Other')])

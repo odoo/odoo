@@ -15,7 +15,7 @@ class ResUsers(models.Model):
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    equipment_ids = fields.One2many('maintenance.equipment', 'employee_id', groups="hr.group_hr_user")
+    equipment_ids = fields.One2many('maintenance.equipment', 'employee_id', groups="hr.group_hr_responsible")
     equipment_count = fields.Integer('Equipment Count', compute='_compute_equipment_count')
 
     @api.depends('equipment_ids')
