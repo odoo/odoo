@@ -29,6 +29,15 @@ class AccountMove(models.Model):
             'domain': [('debit_origin_id', '=', self.id)],
         }
 
+<<<<<<< f9f0529c93614bb9f9deec1a5aaa1daccfe8b58c
     def action_debit_note(self):
         action = self.env.ref('account_debit_note.action_view_account_move_debit')._get_action_dict()
         return action
+||||||| c43b865324d9e7bb713b3fe4edeede52b0bef495
+=======
+    def _get_copy_message_content(self, default):
+        """Override to handle debit note specific messages."""
+        if default and default.get('debit_origin_id'):
+            return _('This debit note was created from: %s', self._get_html_link())
+        return super()._get_copy_message_content(default)
+>>>>>>> 994091fa5e78bc2f43b05703370ffaec24064602

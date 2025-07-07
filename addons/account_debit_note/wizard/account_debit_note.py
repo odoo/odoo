@@ -71,8 +71,17 @@ class AccountDebitNote(models.TransientModel):
         for move in self.move_ids.with_context(include_business_fields=True): #copy sale/purchase links
             default_values = self._prepare_default_values(move)
             new_move = move.copy(default=default_values)
+<<<<<<< f9f0529c93614bb9f9deec1a5aaa1daccfe8b58c
             move_msg = _("This debit note was created from: %s", move._get_html_link())
             new_move.message_post(body=move_msg)
+||||||| c43b865324d9e7bb713b3fe4edeede52b0bef495
+            move_msg = _(
+                "This debit note was created from: %s",
+                move._get_html_link(),
+            )
+            new_move.message_post(body=move_msg)
+=======
+>>>>>>> 994091fa5e78bc2f43b05703370ffaec24064602
             new_moves |= new_move
 
         action = {
