@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import api, fields, models
 
-from odoo import fields, models, api
 from odoo.addons.l10n_my_edi.models.product_template import CLASSIFICATION_CODES_LIST
 
 
@@ -29,5 +29,5 @@ class AccountMoveLine(models.Model):
         """ Default to the product classification if any """
         for line in self:
             # We don't want to automatically update it on invoices that were sent to MyInvois
-            if not line.move_id.l10n_my_edi_external_uuid:
+            if not line.move_id.l10n_my_edi_state:
                 line.l10n_my_edi_classification_code = line.product_id.product_tmpl_id.l10n_my_edi_classification_code or line.l10n_my_edi_classification_code
