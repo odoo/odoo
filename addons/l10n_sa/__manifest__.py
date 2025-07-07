@@ -3,8 +3,8 @@
     'name': 'Saudi Arabia - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['sa'],
-    'version': '2.0',
-    'author': 'Odoo S.A., DVIT.ME (http://www.dvit.me)',
+    'version': '2.1',
+    'author': 'Odoo S.A.',
     'category': 'Accounting/Localizations/Account Charts',
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/saudi_arabia.html',
     'description': """
@@ -16,8 +16,8 @@ Activates:
 
 - Chart of Accounts
 - Taxes
-- Vat Filling Report
-- Withholding Tax Report
+- VAT Return
+- Withholding Return
 - Fiscal Positions
 """,
     'depends': [
@@ -29,6 +29,7 @@ Activates:
     'data': [
         'data/account_data.xml',
         'data/account_tax_report_data.xml',
+        'data/account_tax_report_withholding_data.xml',
         'data/report_paperformat_data.xml',
         'views/account_move_views.xml',
         'views/report_invoice.xml',
