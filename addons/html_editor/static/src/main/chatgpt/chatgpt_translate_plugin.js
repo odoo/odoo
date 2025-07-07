@@ -27,16 +27,11 @@ export class ChatGPTTranslatePlugin extends Plugin {
                 id: "translate",
                 groupId: "ai",
                 description: _t("Translate with AI"),
-                isAvailable: (selection) => {
-                    return !selection.isCollapsed && user.userId;
-                },
+                isAvailable: (selection) => !selection.isCollapsed && user.userId,
                 isDisabled: this.isNotReplaceableByAI.bind(this),
                 Component: LanguageSelector,
                 props: {
                     onSelected: (language) => this.openDialog({ language }),
-                    isDisabled: (selection) => {
-                        return this.isNotReplaceableByAI(selection);
-                    },
                 },
             },
         ],
@@ -98,10 +93,11 @@ export class ChatGPTTranslatePlugin extends Plugin {
         // collapse to end
         const sanitize = this.dependencies.sanitize.sanitize;
         const originalText = selection.textContent() || "";
-        this.dependencies.dialog.addDialog(
-            ChatGPTTranslateDialog,
-            { ...dialogParams, originalText, sanitize }
-        );
+        this.dependencies.dialog.addDialog(ChatGPTTranslateDialog, {
+            ...dialogParams,
+            originalText,
+            sanitize,
+        });
         if (this.services.ui.isSmall) {
             // TODO: Find a better way and avoid modifying range
             // HACK: In the case of opening through dropdown:

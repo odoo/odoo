@@ -25,6 +25,7 @@ export class Toolbar extends Component {
                                         const base = {
                                             id: String,
                                             description: String,
+                                            isDisabled: Boolean,
                                         };
                                         if (button.Component) {
                                             validate(button, {
@@ -39,7 +40,6 @@ export class Toolbar extends Component {
                                                 icon: { type: String, optional: true },
                                                 text: { type: String, optional: true },
                                                 isActive: Boolean,
-                                                isDisabled: Boolean,
                                             });
                                         }
                                         return true;
@@ -66,6 +66,7 @@ export class Toolbar extends Component {
 export const toolbarButtonProps = {
     title: [String, Function],
     getSelection: Function,
+    isDisabled: Boolean,
 };
 
 /** @typedef {import("@html_editor/core/user_command_plugin").UserCommand} UserCommand */

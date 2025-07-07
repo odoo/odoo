@@ -237,7 +237,7 @@ export class ToolbarPlugin extends Plugin {
             this.addDomListener(this.editable, "keydown", (ev) => {
                 // reason for "key?":
                 // On Chrome, if there is a password saved for a login page,
-                // a mouse click trigger a keydown event without any key 
+                // a mouse click trigger a keydown event without any key
                 if (ev.key?.startsWith("Arrow")) {
                     this.closeToolbar();
                     this.onSelectionChangeActive = false;
@@ -425,12 +425,12 @@ export class ToolbarPlugin extends Plugin {
                     .map((button) => ({
                         id: button.id,
                         description: button.description(selection, targetedNodes),
+                        isDisabled: !!button.isDisabled?.(selection, targetedNodes),
                         ...(button.Component
                             ? pick(button, "Component", "props")
                             : {
                                   ...pick(button, "run", "icon", "text"),
                                   isActive: !!button.isActive?.(selection, targetedNodes),
-                                  isDisabled: !!button.isDisabled?.(selection, targetedNodes),
                               }),
                     })),
             }))

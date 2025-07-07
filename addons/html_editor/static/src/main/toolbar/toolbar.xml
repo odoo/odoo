@@ -11,7 +11,8 @@
                                 <t t-component="button.Component"
                                     t-props="button.props"
                                     title="button.description"
-                                    getSelection.bind="props.getSelection"/>
+                                    getSelection.bind="props.getSelection"
+                                    isDisabled="'isDisabled' in button.props ? button.props.isDisabled : !!button.isDisabled"/>
                             </t>
                             <button t-else=""
                                 class="btn btn-light"
