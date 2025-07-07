@@ -5,7 +5,7 @@ from freezegun import freeze_time
 from odoo import fields, Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tests import tagged, users
 
 
@@ -28,7 +28,7 @@ class ActivityScheduleHRCase(ActivityScheduleCase):
                 }), Command.create({
                     'activity_type_id': cls.activity_type_todo.id,
                     'responsible_id': False,
-                    'responsible_type': 'coach',
+                    'responsible_type': 'employee',
                     'sequence': 20,
                     'summary': 'Training',
                 }),
@@ -55,13 +55,6 @@ class ActivityScheduleHRCase(ActivityScheduleCase):
             login='test_manager',
             name='Test Manager',
         )
-        cls.user_coach = mail_new_test_user(
-            cls.env,
-            email='test.coach@test.mycompany.com',
-            groups='base.group_user,hr.group_hr_manager',
-            login='test_coach',
-            name='Test Coach',
-        )
         cls.user_employee_1 = mail_new_test_user(
             cls.env,
             email='test.employee1@test.mycompany.com',
@@ -83,7 +76,7 @@ class ActivityScheduleHRCase(ActivityScheduleCase):
             login='test_employee_dep_b',
             name='Test Employee DepB',
         )
-        cls.users = cls.user_manager + cls.user_coach + cls.user_employee_1 + cls.user_employee_2 + cls.user_employee_dep_b
+        cls.users = cls.user_manager + cls.user_employee_1 + cls.user_employee_2 + cls.user_employee_dep_b
 
         cls.user_internal_basic = mail_new_test_user(
             cls.env,
@@ -100,7 +93,7 @@ class ActivityScheduleHRCase(ActivityScheduleCase):
                 'work_email': user.email,
             } for user in cls.users
         ])
-        cls.employee_manager, cls.employee_coach, cls.employee_1, cls.employee_2, cls.employee_dep_b = cls.employees
+        cls.employee_manager, cls.employee_1, cls.employee_2, cls.employee_dep_b = cls.employees
         cls.department_a = cls.env['hr.department'].create({
             'name': 'Test Department A',
             'member_ids': [Command.link(employee.id) for employee in cls.employees - cls.employee_dep_b],
@@ -109,20 +102,12 @@ class ActivityScheduleHRCase(ActivityScheduleCase):
             'name': 'Test Department B',
             'member_ids': [Command.link(cls.employee_dep_b.id)],
         })
-        cls.employee_1.coach_id = cls.employee_coach
         cls.employee_1.parent_id = cls.employee_manager
-        cls.employee_2.coach_id = cls.employee_coach
         cls.employee_2.parent_id = cls.employee_manager
-        cls.employee_coach.parent_id = cls.employee_manager
-        cls.employee_dep_b.coach_id = cls.employee_coach
-
-        cls.employee_3 = cls.employee_coach
-        cls.employee_4 = cls.employee_manager
-        cls.employee_4.coach_id = cls.employee_coach
+        cls.employee_3 = cls.employee_manager
         for employee, date_start in ((cls.employee_1, '2023-08-01'),
                                      (cls.employee_2, '2023-09-01'),
-                                     (cls.employee_3, '2023-12-01'),
-                                     (cls.employee_4, '2024-01-01')):
+                                     (cls.employee_3, '2024-01-01')):
             employee.version_id.write({
                 'contract_date_end': fields.Date.from_string('2025-12-31'),
                 'contract_date_start': fields.Date.from_string(date_start),
@@ -170,7 +155,7 @@ class TestActivitySchedule(ActivityScheduleHRCase):
         of employee if hr plan specific features are used. """
         with self.assertRaises(
                 UserError,
-                msg="Coach, manager or employee can only be chosen as template responsible with employee plan."):
+                msg="Manager or employee can only be chosen as template responsible with employee plan."):
             self.plan_onboarding.res_model = 'res.partner'
         self.plan_onboarding.template_ids[1].responsible_type = 'on_demand'
         self.plan_onboarding.res_model = 'res.partner'
@@ -178,12 +163,12 @@ class TestActivitySchedule(ActivityScheduleHRCase):
         self.plan_onboarding.template_ids[1].responsible_type = 'manager'
         with self.assertRaises(
                 UserError,
-                msg="Coach, manager or employee can only be chosen as template responsible with employee plan."):
+                msg="Manager or employee can only be chosen as template responsible with employee plan."):
             self.plan_onboarding.res_model = 'res.partner'
         self.plan_onboarding.template_ids[1].responsible_type = 'employee'
         with self.assertRaises(
                 UserError,
-                msg="Coach, manager or employee can only be chosen as template responsible with employee plan."):
+                msg="Manager or employee can only be chosen as template responsible with employee plan."):
             self.plan_onboarding.res_model = 'res.partner'
         self.plan_onboarding.template_ids[1].responsible_type = 'on_demand'
         self.plan_onboarding.res_model = 'res.partner'
@@ -198,6 +183,7 @@ class TestActivitySchedule(ActivityScheduleHRCase):
             'responsible_type': 'manager',
             'responsible_id': False,
         })
+        self.plan_onboarding.template_ids.filtered(lambda t: t.summary == 'Training').unlink()
         self.plan_onboarding.write({
             'template_ids': [(0, 0, {
                 'activity_type_id': self.activity_type_todo.id,
@@ -212,7 +198,6 @@ class TestActivitySchedule(ActivityScheduleHRCase):
             form.plan_id = self.plan_onboarding
             expected_summary_lines = [
                 ('Plan training', self.user_manager.id if len(employees) == 1 else False),
-                ('Training', self.user_coach.id if len(employees) == 1 else False),
                 ('Send feedback to the manager', employees.user_id.id if len(employees) == 1 else False),
             ]
             for summary_line, (expected_description, expected_responsible_id) in zip(
@@ -224,41 +209,33 @@ class TestActivitySchedule(ActivityScheduleHRCase):
             wizard = form.save()
             wizard.action_schedule_plan()
             for employee in employees:
-                activities = self.get_last_activities(employee, 3)
-                self.assertEqual(len(activities), 3)
+                activities = self.get_last_activities(employee, 2)
+                self.assertEqual(len(activities), 2)
                 self.assertEqual(activities[0].user_id, self.user_manager)
-                self.assertEqual(activities[1].user_id, self.user_coach)
-                self.assertEqual(activities[2].user_id, employee.user_id)
+                self.assertEqual(activities[1].user_id, employee.user_id)
 
-            # Cases with errors
+            # Warning case: missing manager
             self.employee_1.parent_id = False
-            self.employee_1.coach_id = False
             form = self._instantiate_activity_schedule_wizard(employees)
             form.plan_id = self.plan_onboarding
-            self.assertTrue(form.has_error)
-            n_error = form.error.count('<li>')
-            self.assertEqual(n_error, 2)
-            self.assertIn(f'Manager of employee {self.employee_1.name} is not set.', form.error)
-            self.assertIn(f'Coach of employee {self.employee_1.name} is not set.', form.error)
-            with self.assertRaises(ValidationError):
-                form.save()
+            self.assertTrue(form.has_warning)
+            n_warning = form.warning.count('<li>')
+            self.assertEqual(n_warning, 1)
+            self.assertIn(f'{self.employee_1.name} has no manager.', form.warning)
+            form.save()
+            # Additional warnings when users are not linked
             self.employee_1.parent_id = self.employee_manager
-            self.employee_1.coach_id = self.employee_coach
-            self.employee_coach.user_id = False
             self.employee_manager.user_id = False
             form = self._instantiate_activity_schedule_wizard(employees)
             form.plan_id = self.plan_onboarding
             self.assertTrue(form.has_warning)
             n_warning = form.warning.count('<li>')
-            self.assertEqual(n_warning, 2 * len(employees))
-            self.assertIn(f"The user of {self.employee_1.name}'s coach is not set.", form.warning)
-            self.assertIn(f'The manager of {self.employee_1.name} should be linked to a user.', form.warning)
+            self.assertEqual(n_warning, len(employees))
+            self.assertIn(f"{self.employee_1.name}'s manager ({self.employee_manager.name}) has no user.", form.warning)
             if len(employees) > 1:
-                self.assertIn(f"The user of {self.employee_2.name}'s coach is not set.", form.warning)
-                self.assertIn(f'The manager of {self.employee_2.name} should be linked to a user.', form.warning)
+                self.assertIn(f"{self.employee_2.name}'s manager ({self.employee_manager.name}) has no user.", form.warning)
             # should save without error, with coach
             form.save()
-            self.employee_coach.user_id = self.user_coach
             self.employee_manager.user_id = self.user_manager
 
     @freeze_time('2023-08-31')
@@ -267,13 +244,10 @@ class TestActivitySchedule(ActivityScheduleHRCase):
         for employees, plan_date in (
                 (self.employee_1, '2023-09-30'),
                 (self.employee_2, '2023-09-30'),
-                (self.employee_3, '2023-12-01'),
-                (self.employee_4, '2024-01-01'),
-                (self.employee_1 + self.employee_2 + self.employee_3, '2023-09-30'),
+                (self.employee_3, '2024-01-01'),
+                (self.employee_1 + self.employee_2, '2023-09-30'),
                 (self.employee_2 + self.employee_3, '2023-09-30'),
                 (self.employee_1 + self.employee_3, '2023-09-30'),
-                (self.employee_3 + self.employee_4, '2023-12-01'),
-                (self.employee_4 + self.employee_3, '2023-12-01'),
         ):
             with self._instantiate_activity_schedule_wizard(employees) as form:
                 form.plan_id = self.plan_onboarding
