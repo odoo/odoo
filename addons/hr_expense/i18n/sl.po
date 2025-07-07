@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-16 20:36+0000\n"
+"POT-Creation-Date: 2025-07-04 18:38+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
@@ -24,22 +24,22 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "$100.00"
-msgstr ""
+msgstr "100.00 €"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "$120.00"
-msgstr ""
+msgstr "120.00 €"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "$500.00"
-msgstr ""
+msgstr "500.00 €"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "$600.00"
-msgstr ""
+msgstr "600.00 €"
 
 #. module: hr_expense
 #. odoo-python
@@ -51,19 +51,19 @@ msgstr "%(employee_name)s: %(expense_name)s"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(expense_name)s: It is not from your department"
-msgstr ""
+msgstr "%(expense_name)s: ni iz tvojega oddelka"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(expense_name)s: It is your own expense"
-msgstr ""
+msgstr "%(expense_name)s: to so vaši lastni stroški"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(expense_name)s: You are neither a Manager nor a HR Officer"
-msgstr ""
+msgstr "%(expense_name)s: Niste ne vodja ne kadrovik"
 
 #. module: hr_expense
 #. odoo-python
@@ -72,13 +72,15 @@ msgid ""
 "%(expense_name)s: Your are neither a Manager nor a HR Officer of this "
 "expense's company"
 msgstr ""
+"%(expense_name)s: Niste ne vodja ne kadrovski direktor podjetja, ki se "
+"ukvarja s temi stroški."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
 "%(user)s confirms this expense is not a duplicate with similar expense."
-msgstr ""
+msgstr "%(user)s potrjuje, da ta odhodek ni dvojnik podobnega odhodka."
 
 #. module: hr_expense
 #: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense
@@ -86,38 +88,41 @@ msgid ""
 "'Expense - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 msgstr ""
+"'Stroški - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
+"''))"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "(incl"
-msgstr ""
+msgstr "(vklj."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
-msgstr ""
+msgstr "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "2023-08-11"
-msgstr "2023-08-11"
+msgstr "11-08-2023"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "<b>Wasting time recording your receipts?</b> Let’s try a better way."
 msgstr ""
+"<b>Izgubljate čas z beleženjem računov?</b> Poskusimo z boljšim načinom."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "<i class=\"oi oi-arrow-right\"/> Setup your alias domain"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right\"/> Nastavite svojo domeno alias"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_payment_form_inherit_expense
 msgid "<span class=\"o_stat_text\">Expense</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Stroški</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -127,32 +132,34 @@ msgstr "<span class=\"o_stat_text\">Vnos v dnevnik</span>"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "<span>@</span>"
-msgstr ""
+msgstr "<span>@</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<span>Date:</span>"
-msgstr ""
+msgstr "<span>Datum:</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<span>Employee:</span>"
-msgstr ""
+msgstr "<span>Zaposlen:</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<span>Manager:</span>"
-msgstr ""
+msgstr "<span>Vodja:</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<span>Paid by:</span>"
-msgstr ""
+msgstr "<span>Plačal/a:</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 msgid "<span>The total amount doesn't match the original amount.</span>"
 msgstr ""
+"<span>Skupni znesek se ne ujema s prvotnim zneskom.\n"
+"</span>"
 
 #. module: hr_expense
 #. odoo-python
@@ -162,6 +169,9 @@ msgid ""
 "paid expenses. You can alternatively specify one in the Journal for the "
 "%(method)s payment method."
 msgstr ""
+"V nastavitvah za stroške, ki jih plača podjetje, mora biti določen privzeti "
+"neporavnani račun. Lahko pa ga določite tudi v dnevniku za %(method)s način "
+"plačila"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -182,7 +192,7 @@ msgstr "Knjigovodski datum"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
 msgid "Accounting date"
-msgstr ""
+msgstr "Datum obračuna"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction
@@ -228,27 +238,27 @@ msgstr "Vzdevek"
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_user
 msgid "All Approver"
-msgstr ""
+msgstr "Vsi odobritelji"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "All Paid"
-msgstr ""
+msgstr "Vse plačano"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "All payment methods allowed"
-msgstr ""
+msgstr "Dovoljene so vse metode plačila"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "All to Pay"
-msgstr ""
+msgstr "Vse za plačilo"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "All to Post"
-msgstr ""
+msgstr "Vse za objavo"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_residual
@@ -259,24 +269,24 @@ msgstr "Dolgovani znesek"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "An"
-msgstr ""
+msgstr "En"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/mixins/document_upload.js:0
 msgid "An error occurred during the upload"
-msgstr ""
+msgstr "Med nalaganjem je prišlo do napake"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__account_id
 msgid "An expense account is expected"
-msgstr ""
+msgstr "Pričakuje se račun stroškov"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/expense_form_view.js:0
 msgid "An expense of same category, amount and date already exists."
-msgstr ""
+msgstr "Strošek iste kategorije, zneska in datuma že obstaja."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_account
@@ -310,7 +320,7 @@ msgstr "Datum odobritve"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__approval_state
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__approval_state
 msgid "Approval State"
-msgstr ""
+msgstr "Stanje odobritve"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -339,13 +349,13 @@ msgstr "Arhivirano"
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Attach Receipt"
-msgstr ""
+msgstr "Priložite potrdilo"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Attach a receipt - usually an image or a PDF file."
-msgstr ""
+msgstr "Priložite potrdilo – običajno sliko ali datoteko PDF."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
@@ -368,7 +378,7 @@ msgstr "Priponke"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
 msgid "Auto-validation"
-msgstr ""
+msgstr "Samodejno preverjanje"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_base
@@ -381,6 +391,8 @@ msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
 "taxes for expenses."
 msgstr ""
+"Tako davki, vključeni v ceno, kot davki brez cene se bodo za stroške "
+"obnašali kot davki, vključeni v ceno."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -390,12 +402,12 @@ msgstr "Poslovno potovanje"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__can_approve
 msgid "Can Approve"
-msgstr ""
+msgstr "Lahko odobri"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__can_reset
 msgid "Can Reset"
-msgstr ""
+msgstr "Lahko ponastavi"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -420,7 +432,7 @@ msgstr "Kategorija:"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Category: not found"
-msgstr ""
+msgstr "Kategorija: ni najdeno"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_checksum
@@ -464,7 +476,7 @@ msgstr "Stroški:"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 msgid "Create a new expense"
-msgstr ""
+msgstr "Ustvari nov strošek"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -474,7 +486,7 @@ msgstr "Ustvarite stroške iz e-poštnih sporočil"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Create new expenses to get statistics."
-msgstr ""
+msgstr "Ustvarite nove stroške za pridobitev statističnih podatkov."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -522,23 +534,23 @@ msgstr "Spoštovani"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_prefix
 msgid "Default Alias Name for Expenses"
-msgstr ""
+msgstr "Privzeto vzdevek za stroške"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_journal_id
 msgid "Default Expense Journal"
-msgstr ""
+msgstr "Privzeti dnevnik stroškov"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default accounting journal for expenses paid by employees."
-msgstr ""
+msgstr "Privzeti računovodski dnevnik za stroške, ki jih plačajo zaposleni."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default outstanding account for expenses paid by company."
-msgstr ""
+msgstr "Neporavnani račun za stroške, ki jih je plačalo podjetje."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -556,7 +568,7 @@ msgstr "Opis"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Digitalize your receipts with OCR and Artificial Intelligence"
-msgstr ""
+msgstr "Digitalizirajte svoje račune z OCR in umetno inteligenco"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_account__display_name
@@ -597,6 +609,9 @@ msgid ""
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
 msgstr ""
+"Ne hranite več potnih listkov v žepih. Samo fotografirajte svoj račun in "
+"pustite, da ga Odoo digitalizira namesto vas. OCR in umetna inteligenca "
+"bosta samodejno vnesla podatke."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
@@ -607,7 +622,7 @@ msgstr "Domena"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/mixins/qrcode.js:0
 msgid "Download our App"
-msgstr ""
+msgstr "Prenesite našo aplikacijo"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__draft
@@ -620,7 +635,7 @@ msgstr "Osnutek"
 #: code:addons/hr_expense/wizard/hr_expense_approve_duplicate.py:0
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__duplicate_expense_ids
 msgid "Duplicate Expense"
-msgstr ""
+msgstr "Podvojeni stroški"
 
 #. module: hr_expense
 #. odoo-python
@@ -629,6 +644,8 @@ msgid ""
 "Each expense paid by the company must have a distinct and dedicated journal "
 "entry."
 msgstr ""
+"Vsak strošek, ki ga plača podjetje, mora imeti ločen in namenski vpis v "
+"dnevnik."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee
@@ -646,7 +663,7 @@ msgstr "Zaposlen (za povračilo)"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Employee Expense Journal"
-msgstr ""
+msgstr "Dnevnik stroškov zaposlenih"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
@@ -661,6 +678,7 @@ msgid ""
 "Enter a name then choose a category and configure the amount of your "
 "expense."
 msgstr ""
+"Vnesite ime, nato izberite kategorijo in konfigurirajte znesek stroškov."
 
 #. module: hr_expense
 #: model:account.journal,name:hr_expense.hr_expense_account_journal
@@ -683,31 +701,31 @@ msgstr "Strošek"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_department_filtered
 msgid "Expense Analysis"
-msgstr ""
+msgstr "Analiza stroškov"
 
 #. module: hr_expense
 #: model:mail.activity.type,name:hr_expense.mail_act_expense_approval
 msgid "Expense Approval"
-msgstr ""
+msgstr "Odobritev stroškov"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_approve_duplicate
 msgid "Expense Approve Duplicate"
-msgstr ""
+msgstr "Odobritev stroškov - dvojnik"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_users__expense_manager_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_employee_search_view
 msgid "Expense Approver"
-msgstr ""
+msgstr "Odobritelj stroškov"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Expense Categories"
-msgstr ""
+msgstr "Kategorije stroškov"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
@@ -718,93 +736,93 @@ msgstr "Datum stroška"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Expense Digitalization (OCR)"
-msgstr ""
+msgstr "Digitalizacija stroškov (OCR)"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
 msgid "Expense Manager"
-msgstr ""
+msgstr "Upravitelj stroškov"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Expense Outstanding Account"
-msgstr ""
+msgstr "Račun neporavnanih stroškov"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_post_wizard
 msgid "Expense Posting Wizard"
-msgstr ""
+msgstr "Čarovnik za knjiženje stroškov"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
 msgid "Expense Refuse Reason Wizard"
-msgstr ""
+msgstr "Čarovnik za razloge za zavrnitev stroškov"
 
 #. module: hr_expense
 #: model:ir.actions.report,name:hr_expense.action_report_expense_img
 msgid "Expense Report Image"
-msgstr ""
+msgstr "Slika poročila o stroških"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_split
 msgid "Expense Split"
-msgstr ""
+msgstr "Razdelitev stroškov"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__expense_split_line_ids
 msgid "Expense Split Line"
-msgstr ""
+msgstr "Razdelitvena vrstica stroškov"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_split_wizard
 msgid "Expense Split Wizard"
-msgstr ""
+msgstr "Čarovnik za razdelitev stroškov"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 msgid "Expense Validate Duplicate"
-msgstr ""
+msgstr "Potrditev dvojnika stroškov"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense approved"
-msgstr ""
+msgstr "Stroški odobreni"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Expense categories can be reinvoiced to your customers."
-msgstr ""
+msgstr "Kategorije stroškov lahko ponovno fakturirate svojim strankam."
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense paid"
-msgstr ""
+msgstr "Plačani stroški"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Expense refuse reason"
-msgstr ""
+msgstr "Razlog za zavrnitev stroškov"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense refused"
-msgstr ""
+msgstr "Stroški zavrnjeni"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
 msgid "Expense reset to Draft"
-msgstr ""
+msgstr "Stroški ponastavljeni na osnutek"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expense split"
-msgstr ""
+msgstr "Razdelitev stroškov"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_department_to_approve
 msgid "Expense to Approve"
-msgstr ""
+msgstr "Stroški za odobritev"
 
 #. module: hr_expense
 #. odoo-python
@@ -841,17 +859,17 @@ msgstr "Poročilo o stroških"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expenses of %(employee)s"
-msgstr ""
+msgstr "Stroški %(employee)s"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Expenses of Your Team Member"
-msgstr ""
+msgstr "Stroški vašega člana ekipe"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expenses_to_approve_count
 msgid "Expenses to Approve"
-msgstr ""
+msgstr "Stroški za odobritev"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_to_process
@@ -863,7 +881,7 @@ msgstr "Stroški za obdelavo"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expenses with a similar receipt to %(other_expense_name)s"
-msgstr ""
+msgstr "Stroški s podobnim potrdilom kot %(other_expense_name)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -872,18 +890,20 @@ msgid ""
 "Failed to send mails for submitted expenses. No valid email was found for "
 "the company"
 msgstr ""
+"Pošiljanje e-pošte za poslane stroške ni uspelo. Za podjetje ni bil najden "
+"veljaven e-poštni naslov."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_base__filter_for_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__filter_for_expense
 msgid "Filter For Expense"
-msgstr ""
+msgstr "Filter za stroške"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Flight Ticket"
-msgstr ""
+msgstr "Letalska vozovnica"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_follower_ids
@@ -903,7 +923,7 @@ msgstr "Font izjemna ikona npr. fa-tasks"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__former_sheet_id
 msgid "Former Report"
-msgstr ""
+msgstr "Prejšnje poročilo"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -914,7 +934,7 @@ msgstr "Bodoče aktivnosti"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Generated Expense(s)"
-msgstr ""
+msgstr "Ustvarjeni stroški"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_gift_product_template
@@ -924,13 +944,13 @@ msgstr "Darila"
 #. module: hr_expense
 #: model_terms:product.template,description:hr_expense.expense_product_gift_product_template
 msgid "Gifts to customers or vendors"
-msgstr ""
+msgstr "Darila strankam ali prodajalcem"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Go to employees"
-msgstr ""
+msgstr "Pojdi na zaposlene"
 
 #. module: hr_expense
 #. odoo-python
@@ -946,7 +966,7 @@ msgstr "Združi po"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Guideline"
-msgstr ""
+msgstr "Smernica"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
@@ -956,12 +976,12 @@ msgstr "Ima sporočilo"
 #. module: hr_expense
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Hotel, plane ticket, taxi, etc."
-msgstr ""
+msgstr "Hotel, letalska vozovnica, taksi itd."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
 msgid "Hr Expense Alias Domain"
-msgstr ""
+msgstr "Vzdevek domene stroškov HR"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_account__id
@@ -1018,7 +1038,7 @@ msgstr "V plačilu"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
 msgid "Included taxes"
-msgstr ""
+msgstr "Vključeni davki"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1034,12 +1054,12 @@ msgstr "Interne opombe"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Invalid attachments!"
-msgstr ""
+msgstr "Neveljavne priloge!"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
 msgid "Is Editable By Current User"
-msgstr ""
+msgstr "Je mogoče urejati s strani trenutnega uporabnika"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_is_follower
@@ -1049,18 +1069,18 @@ msgstr "Je sledilec"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_multiple_currency
 msgid "Is currency_id different from the company_currency_id"
-msgstr ""
+msgstr "Ali se currency_id razlikuje od company_currency_id"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__product_has_cost
 msgid "Is product with non zero cost selected"
-msgstr ""
+msgstr "Je izbran izdelek z neničelnimi stroški?"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "It all begins here - let's go!"
-msgstr ""
+msgstr "Vse se začne tukaj - gremo!"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__journal_id
@@ -1078,12 +1098,12 @@ msgstr "Temeljnica"
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_expense_entry_delete
 msgid "Journal Entry Deleted"
-msgstr ""
+msgstr "Vnos v dnevnik izbrisan"
 
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_expense_entry_draft
 msgid "Journal Entry Reset to Draft"
-msgstr ""
+msgstr "Ponastavitev vnosa v dnevnik na osnutek"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
@@ -1094,28 +1114,28 @@ msgstr "Postavka"
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
 msgid "Journal entry created from these expenses: %(links)s"
-msgstr ""
+msgstr "Dnevniški vpis, ustvarjen iz teh stroškov: %(links)s"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
 msgid "Journal entry created from this expense: %(link)s"
-msgstr ""
+msgstr "Dnevniški vpis, ustvarjen iz tega stroška: %(link)s"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_delete
 msgid "Journal entry deleted"
-msgstr ""
+msgstr "Vnos v dnevnik izbrisan"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_draft
 msgid "Journal entry reset to draft"
-msgstr ""
+msgstr "Vnos v dnevnik ponastavljen na osnutek"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_currency_rate
 msgid "Label Currency Rate"
-msgstr ""
+msgstr "Tečaj valute oznake"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_uid
@@ -1151,19 +1171,19 @@ msgstr "Omogoči zaposlenim beleženje stroškov preko e-pošte"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Let's check out where you can manage all your employees expenses"
-msgstr ""
+msgstr "Poglejmo, kje lahko upravljate vse stroške svojih zaposlenih"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Let's go back to your expenses."
-msgstr ""
+msgstr "Vrnimo se k vašim stroškom."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Lunch with customer $12.32"
-msgstr ""
+msgstr "Kosilo s stranko 12,32 €"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_id
@@ -1183,12 +1203,14 @@ msgid ""
 "Managers can approve the expense here, then an accountant can post the "
 "accounting entries."
 msgstr ""
+"Vodje lahko tukaj odobrijo stroške, nato pa lahko računovodja knjiži "
+"računovodske vpise."
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Managers can inspect all expenses from here."
-msgstr ""
+msgstr "Vodje lahko od tukaj pregledajo vse stroške."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -1198,7 +1220,7 @@ msgstr "Marc Demo"
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_meal_product_template
 msgid "Meals"
-msgstr ""
+msgstr "Obroki"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error
@@ -1213,7 +1235,7 @@ msgstr "Sporočila"
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_mileage_product_template
 msgid "Mileage"
-msgstr ""
+msgstr "Kilometri"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -1244,16 +1266,10 @@ msgid "Name"
 msgstr "Naziv"
 
 #. module: hr_expense
-#. odoo-javascript
-#: code:addons/hr_expense/static/src/views/kanban.xml:0
-msgid "New"
-msgstr "Novo"
-
-#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "New expense entries"
-msgstr ""
+msgstr "Novi vnosi stroškov"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
@@ -1261,12 +1277,14 @@ msgid ""
 "New expenses are awaiting your approval.\n"
 "                You can review them by following this link"
 msgstr ""
+"Novi stroški čakajo na vašo odobritev.\n"
+"Pregledate jih lahko na tej povezavi."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "New expenses waiting for your approval"
-msgstr ""
+msgstr "Novi stroški, ki čakajo na vašo odobritev"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
@@ -1303,13 +1321,15 @@ msgstr "Podatkov še ni!"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "No expense categories found. Let's create one!"
-msgstr ""
+msgstr "Ni najdenih kategorij stroškov. Ustvarimo eno!"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "No work contact found for the employee %(name)s, please configure one."
 msgstr ""
+"Za zaposlenega %(name)sni bilo mogoče najti službenega stika, prosimo, "
+"konfigurirajte enega."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_categories_tree_view
@@ -1335,7 +1355,7 @@ msgstr "Število prilog"
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__nb_expenses
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__nb_expenses
 msgid "Number of Expenses"
-msgstr ""
+msgstr "Število stroškov"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
@@ -1356,7 +1376,7 @@ msgstr "Število sporočil, ki niso bila pravilno dostavljena."
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
 msgid "Numbers computed from your personal expenses."
-msgstr ""
+msgstr "Številke, izračunane na podlagi vaših osebnih stroškov."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -1371,6 +1391,9 @@ msgid ""
 "Give Odoo a hand to find an account by setting up an expense account.\n"
 "%(expense)s %(expense_name)s.\n"
 msgstr ""
+"Odoo si je ogledal vaše stroške, svoj izdelek, vaše podjetje in dnevnik, vendar se je vrnil praznih rok.\n"
+"Pomagajte Odooju najti račun tako, da ustvarite račun stroškov.\n"
+"%(expense)s %(expense_name)s.\n"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
@@ -1378,6 +1401,7 @@ msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
 msgstr ""
+"Ko ustvarite svoj strošek, ga pošljite svojemu vodji, ki ga bo potrdil."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1386,6 +1410,8 @@ msgid ""
 "Once your <b>Expense</b> is ready, you can submit it to your manager and "
 "wait for approval."
 msgstr ""
+"Ko je vaš <b>Strošek</b> pripravljen, ga lahko predložite svojemu vodji in "
+"počakate na odobritev."
 
 #. module: hr_expense
 #. odoo-python
@@ -1393,35 +1419,37 @@ msgstr ""
 msgid ""
 "Only HR Officers, accountants, or the concerned employee can reset to draft."
 msgstr ""
+"Samo kadrovski uradniki, računovodje ali zadevni zaposleni lahko ponastavijo"
+" na osnutek."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only draft expenses can have a total of 0."
-msgstr ""
+msgstr "Samo osnutek stroškov ima lahko skupno vrednost 0."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only expense paid by the employee can be posted with the wizard"
-msgstr ""
+msgstr "S čarovnikom je mogoče knjižiti samo stroške, ki jih plača zaposleni"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only one expense can be linked to a particular payment"
-msgstr ""
+msgstr "Z določenim plačilom je lahko povezan samo en strošek"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Open bugger menu."
-msgstr ""
+msgstr "Odpri meni za pomoč uporabnikom."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 msgid "Original Amount"
-msgstr ""
+msgstr "Prvotni znesek"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_outstanding_account_id
@@ -1443,12 +1471,12 @@ msgstr "Plačal"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Paid by Company"
-msgstr ""
+msgstr "Plačano s strani podjetja"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Paid by Employee"
-msgstr ""
+msgstr "Plača zaposleni"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_list_expense
@@ -1464,12 +1492,12 @@ msgstr "Način plačila"
 #. odoo-python
 #: code:addons/hr_expense/models/account_payment.py:0
 msgid "Payment created for: %s"
-msgstr ""
+msgstr "Plačilo ustvarjeno za: %s"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Payment method allowed for expenses paid by company."
-msgstr ""
+msgstr "Dovoljena metoda plačila za stroške, ki jih krije podjetje."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1480,7 +1508,7 @@ msgstr "Načini plačila"
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_allowed_payment_method_line_ids
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__company_expense_allowed_payment_method_line_ids
 msgid "Payment methods available for expenses paid by company"
-msgstr ""
+msgstr "Razpoložljivi načini plačila za stroške, ki jih krije podjetje"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment
@@ -1490,25 +1518,25 @@ msgstr "Plačila"
 #. module: hr_expense
 #: model_terms:product.template,description:hr_expense.expense_product_communication_product_template
 msgid "Phone bills, postage, etc."
-msgstr ""
+msgstr "Telefonski računi, poštnina itd."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
 "Please specify if the expenses were paid by the company, or the employee."
-msgstr ""
+msgstr "Prosimo, navedite, ali je stroške krilo podjetje ali zaposleni."
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/list.xml:0
 msgid "Post Entries"
-msgstr ""
+msgstr "Objave"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
 msgid "Post Expenses"
-msgstr ""
+msgstr "Knjiženje stroškov"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1519,13 +1547,13 @@ msgstr "Vknjiži temeljnico"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Post expenses"
-msgstr ""
+msgstr "Knjiženje stroškov"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Post expenses paid by the employee"
-msgstr ""
+msgstr "Stroški po pošti, ki jih krije zaposleni"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__posted
@@ -1556,7 +1584,7 @@ msgstr "Opis izdelka"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_cost
 msgid "Product Has Cost"
-msgstr ""
+msgstr "Izdelek ima stroške"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1597,6 +1625,8 @@ msgid ""
 "don't <em>need to save</em> - Odoo will save eveyrthing for you when you "
 "navigate."
 msgstr ""
+"Ste pripravljeni? Tukaj lahko shranite ročno ali zavržete spremembe. Ni vam "
+"<em>treba shranjevati</em> - Odoo bo shranil vse za vas med navigacijo."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__reason
@@ -1618,7 +1648,7 @@ msgstr "Referenca"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Refund employees via their payslips."
-msgstr ""
+msgstr "Zaposlenim povrnite denar prek plačilnih list."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -1630,7 +1660,7 @@ msgstr "Zavrni"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
 msgid "Refuse Expense"
-msgstr ""
+msgstr "Stroški zavrnitve"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__approval_state__refused
@@ -1658,7 +1688,7 @@ msgstr "Ukrep poročila"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__company_currency_id
 msgid "Report Company Currency"
-msgstr ""
+msgstr "Poročilo o valuti podjetja"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_reports
@@ -1678,7 +1708,7 @@ msgstr "Odgovorni uporabnik"
 #. module: hr_expense
 #: model_terms:product.template,description:hr_expense.expense_product_meal_product_template
 msgid "Restaurants, business lunches, etc."
-msgstr ""
+msgstr "Restavracije, poslovna kosila itd."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_sms_error
@@ -1693,20 +1723,20 @@ msgstr "Prodajna cena"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__same_receipt_expense_ids
 msgid "Same Receipt Expense"
-msgstr ""
+msgstr "Stroški istega računa"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/kanban.xml:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 msgid "Scan"
-msgstr ""
+msgstr "Skeniraj"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/components/qrcode_action.xml:0
 msgid "Scan this QR code to get the Odoo app:"
-msgstr ""
+msgstr "Skenirajte to QR kodo, da dobite aplikacijo Odoo:"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -1715,11 +1745,13 @@ msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
 "If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
 msgstr ""
+"Izberite uporabnika, odgovornega za odobritev »Stroškov« tega zaposlenega.\n"
+"Če je polje prazno, odobritev opravi skrbnik ali odobritelj (določeno v nastavitvah/uporabnikih)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
 msgid "Selectable Payment Method Line"
-msgstr ""
+msgstr "Izbirna vrstica načina plačila"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1730,11 +1762,16 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
+"Pošljite e-pošto na ta e-poštni vzdevek s potrdilom v prilogi, da ustvarite "
+"strošek z enim klikom. Če prva beseda v zadevi e-pošte vsebuje interno "
+"referenco kategorije ali ime kategorije, bo ustrezna kategorija samodejno "
+"nastavljena. V zadevo e-pošte vnesite znesek stroška, ​​da ga nastavite tudi"
+" za strošek."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
 msgid "Send bills to OCR to generate expenses"
-msgstr ""
+msgstr "Pošljite račune v OCR za generiranje stroškov"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
@@ -1756,35 +1793,35 @@ msgstr "Izvorni dokument"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__accounting_date
 msgid "Specify the bill date of the related vendor bill."
-msgstr ""
+msgstr "Navedite datum računa za povezani račun dobavitelja."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
 msgid "Specify whether the product can be selected in an expense."
-msgstr ""
+msgstr "Določite, ali je izdelek mogoče izbrati v strošku."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Split Expense"
-msgstr ""
+msgstr "Razdelitev stroškov"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_split_wizard.py:0
 msgid "Split Expenses"
-msgstr ""
+msgstr "Razdelite stroške"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "Split Possible"
-msgstr ""
+msgstr "Možna razdelitev"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__standard_price_update_warning
 msgid "Standard Price Update Warning"
-msgstr ""
+msgstr "Opozorilo o posodobitvi standardne cene"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
@@ -1834,7 +1871,7 @@ msgstr "Vmesni seštevek"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Subtotal in currency"
-msgstr ""
+msgstr "Vmesni seštevek v valuti"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_tax
@@ -1856,23 +1893,23 @@ msgstr "Osnova"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_amount
 msgid "Tax amount"
-msgstr ""
+msgstr "Znesek davka"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_amount_currency
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__tax_amount_currency
 msgid "Tax amount in Currency"
-msgstr ""
+msgstr "Znesek davka v valuti"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_amount
 msgid "Tax amount in company currency"
-msgstr ""
+msgstr "Znesek davka v valuti podjetja"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_amount_currency
 msgid "Tax amount in currency"
-msgstr ""
+msgstr "Znesek davka v valuti"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__tax_amount_currency
@@ -1884,7 +1921,7 @@ msgstr "Davki"
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
 msgid "Team Approver"
-msgstr ""
+msgstr "Odobritelj ekipe"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_outstanding_account_id
@@ -1892,6 +1929,7 @@ msgstr ""
 msgid ""
 "The account used to record the outstanding amount of the company expenses."
 msgstr ""
+"Račun, ki se uporablja za evidentiranje neporavnanih stroškov podjetja."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
@@ -1899,12 +1937,15 @@ msgstr ""
 msgid ""
 "The company's default journal used when an employee expense is created."
 msgstr ""
+"Privzeti dnevnik podjetja, ki se uporablja ob ustvarjanju stroškov "
+"zaposlenega."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "The current user has no related employee. Please, create one."
 msgstr ""
+"Trenutni uporabnik nima sorodnega zaposlenega. Prosimo, ustvarite enega."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -1912,6 +1953,8 @@ msgid ""
 "The first word of the email subject did not correspond to any category code."
 " You'll have to set the category manually on the expense."
 msgstr ""
+"Prva beseda v zadevi e-poštnega sporočila ni ustrezala nobeni kodi "
+"kategorije. Kategorijo boste morali ročno nastaviti za strošek."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -1920,27 +1963,30 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
+"Naslednji odobreni stroški imajo podobne zaposlene, zneske in kategorije kot"
+" nekateri stroški v tem poročilu. Preverite, ali to poročilo vsebuje "
+"podvojene podatke."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__employee_journal_id
 msgid "The journal used when the expense is paid by employee."
-msgstr ""
+msgstr "Dnevnik, ki se uporablja, ko zaposleni plača stroške."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__payment_method_line_id
 msgid "The payment method used when the expense is paid by the company."
-msgstr ""
+msgstr "Način plačila, ki se uporablja, ko podjetje plača stroške."
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "The status of all your current expenses is visible from here."
-msgstr ""
+msgstr "Stanje vseh vaših trenutnih stroškov je vidno tukaj."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "The sum of after split shut remain the same"
-msgstr ""
+msgstr "Vsota po razdelitvi ostane enaka"
 
 #. module: hr_expense
 #. odoo-python
@@ -1948,6 +1994,8 @@ msgstr ""
 msgid ""
 "The work email of some employees is missing. Please add it on their form."
 msgstr ""
+"Manjka službeni e-poštni naslov nekaterih zaposlenih. Prosimo, dodajte ga na"
+" njihov obrazec."
 
 #. module: hr_expense
 #. odoo-python
@@ -1957,28 +2005,31 @@ msgid ""
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
 msgstr ""
+"S to kategorijo so povezani neoddani stroški. Posodobitev stroškov "
+"kategorije bo spremenila zneske stroškov. Prepričajte se, da je to tisto, "
+"kar želite storiti."
 
 #. module: hr_expense
 #: model_terms:web_tour.tour,rainbow_man_message:hr_expense.hr_expense_tour
 msgid "There you go - expense management in a nutshell!"
-msgstr ""
+msgstr "Evo ga – upravljanje stroškov na kratko!"
 
 #. module: hr_expense
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
 #: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
 msgid "Tip: Snap pictures of your receipts with the remote app"
-msgstr ""
+msgstr "Nasvet: Fotografirajte račune z aplikacijo za oddaljeno uporabo"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Tip: try sending receipts by email"
-msgstr ""
+msgstr "Nasvet: poskusite poslati potrdila po e-pošti"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To Post"
-msgstr ""
+msgstr "Za objavo"
 
 #. module: hr_expense
 #. odoo-python
@@ -2010,7 +2061,7 @@ msgstr "Skupni znesek"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_currency
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__total_amount_currency
 msgid "Total In Currency"
-msgstr ""
+msgstr "Skupaj v valuti"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
@@ -2020,27 +2071,27 @@ msgstr "Skupni davki"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
 msgid "Total Untaxed Amount"
-msgstr ""
+msgstr "Skupni neobdavčeni znesek"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount_currency
 msgid "Total Untaxed Amount In Currency"
-msgstr ""
+msgstr "Skupni neobdavčeni znesek v valuti"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_currency_original
 msgid "Total amount of the original Expense that we are splitting"
-msgstr ""
+msgstr "Skupni znesek prvotnih stroškov, ki jih delimo"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__total_amount_currency_original
 msgid "Total amount original"
-msgstr ""
+msgstr "Skupni znesek originala"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Travel & Accommodation"
-msgstr ""
+msgstr "Potovanje in namestitev"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_decoration
@@ -2075,13 +2126,13 @@ msgstr "Naloži"
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_to_process
 msgid "Upload or drop an expense receipt"
-msgstr ""
+msgstr "Naložite ali spustite potrdilo o stroških"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Use the breadcrumbs to go back to the list of expenses."
-msgstr ""
+msgstr "Za vrnitev na seznam stroškov uporabite drobtine."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_users
@@ -2091,7 +2142,7 @@ msgstr "Uporabnik"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_approve_duplicate_action
 msgid "Validate Duplicate Expenses"
-msgstr ""
+msgstr "Potrditev podvojenih stroškov"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__vendor_id
@@ -2106,12 +2157,12 @@ msgstr "Ogled priponk"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "View Expense"
-msgstr ""
+msgstr "Ogled stroškov"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "View expenses"
-msgstr ""
+msgstr "Ogled stroškov"
 
 #. module: hr_expense
 #. odoo-python
@@ -2125,7 +2176,7 @@ msgstr "Čaka odobritev"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Waiting Reimbursement"
-msgstr ""
+msgstr "Povračilo stroškov čakanja"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
@@ -2149,12 +2200,17 @@ msgid ""
 "allowances for mileage, per diem, accommodation"
 "                                             or meal."
 msgstr ""
+"Ko je strošek produkta stroškov drugačen od 0, uporabnik, ki uporablja ta "
+"produkt, ne bo mogel spremeniti zneska stroška, ​​temveč le količino. Za "
+"kategorije stroškov, ki jih podjetje financira s fiksnimi stroški, kot so "
+"nadomestila za prevožene kilometre, dnevnice, nastanitev ali obroki, "
+"uporabite strošek, ki je drugačen od 0."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__product_has_tax
 msgid "Whether tax is defined on a selected product"
-msgstr ""
+msgstr "Ali je davek določen za izbrani izdelek"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__wizard_id
@@ -2165,24 +2221,24 @@ msgstr "Čarovnik"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You are not authorized to edit this expense."
-msgstr ""
+msgstr "Nimate dovoljenja za urejanje tega stroška."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can not submit an expense without a category."
-msgstr ""
+msgstr "Stroška ne morete oddati brez kategorije."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "You can now submit it to the manager from the following link."
-msgstr ""
+msgstr "Zdaj ga lahko oddate upravitelju prek naslednje povezave."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can only generate an accounting entry for approved expense(s)."
-msgstr ""
+msgstr "Računovodski vnos lahko ustvarite samo za odobrene stroške."
 
 #. module: hr_expense
 #. odoo-python
@@ -2191,6 +2247,8 @@ msgid ""
 "You can't post simultaneously employee-paid expenses belonging to different "
 "companies"
 msgstr ""
+"Hkrati ne morete knjižiti stroškov, ki jih plačajo zaposleni in pripadajo "
+"različnim podjetjem."
 
 #. module: hr_expense
 #. odoo-python
@@ -2199,37 +2257,41 @@ msgid ""
 "You cannot approve:\n"
 " %(reasons)s"
 msgstr ""
+"Ne morete odobriti:\n"
+" %(reasons)s"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot cancel an expense linked to a posted journal entry"
 msgstr ""
+"Stroška, ​​povezanega s knjiženim vpisom v dnevnik, ni mogoče preklicati."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot delete a posted or approved expense."
-msgstr ""
+msgstr "Knjiženega ali odobrenega stroška ni mogoče izbrisati."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/analytic.py:0
 msgid "You cannot delete an analytic account that is used in an expense."
 msgstr ""
+"Analitičnega računa, ki se uporablja pri stroških, ni mogoče izbrisati."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/account_payment.py:0
 msgid ""
 "You cannot do this modification since the payment is linked to an expense."
-msgstr ""
+msgstr "Te spremembe ne morete izvesti, ker je plačilo povezano s stroški."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot edit the security fields of an expense manually"
-msgstr ""
+msgstr "Varnostnih polj stroška ni mogoče urejati ročno"
 
 #. module: hr_expense
 #. odoo-python
@@ -2238,42 +2300,46 @@ msgid ""
 "You cannot refuse:\n"
 " %(reasons)s"
 msgstr ""
+"Ne morete zavrniti:\n"
+" %(reasons)s"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot reset to draft an expense linked to a posted journal entry."
 msgstr ""
+"Stroška, ​​povezanega s knjiženim vpisom v dnevnik, ni mogoče ponastaviti na"
+" osnutek."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot split an expense that is already posted."
-msgstr ""
+msgstr "Stroška, ​​ki je že knjižen, ni mogoče razdeliti."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the required permission to submit this expense."
-msgstr ""
+msgstr "Nimate potrebnega dovoljenja za oddajo tega stroška."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the rights to edit this expense."
-msgstr ""
+msgstr "Nimate pravic za urejanje tega stroška."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the rights to create accounting entries."
-msgstr ""
+msgstr "Nimate pravic za ustvarjanje računovodskih vnosov."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You need to add a manual payment method on the journal (%s)"
-msgstr ""
+msgstr "V dnevnik morate dodati ročni način plačila (%s)"
 
 #. module: hr_expense
 #. odoo-python
@@ -2282,16 +2348,18 @@ msgid ""
 "You need to have at least one category that can be expensed in your database"
 " to proceed!"
 msgstr ""
+"Za nadaljevanje morate imeti v svoji bazi podatkov vsaj eno kategorijo, ki "
+"jo je mogoče obračunati kot stroške!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense"
-msgstr ""
+msgstr "Vaši stroški"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Your expense has been successfully registered."
-msgstr ""
+msgstr "Vaš strošek je bil uspešno registriran."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -2311,7 +2379,7 @@ msgstr "npr. kosilo s stranko"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "e.g. Restaurants: only week days, for lunch"
-msgstr ""
+msgstr "npr. restavracije: samo med tednom, za kosilo"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -2321,12 +2389,12 @@ msgstr "npr. mycompany.si"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "expense"
-msgstr ""
+msgstr "stroški"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
-msgstr ""
+msgstr "je bilo zavrnjeno"
 
 #. module: hr_expense
 #. odoo-python
@@ -2337,24 +2405,24 @@ msgstr "identifikacija"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "no taxes"
-msgstr ""
+msgstr "brez davkov"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "per"
-msgstr ""
+msgstr "na"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "tax)"
-msgstr ""
+msgstr "davek)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
-msgstr ""
+msgstr "uporabite OCR za izpolnjevanje podatkov s slike računa"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
-msgstr ""
+msgstr "z istim računom že obstaja."
