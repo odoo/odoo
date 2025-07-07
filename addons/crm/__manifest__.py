@@ -30,7 +30,6 @@
         'data/crm_lost_reason_data.xml',
         'data/crm_stage_data.xml',
         'data/crm_team_data.xml',
-        'data/digest_data.xml',
         'data/ir_action_data.xml',
         'data/ir_cron_data.xml',
         'data/mail_message_subtype_data.xml',
@@ -49,7 +48,6 @@
         'views/crm_stage_views.xml',
         'views/crm_lead_views.xml',
         'views/crm_team_member_views.xml',
-        'views/digest_views.xml',
         'views/mail_activity_plan_views.xml',
         'views/mail_activity_views.xml',
         'views/res_config_settings_views.xml',
@@ -60,6 +58,9 @@
         'views/crm_team_views.xml',
         'views/crm_menu_views.xml',
         'views/crm_helper_templates.xml',
+
+        'data/digest_kpi.xml',
+        'data/digest_data.xml',
     ],
     'demo': [
         'data/crm_team_demo.xml',

@@ -18,5 +18,4 @@ from . import project_update
 from . import res_config_settings
 from . import res_partner
 from . import res_users
-from . import digest_digest
 from . import ir_ui_menu

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="kpi_crm_lead_created" model="digest.kpi" forcecreate="True">
+        <field name="name">New Leads</field>
+        <field name="res_model_id" ref="model_crm_lead"/>
+        <field name="group_ids" eval="[Command.link(ref('sales_team.group_sale_salesman'))]"/>
+        <field name="action_id" ref="crm.crm_lead_action_pipeline"/>
+        <field name="action_menu_root_id" ref="crm.crm_menu_root"/>
+        <field name="module_id" ref="base.module_crm"/>
+        <field name="sequence" eval="4000"/>
+    </record>
+
+    <record id="kpi_crm_opportunities_won" model="digest.kpi" forcecreate="True">
+        <field name="name">Opportunities Won</field>
+        <field name="res_model_id" ref="model_crm_lead"/>
+        <field name="date_field" ref="crm.field_crm_lead__date_closed"/>
+        <field name="domain">[('type', '=', 'opportunity'), ('probability', '=', '100')]</field>
+        <field name="group_ids" eval="[Command.link(ref('sales_team.group_sale_salesman'))]"/>
+        <field name="action_id" ref="crm.crm_lead_action_pipeline"/>
+        <field name="action_menu_root_id" ref="crm.crm_menu_root"/>
+        <field name="module_id" ref="base.module_crm"/>
+        <field name="sequence" eval="4100"/>
+    </record>
+</odoo>

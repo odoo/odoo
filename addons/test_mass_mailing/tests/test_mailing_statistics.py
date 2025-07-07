@@ -77,7 +77,8 @@ class TestMailingStatistics(TestMassMailCommon):
         self.assertEqual(mail.state, 'outgoing')
         # test body content: KPIs
         body_html = html.fromstring(mail.body_html)
-        kpi_values = body_html.xpath('//table[@data-field="mail"]//*[hasclass("kpi_value")]/text()')
+        kpi_values = body_html.xpath(
+            '//table[hasclass("o_digest_kpi_card") and descendant::text()[contains(., "mail")]]//*[hasclass("kpi_value")]/text()')
         self.assertEqual(
             [t.strip().strip('%') for t in kpi_values],
             ['83.33', str(mailing.opened_ratio), str(mailing.replied_ratio)]  # first value is received_ratio

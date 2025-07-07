@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="kpi_res_users_connected" model="digest.kpi" forcecreate="True">
+        <field name="name">Connected Users</field>
+        <field name="res_model_id" ref="base.model_res_users"/>
+        <field name="date_field" ref="base.field_res_users__login_date"/>
+        <field name="module_id" ref="base.module_base"/>
+        <field name="action_id" ref="base.action_res_users"/>
+        <field name="action_menu_root_id" ref="base.menu_administration"/>
+        <field name="sequence" eval="1000"/>
+    </record>
+
+    <record id="kpi_mail_message_total" model="digest.kpi" forcecreate="True">
+        <field name="name">Messages Sent</field>
+        <field name="res_model_id" ref="mail.model_mail_message"/>
+        <field name="domain" eval="repr([('subtype_id', '=', ref('mail.mt_comment')), ('message_type', 'in', ['comment', 'email', 'email_outgoing'])])"/>
+        <field name="module_id" ref="base.module_mail"/>
+        <field name="action_id" ref="mail.action_discuss"/>
+        <field name="action_menu_root_id" ref="mail.menu_root_discuss"/>
+        <field name="sequence" eval="1100"/>
+    </record>
+</odoo>

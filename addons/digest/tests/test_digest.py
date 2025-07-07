@@ -10,10 +10,9 @@ from lxml import html
 from unittest.mock import patch
 from werkzeug.urls import url_encode, url_join
 
-from odoo import SUPERUSER_ID
+from odoo import Command, SUPERUSER_ID
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.digest.tests.common import TestDigestCommon
-from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import tagged
 from odoo.tests.common import users
 from odoo.tools import mute_logger
@@ -52,16 +51,14 @@ class TestDigest(TestDigestCommon):
         with cls.mock_datetime_and_now(cls, cls.reference_datetime):
             cls.test_digest, cls.test_digest_2 = cls.env['digest.digest'].create([
                 {
-                    "kpi_mail_message_total": True,
-                    "kpi_res_users_connected": True,
                     "name": "My Digest",
                     "periodicity": "daily",
+                    "kpi_ids": [Command.link(kpi.id) for kpi in cls.kpis],
                 }, {
-                    "kpi_mail_message_total": True,
-                    "kpi_res_users_connected": True,
                     "name": "My Digest",
                     "periodicity": "weekly",
                     "user_ids": [(4, cls.user_admin.id), (4, cls.user_employee.id)],
+                    "kpi_ids": [Command.link(kpi.id) for kpi in cls.kpis],
                 }
             ])
 
@@ -91,20 +88,21 @@ class TestDigest(TestDigestCommon):
     @users('admin')
     def test_digest_kpi_res_users_connected_value(self):
         self.env['res.users.log'].with_user(SUPERUSER_ID).search([]).unlink()
+        kpi_res_users_connected = 'Connected Users'
         # Sanity check
-        initial_values = self.all_digests.mapped('kpi_res_users_connected_value')
-        self.assertEqual(initial_values, [0, 0, 0])
+        initial_values = self._get_values(self.all_digests, kpi_res_users_connected, 'value_last_30_days')
+        self.assertEqual(initial_values, ['0', '0', '0'])
 
         self.env['res.users'].with_user(self.user_employee)._update_last_login()
         self.env['res.users'].with_user(self.user_admin)._update_last_login()
 
-        self.all_digests.invalidate_recordset()
+        self._invalidate_digest(self.all_digests)
 
-        self.assertEqual(self.digest_1.kpi_res_users_connected_value, 2)
-        self.assertEqual(self.digest_2.kpi_res_users_connected_value, 0,
-            msg='This KPI is in an other company')
-        self.assertEqual(self.digest_3.kpi_res_users_connected_value, 2,
-            msg='This KPI has no company, should take the current one')
+        self.assertEqual(self._get_values(self.digest_1, kpi_res_users_connected, 'value_last_30_days'), '2')
+        self.assertEqual(self._get_values(self.digest_2, kpi_res_users_connected, 'value_last_30_days'), '0',
+                         msg='This KPI is in an other company')
+        self.assertEqual(self._get_values(self.digest_3, kpi_res_users_connected, 'value_last_30_days'), '2',
+                         msg='This KPI has no company, should take the current one (same as digest 1)')
 
     @users('admin')
     def test_digest_numbers(self):
@@ -124,7 +122,7 @@ class TestDigest(TestDigestCommon):
         self.assertEqual(mail.email_from, self.company_admin.email_formatted)
         self.assertEqual(mail.state, 'outgoing', 'Mail should use the queue')
 
-        kpi_message_values = html.fromstring(mail.body_html).xpath('//table[@data-field="kpi_mail_message_total"]//*[hasclass("kpi_value")]/text()')
+        kpi_message_values = html.fromstring(mail.body_html).xpath('//table[hasclass("o_digest_kpi_card") and descendant::text()[contains(., "Messages Sent")]]//*[hasclass("kpi_value")]/text()')
         self.assertEqual(
             [t.strip() for t in kpi_message_values],
             ['3', '8', '15']
@@ -296,18 +294,18 @@ class TestDigest(TestDigestCommon):
 
 
 @tagged("digest", "mail_mail", "-at_install", "post_install")
-class TestUnsubscribe(MailCommon, HttpCaseWithUserDemo):
+class TestUnsubscribe(TestDigestCommon, HttpCaseWithUserDemo):
 
     def setUp(self):
         super(TestUnsubscribe, self).setUp()
 
         self.test_digest = self.env['digest.digest'].create({
-            'kpi_mail_message_total': True,
-            'kpi_res_users_connected': True,
             'name': "My Digest",
             'periodicity': 'daily',
             'user_ids': self.user_demo.ids,
+            'kpi_ids': [Command.link(kpi.id) for kpi in self.kpis],
         })
+        self._invalidate_digest(self.test_digest)  # As we fill kpi_ids and not digest_kpi_ids
         self.test_digest._action_subscribe_users(self.user_demo)
         self.base_url = self.test_digest.get_base_url()
         self.user_demo_unsubscribe_token = self.test_digest._get_unsubscribe_token(self.user_demo.id)

@@ -6,8 +6,7 @@
             <field name="periodicity">daily</field>
             <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="next_run_date" eval="DateTime.now().strftime('%Y-%m-%d')"/>
-            <field name="kpi_res_users_connected">True</field>
-            <field name="kpi_mail_message_total">True</field>
+            <field name="kpi_ids" eval="[Command.link(ref('kpi_mail_message_total')), Command.link(ref('kpi_res_users_connected'))]"/>
         </record>
     </data>
     <data noupdate="0">

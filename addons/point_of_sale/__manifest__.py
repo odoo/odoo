@@ -13,7 +13,6 @@
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
         'data/default_barcode_patterns.xml',
-        'data/digest_data.xml',
         'data/pos_note_data.xml',
         'data/point_of_sale_tour.xml',
         'data/mail_template_data.xml',
@@ -41,7 +40,6 @@
         'views/point_of_sale_sequence.xml',
         'data/point_of_sale_data.xml',
         'views/pos_order_report_view.xml',
-        'views/digest_views.xml',
         'views/res_partner_view.xml',
         'views/report_userlabel.xml',
         'views/report_saledetails.xml',
@@ -54,7 +52,9 @@
         'views/customer_display_index.xml',
         'views/account_move_views.xml',
         'views/pos_session_sales_details.xml',
-        'views/product_tag_views.xml'
+        'views/product_tag_views.xml',
+        'data/digest_kpi.xml',
+        'data/digest_data.xml',
     ],
     'demo': [
         'data/demo_data.xml',

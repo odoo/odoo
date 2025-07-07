@@ -11,7 +11,6 @@ from . import account_move
 from . import pos_bus_mixin
 from . import barcode_rule
 from . import binary
-from . import digest
 from . import pos_category
 from . import pos_config
 from . import pos_order

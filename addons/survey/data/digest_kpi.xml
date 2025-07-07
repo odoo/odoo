@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="kpi_survey_nbr_of_answers" model="digest.kpi" forcecreate="True">
+        <field name="name">Answers</field>
+        <field name="res_model_id" ref="model_survey_user_input"/>
+        <field name="group_ids" eval="[Command.link(ref('survey.group_survey_manager'))]"/>
+        <field name="action_id" ref="survey.action_survey_user_input"/>
+        <field name="action_menu_root_id" ref="survey.menu_surveys"/>
+        <field name="module_id" ref="base.module_survey"/>
+        <field name="sequence" eval="13000"/>
+    </record>
+
+    <record id="kpi_survey_nbr_of_certified_participants" model="digest.kpi" forcecreate="True">
+        <field name="name">Certified Participants</field>
+        <field name="res_model_id" ref="model_survey_user_input"/>
+        <field name="date_field" ref="survey.field_survey_user_input__end_datetime"/>
+        <field name="domain">[('scoring_success', '=', True), ('survey_id.certification', '=', True)]</field>
+        <field name="group_ids" eval="[Command.link(ref('survey.group_survey_manager'))]"/>
+        <field name="action_id" ref="survey.action_survey_user_input_certified"/>
+        <field name="action_menu_root_id" ref="survey.menu_surveys"/>
+        <field name="module_id" ref="base.module_survey"/>
+        <field name="sequence" eval="13100"/>
+    </record>
+</odoo>

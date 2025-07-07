@@ -14,15 +14,24 @@ Send KPI Digests periodically
         'resource',
     ],
     'data': [
+        'security/security.xml',
         'security/ir.model.access.csv',
+        'data/digest_kpi.xml',
         'data/digest_data.xml',
         'data/digest_tips_data.xml',
         'data/ir_cron_data.xml',
         'data/res_config_settings_data.xml',
+        'views/digest_kpi_views.xml',
         'views/digest_views.xml',
         'views/digest_templates.xml',
         'views/res_config_settings_views.xml',
+        'wizard/digest_test_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'digest/static/src/views/fields/**/*',
+        ]
+    },
     'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

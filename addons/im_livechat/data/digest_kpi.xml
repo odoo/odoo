@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_actions_server_kpi_livechat_rating" model="ir.actions.server">
+        <field name="name">kpi computation of % of Happiness</field>
+        <field name="model_id" ref="digest.model_digest_digest"/>
+        <field name="state">code</field>
+        <field name="group_ids" eval="[Command.link(ref('im_livechat.im_livechat_group_manager'))]"/>
+        <field name="code">action = model._im_livechat_kpi_livechat_rating(
+            env.context.get('companies'),
+            env.context.get('start'),
+            env.context.get('end'),
+        )</field>
+    </record>
+
+    <record id="kpi_livechat_rating" model="digest.kpi" forcecreate="True">
+        <field name="name">% of Happiness</field>
+        <field name="res_model_id" ref="model_discuss_channel"/>
+        <field name="agg_mode">custom</field>
+        <field name="agg_custom" ref="ir_actions_server_kpi_livechat_rating"/>
+        <field name="group_ids" eval="[Command.link(ref('im_livechat.im_livechat_group_manager'))]"/>
+        <field name="module_id" ref="base.module_im_livechat"/>
+        <field name="sequence" eval="9000"/>
+    </record>
+
+    <record id="kpi_livechat_conversations" model="digest.kpi" forcecreate="True">
+        <field name="name">Conversations handled</field>
+        <field name="res_model_id" ref="model_discuss_channel"/>
+        <field name="domain">[('channel_type', '=', 'livechat')]</field>
+        <field name="group_ids" eval="[Command.link(ref('im_livechat.im_livechat_group_manager'))]"/>
+        <field name="action_id" ref="im_livechat.im_livechat_report_channel_action"/>
+        <field name="module_id" ref="base.module_im_livechat"/>
+        <field name="sequence" eval="9100"/>
+    </record>
+
+    <record id="kpi_livechat_response" model="digest.kpi" forcecreate="True">
+        <field name="name">Time to answer (sec)</field>
+        <field name="res_model_id" ref="model_im_livechat_report_channel"/>
+        <field name="agg_mode">avg</field>
+        <field name="date_field" ref="im_livechat.field_im_livechat_report_channel__start_date"/>
+        <field name="agg_field" ref="im_livechat.field_im_livechat_report_channel__time_to_answer"/>
+        <field name="group_ids" eval="[Command.link(ref('im_livechat.im_livechat_group_manager'))]"/>
+        <field name="action_id" ref="im_livechat.im_livechat_report_channel_time_to_answer_action"/>
+        <field name="module_id" ref="base.module_im_livechat"/>
+        <field name="sequence" eval="9200"/>
+    </record>
+</odoo>

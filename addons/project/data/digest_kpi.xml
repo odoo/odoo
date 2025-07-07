@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="kpi_project_task_opened" model="digest.kpi" forcecreate="True">
+        <field name="name">Open Tasks</field>
+        <field name="res_model_id" ref="model_project_task"/>
+        <field name="domain">[('stage_id.fold', '=', False), ('project_id', '!=', False)]</field>
+        <field name="group_ids" eval="[Command.link(ref('project.group_project_user'))]"/>
+        <field name="action_id" ref="project.open_view_project_all"/>
+        <field name="action_menu_root_id" ref="project.menu_main_pm"/>
+        <field name="module_id" ref="base.module_project"/>
+        <field name="sequence" eval="5000"/>
+    </record>
+</odoo>

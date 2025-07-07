@@ -17,6 +17,8 @@ class SlideChannelPartner(models.Model):
         ('completed', 'Finished')],
         string='Attendee Status', readonly=True, required=True, default='joined')
     completion = fields.Integer('% Completed Contents', default=0, aggregator="avg")
+    completion_date = fields.Datetime('Completion date', help='Completion date', compute='_compute_completion_date',
+                                      store=True)
     completed_slides_count = fields.Integer('# Completed Contents', default=0)
     partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
@@ -40,6 +42,19 @@ class SlideChannelPartner(models.Model):
         'check(completion >= 0 and completion <= 100)',
         'The completion of a channel is a percentage and should be between 0% and 100.',
     )
+
+    @api.depends('member_status')
+    def _compute_completion_date(self):
+        """ Set the completion date to the current date when it gets completed and resets the completion date when it's
+        set again to incomplete (member_status != 'completed') so that completion date represents the date of completion
+        and is coherent with the "member_status" field. """
+        for record in self:
+            completed = record.member_status == 'completed'
+            if not record.completion_date:
+                if completed:
+                    record.completion_date = fields.Datetime.now()
+            elif not completed:
+                record.completion_date = None
 
     @api.depends('channel_id', 'partner_id')
     def _compute_invitation_link(self):

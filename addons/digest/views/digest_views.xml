@@ -28,9 +28,12 @@
                     <button type="object" name="action_activate" string="Activate"
                         class="oe_highlight"
                         invisible="state == 'activated'" groups="base.group_system"/>
-                    <field name="state" widget="statusbar" statusbar_visible="0"/>
+                    <button type="object" name="action_launch_test_wizard" string="Test" class="btn-secondary"
+                            groups="base.group_system"/>
                 </header>
                 <sheet>
+                    <widget name="web_ribbon" title="Inactive" bg_color="text-bg-danger"
+                            invisible="state == 'activated'"/>
                     <div class="oe_title">
                         <label for="name" string="Digest Title"/>
                         <h1>
@@ -39,7 +42,8 @@
                     </div>
                     <group>
                         <group>
-                            <field name="periodicity" widget="radio" options="{'horizontal': true}"/>
+                            <field name="periodicity" widget="radio" options="{'horizontal': true}" readonly="1" groups="!base.group_system"/>
+                            <field name="periodicity" widget="radio" options="{'horizontal': true}" groups="base.group_system"/>
                             <field name="company_id" options="{'no_create': True}" invisible="1"/>
                         </group>
                         <group>
@@ -47,24 +51,90 @@
                         </group>
                     </group>
                     <notebook>
-                        <page name="kpis" string="KPIs">
-                            <group name="kpis">
-                                <group name="kpi_general" string="General" groups="base.group_system">
-                                    <field name="kpi_res_users_connected"/>
-                                    <field name="kpi_mail_message_total"/>
-                                </group>
-                                <group name="kpi_sales"/>
-                                <group name="custom" string="Custom" groups="base.group_system">
-                                    <div colspan="2">
-                                        <p>Want to add your own KPIs?<br />
-                                        <widget name="documentation_link" path="/applications/general/digest_emails.html#custom-digest-emails" icon="oi oi-arrow-right" label=" Check our Documentation"/></p>
-                                    </div>
-                                </group>
-                            </group>
+                        <page name="kpi_ids" string="KPIs">
+                            <control>
+                                <button name="action_add_kpi" string="Add/Remove KPIs" type="object" class="btn-link" groups="base.group_system"/>
+                            </control>
+
+                            <field name="digest_kpi_ids" nolabel="1">
+                                <kanban create="false" sample="1" can_open="0" type="object" action="action_edit_kpi">
+                                    <field name="sequence" widget="handle" groups="base.group_system"/>
+                                    <field name="icon_url"/>
+                                    <field name="module_name"/>
+                                    <templates>
+                                        <t t-name="card" t-attf-class="o_digest_kpi_kanban">
+                                            <div t-attf-class="d-flex justify-content-between align-items-center {{ record.is_opted_in.raw_value ? '' : 'text-muted' }}">
+                                                <div class="d-flex gap-1 align-items-center">
+                                                    <t if="record.icon_url.raw_value">
+                                                        <img t-att-src="record.icon_url.raw_value" role="img"
+                                                             t-att-title="record.module_name.raw_value" t-att-alt="record.module_name.raw_value"
+                                                             onError="this.onerror=null; this.remove();"
+                                                             valign="middle" width="24" height="24"/>
+                                                    </t>
+                                                    <field name="name" class="fw-bold text-uppercase"/>
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <field name="is_opted_in" widget="boolean_toggle_action_follow"
+                                                        options="{'action': 'action_toggle_opt_in_out', 'force_readonly': False}"/>
+                                                </div>
+                                            </div>
+                                            <div class="position-relative">
+                                                <div class="position-absolute" style="top: 4px; right: -9px">
+                                                    <widget name="web_ribbon" title="Sample" bg_color="text-bg-info"/>
+                                                </div>
+                                            </div>
+                                            <div t-attf-class="container-fluid px-0 mx-0 {{ record.is_opted_in.raw_value ? '' : 'text-muted' }}" groups="base.group_system">
+                                                <div class="row">
+                                                    <div class="col-12"><hr class="mt-1 mb-2"/></div>
+                                                </div>
+                                                <div class="row">
+                                                    <t t-set="v_24h" t-value="40 + (record.id.raw_value * 97 + 19) % 20"/>
+                                                    <t t-set="v_24h_prev" t-value="v_24h + ((record.id.raw_value * 73 + 7) % 20) - 10"/>
+                                                    <t t-set="v_7d" t-value="((v_24h + v_24h_prev) * 3.5) | 0"/>
+                                                    <t t-set="v_7d_prev" t-value="(v_7d + ((record.id.raw_value * 31 + 23) % v_7d) - v_7d / 2) | 0"/>
+                                                    <t t-set="v_30d" t-value="(v_7d + v_7d_prev) * 2"/>
+                                                    <t t-set="v_30d_prev" t-value="(v_30d + ((record.id.raw_value * 113 + 41) % v_30d) - v_30d / 2) | 0"/>
+                                                    <t t-call="metric_column">
+                                                        <t t-set="value" t-value="v_24h"/>
+                                                        <t t-set="prev_value" t-value="v_24h_prev"/>
+                                                        <t t-set="label">Last 24 hours</t>
+                                                    </t>
+                                                    <t t-call="metric_column">
+                                                        <t t-set="value" t-value="v_7d"/>
+                                                        <t t-set="prev_value" t-value="v_7d_prev"/>
+                                                        <t t-set="label">Last 7 days</t>
+                                                    </t>
+                                                    <t t-call="metric_column">
+                                                        <t t-set="value" t-value="v_30d"/>
+                                                        <t t-set="prev_value" t-value="v_30d_prev"/>
+                                                        <t t-set="label">Last 30 days</t>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <t t-name="metric_column">
+                                            <div class="col d-flex flex-column align-items-center">
+                                                <div t-out="value" class="lead fw-bolder"/>
+                                                <div t-out="label" class="small text-muted"/>
+                                                <t t-set="diff" t-value="value - prev_value"/>
+                                                <t t-set="margin" t-value="prev_value === 0 ? 0 : (diff / prev_value) * 100"/>
+                                                <t t-set="margin_rounded" t-value="((margin * 100) - ((margin * 100) % 1)) / 100"/>
+                                                <div t-if="margin_rounded !== 0"
+                                                    t-attf-class="d-flex gap-1 px-1 py-1 small {{ margin &gt; 0 ? 'rounded-pill bg-opacity-25 bg-success' : (margin &lt; 0 ? 'rounded-pill bg-opacity-25 bg-danger' : '') }}">
+                                                    <div t-if="margin &gt; 0">⬆</div>
+                                                    <div t-if="margin &lt; 0">⬇</div>
+                                                    <div><span t-out="margin_rounded"/>%</div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
                         </page>
                         <page name="recipients" string="Recipients" groups="base.group_system">
                             <field name="user_ids" options="{'no_create': True}">
                                 <list string="Recipients">
+                                    <field string="" width="32px" name="image_128" widget="image" options="{'size': [24, 24]}"/>
                                     <field name="name"/>
                                     <field name="email" string="Email Address" />
                                 </list>
@@ -75,6 +145,29 @@
             </form>
         </field>
     </record>
+
+    <record id="digest_digest_view_form_add_remove_kpi" model="ir.ui.view">
+        <field name="name">digest.digest.view.form.add.remove.kpi</field>
+        <field name="model">digest.digest</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <form string="KPI Digest">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <field name="kpi_ids" placeholder="Add existing KPIs" nolabel="1"
+                           options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                </sheet>
+                <footer>
+                    <button string="Save" class="btn-primary" special="save" data-hotkey="q" />
+                    <button name="action_create_kpi" string="Create New KPI" type="object" class="btn-link"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
     <record id="digest_digest_view_search" model="ir.ui.view">
         <field name="name">digest.digest.view.search</field>
         <field name="model">digest.digest</field>

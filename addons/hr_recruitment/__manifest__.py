@@ -19,7 +19,6 @@
     'data': [
         'security/hr_recruitment_security.xml',
         'security/ir.model.access.csv',
-        'data/digest_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
         'data/mail_templates.xml',
@@ -38,12 +37,13 @@
         'views/hr_job_views.xml',
         'views/mail_activity_views.xml',
         'views/mail_activity_plan_views.xml',
-        'views/digest_views.xml',
         'wizard/applicant_refuse_reason_views.xml',
         'wizard/applicant_send_mail_views.xml',
         'wizard/talent_pool_add_applicants_views.xml',
         'wizard/job_add_applicants_views.xml',
         'views/menuitems.xml',
+        'data/digest_kpi.xml',
+        'data/digest_data.xml',
     ],
     'demo': [
         'data/hr_recruitment_demo.xml',
