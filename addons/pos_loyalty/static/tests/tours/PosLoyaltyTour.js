@@ -467,9 +467,11 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsGlobalDiscountProgramNo
             ProductScreen.clickCustomer("AAAA"),
             ProductScreen.addOrderline("product_a", "1"),
             PosLoyalty.hasRewardLine("10% on your order", "-10.00"),
-            PosLoyalty.orderTotalIs("90"),
-            PosLoyalty.pointsAwardedAre("90"),
-            PosLoyalty.finalizeOrder("Cash", "90"),
+            ProductScreen.clickDisplayedProduct("product_a"),
+            PosLoyalty.hasRewardLine("10% on your order", "-20.00"),
+            PosLoyalty.orderTotalIs("180"),
+            PosLoyalty.pointsAwardedAre("180"),
+            PosLoyalty.finalizeOrder("Cash", "180"),
         ].flat(),
 });
 

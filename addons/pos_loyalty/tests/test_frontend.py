@@ -1855,7 +1855,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyPointsGlobalDiscountProgramNoDomain",
             login="pos_user",
         )
-        self.assertEqual(loyalty_card.points, 90)
+        self.assertEqual(loyalty_card.points, 180)
 
     def test_points_awarded_discount_code_no_domain_program(self):
         """

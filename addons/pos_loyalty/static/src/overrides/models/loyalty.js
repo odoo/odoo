@@ -363,7 +363,6 @@ patch(Order.prototype, {
             return this._updateLoyaltyPrograms().then(async () => {
                 // Try auto claiming rewards
                 const claimableRewards = this.getClaimableRewards(false, false, true);
-                let changed = false;
                 for (const { coupon_id, reward } of claimableRewards) {
                     if (
                         reward.program_id.rewards.length === 1 &&
@@ -372,14 +371,10 @@ patch(Order.prototype, {
                             (reward.reward_type == "product" && !reward.multi_product))
                     ) {
                         this._applyReward(reward, coupon_id);
-                        changed = true;
                     }
                 }
-                // Rewards may impact the number of points gained
-                if (changed) {
-                    await this._updateLoyaltyPrograms();
-                }
                 this._updateRewardLines();
+                await this._updateLoyaltyPrograms();
             });
         });
     },
