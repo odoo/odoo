@@ -282,7 +282,10 @@ export class RelationalModel extends Model {
             (config.isMonoRecord && (this.root.config.resId !== config.resId || !config.resId))
         ) {
             return {
-                onUpdate: async (result) => {
+                onFinish: async (hasChanged, result) => {
+                    if (!hasChanged) {
+                        return;
+                    }
                     const { root, loadId } = await rootLoadDef;
                     if (root.id !== this.root.id) {
                         // The root that we want to update is not the current one. It may happen
