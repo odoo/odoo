@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div t-name="survey.SurveyQuestionTypeSelectField" t-inherit="web.BadgeSelectionField" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_selection_badge')]" position="replace">
+            <span
+                class="o_selection_badge btn btn-secondary mb-1"
+                t-att-class="{ 'active': value === option[0], 'btn-sm': props.size === 'sm', 'btn-lg': props.size === 'lg' }"
+                t-att-value="stringify(option[0])"
+                t-on-click="() => this.onChange(option[0])">
+                <i t-att-class="`fa ${this.icons[option[0]]}`"/> <t t-esc="option[1]"/>
+            </span>
+        </xpath>
+    </div>
+
+</templates>
