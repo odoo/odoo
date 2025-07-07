@@ -424,7 +424,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         var $aSubmit = $(ev.currentTarget);
         if (!ev.defaultPrevented && !$aSubmit.is(".disabled")) {
             ev.preventDefault();
-            $aSubmit.closest('form').submit();
+            $aSubmit.closest('form')[0].requestSubmit();
         }
         if ($aSubmit.hasClass('a-submit-disable')) {
             $aSubmit.addClass("disabled");
