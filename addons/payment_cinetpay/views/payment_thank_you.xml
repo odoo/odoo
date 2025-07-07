@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <template id="payment_thank_you" name="Page de remerciement">
+    <t t-call="website.layout">
+      <style>
+        .thank-you-container {
+          background-color: #f8f9fa;
+          padding: 50px 0;
+          text-align: center;
+          border-radius: 10px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .thank-you-container h2 {
+          font-size: 2.5em;
+          color: #28a745;
+          font-weight: bold;
+          margin-bottom: 20px;
+        }
+        .thank-you-container p {
+          font-size: 1.2em;
+          color: #6c757d;
+          margin-bottom: 30px;
+        }
+        .thank-you-container a {
+          padding: 15px 30px;
+          background-color: #007bff;
+          color: white;
+          border-radius: 5px;
+          text-decoration: none;
+          font-size: 1.2em;
+          transition: background-color 0.3s ease;
+        }
+        .thank-you-container a:hover {
+          background-color: #0056b3;
+        }
+        .emoji {
+          font-size: 3em;
+          margin-bottom: 20px;
+        }
+      </style>
+
+      <div class="thank-you-container">
+        <!-- Emoji et message de remerciement -->
+        <div class="emoji">🎉💳</div>
+        <h2>Merci pour votre paiement !</h2>
+        <p>
+          Votre commande a été payée avec succès. Nous vous remercions pour votre achat et nous espérons vous revoir bientôt ! 
+          <span>😊</span>
+        </p>
+
+        <!-- Bouton de retour à la boutique -->
+        <a href="/" class="btn btn-primary">Retour à la boutique 🛒</a>
+      </div>
+    </t>
+  </template>
+</odoo>

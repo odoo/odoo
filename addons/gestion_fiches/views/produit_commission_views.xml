@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action (ouvre la vue list + form) -->
+    <record id="action_produit_commission" model="ir.actions.act_window">
+        <field name="name">Produits et Commissions</field>
+        <field name="res_model">produit.commission</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>
+                Gérer les produits et leurs commissions par profil.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu racine -->
+    <menuitem id="menu_produit_commission_root"
+              name="Produits et Commissions"
+              sequence="10" />
+
+    <!-- Menu enfant lié à l'action -->
+    <menuitem id="menu_produit_commission"
+              name="Produits"
+              parent="menu_produit_commission_root"
+              action="action_produit_commission"
+              sequence="1" />
+
+    <!-- Vue liste (tree view) -->
+    <record id="view_produit_commission_form" model="ir.ui.view">
+    <field name="name">produit.commission.form</field>
+    <field name="model">produit.commission</field>
+    <field name="arch" type="xml">
+        <form string="Produit Commission">
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="categorie"/>
+                    <field name="prix"/>
+                    <field name="commission_senior_pct"/>
+                    <field name="commission_senior_montant"/>
+                    <field name="commission_junior_pct"/>
+                    <field name="commission_junior_montant"/>
+                    <field name="commission_commercial_pct"/>
+                    <field name="commission_commercial_montant"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+    <!-- Vue formulaire (form view) -->
+    <record id="view_produit_commission_form" model="ir.ui.view">
+        <field name="name">produit.commission.form</field>
+        <field name="model">produit.commission</field>
+        <field name="arch" type="xml">
+            <form string="Détail Produit">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="categorie"/>
+                        <field name="prix"/>
+                    </group>
+                    <group string="Commissions (%)">
+                        <field name="commission_senior_pct"/>
+                        <field name="commission_junior_pct"/>
+                        <field name="commission_commercial_pct"/>
+                    </group>
+                    <group string="Montants Calculés (FCFA)">
+                        <field name="commission_senior_montant" readonly="1"/>
+                        <field name="commission_junior_montant" readonly="1"/>
+                        <field name="commission_commercial_montant" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
+

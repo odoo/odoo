@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action -->
+    <record id="action_produit_commission" model="ir.actions.act_window">
+        <field name="name">Produits</field>
+        <field name="res_model">produit.commission</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Principal -->
+    <menuitem id="menu_gestion_fiches_root" name="Produits et Commissions"/>
+
+    <!-- Menu Enfant -->
+    <menuitem id="menu_produit_commission"
+              name="Produits"
+              parent="menu_gestion_fiches_root"
+              action="action_produit_commission"/>
+</odoo>

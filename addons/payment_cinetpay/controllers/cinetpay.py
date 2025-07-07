@@ -20,3 +20,9 @@ class CinetpayController(http.Controller):
             'order': order,
             'amount_total': amount_total,
         })
+
+class PaymentThankYouController(http.Controller):
+
+    @http.route('/payment/thank_you', type='http', auth='public', website=True)
+    def payment_thank_you(self, **kwargs):
+        return request.render('payment_cinetpay.payment_thank_you')

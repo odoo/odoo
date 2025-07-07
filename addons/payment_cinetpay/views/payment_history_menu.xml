@@ -1,0 +1,15 @@
+<odoo>
+    <!-- Action pour afficher l'historique des paiements -->
+    <record id="payment_history_action_url" model="ir.actions.act_url">
+        <field name="name">Historique des Paiements</field>
+        <field name="url">/payment/history</field>
+        <field name="target">self</field>
+    </record>
+
+    <!-- Menu pour l'historique des paiements sous "Mon Compte" -->
+    <menuitem id="payment_history_menu" 
+              name="Historique des Paiements" 
+              parent="portal.portal_my_home" 
+              action="payment_cinetpay.payment_history_action_url" 
+              sequence="20"/>
+</odoo>

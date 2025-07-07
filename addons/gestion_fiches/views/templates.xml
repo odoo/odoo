@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action pour ouvrir la vue list + form -->
+    <record id="action_produit_commission_admin" model="ir.actions.act_window">
+        <field name="name">Gérer Produits et Commissions</field>
+        <field name="res_model">produit.commission</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>
+                Ajouter, modifier ou supprimer des produits et leurs commissions.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu racine pour l'administration -->
+    <menuitem id="menu_produit_commission_admin_root"
+              name="Admin Produits et Commissions"
+              sequence="20" />
+
+    <!-- Menu enfant pour l'action d'administration des produits -->
+    <menuitem id="menu_produit_commission_admin"
+              name="Gérer Produits"
+              parent="menu_produit_commission_admin_root"
+              action="action_produit_commission_admin"
+              sequence="1" />
+
+    <!-- Vue liste (tree view) pour afficher les produits dans l'administration -->
+    <record id="view_produit_commission_admin_tree" model="ir.ui.view">
+        <field name="name">produit.commission.admin.tree</field>
+        <field name="model">produit.commission</field>
+        <field name="arch" type="xml">
+            <tree string="Liste des Produits et Commissions">
+                <field name="name"/>
+                <field name="categorie"/>
+                <field name="prix"/>
+                <field name="commission_senior_pct"/>
+                <field name="commission_junior_pct"/>
+                <field name="commission_commercial_pct"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire (form view) pour l'ajout et la modification de produits -->
+    <record id="view_produit_commission_admin_form" model="ir.ui.view">
+        <field name="name">produit.commission.admin.form</field>
+        <field name="model">produit.commission</field>
+        <field name="arch" type="xml">
+            <form string="Ajouter/Modifier Produit Commission">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="categorie"/>
+                        <field name="prix"/>
+                    </group>
+                    <group string="Commissions (%)">
+                        <field name="commission_senior_pct"/>
+                        <field name="commission_junior_pct"/>
+                        <field name="commission_commercial_pct"/>
+                    </group>
+                    <group string="Montants Calculés (FCFA)">
+                        <field name="commission_senior_montant" readonly="1"/>
+                        <field name="commission_junior_montant" readonly="1"/>
+                        <field name="commission_commercial_montant" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Définition des permissions pour l'administrateur -->
+    <record id="group_produit_commission_admin" model="res.groups">
+        <field name="name">Admin Produits et Commissions</field>
+        <field name="category_id" ref="base.module_category_sales"/>
+    </record>
+
+    <!-- Ajout des droits d'accès sur les produits pour le groupe admin -->
+    <record id="access_produit_commission_admin" model="ir.model.access">
+        <field name="name">Accès complet à la gestion des produits et commissions</field>
+        <field name="model_id" ref="model_produit_commission"/>
+        <field name="group_id" ref="group_produit_commission_admin"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+</odoo>

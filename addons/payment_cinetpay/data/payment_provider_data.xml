@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<!-- Déclaration du Provider CinetPay -->
+        <record id="payment_provider_cinetpay" model="payment.provider">
+            <!-- Nom qui sera visible dans Odoo -->
+            <field name="name">CinetPay</field>
+            <!-- Logo de CinetPay (icon de ton module) -->
+            <field name="image_128" type="base64" file="payment_cinetpay/static/description/icon.png"/>
+            <!-- Lien avec ton module -->
+            <field name="module_id" ref="base.module_payment_cinetpay"/>
+            <!-- Liste des moyens de paiement supportés par CinetPay -->
+            <field name="payment_method_ids"
+                   eval="[Command.set([
+                             ref('payment.payment_method_card'),
+                             ref('payment.payment_method_mobile_money'),
+                             ref('payment.payment_method_bank_transfer'),
+                         ])]"
+            />
+        </record>
+</odoo>

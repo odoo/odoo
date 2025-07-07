@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="saas_client_create" name="Créer une instance SaaS">
+  <t t-call="website.layout">
+
+    <!-- Charger utilisateur courant -->
+    <t t-set="user" t-value="request.env.user"/>
+    <t t-set="is_public" t-value="user.id == request.website.user_id.id"/>
+
+    <div class="container mt-5 mb-5">
+      <h2>Créer votre instance SaaS</h2>
+
+      <!-- Message info si public -->
+      <t t-if="is_public">
+        <div class="alert alert-info">
+          Connectez-vous pour faciliter la gestion de vos instances SaaS.
+        </div>
+      </t>
+
+      <!-- Formulaire de création d'instance -->
+      <form id="saasForm" method="POST" t-attf-action="/saas/instance/create" class="mt-4">
+        <!-- CSRF -->
+        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+        <div class="form-group">
+          <label for="db_name">Nom de la base :</label>
+          <input type="text" id="db_name" name="db_name" class="form-control" required="required"/>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email :</label>
+          <input type="email" id="email" name="email" class="form-control"
+                 t-att-value="user.email if not is_public else ''" required="required"/>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Mot de passe :</label>
+          <input type="password" id="password" name="password" class="form-control" required="required"/>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Créer mon instance</button>
+      </form>
+    </div>
+
+  </t>
+</template>
+
+
+
+    <!-- Vue Formulaire (Form) -->
+    <record id="view_saas_client_form" model="ir.ui.view">
+        <field name="name">saas.client.form</field>
+        <field name="model">saas.client</field>
+        <field name="arch" type="xml">
+            <form string="Client SaaS">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="email"/>
+                            <field name="db_name" string="Database"/>
+                        </group>
+                        <group>
+                            <field name="pack_id"/>
+                            <field name="state"
+                                   widget="statusbar"
+                                   statusbar_visible="draft,active,suspended"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue Recherche (Search) -->
+    <record id="view_saas_client_search" model="ir.ui.view">
+        <field name="name">saas.client.search</field>
+        <field name="model">saas.client</field>
+        <field name="arch" type="xml">
+            <search string="Recherche de clients SaaS">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="db_name"/>
+                <field name="pack_id"/>
+                <filter string="Actifs" name="filter_active" domain="[('state', '=', 'active')]"/>
+                <filter string="Suspendus" name="filter_suspended" domain="[('state', '=', 'suspended')]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter string="Par Pack" name="group_by_pack" context="{'group_by':'pack_id'}"/>
+                    <filter string="Par État" name="group_by_state" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>
