@@ -73,7 +73,7 @@ export class ColorPlugin extends Plugin {
 
         /** Handlers */
         selectionchange_handlers: this.updateSelectedColor.bind(this),
-        remove_format_handlers: this.removeAllColor.bind(this),
+        remove_all_formats_handlers: this.removeAllColor.bind(this),
         color_combination_getters: getColorCombinationFromClass,
 
         /** Overridables */

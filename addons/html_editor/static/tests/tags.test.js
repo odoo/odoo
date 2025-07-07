@@ -123,6 +123,15 @@ describe("to paragraph", () => {
         await press("enter");
         expect(getContent(el)).toBe("<p>ab[]cd</p>");
     });
+
+    test("should remove current font-size formatting when changing to a paragraph", async () => {
+        await testEditor({
+            contentBefore:
+                '<h3 class="h4-fs" style="text-align: center;">[abc<span style="font-size: 32px;">de</span><strong>fg</strong>]</h3>',
+            stepFunction: setTag("p"),
+            contentAfter: '<p style="text-align: center;">[abcde<strong>fg]</strong></p>',
+        });
+    });
 });
 
 describe("to heading 1", () => {
@@ -208,6 +217,15 @@ describe("to heading 1", () => {
             contentAfter: '<ul><li class="nav-item"><h1>[abcd]</h1></li></ul>',
         });
     });
+
+    test("should remove current font-size formatting when changing to a heading 1", async () => {
+        await testEditor({
+            contentBefore:
+                '<h2 class="h4-fs" style="text-align: center;">[abc<span style="font-size: 32px;">de</span><strong>fg</strong>]</h2>',
+            stepFunction: setTag("h1"),
+            contentAfter: '<h1 style="text-align: center;">[abcde<strong>fg]</strong></h1>',
+        });
+    });
 });
 
 describe("to heading 2", () => {
@@ -267,6 +285,15 @@ describe("to heading 2", () => {
             contentBefore: '<ul><li class="nav-item">[abcd]</li></ul>',
             stepFunction: setTag("h2"),
             contentAfter: '<ul><li class="nav-item"><h2>[abcd]</h2></li></ul>',
+        });
+    });
+
+    test("should remove current font-size formatting when changing to a heading 2", async () => {
+        await testEditor({
+            contentBefore:
+                '<h3 class="h4-fs" style="text-align: center;">[abc<span style="font-size: 32px;">de</span><strong>fg</strong>]</h3>',
+            stepFunction: setTag("h2"),
+            contentAfter: '<h2 style="text-align: center;">[abcde<strong>fg]</strong></h2>',
         });
     });
 });
@@ -334,6 +361,15 @@ describe("to heading 3", () => {
             contentAfter: '<ul><li class="nav-item"><h3>[abcd]</h3></li></ul>',
         });
     });
+
+    test("should remove current font-size formatting when changing to a heading 3", async () => {
+        await testEditor({
+            contentBefore:
+                '<h2 class="h4-fs" style="text-align: center;">[abc<span style="font-size: 32px;">de</span><strong>fg]</strong></h2>',
+            stepFunction: setTag("h3"),
+            contentAfter: '<h3 style="text-align: center;">[abcde<strong>fg]</strong></h3>',
+        });
+    });
 });
 
 describe("to pre", () => {
@@ -396,6 +432,15 @@ describe("to pre", () => {
 
         await press("enter");
         expect(getContent(el)).toBe("<pre>ab[]cd</pre>");
+    });
+
+    test("should remove current font-size formatting when changing to a pre", async () => {
+        await testEditor({
+            contentBefore:
+                '<h3 class="h4-fs" style="text-align: center;">[abc<span style="font-size: 32px;">de</span><strong>fg</strong>]</h3>',
+            stepFunction: setTag("pre"),
+            contentAfter: '<pre style="text-align: center;">[abcde<strong>fg]</strong></pre>',
+        });
     });
 });
 
