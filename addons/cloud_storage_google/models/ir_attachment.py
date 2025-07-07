@@ -2,7 +2,7 @@
 
 import json
 import re
-from urllib.parse import unquote, quote
+from urllib.parse import quote, unquote
 
 from google.oauth2 import service_account
 

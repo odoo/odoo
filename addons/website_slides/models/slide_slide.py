@@ -6,14 +6,14 @@ import datetime
 import io
 import logging
 import re
-import requests
 
+import requests
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from werkzeug import urls
 
 from odoo import api, fields, models, _
-from odoo.exceptions import RedirectWarning, UserError, AccessError
+from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.http import request
 from odoo.tools import html2plaintext, sql
 from odoo.tools.pdf import PdfFileReader

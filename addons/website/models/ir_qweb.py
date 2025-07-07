@@ -1,16 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
-
 from collections import OrderedDict
 from urllib.parse import urlsplit
 
 from odoo import models
+from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import lazy
+
 from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import add_form_signature
-from odoo.exceptions import AccessError
-
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 

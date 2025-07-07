@@ -26,11 +26,19 @@ import unicodedata
 import warnings
 import zlib
 from collections import defaultdict
-from collections.abc import Iterable, Iterator, Mapping, MutableMapping, MutableSet, Reversible
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSet,
+    Reversible,
+)
 from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
 from functools import reduce, wraps
-from itertools import islice, groupby as itergroupby
+from itertools import groupby as itergroupby
+from itertools import islice
 from operator import itemgetter
 
 import babel
@@ -51,7 +59,9 @@ K = typing.TypeVar('K')
 T = typing.TypeVar('T')
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Sequence
+
     from odoo.api import Environment
+
     from odoo.addons.base.models.res_lang import LangData
 
     P = typing.TypeVar('P')
@@ -917,6 +927,7 @@ def dumpstacks(sig=None, frame=None, thread_idents=None, log_level=logging.INFO)
     if odoo.evented:
         # code from http://stackoverflow.com/questions/12510648/in-gevent-how-can-i-dump-stack-traces-of-all-running-greenlets
         import gc
+
         from greenlet import greenlet
         for ob in gc.get_objects():
             if not isinstance(ob, greenlet) or not ob:

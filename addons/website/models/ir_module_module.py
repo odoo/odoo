@@ -1,15 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from collections import OrderedDict, defaultdict
+
 import werkzeug
-from collections import defaultdict, OrderedDict
 
 from odoo import api, fields, models
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import MissingError
 from odoo.http import request
 from odoo.modules import Manifest
-from odoo.tools import escape_psql, split_every, SQL
+from odoo.tools import SQL, escape_psql, split_every
+
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 _logger = logging.getLogger(__name__)
 

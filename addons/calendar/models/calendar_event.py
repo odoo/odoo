@@ -11,23 +11,24 @@ import pytz
 from werkzeug.urls import url_parse
 
 from odoo import api, fields, models
-from odoo.fields import Command, Domain
+from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain, Command
+from odoo.tools import html2plaintext, html_sanitize, is_html_empty, single_email_re
+from odoo.tools.intervals import intervals_overlap
+from odoo.tools.misc import get_lang
+from odoo.tools.translate import _
+
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.calendar.models.calendar_attendee import CalendarAttendee
 from odoo.addons.calendar.models.calendar_recurrence import (
-    weekday_to_field,
-    RRULE_TYPE_SELECTION,
+    BYDAY_SELECTION,
     END_TYPE_SELECTION,
     MONTH_BY_SELECTION,
+    RRULE_TYPE_SELECTION,
     WEEKDAY_SELECTION,
-    BYDAY_SELECTION
+    weekday_to_field,
 )
 from odoo.addons.calendar.models.utils import interval_from_events
-from odoo.tools.intervals import intervals_overlap
-from odoo.tools.translate import _
-from odoo.tools.misc import get_lang
-from odoo.tools import html2plaintext, html_sanitize, is_html_empty, single_email_re
-from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 

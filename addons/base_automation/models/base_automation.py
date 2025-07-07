@@ -9,7 +9,8 @@ from collections import defaultdict
 from uuid import uuid4
 
 from dateutil.relativedelta import relativedelta
-from odoo import _, api, exceptions, fields, models
+
+from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import LockError, MissingError
 from odoo.fields import Domain
 from odoo.http import request

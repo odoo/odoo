@@ -1,14 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import uuid
 import base64
 import logging
-
+import uuid
 from collections import defaultdict
+
 from odoo import api, fields, models, _
-from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
-from odoo.tools.misc import clean_context
 from odoo.tools import split_every
+from odoo.tools.misc import clean_context
+
+from odoo.addons.base.models.res_partner import _tz_get
 
 _logger = logging.getLogger(__name__)
 

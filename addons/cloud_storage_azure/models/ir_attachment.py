@@ -2,12 +2,16 @@
 
 import re
 from datetime import datetime, timedelta, timezone
-from urllib.parse import unquote, quote
+from urllib.parse import quote, unquote
 
 from odoo import models
 from odoo.exceptions import ValidationError
 
-from ..utils.cloud_storage_azure_utils import generate_blob_sas, get_user_delegation_key, ClientAuthenticationError
+from ..utils.cloud_storage_azure_utils import (
+    ClientAuthenticationError,
+    generate_blob_sas,
+    get_user_delegation_key,
+)
 
 CloudStorageAzureUserDelegationKeys = {}  # {db_name: (config, user_delegation_key or exception)}
 

@@ -1,19 +1,23 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import requests
 import uuid
 from datetime import timedelta
+
+import requests
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
-from odoo.addons.mail.tools.discuss import Store
-from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_ACTION, PUSH_NOTIFICATION_TYPE
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL
 
-from ...tools import jwt, discuss
+from ...tools import discuss, jwt
+from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.web_push import (
+    PUSH_NOTIFICATION_ACTION,
+    PUSH_NOTIFICATION_TYPE,
+)
 
 _logger = logging.getLogger(__name__)
 SFU_MODE_THRESHOLD = 3

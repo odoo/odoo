@@ -2,13 +2,14 @@
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby, starmap
+
 from markupsafe import Markup
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_is_zero, float_compare, plaintext2html, split_every
-from odoo.tools.constants import PREFETCH_MAX
 from odoo.osv.expression import AND
+from odoo.tools import float_compare, float_is_zero, plaintext2html, split_every
+from odoo.tools.constants import PREFETCH_MAX
 
 
 class PosSession(models.Model):

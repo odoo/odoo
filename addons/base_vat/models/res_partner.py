@@ -1,16 +1,17 @@
-import logging
 import datetime
+import logging
 import re
 
 import stdnum
 from stdnum import luhn
 from stdnum.eu.vat import check_vies
-from stdnum.exceptions import InvalidComponent, InvalidChecksum, InvalidFormat
+from stdnum.exceptions import InvalidChecksum, InvalidComponent, InvalidFormat
 from stdnum.util import clean
 
-from odoo import api, models, fields
-from odoo.tools import _, LazyTranslate
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import LazyTranslate, _
+
 from odoo.addons.base.models.res_partner import EU_EXTRA_VAT_CODES
 
 _lt = LazyTranslate(__name__)

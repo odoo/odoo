@@ -81,3 +81,8 @@ ignore = [
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 known-first-party = ["odoo"]
 known-local-folder = ["odoo.addons"]
+
+# force the order of the "from odoo import" line
+constants = ["SUPERUSER_ID"]
+classes = ["api", "exceptions", "fields", "http", "models", "modules", "osv", "release", "tools"]
+variables = ["_", "Command"]

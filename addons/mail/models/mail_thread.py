@@ -3,48 +3,62 @@
 import ast
 import base64
 import datetime
-import dateutil
 import email
 import email.policy
 import hashlib
 import hmac
 import json
-import lxml
 import logging
-import pytz
 import time
-
 from collections import defaultdict, namedtuple
 from collections.abc import Iterable
 from email import message_from_string
 from email.message import EmailMessage
 from xmlrpc import client as xmlrpclib
 
+import dateutil
+import lxml
+import pytz
 from lxml import etree
 from markupsafe import Markup, escape
 from requests import Session
 from werkzeug import urls
 
-from odoo import _, api, exceptions, fields, models, tools
-from odoo.addons.mail.tools.discuss import Store
-from odoo.addons.mail.tools.web_push import (
-    push_to_end_point, DeviceUnreachableError,
-    ENCRYPTION_BLOCK_OVERHEAD, ENCRYPTION_HEADER_SIZE, MAX_PAYLOAD_SIZE
-)
-from odoo.exceptions import MissingError, AccessError
+from odoo import api, exceptions, fields, models, tools, _
+from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.tools import (
-    is_html_empty, html_escape, html2plaintext,
-    clean_context, split_every, Query, SQL,
-    ormcache, is_list_of,
+    SQL,
+    Query,
+    clean_context,
+    html2plaintext,
+    html_escape,
+    is_html_empty,
+    is_list_of,
+    ormcache,
+    split_every,
 )
 from odoo.tools.mail import (
-    append_content_to_html, decode_message_header,
-    email_normalize, email_normalize_all, email_split,
-    email_split_and_format, email_split_and_format_normalize,
-    formataddr, html_sanitize,
+    append_content_to_html,
+    decode_message_header,
+    email_normalize,
+    email_normalize_all,
+    email_split,
+    email_split_and_format,
+    email_split_and_format_normalize,
+    formataddr,
     generate_tracking_message_id,
+    html_sanitize,
     unfold_references,
+)
+
+from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.web_push import (
+    ENCRYPTION_BLOCK_OVERHEAD,
+    ENCRYPTION_HEADER_SIZE,
+    MAX_PAYLOAD_SIZE,
+    DeviceUnreachableError,
+    push_to_end_point,
 )
 
 MAX_DIRECT_PUSH = 5
