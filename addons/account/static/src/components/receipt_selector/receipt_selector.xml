@@ -3,7 +3,7 @@
 
     <t t-name="account.ReceiptSelector">
         <div>
-            <t t-if="props.readonly || (!show_sale_receipts.value and ['out_invoice', 'out_receipt'].includes(value))">
+            <t t-if="props.readonly || ['in_refund', 'out_refund'].includes(value) || (!show_sale_receipts.value and ['out_invoice', 'out_receipt'].includes(value))">
                 <span t-esc="string" t-att-raw-value="value" />
             </t>
             <t t-else="">
