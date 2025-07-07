@@ -10,6 +10,7 @@ import {
     isContentEditable,
     isEmptyBlock,
     isEmptyTextNode,
+    isParagraphRelatedElement,
     isSelfClosingElement,
     isTextNode,
     isVisibleTextNode,
@@ -161,14 +162,17 @@ export class FormatPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         normalize_handlers: this.normalize.bind(this),
         selectionchange_handlers: this.removeEmptyInlineElement.bind(this),
+        update_content_edited_nodes: this.removeFontSizeFormat.bind(this),
 
         intangible_char_for_keyboard_navigation_predicates: (_, char) => char === "\u200b",
     };
 
-    removeFormat() {
-        const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        this.dispatchTo("remove_format_handlers");
-        for (const format of Object.keys(formatsSpecs)) {
+    /**
+     * @param {string[]} formats
+     * @param {Node[]} targetedNodes
+     */
+    removeSomeFormat(formats, targetedNodes) {
+        for (const format of formats) {
             if (
                 !formatsSpecs[format].removeStyle ||
                 !this.hasSelectionFormat(format, targetedNodes)
@@ -178,6 +182,21 @@ export class FormatPlugin extends Plugin {
             this.formatSelection(format, { applyStyle: false, removeFormat: true });
         }
         this.dependencies.history.addStep();
+    }
+
+    removeFormat() {
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        this.dispatchTo("remove_format_handlers");
+        this.removeSomeFormat(Object.keys(formatsSpecs), targetedNodes);
+    }
+
+    removeFontSizeFormat(els) {
+        // TODO remove 2nd part: PRE should be a paragraphRelatedElement. See
+        // commit 8d348bef.
+        if (els.every((el) => isParagraphRelatedElement(el) || el.nodeName === "PRE")) {
+            const targetedNodes = this.dependencies.selection.getTargetedNodes();
+            this.removeSomeFormat(["fontSize", "setFontSizeClassName"], targetedNodes);
+        }
     }
 
     /**
