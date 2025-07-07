@@ -31,26 +31,42 @@ class PortalChatter(ThreadController):
     @http.route("/portal/chatter_init", type="jsonrpc", auth="public", website=True)
     def portal_chatter_init(self, thread_model, thread_id, **kwargs):
         store = Store()
+        request.env["res.users"]._init_store_data(store)
+        if request.env.user.has_group("website.group_website_restricted_editor"):
+            store.add(request.env.user.partner_id, {"is_user_publisher": True})
         thread = self._get_thread_with_access(thread_model, thread_id, **kwargs)
-        partner = request.env.user.partner_id
         if thread:
             mode = request.env[thread_model]._get_mail_message_access([thread_id], "create")
             has_react_access = self._get_thread_with_access(thread_model, thread_id, mode, **kwargs)
             can_react = has_react_access
             if request.env.user._is_public():
-                portal_partner = get_portal_partner(
+                if portal_partner := get_portal_partner(
                     thread, kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token")
-                )
+                ):
+                    store.add(
+                        thread,
+                        {
+                            "portal_partner": Store.One(
+                                portal_partner,
+                                fields=[
+                                    "active",
+                                    "avatar_128",
+                                    Store.One("main_user_id", "share"),
+                                    "name",
+                                ],
+                            )
+                        },
+                        as_thread=True,
+                    )
                 can_react = has_react_access and portal_partner
-                partner = portal_partner or partner
-            store.add(thread, {"can_react": bool(can_react)}, as_thread=True)
-        store.add_global_values(
-            self_partner=Store.One(
-                partner, ["active", "avatar_128", Store.One("main_user_id", "share"), "name"],
-            ),
-        )
-        if request.env.user.has_group("website.group_website_restricted_editor"):
-            store.add(partner, {"is_user_publisher": True})
+            store.add(
+                thread,
+                {
+                    "can_react": bool(can_react),
+                    "hasReadAccess": thread.sudo(False).has_access("read"),
+                },
+                as_thread=True,
+            )
         return store.get_result()
 
     @http.route('/mail/chatter_fetch', type='jsonrpc', auth='public', website=True)
