@@ -1781,6 +1781,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         line_node.setdefault('cac:Item', {})['cac:ClassifiedTaxCategory'] = [
             self._get_tax_category_node({**vals, 'grouping_key': grouping_key})
             for grouping_key in aggregated_tax_details
+            if grouping_key
         ]
 
     def _add_document_line_tax_total_nodes(self, line_node, vals):
