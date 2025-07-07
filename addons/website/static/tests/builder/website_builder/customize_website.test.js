@@ -3,6 +3,7 @@ import { animationFrame, Deferred } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 
 defineWebsiteModels();
 
@@ -273,4 +274,142 @@ test("isApplied with action “websiteConfig” depends on views, assets and var
     expect(".options-container input[type='checkbox']:eq(1)").not.toBeChecked();
     expect(".options-container input[type='checkbox']:eq(2)").not.toBeChecked();
     expect(".options-container input[type='checkbox']:eq(3)").not.toBeChecked();
+});
+
+test("BuilderButton with action “previewableWebsiteConfig”", async () => {
+    onRpc("/website/theme_customize_data", async (request) => {
+        const { params } = await request.json();
+        expect.step("theme_customize_data");
+        expect(params.enable).toEqual(["test_template_2"]);
+        expect(params.disable).toEqual(["test_template_1", "test_template_negation"]);
+    });
+    onRpc("ir.ui.view", "save", () => {
+        expect.step("websiteSave");
+        return true;
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderButtonGroup action="'previewableWebsiteConfig'">
+                <BuilderButton actionParam="{views: ['test_template_1'], previewClass: 'test_class_1'}">1</BuilderButton>
+                <BuilderButton actionParam="{views: ['test_template_2', '!test_template_negation'], previewClass: 'test_class_2'}">2</BuilderButton>
+                <BuilderButton actionParam="{views: [], previewClass: ''}">3</BuilderButton>
+            </BuilderButtonGroup>`,
+    });
+
+    await setupWebsiteBuilder(`<div class="test-options-target test_class_1">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect("[data-action-param*='test_template_1']").toHaveClass("active");
+
+    await contains("[data-action-param*='[]']").hover();
+    expect(":iframe .test-options-target").not.toHaveClass("test_class_1");
+    expect(":iframe .test-options-target").not.toHaveClass("test_class_2");
+
+    await contains("[data-action-param*='[]']").click();
+    expect("[data-action-param*='[]']").toHaveClass("active");
+    expect(":iframe .test-options-target").not.toHaveClass("test_class_1");
+    expect(":iframe .test-options-target").not.toHaveClass("test_class_2");
+
+    await contains("[data-action-param*='test_template_1']").hover();
+    expect(":iframe .test-options-target").toHaveClass("test_class_1");
+    expect(":iframe .test-options-target").not.toHaveClass("test_class_2");
+
+    await contains("[data-action-param*='test_template_1']").click();
+    expect("[data-action-param*='test_template_1']").toHaveClass("active");
+    expect(":iframe .test-options-target").toHaveClass("test_class_1");
+    expect(":iframe .test-options-target").not.toHaveClass("test_class_2");
+
+    await contains("[data-action-param*='test_template_2']").hover();
+    expect(":iframe .test-options-target").not.toHaveClass("test_class_1");
+    expect(":iframe .test-options-target").toHaveClass("test_class_2");
+
+    await contains("[data-action-param*='test_template_2']").click();
+    expect("[data-action-param*='test_template_2']").toHaveClass("active");
+    expect(":iframe .test-options-target").not.toHaveClass("test_class_1");
+    expect(":iframe .test-options-target").toHaveClass("test_class_2");
+
+    await contains(".o-snippets-top-actions [data-action='save']").click();
+    expect.verifySteps(["websiteSave", "theme_customize_data"]);
+});
+
+test("Undo and redo “previewableWebsiteConfig” action", async () => {
+    onRpc("/website/theme_customize_data", async (request) => {
+        const { params } = await request.json();
+        expect.step("theme_customize_data");
+        expect(params.enable).toEqual(["test_template_1"]);
+        expect(params.disable).toEqual([]);
+    });
+    onRpc("ir.ui.view", "save", () => {
+        expect.step("websiteSave");
+        return true;
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderButtonGroup action="'previewableWebsiteConfig'">
+                <BuilderButton actionParam="{views: ['test_template_1'], previewClass: 'test_class_1'}">1</BuilderButton>
+                <BuilderButton actionParam="{views: ['test_template_2'], previewClass: 'test_class_2'}">2</BuilderButton>
+                <BuilderButton actionParam="{views: [], previewClass: ''}">3</BuilderButton>
+            </BuilderButtonGroup>`,
+    });
+    const { getEditor } = await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    const editor = getEditor();
+
+    await contains(":iframe .test-options-target").click();
+    await contains("[data-action-param*='test_template_1']").click();
+    expect("[data-action-param*='test_template_1']").toHaveClass("active");
+    expect(":iframe .test-options-target").toHaveClass("test_class_1");
+    expect(":iframe .test-options-target").not.toHaveClass("test_class_2");
+
+    await contains("[data-action-param*='test_template_2']").click();
+    expect("[data-action-param*='test_template_2']").toHaveClass("active");
+    expect(":iframe .test-options-target").not.toHaveClass("test_class_1");
+    expect(":iframe .test-options-target").toHaveClass("test_class_2");
+
+    undo(editor);
+    await animationFrame();
+    expect("[data-action-param*='test_template_1']").toHaveClass("active");
+    expect(":iframe .test-options-target").toHaveClass("test_class_1");
+    expect(":iframe .test-options-target").not.toHaveClass("test_class_2");
+
+    redo(editor);
+    await animationFrame();
+    expect("[data-action-param*='test_template_2']").toHaveClass("active");
+    expect(":iframe .test-options-target").not.toHaveClass("test_class_1");
+    expect(":iframe .test-options-target").toHaveClass("test_class_2");
+
+    undo(editor);
+    await animationFrame();
+    expect("[data-action-param*='test_template_1']").toHaveClass("active");
+    expect(":iframe .test-options-target").toHaveClass("test_class_1");
+    expect(":iframe .test-options-target").not.toHaveClass("test_class_2");
+
+    await contains(".o-snippets-top-actions [data-action='save']").click();
+    expect.verifySteps(["websiteSave", "theme_customize_data"]);
+});
+
+test("No rpc call if “previewableWebsiteConfig” action is undone", async () => {
+    onRpc("/website/theme_customize_data", async () => {
+        expect.step("theme_customize_data");
+    });
+    onRpc("ir.ui.view", "save", () => {
+        expect.step("websiteSave");
+        return true;
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderButtonGroup action="'previewableWebsiteConfig'">
+                <BuilderButton actionParam="{views: [], previewClass: ''}">1</BuilderButton>
+                <BuilderButton actionParam="{views: ['test_template'], previewClass: 'test_class'}">2</BuilderButton>
+            </BuilderButtonGroup>`,
+    });
+    const { getEditor } = await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    const editor = getEditor();
+
+    await contains(":iframe .test-options-target").click();
+    await contains("[data-action-param*='test_template']").click();
+    undo(editor);
+    await contains(".o-snippets-top-actions [data-action='save']").click();
+    expect.verifySteps([]); // No call to `theme_customize_data` nor to `save`
 });
