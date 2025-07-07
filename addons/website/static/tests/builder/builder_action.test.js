@@ -106,7 +106,7 @@ describe("website tests", () => {
         await click(".o-website-btn-custo-primary");
         // The button should not be clickable.
         await expect(click(":iframe .test-section button")).rejects.toThrow(
-            "HootDomError: found 0 elements instead of 1: 1 element, including 0 interactive"
+            `found 0 elements instead of 1: 1 matching ":iframe .test-section button" (1 iframe element), including 0 interactive elements`
         );
         expect.verifySteps([]);
         def.resolve();
