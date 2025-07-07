@@ -1049,10 +1049,10 @@ actual arch.
         return ['id', 'key', 'active']
 
     def _get_template_minimal_cache_keys(self):
-        return ['active_test']
+        return (bool(self.env.context.get('active_test', True)),)
 
     @api.model
-    @tools.ormcache('id_or_xmlid', 'isinstance(id_or_xmlid, str) and tuple(self.env.context.get(k) or False for k in self._get_template_minimal_cache_keys())', cache='templates')
+    @tools.ormcache('id_or_xmlid', 'isinstance(id_or_xmlid, str) and self._get_template_minimal_cache_keys()', cache='templates')
     def _get_cached_template_info(self, id_or_xmlid, _view=None):
         """ Return the ir.ui.view id from the xml id, use `_preload_views`.
         """

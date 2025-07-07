@@ -366,7 +366,7 @@ class IrUiView(models.Model):
 
     @api.model
     def _get_template_minimal_cache_keys(self):
-        return super()._get_template_minimal_cache_keys() + ['website_id']
+        return super()._get_template_minimal_cache_keys() + (self.env.context.get('website_id'),)
 
     @api.model
     def _get_template_domain(self, xmlids):
