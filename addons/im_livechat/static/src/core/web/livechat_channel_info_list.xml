@@ -15,7 +15,6 @@
                     <t t-elif="props.thread.livechat_outcome === 'no_agent'">No one Available</t>
                     <t t-elif="props.thread.livechat_outcome === 'no_failure'">Success</t>
                     <t t-elif="props.thread.livechat_outcome === 'escalated'">Escalated</t>
-                    <t t-else=""></t>
                 </div>
             </div>
             <div t-if="expectAnswerSteps.length" class="d-flex flex-column bg-inherit gap-1">
@@ -43,5 +42,23 @@
                 <TranscriptSender thread="props.thread"/>
             </div>
         </ActionPanel>
+    </t>
+
+    <t t-name="im_livechat.LivechatChannelInfoList.info_links">
+        <div t-if="templateParams.info_records.length" class="d-flex flex-column bg-inherit gap-1">
+            <h3 class="pt-3" t-out="templateParams.title"/>
+            <t t-foreach="templateParams.info_records" t-as="record" t-key="record.localId">
+                <a
+                    class="btn btn-sm btn-secondary d-flex align-items-center justify-content-center gap-1 rounded-3"
+                    t-att-href="record.href"
+                    t-att-data-oe-id="record.id"
+                    t-att-data-oe-model="templateParams.model"
+                    contenteditable="false"
+                >
+                    <i class="fa fa-external-link opacity-75"/>
+                    <span class="fw-bold" t-esc="record.name"/>
+                </a>
+            </t>
+        </div>
     </t>
 </templates>
