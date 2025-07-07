@@ -51,7 +51,7 @@ export async function loadDefaultEmbedConfig() {
     });
     patchWithCleanup(session, {
         livechatData: {
-            isAvailable: true,
+            can_load_livechat: true,
             serverUrl: window.origin,
             options: {
                 header_background_color: "#875A7B",

@@ -173,4 +173,8 @@ patch(mailDataHelpers, {
             );
         }
     },
+    _process_request_for_all(store) {
+        super._process_request_for_all(...arguments);
+        store.add({ livechat_available: true });
+    },
 });

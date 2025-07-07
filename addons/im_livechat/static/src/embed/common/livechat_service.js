@@ -147,7 +147,7 @@ export const livechatService = {
     dependencies: ["mail.store", "notification"],
     start(env, services) {
         const livechat = reactive(new LivechatService(env, services));
-        if (livechat.store.livechat_available) {
+        if (session.livechatData?.can_load_livechat) {
             livechat.initialize();
         }
         return livechat;
