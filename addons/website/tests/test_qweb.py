@@ -212,13 +212,13 @@ class TestQweb(TransactionCaseWithUserDemo):
         #     SELECT RECURSIVE arch combine
         # 'base.testing_layout', 'base.testing_header_0'
         #     SELECT id + fields from (xmlid + website_id)
-        #     SELECT RECURSIVE arch combine => TODO: batch me
+        #     SELECT RECURSIVE arch combine
         # 'base.testing_header', 'base.testing_footer'
         #     SELECT id + fields from (xmlid + website_id)
-        #     SELECT RECURSIVE arch combine => TODO: batch me
+        #     SELECT RECURSIVE arch combine
         # 'base.testing_header_1', 'base.testing_footer_0', 'base.testing_footer_1'
         #     SELECT id + fields from (xmlid + website_id)
-        #     SELECT RECURSIVE arch combine => TODO: batch me
+        #     SELECT RECURSIVE arch combine
 
         FIRST_SEARCH_FETCH = 1  # instead of the first SELECT visibility
         OTHER_SEARCH_FETCH = 3  # "SELECT id + fields from xmlid"
