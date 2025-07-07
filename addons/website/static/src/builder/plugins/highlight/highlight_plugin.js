@@ -55,7 +55,7 @@ export class HighlightPlugin extends Plugin {
         selectionchange_handlers: this.updateSelectedHighlight.bind(this),
         collapsed_selection_toolbar_predicate: (selectionData) =>
             !!closestElement(selectionData.editableSelection.anchorNode, ".o_text_highlight"),
-        remove_format_handlers: () => {
+        remove_all_formats_handlers: () => {
             // we rely on the normalize handler to start it again
             this.dependencies.edit_interaction.stopInteraction("website.text_highlight");
         },

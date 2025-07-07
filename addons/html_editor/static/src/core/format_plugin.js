@@ -10,6 +10,7 @@ import {
     isContentEditable,
     isEmptyBlock,
     isEmptyTextNode,
+    isParagraphRelatedElement,
     isSelfClosingElement,
     isTextNode,
     isVisibleTextNode,
@@ -108,7 +109,7 @@ export class FormatPlugin extends Plugin {
                         ? _t("Remove Format")
                         : _t("Selection has no format"),
                 icon: "fa-eraser",
-                run: this.removeFormat.bind(this),
+                run: this.removeAllFormats.bind(this),
                 isAvailable: isHtmlContentSupported,
             },
         ],
@@ -160,14 +161,17 @@ export class FormatPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         normalize_handlers: this.normalize.bind(this),
         selectionchange_handlers: this.removeEmptyInlineElement.bind(this),
+        set_tag_handlers: this.removeFontSizeFormat.bind(this),
 
         intangible_char_for_keyboard_navigation_predicates: (_, char) => char === "\u200b",
     };
 
-    removeFormat() {
-        const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        this.dispatchTo("remove_format_handlers");
-        for (const format of Object.keys(formatsSpecs)) {
+    /**
+     * @param {string[]} formats
+     * @param {Node[]} targetedNodes
+     */
+    removeFormats(formats, targetedNodes) {
+        for (const format of formats) {
             if (
                 !formatsSpecs[format].removeStyle ||
                 !this.hasSelectionFormat(format, targetedNodes)
@@ -177,6 +181,19 @@ export class FormatPlugin extends Plugin {
             this.formatSelection(format, { applyStyle: false, removeFormat: true });
         }
         this.dependencies.history.addStep();
+    }
+
+    removeAllFormats() {
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        this.dispatchTo("remove_all_formats_handlers");
+        this.removeFormats(Object.keys(formatsSpecs), targetedNodes);
+    }
+
+    removeFontSizeFormat(els) {
+        if (els.every((el) => isParagraphRelatedElement(el))) {
+            const targetedNodes = this.dependencies.selection.getTargetedNodes();
+            this.removeFormats(["fontSize", "setFontSizeClassName"], targetedNodes);
+        }
     }
 
     /**
