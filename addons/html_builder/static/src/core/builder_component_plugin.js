@@ -21,6 +21,7 @@ import { Plugin } from "@html_editor/plugin";
 import { Img } from "./img";
 import { BuilderUrlPicker } from "./building_blocks/builder_urlpicker";
 import { BuilderFontFamilyPicker } from "./building_blocks/builder_fontfamilypicker";
+import { BuilderMultiUrlPicker } from "./building_blocks/builder_multiurlpicker";
 
 export class BuilderComponentPlugin extends Plugin {
     static id = "builderComponents";
@@ -50,6 +51,7 @@ export class BuilderComponentPlugin extends Plugin {
             BuilderDateTimePicker,
             BuilderList,
             Img,
+            BuilderMultiUrlPicker,
         },
     };
 

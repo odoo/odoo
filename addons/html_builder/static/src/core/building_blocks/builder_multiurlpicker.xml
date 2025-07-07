@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderMultiUrlPicker">
+    <BuilderComponent>
+        <div>
+            <table class="mb-1">
+                <tr t-foreach="urls" t-as="url" t-key="url">
+                    <td>
+                        <input type="text" class="o-hb-input-base" disabled="" t-att-data-name="url" t-att-value="url"/>
+                    </td>
+                    <td>
+                        <button class="mt-0 border-0 p-0 bg-transparent text-danger fa fa-fw fa-minus" title="Remove" t-on-click="() => unselectUrl(url)"/>
+                    </td>
+                </tr>
+            </table>
+            <BuilderTextInputBase
+                t-props="textInputBaseProps"
+                inputRef="inputRef"
+                commit="(inputValue) => inputValue"
+                preview="(inputValue) => inputValue"
+                onKeydown.bind="handleEnterKey"
+            />
+        </div>
+    </BuilderComponent>
+</t>
+
+</templates>
