@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { ImageTransformation } from "@html_editor/main/media/image_transformation";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { Deferred } from "@web/core/utils/concurrency";
 
 export class ImageTransformOptionPlugin extends Plugin {
     static id = "imageTransformOption";
@@ -19,8 +20,12 @@ class TransformImageAction extends BuilderAction {
     isApplied({ editingElement }) {
         return editingElement.matches(`[style*="transform"]`);
     }
-    apply({ editingElement, params: { isImageTransformationOpen, closeImageTransformation } }) {
+    async apply({
+        editingElement,
+        params: { isImageTransformationOpen, closeImageTransformation },
+    }) {
         if (!isImageTransformationOpen()) {
+            const deferredTillMounted = new Deferred();
             registry.category("main_components").add("ImageTransformation", {
                 Component: ImageTransformation,
                 props: {
@@ -29,8 +34,12 @@ class TransformImageAction extends BuilderAction {
                     editable: this.editable,
                     destroy: () => closeImageTransformation(),
                     onChange: () => this.dependencies.history.addStep(),
+                    onComponentMounted: () => {
+                        deferredTillMounted.resolve();
+                    },
                 },
             });
+            await deferredTillMounted;
         }
     }
 }
