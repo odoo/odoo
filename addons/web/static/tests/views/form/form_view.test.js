@@ -12210,6 +12210,75 @@ test(`field with special data`, async () => {
     expect.verifySteps(["get_special_data 9", "get_special_data 42"]);
 });
 
+test(`field with special data (with persistent Cache)`, async () => {
+    class MyWidget extends Component {
+        static props = ["*"];
+        static template = xml`<div class="my_widget">MyWidget <t t-esc="specialData.data.test"/></div>`;
+        setup() {
+            this.specialData = useSpecialData((orm, props) => {
+                const { record } = props;
+                return orm.call("my.model", "get_special_data", [record.data.int_field]);
+            });
+        }
+    }
+    widgetsRegistry.add("my_widget", { component: MyWidget });
+
+    let def = new Deferred();
+    onRpc("get_special_data", ({ args }) => {
+        expect.step(`get_special_data ${args[0]}`);
+        return def;
+    });
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            views: [[false, "form"]],
+            view_mode: "form",
+            res_id: 2,
+        },
+        {
+            id: 2,
+            res_model: "res.users",
+            res_id: 19,
+            view_mode: "form",
+            views: [[false, "form"]],
+        },
+    ]);
+    Partner._views = {
+        form: `
+            <form>
+                <field name="int_field" />
+                <widget name="my_widget" />
+            </form>`,
+    };
+    await mountWithCleanup(WebClient);
+
+    def.resolve({ test: 1 });
+    await getService("action").doAction(1);
+    expect(`.o_last_breadcrumb_item`).toHaveText("second record");
+    expect(`.my_widget`).toHaveText("MyWidget 1");
+    await contains(`[name='int_field'] input`).edit("42");
+    expect.verifySteps(["get_special_data 9", "get_special_data 42"]);
+
+    // Go to another model, to remove the model cache
+    await getService("action").doAction(2);
+    expect(`.o_last_breadcrumb_item`).toHaveText("Christine");
+
+    //Came back to the model with the special data
+    def = new Deferred();
+    await getService("action").doAction(1);
+    expect(`.o_last_breadcrumb_item`).toHaveText("second record");
+    expect(`.my_widget`).toHaveText("MyWidget 1");
+
+    def.resolve({ test: 2 });
+    await animationFrame();
+    expect(`.o_last_breadcrumb_item`).toHaveText("second record");
+    expect(`.my_widget`).toHaveText("MyWidget 2");
+    expect.verifySteps(["get_special_data 42"]);
+});
+
 test(`x2many field in form dialog view is correctly saved when using a view button`, async () => {
     defineActions([
         {
