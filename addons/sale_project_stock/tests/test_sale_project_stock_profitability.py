@@ -12,11 +12,32 @@ class TestSaleProjectStockProfitability(TestProjectProfitabilityCommon):
         project_template = cls.env['project.project'].create({
             'name': 'sale_project_stock project template',
             'account_id': cls.analytic_account.id,
+        })     
+        stock_input_account = cls.env['account.account'].with_company(cls.env.company).create({
+            'name': 'Stock Input',
+            'code': 'X100',
+            'account_type': 'asset_current',
         })
+
+        stock_output_account = cls.env['account.account'].with_company(cls.env.company).create({
+            'name': 'Stock Output',
+            'code': 'X101',
+            'account_type': 'asset_current',
+        })
+
+        stock_valuation_account = cls.env['account.account'].with_company(cls.env.company).create({
+            'name': 'Stock Valuation',
+            'code': 'X102',
+            'account_type': 'asset_current',
+        })
+
         avco_real_time_product_category = cls.env['product.category'].create({
             'name': 'avco real time',
             'property_valuation': 'real_time',
             'property_cost_method': 'average',
+            'property_stock_account_input_categ_id': stock_input_account.id,
+            'property_stock_account_output_categ_id': stock_output_account.id,
+            'property_stock_valuation_account_id': stock_valuation_account.id,
         })
         cls.cogs_account = cls.env['account.account'].search([
             ('name', '=', 'Cost of Goods Sold'),
