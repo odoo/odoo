@@ -112,6 +112,7 @@ export class Form extends Interaction {
         this.prefillValues();
 
         // Visibility might need to be adapted according to pre-filled values.
+        this.lastFormData = this.getFormDataIncludingDisabledFields(this.el);
         this.updateContent();
 
         if (session.geoip_phone_code) {
