@@ -321,8 +321,8 @@ class Product(models.Model):
             loc_domain = [('location_id', 'any', paths_domain)]
             dest_loc_domain = [
                 '|',
+                ('location_dest_id', 'any', paths_domain),
                 '&', ('location_final_id', '!=', False), ('location_final_id', 'any', paths_domain),
-                '&', ('location_final_id', '=', False), ('location_dest_id', 'any', paths_domain),
             ]
 
         # returns: (domain_quant_loc, domain_move_in_loc, domain_move_out_loc)
