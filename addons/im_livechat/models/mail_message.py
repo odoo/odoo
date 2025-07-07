@@ -65,6 +65,7 @@ class MailMessage(models.Model):
                         "question_email",
                         "question_phone",
                     ]:
+                        # sudo: chatbot.message - checking the user answer to the step is allowed
                         user_answer_message = (
                             self.env["chatbot.message"]
                             .sudo()

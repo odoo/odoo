@@ -2,21 +2,16 @@
 <templates xml:space="preserve">
     <t t-name="website_livechat.LivechatChannelInfoList" t-inherit="im_livechat.LivechatChannelInfoList" t-inherit-mode="extension">
         <xpath expr="//t[@t-name='extra_infos']" position="inside">
-            <div t-if="props.thread.livechatVisitorMember?.persona?.opportunity_ids.length" class="d-flex flex-column bg-inherit gap-1">
-                <h3 class="pt-3">Open leads</h3>
-                <t t-foreach="props.thread.livechatVisitorMember?.persona?.opportunity_ids" t-as="lead" t-key="lead.localId">
-                    <a
-                        class="btn btn-sm btn-secondary d-flex align-items-center justify-content-center gap-1 rounded-3"
-                        t-att-href="lead.href"
-                        t-att-data-oe-id="lead.id"
-                        t-att-data-oe-model="'crm.lead'"
-                        contenteditable="false"
-                    >
-                        <i class="fa fa-external-link opacity-75"/>
-                        <span class="fw-bold" t-esc="lead.name"/>
-                    </a>
-                </t>
-            </div>
+            <t t-call="im_livechat.LivechatChannelInfoList.info_links">
+                <t t-set="title">Open leads</t>
+                <t t-set="templateParams"
+                    t-value="{
+                        title,
+                        'info_records': props.thread.livechatVisitorMember?.persona?.opportunity_ids,
+                        'model': 'crm.lead'
+                    }"
+                />
+            </t>
         </xpath>
     </t>
 </templates>
