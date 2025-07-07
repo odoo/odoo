@@ -143,8 +143,8 @@ patch(PosStore.prototype, {
                     });
                 }
             }
-            newLine.setQuantityFromSOL(line);
-            newLine.setUnitPrice(line.price_unit);
+            newLine.setQuantityFromSOL(converted_line);
+            newLine.setUnitPrice(converted_line.price_unit);
             newLine.setDiscount(line.discount);
 
             const product_unit = line.product_id.uom_id;
