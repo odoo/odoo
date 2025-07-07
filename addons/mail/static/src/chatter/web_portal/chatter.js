@@ -77,7 +77,7 @@ export class Chatter extends Component {
             if (this.state.thread.messages.length === 0) {
                 this.state.thread.messages.push({
                     id: this.store.getNextTemporaryId(),
-                    author_id: this.store.self,
+                    author_id: this.state.thread.effectiveSelf,
                     body: _t("Creating a new record..."),
                     message_type: "notification",
                     thread: this.state.thread,
