@@ -167,7 +167,7 @@ test("analytic field in form view basic features", async () => {
 
     // add a line
     await contains(
-        ".analytic_distribution_popup table:eq(0) .o_field_x2many_list_row_add a"
+        ".analytic_distribution_popup table:eq(0) .o_field_x2many_list_row_add button"
     ).click();
     expect(
         ".analytic_distribution_popup table:eq(0) tr:nth-of-type(3) .o_field_percentage input"

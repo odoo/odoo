@@ -10,15 +10,14 @@
                     <span class="btn account_drag_drop_btn pe-none">Drag &amp; drop</span>
                     <div>
                         <span class="btn pe-none px-1 fw-normal">or</span>
-                        <a class="btn btn-link px-0 fw-normal"
-                            href="#"
+                        <button class="btn btn-link px-0 fw-normal"
                             type="object"
                             name="action_create_vendor_bill"
                             journal_type="purchase"
                             t-on-click="() => this.handleButtonClick('action_create_vendor_bill')"
                         >
                             try our sample
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -43,13 +42,13 @@
                         </div>
                         <div>
                             <span class="btn pe-none px-1 fw-normal">or</span>
-                            <a href="#"
+                            <button
                                 type="object"
                                 class="btn btn-link px-0 fw-normal"
                                 t-on-click="() => this.handleButtonClick('action_create_new')"
                             >
                                 Create manually
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -61,13 +60,13 @@
                     </div>
                     <div class="text-center mt-2">
                         <div class="">
-                            <a href="#"
+                            <button
                                 type="object"
-                                class="o_invoice_new"
+                                class="o_invoice_new btn btn-link p-0 fw-normal"
                                 t-on-click="() => this.handleButtonClick('action_create_new')"
                             >
                                 Create a bill manually
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
