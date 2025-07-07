@@ -1,14 +1,15 @@
 import { _t } from "@web/core/l10n/translation";
-import {PageControllerMixin} from "./page_views_mixin";
+import { usePageManager } from "./page_manager_hook";
 import {PageSearchModel} from "./page_search_model";
 import {registry} from '@web/core/registry';
 import {listView} from '@web/views/list/list_view';
 import {ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dialog";
 import {DeletePageDialog, DuplicatePageDialog} from '@website/components/dialog/page_properties';
 import {CheckboxItem} from "@web/core/dropdown/checkbox_item";
+import { useService } from "@web/core/utils/hooks";
 
 
-export class PageListController extends PageControllerMixin(listView.Controller) {
+export class PageListController extends listView.Controller {
     static template = `website.PageListView`;
     static components = {
         ...listView.Controller.components,
@@ -20,6 +21,12 @@ export class PageListController extends PageControllerMixin(listView.Controller)
      */
     setup() {
         super.setup();
+        this.orm = useService("orm");
+        this.dialog = useService("dialog");
+        this.pageManager = usePageManager({
+            resModel: this.props.resModel,
+            createAction: this.props.context.create_action,
+        });
         if (this.props.resModel === "website.page") {
             this.archiveEnabled = false;
         }
@@ -29,7 +36,7 @@ export class PageListController extends PageControllerMixin(listView.Controller)
      * @override
      */
     onClickCreate() {
-        return this.createWebsiteContent();
+        return this.pageManager.createWebsiteContent();
     }
 
     /**
