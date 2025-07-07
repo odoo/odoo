@@ -14,6 +14,7 @@ import { getCurrentTextHighlight } from "@website/js/highlight_utils";
 import { isCSSColor, rgbaToHex } from "@web/core/utils/colors";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { nodeSize } from "@html_editor/utils/position";
+import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 
 export class HighlightPlugin extends Plugin {
     static id = "highlight";
@@ -277,6 +278,7 @@ formatsSpecs.highlight = {
 
 class HighlightToolbarButton extends Component {
     static props = {
+        ...toolbarButtonProps,
         highlightConfiguratorProps: Object,
         onClick: Function,
         title: String,

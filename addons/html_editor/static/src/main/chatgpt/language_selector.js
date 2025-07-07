@@ -12,7 +12,6 @@ export class LanguageSelector extends Component {
     static props = {
         ...toolbarButtonProps,
         onSelected: { type: Function },
-        isDisabled: { type: Function, optional: true },
     };
     static components = { Dropdown, DropdownItem };
 
