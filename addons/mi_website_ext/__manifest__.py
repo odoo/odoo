@@ -16,6 +16,7 @@
         "web.assets_frontend": [
             "mi_website_ext/static/src/js/notify_button_handler.js",
             "mi_website_ext/static/src/js/startup_popups.js",
+            "mi_website_ext/static/src/js/button_time_redirec.js",
             'mi_website_ext/static/src/js/policy_viewer.js',
             "mi_website_ext/static/src/js/read_tracker.js",
             "mi_website_ext/static/src/js/tooltip_handler.js",
