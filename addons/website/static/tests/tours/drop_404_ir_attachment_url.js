@@ -20,7 +20,7 @@ registerWebsitePreviewTour('drop_404_ir_attachment_url', {
         run: "click",
     },
     {
-        trigger: ".snippet-option-ReplaceMedia",
+        trigger: "[data-action-id='replaceMedia']",
     },
     {
         content: 'Once the image UI appears, check the image has no size (404)',
@@ -33,8 +33,12 @@ registerWebsitePreviewTour('drop_404_ir_attachment_url', {
             }
         },
     },
-    changeOption('ImageTools', 'we-select[data-name="shape_img_opt"] we-toggler'),
-    changeOption('ImageTools', 'we-button[data-set-img-shape]'),
+    changeOption("Image", "[data-label='Shape'] .dropdown-toggle"),
+    {
+        content: "Click on the first image shape",
+        trigger: "[data-action-id='setImageShape']",
+        run: "click",
+    },
     {
         content: 'Once the shape is applied, check the image has now a size (placeholder image)',
         trigger: ':iframe .s_404_snippet img[src^="data:"]',
