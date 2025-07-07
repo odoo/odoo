@@ -38,6 +38,10 @@ export class ImageTransformation extends Component {
         image: { validate: (p) => p.tagName === "IMG" },
         destroy: { type: Function },
         onChange: { type: Function },
+        onComponentMounted: { type: Function, optional: true },
+    };
+    static defaultProps = {
+        onComponentMounted: () => {},
     };
 
     setup() {
@@ -50,6 +54,7 @@ export class ImageTransformation extends Component {
         this.computeImageTransformations();
         onMounted(() => {
             this.positionTransfoContainer();
+            this.props.onComponentMounted();
         });
         useExternalListener(window, "mousemove", this.mouseMove);
         useExternalListener(window, "mouseup", this.mouseUp);
