@@ -17,6 +17,7 @@ import {
 import { ReplaceMediaOption, searchSupportedParentLinkEl } from "./replace_media_option";
 import { computeMaxDisplayWidth } from "@html_builder/plugins/image/image_format_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 export const REPLACE_MEDIA_SELECTOR = "img, .media_iframe_video, span.fa, i.fa";
 export const REPLACE_MEDIA_EXCLUDE =
@@ -109,6 +110,7 @@ class ImageToolOptionPlugin extends Plugin {
                 }
             }
         },
+        normalize_handlers: this.migrateImages.bind(this),
     };
 
     async canHaveHoverEffect(img) {
@@ -135,6 +137,21 @@ class ImageToolOptionPlugin extends Plugin {
     }
     isImageSupportedForShapes(img, dataset = img.dataset) {
         return dataset.originalId && isImageSupportedForProcessing(getMimetype(img));
+    }
+    migrateImages(rootEl) {
+        for (const el of selectElements(
+            rootEl,
+            "img[data-original-id]:not([data-attachment-id]), .oe_img_bg[data-original-id]:not([data-attachment-id])"
+        )) {
+            el.dataset.attachmentId = el.dataset.originalId;
+        }
+        for (const el of selectElements(
+            rootEl,
+            "img[data-original-mimetype]:not([data-format-mimetype]), .oe_img_bg[data-original-mimetype]:not([data-format-mimetype])"
+        )) {
+            el.dataset.formatMimetype = el.dataset.originalMimetype;
+            delete el.dataset.originalMimetype;
+        }
     }
 }
 
