@@ -339,6 +339,7 @@ class Message(models.Model):
 
         allowed_ids.update(self._find_allowed_doc_ids(model_ids))
         allowed = self.browse(id_ for id_ in ids if id_ in allowed_ids)
+        allowed -= allowed._get_forbidden_access("read")
         return allowed._as_query(order)
 
     @api.model
