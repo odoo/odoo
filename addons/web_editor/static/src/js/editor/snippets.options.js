@@ -4570,6 +4570,7 @@ registry.sizing = SnippetOptionWidget.extend({
         const self = this;
         const def = this._super.apply(this, arguments);
         let isMobile = weUtils.isMobileView(this.$target[0]);
+        const isRtl = this.options.direction === "rtl";
 
         this.$handles = this.$overlay.find('.o_handle');
 
@@ -4609,6 +4610,22 @@ registry.sizing = SnippetOptionWidget.extend({
             } else if ($handle.hasClass('se')) {
                 compass = 'se';
                 XY = 'YX';
+            }
+
+            if (isRtl) {
+                if (compass === 'e') {
+                    compass = 'w';
+                } else if (compass === 'w') {
+                    compass = 'e';
+                } else if (compass === 'ne') {
+                    compass = 'nw';
+                } else if (compass === 'nw') {
+                    compass = 'ne';
+                } else if (compass === 'se') {
+                    compass = 'sw';
+                } else if (compass === 'sw') {
+                    compass = 'se';
+                }
             }
 
             // Don't call the normal resize methods if we are in a grid and
@@ -4693,7 +4710,12 @@ registry.sizing = SnippetOptionWidget.extend({
                 for (const dir of directions) {
                     // dd is the number of pixels by which the mouse moved,
                     // compared to the initial position of the handle.
-                    const dd = ev['page' + dir.XY] - dir.xy + dir.resize[1][dir.begin];
+                    let ddRaw = ev['page' + dir.XY] - dir.xy;
+                    // In RTL mode, reverse only horizontal movement (X axis).
+                    if (dir.XY === 'X' && isRtl) {
+                        ddRaw = -ddRaw;
+                    }
+                    const dd = ddRaw + dir.resize[1][dir.begin];
                     const next = dir.current + (dir.current + 1 === dir.resize[1].length ? 0 : 1);
                     const prev = dir.current ? (dir.current - 1) : 0;
 
