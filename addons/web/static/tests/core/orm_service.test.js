@@ -497,8 +497,10 @@ test("Cache: can cache and update a orm call", async () => {
     expect(
         await services.orm
             .cached({
-                onUpdate: (result) => {
-                    expect.step("onUppdate" + JSON.stringify(result));
+                onFinish: (hasChanged, result) => {
+                    expect.step(
+                        `onFinish - hasChanged:${hasChanged} result:${JSON.stringify(result)}`
+                    );
                 },
             })
             .read("res.partner", [1], [])
@@ -507,8 +509,10 @@ test("Cache: can cache and update a orm call", async () => {
     expect(
         await services.orm
             .cached({
-                onUpdate: (result) => {
-                    expect.step("onUppdate" + JSON.stringify(result));
+                onFinish: (hasChanged, result) => {
+                    expect.step(
+                        `onFinish - hasChanged:${hasChanged} result:${JSON.stringify(result)}`
+                    );
                 },
             })
             .read("res.partner", [1], [])
@@ -516,5 +520,10 @@ test("Cache: can cache and update a orm call", async () => {
     await microTick();
     await microTick();
     await microTick();
-    expect.verifySteps(["Fetch", "Fetch", 'onUppdate{"name":456}']);
+    expect.verifySteps([
+        "Fetch",
+        'onFinish - hasChanged:false result:{"name":123}',
+        "Fetch",
+        'onFinish - hasChanged:true result:{"name":456}',
+    ]);
 });

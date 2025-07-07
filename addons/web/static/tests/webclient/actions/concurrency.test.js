@@ -172,7 +172,6 @@ test("handle switching view and switching back on slow network", async () => {
         "web_search_read",
         "has_group",
         "web_search_read",
-        "web_search_read",
     ]);
 
     // we resolve def => list view is now ready (but we want to ignore it)

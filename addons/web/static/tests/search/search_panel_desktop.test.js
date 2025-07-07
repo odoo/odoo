@@ -424,12 +424,90 @@ test("cache search panel", async () => {
     ]);
 });
 
-test("cache search panel (onUpdate called after anoter load)", async () => {
+test("cache search panel (onFinish called after anoter load - Category)", async () => {
     const spSelectRangeDef = [null, new Deferred(), new Deferred()];
     let spSelectRangeCount = 0;
+    onRpc("search_panel_select_range", () => spSelectRangeDef[spSelectRangeCount++]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    expect(`.o_search_panel`).toHaveCount(1);
+    expect(`.o_search_panel_section`).toHaveCount(2);
+    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
+        "All",
+        "asustek\n2",
+        "agrolait\n2",
+    ]);
+    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
+        "gold\n1",
+        "silver\n3",
+    ]);
+
+    // Go to a form view
+    await getService("action").doAction(2);
+    expect(`.o_form_view`).toHaveCount(1);
+
+    // Came back to search panel
+    await getService("action").doAction(1);
+    await animationFrame();
+
+    // Click on a Filter !
+    await contains(queryAll`.o_search_panel_label`[4]).click();
+    await animationFrame();
+
+    // resolve RPCs (3th call) from the click
+    spSelectRangeDef[2].resolve({
+        parent_field: "parent_id",
+        values: [
+            {
+                id: 11,
+                display_name: "plop22",
+                parent_id: false,
+                __count: 8,
+            },
+        ],
+    });
+    await animationFrame();
+    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
+        "All",
+        "plop22\n8",
+    ]);
+
+    // resolve RPCs (2nd call) from the came back => must be ignored
+    spSelectRangeDef[1].resolve({
+        parent_field: "parent_id",
+        values: [
+            {
+                id: 3,
+                display_name: "asustek",
+                parent_id: false,
+                __count: 1,
+            },
+            {
+                id: 5,
+                display_name: "agrolait",
+                parent_id: false,
+                __count: 2,
+            },
+            {
+                id: 7,
+                display_name: "plop",
+                parent_id: false,
+                __count: 4,
+            },
+        ],
+    });
+    await animationFrame();
+    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
+        "All",
+        "plop22\n8",
+    ]);
+});
+
+test("cache search panel (onFinish called after anoter load - Filters)", async () => {
     const spSelectMultiRangeDef = [null, new Deferred(), new Deferred()];
     let spSelectMultiRangeCount = 0;
-    onRpc("search_panel_select_range", () => spSelectRangeDef[spSelectRangeCount++]);
     onRpc(
         "search_panel_select_multi_range",
         () => spSelectMultiRangeDef[spSelectMultiRangeCount++]
@@ -458,20 +536,11 @@ test("cache search panel (onUpdate called after anoter load)", async () => {
     await getService("action").doAction(1);
     await animationFrame();
 
-    await contains(queryAll`.o_search_panel_label`[4]).click();
+    // click on a Category
+    await contains(queryAll`.o_search_panel_label`[1]).click();
+    await animationFrame();
 
     // resolve RPCs (3th call) from the click
-    spSelectRangeDef[2].resolve({
-        parent_field: "parent_id",
-        values: [
-            {
-                id: 11,
-                display_name: "plop22",
-                parent_id: false,
-                __count: 8,
-            },
-        ],
-    });
     spSelectMultiRangeDef[2].resolve({
         values: [
             {
@@ -482,38 +551,11 @@ test("cache search panel (onUpdate called after anoter load)", async () => {
         ],
     });
     await animationFrame();
-    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
-        "All",
-        "plop22\n8",
-    ]);
     expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
         "plop22\n99",
     ]);
 
     // resolve RPCs (2nd call) from the came back => must be ignored
-    spSelectRangeDef[1].resolve({
-        parent_field: "parent_id",
-        values: [
-            {
-                id: 3,
-                display_name: "asustek",
-                parent_id: false,
-                __count: 1,
-            },
-            {
-                id: 5,
-                display_name: "agrolait",
-                parent_id: false,
-                __count: 2,
-            },
-            {
-                id: 7,
-                display_name: "plop",
-                parent_id: false,
-                __count: 4,
-            },
-        ],
-    });
     spSelectMultiRangeDef[1].resolve({
         values: [
             {
@@ -534,10 +576,6 @@ test("cache search panel (onUpdate called after anoter load)", async () => {
         ],
     });
     await animationFrame();
-    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
-        "All",
-        "plop22\n8",
-    ]);
     expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
         "plop22\n99",
     ]);
