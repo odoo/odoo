@@ -1,6 +1,6 @@
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
-import { hasAnyNodesColor } from "@html_editor/utils/color";
+import { hasAnyNodesColor, TEXT_CLASSES_REGEX, BG_CLASSES_REGEX } from "@html_editor/utils/color";
 import { cleanTextNode, splitTextNode, unwrapContents, fillEmpty } from "../utils/dom";
 import {
     areSimilarElements,
@@ -155,7 +155,6 @@ export class FormatPlugin extends Plugin {
 
     removeFormat() {
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        this.dispatchTo("remove_format_handlers");
         for (const format of Object.keys(formatsSpecs)) {
             if (
                 !formatsSpecs[format].removeStyle ||
@@ -165,6 +164,7 @@ export class FormatPlugin extends Plugin {
             }
             this._formatSelection(format, { applyStyle: false });
         }
+        this.dispatchTo("remove_format_handlers");
         this.dependencies.history.addStep();
     }
 
@@ -200,7 +200,8 @@ export class FormatPlugin extends Plugin {
         );
         const isFormatted = formatsSpecs[format].isFormatted;
         return (
-            targetedTextNodes.length && targetedTextNodes.every((node) => isFormatted(node, this.editable))
+            targetedTextNodes.length &&
+            targetedTextNodes.every((node) => isFormatted(node, this.editable))
         );
     }
 
@@ -302,7 +303,12 @@ export class FormatPlugin extends Plugin {
                 !isBlock(parentNode) &&
                 !this.dependencies.split.isUnsplittable(parentNode) &&
                 (parentNode.classList.length === 0 ||
-                    [...parentNode.classList].every((cls) => FONT_SIZE_CLASSES.includes(cls)))
+                    [...parentNode.classList].every(
+                        (cls) =>
+                            FONT_SIZE_CLASSES.includes(cls) ||
+                            TEXT_CLASSES_REGEX.test(cls) ||
+                            BG_CLASSES_REGEX.test(cls)
+                    ))
             ) {
                 const isUselessZws =
                     parentNode.tagName === "SPAN" &&
