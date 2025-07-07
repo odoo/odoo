@@ -323,7 +323,7 @@
                                 ]"
                                 context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
                                 options="{'no_create': True, 'request_type': 'leave'}"
-                                readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                                readonly="state != 'confirm'"/>
                             <!-- half day or custom hours: only show one date -->
                             <label for="request_date_from" invisible="not request_unit_half and not request_unit_hours" string="Date" />
                             <label for="request_date_from" invisible="request_unit_half or request_unit_hours" string="Dates" />
@@ -424,7 +424,7 @@
         <field name="arch" type="xml">
             <field name="holiday_status_id" position="before">
                 <field name="user_id" invisible="1"/> <!-- Used in HolidaysFormViewDialog -->
-                <field name="employee_id" widget="many2one_avatar_employee"/>
+                <field name="employee_id" readonly="state != 'confirm'" widget="many2one_avatar_employee"/>
             </field>
         </field>
     </record>
@@ -490,7 +490,7 @@
                 <attribute name="invisible">0</attribute>
             </xpath>
             <xpath expr="//field[@name='holiday_status_id']" position="before">
-                <field name="employee_id" groups="hr_holidays.group_hr_holidays_responsible" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_employee"/>
+                <field name="employee_id" groups="hr_holidays.group_hr_holidays_responsible" readonly="state != 'confirm'" widget="many2one_avatar_employee"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="department_id" groups="hr_holidays.group_hr_holidays_responsible" readonly="1"/>
             </xpath>
@@ -534,11 +534,11 @@
                         groups="hr_holidays.group_hr_holidays_user" display="always"
                     />
                 </header>
-                <field name="employee_id" widget="many2one_avatar_employee" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
-                <field name="department_id" optional="hidden" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
-                <field name="holiday_status_id" class="fw-bold" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
-                <field name="date_from" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
-                <field name="date_to" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                <field name="employee_id" widget="many2one_avatar_employee" readonly="state != 'confirm'" />
+                <field name="department_id" optional="hidden" readonly="state != 'confirm'"/>
+                <field name="holiday_status_id" class="fw-bold" readonly="state != 'confirm'"/>
+                <field name="date_from" readonly="state != 'confirm'"/>
+                <field name="date_to" readonly="state != 'confirm'"/>
                 <field name="duration_display" string="Duration"/>
                 <field name="name" optional="hidden"/>
                 <field name="state" widget="badge" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'" decoration-danger="state == 'refuse'"/>
