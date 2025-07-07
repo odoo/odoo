@@ -4,9 +4,10 @@ from datetime import datetime
 from freezegun import freeze_time
 from lxml import etree
 
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tools import file_open
 from odoo.tests import Form, tagged
+from odoo.tools import file_open
+
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 NS_MAP = {
     'cac': 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2',
@@ -83,12 +84,10 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         """
         Simply test that with a valid configuration, we can generate the file.
         """
-        basic_invoice = self.init_invoice(
-            'out_invoice', products=self.product_a
-        )
-        basic_invoice.action_post()
+        invoice = self.init_invoice('out_invoice', products=self.product_a, post=True)
+        myinvois_document = invoice._create_myinvois_document()
 
-        file, errors = basic_invoice._l10n_my_edi_generate_invoice_xml()
+        file, errors = myinvois_document._myinvois_generate_xml_file()
         self.assertFalse(errors)
 
         # The file is working! Now we assert that the specificities needed for this EDI (what you can find in this module) are found in the file.
@@ -170,12 +169,12 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         """
         Simply ensure that in a multi currency environment, the rate is found in the file and is the expected one.
         """
-        basic_invoice = self.init_invoice(
-            'out_invoice', currency=self.other_currency, taxes=self.company_data['default_tax_sale'], products=self.product_a
+        invoice = self.init_invoice(
+            'out_invoice', currency=self.other_currency, taxes=self.company_data['default_tax_sale'], products=self.product_a, post=True
         )
-        basic_invoice.action_post()
+        myinvois_document = invoice._create_myinvois_document()
 
-        file, errors = basic_invoice._l10n_my_edi_generate_invoice_xml()
+        file, errors = myinvois_document._myinvois_generate_xml_file()
         self.assertFalse(errors)
 
         root = etree.fromstring(file)
@@ -213,10 +212,10 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         """
         Set a few optional fields, and ensure that they appear as expecting in the file.
         """
-        basic_invoice = self.init_invoice(
+        invoice = self.init_invoice(
             'out_invoice', currency=self.other_currency, products=self.product_a
         )
-        basic_invoice.write({
+        invoice.write({
             'invoice_incoterm_id': self.env.ref('account.incoterm_CFR').id,
             'l10n_my_edi_custom_form_reference': 'E12345678912',
         })
@@ -227,9 +226,10 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         })
         self.partner_a.commercial_partner_id.sst_registration_number = 'A01-2345-67891013'
 
-        basic_invoice.action_post()
+        invoice.action_post()
+        myinvois_document = invoice._create_myinvois_document()
 
-        file, errors = basic_invoice._l10n_my_edi_generate_invoice_xml()
+        file, errors = myinvois_document._myinvois_generate_xml_file()
         self.assertFalse(errors)
 
         root = etree.fromstring(file)
@@ -239,7 +239,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         self._assert_node_values(
             root,
             'cac:AdditionalDocumentReference[not(descendant::*[local-name() = "DocumentType"])]/cbc:ID',
-            basic_invoice.invoice_incoterm_id.code,
+            invoice.invoice_incoterm_id.code,
         )
         self._assert_node_values(
             root,
@@ -249,7 +249,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         self._assert_node_values(
             root,
             'cac:AdditionalDocumentReference[descendant::*[local-name() = "DocumentType"]]/cbc:ID',
-            basic_invoice.l10n_my_edi_custom_form_reference,
+            invoice.l10n_my_edi_custom_form_reference,
         )
         # SST and TTX numbers (tax registrations). SST can be used in both cases, TTX only for supplier.
         # supplier
@@ -279,23 +279,28 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         Ensure that the type is correctly set for another move type, as well as that the original
         uuid is present in an adjustment invoice.
         """
-        basic_invoice = self.init_invoice(
-            'out_invoice', currency=self.other_currency, products=self.product_a
+        invoice = self.init_invoice(
+            'out_invoice', currency=self.other_currency, products=self.product_a, post=True,
         )
-        basic_invoice.l10n_my_edi_external_uuid = '12345678912345678912345678'
-        basic_invoice.action_post()
+        invoice_document = invoice._create_myinvois_document()
+        # Simulate that the document was sent
+        invoice_document.write({
+            'myinvois_state': 'valid',
+            'myinvois_external_uuid': '12345678912345678912345678',
+        })
 
-        action = basic_invoice.action_reverse()
+        action = invoice.action_reverse()
         reversal_wizard = self.env[action['res_model']].with_context(
-            active_ids=basic_invoice.ids,
+            active_ids=invoice.ids,
             active_model='account.move',
-            default_journal_id=basic_invoice.journal_id.id,
+            default_journal_id=invoice.journal_id.id,
         ).create({})
         action = reversal_wizard.reverse_moves()
         credit_note = self.env['account.move'].browse(action['res_id'])
         credit_note.action_post()
+        myinvois_document = credit_note._create_myinvois_document()
 
-        file, errors = credit_note._l10n_my_edi_generate_invoice_xml()
+        file, errors = myinvois_document._myinvois_generate_xml_file()
         self.assertFalse(errors)
 
         root = etree.fromstring(file)
@@ -310,12 +315,12 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         self._assert_node_values(
             root,
             'cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID',
-            basic_invoice.name,
+            invoice_document.name,
         )
         self._assert_node_values(
             root,
             'cac:BillingReference/cac:InvoiceDocumentReference/cbc:UUID',
-            basic_invoice.l10n_my_edi_external_uuid,
+            invoice_document.myinvois_external_uuid,
         )
 
         with file_open('l10n_my_edi/tests/expected_xmls/credit_note.xml', 'rb') as f:
@@ -350,10 +355,10 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         }).sudo(False)
         payment.create_invoices()
         invoice = sale_order.invoice_ids[0]
-        invoice.l10n_my_edi_external_uuid = '12345678912345678912345678'
         invoice.action_post()
+        myinvois_document = invoice._create_myinvois_document()
 
-        file, errors = invoice._l10n_my_edi_generate_invoice_xml()
+        file, errors = myinvois_document._myinvois_generate_xml_file()
         self.assertFalse(errors)
 
         root = etree.fromstring(file)
@@ -370,12 +375,12 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         """
         Check that the file is correct with a foreign customer.
         """
-        basic_invoice = self.init_invoice(
-            'out_invoice', partner=self.partner_b, products=self.product_a
+        invoice = self.init_invoice(
+            'out_invoice', partner=self.partner_b, products=self.product_a, post=True,
         )
-        basic_invoice.action_post()
+        myinvois_document = invoice._create_myinvois_document()
 
-        file, errors = basic_invoice._l10n_my_edi_generate_invoice_xml()
+        file, errors = myinvois_document._myinvois_generate_xml_file()
         self.assertFalse(errors)
 
         root = etree.fromstring(file)
@@ -409,12 +414,12 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'l10n_my_tax_type': 'E',
         })
         invoice = self.init_invoice(
-            'out_invoice', partner=self.partner_b, products=self.product_a, taxes=exempt_tax,
+            'out_invoice', partner=self.partner_b, products=self.product_a, taxes=exempt_tax, post=True,
         )
         invoice.l10n_my_edi_exemption_reason = "Exempt Customer"
-        invoice.action_post()
+        myinvois_document = invoice._create_myinvois_document()
 
-        file, errors = invoice._l10n_my_edi_generate_invoice_xml()
+        file, errors = myinvois_document._myinvois_generate_xml_file()
         self.assertFalse(errors)
 
         root = etree.fromstring(file)
@@ -449,11 +454,11 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
 
     def test_08_self_billing(self):
         bill = self.init_invoice(
-            'in_invoice', partner=self.partner_b, products=self.product_a, taxes=self.purchase_tax,
+            'in_invoice', partner=self.partner_b, products=self.product_a, taxes=self.purchase_tax, post=True
         )
-        bill.action_post()
+        myinvois_document = bill._create_myinvois_document()
 
-        file, errors = bill._l10n_my_edi_generate_invoice_xml()
+        file, errors = myinvois_document._myinvois_generate_xml_file()
         self.assertFalse(errors)
 
         root = etree.fromstring(file)
@@ -485,10 +490,14 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         """ A refund note is issued when an invoice has received a credit note, and that credit note was paid to the customer. """
         # Create the original invoice, and receive the payment.
         invoice = self.init_invoice(
-            'out_invoice', partner=self.partner_b, products=self.product_a
+            'out_invoice', partner=self.partner_b, products=self.product_a, post=True,
         )
-        invoice.l10n_my_edi_external_uuid = '12345678912345678912345678'
-        invoice.action_post()
+        invoice_document = invoice._create_myinvois_document()
+        # Simulate that the document was sent
+        invoice_document.write({
+            'myinvois_state': 'valid',
+            'myinvois_external_uuid': '12345678912345678912345678',
+        })
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': '2019-01-02',
         })._create_payments()
@@ -506,7 +515,9 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'payment_date': '2019-01-02',
         })._create_payments()
         # Generate the file and assert the type, should be "refund" (04)
-        file, errors = credit_note._l10n_my_edi_generate_invoice_xml()
+        myinvois_document = credit_note._create_myinvois_document()
+
+        file, errors = myinvois_document._myinvois_generate_xml_file()
         self.assertFalse(errors)
 
         root = etree.fromstring(file)
@@ -525,10 +536,14 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         """ A credit note is issued when an invoice has received a credit note, and that credit note was not paid to the customer. """
         # Create the original invoice, don't receive a payment.
         invoice = self.init_invoice(
-            'out_invoice', partner=self.partner_b, products=self.product_a
+            'out_invoice', partner=self.partner_b, products=self.product_a, post=True,
         )
-        invoice.l10n_my_edi_external_uuid = '12345678912345678912345678'
-        invoice.action_post()
+        invoice_document = invoice._create_myinvois_document()
+        # Simulate that the document was sent
+        invoice_document.write({
+            'myinvois_state': 'valid',
+            'myinvois_external_uuid': '12345678912345678912345678',
+        })
         # Create the credit note to reduce the amount due of the invoice
         action = invoice.action_reverse()
         reversal_wizard = self.env[action['res_model']].with_context(
@@ -543,7 +558,9 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
                 line.price_unit = 500
         credit_note.action_post()
         # Generate the file and assert the type, should be "credit note" (03)
-        file, errors = credit_note._l10n_my_edi_generate_invoice_xml()
+        myinvois_document = credit_note._create_myinvois_document()
+
+        file, errors = myinvois_document._myinvois_generate_xml_file()
         self.assertFalse(errors)
 
         root = etree.fromstring(file)
@@ -570,16 +587,15 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'l10n_my_tax_type': 'E',
         })
         bill = self.init_invoice(
-            'in_invoice', products=self.product_a, taxes=exempt_tax,
+            'in_invoice', products=self.product_a, taxes=exempt_tax, post=True,
         )
         bill.write({
             'l10n_my_edi_exemption_reason': 'Exempt Customer',
             'l10n_my_edi_custom_form_reference': 'E12345678912',
         })
+        myinvois_document = bill._create_myinvois_document()
 
-        bill.action_post()
-
-        file, errors = bill._l10n_my_edi_generate_invoice_xml()
+        file, errors = myinvois_document._myinvois_generate_xml_file()
         self.assertFalse(errors)
 
         root = etree.fromstring(file)
@@ -599,11 +615,11 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         Ensure that when an invoice contains a customs number; it is treated as an importation and not exportation.
         """
         invoice = self.init_invoice(
-            'out_invoice', products=self.product_a
+            'out_invoice', products=self.product_a, post=True
         )
-        invoice.action_post()
+        myinvois_document = invoice._create_myinvois_document()
 
-        file, errors = invoice._l10n_my_edi_generate_invoice_xml()
+        file, errors = myinvois_document._myinvois_generate_xml_file()
         self.assertFalse(errors)
 
         root = etree.fromstring(file)
@@ -617,6 +633,27 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
 
+    def test_13_prepaid_amount_present(self):
+        """
+        Ensure the prepaid amount is present in the UBL XML under <cac:PrepaidPayment>
+        """
+        invoice = self.init_invoice('out_invoice', currency=self.other_currency, products=self.product_a, post=True)
+        myinvois_document = invoice._create_myinvois_document()
+
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'amount': 2200.00, 'payment_date': '2024-07-15'
+        })._create_payments()
+
+        file, errors = myinvois_document._myinvois_generate_xml_file()
+        self.assertFalse(errors)
+        root = etree.fromstring(file)
+        self._assert_node_values(
+            root,
+            'cac:PrepaidPayment/cbc:PaidAmount',
+            '2200.00',
+            attributes={'currencyID': self.other_currency.name}
+        )
+
     def test_14_prioritize_invoice_line_classification_code(self):
         """
         Check if the classification code of invoice line is prioritized over the classification code of product
@@ -629,8 +666,9 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'l10n_my_edi_classification_code': '002',
         })
         invoice.action_post()
+        myinvois_document = invoice._create_myinvois_document()
 
-        file, errors = invoice._l10n_my_edi_generate_invoice_xml()
+        file, errors = myinvois_document._myinvois_generate_xml_file()
         self.assertFalse(errors)
 
         root = etree.fromstring(file)

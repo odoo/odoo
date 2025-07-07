@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import itertools
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.tools import date_utils
-
-from odoo.addons.l10n_my_edi.models.account_edi_xml_ubl_my import E_164_REGEX
 
 
 class MyInvoisDocumentPoS(models.Model):
@@ -129,16 +129,85 @@ class MyInvoisDocumentPoS(models.Model):
             'context': {
                 'default_date_from': default_date_from,
                 'default_date_to': default_date_to,
+                'default_consolidation_type': 'pos',
             },
             'type': 'ir.actions.act_window',
         }
+
+    def action_show_myinvois_documents(self):
+        """
+        Open the documents in self in the correct view based on the amount of records.
+        When the documents are linked to pos orders, we use a specific view for them.
+        """
+        # We'll only use that specific view if all orders are from PoS, in practice they should never be mixed.
+        are_pos_document = all(document.pos_order_ids for document in self)
+        if not are_pos_document:
+            return super().action_show_myinvois_documents()
+
+        if len(self) == 1:
+            action_vals = {
+                'type': 'ir.actions.act_window',
+                'res_model': 'myinvois.document',
+                'view_mode': 'form',
+                'res_id': self.id,
+                'views': [(self.env.ref('l10n_my_edi_pos.myinvois_document_pos_form_view').id, 'form')],
+            }
+        else:
+            action_vals = {
+                'name': self.env._("Consolidated Invoices"),
+                'type': 'ir.actions.act_window',
+                'res_model': 'myinvois.document',
+                'view_mode': 'list,form',
+                'views': [(self.env.ref('l10n_my_edi_pos.myinvois_document_pos_list_view').id, 'list'), (self.env.ref('l10n_my_edi_pos.myinvois_document_pos_form_view').id, 'form')],
+                'domain': [('id', 'in', self.ids)],
+            }
+        return action_vals
 
     # ----------------
     # Business methods
     # ----------------
 
+    def _validate_taxes(self):
+        """ Makes use of account.edi.xml.ubl_myinvois_my to validate the taxes for the records in self."""
+        super()._validate_taxes()
+        if self.pos_order_ids:
+            self.env["account.edi.xml.ubl_myinvois_my"]._validate_taxes(self.pos_order_ids.lines.tax_ids)
+
+    def _is_consolidated_invoice(self):
+        """
+        Extend the logic in order to also return true if the document is linked to multiple PoS orders,
+        or is a refund of a consolidated invoice generated from the PoS
+
+        :return: True if this invoice is a consolidated invoice or the refund of one.
+        """
+        self.ensure_one()
+        # Note that all documents linked to a PoS order are consolidated invoices, even it there is
+        # only one order.
+        return super()._is_consolidated_invoice() or self.pos_order_ids
+
+    def _is_consolidated_invoice_refund(self):
+        """
+        :return: True if this document is a refund specifically for a consolidated invoice from the PoS.
+        """
+        is_consolidated_invoice_refund = super()._is_consolidated_invoice_refund()
+        # Additionally to the existing check in super(), we want to catch refunds for orders linked to PoS orders.
+        if self._is_refund_document() and self.invoice_ids.pos_order_ids:
+            refunded_order = self.invoice_ids.pos_order_ids[0].refunded_order_id
+            is_consolidated_invoice_refund = bool(refunded_order and refunded_order._get_active_consolidated_invoice())
+        return is_consolidated_invoice_refund
+
+    def _split_consolidated_invoice_record_in_lines(self):
+        """
+        :return: A list of pos_order record sets, with one record set representing what would go in one line in the xml.
+        """
+        if not self._is_consolidated_invoice() or not self.pos_order_ids:
+            return super()._split_consolidated_invoice_record_in_lines()
+        lines_per_configs = self._split_pos_orders_in_lines(self.pos_order_ids)
+        # We create separate documents per config, so at this point _split_pos_orders_in_lines will always return a single config
+        return next(iter(lines_per_configs.values()))
+
     @api.model
-    def _separate_orders_in_lines(self, pos_order_ids):
+    def _split_pos_orders_in_lines(self, pos_order_ids):
         """
         Separate the orders in self into lines as represented in a consolidated invoice, taking care of splitting when
         needed.
@@ -147,101 +216,45 @@ class MyInvoisDocumentPoS(models.Model):
         submit per PoS if wanted.
 
         :param pos_order_ids: The orders to separate.
-        :return: A list of pos_order record sets, with one record set representing what would go in one line in the xml.
+        :return: A dict of pos order per config, for each config having a list of recordset each representing a single line in the xml.
         """
         lines_per_config = {}
         # We start by gathering the sessions involved in this process, and loop on their orders.
-        sorted_order = pos_order_ids.sorted(reverse=True)
-        all_orders_per_config = sorted_order.session_id.order_ids.sorted(reverse=True).grouped('config_id')
+        sorted_orders_to_consolidated = pos_order_ids.sorted(reverse=True)
+        sorted_session_orders = (
+            sorted_orders_to_consolidated.session_id.order_ids.sorted(reverse=True)
+        )
         # During the loop, we want to gather "lines".
         # One line can be comprised of any number of orders as long as they are continuous.
-        continuous_orders = self.env['pos.order']
-        for config, orders in all_orders_per_config.items():
+        continuous_orders = []
+        for config, orders in itertools.groupby(sorted_session_orders, key=lambda o: o["config_id"]):
             config_lines = []
             for order in orders:
                 if continuous_orders and order not in pos_order_ids:
-                    config_lines.append(continuous_orders)
-                    continuous_orders = self.env['pos.order']
+                    config_lines.append(self.env["pos.order"].browse(continuous_orders))
+                    continuous_orders = []
                 elif order in pos_order_ids:
-                    continuous_orders |= order
+                    continuous_orders.append(order.id)
 
-            # We should group by POS config, as this is where the sequence is expected to be continuous.
+            # We don't mix orders from different configs in a single line as they have different sequences.
             if continuous_orders:
-                config_lines.append(continuous_orders)
-                continuous_orders = self.env['pos.order']
+                config_lines.append(self.env["pos.order"].browse(continuous_orders))
+                continuous_orders = []
             lines_per_config[config] = config_lines
 
         return lines_per_config
 
-    def _myinvois_export_document(self):
-        """ Returns a dict with all the values required to build the consolidated invoice XML file. """
-        self.ensure_one()
-
-        # We ignore fully refunded orders and orders that are only refunds.
-        # In both cases, has_refundable_lines will be False (already refunded OR negative qty)
-        orders = self.pos_order_ids.filtered('has_refundable_lines')
-
-        if not orders:
-            return super()._myinvois_export_document()
-
-        builder = self.env['account.edi.xml.ubl_myinvois_my']
-        # 1. Validate the structure of the taxes
-        builder._validate_taxes(orders.lines.tax_ids)
-        # 2. Instantiate the XML builder
-        vals = {'consolidated_invoice': self.with_context(lang=self.env.company.partner_id.lang)}
-        document_node = builder._get_consolidated_invoice_node(vals)
-        vals['template'] = document_node
-        return vals
-
-    def _myinvois_export_document_constraints(self, xml_vals):
-        """ Provides generic constraints that would apply to any documents """
-        self.ensure_one()
-        constraints = super()._myinvois_export_document_constraints(xml_vals)
-
-        builder = self.env['account.edi.xml.ubl_myinvois_my']
-        if not self.company_id.l10n_my_edi_industrial_classification:
-            builder._l10n_my_edi_make_validation_error(constraints, 'industrial_classification_required', 'company', self.company_id.display_name)
-
-        # Supplier Check
-        supplier = xml_vals['supplier']
-        phone_number = supplier.phone or supplier.mobile
-        if phone_number != "NA":
-            phone = builder._l10n_my_edi_get_formatted_phone_number(phone_number)
-            if E_164_REGEX.match(phone) is None:
-                builder._l10n_my_edi_make_validation_error(constraints, 'phone_number_format', 'supplier', supplier.display_name)
-        elif not phone_number:
-            builder._l10n_my_edi_make_validation_error(constraints, 'phone_number_required', 'supplier', supplier.display_name)
-
-        if not supplier.commercial_partner_id.l10n_my_identification_type or not supplier.commercial_partner_id.l10n_my_identification_number:
-            builder._l10n_my_edi_make_validation_error(constraints, 'required_id', 'supplier', supplier.commercial_partner_id.display_name)
-
-        if not supplier.state_id:
-            builder._l10n_my_edi_make_validation_error(constraints, 'no_state', 'supplier', supplier.display_name)
-        if not supplier.city:
-            builder._l10n_my_edi_make_validation_error(constraints, 'no_city', 'supplier', supplier.display_name)
-        if not supplier.country_id:
-            builder._l10n_my_edi_make_validation_error(constraints, 'no_country', 'supplier', supplier.display_name)
-        if not supplier.street:
-            builder._l10n_my_edi_make_validation_error(constraints, 'no_street', 'supplier', supplier.display_name)
-
-        if supplier.commercial_partner_id.sst_registration_number and len(supplier.commercial_partner_id.sst_registration_number.split(';')) > 2:
-            builder._l10n_my_edi_make_validation_error(constraints, 'too_many_sst', 'supplier', supplier.commercial_partner_id.display_name)
-
-        # Line check (based on the vals)
-        for line in xml_vals['template']['cac:InvoiceLine']:
-            item_vals = line['cac:Item']
-            if not item_vals['cac:ClassifiedTaxCategory']:
-                builder._l10n_my_edi_make_validation_error(constraints, 'tax_ids_required', line['id'], item_vals['name'])
-
-            for classified_tax_category_val in item_vals['cac:ClassifiedTaxCategory']:
-                if classified_tax_category_val['cbc:ID']['_text'] == 'E' and not classified_tax_category_val['cbc:TaxExemptionReason']['_text']:
-                    # We don't have a name here, so the % will have to do
-                    builder._l10n_my_edi_make_validation_error(constraints, 'tax_exemption_required_on_tax', classified_tax_category_val['id'], classified_tax_category_val['percent'])
-
-        if all(line['cac:Item']['cac:CommodityClassification']['cbc:ItemClassificationCode']['_text'] == '04' for line in xml_vals['template']['cac:InvoiceLine']):
-            # consolidated invoices must use a specific customer VAT number.
-            customer_vat = xml_vals['template']['cac:AccountingCustomerParty']['cac:Party']['cac:PartyIdentification'][0]['cbc:ID']['_text']
-            if customer_vat != 'EI00000000010':
-                builder._l10n_my_edi_make_validation_error(constraints, 'missing_general_public', xml_vals['customer'].id, xml_vals['customer'].name)
-
-        return constraints
+    def _get_record_rounded_base_lines(self, record):
+        """
+        Little helper to return the rounded base line for a record.
+        It is extracted in order to allow extending the logic to support other business models.
+        :param record: The record from which to get the base lines.
+        :return: The rounder base line for the provided record.
+        """
+        if record and record._name == 'pos.order':
+            AccountTax = self.env["account.tax"]
+            base_lines = record._prepare_tax_base_line_values()
+            AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
+            AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+            return base_lines
+        return super()._get_record_rounded_base_lines(record)

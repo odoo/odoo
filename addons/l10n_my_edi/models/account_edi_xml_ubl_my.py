@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import re
 from datetime import datetime
 
 from pytz import UTC
 
-from odoo import _, api, models
-from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
+from odoo import api, models
+from odoo.tools import html2plaintext
 
 # Far from ideal, but no better solution yet.
 COUNTRY_CODE_MAP = {
@@ -54,41 +53,111 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
     # EXPORT
     # -----------------------
 
-    def _export_invoice_filename(self, invoice):
-        # OVERRIDE 'account_edi_ubl_cii'
-        return f"{invoice.name.replace('/', '_')}_myinvois.xml"
+    def _get_myinvois_document_node(self, vals):
+        """
+        Entry point of the export of a MyInvois document.
+        The node returned by this function should be passed into dict_to_xml in order to generate the XML file to send to
+        MyInvois.
+        """
+        self._add_myinvois_document_config_vals(vals)
+        self._add_myinvois_document_base_lines_vals(vals)
+        self._add_document_currency_vals(vals)
+        self._add_myinvois_document_tax_grouping_function_vals(vals)
+        self._add_myinvois_document_monetary_total_vals(vals)
 
-    def _add_invoice_config_vals(self, vals):
-        super()._add_invoice_config_vals(vals)
-        invoice = vals['invoice']
+        document_node = {}
+        self._add_myinvois_document_header_nodes(document_node, vals)
+        self._add_myinvois_document_accounting_supplier_party_nodes(document_node, vals)
+        self._add_myinvois_document_accounting_customer_party_nodes(document_node, vals)
 
-        # In MyInvois, all documents use the same template (Invoice)
-        vals['document_type'] = 'invoice'
+        myinvois_document = vals["myinvois_document"]
+        if vals['document_type'] == 'invoice' and not myinvois_document._is_consolidated_invoice():
+            self._add_myinvois_document_delivery_nodes(document_node, vals)
+            self._add_myinvois_document_payment_terms_nodes(document_node, vals)
 
-        # Invert customer and supplier if this is a self-invoice.
-        document_type_code, original_document = self._l10n_my_edi_get_document_type_code(invoice)
-        if document_type_code in ('01', '02', '03', '04'):  # Regular invoice
-            vals['supplier'] = invoice.company_id.partner_id
-            vals['customer'] = invoice.partner_id.commercial_partner_id
-        elif document_type_code in ('11', '12', '13', '14'):  # Self billed.
-            vals['supplier'] = invoice.partner_id.commercial_partner_id
-            vals['customer'] = invoice.company_id.partner_id
-            vals['partner_shipping'] = vals['customer']
+        self._add_document_allowance_charge_nodes(document_node, vals)
+        self._add_myinvois_document_exchange_rate_nodes(document_node, vals)
+        self._add_document_tax_total_nodes(document_node, vals)
+        self._add_myinvois_document_monetary_total_nodes(document_node, vals)
+        self._add_myinvois_document_line_nodes(document_node, vals)
+        return document_node
 
-        vals['document_type_code'] = document_type_code
-        vals['original_document'] = original_document
+    def _add_myinvois_document_config_vals(self, vals):
+        myinvois_document = vals['myinvois_document']
+        supplier = myinvois_document.company_id.partner_id.commercial_partner_id
 
-    def _add_document_tax_grouping_function_vals(self, vals):
-        # OVERRIDE 'account_edi_ubl_cii'
+        if myinvois_document._is_consolidated_invoice() or myinvois_document._is_consolidated_invoice_refund():
+            customer = self.env["res.partner"].search(
+                domain=[
+                    *self.env['res.partner']._check_company_domain(myinvois_document.company_id),
+                    '|',
+                    ('vat', '=', 'EI00000000010'),
+                    ('l10n_my_edi_malaysian_tin', '=', 'EI00000000010'),
+                ],
+                limit=1,
+            )
+            partner_shipping = None
+            payment_term_id = None  # wouldn't make sense in a consolidated invoice.
+        else:
+            invoice = myinvois_document.invoice_ids[0]  # Otherwise it would be a consolidated invoice.
+            customer = invoice.partner_id
+            partner_shipping = invoice.partner_shipping_id or customer
+            payment_term_id = invoice.invoice_payment_term_id
+
+        document_type_code, original_document = self._l10n_my_edi_get_document_type_code(myinvois_document)
+        # In case of self billing, we want to invert the supplier and customer.
+        if document_type_code in ("11", "12", "13", "14"):
+            supplier, customer = customer, supplier
+            partner_shipping = customer
+            # In practice, we should never have multiple self billed invoices being part of a consolidated invoices,
+            # but it doesn't hurt to support it.
+            document_ref = ','.join([invoice.ref for invoice in myinvois_document.invoice_ids if invoice.ref]) or None
+        else:
+            document_ref = None
+
+        vals.update({
+            'document_type': 'invoice',
+            'document_type_code': document_type_code,
+            'original_document': original_document,
+
+            'document_name': myinvois_document.name,
+
+            'supplier': supplier,
+            'customer': customer,
+            'partner_shipping': partner_shipping,
+
+            'currency_id': myinvois_document.currency_id,
+            'company_currency_id': myinvois_document.company_id.currency_id,
+
+            'use_company_currency': False,
+            'fixed_taxes_as_allowance_charges': True,
+            'custom_form_reference': myinvois_document.myinvois_custom_form_reference,
+            'document_ref': document_ref,
+            'incoterm_id': myinvois_document.invoice_ids.invoice_incoterm_id,
+            'invoice_payment_term_id': payment_term_id,
+        })
+
+    def _add_myinvois_document_base_lines_vals(self, vals):
+        myinvois_document = vals['myinvois_document']
+        vals['base_lines'] = myinvois_document._get_rounded_base_lines()
+
+    def _add_myinvois_document_tax_grouping_function_vals(self, vals):
         def total_grouping_function(base_line, tax_data):
             return True
 
         def tax_grouping_function(base_line, tax_data):
             tax = tax_data and tax_data['tax']
-            invoice = base_line['record'].move_id
+            myinvois_document = base_line['myinvois_document']
+
+            is_exempt_tax = not tax or tax.l10n_my_tax_type == 'E'
+            tax_exemption_reason = is_exempt_tax and (
+                myinvois_document.myinvois_exemption_reason
+                or tax.l10n_my_tax_exemption_reason
+            )
+
             return {
                 'tax_category_code': tax.l10n_my_tax_type if tax else 'E',
-                'tax_exemption_reason': invoice.l10n_my_edi_exemption_reason if not tax or tax.l10n_my_tax_type == 'E' else None,
+                'tax_exemption_reason': tax_exemption_reason,
                 'amount': tax.amount if tax else 0.0,
                 'amount_type': tax.amount_type if tax else 'percent',
             }
@@ -96,79 +165,21 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         vals['total_grouping_function'] = total_grouping_function
         vals['tax_grouping_function'] = tax_grouping_function
 
+    def _add_myinvois_document_monetary_total_vals(self, vals):
+        self._add_document_monetary_total_vals(vals)
+        myinvois_document = vals["myinvois_document"]
+        if myinvois_document.invoice_ids:
+            # Add the total amount paid.
+            vals.update({
+                'total_paid_amount': sum((invoice.amount_total - invoice.amount_residual) * invoice.invoice_currency_rate for invoice in myinvois_document.invoice_ids),
+                'total_paid_amount_currency': sum(invoice.amount_total - invoice.amount_residual for invoice in myinvois_document.invoice_ids),
+            })
+
     # -------------------------------------------------------------------------
     # EXPORT: Templates
     # -------------------------------------------------------------------------
 
-    def _add_invoice_header_nodes(self, document_node, vals):
-        super()._add_invoice_header_nodes(document_node, vals)
-
-        invoice = vals['invoice']
-
-        # Self-billed invoices must use the number given by the supplier.
-        if vals['document_type_code'] in ('11', '12', '13', '14') and invoice.ref:
-            document_node['cbc:ID']['_text'] = invoice.ref
-
-        document_node.update({
-            'cbc:UBLVersionID': None,
-            # The issue date and time must be the current time set in the UTC time zone
-            'cbc:IssueDate': {'_text': datetime.now(tz=UTC).strftime("%Y-%m-%d")},
-            'cbc:IssueTime': {'_text': datetime.now(tz=UTC).strftime("%H:%M:%SZ")},
-
-            'cbc:DueDate': None,
-
-            # The current version is 1.1 (document with signature), the type code depends on the move type.
-            'cbc:InvoiceTypeCode': {
-                '_text': vals['document_type_code'],
-                'listVersionID': '1.1',
-            },
-            'cac:OrderReference': None,
-
-            # Debit/Credit note original invoice ref.
-            # Applies to credit notes, debit notes, refunds for both invoices and self-billed invoices.
-            # The original document is mandatory; but in some specific cases it will be empty (sending a credit note for an invoice
-            # managed outside Odoo/...)
-            'cac:BillingReference': {
-                'cac:InvoiceDocumentReference': {
-                    'cbc:ID': {'_text': (vals['original_document'] and vals['original_document'].name) or 'NA'},
-                    'cbc:UUID': {'_text': (vals['original_document'] and vals['original_document'].l10n_my_edi_external_uuid) or 'NA'},
-                }
-            } if vals['document_type_code'] in {'02', '03', '04', '12', '13', '14'} else None,
-            'cac:AdditionalDocumentReference': [
-                {
-                    'cbc:ID': {'_text': invoice.l10n_my_edi_custom_form_reference},
-                    'cbc:DocumentType': {'_text': 'CustomsImportForm'},
-                } if vals['document_type_code'] in {'11', '12', '13', '14'} and invoice.l10n_my_edi_custom_form_reference else None,
-                {
-                    'cbc:ID': {'_text': invoice.invoice_incoterm_id.code}
-                } if invoice.invoice_incoterm_id else None,
-                {
-                    'cbc:ID': {'_text': invoice.l10n_my_edi_custom_form_reference},
-                    'cbc:DocumentType': {'_text': 'K2'},
-                } if vals['document_type_code'] in {'01', '02', '03', '04'} and invoice.l10n_my_edi_custom_form_reference else None,
-            ],
-        })
-
-    def _add_invoice_delivery_nodes(self, document_node, vals):
-        document_node['cac:Delivery'] = {
-            'cac:DeliveryParty': self._get_party_node({**vals, 'partner': vals['customer'], 'role': 'delivery'}),
-        }
-
-    def _add_invoice_payment_means_nodes(self, document_node, vals):
-        # PaymentMeans is optional, and since we can't have the correct one at the time of generating, we don't add it.
-        pass
-
-    def _add_invoice_exchange_rate_nodes(self, document_node, vals):
-        invoice = vals['invoice']
-        if invoice.currency_id.name != 'MYR':
-            # Exchange rate information must be provided if applicable
-            document_node['cac:TaxExchangeRate'] = {
-                'cbc:SourceCurrencyCode': {'_text': invoice.currency_id.name},
-                'cbc:TargetCurrencyCode': {'_text': 'MYR'},
-                'cbc:CalculationRate': {'_text': self._l10n_my_edi_get_tax_exchange_rate(vals['invoice'])},
-            }
-
-    def _get_address_node(self, vals):
+    def _get_myinvois_document_address_node(self, vals):
         partner = vals['partner']
 
         # The API expects the iso3166-2 code for the state, in the same way as it expects the iso3166 code for the countries.
@@ -219,7 +230,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             },
         }
 
-    def _get_party_identification_node(self, vals):
+    def _get_myinvois_document_party_identification_node(self, vals):
         """ The id vals list must be filled with two values.
         The TIN, and then one of either:
             - Business registration number (BNR)
@@ -272,20 +283,20 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 })
         return party_identification_node
 
-    def _get_party_node(self, vals):
+    def _get_myinvois_document_party_node(self, vals):
         partner = vals['partner']
         role = vals['role']
 
         return {
             'cbc:IndustryClassificationCode': {
-                '_text': partner.l10n_my_edi_industrial_classification.code,
-                'name': partner.l10n_my_edi_industrial_classification.name
+                '_text': partner.commercial_partner_id.l10n_my_edi_industrial_classification.code,
+                'name': partner.commercial_partner_id.l10n_my_edi_industrial_classification.name
             } if role == 'supplier' else None,
-            'cac:PartyIdentification': self._get_party_identification_node({**vals, 'partner': partner.commercial_partner_id}),
+            'cac:PartyIdentification': self._get_myinvois_document_party_identification_node({**vals, 'partner': partner.commercial_partner_id}),
             'cac:PartyName': {
                 'cbc:Name': {'_text': partner.display_name}
             } if role != 'delivery' else None,
-            'cac:PostalAddress': self._get_address_node(vals),
+            'cac:PostalAddress': self._get_myinvois_document_address_node(vals),
             'cac:PartyLegalEntity': {
                 'cbc:RegistrationName': {'_text': partner.commercial_partner_id.name},
             },
@@ -313,8 +324,161 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             }
         }
 
-    def _add_invoice_line_amount_nodes(self, line_node, vals):
-        super()._add_invoice_line_amount_nodes(line_node, vals)
+    def _add_myinvois_document_header_nodes(self, document_node, vals):
+        document_node.update({
+            'cbc:UBLVersionID': None,
+            'cbc:ID': {'_text': vals['document_name']},
+            # The issue date and time must be the current time set in the UTC time zone
+            'cbc:IssueDate': {'_text': datetime.now(tz=UTC).strftime("%Y-%m-%d")},
+            'cbc:IssueTime': {'_text': datetime.now(tz=UTC).strftime("%H:%M:%SZ")},
+            'cbc:DueDate': None,
+
+            # The current version is 1.1 (document with signature), the type code depends on the move type.
+            'cbc:InvoiceTypeCode': {
+                '_text': vals['document_type_code'],
+                'listVersionID': '1.1',
+            },
+            'cbc:DocumentCurrencyCode': {'_text': vals['currency_id'].name},
+            'cac:OrderReference': None,
+            'cbc:BuyerReference': {'_text': vals['customer'].commercial_partner_id.ref},
+
+            # Debit/Credit note original invoice ref.
+            # Applies to credit notes, debit notes, refunds for both invoices and self-billed invoices.
+            # The original document is mandatory; but in some specific cases it will be empty (sending a credit note for an invoice
+            # managed outside Odoo/...)
+            'cac:BillingReference': {
+                'cac:InvoiceDocumentReference': {
+                    'cbc:ID': {'_text': (vals['original_document'] and vals['original_document'].name) or 'NA'},
+                    'cbc:UUID': {'_text': (vals['original_document'] and vals['original_document'].myinvois_external_uuid) or 'NA'},
+                }
+            } if vals['document_type_code'] in {'02', '03', '04', '12', '13', '14'} else None,
+            'cac:AdditionalDocumentReference': [
+                {
+                    'cbc:ID': {'_text': vals['custom_form_reference']},
+                    'cbc:DocumentType': {'_text': 'CustomsImportForm'},
+                } if vals['document_type_code'] in {'11', '12', '13', '14'} and vals['custom_form_reference'] else None,
+                {
+                    'cbc:ID': {'_text': vals["incoterm_id"].code}
+                } if vals["incoterm_id"] else None,
+                {
+                    'cbc:ID': {'_text': vals['custom_form_reference']},
+                    'cbc:DocumentType': {'_text': 'K2'},
+                } if vals['document_type_code'] in {'01', '02', '03', '04'} and vals['custom_form_reference'] else None,
+            ],
+        })
+
+        # Self-billed invoices must use the number given by the supplier.
+        if vals['document_type_code'] in ('11', '12', '13', '14') and vals['document_ref']:
+            document_node['cbc:ID']['_text'] = vals['document_ref']
+
+    def _add_myinvois_document_accounting_supplier_party_nodes(self, document_node, vals):
+        document_node['cac:AccountingSupplierParty'] = {
+            'cac:Party': self._get_myinvois_document_party_node({**vals, 'partner': vals['supplier'], 'role': 'supplier'}),
+        }
+
+    def _add_myinvois_document_accounting_customer_party_nodes(self, document_node, vals):
+        document_node['cac:AccountingCustomerParty'] = {
+            'cac:Party': self._get_myinvois_document_party_node({**vals, 'partner': vals['customer'], 'role': 'customer'}),
+        }
+
+    def _add_myinvois_document_delivery_nodes(self, document_node, vals):
+        document_node['cac:Delivery'] = {
+            'cac:DeliveryParty': self._get_myinvois_document_party_node({**vals, 'partner': vals['customer'], 'role': 'delivery'}),
+        }
+
+    def _add_myinvois_document_payment_terms_nodes(self, document_node, vals):
+        if vals['invoice_payment_term_id']:
+            document_node['cac:PaymentTerms'] = {
+                # The payment term's note is automatically embedded in a <p> tag in Odoo
+                'cbc:Note': {'_text': html2plaintext(vals['invoice_payment_term_id'].note)}
+            }
+
+    def _add_myinvois_document_exchange_rate_nodes(self, document_node, vals):
+        if vals['currency_id'].name != 'MYR':
+            # I couldn't find any information on maximum precision, so we will use the currency format.
+            total_amount_in_company_currency = total_amount_in_currency = 0.0
+            for base_line in vals['base_lines']:
+                total_amount_in_company_currency += base_line['tax_details']['raw_total_included']
+                total_amount_in_currency += base_line['tax_details']['raw_total_included_currency']
+            # We recalculate the rate so that it works in any cases, even when using consolidated invoices.
+            rate = self.env.ref('base.MYR').round(abs(total_amount_in_company_currency) / (total_amount_in_currency or 1))
+            # Exchange rate information must be provided if applicable
+            document_node['cac:TaxExchangeRate'] = {
+                'cbc:SourceCurrencyCode': {'_text': vals['currency_id'].name},
+                'cbc:TargetCurrencyCode': {'_text': 'MYR'},
+                'cbc:CalculationRate': {'_text': rate},
+            }
+
+    def _add_myinvois_document_monetary_total_nodes(self, document_node, vals):
+        self._add_document_monetary_total_nodes(document_node, vals)
+        currency_suffix = vals['currency_suffix']
+
+        amount_paid = vals[f'total_paid_amount{currency_suffix}']
+        if amount_paid:
+            document_node['cac:PrepaidPayment'] = {
+                'cbc:PaidAmount': {
+                    '_text': self.format_float(amount_paid, vals['currency_dp']),
+                    'currencyID': vals['currency_name'],
+                },
+            }
+        monetary_total_tag = self._get_tags_for_document_type(vals)['monetary_total']
+        payable_amount = self.format_float(vals[f'tax_inclusive_amount{currency_suffix}'] - amount_paid, vals['currency_dp'])
+        document_node[monetary_total_tag]['cbc:PayableAmount']['_text'] = payable_amount
+
+    def _add_myinvois_document_line_nodes(self, document_node, vals):
+        line_idx = 1
+
+        line_tag = self._get_tags_for_document_type(vals)['document_line']
+        document_node[line_tag] = line_nodes = []
+        for base_line in vals['base_lines']:
+            if not self._is_document_allowance_charge(base_line):
+                line_vals = {
+                    **vals,
+                    'line_idx': line_idx,
+                    'base_line': base_line,
+                }
+                line_node = self._get_myinvois_document_line_node(line_vals)
+                line_nodes.append(line_node)
+                line_idx += 1
+
+    def _get_myinvois_document_line_node(self, vals):
+        self._add_myinvois_document_line_vals(vals)
+
+        line_node = {}
+        self._add_document_line_id_nodes(line_node, vals)
+        self._add_document_line_id_nodes(line_node, vals)
+        self._add_myinvois_document_line_amount_nodes(line_node, vals)
+        self._add_document_line_allowance_charge_nodes(line_node, vals)
+        self._add_document_line_tax_total_nodes(line_node, vals)
+        self._add_myinvois_document_line_item_nodes(line_node, vals)
+        self._add_document_line_tax_category_nodes(line_node, vals)
+        self._add_document_line_price_nodes(line_node, vals)
+        return line_node
+
+    def _add_myinvois_document_line_vals(self, vals):
+        """ Generic helper to calculate the amounts for a document line. """
+        self._add_document_line_total_vals(vals)
+        self._add_myinvois_document_line_gross_subtotal_and_discount_vals(vals)
+
+    def _add_myinvois_document_line_gross_subtotal_and_discount_vals(self, vals):
+        """
+        As we group lines together when consolidating, we lose the discount percentage in the process.
+        During the grouping, we stored the actual amount in the base line, se we will override here in order to use that
+        pre-computed amount.
+        """
+        self._add_document_line_gross_subtotal_and_discount_vals(vals)
+        myinvois_document = vals["myinvois_document"]
+        if myinvois_document._is_consolidated_invoice():
+            base_line = vals['base_line']
+
+            for currency_suffix in ['', '_currency']:
+                discount_amount = base_line[f'discount_amount{currency_suffix}']
+
+                vals[f'discount_amount{currency_suffix}'] = discount_amount
+                vals[f'gross_price_unit{currency_suffix}'] += discount_amount  # Price unit should be excluding discounts.
+
+    def _add_myinvois_document_line_amount_nodes(self, line_node, vals):
+        super()._add_document_line_amount_nodes(line_node, vals)
 
         base_line = vals['base_line']
         line_node['cac:ItemPriceExtension'] = {
@@ -324,12 +488,29 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             }
         }
 
-    def _add_invoice_line_item_nodes(self, line_node, vals):
-        super()._add_invoice_line_item_nodes(line_node, vals)
+    def _add_myinvois_document_line_item_nodes(self, line_node, vals):
+        self._add_document_line_item_nodes(line_node, vals)
 
-        base_line = vals['base_line']
-        class_code = base_line['record'].l10n_my_edi_classification_code or \
-                     base_line['record'].product_id.product_tmpl_id.l10n_my_edi_classification_code
+        record = vals['base_line']['record']
+        if record and record.name:
+            line_name = record.name and record.name.replace('\n', ' ')
+        else:
+            line_name = vals['base_line']['line_name']
+        if line_name:
+            line_node['cac:Item']['cbc:Description']['_text'] = line_name
+            if not line_node['cac:Item']['cbc:Name']['_text']:
+                line_node['cac:Item']['cbc:Name']['_text'] = line_name
+
+        # When the invoice is sent for the general public (refunding an order in a consolidated invoice/...) the item code
+        # must be fixed to 004 (consolidated invoice) even if the product has something else set.
+        myinvois_document = vals['myinvois_document']
+        if myinvois_document._is_consolidated_invoice() or myinvois_document._is_consolidated_invoice_refund():
+            class_code = '004'
+        else:
+            base_line = vals['base_line']
+            class_code = base_line['record'].l10n_my_edi_classification_code or \
+                         base_line['record'].product_id.product_tmpl_id.l10n_my_edi_classification_code
+
         if class_code:
             line_node['cac:Item']['cac:CommodityClassification'] = {
                 'cbc:ItemClassificationCode': {
@@ -342,17 +523,15 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
     # EXPORT: Constraints
     # -------------------------------------------------------------------------
 
-    def _export_invoice_constraints(self, invoice, vals):
-        # EXTENDS 'account_edi_ubl_cii'
-        constraints = super()._export_invoice_constraints(invoice, vals)
+    def _export_myinvois_document_constraints(self, vals):
+        constraints = {
+            'myinvois_supplier_name_required': self._check_required_fields(vals['supplier'], 'name'),
+            'myinvois_customer_name_required': self._check_required_fields(vals['customer'].commercial_partner_id, 'name'),
+            'myinvois_document_name_required': self._check_required_fields(vals, 'document_name'),
+        }
 
-        # In malaysia, tax on good is paid at the manufacturer level. It is thus common to invoice without taxes,
-        # unless invoicing for a service.
-        constraints.pop('tax_on_line', '')
-        constraints.pop('cen_en16931_tax_line', '')
-
-        if not invoice.company_id.l10n_my_edi_industrial_classification:
-            self._l10n_my_edi_make_validation_error(constraints, 'industrial_classification_required', 'company', invoice.company_id.display_name)
+        if not vals['supplier'].commercial_partner_id.l10n_my_edi_industrial_classification:
+            self._l10n_my_edi_make_validation_error(constraints, 'industrial_classification_required', 'supplier', vals['supplier'].display_name)
 
         for partner_type in ('supplier', 'customer'):
             partner = vals[partner_type]
@@ -381,124 +560,138 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             if partner.commercial_partner_id.sst_registration_number and len(partner.commercial_partner_id.sst_registration_number.split(';')) > 2:
                 self._l10n_my_edi_make_validation_error(constraints, 'too_many_sst', partner_type, partner.commercial_partner_id.display_name)
 
-        for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_subsection', 'line_note')):
-            if (not line.product_id or not line.product_id.product_tmpl_id.l10n_my_edi_classification_code) and not line.l10n_my_edi_classification_code:
-                self._l10n_my_edi_make_validation_error(constraints, 'class_code_required', line.id, line.display_name)
-            if not line.tax_ids:
-                self._l10n_my_edi_make_validation_error(constraints, 'tax_ids_required', line.id, line.display_name)
-            elif any(tax.l10n_my_tax_type == 'E' for tax in line.tax_ids) and not invoice.l10n_my_edi_exemption_reason:
-                self._l10n_my_edi_make_validation_error(constraints, 'tax_exemption_required', invoice.id, invoice.display_name)
+        for line_vals in vals['document_node']['cac:InvoiceLine']:
+            line_item = line_vals['cac:Item']
+            if 'cac:CommodityClassification' not in line_item:
+                self._l10n_my_edi_make_validation_error(constraints, 'class_code_required', line_vals['cbc:ID']['_text'], line_item['cbc:Name']['_text'])
+            if 'cac:ClassifiedTaxCategory' not in line_item:
+                self._l10n_my_edi_make_validation_error(constraints, 'tax_ids_required', line_vals['cbc:ID']['_text'], line_item['cbc:Name']['_text'])
+            for tax_category in line_item['cac:ClassifiedTaxCategory']:
+                if tax_category['cbc:ID']['_text'] == 'E' and not tax_category['cbc:TaxExemptionReason']['_text']:
+                    self._l10n_my_edi_make_validation_error(constraints, 'tax_exemption_required', line_vals['cbc:ID']['_text'], line_item['cbc:Name']['_text'])
+
+            myinvois_document = vals["myinvois_document"]
+            if myinvois_document._is_consolidated_invoice() or myinvois_document._is_consolidated_invoice_refund():
+                customer_vat = vals['document_node']['cac:AccountingCustomerParty']['cac:Party']['cac:PartyIdentification'][0]['cbc:ID']['_text']
+                if customer_vat != 'EI00000000010':
+                    self._l10n_my_edi_make_validation_error(constraints, 'missing_general_public', vals['customer'].id, vals['customer'].name)
 
         return constraints
 
-    # -------------------------------------------------------------------------
-    # IMPORT
-    # -------------------------------------------------------------------------
-
-    def _import_retrieve_partner_vals(self, tree, role):
-        """ Returns a dict of values that will be used to retrieve the partner """
-        # EXTENDS 'account_edi_ubl_cii'
-        vals = super()._import_retrieve_partner_vals(tree, role)
-        # We invert the country map to get the country code.
-        country_map = {v: k for k, v in COUNTRY_CODE_MAP.items()}
-        # We can't use _find_value for the identifier since we need to get the attribute.
-        vals.update({
-            # Update some values to be correct.
-            'vat': self._find_value(f'.//cac:Accounting{role}Party/cac:Party/cac:PartyIdentification/cbc:ID[@schemeID="TIN"]', tree),
-            'country_code': country_map.get(self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree)),
-            'name': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:RegistrationName', tree),
-            # And add new ones that are expected.
-            'sst': self._find_value(f'.//cac:Accounting{role}Party/cac:Party/cac:PartyIdentification/cbc:ID[@schemeID="SST"]', tree),
-            'ttx': self._find_value(f'.//cac:Accounting{role}Party/cac:Party/cac:PartyIdentification/cbc:ID[@schemeID="TTX"]', tree),
-        })
-
-        identifier = tree.xpath(f'.//cac:Accounting{role}Party/cac:Party/cac:PartyIdentification/cbc:ID[@schemeID="NRIC" or @schemeID="PASSPORT" or @schemeID="BRN" or @schemeID="ARMY"]', namespaces=UBL_NAMESPACES)
-        if identifier:  # Technically it's required, but to be safe...
-            vals.update({
-                'id_type': identifier[0].attrib['schemeID'],
-                'id_val': identifier[0].text,
-            })
-
-        return vals
-
-    def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat, country_code, id_type, id_val, sst=False, ttx=False):
-        """ In addition to the basic values, we need to fill the identifiers of the partner and eventual tax codes. """
-        # OVERRIDE 'account_edi_ubl_cii'
-
-        # I consider that the standard _retrieve_partner should be enough to match.
-        invoice.partner_id = self.env['res.partner'].with_company(invoice.company_id)._retrieve_partner(name=name, phone=phone, mail=mail, vat=vat)
-
-        if not invoice.partner_id and name and vat:
-            partner_vals = {
-                'name': name,
-                'email': mail,
-                'phone': phone,
-                'sst_registration_number': sst,
-                'ttx_registration_number': ttx,
-                'l10n_my_identification_type': id_type,
-                'l10n_my_identification_number': id_val,
-            }
-            country = self.env.ref(f'base.{country_code.lower()}', raise_if_not_found=False)
-            if country:
-                partner_vals['country_id'] = country.id
-            invoice.partner_id = self.env['res.partner'].create(partner_vals)
-            invoice.partner_id.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
-
-    def _import_fill_invoice_form(self, invoice, tree, qty_factor):
-        # EXTENDS 'account_edi_ubl_cii'
-        logs = super()._import_fill_invoice_form(invoice, tree, qty_factor)
-        # We get the incoterm
-        incoterm_code = self._find_value('./cac:AdditionalDocumentReference[not(descendant::cbc:DocumentType)]/cbc:ID', tree)
-        if incoterm_code is not None:
-            invoice.invoice_incoterm_id = self.env['account.incoterms'].search([('code', '=', incoterm_code)], limit=1)
-        custom_form_ref = self._find_value('./cac:AdditionalDocumentReference[descendant::cbc:DocumentType[text()="CustomsImportForm"]]/cbc:ID', tree)
-        invoice.l10n_my_edi_custom_form_reference = custom_form_ref
-
-        # So that we can find the original invoice in case of debit/credit note.
-        invoice_type = self._find_value('./cbc:InvoiceTypeCode', tree)
-        origin_uuid = self._find_value('.//cac:InvoiceDocumentReference[descendant::cbc:ID[text()="Document Internal ID"]]/cbc:UUID', tree)
-        if invoice_type == '02':
-            invoice.reversed_entry_id = self.env['account.move'].search([('l10n_my_edi_external_uuid', '=', origin_uuid)], limit=1)
-        elif invoice_type == '03' and 'debit_origin_id' in self.env['account.move']._fields:
-            invoice.debit_origin_id = self.env['account.move'].search([('l10n_my_edi_external_uuid', '=', origin_uuid)], limit=1)
-        return logs
-
-    # ----------------
-    # Business methods
-    # ----------------
-
     @api.model
-    def _l10n_my_edi_get_document_type_code(self, invoice):
-        """ Returns the code matching the invoice type, as well as the original document if any. """
-        if 'debit_origin_id' in self.env['account.move']._fields and invoice.debit_origin_id:
-            code = '03' if invoice.move_type == 'out_invoice' else '13'
-            return code, invoice.debit_origin_id
-        elif invoice.move_type in ('out_refund', 'in_refund'):
-            # We consider a credit note a refund if it is paid and fully reconciled with a payment or bank transaction.
-            payment_terms = invoice.line_ids.filtered(lambda aml: aml.display_type == 'payment_term')
-            counterpart_amls = payment_terms.matched_debit_ids.debit_move_id + payment_terms.matched_credit_ids.credit_move_id
-            counterpart_move_type = 'out_invoice' if invoice.move_type == 'out_refund' else 'out_refund'
-            has_payments = bool(counterpart_amls.move_id.filtered(lambda move: move.move_type != counterpart_move_type))
-            is_paid = invoice.payment_state in ('in_payment', 'paid', 'reversed')
-            if is_paid and has_payments:
-                code = '04' if invoice.move_type == 'out_refund' else '14'
-            else:
-                code = '02' if invoice.move_type == 'out_refund' else '12'
-
-            return code, invoice.reversed_entry_id
-        else:
-            code = '01' if invoice.move_type == 'out_invoice' else '11'
-            return code, None
-
-    @api.model
-    def _l10n_my_edi_get_tax_exchange_rate(self, invoice):
-        """ Returns the tax exchange rate if applicable. We will compute it based on the invoice totals.
-        This should be the rate to convert a foreign currency into MYR.
+    def _l10n_my_edi_make_validation_error(self, constraints, code, record_identifier, record_name):
+        """ Small helper that add new constrains into provided constrains dict.
+        This helper is mainly there to keep the check method tidy, and focused on its purpose (validating data)
         """
-        if invoice.currency_id.name != "MYR":
-            # I couldn't find any information on maximum precision, so we will use the currency format.
-            return self.env.ref('base.MYR').round(abs(invoice.amount_total_signed) / (invoice.amount_total or 1))
-        return ''
+        message_mapping = {
+            'industrial_classification_required': self.env._(
+                "The industrial classification must be defined on company: %(company_name)s",
+                company_name=record_name
+            ),
+            'phone_number_format': self.env._(
+                "The following partner's phone number should follow the E.164 format: %(partner_name)s",
+                partner_name=record_name
+            ),
+            'phone_number_required': self.env._(
+                "The following partner's phone number is missing: %(partner_name)s",
+                partner_name=record_name
+            ),
+            'required_id': self.env._(
+                "The following partner's identification type or number is missing: %(partner_name)s",
+                partner_name=record_name
+            ),
+            'no_state': self.env._(
+                "The following partner's state is missing: %(partner_name)s",
+                partner_name=record_name
+            ),
+            'no_city': self.env._(
+                "The following partner's city is missing: %(partner_name)s",
+                partner_name=record_name
+            ),
+            'no_country': self.env._(
+                "The following partner's country is missing: %(partner_name)s",
+                partner_name=record_name
+            ),
+            'no_street': self.env._(
+                "The following partner's street is missing: %(partner_name)s",
+                partner_name=record_name
+            ),
+            'class_code_required': self.env._(
+                "You must set a classification code either on the line itself or on the product of line: %(line_name)s",
+                line_name=record_name
+            ),
+            'adjustment_origin': self.env._(
+                "You cannot send a debit / credit note for invoice %(invoice_number)s as it has not yet been sent to MyInvois.",
+                invoice_number=record_name
+            ),
+            'too_many_sst': self.env._(
+                "The following partner's should have at most two SST numbers, separated by a semicolon : %(partner_name)s",
+                partner_name=record_name
+            ),
+            'tax_ids_required': self.env._(
+                "You must set a tax on the line : %(line_name)s.\nIf taxes are not applicable, please set a 0%% tax with a tax type 'Not Applicable'.",
+                line_name=record_name
+            ),
+            'tax_exemption_required': self.env._(
+                "You must set a Tax Exemption Reason on the invoice : %(invoice_name)s as some taxes have the type 'Tax exemption' without a reason set.",
+                invoice_name=record_name
+            ),
+            'tax_exemption_required_on_tax': self.env._(
+                "You must set a Tax Exemption Reason on each tax exempt taxes in order to use them in a Myinvois Document.",
+            ),
+            'missing_general_public': self.env._(
+                "You must have a commercial partner named 'General Public' with a VAT number set to 'EI00000000010' in order to proceed.",
+            ),
+        }
+
+        constraints[f'myinvois_{record_identifier}_{code}'] = message_mapping[code]
+
+    # ----------------
+    # EXPORT: Business methods
+    # ----------------
+
+    @api.model
+    def _l10n_my_edi_get_document_type_code(self, myinvois_document):
+        """ Returns the code matching the invoice type, as well as the original document if any. """
+        document_type_code = '01'
+        original_document = None
+
+        if not myinvois_document._is_consolidated_invoice():
+            invoice = myinvois_document.invoice_ids[0]  # Otherwise it would be a consolidated invoice.
+            if 'debit_origin_id' in self.env['account.move']._fields and invoice.debit_origin_id:
+                document_type_code = '03' if invoice.move_type == 'out_invoice' else '13'
+                original_document = invoice.debit_origin_id._get_active_myinvois_document()
+            elif invoice.move_type in ('out_refund', 'in_refund'):
+                is_refund, refunded_document = self._l10n_my_edi_get_refund_details(invoice)
+                if is_refund:
+                    document_type_code = '04' if invoice.move_type == 'out_refund' else '14'
+                else:
+                    document_type_code = '02' if invoice.move_type == 'out_refund' else '12'
+
+                original_document = refunded_document
+            else:
+                document_type_code = '01' if invoice.move_type == 'out_invoice' else '11'
+
+        return document_type_code, original_document  # Consolidated invoices are fixed to '01'
+
+    @api.model
+    def _l10n_my_edi_get_refund_details(self, invoice):
+        """
+        Helper which returns the refunded document in case of out_refund/in_refund.
+        In some cases, such as PoS, we could need a different logic than from the regular flow.
+        :param invoice: The credit note for which we want to get the refunded document.
+        :return: A tuple, where the first parameter indicates if this credit note is a refund and the second the credited/refunded document.
+        """
+        # We consider a credit note a refund if it is paid and fully reconciled with a payment or bank transaction.
+        payment_terms = invoice.line_ids.filtered(lambda aml: aml.display_type == 'payment_term')
+        counterpart_amls = payment_terms.reconciled_lines_ids
+        counterpart_move_type = 'out_invoice' if invoice.move_type == 'out_refund' else 'in_invoice'
+        has_payments = bool(counterpart_amls.move_id.filtered(lambda move: move.move_type != counterpart_move_type))
+        is_paid = invoice.payment_state in ('in_payment', 'paid', 'reversed')
+
+        refunded_document = invoice.reversed_entry_id._get_active_myinvois_document()
+        is_refund = is_paid and has_payments
+        return is_refund, refunded_document
 
     @api.model
     def _l10n_my_edi_get_formatted_phone_number(self, number):
@@ -507,71 +700,3 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         if not number:
             return ''  # This wouldn't happen in the file as it's caught in the validation errors, but the vals are exported before these checks are done.
         return number.replace(' ', '').replace('(', '').replace(')', '').replace('-', '')
-
-    @api.model
-    def _l10n_my_edi_make_validation_error(self, constraints, code, record_identifier, record_name):
-        """ Small helper that add new constrains into provided constrains dict.
-        This helper is mainly there to keep the check method tidy, and focused on its purpose (validating data)
-        """
-        message_mapping = {
-            'industrial_classification_required': _(
-                "The industrial classification must be defined on company: %(company_name)s",
-                company_name=record_name
-            ),
-            'phone_number_format': _(
-                "The following partner's phone number should follow the E.164 format: %(partner_name)s",
-                partner_name=record_name
-            ),
-            'phone_number_required': _(
-                "The following partner's phone number is missing: %(partner_name)s",
-                partner_name=record_name)
-            ,
-            'required_id': _(
-                "The following partner's identification type or number is missing: %(partner_name)s",
-                partner_name=record_name
-            ),
-            'no_state': _(
-                "The following partner's state is missing: %(partner_name)s",
-                partner_name=record_name
-            ),
-            'no_city': _(
-                "The following partner's city is missing: %(partner_name)s",
-                partner_name=record_name
-            ),
-            'no_country': _(
-                "The following partner's country is missing: %(partner_name)s",
-                partner_name=record_name
-            ),
-            'no_street': _(
-                "The following partner's street is missing: %(partner_name)s",
-                partner_name=record_name
-            ),
-            'class_code_required': _(
-                "You must set a classification code either on the line itself or on the product of line: %(line_name)s",
-                line_name=record_name
-            ),
-            'adjustment_origin': _(
-                "You cannot send a debit / credit note for invoice %(invoice_number)s as it has not yet been sent to MyInvois.",
-                invoice_number=record_name
-            ),
-            'too_many_sst': _(
-                "The following partner's should have at most two SST numbers, separated by a semicolon : %(partner_name)s",
-                partner_name=record_name
-            ),
-            'tax_ids_required': _(
-                "You must set a tax on the line : %(line_name)s.\nIf taxes are not applicable, please set a 0%% tax with a tax type 'Not Applicable'.",
-                line_name=record_name
-            ),
-            'tax_exemption_required': _(
-                "You must set a Tax Exemption Reason on the invoice : %(invoice_name)s as some taxes have the type 'Tax exemption' without a reason set.",
-                invoice_name=record_name
-            ),
-            'tax_exemption_required_on_tax': _(
-                "You must set a Tax Exemption Reason on each tax exempt taxes in order to use them in a Myinvois Document.",
-            ),
-            'missing_general_public': _(
-                "You must have a commercial partner named 'General Public' with a VAT number set to 'EI00000000010' in order to proceed.",
-            ),
-        }
-
-        constraints[f'myinvois_{record_identifier}_{code}'] = message_mapping[code]
