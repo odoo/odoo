@@ -5,7 +5,7 @@ import { convertCSSColorToRgba } from "@web/core/utils/colors";
 
 export class ImageHoverPlugin extends Plugin {
     static id = "imageHover";
-    static shared = ["setHoverEffect"];
+    static shared = ["setHoverEffect", "removeHoverEffect"];
     static dependencies = ["imagePostProcess"];
     resources = {
         builder_actions: {
@@ -164,6 +164,18 @@ export class ImageHoverPlugin extends Plugin {
         const updateAttributes = await this.dependencies.imagePostProcess.processImage({
             img: imgEl,
             newDataset: newData,
+        });
+        updateAttributes();
+    }
+    async removeHoverEffect(imgEl) {
+        const updateAttributes = await this.dependencies.imagePostProcess.processImage({
+            img: imgEl,
+            newDataset: {
+                hoverEffect: undefined,
+                hoverEffectColor: undefined,
+                hoverEffectStrokeWidth: undefined,
+                hoverEffectIntensity: undefined,
+            },
         });
         updateAttributes();
     }

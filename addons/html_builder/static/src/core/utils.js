@@ -267,7 +267,7 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
     useBus(env.editorBus, "DOM_UPDATED", refreshCurrentItem);
     function cleanSelectedItem(...args) {
         if (state.currentSelectedItem) {
-            state.currentSelectedItem.clean(...args);
+            return state.currentSelectedItem.clean(...args);
         }
     }
 
@@ -513,37 +513,45 @@ export function useClickableBuilderComponent() {
     }
 
     function clean(nextApplySpecs, isPreviewing) {
+        const proms = [];
         for (const { actionId, actionParam, actionValue } of getAllActions()) {
             for (const editingElement of comp.env.getEditingElements()) {
                 let nextAction;
-                getAction(actionId).clean?.({
-                    isPreviewing,
-                    editingElement,
-                    params: actionParam,
-                    value: actionValue,
-                    dependencyManager: comp.env.dependencyManager,
-                    selectableContext: comp.env.selectableContext,
-                    get nextAction() {
-                        nextAction =
-                            nextAction || nextApplySpecs.find((a) => a.actionId === actionId) || {};
-                        return {
-                            params: nextAction.actionParam,
-                            value: nextAction.actionValue,
-                        };
-                    },
-                });
+                proms.push(
+                    getAction(actionId).clean?.({
+                        isPreviewing,
+                        editingElement,
+                        params: actionParam,
+                        value: actionValue,
+                        dependencyManager: comp.env.dependencyManager,
+                        selectableContext: comp.env.selectableContext,
+                        get nextAction() {
+                            nextAction =
+                                nextAction ||
+                                nextApplySpecs.find((a) => a.actionId === actionId) ||
+                                {};
+                            return {
+                                params: nextAction.actionParam,
+                                value: nextAction.actionValue,
+                            };
+                        },
+                    })
+                );
             }
         }
+        return Promise.all(proms);
     }
 
     async function callApply(applySpecs, isPreviewing) {
-        comp.env.selectableContext?.cleanSelectedItem(applySpecs, isPreviewing);
+        await comp.env.selectableContext?.cleanSelectedItem(applySpecs, isPreviewing);
         const cleans = inheritedActionIds
             .map((actionId) => comp.env.dependencyManager.get(actionId).cleanSelectedItem)
             .filter(Boolean);
+        const cleanPromises = [];
         for (const clean of new Set(cleans)) {
-            clean(applySpecs, isPreviewing);
+            cleanPromises.push(clean(applySpecs, isPreviewing));
         }
+        await Promise.all(cleanPromises);
         const proms = [];
         const isAlreadyApplied = isApplied();
         for (const applySpec of applySpecs) {

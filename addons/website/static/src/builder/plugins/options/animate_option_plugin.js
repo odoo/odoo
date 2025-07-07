@@ -351,7 +351,7 @@ export class SetAnimationModeAction extends BuilderAction {
     isApplied() {
         return true;
     }
-    clean({ editingElement, value: effectName, nextAction }) {
+    async clean({ editingElement, value: effectName, nextAction }) {
         this.scrollingElement.classList.remove("o_wanim_overflow_xy_hidden");
         editingElement.classList.remove(
             "o_animating",
@@ -370,10 +370,7 @@ export class SetAnimationModeAction extends BuilderAction {
             delete editingElement.dataset.scrollZoneEnd;
         }
         if (effectName === "onHover") {
-            delete editingElement.dataset.hoverEffect;
-            delete editingElement.dataset.hoverEffectColor;
-            delete editingElement.dataset.hoverEffectStrokeWidth;
-            delete editingElement.dataset.hoverEffectIntensity;
+            await this.dependencies.imageHover.removeHoverEffect(editingElement);
         }
 
         const isNextAnimationFadein = this.animationWithFadein.includes(nextAction.value);
@@ -395,18 +392,9 @@ export class SetAnimationModeAction extends BuilderAction {
         }
         if (effectName === "onHover") {
             await this.dependencies.imageHover.setHoverEffect(editingElement);
-            // todo: to implement
-            // Pause the history until the hover effect is applied in
-            // "setImgShapeHoverEffect". This prevents saving the intermediate
-            // steps done (in a tricky way) up to that point.
-            // this.options.wysiwyg.odooEditor.historyPauseSteps();
-            // this.trigger_up("option_update", {
-            //     optionName: "ImageTools",
-            //     name: "enable_hover_effect",
-            // });
         }
         if (forceAnimation) {
-            this.forceAnimation(editingElement);
+            this.dependencies.animateOption.forceAnimation(editingElement);
         }
     }
     /**
