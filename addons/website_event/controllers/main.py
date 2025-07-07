@@ -41,7 +41,16 @@ class WebsiteEventController(http.Controller):
             'country': post.get('country'),
         }
 
-    @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>', '/event/tags/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=sitemap_event)
+    @http.route([
+        path
+        for base in ('event', 'events')
+        for path in [
+            f'/{base}',
+            f'/{base}/page/<int:page>',
+            f'/{base}/tags/<string:slug_tags>',
+            f'/{base}/tags/<string:slug_tags>/page/<int:page>',
+        ]
+    ], type='http', auth="public", website=True, sitemap=sitemap_event)
     def events(self, page=1, slug_tags=None, **searches):
         if (slug_tags or searches.get('tags', '[]').count(',') > 0) and request.httprequest.method == 'GET' and not searches.get('prevent_redirect'):
             # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
@@ -113,7 +122,7 @@ class WebsiteEventController(http.Controller):
             current_country = request.env['res.country'].browse(int(searches['country']))
 
         pager = website.pager(
-            url="/event",
+            url=f"/event/tags/{slug_tags}" if slug_tags else "/event",
             url_args=searches,
             total=event_count,
             page=page,
