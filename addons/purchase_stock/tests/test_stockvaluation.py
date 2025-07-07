@@ -3746,3 +3746,24 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 {'account_id': account_payable_account.id,   'debit': 0.0,      'credit': 1380.0},
             ]
         )
+
+    def test_100_percent_discount(self):
+        product = self.product_a
+        product.categ_id.write({'property_cost_method': 'average', 'property_valuation': 'real_time'})
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 2,
+                'discount': 100,
+            })],
+        })
+        purchase_order.button_confirm()
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+        svls = self.env['stock.valuation.layer'].search([])
+        self.assertRecordValues(svls, [{'value': 0, 'quantity': 2}])
