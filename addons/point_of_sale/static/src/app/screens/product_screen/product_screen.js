@@ -13,6 +13,7 @@ import {
     Numpad,
     getButtons,
     DEFAULT_LAST_ROW,
+    SWITCHSIGN,
 } from "@point_of_sale/app/components/numpad/numpad";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
@@ -160,6 +161,9 @@ export class ProductScreen extends Component {
             BACKSPACE,
         ]).map((button) => ({
             ...button,
+            disabled:
+                button.disabled ||
+                (button.value === SWITCHSIGN.value && this.pos.cashier._role === "minimal"),
             class: `
                 ${defaultLastRowValues.includes(button.value) ? "" : ""}
                 ${colorClassMap[button.value] || ""}
