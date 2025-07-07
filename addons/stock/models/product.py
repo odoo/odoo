@@ -176,7 +176,7 @@ class Product(models.Model):
         if dates_in_the_past:
             # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
             domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
-            domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
+            domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date), ('location_dest_usage', '!=', 'internal')] + domain_move_out_done
 
             groupby = ['product_id', 'product_uom']
             moves_in_res_past = defaultdict(float)
