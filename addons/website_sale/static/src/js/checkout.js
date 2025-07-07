@@ -158,12 +158,14 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      * @return {void}
      */
     async _selectPickupLocation(ev) {
-        const { zipCode, locationId } = ev.currentTarget.dataset;
+        const { zipCode, countryCode, locationId, carrierId } = ev.currentTarget.dataset;
         const deliveryMethodContainer = this._getDeliveryMethodContainer(ev.currentTarget);
         this.call('dialog', 'add', LocationSelectorDialog, {
             zipCode: zipCode,
+            countryCode: countryCode,
             selectedLocationId: locationId,
             isFrontend: true,
+            carrierId: parseInt(carrierId),
             save: async location => {
                 const jsonLocation = JSON.stringify(location);
                 // Assign the selected pickup location to the order.
@@ -197,6 +199,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         const editPickupLocationButton = pickupLocation.querySelector(
             'span[name="o_pickup_location_selector"]'
         );
+        editPickupLocationButton.dataset.countryCode = location.country_code;
         editPickupLocationButton.dataset.locationId = location.id;
         editPickupLocationButton.dataset.zipCode = location.zip_code;
         editPickupLocationButton.dataset.pickupLocationData = jsonLocation;
@@ -454,12 +457,20 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
                 this._enableMainButton();
             }
         }
-        // Asynchronously fetch delivery rates to mitigate delays from third-party APIs
         await Promise.all(this.dmRadios.filter(radio => !radio.checked).map(async radio => {
-            this._showLoadingBadge((radio));
-            const rateData = await this._getDeliveryRate(radio);
-            this._updateAmountBadge(radio, rateData);
+            await this._updateDeliveryRate(radio)
         }));
+    },
+
+    /**
+     * Asynchronously fetch delivery rates to mitigate delays from third-party APIs
+     *
+     * @param {Element} radio
+     */
+    async _updateDeliveryRate(radio){
+        this._showLoadingBadge((radio));
+        const rateData = await this._getDeliveryRate(radio);
+        this._updateAmountBadge(radio, rateData);
     },
 
     /**
@@ -525,14 +536,24 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
     },
 
     /**
-     * Set the pickup location on the order.
+     * Set the pickup location on the order and update the cart in case the fiscal position changed.
      *
      * @private
      * @param {String} pickupLocationData - The pickup location's data to set.
      * @return {void}
      */
     async _setPickupLocation(pickupLocationData) {
-        await rpc('/website_sale/set_pickup_location', {pickup_location_data: pickupLocationData});
+        let result = await rpc(
+            '/website_sale/set_pickup_location',
+            { pickup_location_data: pickupLocationData }
+        );
+        // Delivery rates are calculated based on location's country, so it needs to be recalculated
+        // in case rates are different for another country.
+        await Promise.all(this.dmRadios.filter(radio => radio.checked).map(async radio => {
+            await this._updateDeliveryRate(radio)
+        }));
+
+        this._updateCartSummary(result);
     },
 
     // #=== GETTERS & SETTERS ===#

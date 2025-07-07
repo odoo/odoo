@@ -17,6 +17,8 @@ export class ClickAndCollectAvailability extends Component {
         inStoreStockData: { type: Object, optional: true },
         deliveryStockData: { type: Object, optional: true},
         showSelectStoreButton: { type: Boolean, optional: true },
+        countryCode: { type: String, optional: true },
+        carrierId: Number,
     }
     static defaultProps = {
         active: true,
@@ -56,13 +58,15 @@ export class ClickAndCollectAvailability extends Component {
      * @return {void}
      */
     async openLocationSelector() {
-        const { zip_code, id } = this.state.selectedLocationData;
+        const { zip_code, country_code, id } = this.state.selectedLocationData;
         this.dialog.add(LocationSelectorDialog, {
             isProductPage: true,
             isFrontend: true,
             productId: this.state.productId,
             zipCode: zip_code || this.props.zipCode,
             selectedLocationId: String(id),
+            countryCode: country_code || this.props.countryCode,
+            carrierId: this.props.carrierId,
             save: async location => {
                 this.state.selectedLocationData = location;
                 this.state.inStoreStockData = location.additional_data.in_store_stock_data;

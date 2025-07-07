@@ -17,7 +17,7 @@ class LocationSelectorController(Controller):
         order._set_pickup_location(pickup_location_data)
 
     @route('/delivery/get_pickup_locations', type='jsonrpc', auth='user')
-    def delivery_get_pickup_locations(self, order_id, zip_code=None):
+    def delivery_get_pickup_locations(self, order_id, zip_code=None, country_code=None):
         """ Fetch the order and return the pickup locations close to a given zip code.
 
         Determine the country based on GeoIP or fallback on the order's delivery address' country.
@@ -28,10 +28,14 @@ class LocationSelectorController(Controller):
         :rtype: dict
         """
         order = request.env['sale.order'].browse(order_id)
-        if request.geoip.country_code:
-            country = request.env['res.country'].search(
-                [('code', '=', request.geoip.country_code)], limit=1,
-            )
-        else:
-            country = order.partner_shipping_id.country_id
-        return order._get_pickup_locations(zip_code, country)
+        return order._get_pickup_locations(zip_code, country_code=country_code)
+
+    @route('/delivery/get_delivery_method_countries', type='jsonrpc', auth='public', website=True)
+    def get_delivery_method_countries(self, carrier_id):
+        """ Fetch the countries associated with a delivery carrier.
+
+        :return: The available countries to select from.
+        :rtype: dict
+        """
+        carrier_sudo = request.env['delivery.carrier'].sudo().browse(carrier_id)
+        return carrier_sudo._get_carrier_countries()
