@@ -12,7 +12,7 @@ class BaseSetup(http.Controller):
         if not request.env.user.has_group('base.group_erp_manager'):
             raise AccessError(_("Access Denied"))
 
-        cr = request.cr
+        cr = self.env.cr
         cr.execute("""
             SELECT count(*)
               FROM res_users

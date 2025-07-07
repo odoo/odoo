@@ -37,10 +37,8 @@ class WebsiteForum(WebsiteProfile):
         forum = values.get('forum')
         if forum and forum is not True and not request.env.user._is_public():
             def _get_my_other_forums():
-                post_domain = Domain.OR(
-                    [[('create_uid', '=', request.uid)],
-                     [('favourite_ids', '=', request.uid)]]
-                )
+                post_domain = Domain('create_uid', '=', request.env.uid) \
+                    | Domain('favourite_ids', '=', request.env.uid)
                 return request.env['forum.forum'].search(
                     request.website.website_domain()
                     & Domain('id', '!=', forum.id)
@@ -343,7 +341,7 @@ class WebsiteForum(WebsiteProfile):
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite', type='jsonrpc', auth="user", methods=['POST'], website=True)
     def question_toggle_favorite(self, forum, question, **post):
         favourite = not question.user_favourite
-        question.sudo().favourite_ids = [(favourite and 4 or 3, request.uid)]
+        question.sudo().favourite_ids = [(favourite and 4 or 3, request.env.uid)]
         if favourite:
             # Automatically add the user as follower of the posts that he
             # favorites (on unfavorite we chose to keep him as a follower until
@@ -366,7 +364,7 @@ class WebsiteForum(WebsiteProfile):
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/edit_answer', type='http', auth="user", website=True)
     def question_edit_answer(self, forum, question, **kwargs):
         for record in question.child_ids:
-            if record.create_uid.id == request.uid:
+            if record.create_uid.id == request.env.uid:
                 answer = record
                 break
         else:
@@ -454,7 +452,7 @@ class WebsiteForum(WebsiteProfile):
     def post_toggle_correct(self, forum, post, **kwargs):
         if post.parent_id is False:
             return request.redirect('/')
-        if request.uid == post.create_uid.id:
+        if request.env.uid == post.create_uid.id:
             return {'error': 'own_post'}
 
         # set all answers to False, only one can be accepted
@@ -511,14 +509,14 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/upvote', type='jsonrpc', auth="user", website=True)
     def post_upvote(self, forum, post, **kwargs):
-        if request.uid == post.create_uid.id:
+        if request.env.uid == post.create_uid.id:
             return {'error': 'own_post'}
         upvote = True if not post.user_vote > 0 else False
         return post.vote(upvote=upvote)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/downvote', type='jsonrpc', auth="user", website=True)
     def post_downvote(self, forum, post, **kwargs):
-        if request.uid == post.create_uid.id:
+        if request.env.uid == post.create_uid.id:
             return {'error': 'own_post'}
         upvote = True if post.user_vote < 0 else False
         return post.vote(upvote=upvote)

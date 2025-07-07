@@ -259,10 +259,9 @@ class Web_Editor(http.Controller):
             attachments_to_remove.unlink()
         return removal_blocked_by
 
-
     def _clean_context(self):
         # avoid allowed_company_ids which may erroneously restrict based on website
-        context = dict(request.context)
+        context = dict(request.env.context)
         context.pop('allowed_company_ids', None)
         request.update_env(context=context)
 

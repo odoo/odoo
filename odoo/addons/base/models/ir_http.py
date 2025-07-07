@@ -68,7 +68,7 @@ class ModelConverter(werkzeug.routing.BaseConverter):
 
     def to_python(self, value: str) -> models.BaseModel:
         _uid = RequestUID(value=value, converter=self)
-        env = api.Environment(request.cr, _uid, request.context)
+        env = api.Environment(request.env.cr, _uid, request.env.context)
         return env[self.model].browse(self.unslug(value)[1])
 
     def to_url(self, value: models.BaseModel) -> str:
@@ -84,7 +84,7 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
 
     def to_python(self, value: str) -> models.BaseModel:
         _uid = RequestUID(value=value, converter=self)
-        env = api.Environment(request.cr, _uid, request.context)
+        env = api.Environment(request.env.cr, _uid, request.env.context)
         return env[self.model].browse(int(v) for v in value.split(','))
 
     def to_url(self, value: models.BaseModel) -> str:

@@ -1729,6 +1729,7 @@ class Request:
 
     @property
     def context(self):
+        warnings.warn("Since 19.0, use request.env.context directly", DeprecationWarning, stacklevel=2)
         return self.env.context
 
     @context.setter
@@ -1737,6 +1738,7 @@ class Request:
 
     @property
     def uid(self):
+        warnings.warn("Since 19.0, use request.env.uid directly", DeprecationWarning, stacklevel=2)
         return self.env.uid
 
     @uid.setter
@@ -1745,6 +1747,7 @@ class Request:
 
     @property
     def cr(self):
+        warnings.warn("Since 19.0, use request.env.cr directly", DeprecationWarning, stacklevel=2)
         return self.env.cr
 
     @cr.setter

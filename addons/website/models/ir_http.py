@@ -178,7 +178,7 @@ class IrHttp(models.AbstractModel):
             if website:
                 request.update_env(user=website._get_cached('user_id'))
 
-        if not request.uid:
+        if not request.env.uid:
             super()._auth_method_public()
 
     @classmethod
@@ -236,7 +236,7 @@ class IrHttp(models.AbstractModel):
     def _frontend_pre_dispatch(cls):
         super()._frontend_pre_dispatch()
 
-        if not request.context.get('tz'):
+        if not request.env.context.get('tz'):
             with contextlib.suppress(pytz.UnknownTimeZoneError):
                 request.update_context(tz=pytz.timezone(request.geoip.location.time_zone).zone)
 
@@ -263,7 +263,7 @@ class IrHttp(models.AbstractModel):
             **cls._get_web_editor_context(),
         )
 
-        request.website = website.with_context(request.context)
+        request.website = website.with_context(request.env.context)
 
     @classmethod
     def _post_dispatch(cls, response):
@@ -414,7 +414,7 @@ class IrHttp(models.AbstractModel):
                     )
                     values['view'] = values['view'] and values['view'][0]
         # Needed to show reset template on translated pages (`_prepare_environment` will set it for main lang)
-        values['editable'] = request.uid and request.env.user.has_group('website.group_website_designer')
+        values['editable'] = request.env.uid and request.env.user.has_group('website.group_website_designer')
         return values
 
     @classmethod

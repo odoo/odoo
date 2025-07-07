@@ -140,7 +140,7 @@ class IrHttp(models.AbstractModel):
             for key, val in list(args.items()):
                 if isinstance(val, models.BaseModel):
                     if isinstance(val.env.uid, RequestUID):
-                        args[key] = val = val.with_user(request.uid)
+                        args[key] = val = val.with_user(request.env.uid)
                     if val.env.context.get('lang') != lang.code:
                         args[key] = val = val.with_context(lang=lang.code)
                     if prefetch_langs:
@@ -182,7 +182,7 @@ class IrHttp(models.AbstractModel):
         if url and not url.netloc and not url.scheme and (url.path or force_lang):
             location = werkzeug.urls.url_join(request.httprequest.path, location)
             lang_url_codes = [info.url_code for info in Lang._get_frontend().values()]
-            lang_code = lang_code or request.context['lang']
+            lang_code = lang_code or request.env.context['lang']
             lang_url_code = Lang._get_data(code=lang_code).url_code
             lang_url_code = lang_url_code if lang_url_code in lang_url_codes else lang_code
             if (len(lang_url_codes) > 1 or force_lang) and cls._is_multilang_url(location, lang_url_codes):
@@ -486,7 +486,7 @@ class IrHttp(models.AbstractModel):
             # update the context of "<model(...):...>" args
             for key, val in list(args.items()):
                 if isinstance(val, models.BaseModel):
-                    args[key] = val.with_context(request.context)
+                    args[key] = val.with_context(request.env.context)
 
         if request.is_frontend_multilang:
             # A product with id 1 and named 'egg' is accessible via a
@@ -572,7 +572,7 @@ class IrHttp(models.AbstractModel):
             return response
 
         # minimal setup to serve frontend pages
-        if not request.uid:
+        if not request.env.uid:
             cls._auth_method_public()
         cls._handle_debug()
         cls._frontend_pre_dispatch()
@@ -580,7 +580,7 @@ class IrHttp(models.AbstractModel):
 
         code, values = cls._get_exception_code_values(exception)
 
-        request.cr.rollback()
+        request.env.cr.rollback()
         if code in (404, 403):
             try:
                 response = cls._serve_fallback()
