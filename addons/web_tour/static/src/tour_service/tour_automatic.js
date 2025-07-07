@@ -49,9 +49,6 @@ export class TourAutomatic {
                         } else {
                             console.log(step.describeMe);
                         }
-                        // This delay is important for making the current set of tour tests pass.
-                        // IMPROVEMENT: Find a way to remove this delay.
-                        await new Promise((resolve) => requestAnimationFrame(resolve));
                     },
                 },
                 {
