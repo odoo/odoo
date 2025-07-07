@@ -144,7 +144,7 @@ class MailActivitySchedule(models.TransientModel):
 
             if warnings:
                 warning_header = (
-                    _('The plan "%(plan_name)s" can be launched, with these additional effects:', plan_name=scheduler.plan_id.name) if scheduler.plan_id
+                    _('Some activities have no responsible, assigning to you:') if scheduler.plan_id
                     else _('The activity can be launched, with these additional effects:')
                 )
                 warning_body = Markup('<ul>%s</ul>') % (
