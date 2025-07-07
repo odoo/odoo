@@ -287,7 +287,7 @@ class AccountMoveLine(models.Model):
             else:
                 price_unit = self.price_subtotal / self.quantity
         else:
-            price_unit = self.price_unit
+            price_unit = 0
 
         return -price_unit if self.move_id.move_type == 'in_refund' else price_unit
 
