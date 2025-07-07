@@ -952,7 +952,7 @@ class IrQweb(models.AbstractModel):
         # dictionary is only there for logs, performance or test information.
         # The values of these `options` cannot be changed and must always be
         # identical in `context` and `self.env.context`.
-        options = {k: compile_context.get(k, False) for k in self._get_template_cache_keys() + ['ref', 'ref_name', 'ref_xml']}
+        options = {k: compile_context.get(k, False) for k in self._get_template_cache_keys() + ['ref', 'ref_name']}
 
         # generate code
         ref_name = compile_context['ref_name'] or ''
@@ -998,6 +998,9 @@ class IrQweb(models.AbstractModel):
             code_lines.append(f'template_functions[{name!r}] = {name}')
 
         code = '\n'.join(code_lines)
+
+        if options.get('profile'):
+            options['ref_xml'] = compile_context['ref_xml']
 
         return (code, options, def_name)
 
