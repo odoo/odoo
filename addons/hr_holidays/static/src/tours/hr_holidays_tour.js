@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add("hr_holidays_tour", {
     url: "/odoo",
@@ -31,25 +31,23 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
         },
         {
             trigger: "input[data-field=request_date_from]",
-            content: _t(
-                "You can select the period you need to take off"
-            ),
+            content: _t("You can select the period you need to take off"),
             tooltipPosition: "right",
             run: "click",
         },
         {
             content: _t("Click on the 22nd"),
-            trigger: '.o_date_item_cell:nth-child(31)',
-            run: "click"
+            trigger: ".o_date_item_cell:nth-child(31)",
+            run: "click",
         },
         {
             content: _t("Click on the 25st"),
-            trigger: '.o_date_item_cell:nth-child(34)',
-            run: "click"
+            trigger: ".o_date_item_cell:nth-child(34)",
+            run: "click",
         },
         {
             content: "click outside to go back to the time off record",
-            trigger: '.modal-content',
+            trigger: ".modal-content",
             run: "click",
         },
         {

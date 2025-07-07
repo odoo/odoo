@@ -8,7 +8,7 @@
  */
 
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { stepUtils } from "@web_tour/tour_utils";
 
 const baseDescriptionContent = "Test project task history version";
 function changeDescriptionContentAndSave(newContent) {

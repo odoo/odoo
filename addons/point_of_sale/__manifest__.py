@@ -207,6 +207,7 @@
             "web_tour/static/src/tour_pointer/**/*.xml",
             "web_tour/static/src/tour_pointer/**/*.js",
             "web_tour/static/src/tour_service/**/*",
+            'web_tour/static/src/tour_utils.js',
             "barcodes/static/tests/legacy/helpers.js",
             "web/static/tests/legacy/helpers/utils.js",
             "web/static/tests/legacy/helpers/cleanup.js",

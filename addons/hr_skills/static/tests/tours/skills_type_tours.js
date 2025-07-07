@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add("hr_skills_type_tour", {
     url: "/odoo",
@@ -82,6 +82,6 @@ registry.category("web_tour.tours").add("hr_skills_type_tour", {
             trigger: "tr:nth-child(2) [name=default_level] input[type='checkbox']",
             run: "click",
         },
-        ...stepUtils.saveForm()
-    ]
+        ...stepUtils.saveForm(),
+    ],
 });

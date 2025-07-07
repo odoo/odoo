@@ -1,6 +1,6 @@
 import { accountTourSteps } from "@account/js/tours/account";
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add('account_tax_group', {
     url: "/odoo",
