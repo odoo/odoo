@@ -941,7 +941,7 @@ class IrActionsServer(models.Model):
             record_cached = self._context['onchange_self']
             for field, new_value in res.items():
                 record_cached[field] = new_value
-        else:
+        elif self.update_path:
             starting_record = self.env[self.model_id.model].browse(self._context.get('active_id'))
             path = self.update_path.split('.')
             target_records = reduce(getitem, path[:-1], starting_record)
