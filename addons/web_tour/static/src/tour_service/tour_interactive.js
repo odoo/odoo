@@ -1,6 +1,6 @@
 import { tourState } from "@web_tour/tour_service/tour_state";
 import { debounce } from "@web/core/utils/timing";
-import { getScrollParent } from "@web_tour/tour_service/tour_utils";
+import { getScrollParent } from "@web_tour/tour_utils";
 import * as hoot from "@odoo/hoot-dom";
 import { utils } from "@web/core/ui/ui_service";
 import { TourStep } from "./tour_step";
@@ -161,7 +161,7 @@ export class TourInteractive {
 
     /**
      * @param {HTMLElement} params.anchorEl
-     * @param {import("./tour_utils").ConsumeEvent[]} params.consumeEvents
+     * @param {import("../tour_utils").ConsumeEvent[]} params.consumeEvents
      * @param {() => void} params.onMouseEnter
      * @param {() => void} params.onMouseLeave
      * @param {(ev: Event) => any} params.onScroll

@@ -4,7 +4,7 @@ import {
     clickOnExtraMenuItem,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
-import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { stepUtils } from "@web_tour/tour_utils";
 
 const checkNoTranslate = {
     content: "Check there is no translate button",

@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { stepUtils } from "@web_tour/tour_utils";
 
 const baseDescriptionContent = "Test project todo history version";
 const descriptionField = `div.note-editable.odoo-editor-editable div.o-paragraph`;

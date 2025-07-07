@@ -4,7 +4,7 @@ import {
     clickOnSave,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
-import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { stepUtils } from "@web_tour/tour_utils";
 
 /**
  * The purpose of these tours is to check the systray visibility:

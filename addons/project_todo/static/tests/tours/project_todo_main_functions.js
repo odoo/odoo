@@ -1,6 +1,6 @@
 import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add('project_todo_main_functions', {
     url: '/odoo',

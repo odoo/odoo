@@ -1,6 +1,6 @@
 import { tourState } from "./tour_state";
 import * as hoot from "@odoo/hoot-dom";
-import { serializeChanges, serializeMutation } from "./tour_utils";
+import { serializeChanges, serializeMutation } from "../tour_utils";
 import { TourHelpers } from "./tour_helpers";
 import { TourStep } from "./tour_step";
 import { getTag } from "@web/core/utils/xml";

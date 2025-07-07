@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { stepUtils } from "@web_tour/tour_utils";
 
 import PurchaseAdditionalTourSteps from "@purchase/js/tours/purchase_steps";
 
