@@ -4,7 +4,7 @@
     'icon': '/account/static/description/l10n.png',
     'countries': ['sa'],
     'version': '2.0',
-    'author': 'Odoo S.A., DVIT.ME (http://www.dvit.me)',
+    'author': 'Odoo S.A.',
     'category': 'Accounting/Localizations/Account Charts',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/saudi_arabia.html',
     'description': """
@@ -16,14 +16,15 @@ Activates:
 
 - Chart of Accounts
 - Taxes
-- Vat Filling Report
-- Withholding Tax Report
+- VAT Return
+- Withholding Return
 - Fiscal Positions
 """,
     'depends': [
         'l10n_gcc_invoice',
         'account',
         'account_debit_note',
+        'l10n_account_withholding_tax',
     ],
     'auto_install': ['account'],
     'data': [
