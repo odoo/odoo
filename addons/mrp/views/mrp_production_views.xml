@@ -651,7 +651,7 @@
                     <filter invisible="1" name="day_1" string="Tomorrow" domain="[('search_date_category', '=', 'day_1')]"/>
                     <filter invisible="1" name="day_2" string="The day after tomorrow" domain="[('search_date_category', '=', 'day_2')]"/>
                     <filter invisible="1" name="after" string="After" domain="[('search_date_category', '=', 'after')]"/>
-                    <filter string="Late" name="filter_late_mo" help="Late" domain="[('date_start', '&lt;', context_today()), ('state', '=', 'confirmed')]"/>
+                    <filter string="Late" name="filter_late_mo" help="Late" domain="[('date_start', '&lt;', datetime.datetime.now().to_utc().strftime('%Y-%m-%d %H:%M:%S')), ('state', '=', 'confirmed')]"/>
                     <filter string="Delayed Productions" name="planning_issues" help="Late MO or Late delivery of components"
                         domain="['|', ('delay_alert_date', '!=', False), ('is_delayed', '=', True)]"/>
                     <filter string="Components Available" name="available" domain="[('components_availability_state', '=', 'available')]"/>
