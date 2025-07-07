@@ -95,17 +95,17 @@ export class PersistentCache {
     read(table, key, fallback, { onUpdate } = {}) {
         const ramValue = this.ramCache.read(table, key);
         if (ramValue && !onUpdate) {
-            return ramValue;
+            return ramValue.then((value) => deepCopy(value));
         }
         const def = new Deferred();
         const fromCache = new Deferred();
         let fromCacheValue;
         const prom = fallback()
             .then((result) => {
-                def.resolve(result);
-                this.ramCache.write(table, key, Promise.resolve(deepCopy(result)));
+                def.resolve(deepCopy(result));
+                this.ramCache.write(table, key, Promise.resolve(result));
                 if (onUpdate && fromCacheValue && fromCacheValue !== JSON.stringify(result)) {
-                    onUpdate(result);
+                    onUpdate(deepCopy(result));
                 }
                 this.crypto.encrypt(result).then((encryptedResult) => {
                     this.indexedDB.write(table, key, encryptedResult);
@@ -123,7 +123,7 @@ export class PersistentCache {
             });
         if (ramValue) {
             ramValue.then((value) => {
-                def.resolve(value);
+                def.resolve(deepCopy(value));
                 fromCacheValue = JSON.stringify(value);
                 fromCache.resolve();
             });
@@ -140,7 +140,7 @@ export class PersistentCache {
                         // The data will be updated with the new cryptoKey.
                         return;
                     }
-                    def.resolve(decrypted);
+                    def.resolve(deepCopy(decrypted));
                     this.ramCache.write(table, key, Promise.resolve(decrypted));
                     fromCacheValue = JSON.stringify(decrypted);
                 }
