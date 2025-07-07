@@ -17,9 +17,7 @@
                        t-if="!this.isActiveItem('no_end_action_opt') and !this.isActiveItem('redirect_end_action_opt')"
                        action="'previewEndMessage'"
                        preview="false"
-                       icon="'fa-eye'"
-                       classActive="'text-primary'"
-        />
+                       icon="'fa-eye'"/>
     </BuilderRow>
     <BuilderRow t-if="this.isActiveItem('redirect_end_action_opt')"
                 label.translate="URL">
