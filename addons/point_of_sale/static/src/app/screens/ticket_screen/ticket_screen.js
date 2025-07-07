@@ -824,18 +824,18 @@ export class TicketScreen extends Component {
             if (presetTime < DateTime.now()) {
                 return "bg-danger text-white";
             } else {
-                return "bg-light text-dark";
+                return "bg-light text-emphasis";
             }
         }
         if (
             slot.datetime <= presetTime &&
             presetTime < slot.datetime.plus({ minutes: order.preset_id.interval_time })
         ) {
-            return "bg-warning text-dark";
+            return "bg-warning text-white";
         } else if (presetTime < slot.datetime) {
             return "bg-danger text-white";
         } else {
-            return "bg-light text-dark";
+            return "bg-light text-emphasis";
         }
     }
 }
