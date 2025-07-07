@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.account.controllers.portal import PortalAccount
 from odoo.http import request
+
+from odoo.addons.account.controllers.portal import PortalAccount
 
 
 class PortalAccountMy(PortalAccount):

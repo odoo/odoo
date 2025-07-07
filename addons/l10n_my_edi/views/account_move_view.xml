@@ -5,6 +5,14 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="l10n_my_edi_document_ids" invisible="1"/>
+                <button name="action_show_myinvois_documents" type="object" class="oe_stat_button" icon="fa-file-text-o" invisible="not l10n_my_edi_document_ids">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">MyInvois<br/>Documents</span>
+                    </div>
+                </button>
+           </xpath>
             <xpath expr="//widget[@name='web_ribbon']" position="before">
                 <widget name="web_ribbon" title="Processing" bg_color="text-bg-info" invisible="l10n_my_edi_state != 'in_progress'"/>
                 <widget name="web_ribbon" title="Rejected" bg_color="text-bg-warning" invisible="l10n_my_edi_state != 'rejected'"/>
@@ -38,18 +46,9 @@
                     <group>
                         <group>
                             <!-- Only displayed if the invoice contains a tax of type Exempt -->
-                            <field name="l10n_my_edi_display_tax_exemption_reason" invisible="1"/>
-                            <field name="l10n_my_invoice_need_edi" invisible="1"/>
+                            <field name="l10n_my_edi_state" invisible="not l10n_my_edi_state"/>
                             <field name="l10n_my_edi_exemption_reason" invisible="not l10n_my_edi_display_tax_exemption_reason" readonly="l10n_my_edi_state != False"/>
                             <field name="l10n_my_edi_custom_form_reference" readonly="l10n_my_edi_state != False"/>
-                        </group>
-                        <group>
-                            <!-- a "not sent" placeholder would be great, but they don't work in readonly -->
-                            <field name="l10n_my_edi_state" invisible="not l10n_my_edi_state"/>
-                            <field name="l10n_my_edi_submission_uid" invisible="not l10n_my_edi_submission_uid"/>
-                            <field name="l10n_my_edi_external_uuid" invisible="not l10n_my_edi_external_uuid"/>
-                            <field name="l10n_my_edi_invoice_long_id" invisible="not l10n_my_edi_external_uuid"/>
-                            <field name="l10n_my_edi_validation_time" invisible="not l10n_my_edi_validation_time"/>
                         </group>
                     </group>
                 </page>
