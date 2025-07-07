@@ -100,7 +100,7 @@ export class StatusBarField extends Component {
                     fieldNames.push(foldField);
                 }
                 const value = record.data[fieldName];
-                let domain = getFieldDomain(record, fieldName, props.domain)
+                let domain = getFieldDomain(record, fieldName, props.domain);
                 domain = Domain.and([this.getDomain(), domain]).toList();
                 if (domain.length && value) {
                     domain = Domain.or([[["id", "=", value.id]], domain]).toList(
@@ -313,7 +313,10 @@ export class StatusBarField extends Component {
      */
     async selectItem(item) {
         const { name, record } = this.props;
-        const value = this.field.type === "many2one" ? { id: item.value, display_name: item.label } : item.value;
+        const value =
+            this.field.type === "many2one"
+                ? { id: item.value, display_name: item.label }
+                : item.value;
         await record.update({ [name]: value });
         await record.save();
     }
@@ -334,7 +337,7 @@ export const statusBarField = {
             label: _t("Clickable"),
             name: "clickable",
             type: "boolean",
-            default: true,
+            default: false,
         },
         {
             label: _t("Fold field"),
