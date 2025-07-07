@@ -30,7 +30,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on Blog Post",
-            trigger: "#o_new_content_menu_choices button[title='Blog Post']",
+            trigger: ".o_new_content_menu_choices button[aria-label='Blog Post']",
             run: "click",
         },
         {
@@ -45,11 +45,6 @@ registerWebsitePreviewTour(
         {
             content: "Click on Discard",
             trigger: ".modal-footer .o_form_button_cancel",
-            run: "click",
-        },
-        {
-            content: "Click away to close the modal",
-            trigger: "#o_new_content_menu_choices",
             run: "click",
         },
         ...clickOnEditAndWaitEditMode(),
