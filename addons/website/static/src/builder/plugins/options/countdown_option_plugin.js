@@ -1,5 +1,6 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { before, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
+import { getElementsWithOption } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
@@ -23,6 +24,12 @@ class CountdownOptionPlugin extends Plugin {
             SetEndActionAction,
             PreviewEndMessageAction,
             SetLayoutAction,
+        },
+        on_cloned_handlers: ({ cloneEl }) => {
+            const countdownEls = getElementsWithOption(cloneEl, ".s_countdown");
+            for (const countdownEl of countdownEls) {
+                countdownEl.classList.remove("s_countdown_enable_preview");
+            }
         },
     };
 }
@@ -135,11 +142,15 @@ export class SetEndActionAction extends BaseCountdownAction {
 
 export class PreviewEndMessageAction extends BaseCountdownAction {
     static id = "previewEndMessage";
+    static dependencies = ["builderOptions"];
     apply({ editingElement }) {
-        return this.toggleEndMessagePreview(editingElement, true);
+        this.toggleEndMessagePreview(editingElement, true);
     }
     clean({ editingElement }) {
-        return this.toggleEndMessagePreview(editingElement, false);
+        this.toggleEndMessagePreview(editingElement, false);
+        // Activate the countdown options, to not stay on the message preview
+        // ones if they were active.
+        this.dependencies.builderOptions.setNextTarget(editingElement);
     }
     isApplied(context) {
         return this.isEndMessagePreviewed(context);
