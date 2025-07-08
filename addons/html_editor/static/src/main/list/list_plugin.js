@@ -141,6 +141,9 @@ export class ListPlugin extends Plugin {
         /** Handlers */
         input_handlers: this.onInput.bind(this),
         normalize_handlers: this.normalize.bind(this),
+        before_add_step_handlers: ({ stepCommonAncestor: node }) => {
+            this.adjustListPadding(node);
+        },
         step_added_handlers: this.updateToolbarButtons.bind(this),
         delete_handlers: this.adjustListPaddingOnDelete.bind(this),
 
@@ -176,6 +179,7 @@ export class ListPlugin extends Plugin {
         this.addDomListener(this.editable, "touchstart", this.onPointerdown);
         this.addDomListener(this.editable, "mousedown", this.onPointerdown);
         this.listSelectorButtons = this.getListSelectorButtons();
+        this.markerWidthMap = new WeakMap();
     }
 
     toggleListCommand({ mode } = {}) {
@@ -391,7 +395,6 @@ export class ListPlugin extends Plugin {
             baseContainer.style.removeProperty("text-align");
         }
         this.dependencies.dom.copyAttributes(baseContainer, list);
-        this.adjustListPadding(list);
         baseContainer.remove();
         cursors.remapNode(baseContainer, list.firstChild).restore();
         return list;
@@ -466,7 +469,6 @@ export class ListPlugin extends Plugin {
         if (newMode === "CL") {
             newList.classList.add("o_checklist");
         }
-        this.adjustListPadding(newList);
         return newList;
     }
 
@@ -519,7 +521,6 @@ export class ListPlugin extends Plugin {
             previousSibling.append(...element.childNodes);
             // @todo @phoenix: what if unremovable/unmergeable?
             element.remove();
-            this.adjustListPadding(previousSibling);
             cursors.restore();
             return previousSibling;
         }
@@ -675,8 +676,6 @@ export class ListPlugin extends Plugin {
         cursors.update(callbacksForCursorUpdate.prepend(moveTo, node));
         moveTo.prepend(node);
         cursors.restore();
-        this.adjustListPadding(currentList);
-        this.adjustListPadding(newList);
         return newList;
     }
 
@@ -702,7 +701,6 @@ export class ListPlugin extends Plugin {
             cursors.update(callbacksForCursorUpdate.remove(lip));
             lip.remove();
         }
-        this.adjustListPadding(li.parentElement);
         cursors.restore();
     }
 
@@ -774,8 +772,6 @@ export class ListPlugin extends Plugin {
         if (!ul.firstElementChild) {
             cursors.update(callbacksForCursorUpdate.remove(ul));
             ul.remove();
-        } else {
-            this.adjustListPadding(ul);
         }
         cursors.restore();
     }
@@ -854,12 +850,6 @@ export class ListPlugin extends Plugin {
         if (listItems.length || navListItems.length) {
             this.indentListNodes(listItems);
             this.dependencies.tabulation.indentBlocks(nonListItems);
-            const listsToAdjustPadding = new Set(
-                listItems.map((li) => closestElement(li, "ul, ol")).filter(Boolean)
-            );
-            for (const list of listsToAdjustPadding) {
-                this.adjustListPadding(list);
-            }
             // Do nothing to nav-items.
             this.dependencies.history.addStep();
             return true;
@@ -913,7 +903,6 @@ export class ListPlugin extends Plugin {
         }
         const [anchorNode, anchorOffset] = getDeepestPosition(newLI, 0);
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
-        this.adjustListPadding(newLI.parentElement);
         return true;
     }
 
@@ -1106,7 +1095,6 @@ export class ListPlugin extends Plugin {
         if (!listItems.size) {
             return false;
         }
-        const listsSet = new Set();
         const cursors = this.dependencies.selection.preserveSelection();
         for (const listItem of listItems) {
             // Skip list items with block descendants other than base
@@ -1161,12 +1149,8 @@ export class ListPlugin extends Plugin {
                     cursors.update(callbacksForCursorUpdate.append(span, node));
                 }
             }
-            listsSet.add(listItem.parentElement);
         }
         cursors.restore();
-        for (const list of listsSet) {
-            this.adjustListPadding(list);
-        }
         return true;
     }
 
@@ -1177,32 +1161,56 @@ export class ListPlugin extends Plugin {
      *
      * @param {HTMLElement} list - The `<ul>` element used to determine the parent list and marker width.
      */
-    adjustListPadding(list) {
-        if (!isListElement(list)) {
-            return;
+    adjustListPadding(node) {
+        const listsToAdjust = new Set();
+        if (["UL", "OL"].includes(node.nodeName)) {
+            listsToAdjust.add(node);
+        } else if (node.nodeName === "LI") {
+            const parentList = node.closest("ul, ol");
+            if (parentList) {
+                listsToAdjust.add(parentList);
+            }
         }
-        list.style.removeProperty("padding-inline-start");
-        if (list.classList.contains("o_checklist")) {
-            return;
-        }
+        node?.querySelectorAll("ul, ol").forEach((list) => listsToAdjust.add(list));
 
-        const largestMarker = list.children[Symbol.iterator]()
-            .map((li) => {
-                const markerWidth = parseFloat(this.window.getComputedStyle(li, "::marker").width);
-                return isNaN(markerWidth) ? 0 : markerWidth;
-            })
-            .reduce(Math.max);
-        // For `UL` with large font size the marker width is so big that more padding is needed.
-        const largestMarkerPadding = Math.round(largestMarker) * (list.nodeName === "UL" ? 2 : 1);
+        for (const list of listsToAdjust) {
+            if (list.classList.contains("o_checklist")) {
+                continue;
+            }
 
-        // bootstrap sets ul { padding-left: 2rem; }
-        const defaultPadding =
-            parseFloat(this.window.getComputedStyle(document.documentElement).fontSize) * 2;
-        // Align the whole list based on the item that requires the largest padding.
-        // For smaller font sizes, doubling the width of the dot marker is still lower than the
-        // default. The default is kept in that case.
-        if (largestMarkerPadding > defaultPadding) {
-            list.style.paddingInlineStart = `${largestMarkerPadding}px`;
+            const largestMarker = list.children[Symbol.iterator]()
+                .map((li) => {
+                    const markerWidth = parseFloat(
+                        this.window.getComputedStyle(li, "::marker").width
+                    );
+                    return isNaN(markerWidth) ? 0 : markerWidth;
+                })
+                .reduce(Math.max, 0);
+
+            const previousWidth = this.markerWidthMap.get(list)?.width;
+            const inlinePadding = getComputedStyle(list).paddingInlineStart;
+            const previousPadding = this.markerWidthMap.get(list)?.padding;
+            if (previousWidth === largestMarker && previousPadding === inlinePadding) {
+                continue; // No change in marker width & list padding, no need to adjust it.
+            }
+            this.markerWidthMap.set(list, {
+                width: largestMarker,
+                padding: inlinePadding,
+            });
+            list.style.removeProperty("padding-inline-start");
+            // For `UL` with large font size the marker width is so big that more padding is needed.
+            const largestMarkerPadding =
+                Math.round(largestMarker) * (list.nodeName === "UL" ? 2 : 1);
+
+            // bootstrap sets ul { padding-left: 2rem; }
+            const defaultPadding =
+                parseFloat(this.window.getComputedStyle(document.documentElement).fontSize) * 2;
+            // Align the whole list based on the item that requires the largest padding.
+            // For smaller font sizes, doubling the width of the dot marker is still lower than the
+            // default. The default is kept in that case.
+            if (largestMarkerPadding > defaultPadding) {
+                list.style.paddingInlineStart = `${largestMarkerPadding}px`;
+            }
         }
     }
 
@@ -1210,10 +1218,6 @@ export class ListPlugin extends Plugin {
         const selection = this.document.getSelection();
         if (!selection.isCollapsed) {
             return;
-        }
-        const listItem = closestElement(selection.anchorNode);
-        if (isListItem(listItem)) {
-            this.adjustListPadding(listItem.parentElement);
         }
     }
 
