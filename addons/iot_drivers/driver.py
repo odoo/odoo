@@ -54,7 +54,10 @@ class Driver(Thread):
             _logger.exception("Error while executing action %s with params %s", action, data)
             response = {'status': 'error', 'result': str(e), 'action_args': {**data}}
 
-        event_manager.device_changed(self, response)  # Make response available to /event route or websocket
+        # Make response available to /event route or websocket
+        # printers handle their own events (low on paper, etc.)
+        if self.device_type != "printer":
+            event_manager.device_changed(self, response)
 
     def disconnect(self):
         self._stopped.set()

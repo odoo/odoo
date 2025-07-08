@@ -58,8 +58,8 @@ class PrinterDriver(PrinterDriverBase):
         try:
             self.escpos_device.open()
             self.escpos_device.close()
-        except escpos.exceptions.Error:
-            _logger.exception("Could not initialize escpos class")
+        except escpos.exceptions.Error as e:
+            _logger.info("%s - Could not initialize escpos class: %s", self.device_name, e)
             self.escpos_device = None
 
     @classmethod
