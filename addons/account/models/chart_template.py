@@ -1272,18 +1272,18 @@ class AccountChartTemplate(models.AbstractModel):
                     return value.strip()
             return value
 
-        res = {}
+        res = defaultdict(dict)
         for template in self._get_parent_template(template_code)[::-1] or ['']:
             try:
                 with file_open(f"{module}/data/template/{model}{f'-{template}' if template else ''}.csv", 'r') as csv_file:
                     for row in csv.DictReader(csv_file):
                         if row['id']:
                             last_id = row['id']
-                            res[row['id']] = {
+                            res[row['id']].update({
                                 key.split('/')[0]: evaluate(key, value, model_fields)
                                 for key, value in row.items()
                                 if key != 'id' and value and ('@' in key or key in model_fields)
-                            }
+                            })
                         create_added = set()
                         for key, value in row.items():
                             if '/' in key and value:
