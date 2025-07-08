@@ -2410,6 +2410,7 @@ class IrQweb(models.AbstractModel):
 
         # values (t-out="0" from content and variables from t-set)
         def_name = compile_context['make_name']('t_call')
+        has_content = bool(list(el) or el.text)
 
         # values from content (t-out="0" and t-set inside the content)
         code_content = [f"def {def_name}(self, values):"]
@@ -2419,7 +2420,7 @@ class IrQweb(models.AbstractModel):
         self._append_text('', compile_context) # To ensure the template function is a generator and doesn't become a regular function
         code_content.extend(self._flush_text(compile_context, 1, rstrip=True))
 
-        if len(code_content) > 3 or not code_content[1].startswith("    #") or code_content[2] != "    yield ''":
+        if has_content:
             compile_context['template_functions'][def_name] = code_content
             code.append(indent_code(f"""
                 t_call_values = values.copy()
