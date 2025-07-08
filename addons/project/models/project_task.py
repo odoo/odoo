@@ -91,7 +91,7 @@ class ProjectTask(models.Model):
         'mail.thread.cc',
         'mail.activity.mixin',
         'rating.mixin',
-        'mail.tracking.duration.mixin',
+        'mail.thread.tracking.duration.mixin',
         'html.field.history.mixin',
     ]
     _mail_post_access = 'read'

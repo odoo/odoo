@@ -93,7 +93,7 @@ class CrmLead(models.Model):
                 'mail.activity.mixin',
                 'utm.mixin',
                 'format.address.mixin',
-                'mail.tracking.duration.mixin',
+                'mail.thread.tracking.duration.mixin',
                ]
     _primary_email = 'email_from'
     _check_company_auto = True

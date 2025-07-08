@@ -7,8 +7,8 @@ from odoo.exceptions import UserError
 from odoo.tools import SQL
 
 
-class MailTrackingDurationMixin(models.AbstractModel):
-    _name = 'mail.tracking.duration.mixin'
+class MailThreadTrackingDurationMixin(models.AbstractModel):
+    _name = 'mail.thread.tracking.duration.mixin'
     _description = "Mixin to compute the time a record has spent in each value a many2one field can take"
     _inherit = ['mail.thread']
 

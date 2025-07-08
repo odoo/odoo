@@ -28,7 +28,7 @@ class ProjectProject(models.Model):
         'mail.alias.mixin',
         'rating.parent.mixin',
         'mail.activity.mixin',
-        'mail.tracking.duration.mixin',
+        'mail.thread.tracking.duration.mixin',
         'analytic.plan.fields.mixin',
     ]
     _order = "sequence, name, id"
