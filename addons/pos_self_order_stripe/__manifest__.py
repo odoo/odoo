@@ -10,7 +10,10 @@
     ],
     'assets': {
         'pos_self_order.assets': [
-            'pos_self_order_stripe/static/**/*',
+            'pos_self_order_stripe/static/src/**/*',
+        ],
+        'pos_self_order.assets_tests': [
+            'pos_self_order_stripe/static/tests/tours/**/*',
         ],
     },
     "license": "LGPL-3",
