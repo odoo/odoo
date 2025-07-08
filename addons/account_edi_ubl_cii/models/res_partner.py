@@ -8,6 +8,15 @@ from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPIN
 from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
 
 
+PEPPOL_ENDPOINT_INVALIDCHARS_RE = re.compile(r'[^a-zA-Z\d\-._~]')
+
+
+def sanitize_peppol_endpoint(peppol_endpoint):
+    if not peppol_endpoint:
+        return peppol_endpoint
+    return PEPPOL_ENDPOINT_INVALIDCHARS_RE.sub('', peppol_endpoint)
+
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
@@ -210,15 +219,15 @@ class ResPartner(models.Model):
     def _compute_peppol_endpoint(self):
         """ If the EAS changes and a valid endpoint is available, set it. Otherwise, keep the existing value."""
         for partner in self:
-            partner.peppol_endpoint = partner.peppol_endpoint
+            partner.peppol_endpoint = sanitize_peppol_endpoint(partner.peppol_endpoint)
             country_code = partner._deduce_country_code()
             if country_code in EAS_MAPPING:
                 field = EAS_MAPPING[country_code].get(partner.peppol_eas)
                 if field \
                         and field in partner._fields \
-                        and partner[field] \
-                        and not partner._build_error_peppol_endpoint(partner.peppol_eas, partner[field]):
-                    partner.peppol_endpoint = partner[field]
+                        and (peppol_endpoint := sanitize_peppol_endpoint(partner[field])) \
+                        and not partner._build_error_peppol_endpoint(partner.peppol_eas, peppol_endpoint):
+                    partner.peppol_endpoint = peppol_endpoint
 
     @api.depends(lambda self: self._peppol_eas_endpoint_depends())
     def _compute_peppol_eas(self):
@@ -235,8 +244,8 @@ class ResPartner(models.Model):
                     new_eas = next(iter(EAS_MAPPING[country_code].keys()))
                     # Iterate on the possible EAS until a valid one is found
                     for eas, field in eas_to_field.items():
-                        if field and field in partner._fields and partner[field]:
-                            if not partner._build_error_peppol_endpoint(eas, partner[field]):
+                        if field and field in partner._fields and (peppol_endpoint := sanitize_peppol_endpoint(partner[field])):
+                            if not partner._build_error_peppol_endpoint(eas, peppol_endpoint):
                                 new_eas = eas
                                 break
                     partner.peppol_eas = new_eas
@@ -251,7 +260,7 @@ class ResPartner(models.Model):
             return _("The Peppol endpoint is not valid. "
                      "It should contain exactly 10 digits (Company Registry number)."
                      "The expected format is: 1234567890")
-        if not re.match(r"^[a-zA-Z\d\-._~]{1,50}$", endpoint):
+        if PEPPOL_ENDPOINT_INVALIDCHARS_RE.search(endpoint) or not 1 <= len(endpoint) <= 50:
             return _("The Peppol endpoint (%s) is not valid. It should contain only letters and digit.", endpoint)
 
     @api.model
