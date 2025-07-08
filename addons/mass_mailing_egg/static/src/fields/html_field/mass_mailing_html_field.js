@@ -105,6 +105,7 @@ export class MassMailingHtmlField extends HtmlMailField {
             },
             [this.state]
         );
+        // Sets the iframe height
         useEffect(
             () => {
                 if (!this.codeViewRef.el) {
