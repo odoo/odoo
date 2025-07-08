@@ -67,9 +67,6 @@ class MailPluginController(http.Controller):
         if not partner:
             return {'error': _("This partner does not exist")}
 
-        if not partner.is_company:
-            return {'error': 'Contact must be a company'}
-
         normalized_email = partner.email_normalized
         if not normalized_email:
             return {'error': 'The email of this contact is not valid and we can not enrich it'}
@@ -307,7 +304,7 @@ class MailPluginController(http.Controller):
         if partner_iap:
             return partner_iap.partner_id.sudo(False)
 
-        return request.env["res.partner"].search([("is_company", "=", True), ("email_normalized", "=ilike", "%" + search)], limit=1)
+        return request.env["res.partner"].search([("parent_id", "=", False), ("vat", "!=", False), ("email_normalized", "=ilike", "%" + search)], limit=1)
 
     def _get_company_data(self, company):
         if not company:
@@ -339,7 +336,6 @@ class MailPluginController(http.Controller):
         phone_numbers = iap_data.get('phone_numbers')
         emails = iap_data.get('email')
         new_company_info = {
-            'is_company': True,
             'name': iap_data.get("name") or domain,
             'street': iap_data.get("street_name"),
             'city': iap_data.get("city"),
@@ -387,7 +383,7 @@ class MailPluginController(http.Controller):
 
     def _get_partner_data(self, partner):
 
-        fields_list = ['id', 'name', 'email', 'phone', 'is_company']
+        fields_list = ['id', 'name', 'email', 'phone']
 
         partner_values = dict((fname, partner[fname]) for fname in fields_list)
         partner_values['image'] = partner.image_128
@@ -414,7 +410,7 @@ class MailPluginController(http.Controller):
         """
         if partner:
             partner_response = self._get_partner_data(partner)
-            if partner.company_type == 'company':
+            if not partner.parent_id:
                 partner_response['company'] = self._get_company_data(partner)
             elif partner.parent_id:
                 partner_response['company'] = self._get_company_data(partner.parent_id)

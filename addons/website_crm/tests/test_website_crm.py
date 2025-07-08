@@ -31,7 +31,6 @@ class TestWebsiteCrm(odoo.tests.HttpCase):
     def test_catch_logged_partner_info_tour(self):
         self.env.ref('base.partner_admin').write({
             'name': 'Mitchell Admin',
-            'company_name': 'YourCompany',
             'email': 'mitchell.admin@example.com',
         })
         user_login = 'admin'

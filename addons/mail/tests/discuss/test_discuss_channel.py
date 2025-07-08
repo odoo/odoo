@@ -140,7 +140,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     {
                                         "avatar_128_access_token": self.env.user.partner_id._get_avatar_128_access_token(),
                                         "id": self.env.user.partner_id.id,
-                                        "is_company": False,
                                         "main_user_id": self.env.user.id,
                                         "name": "Ernest Employee",
                                         "write_date": emp_partner_write_date,
@@ -176,7 +175,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "id": self.test_partner.id,
                                     "im_status": "im_partner",
                                     "im_status_access_token": self.test_partner._get_im_status_access_token(),
-                                    "is_company": False,
                                     "main_user_id": False,
                                     "name": "Test Partner",
                                     "write_date": test_partner_write_date,
@@ -220,7 +218,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "id": self.test_partner.id,
                                     "im_status": "im_partner",
                                     "im_status_access_token": self.test_partner._get_im_status_access_token(),
-                                    "is_company": False,
                                     "main_user_id": False,
                                     "name": "Test Partner",
                                     "write_date": test_partner_write_date,

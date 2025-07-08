@@ -264,7 +264,6 @@ class ResPartner(models.Model):
             "avatar_128",
             "email",
             "im_status",
-            "is_company",
             Store.One("main_user_id", ["share"]),
             "name",
         ]
