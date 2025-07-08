@@ -83,6 +83,26 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'formatted display name should show the "Back on" formatted date'
         )
 
+    @freeze_time("2024-06-06")
+    def test_public_holiday_ooo(self):
+        self.env["resource.calendar.leaves"].create({
+            "name": "Public Holiday",
+            "company_id": self.employee_hruser.company_id.id,
+            "resource_id": False,
+            "date_from": "2024-06-05",
+            "date_to": "2024-06-07",
+        })
+
+        user = self.employee_hruser.user_id
+        # refresh computed fields after creating the public holiday
+        user.invalidate_recordset(["im_status", "display_name"])
+        self.assertEqual(user.im_status, "leave_offline", "user should be out of office due to public holiday")
+        self.assertEqual(
+            user.with_context(formatted_display_name=True).display_name,
+            "armande (base.group_user,hr_holidays.group_hr_holidays_user) \t ✈ --Out of office due to public holiday--",
+            "formatted display name should show the 'Out of office due to public holiday' message"
+        )
+
 
 @tagged('out_of_office')
 @tagged('at_install', '-post_install')  # LEGACY at_install
