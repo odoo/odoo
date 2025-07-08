@@ -12,13 +12,9 @@ export const productPageSelector = "main:has(.o_wsale_product_page)";
 class ProductPageOptionPlugin extends Plugin {
     static id = "productPageOption";
     static dependencies = ["builderActions", "media", "customizeWebsite"];
-    static shared = ["getDisabledOtherZoomViews"];
     resources = {
         builder_options: {
             OptionComponent: ProductPageOption,
-            props: {
-                getZoomLevels: this.getZoomLevels.bind(this),
-            },
             selector: productPageSelector,
             editableOnly: false,
             title: _t("Product Page"),
@@ -75,47 +71,6 @@ class ProductPageOptionPlugin extends Plugin {
             this.productPageGrid = mainEl.querySelector("#o-grid-product");
         }
     }
-    
-    getZoomLevels() {
-        const hasImages = this.productDetailMain.dataset.image_width != "none";
-        const isFullImage = this.productDetailMain.dataset.image_width == "100_pc";
-        return [
-            {
-                id: "o_wsale_zoom_hover",
-                views: ["website_sale.product_picture_magnify_hover"],
-                label: _t("Magnifier on hover"),
-                visible: hasImages && !isFullImage,
-            },
-            {
-                id: "o_wsale_zoom_click",
-                views: ["website_sale.product_picture_magnify_click"],
-                label: _t("Pop-up on Click"),
-                visible: hasImages,
-            },
-            {
-                id: "o_wsale_zoom_both",
-                views: ["website_sale.product_picture_magnify_both"],
-                label: _t("Both"),
-                visible: hasImages && !isFullImage,
-            },
-            {
-                id: "o_wsale_zoom_none",
-                views: [],
-                label: _t("None"),
-                visible: hasImages,
-            },
-        ];
-    }
-    getZoomViews() {
-        const views = [];
-        for (const zoomLevel of this.getZoomLevels()) {
-            views.push(...zoomLevel.views);
-        }
-        return views;
-    }
-    getDisabledOtherZoomViews(keptView) {
-        return this.getZoomViews().map((view) => (view === keptView ? view : `!${view}`));
-    }
 }
 
 export class ProductPageImageWidthAction extends WebsiteConfigAction {
@@ -128,14 +83,6 @@ export class ProductPageImageWidthAction extends WebsiteConfigAction {
         return productDetailMainEl.dataset.image_width;
     }
     async apply({ value }) {
-        if (value === "100_pc") {
-            const defaultZoomOption = "website_sale.product_picture_magnify_click";
-            await super.apply({
-                params: {
-                    views: this.dependencies.productPageOption.getDisabledOtherZoomViews(defaultZoomOption),
-                },
-            });
-        }
         await rpc("/shop/config/website", { product_page_image_width: value });
     }
 }
@@ -148,23 +95,7 @@ export class ProductPageImageLayoutAction extends WebsiteConfigAction {
     getValue({ editingElement: productDetailMainEl }) {
         return productDetailMainEl.dataset.image_layout;
     }
-    async apply({ editingElement: productDetailMainEl, value }) {
-        const imageWidthOption = productDetailMainEl.dataset.image_width;
-        let defaultZoomOption =
-            value === "grid"
-                ? "website_sale.product_picture_magnify_click"
-                : "website_sale.product_picture_magnify_hover";
-        if (
-            imageWidthOption === "100_pc" &&
-            defaultZoomOption === "website_sale.product_picture_magnify_hover"
-        ) {
-            defaultZoomOption = "website_sale.product_picture_magnify_click";
-        }
-        await super.apply({
-            params: {
-                views: this.dependencies.productPageOption.getDisabledOtherZoomViews(defaultZoomOption),
-            },
-        });
+    async apply({ value }) {
         return rpc("/shop/config/website", { product_page_image_layout: value });
     }
 }
