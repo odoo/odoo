@@ -18,12 +18,16 @@ export class EventSlotCalendarModel extends CalendarModel {
     /**
      * @override
      * Instead of the local tz, express the times in the related event tz or fallback on utc.
+     *
+     * After conversion to event tz, changing the 'zone' param back to local without changing
+     * the already converted datetime. This is to make sure the calendar doesn't do any further
+     * display conversion using the 'zone' param.
      */
     normalizeRecord(rawRecord) {
         const normalizedRecord = super.normalizeRecord(rawRecord);
         const tz = rawRecord.date_tz || 'utc';
-        normalizedRecord.start = normalizedRecord.start.setZone(tz);
-        normalizedRecord.end = normalizedRecord.end.setZone(tz);
+        normalizedRecord.start = normalizedRecord.start.setZone(tz).setZone('local', {keepLocalTime: true});
+        normalizedRecord.end = normalizedRecord.end.setZone(tz).setZone('local', {keepLocalTime: true});
         return normalizedRecord;
     }
 
