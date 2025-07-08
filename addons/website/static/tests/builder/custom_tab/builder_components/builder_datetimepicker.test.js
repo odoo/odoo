@@ -69,6 +69,20 @@ test("defaults to last one when invalid date provided", async () => {
     expect(".we-bg-options-container input").toHaveValue("04/01/2019 10:00:00");
 });
 
+test("defaults to last one when invalid date provided (date)", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderDateTimePicker type="'date'" dataAttributeAction="'date'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains(".we-bg-options-container input").edit("04/01/2019 10:00:00");
+    expect(".we-bg-options-container input").toHaveValue("04/01/2019");
+
+    await contains(".we-bg-options-container input").edit("INVALID DATE");
+    expect(".we-bg-options-container input").toHaveValue("04/01/2019");
+});
+
 test("defaults to now when no date is selected", async () => {
     addOption({
         selector: ".test-options-target",

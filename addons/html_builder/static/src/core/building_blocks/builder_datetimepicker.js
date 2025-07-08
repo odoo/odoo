@@ -1,6 +1,6 @@
 import { Component } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_hook";
-import { ConversionError, formatDateTime, parseDateTime } from "@web/core/l10n/dates";
+import { ConversionError, formatDate, formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { useChildRef } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { BuilderComponent } from "./builder_component";
@@ -64,6 +64,8 @@ export class BuilderDateTimePicker extends Component {
 
         this.inputRef = useChildRef();
 
+        this.formatDateTime = this.props.type === "date" ? formatDate : formatDateTime;
+
         this.dateTimePicker = useDateTimePicker({
             target: "root",
             format: this.props.format,
@@ -71,11 +73,11 @@ export class BuilderDateTimePicker extends Component {
                 return getPickerProps();
             },
             onApply: (value) => {
-                const result = this.commit(formatDateTime(value));
+                const result = this.commit(this.formatDateTime(value));
                 this.inputRef.el.value = result;
             },
             onChange: (value) => {
-                const dateString = formatDateTime(value);
+                const dateString = this.formatDateTime(value);
                 this.preview(dateString);
                 this.inputRef.el.value = dateString;
             },
@@ -101,7 +103,7 @@ export class BuilderDateTimePicker extends Component {
      * @returns {String} a formatted date string
      */
     formatRawValue(rawValue) {
-        return formatDateTime(DateTime.fromSeconds(parseInt(rawValue)));
+        return this.formatDateTime(DateTime.fromSeconds(parseInt(rawValue)));
     }
 
     /**
