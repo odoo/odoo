@@ -726,7 +726,7 @@ msgstr "加入開店備註⋯"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Add internal notes on order lines for the kitchen"
-msgstr "在廚房訂單資料行新增內部備註"
+msgstr "在廚房單加入內部備註"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -874,7 +874,7 @@ msgstr "金額"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__amount_authorized_diff
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_amount_authorized_diff
 msgid "Amount Authorized Difference"
-msgstr "授權差異的總金額"
+msgstr "可接受差額金額"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1035,7 +1035,7 @@ msgstr "屬性"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Authorized Difference"
-msgstr "可接受結帳差額"
+msgstr "可接受差額"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__auto_validate_terminal_payment
@@ -3766,7 +3766,7 @@ msgstr "筆記型電腦型號 x"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_big_scrollbars
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_big_scrollbars
 msgid "Large Scrollbars"
-msgstr "大滾動條"
+msgstr "加大捲軸"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cash
@@ -4396,7 +4396,7 @@ msgstr "未開立憑單"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_note_tree
 msgid "Note Models"
-msgstr "備註模型"
+msgstr "備註預設選項"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4523,7 +4523,7 @@ msgstr "只有類型為'現金'或'銀行'的日記賬才能與支付方式一�
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Only on cash methods"
-msgstr "僅限現金方式"
+msgstr "只套用至現金付款訂單"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
@@ -5641,7 +5641,7 @@ msgstr "準備工作顯示"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer
 msgid "Preparation Printers"
-msgstr "準備工作打印機"
+msgstr "廚房單打印機"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6809,14 +6809,14 @@ msgstr "對話視窗"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__set_maximum_difference
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_set_maximum_difference
 msgid "Set Maximum Difference"
-msgstr "設置最大差異"
+msgstr "設定差額上限"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Set a maximum difference allowed between the expected and counted money "
 "during the closing of the session"
-msgstr "設置在營業點結束期間預期和計數之間允許的最大差異"
+msgstr "設定系統計算的預期現金金額，與關店時點算所得的實際金額，兩者之間可以存在的最大差額"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__set_maximum_difference
@@ -6824,7 +6824,7 @@ msgstr "設置在營業點結束期間預期和計數之間允許的最大差異
 msgid ""
 "Set a maximum difference allowed between the expected and counted money "
 "during the closing of the session."
-msgstr "設置在營業點結束期間預期和計數之間允許的最大差異。"
+msgstr "設定系統計算的預期現金金額，與關店時點算所得的實際金額，兩者之間可以存在的最大差額。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7424,7 +7424,7 @@ msgstr "銷售點無法找到與掃描條碼相關的任何產品、客戶、員
 msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
-msgstr "營業點僅支持“增加捨入明細”捨入策略."
+msgstr "此銷售點只支援「新增捨入資料行」捨入政策。"
 
 #. module: point_of_sale
 #. odoo-python

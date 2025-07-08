@@ -83,6 +83,12 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
         for vals in vals_list:
             vals.pop('registration_address_vals', None)
+            vals["tax_scheme_vals"].update(
+                {
+                    "id": "",
+                    "name": partner.ref,
+                }
+            )
         return vals_list
 
     def _get_partner_party_legal_entity_vals_list(self, partner):

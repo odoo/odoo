@@ -197,7 +197,11 @@ class AccountAnalyticLine(models.Model):
 
             company = task.company_id or project.company_id or self.env['res.company'].browse(vals.get('company_id'))
             vals['company_id'] = company.id
-            vals.update(self._timesheet_preprocess_get_accounts(vals))
+            vals.update({
+                fname: account_id
+                for fname, account_id in self._timesheet_preprocess_get_accounts(vals).items()
+                if fname not in vals
+            })
 
             if not vals.get('product_uom_id'):
                 vals['product_uom_id'] = company.project_time_mode_id.id
@@ -290,7 +294,11 @@ class AccountAnalyticLine(models.Model):
             raise ValidationError(_('Timesheets cannot be created on a private task.'))
         if project or task:
             values['company_id'] = task.company_id.id or project.company_id.id
-        values.update(self._timesheet_preprocess_get_accounts(values))
+        values.update({
+            fname: account_id
+            for fname, account_id in self._timesheet_preprocess_get_accounts(values).items()
+            if fname not in values
+        })
 
         if values.get('employee_id'):
             employee = self.env['hr.employee'].browse(values['employee_id'])

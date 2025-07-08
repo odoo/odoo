@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo.fields import Command
 from odoo.tests import Form
 from odoo.tests import common
 from odoo.exceptions import ValidationError
@@ -574,3 +574,27 @@ class TestMrpByProduct(common.TransactionCase):
         self.assertEqual(len(postprod_picking.move_ids), 2)
         self.assertEqual(postprod_picking.move_ids.product_id, final_product + byproduct)
         self.assertEqual(postprod_picking.location_dest_id, self.warehouse.lot_stock_id)
+
+    def test_over_produce_by_products_with_cost_share(self):
+        """
+        Tests that overproducing by-products with a set cost share
+        behaves as expected (as it should rely on the merge move) for
+        the extra move.
+        """
+        # Create new MO
+        self.env.user.groups_id = [Command.link(self.ref('mrp.group_mrp_byproducts'))]
+        self.bom_byproduct.byproduct_ids.cost_share = 3.3
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_a.id,
+            'product_qty': 1.0,
+        })
+        mo.action_confirm()
+
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 1.0
+            with mo_form.move_byproduct_ids.edit(0) as by_product_move:
+                by_product_move.quantity = 10.0
+        mo.button_mark_done()
+        self.assertRecordValues(mo.move_byproduct_ids, [
+            {'quantity': 10.0, 'state': 'done'},
+        ])

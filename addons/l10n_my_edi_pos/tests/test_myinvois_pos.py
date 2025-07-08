@@ -10,7 +10,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 from odoo.tools import file_open, mute_logger
 
-from odoo.addons.account_reports.tests.common import TestAccountReportsCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.l10n_my_edi.tests.test_file_generation import NS_MAP
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -21,7 +21,7 @@ CONTACT_PROXY_METHOD = 'odoo.addons.l10n_my_edi.models.account_edi_proxy_user.Ac
 class TestMyInvoisPoS(TestPoSCommon):
 
     @classmethod
-    @TestAccountReportsCommon.setup_country('my')
+    @AccountTestInvoicingCommon.setup_country('my')
     def setUpClass(cls):
         super().setUpClass()
         cls.config = cls.basic_config
