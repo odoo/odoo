@@ -2,7 +2,7 @@
 
 import itertools
 from collections import defaultdict
-from datetime import datetime, date, time
+from datetime import datetime, date, time, timedelta
 import pytz
 
 from dateutil.relativedelta import relativedelta
@@ -427,22 +427,39 @@ class HrVersion(models.Model):
                 new_vals.pop('date_stop', False)
                 if 'duration' not in new_vals or 'date' not in new_vals:
                     raise UserError(_('Missing date or duration on work entry'))
-            date_start = new_vals['date_start']
-            date_stop = new_vals['date_stop']
-            offset = (date_stop.date() - date_start.date()).days
-            if offset:
-                if offset > 1:
-                    raise UserError(_('Work entry starting and ending dates should be the same or over 2 days.'))
-                end_of_day = datetime.combine(date_start.date(), datetime.max.time())
-                first_part = new_vals.copy()
-                first_part['date_stop'] = end_of_day
-                new_vals_list.append(first_part)
-                start_of_next_day = datetime.combine(date_stop.date(), datetime.min.time())
-                second_part = new_vals.copy()
-                second_part['date_start'] = start_of_next_day
-                new_vals_list.append(second_part)
-            else:
                 new_vals_list.append(new_vals)
+                continue
+
+            date_start_utc = new_vals['date_start']
+            date_stop_utc = new_vals['date_stop']
+
+            # Get timezone from calendar
+            version = self.env['hr.version'].browse(new_vals['version_id'])
+            calendar = version.resource_calendar_id
+            if not calendar or not calendar.tz:
+                raise UserError(_('Missing timezone on resource calendar.'))
+
+            tz = pytz.timezone(calendar.tz)
+            local_start = date_start_utc.astimezone(tz)
+            local_stop = date_stop_utc.astimezone(tz)
+
+            # Handle multi-local-day spans
+            current = local_start
+            while current < local_stop:
+                next_local_midnight = datetime.combine(current.date() + timedelta(days=1), datetime.min.time()).replace(tzinfo=tz)
+                segment_end = min(local_stop, next_local_midnight)
+
+                duration_ratio = (segment_end - current) / (local_stop - local_start)
+                partial_vals = new_vals.copy()
+
+                # Convert partial segment back to UTC for consistency
+                partial_vals['date_start'] = current.astimezone(pytz.UTC)
+                partial_vals['date_stop'] = segment_end.astimezone(pytz.UTC)
+
+                new_vals_list.append(partial_vals)
+
+                current = segment_end
+
         vals_list = new_vals_list
 
         for vals in vals_list:
