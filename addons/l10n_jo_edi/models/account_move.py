@@ -110,7 +110,7 @@ class AccountMove(models.Model):
         super()._compute_preferred_payment_method_line_id()
 
         for move in self.filtered(lambda m: m.partner_id and m.l10n_jo_edi_is_needed):
-            expected_type = 'bank' if move.partner_id.is_company or move.partner_id.parent_id else 'cash'
+            expected_type = 'bank' if move.partner_id.vat or move.partner_id.parent_id else 'cash'
             journal = self.env['account.journal'].search([
                 ('type', '=', expected_type),
                 ('company_id', '=', move.company_id.id),

@@ -186,7 +186,6 @@ class TestJoEdiTypes(JoEdiCommon):
     def test_jo_no_vat_customer(self):
         self.company.l10n_jo_edi_taxpayer_type = 'income'
         self.company.l10n_jo_edi_sequence_income_source = '4419618'
-        self.partner_jo.vat = False
 
         invoice = self._l10n_jo_create_invoice({
             'name': 'EIN/998833/0',

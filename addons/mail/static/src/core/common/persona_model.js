@@ -31,8 +31,6 @@ export class Persona extends Record {
 
     /** @type {string} */
     avatar_128_access_token;
-    /** @type {string} */
-    commercial_company_name;
     /**
      * function = job position (Frenchism)
      *
@@ -41,8 +39,6 @@ export class Persona extends Record {
     function;
     /** @type {number} */
     id;
-    /** @type {boolean | undefined} */
-    is_company;
     /** @type {string} */
     phone;
     debouncedSetImStatus;

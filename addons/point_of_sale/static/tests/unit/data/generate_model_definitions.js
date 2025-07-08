@@ -443,7 +443,6 @@ export class ResPartner extends models.ServerModel {
             "parent_name",
             "pos_contact_address",
             "invoice_emails",
-            "company_type",
             "fiscal_position_id",
         ];
     }

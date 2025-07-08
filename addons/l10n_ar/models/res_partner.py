@@ -26,6 +26,7 @@ class ResPartner(models.Model):
         'l10n_ar.afip.responsibility.type', string='AFIP Responsibility Type', index='btree_not_null', help='Defined by AFIP to'
         ' identify the type of responsibilities that a person or a legal entity could have and that impacts in the'
         ' type of operations and requirements they need.')
+    l10n_ar_is_company = fields.Boolean(string="Is Company (AR)", compute="_compute_l10n_ar_is_company", store=True)
 
     @api.depends('l10n_ar_vat')
     def _compute_l10n_ar_formatted_vat(self):
@@ -51,6 +52,18 @@ class ResPartner(models.Model):
             rec.l10n_ar_vat = stdnum.ar.cuit.compact(rec.vat)
         remaining = self - recs_ar_vat
         remaining.l10n_ar_vat = False
+
+    @api.depends('l10n_latam_identification_type_id', 'l10n_ar_vat')
+    def _compute_l10n_ar_is_company(self):
+        "True if partner is considered a company in Argentina, based on Identification Type and CUIT prefix."
+        for rec in self:
+            afip_code = rec.l10n_latam_identification_type_id.l10n_ar_afip_code
+            prefix = (rec.l10n_ar_vat or '')[:2]
+
+            if afip_code == '80' and prefix in ('30', '33', '34', '51', '55'):  # CUIT
+                rec.l10n_ar_is_company = True
+            else:
+                rec.l10n_ar_is_company = False  # CUIL or DNI or Unknown type → default to individual
 
     def _run_check_identification(self, validation='error'):
         """ Since we validate more documents than the vat for Argentinean partners (CUIT - VAT AR, CUIL, DNI) we
