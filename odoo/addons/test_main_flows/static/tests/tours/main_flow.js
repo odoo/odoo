@@ -428,9 +428,6 @@ stepUtils.autoExpandMoreButtons(),
     run: "click",
 },
 {
-    trigger: ".o_field_widget[name=partner_id] .o_external_button",
-},
-{
     trigger: ".o_field_widget[name=price] input",
     content: _t('Set the cost price'),
     tooltipPosition: 'right',
