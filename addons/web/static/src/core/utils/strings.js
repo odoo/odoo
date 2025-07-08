@@ -228,11 +228,16 @@ export function uuid() {
  * @param {string} str
  * @returns {string}
  */
-export function hashCode(str) {
+export function hashCode(...strings) {
+    const str = strings.join("\x1C");
+
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
-        hash += Math.pow(str.charCodeAt(i) * 31, str.length - i);
-        hash = hash & hash; // Convert to 32bit integer
+        hash = (hash << 5) - hash + str.charCodeAt(i);
+        hash |= 0;
     }
-    return hash;
+
+    // Convert the possibly negative number hash code into an 8 character
+    // hexadecimal string
+    return (hash + 16 ** 8).toString(16).slice(-8);
 }
