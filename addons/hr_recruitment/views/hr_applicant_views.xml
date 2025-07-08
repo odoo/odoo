@@ -9,7 +9,7 @@
                     <button
                         name="action_job_add_applicants"
                         string="Create Applications"
-                        invisible="context.get('default_job_id') or context.get('no_create_application_button')"
+                        invisible="context.get('default_job_id') or not context.get('create_application_button')"
                         type="object"
                     />
                     <button
@@ -475,7 +475,7 @@
             (5, 0, 0),
             (0, 0, {'view_mode': 'list'}),
             (0, 0, {'view_mode': 'kanban', 'view_id': ref('hr_kanban_view_applicant_talent_pool')})]"/>
-        <field name="context">{'default_talent_pool_ids': active_ids, 'create': False}</field>
+        <field name="context">{'default_talent_pool_ids': active_ids, 'create': False, 'create_application_button': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No Talents in the pool yet
