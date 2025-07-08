@@ -10,9 +10,9 @@ export class DynamicSnippetOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
-        // specify model name in subclasses to filter the list of available model record filters
-        // Indicates that some current options are a default selection.
-
+        // Specify model name in subclasses to filter the list of available
+        // model record filters. Indicates that some current options are a
+        // default selection.
         this.dynamicOptionParams = useDynamicSnippetOption(this.props.modelNameFilter);
     }
 }

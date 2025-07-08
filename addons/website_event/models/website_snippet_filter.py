@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 
-from odoo import models, fields, _
+from odoo import models, fields, api, _
 
 
 class WebsiteSnippetFilter(models.Model):
@@ -49,3 +49,10 @@ class WebsiteSnippetFilter(models.Model):
                 # merge definitions
             samples = merged
         return samples
+
+    @api.model
+    def default_get(self, fields):
+        defaults = super().default_get(fields)
+        if 'field_names' in defaults and self.env.context.get('model') == 'event.event':
+            defaults['field_names'] = 'name,subtitle'
+        return defaults

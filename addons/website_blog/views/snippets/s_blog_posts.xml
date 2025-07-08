@@ -4,23 +4,83 @@
 <template id="s_blog_posts" name="Blog Posts">
     <t t-call="website.s_dynamic_snippet_template">
         <t t-set="snippet_name" t-value="'s_blog_posts'"/>
-        <t t-set="snippet_classes" t-value="'s_dynamic_snippet_blog_posts s_blog_post_big_picture s_blog_posts_effect_marley s_blog_posts_post_picture_size_default'"/>
         <t t-set="main_page_url" t-value="'/blog'"/>
-        <t t-set="custom_template_data" t-valuef='{"blog_posts_post_author_active":true, "blog_posts_post_teaser_active":true, "blog_posts_post_date_active":true}'/>
+        <t t-set="snippet_classes" t-value="'s_dynamic_snippet_blog_posts %s' % snippet_extra_classes"/>
+        <t t-set="custom_template_data" t-valuef='{"blog_posts_post_author_active":true, "blog_posts_post_teaser_active":true, "blog_posts_post_date_active":true, "blog_posts_post_category_active":true}'/>
+        <t t-out="0"/>
+    </t>
+</template>
+<!-- Multi record snippets -->
+<template id="s_blog_posts_big_picture" name="Blog Posts Big Picture">
+    <t t-set="snippet_extra_classes" t-value="'s_blog_post_big_picture s_blog_posts_effect_marley s_blog_posts_post_picture_size_default'"/>
+    <t t-call="website_blog.s_blog_posts">
         <t t-call="website_blog.s_dynamic_snippet_blog_posts_preview_data"/>
     </t>
 </template>
+<template id="s_blog_posts_card" name="Blog Posts Card">
+    <t t-set="snippet_extra_classes" t-value="'s_blog_post_card s_blog_posts_post_picture_size_default'"/>
+    <t t-call="website_blog.s_blog_posts">
+        <t t-call="website_blog.s_dynamic_snippet_blog_posts_card_preview_data"/>
+    </t>
+</template>
+<template id="s_blog_posts_horizontal" name="Blog Posts Horizontal">
+    <t t-set="snippet_extra_classes" t-value="'s_blog_post_horizontal s_blog_posts_post_picture_size_default'"/>
+    <t t-call="website_blog.s_blog_posts">
+        <t t-call="website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data"/>
+    </t>
+</template>
+<template id="s_blog_posts_list" name="Blog Posts List">
+    <t t-set="snippet_extra_classes" t-value="'s_blog_post_list'"/>
+    <t t-call="website_blog.s_blog_posts">
+        <t t-call="website_blog.s_dynamic_snippet_blog_posts_list_preview_data"/>
+    </t>
+</template>
+<!-- Single record snippets -->
+<template id="s_blog_posts_single_aside" name="Single Blog Post Aside">
+    <t t-set="is_single_record" t-value="True"/>
+    <t t-set="snippet_extra_classes" t-value="'s_blog_post_single_aside'"/>
+    <t t-call="website_blog.s_blog_posts">
+        <t t-call="website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data"/>
+    </t>
+</template>
+<template id="s_blog_posts_single_full" name="Single Blog Post Full">
+    <t t-set="is_single_record" t-value="True"/>
+    <t t-set="snippet_extra_classes" t-value="'s_blog_post_single_full o_cc o_cc5'"/>
+    <t t-call="website_blog.s_blog_posts">
+        <t t-call="website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data"/>
+    </t>
+</template>
+<template id="s_blog_posts_single_circle" name="Single Blog Post Circle">
+    <t t-set="is_single_record" t-value="True"/>
+    <t t-set="snippet_extra_classes" t-value="'s_blog_post_single_circle o_cc o_cc2'"/>
+    <t t-set="container_classes" t-value="'o_container_small'"/>
+    <t t-call="website_blog.s_blog_posts">
+        <t t-call="website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data"/>
+    </t>
+</template>
+<template id="s_blog_posts_single_badge" name="Single Blog Post Badge">
+    <t t-set="is_single_record" t-value="True"/>
+    <t t-set="snippet_extra_classes" t-value="'s_blog_post_single_badge'"/>
+    <t t-call="website_blog.s_blog_posts">
+        <t t-call="website_blog.s_dynamic_snippet_blog_posts_single_badge_preview_data"/>
+    </t>
+</template>
 
-<!-- Load-time templates (rendered in JS on page load) -->
+<!-- Multi record "Load-time" templates (rendered in JS on page load) -->
 <!-- List layout -->
 <template id="dynamic_filter_template_blog_post_list" name="List">
-    <div t-foreach="records" t-as="data" class="s_blog_posts_post border-0 rounded-3 p-3" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4">
+    <div t-foreach="records" t-as="data" class="s_blog_posts_post border-0 rounded-3" data-extra-classes="g-4" data-column-classes="col-12 col-sm-6 col-lg-4">
         <t t-set="record" t-value="data['_record']"/>
-        <a class="text-decoration-none text-reset" t-att-title="'Read ' + data['name']" t-att-href="data['call_to_action_url']">
-            <div class="d-flex align-items-center small">
+        <div class="d-flex flex-wrap mb-2 small">
+            <span class="w-100 w-sm-auto">
                 <t t-call="website_blog.s_dynamic_snippet_template_author"/>
-                <t t-call="website_blog.s_dynamic_snippet_template_date"/>
-            </div>
+            </span>
+            <span class="d-none d-sm-inline text-muted mx-0 mx-sm-2" t-if="blog_posts_post_date_active and blog_posts_post_author_active">•</span>
+            <t t-call="website_blog.s_dynamic_snippet_template_date"/>
+            <span class="text-muted mx-2" t-if="blog_posts_post_category_active and (blog_posts_post_date_active or blog_posts_post_author_active)">•</span>
+            <t t-call="website_blog.s_dynamic_snippet_template_category"/>
+        </div>
+        <a class="text-reset" t-att-title="'Read ' + data['name']" t-att-href="data['call_to_action_url']">
             <h4 class="mt-2">
                 <span t-if="is_sample" class="bg-primary text-uppercase">Sample</span>
                 <span t-field="record.name"/>
@@ -31,7 +91,7 @@
 </template>
 <!-- Big picture layout -->
 <template id="dynamic_filter_template_blog_post_big_picture" name="Big picture">
-    <div t-foreach="records" t-as="data" class="s_blog_posts_post position-relative w-100" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4">
+    <div t-foreach="records" t-as="data" class="s_blog_posts_post position-relative w-100" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4" data-extra-snippet-classes="s_blog_posts_effect_marley s_blog_posts_post_picture_size_default">
         <t t-set="record" t-value="data['_record']"/>
         <a class="s_blog_posts_post_cover position-relative d-block h-100 rounded shadow-sm overflow-hidden text-decoration-none text-reset ratio ratio-1x1" t-att-title="'Read ' + data['name']" t-att-href="data['call_to_action_url']">
             <t t-call="website.record_cover">
@@ -78,7 +138,7 @@
                     </a>
                     <div class="d-flex justify-content-between small">
                         <t t-call="website_blog.s_dynamic_snippet_template_author"/>
-                        <span class="text-muted">In <a class="fw-bold" t-field="record.blog_id.name" t-att-href="'/blog/%s' % record.blog_id.id" />
+                        <span class="text-muted" t-if="blog_posts_post_category_active">In <t t-call="website_blog.s_dynamic_snippet_template_category"/>
                             <a t-if="is_sample" class="fw-bold" href="#">Sample</a>
                         </span>
                     </div>
@@ -108,7 +168,7 @@
             </a>
             <div class="card-footer d-flex justify-content-between mt-auto border-0 p-3 pt-0 bg-transparent small">
                 <t t-call="website_blog.s_dynamic_snippet_template_author"/>
-                <span class="text-muted">In <a class="fw-bold" t-field="record.blog_id.name" t-att-href="'/blog/%s' % record.blog_id.id" />
+                <span class="text-muted" t-if="blog_posts_post_category_active">In <t t-call="website_blog.s_dynamic_snippet_template_category"/>
                     <a t-if="is_sample" class="fw-bold" href="#">Sample</a>
                 </span>
             </div>
@@ -116,10 +176,24 @@
     </div>
 </template>
 
+<!-- Single record templates -->
+<!-- Full Layout -->
+<template id="dynamic_filter_template_blog_post_single_full" name="Solo Full">
+</template>
+<!-- Aside Layout -->
+<template id="dynamic_filter_template_blog_post_single_aside" name="Solo Aside">
+</template>
+<!-- Circle Layout -->
+<template id="dynamic_filter_template_blog_post_single_circle" name="Solo Circle">
+</template>
+<!-- CTA Badge Layout -->
+<template id="dynamic_filter_template_blog_post_single_badge" name="Solo Badge">
+</template>
+
 <!-- Blog Post Author (optional) -->
 <template id="website_blog.s_dynamic_snippet_template_author" name="Blog Post Author">
     <div t-if="blog_posts_post_author_active" class="s_blog_posts_post_author d-inline-flex align-items-center">
-        <img class="o_avatar me-2 rounded-pill" t-attf-src="data:image/png;base64,{{record.author_avatar}}"/>
+        <img class="o_avatar me-2 rounded-pill" t-attf-src="data:image/png;base64,{{record.author_avatar}}" t-if="record.author_avatar"/>
         <span t-field="record.author_name"/>
     </div>
 </template>
@@ -132,6 +206,12 @@
 <!-- Blog Post Date (optional for Card, Horizontal and List layouts) -->
 <template id="website_blog.s_dynamic_snippet_template_date" name="Blog Post Date">
     <small t-if="blog_posts_post_date_active" class="s_blog_posts_post_date text-muted" t-field="record.post_date" t-options='{"format": "MMM d, yyyy"}' />
+</template>
+
+<!-- Blog Post Category (optional) -->
+<template id="website_blog.s_dynamic_snippet_template_category" name="Blog Post Category">
+    <a t-if="blog_posts_post_category_active" t-attf-class="s_blog_posts_post_category {{ category_custom_class }}" t-field="record.blog_id.name" t-att-href="'/blog/%s' % record.blog_id.id" />
+    <a t-if="is_sample" href="#">Sample</a>
 </template>
 
 <!-- Options -->

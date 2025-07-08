@@ -40,6 +40,20 @@ export class DynamicSnippetBlogPostsOption extends BaseOptionComponent {
             "website_blog.dynamic_filter_template_blog_post_list",
             "website_blog.dynamic_filter_template_blog_post_horizontal",
             "website_blog.dynamic_filter_template_blog_post_card",
+            "website_blog.dynamic_filter_template_blog_post_single_full",
+            "website_blog.dynamic_filter_template_blog_post_single_aside",
+            "website_blog.dynamic_filter_template_blog_post_single_circle",
+        ].includes(this.templateKeyState.templateKey);
+    }
+    showCategoryOption() {
+        return [
+            "website_blog.dynamic_filter_template_blog_post_list",
+            "website_blog.dynamic_filter_template_blog_post_horizontal",
+            "website_blog.dynamic_filter_template_blog_post_card",
+            "website_blog.dynamic_filter_template_blog_post_single_full",
+            "website_blog.dynamic_filter_template_blog_post_single_aside",
+            "website_blog.dynamic_filter_template_blog_post_single_circle",
+            "website_blog.dynamic_filter_template_blog_post_single_badge",
         ].includes(this.templateKeyState.templateKey);
     }
 }

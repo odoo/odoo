@@ -1,5 +1,5 @@
 .s_dynamic {
-    &.s_blog_posts {
+    &.s_dynamic_snippet_blog_posts {
         --Avatar-size: 1.5em;
     }
 
@@ -15,14 +15,9 @@
         @include o-line-clamp(2);
     }
 
-    &.s_blog_post_list {
-        .s_blog_posts_post_author + small.s_blog_posts_post_date::before {
-            content: "•";
-            margin: 0 map-get($spacers, 1);
-        }
-
-        .s_blog_posts_post:hover {
-            background-color: color-mix(in srgb, currentColor 10%, transparent);
+    &.s_blog_post_list:not(:has(.s_dynamic_snippet_title_aside)){
+        .s_dynamic_snippet_content {
+            margin-top: map-get($spacers, 4);
         }
     }
 

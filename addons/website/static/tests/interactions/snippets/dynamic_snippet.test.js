@@ -37,7 +37,7 @@ test("dynamic snippet loads items and displays them through template", async () 
     });
     const { core } = await startInteractions(`
         <div id="wrapwrap">
-            <section data-snippet="s_dynamic_snippet" class="s_dynamic_snippet s_dynamic s_dynamic_empty pt32 pb32 o_colored_level" data-custom-template-data="{}" data-name="Dynamic Snippet"
+            <section data-snippet="s_dynamic_snippet" class="s_dynamic_snippet s_dynamic pt32 pb32 o_colored_level" data-custom-template-data="{}" data-name="Dynamic Snippet"
                     data-filter-id="1"
                     data-template-key="website.dynamic_filter_template_test_item"
                     data-number-of-records="16"

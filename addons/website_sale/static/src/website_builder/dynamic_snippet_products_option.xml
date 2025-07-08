@@ -2,11 +2,16 @@
 <templates xml:space="preserve">
 
 <t t-name="website_sale.DynamicSnippetProductsOption" t-inherit="website.DynamicSnippetCarouselOption">
+    <!-- TODO: The product snippets design will be refactored soon... Hide the template
+     option once the final layouts and previews of the snippets are available. -->
+    <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="attributes">
+        <attribute name="t-if">filteredTemplates.length &gt; 1</attribute>
+    </xpath>
     <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
 
         <ProductsDesignPanel showLists="false" label.translate="Cards Design"/>
 
-        <BuilderRow label.translate="Category" t-if="!this.domState.isAlternative">
+        <BuilderRow label.translate="Category" t-if="!this.domState.isAlternative and !isSingleMode">
             <BuilderSelect dataAttributeAction="'productCategoryId'" preview="false" id="'product_category_opt'">
                 <BuilderSelectItem dataAttributeActionValue="'all'">All Products</BuilderSelectItem>
                 <BuilderSelectItem dataAttributeActionValue="'current'">Current Category or All</BuilderSelectItem>
@@ -15,7 +20,7 @@
                 </t>
             </BuilderSelect>
         </BuilderRow>
-        <BuilderRow label.translate="Tags" preview="false" t-if="!this.domState.isAlternative">
+        <BuilderRow label.translate="Tags" preview="false" t-if="!this.domState.isAlternative and !isSingleMode">
 	        <BuilderMany2Many id="'product_tag_opt'" model="'product.tag'" limit="10"
 	            dataAttributeAction="'productTagIds'"
 	        />
@@ -27,7 +32,7 @@
         <BuilderRow label.translate="Show variants" preview="false">
             <BuilderCheckbox dataAttributeAction="'showVariants'" dataAttributeActionValue="'true'"/>
         </BuilderRow>
-        <BuilderRow label.translate="Product Names" preview="false" t-if="!this.domState.isAlternative">
+        <BuilderRow label.translate="Product Names" preview="false" t-if="!this.domState.isAlternative and !isSingleMode">
             <BuilderTextInput dataAttributeAction="'productNames'" id="'product_names_opt'"
                 placeholder.translate="e.g. lamp,bin"
                 title.translate="Comma-separated list of parts of product names, barcodes or internal reference"

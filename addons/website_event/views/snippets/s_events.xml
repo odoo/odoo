@@ -1,18 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
+<!-- Snippet -->
 <template id="s_events" name="Events">
     <t t-call="website.s_dynamic_snippet_template">
         <t t-set="snippet_name" t-value="'s_events'"/>
-        <t t-set="snippet_classes" t-value="'s_event_upcoming_snippet s_event_event_picture'"/>
+        <t t-set="snippet_classes" t-value="'s_event_upcoming_snippet %s' % snippet_extra_classes"/>
         <t t-set="main_page_url" t-value="'/event'"/>
         <t t-set="custom_template_data" t-valuef='{"events_event_time_active":true}'/>
+        <t t-out="0"/>
+    </t>
+</template>
+<!-- Multi record snippets -->
+<template id="s_events_picture" name="Events Picture">
+    <t t-set="snippet_extra_classes" t-value="'s_event_event_picture'"/>
+    <t t-call="website_event.s_events">
         <t t-call="website_event.s_event_upcoming_snippet_preview_data"/>
     </t>
 </template>
+<template id="s_events_card" name="Events Card">
+    <t t-set="snippet_extra_classes" t-value="'s_event_event_card'"/>
+    <t t-call="website_event.s_events">
+        <t t-call="website_event.s_event_upcoming_snippet_card_preview_data"/>
+    </t>
+</template>
+<!-- Single record snippets -->
+<template id="s_events_single_offset" name="Single Event Offset">
+    <t t-set="is_single_record" t-value="True"/>
+    <t t-set="snippet_extra_classes" t-value="'s_event_event_single_offset'"/>
+    <t t-call="website_event.s_events">
+        <t t-call="website_event.s_dynamic_snippet_events_single_offset_preview_data"/>
+    </t>
+</template>
+<template id="s_events_single_entry" name="Single Event Entry">
+    <t t-set="is_single_record" t-value="True"/>
+    <t t-set="snippet_extra_classes" t-value="'s_event_event_single_entry'"/>
+    <t t-call="website_event.s_events">
+        <t t-call="website_event.s_dynamic_snippet_events_single_entry_preview_data"/>
+    </t>
+</template>
+<template id="s_events_single_card" name="Single Event Card">
+    <t t-set="is_single_record" t-value="True"/>
+    <t t-set="snippet_extra_classes" t-value="'s_event_event_single_card'"/>
+    <t t-call="website_event.s_events">
+        <t t-call="website_event.s_dynamic_snippet_events_single_card_preview_data"/>
+    </t>
+</template>
+<template id="s_events_single_badge" name="Single Event Badge">
+    <t t-set="is_single_record" t-value="True"/>
+    <t t-set="snippet_extra_classes" t-value="'s_event_event_single_badge'"/>
+    <t t-call="website_event.s_events">
+        <t t-call="website_event.s_dynamic_snippet_events_single_badge_preview_data"/>
+    </t>
+</template>
+<template id="s_events_single_aside" name="Single Event Aside">
+    <t t-set="is_single_record" t-value="True"/>
+    <t t-set="snippet_extra_classes" t-value="'s_event_event_single_aside'"/>
+    <t t-call="website_event.s_events">
+        <t t-call="website_event.s_dynamic_snippet_events_single_aside_preview_data"/>
+    </t>
+</template>
 
-<!--TEMPLATES-->
-
+<!-- Multi record templates-->
+<!-- Picture Layout -->
 <template id="dynamic_filter_template_event_event_picture" name="Picture Layout" priority="5">
     <div t-foreach="records" t-as="data" class="s_events_event w-100" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4">
         <t t-set="record" t-value="data['_record']._set_tz_context()"/>
@@ -41,7 +90,7 @@
         </a>
     </div>
 </template>
-
+<!-- Card Layout -->
 <template id="dynamic_filter_template_event_event_card" name="Card Layout" priority="10">
     <t t-foreach="records" t-as="data" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4 col-xxl-3">
         <t t-set="record" t-value="data['_record']._set_tz_context()"/>
@@ -74,6 +123,23 @@
             </div>
         </a>
     </t>
+</template>
+
+<!-- Single record templates -->
+<!-- Offset Layout -->
+<template id="dynamic_filter_template_event_event_single_offset" name="Solo Offset">
+</template>
+<!-- Entry Layout -->
+<template id="dynamic_filter_template_event_event_single_entry" name="Solo Entry">
+</template>
+<!-- Card Layout -->
+<template id="dynamic_filter_template_event_event_single_card" name="Solo Card">
+</template>
+<!-- CTA Badge Layout -->
+<template id="dynamic_filter_template_event_event_single_badge" name="Solo Badge">
+</template>
+<!-- Aside Layout -->
+<template id="dynamic_filter_template_event_event_single_aside" name="Solo Aside">
 </template>
 
 <!--SNIPPET OPTIONS -->

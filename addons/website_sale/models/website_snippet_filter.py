@@ -17,10 +17,10 @@ class WebsiteSnippetFilter(models.Model):
             " cross selling",
     )
 
-    def _prepare_values(self, limit=None, search_domain=None):
+    def _prepare_values(self, limit=None, search_domain=None, **kwargs):
         website = self.env['website'].get_current_website()
         if (
-            self.model_name in ('product.product', 'product.public.category')
+            (self.model_name or kwargs.get('res_model')) in ('product.product', 'product.public.category')
             and not website.has_ecommerce_access()
         ):
             return []
@@ -44,7 +44,7 @@ class WebsiteSnippetFilter(models.Model):
         res = super(
             WebsiteSnippetFilter,
             self.with_context(hide_variants=hide_variants, product_limit=product_limit),
-        )._prepare_values(limit=limit, search_domain=search_domain)
+        )._prepare_values(limit=limit, search_domain=search_domain, **kwargs)
         if update_limit_cache:
             update_limit_cache(value=stored_limit)
         return res
@@ -110,16 +110,16 @@ class WebsiteSnippetFilter(models.Model):
             samples = merge_samples_with_data(data)
         return samples
 
-    def _filter_records_to_values(self, records, is_sample=False):
+    def _filter_records_to_values(self, records, **options):
         hide_variants = self.env.context.get('hide_variants') and not isinstance(records, list)
         if hide_variants:
             product_limit = self.env.context.get('product_limit') or self.limit
             records = records.product_tmpl_id[:product_limit]
-        res_products = super()._filter_records_to_values(records, is_sample)
-        if self.model_name == 'product.product':
+        res_products = super()._filter_records_to_values(records, **options)
+        if (self.model_name or options.get('res_model')) == 'product.product':
             for res_product in res_products:
                 product = res_product.get('_record')
-                if not is_sample:
+                if not options.get('is_sample'):
                     if hide_variants and not product.has_configurable_attributes:
                         # Still display a product.product if the template is not configurable
                         res_product['_record'] = product = product.product_variant_id
@@ -310,3 +310,10 @@ class WebsiteSnippetFilter(models.Model):
                     display_default_code=False,
                 ).search(domain, limit=limit)
         return products
+
+    @api.model
+    def default_get(self, fields):
+        defaults = super().default_get(fields)
+        if 'field_names' in defaults and self.env.context.get('model') == 'product.product':
+            defaults['field_names'] = 'display_name,description_sale,image_512'
+        return defaults
