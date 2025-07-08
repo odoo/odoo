@@ -8,7 +8,7 @@
                     'd-flex justify-content-center align-items-center': props.thread.attachments.length === 0,
                 }">
                     <p t-if="props.thread.attachments.length === 0" class="text-center fst-italic text-500">
-                        <t t-if="props.thread.channel_type === 'channel'">This channel doesn't have any attachments.</t>
+                        <t t-if="props.thread.channel?.channel_type === 'channel'">This channel doesn't have any attachments.</t>
                         <t t-else="">This conversation doesn't have any attachments.</t>
                     </p>
                     <div t-else="" t-foreach="attachmentsByDate" t-as="dateDay" t-key="dateDay" class="d-flex flex-column">

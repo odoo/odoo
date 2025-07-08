@@ -151,7 +151,7 @@ export class Persona extends Record {
 
     searchChat() {
         return Object.values(this.store.Thread.records).find(
-            (thread) => thread.channel_type === "chat" && thread.correspondent?.persona.eq(this)
+            (thread) => thread.channel?.channel_type === "chat" && thread.channel?.correspondent?.persona.eq(this)
         );
     }
 

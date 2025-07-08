@@ -73,7 +73,7 @@ patch(Thread.prototype, {
         });
         this.storeAsActiveLivechats = fields.One("Store", {
             compute() {
-                return this.channel_type === "livechat" && !this.livechat_end_dt
+                return this.channel?.channel_type === "livechat" && !this.livechat_end_dt
                     ? this.store
                     : null;
             },
@@ -90,19 +90,19 @@ patch(Thread.prototype, {
     },
 
     get avatarUrl() {
-        if (this.channel_type === "livechat") {
+        if (this.channel?.channel_type === "livechat") {
             return this.livechat_operator_id.avatarUrl;
         }
         return super.avatarUrl;
     },
     get displayName() {
-        if (this.channel_type === "livechat" && this.livechat_operator_id) {
+        if (this.channel?.channel_type === "livechat" && this.livechat_operator_id) {
             return this.getPersonaName(this.livechat_operator_id);
         }
         return super.displayName;
     },
     get hasWelcomeMessage() {
-        return this.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;
+        return this.channel?.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;
     },
     /** @returns {Promise<import("models").Message} */
     async post(body, postData, extraData = {}) {
@@ -113,7 +113,7 @@ patch(Thread.prototype, {
         ) {
             this.chatbot.isProcessingAnswer = true;
         }
-        if (this.channel_type === "livechat" && this.isTransient) {
+        if (this.channel?.channel_type === "livechat" && this.isTransient) {
             // For smoother transition: post the temporary message and set the
             // selected chat bot answer if any. Then, simulate the chat bot is
             // typing (2 ** 31 - 1 is the greatest value supported by

@@ -3,7 +3,7 @@
     <t t-inherit="mail.Composer" t-inherit-mode="extension">
         <xpath expr="//AttachmentList" position="after">
             <div t-if="thread?.model === 'discuss.channel' and !compact" class="o-discuss-Typing d-flex">
-                <Typing channel="thread" size="'medium'"/>
+                <Typing channel="thread.channel" size="'medium'"/>
             </div>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-Composer-input')]" position="attributes">

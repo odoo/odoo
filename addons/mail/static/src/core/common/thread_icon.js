@@ -33,7 +33,7 @@ export class ThreadIcon extends Component {
     }
 
     get correspondent() {
-        return this.props.thread.correspondent;
+        return this.props.thread.channel.correspondent;
     }
 
     get defaultChatIcon() {

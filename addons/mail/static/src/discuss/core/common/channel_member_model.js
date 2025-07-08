@@ -30,8 +30,8 @@ export class ChannelMember extends Record {
     get persona() {
         return this.guest_id || this.partner_id;
     }
-    channel_id = fields.One("Thread", { inverse: "channel_member_ids" });
-    threadAsSelf = fields.One("Thread", {
+    channel_id = fields.One("discuss.channel", { inverse: "channel_member_ids" });
+    threadAsSelf = fields.One("discuss.channel", {
         compute() {
             if (this.store.self?.eq(this.persona)) {
                 return this.channel_id;
@@ -85,7 +85,7 @@ export class ChannelMember extends Record {
             }
         },
     });
-    threadAsTyping = fields.One("Thread", {
+    threadAsTyping = fields.One("discuss.channel", {
         compute() {
             return this.isTyping ? this.channel_id : undefined;
         },
@@ -98,7 +98,7 @@ export class ChannelMember extends Record {
     typingTimeoutId;
 
     get name() {
-        return this.channel_id.getPersonaName(this.persona);
+        return this.channel_id.thread.getPersonaName(this.persona);
     }
 
     /**

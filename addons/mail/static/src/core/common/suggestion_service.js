@@ -254,7 +254,7 @@ export class SuggestionService {
             ...this.store.specialMentions.filter(
                 (special) =>
                     thread &&
-                    special.channel_types.includes(thread.channel_type) &&
+                    special.channel_types.includes(thread.channel?.channel_type) &&
                     cleanedSearchTerm.length >= Math.min(4, special.label.length) &&
                     (special.label.startsWith(cleanedSearchTerm) ||
                         cleanTerm(special.description.toString()).includes(cleanedSearchTerm))
@@ -303,7 +303,7 @@ export class SuggestionService {
     searchChannelSuggestions(cleanedSearchTerm) {
         const suggestionList = Object.values(this.store.Thread.records).filter(
             (thread) =>
-                thread.channel_type === "channel" &&
+                thread.channel?.channel_type === "channel" &&
                 thread.displayName &&
                 cleanTerm(thread.displayName).includes(cleanedSearchTerm)
         );

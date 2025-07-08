@@ -12,14 +12,14 @@ const messagePatch = {
     canReplyTo(thread) {
         return (
             super.canReplyTo(thread) &&
-            (thread?.channel_type !== "livechat" || !thread.composerDisabled)
+            (thread?.channel?.channel_type !== "livechat" || !thread.composerDisabled)
         );
     },
     isTranslatable(thread) {
         return (
             super.isTranslatable(thread) ||
             (this.store.hasMessageTranslationFeature &&
-                thread?.channel_type === "livechat" &&
+                thread?.channel?.channel_type === "livechat" &&
                 thread?.selfMember?.persona?.main_user_id?.share === false)
         );
     },

@@ -56,7 +56,7 @@ patch(Composer.prototype, {
                 this.hasSuggestions ||
                 (command &&
                     (!command.channel_types ||
-                        command.channel_types.includes(this.thread.channel_type)))
+                        command.channel_types.includes(this.thread.channel?.channel_type)))
             ) {
                 this.stopTyping();
                 return;

@@ -30,7 +30,7 @@ threadActionsRegistry
             return (
                 component.thread &&
                 component.props.chatWindow?.isOpen &&
-                (component.thread.is_editable || component.thread.channel_type === "chat")
+                (component.thread.is_editable || component.thread.channel?.channel_type === "chat")
             );
         },
         icon: "fa fa-fw fa-pencil",

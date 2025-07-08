@@ -11,7 +11,7 @@ patch(Thread.prototype, {
         this.livechat_operator_id = fields.One("Persona");
         this.livechatVisitorMember = fields.One("discuss.channel.member", {
             compute() {
-                if (this.channel_type !== "livechat") {
+                if (this.channel?.channel_type !== "livechat") {
                     return;
                 }
                 // For livechat threads, the correspondent is the first
@@ -41,12 +41,12 @@ patch(Thread.prototype, {
     },
     get autoOpenChatWindowOnNewMessage() {
         return (
-            (this.channel_type === "livechat" && !this.store.chatHub.compact) ||
+            (this.channel?.channel_type === "livechat" && !this.store.chatHub.compact) ||
             super.autoOpenChatWindowOnNewMessage
         );
     },
     get showCorrespondentCountry() {
-        if (this.channel_type === "livechat") {
+        if (this.channel?.channel_type === "livechat") {
             return (
                 this.livechat_operator_id?.eq(this.store.self) && Boolean(this.correspondentCountry)
             );
@@ -58,15 +58,15 @@ patch(Thread.prototype, {
     },
 
     get isChatChannel() {
-        return this.channel_type === "livechat" || super.isChatChannel;
+        return this.channel?.channel_type === "livechat" || super.isChatChannel;
     },
 
     get composerDisabled() {
-        return this.channel_type === "livechat" && this.livechat_end_dt;
+        return this.channel?.channel_type === "livechat" && this.livechat_end_dt;
     },
 
     get composerDisabledText() {
-        return this.channel_type === "livechat" && this.livechat_end_dt
+        return this.channel?.channel_type === "livechat" && this.livechat_end_dt
             ? _t("This livechat conversation has ended")
             : "";
     },
@@ -75,7 +75,7 @@ patch(Thread.prototype, {
      * @param {import("models").Persona} persona
      */
     getPersonaName(persona) {
-        if (this.channel_type === "livechat" && persona.user_livechat_username) {
+        if (this.channel?.channel_type === "livechat" && persona.user_livechat_username) {
             return persona.user_livechat_username;
         }
         if (persona.is_public && this.anonymous_name) {

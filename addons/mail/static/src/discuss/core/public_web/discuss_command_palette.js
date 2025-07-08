@@ -177,8 +177,8 @@ export class DiscussCommandPalette {
         const channels = Object.values(this.store.Thread.records)
             .filter(
                 (thread) =>
-                    thread.channel_type &&
-                    thread.channel_type !== "chat" &&
+                    thread.channel?.channel_type &&
+                    thread.channel?.channel_type !== "chat" &&
                     cleanTerm(thread.displayName).includes(this.cleanedTerm) &&
                     (!filtered || !filtered.has(thread))
             )
@@ -232,13 +232,15 @@ export class DiscussCommandPalette {
                     const channel = await this.store.Thread.getOrFetch(thread);
                     channel.open({ focus: true, bypassCompact: true });
                 },
-                name: thread.displayName,
+                name: thread.channel.name,
                 category,
                 props: {
                     imgUrl: thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl,
-                    channel: thread.channel_type !== "chat" ? thread : undefined,
+                    channel: thread.channel?.channel_type !== "chat" ? thread : undefined,
                     persona:
-                        thread.channel_type === "chat" ? thread.correspondent.persona : undefined,
+                        thread.channel?.channel_type === "chat"
+                            ? thread.channel.correspondent.persona
+                            : undefined,
                     counter: thread.importantCounter,
                 },
             };

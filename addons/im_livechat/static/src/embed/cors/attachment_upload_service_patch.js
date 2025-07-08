@@ -5,7 +5,7 @@ import { url } from "@web/core/utils/urls";
 
 patch(AttachmentUploadService.prototype, {
     getUploadURL(thread) {
-        if (thread.channel_type === "livechat") {
+        if (thread.channel?.channel_type === "livechat") {
             return url("/im_livechat/cors/attachment/upload");
         }
         return super.getUploadURL(...arguments);

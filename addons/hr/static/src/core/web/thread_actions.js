@@ -6,9 +6,9 @@ import { useService } from "@web/core/utils/hooks";
 threadActionsRegistry.add("open-hr-profile", {
     condition(component) {
         return (
-            component.thread?.channel_type === "chat" &&
+            component.thread?.channel.channel_type === "chat" &&
             component.props.chatWindow?.isOpen &&
-            component.thread.correspondent?.persona.employeeId
+            component.thread.channel.correspondent?.persona.employeeId
         );
     },
     icon: "fa fa-fw fa-id-card",
@@ -17,7 +17,7 @@ threadActionsRegistry.add("open-hr-profile", {
     async open(component) {
         component.actionService.doAction({
             type: "ir.actions.act_window",
-            res_id: component.thread.correspondent.persona.employeeId,
+            res_id: component.thread.channel.correspondent.persona.employeeId,
             res_model: "hr.employee.public",
             views: [[false, "form"]],
         });
@@ -27,17 +27,17 @@ threadActionsRegistry.add("open-hr-profile", {
         const orm = useService("orm");
         let employeeId;
         if (
-            !component.thread?.correspondent?.persona.employeeId &&
-            component.thread?.correspondent
+            !component.thread?.channel.correspondent?.persona.employeeId &&
+            component.thread?.channel.correspondent
         ) {
             const employees = await orm.silent.searchRead(
                 "hr.employee",
-                [["user_partner_id", "=", component.thread.correspondent.persona.id]],
+                [["user_partner_id", "=", component.thread.channel.correspondent.persona.id]],
                 ["id"]
             );
             employeeId = employees[0]?.id;
             if (employeeId) {
-                component.thread.correspondent.persona.employeeId = employeeId;
+                component.thread.channel.correspondent.persona.employeeId = employeeId;
             }
         }
     },

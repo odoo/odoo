@@ -360,7 +360,7 @@ export class Message extends Component {
         if (this.message.isSelfAuthored) {
             return false;
         }
-        if (this.props.thread.channel_type === "chat") {
+        if (this.props.thread.channel?.channel_type === "chat") {
             return false;
         }
         return true;

@@ -233,7 +233,7 @@ export class Composer extends Component {
             return this.props.placeholder;
         }
         if (this.thread) {
-            if (this.thread.channel_type === "channel") {
+            if (this.thread.channel?.channel_type === "channel") {
                 const threadName = this.thread.displayName;
                 if (this.thread.parent_channel_id) {
                     return _t('Message "%(subChannelName)s"', {
