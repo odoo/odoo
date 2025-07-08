@@ -190,14 +190,16 @@ export class FormatPlugin extends Plugin {
      * @returns {boolean}
      */
     isSelectionFormat(format, traversedNodes = this.dependencies.selection.getTraversedNodes()) {
-        const selectedNodes = traversedNodes.filter(isTextNode);
+        const selectedNodes = traversedNodes.filter(
+            (node) =>
+                isTextNode(node) &&
+                !isZwnbsp(node) &&
+                !isEmptyTextNode(node) &&
+                (!/^\n+$/.test(node.nodeValue) || !isBlock(closestElement(node)))
+        );
         const isFormatted = formatsSpecs[format].isFormatted;
         return (
-            selectedNodes.length &&
-            selectedNodes.every(
-                (node) =>
-                    isZwnbsp(node) || isEmptyTextNode(node) || isFormatted(node, this.editable)
-            )
+            selectedNodes.length && selectedNodes.every((node) => isFormatted(node, this.editable))
         );
     }
 
@@ -253,7 +255,10 @@ export class FormatPlugin extends Plugin {
                 .getSelectedNodes()
                 .filter(
                     (n) =>
-                        ((isTextNode(n) && (isVisibleTextNode(n) || isZWS(n))) ||
+                        ((isTextNode(n) &&
+                            (isVisibleTextNode(n) ||
+                                isZWS(n) ||
+                                (/^\n+$/.test(n.nodeValue) && !applyStyle))) ||
                             (n.nodeName === "BR" &&
                                 (isFakeLineBreak(n) ||
                                     previousLeaf(n, closestBlock(n))?.nodeName === "BR"))) &&
