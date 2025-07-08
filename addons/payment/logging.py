@@ -6,7 +6,10 @@ class SensitiveDataFilter(logging.Filter):
 
     def __init__(self, name='', sensitive_keys=None):
         super().__init__(name)
-        self._sensitive_keys = sensitive_keys or {}
+        if sensitive_keys is None:
+            self._sensitive_keys = set()
+        else:
+            self._sensitive_keys = sensitive_keys
         self._compile_patterns()
 
     def _compile_patterns(self):
@@ -62,9 +65,7 @@ class SensitiveDataFilter(logging.Filter):
 
 
 def get_payment_logger(name, sensitive_keys=None):
-    """
-    Returns the shared 'payment' logger or one of its children.
-    e.g. get_payment_logger('paypal') → logger named 'payment.paypal'
+    """Return a logger with a SensitiveDataFilter added if sensitive_keys are provided.
 
     :param name: The name of the logger.
     :param sensitive_keys: The keys that are sensitive and should not be logged.
@@ -72,6 +73,6 @@ def get_payment_logger(name, sensitive_keys=None):
     :rtype: logging.Logger
     """
     logger = logging.getLogger(name)
-    if sensitive_keys:
+    if sensitive_keys is not None:
         logger.addFilter(SensitiveDataFilter(sensitive_keys=sensitive_keys))
     return logger
