@@ -32,7 +32,6 @@ Ask questions, get answers, no distractions
         'views/forum_post_reason_views.xml',
         'views/forum_tag_views.xml',
         'views/forum_forum_views.xml',
-        'views/res_users_views.xml',
         'views/gamification_karma_tracking_views.xml',
         'views/forum_menus.xml',
 
