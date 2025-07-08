@@ -393,6 +393,12 @@ class ResCompany(models.Model):
                 if self.env['account.move.line'].search([('company_id', '=', company.id)]):
                     raise UserError(_('You cannot change the currency of the company since some journal items already exist'))
 
+                # We delete rate in the new company currency rate to avoid conversion issues
+                self.env['res.currency.rate'].search([
+                    ('currency_id', '=', values['currency_id']),
+                    ('company_id', '=', company.id),
+                ]).unlink()
+
         return super(ResCompany, self).write(values)
 
     @api.model
