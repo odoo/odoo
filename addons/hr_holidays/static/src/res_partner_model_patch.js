@@ -19,10 +19,13 @@ export function getOutOfOfficeDateEndText(datetime) {
 patch(ResPartner.prototype, {
     /** @returns {string} */
     get outOfOfficeDateEndText() {
-        const employee_id = this.employee_id || this.main_user_id?.employee_id;
-        if (!employee_id?.leave_date_to) {
+        const leave_date_to = this.main_user_id?.employee_id?.leave_date_to;
+        if (this.im_status.startsWith("leave_") && !leave_date_to) {
+            return _t("On leave due to public holiday");
+        }
+        if (!leave_date_to) {
             return "";
         }
-        return getOutOfOfficeDateEndText(employee_id.leave_date_to);
+        return getOutOfOfficeDateEndText(leave_date_to);
     },
 });
