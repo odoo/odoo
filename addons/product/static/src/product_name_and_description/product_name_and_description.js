@@ -90,7 +90,7 @@ export class ProductNameAndDescriptionField extends Component {
     }
 
     get productName() {
-        return this.props.record.data[this.props.name].display_name;
+        return this.props.record.data[this.props.name].display_name || "";
     }
 
     get label() {
