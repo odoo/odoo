@@ -39,8 +39,8 @@ class HrWorkEntry(models.Model):
         date_to += relativedelta(hour=23, minute=59, second=59)
         leaves_work_entries = self.env['hr.work.entry'].search([
             ('employee_id', '=', employee_id.id),
-            ('date_start', '>=', date_from),
-            ('date_stop', '<=', date_to),
+            ('date', '>=', date_from),
+            ('date', '<=', date_to),
             ('state', '!=', 'cancelled'),
             ('leave_id', '!=', False),
             ('leave_state', '=', 'validate'),
