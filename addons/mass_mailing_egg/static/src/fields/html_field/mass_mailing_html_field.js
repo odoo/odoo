@@ -33,6 +33,7 @@ export class MassMailingHtmlField extends HtmlMailField {
         super.setup();
         this.alwaysComputeInlineEditorContent = false;
         this.themeService = useService("mass_mailing_egg.themes");
+        this.ui = useService("ui");
         Object.assign(this.state, {
             // TODO EGGMAIL: maybe define a condition if there is no content to display
             // theme selectors. Or at least add an interface button to allow changing the theme
@@ -113,6 +114,24 @@ export class MassMailingHtmlField extends HtmlMailField {
             },
             () => [this.codeViewRef.el]
         );
+        // If the ui becomes small, we only display the readonly html value
+        let isSmall;
+        effect(
+            (state) => {
+                if (status(this) === "destroyed") {
+                    return;
+                }
+                if (state.isSmall !== isSmall) {
+                    this.state.key++;
+                    isSmall = state.isSmall;
+                }
+            },
+            [this.ui]
+        );
+    }
+
+    get isIframeReadonly() {
+        return this.props.readonly || this.ui.isSmall;
     }
 
     resetIframe() {
@@ -142,7 +161,7 @@ export class MassMailingHtmlField extends HtmlMailField {
      * @override
      */
     getConfig() {
-        if (this.props.readonly) {
+        if (this.isIframeReadonly) {
             return this.getReadonlyConfig();
         } else if (this.state.themeOptions?.withBuilder) {
             return this.getBuilderConfig();

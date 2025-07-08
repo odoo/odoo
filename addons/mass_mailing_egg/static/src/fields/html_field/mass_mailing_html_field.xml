@@ -17,7 +17,7 @@
                 </div>
             </t>
             <MassMailingIframe t-key="state.key"
-                config="this.getConfig()" themeOptions="state.themeOptions" readonly="props.readonly"
+                config="this.getConfig()" themeOptions="state.themeOptions" readonly="isIframeReadonly"
                 onEditorLoad.bind="onEditorLoad" onIframeLoad.bind="onIframeLoad" iframeRef="iframeRef"
                 showThemeSelector="state.showThemeSelector" showCodeView="state.showCodeView"
                 onBlur.bind="onBlur" t-props="this.getMassMailingIframeProps()"/>
