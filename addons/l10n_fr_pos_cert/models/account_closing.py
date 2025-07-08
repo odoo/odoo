@@ -86,7 +86,7 @@ class AccountSaleClosing(models.Model):
             date_start = previous_closing.create_date
             cumulative_total += previous_closing.cumulative_total
 
-        domain = Domain('company_id', '=', company.id) | Domain('state', 'in', ('paid', 'done'))
+        domain = Domain('company_id', '=', company.id) & Domain('state', 'in', ('paid', 'done'))
         if first_order.l10n_fr_secure_sequence_number is not False and first_order.l10n_fr_secure_sequence_number is not None:
             domain &= Domain('l10n_fr_secure_sequence_number', '>', first_order.l10n_fr_secure_sequence_number)
         elif date_start:
