@@ -9,7 +9,7 @@
             no_livechat="1">
             <t t-set="share_url" t-value="card._get_redirect_url()"/>
             <t t-set="share_url_quoted" t-value="quote(share_url)"/>
-            <div class="d-flex flex-column align-items-center justify-content-center h-100">
+            <div class="d-flex flex-column align-items-center text-center mt-5 h-100">
                 <div class="mb-5 d-flex flex-column align-items-center justify-content-center">
                     <h1 t-out="campaign.request_title">Share with your community!</h1>
                     <p t-out="campaign.request_description or None" class="mb-5"/>
@@ -21,13 +21,13 @@
                 </div>
                 <div class="d-flex flex-column align-items-center">
                     <h4>Select where to share</h4>
-                    <div class="text-start o_no_link_popover">
+                    <div class="o_no_link_popover">
                         <div id="url-div">
-                            <a class="fa fa-2x fa-facebook rounded m-2" t-attf-href="https://www.facebook.com/sharer/sharer.php?u={{share_url_quoted}}" target="_blank"/>
-                            <a class="fa fa-2x fa-twitter rounded m-2" t-attf-href="https://twitter.com/intent/tweet?url={{share_url_quoted}}{{'&amp;text=%s' % quote(campaign.post_suggestion) if campaign.post_suggestion else ''}}" target="_blank"/>
-                            <a class="fa fa-2x fa-linkedin rounded m-2" t-attf-href="https://www.linkedin.com/sharing/share-offsite/?url={{share_url_quoted}}" target="_blank"/>
-                            <a class="fa fa-2x fa-whatsapp rounded m-2" t-attf-href="https://wa.me/?text={{share_url_quoted}}" target="_blank"/>
-                            <a class="fa fa-2x fa-pinterest rounded m-2" t-attf-href="https://pinterest.com/pin/create/button/?url={{share_url_quoted}}" target="_blank"/>
+                            <a class="fa fa-facebook rounded" t-attf-href="https://www.facebook.com/sharer/sharer.php?u={{share_url_quoted}}" target="_blank"/>
+                            <a class="fa fa-twitter rounded" t-attf-href="https://twitter.com/intent/tweet?url={{share_url_quoted}}{{'&amp;text=%s' % quote(campaign.post_suggestion) if campaign.post_suggestion else ''}}" target="_blank"/>
+                            <a class="fa fa-linkedin rounded" t-attf-href="https://www.linkedin.com/sharing/share-offsite/?url={{share_url_quoted}}" target="_blank"/>
+                            <a class="fa fa-whatsapp rounded" t-attf-href="https://wa.me/?text={{share_url_quoted}}" target="_blank"/>
+                            <a class="fa fa-pinterest rounded" t-attf-href="https://pinterest.com/pin/create/button/?url={{share_url_quoted}}" target="_blank"/>
                         </div>
                     </div>
                 </div>
