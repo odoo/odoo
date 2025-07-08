@@ -7,9 +7,10 @@
         <xpath expr="//div[hasclass('screen-login')]" position="after">
             <div t-if="this.pos.config.module_pos_hr and this.pos.login" class="screen-login flex-grow-1 d-flex align-items-center justify-content-center">
                 <div class="d-flex bg-white p-3 gap-2 rounded">
-                    <input t-model="this.state.pin"
+                    <input
                         t-ref="autofocus"
-                        type="password"
+                        type="text"
+                        t-on-input="maskedInput"
                         class="form-control form-control-lg rounded flex-grow-1"
                         placeholder="Enter your PIN" />
                     <button class="select-cashier btn btn-secondary px-4" t-on-click="() => this.selectCashier(false, true)">
