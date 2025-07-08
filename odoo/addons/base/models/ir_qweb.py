@@ -748,6 +748,7 @@ class IrQweb(models.AbstractModel):
             __qweb_loaded_functions={},
             # List of codes generated during compilation. It is mainly used for debugging and displaying error messages.
             __qweb_loaded_codes={},
+            __qweb_loaded_options={},
             # Reference to the last node being compiled. It is mainly used for debugging and displaying error messages.
             _qweb_error_path_xml=[None, None],
         )
@@ -861,15 +862,16 @@ class IrQweb(models.AbstractModel):
             except Exception as error:
                 loaded_codes = self.env.context['__qweb_loaded_codes']
                 if (iterator_info['view_ref'] in loaded_codes and not isinstance(error, RecursionError)) or len(stack) <= 1:
-                    options = iterator_info['options']
+                    options = iterator_info['options'] or self.env.context['__qweb_loaded_options'].get(iterator_info['view_ref'])
                     ref = options.get('ref') if options else view_ref
                     ref_name = options.get('ref_name') if options else None
                     code = loaded_codes.get(iterator_info['view_ref']) or loaded_codes.get(False)
                     path_xml = [ref] + self.env.context['_qweb_error_path_xml']
                 else:
                     # get the previous caller (t-call, t-cache...) to display erroneous xml node.
-                    ref = stack[-2]['options'].get('ref')
-                    ref_name = stack[-2]['options'].get('ref_name')
+                    options = stack[-2]['options'] or self.env.context['__qweb_loaded_options'].get(stack[-2]['view_ref'])
+                    ref = options.get('ref')
+                    ref_name = options.get('ref_name')
                     code = loaded_codes.get(ref) or loaded_codes.get(False)
                     path_xml = iterator_info['caller_path_xml']
 
@@ -1063,6 +1065,7 @@ class IrQweb(models.AbstractModel):
                     values['xmlid'] = {options['ref_name']!r}
                     values['viewid'] = {options['ref']!r}
                 self.env.context['__qweb_loaded_functions'].update(template_functions)
+                self.env.context['__qweb_loaded_options'][{options['ref']!r}] = self.env.context['__qweb_loaded_options'][{options['ref_name']!r}] = template_options
                 self.env.context['__qweb_loaded_codes'][{options['ref']!r}] = self.env.context['__qweb_loaded_codes'][{options['ref_name']!r}] = code
                 yield from {def_name}_content(self, values)
                 """, 0)]
@@ -2533,7 +2536,7 @@ class IrQweb(models.AbstractModel):
                     )
             else:
                 code.append(indent_code(f"""
-                    t_call_values = {{ {T_CALL_SLOT}: QwebContent({{}}, {compile_context['ref']!r}, {def_name!r}, values.copy(), 'root', 't-call', (template_options['ref'], {path!r}, {xml!r}), irQweb=self) }}
+                    t_call_values = {{ {T_CALL_SLOT}: QwebContent({{}}, {compile_context['ref']!r}, {def_name!r}, values.copy(), 'root', 'inner-content', (template_options['ref'], {path!r}, {xml!r}), irQweb=self) }}
                 """, level))
         else:
             code.append(indent_code(f"t_call_values = {{ {T_CALL_SLOT}: '' }}", level))
