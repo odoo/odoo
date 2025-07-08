@@ -89,6 +89,7 @@ class StockWarehouseOrderpoint(models.Model):
              "The value depends on the type of the route (Buy or Manufacture)")
 
     unwanted_replenish = fields.Boolean('Unwanted Replenish', compute="_compute_unwanted_replenish")
+    deadline_date = fields.Date("Deadline", compute="_compute_deadline_date", help="Date before which you should order to avoid falling below the minimum.")
 
     _product_location_check = models.Constraint(
         'unique (product_id, location_id, company_id)',
@@ -107,6 +108,10 @@ class StockWarehouseOrderpoint(models.Model):
                 loc_domain &= ~Domain('id', 'child_of', view_location_id.id)
                 loc_domain &= Domain('company_id', 'in', [False, orderpoint.company_id.id])
             orderpoint.allowed_location_ids = self.env['stock.location'].search(loc_domain)
+
+    def _compute_deadline_date(self):
+        for orderpoint in self:
+            orderpoint.deadline_date = fields.Date.today()
 
     @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_lead_days(self):
