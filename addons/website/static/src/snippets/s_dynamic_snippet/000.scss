@@ -1,7 +1,13 @@
 .s_dynamic {
-    &.o_dynamic_snippet_empty:not(.o_check_scroll_position) {
-        // TODO Restore once interactions are started in edit mode.
-        // display: none !important;
+    // TODO Dynamic snippet loading style: Temporarily disabled in preview mode
+    // since it needs interactions to be available.
+    #wrap &.o_dynamic_snippet_empty:not(.o_check_scroll_position) {
+        section:not(.s_dynamic_snippet_holder) {
+            display: none !important;
+        }
+        .s_dynamic_snippet_holder {
+            display: block !important;
+        }
     }
     [data-url] {
         cursor: pointer;
@@ -45,6 +51,12 @@
                     flex: 1 1 var(--DynamicSnippet__entry-maxWidth, #{$-entry-min-width});
                 }
             }
+        }
+    }
+
+    &.s_dynamic_snippet_cover_left {
+        .s_dynamic_snippet_content_position {
+            flex-direction: row-reverse;
         }
     }
 }

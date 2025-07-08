@@ -24,6 +24,11 @@ export class DynamicSnippet extends Interaction {
                 "o_dynamic_snippet_empty": !this.isVisible,
             }),
         },
+        ".missing_option_warning": {
+            "t-att-class": () => ({
+                "d-none": !!this.data.length,
+            }),
+        },
     };
 
     setup() {
@@ -38,11 +43,13 @@ export class DynamicSnippet extends Interaction {
         this.renderedContentNode = document.createDocumentFragment();
         this.uniqueId = uniqueId("s_dynamic_snippet_");
         this.templateKey = "website.s_dynamic_snippet.grid";
-        this.isVisible = true;
+        this.isVisible = false;
         this.withSample = false;
     }
 
     async willStart() {
+        this.isSingleMode =
+            parseInt(this.el.dataset.numberOfRecords) === 1 && !this.el.dataset.filterId;
         await this.fetchData();
     }
 
@@ -63,7 +70,12 @@ export class DynamicSnippet extends Interaction {
      * Check if additional configuration elements are required in order to fetch data.
      */
     isConfigComplete() {
-        return this.el.dataset.filterId !== undefined && this.el.dataset.templateKey !== undefined;
+        const data = this.el.dataset;
+        const isSingleModeConfigComplete =
+            data.snippetModel && (!this.withSample ? data.snippetResId : true);
+        return !!(
+            data.templateKey && (this.isSingleMode ? isSingleModeConfigComplete : data.filterId)
+        );
     }
 
     /**
@@ -79,7 +91,12 @@ export class DynamicSnippet extends Interaction {
      * Add custom parameters if needed.
      */
     getRpcParameters() {
-        return {};
+        return this.isSingleMode
+            ? {
+                res_model: this.el.dataset.snippetModel,
+                res_id: parseInt(this.el.dataset.snippetResId),
+              }
+            : {};
     }
 
     async fetchData() {
@@ -140,10 +157,8 @@ export class DynamicSnippet extends Interaction {
 
     render() {
         if (this.data.length > 0 || this.withSample) {
-            this.isVisible = true;
             this.prepareContent();
         } else {
-            this.isVisible = false;
             this.renderedContentNode = document.createDocumentFragment();
         }
         this.renderContent();
@@ -157,6 +172,7 @@ export class DynamicSnippet extends Interaction {
         const templateAreaEl = this.el.querySelector(".dynamic_snippet_template");
         this.services["public.interactions"].stopInteractions(templateAreaEl);
         templateAreaEl.replaceChildren(this.renderedContentNode);
+        this.toggleVisibility(true);
         // TODO this is probably not the only public widget which creates DOM
         // which should be attached to another public widget. Maybe a generic
         // method could be added to properly do this operation of DOM addition.

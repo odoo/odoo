@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+<t t-inherit="website.DynamicSnippetOption" t-inherit-mode="extension">
+    <xpath expr="//BuilderSelect[@id=&quot;'model_opt'&quot;]" position="inside">
+        <BuilderSelectItem actionParam="'event.event'">Events</BuilderSelectItem>
+    </xpath>
+</t>
+
 <t t-name="website_event.DynamicSnippetEventsOption" t-inherit="website.DynamicSnippetOption">
     <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
     <div/>
-        <BuilderRow label.translate="Event Tags" preview="false">
+        <BuilderRow label.translate="Event Tags" preview="false" t-if="!isSingleMode">
             <BuilderMany2Many id="'event_tag_opt'" model="'event.tag'" limit="10"
                 dataAttributeAction="'filterByTagIds'"
                 fields="['category_id']"
