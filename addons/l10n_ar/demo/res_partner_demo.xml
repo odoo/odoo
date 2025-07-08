@@ -6,7 +6,6 @@
     <record id="res_partner_adhoc" model="res.partner">
         <field name="name">ADHOC SA</field>
         <field eval="[(6, 0, [ref('base.res_partner_category_8'), ref('base.res_partner_category_11')])]" name="category_id"/>
-        <field name="is_company">1</field>
         <field name="city">Rosario</field>
         <field name="zip">2000</field>
         <field name="state_id" ref="base.state_ar_s"/>
@@ -25,7 +24,6 @@
     <record id="res_partner_gritti_agrimensura" model="res.partner">
         <field name="name">Gritti Agrimensura</field>
         <field eval="[(6, 0, [ref('base.res_partner_category_8'), ref('base.res_partner_category_11')])]" name="category_id"/>
-        <field name="is_company">1</field>
         <field name="city">Rosario</field>
         <field name="zip">2000</field>
         <field name="state_id" ref="base.state_ar_s"/>
@@ -43,7 +41,6 @@
     <!-- Servicios Globales SRL -->
     <record id="res_partner_cmr" model="res.partner">
         <field name="name">Servicios Globales SRL</field>
-        <field name="is_company">1</field>
         <field name="city">Rosario</field>
         <field name="zip">2000</field>
         <field name="state_id" ref="base.state_ar_s"/>
@@ -60,7 +57,6 @@
     <!-- Odoo -->
     <record id="res_partner_odoo" model="res.partner">
         <field name="name">Odoo Inc</field>
-        <field name="is_company">1</field>
         <field name="city">San Francisco</field>
         <field name="zip">CA 94107</field>
         <field name="country_id" ref="base.us"/>
@@ -77,7 +73,6 @@
     <!-- Telecom -->
     <record id="res_partner_telecom" model="res.partner">
         <field name="name">TELECOM</field>
-        <field name="is_company">1</field>
         <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
         <field name='vat'>30639453738</field>
         <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_IVARI"/>
@@ -86,7 +81,6 @@
     <!-- Odoo -->
     <record id="res_partner_expresso" model="res.partner">
         <field name="name">Barcelona Food</field>
-        <field name="is_company">1</field>
         <field name="city">Barcelona</field>
         <field name="zip">11002</field>
         <field name="country_id" ref="base.es"/>
@@ -102,7 +96,6 @@
     <!-- Montana Sur -->
     <record id="res_partner_cerrocastor" model="res.partner">
         <field name="name">Montaña Sur</field>
-        <field name="is_company">1</field>
         <field name="city">San Martín de los Andes</field>
         <field name="state_id" ref="base.state_ar_v"/>
         <field name="country_id" ref="base.ar"/>
@@ -119,7 +112,6 @@
     <record id="res_partner_foreign" model="res.partner">
         <field name="name">Foreign Inc</field>
         <field eval="[(6, 0, [ref('base.res_partner_category_14'), ref('base.res_partner_category_12')])]" name="category_id"/>
-        <field name="is_company">1</field>
         <field name="street">7841 Red Road</field>
         <field name="city">San Francisco</field>
         <field name="state_id" ref='base.state_us_5'/>
@@ -137,7 +129,6 @@
     <record id="res_partner_mipyme" model="res.partner">
         <field name="name">Trenes Argentinos (Mipyme)</field>
         <field eval="[(6, 0, [ref('base.res_partner_category_14'), ref('base.res_partner_category_12')])]" name="category_id"/>
-        <field name="is_company">1</field>
         <field name="street">Santa Cruz 4636</field>
         <field name="city">Buenos Aires</field>
         <field name="state_id" ref='base.state_ar_c'/>
