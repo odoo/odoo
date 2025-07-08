@@ -1,62 +1,24 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
-import { standardFieldProps } from "../standard_field_props";
-import { FileInput } from "@web/core/file_input/file_input";
+import { Many2XBinary } from "../many2x_binary/many2x_binary_component";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 
-import { Component } from "@odoo/owl";
-
-export class Many2ManyBinaryField extends Component {
-    static template = "web.Many2ManyBinaryField";
-    static components = {
-        FileInput,
-    };
-    static props = {
-        ...standardFieldProps,
-        acceptedFileExtensions: { type: String, optional: true },
-        className: { type: String, optional: true },
-        numberOfFiles: { type: Number, optional: true },
-    };
-
+export class Many2ManyBinaryField extends Many2XBinary {
     setup() {
-        this.orm = useService("orm");
-        this.notification = useService("notification");
+        super.setup();
         this.operations = useX2ManyCrud(() => this.props.record.data[this.props.name], true);
     }
 
-    get uploadText() {
-        return this.props.record.fields[this.props.name].string;
-    }
     get files() {
-        return this.props.record.data[this.props.name].records.map((record) => {
-            return {
-                ...record.data,
-                id: record.resId,
-            };
-        });
-    }
-
-    getUrl(id) {
-        return "/web/content/" + id + "?download=true";
-    }
-
-    getExtension(file) {
-        return file.name.replace(/^.*\./, "");
-    }
-
-    isImage(file) {
-        return file.mimetype.startsWith("image/");
+        return this.props.record.data[this.props.name].records.map((record) => ({
+            ...record.data,
+            id: record.resId,
+        }));
     }
 
     async onFileUploaded(files) {
-        for (const file of files) {
-            if (file.error) {
-                return this.notification.add(file.error, {
-                    title: _t("Uploading error"),
-                    type: "danger",
-                });
-            }
+        const validFiles = await super.onFileUploaded(files);
+        for (const file of validFiles) {
             await this.operations.saveRecord([file.id]);
         }
     }
@@ -92,6 +54,7 @@ export const many2ManyBinaryField = {
     extractProps: ({ attrs, options }) => ({
         acceptedFileExtensions: options.accepted_file_extensions,
         className: attrs.class,
+        multiUpload: true,
         numberOfFiles: options.number_of_files,
     }),
 };
