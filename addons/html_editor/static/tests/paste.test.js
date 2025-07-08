@@ -1083,6 +1083,105 @@ describe("Unwrapping html element", () => {
             contentAfter: '<h1><font style="background-color: rgb(255, 0, 0);">abc</font>[]</h1>',
         });
     });
+    test("should unwrap li elements having no ul/ol", async () => {
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteOdooEditorHtml(editor, "<li><p>abc</p></li><li><p>def</p></li>");
+            },
+            contentAfter: "<p>abc</p><p>def[]</p>",
+        });
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteOdooEditorHtml(editor, "<li><h1>abc</h1></li><li><h1>def</h1></li");
+            },
+            contentAfter: "<h1>abc</h1><h1>def[]</h1>",
+        });
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteOdooEditorHtml(
+                    editor,
+                    "<li><blockquote>abc</blockquote></li><li><blockquote>def</blockquote></li>"
+                );
+            },
+            contentAfter: "<blockquote>abc</blockquote><blockquote>def[]</blockquote>",
+        });
+    });
+    test("should unwrap li elements with multiple blocks having no ul/ol", async () => {
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteOdooEditorHtml(
+                    editor,
+                    "<li><p>abc</p><p>def</p></li><li><p>abc</p><p>def</p></li>"
+                );
+            },
+            contentAfter: "<p>abc</p><p>def</p><p>abc</p><p>def[]</p>",
+        });
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteOdooEditorHtml(
+                    editor,
+                    "<li><h1>abc</h1><h1>def</h1></li><li><h1>abc</h1><h1>def</h1></li"
+                );
+            },
+            contentAfter: "<h1>abc</h1><h1>def</h1><h1>abc</h1><h1>def[]</h1>",
+        });
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteOdooEditorHtml(
+                    editor,
+                    "<li><blockquote>abc</blockquote><blockquote>def</blockquote></li><li><blockquote>abc</blockquote><blockquote>def</blockquote></li>"
+                );
+            },
+            contentAfter:
+                "<blockquote>abc</blockquote><blockquote>def</blockquote><blockquote>abc</blockquote><blockquote>def[]</blockquote>",
+        });
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteOdooEditorHtml(
+                    editor,
+                    unformat(`
+                    <li>
+                        <p>abc</p>
+                        <ul>
+                            <li>abc</li>
+                            <li>def</li>
+                            <li>ghi</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p>abc</p>
+                        <ul>
+                            <li>abc</li>
+                            <li>def</li>
+                            <li>ghi</li>
+                        </ul>
+                    </li>
+                `)
+                );
+            },
+            contentAfter: unformat(`
+                <p>abc</p>
+                <ul>
+                    <li>abc</li>
+                    <li>def</li>
+                    <li>ghi</li>
+                </ul>
+                <p>abc</p>
+                <ul>
+                    <li>abc</li>
+                    <li>def</li>
+                    <li>ghi[]</li>
+                </ul>
+            `),
+        });
+    });
 });
 
 describe("Complex html span", () => {
