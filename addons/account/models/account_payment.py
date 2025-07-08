@@ -149,6 +149,7 @@ class AccountPayment(models.Model):
     )
     reconciled_invoice_ids = fields.Many2many('account.move', string="Reconciled Invoices",
         compute='_compute_stat_buttons_from_reconciliation',
+        search='_search_reconciled_invoice_ids',
         help="Invoices whose journal items have been reconciled with these payments.")
     reconciled_invoices_count = fields.Integer(string="# Reconciled Invoices",
         compute="_compute_stat_buttons_from_reconciliation")
@@ -409,7 +410,7 @@ class AccountPayment(models.Model):
             if payment.journal_id.company_id not in payment.company_id.parent_ids:
                 payment.company_id = (payment.journal_id.company_id or self.env.company)._accessible_branches()[:1]
 
-    @api.depends('invoice_ids.payment_state', 'move_id.line_ids.amount_residual')
+    @api.depends('invoice_ids.payment_state', 'reconciled_invoice_ids.payment_state', 'move_id.line_ids.amount_residual')
     def _compute_state(self):
         for payment in self:
             if not payment.state:
@@ -422,7 +423,11 @@ class AccountPayment(models.Model):
                     if move.company_currency_id.is_zero(sum(liquidity.mapped('amount_residual'))) or not any(liquidity.account_id.mapped('reconcile')) else
                     'in_process'
                 )
-            if payment.state == 'in_process' and payment.invoice_ids and all(invoice.payment_state == 'paid' for invoice in payment.invoice_ids):
+            if (
+                payment.state == 'in_process' and
+                (payment.invoice_ids or payment.reconciled_invoice_ids) and
+                all(invoice.payment_state == 'paid' for invoice in (payment.invoice_ids | payment.reconciled_invoice_ids))
+            ):
                 payment.state = 'paid'
 
     @api.depends('move_id.line_ids.amount_residual', 'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.account_id', 'state')
@@ -690,7 +695,6 @@ class AccountPayment(models.Model):
         query_res = self._cr.dictfetchall()
 
         for pay in self:
-            pay.reconciled_invoice_ids = pay.invoice_ids.filtered(lambda m: m.is_sale_document(True))
             pay.reconciled_bill_ids = pay.invoice_ids.filtered(lambda m: m.is_purchase_document(True))
 
         for res in query_res:
@@ -750,6 +754,10 @@ class AccountPayment(models.Model):
         for payment in self:
             # Uses payment._origin.id to handle records in edition/existing records and 0 for new records
             payment.duplicate_payment_ids = payment_to_duplicate_move.get(payment._origin.id, self.env['account.payment'])
+
+    def _search_reconciled_invoice_ids(self, operator, value):
+        payment = self.env['account.move'].browse(value).origin_payment_id
+        return [('id', operator, payment.ids)]
 
     def _fetch_duplicate_reference(self, matching_states=('draft', 'in_process')):
         """ Retrieve move ids for possible duplicates of payments. Duplicates moves:
