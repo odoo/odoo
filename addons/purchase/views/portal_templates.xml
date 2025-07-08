@@ -311,7 +311,7 @@
                             }">
                                 <t t-if="not line.display_type">
                                     <td id="product_name" class="d-flex">
-                                        <img t-att-src="image_data_uri(resize_to_48(line.product_id.image_1024))" alt="Product" class="d-none d-lg-inline"/>
+                                        <img t-att-src="image_data_uri(line.product_id.image_128)" alt="Product" class="d-none d-lg-inline o_purchase_portal_product_image"/>
                                         <span t-field="line.name"/>
                                     </td>
                                     <td class="text-end">
