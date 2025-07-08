@@ -786,6 +786,7 @@ class DiscussChannel(models.Model):
 
     def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
         payload = super()._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
+        msg_vals = msg_vals or {}
         payload['options']['data']['action'] = 'mail.action_discuss'
         record_name = msg_vals['record_name'] if 'record_name' in msg_vals else message.record_name
         author_ids = [msg_vals["author_id"]] if msg_vals.get("author_id") else message.author_id.ids
