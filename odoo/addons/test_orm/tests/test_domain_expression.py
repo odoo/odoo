@@ -2590,14 +2590,14 @@ class TestMany2many(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
-            WHERE (NOT EXISTS (
-                SELECT 1 FROM "res_groups_users_rel" AS "res_users__group_ids"
-                WHERE "res_users__group_ids"."uid" = "res_users"."id"
-            )
-            OR EXISTS (
+            WHERE (EXISTS (
                 SELECT 1 FROM "res_groups_users_rel" AS "res_users__group_ids"
                 WHERE "res_users__group_ids"."uid" = "res_users"."id"
                 AND "res_users__group_ids"."gid" IN %s
+            )
+            OR NOT EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__group_ids"
+                WHERE "res_users__group_ids"."uid" = "res_users"."id"
             ))
             ORDER BY "res_users"."id"
         ''']):

@@ -811,9 +811,6 @@ class _RelationalMulti(_Relational):
         if not self.store:
             raise ValueError(f"Cannot convert {self} to SQL because it is not stored")
 
-        # update the operator to 'any'
-        if operator in ('in', 'not in'):
-            operator = 'any' if operator == 'in' else 'not any'
         assert operator in ('any', 'not any', 'any!', 'not any!'), \
             f"Relational field {self} expects 'any' operator"
         exists = operator in ('any', 'any!')
@@ -851,9 +848,13 @@ class _RelationalMulti(_Relational):
         field_domain = self.get_comodel_domain(model)
         if isinstance(value, Domain):
             domain = value & field_domain
-            comodel = comodel.with_context(**self.context)
             bypass_access = self.bypass_search_access or operator in ('any!', 'not any!')
-            query = comodel._search(domain, bypass_access=bypass_access)
+            if bypass_access and domain.is_condition('id', value=Query):
+                # ('id', 'any!', Query), so we can just use the query
+                query = domain.value
+            else:
+                comodel = comodel.with_context(**self.context)
+                query = comodel._search(domain, bypass_access=bypass_access)
             assert isinstance(query, Query)
             return query
         if isinstance(value, Query):

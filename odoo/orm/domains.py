@@ -1925,8 +1925,29 @@ def _optimize_m2o_bypass_comodel_id_lookup(condition, model):
         if operator == 'not any!':
             domain = ~domain
         return domain
-
     return condition
+
+
+@field_type_optimization(['one2many', 'many2many'], level=OptimizationLevel.FULL)
+def _optimize_x2m_in_operator(condition, model):
+    """For x2m fields, we always will generate a query so we can express it as
+    the "any!" operator directly.
+    """
+    if condition.operator not in ('in', 'not in'):
+        return condition
+    field_expr = condition.field_expr
+    ids = condition.value
+    # rewrite condition (field_expr, 'in', ids), then negate in the case 'not in'
+    domain = Domain.FALSE
+    if False in ids:
+        # x2m in {False, ...} => x2m not any! (Domain.TRUE) or x2m in {...}
+        domain |= Domain(field_expr, 'not any!', Domain.TRUE)
+        ids = ids - {False}
+    if ids:
+        # x2m in ids => x2m any! (ids_as_query)
+        comodel = model.env[condition._field(model).comodel_name]
+        domain |= Domain(field_expr, 'any!', comodel.browse(ids)._as_query(ordered=False))
+    return domain if condition.operator == 'in' else ~domain
 
 
 # --------------------------------------------------
