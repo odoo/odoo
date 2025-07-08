@@ -168,7 +168,7 @@ class ProductTemplate(models.Model):
                         FROM %s
                     LEFT JOIN pm ON product_template.id = pm.product_tmpl_id
                         WHERE %s
-                    ORDER BY product_template.is_favorite DESC,
+                    ORDER BY product_template.is_favorite DESC NULLS LAST,
                         CASE WHEN product_template.type = 'service' THEN 1 ELSE 0 END DESC,
                         pm.date DESC NULLS LAST,
                         product_template.write_date DESC
