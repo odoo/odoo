@@ -43,7 +43,6 @@ class TestPhCommon(AccountTestInvoicingCommon):
             'city': 'Super City',
             'zip': '8888',
             'country_id': cls.env.ref('base.ph').id,
-            'is_company': True,
             'vat': '789-456-123-456',
         })
         cls.partner_c = cls.env['res.partner'].create({

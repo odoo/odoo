@@ -470,7 +470,6 @@ class AccountChartTemplate(models.AbstractModel):
             'l10n_uy.res_partner_foreign': {
                 'name': 'Foreign Inc',
                 'l10n_latam_identification_type_id': 'l10n_latam_base.it_vat',
-                'is_company': True,
                 'vat': '17-2038053',
                 'zip': '95380',
                 'street': '7841 Red Road',
