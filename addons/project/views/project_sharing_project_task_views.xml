@@ -153,11 +153,11 @@
                         <h1 class="d-flex w-100">
                             <field name="name" options="{'line_breaks': False}" widget="text" class="o_task_name text-truncate w-md-75 w-100 pe-2" placeholder="Task Title..."/>
                         </h1>
-                        <div class="d-flex justify-content-end align-items-center px-1" invisible="not active or is_template">
+                        <div class="d-flex justify-content-end align-items-center px-1" invisible="not active">
                             <field name="priority" class="h3 pe-2" widget="priority"/>
                             <field name="state" widget="project_task_state_selection" class="o_task_state_widget" />
                         </div>
-                        <div class="d-flex justify-content-start align-items-center w-100 w-md-50 w-lg-25" invisible="active and not is_template">
+                        <div class="d-flex justify-content-start align-items-center w-100 w-md-50 w-lg-25" invisible="active">
                             <field name="priority" class="h3 pe-2" widget="priority"/>
                             <field name="state" widget="project_task_state_selection" class="o_task_state_widget" />
                         </div>

@@ -29,12 +29,8 @@ PROJECT_TASK_READABLE_FIELDS = {
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
-    project_id = fields.Many2one(domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id), ('is_internal_project', '=', False), ('is_template', 'in', [is_template, False])]")
+    project_id = fields.Many2one(domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id), ('is_internal_project', '=', False)]")
     analytic_account_active = fields.Boolean("Active Analytic Account", related='project_id.analytic_account_active', export_string_translation=False)
-    allow_timesheets = fields.Boolean(
-        "Allow timesheets",
-        compute='_compute_allow_timesheets', search='_search_allow_timesheets',
-        compute_sudo=True, readonly=True, export_string_translation=False)
     remaining_hours = fields.Float("Time Remaining", compute='_compute_remaining_hours', store=True, readonly=True, help="Number of allocated hours minus the number of hours spent.")
     remaining_hours_percentage = fields.Float(compute='_compute_remaining_hours_percentage', search='_search_remaining_hours_percentage', export_string_translation=False)
     effective_hours = fields.Float("Time Spent", compute='_compute_effective_hours', compute_sudo=True, store=True)
@@ -43,16 +39,6 @@ class ProjectTask(models.Model):
     overtime = fields.Float(compute='_compute_progress_hours', store=True)
     subtask_effective_hours = fields.Float("Time Spent on Sub-tasks", compute='_compute_subtask_effective_hours', recursive=True, store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets', export_string_translation=False)
-    encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=lambda self: self._uom_in_days(), export_string_translation=False)
-    display_name = fields.Char(help="""Use these keywords in the title to set new tasks:\n
-        30h Allocate 30 hours to the task
-        #tags Set tags on the task
-        @user Assign the task to a user
-        ! Set the task a medium priority
-        !! Set the task a high priority
-        !!! Set the task a urgent priority\n
-        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !""",
-    )
     @property
     def TASK_PORTAL_READABLE_FIELDS(self):
         return super().TASK_PORTAL_READABLE_FIELDS | PROJECT_TASK_READABLE_FIELDS
@@ -62,23 +48,6 @@ class ProjectTask(models.Model):
         private_tasks = self.filtered(lambda t: not t.project_id)
         if private_tasks and self.env['account.analytic.line'].sudo().search_count([('task_id', 'in', private_tasks.ids)], limit=1):
             raise UserError(_("This task cannot be private because there are some timesheets linked to it."))
-
-    def _uom_in_days(self):
-        return self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
-
-    def _compute_encode_uom_in_days(self):
-        self.encode_uom_in_days = self._uom_in_days()
-
-    @api.depends('project_id.allow_timesheets')
-    def _compute_allow_timesheets(self):
-        for task in self:
-            task.allow_timesheets = task.project_id.allow_timesheets
-
-    def _search_allow_timesheets(self, operator, value):
-        query = self.env['project.project'].sudo()._search([
-            ('allow_timesheets', operator, value),
-        ])
-        return [('project_id', 'in', query)]
 
     @api.depends('timesheet_ids.unit_amount')
     def _compute_effective_hours(self):

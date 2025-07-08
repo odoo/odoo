@@ -96,7 +96,7 @@ export class SubtaskKanbanList extends Component {
             const sequences = this.list.records.map(r => r.data.sequence);
             const nextSequence = (sequences.length ? Math.max(...sequences) : 0) + 1;
 
-            await this.orm.create("project.task", [{
+            await this.orm.create(this.list.resModel, [{
                 display_name: name,
                 parent_id: this.props.record.resId,
                 project_id: this.props.record.data.project_id.id,
