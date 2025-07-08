@@ -168,10 +168,22 @@ class ResPartner(models.Model):
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
 
+<<<<<<< aa72462bd8672fe8a2109daa0fc60abeb3814090
     def write(self, vals):
         res = super().write(vals)
         self._update_peppol_state_per_company(vals=vals)
         return res
+||||||| ca7de6b2fbe4626583b67a34d77bbb523d972f79
+    @api.depends('ubl_cii_format')
+    def _compute_is_peppol_edi_format(self):
+        for partner in self:
+            partner.is_peppol_edi_format = partner.ubl_cii_format not in (False, 'facturx', 'oioubl_201', 'ciusro')
+=======
+    @api.depends('ubl_cii_format')
+    def _compute_is_peppol_edi_format(self):
+        for partner in self:
+            partner.is_peppol_edi_format = partner.ubl_cii_format not in (False, 'facturx', 'oioubl_201', 'ciusro', 'ubl_tr')
+>>>>>>> ae8df04c1032f661bfad838a81bbcc199c701657
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -23,9 +23,63 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         alerts = super()._get_alerts(moves, moves_data)
 
+<<<<<<< aa72462bd8672fe8a2109daa0fc60abeb3814090:addons/account_edi_ubl_cii/models/account_move_send.py
         peppol_formats = set(self.env['res.partner']._get_peppol_formats())
         if peppol_format_moves := moves.filtered(lambda m: moves_data[m]['invoice_edi_format'] in peppol_formats):
             not_configured_company_partners = peppol_format_moves.company_id.partner_id.filtered(
+||||||| ca7de6b2fbe4626583b67a34d77bbb523d972f79:addons/account_edi_ubl_cii/wizard/account_move_send.py
+    @api.depends('move_ids')
+    def _compute_enable_ubl_cii_xml(self):
+        for wizard in self:
+            wizard.enable_ubl_cii_xml = any(m._need_ubl_cii_xml() for m in wizard.move_ids)
+
+    @api.depends('checkbox_ubl_cii_xml')
+    def _compute_mail_attachments_widget(self):
+        # EXTENDS 'account' - add depends
+        super()._compute_mail_attachments_widget()
+
+    @api.depends('enable_ubl_cii_xml')
+    def _compute_checkbox_ubl_cii_xml(self):
+        for wizard in self:
+            wizard.checkbox_ubl_cii_xml = wizard.enable_ubl_cii_xml and (wizard.checkbox_ubl_cii_xml or wizard.company_id.invoice_is_ubl_cii)
+
+    @api.depends('move_ids')
+    def _compute_ubl_warnings(self):
+        for wizard in self:
+            wizard.show_ubl_company_warning = False
+            wizard.ubl_partner_warning = False
+            if not set(wizard.move_ids.partner_id.commercial_partner_id.mapped('ubl_cii_format')) - {False, 'facturx', 'oioubl_201'}:
+                return
+
+            wizard.show_ubl_company_warning = not (wizard.company_id.partner_id.peppol_eas and wizard.company_id.partner_id.peppol_endpoint)
+            not_configured_partners = wizard.move_ids.partner_id.commercial_partner_id.filtered(
+=======
+    @api.depends('move_ids')
+    def _compute_enable_ubl_cii_xml(self):
+        for wizard in self:
+            wizard.enable_ubl_cii_xml = any(m._need_ubl_cii_xml() for m in wizard.move_ids)
+
+    @api.depends('checkbox_ubl_cii_xml')
+    def _compute_mail_attachments_widget(self):
+        # EXTENDS 'account' - add depends
+        super()._compute_mail_attachments_widget()
+
+    @api.depends('enable_ubl_cii_xml')
+    def _compute_checkbox_ubl_cii_xml(self):
+        for wizard in self:
+            wizard.checkbox_ubl_cii_xml = wizard.enable_ubl_cii_xml and (wizard.checkbox_ubl_cii_xml or wizard.company_id.invoice_is_ubl_cii)
+
+    @api.depends('move_ids')
+    def _compute_ubl_warnings(self):
+        for wizard in self:
+            wizard.show_ubl_company_warning = False
+            wizard.ubl_partner_warning = False
+            if not set(wizard.move_ids.partner_id.commercial_partner_id.mapped('ubl_cii_format')) - {False, 'facturx', 'oioubl_201', 'ubl_tr'}:
+                return
+
+            wizard.show_ubl_company_warning = not (wizard.company_id.partner_id.peppol_eas and wizard.company_id.partner_id.peppol_endpoint)
+            not_configured_partners = wizard.move_ids.partner_id.commercial_partner_id.filtered(
+>>>>>>> ae8df04c1032f661bfad838a81bbcc199c701657:addons/account_edi_ubl_cii/wizard/account_move_send.py
                 lambda partner: not (partner.peppol_eas and partner.peppol_endpoint)
             )
             if not_configured_company_partners:
