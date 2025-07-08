@@ -148,7 +148,8 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'cac:PartyIdentification': {
                 'cbc:ID': {
                     '_text': partner.vat,
-                    'schemeID': 'VKN' if partner.is_company else 'TCKN',
+                    # A company has a 10-digit Tax ID & an individual contact has an 11-digit Tax ID
+                    'schemeID': 'VKN' if len(partner.vat) < 11 else 'TCKN',
                 }
             },
             'cac:PartyName': {
@@ -177,7 +178,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 'cbc:ElectronicMail': {'_text': partner.email},
             }
         }
-        if not partner.is_company:
+        if len(partner.vat) > 10:
             name_parts = partner.name.split(' ', 1)
             party_node['cac:Person'] = {
                 'cbc:FirstName': {'_text': name_parts[0]},
