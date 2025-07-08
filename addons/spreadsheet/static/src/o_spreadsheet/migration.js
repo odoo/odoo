@@ -57,7 +57,11 @@ migrationStepRegistry.add("18.4.10", {
     migrate(data) {
         for (const globalFilter of data.globalFilters || []) {
             if (globalFilter.type === "text" && typeof globalFilter.defaultValue == "string") {
-                globalFilter.defaultValue = [globalFilter.defaultValue];
+                if (globalFilter.defaultValue === "") {
+                    delete globalFilter.defaultValue;
+                } else {
+                    globalFilter.defaultValue = [globalFilter.defaultValue];
+                }
             }
             if (globalFilter.type === "text" && globalFilter.rangeOfAllowedValues) {
                 globalFilter.rangesOfAllowedValues = [globalFilter.rangeOfAllowedValues];
