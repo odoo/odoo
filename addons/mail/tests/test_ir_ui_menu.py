@@ -64,7 +64,6 @@ class TestMenuRootLookupByModel(MailCommon):
                      'Contacts', res_model='res.partner',
                      path='all-contacts',
                      view_mode='kanban,list,form,activity',
-                     context={'default_is_company': True},
                      domain='[]'))
         menu_root_invoicing = new_menu('Invoicing')
         new_menu('Companies', parent_id=menu_root_invoicing.id,
@@ -80,7 +79,6 @@ class TestMenuRootLookupByModel(MailCommon):
                      context={
                          'search_default_customer': 1,
                          'res_partner_search_mode': 'customer',
-                         'default_is_company': True,
                          'default_customer_rank': 1,
                      }))
         menu_root_sales = new_menu('Sales')
@@ -92,7 +90,6 @@ class TestMenuRootLookupByModel(MailCommon):
                      context={
                          'search_default_customer': 1,
                          'res_partner_search_mode': 'customer',
-                         'default_is_company': True,
                          'default_customer_rank': 1,
                      }))
         menu_root_settings = new_menu('Settings')

@@ -21,8 +21,6 @@ registry.category("website.form_editor_actions").add('create_lead', {
         string: _t('Your Email'),
     }, {
         type: 'char',
-        required: true,
-        fillWith: 'commercial_company_name',
         name: 'partner_name',
         string: _t('Your Company'),
     }, {

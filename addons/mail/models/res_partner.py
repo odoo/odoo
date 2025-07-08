@@ -262,7 +262,6 @@ class ResPartner(models.Model):
             "active",
             "avatar_128",
             "im_status",
-            "is_company",
             Store.One("main_user_id", ["share"]),
             "name",
         ]
