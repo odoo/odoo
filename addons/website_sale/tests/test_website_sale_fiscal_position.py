@@ -94,24 +94,27 @@ class TestWebsiteSaleFiscalPosition(ProductCommon, HttpCaseWithUserPortal):
         self.start_tour("/shop", 'website_sale_fiscal_position_public_tour', login="")
 
     def test_recompute_taxes_on_address_change(self):
+        tax_15_incl = self.tax_15_excl.copy({'name': "15% incl", 'price_include': True})
+        self.fpos_be.tax_ids.tax_src_id = self.product.taxes_id = tax_15_incl
         self.product.website_published = True
-        self.product.taxes_id = self.tax_15_excl
         cart = self.env['sale.order'].create({
             'partner_id': self.partner_portal.id,
             'website_id': self.website.id,
             'order_line': [Command.create({'product_id': self.product.id})],
         })
+        amount_untaxed = cart.amount_untaxed
         self.assertEqual(cart.fiscal_position_id, self.fpos_be)
         self.assertEqual(cart.order_line.tax_id, self.tax_0)
 
         self.partner_portal.country_id = self.env.ref('base.us')
         self.assertNotEqual(cart.fiscal_position_id, self.fpos_be)
-        self.assertEqual(cart.order_line.tax_id, self.tax_15_excl)
+        self.assertEqual(cart.order_line.tax_id, tax_15_incl)
+        self.assertEqual(cart.amount_untaxed, amount_untaxed, "Untaxed amount should not change")
 
         cart.action_confirm()
         self.partner_portal.country_id = self.env.ref('base.be')
         self.assertEqual(
             cart.order_line.tax_id,
-            self.tax_15_excl,
+            tax_15_incl,
             "Tax should no longer change after order confirmation",
         )
