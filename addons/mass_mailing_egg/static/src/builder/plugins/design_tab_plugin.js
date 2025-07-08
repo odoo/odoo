@@ -12,11 +12,14 @@ export const OPTION_POSITIONS = {
     LINK: 60,
 };
 
+// TODO EGGMAIL: ensure that there is a .o_layout and a .container element
+// in the DOM, always. Reset from known theme if needed, wrap current content
+// in theme_wrapper? Investigate.
 class DesignTabPlugin extends Plugin {
     static id = "mass_mailing.DesignTab";
     static dependencies = ["builderActions"];
     resources = {
-        builder_options: [
+        design_options: [
             withSequence(
                 OPTION_POSITIONS.BODY,
                 this.getDesignOptionBlock("design-body", _t("Body"), {

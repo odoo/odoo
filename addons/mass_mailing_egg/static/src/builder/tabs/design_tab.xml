@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
 
-<t t-name="html_builder.DesignTab">
+<t t-name="mass_mailing_egg.DesignTab">
     <div class="o_design_tab h-100">
         <div t-ref="content" class="d-flex flex-column h-100">
             <t t-foreach="optionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
@@ -20,17 +20,17 @@
 </t>
 
 <t t-name="mass_mailing_egg.DesignBodyOption">
-    <BulderContext preview="false">
+    <BuilderContext preview="false">
         <BuilderRow label.translate="Body Width">
-            <BuilderSelect action="'customizeBodyWidth'" actionParam="'className'">
+            <BuilderSelect action="'mass_mailing_egg.DesignBodyOption'">
                 <BuilderSelectItem actionValue="'o_mail_small'">Small</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'o_mail_regular'">Regular</BuilderSelectItem>
                 <BuilderSelectItem actionValue="''">Full</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
-        <BuilderRow label.translate="Mailing Background"></BuilderRow>
-        <BuilderRow label.translate="Content Background"></BuilderRow>
-    </BulderContext>
+        <!-- <BuilderRow label.translate="Mailing Background"></BuilderRow>
+        <BuilderRow label.translate="Content Background"></BuilderRow> -->
+    </BuilderContext>
 </t>
 
 <t t-name="mass_mailing_egg.DesignParagraphOption">

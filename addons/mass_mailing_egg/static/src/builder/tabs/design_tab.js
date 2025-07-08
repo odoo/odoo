@@ -5,6 +5,7 @@ import { OptionsContainer } from "@html_builder/sidebar/option_container";
 export class DesignTab extends Component {
     static template = "mass_mailing_egg.DesignTab";
     static components = { OptionsContainer };
+    static props = {};
 
     setup() {
         useOptionsSubEnv(() => [this.env.editor.document.body]);

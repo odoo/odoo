@@ -11,7 +11,7 @@ export class CustomizeMailingPlugin extends Plugin {
 
     resources = {
         builder_actions: {
-
+            DesignBodyOption,
         },
         mass_mailing_css_prefix_selectors: ".o_mail_wrapper",
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
@@ -93,25 +93,35 @@ export class CustomizeMailingPlugin extends Plugin {
     }
 }
 
-const BODY_WIDTH_CLASSES = new Set("o_mail_small", "o_mail_regular");
+const BODY_WIDTH_CLASSES = new Set(["o_mail_small", "o_mail_regular"]);
 export class DesignBodyOption extends BuilderAction {
     static id = "mass_mailing_egg.DesignBodyOption";
-    static dependencies = ["builderActions", "mass_mailing.CustomizeMailingPlugin"];
-    isApplied() {
-        // TODO EGGMAIL always applied should return true?
-        return true;
+    static dependencies = ["builderActions", "mass_mailing.CustomizeMailingPlugin", "history"];
+    isApplied({ value }) {
+        return this.getValue() === value;
     }
     getValue() {
         const container = this.editable.querySelector(".container");
         for (const className of BODY_WIDTH_CLASSES) {
-            if (container.matches(className)) {
+            if (container.matches(`.${className}`)) {
                 return className;
             }
         }
         return "";
     }
-    apply({ editingElement, params, value }) {
-        
+    apply({ value }) {
+        const container = this.editable.querySelector(".container");
+        const currentValue = this.getValue();
+        if (currentValue === value) {
+            return;
+        }
+        if (currentValue) {
+            container.classList.remove(currentValue);
+        }
+        if (value) {
+            container.classList.add(value);
+        }
+        this.dependencies.history.addStep();
     }
 }
 
