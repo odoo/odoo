@@ -1458,7 +1458,7 @@
                                 </div>
                             </page>
                             <page id="other_tab" string="Other Info" name="other_info"
-                                  invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')">
+                                  invisible="move_type == 'entry'">
                                 <group id="other_tab_group">
                                     <group string="Invoice"
                                            name="sale_info_group"
@@ -1481,28 +1481,28 @@
                                         <field name="delivery_date" readonly="state != 'draft'"/>
                                     </group>
                                     <group string="Accounting"
-                                           name="accounting_info_group"
-                                           invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')">
+                                           name="accounting_info_group">
                                         <field name="company_id" groups="base.group_multi_company"/>
-                                        <field name="invoice_incoterm_id"/>
-                                        <field name="incoterm_location"/>
+                                        <field name="invoice_incoterm_id" invisible="move_type in ('out_receipt', 'in_receipt')"/>
+                                        <field name="incoterm_location" invisible="move_type in ('out_receipt', 'in_receipt')"/>
                                         <field name="fiscal_position_id" readonly="state in ['cancel', 'posted']"/>
                                         <field name="secured" groups="account.group_account_secured,base.group_no_one"/>
                                         <field name="preferred_payment_method_line_id"
                                                string="Payment Method"
                                                domain="[('payment_type', '=', 'inbound'), ('company_id', '=', company_id)]"
-                                               invisible="move_type in ('in_invoice', 'in_refund')"
+                                               invisible="move_type in ('in_invoice', 'in_refund', 'in_receipt')"
                                         />
                                         <field name="preferred_payment_method_line_id"
                                                string="Payment Method"
                                                domain="[('payment_type', '=', 'outbound'), ('company_id', '=', company_id)]"
-                                               invisible="move_type in ('out_invoice', 'out_refund')"
+                                               invisible="move_type in ('out_invoice', 'out_refund', 'out_receipt')"
                                         />
                                         <field name="invoice_cash_rounding_id" groups="account.group_cash_rounding" readonly="state != 'draft'"/>
                                         <field name="invoice_source_email"
                                                widget="email"
                                                invisible="move_type not in ('in_invoice', 'in_refund') or not invoice_source_email"/>
                                         <field name="auto_post"
+                                               invisible="move_type in ('out_receipt', 'in_receipt')"
                                                readonly="state != 'draft'"/>
                                         <field name="auto_post_until"
                                                invisible="auto_post in ('no', 'at_date')"
