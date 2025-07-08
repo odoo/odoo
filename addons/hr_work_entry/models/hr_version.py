@@ -436,10 +436,11 @@ class HrVersion(models.Model):
             # Get timezone from calendar
             version = self.env['hr.version'].browse(new_vals['version_id'])
             calendar = version.resource_calendar_id
-            if not calendar or not calendar.tz:
-                raise UserError(_('Missing timezone on resource calendar.'))
+            tz = version.resource_calendar_id.tz or version.employee_id.resource_calendar_id.tz or version.company_id.resource_calendar_id.tz
+            if not tz:
+                raise UserError(_('Missing timezone for work entries generation.'))
 
-            tz = pytz.timezone(calendar.tz)
+            tz = pytz.timezone(tz)
             local_start = date_start_utc.astimezone(tz)
             local_stop = date_stop_utc.astimezone(tz)
 
@@ -449,7 +450,6 @@ class HrVersion(models.Model):
                 next_local_midnight = datetime.combine(current.date() + timedelta(days=1), datetime.min.time()).replace(tzinfo=tz)
                 segment_end = min(local_stop, next_local_midnight)
 
-                duration_ratio = (segment_end - current) / (local_stop - local_start)
                 partial_vals = new_vals.copy()
 
                 # Convert partial segment back to UTC for consistency

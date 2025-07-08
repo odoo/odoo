@@ -53,8 +53,8 @@ class HrLeave(models.Model):
             start = min(self.mapped('date_from'), default=False)
             stop = max(self.mapped('date_to'), default=False)
             work_entry_groups = self.env['hr.work.entry']._read_group([
-                ('date', '<', stop),
-                ('date', '>', start),
+                ('date', '<=', stop),
+                ('date', '>=', start),
                 ('employee_id', 'in', self.employee_id.ids),
             ], ['employee_id'], ['id:recordset'])
             work_entries_by_employee = {
