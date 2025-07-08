@@ -4,7 +4,7 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 export class FormActionFieldsOption extends BaseOptionComponent {
     static template = "website.s_website_form_form_action_fields_option";
     static props = {
-        activeForm: Object,
+        activeForm: { type: Object, optional: true },
         prepareFormModel: Function,
     };
 
