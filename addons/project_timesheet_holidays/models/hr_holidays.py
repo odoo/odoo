@@ -82,7 +82,9 @@ class Holidays(models.Model):
 
             work_hours_data = leave.employee_id.list_work_time_per_day(
                 leave.date_from,
-                leave.date_to)
+                leave.date_to,
+                leave.resource_calendar_id,
+            )
 
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
                 vals_list.append(leave._timesheet_prepare_line_values(index, work_hours_data, day_date, work_hours_count, project, task))
