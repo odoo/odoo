@@ -3,7 +3,7 @@
     <data noupdate="1">
 
         <record id="dep_administration" model="hr.department">
-          <field name="name">Administration</field>
+            <field name="name">Administration</field>
         </record>
 
         <record id="employee_admin" model="hr.employee">
@@ -215,6 +215,11 @@
             <field name="parent_id" ref="mt_contract_pending"/>
             <field name="relation_field">department_id</field>
             <field name="description">Contract about to expire</field>
+        </record>
+
+        <!-- Add default Structure to employee admin -->
+        <record id="employee_admin" model="hr.employee">
+            <field name="structure_type_id" ref="hr.structure_type_employee"/>
         </record>
     </data>
 </odoo>
