@@ -116,3 +116,31 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
         right_date = commitment_date - security_delay
         for line in new_order.order_line:
             self.assertEqual(line.move_ids[0].date, right_date, "The expected date for the Stock Move is wrong")
+
+    def test_expected_date_with_storable_product(self):
+        ''' This test ensures the expected date is computed based on only goods(consu) products.
+        It's avoiding computation for non-goods products.
+        '''
+        sale_delay = 10.0
+        self.product.sale_delay = sale_delay
+
+        # Create a sale order with a consu product.
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 1000,
+            })],
+        })
+
+        # Ensure that expected date is correctly computed based on the consu product's sale delay.
+        self.assertEqual(sale_order.expected_date, fields.Datetime.now() + timedelta(days=sale_delay))
+
+        # Add a service product and ensure the expected date remains unchanged.
+        sale_order.write({
+            'order_line': [Command.create({
+                'product_id': self.service_product.id,
+                'product_uom_qty': 1000,
+            })],
+        })
+        self.assertEqual(sale_order.expected_date, fields.Datetime.now() + timedelta(days=sale_delay))
