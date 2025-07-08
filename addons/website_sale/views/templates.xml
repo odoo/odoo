@@ -2439,23 +2439,8 @@
     </template>
 
     <!-- Product options: Zoom -->
-    <template inherit_id='website_sale.product' id="product_picture_magnify_hover" name="Automatic Image Zoom">
+    <template inherit_id='website_sale.product' id="product_picture_magnify_click" name="Image Zoom On Click">
         <xpath expr='//div[hasclass("o_wsale_product_page")]' position='attributes'>
-            <attribute name="data-ecom-zoom-auto">1</attribute>
-            <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
-        </xpath>
-    </template>
-
-    <template inherit_id='website_sale.product' id="product_picture_magnify_click" active="False" name="Image Zoom On Click">
-        <xpath expr='//div[hasclass("o_wsale_product_page")]' position='attributes'>
-            <attribute name="data-ecom-zoom-click">1</attribute>
-            <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
-        </xpath>
-    </template>
-
-    <template inherit_id='website_sale.product' id="product_picture_magnify_both" active="False" name="Automatic Image Zoom And On Click">
-        <xpath expr='//div[hasclass("o_wsale_product_page")]' position='attributes'>
-            <attribute name="data-ecom-zoom-auto">1</attribute>
             <attribute name="data-ecom-zoom-click">1</attribute>
             <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
         </xpath>
