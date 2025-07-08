@@ -1,5 +1,27 @@
 <?xml version="1.0"?>
 <odoo>
+    <record id="auth_passkey_key_view_kanban" model="ir.ui.view">
+        <field name="name">auth.passkey.key.kanban</field>
+        <field name="model">auth.passkey.key</field>
+        <field name="arch" type="xml">
+            <kanban create="0" can_open="0">
+                <templates>
+                    <t t-name="menu">
+                        <a role="menuitem" type="object" name="action_rename_passkey" class="dropdown-item">Rename</a>
+                        <a role="menuitem" type="object" name="action_delete_passkey" class="dropdown-item">Delete</a>
+                    </t>
+                    <t t-name="card">
+                        <div>
+                            <field name="name" class="fw-bold fs-5"/>
+                            <field name="create_date" class="ms-2 text-muted"/>
+                        </div>
+                        <small>Last used: <field name="write_date"/></small>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="auth_passkey_key_rename" model="ir.ui.view">
         <field name="name">auth.passkey.key.rename</field>
         <field name="model">auth.passkey.key</field>

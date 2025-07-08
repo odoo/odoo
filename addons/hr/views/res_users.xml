@@ -168,6 +168,12 @@
                         </div>
                     </button>
                 </xpath>
+                <xpath expr="//group[@name='other_preferences']" position="inside">
+                    <field name="pin" string="Attendance PIN" readonly="not is_hr_user"/>
+                </xpath>
+                <xpath expr="//group[@name='other_calendar_preferences']" position="inside">
+                    <field name="work_location_id" string="Main Work Location" readonly="not can_edit"/>
+                </xpath>
             </field>
         </record>
     </data>

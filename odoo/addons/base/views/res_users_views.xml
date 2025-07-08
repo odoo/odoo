@@ -136,7 +136,7 @@
                             <page name="access_rights" string="Access Rights">
                                 <group string="Roles" invisible="share and companies_count &lt;= 1">
                                     <field name="role" invisible="share" widget="radio" options="{'horizontal': true}"/>
-                                    <field string="Allowed Companies" name="company_ids" invisible="companies_count &lt;= 1" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
+                                    <field string="Companies" name="company_ids" invisible="companies_count &lt;= 1" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
                                     <field string="Default Company" name="company_id" invisible="companies_count &lt;= 1" context="{'user_preference': 0}"/>
                                 </group>
                                 <field name="group_ids" widget="res_user_group_ids" nolabel="1" colspan="2" groups="base.group_no_one"/>
@@ -144,7 +144,7 @@
                             </page>
                             <page string="Preferences" name="preferences">
                                 <group>
-                                    <group string="Localization" name="preferences">
+                                    <group>
                                         <label for="lang" />
                                         <div class="o_row">
                                             <field name="lang" required="1"/>
@@ -152,22 +152,69 @@
                                                 type="action"
                                                 name="%(base.action_view_base_language_install)d"
                                                 class="oe_edit_only btn-sm btn-link mb4 fa fa-globe"
+                                                groups="base.group_system"
                                                 aria-label="Add a language"
                                                 title="Add a language"/>
                                         </div>
-                                        <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" />
-                                        <field name="tz_offset" invisible="1"/> <!-- needed for the timezone_mismatch widget -->
+                                        <field name="signature" readonly="0" options="{'codeview': true}"/>
                                     </group>
-                                    <group string="Menus Customization" groups="base.group_no_one"
-                                        invisible="share">
-                                        <field name="action_id"/>
-                                    </group>
-                                </group>
-                                <group name="messaging">
-                                    <field name="signature" options="{'codeview': true}"/>
+                                    <!-- This group is meant to be used by other modules -->
+                                    <group name="other_preferences"/>
                                 </group>
                             </page>
-                            <page string="Account Security" name="account_security" invisible="not id"/>
+                            <page name="calendar" string="Calendar">
+                                <group>
+                                    <group name="calendar_preferences">
+                                        <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
+                                        <field name="tz_offset" invisible="1"/> <!-- needed for the timezone_mismatch widget -->
+                                    </group>
+                                    <!-- This group is meant to be used by other modules -->
+                                    <group name="other_calendar_preferences"/>
+                                </group>
+                            </page>
+                            <page string="Security" name="page_security">
+                                <div name="auth" class="d-flex" invisible="id != uid">
+                                    <div class="w-50 w-lg-25 d-flex flex-column">
+                                        <span class="o_form_label">
+                                            Change Password
+                                        </span>
+                                        <span class="text-muted">
+                                            Update if compromised.
+                                        </span>
+                                    </div>
+                                    <a name="change_password" role="button" class="btn btn-secondary h-100" href="/web/change_password">
+                                        Change password
+                                    </a>
+                                </div>
+                                <div name="api_keys" invisible="id != uid" class="d-md-flex mt-3">
+                                    <div class="w-md-50 w-lg-25 d-flex flex-column">
+                                        <label for="api_key_wizard" string="API Keys" class="o_form_label"/>
+                                        <span class="text-muted">
+                                            Connect external services.
+                                        </span>
+                                    </div>
+                                    <div class="w-md-50 w-lg-75 d-flex flex-column">
+                                        <field name="api_key_ids" mode="kanban" invisible="not api_key_ids" class="w-sm-75 w-md-100 w-lg-75 w-xl-50 o_base_api_keys_kanban_view"/>
+                                        <div>
+                                            <button name="api_key_wizard" string="New API Key" type="object" class="btn btn-secondary h-100"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div invisible="id != uid" class="d-md-flex mt-3">
+                                    <div class="w-md-50 w-lg-25  d-flex flex-column">
+                                        <label for="action_revoke_all_devices" string="Devices" class="o_form_label"/>
+                                        <span class="text-muted">
+                                            Check if they are yours.
+                                        </span>
+                                    </div>
+                                    <div class="w-md-50 w-lg-75 d-flex flex-column">
+                                        <field name="device_ids" mode="kanban" class="w-sm-75 w-md-100 w-lg-75 w-xl-50 o_base_devices_kanban_view"/>
+                                        <div>
+                                            <button name="action_revoke_all_devices" type="object" string="Log out from all devices" class="btn btn-secondary h-100"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
@@ -382,7 +429,7 @@
                         </page>
                         <page string="Security" name="page_security">
                             <div name="auth" class="d-flex">
-                                <div class="w-25 d-flex flex-column">
+                                <div class="w-50 w-lg-25 d-flex flex-column">
                                     <span class="o_form_label">
                                         Change Password
                                     </span>
@@ -394,36 +441,22 @@
                                     Change password
                                 </a>
                             </div>
-                            <div name="api_keys" class="d-flex mt-3">
-                                <div class="w-sm-25 d-flex flex-column">
+                            <div name="api_keys" class="d-lg-flex mt-3">
+                                <div class="w-lg-25 d-flex flex-column">
                                     <label for="api_key_wizard" string="API Keys" class="o_form_label"/>
                                     <span class="text-muted">
                                         Connect external services.
                                     </span>
                                 </div>
-                                <div class="w-sm-75 d-flex flex-column">
-                                    <field name="api_key_ids" invisible="not api_key_ids" class="w-sm-75 o_base_api_keys_kanban_view">
-                                        <kanban can_open="false">
-                                            <templates>
-                                                <t t-name="menu">
-                                                    <a role="menuitem" type="object" name="remove" class="dropdown-item">Delete</a>
-                                                </t>
-                                                <t t-name="card">
-                                                    <field name="name" class="fw-bold fs-5"/>
-                                                    <small invisible="not scope">Scope: <field name="scope"/></small>
-                                                    <small>Created: <field name="create_date"/></small>
-                                                    <small>Expiration: <field name="expiration_date"/></small>
-                                                </t>
-                                            </templates>
-                                        </kanban>
-                                    </field>
+                                <div class="w-lg-75 d-flex flex-column">
+                                    <field name="api_key_ids" mode="kanban" invisible="not api_key_ids" class="w-lg-75 o_base_api_keys_kanban_view"/>
                                     <div>
                                         <button name="api_key_wizard" string="New API Key" type="object" class="btn btn-secondary h-100"/>
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex mt-3">
-                                <div class="w-sm-25 d-flex flex-column">
+                            <div class="d-lg-flex mt-3">
+                                <div class="w-lg-25 d-flex flex-column">
                                     <label for="action_revoke_all_devices" string="Devices" class="o_form_label"/>
                                     <span class="text-muted">
                                         Check if they are yours.

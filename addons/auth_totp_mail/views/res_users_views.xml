@@ -5,9 +5,9 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="auth_totp.view_totp_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_totp_enable_wizard']" position="after">
-                <button groups="base.group_erp_manager" invisible="id == uid"
-                        name="action_totp_invite" string="Invite to use 2FA" type="object" class="btn btn-secondary"/>
+            <xpath expr="//button[@name='action_totp_enable_wizard'][hasclass('disabled')]" position="after">
+                <button groups="base.group_erp_manager" invisible="id == uid or totp_enabled"
+                        name="action_totp_invite" string="Invite to use 2FA" type="object" class="btn btn-primary h-100 ms-2"/>
             </xpath>
         </field>
     </record>
