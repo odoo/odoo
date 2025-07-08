@@ -294,7 +294,7 @@
     <t t-else="" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-12' or 'col-xl-12'"/>
     <!-- No events -->
     <div t-if="not event_ids" class="col-12 text-center">
-        <div t-call="website_event.event_empty_events_svg" class="my-4"/>
+        <div class="my-4"><t t-call="website_event.event_empty_events_svg"/></div>
         <h3>No events scheduled yet</h3>
         <p t-if="searches['search']">We couldn't find any event matching your search for: <strong t-out="searches['search']"/>.</p>
         <p t-elif="searches['tags']">No event matching your search criteria could be found.</p>

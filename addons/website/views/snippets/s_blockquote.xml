@@ -85,18 +85,16 @@
 
 <template id="s_blockquote_options_apply" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
-        <!-- Binding the blockquote options on blockquotes without a handler parent -->
-        <t t-call="website.s_blockquote_options">
-            <t t-set="selector" t-value="'.s_blockquote'"/>
-            <t t-set="exclude" t-valuef="div:is(#{blockquote_parent_handlers}) > .s_blockquote"/>
-        </t>
+        <!-- Color and images -->
+        <t t-call="website.snippet_options_background_options"
+           selector.f=".s_blockquote"
+           exclude.f="div:is(#{blockquote_parent_handlers}) > .s_blockquote"/>
 
         <!-- Binding the blockquote options on the blockquote handler parents -->
-        <t t-call="website.s_blockquote_options">
-            <t t-set="selector" t-valuef="#{blockquote_parent_handlers}"/>
-            <t t-set="target" t-value="'> .s_blockquote'"/>
-            <t t-set="disable_blockquote_width" t-value="true"/>
-        </t>
+        <t t-call="website.s_blockquote_options"
+            selector.f="#{blockquote_parent_handlers}"
+            target="'> .s_blockquote'"
+            disable_blockquote_width="true"/>
     </xpath>
 </template>
 

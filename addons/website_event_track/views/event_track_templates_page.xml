@@ -117,10 +117,10 @@
                     </div>
                     <div class="o_we_track_action_buttons d-flex justify-content-md-end align-items-center flex-wrap">
                         <div class="o_we_track_reminder_button my-1">
-                            <div t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))"
-                                t-call="website_event_track.track_widget_reminder">
-                                <t t-set="reminder_small" t-value="False"/>
-                                <t t-set="reminder_light" t-value="False"/>
+                            <div t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))">
+                                <t t-call="website_event_track.track_widget_reminder"
+                                    reminder_small="False"
+                                    reminder_light="False"/>
                             </div>
                         </div>
                     </div>
