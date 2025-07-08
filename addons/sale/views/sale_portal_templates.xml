@@ -202,7 +202,10 @@
                                              and not payment_amount"> Accept &amp; Pay</t>
                                     <t t-else=""> Pay Now</t>
                                 </a>
-                                <div class="o_download_pdf d-flex gap-2 flex-lg-column flex-xl-row flex-wrap">
+                                <div
+                                    id="print_invoice_sidebar_button"
+                                    class="o_download_pdf d-flex gap-2 flex-lg-column flex-xl-row flex-wrap"
+                                >
                                     <a class="btn btn-light o_print_btn o_portal_invoice_print flex-grow-1" t-att-href="sale_order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" role="button" target="_blank"><i class="fa fa-print me-1"/>View Details</a>
                                 </div>
                             </div>

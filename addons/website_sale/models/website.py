@@ -48,7 +48,6 @@ class Website(models.Model):
 
     #=== FIELDS ===#
 
-    enabled_portal_reorder_button = fields.Boolean(string="Re-order From Portal")
     salesperson_id = fields.Many2one(
         string="Salesperson",
         comodel_name='res.users',
