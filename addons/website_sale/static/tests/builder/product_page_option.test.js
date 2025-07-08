@@ -115,7 +115,7 @@ test("Product page options", async () => {
     await waitForEndOfOperation();
     expect.verifySteps([
         // Activate the carousel view and change the shop config
-        "theme_customize_data", "config",
+        "config",
         // Shop config changes don't trigger the `savePlugin`; image edits are saved because of the
         // theme customization.
         "modify_image",
