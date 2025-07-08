@@ -13,4 +13,4 @@ class PosPaymentMethod(models.Model):
             domain = expression.OR([[('is_online_payment', '=', True), ('id', 'in', config['payment_method_ids'])], domain])
             return domain
         else:
-            return [('is_online_payment', '=', True)]
+            return [('is_online_payment', '=', True), ('id', '=', config['self_order_online_payment_method_id'])]
