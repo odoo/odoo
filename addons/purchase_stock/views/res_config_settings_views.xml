@@ -33,11 +33,10 @@
 				<attribute name="invisible">0</attribute>
 			</xpath>
 			<div id="purchase_po_lead" position="replace">
-				<setting company_dependent="1" help="Schedule request for quotations earlier to avoid delays" documentation="/applications/inventory_and_mrp/inventory/management/planning/scheduled_dates.html" title="Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays." name="schedule_receivings_setting_container">
-					<field name="use_po_lead"/>
+				<setting string="Replenishment Horizon" company_dependent="1" help="Configure your horizon to trigger reordering rules earlier to get a head start on replenishment and avoid delays, or trigger it just-in-time ('0 day') to avoid overstocking." documentation="/applications/inventory_and_mrp/inventory/management/planning/scheduled_dates.html" title="Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays." name="schedule_receiving_setting_container">
 					<div class="content-group">
-						<div class="mt16" invisible="not use_po_lead">
-							<span>Move forward expected request creation date by <field name="po_lead" class="oe_inline"/> days</span>
+						<div class="mt16">
+							<span><field name="po_lead" class="oe_inline"/> days</span>
 						</div>
 					</div>
 				</setting>
