@@ -181,3 +181,26 @@ registry.category("web_tour.tours").add("test_change_on_rights_reflected_directl
             Utils.negateStep(...SelectionPopup.has("Pos Employee1")),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_minimal_employee_refund", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Unlock Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Minimal Employee", { run: "click" }),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("001"),
+            {
+                trigger: negate(".subpads"),
+            },
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("001"),
+            {
+                trigger: ".subpads",
+            },
+        ].flat(),
+});
