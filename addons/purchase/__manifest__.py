@@ -51,6 +51,7 @@
         ],
         'web.assets_frontend': [
             'purchase/static/src/interactions/**/*',
+            'purchase/static/src/scss/purchase_portal.scss',
         ],
     },
     'author': 'Odoo S.A.',
