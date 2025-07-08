@@ -66,6 +66,7 @@ export class PosOrder extends Base {
                 TipScreen: {
                     inputTipAmount: "",
                 },
+                requiredPartnerDetails: {},
             };
         }
     }
@@ -112,12 +113,28 @@ export class PosOrder extends Base {
     }
 
     get presetRequirementsFilled() {
-        return (
-            (!this.preset_id?.needsPartner ||
-                (this.partner_id?.name && this.partner_id?.contact_address)) &&
-            (!this.preset_id?.needsName || this.partner_id?.name || this.floating_order_name) &&
-            (!this.preset_id?.needsSlot || this.preset_time)
-        );
+        const invalidCustomer =
+            (this.preset_id?.needsName || this.preset_id?.needsPartner) &&
+            !this.partner_id &&
+            !this.floating_order_name;
+        const isAddressMissing =
+            this.preset_id?.needsPartner && !(this.partner_id?.street || this.partner_id?.street2);
+        const invalidSlot = this.preset_id?.needsSlot && !this.preset_time;
+
+        if (invalidCustomer || isAddressMissing || invalidSlot) {
+            this.uiState.requiredPartnerDetails = {
+                field: _t(invalidCustomer ? "Customer" : isAddressMissing ? "Address" : "Slot"),
+                message: _t(
+                    invalidCustomer
+                        ? "Please add a valid customer to the order."
+                        : isAddressMissing
+                        ? "The selected customer needs an address."
+                        : "Please select a time slot before proceeding."
+                ),
+            };
+            return false;
+        }
+        return true;
     }
 
     setPresetDateTime(newTime) {
