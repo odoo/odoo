@@ -313,6 +313,22 @@ registry.category("web_tour.tours").add("OrderTrackingTour", {
             PaymentScreen.clickValidate(),
             ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.isShown(),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("2"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1"),
+            ProductScreen.clickOrderButton(),
+            FloorScreen.clickTable("2"),
+            inLeftSide([
+                ...ProductScreen.clickLine("Coca-Cola", "1"),
+                ...["⌫", "⌫"].map(Numpad.click), // remove orderlines and release table
+            ]),
+            ProductScreen.orderIsEmpty(),
+            ProductScreen.clickReleaseButton(), // synced order should be cancelled instead of deletion
+            FloorScreen.clickTable("2"),
+            ProductScreen.clickReleaseButton(),
+            Chrome.clickOrders(),
+            TicketScreen.search("Reference", "00002"),
+            { trigger: ".ticket-screen .rightpane .orders h3:contains('No orders found')" },
         ].flat(),
 });
 registry.category("web_tour.tours").add("CategLabelCheck", {
