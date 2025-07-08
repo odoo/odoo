@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_project_task_template_list_inherited" model="ir.ui.view">
+            <field name="name">project.task.template.list.inherited</field>
+            <field name="model">project.task.template</field>
+            <field name="inherit_id" ref="project.view_project_task_template_list"/>
+            <field name="arch" type="xml">
+                <field name="priority" position="before">
+                    <field name="allocated_hours"
+                        widget="timesheet_uom_no_toggle" sum="Total Allocated Time"
+                        invisible="allocated_hours == 0" optional="hide"
+                        groups="hr_timesheet.group_hr_timesheet_user"
+                        column_invisible="not context.get('allow_timesheets', True)"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_task_template_kanban_inherited_progress">
+            <field name="name">project.task.template.kanban.inherited.progress</field>
+            <field name="model">project.task.template</field>
+            <field name="inherit_id" ref="project.view_project_task_template_kanban"/>
+            <field name="arch" type="xml">
+                <templates position="before">
+                    <field name="allocated_hours" />
+                    <field name="allow_timesheets"/>
+                    <field name="encode_uom_in_days"/>
+                </templates>
+                <xpath expr="//footer//field[@name='priority']" position="before">
+                   <t name="allocated_hours" t-if="record.allocated_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value" groups="hr_timesheet.group_hr_timesheet_user">
+                       <t t-set="badge" t-value="'border border-success'"/>
+                        <t t-set="badge" t-value="'border border-warning'" t-if="record.allocated_hours.raw_value &gt;= 0.8 and record.allocated_hours.raw_value &lt;= 1"/>
+                        <t t-set="title" t-if="record.encode_uom_in_days.raw_value">Remaining days</t>
+                        <t t-set="title" t-else="">Time Remaining</t>
+                        <div t-attf-class="bg-transparent badge {{ badge }} me-0" t-att-title="title">
+                            <field name="allocated_hours" widget="timesheet_uom" />
+                        </div>
+                   </t>
+                </xpath>
+             </field>
+         </record>
+
+        <record model="ir.ui.view" id="view_project_task_template_form_inherited">
+            <field name="name">project.task.template.form.inherited</field>
+            <field name="model">project.task.template</field>
+            <field name="inherit_id" ref="project.view_project_task_template_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/field[@name='allocated_hours']" position="replace">
+                    <field name="subtask_count" invisible="1"/>
+                    <label for="allocated_hours" invisible="not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <div id="allocated_hours_container" class="text-nowrap" invisible="not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user">
+                        <field name="allocated_hours" class="oe_inline o_field_float_time o_task_planned_hours" widget="timesheet_uom_no_toggle"/>
+                        <span invisible="not subtask_count">
+                            (incl. <field name="subtask_allocated_hours" nolabel="1" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
+                            <span class="fw-bold text-dark"> Sub-tasks</span>)
+                        </span>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

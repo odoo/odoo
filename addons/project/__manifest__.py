@@ -35,6 +35,7 @@
         'views/project_task_type_views.xml',
         'views/project_project_views.xml',
         'views/project_task_views.xml',
+        'views/project_task_template_views.xml',
         'views/project_role_views.xml',
         'views/project_tags_views.xml',
         'views/project_milestone_views.xml',

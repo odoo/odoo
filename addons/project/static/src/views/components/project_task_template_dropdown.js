@@ -63,7 +63,7 @@ export class ProjectTaskTemplateDropdown extends Component {
         }
         this.action.switchView("form", {
             resId: await this.orm.call(
-                "project.task",
+                "project.task.template",
                 "action_create_from_template",
                 [templateId],
                 {

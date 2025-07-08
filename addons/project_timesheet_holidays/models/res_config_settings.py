@@ -14,7 +14,7 @@ class ResConfigSettings(models.TransientModel):
              " You can specify another project on each time off type individually.")
     leave_timesheet_task_id = fields.Many2one(
         related='company_id.leave_timesheet_task_id', string="Time Off Task", readonly=False,
-        domain="[('company_id', '=', company_id), ('project_id', '=?', internal_project_id), ('has_template_ancestor', '=', False)]",
+        domain="[('company_id', '=', company_id), ('project_id', '=?', internal_project_id)]",
         help="The default task used when automatically generating timesheets via time off requests."
              " You can specify another task on each time off type individually.")
 

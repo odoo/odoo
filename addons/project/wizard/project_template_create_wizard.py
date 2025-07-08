@@ -9,7 +9,7 @@ class ProjectTemplateCreateWizard(models.TransientModel):
         res = []
         template = self.env['project.project'].browse(self.env.context.get('template_id'))
         if template:
-            res = [Command.create({'role_id': role.id}) for role in template.task_ids.role_ids]
+            res = [Command.create({'role_id': role.id}) for role in template.task_template_ids.role_ids]
         return res
 
     name = fields.Char(string="Name", required=True)

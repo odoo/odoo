@@ -478,7 +478,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
     def _get_my_tasks_searchbar_filters(self, project_domain=None, task_domain=None):
         searchbar_filters = {
-            'all': {'label': _('All'), 'domain': [('project_id', '!=', False), ('is_template', '=', False)]},
+            'all': {'label': _('All'), 'domain': [('project_id', '!=', False)]},
         }
 
         # extends filterby criteria with project the customer has access to
@@ -491,7 +491,7 @@ class ProjectCustomerPortal(CustomerPortal):
         # extends filterby criteria with project (criteria name is the project id)
         # Note: portal users can't view projects they don't follow
         project_groups = request.env['project.task']._read_group(
-            Domain.AND([[('project_id', 'not in', projects.ids), ('is_template', '=', False), ('project_id', '!=', False)], task_domain or []]),
+            Domain.AND([[('project_id', 'not in', projects.ids), ('project_id', '!=', False)], task_domain or []]),
             ['project_id'])
         for [project] in project_groups:
             searchbar_filters.update({

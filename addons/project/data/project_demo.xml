@@ -847,7 +847,7 @@
             <field name="parent_id" ref="project.project_1_task_16"/>
             <field name="stage_id" ref="project_stage_2"/>
         </record>
-        <record id="project_1_task_18" model="project.task">
+        <record id="project_1_task_18" model="project.task.template">
             <field name="name">[Room Name] Layout Planning</field>
             <field name="description">
                 <![CDATA[
@@ -870,9 +870,8 @@
             <field name="project_id" ref="project.project_project_1"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_08')])]"/>
-            <field name="is_template">True</field>
         </record>
-        <record id="project_1_task_19" model="project.task">
+        <record id="project_1_task_19" model="project.task.template">
             <field name="name">[Vendor Name] Furniture Coordination</field>
             <field name="description">
                 <![CDATA[
@@ -882,19 +881,18 @@
             <field name="project_id" ref="project.project_project_1"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_05'), ref('project_tags_09')])]"/>
-            <field name="is_template">True</field>
         </record>
-        <record id="project_1_task_19_subtask_1" model="project.task">
+        <record id="project_1_task_19_subtask_1" model="project.task.template">
             <field name="name">Confirm Order and Delivery Date</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="parent_id" ref="project_1_task_19"/>
         </record>
-        <record id="project_1_task_19_subtask_2" model="project.task">
+        <record id="project_1_task_19_subtask_2" model="project.task.template">
             <field name="name">Prepare Site for Delivery</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="parent_id" ref="project_1_task_19"/>
         </record>
-        <record id="project_1_task_19_subtask_3" model="project.task">
+        <record id="project_1_task_19_subtask_3" model="project.task.template">
             <field name="name">Log Delivery and Report Issues</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="parent_id" ref="project_1_task_19"/>

@@ -65,8 +65,6 @@ class ReportProjectTaskUser(models.Model):
         column2='task_id', string='Block', readonly=True,
         domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
     description = fields.Text(readonly=True)
-    # We exclude template tasks, but we still need the field for the views
-    is_template = fields.Boolean(readonly=True)
 
     def _select(self):
         return """
@@ -98,8 +96,7 @@ class ReportProjectTaskUser(models.Model):
                 NULLIF(t.working_hours_open, 0) as working_hours_open,
                 NULLIF(t.working_hours_close, 0) as working_hours_close,
                 (extract('epoch' from (t.date_deadline-(now() at time zone 'UTC'))))/(3600*24) as delay_endings_days,
-                COUNT(td.task_id) as dependent_ids_count,
-                t.is_template
+                COUNT(td.task_id) as dependent_ids_count
         """
 
     def _group_by(self):
@@ -145,8 +142,6 @@ class ReportProjectTaskUser(models.Model):
     def _where(self):
         return """
                 t.project_id IS NOT NULL
-                AND t.is_template IS NOT TRUE
-                AND p.is_template IS NOT TRUE
         """
 
     def init(self):
