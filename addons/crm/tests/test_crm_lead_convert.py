@@ -446,7 +446,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         test_partner_lead, test_partner_wizard, commercial_partner = self.env['res.partner'].create([
             {'name': 'Lead Test Partner'},
             {'name': 'Wizard Test Partner'},
-            {'name': 'Company Partner', 'is_company': True},
+            {'name': 'Company Partner', 'vat': 'BE0477472701'},
         ])
         case_values = product(
             [no_partner, test_partner_lead],

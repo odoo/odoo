@@ -197,7 +197,6 @@ class TestPointOfSaleFlow(CommonPosTest):
     def test_pos_orders_count(self):
         parent_partner = self.env['res.partner'].create({
             'name': 'Parent Partner',
-            'company_type': 'person',
         })
         child_partner = self.env['res.partner'].create({
             'name': 'Child Partner',

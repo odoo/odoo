@@ -320,7 +320,7 @@ class TestProductPricelist(ProductCommon):
 
         test_partner_company = ResPartner.create({
             'name': 'This company',
-            'is_company': True,
+            'vat': 'BE0477472701',
         })
         test_partner_company.with_company(company_1).property_product_pricelist = self.business_pricelist.id
         test_partner_company.with_company(company_2).property_product_pricelist = self.customer_pricelist.id

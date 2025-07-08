@@ -884,7 +884,6 @@ class TestEventRegistrationData(TestEventInternalsCommon):
         # create company structure (using sudo as required partner manager group)
         company = self.env['res.partner'].sudo().create({
             'name': 'Customer Company',
-            'is_company': True,
             'type': 'other',
         })
         customer.sudo().write({'type': 'invoice', 'parent_id': company.id})

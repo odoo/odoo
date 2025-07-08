@@ -706,7 +706,7 @@ class CustomerPortal(Controller):
                 # Company name shouldn't be updated anywhere but the main and company address, even
                 # if it's not in the fields returned by _commercial_fields.
                 if partner_sudo != request.env['res.partner']._get_current_partner(**kwargs):
-                    address_values.pop('company_name', None)
+                    address_values.pop('parent_name', None)
             # Prevent changing the VAT number on a commercial partner if documents have been issued.
             elif (
                 'vat' in address_values

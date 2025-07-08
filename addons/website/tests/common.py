@@ -18,7 +18,6 @@ class HttpCaseWithWebsiteUser(HttpCase):
         partner_vals = {
             "name": "Rafe Restricted",
             "company_id": company.id,
-            "company_name": "YourCompany",
             "street": "725 5th Ave",
             "city": "New York",
             "state_id": state.id if state else False,

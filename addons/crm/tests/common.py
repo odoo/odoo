@@ -199,7 +199,6 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         cls.contact_company_1 = cls.env['res.partner'].create({
             'name': 'Planet Express',
             'email': cls.test_email_data[0],
-            'is_company': True,
             'street': '57th Street',
             'city': 'New New York',
             'country_id': cls.env.ref('base.us').id,
@@ -212,7 +211,6 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'lang': cls.lang_en.code,
             'phone': False,
             'parent_id': cls.contact_company_1.id,
-            'is_company': False,
             'street': 'Actually the sewers',
             'city': 'New York',
             'country_id': cls.env.ref('base.us').id,
@@ -224,7 +222,6 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'lang': cls.lang_en.code,
             'phone': cls.test_phone_data[2],
             'parent_id': False,
-            'is_company': False,
             'street': 'Cookieville Minimum-Security Orphanarium',
             'city': 'New New York',
             'country_id': cls.env.ref('base.us').id,
@@ -232,8 +229,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         })
         cls.contact_company = cls.env['res.partner'].create({
             'name': 'Mom',
-            'company_name': 'MomCorp',
-            'is_company': True,
+            'vat': 'BE0477472701',
             'street': 'Mom Friendly Robot Street',
             'city': 'New new York',
             'country_id': base_us.id,

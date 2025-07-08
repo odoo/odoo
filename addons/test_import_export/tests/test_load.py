@@ -1385,7 +1385,7 @@ class test_realworld(SavepointCaseWithUserDemo):
         self.assertEqual(len(result['ids']), len(data))
 
     def test_backlink(self):
-        fnames = ["name", "type", "street", "city", "country_id", "category_id", "is_company", "parent_id"]
+        fnames = ["name", "type", "street", "city", "country_id", "category_id", "parent_id"]
         data = json.loads(file_open('test_import_export/data/contacts.json', 'rt').read())
         result = self.env['res.partner'].load(fnames, data)
         self.assertFalse(result['messages'])

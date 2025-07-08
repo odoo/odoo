@@ -421,8 +421,8 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         user_partner = user.partner_id
         partner_company = self.env['res.partner'].create({
             'name': 'My company',
-            'is_company': True,
             'child_ids': [Command.link(user_partner.id)],
+            'vat': 'BE0477472701',
         })
         colleague = self.env['res.partner'].create({
             'parent_id': partner_company.id,
@@ -550,7 +550,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         # TODO dispatch test to sale & account
         partner_company = self.env['res.partner'].create({
             'name': 'My company',
-            'is_company': True,
+            'vat': 'BE0477472701',
             'child_ids': [
                 Command.create({
                     'name': 'partner_1',

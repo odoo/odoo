@@ -890,7 +890,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         route_mto.rule_ids.procure_method = 'mts_else_mto'
         self.partner_test = self.env['res.partner'].create({
             'name': 'Partner Test A',
-            'is_company': True,
             'street': '77 Santa Barbara Rd',
             'city': 'Pleasant Hill',
             'country_id': self.env.ref('base.nl').id,
