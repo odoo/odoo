@@ -62,7 +62,7 @@ class AccountChartTemplate(models.AbstractModel):
         company = self.env.company
         inter_state_ref = 'base.state_in_ts'
         intra_state_ref = 'base.state_in_gj'
-        default_partner_dict = {'country_id': 'base.in', 'is_company': True, 'company_id': company.id}
+        default_partner_dict = {'country_id': 'base.in', 'company_id': company.id}
         return {
             'res_partner_registered_customer': {
                 **default_partner_dict,
@@ -141,7 +141,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'zip': '000000',
                 'state_id': 'base.state_us_5',
                 'country_id': 'base.us',
-                'is_company': True,
                 'company_id': company.id,
             },
         }

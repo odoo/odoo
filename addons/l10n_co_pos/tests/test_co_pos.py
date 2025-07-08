@@ -9,3 +9,4 @@ class TestGenericCO(TestGenericLocalization):
     @AccountTestInvoicingCommon.setup_country('co')
     def setUpClass(cls):
         super().setUpClass()
+        cls.partner_a.vat = '/'  # So that we don't sent actual request as company
