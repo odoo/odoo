@@ -43,14 +43,16 @@ class Job(models.Model):
     manager_id = fields.Many2one(
         'hr.employee', related='department_id.manager_id', string="Department Manager",
         readonly=True, store=True)
-    user_id = fields.Many2one('res.users', "Recruiter", domain="[('share', '=', False), ('company_ids', 'in', company_id)]", tracking=True, help="The Recruiter will be the default value for all Applicants Recruiter's field in this job position. The Recruiter is automatically added to all meetings with the Applicant.")
+    user_id = fields.Many2one('res.users', "Recruiter", tracking=True, help="The Recruiter will be the default value for all Applicants Recruiter's field in this job position. The Recruiter is automatically added to all meetings with the Applicant.")
+    user_id_domain = fields.Binary(compute="_compute_user_domains")
     document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents", readonly=True)
     documents_count = fields.Integer(compute='_compute_document_ids', string="Document Count")
     alias_id = fields.Many2one(help="Email alias for this job position. New emails will automatically create new applicants for this job position.")
     color = fields.Integer("Color Index")
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite')
     favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
-    interviewer_ids = fields.Many2many('res.users', string='Interviewers', domain="[('share', '=', False), ('company_ids', 'in', company_id)]", help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.")
+    interviewer_ids = fields.Many2many('res.users', string='Interviewers', help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.")
+    interviewer_ids_domain = fields.Binary(compute="_compute_user_domains")
     extended_interviewer_ids = fields.Many2many('res.users', 'hr_job_extended_interviewer_res_users', compute='_compute_extended_interviewer_ids', store=True)
 
     activities_overdue = fields.Integer(compute='_compute_activities')
@@ -100,6 +102,20 @@ class Job(models.Model):
             interviewers_by_job[result_raw['job_id'][0]] |= set(result_raw['interviewer_ids'])
         for job in self:
             job.extended_interviewer_ids = [(6, 0, list(interviewers_by_job[job.id]))]
+
+    @api.depends('company_id')
+    def _compute_user_domains(self):
+        for job in self:
+            domain = [('share', '=', False)]
+            if job.company_id:
+                domain = [
+                    ('share', '=', False),
+                    '|',
+                    ('company_ids', 'in', [job.company_id.id]),
+                    ('company_ids', '=', False),
+                ]
+            job.user_id_domain = domain
+            job.interviewer_ids_domain = domain
 
     def _compute_is_favorite(self):
         for job in self:
