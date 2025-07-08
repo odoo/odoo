@@ -315,15 +315,11 @@
     </BuilderRow>
 
     <t t-if="domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
-        <div class="pt-2"/> <!-- Spacer -->
-	    <BuilderRow label.translate="Zoom">
-	        <BuilderSelect action="'websiteConfig'" id="'o_wsale_zoom_mode'">
-	            <t t-foreach="props.getZoomLevels()" t-as="zoomLevel" t-key="zoomLevel.id">
-	                <t t-if="zoomLevel.visible">
-                        <BuilderSelectItem id="zoomLevel.id" actionParam="{ views: zoomLevel.views }" t-out="zoomLevel.label"/>
-	                </t>
-	            </t>
-	        </BuilderSelect>
+	    <BuilderRow label.translate="Zoom on click" level="1">
+            <BuilderCheckbox
+                action="'websiteConfig'"
+                actionParam="{ views: ['website_sale.product_picture_magnify_click'] }"
+            />
 	    </BuilderRow>
     </t>
 
