@@ -39,6 +39,7 @@ export class CustomizeMailingPlugin extends Plugin {
             return;
         }
         const styleEl = this.document.createElement("STYLE");
+        styleEl.id = "design-element";
         const cssTextArray = [];
         for (const rule of Array.from(this.styleSheet.cssRules)) {
             if (!rule.style.length) {
@@ -146,9 +147,6 @@ export class CustomizeLayoutColorAction extends BuilderAction {
     setup() {
         this.layoutEl = this.editable.querySelector(".o_layout");
     }
-    isApplied({ value }) {
-        return this.getValue() === value;
-    }
     getValue() {
         return this.layoutEl.style.backgroundColor;
     }
@@ -162,15 +160,12 @@ const WRAPPER_SNIPPET_SELECTOR = ".o_mail_wrapper_td > [data-snippet]";
 export class CustomizeSnippetColorAction extends BuilderAction {
     static id = "mass_mailing_egg.CustomizeSnippetColorAction";
     static dependencies = ["builderActions", "mass_mailing.CustomizeMailingPlugin", "history"];
-    isApplied({ value }) {
-        return this.getValue() === value;
-    }
     getValue() {
         const rule =
             this.dependencies["mass_mailing.CustomizeMailingPlugin"].getRule(
                 WRAPPER_SNIPPET_SELECTOR
             );
-        return rule.style.backgroundColor;
+        return rule.style.getPropertyValue("background-color");
     }
     apply({ value }) {
         const oldValue = this.getValue();
