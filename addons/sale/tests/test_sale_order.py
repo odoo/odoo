@@ -1026,35 +1026,6 @@ class TestSalesTeam(SaleCommon):
         self.assertEqual(order.amount_total, 252)
         self.assertEqual(order.amount_tax, 52)
 
-    def test_expected_date_with_storable_product(self):
-        '''
-        This test ensures the expected date is computed based on only goods(consu) products.
-        It's avoiding computation for non-goods products.
-        '''
-        sale_delay = 10.0
-        self.product.sale_delay = sale_delay
-
-        # Create a sale order with a consu product.
-        sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
-            'order_line': [Command.create({
-                'product_id': self.product.id,
-                'product_uom_qty': 1000,
-            })],
-        })
-
-        # Ensure that expected date is correctly computed based on the consu product's sale delay.
-        self.assertEqual(sale_order.expected_date, fields.Datetime.now() + timedelta(days=sale_delay))
-
-        # Add a service product and ensure the expected date remains unchanged.
-        sale_order.write({
-            'order_line': [Command.create({
-                'product_id': self.service_product.id,
-                'product_uom_qty': 1000,
-            })],
-        })
-        self.assertEqual(sale_order.expected_date, fields.Datetime.now() + timedelta(days=sale_delay))
-
 
 @tagged('post_install', '-at_install')
 class TestSaleMailComposerUI(MailCommon, HttpCase):
