@@ -633,18 +633,19 @@ class SurveyQuestion(models.Model):
                or (line.value_char_box and self.comment_count_as_answer):
                 count_data[line.suggested_answer_id] += 1
 
-        table_data = [{
-            'value': _('Other (see comments)') if not suggested_answer else suggested_answer.value_label,
-            'suggested_answer': suggested_answer,
-            'count': count_data[suggested_answer],
-            'count_text': _("%s Votes", count_data[suggested_answer]),
-            }
-            for suggested_answer in suggested_answers]
-        graph_data = [{
-            'text': _('Other (see comments)') if not suggested_answer else suggested_answer.value_label,
-            'count': count_data[suggested_answer]
-            }
-            for suggested_answer in suggested_answers]
+        table_data = []
+        graph_data = []
+        for suggested_answer in suggested_answers:
+            table_data.append({
+                'value': _('Other (see comments)') if not suggested_answer else suggested_answer.value_label,
+                'suggested_answer': suggested_answer,
+                'count': count_data[suggested_answer],
+                'count_text': _("%s Votes", count_data[suggested_answer]),
+            })
+            graph_data.append({
+                'text': _('Other (see comments)') if not suggested_answer else suggested_answer.value_label,
+                'count': count_data[suggested_answer]
+            })
 
         return table_data, graph_data
 
