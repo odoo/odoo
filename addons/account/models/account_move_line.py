@@ -1429,8 +1429,8 @@ class AccountMoveLine(models.Model):
             defaults['account_id'] = quick_encode_suggestion['account_id']
             defaults['price_unit'] = quick_encode_suggestion['price_unit']
             defaults['tax_ids'] = [Command.set(quick_encode_suggestion['tax_ids'])]
-        elif (journal := self.env['account.journal'].browse(self.env.context.get('journal_id'))) and journal.default_account_id:
-            defaults['account_id'] = journal.default_account_id
+        elif self.display_type and (journal := self.env['account.journal'].browse(self.env.context.get('journal_id'))) and journal.default_account_id:
+            defaults['account_id'] = journal.default_account_id.id
         return defaults
 
     def _sanitize_vals(self, vals):
