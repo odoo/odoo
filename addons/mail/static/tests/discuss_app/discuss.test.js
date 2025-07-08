@@ -248,6 +248,16 @@ test("Can use channel command /who", async () => {
     await contains(".o_mail_notification", { text: "You are alone in this channel." });
 });
 
+test("guests are not allowed to use commands", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
+    await start({ authenticateAs: false });
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "/who");
+    await press("Enter");
+    await contains(".o-mail-Message-body", { text: "/who" });
+});
+
 test("sidebar: chat im_status rendering", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
