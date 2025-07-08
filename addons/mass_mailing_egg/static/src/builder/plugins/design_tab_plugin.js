@@ -12,7 +12,7 @@ export const OPTION_POSITIONS = {
     LINK: 60,
 };
 
-// TODO EGGMAIL: ensure that there is a .o_layout and a .container element
+// TODO EGGMAIL: ensure that there is a .o_layout and a .o_mail_wrapper element
 // in the DOM, always. Reset from known theme if needed, wrap current content
 // in theme_wrapper? Investigate.
 class DesignTabPlugin extends Plugin {
@@ -26,30 +26,30 @@ class DesignTabPlugin extends Plugin {
                     template: "mass_mailing_egg.DesignBodyOption",
                 })
             ),
-            withSequence(
-                OPTION_POSITIONS.HEADINGS,
-                this.getDesignOptionBlock("design-headings", _t("Headings"), {
-                    template: "mass_mailing_egg.DesignHeadingsOption",
-                })
-            ),
-            withSequence(
-                OPTION_POSITIONS.PARAGRAPH,
-                this.getDesignOptionBlock("design-paragraph", _t("Paragraph"), {
-                    template: "mass_mailing_egg.DesignParagraphOption",
-                })
-            ),
-            withSequence(
-                OPTION_POSITIONS.BUTTON,
-                this.getDesignOptionBlock("design-button", _t("Button"), {
-                    template: "mass_mailing_egg.DesignButtonOption",
-                })
-            ),
-            withSequence(
-                OPTION_POSITIONS.LINK,
-                this.getDesignOptionBlock("design-link", _t("Link"), {
-                    template: "mass_mailing_egg.DesignLinkOption",
-                })
-            ),
+            // withSequence(
+            //     OPTION_POSITIONS.HEADINGS,
+            //     this.getDesignOptionBlock("design-headings", _t("Headings"), {
+            //         template: "mass_mailing_egg.DesignHeadingsOption",
+            //     })
+            // ),
+            // withSequence(
+            //     OPTION_POSITIONS.PARAGRAPH,
+            //     this.getDesignOptionBlock("design-paragraph", _t("Paragraph"), {
+            //         template: "mass_mailing_egg.DesignParagraphOption",
+            //     })
+            // ),
+            // withSequence(
+            //     OPTION_POSITIONS.BUTTON,
+            //     this.getDesignOptionBlock("design-button", _t("Button"), {
+            //         template: "mass_mailing_egg.DesignButtonOption",
+            //     })
+            // ),
+            // withSequence(
+            //     OPTION_POSITIONS.LINK,
+            //     this.getDesignOptionBlock("design-link", _t("Link"), {
+            //         template: "mass_mailing_egg.DesignLinkOption",
+            //     })
+            // ),
         ],
     };
 

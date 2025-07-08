@@ -1,7 +1,7 @@
 <templates id="template">
     <!-- TODO EGGMAIL: check editor classes (should use only new editor technical classes) -->
     <t t-name="mass_mailing_egg.ThemeLayout">
-        <div data-name="Mailing" class="o_layout oe_unremovable oe_unmovable bg-200"
+        <div data-name="Mailing" class="o_layout oe_unremovable oe_unmovable"
             t-att-class="className" t-att-style="layoutStyles">
             <t t-if="nowrap" t-call="mass_mailing_egg.ThemeStructure"/>
             <t t-else="" t-call="mass_mailing_egg.ThemeWrapper"/>

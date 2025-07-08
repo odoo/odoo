@@ -185,7 +185,7 @@ export class MassMailingIframe extends Component {
             return;
         }
         const htmlResizeObserver = new ResizeObserver(this.throttledResize);
-        this.iframeRef.el.contentDocument.body.classList.add("o_in_iframe");
+        this.iframeRef.el.contentDocument.body.classList.add("o_in_iframe", "bg-200");
         // Set `ready` symbol for tours
         this.iframeRef.el.contentDocument.head.appendChild(this.renderHeadContent());
         this.iframeRef.el.contentDocument.body.appendChild(this.renderBodyContent());
