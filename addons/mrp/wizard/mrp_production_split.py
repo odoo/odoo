@@ -68,7 +68,7 @@ class MrpProductionSplit(models.TransientModel):
                 wizard.valid_details = wizard.product_uom_id.compare(wizard.product_qty, sum(wizard.production_detailed_vals_ids.mapped('quantity'))) == 0
 
     def action_split(self):
-        productions = self.production_id._split_productions({self.production_id: [detail.quantity for detail in self.production_detailed_vals_ids]})
+        productions = self.production_id.with_context(is_split_production=True)._split_productions({self.production_id: [detail.quantity for detail in self.production_detailed_vals_ids]})
         for production, detail in zip(productions, self.production_detailed_vals_ids):
             production.user_id = detail.user_id
             production.date_start = detail.date

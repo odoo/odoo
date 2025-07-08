@@ -492,6 +492,18 @@ class MrpProduction(models.Model):
         for order in self:
             order.picking_ids = pickings_per_procurement_group.get(order.procurement_group_id.id, [])
             order.picking_ids |= order.move_raw_ids.move_orig_ids.picking_id
+            # Count only those deliveries related to the current MO in a 2-step or 3-step MRP process.
+            if order.warehouse_id.manufacture_steps in ['pbm_sam', 'pbm']:
+                filtered_picking_ids = order.picking_ids.filtered(
+                    lambda picking: picking.origin == order.name or any(
+                        order in move.move_dest_ids.raw_material_production_id or
+                        order in move.move_orig_ids.production_id or
+                        order in move.production_ids
+                        for move in picking.move_ids
+                    )
+                )
+                # Unlink unrelated pickings from current MO after split.
+                order.picking_ids = [(3, picking.id, False) for picking in (order.picking_ids - filtered_picking_ids)]
             order.delivery_count = len(order.picking_ids)
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')
@@ -1859,7 +1871,8 @@ class MrpProduction(models.Model):
             backorder_qtys = amounts[production][1:]
             production.with_context(skip_compute_move_raw_ids=True).product_qty = amounts[production][0]
 
-            next_seq = max(production.procurement_group_id.mrp_production_ids.mapped("backorder_sequence"), default=1)
+            next_seq = 1 if self.env.context.get('is_split_production') and production.backorder_sequence == 1 else \
+                    max(production.procurement_group_id.mrp_production_ids.mapped("backorder_sequence"), default=1)
 
             for qty_to_backorder in backorder_qtys:
                 next_seq += 1
@@ -2017,6 +2030,22 @@ class MrpProduction(models.Model):
         self.env['stock.move.line'].browse(move_lines_to_unlink).unlink()
 
         moves_to_consume.write({'picked': True})
+
+        # Create the pre-production picking/transfer for each backorder in 2-step or 3-step MRP process if MO is split.
+        if self.env.context.get('is_split_production') and len(production.picking_ids) == 1:
+            for production in self:
+                if production.picking_ids.state != "done":
+                    # Cancel the pre-picking of this production if picking is not done because new tranfer is created based on new product_qty of production.
+                    production.picking_ids.action_cancel()
+                    production.picking_ids.group_id = False
+
+                    productions = self.env['mrp.production'].browse(list(production_ids))
+                    for production in productions:
+                        production.move_raw_ids.write({'move_orig_ids': False, 'state': 'draft'})
+                        production.write({'state': 'draft'})
+                        production.action_confirm()
+                else:
+                    production.picking_ids.move_ids.production_ids = production.picking_ids.move_ids.move_dest_ids.raw_material_production_id
 
         workorders_to_cancel = self.env['mrp.workorder']
         for production in self:

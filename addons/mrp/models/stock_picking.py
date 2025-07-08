@@ -146,8 +146,15 @@ class StockPicking(models.Model):
     def _compute_mrp_production_ids(self):
         for picking in self:
             production_ids = picking.group_id.mrp_production_ids | picking.move_ids.move_dest_ids.raw_material_production_id
-            # Filter out unwanted MO types
-            picking.production_ids = production_ids.filtered(lambda p: p.picking_type_id.active)
+            # Count only those MO related to the current picking for a 2-step or 3-step MRP process.
+            if picking.picking_type_id.warehouse_id.manufacture_steps in ['pbm_sam', 'pbm']:
+                picking.production_ids = production_ids.filtered(lambda p: p.picking_type_id.active and (
+                    any(p in move.raw_material_production_id or p in move.production_id for move in picking.move_ids)
+                    or p.name == picking.origin)
+                )
+            else:
+                # Filter out unwanted MO types
+                picking.production_ids = production_ids.filtered(lambda p: p.picking_type_id.active)
             picking.production_count = len(picking.production_ids)
 
     def action_detailed_operations(self):
