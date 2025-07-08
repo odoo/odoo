@@ -72,7 +72,6 @@ class TestItEdi(AccountTestInvoicingCommon):
             'zip': '28887',
             'city': 'Milan',
             'company_id': False,
-            'is_company': True,
             'invoice_edi_format': 'it_edi_xml',
         })
 
@@ -85,27 +84,23 @@ class TestItEdi(AccountTestInvoicingCommon):
             'street': 'Via Test PA',
             'zip': '32121',
             'city': 'PA Town',
-            'is_company': True,
             'invoice_edi_format': 'it_edi_xml',
         })
 
         cls.italian_partner_no_address_codice = cls.env['res.partner'].create({
             'name': 'Alessi',
             'l10n_it_codice_fiscale': '00465840031',
-            'is_company': True,
         })
 
         cls.italian_partner_no_address_VAT = cls.env['res.partner'].create({
             'name': 'Alessi',
             'vat': 'IT00465840031',
-            'is_company': True,
         })
 
         cls.american_partner = cls.env['res.partner'].create({
             'name': 'Alessi',
             'vat': '00465840031',
             'country_id': cls.env.ref('base.us').id,
-            'is_company': True,
         })
 
         # We create this because we are unable to post without a proxy user existing
