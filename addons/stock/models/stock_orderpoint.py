@@ -55,14 +55,11 @@ class StockWarehouseOrderpoint(models.Model):
     product_uom_name = fields.Char(string='Product unit of measure label', related='product_uom.display_name', readonly=True)
     product_min_qty = fields.Float(
         'Min Quantity', digits='Product Unit', required=True, default=0.0,
-        compute='_compute_product_min_qty', readonly=False, store=True,
-        help="When the virtual stock goes below the Min Quantity specified for this field, Odoo generates "
-             "a procurement to bring the forecasted quantity above of this Min Quantity.")
+        help="The minimum Stock level that will trigger a replenishment.")
     product_max_qty = fields.Float(
         'Max Quantity', digits='Product Unit', required=True, default=0.0,
         compute='_compute_product_max_qty', readonly=False, store=True,
-        help="When the virtual stock goes below the Min Quantity, Odoo generates "
-             "a procurement to bring the forecasted quantity up to (or near to) the Max Quantity specified for this field (or to Min Quantity, whichever is bigger).")
+        help="Stock level to reach when replenishing.")
     allowed_replenishment_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_replenishment_uom_ids')
     replenishment_uom_id = fields.Many2one(
         'uom.uom', 'Replenishment Multiple',
@@ -92,6 +89,7 @@ class StockWarehouseOrderpoint(models.Model):
              "The value depends on the type of the route (Buy or Manufacture)")
 
     unwanted_replenish = fields.Boolean('Unwanted Replenish', compute="_compute_unwanted_replenish")
+    show_supply_warning = fields.Boolean(compute="_compute_show_supply_warning")
 
     _product_location_check = models.Constraint(
         'unique (product_id, location_id, company_id)',
@@ -110,6 +108,10 @@ class StockWarehouseOrderpoint(models.Model):
                 loc_domain &= ~Domain('id', 'child_of', view_location_id.id)
                 loc_domain &= Domain('company_id', 'in', [False, orderpoint.company_id.id])
             orderpoint.allowed_location_ids = self.env['stock.location'].search(loc_domain)
+
+    def _compute_show_supply_warning(self):
+        for orderpoint in self:
+            orderpoint.show_supply_warning = not orderpoint.rule_ids
 
     @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_lead_days(self):
@@ -135,12 +137,6 @@ class StockWarehouseOrderpoint(models.Model):
             orderpoint.rule_ids = rule_ids
             rules_cache[cache_key] = rule_ids
         (self - orderpoints_to_compute).rule_ids = False
-
-    @api.depends('product_max_qty')
-    def _compute_product_min_qty(self):
-        for orderpoint in self:
-            if orderpoint.product_max_qty < orderpoint.product_min_qty or not orderpoint.product_min_qty:
-                orderpoint.product_min_qty = orderpoint.product_max_qty
 
     @api.depends('product_min_qty')
     def _compute_product_max_qty(self):
