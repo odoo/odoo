@@ -1109,7 +1109,7 @@ class AccountMoveLine(models.Model):
                 related_distribution = line._related_analytic_distribution()
                 root_plans = self.env['account.analytic.account'].browse(
                     list({int(account_id) for ids in related_distribution for account_id in ids.split(',')})
-                ).root_plan_id
+                ).exists().root_plan_id
 
                 arguments = frozendict({
                     "product_id": line.product_id.id,
