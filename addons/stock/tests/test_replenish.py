@@ -4,9 +4,8 @@
 from freezegun import freeze_time
 
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.tests import Form
+from odoo.tests import tagged, Form, HttpCase
 from odoo import fields
-
 
 
 class TestStockReplenish(TestStockCommon):
@@ -75,3 +74,33 @@ class TestStockReplenish(TestStockCommon):
         self.assertEqual(len(product.route_ids), 0)
         wizard = Form(self.env['product.replenish'].with_context(default_product_tmpl_id=product.id))
         self.assertEqual(wizard._values['quantity'], 1)
+
+
+@tagged('post_install', '-at_install')
+class TestStockReorderingWithVariant(HttpCase):
+
+    def test_reordering_rule_with_variant_product(self):
+        color_attr = self.env['product.attribute'].create({
+            'name': 'Color',
+            'create_variant': 'always',
+        })
+        black = self.env['product.attribute.value'].create({
+            'name': 'Black',
+            'attribute_id': color_attr.id,
+        })
+        white = self.env['product.attribute.value'].create({
+            'name': 'White',
+            'attribute_id': color_attr.id,
+        })
+
+        self.env['product.template'].create({
+            'name': 'KRIP T-Shirt',
+            'type': 'consu',
+            'is_storable': True,
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': color_attr.id,
+                'value_ids': [(6, 0, [black.id, white.id])]
+            })],
+        })
+
+        self.start_tour(url_path="/odoo/action-stock.product_template_action_product", tour_name="test_reordering_rule_with_variant_product", login='admin')

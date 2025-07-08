@@ -340,7 +340,7 @@ class StockWarehouseOrderpoint(models.Model):
     @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
     def _compute_qty_to_order_computed(self):
         def to_compute(orderpoint):
-            rounding = orderpoint.product_uom.rounding
+            rounding = orderpoint.product_uom.rounding or 0.01
             # The check is on purpose. We only want to consider the visibility days if the forecast is negative and
             # there is a already something to ressuply base on lead times.
             return (
