@@ -44,7 +44,6 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         # Partners
         cls.partner_company = cls.env['res.partner'].create({
             'name': 'Magyar Vevő Kft.',
-            'is_company': True,
             'street': 'Alkotmány utca 11.',
             'city': 'Debrecen',
             'zip': '4000',
@@ -54,7 +53,6 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         })
         cls.partner_group_company_1 = cls.env['res.partner'].create({
             'name': 'MOL Nyrt.',
-            'is_company': True,
             'street': 'Dombóvári út 28.',
             'city': 'Budapest',
             'zip': '1117',
@@ -64,7 +62,6 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         })
         cls.partner_group_company_2 = cls.env['res.partner'].create({
             'name': 'MOL Petrolkémia Zrt.',
-            'is_company': True,
             'street': 'TVK-Ipartelep, TVK Központi Irodaház 2119/3hrsz. 136. ép.',
             'city': 'Tiszaújváros',
             'zip': '3581',
