@@ -34,6 +34,25 @@ export class Popup extends Interaction {
         this.bsModal = window.Modal.getOrCreateInstance(this.modalEl);
         this.registerCleanup(() => { this.bsModal.dispose() });
 
+        const selectedUrls =
+            this.modalEl.dataset.showOnSpecificPages === "true"
+                ? JSON.parse(this.modalEl.dataset.selectedUrls)
+                : [];
+        if (selectedUrls && selectedUrls.length) {
+            // If the popup is only shown on specific URLs, we check if the current URL matches
+            // one of the selected URLs.
+            const currentUrl = browser.location.pathname;
+            const existInSelectedUrls = selectedUrls.find((url) => url === currentUrl);
+            if (existInSelectedUrls === undefined) {
+                const whereEl = document.querySelector("#o_shared_blocks");
+                const popupEl = this.el;
+                if (whereEl && popupEl && whereEl.contains(popupEl)) {
+                    popupEl.remove();
+                    this.modalEl.remove(); // Remove the modal element as well
+                }
+            }
+        }
+
         this.modalShownOnClickEl = this.el.querySelector(".modal[data-display='onClick']");
         if (this.modalShownOnClickEl) {
             this.showModalBtnEl = document.querySelector(`[href="#${this.modalShownOnClickEl.id}"]`);

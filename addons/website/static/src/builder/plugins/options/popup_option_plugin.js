@@ -92,12 +92,22 @@ export class MoveBlockAction extends BuilderAction {
     static id = "moveBlock";
     isApplied({ editingElement, value }) {
         return editingElement.closest("#o_shared_blocks")
-            ? value === "allPages"
+            ? editingElement.dataset.showOnSpecificPages === "true"
+                ? value === "specificPages"
+                : value === "allPages"
             : value === "currentPage";
     }
     apply({ editingElement, value }) {
         const selector =
-            value === "allPages" ? "#o_shared_blocks" : "main .oe_structure.o_editable";
+            value === "allPages" || value === "specificPages"
+                ? "#o_shared_blocks"
+                : "main .oe_structure.o_editable";
+        editingElement.dataset.showOnSpecificPages = value === "specificPages";
+
+        if (value === "specificPages" && !editingElement.dataset.selectedUrls) {
+            editingElement.dataset.selectedUrls = [];
+        }
+
         const whereEl = this.editable.querySelector(selector);
         const popupEl = editingElement.closest(".s_popup");
         whereEl.insertAdjacentElement("afterbegin", popupEl);
