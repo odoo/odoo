@@ -339,7 +339,11 @@ class StockWarehouseOrderpoint(models.Model):
             rounding = orderpoint.product_uom.rounding
             # The check is on purpose. We only want to consider the visibility days if the forecast is negative and
             # there is a already something to ressuply base on lead times.
-            return float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=rounding) < 0
+            return (
+                orderpoint.product_id
+                and orderpoint.location_id
+                and float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=rounding) < 0
+            )
 
         orderpoints = self.filtered(to_compute)
         qty_in_progress_by_orderpoint = orderpoints._quantity_in_progress()
