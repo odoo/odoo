@@ -9,6 +9,7 @@ import {
     fields,
     models,
     mountView,
+    onRpc,
     pagerNext,
     removeFacet,
     serverState,
@@ -1172,6 +1173,12 @@ test(`freeze widths: add a record in empty list with handle widget`, async () =>
 });
 
 test(`freeze widths: edit multiple records`, async () => {
+    onRpc("/web/view/save_multi", async function (request) {
+        const { params } = await request.json();
+        const { changes, ids, model } = params;
+        this.env[model].write(ids, changes);
+        expect.step("save_multi");
+    });
     await mountView({
         resModel: "foo",
         type: "list",
@@ -1201,6 +1208,7 @@ test(`freeze widths: edit multiple records`, async () => {
     await contains(`.modal .btn-primary`).click();
     expect(`.o_selected_row`).toHaveCount(0);
     expect(getColumnWidths()).toEqual(initialWidths);
+    expect.verifySteps(["save_multi"]);
 });
 
 test(`freeze widths: toggle optional fields`, async () => {
