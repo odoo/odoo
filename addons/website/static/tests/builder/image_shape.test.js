@@ -22,6 +22,7 @@ test("Should set a shape on an image", async () => {
     await editor.shared.operation.next(() => {});
 
     const img = queryFirst(":iframe .test-options-target img");
+    expect(":iframe .test-options-target img").toHaveAttribute("data-attachment-id", "1");
     expect(":iframe .test-options-target img").toHaveAttribute("data-original-id", "1");
     expect(":iframe .test-options-target img").toHaveAttribute("data-mimetype", "image/svg+xml");
     expect(img.src.startsWith("data:image/svg+xml;base64,")).toBe(true);

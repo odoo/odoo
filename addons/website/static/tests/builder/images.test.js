@@ -50,7 +50,6 @@ test("simple click on Image", async () => {
     expect("div.o-tooltip").toHaveCount(0);
 });
 
-
 test("double click on text", async () => {
     await setupWebsiteBuilder("<div><p class=text_class>Text</p></div>");
     expect(".modal-content").toHaveCount(0);
@@ -93,6 +92,7 @@ describe("Image format/optimize", () => {
         await editor.shared.operation.next(() => {});
 
         const img = queryFirst(":iframe .test-options-target img");
+        expect(":iframe .test-options-target img").toHaveAttribute("data-attachment-id", "1");
         expect(":iframe .test-options-target img").toHaveAttribute("data-original-id", "1");
         expect(":iframe .test-options-target img").toHaveAttribute("data-mimetype", "image/webp");
         expect(img.src.startsWith("data:image/webp;base64,")).toBe(true);
