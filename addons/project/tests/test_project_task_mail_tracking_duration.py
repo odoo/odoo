@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.mail.tests.common_tracking import MailTrackingDurationMixinCase
+from odoo.addons.mail.tests.common_tracking import MailThreadTrackingDurationMixinCase
 from odoo.tests import Form, tagged
 
 
 @tagged('is_query_count')
-class TestProjectTaskMailTrackingDuration(MailTrackingDurationMixinCase):
+class TestProjectTaskMailTrackingDuration(MailThreadTrackingDurationMixinCase):
 
     @classmethod
     def setUpClass(cls):

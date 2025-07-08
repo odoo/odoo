@@ -30,7 +30,7 @@ class HrApplicant(models.Model):
                'mail.thread.phone',
                'mail.activity.mixin',
                'utm.mixin',
-               'mail.tracking.duration.mixin',
+               'mail.thread.tracking.duration.mixin',
     ]
     _rec_name = "partner_name"
     _mailing_enabled = True

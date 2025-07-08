@@ -3,14 +3,14 @@
 
 from odoo import exceptions, tools
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.addons.mail.tests.common_tracking import MailTrackingDurationMixinCase
+from odoo.addons.mail.tests.common_tracking import MailThreadTrackingDurationMixinCase
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
 
 @tagged('mail_thread', 'mail_track', 'is_query_count')
-class TestMailTrackingDurationMixin(MailTrackingDurationMixinCase):
+class TestMailThreadTrackingDurationMixin(MailThreadTrackingDurationMixinCase):
 
     @classmethod
     def setUpClass(cls):

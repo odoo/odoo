@@ -5,7 +5,7 @@ from unittest.mock import patch
 from odoo.addons.mail.tests.common import MailCommon
 
 
-class MailTrackingDurationMixinCase(MailCommon):
+class MailThreadTrackingDurationMixinCase(MailCommon):
 
     @classmethod
     def setUpClass(cls, tested_model, model_fields=None):
@@ -178,7 +178,7 @@ class MailTrackingDurationMixinCase(MailCommon):
 
     def _test_queries_batch_duration_tracking(self):
         """
-        The MailTrackingDuration mixin is only supposed to add 3 queries
+        The MailThreadTrackingDuration mixin is only supposed to add 3 queries
         """
 
         batch = self.rec_1 | self.rec_2 | self.rec_3 | self.rec_4
