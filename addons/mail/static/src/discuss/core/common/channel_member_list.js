@@ -28,13 +28,13 @@ export class ChannelMemberList extends Component {
 
     get onlineSectionText() {
         return _t("Online - %(online_count)s", {
-            online_count: this.props.thread.onlineMembers.length,
+            online_count: this.props.thread.channel.onlineMembers.length,
         });
     }
 
     get offlineSectionText() {
         return _t("Offline - %(offline_count)s", {
-            offline_count: this.props.thread.offlineMembers.length,
+            offline_count: this.props.thread.channel.offlineMembers.length,
         });
     }
 

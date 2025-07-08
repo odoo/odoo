@@ -15,11 +15,11 @@ patch(Store.prototype, {
         this.discuss = { activeTab: "main" };
         this.env.bus.addEventListener(
             "discuss.channel/new_message",
-            ({ detail: { channel, message, silent } }) => {
+            ({ detail: { thread, message, silent } }) => {
                 if (this.env.services.ui.isSmall || message.isSelfAuthored || silent) {
                     return;
                 }
-                channel.notifyMessageToUser(message);
+                thread.notifyMessageToUser(message);
             }
         );
     },
