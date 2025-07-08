@@ -53,8 +53,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "press Enter",
         },
         {
-            trigger:
-                ".o-mail-Message:has(.o-mail-Message-date):contains(sometext_) [title='Mark as Todo']:not(:visible)",
+            trigger: ".o-mail-Message[data-persistent] [title='Mark as Todo']:not(:visible)",
             content: _t("Hover on your message and mark as todo"),
             tooltipPosition: "top",
             async run(helpers) {
