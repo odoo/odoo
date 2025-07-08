@@ -233,7 +233,7 @@ class TestProjectRecurrence(TransactionCase):
 
         # Task recurrence trigger
         parent_task.state = '1_done'
-        parent_task_copy = self.env['project.task'].browse(parent_task.recurrence_id._get_last_task_id_per_recurrence_id().get(parent_task.recurrence_id.id))
+        parent_task_copy = self.env['project.task'].browse(parent_task.recurrence_id._get_last_task_id_per_recurrence_id(parent_task._name).get(parent_task.recurrence_id.id))
         self.assertNotEqual(parent_task.id, parent_task_copy.id, 'The generated recurring task should be different than the original one')
 
         # Newly created nodes from recurrence
@@ -318,7 +318,7 @@ class TestProjectRecurrence(TransactionCase):
                 ],
             },
         ])
-        tasks_copy = self.env['project.task.recurrence']._create_next_occurrences(tasks)
+        tasks_copy = self.env['project.task.recurrence']._create_next_occurrences(tasks._name, tasks)
         # Every date should be 1 week later
         self.assertEqual(datetime(2023, 1, 8, 0, 0), tasks_copy[0].date_deadline)
         self.assertEqual(datetime(2023, 1, 9, 0, 0), tasks_copy[0].child_ids.date_deadline)

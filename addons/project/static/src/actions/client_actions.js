@@ -2,6 +2,15 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 
+export async function openFormView(env, { resModel, resId }) {
+    await env.services.action.doAction({
+        type: "ir.actions.act_window",
+        res_model: resModel,
+        views: [[false, "form"]],
+        res_id: resId,
+    });
+}
+
 export function showTemplateUndoNotification(
     env,
     {
@@ -11,6 +20,8 @@ export function showTemplateUndoNotification(
         undoMethod = "action_undo_convert_to_template",
         actionType = "success",
         undoCallback,
+        templateResId,
+        templateResModel,
     }
 ) {
     const undoNotification = env.services.notification.add(_t(message), {
@@ -31,6 +42,12 @@ export function showTemplateUndoNotification(
                         const restoreController =
                             env.services.action.currentController.config.breadcrumbs?.at(-2);
                         restoreController?.onSelected();
+                    }
+                    if (undoMethod === 'action_undo_convert_to_template' && res.params.type == 'success') {
+                        const { res_id, res_model } = res.params;
+                        await openFormView(env, { resModel: res_model, resId: res_id });
+                        await env.services.orm.call(templateResModel, "action_archive", [[templateResId]]);
+                        env.services.action.currentController.config.breadcrumbs?.pop()
                     }
                     undoNotification();
                 },
@@ -56,6 +73,11 @@ export function showTemplateUndoConfirmationDialog(
         confirm: async () => {
             const action = await env.services.orm.call(model, undoMethod, [recordId]);
             await env.services.action.doAction(action);
+            if (action.params.type == 'success') {
+                const { res_id, res_model } = action.params;
+                await openFormView(env, { resModel: res_model, resId: res_id });
+                env.services.action.currentController.config.breadcrumbs?.pop()
+            }
             if (confirmationCallback) {
                 await env.services.orm.call(
                     model,
@@ -74,21 +96,21 @@ export async function showTemplateFormView(
     { model, recordId, method = "action_create_template_from_project" }
 ) {
     const action = await env.services.orm.call(model, method, [recordId]);
-    await env.services.action.doAction({
-        type: "ir.actions.act_window",
-        res_model: model,
-        views: [[false, "form"]],
-        res_id: action.params.project_id,
-    });
+    await openFormView(env, { resModel: model, resId: action.params.project_id });
     await env.services.action.doAction(action);
 }
 
 // Task → Template Notification
-registry.category("actions").add("project_show_template_notification", (env, action) => {
+registry.category("actions").add("project_show_template_notification", async(env, action) => {
     const params = action.params || {};
+    const { template_res_id, template_res_model } = action.params;
+    await openFormView(env, { resModel: template_res_model, resId: template_res_id });
+    env.services.action.currentController.config.breadcrumbs?.pop()
     showTemplateUndoNotification(env, {
         model: "project.task",
-        recordId: params.task_id,
+        recordId: params.res_id,
+        templateResId: template_res_id,
+        templateResModel: template_res_model,
         message: _t("Task converted to template"),
     });
     return params.next;
@@ -100,8 +122,8 @@ registry
     .add("project_show_template_undo_confirmation_dialog", (env, action) => {
         const params = action.params || {};
         showTemplateUndoConfirmationDialog(env, {
-            model: "project.task",
-            recordId: params.task_id,
+            model: params.res_model,
+            recordId: params.res_id,
             bodyMessage: _t(
                 "This task is currently a template. Would you like to convert it back into a regular task?"
             ),
