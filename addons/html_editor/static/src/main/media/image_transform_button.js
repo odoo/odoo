@@ -42,12 +42,7 @@ export function useImageTransform({ document, closeImageTransformation, buttonSe
         if (node.matches(buttonSelector)) {
             return true;
         }
-        if (
-            isImageTransformationOpen() &&
-            node.matches(
-                ".transfo-container, .transfo-container div, .transfo-container i, .transfo-container span"
-            )
-        ) {
+        if (isImageTransformationOpen() && node.matches(".transfo-controls, .transfo-controls *")) {
             return true;
         }
         return false;
