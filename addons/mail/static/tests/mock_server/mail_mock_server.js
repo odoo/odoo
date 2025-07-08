@@ -608,6 +608,22 @@ async function mail_link_preview(request) {
             "mail.record/insert",
             new mailDataHelpers.Store(MailMessage.browse(message_id)).get_result()
         );
+    } else {
+        const linkPreviewIds = MailLinkPreview.search([["message_id", "=", message_id]]);
+        for (const linkPreviewId of linkPreviewIds) {
+            BusBus._sendone(
+                MailMessage._bus_notification_target(message_id),
+                "mail.record/insert",
+                new mailDataHelpers.Store(MailMessage.browse(message_id), {
+                    linkPreviews: mailDataHelpers.Store.many(
+                        MailLinkPreview.browse(linkPreviewId),
+                        "DELETE",
+                        makeKwArgs({ only_id: true })
+                    ),
+                }).get_result()
+            );
+        }
+        MailLinkPreview.unlink(linkPreviewIds);
     }
 }
 

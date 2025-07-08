@@ -565,8 +565,15 @@ export class Message extends Record {
             mentionedRoles,
             thread: this.thread,
         });
+<<<<<<< ac94f2e671dd4fc03394bfa7175dabf1a6ea24a9
         const hadLink = this.hasLink; // to remove old previews if message no longer contains any link
         const updateData = {
+||||||| 2982b5f44af03fae6a9888f20632c1cc19f623ba
+        const data = await rpc("/mail/message/update_content", {
+=======
+        const hadLink = this.hasLink;
+        const data = await rpc("/mail/message/update_content", {
+>>>>>>> 632d0c6e9eb4e62b62a056b0758e1ef69410eb0f
             attachment_ids: attachments
                 .concat(this.attachment_ids)
                 .map((attachment) => attachment.id),
@@ -583,8 +590,16 @@ export class Message extends Record {
             update_data: updateData,
             ...this.thread.rpcParams,
         });
+<<<<<<< ac94f2e671dd4fc03394bfa7175dabf1a6ea24a9
         this.store.insert(data);
         if ((hadLink || this.hasLink) && this.store.hasLinkPreviewFeature) {
+||||||| 2982b5f44af03fae6a9888f20632c1cc19f623ba
+        this.store.insert(data, { html: true });
+        if (this.hasLink && this.store.hasLinkPreviewFeature) {
+=======
+        this.store.insert(data, { html: true });
+        if ((hadLink || this.hasLink) && this.store.hasLinkPreviewFeature) {
+>>>>>>> 632d0c6e9eb4e62b62a056b0758e1ef69410eb0f
             rpc("/mail/link_preview", { message_id: this.id }, { silent: true });
         }
         return data;

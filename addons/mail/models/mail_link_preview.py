@@ -37,12 +37,25 @@ class MailLinkPreview(models.Model):
 
     @api.model
     def _create_from_message_and_notify(self, message, request_url=None):
+<<<<<<< ac94f2e671dd4fc03394bfa7175dabf1a6ea24a9
         urls = []
         if not tools.is_html_empty(message.body):
             urls = OrderedSet(html.fromstring(message.body).xpath("//a[not(@data-oe-model)]/@href"))
             if request_url:
                 ignore_pattern = re.compile(f"{re.escape(request_url)}(odoo|web|chat)(/|$|#|\\?)")
                 urls = list(filter(lambda url: not ignore_pattern.match(url), urls))
+||||||| 2982b5f44af03fae6a9888f20632c1cc19f623ba
+        if tools.is_html_empty(message.body):
+            return self
+        urls = OrderedSet(html.fromstring(message.body).xpath('//a[not(@data-oe-model)]/@href'))
+        link_previews = self.env['mail.link.preview']
+=======
+        if tools.is_html_empty(message.body):
+            message.sudo().link_preview_ids._unlink_and_notify()
+            return self
+        urls = OrderedSet(html.fromstring(message.body).xpath('//a[not(@data-oe-model)]/@href'))
+        link_previews = self.env['mail.link.preview']
+>>>>>>> 632d0c6e9eb4e62b62a056b0758e1ef69410eb0f
         requests_session = requests.Session()
         message_link_previews_ok = self.env["mail.message.link.preview"]
         link_previews_values = []  # list of (sequence, values)

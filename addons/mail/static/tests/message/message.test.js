@@ -2475,6 +2475,7 @@ test("display the notification message's posting date and time", async () => {
         text: "Tom Riddle joined the channel1:00 PM",
     });
 });
+<<<<<<< ac94f2e671dd4fc03394bfa7175dabf1a6ea24a9
 
 test("Pause GIF attachment when thread is not focused", async () => {
     const pyEnv = await startServer();
@@ -2628,3 +2629,22 @@ test("Prevent adding reactions on messages without a mail thread", async () => {
     await contains(".o-mail-Message:eq(0) [title='Add a Reaction']");
     await contains(".o-mail-Message:eq(1):not(:has([title='Add a Reaction']))");
 });
+||||||| 2982b5f44af03fae6a9888f20632c1cc19f623ba
+=======
+
+test("Remove link preview when message no longer contains the link", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "EditPreviewTest" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "https://make-link-preview.com");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-LinkPreviewCard", { count: 1 });
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await insertText(".o-mail-Message.o-editing .o-mail-Composer-input", "Hi", { replace: true });
+    await press("Enter");
+    await contains(".o-mail-Message-body:text('Hi (edited)')");
+    await contains(".o-mail-LinkPreviewCard", { count: 0 });
+});
+>>>>>>> 632d0c6e9eb4e62b62a056b0758e1ef69410eb0f
