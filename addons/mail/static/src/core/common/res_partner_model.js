@@ -64,8 +64,8 @@ export class ResPartner extends Record {
     });
     /** @type {string|undefined} */
     im_status_access_token;
-    /** @type {boolean | undefined} */
-    is_company;
+    /** @type {number | undefined} */
+    parent_id;
     /** @type {boolean} */
     is_public;
     main_user_id = fields.One("res.users");

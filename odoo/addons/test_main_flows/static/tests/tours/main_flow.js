@@ -238,10 +238,6 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_field_radio.o_field_widget[name=company_type]",
-},
-{
-    isActive: ["mobile"],
     trigger: ".o_field_widget[name=name] input:not(.o_invisible_modifier)",
     content: _t('Select a seller'),
     tooltipPosition: 'top',

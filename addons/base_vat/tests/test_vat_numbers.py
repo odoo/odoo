@@ -13,7 +13,7 @@ from zeep.wsdl import Document
 class TestStructure(TransactionCase):
     @classmethod
     def setUpClass(cls):
-        def check_vies(vat_number):
+        def check_vies(vat_number, timeout):
             return {'valid': vat_number == 'BE0477472701'}
 
         super().setUpClass()
@@ -66,7 +66,6 @@ class TestStructure(TransactionCase):
             "name": "World Company",
             "country_id": self.env.ref("base.be").id,
             "vat": "ATU12345675",
-            "company_type": "company",
         })
 
         # reactivate it and correct the vat number

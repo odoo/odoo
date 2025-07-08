@@ -102,13 +102,13 @@ class ResPartner(models.Model):
         """ OVERRIDE """
         if not country or not vat:
             return vat, False
-        if len(vat) == 1:
-            if vat == '/' or not validation:
+        if 1 <= len(vat) <= 2:
+            if vat in ['/', 'na', 'NA'] or not validation:
                 return vat, False
             if validation == 'setnull':
                 return '', False
             if validation == 'error':
-                raise ValidationError(_("To explicitly indicate no (valid) VAT, use '/' instead. "))
+                raise ValidationError(_("To explicitly indicate no (valid) VAT, use '/' or 'na' instead. "))
         vat_prefix, vat_number = self._split_vat(vat)
 
         if vat_prefix == 'EU' and country not in self.env.ref('base.europe').country_ids:
@@ -521,13 +521,8 @@ class ResPartner(models.Model):
                     res.append(True)
                 else:
                     res.append(False)
-            elif partner.commercial_partner_id.is_company:
-                if len(vat) == 12:
-                    res.append(True)
-                else:
-                    res.append(False)
-            else:
-                if len(vat) == 10 or len(vat) == 9:
+            elif partner.commercial_partner_id.vat:
+                if len(vat) == 12 or len(vat) == 10 or len(vat) == 9:
                     res.append(True)
                 else:
                     res.append(False)

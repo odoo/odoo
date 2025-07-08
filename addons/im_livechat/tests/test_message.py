@@ -212,8 +212,8 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                             1
                         ].partner_id._get_avatar_128_access_token(),
                         "id": self.users[1].partner_id.id,
-                        "is_company": False,
                         "main_user_id": self.users[1].id,
+                        "parent_id": False,
                         "user_livechat_username": "chuck",
                         "write_date": fields.Datetime.to_string(self.users[1].write_date),
                     },
@@ -319,9 +319,9 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                     {
                                         "avatar_128_access_token": self.env.user.partner_id._get_avatar_128_access_token(),
                                         "id": self.env.user.partner_id.id,
-                                        "is_company": False,
                                         "main_user_id": self.env.user.id,
                                         "name": "Chell Gladys",
+                                        "parent_id": False,
                                         "user_livechat_username": False,
                                         "write_date": fields.Datetime.to_string(
                                             self.env.user.write_date

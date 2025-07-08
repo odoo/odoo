@@ -41,7 +41,7 @@ class CrmLead2opportunityPartner(models.TransientModel):
         'crm.lead', string='Opportunities', context={'active_test': False},
         compute='_compute_duplicated_lead_ids', readonly=False, store=True, compute_sudo=False)
     commercial_partner_id = fields.Many2one(
-        'res.partner', 'Company', domain=[('is_company', '=', True)],
+        'res.partner', 'Company', domain=[('parent_id', '=', False), ('vat', '!=', False)],
         compute='_compute_commercial_partner_id', readonly=False, store=True, compute_sudo=False)
     partner_id = fields.Many2one(
         'res.partner', 'Customer',

@@ -730,7 +730,6 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             UPDATE
                 res_partner
             SET
-                is_company = NULL,
                 parent_id = NULL
             WHERE
                 parent_id = id
@@ -752,17 +751,6 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         # since it is like this from the initial commit of this wizard, I don't change it. yet ...
         wizard = self.create({'group_by_vat': True, 'group_by_email': True, 'group_by_name': True})
         wizard.action_start_automatic_process()
-
-        # NOTE JEM : no idea if this query is usefull
-        self.env.cr.execute("""
-            UPDATE
-                res_partner
-            SET
-                is_company = NULL
-            WHERE
-                parent_id IS NOT NULL AND
-                is_company IS NOT NULL
-        """)
 
         return self._action_next_screen()
 

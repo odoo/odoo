@@ -71,9 +71,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
                     "im_status_access_token": self.partner_root._get_im_status_access_token(),
-                    "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
+                    "parent_id": False,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
@@ -126,9 +126,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
                     "im_status_access_token": self.partner_root._get_im_status_access_token(),
-                    "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
+                    "parent_id": False,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
@@ -235,9 +235,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
                     "im_status_access_token": self.partner_root._get_im_status_access_token(),
-                    "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
+                    "parent_id": False,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {

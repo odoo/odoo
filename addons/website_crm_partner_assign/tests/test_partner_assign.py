@@ -50,7 +50,6 @@ class TestPartnerAssign(TransactionCase):
         """ Test the automatic assignation using geolocalisation """
         partner_be = self.env['res.partner'].create({
             "name": "Agrolait",
-            "is_company": True,
             "city": "Wavre",
             "zip": "1300",
             "country_id": self.env.ref("base.be").id,
@@ -59,7 +58,6 @@ class TestPartnerAssign(TransactionCase):
         })
         partner_uk = self.env['res.partner'].create({
             "name": "Think Big Systems",
-            "is_company": True,
             "city": "London",
             "country_id": self.env.ref("base.uk").id,
             "street": "89 Lingfield Tower",
@@ -263,7 +261,6 @@ class TestPartnerLeadPortal(TestCrmCommon):
         # Create a partner outside of Mexico
         non_mexican_partner = self.env['res.partner'].create({
             'name': 'Non_Mexican_Partner',
-            'is_company': True,
             'grade_id': self.env['res.partner.grade'].search([], limit=1).id,
             'website_published': True,
             'country_id': self.env['res.country'].search([('code', '!=', 'mx')], limit=1).id
@@ -301,7 +298,6 @@ class TestPublish(HttpCase):
         })
         cls.partner = cls.env['res.partner'].create({
             'name': "Agrolait",
-            'is_company': True,
             'city': "Wavre",
             'zip': "1300",
             'country_id': cls.env.ref('base.be').id,
