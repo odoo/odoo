@@ -84,7 +84,7 @@ class PrinterDriverBase(Driver, ABC):
         :param str status: The value of the status
         :param str message: A comprehensive message describing the status
         """
-        self.data['print_status'] = status
+        self.data['status'] = status
         self.data['message'] = message
         event_manager.device_changed(self)
 
