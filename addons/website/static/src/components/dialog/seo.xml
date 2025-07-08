@@ -66,8 +66,13 @@
                         <t t-elif="state.headingsScan.multipleH1">
                             <p class="mb-2"><i class="fa fa-times text-danger me-2"></i>Multiple H1 tags detected. Please update your content to include only one H1 heading</p>
                         </t>
-                        <t t-if="state.headingsScan.misplacedH1 and !state.headingsScan.missingH1">
-                            <p><i class="fa fa-times text-danger me-3"></i>Misplaced H1 tag. Please place the H1 heading at the top of the page</p>
+                        <t t-if="state.headingsScan.invalidHeadingOrder">
+                            <span><i class="fa fa-times text-danger me-3"></i>
+                                <t t-esc="state.headingsScan.invalidHeadingDetail"/>
+                            </span>
+                        </t>
+                        <t t-elif="!state.headingsScan.missingH1 and !state.headingsScan.multipleH1">
+                            <span><i class="fa fa-check text-success me-2"></i>All Title Tags are placed correctly</span>
                         </t>
                     </div>
                 </div>

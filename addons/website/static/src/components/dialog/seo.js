@@ -616,8 +616,10 @@ export class SeoChecks extends Component {
         const ret = {
             missingH1: false,
             multipleH1: false,
-            misplacedH1: false,
+            invalidHeadingOrder: false,
+            invalidHeadingDetail: "",
         };
+
         const allHeadingsEls = Array.from(
             this.website.pageDocument.documentElement.querySelectorAll(
                 "#wrap :is(h1,h2,h3,h4,h5,h6)"
@@ -628,14 +630,24 @@ export class SeoChecks extends Component {
         if (h1Els.length === 0) {
             // We must have a h1 tag
             ret.missingH1 = true;
+            this.state.issues.title++;
         } else if (h1Els.length > 1) {
             // We must have only one h1 tag
             ret.multipleH1 = true;
+            this.state.issues.title++;
         }
-        if (allHeadingsEls.length && allHeadingsEls[0].tagName.toLowerCase() !== "h1") {
-            // The h1 tag must be at the top of the hierarchy
-            ret.misplacedH1 = true;
-        }
+        // Check heading order (no backward jumps)
+        let lastLevel = 1;
+        allHeadingsEls.forEach((heading, index) => {
+            const currentLevel = parseInt(heading.tagName[1]);
+            if (currentLevel < lastLevel) {
+                ret.invalidHeadingOrder = true;
+                ret.invalidHeadingDetail = `Misplaced ${heading.tagName}`;
+                this.state.issues.title++;
+            }
+            lastLevel = Math.max(lastLevel, currentLevel);
+        });
+
         return ret;
     }
 
