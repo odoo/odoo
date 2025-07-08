@@ -3,7 +3,6 @@
         <record id="l10n_eg_res_partner_1" model="res.partner">
             <field name="name">Egyptian Furniture</field>
             <field eval="[Command.set([ref('base.res_partner_category_14'), ref('base.res_partner_category_12')])]" name="category_id"/>
-            <field name="is_company">1</field>
             <field name="street">15 Khaled Ibn El-Walid St., Gesr El-Suez; Infront of El-Salam Hotel</field>
             <field name="city">Heliopolis</field>
             <field name="state_id" ref='base.state_eg_c'/>

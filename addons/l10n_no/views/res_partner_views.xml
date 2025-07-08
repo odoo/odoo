@@ -7,7 +7,7 @@
         <field name="priority">14</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="l10n_no_bronnoysund_number" invisible="country_code != 'NO' or not is_company"/>
+                <field name="l10n_no_bronnoysund_number" invisible="country_code != 'NO'"/>
             </xpath>
         </field>
     </record>
