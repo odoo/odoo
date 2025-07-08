@@ -19,6 +19,7 @@ import { useSetupAction } from "@web/search/action_hook";
 import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";
 import { BlockTab } from "@html_builder/sidebar/block_tab";
 import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
+import { useSnippets } from "@html_builder/snippets/snippet_service";
 import {
     setBuilderCSSVariables,
     setEditableDocument,
@@ -66,6 +67,8 @@ export class Builder extends Component {
         this.dialog = useService("dialog");
         this.ui = useService("ui");
         this.notification = useService("notification");
+
+        this.snippetModel = useSnippets(this.props.snippetsName);
 
         this.lastTrigerUpdateId = 0;
         this.editorBus = new EventBus();
@@ -129,6 +132,7 @@ export class Builder extends Component {
                         cleanForSaveHandlers,
                         wrapWithSaveSnippetHandlers
                     ),
+                snippetModel: this.snippetModel,
                 getShared: () => this.editor.shared,
                 updateInvisibleElementsPanel: () => this.updateInvisibleEls(),
                 allowCustomStyle: true,
@@ -139,8 +143,6 @@ export class Builder extends Component {
             this.env.services
         );
         this.props.onEditorLoad(this.editor);
-
-        this.snippetModel = useState(useService("html_builder.snippets"));
 
         onWillStart(async () => {
             await this.snippetModel.load();

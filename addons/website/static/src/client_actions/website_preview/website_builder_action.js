@@ -74,6 +74,8 @@ export class WebsiteBuilderClientAction extends Component {
         this.websiteContent = useRef("iframe");
         this.cleanups = [];
 
+        this.snippetsTemplate = "website.snippets";
+
         useSubEnv({
             builderRef: useRef("container"),
         });
@@ -135,10 +137,12 @@ export class WebsiteBuilderClientAction extends Component {
             if (!this.ui.isSmall) {
                 // preload builder and snippets so clicking on "edit" is faster
                 loadBundle("website.website_builder_assets").then(() => {
-                    this.env.services["html_builder.snippets"].reload({
-                        lang: this.websiteService.currentWebsite?.default_lang_id.code,
-                        website_id: this.websiteService.currentWebsite?.id,
-                    });
+                    this.env.services["html_builder.snippets"]
+                        .getSnippetModel(this.snippetsTemplate)
+                        .reload({
+                            lang: this.websiteService.currentWebsite?.default_lang_id.code,
+                            website_id: this.websiteService.currentWebsite?.id,
+                        });
                 });
             }
         });
@@ -185,7 +189,7 @@ export class WebsiteBuilderClientAction extends Component {
     get testMode() {
         return false;
     }
-    
+
     get websiteBuilderProps() {
         const iframeLoaded = this.iframeLoaded.then((el) => {
             return this.waitForIframeReady().then(() => el);
@@ -193,7 +197,7 @@ export class WebsiteBuilderClientAction extends Component {
         const builderProps = {
             closeEditor: this.reloadIframeAndCloseEditor.bind(this),
             reloadEditor: this.reloadEditor.bind(this),
-            snippetsName: "website.snippets",
+            snippetsName: this.snippetsTemplate,
             toggleMobile: this.toggleMobile.bind(this),
             installSnippetModule: this.installSnippetModule.bind(this),
             overlayRef: this.overlayRef,
