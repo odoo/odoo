@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+<t t-inherit="website.DynamicSnippetOption" t-inherit-mode="extension">
+    <xpath expr="//BuilderSelect[@id=&quot;'model_opt'&quot;]" position="inside">
+        <BuilderSelectItem actionParam="'blog.post'">Blog Posts</BuilderSelectItem>
+    </xpath>
+</t>
+
 <t t-name="website_blog.DynamicSnippetBlogPostsOption" t-inherit="website.DynamicSnippetOption">
     <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
-        <BuilderRow label.translate="Blog">
+        <BuilderRow label.translate="Blog" t-if="!isSingleMode">
             <BuilderSelect dataAttributeAction="'filterByBlogId'" preview="false">
                 <BuilderSelectItem dataAttributeActionValue="'-1'">All blogs</BuilderSelectItem>
                 <t t-foreach="blogState.blogs" t-as="blog" t-key="blog.id">
@@ -14,23 +20,26 @@
     </xpath>
     <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="after">
         <!-- TODO noWidgetRefresh="true" => refreshInteraction="false" ? -->
-        <BuilderRow label.translate="Picture Size" level="1" preview="false" t-if="showPictureSizeOption()">
+        <BuilderRow label.translate="Picture Size" preview="false" t-if="showPictureSizeOption()">
             <BuilderButtonGroup id="'picture_size_opt'">
                 <BuilderButton label.translate="Smaller" title.translate="Smaller picture" classAction="'s_blog_posts_post_picture_size_small'"/>
                 <BuilderButton label.translate="Normal" title.translate="Normal picture" classAction="'s_blog_posts_post_picture_size_default'"/>
             </BuilderButtonGroup>
         </BuilderRow>
-        <BuilderRow label.translate="Author" level="1" preview="false">
+        <BuilderRow label.translate="Author" preview="false">
             <BuilderCheckbox id="'author_opt'" action="'customizeTemplate'" actionParam="'blog_posts_post_author_active'"/>
         </BuilderRow>
-        <BuilderRow label.translate="Teaser" level="1" preview="false" t-if="!!showTeaserOption()">
+        <BuilderRow label.translate="Teaser" preview="false" t-if="!!showTeaserOption()">
             <BuilderCheckbox id="'teaser_opt'" action="'customizeTemplate'" actionParam="'blog_posts_post_teaser_active'"/>
         </BuilderRow>
-        <BuilderRow label.translate="Date" level="1" preview="false" t-if="!!showDateOption()">
+        <BuilderRow label.translate="Date" preview="false" t-if="!!showDateOption()">
             <BuilderCheckbox id="'date_opt'" action="'customizeTemplate'" actionParam="'blog_posts_post_date_active'"/>
         </BuilderRow>
+        <BuilderRow label.translate="Category" preview="false" t-if="!!showCategoryOption()">
+            <BuilderCheckbox id="'category_opt'" action="'customizeTemplate'" actionParam="'blog_posts_post_category_active'"/>
+        </BuilderRow>
         <!-- TODO noWidgetRefresh="true" => refreshInteraction="false" ? -->
-        <BuilderRow label.translate="Hover Effect" level="1" t-if="templateKeyState.templateKey === 'website_blog.dynamic_filter_template_blog_post_big_picture'">
+        <BuilderRow label.translate="Hover Effect" t-if="templateKeyState.templateKey === 'website_blog.dynamic_filter_template_blog_post_big_picture'">
             <BuilderSelect>
                 <BuilderSelectItem classAction="''">None</BuilderSelectItem>
                 <BuilderSelectItem classAction="'s_blog_posts_effect_marley'">Marley</BuilderSelectItem>

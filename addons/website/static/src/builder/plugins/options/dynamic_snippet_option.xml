@@ -3,16 +3,35 @@
 
 <t t-name="website.DynamicSnippetOption">
     <t t-set="dynamicFilters" t-value="Object.values(dynamicOptionParams.dynamicFilters)"/>
-    <BuilderRow id="filter_opt_row" label.translate="Filter" t-if="dynamicOptionParams.showFilterOption()">
+    <t t-set="snippetModel" t-value="dynamicOptionParams.domState.snippetModel"/>
+    <t t-set="templateKey" t-value="dynamicOptionParams.domState.templateKey"/>
+    <t t-set="filteredTemplates" t-value="dynamicOptionParams.getFilteredTemplates()"/>
+    <t t-set="isSingleMode" t-value="dynamicOptionParams.domState.isSingleMode"/>
+    <t t-set="numberOfRecords" t-value="dynamicOptionParams.domState.numberOfRecords"/>
+    <!-- Single record filter options -->
+    <BuilderRow label.translate="Model" t-if="!props.modelNameFilter and isSingleMode">
+        <BuilderSelect action="'dynamicModel'" preview="false" id="'model_opt'"></BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Record" t-if="isSingleMode">
+        <BuilderMany2One
+            model="snippetModel"
+            action="'dynamicRecord'"
+            id="'record_opt'"
+            domain="[['is_published', '=', true]]"
+            allowUnselect="false"
+            fields="['id', 'name']"
+        />
+    </BuilderRow>
+    <!-- Multi record & common options -->
+    <BuilderRow id="filter_opt_row" label.translate="Filter" t-if="!!dynamicOptionParams.showFilterOption()">
         <BuilderSelect action="'dynamicFilter'" preview="false" id="'filter_opt'">
             <t t-foreach="dynamicFilters" t-as="filter" t-key="filter.id">
                 <BuilderSelectItem actionParam="filter" t-out="filter.name" title="filter.help || ''"/>
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <t t-set="filteredTemplates" t-value="dynamicOptionParams.getFilteredTemplates()"/>
-    <BuilderRow id="template_opt_row" label.translate="Template" t-if="filteredTemplates.length > 1">
-        <BuilderSelect action="'dynamicFilterTemplate'" preview="false" id="'template_opt'">
+    <BuilderRow id="template_opt_row" label.translate="Template" t-if="!props.modelNameFilter and filteredTemplates.length > 1">
+        <BuilderSelect action="'dynamicSnippetTemplate'" preview="false" id="'template_opt'">
             <t t-foreach="filteredTemplates" t-as="template" t-key="template.key">
                 <t t-if="template.thumb">
                     <BuilderSelectItem actionParam="template">
@@ -25,18 +44,24 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow id="number_of_records_opt_row" label.translate="Fetched Elements" t-if="!!this.dynamicOptionParams.domState.filterId">
-        <BuilderSelect dataAttributeAction="'numberOfRecords'" preview="false" id="'number_of_records_opt'">
+    <BuilderRow label.translate="Cover Image" t-if="dynamicOptionParams.domState.snippetContentPosition">
+        <BuilderButtonGroup>
+            <BuilderButton title.translate="Left" classAction="'s_dynamic_snippet_cover_left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+            <BuilderButton title.translate="Right" classAction="''" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow id="number_of_records_opt_row" label.translate="Fetched Elements" t-if="!!dynamicOptionParams.domState.filterId or isSingleMode">
+        <BuilderSelect action="'numberOfRecords'" preview="false" id="'number_of_records_opt'">
             <t t-foreach="['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16']" t-as="value" t-key="value">
-                <BuilderSelectItem dataAttributeActionValue="value" t-out="value"/>
+                <BuilderSelectItem actionParam="value" t-out="value"/>
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Section Title">
+    <BuilderRow label.translate="Section Title" t-if="!isSingleMode">
         <BuilderButtonGroup applyTo="'.s_dynamic_snippet_title'">
-            <BuilderButton label.translate="Top" classAction="'justify-content-between'"/>
-            <BuilderButton label.translate="Left" classAction="'s_dynamic_snippet_title_aside col-lg-3 justify-content-between flex-lg-column justify-content-lg-start'"/>
-            <BuilderButton label.translate="None" title.translate="No title" classAction="'d-none'"/>
+            <BuilderButton label.translate="Top" classAction="dynamicOptionParams.getSnippetTitleClasses('top')"/>
+            <BuilderButton label.translate="Left" classAction="dynamicOptionParams.getSnippetTitleClasses('left')"/>
+            <BuilderButton label.translate="None" title.translate="No title" classAction="dynamicOptionParams.getSnippetTitleClasses('none')"/>
         </BuilderButtonGroup>
     </BuilderRow>
 </t>
