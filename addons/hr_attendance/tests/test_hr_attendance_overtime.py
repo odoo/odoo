@@ -2,7 +2,7 @@
 from datetime import date, datetime
 from freezegun import freeze_time
 
-from odoo.tests import new_test_user
+from odoo.tests import Form, new_test_user
 from odoo.tests.common import tagged, TransactionCase
 
 @tagged('post_install', '-at_install', 'hr_attendance_overtime')
@@ -681,11 +681,18 @@ class TestHrAttendanceOvertime(TransactionCase):
         """
         self.company.attendance_overtime_validation = "no_validation"
 
-        attendance = self.env['hr.attendance'].create({
-            'employee_id': self.employee.id,
-            'check_in': datetime(2023, 1, 2, 8, 0),
-            'check_out': datetime(2023, 1, 2, 18, 0)
-        })
+        attendance = self.env['hr.attendance']
+        # Form is used here as it will send a `validated_overtime_hours` value of 0 when saved.
+        # This should not be considered as a manual edition of the field by the user.
+        with Form(attendance) as attendance_form:
+            attendance_form.employee_id = self.employee
+            attendance_form.check_in = datetime(2023, 1, 2, 8, 0)
+            attendance_form.check_out = datetime(2023, 1, 2, 18, 0)
+        attendance = attendance_form.save()
+
+        self.assertAlmostEqual(attendance.overtime_hours, 1, 2)
+        self.assertAlmostEqual(attendance.validated_overtime_hours, 1, 2)
+
         attendance.validated_overtime_hours = previous = 0.5
         self.assertNotEqual(attendance.validated_overtime_hours, attendance.overtime_hours)
 

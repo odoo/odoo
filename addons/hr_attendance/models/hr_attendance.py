@@ -470,6 +470,8 @@ class HrAttendance(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         res._update_overtime()
+        no_validation = res.filtered(lambda att: att.employee_id.company_id.attendance_overtime_validation == 'no_validation')
+        self.env.add_to_compute(self._fields['validated_overtime_hours'], no_validation)
         return res
 
     def write(self, vals):
