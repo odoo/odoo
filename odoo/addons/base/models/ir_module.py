@@ -156,7 +156,7 @@ class IrModuleModule(models.Model):
         if isinstance(name, str):
             # we have no info for studio_customization
             # imported modules are not found using this method
-            return modules.Manifest.for_addon(name, downloaded=True, display_warning=False) or {}
+            return modules.Manifest.for_addon(name, display_warning=False) or {}
         if isinstance(name, modules.Manifest):
             return name
         return {}
@@ -946,7 +946,7 @@ class IrModuleModule(models.Model):
         translation_importer = TranslationImporter(self.env.cr, verbose=False)
 
         for module_name in modules:
-            if not Manifest.for_addon(module_name, downloaded=True, display_warning=False):
+            if not Manifest.for_addon(module_name, display_warning=False):
                 continue
             for lang in langs:
                 for po_path in get_po_paths(module_name, lang):
