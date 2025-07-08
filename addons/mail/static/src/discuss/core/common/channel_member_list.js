@@ -39,7 +39,7 @@ export class ChannelMemberList extends Component {
     }
 
     canOpenChatWith(member) {
-        if (this.store.inPublicPage) {
+        if (this.store.inPublicPage || !member.persona.userId) {
             return false;
         }
         if (member.persona.type === "guest") {
