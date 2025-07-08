@@ -553,13 +553,36 @@ async function mail_link_preview(request) {
 
     const { message_id } = await parseRequestParams(request);
     const [message] = MailMessage.search_read([["id", "=", message_id]]);
-    if (message.body.includes("https://make-link-preview.com")) {
+    const existingPreviews = MailLinkPreview.browse(message.link_preview_ids || []);
+    const previewsToDelete = existingPreviews.filter(
+        (preview) => !message.body.includes(preview.source_url)
+    );
+    if (previewsToDelete.length) {
+        const previewRecords = MailLinkPreview.browse(previewsToDelete.map((p) => p.id));
+        BusBus._sendone(
+            MailMessage._bus_notification_target(message_id),
+            "mail.record/insert",
+            new mailDataHelpers.Store(MailMessage.browse(message_id), {
+                linkPreviews: mailDataHelpers.Store.many(
+                    previewRecords,
+                    "DELETE",
+                    makeKwArgs({ only_id: true })
+                ),
+            }).get_result()
+        );
+        MailLinkPreview.unlink(previewsToDelete.map((p) => p.id));
+    }
+    const previewUrlToCreate = "https://make-link-preview.com";
+    const previewAlreadyExist = existingPreviews.some(
+        (preview) => preview.source_url === previewUrlToCreate
+    );
+    if (message.body.includes(previewUrlToCreate) && !previewAlreadyExist) {
         const linkPreviewId = MailLinkPreview.create({
             message_id: message.id,
             og_description: "test description",
             og_title: "Article title",
             og_type: "article",
-            source_url: "https://make-link-preview.com",
+            source_url: previewUrlToCreate,
         });
         BusBus._sendone(
             MailMessage._bus_notification_target(message_id),
