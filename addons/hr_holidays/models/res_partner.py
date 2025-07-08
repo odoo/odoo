@@ -38,6 +38,9 @@ class ResPartner(models.Model):
         return super()._to_store_defaults() + [
             Store.One(
                 "main_user_id",
-                [Store.Attr("leave_date_to", lambda u: u.leave_date_to if u.active else False)],
+                [
+                    Store.Attr("leave_date_to", lambda u: u.leave_date_to if u.active else False),
+                    Store.Attr("public_holiday_name", lambda u: u.user_ids.public_holiday_name),
+                ],
             ),
         ]
