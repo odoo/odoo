@@ -104,7 +104,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
         },
         {
-            trigger: ".o-mail-Message-textContent:contains(cheese)",
+            trigger: ".o-mail-Message[data-persistent]:contains(cheese)",
             run: "hover && click .o-mail-Message [title='Add a Reaction']",
         },
         {
@@ -139,7 +139,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             content: "Click on more menu",
-            trigger: ".o-mail-Message-textContent:contains(cheese)",
+            trigger: ".o-mail-Message[data-persistent]:contains(cheese)",
             run: "hover && click .o-mail-Message [title='Expand']",
         },
         {
