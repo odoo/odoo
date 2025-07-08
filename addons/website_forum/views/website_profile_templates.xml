@@ -9,17 +9,6 @@
         </xpath>
     </template>
 
-    <template id="user_profile_sub_nav" inherit_id="website_profile.user_profile_sub_nav">
-        <xpath expr="//nav" position="before">
-            <div t-if="request.params.get('forum_origin')" class="o_wprofile_all_users_nav_btn_container col pe-0 flex-grow-0">
-                <a t-att-href="(request.website.domain or '') + '/' + request.params.get('forum_origin').lstrip('/')"
-                    class="o_wprofile_all_users_nav_btn btn text-nowrap">
-                    <i class="oi oi-chevron-left small"/> Back
-                </a>
-            </div>
-        </xpath>
-    </template>
-
     <template id="user_profile_content" inherit_id="website_profile.user_profile_content">
         <xpath expr="//table[@id='o_wprofile_sidebar_table']//tr[last()]" position="after">
             <t t-if="forum and (up_votes or down_votes)">
