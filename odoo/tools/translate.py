@@ -1776,7 +1776,7 @@ def get_po_paths(module_name: str, lang: str) -> Iterator[str]:
 def get_datafile_translation_path(module_name: str) -> Iterator[str]:
     from odoo.modules import Manifest  # noqa: PLC0415
     # if we are importing a module, we have an env, hide warnings
-    manifest = Manifest.for_addon(module_name, downloaded=True, display_warning=False) or {}
+    manifest = Manifest.for_addon(module_name, display_warning=False) or {}
     for data_type in ('data', 'demo'):
         for path in manifest.get(data_type, ()):
             if path.endswith(('.xml', '.csv')):
