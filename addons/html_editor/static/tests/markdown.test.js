@@ -42,7 +42,7 @@ describe("inline code", () => {
         await testEditor({
             contentBefore: "<p>ab[]cd`</p>",
             stepFunction: async (editor) => await insertText(editor, "`"),
-            contentAfter: '<p>ab<code class="o_inline_code">[]cd</code></p>',
+            contentAfter: '<p>ab<code class="o_inline_code">[]cd</code>\u200B</p>',
         });
     });
 
@@ -141,7 +141,7 @@ describe("inline code", () => {
                 editor.document.getSelection().anchorNode.after(document.createTextNode("`"));
                 await insertText(editor, "`");
             },
-            contentAfter: '<p>ab<code class="o_inline_code">[]c</code></p>',
+            contentAfter: '<p>ab<code class="o_inline_code">[]c</code>\u200B</p>',
         });
     });
 
@@ -165,6 +165,61 @@ describe("inline code", () => {
             contentBefore: "<p>````[]</p>",
             stepFunction: async (editor) => insertText(editor, "`"),
             contentAfter: "<p>`````[]</p>",
+        });
+    });
+
+    test("should wrap selection in inline code", async () => {
+        await testEditor({
+            contentBefore: "<p>a[bc]d</p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: '<p>a<code class="o_inline_code">bc[]</code>\u200Bd</p>',
+        });
+        await testEditor({
+            contentBefore: `<p>ab[cd<a href="#">test</a>ef]gh</p>`,
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: `<p>ab<code class="o_inline_code">cd<a href="#">test</a>ef[]</code>\u200Bgh</p>`,
+        });
+    });
+
+    test("should split selected inline element and wrap only the selected text in inline code", async () => {
+        await testEditor({
+            contentBefore: "<p>ab[cd<strong>ef]g</strong>h</p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter:
+                '<p>ab<code class="o_inline_code">cd<strong>ef[]</strong></code>\u200B<strong>g</strong>h</p>',
+        });
+    });
+
+    test("should split selected inline element and wrap only the selected text in inline code(1)", async () => {
+        await testEditor({
+            contentBefore: "<p><strong>a<u>b[cd</u>ef]g</strong></p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter:
+                '<p><strong>a<u>b</u></strong>\u200b<code class="o_inline_code"><strong><u>cd</u>ef[]</strong></code>\u200b<strong>g</strong></p>',
+        });
+    });
+
+    test("should not apply inline code when selection partially includes a link", async () => {
+        await testEditor({
+            contentBefore: `<p>ab[cd<a href="#">te]st</a>ef</p>`,
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: '<p>ab`[]<a href="#">st</a>ef</p>',
+        });
+    });
+
+    test("should not apply inline code when selection spans multiple block elements", async () => {
+        await testEditor({
+            contentBefore: "<p>a[b</p><p>cd</p><p>e]f</p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: "<p>a`[]f</p>",
+        });
+    });
+
+    test("should create an empty inline code when their is no text in between two backtics", async () => {
+        await testEditor({
+            contentBefore: "<p>a`[]b</p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: '<p>a<code class="o_inline_code">&nbsp;[]</code>\u200bb</p>',
         });
     });
 });
