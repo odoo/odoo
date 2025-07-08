@@ -170,7 +170,7 @@ export const CUSTOMIZE_MAILING_VARIABLES_DEFAULTS = {
         color: "rgb(0, 0, 0)",
     },
     "--link-font-size": {
-        "font-size": "12px",
+        "font-size": "16px",
     },
     "--link-font-weight": {
         "font-weight": "400",

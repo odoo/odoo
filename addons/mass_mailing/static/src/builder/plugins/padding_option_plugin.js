@@ -13,7 +13,7 @@ class PaddingOptionPlugin extends Plugin {
             withSequence(after(VERTICAL_ALIGNMENT), {
                 template: "mass_mailing.HorizontalPaddingOption",
                 selector: this.selector,
-                exclude: ".s_col_no_resize.row > div, .s_col_no_resize",
+                exclude: ".s_col_no_resize.row > div, .s_col_no_resize, img",
             }),
             withSequence(after(VERTICAL_ALIGNMENT), {
                 template: "mass_mailing.VerticalPaddingOption",
