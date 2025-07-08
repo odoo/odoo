@@ -1,3 +1,4 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
@@ -9,6 +10,9 @@ export class CustomizeMailingPlugin extends Plugin {
     static shared = ["transformFontFamilySelector"];
 
     resources = {
+        builder_actions: {
+
+        },
         mass_mailing_css_prefix_selectors: ".o_mail_wrapper",
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
     };
@@ -86,6 +90,28 @@ export class CustomizeMailingPlugin extends Plugin {
         } else if (RE_SELECTOR_ENDS_WITH_GT_STAR.test(selector)) {
             return [`${selector.replace(RE_SELECTOR_ENDS_WITH_GT_STAR, "").trim()} :not(.fa)`];
         }
+    }
+}
+
+const BODY_WIDTH_CLASSES = new Set("o_mail_small", "o_mail_regular");
+export class DesignBodyOption extends BuilderAction {
+    static id = "mass_mailing_egg.DesignBodyOption";
+    static dependencies = ["builderActions", "mass_mailing.CustomizeMailingPlugin"];
+    isApplied() {
+        // TODO EGGMAIL always applied should return true?
+        return true;
+    }
+    getValue() {
+        const container = this.editable.querySelector(".container");
+        for (const className of BODY_WIDTH_CLASSES) {
+            if (container.matches(className)) {
+                return className;
+            }
+        }
+        return "";
+    }
+    apply({ editingElement, params, value }) {
+        
     }
 }
 
