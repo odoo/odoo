@@ -161,6 +161,7 @@ describe("Image format/optimize", () => {
         await editor.shared.operation.next(() => {});
 
         const img = queryFirst(":iframe .test-options-target img");
+        expect(":iframe .test-options-target img").toHaveAttribute("data-attachment-id", "1");
         expect(":iframe .test-options-target img").toHaveAttribute("data-original-id", "1");
         expect(":iframe .test-options-target img").toHaveAttribute("data-mimetype", "image/webp");
         expect(img.src.startsWith("data:image/webp;base64,")).toBe(true);
