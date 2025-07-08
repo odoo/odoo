@@ -359,6 +359,9 @@ class Website(Home):
         action_url = f"/odoo/action-website.website_configurator?menu_id={request.env.ref('website.menu_website_configuration').id}"
         if step > 1:
             action_url += '&step=' + str(step)
+        info = kwargs.get('info')
+        if info:
+            action_url += f'&info={int(info)}'
         return request.redirect(action_url)
 
     @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
