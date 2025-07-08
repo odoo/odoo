@@ -87,7 +87,6 @@ class TestSaEdiCommon(AccountEdiTestCommon):
         return cls.env['res.partner'].create({
             'name': 'Saud Ahmed',
             'ref': 'Saudi Aramco',
-            'company_type': 'company',
             'lang': 'en_US',
             # Contact info
             'email': 'saudi.aramco@example.com',
@@ -114,7 +113,6 @@ class TestSaEdiCommon(AccountEdiTestCommon):
         return cls.env['res.partner'].create({
             'name': 'Mohammed Ali',
             'ref': 'Mohammed Ali',
-            'company_type': 'person',
             'lang': 'en_US',
             'country_id': cls.saudi_arabia.id,
             'state_id': cls.riyadh.id,
