@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
+import re
 
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.parser import parse_res_ids
@@ -301,7 +302,8 @@ class MailActivitySchedule(models.TransientModel):
             summary=self.summary,
             note=self.note,
             user_id=self.activity_user_id.id,
-            date_deadline=self.date_deadline
+            date_deadline=self.date_deadline,
+            attachment_ids=list(map(int, re.findall(r'href="/web/content/(\d+)\?', str(self.note))))
         )
 
     # ------------------------------------------------------------
