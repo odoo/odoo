@@ -34,15 +34,23 @@ Attachment = {
     },
 }
 
+IssuerParty = {
+    'cac:PartyIdentification': {
+        'cbc:ID': {},
+    }
+}
+
 DocumentReference = {
     'cbc:ID': {},
     'cbc:UUID': {},
     'cbc:IssueDate': {},
     'cbc:IssueTime': {},
     'cbc:DocumentTypeCode': {},
+    'cbc:DocumentStatusCode': {},
     'cbc:DocumentType': {},
     'cbc:DocumentDescription': {},
     'cac:Attachment': Attachment,
+    'cac:IssuerParty': IssuerParty,
 }
 
 BillingReference = {
