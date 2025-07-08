@@ -35,6 +35,9 @@ export class TimeOffCalendarMobileFilterPanel extends CalendarMobileFilterPanel 
         }
         const filterData = {};
         const [data,] = await Promise.all(promises);
+        if(!data){
+            return;
+        }
         data.forEach((leave) => {
             filterData[leave[3]] = leave;
         });
