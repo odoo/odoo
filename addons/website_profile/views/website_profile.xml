@@ -6,6 +6,11 @@
             <div class="container">
                 <div class="row align-items-center justify-content-between">
                     <!-- Desktop Mode -->
+                    <div t-if="url_from" class="o_wprofile_all_users_nav_btn_container col pe-0 flex-grow-0 d-none d-md-flex">
+                        <a t-att-href="url_from" class="o_wprofile_all_users_nav_btn btn text-nowrap">
+                            <i class="oi oi-chevron-left small"/> <t t-out="url_from_label"/>
+                        </a>
+                    </div>
                     <nav aria-label="breadcrumb" class="col d-none d-md-flex">
                         <ol class="breadcrumb bg-transparent mb-0 ps-0 py-0">
                             <li t-attf-class="breadcrumb-item #{'active' if not view_user else ''}">
@@ -31,9 +36,15 @@
                     </div>
 
                     <!-- Mobile Mode -->
-                    <div class="col d-md-none py-1 o_wprofile_user_profile_sub_nav_mobile_col">
-                        <div class="btn-group w-100 position-relative" role="group" aria-label="Mobile sub-nav">
-                            <div class="btn-group w-100 ms-2">
+                    <div class="col d-md-none py-1">
+                        <div class="btn-group d-flex justify-content-between gap-1" role="group" aria-label="Mobile sub-nav">
+                            <div t-if="url_from" class="btn-group">
+                                <a t-att-href="url_from" class="btn bg-black-25 text-white">
+                                    <i class="oi oi-chevron-left small"/>
+                                </a>
+                            </div>
+
+                            <div class="btn-group flex-grow-1">
                                 <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nav</a>
 
                                 <ul class="dropdown-menu">
@@ -43,9 +54,9 @@
                                 </ul>
                             </div>
 
-                            <div class="btn-group ms-1 position-static me-2">
+                            <div class="btn-group">
                                 <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
-                                <div class="dropdown-menu dropdown-menu-end w-100" style="right: 10px;">
+                                <div class="dropdown-menu dropdown-menu-end w-100">
                                     <form class="px-3" t-attf-action="/profile/users" role="search" method="get">
                                         <div class="input-group">
                                             <input type="text" class="form-control" name="search" placeholder="Search users"/>
