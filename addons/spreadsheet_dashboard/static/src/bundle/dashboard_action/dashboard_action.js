@@ -122,7 +122,7 @@ export class SpreadsheetDashboardAction extends Component {
         if (this.props.state && this.props.state.activeDashboardId) {
             return this.props.state.activeDashboardId;
         }
-        const params = this.props.action.params || this.props.action.context.params;
+        const params = this.props.action.params;
         if (params && params.dashboard_id) {
             return params.dashboard_id;
         }
