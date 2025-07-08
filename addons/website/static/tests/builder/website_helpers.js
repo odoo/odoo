@@ -125,6 +125,11 @@ export async function setupWebsiteBuilder(
             iframe.contentDocument.body.innerHTML = `
                 ${beforeWrapwrapContent}
                 <div id="wrapwrap">${headerContent} <div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${websiteContent}</div></div>`;
+            // we artificially set the is-ready attribute to trick the rest of
+            // the code into thinking that the js inside the iframe is properly
+            // loaded
+            iframe.contentDocument.body.setAttribute("is-ready", "true");
+
             onIframeLoaded(iframe);
             resolve(el);
         };
