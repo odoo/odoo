@@ -9,14 +9,7 @@ import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_component
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import {
-    click,
-    press,
-    queryAll,
-    queryAllTexts,
-    queryOne,
-    waitFor,
-} from "@odoo/hoot-dom";
+import { click, press, queryAll, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
 import { onWillDestroy, xml } from "@odoo/owl";
 import {
@@ -1913,6 +1906,7 @@ describe("save image", () => {
                     class="img img-fluid o_we_custom_image o_we_image_cropped${
                         isModified ? " o_modified_image_to_save" : ""
                     }"
+                    data-attachment-id="${imageRecord.id}"
                     data-original-id="${imageRecord.id}"
                     data-original-src="${imageRecord.image_src}"
                     data-mimetype="image/png"
