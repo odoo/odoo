@@ -613,6 +613,11 @@ test("text global filter default value is now an array of strings", () => {
                 id: "2",
                 type: "text",
             },
+            {
+                id: "3",
+                type: "text",
+                defaultValue: "",
+            },
         ],
     };
     const migratedData = load(data);
@@ -622,6 +627,7 @@ test("text global filter default value is now an array of strings", () => {
     expect(migratedData.globalFilters[1].defaultValue).toBe(undefined);
     expect(migratedData.globalFilters[1].rangeOfAllowedValues).toBe(undefined);
     expect(migratedData.globalFilters[1].rangesOfAllowedValues).toBe(undefined);
+    expect(migratedData.globalFilters[2].defaultValue).toBe(undefined);
 });
 
 test("Date with antepenultimate_year is not supported anymore", () => {
