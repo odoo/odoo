@@ -70,6 +70,12 @@ export class CarouselSlider extends Interaction {
     }
 
     computeMaxHeight() {
+        //In the Image Gallery Snippet the size is set on the snippet so there's
+        // no need to set a min-height on the items since it just make the img
+        // unresponsive and cause it to disappear behind the padding.
+        if (this.el.closest(".s_image_gallery")) {
+            return;
+        }
         this.maxHeight = undefined;
         // "updateContent()" is necessary to reset the min-height before the
         // following check.
