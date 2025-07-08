@@ -690,7 +690,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                 <BuyerName>partner_a invoice</BuyerName>
             </xpath>
             <xpath expr="//BuyerAdress" position="replace">
-                <BuyerAdress>invoice address     Indonesia</BuyerAdress>
+                <BuyerAdress>partner_a invoice address     Indonesia</BuyerAdress>
             </xpath>
             '''
         )

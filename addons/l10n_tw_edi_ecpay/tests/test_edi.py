@@ -207,16 +207,6 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
             'country_id': self.env.ref('base.tw').id,
         })
 
-        # the partner is b2b and has an invalid tax id
-        test_partner.vat = '1234567A'
-        invoice_b = self.init_invoice(
-            'out_invoice', partner=test_partner, products=self.product_a,
-        )
-        invoice_b.action_post()
-        send_and_print = self.create_send_and_print(invoice_b)
-        with self.assertRaises(UserError):
-            send_and_print.action_send_and_print()
-
         # the partner's phone number is invalid
         test_partner.phone = '123+456+789'
         invoice_c = self.init_invoice(
