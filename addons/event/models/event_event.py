@@ -825,7 +825,6 @@ class EventEvent(models.Model):
 
         for event in self:
             cal = vobject.iCalendar()
-            cal.add('method').value = 'PUBLISH'
             cal_event = cal.add('vevent')
             start = slot.start_datetime or event.date_begin
             end = slot.end_datetime or event.date_end
