@@ -579,6 +579,7 @@ export class SelectionPlugin extends Plugin {
         if (!this.validateSelection({ anchorNode, anchorOffset, focusNode, focusOffset })) {
             return null;
         }
+        const restore = this.preserveTextareaSelections();
         const isCollapsed = anchorNode === focusNode && anchorOffset === focusOffset;
         [focusNode, focusOffset] = normalizeSelfClosingElement(focusNode, focusOffset, "right");
         [anchorNode, anchorOffset] = isCollapsed
@@ -623,8 +624,35 @@ export class SelectionPlugin extends Plugin {
                 });
             }
         }
+        restore();
 
         return this.activeSelection;
+    }
+
+    /**
+     * Take the selections in all `<textarea>` elements in the editable and
+     * return a function that restores them.
+     *
+     * @returns {() => void}
+     */
+    preserveTextareaSelections() {
+        const selections = [...this.editable.querySelectorAll("textarea")].map((textarea) => ({
+            textarea,
+            start: textarea.selectionStart,
+            end: textarea.selectionEnd,
+            direction: textarea.selectionDirection,
+        }));
+        return () => {
+            for (const { textarea, start, end, direction } of selections) {
+                if (
+                    textarea.selectionStart !== start ||
+                    textarea.selectionEnd !== end ||
+                    textarea.selectionDirection !== direction
+                ) {
+                    textarea.setSelectionRange(start, end, direction);
+                }
+            }
+        };
     }
 
     /**
