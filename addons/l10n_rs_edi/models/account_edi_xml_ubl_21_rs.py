@@ -73,9 +73,9 @@ class AccountEdiXmlUBL21RS(models.AbstractModel):
         return vals_list
 
     def _get_partner_party_identification_vals_list(self, partner):
-        vals_list = super()._get_partner_party_identification_vals_list(partner)
+        # EXTENDS account.edi.xml.ubl_21
         if partner.country_code == 'RS' and partner.l10n_rs_edi_public_funds:
-            vals_list.append({
+            return [{
                 'id': f'JBKJS: {partner.l10n_rs_edi_public_funds}',
-            })
-        return vals_list
+            }]
+        return super()._get_partner_party_identification_vals_list(partner)
