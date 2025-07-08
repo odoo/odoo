@@ -57,7 +57,10 @@ class ResPartner(models.Model):
             if orders_sudo:
                 fpos_by_order = {so.id: so.fiscal_position_id.id for so in orders_sudo}
                 self.env.add_to_compute(orders_sudo._fields['fiscal_position_id'], orders_sudo)
-                orders_sudo.filtered(
+                fpos_changed = orders_sudo.filtered(
                     lambda so: so.fiscal_position_id.id != fpos_by_order[so.id],
-                )._recompute_taxes()
+                )
+                if fpos_changed:
+                    fpos_changed._recompute_taxes()
+                    fpos_changed._recompute_prices()
         return res
