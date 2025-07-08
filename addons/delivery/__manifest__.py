@@ -37,6 +37,9 @@ The system is able to add and compute the shipping line.
         'web.assets_frontend': [
             'delivery/static/src/**/*',
         ],
+        'web.assets_unit_tests_setup': [
+            'delivery/static/src/js/location_selector/**/*',
+        ],
     },
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
