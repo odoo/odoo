@@ -42,7 +42,7 @@ class WorldlineController(http.Controller):
                 'GET', f'hostedcheckouts/{data["hostedCheckoutId"]}'
             )
         except ValidationError:
-            _logger.exception("Unable to handle the notification data")
+            _logger.error("Unable to handle the notification data")
         else:
             notification_data = checkout_session_data.get('createdPaymentOutput', {})
             request.env['payment.transaction'].sudo()._handle_notification_data(

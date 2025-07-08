@@ -69,6 +69,6 @@ class MollieController(http.Controller):
                 'GET', f'/payments/{tx_sudo.provider_reference}'
             )
         except ValidationError:
-            _logger.exception("Unable to handle the notification data")
+            _logger.error("Unable to handle the notification data")
         else:
             tx_sudo._handle_notification_data('mollie', verified_data)

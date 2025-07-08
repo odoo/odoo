@@ -486,9 +486,6 @@ class PaymentTransaction(models.Model):
 
         return processing_values
 
-    def _obfuscate_log_values(self, values):
-        return values
-
     def _get_specific_processing_values(self, processing_values):
         """ Return a dict of provider-specific values used to process the transaction.
 

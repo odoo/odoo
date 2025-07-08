@@ -65,6 +65,7 @@ class PaymentProvider(models.Model):
         headers = {
             'Authorization': authorization_header,
             'Date': dt,
+            'Content-Type': content_type,
         }
         if method == 'POST' and idempotency_key:
             headers['X-GCS-Idempotence-Key'] = idempotency_key

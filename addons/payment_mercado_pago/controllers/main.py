@@ -76,6 +76,6 @@ class MercadoPagoController(http.Controller):
                 'GET', f'/v1/payments/{data.get("payment_id")}'
             )
         except ValidationError:
-            _logger.exception("Unable to verify the notification data")
+            _logger.error("Unable to verify the notification data")
         else:
             tx_sudo._handle_notification_data('mercado_pago', verified_data)

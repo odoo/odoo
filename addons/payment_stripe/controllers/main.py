@@ -53,7 +53,7 @@ class StripeController(http.Controller):
                 data={'expand[]': 'payment_method'},  # Expand all required objects.
             )
         except ValidationError:
-            _logger.exception("Failed to process the return from Stripe.")
+            _logger.error("Failed to process the return from Stripe.")
         else:
             if tx_sudo.operation != 'validation':
                 self._include_payment_intent_in_notification_data(response_content, data)

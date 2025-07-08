@@ -110,6 +110,6 @@ class FlutterwaveController(http.Controller):
                 'GET', 'transactions/verify_by_reference', params={'tx_ref': tx_sudo.reference},
             )
         except ValidationError:
-            _logger.exception("Unable to verify the notification data")
+            _logger.error("Unable to verify the notification data")
         else:
             tx_sudo._handle_notification_data('flutterwave', verified_data)

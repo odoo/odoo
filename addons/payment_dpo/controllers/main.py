@@ -52,7 +52,7 @@ class DPOController(http.Controller):
             # Verify the notification data.
             verified_data = tx_sudo._send_api_request('POST', '', data=payload)
         except ValidationError:
-            _logger.exception("Unable to verify the notification data")
+            _logger.error("Unable to verify the notification data")
         else:
             data.update(verified_data)
             # Handle the notification data.

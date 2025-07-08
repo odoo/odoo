@@ -81,7 +81,7 @@ class PaymentTransaction(models.Model):
         # Update the provider reference.
         transaction_keys = notification_data.get('brq_transactions')
         if not transaction_keys:
-            self._set_error("Received data with missing transaction keys")
+            self._set_error(_("Received data with missing transaction keys"))
             return
         # BRQ_TRANSACTIONS can hold multiple, comma-separated, tx keys. In practice, it holds only
         # one reference. So we split for semantic correctness and keep the first transaction key.

@@ -728,7 +728,7 @@ class PaymentProvider(models.Model):
         auth = self._build_request_auth(**kwargs)
 
         # Log the request.
-        payload = pformat(params or data or json)
+        payload = params or data or json
         self._log_request(method, url, payload, reference=reference)
 
         # Send the request.
@@ -798,19 +798,20 @@ class PaymentProvider(models.Model):
         :param str reference: The reference of the transaction, if any.
         :rtype: None
         """
+        log_msg = "Sending %(method)s API request to %(url)s"
+        log_values = {'method': method, 'url': url}
         if reference:
-            log_msg = (
-                "Sending %(method)s API request to %(url)s for transaction with reference %(ref)s:"
-                "\n%(data)s"
-            )
+            log_msg += " for transaction with reference %(ref)s"
+            log_values['ref'] = reference
         else:
-            log_msg = (
-                "Sending %(method)s API request to %(url)s for provider with id %(p_id)s:\n%(data)s"
-            )
-        _logger.info(
-            log_msg,
-            {'method': method, 'url': url, 'ref': reference, 'p_id': self.id, 'data': payload},
-        )
+            log_msg += " for provider with id %(p_id)s"
+            log_values['p_id'] = str(self.id)
+
+        if payload:  # Add the payload to the log if any.
+            log_msg += ":\n%(data)s"
+            log_values['data'] = pformat(payload)
+
+        _logger.info(log_msg, log_values)
 
     def _log_response(self, response, *, reference=None):
         """Log the response.
