@@ -138,7 +138,7 @@ class ImageToolOptionPlugin extends Plugin {
         const isHoverEffect = !!dataset["hoverEffect"];
         return (
             isHoverEffect ||
-            (dataset.originalId && isImageSupportedForProcessing(getMimetype(img)))
+            (dataset.originalId && isImageSupportedForProcessing(getMimetype(img, dataset)))
         );
     }
 }

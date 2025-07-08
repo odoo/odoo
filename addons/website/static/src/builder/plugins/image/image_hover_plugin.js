@@ -159,7 +159,7 @@ export class ImageHoverPlugin extends Plugin {
                 "rgba(0, 0, 0, 0)",
             hoverEffectStrokeWidth: undefined,
             hoverEffectIntensity: "20",
-            hoverEffect: "overlay",
+            hoverEffect: hoverEffectId,
         };
         const updateAttributes = await this.dependencies.imagePostProcess.processImage({
             img: imgEl,
@@ -199,7 +199,13 @@ export class ImageHoverPlugin extends Plugin {
 }
 export class SetHoverEffectAction extends BuilderAction {
     static id = "setHoverEffect";
-    async load({ editingElement: imgEl }) {}
-    async apply({ editingElement: imgEl }) {}
+    static dependencies = ["imageHover", "animateOption"];
+
+    isApplied({ editingElement, value: hoverEffectId }) {
+        return editingElement.dataset.hoverEffect === hoverEffectId;
+    }
+    async apply({ editingElement, value: hoverEffectId }) {
+        await this.dependencies.imageHover.setHoverEffect(editingElement, hoverEffectId);
+    }
 }
 registry.category("website-plugins").add(ImageHoverPlugin.id, ImageHoverPlugin);
