@@ -296,8 +296,6 @@ class SaleOrderLine(models.Model):
             'name': '%s - %s' % (self.order_id.name, template.name),
             'allocated_hours': allocated_hours,
             'project_id': project.id,
-            'sale_line_id': self.id,
-            'sale_order_id': self.order_id.id,
         }
 
     def _get_sale_order_partner_id(self, project):
@@ -312,6 +310,8 @@ class SaleOrderLine(models.Model):
             vals = self._prepare_task_template_vals(template, project)
             task_id = template.with_context(
                 default_partner_id=self._get_sale_order_partner_id(project),
+                default_sale_line_id=self.id,
+                default_sale_order_id=self.order_id.id,
             ).action_create_from_template(vals)
             task = self.env['project.task'].sudo().browse(task_id)
         else:
@@ -341,7 +341,7 @@ class SaleOrderLine(models.Model):
         """
         so_line_task_global_project = self._get_so_lines_task_global_project()
         so_line_new_project = self._get_so_lines_new_project()
-        task_templates = self.env['project.task']
+        task_templates = self.env['project.task.template']
 
         # search so lines from SO of current so lines having their project generated, in order to check if the current one can
         # create its own project, or reuse the one of its order.

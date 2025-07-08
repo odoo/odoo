@@ -44,10 +44,9 @@ class TestSaleProject(TestSaleProjectCommon):
             'sequence': 1,
             'project_ids': [(4, cls.project_template.id)]
         })
-        cls.task_template = cls.env['project.task'].create({
+        cls.task_template = cls.env['project.task.template'].create({
             'name': 'test task template',
             'project_id': cls.project_template.id,
-            'is_template': True,
         })
 
         # Create service products
@@ -433,12 +432,6 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertFalse(sale_order_2.show_project_button, "There is no project on the sale order, the button should be hidden")
         self.assertTrue(sale_order_2.show_task_button, "There is no project on the sale order and there is a task whose sale item is one of the sale_line of the SO, the button should be displayed")
         self.assertEqual(sale_order_2.tasks_ids, task)
-        task.action_convert_to_template()
-        sale_order_2._compute_tasks_ids()
-        sale_order_2._compute_show_project_and_task_button()
-        self.assertFalse(sale_order_2.show_task_button, 'The button should no longer be visible since no tasks are linked to the SO.')
-        self.assertFalse(sale_order_2.tasks_ids, 'No tasks should be linked to the SO since the task has been converted into a template.')
-
         # add a manual service product
         self.env['sale.order.line'].create({
             'product_id': self.product_service_delivered_manual.id,

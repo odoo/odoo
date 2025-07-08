@@ -15,7 +15,7 @@ from odoo.tools import get_lang, float_utils, formatLang, SQL, LazyTranslate
 from odoo.tools.misc import unquote
 from odoo.tools.translate import _
 from .project_update import STATUS_COLOR
-from .project_task import CLOSED_STATES
+from .project_task_template import CLOSED_STATES
 
 _lt = LazyTranslate(__name__)
 
@@ -43,13 +43,14 @@ class ProjectProject(models.Model):
         if additional_domain:
             domain &= Domain(additional_domain)
         ProjectTask = self.env['project.task'].with_context(active_test=any(project.active for project in self))
+        ProjectTaskTemplate = self.env['project.task.template'].with_context(active_test=any(project.active for project in self))
         tasks_count_by_project = dict(ProjectTask._read_group(domain, ['project_id'], ['__count']))
-        templates_count_by_project = dict(ProjectTask._read_group(domain & Domain('is_template', '=', True), ['project_id'], ['__count']))
+        templates_count_by_project = dict(ProjectTaskTemplate.sudo()._read_group(domain, ['project_id'], ['__count']))
         for project in self:
             if project.is_template:
                 count = templates_count_by_project.get(project, 0)
             else:
-                count = tasks_count_by_project.get(project, 0) - templates_count_by_project.get(project, 0)
+                count = tasks_count_by_project.get(project, 0)
             project.update({count_field: count})
 
     def _compute_task_count(self):
@@ -113,7 +114,9 @@ class ProjectProject(models.Model):
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count", export_string_translation=False)
     open_task_count = fields.Integer(compute='_compute_open_task_count', string="Open Task Count", export_string_translation=False)
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks', export_string_translation=False,
-                               domain="[('is_closed', '=', False), ('is_template', 'in', [is_template, True])]")
+                               domain="[('is_closed', '=', False)]")
+    task_template_ids = fields.One2many('project.task.template', 'project_id', string='Task Templates', export_string_translation=False,
+                               domain="[('is_closed', '=', False)]")
     color = fields.Integer(string='Color Index', export_string_translation=False)
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True, falsy_value_label=_lt("👤 Unassigned"))
     alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
@@ -459,9 +462,13 @@ class ProjectProject(models.Model):
     def map_tasks(self, new_project_id):
         """ copy and map tasks from old to new project """
         project = self.browse(new_project_id)
-        new_tasks = self.env['project.task']
+        task_model = self.env['project.task']
+        if project.is_template:
+            task_model = self.env['project.task.template']
+
         # We want to copy archived task, but do not propagate an active_test context key
-        tasks = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id), ('parent_id', '=', False)])
+        tasks = task_model.with_context(active_test=False).search([('project_id', '=', self.id), ('parent_id', '=', False)])
+
         if self.allow_task_dependencies and 'task_mapping' not in self.env.context:
             self = self.with_context(task_mapping=dict())
         # preserve task name and stage, normally altered during copy
@@ -705,6 +712,7 @@ class ProjectProject(models.Model):
         for project in self:
             if project.account_id and not project.account_id.line_ids:
                 analytic_accounts_to_delete |= project.account_id
+        self.with_context(active_test=False).task_template_ids.unlink()
         self.with_context(active_test=False).tasks.unlink()
         result = super().unlink()
         analytic_accounts_to_delete.unlink()
@@ -769,8 +777,8 @@ class ProjectProject(models.Model):
 
     def get_template_tasks(self):
         self.ensure_one()
-        return self.env['project.task'].search_read(
-            [('project_id', '=', self.id), ('is_template', '=', True)],
+        return self.env['project.task.template'].search_read(
+            [('project_id', '=', self.id), ('display_in_project', '=', True)],
             ['id', 'name'],
         )
 
@@ -871,7 +879,8 @@ class ProjectProject(models.Model):
         favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
 
     def action_view_tasks(self):
-        action = self.env['ir.actions.act_window'].with_context(active_id=self.id)._for_xml_id('project.act_project_project_2_project_task_all')
+        xml_id = 'project.project_task_templates_action' if self.is_template else 'project.act_project_project_2_project_task_all'
+        action = self.env['ir.actions.act_window'].with_context(active_id=self.id)._for_xml_id(xml_id)
         action['display_name'] = self.name
         context = action['context'].replace('active_id', str(self.id))
         context = ast.literal_eval(context)
@@ -882,11 +891,16 @@ class ProjectProject(models.Model):
             })
         action['context'] = context
         if self.is_template:
-            action['context'].update({'default_is_template': True})
-            domain = ast.literal_eval(action['domain'].replace('active_id', str(self.id)))
-            domain.remove(('has_template_ancestor', '=', False))
-            action['domain'] = domain
-            action['views'] = [(view_id, view_type) for view_id, view_type in action['views'] if view_type not in ('pivot', 'graph')]
+            action['context'].update({'default_project_id': self.id})
+            action['domain'] = [('project_id', '=', self.id)]
+            view_id_per_view_type = {
+                'kanban': self.env.ref("project.view_task_template_kanban_default_groupby_stage_id").id,
+                'list': self.env.ref("project.view_task_template_list_default_groupby_stage_id").id,
+            }
+            action["views"] = [
+                (view_id_per_view_type.get(v_type, v_id), v_type)
+                for v_id, v_type in action["views"]
+            ]
         return action
 
     def action_view_all_rating(self):
@@ -1320,7 +1334,9 @@ class ProjectProject(models.Model):
 
     def action_create_template_from_project(self):
         self.ensure_one()
-        template = self.copy(default={"is_template": True, "partner_id": False})
+        template = self.with_context(copy_from_template=True).copy(default={"is_template": True, "partner_id": False})
+        for parent_task in self.task_ids.filtered(lambda t: not t.parent_id):
+            self._copy_task_and_task_template_vals(template, parent_task)
         template._toggle_template_mode(True)
         template.message_post(body=self.env._("Template created from %s.", self.name))
         config = {
@@ -1342,6 +1358,14 @@ class ProjectProject(models.Model):
 
     def action_undo_convert_to_template(self):
         self.ensure_one()
+        if self.task_template_ids:
+            parent_task = self.task_template_ids.filtered(lambda t: not t.parent_id)
+            task_vals = parent_task.with_context(copy_project=True, copy_from_template=True).copy_data()
+            if task_vals and task_vals[0].get('recurring_task') and not task_vals[0].get('repeat_interval'):
+                task_vals[0]['recurring_task'] = False
+            self.env['project.task'].create(task_vals)
+            self.task_template_ids.action_archive()
+
         self._toggle_template_mode(False)
         self.message_post(body=self.env._("Template converted back to regular project."))
         return {
@@ -1359,7 +1383,6 @@ class ProjectProject(models.Model):
     def _toggle_template_mode(self, is_template):
         self.ensure_one()
         self.is_template = is_template
-        self.task_ids.write({"is_template": is_template})
         if not is_template:
             self.task_ids.role_ids = False
 
@@ -1379,6 +1402,28 @@ class ProjectProject(models.Model):
             "partner_id",
         ]
 
+    def _copy_task_and_task_template_vals(self, project, task, parent_task=False):
+        task_data = task.with_context(copy_from_template=True, is_copy_depend_task=True).copy_data({
+            'project_id': project.id,
+            'parent_id': parent_task and parent_task.id,
+        })[0]
+        if task_data.get('recurring_task') and not task_data.get('repeat_interval'):
+            task_data['recurring_task'] = False
+
+        task_data.pop('child_ids', None)
+        if project.is_template:
+            task_template_vals = {
+                f_name: value
+                for f_name, value in task_data.items()
+                if f_name in self.env['project.task.template']._fields
+            }
+            new_task = self.env['project.task.template'].create(task_template_vals)
+        else:
+            new_task = self.env['project.task'].create(task_data)
+        for child in task.child_ids:
+            self._copy_task_and_task_template_vals(project, child, new_task)
+        return task
+
     def action_create_from_template(self, values=None, role_to_users_mapping=None):
         self.ensure_one()
         values = values or {}
@@ -1395,12 +1440,14 @@ class ProjectProject(models.Model):
             if key.startswith('default_') and key.removeprefix('default_') in self._get_template_default_context_whitelist()
         } | values
         project = self.with_context(copy_from_template=True).copy(default=default)
+        for parent_template in self.task_template_ids.filtered(lambda t: not t.parent_id):
+            self._copy_task_and_task_template_vals(project, parent_template)
         project.message_post(body=self.env._("Project created from template %(name)s.", name=self.name))
 
         # Tasks dispatching using project roles
         project.task_ids.role_ids = False
         if role_to_users_mapping and (mapping := role_to_users_mapping.filtered(lambda entry: entry.user_ids)):
-            for template_task, new_task in zip(self.task_ids, project.task_ids):
+            for template_task, new_task in zip(self.task_template_ids, project.task_ids):
                 for entry in mapping:
                     if entry.role_id in template_task.role_ids:
                         new_task.user_ids |= entry.user_ids
