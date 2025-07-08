@@ -3,11 +3,11 @@
 import { _t } from "@web/core/l10n/translation";
 
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
-import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { makeAwaitable, ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { CashierSelectionPopup } from "@pos_hr/app/components/popups/cashier_selection_popup/cashier_selection_popup";
 
 export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, exclusive: false }) {
     const pos = usePos();
@@ -65,14 +65,6 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
             return;
         }
 
-        const prepareList = (employees) =>
-            employees.map((employee) => ({
-                id: employee.id,
-                item: employee,
-                label: employee.name,
-                isSelected: false,
-            }));
-
         const wrongPinNotification = () => {
             notification.add(_t("PIN not found"), {
                 type: "warning",
@@ -100,9 +92,9 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
         }
 
         if (pinMatchEmployees.length > 1 || list) {
-            employee = await makeAwaitable(dialog, SelectionPopup, {
-                title: _t("Change Cashier"),
-                list: prepareList(allEmployees),
+            employee = await makeAwaitable(dialog, CashierSelectionPopup, {
+                currentCashier: pos.getCashier() || undefined,
+                employees: allEmployees,
             });
 
             if (!employee) {
