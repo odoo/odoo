@@ -104,8 +104,8 @@ class TestSnippets(HttpCase):
         admin = self.env.ref('base.user_admin')
         admin.write({
             'parent_id': self.env['res.partner'].create({
-                'is_company': True,
                 'name': 'yourcompany',
+                'vat': 'BE0477472701',
             }).id
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_display_on_click', login='admin')

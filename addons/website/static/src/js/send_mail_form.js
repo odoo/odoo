@@ -28,7 +28,7 @@ registry.category("website.form_editor_actions").add("send_mail", {
         {
             type: "char",
             custom: true,
-            fillWith: "commercial_company_name",
+            fillWith: "parent_name",
             name: "company",
             string: _t("Your Company"),
         },

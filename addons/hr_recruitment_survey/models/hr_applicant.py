@@ -44,7 +44,6 @@ class HrApplicant(models.Model):
                     raise UserError(self.env._('Please provide an applicant name.'))
 
                 applicant.partner_id = applicant.env['res.partner'].sudo().create({
-                    'is_company': False,
                     'name': applicant.partner_name,
                     'email': applicant.email_from,
                     'phone': applicant.partner_phone,

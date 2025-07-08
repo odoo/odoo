@@ -294,7 +294,6 @@ class ResCompany(models.CachedModel):
             partners = self.env['res.partner'].with_context(default_parent_id=False).create([
                 {
                     'name': vals['name'],
-                    'is_company': True,
                     'image_1920': vals.get('logo'),
                     'email': vals.get('email'),
                     'phone': vals.get('phone'),

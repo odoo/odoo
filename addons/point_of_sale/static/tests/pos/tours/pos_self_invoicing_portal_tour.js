@@ -36,9 +36,9 @@ registry.category("web_tour.tours").add("invoicePoSOrderWithSelfInvocing", {
             run: "edit test@test.com",
         },
         {
-            trigger: ".o_portal_wrap input[name='company_name']",
+            trigger: ".o_portal_wrap input[name='parent_name']",
             run: function () {
-                const companyNameInput = document.querySelector("input[name='company_name']");
+                const companyNameInput = document.querySelector("input[name='parent_name']");
                 if (companyNameInput.hasAttribute("readonly")) {
                     throw new Error("The company name input must not be readonly.");
                 }

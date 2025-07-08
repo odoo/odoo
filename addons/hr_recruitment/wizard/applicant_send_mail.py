@@ -40,7 +40,6 @@ class ApplicantSendMail(models.TransientModel):
         for applicant in self.applicant_ids:
             if not applicant.partner_id:
                 applicant.partner_id = self.env['res.partner'].create({
-                    'is_company': False,
                     'name': applicant.partner_name,
                     'email': applicant.email_from,
                     'phone': applicant.partner_phone,
