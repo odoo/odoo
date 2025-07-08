@@ -17,7 +17,7 @@ export class ImageShapeOption extends BaseOptionComponent {
                 shape = shape.replace("web_editor", "html_builder");
             }
             return {
-                hasShape: !!shape,
+                hasShape: !!shape && !this.imageShapeOption.isTechnicalShape(shape),
                 shapeLabel: this.imageShapeOption.getShapeLabel(shape),
                 showImageShape0: this.isShapeVisible(editingElement, 0),
                 showImageShape1: this.isShapeVisible(editingElement, 1),

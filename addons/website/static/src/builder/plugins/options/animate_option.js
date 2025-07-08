@@ -17,12 +17,10 @@ export class AnimateOption extends BaseOptionComponent {
         this.state = useDomState(async (editingElement) => {
             const hasAnimateClass = editingElement.classList.contains("o_animate");
 
-            const canHover = await this.props.canHaveHoverEffect(editingElement);
-
             return {
                 isOptionActive: this.isOptionActive(editingElement),
                 hasAnimateClass: hasAnimateClass,
-                canHover,
+                canHover: await this.props.canHaveHoverEffect(editingElement),
                 isLimitedEffect: this.limitedEffects.some((className) =>
                     editingElement.classList.contains(className)
                 ),

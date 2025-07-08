@@ -34,6 +34,7 @@ export class ImageShapeOptionPlugin extends Plugin {
     static shared = [
         "getImageShapeGroups",
         "isTransformableShape",
+        "isTechnicalShape",
         "isAnimableShape",
         "isTogglableRatioShape",
         "getShapeLabel",
@@ -82,12 +83,14 @@ export class ImageShapeOptionPlugin extends Plugin {
     async processImageWarmup(img, newDataset) {
         const getData = (propName) =>
             propName in newDataset ? newDataset[propName] : img.dataset[propName];
-        const shapeId = getData("shape");
+        const combinedDataset = { ...img.dataset, ...newDataset };
+        const previousShapeId = this.getDefaultShapeId(img.dataset);
+        const shapeId = combinedDataset.shape || this.getDefaultShapeId(combinedDataset);
         // todo: should we reset some data if shapeName is not defined?
         if (!shapeId) {
             return;
         }
-        const isNewShape = "shape" in newDataset && newDataset.shape !== img.dataset.shape;
+        const isNewShape = previousShapeId !== shapeId;
         const shapeSvgText = await this.getShapeSvgText(shapeId);
 
         // Get colors.
@@ -109,7 +112,9 @@ export class ImageShapeOptionPlugin extends Plugin {
         const svgWidth = getData("resizeWidth") || getData("width") || (await getNaturalWidth());
 
         // Get the svg element.
-        const svg = this.computeShape(shapeSvgText, {
+        const svg = await this.computeShape(shapeSvgText, {
+            ...img.dataset,
+            ...newDataset,
             shapeId,
             shapeFlip: getData("shapeFlip") || "",
             shapeRotate: getData("shapeRotate") || 0,
@@ -198,7 +203,8 @@ export class ImageShapeOptionPlugin extends Plugin {
      * @param {HTMLImageElement} img
      * @returns {SVGElement}
      */
-    computeShape(svgText, { shapeId, shapeFlip, shapeRotate, shapeAnimationSpeed, shapeColors }) {
+    async computeShape(svgText, params) {
+        const { shapeId, shapeFlip, shapeRotate, shapeAnimationSpeed, shapeColors } = params;
         // Apply the colors to the shape.
         svgText = this.replaceSvgColors(svgText, shapeColors.split(";"));
         // Apply the right animation speed if there is an animated shape.
@@ -233,6 +239,9 @@ export class ImageShapeOptionPlugin extends Plugin {
         }
 
         // todo: Add shape animations on hover.
+        for (const cb of this.getResource("post_compute_shape_listeners")) {
+            await cb(svg, params);
+        }
         // if (params.hoverEffect && this._canHaveHoverEffect()) {
         //     this._addImageShapeHoverEffect(svg, img);
         // }
@@ -332,6 +341,12 @@ export class ImageShapeOptionPlugin extends Plugin {
         const canTransform = this.imageShapes[shapeId].transform;
         return typeof canTransform === "undefined" ? true : canTransform;
     }
+    isTechnicalShape(shapeId) {
+        if (!shapeId) {
+            return false;
+        }
+        return this.imageShapes[shapeId].isTechnical;
+    }
     getShapeLabel(shapeId) {
         if (!shapeId) {
             return _t("None");
@@ -362,6 +377,14 @@ export class ImageShapeOptionPlugin extends Plugin {
             )
             .flat();
         return Object.fromEntries(entries);
+    }
+    getDefaultShapeId(dataset) {
+        for (const fn of this.getResource("default_shape_handlers")) {
+            const shapeId = fn(dataset);
+            if (shapeId) {
+                return shapeId;
+            }
+        }
     }
 }
 
