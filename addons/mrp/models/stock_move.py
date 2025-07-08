@@ -125,6 +125,11 @@ class StockMoveLine(models.Model):
 
         return aggregated_move_lines
 
+    def _exclude_requiring_lot(self):
+        if self.move_id.unbuild_id:
+            return True
+        return super()._exclude_from_lot_requirement()
+
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
