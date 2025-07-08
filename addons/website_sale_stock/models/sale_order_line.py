@@ -6,12 +6,15 @@ from odoo import models
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    def _set_shop_warning_stock(self, desired_qty, new_qty):
+    def _set_shop_warning_stock(self, desired_qty, new_qty, save=True):
         self.ensure_one()
-        self.shop_warning = self.env._(
+        warning = self.env._(
             "You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is available",
             desired_qty=desired_qty, product_name=self.product_id.name, new_qty=new_qty
         )
+        if save:
+            self.shop_warning = warning
+        return warning
 
     def _get_max_line_qty(self):
         max_quantity = self._get_max_available_qty()
