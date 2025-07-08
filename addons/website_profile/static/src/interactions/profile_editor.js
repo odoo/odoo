@@ -14,7 +14,13 @@ export class ProfileEditor extends Interaction {
     openDialog() {
         this.services.dialog.add(ProfileDialog, {
             confirm: () => {
-                browser.location.reload();
+                const url = new URL(window.location.href);
+                if (this.el.dataset.urlFrom && !url.searchParams.has("url_from")) {
+                    url.searchParams.set("url_from", this.el.dataset.urlFrom);
+                    window.location.replace(url.toString());
+                } else {
+                    browser.location.reload();
+                }
             },
             focusWebsiteDescription:
                 this.el.dataset.focusWebsiteDescription &&

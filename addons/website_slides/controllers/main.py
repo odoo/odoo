@@ -2,6 +2,7 @@
 
 from ast import literal_eval
 from dateutil.relativedelta import relativedelta
+import re
 
 import base64
 import json
@@ -35,6 +36,12 @@ class WebsiteSlides(WebsiteProfile):
         'view': 'total_views desc',
         'date': 'create_date desc',
     }
+
+    def _get_from_label(self, path):
+        label = super()._get_from_label(path)
+        if label or not re.match(r'/slides(/.*)?', path):
+            return label
+        return _('All Courses')
 
     def sitemap_slide(env, rule, qs):
         Channel = env['slide.channel']

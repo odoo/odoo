@@ -3,6 +3,7 @@ import json
 import logging
 
 import lxml
+import re
 import requests
 import werkzeug.exceptions
 import werkzeug.urls
@@ -22,6 +23,13 @@ _logger = logging.getLogger(__name__)
 class WebsiteForum(WebsiteProfile):
     _post_per_page = 10
     _user_per_page = 30
+
+    def _get_from_label(self, path):
+        label = super()._get_from_label(path)
+        match = re.match(r"^/forum/[^/]+-(\d+)(?:/.*)?$", path)
+        if label or not match:
+            return label
+        return self.env['forum.forum'].browse([int(match.group(1))]).name
 
     def _prepare_user_values(self, **kwargs):
         values = super(WebsiteForum, self)._prepare_user_values(**kwargs)
