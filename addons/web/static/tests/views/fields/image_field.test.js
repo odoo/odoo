@@ -27,6 +27,9 @@ const MY_IMAGE =
     "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
 const PRODUCT_IMAGE =
     "R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7";
+// 2000x2000
+const HIGH_RES_IMAGE =
+    "iVBORw0KGgoAAAANSUhEUgAAB9AAAAfQAQMAAACg9lY6AAAAA1BMVEX///+nxBvIAAAB/UlEQVR42u3BAQ0AAADCoPdPbQ43oAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHg2qVkAAdbjW0oAAAAOZVhJZk1NACoAAAAIAAAAAAAAANJTkwAAAABJRU5ErkJggg=="
 
 function getUnique(target) {
     const src = target.dataset.src;
@@ -876,4 +879,55 @@ test("convert image to webp", async () => {
         { message: "image field should not be set" }
     );
     await setFiles(imageFile);
+});
+
+test("apply webp downsampling", async () => {
+    async function getImageSize(base64DataUrl) {
+        const img = new Image();
+        return new Promise((resolve, reject) => {
+            img.onload = () => resolve( Math.max(img.width, img.height) );
+            img.onerror = reject;
+            img.src = `data:image/webp;base64,${base64DataUrl}`;
+        });
+    }
+
+    const createdSizes = {};
+
+    onRpc("create_unique", async (request) => {
+        const args = request.args;
+        const datas = args[0][0].datas;
+        const mimetype = args[0][0].mimetype;
+        const size = await getImageSize(datas);
+        if (!createdSizes[mimetype]) {
+            createdSizes[mimetype] = [];
+        }
+        createdSizes[mimetype].push(size);
+        return [1];
+    });
+
+    const imageData = Uint8Array.from([...atob(HIGH_RES_IMAGE)].map((c) => c.charCodeAt(0)));
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+            <form>
+                <field name="document" widget="image" required="1" options="{'convert_to_webp': True}" />
+            </form>
+        `,
+    });
+
+    const imageFile = new File([imageData], "fake_file.png", { type: "png" });
+    expect("img[alt='Binary file']").toHaveAttribute(
+        "data-src",
+        "/web/static/img/placeholder.png",
+        { message: "image field should not be set" }
+    );
+    const start = performance.now();
+    await setFiles(imageFile);
+    const duration = performance.now() - start;
+    expect(duration).toBeLessThan(10000);
+
+    const expectedSizes = [2000, 1024, 512, 256, 128];
+    expect(createdSizes["image/webp"]).toEqual(expectedSizes);
+    expect(createdSizes["image/jpeg"]).toEqual(expectedSizes);
 });

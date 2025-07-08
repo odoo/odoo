@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { resizeImageWithResampling } from "@web/core/utils/image_resize";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { getVideoUrl } from "../utils/url";
 import { useChildSubEnv } from "@odoo/owl";
@@ -75,14 +76,7 @@ export class X2ManyMediaViewer extends X2ManyField {
                 let referenceId = undefined;
 
                 for (const size of [originalSize, ...smallerSizes]) {
-                    const ratio = size / originalSize;
-                    const canvas = document.createElement("canvas");
-                    canvas.width = image.width * ratio;
-                    canvas.height = image.height * ratio;
-                    const ctx = canvas.getContext("2d");
-                    ctx.drawImage(
-                        image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height
-                    );
+                    const canvas = resizeImageWithResampling(image, size, originalSize);
 
                     // WebP format
                     const webpData = canvas.toDataURL("image/webp", 0.75).split(",")[1];
