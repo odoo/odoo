@@ -34,7 +34,7 @@
         </div>
         <div class="o-tab-content overflow-y-auto overflow-x-hidden flex-grow-1">
             <t t-if="state.activeTab === 'blocks'">
-                <BlockTab />
+                <BlockTab snippetsName="props.snippetsName" />
             </t>
             <t t-if="state.activeTab === 'customize'">
                 <t t-if="!!props.config.customizeTab" t-call="{{props.config.customizeTab}}"/>

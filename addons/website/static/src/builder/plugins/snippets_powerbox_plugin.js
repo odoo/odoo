@@ -139,7 +139,7 @@ class SnippetsPowerboxPlugin extends Plugin {
     };
 
     insertSnippet(name) {
-        const snippet = this.services["html_builder.snippets"].getSnippetByName(
+        const snippet = this.config.snippetModel.getSnippetByName(
             "snippet_content",
             name
         );
