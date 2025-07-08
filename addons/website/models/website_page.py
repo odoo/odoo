@@ -267,6 +267,23 @@ class WebsitePage(models.Model):
             'view_id': self.env.ref('website.view_view_form_extend').id,
         }
 
+    def action_open_website_with_seo_dialog(self):
+        self.ensure_one()
+
+        url = self.website_url or "/"
+        if '?' in url:
+            url += '&seo_optimize=1'
+        else:
+            url += '?seo_optimize=1'
+
+        website = self.env['website'].get_current_website()
+        final_url = website.get_client_action_url(url, mode_edit=False)
+
+        return {
+            'type': 'ir.actions.act_url',
+            'url': final_url,
+            'target': 'self',
+        }
 
 # this is just a dummy function to be used as ormcache key
 def _cached_response():

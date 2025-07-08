@@ -494,6 +494,7 @@
             'website/static/src/client_actions/*/*.xml',
             'website/static/src/components/website_loader/*.xml',
             'website/static/src/js/backend/**/*',
+            "website/static/src/js/optimize_seo_trigger.js",
 
             # Don't include dark mode files in light mode
             ('remove', 'website/static/src/components/dialog/*.dark.scss'),

@@ -97,7 +97,8 @@
     <field name="model">website.page</field>
     <field name="priority">99</field>
     <field name="arch" type="xml">
-        <list js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1" default_order="url asc, id asc">
+            <!-- <list js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1" default_order="url asc, id asc"> -->
+         <list multi_edit="1" default_order="url asc, id asc">
             <field name="is_homepage" column_invisible="True"/>
             <field name="name" string="Page Title"/>
             <field name="website_url" string="Page URL"/>
@@ -106,6 +107,12 @@
             <field name="website_indexed"/>
             <field name="is_in_menu" string="Is In Main Menu"/>
             <field name="is_seo_optimized"/>
+            <button type="object"
+                name="action_open_website_with_seo_dialog"
+                string="View"
+                class="btn o_list_button_add"
+                title="Open SEO Dialog on Website"/>
+
             <field name="is_published"/>
 
             <field name="create_uid" column_invisible="True"/>

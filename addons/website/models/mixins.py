@@ -21,7 +21,7 @@ class WebsiteSeoMetadata(models.AbstractModel):
 
     _description = 'SEO metadata'
 
-    is_seo_optimized = fields.Boolean("SEO optimized", compute='_compute_is_seo_optimized', store=True)
+    is_seo_optimized = fields.Boolean("SEO optimized", compute='_compute_is_seo_optimized', store=True, help="Your page is SEO-optimized if it has a title, description, relevant keywords, and well-structured content. Open the SEO dialog for more details.")
     website_meta_title = fields.Char("Website meta title", translate=True, prefetch="website_meta")
     website_meta_description = fields.Text("Website meta description", translate=True, prefetch="website_meta")
     website_meta_keywords = fields.Char("Website meta keywords", translate=True, prefetch="website_meta")
