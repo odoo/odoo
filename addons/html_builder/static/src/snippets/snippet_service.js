@@ -6,7 +6,8 @@ import { escape } from "@web/core/utils/strings";
 import { AddSnippetDialog } from "./add_snippet_dialog";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { markup } from "@odoo/owl";
+import { markup, useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 export class SnippetModel extends Reactive {
     constructor(services, { snippetsName, context }) {
@@ -409,18 +410,35 @@ export class SnippetModel extends Reactive {
 }
 
 registry.category("services").add("html_builder.snippets", {
-    dependencies: ["orm", "dialog", "website"],
+    dependencies: ["orm", "dialog"],
 
-    start(env, { orm, dialog, website }) {
-        const services = { orm, dialog, website };
+    start(env, { orm, dialog }) {
+        const services = { orm, dialog };
         const context = {
-            lang: website.currentWebsite?.default_lang_id.code,
+            lang: user.context.lang, // will be overridden by each module through reload().
             user_lang: user.context.lang,
         };
 
-        return new SnippetModel(services, {
-            snippetsName: "website.snippets",
-            context,
-        });
+        const snippetModelsMap = new Map();
+        const getSnippetModel = (snippetsName) => {
+            if (snippetModelsMap.has(snippetsName)) {
+                return snippetModelsMap.get(snippetsName);
+            }
+            snippetModelsMap.set(
+                snippetsName,
+                new SnippetModel(services, {
+                    snippetsName,
+                    context,
+                })
+            );
+            return snippetModelsMap.get(snippetsName);
+        };
+
+        return { getSnippetModel };
     },
 });
+
+export function useSnippets(snippetsName) {
+    const snippetsService = useService("html_builder.snippets");
+    return useState(snippetsService.getSnippetModel(snippetsName));
+}
