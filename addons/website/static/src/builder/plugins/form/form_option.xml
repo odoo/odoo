@@ -172,20 +172,16 @@
         <BuilderCheckbox attributeAction="'checked'" attributeActionValue="'checked'"
             applyTo="`.col-sm > * > input[type='checkbox']`" preview="false"
         />
-        <!-- TODO used to set both attribute & property -->
-        <BuilderTextInput attributeAction="'value'"
+        <BuilderTextInput attributeAction="'value'" action="'property'" actionParam="{ property: 'value' }"
             applyTo="`input[type='text']:not(.datetimepicker-input), input[type='email'], input[type='tel'], input[type='url']`"
         />
-        <!-- TODO used to set both attribute & property -->
-        <BuilderNumberInput attributeAction="'value'" step="1"
+        <BuilderNumberInput attributeAction="'value'" step="1" action="'property'" actionParam="{ property: 'value' }"
             applyTo="`input[type='number']`"
         />
-        <!-- TODO used to set both attribute & "valueProperty" -->
-        <BuilderDateTimePicker type="'datetime'" attributeAction="'value'"
+        <BuilderDateTimePicker type="'datetime'" attributeAction="'value'" action="'property'" actionParam="{ property: 'value', format: format.datetime }"
             applyTo="'.s_website_form_datetime input'"
         />
-        <!-- TODO used to set both attribute & "valueProperty" -->
-        <BuilderDateTimePicker type="'date'" attributeAction="'value'"
+        <BuilderDateTimePicker type="'date'" attributeAction="'value'" action="'property'" actionParam="{ property: 'value', format: format.date }"
             applyTo="'.s_website_form_date input'"
         />
     </BuilderRow>
