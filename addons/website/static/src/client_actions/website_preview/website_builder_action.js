@@ -187,6 +187,9 @@ export class WebsiteBuilderClientAction extends Component {
     }
     
     get websiteBuilderProps() {
+        const iframeLoaded = this.iframeLoaded.then((el) => {
+            return this.waitForIframeReady().then(() => el);
+        });
         const builderProps = {
             closeEditor: this.reloadIframeAndCloseEditor.bind(this),
             reloadEditor: this.reloadEditor.bind(this),
@@ -194,7 +197,7 @@ export class WebsiteBuilderClientAction extends Component {
             toggleMobile: this.toggleMobile.bind(this),
             installSnippetModule: this.installSnippetModule.bind(this),
             overlayRef: this.overlayRef,
-            iframeLoaded: this.iframeLoaded,
+            iframeLoaded: iframeLoaded,
             isMobile: this.websiteContext.isMobile,
             config: {
                 initialTarget: this.target,
@@ -266,6 +269,13 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     async loadAssetsEditBundle() {
+        // at this point, the iframe should be loaded. In a normal user flow, the
+        // iframe had the time to load and start the js, and has an environment
+        // with services. But it could happen (most likely in tours or tests) that
+        // the js is not loaded yet. If we load the assets_edit_frontend bundle
+        // now, and if it comes first, we'll get a crash. So we make sure that we
+        // properly wait for the iframe to be completely ready.
+        await this.waitForIframeReady();
         await Promise.all([
             // TODO Should be website.assets_edit_frontend, but that is currently
             // still used by website, so let's not impact it yet.
@@ -452,6 +462,24 @@ export class WebsiteBuilderClientAction extends Component {
     get withLoader() {
         return this.props.withLoader || !!router.current.with_loader;
     }
+
+    waitForIframeReady() {
+        return new Promise((resolve) => {
+            const doc = this.websiteContent.el.contentDocument;
+            if (doc.body.hasAttribute("is-ready")) {
+                resolve();
+            } else {
+                const observer = new MutationObserver(() => {
+                    if (doc.body.hasAttribute("is-ready")) {
+                        observer.disconnect();
+                        resolve();
+                    }
+                });
+                observer.observe(doc.body, { attributes: true, attributeFilter: ['is-ready'] });
+            }
+        });
+    }
+
 
     async reloadEditor(param = {}) {
         this.initialTab = param.initialTab;
