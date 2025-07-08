@@ -115,6 +115,8 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
                 return this._getBooleanDomain(filter, fieldMatching);
             case "selection":
                 return this._getSelectionDomain(filter, fieldMatching);
+            case "numeric":
+                return this._getNumericDomain(filter, fieldMatching);
         }
     }
 
@@ -140,6 +142,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
             case "text":
             case "boolean":
             case "selection":
+            case "numeric":
                 return filter.defaultValue;
             case "date":
                 return this._getDateValueFromDefaultValue(filter.defaultValue);
@@ -185,6 +188,8 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
             case "selection":
             case "relation":
                 return [[{ value: value?.length ? value.join(", ") : "" }]];
+            case "numeric":
+                return [[{ value }]];
             case "date":
                 return this._getDateFilterDisplayValue(filter);
         }
@@ -416,6 +421,14 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         }
         const field = fieldMatching.chain;
         return new Domain([[field, "in", values]]);
+    }
+
+    _getNumericDomain(filter, fieldMatching) {
+        const value = this.getGlobalFilterValue(filter.id);
+        if (value === undefined || !fieldMatching.chain) {
+            return new Domain();
+        }
+        return new Domain([[fieldMatching.chain, "=", value]]);
     }
 
     /**

@@ -275,3 +275,17 @@ test("selection filter", async function () {
     await contains("a:first").click();
     expect(model.getters.getGlobalFilterValue("42")).toEqual(["after"]);
 });
+
+test("numeric filter", async function () {
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "numeric",
+        label: "Numeric Filter",
+    });
+    await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
+    await contains("input").edit(1998);
+    await contains("input").press("Enter");
+    expect(model.getters.getGlobalFilterValue("42")).toEqual(1998, { message: "value is set" });
+});
