@@ -4,7 +4,7 @@ from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 from urllib.parse import urlsplit
 
-from odoo import Command, http, _
+from odoo import http, _
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import replace_exceptions

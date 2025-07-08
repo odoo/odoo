@@ -148,17 +148,12 @@ class DiscussChannelMember(models.Model):
             )
 
     def _to_store_defaults(self):
-        bot = self._get_bot_partner_ids()
         return super()._to_store_defaults() + [
             Store.Attr(
                 "livechat_member_type",
                 predicate=lambda member: member.channel_id.channel_type == "livechat",
             )
         ]
-
-    def _get_bot_partner_ids(self):
-        # sudo: discuss.channel - reading livechat channel to check whether current member is a bot is allowed
-        return self.channel_id.sudo().livechat_channel_id.rule_ids.mapped('chatbot_script_id.operator_partner_id')
 
     def _get_store_partner_fields(self, fields):
         self.ensure_one()

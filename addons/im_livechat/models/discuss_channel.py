@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, Command, fields, models, _
+from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
 
