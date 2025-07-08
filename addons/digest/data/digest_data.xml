@@ -353,24 +353,27 @@
                                                 </tr>
                                                 <tr style="vertical-align: top;">
                                                     <td t-if="kpi_info.get('kpi_col1')" class="kpi_cell" style="padding-top: 10px; border-top: 1px solid #e6e6e6;">
-                                                        <div t-call="digest.digest_tool_kpi">
-                                                            <t t-set="kpi_value" t-value="kpi_info['kpi_col1']['value']" />
-                                                            <t t-set="kpi_margin" t-value="kpi_info['kpi_col1'].get('margin')" />
-                                                            <t t-set="kpi_subtitle" t-value="kpi_info['kpi_col1']['col_subtitle']" />
+                                                        <div>
+                                                            <t t-call="digest.digest_tool_kpi"
+                                                                kpi_value="kpi_info['kpi_col1']['value']"
+                                                                kpi_margin="kpi_info['kpi_col1'].get('margin')"
+                                                                kpi_subtitle="kpi_info['kpi_col1']['col_subtitle']"/>
                                                         </div>
                                                     </td>
                                                     <td t-if="kpi_info.get('kpi_col2')" class="kpi_cell" style="padding-top: 10px; border-top: 1px solid #e6e6e6;">
-                                                        <div t-call="digest.digest_tool_kpi">
-                                                            <t t-set="kpi_value" t-value="kpi_info['kpi_col2']['value']" />
-                                                            <t t-set="kpi_margin" t-value="kpi_info['kpi_col2'].get('margin')" />
-                                                            <t t-set="kpi_subtitle" t-value="kpi_info['kpi_col2']['col_subtitle']" />
+                                                        <div>
+                                                            <t t-call="digest.digest_tool_kpi"
+                                                                kpi_value="kpi_info['kpi_col2']['value']"
+                                                                kpi_margin="kpi_info['kpi_col2'].get('margin')"
+                                                                kpi_subtitle="kpi_info['kpi_col2']['col_subtitle']"/>
                                                         </div>
                                                     </td>
                                                     <td t-if="kpi_info.get('kpi_col3')" class="kpi_cell" style="padding-top: 10px; border-top: 1px solid #e6e6e6;">
-                                                        <div t-call="digest.digest_tool_kpi">
-                                                            <t t-set="kpi_value" t-value="kpi_info['kpi_col3']['value']" />
-                                                            <t t-set="kpi_margin" t-value="kpi_info['kpi_col3'].get('margin')" />
-                                                            <t t-set="kpi_subtitle" t-value="kpi_info['kpi_col3']['col_subtitle']" />
+                                                        <div>
+                                                            <t t-call="digest.digest_tool_kpi"
+                                                                kpi_value="kpi_info['kpi_col3']['value']"
+                                                                kpi_margin="kpi_info['kpi_col3'].get('margin')"
+                                                                kpi_subtitle="kpi_info['kpi_col3']['col_subtitle']"/>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -418,7 +421,9 @@
                                 </table>
                             </td>
                         </tr>
-                        <tr t-if="display_mobile_banner" t-call="digest.digest_section_mobile" />
+                        <tr t-if="display_mobile_banner">
+                            <t t-call="digest.digest_section_mobile"/>
+                        </tr>
                     </tfoot>
                 </table>
             </td>

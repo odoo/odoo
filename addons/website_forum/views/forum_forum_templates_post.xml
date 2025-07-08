@@ -70,7 +70,7 @@
                     </div>
                 </div>
             </div>
-            <div t-if="not answer" t-call="website_forum.post_stats" class="d-inline-flex align-items-center"/>
+            <div t-if="not answer" class="d-inline-flex align-items-center"><t t-call="website_forum.post_stats"/></div>
         </div>
     </div>
     <tr t-else="" class="position-relative d-flex d-lg-table-row">
@@ -245,7 +245,7 @@
                     </t>
                 </div>
             </div>
-            <div t-attf-class="d-flex align-items-center #{'mb-3' if not is_profile else ''}" t-call="website_forum.post_stats"/>
+            <div t-attf-class="d-flex align-items-center #{'mb-3' if not is_profile else ''}"><t t-call="website_forum.post_stats"/></div>
             <div class="d-grid">
                 <!-- Question Post -->
                 <t t-call="website_forum.post_display">
@@ -276,7 +276,7 @@
                 <t t-if="question.state != 'close' and question.active != False and question.can_answer and forum">
                     <div id="post_reply" class="answer_collapse position-fixed d-flex flex-column start-0 end-0 bottom-0 w-100 w-lg-50 shadow mx-auto px-3 bg-body"
                          t-if="forum and not forum.has_pending_post and (not question.uid_has_answered or question.forum_id.mode == 'discussions')">
-                        <div t-call="website_forum.post_answer" class="container my-3"/>
+                        <div class="container my-3"><t t-call="website_forum.post_answer"/></div>
                     </div>
                     <div t-elif="forum and forum.has_pending_post" class="alert alert-info text-center">
                         <b class="d-block">You have a pending post</b>
@@ -284,7 +284,7 @@
                     </div>
                 </t>
                 <t t-if="is_public_user" t-call="website_forum.forum_sign_up_cta"/>
-                <section t-if="related_posts" t-call="website_forum.forum_related_posts"/>
+                <section t-if="related_posts"><t t-call="website_forum.forum_related_posts"/></section>
             </div>
         </div>
     </t>
@@ -553,10 +553,11 @@
                 <t t-set="can_unlink_comment" t-value="user.karma >= unlink_comment_required_karma"/>
                 <div class="flex-grow-1 py-2 opacity-75">
                     <header>
-                        <span t-call="website_forum.author_box">
-                            <t t-set="object" t-value="message"/>
-                            <t t-set="compact" t-value="True"/>
-                            <t t-set="show_name" t-value="True"/>
+                        <span>
+                            <t t-call="website_forum.author_box"
+                                object="message"
+                                compact="True"
+                                show_name="True"/>
                         </span>
                         <span class="ms-2 mb-2 small text-muted"><small class="o_wforum_relative_datetime"/></span>
                         <span t-if="_question_creator == _comment_author" class="badge ms-2 border border-dark text-reset">

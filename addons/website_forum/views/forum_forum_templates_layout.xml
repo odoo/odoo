@@ -253,7 +253,7 @@
 <template id="user_sidebar_mobile">
     <div id="o_wforum_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none mw-75 p-0 overflow-visible">
         <button type="button" class="btn-close mt-3 ms-auto me-3" data-bs-dismiss="offcanvas" aria-label="Close"/>
-        <div class="offcanvas-header align-items-start px-0" t-call="website_forum.user_sidebar_header"/>
+        <div class="offcanvas-header align-items-start px-0"><t t-call="website_forum.user_sidebar_header"/></div>
         <div class="offcanvas-body d-flex flex-column py-0 nav">
             <t t-call="website_forum.user_sidebar_body"/>
             <div t-if="forum" class="mb-2 d-flex justify-content-center align-items-end flex-grow-1">

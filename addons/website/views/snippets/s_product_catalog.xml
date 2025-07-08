@@ -12,41 +12,35 @@
                 <div class="col-lg-6 pt16 pb16">
                     <h3 class="h4-fs">Pastries</h3>
                     <ul class="list-unstyled my-3">
-                        <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Croissant</t>
-                            <t t-set="price">$1.50</t>
-                            <t t-set="description">A buttery, flaky pastry with a golden-brown crust, perfect for breakfast or a light snack.</t>
-                        </t>
-                        <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Cinnamon Roll</t>
-                            <t t-set="price">$3.00</t>
-                            <t t-set="description">Soft, sweet dough rolled with cinnamon and sugar, topped with a rich cream cheese frosting.</t>
-                        </t>
-                        <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Sourdough Bread</t>
-                            <t t-set="price">$5.00</t>
-                            <t t-set="description">A crusty loaf with a chewy interior, made with a naturally fermented sourdough starter for a tangy flavor.</t>
-                        </t>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Croissant"
+                            price.f="$1.50"
+                            description.translate="A buttery, flaky pastry with a golden-brown crust, perfect for breakfast or a light snack."/>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Cinnamon Roll"
+                            price.f="$3.00"
+                            description.translate="Soft, sweet dough rolled with cinnamon and sugar, topped with a rich cream cheese frosting."/>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Sourdough Bread"
+                            price.f="$5.00"
+                            description.translate="A crusty loaf with a chewy interior, made with a naturally fermented sourdough starter for a tangy flavor."/>
                     </ul>
                 </div>
                 <div class="col-lg-6 pt16 pb16">
                     <h3 class="h4-fs">Cakes</h3>
                     <ul class="list-unstyled my-3">
-                        <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Classic Cheesecake</t>
-                            <t t-set="price">$25.00</t>
-                            <t t-set="description">A creamy, smooth cheesecake with a graham cracker crust, topped with a layer of fresh fruit or chocolate ganache.</t>
-                        </t>
-                        <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Red Velvet Cake</t>
-                            <t t-set="price">$28.00</t>
-                            <t t-set="description">A moist, red-hued cake with layers of cream cheese frosting, perfect for any special occasion.</t>
-                        </t>
-                        <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Carrot Cake</t>
-                            <t t-set="price">$26.00</t>
-                            <t t-set="description">A spiced cake loaded with grated carrots, nuts, and a hint of cinnamon, topped with a tangy cream cheese frosting.</t>
-                        </t>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Classic Cheesecake"
+                            price.f="$25.00"
+                            description.translate="A creamy, smooth cheesecake with a graham cracker crust, topped with a layer of fresh fruit or chocolate ganache."/>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Red Velvet Cake"
+                            price.f="$28.00"
+                            description.translate="A moist, red-hued cake with layers of cream cheese frosting, perfect for any special occasion."/>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Carrot Cake"
+                            price.f="$26.00"
+                            description.translate="A spiced cake loaded with grated carrots, nuts, and a hint of cinnamon, topped with a tangy cream cheese frosting."/>
                     </ul>
                 </div>
             </div>
@@ -81,25 +75,22 @@
     <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="before">
         <div data-js="MultipleItems"
              data-selector=".s_product_catalog">
-            <t t-call="website.s_product_catalog_add_product_widget">
-                <t t-set="apply_to" t-valuef="> :has(.s_product_catalog_dish):not(:has(.row > div:has(.s_product_catalog_dish)))"/>
-            </t>
+            <t t-call="website.s_product_catalog_add_product_widget"
+                apply_to.f="> :has(.s_product_catalog_dish):not(:has(.row > div:has(.s_product_catalog_dish)))"/>
         </div>
         <div data-js="MultipleItems"
              data-selector=".s_product_catalog .row > div">
-            <t t-call="website.s_product_catalog_add_product_widget">
-                <t t-set="apply_to" t-valuef="> :has(.s_product_catalog_dish)"/>
-            </t>
+            <t t-call="website.s_product_catalog_add_product_widget"
+                apply_to.f="> :has(.s_product_catalog_dish)"/>
         </div>
     </xpath>
     <xpath expr="." position="inside">
         <div data-js="Pricelist" data-selector=".s_product_catalog">
             <we-checkbox string="Descriptions" data-toggle-description="true" data-items-class="s_product_catalog_dish" data-description-class="s_product_catalog_dish_description" data-no-preview="true"/>
-            <t t-call="website.snippet_options_border_line_widgets">
-                <t t-set="label">Separator</t>
-                <t t-set="direction" t-value="'top'"/>
-                <t t-set="apply_to" t-value="'.s_product_catalog_dish_dot_leaders'"/>
-            </t>
+            <t t-call="website.snippet_options_border_line_widgets"
+                label.translate="Separator"
+                direction.f="top"
+                apply_to.f=".s_product_catalog_dish_dot_leaders"/>
         </div>
         <div data-selector=".s_product_catalog_dish" data-drop-near=".s_product_catalog_dish"/>
     </xpath>

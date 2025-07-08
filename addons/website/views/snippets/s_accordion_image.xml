@@ -9,9 +9,7 @@
                     <h2 class="h3-fs">Top questions answered</h2>
                     <p class="lead">In this section, you can address common questions efficiently.</p>
                     <p><br/></p>
-                    <t t-snippet-call="website.s_accordion">
-                        <t t-set="extra_classes" t-valuef="accordion-flush"/>
-                    </t>
+                    <t t-snippet-call="website.s_accordion" extra_classes.f="accordion-flush"/>
                 </div>
                 <div class="col-lg-5 offset-lg-1 pt16">
                     <img src="/web/image/website.s_accordion_image_default_image" class="img img-fluid mx-auto rounded" style="width: 100% !important;" alt=""/>

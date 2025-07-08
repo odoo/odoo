@@ -208,7 +208,7 @@
 <template id="exhibitors_main" name="Exhibitors: Main Display">
     <!-- No exhibitors -->
     <div t-if="not sponsor_categories" class="col-12 text-center">
-        <div t-call="website_event.event_empty_events_svg" class="my-4"/>
+        <div class="my-4"><t t-call="website_event.event_empty_events_svg"/></div>
         <h2>No exhibitor found.</h2>
         <p t-if="search_key">We could not find any exhibitor matching your search for: <strong t-out="search_key"/>.</p>
         <p t-else="">We could not find any exhibitor at this moment.</p>
@@ -219,7 +219,7 @@
         </div>
     </div>
     <!-- Cards -->
-    <div class="col-12" t-call="website_event_exhibitor.exhibitors_display_cards"/>
+    <div class="col-12"><t t-call="website_event_exhibitor.exhibitors_display_cards"/></div>
 </template>
 
 <!-- Exhibitors: Cards-based display -->
