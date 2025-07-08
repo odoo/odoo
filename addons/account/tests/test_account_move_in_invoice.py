@@ -2853,36 +2853,54 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(UserError, 'Any journal item on a payable account must have a due date and vice versa.'):
             move_form.save()
 
-    def test_default_tax(self):
-        ''' Tests that for invoices the default product tax is used. If none, the account default tax should be used.
-
-            In the case of receipts, the default receipt tax in the COA should take priority over the previous statement.
+    def test_default_tax_and_default_fiscal_position(self):
+        ''' Tests that for invoices the default fp based on partner is used.
+            In the case of receipts, the default receipt fp in the COA should take priority over the fp based on partner.
+            And the tax will be applied according to the fp in both cases.
         '''
-        receipt_tax = self.env['account.tax'].create({
-            'name': 'Default receipt tax',
+        receipt_fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'Default receipt fiscal position',
+            'company_id': self.env.company.id,
+        })
+        product_tax = self.env['account.tax'].create({
+            'name': 'Default product tax',
             'type_tax_use': 'purchase',
             'amount_type': 'percent',
             'amount': 10,
             'company_id': self.env.company.id,
         })
-        product_tax = receipt_tax.copy({'name': 'Default product tax'})
-        account_tax = receipt_tax.copy({'name': 'Default account tax'})
+        account_tax = product_tax.copy({'name': 'Default account tax'})
+        receipt_tax = product_tax.copy({
+            'name': 'Default receipt tax',
+            'original_tax_ids': [product_tax.id, account_tax.id],
+            'fiscal_position_ids': [receipt_fiscal_position.id],
+        })
         invoice = self.init_invoice('in_invoice', products=self.product_a)
         receipt = self.init_invoice('in_receipt', products=self.product_a)
         moves = invoice + receipt
 
-        # Set up the default taxes
-        self.env.company.account_purchase_receipt_tax_id = receipt_tax
+        # Set up the default fiscal position and taxes
+        self.env.company.account_purchase_receipt_fiscal_position_id = receipt_fiscal_position
+        moves._compute_fiscal_position_id()
         self.product_a.supplier_taxes_id = product_tax
         moves.invoice_line_ids.account_id.tax_ids = account_tax
+
+        # Default fiscal position (when fp set on the company)
+        self.assertEqual(invoice.fiscal_position_id.id, False)
+        self.assertEqual(receipt.fiscal_position_id, receipt_fiscal_position)
 
         # Receipt tax (for the receipt only)
         moves.invoice_line_ids._compute_tax_ids()
         self.assertEqual(invoice.invoice_line_ids.tax_ids, product_tax)
         self.assertEqual(receipt.invoice_line_ids.tax_ids, receipt_tax)
 
+        # Default fiscal position (when fp not set on the company)
+        self.env.company.account_purchase_receipt_fiscal_position_id = False
+        moves._compute_fiscal_position_id()
+        self.assertEqual(invoice.fiscal_position_id.id, False)
+        self.assertEqual(receipt.fiscal_position_id.id, False)
+
         # Product tax
-        self.env.company.account_purchase_receipt_tax_id = False
         moves.invoice_line_ids._compute_tax_ids()
         self.assertEqual(invoice.invoice_line_ids.tax_ids, product_tax)
         self.assertEqual(receipt.invoice_line_ids.tax_ids, product_tax)
