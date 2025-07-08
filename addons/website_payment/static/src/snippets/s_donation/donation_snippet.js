@@ -98,7 +98,7 @@ export class DonationSnippet extends Interaction {
             if (this.rangeSliderEl) {
                 amount = parseFloat(this.rangeSliderEl.value);
             } else if (donationButtonEls.length) {
-                amount = parseFloat(this.el.querySelector("#s_donation_amount_input").value);
+                amount = parseFloat(this.el.querySelector("#s_donation_amount_input")?.value);
                 let errorMessage = "";
                 const minAmount = parseFloat(this.el.dataset.minimumAmount);
                 if (!amount) {
