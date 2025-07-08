@@ -35,6 +35,7 @@ class LinkPreview(models.Model):
     @api.model
     def _create_from_message_and_notify(self, message, request_url=None):
         if tools.is_html_empty(message.body):
+            message.sudo().link_preview_ids._unlink_and_notify()
             return self
         urls = OrderedSet(html.fromstring(message.body).xpath('//a[not(@data-oe-model)]/@href'))
         link_previews = self.env['mail.link.preview']
