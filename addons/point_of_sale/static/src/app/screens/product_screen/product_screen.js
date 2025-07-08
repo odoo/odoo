@@ -318,7 +318,8 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     }
     async _parseElementsFromGS1(parsed_results) {
         const productBarcode = parsed_results.find((element) => element.type === "product");
-        const lotBarcode = parsed_results.find((element) => element.type === "lot");
+        const lotElements = parsed_results.filter((element) => element.type === "lot").sort((elem)=> elem.rule.sequence)
+        const lotBarcode = lotElements[0];
         const product = await this._getProductByBarcode(productBarcode);
         return { product, lotBarcode, customProductOptions: {} };
     }
