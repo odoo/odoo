@@ -5,8 +5,8 @@ import { browser } from '@web/core/browser/browser';
 
 const SupportedPaymentMethodsEdit = I => class extends I {
     dynamicContent = {
-        // Bypass the ctrl-click required to open a link in edit mode
-        '.btn-view_providers': { 't-on-click': this.onClickViewPorviders.bind(this) },
+        // Bypass the ctrl-click required to open a link in edit mode.
+        '.btn-view_providers': { 't-on-click': this.onClickViewProviders.bind(this) },
     };
 
     /**
@@ -24,8 +24,8 @@ const SupportedPaymentMethodsEdit = I => class extends I {
         );
     }
 
-    async onClickViewPorviders(ev) {
-        // Opens the view in a seperate tab such that any edit are kept
+    async onClickViewProviders() {
+        // Open the view in a separate tab such that any edits are kept.
         browser.open('/odoo/action-payment.action_payment_provider');
     }
 };

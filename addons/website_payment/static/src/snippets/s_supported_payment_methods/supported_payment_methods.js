@@ -1,6 +1,6 @@
+import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { Interaction } from '@web/public/interaction';
-import { rpc } from '@web/core/network/rpc';
 
 
 export class SupportedPaymentMethods extends Interaction {

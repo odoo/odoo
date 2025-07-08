@@ -155,20 +155,21 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
     @http.route(
         '/website_payment/snippet/supported_payment_methods',
-        type='jsonrpc', auth='public', readonly=True, sitemap=False, website=True,
+        type='jsonrpc', auth='public', website=True, sitemap=False, readonly=True
     )
-    def get_available_payment_methods(self, limit=None):
-        """Retrieve the payment methods' brands linked to a provider published on the current
+    def get_supported_payment_methods(self, limit=None):
+        """Retrieve the payment methods linked to payment providers published on the current
         website.
+
+        If a payment method is a primary payment method, its brands are returned instead.
 
         Note: The provider must be linked to the same company as the website. This differs from the
         usual payment method selection, which uses the user's company. In this case, we want to
         display the general payment methods linked to the website, regardless of the user.
 
-        :param int | None limit: Optionally, limit the number of payment methods returned.
-        :rtype: list[{ 'id': int, 'name': str, 'code': str }]
-        :return: For any primary payment method whose payment provider is published, either its
-            brands or the primary method itself if it does not have brands.
+        :param int limit: The number of payment methods to return.
+        :return: The supported payment methods, in [{'id': int, 'name': str, 'code': str}] format.
+        :rtype: list[dict]
         """
         limit = self._cast_as_int(limit)
         website = request.website
@@ -176,29 +177,25 @@ class PaymentPortal(payment_portal.PaymentPortal):
         # For any primary payment method with at least one provider matching the following domain:
         #  - published on the current website, and
         #  - linked to the website company.
-        provider_domain = Domain([
+        providers_domain = Domain([
             ('is_published', '=', True),
             ('website_id', 'in', (website.id, False)),
             ('company_id', '=', website.company_id.id),
         ])
-        # Select the brands, i.e. non-primary payment methods. E.g., American Express is a brand
-        # from the primary Card payment method.
+        # Select the brands, i.e. non-primary payment methods. E.g., Amex for Card.
         brands_domain = Domain([
             ('is_primary', '=', False),
-            ('primary_payment_method_id.provider_ids', 'any', provider_domain),
+            ('primary_payment_method_id.provider_ids', 'any', providers_domain),
         ])
-        # Or, select the primary payment methods without any brands. E.g., PayPal does not have any
-        # brands.
+        # Or, select the primary payment methods without any brands. E.g., PayPal.
         primary_without_brands_domain = Domain([
             ('is_primary', '=', True),
             ('brand_ids', '=', False),
-            ('provider_ids', 'any', provider_domain),
+            ('provider_ids', 'any', providers_domain),
         ])
-
-        # Sudoed to read the payment providers
         return request.env['payment.method'].sudo().search_read(
             Domain.OR([brands_domain, primary_without_brands_domain]),
             fields=('id', 'name', 'code'),
             limit=limit,
             order='sequence',
-        )
+        )  # In sudo mode to read the payment provider fields.
