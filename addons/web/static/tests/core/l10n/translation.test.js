@@ -123,7 +123,7 @@ test("[cache] write into the cache", async () => {
         },
         modules: { web: { messages: [{ id: "Hello", string: "Bonjour" }] } },
         multi_lang: false,
-        hash: "6b1bcfb1",
+        hash: "cf48f5f2",
     };
     expect.verifySteps([
         "hash: ",
@@ -223,7 +223,7 @@ test("[cache] update the cache if hash are different - template", async () => {
         },
         modules: { web: { messages: [{ id: "Hello", string: "Bonjour" }] } }, // value was updated in the cache
         multi_lang: false,
-        hash: "6b1bcfb1", // hash was updated in the cache
+        hash: "cf48f5f2", // hash was updated in the cache
     };
     expect.verifySteps([
         "hash: 30b", //Fetch with the hash of the translation in cache
@@ -310,7 +310,7 @@ test("[cache] update the cache if hash are different - js", async () => {
             },
         }, // value was updated in the cache
         multi_lang: false,
-        hash: "6b1bcfb1", // hash was updated in the cache
+        hash: "2a52c9bf", // hash was updated in the cache
     };
     expect.verifySteps([
         "hash: 30b", //Fetch with the hash of the translation in cache
