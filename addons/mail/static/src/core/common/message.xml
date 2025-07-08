@@ -8,8 +8,13 @@
         </div>
         <ActionSwiper t-else="" onRightSwipe="hasTouch() and props.thread?.eq(store.inbox) ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
             <div class="o-mail-Message position-relative rounded-0"
+<<<<<<< 037d10377398b55f03e38ba82f103171ed5bb94f
                 t-att-data-starred="message.starred"
                 t-att-data-persistent="message.persistent"
+||||||| a7a29ed691db4f1607c0d12929c56845681164fa
+=======
+                t-att-data-persistent="message.persistent"
+>>>>>>> db9e78f19ca615ed491c804aba14c776d7acf2b5
                 t-att-class="attClass"
                 role="group"
                 t-att-aria-label="messageTypeText"
