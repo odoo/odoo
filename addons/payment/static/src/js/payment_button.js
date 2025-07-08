@@ -42,6 +42,14 @@ publicWidget.registry.PaymentButton = publicWidget.Widget.extend({
         if (!paymentForm) {  // Payment form is not present.
             return true; // Ignore the check.
         }
+        const selectedRadio = document.querySelector('input[name="o_payment_radio"]:checked');
+        if (selectedRadio) {
+        const paymentMethodCode = selectedRadio.dataset.paymentMethodCode;
+        console.log('Selected payment method code:', paymentMethodCode);
+        if (paymentMethodCode) {
+            this.paymentButton.textContent = selectedRadio.dataset.paymentMethodPayLabel;
+        }
+        }
         return document.querySelectorAll('input[name="o_payment_radio"]:checked').length === 1;
     },
 
