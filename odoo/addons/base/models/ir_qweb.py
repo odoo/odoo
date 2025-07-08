@@ -379,7 +379,7 @@ import warnings
 import werkzeug
 
 from markupsafe import Markup, escape
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from collections.abc import Sized, Mapping, Sequence
 from copy import deepcopy
 from itertools import count, chain
@@ -612,6 +612,11 @@ class QWebAssertionError(QWebException, AssertionError):
 class QWebValueError(QWebException, ValueError):
     pass
 
+####################################
+###         QwebContent          ###
+####################################
+
+QwebContent = namedtuple('QwebContent', 'context view_ref method values scope directive log')
 
 ####################################
 ###             QWeb             ###
@@ -750,7 +755,7 @@ class IrQweb(models.AbstractModel):
 
                 # traverse the iterator
                 for item in iterator_info['iterator']:
-                    if isinstance(item, str) or item[5] == dont_fetch_directive:
+                    if isinstance(item, str) or item.directive == dont_fetch_directive:
                         yield item
                     else:
                         stack.append({
@@ -758,13 +763,13 @@ class IrQweb(models.AbstractModel):
                             'values': None,
                             'options': None,
                             'irQweb': None,
-                            'context': item[0],
-                            'view_ref': item[1],
-                            'method': item[2],
-                            'default_values': item[3],
-                            'scope': item[4],
-                            'directive': item[5],
-                            'caller_path_xml': item[6],
+                            'context': item.context,
+                            'view_ref': item.view_ref,
+                            'method': item.method,
+                            'default_values': item.values,
+                            'scope': item.scope,
+                            'directive': item.directive,
+                            'caller_path_xml': item.log,
                         })
                         break
                 else:
@@ -1190,6 +1195,7 @@ class IrQweb(models.AbstractModel):
             'Markup': Markup,
             'escape': escape,
             'VOID_ELEMENTS': VOID_ELEMENTS,
+            'QwebContent': QwebContent,
             'Exception': Exception,
             'ValueError': ValueError,
             'UserError': UserError,
@@ -2442,7 +2448,7 @@ class IrQweb(models.AbstractModel):
                     template = int(template)
                 """, level))
 
-        code.append(indent_code(f"yield (t_call_options, template, None, t_call_values, 'scope', 't-call', (template_options['ref'], {path!r}, {xml!r}))", level))
+        code.append(indent_code(f"yield QwebContent(t_call_options, template, None, t_call_values, 'scope', 't-call', (template_options['ref'], {path!r}, {xml!r}))", level))
 
         return code
 
@@ -2558,7 +2564,7 @@ class IrQweb(models.AbstractModel):
             """, 0)]
         compile_context['template_functions'][f'{def_name}_wrap'] = def_wrap
 
-        code.append(indent_code(f"yield ({{}}, {compile_context['template']!r}, '{def_name}_wrap', {{}}, 'scope', 't-cache', (template_options['ref'], {path!r}, {xml!r}))", level))
+        code.append(indent_code(f"yield QwebContent({{}}, {compile_context['template']!r}, '{def_name}_wrap', {{}}, 'scope', 't-cache', (template_options['ref'], {path!r}, {xml!r}))", level))
         return code
 
     def _compile_directive_nocache(self, el, compile_context, level):
@@ -2609,7 +2615,7 @@ class IrQweb(models.AbstractModel):
         compile_context['template_functions'][def_name] = def_code
 
         code.extend(code_cache_values)
-        code.append(indent_code(f"yield ({{'__qweb_dont_fetch_directive': None}}, {compile_context['template']!r}, {def_name!r}, cached_values, self.env.context.get('__qweb_dont_fetch_directive') and 'root', 't-nocache', (template_options['ref'], {path!r}, {xml!r}))", level))
+        code.append(indent_code(f"yield QwebContent({{'__qweb_dont_fetch_directive': None}}, {compile_context['template']!r}, {def_name!r}, cached_values, self.env.context.get('__qweb_dont_fetch_directive') and 'root', 't-nocache', (template_options['ref'], {path!r}, {xml!r}))", level))
 
         return code
 
