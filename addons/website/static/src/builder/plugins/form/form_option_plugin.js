@@ -155,6 +155,7 @@ export class FormOptionPlugin extends Plugin {
             SetVisibilityAction,
             SetVisibilityDependencyAction,
             SetFormCustomFieldValueListAction,
+            PropertyAction,
         },
         system_classes: ["o_builder_form_show_message"],
         normalize_handlers: (el) => {
@@ -1245,6 +1246,13 @@ export class SetFormCustomFieldValueListAction extends BuilderAction {
             field.records.shift();
         }
         return JSON.stringify(field.records);
+    }
+}
+class PropertyAction extends BuilderAction {
+    static id = "property";
+
+    apply({ editingElement, params: { property, format } = {}, value }) {
+        editingElement[property] = format ? format(value) : value;
     }
 }
 
