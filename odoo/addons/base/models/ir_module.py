@@ -156,7 +156,7 @@ class IrModuleModule(models.Model):
         if isinstance(name, str):
             # we have no info for studio_customization
             # imported modules are not found using this method
-            return modules.Manifest.for_addon(name, downloaded=True, display_warning=False) or {}
+            return modules.Manifest.for_addon(name, display_warning=False) or {}
         if isinstance(name, modules.Manifest):
             return name
         return {}
