@@ -176,7 +176,7 @@ class MailThreadTrackingDurationMixin(models.AbstractModel):
             # If _stage_day_rot_field has not been set, the rotting feature is not enabled for this model
             return 0
         if not self._stage_day_rot_field in rotting_stage:
-            raise UserError(_('Models using the rotting feature need to declare a "day_rot" field on their stage model. Please refer to the help present in the mail/models/mail_tracking_duration_mixin.py file for implementation details'))
+            raise UserError(_('Models using the rotting feature need to declare a "day_rot" field on their stage model. Please refer to the help present in the mail/models/mail_thread_tracking_duration_mixin.py file for implementation details'))
         day_rot = rotting_stage[self._stage_day_rot_field]
         return day_rot
 
