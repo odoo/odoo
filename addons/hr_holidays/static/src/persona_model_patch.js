@@ -19,6 +19,9 @@ export function getOutOfOfficeDateEndText(datetime) {
 patch(Persona.prototype, {
     /** @returns {string} */
     get outOfOfficeDateEndText() {
+        if (this.main_user_id?.public_holiday_name) {
+            return "On leave due to " + this.main_user_id?.public_holiday_name;
+        }
         if (!this.main_user_id?.leave_date_to) {
             return "";
         }
