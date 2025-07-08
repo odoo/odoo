@@ -15,7 +15,7 @@ export class DropZonePlugin extends Plugin {
     ];
 
     setup() {
-        this.snippetModel = this.services["html_builder.snippets"];
+        this.snippetModel = this.config.snippetModel;
         this.dropzoneSelectors = this.getResource("dropzone_selector");
         this.iframe = this.document.defaultView.frameElement;
     }
