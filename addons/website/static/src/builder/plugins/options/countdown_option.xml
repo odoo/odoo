@@ -4,7 +4,7 @@
 <t t-name="website.CountdownOption">
     <BuilderContext action="'reloadCountdown'"> <!-- TODO AGAU: remove after merging generalized restart interactions -->
     <BuilderRow label.translate="Due Date">
-        <BuilderDateTimePicker dataAttributeAction="'endTime'"/>
+        <BuilderDateTimePicker dataAttributeAction="'endTime'" acceptEmptyDate="false"/>
     </BuilderRow>
     <BuilderRow label.translate="At The End">
         <BuilderSelect preview="false" action="'setEndAction'">
