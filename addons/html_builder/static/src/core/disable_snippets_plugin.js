@@ -14,7 +14,7 @@ export class DisableSnippetsPlugin extends Plugin {
     };
 
     setup() {
-        this.snippetModel = this.services["html_builder.snippets"];
+        this.snippetModel = this.config.snippetModel;
         this._disableSnippets = this.disableUndroppableSnippets.bind(this);
 
         // TODO only for website ?

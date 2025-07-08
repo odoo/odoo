@@ -5,6 +5,7 @@ import { getScrollingElement } from "@web/core/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
 import { closest } from "@web/core/utils/ui";
 import { useDragAndDrop } from "@html_editor/utils/drag_and_drop";
+import { useSnippets } from "@html_builder/snippets/snippet_service";
 import { getCSSVariableValue } from "@html_builder/utils/utils_css";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import { Snippet } from "./snippet";
@@ -13,13 +14,15 @@ import { CustomInnerSnippet } from "./custom_inner_snippet";
 export class BlockTab extends Component {
     static template = "html_builder.BlockTab";
     static components = { Snippet, CustomInnerSnippet };
-    static props = {};
+    static props = {
+        snippetsName: String,
+    };
 
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
         this.popover = useService("popover");
-        this.snippetModel = useState(useService("html_builder.snippets"));
+        this.snippetModel = useSnippets(this.props.snippetsName);
         this.blockTabRef = useRef("block-tab");
         // Needed to avoid race condition in tours.
         this.state = useState({ ongoingInsertion: false });
