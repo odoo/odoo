@@ -153,6 +153,10 @@ export class TicketScreen extends Component {
             ]
         );
     }
+    // overridden to add classes from pos_discount
+    getNumpadClasses() {
+        return "pb-2";
+    }
     async onClickScanOrder(qrcode) {
         if (qrcode) {
             const uuid = new URL(qrcode).searchParams.get("order_uuid");

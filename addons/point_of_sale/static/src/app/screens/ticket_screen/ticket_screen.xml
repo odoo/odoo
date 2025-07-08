@@ -186,7 +186,7 @@
                                     </button>
                                 </div>
                                 <div class="subpads d-flex flex-column">
-                                    <Numpad class="'pb-2'" buttons="getNumpadButtons()"/>
+                                    <Numpad class="getNumpadClasses()" buttons="getNumpadButtons()"/>
                                         <ActionpadWidget
                                             t-if="this.pos.cashier._role !== 'minimal'"
                                             partner="getSelectedOrder()?.getPartner()"
