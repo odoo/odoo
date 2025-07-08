@@ -44,6 +44,11 @@ class StockWarehouseOrderpoint(models.Model):
             if 'manufacture' in orderpoint.rule_ids.mapped('action'):
                 orderpoint.allowed_replenishment_uom_ids += orderpoint.product_id.bom_ids.product_uom_id
 
+    def _compute_show_supply_warning(self):
+        super()._compute_show_supply_warning()
+        for orderpoint in self:
+            orderpoint.show_supply_warning = orderpoint.show_supply_warning and not orderpoint.product_id.bom_ids
+
     @api.depends('route_id')
     def _compute_show_bom(self):
         manufacture_route = []

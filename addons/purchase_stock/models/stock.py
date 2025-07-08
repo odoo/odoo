@@ -112,11 +112,11 @@ class StockReturnPicking(models.TransientModel):
 class StockWarehouseOrderpoint(models.Model):
     _inherit = "stock.warehouse.orderpoint"
 
-    show_supplier = fields.Boolean('Show supplier column', compute='_compute_show_suppplier')
+    show_supplier = fields.Boolean('Show supplier column', compute='_compute_show_supplier')
     supplier_id = fields.Many2one(
         'product.supplierinfo', string='Vendor Pricelist', check_company=True,
         domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
-    vendor_id = fields.Many2one(related='supplier_id.partner_id', string="Vendor")
+    vendor_ids = fields.One2many(related='product_id.seller_ids', string="Vendors")
     purchase_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the purchase routes.")
     product_supplier_id = fields.Many2one('res.partner', compute='_compute_product_supplier_id', store=True, string='Product Supplier')
 
@@ -163,7 +163,7 @@ class StockWarehouseOrderpoint(models.Model):
         return res
 
     @api.depends('route_id')
-    def _compute_show_suppplier(self):
+    def _compute_show_supplier(self):
         buy_route = []
         for res in self.env['stock.rule'].search_read([('action', '=', 'buy')], ['route_id']):
             buy_route.append(res['route_id'][0])
