@@ -2807,6 +2807,59 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["web_read"]);
     });
 
+    QUnit.test("one2many kanban order with sequence field", async (assert) => {
+        serverData.models.partner.records[0].p = [4, 2];
+        serverData.models.partner.fields.sequence = {
+            string: "Sequence",
+            type: "integer",
+            default: 10,
+        };
+        serverData.models.partner.records[1].sequence = 11;
+        serverData.models.partner.records[2].sequence = 10;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo"/>
+                    <field name="p">
+                        <kanban>
+                            <field name="sequence" invisible="1"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <field name="foo"/>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </form>`,
+            resId: 1,
+            mockRPC(route, args) {
+                if (args.method === "web_read" && args.args[0].length == 1) {
+                    assert.step("web_read");
+                    assert.strictEqual(args.kwargs.specification.p.order, "sequence ASC, id ASC");
+                } else if (args.method === "web_save") {
+                    assert.step("web_save");
+                    assert.strictEqual(args.args[1].p[0][2].sequence, 12);
+                }
+            },
+        });
+        assert.verifySteps(["web_read"]);
+        await click(target.querySelector(".o-kanban-button-new"));
+        await editInput(target, ".modal input", "new record");
+        await click(target.querySelector(".modal .modal-footer .o_form_button_save"));
+        await clickSave(target);
+        assert.verifySteps(["web_save"]);
+        assert.deepEqual(
+            Array.from(document.querySelectorAll(".o_kanban_record[role='article']")).map(
+                (e) => e.textContent
+            ),
+            ["My little Foo Value", "blip", "new record"]
+        );
+    });
+
     QUnit.test("one2many field when using the pager", async function (assert) {
         const ids = [];
         for (let i = 0; i < 45; i++) {
