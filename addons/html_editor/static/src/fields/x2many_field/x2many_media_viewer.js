@@ -78,23 +78,7 @@ export class X2ManyMediaViewer extends X2ManyField {
                 let referenceId = undefined;
 
                 for (const size of [originalSize, ...smallerSizes]) {
-                    const ratio = size / originalSize;
-                    const canvas = document.createElement("canvas");
-                    canvas.width = image.width * ratio;
-                    canvas.height = image.height * ratio;
-                    const ctx = canvas.getContext("2d");
-                    ctx.drawImage(
-                        image,
-                        0,
-                        0,
-                        image.width,
-                        image.height,
-                        0,
-                        0,
-                        canvas.width,
-                        canvas.height
-                    );
-
+                    const canvas = lanczos.resizeImageWithResampling(image, size, originalSize);
                     // WebP format
                     const webpData = canvas.toDataURL("image/webp", 0.75).split(",")[1];
                     const [resizedId] = await this.orm.call("ir.attachment", "create_unique", [

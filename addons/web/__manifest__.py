@@ -96,6 +96,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/libs/bootstrap.js',
 
             'web/static/lib/dompurify/DOMpurify.js',
+            'web/static/lib/lanczos/lanczos.js',
 
             'base/static/src/css/modules.css',
 
@@ -220,6 +221,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
             'web/static/src/legacy/js/core/class.js',
+            'web/static/lib/lanczos/lanczos.js',
 
             'web/static/src/env.js',
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files
@@ -492,6 +494,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/stacktracejs/stacktrace.js',
             ('include', "web.chartjs_lib"),
             'web/static/lib/signature_pad/signature_pad.umd.js',
+            'web/static/lib/lanczos/lanczos.js',
 
             'web/static/tests/legacy/helpers/**/*.js',
             'web/static/tests/legacy/views/helpers.js',
