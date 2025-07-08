@@ -3,6 +3,9 @@ import { onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 import { FormActionFieldsOption } from "./form_action_fields_option";
 import { FormModelRequiredFieldAlert } from "./form_model_required_field_alert";
 import { getDependencyEl, getFieldName, getMultipleInputs, isFieldCustom } from "./utils";
+import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+
+const { DateTime } = luxon;
 
 export class FormFieldOption extends BaseOptionComponent {
     static template = "website.s_website_form_field_option";
@@ -32,6 +35,11 @@ export class FormFieldOption extends BaseOptionComponent {
                 modelName,
             };
         });
+        this.format = {
+            date: (value) => (value ? formatDate(DateTime.fromSeconds(parseInt(value))) : ""),
+            datetime: (value) =>
+                value ? formatDateTime(DateTime.fromSeconds(parseInt(value))) : "",
+        };
 
         this.domStateDependency = useDomState((el) => {
             const dependencyEl = getDependencyEl(el);
