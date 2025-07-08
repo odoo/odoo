@@ -1,6 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
-import { removeClass, toggleClass, wrapInlinesInBlocks } from "@html_editor/utils/dom";
+import {
+    removeClass,
+    toggleClass,
+    unwrapContents,
+    wrapInlinesInBlocks,
+} from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isEmptyBlock,
@@ -475,10 +480,15 @@ export class ListPlugin extends Plugin {
         if (!isOrphan) {
             return;
         }
-        // Transform <li> into <p> if they are not in a <ul> / <ol>.
-        const paragraph = this.dependencies.baseContainer.createBaseContainer();
-        element.replaceWith(paragraph);
-        paragraph.replaceChildren(...element.childNodes);
+        if (element.children.length && [...element.children].every(isBlock)) {
+            // Unwrap <li> if each of its children is a block element.
+            unwrapContents(element);
+        } else {
+            // Otherwise, wrap its content in a new <p> element.
+            const paragraph = this.dependencies.baseContainer.createBaseContainer();
+            element.replaceWith(paragraph);
+            paragraph.replaceChildren(...element.childNodes);
+        }
     }
 
     mergeSimilarLists(element) {
