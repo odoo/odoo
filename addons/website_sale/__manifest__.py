@@ -107,8 +107,6 @@
             'website/static/src/interactions/multirange_input.js',
             'website_sale/static/src/xml/website_sale_image_viewer.xml',
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
-            'website_sale/static/src/xml/website_sale_reorder_modal.xml',
-            'website_sale/static/src/js/website_sale_reorder.js',
             'website_sale/static/src/js/notification/add_to_cart_notification/add_to_cart_notification.js',
             'website_sale/static/src/js/notification/add_to_cart_notification/add_to_cart_notification.xml',
             'website_sale/static/src/js/notification/cart_notification/cart_notification.js',

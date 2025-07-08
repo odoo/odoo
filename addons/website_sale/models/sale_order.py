@@ -336,7 +336,12 @@ class SaleOrder(models.Model):
         # NOTE: the provided product_id should not be given after `_create_new_cart_line` call as it
         # could be different from the line's product_id (see variant generation logic in
         # `_prepare_order_line_values`).
-        self._verify_cart_after_update()
+
+        if warning:
+            (order_line or self).shop_warning = warning
+
+        if not self.env.context.get('skip_cart_verification'):
+            self._verify_cart_after_update()
 
         return {
             'added_qty': quantity,
@@ -434,6 +439,9 @@ class SaleOrder(models.Model):
         order_line = self._cart_update_order_line(order_line, quantity, **kwargs)
         if not self.env.context.get('skip_cart_verification'):
             self._verify_cart_after_update()
+
+        if warning:
+            (order_line or self).shop_warning = warning
 
         return {
             'added_qty': added_qty,
@@ -588,6 +596,24 @@ class SaleOrder(models.Model):
             ]
 
         return values
+
+    def _check_combo_quantities(self, line) -> bool:
+        """Ensure all combo item lines have the same quantity.
+
+        :returns: whether the combo quantities had to be updated
+        """
+        # Ensure all combo lines have the same quantity
+        combo_lines = line.linked_line_ids
+        available_combo_quantity = min(line.product_uom_qty for line in combo_lines)
+        if available_combo_quantity < line.product_uom_qty:
+            line._set_shop_warning_stock(
+                line.product_uom_qty,
+                available_combo_quantity,
+            )
+            (line + combo_lines).product_uom_qty = available_combo_quantity
+            return True
+
+        return False
 
     def _verify_cart_after_update(self):
         """Global checks on the cart after updates.

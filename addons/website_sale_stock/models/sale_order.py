@@ -37,28 +37,32 @@ class SaleOrder(models.Model):
             if available_qty < total_cart_qty:
                 allowed_line_qty = available_qty - (product_qty_in_cart - old_qty)
                 if allowed_line_qty > 0:
+                    format_qty = lambda qty: int(qty) if float(qty).is_integer() else qty
                     if order_line:
-                        order_line._set_shop_warning_stock(total_cart_qty, available_qty)
+                        warning = order_line._set_shop_warning_stock(
+                            format_qty(total_cart_qty),
+                            format_qty(available_qty),
+                            save=False,
+                        )
                     else:
-                        self.shop_warning = self.env._(
+                        warning = self.env._(
                             "You ask for %(desired_qty)s products but only %(available_qty)s is"
                             " available.",
-                            desired_qty=total_cart_qty, available_qty=available_qty
+                            desired_qty=format_qty(total_cart_qty),
+                            available_qty=format_qty(available_qty),
                         )
-                    returned_warning = order_line.shop_warning or self.shop_warning
                 elif order_line:
                     # Line will be deleted
-                    self.shop_warning = self.env._(
+                    warning = self.env._(
                         "Some products became unavailable and your cart has been updated. We're"
                         " sorry for the inconvenience."
                     )
-                    returned_warning = self.shop_warning
                 else:
-                    self.shop_warning = self.env._(
-                        "The item has not been added to your cart since it is not available."
+                    warning = self.env._(
+                        "%(product_name)s has not been added to your cart since it is not available.",
+                        product_name=product.name,
                     )
-                    returned_warning = self.shop_warning
-                return allowed_line_qty, returned_warning
+                return allowed_line_qty, warning
         return super()._verify_updated_quantity(order_line, product_id, new_qty, uom_id, **kwargs)
 
     def _get_cart_and_free_qty(self, product):

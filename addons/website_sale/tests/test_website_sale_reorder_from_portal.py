@@ -16,7 +16,6 @@ class TestWebsiteSaleReorderFromPortal(HttpCaseWithUserPortal):
 
         cls.website = cls.env['website'].get_current_website()
         cls.website.write({
-            'enabled_portal_reorder_button': True,
             'prevent_zero_price_sale': False,
         })
         cls.empty_cart = cls.env['sale.order'].create({
