@@ -122,7 +122,6 @@
                                     invisible="type == 'opportunity'"
                                     placeholder="Select or create a contact..."
                                     context="{
-                                        'default_parent_id': commercial_partner_id,
                                         'default_name': contact_name,
                                         'default_street': street,
                                         'default_street2': street2,
@@ -147,8 +146,6 @@
                                         'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
                                         'default_name': contact_name or partner_name,
                                         'default_street': street,
-                                        'default_is_company': type == 'opportunity' and contact_name == False,
-                                        'default_company_name': type == 'opportunity' and partner_name,
                                         'default_street2': street2,
                                         'default_city': city,
                                         'default_state_id': state_id,
@@ -353,22 +350,6 @@
                 <form>
                     <group class="crm_quick_create_opportunity_form_group">
                         <div class="d-flex align-items-center" colspan="2">
-                            <i class="fa fa-building" title="Company"/>
-                            <field name="commercial_partner_id" widget="res_partner_many2one"
-                                placeholder="Company"
-                                string="Company"
-                                nolabel="1"
-                                class="o_field_highlight w-100 mb-0"
-                                context="{
-                                'default_is_company': True,
-                                'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
-                                'default_type': 'contact',
-                                'default_user_id': user_id,
-                                'default_team_id': team_id,
-                                'default_child_ids': partner_id and [(4, partner_id)] or False,
-                        }"/>
-                        </div>
-                        <div class="d-flex align-items-center" colspan="2">
                             <i class="fa fa-user" title="Contact"/>
                             <field name="partner_id"
                                 nolabel="1"
@@ -376,20 +357,13 @@
                                 placeholder='Contact'
                                 context="{
                                 'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
-                                'partner_display_name_hide_company': commercial_partner_id,
-                                'default_company_name': not commercial_partner_id and type == 'opportunity' and partner_name,
                                 'default_name': contact_name or partner_name,
-                                'default_is_company': False,
                                 'default_type': 'contact',
                                 'default_phone': phone,
                                 'default_email': email_from,
-                                'default_parent_id': commercial_partner_id,
                                 'default_user_id': user_id,
                                 'default_team_id': team_id,
                                 'show_vat': True}"
-                                domain="[('is_company', '!=', True)] + (
-                                    [('id', 'child_of', commercial_partner_id)] if commercial_partner_id else []
-                                )"
                             />
                         </div>
                         <div class="d-flex align-items-center" colspan="2">

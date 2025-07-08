@@ -162,12 +162,6 @@ class CrmLead(models.Model):
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
     # Customer / contact
 
-    # UX field to ease partner creation
-    # Not to be relied on for business logic
-    commercial_partner_id = fields.Many2one(
-        'res.partner', string='Customer Company', domain="[('is_company', '=', True)]",
-        compute='_compute_commercial_partner_id', readonly=False, store=False,
-    )
     partner_id = fields.Many2one(
         'res.partner', string='Contact', check_company=True, index=True, tracking=10,
         help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
@@ -394,38 +388,6 @@ class CrmLead(models.Model):
         for lead in self:
             if not lead.name and lead.partner_id and lead.partner_id.name:
                 lead.name = _("%s's opportunity") % lead.partner_id.name
-
-    @api.depends('partner_id', 'partner_name')
-    def _compute_commercial_partner_id(self):
-        leads_w_partners = self.filtered('partner_id')
-        for lead in leads_w_partners:
-            commercial_partner = lead.partner_id.commercial_partner_id
-            lead.commercial_partner_id = commercial_partner.is_company and commercial_partner != lead.partner_id and commercial_partner
-        # match by name if exists
-        remaining_leads_w_pname = (self - leads_w_partners).filtered('partner_name')
-        commercial_partner_by_name = self.env['res.partner']._read_group(
-            [('is_company', '=', True), ('name', 'in', remaining_leads_w_pname.mapped('partner_name'))],
-            ['name'], ['id:array_agg'],
-        )
-        remaining_leads_by_name = remaining_leads_w_pname.grouped('partner_name')
-        for commercial_partner_name, commercial_partner_ids in commercial_partner_by_name:
-            remaining_leads_by_name[commercial_partner_name].commercial_partner_id = commercial_partner_ids[0]
-
-    @api.onchange('commercial_partner_id')
-    def _onchange_commercial_partner_id(self):
-        for lead in self:
-            if lead.partner_id and lead.commercial_partner_id and lead.commercial_partner_id != lead.partner_id.commercial_partner_id:
-                # writing to partner will invalidate and recompute
-                # re-write the original value to keep user selection
-                commercial_partner = lead.commercial_partner_id
-                lead.update({
-                    'partner_id': False,
-                    'email_from': False,
-                    'phone': False,
-                })
-                lead.commercial_partner_id = commercial_partner
-            if not lead.name and lead.commercial_partner_id:
-                lead.name = _("%s's opportunity", lead.commercial_partner_id.name)
 
     @api.depends('partner_id')
     def _compute_contact_name(self):
@@ -714,8 +676,8 @@ class CrmLead(models.Model):
         partner_name = partner.parent_id.name
         if not partner_name and partner.is_company:
             partner_name = partner.name
-        elif not partner_name and partner.company_name:
-            partner_name = partner.company_name
+        elif not partner_name and partner.parent_name:
+            partner_name = partner.parent_name
         return {'partner_name': partner_name or self.partner_name}
 
     def _get_partner_email_update(self, force_void=True):
@@ -770,20 +732,6 @@ class CrmLead(models.Model):
         # handling a date_closed value if the lead is directly created in the won stage
         won_to_set = leads.filtered(lambda l: not l.date_closed and l.stage_id.is_won)
         won_to_set.write({'date_closed': fields.Datetime.now()})
-
-        if self.default_get(['partner_id']).get('partner_id') is None:
-            commercial_partner_ids = [vals['commercial_partner_id'] for vals in vals_list if vals.get('commercial_partner_id')]
-            CommercialPartners = self.env['res.partner'].with_prefetch(commercial_partner_ids)
-            for lead, lead_vals in zip(leads, vals_list, strict=True):
-                if not lead_vals.get('partner_id') and lead_vals.get('commercial_partner_id'):
-                    commercial_partner = CommercialPartners.browse(lead_vals['commercial_partner_id'])
-                    if (lead.phone or lead.email_from) and (
-                        lead.phone_sanitized != commercial_partner.phone_sanitized or
-                        lead.email_normalized != commercial_partner.email_normalized
-                    ):
-                        lead.partner_name = lead.partner_name or commercial_partner.name
-                        continue
-                    lead.partner_id = commercial_partner
 
         leads._handle_won_lost({}, {
             lead.id: {
@@ -2002,18 +1950,18 @@ class CrmLead(models.Model):
         if with_parent:
             partner_company = with_parent
         elif self.partner_name:
-            partner_company = Partner.create(self._prepare_customer_values(self.partner_name, is_company=True))
+            partner_company = Partner.create(self._prepare_customer_values(self.partner_name))
         elif self.partner_id:
             partner_company = self.partner_id
         else:
             partner_company = self.env['res.partner']
 
         if contact_name:
-            return Partner.create(self._prepare_customer_values(contact_name, is_company=False, parent_id=partner_company.id))
+            return Partner.create(self._prepare_customer_values(contact_name, parent_id=partner_company.id))
 
         if partner_company:
             return partner_company
-        return Partner.create(self._prepare_customer_values(self.name, is_company=False))
+        return Partner.create(self._prepare_customer_values(self.name))
 
     def _get_customer_information(self):
         email_keys_to_values = super()._get_customer_information()
@@ -2025,24 +1973,18 @@ class CrmLead(models.Model):
                 continue
             values = email_keys_to_values.setdefault(email_key, {})
             contact_name = lead.contact_name or parse_contact_from_email(lead.email_from)[0] or lead.email_from
-            is_company = bool(lead.partner_name) and contact_name == lead.partner_name
             # Note that we don't attempt to create the parent company even if partner name is set
             values.update({
                 key: val for key, val in lead._prepare_customer_values(
-                    contact_name, is_company=is_company, parent_id=False
+                    contact_name, parent_id=False
                 ).items() if val and key != 'email'  # don't force email used as criterion
             })
-            values['is_company'] = is_company
-            if not is_company and lead.commercial_partner_id:
-                values['parent_id'] = lead.commercial_partner_id.id
-                values.pop('company_name', None)
         return email_keys_to_values
 
-    def _prepare_customer_values(self, partner_name, is_company=False, parent_id=False):
+    def _prepare_customer_values(self, partner_name, parent_id=False):
         """ Extract data from lead to create a partner.
 
         :param partner_name : future name of the partner
-        :param is_company : True if the partner is a company
         :param parent_id : id of the parent partner (False if no parent)
 
         :return: dictionary of values to give at res_partner.create()
@@ -2065,10 +2007,10 @@ class CrmLead(models.Model):
             'website': self.website,
             # company / hierarchy
             'parent_id': parent_id,
-            'is_company': is_company,
-            'company_name': not is_company and not parent_id and self.partner_name,
             'type': 'contact'
         }
+        if not parent_id and self.partner_name:
+            res['parent_name'] = self.partner_name
         if self.lang_id.active:
             res['lang'] = self.lang_id.code
         return res

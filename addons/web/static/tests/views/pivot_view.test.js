@@ -62,12 +62,6 @@ class Partner extends models.Model {
         aggregator: "sum",
         groupable: false,
     });
-    company_type = fields.Selection({
-        selection: [
-            ["company", "Company"],
-            ["individual", "individual"],
-        ],
-    });
     price_nonaggregable = fields.Monetary({
         string: "Price non-aggregable",
         aggregator: undefined,
@@ -102,7 +96,6 @@ class Partner extends models.Model {
             date: "2016-12-14",
             product_id: 37,
             customer: 1,
-            company_type: "company",
             reference: "product,37",
             properties_definition: [
                 {
@@ -120,7 +113,6 @@ class Partner extends models.Model {
             date: "2016-10-26",
             product_id: 41,
             customer: 2,
-            company_type: "individual",
             reference: "product,41",
             parent_id: 1,
             properties: {
@@ -135,7 +127,6 @@ class Partner extends models.Model {
             date: "2016-12-15",
             product_id: 41,
             customer: 2,
-            company_type: "company",
             reference: "customer,1",
             parent_id: 1,
             properties: {
@@ -150,7 +141,6 @@ class Partner extends models.Model {
             date: "2016-04-11",
             product_id: 41,
             customer: 1,
-            company_type: "individual",
             reference: "customer,2",
         },
     ];
@@ -763,7 +753,6 @@ test("basic folding/unfolding", async () => {
     await contains("tbody .o_pivot_header_cell_closed").click();
     expect(".o-dropdown--menu").toHaveCount(1);
     expect(queryAllTexts(".o-dropdown--menu .o-dropdown-item")).toEqual([
-        "Company type",
         "Customer",
         "Date",
         "Other product",
@@ -846,7 +835,7 @@ test("unfold second header group", async () => {
     await contains("thead .o_pivot_header_cell_closed:last-child").click();
     await contains(".o-dropdown--menu span:nth-child(1)").click();
     expect("thead tr").toHaveCount(4);
-    values = ["12", "17", "3", "32"];
+    values = ["12", "2", "18", "32"];
     expect(getCurrentValues()).toBe(values.join(","));
 });
 
@@ -878,10 +867,9 @@ test("pivot renders group dropdown same as search groupby dropdown if group bys 
     expect(".dropdown-menu > .dropdown-item").toHaveCount(4);
     expect(".o-dropdown--menu .o_add_custom_group_menu").toHaveCount(1);
     // check custom groupby selection has groupable fields only
-    expect(".o_add_custom_group_menu option:not([disabled])").toHaveCount(6);
+    expect(".o_add_custom_group_menu option:not([disabled])").toHaveCount(5);
     const optionDescriptions = queryAllTexts(".o_add_custom_group_menu option:not([disabled])");
     expect(optionDescriptions).toEqual([
-        "Company type",
         "Customer",
         "Date",
         "Other product",
@@ -952,8 +940,7 @@ test("pivot group dropdown sync with search groupby dropdown", async () => {
     expect(".o-dropdown--menu .o_menu_item").toHaveCount(3);
     // add a custom group in searchview groupby
     await toggleSearchBarMenu();
-    await contains(`.o_add_custom_group_menu`).select("company_type");
-    expect(".o-dropdown--menu .o_menu_item").toHaveCount(6);
+    expect(".o-dropdown--menu .o_menu_item").toHaveCount(5);
     await contains("tbody tr:last-child .o_pivot_header_cell_closed").click();
     expect(".o-dropdown--menu .o_menu_item").toHaveCount(3);
     // add a custom group in pivot groupby
@@ -963,7 +950,7 @@ test("pivot group dropdown sync with search groupby dropdown", async () => {
     expect(".o-dropdown--menu .o_menu_item").toHaveCount(4);
     // applying custom groupby in pivot groupby dropdown will not update search dropdown
     await toggleSearchBarMenu();
-    expect(".o-dropdown--menu .o_menu_item").toHaveCount(6);
+    expect(".o-dropdown--menu .o_menu_item").toHaveCount(5);
 });
 
 test("pivot custom groupby: grouping on date field use default interval month", async () => {
@@ -1016,8 +1003,7 @@ test("pivot groupby dropdown renders custom search at the end with separator", a
     // open group by dropdown
     await toggleSearchBarMenu();
     expect(".o-dropdown--menu .o_menu_item").toHaveCount(5);
-    await contains(`.o_add_custom_group_menu`).select("company_type");
-    expect(".o-dropdown--menu .o_menu_item").toHaveCount(6);
+    expect(".o-dropdown--menu .o_menu_item").toHaveCount(5);
     // click on closed header to open dropdown
     await contains("tbody .o_pivot_header_cell_closed:eq(1)").click();
     let items = queryAll(".o_menu_item:not(select)");
@@ -1051,12 +1037,12 @@ test("pivot view without group by specified in search arch", async () => {
     expect(".o-dropdown--menu .o_add_custom_group_menu").toHaveCount(1);
     // click on closed header to open dropdown
     await contains("tbody .o_pivot_header_cell_closed:eq(1)").click();
-    expect(".o-dropdown--menu .o_menu_item").toHaveCount(7);
+    expect(".o-dropdown--menu .o_menu_item").toHaveCount(6);
     expect(".o-dropdown--menu .o_add_custom_group_menu").toHaveCount(1);
 });
 
 test("pivot view do not show custom group selection if there are no groupable fields", async () => {
-    for (const fieldName of ["bar", "company_type", "customer", "date", "other_product_id"]) {
+    for (const fieldName of ["bar", "customer", "date", "other_product_id"]) {
         delete Partner._fields[fieldName];
     }
 
@@ -1486,7 +1472,7 @@ test("correctly save measures and groupbys to favorite", async () => {
 
     // expand header on field customer
     await contains("thead .o_pivot_header_cell_closed:eq(1)").click();
-    await contains(".o-dropdown--menu .dropdown-item:eq(1)").click();
+    await contains(".o-dropdown--menu .dropdown-item:eq(0)").click();
     expectedContext = {
         group_by: [],
         pivot_column_groupby: ["date:day", "customer"],
@@ -1500,7 +1486,7 @@ test("correctly save measures and groupbys to favorite", async () => {
 
     // expand row on field product_id
     await contains("tbody .o_pivot_header_cell_closed").click();
-    await contains(".o-dropdown--menu .dropdown-item:eq(4)").click();
+    await contains(".o-dropdown--menu .dropdown-item:eq(3)").click();
     expectedContext = {
         group_by: [],
         pivot_column_groupby: ["date:day", "customer"],
@@ -1598,7 +1584,7 @@ test("correctly remove pivot_ keys from the context", async () => {
 
     // Group row by product_id
     await contains("tbody .o_pivot_header_cell_closed").click();
-    await contains(".o-dropdown--menu span:nth-child(5)").click();
+    await contains(".o-dropdown--menu span:nth-child(4)").click();
     expectedContext = {
         group_by: [],
         pivot_column_groupby: [],
@@ -1612,7 +1598,7 @@ test("correctly remove pivot_ keys from the context", async () => {
 
     // Group column by customer
     await contains("thead .o_pivot_header_cell_closed").click();
-    await contains(".o-dropdown--menu span:nth-child(2)").click();
+    await contains(".o-dropdown--menu span:nth-child(1)").click();
     expectedContext = {
         group_by: [],
         pivot_column_groupby: ["customer"],
@@ -1859,7 +1845,7 @@ test("Reload, group by columns, reload", async () => {
 
     // Set a column groupby
     await contains("thead .o_pivot_header_cell_closed").click();
-    await contains(".o-dropdown--menu .dropdown-item:eq(1)").click();
+    await contains(".o-dropdown--menu .dropdown-item:eq(0)").click();
 
     // Set a domain
     await toggleSearchBarMenu();
@@ -1879,7 +1865,7 @@ test("Reload, group by columns, reload", async () => {
     // Set a column groupby
     await removeFacet(); // remove previously saved favorite
     await contains("thead .o_pivot_header_cell_closed").click();
-    await contains(".o-dropdown--menu .dropdown-item:eq(4)").click();
+    await contains(".o-dropdown--menu .dropdown-item:eq(3)").click();
 
     // Set a domain
     await toggleSearchBarMenu();
@@ -1903,7 +1889,6 @@ test("folded groups remain folded at reload", async () => {
         arch: `
 			<pivot>
 				<field name="product_id" type="row"/>
-				<field name="company_type" type="col"/>
 				<field name="foo" type="measure"/>
 			</pivot>`,
         searchViewArch: `
@@ -1912,21 +1897,22 @@ test("folded groups remain folded at reload", async () => {
 			</search>`,
     });
 
-    let values = ["29", "3", "32", "12", "12", "17", "3", "20"];
+    let values = ["32", "12", "20"];
     expect(getCurrentValues()).toBe(values.join(","));
 
     // expand a col group
-    await contains("thead .o_pivot_header_cell_closed:eq(1)").click();
-    await contains(".o-dropdown--menu .dropdown-item:eq(1)").click();
+    await contains("thead .o_pivot_header_cell_closed:eq(0)").click();
+    await contains(".o-dropdown--menu .dropdown-item:eq(0)").click();
 
-    values = ["29", "2", "1", "32", "12", "12", "17", "2", "1", "20"];
+
+    values = ["14", "18", "32", "12", "12", "2", "18", "20"];
     expect(getCurrentValues()).toBe(values.join(","));
 
     // expand a row group
-    await contains("tbody .o_pivot_header_cell_closed:eq(1)").click();
-    await contains(".o-dropdown--menu .dropdown-item:eq(3)").click();
+    await contains("tbody .o_pivot_header_cell_closed:eq(0)").click();
+    await contains(".o-dropdown--menu .dropdown-item:eq(4)").click();
 
-    values = ["29", "2", "1", "32", "12", "12", "17", "2", "1", "20", "17", "2", "1", "20"];
+    values = ["14", "18", "32", "12", "12", "12", "12", "2", "18", "20"];
     expect(getCurrentValues()).toBe(values.join(","));
 
     // reload (should keep folded groups folded as col/row groupbys didn't change)
@@ -1940,23 +1926,20 @@ test("folded groups remain folded at reload", async () => {
     // sanity check of what the table should look like if all groups are
     // expanded, to ensure that the former asserts are pertinent
     values = [
-        "12",
-        "17",
-        "2",
-        "1",
+        "14",
+        "18",
         "32",
         "12",
         "12",
         "12",
         "12",
-        "17",
         "2",
-        "1",
+        "18",
         "20",
-        "17",
         "2",
-        "1",
-        "20",
+        "2",
+        "18",
+        "18",
     ];
     expect(getCurrentValues()).toBe(values.join(","));
 });
@@ -1989,7 +1972,7 @@ test("Empty results keep groupbys", async () => {
 
     // Set a column groupby
     await contains("thead .o_pivot_header_cell_closed").click();
-    await contains(".o-dropdown--menu .dropdown-item:eq(1)").click();
+    await contains(".o-dropdown--menu .dropdown-item:eq(0)").click();
 
     expect("table").toHaveCount(1);
 
@@ -2064,14 +2047,14 @@ test("clear table cells data after closeGroup", async () => {
 
     await contains("tbody .o_pivot_header_cell_opened").click();
     await contains("tbody .o_pivot_header_cell_closed").click();
-    await contains(".o-dropdown--menu .dropdown-item:eq(4)").click();
+    await contains(".o-dropdown--menu .dropdown-item:eq(3)").click();
     expect(".o_pivot_cell_value:eq(4)").toHaveText(""); // xphone December 2016
 
     // invert axis, and reopen column groupings
     await contains(".o_pivot_buttons .o_pivot_flip_button").click();
     await contains("thead .o_pivot_header_cell_opened").click();
     await contains("thead .o_pivot_header_cell_closed").click();
-    await contains(".o-dropdown--menu .dropdown-item:eq(4)").click();
+    await contains(".o-dropdown--menu .dropdown-item:eq(3)").click();
     expect(".o_pivot_cell_value:eq(3)").toHaveText(""); // December 2016 xphone
 });
 
@@ -2370,11 +2353,11 @@ test("Row and column groupbys plus a domain", async () => {
 
     // Set a column groupby
     await contains("thead .o_pivot_header_cell_closed").click();
-    await contains(".o-dropdown--menu .dropdown-item:eq(1)").click();
+    await contains(".o-dropdown--menu .dropdown-item:eq(0)").click();
 
     // Set a Row groupby
     await contains("tbody .o_pivot_header_cell_closed").click();
-    await contains(".o-dropdown--menu .dropdown-item:eq(4)").click();
+    await contains(".o-dropdown--menu .dropdown-item:eq(3)").click();
 
     // Add a filter
     await toggleSearchBarMenu();
@@ -2648,17 +2631,13 @@ test("group bys added via control panel and expand Header do not stack", async (
     expect(queryAllTexts("tbody th")).toEqual(["Total"]);
     // open group by menu and add new groupby
     await toggleSearchBarMenu();
-    await contains(`.o_add_custom_group_menu`).select("company_type");
-
-    expect(queryAllTexts("thead th")).toEqual(["", "Total", "Foo"]);
-    expect(queryAllTexts("tbody th")).toEqual(["Total", "Company", "individual"]);
+    await contains(`.o_add_custom_group_menu`).select("product_id");
 
     // Set a Row groupby
     await contains("tbody tr:nth-child(2) .o_pivot_header_cell_closed").click();
-    await contains(".o-dropdown--menu .o_menu_item:nth-child(5)").click();
 
     expect(queryAllTexts("thead th")).toEqual(["", "Total", "Foo"]);
-    expect(queryAllTexts("tbody th")).toEqual(["Total", "Company", "xphone", "xpad", "individual"]);
+    expect(queryAllTexts("tbody th")).toEqual(["Total", "xphone", "xpad"]);
 
     // open groupby menu generator and add a new groupby
     await toggleSearchBarMenu();
@@ -2667,9 +2646,9 @@ test("group bys added via control panel and expand Header do not stack", async (
     expect(queryAllTexts("thead th")).toEqual(["", "Total", "Foo"]);
     expect(queryAllTexts("tbody th")).toEqual([
         "Total",
-        "Company",
+        "xphone",
         "Yes",
-        "individual",
+        "xpad",
         "No",
         "Yes",
     ]);
@@ -2690,11 +2669,10 @@ test("display only one dropdown menu", async () => {
     await contains("thead th.o_pivot_header_cell_closed").click();
     await contains(".o-dropdown--menu .dropdown-item:eq(5)").click();
 
-    // Click on the two header dropdown togglers
+    // Click on the header dropdown togglers
     await contains("thead th.o_pivot_header_cell_closed:eq(0)").click();
-    await contains("thead th.o_pivot_header_cell_closed:eq(1)").click();
+    await contains("thead th.o_pivot_header_cell_closed:eq(0)").click();
 
-    expect(".o-dropdown--menu").toHaveCount(1);
 });
 
 test("Server order is kept by default", async () => {
@@ -2912,9 +2890,9 @@ test("expanded groups are kept when leaving and coming back", async () => {
     expect(".o_pivot_view").toHaveCount(1);
     expect(getCurrentValues()).toBe(["4", "2", "2"].join(","));
 
-    // drill down first row group (group by company_type)
-    await contains("tbody .o_pivot_header_cell_closed").click();
-    await contains(".o-dropdown--menu .dropdown-item").click();
+    // drill down first row group (group by product_id)
+    await contains("tbody .o_pivot_header_cell_closed:eq(0)").click();
+    await contains(".o-dropdown--menu .dropdown-item:eq(4)").click();
 
     expect(getCurrentValues()).toBe(["4", "2", "1", "1", "2"].join(","));
 
@@ -3713,8 +3691,8 @@ test("Close header dropdown when a simple groupby is selected", async function (
         "",
         "Total",
         "",
-        "Company",
-        "individual",
+        "First",
+        "Second",
         "Count",
         "Count",
         "Count",

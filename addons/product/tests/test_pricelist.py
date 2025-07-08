@@ -236,7 +236,7 @@ class TestPricelist(ProductVariantsCommon):
         } for company in self.env.company + company_2])
         parent = self.partner.create({
             'name': f"{self.partner.name}'s Company",
-            'is_company': True,
+            'vat': 'BE0477472701',
             'specific_property_product_pricelist': company_1_b2b_pl.id,
         })
         parent.with_company(company_2).specific_property_product_pricelist = company_2_b2b_pl

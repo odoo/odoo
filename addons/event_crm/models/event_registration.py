@@ -244,7 +244,7 @@ class EventRegistration(models.Model):
                 contact_vals['email_from'] = sorted_self._find_first_notnull('email')
             if not valid_partner.phone:
                 contact_vals['phone'] = registration_phone
-            if not valid_partner.company_name:
+            if not valid_partner.parent_name:
                 contact_vals['partner_name'] = registration_company
         else:
             # don't force email_from + partner_id because those fields are now synchronized automatically

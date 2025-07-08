@@ -84,8 +84,9 @@ registry.category("web_tour.tours").add('website_crm_catch_logged_partner_info_t
     url: '/contactus',
     steps: () => [
 {
-    content: "Wait the form is patched with values before continue to edit it",
-    trigger: "form#contactus_form input[name=partner_name]:value(yourcompany)",
+    content: "Fill Company Name",
+    trigger: "form#contactus_form input[name=partner_name]",
+    run: "edit Useless Company"
 },
 {
     content: "Complete Subject",

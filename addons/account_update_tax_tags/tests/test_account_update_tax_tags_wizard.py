@@ -15,8 +15,8 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
         be_country_id = cls.env.ref('base.be').id
         cls.partner_agrolait = cls.env['res.partner'].create({
             'name': 'Deco Agrolait',
-            'is_company': True,
             'country_id': cls.env.ref('base.us').id,
+            'vat': '123456789',
         })
         cls.company = cls.company_data['company']
         cls.company.write({'country_id': be_country_id})

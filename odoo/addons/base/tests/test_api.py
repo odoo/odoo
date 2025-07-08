@@ -437,26 +437,26 @@ class TestAPI(SavepointCaseWithUserDemo):
     def test_60_prefetch_read(self):
         """ Check that reading a field computes it on self only. """
         Partner = self.env['res.partner']
-        field = type(Partner).company_type
+        field = Partner._fields['vat_label']
         self.assertTrue(field.compute and not field.store)
 
         partner1 = Partner.create({'name': 'Foo'})
         partner2 = Partner.create({'name': 'Bar', 'parent_id': partner1.id})
         self.assertEqual(partner1.child_ids, partner2)
 
-        # reading partner1 should not prefetch 'company_type' on partner2
+        # reading partner1 should not prefetch 'vat_label' on partner2
         self.env.clear()
         partner1 = partner1.with_prefetch()
-        partner1.read(['company_type'])
-        self.assertIn('company_type', partner1._cache)
-        self.assertNotIn('company_type', partner2._cache)
+        partner1.read(['vat_label'])
+        self.assertIn('vat_label', partner1._cache)
+        self.assertNotIn('vat_label', partner2._cache)
 
-        # reading partner1 should not prefetch 'company_type' on partner2
+        # reading partner1 should not prefetch 'vat_label' on partner2
         self.env.clear()
         partner1 = partner1.with_prefetch()
-        partner1.read(['child_ids', 'company_type'])
-        self.assertIn('company_type', partner1._cache)
-        self.assertNotIn('company_type', partner2._cache)
+        partner1.read(['child_ids', 'vat_label'])
+        self.assertIn('vat_label', partner1._cache)
+        self.assertNotIn('vat_label', partner2._cache)
 
     def test_60_reversed(self):
         records = self.partners

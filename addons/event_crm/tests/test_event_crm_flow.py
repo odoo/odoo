@@ -175,7 +175,7 @@ class TestEventCrmFlow(TestEventCrmCommon, CronMixinCase):
     def test_event_crm_flow_per_attendee_single_wpartner(self):
         """ Single registration, attendee based, with partner involved, check
         contact information, check synchronization and update """
-        self.event_customer.write({'company_name': 'Event Company'})
+        self.event_customer.write({'parent_name': 'Event Company'})
         self.event_customer2.write({
             'email': False,
             'phone': False,

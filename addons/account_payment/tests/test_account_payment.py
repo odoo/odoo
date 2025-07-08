@@ -395,10 +395,9 @@ class TestAccountPayment(AccountPaymentCommon):
             })
 
         self.partner.write({
-            'is_company': True,
+            'vat': 'BE0477472701',
             'child_ids': [Command.create({
                 'name': name,
-                'is_company': False,
             }) for name in ("Child 1", "Child 2")],
         })
         child_1, child_2 = self.partner.child_ids

@@ -128,8 +128,8 @@ class CrmLead(models.Model):
                     })
         return True
 
-    def _prepare_customer_values(self, partner_name, is_company=False, parent_id=False):
-        res = super()._prepare_customer_values(partner_name, is_company=is_company, parent_id=parent_id)
+    def _prepare_customer_values(self, partner_name, parent_id=False):
+        res = super()._prepare_customer_values(partner_name, parent_id=parent_id)
         res.update({
             'partner_latitude': self.partner_latitude,
             'partner_longitude': self.partner_longitude,

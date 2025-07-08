@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     tooltipPosition: 'bottom',
     run: "click",
 }, {
-    trigger: ".o_kanban_quick_create .o_field_widget[name='commercial_partner_id'] input",
+    trigger: ".o_kanban_quick_create .o_field_widget[name='partner_id'] input",
     content: markup(_t('<b>Write a few letters</b> to look for a company, or create a new one.')),
     tooltipPosition: "top",
     run: "edit Brandon Freeman",
