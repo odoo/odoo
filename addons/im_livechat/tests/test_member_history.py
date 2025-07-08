@@ -19,7 +19,7 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
             "/im_livechat/get_session",
             {
                 "anonymous_name": "Visitor",
-                "channel_id": livechat_channel.id,
+                "channel_info": {"channel_id": livechat_channel.id},
             },
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
@@ -52,7 +52,7 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
             {
                 "anonymous_name": "Test Visitor",
                 "operator_params": {"chatbot_script_id": self.chatbot_script.id},
-                "channel_id": self.livechat_channel.id,
+                "channel_info": {"channel_id": self.livechat_channel.id},
             },
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
@@ -91,7 +91,7 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
             "/im_livechat/get_session",
             {
                 "anonymous_name": "Visitor",
-                "channel_id": livechat_channel.id,
+                "channel_info": {"channel_id": livechat_channel.id},
             },
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
@@ -138,7 +138,7 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
         )
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
-            {"anonymous_name": "Visitor", "channel_id": livechat_channel.id},
+            {"anonymous_name": "Visitor", "channel_info": {"channel_id": livechat_channel.id}},
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         og_history = channel.channel_member_ids.livechat_member_history_ids.filtered(

@@ -18,7 +18,7 @@ class TestUploadAttachment(HttpCase):
             "/im_livechat/get_session",
             {
                 "anonymous_name": "Visitor",
-                "channel_id": livechat_channel.id,
+                "channel_info": {"channel_id": livechat_channel.id},
                 "persisted": True,
             },
         )

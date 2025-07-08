@@ -27,7 +27,7 @@ async function get_session(request) {
     const ResUsers = this.env["res.users"];
 
     let {
-        channel_id,
+        channel_info,
         anonymous_name,
         operator_params,
         persisted,
@@ -50,7 +50,7 @@ async function get_session(request) {
         }
     }
     const channelVals = LivechatChannel._get_livechat_discuss_channel_vals(
-        channel_id,
+        channel_info,
         anonymous_name,
         operator_params,
         country_id,

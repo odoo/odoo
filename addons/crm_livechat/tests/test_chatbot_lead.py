@@ -172,7 +172,7 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
     def _play_session_with_lead(self):
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
             'anonymous_name': 'Test Visitor',
-            'channel_id': self.livechat_channel.id,
+            'channel_info': {'channel_id': self.livechat_channel.id},
             'operator_params': {'chatbot_script_id': self.chatbot_script.id},
         })
         discuss_channel = (

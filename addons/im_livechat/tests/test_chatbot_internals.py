@@ -55,7 +55,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
             'anonymous_name': 'Test Visitor',
             'operator_params': {'chatbot_script_id': self.chatbot_script.id},
-            'channel_id': self.livechat_channel.id,
+            'channel_info': {'channel_id': self.livechat_channel.id},
         })
         discuss_channel = self.env["discuss.channel"].browse(data["channel_id"])
 
@@ -120,7 +120,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             "/im_livechat/get_session",
             {
                 "anonymous_name": "Test Visitor",
-                "channel_id": self.livechat_channel.id,
+                "channel_info": {"channel_id": self.livechat_channel.id},
                 "operator_params": {'chatbot_script_id': self.chatbot_script.id},
             },
         )
@@ -145,7 +145,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             "/im_livechat/get_session",
             {
                 "anonymous_name": "Test Visitor",
-                "channel_id": self.livechat_channel.id,
+                "channel_info": {"channel_id": self.livechat_channel.id},
                 "operator_params": {'chatbot_script_id': self.chatbot_script.id},
             },
         )
@@ -533,7 +533,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             {
                 "anonymous_name": "Test Visitor",
                 "chatbot_script_id": self.chatbot_script.id,
-                "channel_id": self.livechat_channel.id,
+                "channel_info": {"channel_id": self.livechat_channel.id},
             },
         )
         discuss_channel = self.env["discuss.channel"].browse(data["channel_id"])

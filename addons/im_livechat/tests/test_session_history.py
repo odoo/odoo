@@ -12,7 +12,7 @@ class TestImLivechatSessionHistory(TestImLivechatCommon):
         self.livechat_channel.user_ids |= operator
         self.authenticate(None, None)
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
-            "channel_id": self.livechat_channel.id,
+            "channel_info": {"channel_id": self.livechat_channel.id},
             "anonymous_name": "Visitor",
             "operator_params": {"previous_operator_id": operator.partner_id.id},
         })

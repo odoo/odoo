@@ -235,7 +235,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "/im_livechat/get_session",
                 {
                     "anonymous_name": "anon 1",
-                    "channel_id": self.im_livechat_channel.id,
+                    "channel_info": {"channel_id": self.im_livechat_channel.id},
                     "operator_params": {"previous_operator_id": self.users[0].partner_id.id},
                 },
             )["channel_id"]

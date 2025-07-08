@@ -31,7 +31,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         # public: should not be set as customer
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
             'anonymous_name': 'Visitor',
-            'channel_id': self.livechat_channel.id,
+            'channel_info': {'channel_id': self.livechat_channel.id},
             'persisted': True,
         })
         channel = self.env["discuss.channel"].browse(data["channel_id"])
@@ -72,7 +72,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         self.authenticate("user_portal", "user_portal")
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
             'anonymous_name': 'Visitor',
-            'channel_id': self.livechat_channel.id,
+            'channel_info': {'channel_id': self.livechat_channel.id},
             'persisted': True,
         })
         channel = self.env["discuss.channel"].browse(data["channel_id"])
@@ -105,7 +105,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         self.env["mail.presence"]._update_presence(bob_operator)
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
-            {"anonymous_name": "Visitor", "channel_id": self.livechat_channel.id},
+            {"anonymous_name": "Visitor", "channel_info": {'channel_id': self.livechat_channel.id}},
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         message = channel.message_post(

@@ -55,7 +55,7 @@ class TestLivechatCommon(MailCommon, TransactionCaseWithUserDemo):
 
         self.open_chat_url = f"{self.livechat_base_url}/im_livechat/get_session"
         self.open_chat_params = {'params': {
-            'channel_id': self.livechat_channel.id,
+            'channel_info': {'channel_id': self.livechat_channel.id},
             'anonymous_name': "Wrong Name"
         }}
 

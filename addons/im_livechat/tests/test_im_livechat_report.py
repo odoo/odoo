@@ -26,7 +26,7 @@ class TestImLivechatReport(TestImLivechatCommon):
         ):
             channel_id = self.make_jsonrpc_request(
                 "/im_livechat/get_session",
-                {"anonymous_name": "Anonymous", "channel_id": self.livechat_channel.id},
+                {"anonymous_name": "Anonymous", "channel_info": {"channel_id": self.livechat_channel.id}},
             )["channel_id"]
 
         channel = self.env['discuss.channel'].browse(channel_id)

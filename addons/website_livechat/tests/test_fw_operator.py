@@ -66,7 +66,7 @@ class TestFwOperator(ChatbotCase, HttpCase, TestLivechatCommon):
     def test_chatbot_trigger_blocked_after_forward_to_operator(self):
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
             "anonymous_name": "Visitor #1",
-            "channel_id": self.livechat_channel.id,
+            "channel_info": {"channel_id": self.livechat_channel.id},
             "operator_params": {"chatbot_script_id": self.chatbot_fw_script.id}
         })
         channel = self.env["discuss.channel"].browse(data["channel_id"])
