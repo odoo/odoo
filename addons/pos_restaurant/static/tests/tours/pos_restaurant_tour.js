@@ -699,10 +699,10 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
             FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(1, "John"),
-            TicketScreen.nthRowContains(1, "Takeaway", false),
-            TicketScreen.nthRowContains(2, "002"),
-            TicketScreen.nthRowContains(2, "Eat in", false),
+            TicketScreen.nthRowContains(2, "John"),
+            TicketScreen.nthRowContains(2, "Takeaway", false),
+            TicketScreen.nthRowContains(1, "002"),
+            TicketScreen.nthRowContains(1, "Eat in", false),
         ].flat(),
 });
 

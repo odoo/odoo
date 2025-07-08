@@ -16,8 +16,8 @@ patch(PosStore.prototype, {
     isArgentineanCompany() {
         return this.company.country_id?.code == "AR";
     },
-    createNewOrder() {
-        const order = super.createNewOrder(...arguments);
+    async createNewOrder() {
+        const order = await super.createNewOrder(...arguments);
 
         if (this.isArgentineanCompany() && !order.partner_id) {
             order.partner_id = this.config._consumidor_final_anonimo_id;

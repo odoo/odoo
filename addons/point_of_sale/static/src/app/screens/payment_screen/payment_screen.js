@@ -421,7 +421,7 @@ export class PaymentScreen extends Component {
                     switchScreen = this.currentOrder.uuid === this.pos.selectedOrderUuid;
                     nextPage = this.pos.defaultPage;
                     if (switchScreen) {
-                        this.selectNextOrder();
+                        await this.selectNextOrder();
                     }
                 }
             }
@@ -431,11 +431,11 @@ export class PaymentScreen extends Component {
             this.pos.navigate(nextPage.page, nextPage.params);
         }
     }
-    selectNextOrder() {
+    async selectNextOrder() {
         if (this.currentOrder.originalSplittedOrder) {
             this.pos.selectedOrderUuid = this.currentOrder.uiState.splittedOrderUuid;
         } else {
-            this.pos.addNewOrder();
+            await this.pos.addNewOrder();
         }
     }
     /**
