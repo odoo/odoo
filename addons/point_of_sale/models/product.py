@@ -386,6 +386,15 @@ class ProductPricelist(models.Model):
     def _load_pos_data_fields(self, config_id):
         return ['id', 'name', 'display_name', 'item_ids']
 
+    def _get_partner_pricelist_multi(self, partner_ids):
+        pricelist = self.env['pos.config'].browse(
+            self.env.context.get("pos_config_id")
+        ).pricelist_id
+        if pricelist:
+            return dict.fromkeys(partner_ids, pricelist)
+
+        return super()._get_partner_pricelist_multi(partner_ids)
+
 
 class ProductPricelistItem(models.Model):
     _name = 'product.pricelist.item'
