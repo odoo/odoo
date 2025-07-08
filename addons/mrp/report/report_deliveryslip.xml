@@ -19,7 +19,7 @@
         </xpath>
         <xpath expr="//t[@name='has_packages']" position="after">
             <!-- Additional use case: group by kits when no packages exist and then apply use case 1. (serial/lot numbers used/printed) -->
-            <t t-elif="has_kits and not has_packages">
+            <t t-elif="has_kits and not packages_count">
                 <t t-call="mrp.stock_report_delivery_kit_sections"/>
                 <t t-call="mrp.stock_report_delivery_no_kit_section"/>
             </t>

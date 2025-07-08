@@ -7,10 +7,8 @@
         <field name="inherit_id" ref="stock.stock_package_type_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='delivery']" position="inside">
-                <group>
-                    <field name="package_carrier_type"/>
-                    <field name="shipper_package_code"/>
-                </group>
+                <field name="package_carrier_type"/>
+                <field name="shipper_package_code"/>
             </xpath>
         </field>
     </record>
