@@ -411,8 +411,9 @@ class StockPicking(models.Model):
 
     def _import_drivers(self, tree):
         ResPartner = self.env['res.partner']
+        # TODO Change domain if is_company is stored
         existing_partners = dict(ResPartner.with_context(active_test=False)._read_group(
-            [('country_id.code', '=', 'TR'), ('is_company', '=', False)], ['name'], ['id:min'],
+            [('country_id.code', '=', 'TR'), ('vat', 'not in', [False, 'na', 'NA', '/'])], ['name'], ['id:min'],
         ))
         country_id = self.env.ref('base.tr', raise_if_not_found=False)
         driver_ids = []
