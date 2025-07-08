@@ -31,6 +31,25 @@ export class Popup extends Interaction {
         this.bsModal = window.Modal.getOrCreateInstance(this.modalEl);
         this.registerCleanup(() => { this.bsModal.dispose() });
 
+        const selectedUrls =
+            this.modalEl.dataset.showOnSpecificPages === "true"
+                ? JSON.parse(this.modalEl.dataset.selectedUrls)
+                : [];
+        if (selectedUrls && selectedUrls.length) {
+            // If the popup is only shown on specific URLs, we check if the
+            // current URL matches one of the selected URLs.
+            const currentUrl = browser.location.pathname;
+            if (!selectedUrls.includes(currentUrl)) {
+                const whereEl = document.querySelector("#o_shared_blocks");
+                const popupEl = this.el;
+                if (whereEl && popupEl && whereEl.contains(popupEl)) {
+                    this.bsModal.dispose();
+                    popupEl.remove();
+                    return;
+                }
+            }
+        }
+
         this.modalShownOnClickEl = this.el.querySelector(".modal[data-display='onClick']");
         if (this.modalShownOnClickEl) {
             this.showModalBtnEl = document.querySelector(`[href="#${this.modalShownOnClickEl.id}"]`);
@@ -45,6 +64,12 @@ export class Popup extends Interaction {
     }
 
     start() {
+        if (!this.bsModal._element) {
+            // If the modal element has been removed from the DOM, we do not
+            // need to bind the popup.
+            return;
+        }
+
         // Check if every child element of the popup is conditionally hidden,
         // and if so, never show an empty popup.
         // config.device.isMobile is true if the device is <= SM, but the device

@@ -53,8 +53,14 @@
     <BuilderRow label.translate="Show on">
         <BuilderSelect action="'moveBlock'" preview="false">
             <BuilderSelectItem actionValue="'currentPage'">This page</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'specificPages'" id="'specific_pages'">These specific pages</BuilderSelectItem>
             <BuilderSelectItem actionValue="'allPages'">All pages</BuilderSelectItem>
         </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate=" ">
+        <WebsiteMultiUrlPicker t-if="isActiveItem('specific_pages')"
+                placeholder.translate="e.g. /my-awesome-page"
+                dataAttributeAction="'selectedUrls'"/>
     </BuilderRow>
 </t>
 
