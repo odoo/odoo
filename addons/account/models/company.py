@@ -390,7 +390,7 @@ class ResCompany(models.Model):
 
             #forbid the change of currency_id if there are already some accounting entries existing
             if 'currency_id' in values and values['currency_id'] != company.currency_id.id:
-                if self.env['account.move.line'].search([('company_id', '=', company.id)]):
+                if self.env['account.move.line'].sudo().search([('company_id', '=', company.id)]):
                     raise UserError(_('You cannot change the currency of the company since some journal items already exist'))
 
         return super(ResCompany, self).write(values)
