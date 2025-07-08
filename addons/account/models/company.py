@@ -122,8 +122,7 @@ class ResCompany(models.Model):
     transfer_account_code_prefix = fields.Char(string='Prefix of the transfer accounts')
     account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", check_company=True)
     account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", check_company=True)
-    account_sale_receipt_tax_id = fields.Many2one('account.tax', string="Default Sale Receipt Tax", check_company=True)
-    account_purchase_receipt_tax_id = fields.Many2one('account.tax', string="Default Purchase Receipt Tax", check_company=True)
+    account_purchase_receipt_fiscal_position_id = fields.Many2one('account.fiscal.position', string="Default Purchase Receipt Fiscal Position", check_company=True)
     tax_calculation_rounding_method = fields.Selection([
         ('round_globally', 'Round per Tax'),
         ('round_per_line', 'Round per Line'),
