@@ -2,10 +2,12 @@
 
 from odoo import Command
 from odoo.exceptions import ValidationError
+from odoo.tests import tagged
 
 from .common import PartnershipCommon
 
 
+@tagged('post_install', '-at_install')
 class TestPartnership(PartnershipCommon):
 
     def test_sell_basic_partnership(self):
@@ -32,3 +34,15 @@ class TestPartnership(PartnershipCommon):
         with self.assertRaises(ValidationError):
             # A sale order cannot contain partnership products assigning different grade levels
             self.sale_order_partnership.order_line = [Command.create({'product_id': partnership.id})]
+
+    def test_partnership_product_domain(self):
+        ProductTemplate = self.env['product.template']
+        product_domain = [
+            ('sale_ok', '=', True),
+            ('service_tracking', 'in', ProductTemplate._get_saleable_tracking_types()),
+        ]
+        self.assertIn(
+            self.partnership_product.product_tmpl_id,
+            ProductTemplate.search(product_domain),
+            "Partnership product should be saleable",
+        )
