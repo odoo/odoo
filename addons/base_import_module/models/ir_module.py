@@ -56,7 +56,7 @@ class IrModuleModule(models.Model):
         IrAttachment = self.env['ir.attachment']
 
         for module in modules:
-            if Manifest.for_addon(module, downloaded=True, display_warning=False):
+            if Manifest.for_addon(module, display_warning=False):
                 continue
             for lang in langs:
                 for lang_ in get_base_langs(lang):

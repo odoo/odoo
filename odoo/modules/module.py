@@ -278,11 +278,10 @@ class Manifest(Mapping[str, typing.Any]):
         return None
 
     @staticmethod
-    def for_addon(module_name: str, *, downloaded: bool = False, display_warning: bool = True) -> Manifest | None:
+    def for_addon(module_name: str, *, display_warning: bool = True) -> Manifest | None:
         """Get the module's manifest from a name.
 
         :param module: module's name
-        :param downloaded: whether to check odoo's data directory
         :param display_warning: log a warning if the module is not found
         """
         if not MODULE_NAME_RE.match(module_name):
@@ -290,10 +289,6 @@ class Manifest(Mapping[str, typing.Any]):
             return None
         if mod := Manifest._get_manifest_from_addons(module_name):
             return mod
-        if downloaded:
-            path = opj(tools.config.addons_data_dir, module_name)
-            if mod := Manifest._from_path(path):
-                return mod
         if display_warning:
             _logger.warning('module %s: manifest not found', module_name)
         return None
@@ -330,7 +325,7 @@ class Manifest(Mapping[str, typing.Any]):
         return sorted(modules.values(), key=lambda m: m.name)
 
 
-def get_module_path(module: str, downloaded: bool = False, display_warning: bool = True) -> str | None:
+def get_module_path(module: str, display_warning: bool = True) -> str | None:
     """Return the path of the given module.
 
     Search the addons paths and return the first path where the given
@@ -339,7 +334,7 @@ def get_module_path(module: str, downloaded: bool = False, display_warning: bool
 
     """
     # TODO deprecate
-    mod = Manifest.for_addon(module, downloaded=downloaded, display_warning=display_warning)
+    mod = Manifest.for_addon(module, display_warning=display_warning)
     return mod.path if mod else None
 
 
@@ -397,7 +392,7 @@ def load_manifest(module: str, mod_path: str | None = None) -> dict:
         mod = Manifest._from_path(mod_path)
         assert mod.path == mod_path
     else:
-        mod = Manifest.for_addon(module, downloaded=True)
+        mod = Manifest.for_addon(module)
     if not mod:
         _logger.debug('module %s: no manifest file found %s', module, MANIFEST_NAMES)
         return {}
@@ -478,7 +473,7 @@ def get_manifest(module: str, mod_path: str | None = None) -> Mapping[str, typin
         if mod and mod.name != module:
             raise ValueError(f"Invalid path for module {module}: {mod_path}")
     else:
-        mod = Manifest.for_addon(module, downloaded=True, display_warning=False)
+        mod = Manifest.for_addon(module, display_warning=False)
     return mod if mod is not None else {}
 
 
