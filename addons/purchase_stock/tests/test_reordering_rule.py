@@ -1551,3 +1551,16 @@ class TestReorderingRule(TransactionCase):
         self.assertRecordValues(purchase_order_line, [
             {'product_uom_qty': 100, 'move_dest_ids': [delivery.move_ids.id, delivery.backorder_ids.move_ids.id]}
         ])
+
+    def test_orderpoint_warning_purchase_stock(self):
+        """ Checks that the warning correctly computes depending on if there's a vendor. """
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product_01.id,
+            'product_min_qty': 10,
+            'product_max_qty': 50,
+        })
+        self.assertFalse(orderpoint.show_supply_warning)
+
+        self.product_01.seller_ids = False
+        orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
+        self.assertTrue(orderpoint.show_supply_warning)

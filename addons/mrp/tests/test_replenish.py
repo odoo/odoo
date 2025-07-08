@@ -287,3 +287,22 @@ class TestMrpReplenish(TestMrpCommon):
 
         self.assertEqual(len(mo_final), 1, "Expected one MO for the final product.")
         self.assertEqual(len(mo_component), 1, "Expected one MO for the manufactured BOM component.")
+
+    def test_orderpoint_warning_mrp(self):
+        """ Checks that the warning correctly computes depending on if there's a bom. """
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product_4.id,
+            'product_min_qty': 10,
+            'product_max_qty': 50,
+        })
+        self.assertTrue(orderpoint.show_supply_warning)
+
+        # Add a manufacture route to the product
+        self.product_4.route_ids |= self.route_manufacture
+        orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
+        self.assertFalse(orderpoint.show_supply_warning)
+
+        # Archive the boms linked to the product
+        self.product_4.bom_ids.active = False
+        orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
+        self.assertTrue(orderpoint.show_supply_warning)

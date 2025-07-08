@@ -680,6 +680,37 @@ class TestProcRule(TransactionCase):
         self.assertEqual(orderpoint_list_view.qty_to_order, 0)
         self.assertFalse(orderpoint_list_view.product_id)
 
+    def test_orderpoint_warning(self):
+        """ Checks that the warning correctly computes depending on the configuration. """
+        self.product.is_storable = True
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product.id,
+            'product_min_qty': 10,
+            'product_max_qty': 50,
+        })
+        self.assertFalse(orderpoint.show_supply_warning, "There should at least be the rule from route 'My Company: Receive in 1 step (stock)'.")
+
+        # Archive the route
+        orderpoint.rule_ids.route_id.active = False
+        orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
+        self.assertTrue(orderpoint.show_supply_warning)
+
+        # Add a route to the product
+        product_route = self.env['stock.route'].create({
+            'name': 'Supplier -> Stock',
+            'product_selectable': True,
+            'rule_ids': [Command.create({
+                'name': 'Supplier -> Stock',
+                'action': 'pull',
+                'picking_type_id': self.ref('stock.picking_type_in'),
+                'location_src_id': self.ref('stock.stock_location_suppliers'),
+                'location_dest_id': self.ref('stock.stock_location_stock'),
+            })],
+        })
+        self.product.write({'route_ids': [Command.set(product_route.ids)]})
+        orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
+        self.assertFalse(orderpoint.show_supply_warning)
+
 
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):
