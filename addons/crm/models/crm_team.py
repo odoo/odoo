@@ -179,10 +179,22 @@ class CrmTeam(models.Model):
         details about assign process.
 
         """
-        self.env['crm.team'].search([
+        teams = self.env['crm.team'].search([
             '&', '|', ('use_leads', '=', True), ('use_opportunities', '=', True),
             ('assignment_optout', '=', False)
-        ])._action_assign_leads(force_quota=force_quota, creation_delta_days=creation_delta_days)
+        ])
+
+        assigned_teams = 0
+        for team in teams:
+            try:
+                team_data, _ = team._action_assign_leads(force_quota=force_quota, creation_delta_days=creation_delta_days)
+                _logger.info("[Assign Cron] Successfully assigned %s leads for team %s (ID: %d)", len(team_data['leads']), team.name, team.id)
+                assigned_teams += 1
+            except Exception as e:
+                _logger.error("[Assign Cron] Crash while processing team %s (ID: %d). Error: %s", team.name, team.id, str(e))
+                raise
+
+        _logger.info("[Assign Cron] Finished assigning. %d/%d teams processed successfully.", assigned_teams, len(teams))
         return True
 
     def action_assign_leads(self):
@@ -467,7 +479,14 @@ class CrmTeam(models.Model):
 
             # assign + deduplicate and concatenate results in teams_data to keep some history
             candidate_lead = teams_data[team]["leads"][0]
-            assign_res = team._allocate_leads_deduplicate(candidate_lead, duplicates_cache=duplicates_lead_cache)
+
+            try:
+                assign_res = team._allocate_leads_deduplicate(candidate_lead, duplicates_cache=duplicates_lead_cache)
+            except Exception as e:
+                _logger.error("[Assign Lead] Crash while assigning lead %s (ID: %d) to %s team (ID: %d). Error: %s", candidate_lead.name, candidate_lead.id, team.name, team.id, str(e))
+                _logger.error("[Assign Lead] %d leads (IDs: %s) assigned to %s team (ID: %d) before crash.", len(teams_data[team]["assigned"]), list(teams_data[team]["assigned"]), team.name, team.id)
+                raise
+
             for key in ('assigned', 'merged', 'duplicates'):
                 teams_data[team][key].update(assign_res[key])
                 leads_done_ids.update(assign_res[key])
