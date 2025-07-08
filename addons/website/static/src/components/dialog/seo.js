@@ -820,8 +820,9 @@ export class OptimizeSEODialog extends Component {
         this.website = useService('website');
         this.dialogs = useService('dialog');
         this.orm = useService('orm');
-
-        this.title = _t("Optimize SEO");
+        const langLocale = this.website.currentWebsite.metadata.lang;
+        this.langCode = langLocale.split('_')[0].toUpperCase();
+        this.title = `${_t("Optimize SEO")} (${this.langCode})`;
         this.saveButton = _t("Save");
         this.size = 'lg';
         this.contentClass = "oe_seo_configuration";
