@@ -14,7 +14,24 @@ export function clickMenuButton() {
     };
 }
 export function clickMenuOption(name, options) {
-    return [clickMenuButton(), clickMenuDropdownOption(name, options)];
+    return [
+        waitForMenuButtons(),
+        clickMenuButton(),
+        waitForMenuOptionsToOpen(),
+        clickMenuDropdownOption(name, options),
+    ];
+}
+export function waitForMenuButtons() {
+    return {
+        content: "Wait for the menu buttons to be available",
+        trigger: ".pos-rightheader button:has(.fa-bars)",
+    };
+}
+export function waitForMenuOptionsToOpen() {
+    return {
+        content: `Wait for the menu options to be available`,
+        trigger: `span.dropdown-item`,
+    };
 }
 export function clickMenuDropdownOption(name, { expectUnloadPage = false } = {}) {
     return {
