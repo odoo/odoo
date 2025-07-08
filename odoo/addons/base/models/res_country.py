@@ -83,6 +83,7 @@ class Country(models.Model):
             'The code of the country must be unique!')
     ]
 
+<<<<<<< f140c73241a119337b04e1afb86eb606bbd7cf0c
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         result = []
@@ -99,6 +100,42 @@ class Country(models.Model):
         # normal search
         result.extend(super().name_search(name, domain, operator, limit))
         return result
+||||||| b87c896969cc576a799ac63f03501be1e87b0e84
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+        if domain is None:
+            domain = []
+
+        ids = []
+        if len(name) == 2:
+            ids = list(self._search([('code', 'ilike', name)] + domain, limit=limit, order=order))
+
+        search_domain = [('name', operator, name)]
+        if ids:
+            search_domain.append(('id', 'not in', ids))
+        ids += list(self._search(search_domain + domain, limit=limit, order=order))
+
+        return ids
+=======
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+        if domain is None:
+            domain = []
+
+        ids = []
+        if len(name) == 2:
+            ids = list(self._search([('code', 'ilike', name)] + domain, limit=limit, order=order))
+        elif operator in ('=', '!=', 'in', 'not in'):
+            if isinstance(name, str):
+                name = name.capitalize()
+            else:  # iterable
+                name = [n.capitalize() if n else n for n in name]
+
+        search_domain = [('name', operator, name)]
+        if ids:
+            search_domain.append(('id', 'not in', ids))
+        ids += list(self._search(search_domain + domain, limit=limit, order=order))
+
+        return ids
+>>>>>>> bee84e49d04bb125aa307a3524061a8d9b662dbe
 
     @api.model
     @tools.ormcache('code')
