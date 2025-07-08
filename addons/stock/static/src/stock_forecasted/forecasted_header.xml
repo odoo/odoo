@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="stock.ForecastedHeader">
-        <div class="d-flex flex-wrap pb-2 justify-content-between">
+        <div class="d-flex flex-wrap pb-1 justify-content-between">
             <div class="o_product_name">
-                <h3>
+                <h3 name="product_name">
                     <t t-if="props.docs.product_templates">
                         <t t-foreach="props.docs.product_templates" t-as="product_template" t-key='product_template.id'>
                             <a href="#"
@@ -19,15 +19,6 @@
                         </t>
                     </t>
                 </h3>
-                <h6 t-if="props.docs.product_templates and props.docs.product_variants and props.docs.product_templates.length != props.docs.product_variants.length"
-                    name="product_variants">
-                    <t t-foreach="props.docs.product_variants" t-as="product_variant" t-key="product_variant.id">
-                        <a href="#"
-                        t-on-click.prevent="() => this.props.openView('product.product', 'form', product_variant.id)">
-                            [<t t-out="product_variant.combination_name"/>]
-                        </a>
-                    </t>
-                </h6>
             </div>
             <div class="row">
                 <div class="col-md-auto text-center" name="on_hand">
@@ -60,6 +51,11 @@
                     </div>
                     <div>Forecasted</div>
                 </div>
+            </div>
+        </div>
+        <div class="d-flex flex-wrap pb-1 justify-content-end">
+            <div class="row">
+                <h6>Time to replenish: <a href="#"> XX days (mm/dd/yy)</a></h6>
             </div>
         </div>
     </t>

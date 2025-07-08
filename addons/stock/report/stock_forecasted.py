@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import date
+from datetime import date, datetime
 
 from odoo import api, models
 from odoo.fields import Domain
@@ -154,6 +154,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
         product = product or (move_out.product_id if move_out else move_in.product_id)
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
+        delivery_late = move_out.state != 'done' and move_out.date < datetime.now() if move_out else False
+        receipt_late = move_in.state != 'done' and move_in.date < datetime.now() if move_in else False
 
         move_to_match_ids = self.env.context.get('move_to_match_ids') or []
         move_in_id = move_in.id if move_in else None
@@ -169,6 +171,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
             },
             'replenishment_filled': replenishment_filled,
             'is_late': is_late,
+            'delivery_late': delivery_late,
+            'receipt_late': receipt_late,
             'quantity': product.uom_id.round(quantity),
             'move_out': move_out,
             'move_in': move_in,

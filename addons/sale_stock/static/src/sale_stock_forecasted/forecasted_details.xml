@@ -3,24 +3,24 @@
     <t t-name="sale_stock.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
         <xpath expr="//tr[@name='draft_picking_out']" position="after">
             <tr t-if="props.docs.product[line.product.id].draft_sale_qty.out" name="draft_so_out" t-attf-class="#{props.docs.product[line.product.id].draft_sale_orders_matched and 'table-info'} #{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
-                <td>Quotations</td>
+                <td>
+                <t t-set="draft_so_out_count" t-value="props.docs.product[line.product.id].draft_sale_orders.length"/>
+                <a t-if="draft_so_out_count == 1" href="#"
+                    t-on-click.prevent="() => this.props.openView('sale.order', 'form', props.docs.product[line.product.id].draft_sale_orders[0].id)">
+                    1 Quotation</a>
+                <a t-else="" href="#"
+                    t-on-click.prevent="() => this.props.openView('sale.order', 'list', false, [['id', 'in', props.docs.product[line.product.id].draft_sale_orders.map((so) => so.id)]])">
+                    <t t-out="draft_so_out_count"/> Quotations</a>
+                </td>
                 <td class="text-end">
                     <t t-out="_formatFloat(-props.docs.product[line.product.id].draft_sale_qty.out)"/> <t t-out="line.uom_id.display_name"/>
                 </td>
-                <td>
-                    <t t-foreach="props.docs.product[line.product.id].draft_sale_orders" t-as="sale_order" t-key="sale_order_index">
-                        <t t-if="sale_order_index > 0"> | </t>
-                        <a t-attf-href="#" t-out="sale_order.name"
-                            class="fw-bold"
-                            t-on-click.prevent="() => this.props.openView('sale.order', 'form', sale_order.id)"/>
-                    </t>
-                </td>
+                <td colspan="3"/>
             </tr>
         </xpath>
         <xpath expr="//td[@name='usedby_cell']" position="inside">
-            <span t-if="line.move_out and line.move_out.picking_id and line.move_out.picking_id.sale_id">
-                | <span t-out="line.move_out.picking_id.sale_id.partner_id.display_name"/>
-            </span>
+            <span t-if="line.move_out and line.move_out.picking_id and line.move_out.picking_id.sale_id" t-out="' | ' + line.move_out.picking_id.sale_id.partner_id.display_name"/>
+            <span t-if="line.document_out and line.is_matched and line.document_out._name === 'sale.order'" t-out="' (Your SO)'"/>
         </xpath>
     </t>
 </templates>

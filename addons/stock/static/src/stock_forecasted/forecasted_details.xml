@@ -42,18 +42,20 @@ We may use href=".collapseGroup_y" with class="collapseGroup_y" to avoid using i
                             </td>
                         </tr>
                     </t>
-                    <tr t-attf-class="#{line.is_matched and 'table-info' or ''} #{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}" >
-                        <t t-if="skip_row > 1" t-set="skip_row" t-value="skip_row - 1"/>
-                        <t t-else="">
+                    <tr t-attf-class="#{line.is_late and 'table-warning'} #{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}" >
+                        <t t-if="skip_row > 0" t-set="skip_row" t-value="skip_row - 1"/>
+                        <t t-if="!skip_row or skip_row == 0">
                             <t t-if="splittedIncomingLines[line_index]" t-set="skip_row" t-value="splittedIncomingLines[line_index]['rowcount']"/>
-                            <td t-attf-class="#{line.is_late and 'table-danger' or classForLine(line)}" t-attf-rowspan="#{skip_row > 0 and skip_row}">
+                            <td t-attf-class="#{classForLine(line)}" t-attf-rowspan="#{skip_row > 0 and skip_row}">
                                 <t t-if="line.document_in">
                                     <a t-if="line.document_in"
                                         href="#"
                                         t-on-click.prevent="() => this.props.openView(line.document_in._name, 'form', line.document_in.id)"
                                         t-out="line.document_in.name"
                                         class="fw-bold"/>
-                                    <span t-if="line.receipt_date">: <t t-out="_formatFloat(skip_row > 0 ? splittedIncomingLines[line_index].tot_qty : line.quantity)"/> <t t-out="line.uom_id.display_name"/> expected on <t t-out="line.receipt_date"/></span>
+                                    <span t-if="line.receipt_date">:
+                                        <t t-out="_formatFloat(skip_row > 0 ? splittedIncomingLines[line_index].tot_qty : line.quantity)"/> <t t-out="line.uom_id.display_name"/> expected on <t t-out="line.receipt_date"/>
+                                    </span>
                                 </t>
                                 <t t-elif="line.reservation">
                                     <a t-out="line.reservation.name" href="#" class="fw-bold"
@@ -79,13 +81,14 @@ We may use href=".collapseGroup_y" with class="collapseGroup_y" to avoid using i
                             </td>
                         </t>
                         <td class="text-end" t-att-class="classForLine(line)"><t t-if="! line.replenishment_filled">- </t><t t-out="_formatFloat(line.quantity)"/> <t t-out="line.uom_id.display_name"/></td>
-                        <td class="border-end-0" t-attf-class="#{! line.replenishment_filled and 'table-danger'}" name="usedby_cell">
+                        <td class="border-end-0" t-attf-class="#{(!line.replenishment_filled and 'table-danger') or (line.is_matched and 'table-info')}" name="usedby_cell">
                             <button t-if="line.move_out and line.move_out.picking_id"
                                 t-attf-class="o_priority o_priority_star me-1 fa fa-star#{line.move_out.picking_id.priority=='1' ? '' : '-o'}"
                                 t-on-click="() => this._onClickChangePriority('stock.picking', line.move_out.picking_id)"
                                 name="change_priority_link"/>
                             <a t-if="line.document_out"
                                 href="#"
+                                t-attf-class="#{line.is_matched and 'fst-italic'}"
                                 t-on-click.prevent="() => this.props.openView(line.document_out._name, 'form', line.document_out.id)"
                                 t-out="line.document_out.name"
                                 class="fw-bold"/>
@@ -107,7 +110,7 @@ We may use href=".collapseGroup_y" with class="collapseGroup_y" to avoid using i
                             </t>
                         </td>
                         <td t-out="line.delivery_date or ''"
-                            t-attf-class="#{! line.replenishment_filled and 'table-danger'}"/>
+                            t-attf-class="#{(!line.replenishment_filled or line.delivery_late) and 'text-danger'}"/>
                     </tr>
                     <t t-if="line_index === last_line_index or line.product.id !== props.docs.lines[line_index + 1].product.id">
                         <tr t-if="this.props.docs.product[line.product.id].qty_to_order" t-attf-class="#{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">

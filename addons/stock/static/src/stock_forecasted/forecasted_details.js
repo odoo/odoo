@@ -28,6 +28,7 @@ export class ForecastedDetails extends Component {
             const index = i-j;
             const line = this.props.docs.lines[index];
             const nextLine = this.props.docs.lines[i + 1];
+            // this.splittedIncomingLines[i]= {tot_qty: (-i-1)*1000};
             if (line.product.id != nextLine.product.id || !((line.document_in && nextLine.document_in && line.document_in.id === nextLine.document_in.id && line.document_in._name === nextLine.document_in._name) || (this.reservedOnHand.includes(line) && this.reservedOnHand.includes(nextLine)))) {
                 j = 0;
                 continue;
@@ -97,9 +98,5 @@ export class ForecastedDetails extends Component {
             ||
             (line.in_transit && !line.move_out);
         return greyBackground ? 'bg-200' : '';
-    }
-
-    should_have_grey_bg(line){
-
     }
 }
