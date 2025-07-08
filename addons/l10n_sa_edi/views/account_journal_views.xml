@@ -8,10 +8,10 @@
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="inside">
-                    <field name="l10n_sa_csr" invisible="1"/> <!-- TODO: to be removed in master -->
-                    <field name="l10n_sa_compliance_csid_json" invisible="1"/> <!-- TODO: to be removed in master -->
-                    <field name="l10n_sa_production_csid_json" invisible="1"/> <!-- TODO: to be removed in master -->
-                    <field name="l10n_sa_compliance_checks_passed" invisible="1"/> <!-- TODO: to be removed in master -->
+                    <field name="l10n_sa_csr" invisible="1"/>
+                    <field name="l10n_sa_compliance_csid_json" invisible="1"/>
+                    <field name="l10n_sa_production_csid_json" invisible="1"/>
+                    <field name="l10n_sa_compliance_checks_passed" invisible="1"/>
                     <page name="zatca_einvoicing" string="ZATCA" invisible="country_code != 'SA' or type != 'sale'">
                         <group>
                             <group>

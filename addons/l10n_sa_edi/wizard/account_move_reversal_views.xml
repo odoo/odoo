@@ -7,7 +7,7 @@
             <field name="model">account.move.reversal</field>
             <field name="arch" type="xml">
                 <field name="reason" position="replace">
-                    <field name="country_code" invisible="1"/> <!-- TODO: to be removed in master -->
+                    <field name="country_code" invisible="1"/>
                     <field name="reason" string="Reason" invisible="move_type == 'entry' and country_code != 'SA'" required="country_code == 'SA'"/>
                 </field>
             </field>
