@@ -82,6 +82,29 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.test_move.action_post()
         self.assertMoveName(self.test_move, 'MyMISC/2020/0000001')
 
+    def test_payment_reference_updated_after_resequence(self):
+        """Update payment_reference after invoice name is resequenced."""
+        self.product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'consu',
+            'list_price': 10,
+        })
+        invoice = self.init_invoice('out_invoice', products=self.product_a)
+        invoice.action_post()
+        original_name = invoice.name
+        original_reference = invoice.payment_reference
+
+        wizard = self.env['account.resequence.wizard'].create({
+            'first_name': original_name.split('/')[0],
+            'move_ids': [Command.set([invoice.id])],
+            'ordering': 'keep',
+        })
+        wizard.resequence()
+
+        self.assertNotEqual(invoice.name, original_name)
+        self.assertNotEqual(invoice.payment_reference, original_reference)
+        self.assertEqual(invoice.payment_reference, invoice._get_invoice_computed_reference())
+
     def test_sequence_change_date_with_quick_edit_mode(self):
         """
         Test the sequence update behavior when changing the date of a move in quick edit mode.
