@@ -145,6 +145,15 @@ test("should remove a bold tag that was redondant while performing the command",
     }
 });
 
+test("should remove bold format when having newline character nodes in selection", async () => {
+    await testEditor({
+        contentBefore:
+            "<p><strong>[abc</strong></p>\n<p><strong>def</strong></p>\n<p><strong>ghi]</strong></p>",
+        stepFunction: bold,
+        contentAfter: "<p>[abc</p>\n<p>def</p>\n<p>ghi]</p>",
+    });
+});
+
 test("should remove a bold tag that was redondant with different tags while performing the command", async () => {
     await testEditor({
         contentBefore: unformat(`<p>
