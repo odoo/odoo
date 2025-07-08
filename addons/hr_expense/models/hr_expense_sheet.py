@@ -270,7 +270,7 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             sheet.payment_method_line_id = sheet.selectable_payment_method_line_ids[:1]
 
-    @api.depends('employee_journal_id', 'payment_method_line_id')
+    @api.depends('employee_journal_id', 'payment_method_line_id', 'payment_mode')
     def _compute_journal_id(self):
         for sheet in self:
             if sheet.payment_mode == 'company_account':

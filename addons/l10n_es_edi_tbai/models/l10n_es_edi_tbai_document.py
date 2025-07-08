@@ -413,7 +413,7 @@ class L10nEsEdiTbaiDocument(models.Model):
 
     def _get_sale_values(self, values):
         sale_values = {
-            'prev_doc': self.company_id._get_l10n_es_tbai_last_chained_document(),
+            'chain_prev_document': self.company_id._get_l10n_es_tbai_last_chained_document(),
             **self._get_regime_code_value(values['taxes'], values['is_simplified']),
         }
 

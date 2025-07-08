@@ -1159,12 +1159,12 @@ export class SearchModel extends EventBus {
                         selection: definition.selection,
                         sortable: true,
                         store: true,
-                        string: `${definition.string} (${definitionRecordName})`,
+                        string: definition.string,
                         type: definition.type,
                         relatedPropertyField: field,
                     };
 
-                    if (!searchItemsNames.includes(fullName)) {
+                    if (!searchItemsNames.includes(fullName) && definition.type !== "separator") {
                         const groupByItem = {
                             description: definition.string,
                             definitionRecordId,
