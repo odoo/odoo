@@ -13,6 +13,29 @@ class ResPartner(models.Model):
         index=True,
     )
 
+    def _compute_is_company(self):
+        """
+            A partner can be identified as a company in two ways:
+
+            1. VAT follows the European format:
+            - Starts with 'HU' and Followed by 8 digits
+            Example: HU12345678
+
+            2. VAT follows the Hungarian domestic format:
+            - 8 digits - [2/4/5] - 2 digits
+            Example: 12345678-2-43
+        """
+        l10n_hu_partners = self.filtered(lambda p: p.country_code == 'HU')
+        for partner in l10n_hu_partners:
+            if partner._is_vat_void(partner.vat):
+                partner.is_company = False
+                continue
+            vat = (partner.vat).replace(' ', '').upper()
+            partner.is_company = (vat.startswith('HU') and len(vat) == 10) \
+                or bool(self._check_tin_hu_companies_re.fullmatch(vat)) or False
+
+        super(ResPartner, self - l10n_hu_partners)._compute_is_company()
+
     @api.model
     def _commercial_fields(self):
         return super()._commercial_fields() + [
