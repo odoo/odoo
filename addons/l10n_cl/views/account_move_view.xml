@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <form>
-                <field name="l10n_latam_internal_type" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="l10n_latam_internal_type" invisible="1"/>
             </form>
         </field>
     </record>
@@ -44,8 +44,8 @@
                 <field name="amount_tax_signed" string="Tax" sum="Total" optional="show"/>
                 <field name="amount_total_signed" string="Total" sum="Total" optional="show"/>
                 <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="show"/>
-                <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'posted']"/> <!-- TODO: to be removed in master -->
-                <field name="company_currency_id" column_invisible="True"/> <!-- TODO: to be removed in master -->
+                <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'posted']"/>
+                <field name="company_currency_id" column_invisible="True"/>
                 <field name="state" optional="show"/>
                 <field name="payment_state" optional="hide"/>
                 <field name="move_type" column_invisible="context.get('default_move_type', True)"/>

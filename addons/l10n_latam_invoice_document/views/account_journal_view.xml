@@ -7,8 +7,8 @@
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
             <form>
-                <field name="country_code" invisible="1"/> <!-- TODO: to be removed in master -->
-                <field name="l10n_latam_company_use_documents" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="country_code" invisible="1"/>
+                <field name="l10n_latam_company_use_documents" invisible="1"/>
             </form>
             <field name="type" position="after">
                 <field name="l10n_latam_use_documents" invisible="not l10n_latam_company_use_documents or type not in ['purchase', 'sale']"/>
