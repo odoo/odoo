@@ -42,6 +42,7 @@ describe("Html Paste cleaning - whitelist", () => {
                         pasteHtml(editor, `a<${tagDescription}>b</${tagName}>c`);
                     },
                     contentAfter: "<p>123" + html + "[]4</p>",
+                    config: { baseContainer: "DIV" },
                 });
             }
         }
@@ -773,6 +774,17 @@ describe("Simple html elements containing <br>", () => {
                     pasteHtml(editor, "<div>abc<br>def</div>");
                 },
                 contentAfter: `<div>abc</div><div>def[]</div>`,
+                config: { baseContainer: "DIV" },
+            });
+        });
+
+        test("should split div with <br> (2)", async () => {
+            await testEditor({
+                contentBefore: "<p>[]<br></p>",
+                stepFunction: async (editor) => {
+                    pasteHtml(editor, "<div>abc<br>def</div>");
+                },
+                contentAfter: `<p>abc</p><p>def[]</p>`,
             });
         });
     });
@@ -1914,6 +1926,39 @@ describe("Complex html div", () => {
                 pasteHtml(editor, complexHtmlData);
             },
             contentAfter: `<div>abcdef</div><div dir="rtl">ghijkl</div><div>jklmno[]</div>`,
+            config: { baseContainer: "DIV" },
+        });
+    });
+
+    test("should convert div to a baseContainer (2)", async () => {
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, complexHtmlData);
+            },
+            contentAfter: `<p>abcdef</p><p dir="rtl">ghijkl</p><p>jklmno[]</p>`,
+        });
+    });
+
+    const copiedHtmlData = `<ol><li><div>abc</div><div></div></li><li><div></div><div style="white-space: break-spaces;"><span>def\nghi</span><br><span>jkl</span></div></li></ol>`;
+    test("should remove empty <div> elements from pasted content", async () => {
+        await testEditor({
+            contentBefore: "<p>12[]3</p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, copiedHtmlData);
+            },
+            contentAfter: `<p>12</p><ol><li><div>abc</div></li><li><div>def</div><div>ghi</div><div>jkl[]</div></li></ol><p>3</p>`,
+            config: { baseContainer: "DIV" },
+        });
+    });
+
+    test("should remove empty <div> elements from pasted content (2)", async () => {
+        await testEditor({
+            contentBefore: "<p>12[]3</p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, copiedHtmlData);
+            },
+            contentAfter: `<p>12</p><ol><li><p>abc</p></li><li><p>def</p><p>ghi</p><p>jkl[]</p></li></ol><p>3</p>`,
         });
     });
 });

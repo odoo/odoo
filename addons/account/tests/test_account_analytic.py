@@ -587,3 +587,70 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
             'balance': 340.0,
             'analytic_distribution': False,
         }])
+
+    def test_synchronization_between_analytic_distribution_and_analytic_lines(self):
+        """ Test creating, updating, and deleting analytic lines and ensure the changes are reflected in move_line's analytic_distribution. """
+        # Create an invoice with analytic distribution
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2023-01-01',
+            'invoice_date': '2023-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'analytic_distribution': {
+                        self.analytic_account_1.id: 40,
+                        self.analytic_account_2.id: 60,
+                    },
+                }),
+            ],
+        })
+
+        # Post the invoice
+        invoice.action_post()
+
+        # Fetch the associated move line and analytic lines
+        invoice_line = invoice.invoice_line_ids
+        analytic_lines = invoice_line.analytic_line_ids.sorted('amount')
+
+        # Update the account of the first analytic line
+        analytic_lines[0].write({
+            self.analytic_account_3.plan_id._column_name(): self.analytic_account_3.id,
+            'amount': 50,
+        })
+        self.assertEqual(invoice_line.analytic_distribution, {
+            f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 50,
+            f"{self.analytic_account_2.id}": 60,
+        })
+
+        # Delete the first analytic line
+        analytic_lines[0].unlink()
+        self.assertEqual(invoice_line.analytic_distribution, {
+            f"{self.analytic_account_2.id}": 60,
+        })
+
+        # Create analytic line
+        self.env['account.analytic.line'].create({
+            'name': 'Extra Analytic Line',
+            'account_id': self.analytic_account_1.id,
+            'amount': 30,
+            'move_line_id': invoice_line.id,
+        })
+        self.assertEqual(invoice_line.analytic_distribution, {
+            f"{self.analytic_account_1.id}": 30,
+            f"{self.analytic_account_2.id}": 60,
+        })
+
+        # Unlink from a move line
+        analytic_lines = invoice.invoice_line_ids.analytic_line_ids
+        analytic_lines.move_line_id = False
+        self.assertFalse(invoice_line.analytic_distribution)
+
+        # Link to a move line
+        analytic_lines.move_line_id = invoice_line
+        self.assertEqual(invoice_line.analytic_distribution, {
+            f"{self.analytic_account_1.id}": 30,
+            f"{self.analytic_account_2.id}": 60,
+        })
