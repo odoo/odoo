@@ -12,3 +12,7 @@ class HrEmployeePublic(models.Model):
     saturday_location_id = fields.Many2one('hr.work.location', string='Saturday')
     sunday_location_id = fields.Many2one('hr.work.location', string='Sunday')
     today_location_name = fields.Char()
+
+    hr_icon_display = fields.Selection(selection_add=[('presence_home', 'At Home'),
+                                                    ('presence_office', 'At Office'),
+                                                    ('presence_other', 'At Other')])
