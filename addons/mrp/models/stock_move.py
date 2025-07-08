@@ -86,8 +86,10 @@ class StockMoveLine(models.Model):
     def _compute_product_packaging_qty(self):
         # we catch kit lines where the packaging is still the one from the final product (it has
         # not been changed to a packaging of a component)
-        kit_lines = self.filtered(lambda move_line: move_line.move_id.bom_line_id.bom_id.type == 'phantom' and
-        move_line.product_id != move_line.move_id.product_packaging_id.product_id)
+        kit_lines = self.filtered(lambda move_line:
+            move_line.move_id.bom_line_id.bom_id.type == 'phantom'
+            and move_line.move_id.product_packaging_id
+            and move_line.product_id != move_line.move_id.product_packaging_id.product_id)
         for move_line in kit_lines:
             move = move_line.move_id
             bom_line = move.bom_line_id
