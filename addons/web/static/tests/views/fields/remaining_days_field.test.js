@@ -83,7 +83,12 @@ test("RemainingDaysField on a date field in list view", async () => {
 test.tags("desktop");
 test("RemainingDaysField on a date field in multi edit list view", async () => {
     mockDate("2017-10-08 15:35:11"); // October 8 2017, 15:35:11
-
+    onRpc("/web/view/save_multi", async function (request) {
+        const { params } = await request.json();
+        const { changes, ids, model } = params;
+        this.env[model].write(ids, changes);
+        expect.step("save_multi");
+    });
     Partner._records = [
         { id: 1, date: "2017-10-08" }, // today
         { id: 2, date: "2017-10-09" }, // tomorrow
@@ -125,6 +130,7 @@ test("RemainingDaysField on a date field in multi edit list view", async () => {
     expect(".o_data_row:eq(1) .o_data_cell:first").toHaveText("In 2 days", {
         message: "should have 'In 2 days' as date field value",
     });
+    expect.verifySteps(["save_multi"]);
 });
 
 test.tags("desktop");

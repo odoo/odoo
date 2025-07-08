@@ -7,6 +7,7 @@ import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 
 import { Component, useState } from "@odoo/owl";
+import { FieldOperator } from "@web/core/utils/field_operator";
 
 export class IntegerField extends Component {
     static template = "web.IntegerField";
@@ -54,6 +55,9 @@ export class IntegerField extends Component {
                 return "";
             }
             return this.value;
+        }
+        if (this.value instanceof FieldOperator) {
+            return this.value.operation;
         }
         if (this.props.humanReadable && !this.state.hasFocus) {
             return formatInteger(this.value, {
