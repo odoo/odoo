@@ -8,5 +8,6 @@ from . import (
     test_orm,
     test_performance,
     test_read_group,
+    test_rpc,
     test_unity_read,
 )
