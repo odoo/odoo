@@ -6,28 +6,32 @@ const MegaMenuDropdownEdit = (I) => class extends I {
         ...this.dynamicContent,
         ".o_mega_menu_toggle": {
             ...this.dynamicContent[".o_mega_menu_toggle"],
-            "t-on-shown.bs.dropdown": () => {
-                // Focus the mega menu to show its options. Click is
-                // listened to in BuilderOptionsPlugin to call updateContainers.
-                this.waitForTimeout(() => {
-                        document
-                            .querySelector(".o_mega_menu")
-                            .dispatchEvent(new PointerEvent("click", { bubbles: true }));
-                });
+            "t-on-click": (ev) => {
+                const toggleEl = ev.currentTarget;
+                const megaMenuEl = toggleEl.parentElement.querySelector(".o_mega_menu"); 
+                // Activate the mega menu options when shown.
+                if (!megaMenuEl || !megaMenuEl.classList.contains("show")) {
+                    this.websiteEditService.callShared("builderOptions", "deactivateContainers");  
+                } else {
+                    this.websiteEditService.callShared("builderOptions", "updateContainers", megaMenuEl);
+                }
             },
         },
     };
 
     setup() {
         super.setup();
-        const hasMegaMenu = this.el.querySelector(".o_mega_menu_toggle");
-        if (hasMegaMenu) {
-            const bsDropdown = window.Dropdown.getOrCreateInstance(".o_mega_menu_toggle");
-            this.registerCleanup(() => {
+        this.websiteEditService = this.services.website_edit;
+
+        // Hide all the open mega menus when destroying the interaction.
+        this.registerCleanup(() => {
+            const megaMenuToggleEls = this.el.querySelectorAll(".o_mega_menu_toggle.show");
+            for (const megaMenuToggleEl of megaMenuToggleEls) {
+                const bsDropdown = window.Dropdown.getOrCreateInstance(megaMenuToggleEl);
                 bsDropdown.hide();
                 bsDropdown.dispose();
-            });
-        }
+            }
+        });
     }
 };
 
