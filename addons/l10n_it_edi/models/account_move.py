@@ -597,6 +597,22 @@ class AccountMove(models.Model):
         skip = tax_data['is_reverse_charge'] or self._l10n_it_edi_is_neg_split_payment(tax_data)
         return not skip
 
+    def _prepare_product_base_line_for_taxes_computation(self, product_line):
+        """
+            Prepares tax base line. Rounding lines must appear in the XML,
+            so they are converted to regular lines with tax exemption code ('N2.2').
+        """
+        base_line = super()._prepare_product_base_line_for_taxes_computation(product_line)
+
+        if product_line.display_type == 'rounding':
+            base_line.update({
+                'quantity': 1,
+                'price_unit': -product_line.amount_currency,
+                'tax_ids': self._l10n_it_edi_search_tax_for_import(self.company_id, 0.0, l10n_it_exempt_reason='N2.2'),
+            })
+
+        return base_line
+
     def _l10n_it_edi_get_values(self, pdf_values=None):
         self.ensure_one()
 
@@ -611,7 +627,7 @@ class AccountMove(models.Model):
         convert_to_euros = self.currency_id.name != 'EUR'
 
         # Base lines.
-        base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product')
+        base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product' or x.display_type == 'rounding')
         base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
         tax_amls = self.line_ids.filtered(lambda x: x.display_type == 'tax')
         tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
