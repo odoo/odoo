@@ -110,3 +110,6 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         # Zero priced order
         self.start_tour(self_route, "self_order_mobile_0_price_order")
+
+        order = self.env['pos.order'].search([], limit=1)
+        self.assertEqual(order.picking_count, 1)
