@@ -83,7 +83,7 @@ class PurchaseReport(models.Model):
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id,
                     sum(p.weight * l.product_qty/line_uom.factor*product_uom.factor) as weight,
-                    sum(p.volume * l.product_qty/line_uom.factor*product_uom.factor) as volume,
+                    sum(p.volume * l.product_qty * line_uom.factor / product_uom.factor) as volume,
                     sum(l.price_subtotal / COALESCE(po.currency_rate, 1.0))::decimal(16,2) * account_currency_table.rate as untaxed_total,
                     sum(l.product_qty * line_uom.factor / product_uom.factor) as qty_ordered,
                     sum(l.qty_received * line_uom.factor / product_uom.factor) as qty_received,
