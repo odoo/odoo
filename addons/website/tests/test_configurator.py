@@ -90,6 +90,14 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
         patcher = patch('odoo.addons.website.models.ir_module_module.IrModuleModule._theme_upgrade_upstream', wraps=self._theme_upgrade_upstream)
         self.startPatcher(patcher)
 
+
+@odoo.tests.common.tagged('post_install', '-at_install')
+class TestConfigurator(TestConfiguratorCommon):
+
+    def test_configurator_params_step(self):
+        self.start_tour('/website/configurator/3', 'configurator_params_step', login='admin')
+
+
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestConfiguratorTranslation(TestConfiguratorCommon):
 
