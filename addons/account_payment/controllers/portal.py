@@ -35,6 +35,8 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
                 'amount_residual': discounted_amount,
                 'landing_route': invoice.get_portal_url(),
                 'transaction_route': f'/invoice/transaction/{invoice.id}',
+                'installment_state': values.get('installment_state'),
+                'next_amount_to_pay': values.get('next_amount_to_pay'),
             },
             access_token=access_token,
             **kwargs)
@@ -103,6 +105,8 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
                 'payment_reference': batch_name,
                 'landing_route': '/my/invoices/',
                 'transaction_route': '/invoice/transaction/overdue',
+                'installment_state': 'overdue',
+                'next_amount_to_pay': total_amount,
             },
             **kwargs)
         values |= common_view_values
@@ -117,11 +121,16 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         invoice_company = invoices_data['company'] or request.env.company
 
         availability_report = {}
+        # Get compatible providers using minor amount
+        valid_modes = ('next', 'overdue')
+        mode = kwargs.get('mode')
+        use_next_amount_to_pay = (invoices_data['installment_state'] in valid_modes and
+                                  invoices_data['total_amount'] != invoices_data['next_amount_to_pay'] and mode != 'full')
         # Select all the payment methods and tokens that match the payment context.
         providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
             invoice_company.id,
             partner_sudo.id,
-            invoices_data['total_amount'],
+            invoices_data['total_amount'] if not use_next_amount_to_pay else invoices_data['next_amount_to_pay'],
             currency_id=invoices_data['currency'].id,
             report=availability_report,
         )  # In sudo mode to read the fields of providers and partner (if logged out).
