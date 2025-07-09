@@ -7,7 +7,7 @@ from unittest.mock import patch
 from odoo import Command, api
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from odoo.tests import tagged
+from odoo.tests import tagged, loaded_demo_data
 from odoo.addons.account.tests.common import TestTaxCommon, AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.addons.point_of_sale.models.pos_config import PosConfig
@@ -2392,6 +2392,29 @@ class TestUi(TestPointOfSaleHttpCommon):
             "test_pos_order_shipping_date",
             login="pos_user",
         )
+
+    def test_load_pos_demo_data(self):
+        """ Test that the demo data can be loaded by admin but not by user. """
+
+        if loaded_demo_data(self.env):
+            self.skipTest('Cannot test with demo data.')
+
+        # Unlink existing product records
+        self.env['product.product'].sudo().search([]).unlink()
+
+        # cannot load by pos user
+        self.start_pos_tour('test_load_pos_demo_data_by_pos_user', login='pos_user')
+        products = self.env['product.product'].search([])
+        self.assertFalse(products, 'Demo data should not be loaded by user.')
+
+        # pos admin group access
+        self.pos_admin.write({
+            'group_ids': [Command.link(self.env.ref('base.group_system').id)],
+        })
+        # can load by pos admin
+        self.start_pos_tour('test_load_pos_demo_data_by_pos_admin', login='pos_admin')
+        products = self.env['product.product'].search([])
+        self.assertTrue(products, 'Demo data should be loaded by admin.')
 
 
 # This class just runs the same tests as above but with mobile emulation
