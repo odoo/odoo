@@ -106,8 +106,8 @@ class MaintenanceMixin(models.AbstractModel):
     def _compute_maintenance_request(self):
         for record in self:
             maintenance_requests = record.maintenance_ids.filtered(lambda mr: mr.maintenance_type == 'corrective' and mr.stage_id.done)
-            record.mttr = len(maintenance_requests) and (sum(int((request.close_date - request.request_date).days) for request in maintenance_requests) / len(maintenance_requests)) or 0
-            record.latest_failure_date = max((request.request_date for request in maintenance_requests), default=False)
+            record.mttr = len(maintenance_requests) and (sum(int((request.close_date - request.request_date).days) for request in maintenance_requests if request.request_date) / len(maintenance_requests)) or 0
+            record.latest_failure_date = max((request.request_date for request in maintenance_requests if request.request_date), default=False)
             record.mtbf = record.latest_failure_date and (record.latest_failure_date - record.effective_date).days / len(maintenance_requests) or 0
             record.estimated_next_failure = record.mtbf and record.latest_failure_date + relativedelta(days=record.mtbf) or False
 
@@ -318,6 +318,8 @@ class MaintenanceRequest(models.Model):
                 request.close_date = False
             if not request.close_date and request.stage_id.done:
                 request.close_date = fields.Date.today()
+            if not request.request_date:
+                request.request_date = fields.Date.today()
         maintenance_requests.activity_update()
         return maintenance_requests
 

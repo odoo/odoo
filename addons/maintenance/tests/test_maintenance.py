@@ -3,7 +3,8 @@
 
 import time
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, Form
+from odoo import fields
 
 class TestEquipment(TransactionCase):
     """ Test used to check that when doing equipment/maintenance_request/equipment_category creation."""
@@ -119,3 +120,34 @@ class TestEquipment(TransactionCase):
             {'kanban_state': 'blocked', 'stage_id': self.ref('maintenance.stage_0')},
             {'kanban_state': 'blocked', 'stage_id': self.ref('maintenance.stage_0')},
         ])
+
+    def test_handle_maintenance_request_without_date(self):
+        # Create a new equipment
+        equipment = self.equipment.with_user(self.manager).create({
+            'name': 'Laptop',
+        })
+
+        # Check that equipment is created or not
+        assert equipment, "Equipment not created"
+
+        # Create new maintenance request without request date
+        request_1 = self.maintenance_request.with_user(self.user).create({
+            'name': 'Not working',
+            'request_date': None,
+            'equipment_id': equipment.id,
+            'stage_id': self.ref('maintenance.stage_3'),
+        })
+        self.assertEqual(request_1.request_date, fields.Date.today())
+
+        # If the request date is already not set (before fix)
+        request_1.request_date = None
+        request_2 = self.maintenance_request.with_user(self.user).create({
+            'name': 'Display damaged',
+            'request_date': fields.Date.today(),
+            'close_date': fields.Date.add(fields.Date.today(), days=10),
+            'equipment_id': equipment.id,
+            'stage_id': self.ref('maintenance.stage_3'),
+        })
+        equipment_form = Form(equipment)
+        self.assertEqual(equipment_form.mttr, 5)
+        self.assertEqual(equipment_form.latest_failure_date, request_2.request_date.strftime('%Y-%m-%d'))
