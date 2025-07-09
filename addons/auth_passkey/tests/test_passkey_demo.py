@@ -131,13 +131,14 @@ class PasskeyTest(HttpCaseWithUserDemo):
             },
         }
 
+        now = self.env.cr.now()
         for key, values in self.passkeys.items():
             self.cr.execute(SQL(
                 """
                 INSERT INTO auth_passkey_key (name, credential_identifier, public_key, create_uid, write_date, create_date)
-                VALUES (%s, %s, %s, %s, NOW() AT TIME ZONE 'UTC', NOW() AT TIME ZONE 'UTC')
+                VALUES (%s, %s, %s, %s, %s, %s)
                 RETURNING id
-                """, key, values['credential_identifier'], values['public_key'], values['user'].id,
+                """, key, values['credential_identifier'], values['public_key'], values['user'].id, now, now
             ))
             passkey_id = self.cr.fetchone()
             values['passkey'] = self.env['auth.passkey.key'].browse(passkey_id)

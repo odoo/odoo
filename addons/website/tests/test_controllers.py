@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import os
 
+from datetime import datetime, timedelta
 from werkzeug.urls import url_encode
 
 from unittest.mock import patch, Mock
@@ -21,6 +23,8 @@ class TestControllers(tests.HttpCase):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         suggested_links_url = base_url + '/website/get_suggested_links'
 
+        fake_time_mode = os.getenv('ODOO_FAKETIME_MODE')
+
         old_pages = Page
         for i in range(0, 10):
             new_page = Page.create({
@@ -36,6 +40,8 @@ class TestControllers(tests.HttpCase):
             if i % 2 == 0:
                 old_pages += new_page
             else:
+                if fake_time_mode:
+                    new_page._write({'write_date': datetime.now() + timedelta(hours=1)})
                 last_5_url_edited.append(new_page.url)
 
         self.url_open(url=suggested_links_url, json={'params': {'needle': '/'}})

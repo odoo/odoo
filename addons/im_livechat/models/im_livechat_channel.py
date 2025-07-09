@@ -401,6 +401,7 @@ class Im_LivechatChannel(models.Model):
             return self.env["res.users"]
         if expertises is None:
             expertises = self.env["im_livechat.expertise"]
+        now = self.env.cr.now()
         self.env.cr.execute("""
             WITH operator_rtc_session AS (
                 SELECT COUNT(DISTINCT s.id) as nbr, member.partner_id as partner_id
@@ -412,15 +413,15 @@ class Im_LivechatChannel(models.Model):
             FROM discuss_channel c
             LEFT OUTER JOIN mail_message m ON c.id = m.res_id AND m.model = 'discuss.channel'
             LEFT OUTER JOIN operator_rtc_session rtc ON rtc.partner_id = c.livechat_operator_id
-            WHERE c.channel_type = 'livechat' AND c.create_date > ((now() at time zone 'UTC') - interval '24 hours')
+            WHERE c.channel_type = 'livechat' AND c.create_date > ((%s) - interval '24 hours')
             AND (
                 c.livechat_end_dt IS NULL
-                OR m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
+                OR m.create_date > ((%s) - interval '30 minutes')
             )
             AND c.livechat_operator_id in %s
             GROUP BY c.livechat_operator_id, rtc.nbr
             ORDER BY COUNT(DISTINCT c.id) < 2 OR rtc.nbr IS NULL DESC, COUNT(DISTINCT c.id) ASC, rtc.nbr IS NULL DESC""",
-            (tuple(users.partner_id.ids),)
+            (now, now, tuple(users.partner_id.ids),)
         )
         operator_statuses = self.env.cr.dictfetchall()
         # Try to match the previous operator

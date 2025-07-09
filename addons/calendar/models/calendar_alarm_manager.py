@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.tools import plaintext2html
+from odoo.tools.sql import SQL
 
 
 class CalendarAlarm_Manager(models.AbstractModel):
@@ -16,16 +17,17 @@ class CalendarAlarm_Manager(models.AbstractModel):
             self.env[model_name].flush_model()
 
         result = {}
-        delta_request = """
+        now = self.env.cr.now()
+        delta_request = SQL("""
             SELECT
                 rel.calendar_event_id, max(alarm.duration_minutes) AS max_delta,min(alarm.duration_minutes) AS min_delta
             FROM
                 calendar_alarm_calendar_event_rel AS rel
             LEFT JOIN calendar_alarm AS alarm ON alarm.id = rel.calendar_alarm_id
-            WHERE alarm.alarm_type = %s
+            WHERE alarm.alarm_type = %(alarm_type)s
             GROUP BY rel.calendar_event_id
-        """
-        base_request = """
+        """, alarm_type=alarm_type)
+        base_request = SQL("""
                     SELECT
                         cal.id,
                         cal.start - interval '1' minute  * calcul_delta.max_delta AS first_alarm,
@@ -45,44 +47,35 @@ class CalendarAlarm_Manager(models.AbstractModel):
                         calendar_event AS cal
                     RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
                     LEFT JOIN calendar_recurrence as rrule ON rrule.id = cal.recurrence_id
-             """
-
-        filter_user = """
-                RIGHT JOIN calendar_event_res_partner_rel AS part_rel ON part_rel.calendar_event_id = cal.id
-                    AND part_rel.res_partner_id IN %s
-        """
-
-        # Add filter on alarm type
-        tuple_params = (alarm_type,)
-
-        # Add filter on partner_id
-        if partners:
-            base_request += filter_user
-            tuple_params += (tuple(partners.ids), )
+                    %(partners_join)s
+             """, partners_join=SQL("""
+                    RIGHT JOIN calendar_event_res_partner_rel AS part_rel ON part_rel.calendar_event_id = cal.id
+                        AND part_rel.res_partner_id IN %(partner_ids)s
+            """, partner_ids=tuple(partners.ids))
+        )
 
         # Upper bound on first_alarm of requested events
         first_alarm_max_value = ""
         if seconds is None:
             # first alarm in the future + 3 minutes if there is one, now otherwise
-            first_alarm_max_value = """
+            first_alarm_max_value = SQL("""
                 COALESCE((SELECT MIN(cal.start - interval '1' minute  * calcul_delta.max_delta)
                 FROM calendar_event cal
                 RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
-                WHERE cal.start - interval '1' minute  * calcul_delta.max_delta > now() at time zone 'utc'
-            ) + interval '3' minute, now() at time zone 'utc')"""
+                WHERE cal.start - interval '1' minute  * calcul_delta.max_delta > %(now)s
+            ) + interval '3' minute, %(now)s)""", now=now)
         else:
             # now + given seconds
-            first_alarm_max_value = "(now() at time zone 'utc' + interval '%s' second )"
-            tuple_params += (seconds,)
+            first_alarm_max_value = SQL("(%(now)s + interval '%(seconds)s' second )", now=now, seconds=seconds)
 
         self.env.flush_all()
-        self.env.cr.execute("""
-            WITH calcul_delta AS (%s)
+        self.env.cr.execute(SQL("""
+            WITH calcul_delta AS (%(delta_request)s)
             SELECT *
-                FROM ( %s WHERE cal.active = True ) AS ALL_EVENTS
-               WHERE ALL_EVENTS.first_alarm < %s
-                 AND ALL_EVENTS.last_event_date > (now() at time zone 'utc')
-        """ % (delta_request, base_request, first_alarm_max_value), tuple_params)
+                FROM ( %(base_request)s WHERE cal.active = True ) AS ALL_EVENTS
+               WHERE ALL_EVENTS.first_alarm < %(first_alarm_max_value)s
+                 AND ALL_EVENTS.last_event_date > (%(now)s)
+        """, delta_request=delta_request, base_request=base_request, first_alarm_max_value=first_alarm_max_value, now=now))
 
         for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration, rule in self.env.cr.fetchall():
             result[event_id] = {
