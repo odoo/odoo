@@ -943,4 +943,10 @@ patch(PosStore.prototype, {
             }
         }
     },
+    getOrderData(order, reprint) {
+        return {
+            ...super.getOrderData(order, reprint),
+            customer_count: order.getCustomerCount(),
+        };
+    },
 });
