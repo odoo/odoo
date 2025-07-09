@@ -12,6 +12,7 @@
         'l10n_sa',
         'base_vat',
         'certificate',
+        'account_edi_ubl_cii_tax_extension'
     ],
     'summary': """
         E-Invoicing, Universal Business Language

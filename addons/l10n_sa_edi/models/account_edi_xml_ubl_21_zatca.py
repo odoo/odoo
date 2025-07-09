@@ -105,9 +105,9 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
         if supplier.country_id.code == 'SA':
             if tax and tax.amount != 0:
                 return 'S'
-            elif tax and tax.l10n_sa_exemption_reason_code in TAX_EXEMPTION_CODES:
+            elif tax and tax.ubl_cii_tax_exemption_reason_code in TAX_EXEMPTION_CODES:
                 return 'E'
-            elif tax and tax.l10n_sa_exemption_reason_code in TAX_ZERO_RATE_CODES:
+            elif tax and tax.ubl_cii_tax_exemption_reason_code in TAX_ZERO_RATE_CODES:
                 return 'Z'
             else:
                 return 'O'
@@ -116,8 +116,8 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
     def _get_tax_exemption_reason(self, customer, supplier, tax):
         if supplier.country_id.code == 'SA':
             if tax and tax.amount == 0:
-                exemption_reason_by_code = dict(tax._fields["l10n_sa_exemption_reason_code"]._description_selection(self.env))
-                code = tax.l10n_sa_exemption_reason_code
+                exemption_reason_by_code = dict(tax._fields["ubl_cii_tax_exemption_reason_code"]._description_selection(self.env))
+                code = tax.ubl_cii_tax_exemption_reason_code
                 return {
                     'tax_exemption_reason_code': code or "VATEX-SA-OOS",
                     'tax_exemption_reason': (
