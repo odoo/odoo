@@ -31,11 +31,7 @@ const patchHrPresenceStatus = () => ({
     },
 
     get location() {
-        let location = this.value?.split("_")[1] || "";
-        if (location && !['home', 'office', 'other'].includes(location)) {
-            location = "";
-        }
-        return location;
+        return this.props.record.data.work_location_type;
     },
 
     get label() {
@@ -52,6 +48,7 @@ patch(HrPresenceStatusPrivate.prototype, patchHrPresenceStatus());
 
 const additionalFieldDependencies = [
     { name: "hr_presence_state", type: "selection" },
+    { name: "work_location_type", type: "char" },
     { name: "work_location_name", type: "char" },
 ];
 if (typeof hrPresenceStatus.fieldDependencies === "function") {
