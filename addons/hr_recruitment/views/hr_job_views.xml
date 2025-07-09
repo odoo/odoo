@@ -235,10 +235,12 @@
                            help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
                     <div name="alias_def">
                         <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
-                        <div class="oe_edit_only" name="edit_alias">
-                            <field name="alias_name" class="oe_inline o_job_alias" placeholder="e.g. sales-manager"/>@
-                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
+                        <div class="oe_edit_only d-flex" name="edit_alias">
+                            <field name="alias_name" class="o_job_alias" placeholder="e.g. sales-manager"/>@
+                            <field name="alias_domain_id" placeholder="e.g. mycompany.com"
                                    options="{'no_create': True, 'no_open': True}"/>
+                            <field name="alias_email" widget="EmailAliasCopyClipboardButtonField" class="ms-2"
+                                options="{'btn_class': 'link'}" string="" invisible="not alias_email"/>
                         </div>
                         <div class="text-muted">Incoming emails create applications automatically. Use it for direct applications or when posting job offers on LinkedIn, Monster, etc.</div>
                     </div>
@@ -290,9 +292,11 @@
                 <div name="alias_def">
                     <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
                     <div class="oe_edit_only d-flex" name="edit_alias">
-                        <field name="alias_name" class="oe_inline" placeholder="e.g. jobs"/>@
-                        <field name="alias_domain_id" class="oe_inline" placeholder="e.g. domain.com"
+                        <field name="alias_name" placeholder="e.g. jobs"/>@
+                        <field name="alias_domain_id" placeholder="e.g. domain.com"
                                options="{'no_create': True, 'no_open': True}"/>
+                        <field name="alias_email" widget="EmailAliasCopyClipboardButtonField" class="ms-2"
+                            options="{'btn_class': 'link'}" string="" invisible="not alias_email"/>
                     </div>
                 </div>
             </xpath>
