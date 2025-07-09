@@ -213,6 +213,18 @@ class PosSelfOrderController(http.Controller):
 
         return {'order': order_sudo.read(order_sudo._load_pos_data_fields(pos_config.id), load=False), 'payment_status': status}
 
+    @http.route('/pos_self_order/kiosk/increment_nb_print/', auth='public', type='jsonrpc', website=True)
+    def pos_kiosk_increment_nb_print(self, access_token, order_id, order_access_token):
+        pos_config = self._verify_pos_config(access_token)
+        pos_order = pos_config.env['pos.order'].browse(order_id)
+
+        if not pos_order.exists() or not consteq(pos_order.access_token, order_access_token):
+            raise MissingError(_("Your order does not exist or has been removed"))
+
+        pos_order.write({
+            'nb_print': 1,
+        })
+
     @http.route('/pos-self-order/change-printer-status', auth='public', type='jsonrpc', website=True)
     def change_printer_status(self, access_token, has_paper):
         pos_config = self._verify_pos_config(access_token)
