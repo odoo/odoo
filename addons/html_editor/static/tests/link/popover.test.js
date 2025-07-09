@@ -1394,6 +1394,7 @@ describe("upload file via link popover", () => {
     });
 });
 
+<<<<<<< 1ee4e02daa0ffedbdff47e17e4e6a0fd80b472c9
 describe("apply button should be disabled when the URL is empty", () => {
     test("when URL on link is empty, the apply link button should be disabled (1)", async () => {
         await setupEditor("<p>this is a <a>li[]nk</a></p>");
@@ -1599,5 +1600,32 @@ describe("label is a valid URL", () => {
         await click(".o_we_edit_link");
         await waitFor(".o_we_href_input_link");
         expect("input.o_we_href_input_link").toHaveValue("https://odoo.com/");
+||||||| a7a29ed691db4f1607c0d12929c56845681164fa
+    describe("hidden label field", () => {
+        test("label field should be hidden if <a> content is not text only", async () => {
+            await setupEditor(`<a href="http://test.com/"><img src="${base64Img}">te[]xt</a>`);
+            await waitFor(".o-we-linkpopover");
+            expect(".o-we-linkpopover").toHaveCount(1);
+            // open edit mode and check if label input is hidden
+            await click(".o_we_edit_link");
+            await waitFor(".input-group", { timeout: 1500 });
+            expect(".o_we_label_link").not.toBeVisible();
+            expect(".o_we_href_input_link").toHaveValue("http://test.com/");
+        });
+=======
+    describe("hidden label field", () => {
+        test("label field should be hidden if <a> content is not text only", async () => {
+            await setupEditor(
+                `<p><a href="http://test.com/"><img src="${base64Img}">te[]xt</a></p>`
+            );
+            await waitFor(".o-we-linkpopover");
+            expect(".o-we-linkpopover").toHaveCount(1);
+            // open edit mode and check if label input is hidden
+            await click(".o_we_edit_link");
+            await waitFor(".o_we_href_input_link", { timeout: 1500 });
+            expect(".o_we_label_link").not.toBeVisible();
+            expect(".o_we_href_input_link").toHaveValue("http://test.com/");
+        });
+>>>>>>> 41d4103c995c6aab0293d29a4bb3f3a2870f81ec
     });
 });
