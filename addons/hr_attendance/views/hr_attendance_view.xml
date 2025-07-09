@@ -313,6 +313,7 @@
     <record id="hr_attendance_reporting" model="ir.actions.act_window">
         <field name="name">Attendances</field>
         <field name="res_model">hr.attendance</field>
+        <field name="path">attendance-report</field>
         <field name="view_mode">pivot,graph</field>
         <field name="search_view_id" ref="hr_attendance_view_filter"/>
         <field name="context">
@@ -444,7 +445,19 @@
 
     <menuitem id="menu_action_open_form" name="Kiosk Mode" action="open_kiosk_url" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance_manager"/>
 
-    <menuitem id="menu_hr_attendance_reporting" name="Reporting" action="hr_attendance_reporting" parent="menu_hr_attendance_root" sequence="15" groups="hr_attendance.group_hr_attendance_officer"/>
+    <menuitem
+        id="menu_hr_attendance_reporting"
+        name="Reporting"
+        parent="menu_hr_attendance_root"
+        sequence="15"
+        groups="hr_attendance.group_hr_attendance_officer"/>
+
+    <menuitem
+        id="menu_hr_attendance_attendance_reporting"
+        name="Attendances"
+        action="hr_attendance_reporting"
+        parent="menu_hr_attendance_reporting"
+        sequence="10"/>
 
     <menuitem id="menu_hr_attendance_overview" name="Overview" parent="menu_hr_attendance_root" sequence="5" groups="hr_attendance.group_hr_attendance_officer"/>
 
