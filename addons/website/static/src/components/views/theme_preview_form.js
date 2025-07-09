@@ -30,7 +30,7 @@ export function useLoaderOnClick() {
                     if (callback) {
                         callback.target = 'main';
                         await action.doAction(callback);
-                        if (callback.tag === 'website_preview' && callback.context.params.with_loader) {
+                        if (callback.tag === 'website_preview') {
                             keepLoader = true;
                         }
                     }
