@@ -1459,13 +1459,20 @@
                                 '|', '|' , '|', '|',
                                 ('name', 'ilike', self), ('invoice_origin', 'ilike', self),
                                 ('ref', 'ilike', self), ('payment_reference', 'ilike', self),
+<<<<<<< 5bf5c9a5d222179b85744ae934f5149fd335c2b4
                                 ('partner_id', 'child_of', self)]"/>
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="payment_reference"/>
+||||||| ee612ac3e859991becec964f91af8831324e840a
+                                ('partner_id', 'child_of', self)]"/>
+=======
+                                ('partner_id', 'child_of', self)]"
+                            context="{'active_test': False}"/>
+>>>>>>> 11e323b01cfae34a1aee45ce103b7c995795258b
                     <field name="journal_id"/>
-                    <field name="partner_id" operator="child_of"/>
-                    <field name="invoice_user_id" string="Salesperson" domain="[('share', '=', False)]"/>
+                    <field name="partner_id" operator="child_of" context="{'active_test': False}" />
+                    <field name="invoice_user_id" string="Salesperson" domain="[('share', '=', False)]" />
                     <field name="date" string="Period"/>
                     <field name="line_ids" string="Invoice Line"/>
                     <filter domain="[('invoice_user_id', '=', uid)]" name="myinvoices" help="My Invoices"/>
