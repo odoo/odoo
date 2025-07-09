@@ -689,9 +689,10 @@ class ResourceCalendar(models.Model):
     def _get_days_per_week(self):
         # If the employee didn't work a full day, it is still counted, i.e. 19h / week (M/T/W(half day)) -> 3 days
         self.ensure_one()
-        days = len(set(self.attendance_ids.filtered(
-            lambda attendance_id: attendance_id._is_work_period() and attendance_id.duration_hours)
-            .mapped(lambda attendance_id: f"{attendance_id.week_type} {attendance_id.dayofweek}")))
+        days = len(set(
+            (attendance.week_type, attendance.dayofweek)  # ensure week + weekday unicity
+            for attendance in self.attendance_ids.filtered(lambda a: a._is_work_period() and a.duration_hours)
+        ))
         return days / 2 if self.two_weeks_calendar else days
 
     def _get_global_attendances(self):
