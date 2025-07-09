@@ -77,7 +77,9 @@ test("install an app from snippet group", async () => {
     await click(`.o-snippets-menu #snippet_groups .o_snippet .btn.o_install_btn`);
     await animationFrame();
     expect(".modal").toHaveCount(1);
-    expect(".modal-body").toHaveText("Do you want to install module_A App?\nMore info about this app.");
+    expect(".modal-body").toHaveText(
+        "Do you want to install module_A App?\nMore info about this app."
+    );
 
     await contains(".modal .btn-primary:contains('Save and Install')").click();
     expect.verifySteps([`button_immediate_install`]);

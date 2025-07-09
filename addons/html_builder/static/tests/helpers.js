@@ -9,7 +9,7 @@ import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { after } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, waitFor, queryOne } from "@odoo/hoot-dom";
 import { Component, onMounted, useRef, useState, useSubEnv, xml } from "@odoo/owl";
 import {
     defineModels,
@@ -20,6 +20,7 @@ import {
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
+import { loadBundle } from "@web/core/assets";
 
 export function patchWithCleanupImg() {
     const defaultImg =
@@ -259,4 +260,29 @@ export function addBuilderAction(actions = {}) {
         };
     }
     addBuilderPlugin(P);
+}
+
+export function addDropZoneSelector(selector) {
+    const pluginId = uniqueId("test-dropzone-selector");
+
+    class P extends Plugin {
+        static id = pluginId;
+        resources = {
+            dropzone_selector: [selector],
+        };
+    }
+
+    registry.category("website-plugins").add(pluginId, P);
+    after(() => {
+        registry.category("website-plugins").remove(P);
+    });
+}
+
+export async function waitForSnippetDialog() {
+    await animationFrame();
+    await loadBundle("html_builder.iframe_add_dialog", {
+        targetDoc: queryOne("iframe.o_add_snippet_iframe").contentDocument,
+        js: false,
+    });
+    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe");
 }
