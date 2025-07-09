@@ -1474,14 +1474,18 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
 }
 
 // Parallax
+// ".parallax > .s_parallax_bg" selector are kept for compatibility.
 .parallax {
-    // TODO this introduces a limitation: no dropdown will be able to
-    // overflow. Maybe there is a better way to find.
-    &:not(.s_parallax_no_overflow_hidden) {
+    // Kept for compatibility. Before "s_parallax_bg" was wrapped by an
+    // intermediate parent element to clip it ("s_parallax_bg_wrap"), its direct
+    // parent was the section with the "parallax" class, which had the CSS rule
+    // "overflow: hidden". That was not the right solution because it introduced
+    // a limitation: no dropdown could overflow, for example.
+    &:where(:not(.s_parallax_no_overflow_hidden):not(:has(> .s_parallax_bg_wrap))) {
         overflow: hidden;
     }
 
-    > .s_parallax_bg {
+    > .s_parallax_bg, > .s_parallax_bg_wrap > .s_parallax_bg, > .s_parallax_bg_wrap {
         @extend %o-we-background-layer;
     }
     @include media-breakpoint-up(xl) {
@@ -1489,8 +1493,10 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         // which is not a big deal but, on some of them (iOS...), defining the
         // background as fixed breaks the background-size/position props.
         // So we enable this only for >= XL devices.
-        &.s_parallax_is_fixed > .s_parallax_bg {
-            background-attachment: fixed;
+        &.s_parallax_is_fixed {
+            > .s_parallax_bg, > .s_parallax_bg_wrap > .s_parallax_bg {
+                background-attachment: fixed;
+            }
         }
     }
 }

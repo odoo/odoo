@@ -27,10 +27,10 @@ class WebsiteParallaxPlugin extends Plugin {
         const isParallax = value !== "none";
         editingElement.classList.toggle("parallax", isParallax);
         editingElement.classList.toggle("s_parallax_is_fixed", value === "fixed");
-        editingElement.classList.toggle(
-            "s_parallax_no_overflow_hidden",
-            value === "none" || value === "fixed"
-        );
+        // Kept for compatibility. The "s_parallax_no_overflow_hidden" class may
+        // still appear when "s_parallax_bg" hasn’t yet been wrapped in
+        // "s_parallax_bg_wrap".
+        editingElement.classList.remove("s_parallax_no_overflow_hidden");
         const typeValues = {
             none: 0,
             fixed: 1,
@@ -48,17 +48,31 @@ class WebsiteParallaxPlugin extends Plugin {
         } else {
             delete editingElement.dataset.parallaxType;
         }
-        let parallaxEl = editingElement.querySelector(":scope > .s_parallax_bg");
+
+        let parallaxBgEl = editingElement
+            .querySelector(":scope > .s_parallax_bg, :scope > .s_parallax_bg_wrap .s_parallax_bg");
+        const parallaxBgWrapEl = editingElement.querySelector(":scope > .s_parallax_bg_wrap");
         if (isParallax) {
-            if (!parallaxEl) {
-                parallaxEl = document.createElement("span");
-                parallaxEl.classList.add("s_parallax_bg");
-                editingElement.prepend(parallaxEl);
-                this.dependencies.backgroundImageOption.changeEditingEl(editingElement, parallaxEl);
+            if (!parallaxBgEl) {
+                parallaxBgEl = document.createElement("span");
+                parallaxBgEl.classList.add("s_parallax_bg");
             }
-        } else if (parallaxEl) {
-            this.dependencies.backgroundImageOption.changeEditingEl(parallaxEl, editingElement);
-            parallaxEl.remove();
+            // For compatibility, check if not "parallaxBgWrapEl" separately.
+            // "parallaxBgEl" may exist without "parallaxBgWrapEl".
+            if (!parallaxBgWrapEl) {
+                const newWrapEl = document.createElement("span");
+                newWrapEl.classList.add("s_parallax_bg_wrap");
+                newWrapEl.appendChild(parallaxBgEl);
+                editingElement.prepend(newWrapEl);
+                this.dependencies.backgroundImageOption.changeEditingEl(editingElement, parallaxBgEl);
+            }
+        } else if (parallaxBgEl) {
+            this.dependencies.backgroundImageOption.changeEditingEl(parallaxBgEl, editingElement);
+            if (parallaxBgWrapEl) {
+                parallaxBgWrapEl.remove();
+            } else {
+                parallaxBgEl.remove(); // Kept for compatibility.
+            }
         }
     }
     onBgImageHide(rootEl) {
@@ -71,7 +85,9 @@ class WebsiteParallaxPlugin extends Plugin {
         }
     }
     removeParallax(editingEl) {
-        const parallaxEl = editingEl.querySelector(":scope > .s_parallax_bg");
+        // ":scope > .s_parallax_bg" is kept for compatibility
+        const parallaxEl = editingEl
+            .querySelector(":scope > .s_parallax_bg, :scope > .s_parallax_bg_wrap");
         const bgImage = parallaxEl?.style.backgroundImage;
         if (
             !parallaxEl ||
@@ -89,7 +105,13 @@ class WebsiteParallaxPlugin extends Plugin {
         }
     }
     getTargetElement(editingEl) {
-        return editingEl.classList.contains("s_parallax_bg") ? editingEl.parentElement : editingEl;
+        if (editingEl.matches(".s_parallax_bg")) {
+            const parallaxBgParentEl = editingEl.parentElement;
+            return parallaxBgParentEl.matches(".s_parallax_bg_wrap")
+                ? parallaxBgParentEl.parentElement
+                : parallaxBgParentEl; // <- kept for compatibility
+        }
+        return editingEl;
     }
 }
 export class SetParallaxTypeAction extends BuilderAction {

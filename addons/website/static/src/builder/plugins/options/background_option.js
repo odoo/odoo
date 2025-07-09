@@ -21,9 +21,12 @@ export class WebsiteBackgroundOption extends BaseOptionComponent {
         super.setup();
         const { showColorFilter } = useBackgroundOption(this.isActiveItem);
         this.showColorFilter = () => showColorFilter() || this.isActiveItem("toggle_bg_video_id");
+        // ":scope > .s_parallax_bg" is kept for compatibility.
+        const parallaxBgSelector =
+            ":scope > .s_parallax_bg, :scope > .s_parallax_bg_wrap > .s_parallax_bg";
         this.websiteBgOptionDomState = useDomState((el) => ({
             // Only search for .s_parallax_bg that are direct children
-            applyTo: el.querySelector(":scope > .s_parallax_bg") ? ".s_parallax_bg" : "",
+            applyTo: el.querySelector(parallaxBgSelector) ? parallaxBgSelector : "",
         }));
     }
 }
