@@ -1,4 +1,4 @@
-import { after, before, WIDTH } from "@html_builder/utils/option_sequence";
+import { after, before, END, VERTICAL_ALIGNMENT } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
@@ -9,11 +9,11 @@ class HorizontalPaddingOptionPlugin extends Plugin {
     resources = {
         mark_color_level_selector_params: [{ selector: this.selector }],
         builder_options: [
-            withSequence(after(WIDTH)), {
+            withSequence(after(VERTICAL_ALIGNMENT), {
                 template: "mass_mailing.HorizontalPaddingOption",
                 selector: this.selector,
                 exclude: ".s_col_no_resize.row > div, .s_col_no_resize",
-            },
+            }),
         ],
     };
 }

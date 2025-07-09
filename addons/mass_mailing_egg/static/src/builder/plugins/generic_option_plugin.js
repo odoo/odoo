@@ -1,4 +1,4 @@
-import { after, before, WIDTH } from "@html_builder/utils/option_sequence";
+import { after, before, LAYOUT_COLUMN, WIDTH } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
@@ -14,11 +14,11 @@ class GenericBlockOptionPlugin extends Plugin {
                 selector: ".o_mail_snippet_general",
                 applyTo: "* > *:has(> .row:not(.s_nb_column_fixed)), * > .s_allow_columns"
             }),
-            {
-                template: "mass_mailing.BlockquoteOption",
+            withSequence(after(LAYOUT_COLUMN),{
+                template: "mass_mailing.HeightOption",
                 selector: ".o_mail_snippet_general",
                 exclude: ".o_mail_snippet_general .row > div *"
-            },
+            }),
         ],
         so_snippet_addition_selector: [".o_mail_snippet_general"],
         so_content_addition_selector: [
