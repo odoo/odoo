@@ -157,8 +157,10 @@ export class MediaPlugin extends Plugin {
             } else {
                 node.replaceWith(element);
             }
+            this.dispatchTo("on_replaced_media_handlers", { newMediaEl: element });
         } else {
             this.dependencies.dom.insert(element);
+            this.dispatchTo("on_added_media_handlers", { newMediaEl: element });
         }
         // Collapse selection after the inserted/replaced element.
         const [anchorNode, anchorOffset] = rightPos(element);
