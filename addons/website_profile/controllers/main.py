@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from urllib.parse import urlparse, urlunparse
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.urls
@@ -91,6 +92,20 @@ class WebsiteProfile(http.Controller):
             field_name=field, width=int(width), height=int(height), crop=crop
         ).get_response()
 
+    def _get_from_label(self, path):
+        return None
+
+    def _calculate_from_path_and_url(self):
+        if url_from := request.params.get('url_from'):
+            return urlparse(url_from).path, url_from
+        referer_url = request.httprequest.headers.get('Referer')
+        if not referer_url:
+            return None, None
+        referer = urlparse(referer_url)
+        if urlparse(request.httprequest.url).netloc != referer.netloc:
+            return None, None
+        return referer.path, urlunparse(('', '', referer.path or '/', '', referer.query, referer.fragment))
+
     @http.route('/profile/user/<int:user_id>', type='http', auth='public', website=True, readonly=True)
     def view_user_profile(self, user_id, **post):
         user_sudo, denial_reason = self._check_user_profile_access(user_id)
@@ -99,6 +114,12 @@ class WebsiteProfile(http.Controller):
         values = self._prepare_user_values(**post)
         params = self._prepare_user_profile_parameters(**post)
         values.update(self._prepare_user_profile_values(user_sudo, **params))
+
+        path_from, url_from = self._calculate_from_path_and_url()
+        url_from_label = self._get_from_label(path_from)
+        values['url_from'] = url_from
+        values['url_from_label'] = url_from_label
+
         return request.render("website_profile.user_profile_main", values)
 
     # Edit Profile

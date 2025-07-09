@@ -6,6 +6,13 @@
             <div class="container">
                 <div class="row align-items-center justify-content-between">
                     <!-- Desktop Mode -->
+                    <div t-if="url_from" class="o_wprofile_all_users_nav_btn_container col pe-0 flex-grow-0">
+                        <a t-att-href="url_from" class="o_wprofile_all_users_nav_btn btn text-nowrap">
+                            <i class="oi oi-chevron-left small"/>
+                            <t t-if="url_from_label" t-out="url_from_label"></t>
+                            <t t-else="">Back</t>
+                        </a>
+                    </div>
                     <nav aria-label="breadcrumb" class="col d-none d-md-flex">
                         <ol class="breadcrumb bg-transparent mb-0 ps-0 py-0">
                             <li t-attf-class="breadcrumb-item #{'active' if not view_user else ''}">
@@ -105,7 +112,7 @@
                                 <span t-field="user.name"/><small t-if="user.karma == 0"> (not verified)</small>
                             </h1>
                             <a class="btn o_wprofile_editor btn-primary d-none d-md-inline-block" t-if="(request.env.user == user and user.karma != 0) or request.env.user._is_admin()"
-                                t-att-data-user-id="user.id">
+                                t-att-data-user-id="user.id" t-att-data-url-from="url_from">
                                 <i class="fa fa-pencil me-2"/>EDIT PROFILE
                             </a>
                         </div>
@@ -188,7 +195,7 @@
                             <div t-if="user.partner_id.website_description" class="mb32">
                                 <t t-if="request.env.user == user and user.karma != 0 or request.env.user._is_admin()">
                                     <a href="#" class="o_wprofile_editor btn btn-link float-end"
-                                        t-att-data-user-id="user.id" data-focus-website-description="true">
+                                        t-att-data-user-id="user.id" t-att-data-url-from="url_from" data-focus-website-description="true">
                                         <i class="fa fa-pencil me-1"/>Edit
                                     </a>
                                 </t>
