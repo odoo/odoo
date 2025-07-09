@@ -1,6 +1,5 @@
 import code
 import logging
-import optparse
 import os
 import signal
 import sys
@@ -39,6 +38,22 @@ SHELLS = ['ipython', 'ptpython', 'bpython', 'python']
 class Shell(Command):
     """Start odoo in an interactive shell"""
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.parser.add_argument(
+            '-c', '--config', dest='config',
+            help="use a specific configuration file")
+        self.parser.add_argument(
+            '-d', '--database', dest='db_name', default=None,
+            help="database name, connection details will be taken from the config file")
+        self.parser.add_argument(
+            '--shell-file', default=os.environ.get('PYTHONSTARTUP'),
+            help="Specify a python script to be run after the start of the shell. "
+                 "Overrides the env variable PYTHONSTARTUP.")
+        self.parser.add_argument(
+            '--shell-interface', choices=SHELLS,
+            help="Specify a preferred REPL to use in shell mode.")
+
     @contextmanager
     def _build_env(self, dbname):
         if dbname:
@@ -49,6 +64,70 @@ class Shell(Command):
                 cr.rollback()
         else:
             yield None
+
+    def run(self, cmdargs):
+        parsed_args = self.parser.parse_args(args=cmdargs)
+
+        config_args = []
+        if parsed_args.config:
+            config_args += ['-c', parsed_args.config]
+        if parsed_args.db_name:
+            config_args += ['-d', parsed_args.db_name]
+
+        config.parse_config(config_args, setup_logging=True)
+        cli_server.report_configuration()
+
+        db_names = config['db_name']
+        if not db_names:
+            _logger.warning("No dbname was specified, Environment won't be available")
+        elif len(db_names) > 1:
+            self.parser.error("Please provide a single database")
+        parsed_args.db_name = next(iter(db_names), None)
+
+        pythonstartup = parsed_args.shell_file or os.environ.get('PYTHONSTARTUP')
+        preferred_interface = parsed_args.shell_interface
+        shells_to_try = [preferred_interface, 'python'] if preferred_interface else SHELLS
+
+        threading.current_thread().dbname = parsed_args.db_name
+
+        def raise_keyboard_interrupt(*a):
+            raise KeyboardInterrupt()
+        signal.signal(signal.SIGINT, raise_keyboard_interrupt)
+        server.start(preload=[], stop=True)
+
+        local_vars = {
+            'openerp': odoo,
+            'odoo': odoo,
+        }
+        with self._build_env(parsed_args.db_name) as env:
+            if env:
+                local_vars.update({
+                    'env': env,
+                    'self': env.user,
+                })
+            else:
+                _logger.warning('No environment set, use `%s shell -d dbname` to get one.', sys.argv[0])
+
+            if not os.isatty(sys.stdin.fileno()):
+                # If not interactive, read and run the script from stdin
+                local_vars['__name__'] = '__main__'
+                exec(sys.stdin.read(), local_vars)
+                return
+
+            for key, val in sorted(local_vars.items()):
+                print(f'{key}: {val}')  # noqa: T201
+
+            for shell in shells_to_try:
+                try:
+                    shell_func = getattr(self, shell)
+                    shell_func(local_vars, pythonstartup)
+                    break
+                except ImportError:
+                    if shell == preferred_interface:
+                        _logger.warning("Could not start '%s' shell.", shell)
+                except Exception:  # noqa: BLE001
+                    _logger.warning("Could not start '%s' shell.", shell)
+                    _logger.debug("Shell error:", exc_info=True)
 
     def ipython(self, local_vars, pythonstartup=None):
         from IPython import start_ipython  # noqa: PLC0415
@@ -92,70 +171,3 @@ class Shell(Command):
             with open(pythonstartup, encoding='utf-8') as f:
                 console.runsource(f.read(), filename=pythonstartup, symbol='exec')
         console.interact(banner='')
-
-    def run(self, args):
-        config.parser.prog = self.prog
-
-        group = optparse.OptionGroup(config.parser, "Shell options")
-        group.add_option(
-            '--shell-file', dest='shell_file', type='string', my_default='',
-            help="Specify a python script to be run after the start of the shell. "
-                 "Overrides the env variable PYTHONSTARTUP."
-        )
-        group.add_option(
-            '--shell-interface', dest='shell_interface', type='string',
-            help="Specify a preferred REPL to use in shell mode. "
-                 "Supported REPLs are: [ipython|ptpython|bpython|python]"
-        )
-        config.parser.add_option_group(group)
-        config.parse_config(args, setup_logging=True)
-        cli_server.report_configuration()
-
-        dbnames = config['db_name']
-        if len(dbnames) > 1:
-            sys.exit("-d/--database/db_name has multiple database, please provide a single one")
-        dbname = dbnames[0] if dbnames else None
-
-        pythonstartup = config.options.get('shell_file') or os.environ.get('PYTHONSTARTUP')
-        preferred_interface = config.options.get('shell_interface')
-        shells_to_try = [preferred_interface, 'python'] if preferred_interface else SHELLS
-
-        threading.current_thread().dbname = dbname
-
-        def raise_keyboard_interrupt(*a):
-            raise KeyboardInterrupt()
-        signal.signal(signal.SIGINT, raise_keyboard_interrupt)
-        server.start(preload=[], stop=True)
-
-        local_vars = {
-            'openerp': odoo,
-            'odoo': odoo,
-        }
-        with self._build_env(dbname) as env:
-            if env:
-                local_vars.update({
-                    'env': env,
-                    'self': env.user,
-                })
-            else:
-                _logger.warning('No environment set, use `%s shell -d dbname` to get one.', sys.argv[0])
-
-            if not os.isatty(sys.stdin.fileno()):
-                # If not interactive, read and run the script from stdin
-                local_vars['__name__'] = '__main__'
-                exec(sys.stdin.read(), local_vars)
-                return
-
-            for key, val in sorted(local_vars.items()):
-                print(f'{key}: {val}')  # noqa: T201
-
-            for shell in shells_to_try:
-                try:
-                    shell_func = getattr(self, shell)
-                    shell_func(local_vars, pythonstartup)
-                    break
-                except ImportError:
-                    pass
-                except Exception:  # noqa: BLE001
-                    _logger.warning("Could not start '%s' shell.", shell)
-                    _logger.debug("Shell error:", exc_info=True)
