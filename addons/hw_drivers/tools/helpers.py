@@ -383,10 +383,15 @@ def download_iot_handlers(auto=True, server_url=None):
     except KeyError:
         _logger.exception('No ETag in the response headers')
 
-    delete_iot_handlers()
-    with writable():
-        path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
+    try:
         zip_file = zipfile.ZipFile(io.BytesIO(data))
+    except zipfile.BadZipFile:
+        _logger.exception('Bad IoT handlers response received: not a zip file')
+        return
+
+    delete_iot_handlers()
+    path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
+    with writable():
         zip_file.extractall(path)
 
 
