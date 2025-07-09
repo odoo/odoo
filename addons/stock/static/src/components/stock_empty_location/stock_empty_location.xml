@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="stock.StockEmptyLocation" t-inherit="web.AutoComplete">
+        <xpath expr="//t[@t-slot='{{ source.optionSlot }}']" position="replace">
+            <t t-slot="{{ source.optionSlot }}" option="Object.getPrototypeOf(option)">
+                <span class="d-flex justify-content-between">
+                    <div class="text-truncate" t-out="option.label" t-att-title="option.label"/>
+                    <div t-if="option.isEmpty" class="text-muted ms-2 fs-4 lh-1 fst-italic opacity-75">Empty</div>
+                </span>
+            </t>
+        </xpath>
+    </t>
+</templates>
