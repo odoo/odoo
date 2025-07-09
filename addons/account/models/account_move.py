@@ -4184,6 +4184,41 @@ class AccountMove(models.Model):
         for move in self:
             move.to_check = False
 
+    def _split_filename_extension(self, attachment_name):
+        if '.' in attachment_name:
+            return '.'.join(attachment_name.split('.')[:-1]), '.' + attachment_name.split('.')[-1]
+        else:
+            return attachment_name, ''
+
+    def _get_fields_to_detach(self):
+        """"
+        Returns a list of field names to detach on resetting an invoice to draft. Can be overridden by other modules to
+        add more fields.
+        """
+        return ['invoice_pdf_report_file']
+
+    def _detach_attachments(self):
+        """
+        Called by button_draft to detach specific attachments for the current journal entries to allow regeneration.
+        """
+        files_to_detach = self.sudo().env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', 'in', self.ids),
+            ('res_field', 'in', self._get_fields_to_detach()),
+        ])
+        if files_to_detach:
+            files_to_detach.res_field = False
+            today = format_date(self.env, fields.Date.context_today(self))
+            for attachment in files_to_detach:
+                attachment_name, attachment_extension = self._split_filename_extension(attachment.name)
+                attachment.name = _(
+                    '%(attachment_name)s (detached by %(user)s on %(date)s)%(attachment_extension)s',
+                    attachment_name=attachment_name,
+                    attachment_extension=attachment_extension,
+                    user=self.env.user.name,
+                    date=today,
+                )
+
     def button_draft(self):
         if any(move.state not in ('cancel', 'posted') for move in self):
             raise UserError(_("Only posted/cancelled journal entries can be reset to draft."))
@@ -4195,6 +4230,8 @@ class AccountMove(models.Model):
         self.mapped('line_ids.analytic_line_ids').unlink()
         self.mapped('line_ids').remove_move_reconcile()
         self.state = 'draft'
+
+        self._detach_attachments()
 
     def _check_draftable(self):
         exchange_move_ids = set()
