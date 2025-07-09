@@ -27,12 +27,13 @@ class DesignTabPlugin extends Plugin {
                     title: _t("Body"),
                 })
             ),
-            // withSequence(
-            //     OPTION_POSITIONS.HEADINGS,
-            //     this.getDesignOptionBlock("design-headings", _t("Headings"), {
-            //         template: "mass_mailing_egg.DesignHeadingsOption",
-            //     })
-            // ),
+            withSequence(
+                OPTION_POSITIONS.HEADINGS,
+                this.getDesignOptionBlock("design-headings", {
+                    template: "mass_mailing_egg.DesignHeadingsOption",
+                    title: _t("Headings"),
+                })
+            ),
             // withSequence(
             //     OPTION_POSITIONS.PARAGRAPH,
             //     this.getDesignOptionBlock("design-paragraph", _t("Paragraph"), {

@@ -17,7 +17,7 @@ export class CustomizeMailingPlugin extends Plugin {
 
     resources = {
         builder_actions: {
-            CustomizeMassMailingStyleProperty,
+            CustomizeStyleProperty,
         },
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
     };
@@ -138,8 +138,8 @@ export const PRIORITY_STYLES = {
     hr: new Set(["border-top-width", "border-top-style", "border-top-color"]),
 };
 
-export class CustomizeMassMailingStyleProperty extends BuilderAction {
-    static id = "mass_mailing_egg.CustomizeMassMailingStyleProperty";
+export class CustomizeStyleProperty extends BuilderAction {
+    static id = "mass_mailing_egg.CustomizeStyleProperty";
     static dependencies = ["builderActions", "mass_mailing.CustomizeMailingPlugin", "history"];
     isApplied({ value }) {
         return this.getValue(...arguments) === value;
