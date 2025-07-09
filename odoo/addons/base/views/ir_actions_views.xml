@@ -376,7 +376,7 @@
                             </div>
                             <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'object_write'">
                                 <field name="evaluation_type" class="oe_inline"/>
-                                <field name="update_path" widget="field_selector" class="oe_inline" options="{'model': 'model_name'}"/>
+                                <field name="update_path" widget="field_selector" class="oe_inline" options="{'model': 'model_name', 'allow_properties': False}"/>
                                 <field name="update_field_id" invisible="True"/>  <!-- The field is store=True and readonly=False, in this view we want to save the value from compute/onchange -->
                                 <field name="update_related_model_id" invisible="True"/> <!-- This field is required for 'resource_ref' to compute possible m2m and m2o values -->
                                 <span invisible="evaluation_type != 'value' or update_field_type not in ['one2many', 'many2many']">by</span>
