@@ -164,6 +164,7 @@ export class LinkPlugin extends Plugin {
                     return (
                         !!linkEl &&
                         !this.isLinkImmutable(linkEl) &&
+                        !this.isUnremovable(linkEl) &&
                         isHtmlContentSupported(selection)
                     );
                 },
@@ -589,6 +590,7 @@ export class LinkPlugin extends Plugin {
             recordInfo: this.config.getRecordInfo?.() || {},
             canEdit:
                 !this.linkInDocument || !this.linkInDocument.classList.contains("o_link_readonly"),
+            canRemove: this.linkInDocument && !this.isUnremovable(this.linkInDocument),
             canUpload: this.config.allowFile,
             onUpload: this.config.onAttachmentChange,
             type: this.type || "",
@@ -799,10 +801,17 @@ export class LinkPlugin extends Plugin {
         this.dependencies.selection.setCursorEnd(linkElement);
     }
 
+    isUnremovable(linkEl) {
+        return this.getResource("unremovable_node_predicates").some((p) => p(linkEl));
+    }
+
     /**
      * Remove the link from the collapsed selection
      */
     removeLinkInDocument(link = this.linkInDocument) {
+        if (this.isUnremovable(link)) {
+            return;
+        }
         const cursors = this.dependencies.selection.preserveSelection();
         if (link && link.isContentEditable) {
             cursors.update(callbacksForCursorUpdate.unwrap(link));

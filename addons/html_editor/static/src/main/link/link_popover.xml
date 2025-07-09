@@ -139,7 +139,7 @@
                                         <a href="#" class="mx-1 o_we_edit_link text-dark" t-on-click="onClickEdit" title="Edit Link">
                                             <i class="fa fa-edit"></i>
                                         </a>
-                                        <a href="#" class="ms-1 o_we_remove_link text-dark" t-on-click="onClickRemove" title="Remove Link">
+                                        <a href="#" t-if="props.canRemove" class="ms-1 o_we_remove_link text-dark" t-on-click="onClickRemove" title="Remove Link">
                                             <i class="fa fa-chain-broken"></i>
                                         </a>
                                     </t>

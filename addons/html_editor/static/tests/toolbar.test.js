@@ -220,6 +220,14 @@ test("toolbar link buttons react to selection change", async () => {
     expect(".btn[name='unlink']").toHaveCount(1);
 });
 
+test("toolbar unlink button should not be present when link is unremovable", async () => {
+    await setupEditor('<p>a<a class="oe_unremovable" href="http://test.test/">bc[d]</a>e</p>');
+    await waitFor(".o-we-toolbar");
+    expect(".btn[name='link']").toHaveCount(1);
+    expect(".btn[name='link']").toHaveClass("active");
+    expect(".btn[name='unlink']").toHaveCount(0);
+});
+
 test("toolbar format buttons should react to format change", async () => {
     await setupEditor(
         `<div class="o-paragraph">[\ufeff<a href="http://test.com">\ufefftest.com\ufeff</a>\ufeff&nbsp;]</div>`

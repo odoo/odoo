@@ -80,6 +80,13 @@ describe("should open a popover", () => {
         expect(".o_we_edit_link").toHaveCount(1);
         expect(".o_we_remove_link").toHaveCount(1);
     });
+    test("link popover should not have the remove button when link is unremovable", async () => {
+        await setupEditor('<p>a<a class="oe_unremovable" href="http://test.test/">bcd[]</a>e</p>');
+        await expectElementCount(".o-we-linkpopover", 1);
+        expect(".o_we_copy_link").toHaveCount(1);
+        expect(".o_we_edit_link").toHaveCount(1);
+        expect(".o_we_remove_link").toHaveCount(0);
+    });
     test("link popover should not repositioned when clicking in the input field", async () => {
         await setupEditor("<p>this is a <a>li[]nk</a></p>");
         await waitFor(".o_we_href_input_link");
