@@ -298,3 +298,20 @@ registry.category("web_tour.tours").add("self_mobile_auto_table_selection_takeaw
         Utils.checkIsNoBtn("Order Now"),
     ],
 });
+
+registry.category("web_tour.tours").add("self_order_mobile_0_price_order", {
+    steps: () =>
+        [
+            Utils.checkIsNoBtn("My Order"),
+            Utils.clickBtn("Order Now"),
+            LandingPage.selectLocation("Test-In"),
+            ProductPage.clickProduct("Ketchup"),
+            Utils.clickBtn("Checkout"),
+            CartPage.checkProduct("Ketchup", "0", "1"),
+            Utils.clickBtn("Order"),
+            CartPage.selectTable("3"),
+            ConfirmationPage.isShown(),
+            Utils.clickBtn("Ok"),
+            Utils.clickBtn("My Order"),
+        ].flat(),
+});
