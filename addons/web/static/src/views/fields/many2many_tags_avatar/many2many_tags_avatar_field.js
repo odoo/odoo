@@ -8,6 +8,19 @@ import {
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { imageUrl } from "@web/core/utils/urls";
 
+/**
+ * Cleans '__formatted_display_name' by removing '--' and returns it as a JSON string for tooltip.
+ *
+ * @param {Data} data
+ * @returns {string}
+ */
+export function getTooltipDataDisplayName(data) {
+    const label = data.record.__formatted_display_name.replace(/--/g, "") || "";
+    return JSON.stringify({
+        DisplayName: label,
+    });
+}
+
 export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
     static template = "web.Many2ManyTagsAvatarField";
     static optionTemplate = "web.Many2ManyTagsAvatarField.option";
@@ -78,6 +91,10 @@ export class Many2ManyTagsAvatarFieldPopover extends Many2ManyTagsAvatarField {
 
     get tags() {
         return super.tags.reverse();
+    }
+
+    get tooltipDataDisplayName() {
+        return getTooltipDataDisplayName(this.autoCompleteItemScope);
     }
 }
 

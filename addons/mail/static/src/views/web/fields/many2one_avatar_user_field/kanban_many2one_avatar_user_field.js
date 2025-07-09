@@ -8,6 +8,7 @@ import {
     m2oSupportedOptions,
     Many2OneField,
 } from "@web/views/fields/many2one/many2one_field";
+import { getTooltipDataDisplayName } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
 import { Avatar } from "../avatar/avatar";
 
 export class KanbanMany2OneAvatarUserField extends Component {
@@ -28,6 +29,10 @@ export class KanbanMany2OneAvatarUserField extends Component {
 
     get value() {
         return this.props.record.data[this.props.name];
+    }
+
+    get tooltipDataDisplayName() {
+        return getTooltipDataDisplayName(this.autoCompleteItemScope);
     }
 }
 
