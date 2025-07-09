@@ -277,7 +277,7 @@ describe("using selectors", () => {
         expect(clicked).toBe(1);
     });
 
-    test("can refresh listeners", async () => {
+    test("can refresh nodes", async () => {
         let clicked = 0;
         class Test extends Interaction {
             static selector = ".test";
@@ -289,7 +289,6 @@ describe("using selectors", () => {
                             .querySelectorAll("span:not(.me)")
                             .forEach((el) => el.classList.add("me"));
                         ev.currentTarget.classList.remove("me");
-                        this.refreshListeners();
                     },
                 },
             };
@@ -1963,20 +1962,74 @@ describe("components", () => {
         expect(".test").toHaveOuterHTML(`<div class="test"></div>`);
     });
 
+    test("can receive the selected element with t-component", async () => {
+        let isCDestroyed = false;
+        class C extends Component {
+            static template = xml`<p>component<span t-out="props.prop"></span></p>`;
+            static props = {
+                prop: { optional: true, type: String },
+            };
+
+            setup() {
+                onWillDestroy(() => (isCDestroyed = true));
+            }
+        }
+
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                _root: { "t-component": (el) => [C, { prop: el.className }] },
+            };
+        }
+        const { core } = await startInteraction(Test, `<div class="test"></div>`);
+        expect(".test").toHaveOuterHTML(
+            `<div class="test"><owl-component contenteditable="false" data-oe-protected="true"></owl-component></div>`
+        );
+        await animationFrame();
+        expect(".test").toHaveOuterHTML(
+            `<div class="test"><owl-component contenteditable="false" data-oe-protected="true"><p>component<span>test</span></p></owl-component></div>`
+        );
+        expect(isCDestroyed).toBe(false);
+        core.stopInteractions();
+        expect(isCDestroyed).toBe(true);
+        expect(".test").toHaveOuterHTML(`<div class="test"></div>`);
+    });
+
+    test("can insert a component at certain position", async () => {
+        class C extends Component {
+            static template = xml`component`;
+            static props = {};
+        }
+        class Test extends Interaction {
+            static selector = ".test";
+            setup() {
+                const el = document.createElement("span");
+                this.insert(el, this.el);
+                this.mountComponent(el, C, null, "beforebegin");
+            }
+        }
+        await startInteraction(Test, `<div class="test"></div>`);
+        expect(".test").toHaveOuterHTML(
+            `<div class="test"><owl-component contenteditable="false" data-oe-protected="true"></owl-component><span></span></div>`
+        );
+    });
+
     test("can insert a component with mountComponent", async () => {
         class C extends Component {
             static template = xml`component`;
             static props = {};
         }
 
+        let root;
         class Test extends Interaction {
             static selector = ".test";
 
             setup() {
-                this.mountComponent(this.el, C);
+                root = this.mountComponent(this.el, C);
             }
         }
         await startInteraction(Test, `<div class="test"></div>`);
+        expect(root.C).toBe(C);
         expect(".test").toHaveOuterHTML(
             `<div class="test"><owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"></owl-root></div>`
         );
@@ -2013,6 +2066,43 @@ describe("components", () => {
 });
 
 describe("insert", () => {
+    test("can insert an element and update dynamicAttrs and dynamicNodes", async () => {
+        const el1 = document.createElement("div");
+        el1.classList.add("very-cool-class");
+        const el2 = document.createElement("div");
+        el2.classList.add("very-cool-class");
+        let interaction;
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                ".very-cool-class": {
+                    "t-att-style": () => ({ display: "block" }),
+                },
+            };
+            setup() {
+                interaction = this;
+            }
+        }
+        const { core } = await startInteraction(Test, TemplateTest);
+        interaction.insert(el1, interaction.el);
+        const dynNode1 = interaction.__colibri__.dynamicNodes.values().next().value[0];
+        expect(dynNode1).toBe(el1);
+        interaction.updateContent();
+        const initialValues = interaction.__colibri__.dynamicAttrs[0].initialValues;
+        expect(initialValues.size).toBe(1);
+        expect(initialValues.has(el1)).toBe(true);
+        el1.remove();
+        interaction.insert(el2, interaction.el);
+        const dynNode2 = interaction.__colibri__.dynamicNodes.values().next().value[0];
+        expect(dynNode2).toBe(el2);
+        expect(initialValues.size).toBe(1);
+        expect(initialValues.has(el2)).toBe(false);
+        interaction.updateContent();
+        expect(initialValues.size).toBe(2);
+        expect(initialValues.has(el2)).toBe(true);
+        core.stopInteractions();
+    });
+
     test("can insert an element after another nested", async () => {
         class Test extends Interaction {
             static selector = ".test";
