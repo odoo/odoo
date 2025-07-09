@@ -26,6 +26,8 @@ class StockMove(models.Model):
         if line.currency_id != self.company_id.currency_id:
             kit_price_unit = line.currency_id._convert(kit_price_unit, self.company_id.currency_id, self.company_id, fields.Date.context_today(self), round=False)
         cost_share = self.bom_line_id._get_cost_share()
+        if 'cumulative_cost_share' in self._context:
+            cost_share = self._context['cumulative_cost_share'] / 100 if self._context['cumulative_cost_share'] else cost_share
         uom_factor = 1.0
         kit_product = bom.product_id or bom.product_tmpl_id
 

@@ -408,6 +408,12 @@ class MrpBom(models.Model):
                 converted_line_quantity = current_line.product_uom_id._compute_quantity(
                     line_quantity / bom.product_qty, bom.product_uom_id, round=False
                 )
+                cost_share = parent_cost_share = current_line.cost_share if 'cost_share' in current_line else 0.0
+                if 'cumulative_cost_share' in current_line._context:
+                    cumul_cost_share = current_line._context['cumulative_cost_share']
+                    if parent_line:
+                        cost_share = cumul_cost_share * (parent_cost_share.cost_share / 100)
+                current_line = current_line.with_context(cumulative_cost_share=cost_share)
                 bom_lines += [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids]
                 for bom_line in bom.bom_line_ids:
                     if not bom_line.product_id in product_boms:
@@ -418,6 +424,10 @@ class MrpBom(models.Model):
                 # should be consumed.
                 rounding = current_line.product_uom_id.rounding
                 line_quantity = float_round(line_quantity, precision_rounding=rounding, rounding_method='UP')
+                cost_share = current_line.cost_share if 'cost_share' in current_line and current_line.cost_share else 0.0
+                if parent_line and 'cumulative_cost_share' in parent_line._context:
+                    cost_share = parent_line._context['cumulative_cost_share'] * (cost_share / 100)
+                current_line = current_line.with_context(cumulative_cost_share=cost_share)
                 lines_done.append((current_line, {'qty': line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': parent_line}))
 
         return boms_done, lines_done

@@ -185,6 +185,166 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
         self.assertEqual(component01.stock_valuation_layer_ids.mapped('value'), [25, -25, 25])
         self.assertEqual(component02.stock_valuation_layer_ids.mapped('value'), [75, -75, 75])
 
+    def test_purchase_kit_cumulative_cost_share_with_auto_avco_components(self):
+        """
+        A kit Full with two AVCO components
+        - C01, cost share 40%
+        - A kit Kit with two AVCO components, cost share 60%
+            - C02, cost share 50%
+            - C03, cost share 50%
+        All in Units
+        Buy and receive 1 kit Full @ 1000
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+
+        component01, component02, component03 = self.env['product.product'].create([{
+            'name': 'Component %s' % name,
+            'type': 'product',
+            'categ_id': self.avco_category.id,
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+        } for name in ['01', '02', '03']])
+
+        full, kit = self.env['product.product'].create([{
+            'name': name,
+            'type': 'consu',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+        } for name in ['Full Kit', 'Super Kit']])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': full.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': component01.id,
+                'product_qty': 1,
+                'cost_share': 40,
+            }), (0, 0, {
+                'product_id': kit.id,
+                'product_qty': 1,
+                'cost_share': 60,
+            })],
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': component02.id,
+                'product_qty': 1,
+                'cost_share': 50,
+            }), (0, 0, {
+                'product_id': component03.id,
+                'product_qty': 1,
+                'cost_share': 50,
+            })],
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.vendor01
+        with po_form.order_line.new() as pol_form:
+            pol_form.product_id = full
+            pol_form.price_unit = 1000
+            pol_form.taxes_id.clear()
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_line_ids.quantity = 1
+        receipt.button_validate()
+
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(receipt.move_line_ids.product_id, component01 | component02 | component03)
+        self.assertEqual(po.order_line.qty_received, 1)
+        self.assertEqual(component01.stock_valuation_layer_ids.value, 400)
+        self.assertEqual(component02.stock_valuation_layer_ids.value, 300)
+        self.assertEqual(component03.stock_valuation_layer_ids.value, 300)
+
+    def test_purchase_kit_cost_share_0_with_auto_avco_components(self):
+        """
+        This test check if the unit price is set correctly when using cost_share = 0
+        If there is no cost_share set in the BoM, it should divide the price equally
+        Else it should consider the product as a product without impact on the valuation price
+
+        A kit A with two AVCO components
+        - C01, cost share 100%
+        - C02, cost share 0%
+        A kit B with two AVCO components
+        - C03, cost share 0%
+        - C04, cost share 0%
+        All in Units
+        Buy and receive 1 kit A and B @ 1000
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+
+        component01, component02, component03, component04 = self.env['product.product'].create([{
+            'name': 'Component %s' % name,
+            'type': 'product',
+            'categ_id': self.avco_category.id,
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+        } for name in ['01', '02', '03', '04']])
+
+        kit_a, kit_b = self.env['product.product'].create([{
+            'name': name,
+            'type': 'consu',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+        } for name in ['Kit A', 'Kit B']])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_a.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': component01.id,
+                'product_qty': 1,
+                'cost_share': 100,
+            }), (0, 0, {
+                'product_id': component02.id,
+                'product_qty': 1,
+                'cost_share': 0,
+            })],
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_b.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': component03.id,
+                'product_qty': 1,
+                'cost_share': 0,
+            }), (0, 0, {
+                'product_id': component04.id,
+                'product_qty': 1,
+                'cost_share': 0,
+            })],
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.vendor01
+        with po_form.order_line.new() as pol_form:
+            pol_form.product_id = kit_a
+            pol_form.price_unit = 1000
+            pol_form.taxes_id.clear()
+        with po_form.order_line.new() as pol_form:
+            pol_form.product_id = kit_b
+            pol_form.price_unit = 1000
+            pol_form.taxes_id.clear()
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_line_ids.quantity = 1
+        receipt.button_validate()
+
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(receipt.move_line_ids.product_id, component01 | component02 | component03 | component04)
+        self.assertEqual(po.order_line.mapped('qty_received'), [1.0, 1.0])
+        self.assertEqual(component01.stock_valuation_layer_ids.value, 1000)
+        self.assertEqual(component02.stock_valuation_layer_ids.value, 0)
+        self.assertEqual(component03.stock_valuation_layer_ids.value, 500)
+        self.assertEqual(component04.stock_valuation_layer_ids.value, 500)
+
     def test_valuation_multicurrency_with_kits(self):
         """ Purchase a Kit in multi-currency and verify that the amount_currency is correctly computed.
         """
