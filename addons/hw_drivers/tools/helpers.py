@@ -433,12 +433,17 @@ def download_iot_handlers(auto=True):
         server = server + '/iot/get_handlers'
         try:
             resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)
+            if resp.status != 200:
+                _logger.error('Bad IoT handlers response received: status %s', resp.status)
+                return
             if resp.data:
+                zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
                 delete_iot_handlers()
+                path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
                 with writable():
-                    path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
-                    zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
                     zip_file.extractall(path)
+        except zipfile.BadZipFile:
+            _logger.exception('Bad IoT handlers response received: not a zip file')
         except Exception:
             _logger.exception('Could not reach configured server to download IoT handlers')
 
