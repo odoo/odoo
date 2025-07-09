@@ -10,7 +10,7 @@ class ResPartner(models.Model):
         size=5,
     )
 
-    def _l10n_tr_nilvera_validate_partner_details(self, is_delivery_partner=False):
+    def _l10n_tr_nilvera_validate_partner_details(self):
         error_messages = {}
 
         for record in self:
@@ -27,7 +27,7 @@ class ResPartner(models.Model):
             if country_code == 'TR' and not record.vat:
                 missing_fields.append(_("TCKN/VKN"))
 
-            if (country_code == 'TR' or is_delivery_partner) and not record.zip:
+            if country_code == 'TR' and not record.zip:
                 missing_fields.append(_("ZIP"))
 
             if missing_fields:
@@ -40,9 +40,11 @@ class ResPartner(models.Model):
                 msg.append(_("Customs ZIP of 5 characters must be present"))
 
             if msg:
-                error_messages[f"invalid_{record.name.replace(' ', '_')}"] = {
-                    'message': _("%s's %s.", record.name, ', '.join(msg)),
-                    'action_text': _("View %s", record.name),
+                # Instead of using name, display_name is used, since name is not required
+                # if contact is of type "Delivery Address".
+                error_messages[f"invalid_partner_{record.id}"] = {
+                    'message': _("%s's %s.", record.display_name, ', '.join(msg)),
+                    'action_text': _("View %s", record.display_name),
                     'action': record._get_records_action(name=_("View Partner"))
                 }
         return error_messages
