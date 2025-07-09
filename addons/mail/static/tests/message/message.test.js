@@ -759,7 +759,7 @@ test("Reaction summary", async () => {
     }
 });
 
-test("Add the same reaction twice from the emoji picker", async () => {
+test("Select already reacted emoji from quick reaction removes the reaction on message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -775,9 +775,10 @@ test("Add the same reaction twice from the emoji picker", async () => {
     await openDiscuss(channelId);
     await click("[title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button", { text: "😅" });
+    await contains(".o-mail-MessageReaction", { text: "😅1" });
     await click("[title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button", { text: "😅" });
-    await contains(".o-mail-MessageReaction", { text: "😅1" });
+    await contains(".o-mail-MessageReaction", { count: 0 });
 });
 
 test("basic rendering of message", async () => {
