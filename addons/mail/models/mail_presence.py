@@ -2,7 +2,7 @@
 
 from datetime import timedelta
 
-from odoo import api, Command, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.service.model import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
 
 UPDATE_PRESENCE_DELAY = 60
@@ -86,7 +86,9 @@ class MailPresence(models.Model):
         if presence := user_or_guest_sudo.presence_ids:
             presence.write(values)
         else:
-            user_or_guest_sudo.presence_ids = [Command.create(values)]
+            values["guest_id" if user_or_guest._name == "mail.guest" else "user_id"] = user_or_guest.id
+            # sudo: res.users/mail.guest can update presence of accessible user/guest
+            self.env["mail.presence"].sudo().create(values)
 
     def _send_presence(self, im_status=None, bus_target=None):
         """Send notification related to bus presence update.
