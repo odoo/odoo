@@ -131,25 +131,21 @@ class TestWebsocketCaryall(WebsocketCase):
         self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
     def test_user_logout_outgoing_message(self):
-        subscribe_done_event = Event()
-        original_subscribe = Websocket.subscribe
         odoo_ws = None
 
         def patched_subscribe(self, *args):
             nonlocal odoo_ws
             odoo_ws = self
-            original_subscribe(self, *args)
-            subscribe_done_event.set()
 
         new_test_user(self.env, login='test_user', password='Password!1')
         user_session = self.authenticate('test_user', 'Password!1')
         websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
         with patch.object(Websocket, 'subscribe', patched_subscribe):
-            websocket.send(json.dumps({
-                'event_name': 'subscribe',
-                'data': {'channels': ['channel1'], 'last': 0}
-            }))
-            subscribe_done_event.wait(timeout=5)
+            self.subscribe(
+                websocket,
+                ["channel1"],
+                self.env["bus.bus"].search([], limit=1, order="id DESC").id or 0,
+            )
             self.url_open('/web/session/logout')
             # Simulate postgres notify. The session with whom the websocket
             # connected has been deleted. WebSocket should be closed without
