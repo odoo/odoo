@@ -28,6 +28,6 @@ export class PosOrderLineRefund {
         }
 
         const line = this.line;
-        return line.qty - this.refunded_qty;
+        return line.qty - this.refundedQty;
     }
 }
