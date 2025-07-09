@@ -371,11 +371,7 @@ class StockPickingType(models.Model):
                 'total_day_2': 0,
                 'total_after': 0,
             }
-            for p_date in dates:
-                date_category = self.env["stock.picking"].calculate_date_category(p_date)
-                if date_category:
-                    summaries[picking_type_id]['total_' + date_category] += 1
-
+            self.env["stock.picking"].calculate_date_category(dates, summaries[picking_type_id])
         self._prepare_graph_data(summaries)
 
     @api.onchange('sequence_code')
@@ -1810,7 +1806,7 @@ class StockPicking(models.Model):
         return self._get_action('stock.action_picking_tree_internal')
 
     @api.model
-    def calculate_date_category(self, datetime):
+    def calculate_date_category(self, datetime_list, summaries):
         """
         Assigns given datetime to one of the following categories:
         - "before"
@@ -1833,24 +1829,24 @@ class StockPicking(models.Model):
         start_day_2 = start_today + timedelta(days=2)
         start_day_3 = start_today + timedelta(days=3)
 
-        date_category = ""
-
-        if datetime:
-            datetime = datetime.astimezone(UTC)
-            if datetime < start_yesterday:
-                date_category = "before"
-            elif start_yesterday <= datetime < start_today:
-                date_category = "yesterday"
-            elif start_today <= datetime < start_day_1:
-                date_category = "today"
-            elif start_day_1 <= datetime < start_day_2:
-                date_category = "day_1"
-            elif start_day_2 <= datetime < start_day_3:
-                date_category = "day_2"
-            else:
-                date_category = "after"
-
-        return date_category
+        for p_date in datetime_list:
+            date_category = ""
+            if p_date:
+                p_date = p_date.astimezone(UTC)
+                if p_date < start_yesterday:
+                    date_category = "before"
+                elif start_yesterday <= p_date < start_today:
+                    date_category = "yesterday"
+                elif start_today <= p_date < start_day_1:
+                    date_category = "today"
+                elif start_day_1 <= p_date < start_day_2:
+                    date_category = "day_1"
+                elif start_day_2 <= p_date < start_day_3:
+                    date_category = "day_2"
+                else:
+                    date_category = "after"
+            summaries['total_' + date_category] += 1
+        return summaries
 
     @api.model
     def date_category_to_domain(self, field_name, date_category):
