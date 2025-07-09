@@ -36,7 +36,7 @@
                 <button name="%(crm_sms.crm_lead_act_window_sms_composer_single)d" type="action" string="SMS" />
             </xpath>
             <xpath expr="//button[@name='%(crm.action_lead_mail_compose)d']" position="after">
-                <button name="%(crm_sms.crm_lead_act_window_sms_composer_multi)d" type="action" string="SMS" icon="fa-comments" />
+                <button name="%(crm_sms.crm_lead_act_window_sms_composer_multi)d" type="action" string="SMS" icon="fa-comments" invisible="won_status == 'lost'"/>
             </xpath>
         </field>
     </record>
