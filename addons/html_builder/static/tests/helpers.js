@@ -9,7 +9,7 @@ import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { after } from "@odoo/hoot";
-import { animationFrame, waitFor, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, waitFor, queryOne, waitForNone } from "@odoo/hoot-dom";
 import { Component, onMounted, useRef, useState, useSubEnv, xml } from "@odoo/owl";
 import {
     defineModels,
@@ -285,4 +285,27 @@ export async function waitForSnippetDialog() {
         js: false,
     });
     await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe");
+}
+
+/**
+ * Returns the dragged helper when drag and dropping snippets.
+ */
+export function getDragHelper() {
+    return document.body.querySelector(".o_draggable_dragging .o_snippet_thumbnail");
+}
+
+/**
+ * Returns the dragged helper when drag and dropping elements from the page.
+ */
+export function getDragMoveHelper() {
+    return document.body.querySelector(".o_drag_move_helper");
+}
+
+/**
+ * Waits for the loading element added by the mutex to be removed, indicating
+ * that the operation is over.
+ */
+export async function waitForEndOfOperation() {
+    await waitForNone(":iframe .o_loading_screen", { timeout: 600 });
+    await animationFrame();
 }
