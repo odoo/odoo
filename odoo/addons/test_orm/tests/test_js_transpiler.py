@@ -391,12 +391,12 @@ Object.assign(__exports, require("@tests/Dialog"));
 
 return __exports;
 });
-"""
+"""  # noqa: W291
 
         self.assertEqual(result, expected_result)
 
 
-    def test_09_variables(self):
+    def test_09_variables(self):  # noqa: E303
         input_content = """export const v = 5;
 
 const a = 12;

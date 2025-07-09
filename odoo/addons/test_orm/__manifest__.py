@@ -80,13 +80,13 @@
             'test_orm/static/invalid_src/xml/invalid_xml.xml',
             'test_orm/static/invalid_src/xml/second_invalid_xml.xml',
         ],
-        'test_orm.multiple_same_name':[
+        'test_orm.multiple_same_name': [
           'test_orm/static/invalid_src/xml/multiple_same_name.xml',
         ],
-        'test_orm.wo_name':[
+        'test_orm.wo_name': [
           'test_orm/static/invalid_src/xml/template_wo_name.xml',
         ],
-        'test_orm.file_not_found':[
+        'test_orm.file_not_found': [
           'test_orm/static/invalid_src/xml/file_not_found.xml',
         ],
     },
