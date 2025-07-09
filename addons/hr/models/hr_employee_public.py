@@ -44,12 +44,9 @@ class HrEmployeePublic(models.Model):
         ('absent', 'Absent'),
         ('archive', 'Archived'),
         ('out_of_working_hour', 'Out of Working hours')], compute='_compute_presence_state', default='out_of_working_hour')
-    hr_icon_display = fields.Selection([
-        ('presence_present', 'Present'),
-        ('presence_out_of_working_hour', 'Out of Working hours'),
-        ('presence_absent', 'Absent'),
-        ('presence_archive', 'Archived'),
-        ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
+    hr_icon_display = fields.Selection(
+        selection='_get_selection_hr_icon_display',
+        compute='_compute_presence_icon')
     show_hr_icon_display = fields.Boolean(compute='_compute_presence_icon')
     last_activity = fields.Date(compute="_compute_last_activity")
     last_activity_time = fields.Char(compute="_compute_last_activity")
@@ -78,6 +75,9 @@ class HrEmployeePublic(models.Model):
     birthday_public_display_string = fields.Char("Public Date of Birth", related='employee_id.birthday_public_display_string')
 
     newly_hired = fields.Boolean('Newly Hired', compute='_compute_newly_hired', search='_search_newly_hired')
+
+    def _get_selection_hr_icon_display(self):
+        return self.env['hr.employee']._fields['hr_icon_display']._description_selection(self.env)
 
     def _compute_from_employee(self, field_names):
         if isinstance(field_names, str):

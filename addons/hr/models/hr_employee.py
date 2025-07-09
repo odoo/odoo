@@ -158,6 +158,11 @@ class HrEmployee(models.Model):
     is_past = fields.Boolean(related='version_id.is_past', inherited=True, groups="hr.group_hr_manager")
     is_future = fields.Boolean(related='version_id.is_future', inherited=True, groups="hr.group_hr_manager")
     is_in_contract = fields.Boolean(related='version_id.is_in_contract', inherited=True, groups="hr.group_hr_manager")
+    work_location_name = fields.Char("Work Location Name", compute="_compute_work_location_name_type")
+    work_location_type = fields.Selection([
+        ("home", "Home"),
+        ("office", "Office"),
+        ("other", "Other")], compute="_compute_work_location_name_type", tracking=True)
 
     # employee in company
     parent_id = fields.Many2one('hr.employee', 'Manager', tracking=True, index=True,
@@ -360,6 +365,12 @@ class HrEmployee(models.Model):
             else:
                 version = employee.current_version_id
             employee.version_id = version
+
+    @api.depends("version_id.work_location_id.name", "version_id.work_location_id.location_type")
+    def _compute_work_location_name_type(self):
+        for employee in self:
+            employee.work_location_name = employee.version_id.work_location_id.name or None
+            employee.work_location_type = employee.version_id.work_location_id.location_type or 'other'
 
     @api.depends('version_ids.date_version', 'version_ids.active', 'active')
     def _compute_current_version_id(self):
