@@ -44,8 +44,8 @@ export class BomOverviewComponent extends Component {
 
         useBus(
             this.env.overviewBus,
-            "toggle-fold-all",
-            () => (this.state.allFolded = !this.state.allFolded)
+            "toggle-fold-all-bom",
+            (ev) => this.state.allFolded = ev.detail.foldAll
         );
 
         onWillStart(async () => {
