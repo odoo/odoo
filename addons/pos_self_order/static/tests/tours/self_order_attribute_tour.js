@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import * as Utils from "@pos_self_order/../tests/tours/utils/common";
 import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
+import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
 
 registry.category("web_tour.tours").add("self_attribute_selector", {
     steps: () => [
@@ -80,6 +81,7 @@ registry.category("web_tour.tours").add("selfAlwaysAttributeVariants", {
 registry.category("web_tour.tours").add("self_order_product_info", {
     steps: () => [
         Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-In"),
         {
             trigger: ".o_self_product_box:contains('Product Info Test') .product_info_icon",
             run: "click",
