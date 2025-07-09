@@ -1284,6 +1284,19 @@ describe("links with inline image", () => {
 
         expect(cleanLinkArtifacts(getContent(el))).toBe(`<p>ab[]c</p>`);
     });
+    test("selecting text and a image with link should not extend the link element", async () => {
+        const { el } = await setupEditor(
+            `<p>ab<a href="http://test.test/">cd<img src="${base64Img}">ef</a>g</p>`
+        );
+        setContent(el, `<p>ab<a href="http://test.test/">c]d<img src="${base64Img}">e[f</a>g</p>`);
+        await waitFor(".o-we-linkpopover", { timeout: 1500 });
+        await waitFor(".o-we-toolbar");
+        setContent(el, `<p>a]b<a href="http://test.test/">cd<img src="${base64Img}">e[f</a>g</p>`);
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            `<p>a]b<a href="http://test.test/">cd<img src="${base64Img}">e[f</a>g</p>`
+        );
+    });
 });
 
 describe("readonly mode", () => {
@@ -1445,9 +1458,7 @@ describe("apply button should be disabled when the URL is empty", () => {
 
 describe("hidden label field", () => {
     test("label field should be hidden if <a> content is not text only", async () => {
-        await setupEditor(
-            `<p><a href="http://test.com/"><img src="${base64Img}">te[]xt</a></p>`
-        );
+        await setupEditor(`<p><a href="http://test.com/"><img src="${base64Img}">te[]xt</a></p>`);
         await expectElementCount(".o-we-linkpopover", 1);
         // open edit mode and check if label input is hidden
         await click(".o_we_edit_link");
