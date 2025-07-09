@@ -36,6 +36,9 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_a
             content: "Check message is shown",
             trigger: '.o-mail-Message-body:contains("Hello")',
         },
+        {
+            trigger: ".o_form_saved",
+        },
         ...stepUtils.toggleHomeMenu(),
     ],
 });
