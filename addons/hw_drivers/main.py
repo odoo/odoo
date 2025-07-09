@@ -26,33 +26,77 @@ class Manager(Thread):
     daemon = True
     ws_channel = ""
 
+    def __init__(self):
+        super().__init__()
+        self.hostname = helpers.get_hostname()
+        self.mac_address = helpers.get_mac_address()
+        self.domain = self._get_domain()
+        self.token = helpers.get_token()
+        self.version = helpers.get_version(detailed_version=True)
+        self.previous_iot_devices = {}
+
+    def _get_domain(self):
+        """
+        Get the iot box domain based on the IP address and subject.
+        """
+        subject = helpers.get_conf('subject')
+        ip_addr = helpers.get_ip()
+        if subject and ip_addr:
+            return ip_addr.replace('.', '-') + subject.strip('*')
+        return ip_addr or '127.0.0.1'
+
+    def _get_changes_to_send(self):
+        """
+        Check if the IoT Box information has changed since the last time it was sent.
+        Returns True if any tracked property has changed.
+        """
+        changed = False
+
+        current_devices = set(iot_devices.keys()) | set(unsupported_devices.keys())
+        if current_devices != set(self.previous_iot_devices.keys()):
+            self.previous_iot_devices = iot_devices.copy()
+            changed = True
+
+        # Mac address can change if the user has multiple network interfaces
+        new_mac_address = helpers.get_mac_address()
+        if self.mac_address != new_mac_address:
+            self.mac_address = new_mac_address
+            changed = True
+        # IP address change
+        new_domain = self._get_domain()
+        if self.domain != new_domain:
+            self.domain = new_domain
+            changed = True
+        # Version change
+        new_version = helpers.get_version(detailed_version=True)
+        if self.version != new_version:
+            self.version = new_version
+            changed = True
+
+        return changed
+
     @helpers.require_db
     def send_all_devices(self, server_url=None):
         """This method send IoT Box and devices information to Odoo database
 
         :param server_url: URL of the Odoo server (provided by decorator).
         """
-        subject = helpers.get_conf('subject')
-        if subject:
-            domain = helpers.get_ip().replace('.', '-') + subject.strip('*')
-        else:
-            domain = helpers.get_ip()
         iot_box = {
-            'name': helpers.get_hostname(),
-            'identifier': helpers.get_identifier(),
-            'ip': domain,
-            'token': helpers.get_token(),
-            'version': helpers.get_version(detailed_version=True),
+            'name': self.hostname,
+            'identifier': self.mac_address,
+            'ip': self.domain,
+            'token': self.token,
+            'version': self.version,
         }
         devices_list = {}
-        for iot_device in iot_devices.values():
-            identifier = iot_device.device_identifier
+        for device in self.previous_iot_devices.values():
+            identifier = device.device_identifier
             devices_list[identifier] = {
-                'name': iot_device.device_name,
-                'type': iot_device.device_type,
-                'manufacturer': iot_device.device_manufacturer,
-                'connection': iot_device.device_connection,
-                'subtype': iot_device.device_subtype if iot_device.device_type == 'printer' else '',
+                'name': device.device_name,
+                'type': device.device_type,
+                'manufacturer': device.device_manufacturer,
+                'connection': device.device_connection,
+                'subtype': device.device_subtype if device.device_type == 'printer' else '',
             }
         devices_list.update(unsupported_devices)
         devices_list_to_send = {
@@ -109,12 +153,9 @@ class Manager(Thread):
 
         # Check every 3 seconds if the list of connected devices has changed and send the updated
         # list to the connected DB.
-        previous_iot_devices = set()
         while 1:
             try:
-                current_devices = set(iot_devices.keys()) | set(unsupported_devices.keys())
-                if current_devices != previous_iot_devices:
-                    previous_iot_devices = current_devices
+                if self._get_changes_to_send():
                     self.send_all_devices()
                 if platform.system() == 'Linux' and helpers.get_ip() != '10.11.12.1':
                     wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
