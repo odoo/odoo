@@ -10,7 +10,18 @@
 <t t-name="website.ImageSelector">
     <section>
         <div class="o_seo_og_image">
-            <div><label>Cover image</label></div>
+            <div class="d-flex gap-3">
+                <h4><label>Cover image</label></h4>
+                <label class="ms-2">
+                    <input
+                        type="checkbox"
+                        class="mt-1"
+                        t-att-checked="this.isSocialDefaultImageActive ? true : false"
+                        t-on-click="this.setDefaultCoverImage"
+                    />
+                    <span class="ms-2">Set as default</span>
+                </label>
+            </div>
             <t t-foreach="state.images" t-as="image" t-key="image.src">
                 <MetaImage active="image.active" custom="image.custom" src="image.src" selectImage="src => this.selectImage(src)"/>
             </t>
@@ -282,6 +293,7 @@
         <ImageSelector t-if="canEditSeo" previewDescription="socialPreviewDescription"
             defaultTitle="defaultTitle"
             hasSocialDefaultImage="hasSocialDefaultImage"
+            socialDefaultImage="socialDefaultImage"
             pageImages="pageImages"
             url="url"/>
         <MetaKeywords t-if="canEditSeo"/>

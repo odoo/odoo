@@ -6,7 +6,7 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    is_newsletter_enabled = fields.Boolean()
+    is_newsletter_enabled = fields.Boolean(related='website_id.is_newsletter_enabled', readonly=False)
     newsletter_id = fields.Many2one(related='website_id.newsletter_id', readonly=False)
 
     # === CRUD METHODS ===#

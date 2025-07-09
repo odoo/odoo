@@ -96,10 +96,6 @@ class ResConfigSettings(models.TransientModel):
         'Favicon',
         related='website_id.favicon',
         readonly=False)
-    social_default_image = fields.Binary(
-        'Default Social Share Image',
-        related='website_id.social_default_image',
-        readonly=False)
 
     group_multi_website = fields.Boolean(
         "Multi-website",
@@ -112,16 +108,11 @@ class ResConfigSettings(models.TransientModel):
         "Console Google Search",
         compute='_compute_has_google_search_console',
         inverse='_inverse_has_google_search_console')
-    has_default_share_image = fields.Boolean(
-        "Use a image by default for sharing",
-        compute='_compute_has_default_share_image',
-        inverse='_inverse_has_default_share_image')
     has_plausible_shared_key = fields.Boolean(
         "Plausible Analytics",
         compute='_compute_has_plausible_shared_key',
         inverse='_inverse_has_plausible_shared_key')
     module_website_livechat = fields.Boolean()
-    module_marketing_automation = fields.Boolean()
 
     @api.depends('website_id')
     def _compute_shared_user_account(self):
@@ -187,16 +178,6 @@ class ResConfigSettings(models.TransientModel):
         for config in self:
             if not config.has_google_search_console:
                 config.google_search_console = False
-
-    @api.depends('website_id')
-    def _compute_has_default_share_image(self):
-        for config in self:
-            config.has_default_share_image = bool(config.social_default_image)
-
-    def _inverse_has_default_share_image(self):
-        for config in self:
-            if not config.has_default_share_image:
-                config.social_default_image = False
 
     @api.onchange('language_ids')
     def _onchange_language_ids(self):

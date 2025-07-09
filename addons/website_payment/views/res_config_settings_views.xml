@@ -6,12 +6,44 @@
         <field name="priority" eval="20"/>
         <field name="inherit_id" ref="website.res_config_settings_view_form"/>
         <field name="arch" type="xml">
+            <setting id="website_creation_settings" position="after">
+                <setting type="header" id="website_payment_settings" string="Payment">
+                    <field name="providers_state" invisible="1"/>
+                    <field name="is_stripe_supported_country" invisible="1"/>
+                    <span
+                        class="d-flex"
+                        invisible="providers_state == 'other_than_paypal'"
+                    >
+                        No payment provider defined?
+                    </span>
+                    <button
+                        invisible="not is_stripe_supported_country"
+                        class="btn btn-link"
+                        name="action_activate_stripe"
+                    >
+                        Configure Stripe
+                    </button>
+                    <button
+                        invisible="is_stripe_supported_country"
+                        class="btn btn-link"
+                        disabled=""
+                        string="Configure Stripe"
+                    />
+                    <span>or</span>
+                    <button
+                        class="btn btn-link"
+                        name="%(payment.action_payment_provider)d"
+                    >
+                        View all providers
+                    </button>
+                </setting>
+            </setting>
             <block id="website_info_settings" position="after">
-                <block title="Shop - Payment" id="div_website_payment">
+                <block title="Payments" id="div_website_payment">
                     <setting
                         id="website_payment"
-                        string="Activate Payments"
-                        help="Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring charges."
+                        string="Configure Payments"
+                        help="Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring charges."
                         documentation="/applications/finance/payment_providers.html"
                     >
                         <div class="content-group">
@@ -29,23 +61,23 @@
                                 </div>
                                 <button type="action"
                                         name="%(payment.action_payment_provider)d"
-                                        string="View Alternatives"
-                                        class="btn-link oe_inline"
-                                        icon="oi-arrow-right"
+                                        string="Find a provider"
+                                        class="btn-secondary oe_inline"
                                 />
                             </div>
-                            <div invisible="providers_state != 'other_than_paypal'">
-                                <button name="action_configure_first_provider"
-                                        type="object"
-                                        class="btn-primary col-auto"
-                                >
-                                    <field name="first_provider_label" nolabel="1" class="oe_inline"/>
-                                </button>
+                            <div class="row" invisible="providers_state != 'other_than_paypal'">
+                                <div class="oe_inline">
+                                    <button name="action_configure_first_provider"
+                                            type="object"
+                                            class="btn-primary col-auto"
+                                    >
+                                        <field name="first_provider_label" nolabel="1" class="oe_inline"/>
+                                    </button>
+                                </div>
                                 <button type="action"
                                         name="%(payment.action_payment_provider)d"
-                                        string="View other providers "
-                                        class="btn-link col-auto"
-                                        icon="oi-arrow-right"
+                                        string="Find a provider"
+                                        class="btn-secondary col-auto"
                                 />
                             </div>
                         </div>
