@@ -1,7 +1,6 @@
 import {
     insertSnippet,
     registerWebsitePreviewTour,
-    selectElementInWeSelectWidget,
     clickToolbarButton,
 } from '@website/js/tours/tour_utils';
 
@@ -16,16 +15,21 @@ registerWebsitePreviewTour("text_highlights", {
     }),
     ...clickToolbarButton("snippet title", ".s_cover h1", "Apply highlight", true),
     {
-        content: "Check that the highlight was applied",
-        trigger: ":iframe .s_cover h1 span.o_text_highlight > .o_text_highlight_item > svg:has(.o_text_highlight_path_underline)",
+        content: "Check that the highlights grid was displayed",
+        trigger: ".o_popover .o_text_highlight",
     },
     {
-        content: "Check that the highlights grid was displayed",
-        trigger: "we-select[data-name=text_highlight_opt] we-toggler.active",
+        content: "Select the highlight effect",
+        trigger: ".o_popover span.o_text_highlight_underline",
+        run: "click",
+    },
+    {
+        content: "Check that the highlight was applied",
+        trigger: ":iframe .s_cover h1 span.o_text_highlight_underline svg.o_text_highlight_svg",
     },
     {
         content: "Disable the highlight effect",
-        trigger: "div.o_we_text_highlight",
+        trigger: ".o_popover button[title='Reset']",
         run: "click",
     },
     {
@@ -38,7 +42,7 @@ registerWebsitePreviewTour("text_highlights", {
         content: "Update and select the snippet paragraph content",
         trigger: ":iframe .s_cover p",
         run() {
-            const iframeDOC = document.querySelector(".o_iframe").contentDocument;
+            const iframeDOC = document.querySelector(".o_iframe_container > iframe").contentDocument;
             const firstLine = document.createElement("strong");
             firstLine.textContent = "Text content line A";
             const secondLine = document.createElement("i");
@@ -53,25 +57,39 @@ registerWebsitePreviewTour("text_highlights", {
         },
     },
     {
-        content: "Add the highlight effect on the muti-line text",
-        trigger: "div.o_we_text_highlight",
+        content: "Check that the highlights grid was displayed",
+        trigger: ".o_popover .o_text_highlight",
+    },
+    {
+        content: "Select the highlight effect",
+        trigger: ".o_popover span.o_text_highlight_underline",
         run: "click",
     },
     {
         content: "Check if the text was correctly updated",
-        trigger: ":iframe .o_text_highlight_underline:has(span:contains(Text content line A) + br + span:contains(Text content line B))",
-    },
-    ...selectElementInWeSelectWidget("text_highlight_opt", "Jagged").slice(1), // The select is already opened
-    {
-        trigger: ":iframe .o_text_highlight_item:has(.o_text_highlight_path_jagged):nth-child(3)",
+        trigger: ":iframe span.o_text_highlight_underline:contains(Text content line A) + br + span.o_text_highlight_underline:contains(Text content line B)",
     },
     {
-        content: "When changing the text highlight, we only replace the highlight SVG with a new drawn one",
-        trigger: ":iframe .o_text_highlight_item:has(.o_text_highlight_path_jagged):nth-child(1)",
+        content: "Click on highlight picker to change the highlight effect",
+        trigger: ".o_popover #highlightPicker",
+        run: "click",
+    },
+    {
+        content: "Check that the highlights grid was displayed",
+        trigger: ".o_popover .o_text_highlight",
+    },
+    {
+        content: "Change the highlight effect",
+        trigger: ".o_popover span.o_text_highlight_jagged",
+        run: "click",
+    },
+    {
+        content: "Check if the text was correctly updated",
+        trigger: ":iframe span.o_text_highlight_jagged:contains('Text content line A') + br + span.o_text_highlight_jagged:contains('Text content line B')",
     },
     {
         content: "Disable the highlight effect",
-        trigger: "div.o_we_text_highlight",
+        trigger: ".o_popover button[title='Reset']",
         run: "click",
     },
     {
