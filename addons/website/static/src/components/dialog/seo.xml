@@ -120,9 +120,9 @@
                 <h2 class="accordion-header" id="accordionLinks">
                     <button class="accordion-button fs-5" type="button" t-att-class="state.issues.links > 0 ? '' : 'collapsed'" data-bs-toggle="collapse" data-bs-target="#collapseThree" t-att-aria-expanded="state.issues.links == 0 ? 'true' : 'false'" aria-controls="collapseThree">
                         Links
-                        <t t-if="seoContext.brokenLinks.length > 0">
+                        <t t-if="seoContext.brokenLinks.filter(link => link.broken and !link.noFollow).length > 0">
                             <span class="text-danger ms-2">
-                                <span t-out="seoContext.brokenLinks.length"></span> broken link(s)
+                                <span t-out="seoContext.brokenLinks.filter(link => link.broken and !link.noFollow).length"></span> broken link(s)
                             </span>
                         </t>
                     </button>
@@ -134,6 +134,12 @@
                                 <t t-foreach="seoContext.brokenLinks" t-as="link" t-key="link.oldLink">
                                     <div t-if="!link.remove" class="row align-items-center mb-3">
                                         <div class="col-12">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" t-att-id="'noFollow-' + link.oldLink" t-model="link.noFollow" />
+                                                <label t-att-for="'noFollow-' + link.oldLink"> Mark as noFollow
+                                                    <i class="fa fa-question-circle text-primary" title="Marks link as ‘nofollow’ for SEO purposes "/>
+                                                </label>
+                                            </div>
                                             <div class="input-group">
                                                 <input t-model="link.newLink" type="text" t-on-focus="(ev) => this._onInputFocus(ev, link)" t-att-class="'form-control ' + linkClass(link)" t-on-blur="() => this.modifyLink(link)"/>
                                                 <button class="btn btn-primary" t-att-disabled="state.checkingLink || !link.newLink.trim().length || (link.newLink.trim() == link.oldLink)" t-on-click="() => this.modifyLink(link)">Check</button>

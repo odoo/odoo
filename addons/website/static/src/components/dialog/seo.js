@@ -10,6 +10,7 @@ import { CheckBox } from '@web/core/checkbox/checkbox';
 import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
 import { WebsiteDialog } from './dialog';
 import { Component, onMounted, onWillStart, reactive, useEffect, useState } from "@odoo/owl";
+import wUtils from "@website/js/utils";
 
 // This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
 // Javascript \b is not unicode aware, and words beginning or ending by accents won't match \b
@@ -607,6 +608,25 @@ export class SeoChecks extends Component {
         });
     }
 
+    _onInputFocus(ev, link) {
+        const input = ev.target;
+        if (input.dataset.autocompleteAttached) {
+            return;
+        }
+        input.dataset.autocompleteAttached = "true";
+        const options = {
+            body: this.website.pageDocument.body,
+            position: "bottom-fit",
+            classes: {
+                "ui-autocomplete": "o_edit_menu_autocomplete",
+            },
+            urlChosen: () => {
+                link.newLink = input.value;
+            },
+        };
+        wUtils.autocompleteWithPages(input, options, this.env);
+    }
+
     imgUpdated(img) {
         img.updated = true;
         this.seoContext.updatedAlts = this.state.altAttributes.filter(img => img.updated);
@@ -773,6 +793,7 @@ export class SeoChecks extends Component {
                     res_model: recordEl.dataset.resModel || recordEl.dataset.oeModel,
                     res_id: parseInt(recordEl.dataset.resId || recordEl.dataset.oeId),
                     field: recordEl.dataset.oeField || null,
+                    noFollow: el.getAttribute('rel') === 'nofollow',
                 };
             })
             .filter(Boolean);
@@ -782,6 +803,10 @@ export class SeoChecks extends Component {
         this.state.totalLinks = links.length;
         const brokenLinks = [];
         const promises = links.map(async (link) => {
+            if (link.noFollow) {
+                this.state.counterLinks++;
+                return;
+            }
             try {
                 const response = await fetch(link.link, {
                     method: "GET",
@@ -807,6 +832,7 @@ export class SeoChecks extends Component {
                 newLink: link.link,
                 broken: true,
                 remove: false,
+                noFollow: link.noFollow,
                 res_model: link.res_model,
                 res_id: link.res_id,
                 field: link.field,
@@ -936,7 +962,7 @@ export class OptimizeSEODialog extends Component {
         const rpcCalls = [];
         if (
             seoContext.brokenLinks.some(
-                (link) => link.oldLink !== link.newLink || link.remove === true
+                (link) => link.oldLink !== link.newLink || link.remove === true || link.noFollow
             )
         ) {
             rpcCalls.push(
