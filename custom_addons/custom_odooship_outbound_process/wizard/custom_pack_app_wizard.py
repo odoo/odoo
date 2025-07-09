@@ -418,23 +418,64 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     _logger.error(f"[LEGACY] Payload failed: {str(e)}")
                     raise UserError(_("Legacy label failed:\n%s") % str(e))
 
+            print("\n\n\n\ multi pick before auspost====", line.picking_id.sale_id.carrier,
+                  line.picking_id.sale_id.items, line.picking_id.sale_id.shipmentid)
+            if (line.picking_id.sale_id.carrier or '').upper() == 'AUSPOST':
+                _logger.info("[LEGACY] Triggering legacy multi-pick payload...")
+                if any(l.api_payload_success for l in self.line_ids):
+                    _logger.info("[LEGACY] Payload already sent — skipping.")
+                    return
+
+                line.scanned = True
+                line.quantity = 1
+                line.remaining_quantity = 0
+                line.available_quantity = 1
+                line.line_added = True
+
+                try:
+                    payload = self._prepare_old_logic_payload_multi_picks()
+                    is_prod = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
+                    api_url = "https://shiperoo-connect-shopify.uat.automation.shiperoo.com/auspost/shipment" if is_prod == 'True' \
+                        else "https://shiperoo-connect-shopify.uat.automation.shiperoo.com/auspost/shipment"
+
+                    self.send_payload_to_api(api_url, payload)
+
+                    for l in self.line_ids:
+                        l.api_payload_success = True
+                        l.line_added = True
+                        l.scanned = True
+                        l.quantity = 1
+                        l.remaining_quantity = 0
+
+                    return {
+                        'warning': {
+                            'title': _("Success"),
+                            'message': _("Legacy label printed successfully."),
+                            'type': 'notification'
+                        }
+                    }
+                except Exception as e:
+                    _logger.error(f"[LEGACY] Payload failed: {str(e)}")
+                    raise UserError(_("Legacy label failed:\n%s") % str(e))
+
             # MULTI-PICK - OneTraker
-            config = self.get_onetraker_config()
-            try:
-                success = self.send_payload_to_onetraker(self.env, line.picking_id, [line], config)
-                line.api_payload_attempted = True
-                if success:
-                    line.update({
-                        "api_payload_success": True,
-                        "line_added": True,
-                        "quantity": 1,
-                        "available_quantity": 1,
-                        "remaining_quantity": 0,
-                        "scanned": True,
-                        "product_package_number": line.product_package_number or self.next_package_number
-                    })
-            except Exception as e:
-                raise UserError(_("Error while sending label for Order %s:\n%s") % (sale.name, str(e)))
+            else:
+                config = self.get_onetraker_config()
+                try:
+                    success = self.send_payload_to_onetraker(self.env, line.picking_id, [line], config)
+                    line.api_payload_attempted = True
+                    if success:
+                        line.update({
+                            "api_payload_success": True,
+                            "line_added": True,
+                            "quantity": 1,
+                            "available_quantity": 1,
+                            "remaining_quantity": 0,
+                            "scanned": True,
+                            "product_package_number": line.product_package_number or self.next_package_number
+                        })
+                except Exception as e:
+                    raise UserError(_("Error while sending label for Order %s:\n%s") % (sale.name, str(e)))
         else:
             # SINGLE PICK LOGIC (all lines are for one SO)
             line.quantity = 1
@@ -585,6 +626,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "site_code": line.site_code_id.name if line.site_code_id else "",
                 "receipt_number": line.picking_id.name,
                 "partner_id": line.picking_id.partner_id.name,
+                "business_name": line.picking_id.partner_id.business_name,
                 "origin": line.picking_id.origin or "N/A",
                 "package_name": (line.package_box_type_id.name if line.package_box_type_id else "NoBox") + '_' + str(
                     line.product_package_number),
@@ -601,6 +643,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "hs_code": line.product_id.hs_code or "",
                 "cost_price": line.product_id.standard_price or "0.0",
                 "sale_price": line.product_id.list_price or "0.0",
+                "shipmentid": line.picking_id.sale_id.shipmentid,
+                "items": line.picking_id.sale_id.items,
             })
 
         payload = {
@@ -619,8 +663,13 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         }
 
         is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
-        api_url = "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/orders" if is_production == 'True' else "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
-
+        if self.site_code_id.name != "SHIPEROOALTONA" or self.tenant_code_id.name != "STONEHIVE":
+            api_url = "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/orders" if is_production == 'True' \
+                else "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
+        if (line.picking_id.sale_id.carrier or '').upper() == 'AUSPOST':
+            api_url = "https://shiperoo-connect-shopify.uat.automation.shiperoo.com/auspost/shipment" if is_production == 'True' \
+                else "https://shiperoo-connect-shopify.uat.automation.shiperoo.com/auspost/shipment"
+        print("\n\n\n old logic Aup[opst payload single pick=====", api_url)
         _logger.info(f"[OLD LOGIC] Sending legacy payload:\n{json.dumps(payload, indent=4)}")
         self.send_payload_to_api(api_url, payload)
         #
@@ -643,9 +692,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         This method groups lines per product and builds a flat payload list as required by
         the old Shiperoo API.
         """
-        if self.site_code_id.name != "SHIPEROOALTONA" or self.tenant_code_id.name != "STONEHIVE":
-            raise ValidationError("This method should only be called for SHIPEROOALTONA and STONEHIVE.")
-
+        # if self.site_code_id.name != "SHIPEROOALTONA" or self.tenant_code_id.name != "STONEHIVE":
+        #     raise ValidationError("This method should only be called for SHIPEROOALTONA and STONEHIVE.")
         product_lines = []
 
         scanned_lines = self.line_ids.filtered(lambda l: l.scanned)
@@ -672,6 +720,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "site_code": line.site_code_id.name if line.site_code_id else "",
                 "receipt_number": line.picking_id.name,
                 "partner_id": line.picking_id.partner_id.name,
+                "business_name": line.picking_id.partner_id.business_name,
                 "origin": line.picking_id.origin or "N/A",
                 "package_name": (line.package_box_type_id.name if line.package_box_type_id else "NoBox") + '_' + str(
                     line.product_package_number),
@@ -689,6 +738,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "so_reference": line.picking_id.sale_id.client_order_ref or "N/A",
                 "cost_price": line.product_id.standard_price or "0.0",
                 "sale_price": line.product_id.list_price or "0.0",
+                "shipmentid": line.picking_id.sale_id.shipmentid,
+                "items":line.picking_id.sale_id.items,
             })
 
         payload = {
@@ -854,7 +905,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         # Handle legacy site/tenant logic (STONEHIVE/SHIPEROOALTONA)
         if self.site_code_id.name == "SHIPEROOALTONA" and self.tenant_code_id.name == "STONEHIVE":
             return self._process_single_pick_old_logic(main_picking, scanned_lines)
-
+        #Handle for Auspost if Carrier Auspost any tenant or site send old payload
+        if sale and (sale.carrier or "").upper() == "AUSPOST":
+            self._process_single_pick_old_logic(main_picking, scanned_lines)
+            return {'type': 'ir.actions.act_window_close'}
         if sale and sale.service_type and sale.service_type.strip().upper() == "MANUAL WB":
             _logger.info("[MANUAL WB] Detected Manual WB order – skipping label generation.")
 
@@ -1112,86 +1166,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             _logger.error(f"OneTraker request exception: {e}")
             raise UserError(f"Request error: {str(e)}")
 
-    # def send_payload_and_print_label(self, payload, pick_name=None):
-    #     self.ensure_one()
-    #
-    #     config = self.get_onetraker_config()
-    #     api_url = config.get("ONETRAKER_CREATE_ORDER_URL")
-    #     bearer_token = config.get("BEARER")
-    #     bench_ip = self.pack_bench_id.printer_ip
-    #
-    #     if not bench_ip:
-    #         raise UserError(_("Pack Bench is missing printer IP."))
-    #
-    #     headers = {
-    #         'Content-Type': 'application/json',
-    #         'Authorization': bearer_token
-    #     }
-    #
-    #     try:
-    #         t_start = time.perf_counter()
-    #         response = requests.post(api_url, headers=headers, json=payload, timeout=50)
-    #         response.raise_for_status()
-    #
-    #         response_json = response.json()
-    #         _logger.info(f"[ONETRAKER][FULL RESPONSE] for {pick_name or 'N/A'}:\n{json.dumps(response_json, indent=4)}")
-    #
-    #         generic = response_json.get("genericResponse", {})
-    #         status_code = generic.get("apiStatusCode")
-    #         status_success = generic.get("apiSuccessStatus")
-    #         status_message = generic.get("apiStatusMessage", "Unknown error from OneTraker")
-    #
-    #         if status_code != 200 or status_success != "True":
-    #             _logger.error(f"[ONETRAKER][ERROR] Code: {status_code}, Message: {status_message}")
-    #             raise UserError(_(status_message))
-    #         else:
-    #             _logger.info(f"[ONETRAKER][SUCCESS] Code: {status_code}, Message: {status_message}")
-    #
-    #         label_url = response_json.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
-    #                                                                                                 {}).get("url")
-    #
-    #         # if not label_url:
-    #         #     raise UserError(_("Label URL not found in OneTraker response."))
-    #         con_id = response_json.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
-    #
-    #         # if not label_url:
-    #         #     raise UserError(_("Label URL not found in OneTraker response."))
-    #
-    #         t_label_start = time.perf_counter()
-    #         label_resp = requests.get(label_url, stream=True, timeout=50)
-    #         label_resp.raise_for_status()
-    #
-    #         zpl_data = ""
-    #         for chunk in label_resp.iter_content(chunk_size=1024):
-    #             zpl_data += chunk.decode('utf-8')
-    #
-    #         t_label_end = time.perf_counter()
-    #
-    #         if not zpl_data.strip():
-    #             raise UserError(_("Downloaded label is empty."))
-    #
-    #         t_print_start = time.perf_counter()
-    #         with socket.create_connection((bench_ip, 9100), timeout=40) as sock:
-    #             sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-    #             sock.sendall(zpl_data.encode('utf-8'))
-    #
-    #         t_end = time.perf_counter()
-    #         time_to_response = t_label_start - t_start
-    #         time_to_label_download = t_label_end - t_label_start
-    #         time_to_print = t_end - t_print_start
-    #         total_time = t_end - t_start
-    #         _logger.info(
-    #             f"[PERF][{pick_name or 'N/A'}] "
-    #             f"API Response: {time_to_response:.2f}s, "
-    #             f"Label Download: {time_to_label_download:.2f}s, "
-    #             f"Print: {time_to_print:.2f}s, "
-    #             f"Total Time: {total_time:.2f}s"
-    #         )
-    #         return label_url, con_id
-    #
-    #     except Exception as e:
-    #         _logger.error(f"[ONETRAKER][FAILURE] {str(e)}")
-    #         raise UserError(_("Failed to print label:\n%s") % str(e))
 
     def send_payload_and_print_label(self, payload, pick_name=None):
         self.ensure_one()
@@ -1725,116 +1699,6 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
             else:
                 line.line_added = line.remaining_quantity == 0
 
-    # @api.onchange('product_id', 'package_box_type_id', 'serial_number', 'weight', 'product_package_number')
-    # def _onchange_trigger_payload(self):
-    #     for line in self:
-    #         if not line.product_id or line.api_payload_success:
-    #             return
-    #
-    #         wizard = line.wizard_id
-    #         multiple_picks = len(wizard.picking_ids) > 1
-    #         serial_ok = not line.product_id.is_serial_number or bool(line.serial_number)
-    #
-    #         all_ready = (
-    #                 line.product_id and
-    #                 line.package_box_type_id and
-    #                 line.weight > 0 and
-    #                 line.product_package_number and
-    #                 multiple_picks and
-    #                 serial_ok
-    #         )
-    #
-    #         if not all_ready:
-    #             if line.product_id.is_serial_number and not line.serial_number:
-    #                 return {
-    #                     'warning': {
-    #                         'title': _("Packing Information"),
-    #                         'message': _("Serial number is required for product '%s'.") % line.product_id.display_name
-    #                     }
-    #                 }
-    #             if not line.package_box_type_id and not line.api_payload_attempted:
-    #                 return {
-    #                     'warning': {
-    #                         'title': _("Packing Information"),
-    #                         'message': _("Please select a package type before proceeding.")
-    #                     }
-    #                 }
-    #             if line.product_id.is_fragile:
-    #                 return {
-    #                     'warning': {
-    #                         'title': _("Packing Information"),
-    #                         'message': _("This item is fragile and must be packed with bubble wrap for protection.")
-    #                     }
-    #                 }
-    #             return
-    #
-    #         if line.api_payload_attempted:
-    #             _logger.info(f"[SKIP] Payload already attempted for {line.product_id.display_name}")
-    #             return
-    #
-    #         _logger.info(f"[AUTO PAYLOAD] Sending for {line.product_id.display_name}")
-    #         line.api_payload_attempted = True
-    #
-    #         # Legacy Stonehive/SHIPEROOALTONA multi-pick logic
-    #         if wizard.site_code_id.name == "SHIPEROOALTONA" and wizard.tenant_code_id.name == "STONEHIVE":
-    #             _logger.info("[OLD LOGIC] Triggering old multi-pick payload from line onchange...")
-    #
-    #             # Avoid multiple legacy payload triggers
-    #             if any(l.api_payload_success for l in wizard.line_ids):
-    #                 _logger.warning("[OLD LOGIC] Legacy payload already triggered — skipping resend.")
-    #                 return
-    #
-    #             try:
-    #                 payload = wizard._prepare_old_logic_payload_multi_picks()
-    #                 is_production = wizard.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
-    #                 api_url = (
-    #                     "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/orders"
-    #                     if is_production else
-    #                     "https://int-shiperooconnect-dev.automation.shiperoo.com/api/orders"
-    #                 )
-    #                 wizard.send_payload_to_api(api_url, payload)
-    #                 _logger.info("[SUCCESS] Legacy multi-pick payload sent successfully to: %s", api_url)
-    #
-    #                 # Mark all lines as packed
-    #                 for l in wizard.line_ids:
-    #                     l.api_payload_success = True
-    #                     l.line_added = True
-    #                     l.scanned = True
-    #                     l.quantity = 1
-    #                     l.remaining_quantity = 0
-    #
-    #                 return {
-    #                     'warning': {
-    #                         'title': _("Success"),
-    #                         'message': _("Legacy label printed successfully for multi-pick."),
-    #                         'type': 'notification'
-    #                     }
-    #                 }
-    #
-    #             except Exception as e:
-    #                 _logger.error(f"[MULTI-PICK] Failed to send legacy payload: {str(e)}")
-    #                 raise UserError(_("Legacy multi-pick label failed:\n%s") % str(e))
-    #
-    #         # OneTraker multi-pick logic
-    #         try:
-    #             config = wizard.get_onetraker_config()
-    #             success = wizard.send_payload_to_onetraker(wizard.env, line.picking_id, [line], config)
-    #             if success:
-    #                 line.api_payload_success = True
-    #                 line.line_added = True
-    #                 _logger.info(f"[SUCCESS] Payload sent for {line.product_id.display_name}")
-    #                 return {
-    #                     'warning': {
-    #                         'title': _("Success"),
-    #                         'message': _("Label Printed Successfully."),
-    #                         'type': 'notification'
-    #                     }
-    #                 }
-    #         except Exception as e:
-    #             _logger.error(f"[EXCEPTION] during payload for {line.product_id.display_name}: {str(e)}")
-    #             raise UserError(
-    #                 _("API request failed for product '%s':\n%s") % (line.product_id.display_name, str(e))
-    #             )
 
     def send_tracking_update_to_odoo(self, order_number, tracking_number, carrier_name, pick_number):
         """
