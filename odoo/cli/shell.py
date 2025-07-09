@@ -134,11 +134,18 @@ class Shell(Command):
                 console.runsource(f.read(), filename=pythonstartup, symbol='exec')
         console.interact(banner='')
 
-    def shell(self, dbname):
+    def run(self, args):
+        self.init(args)
+
+        dbnames = config['db_name']
+        if len(dbnames) > 1:
+            sys.exit("-d/--database/db_name has multiple database, please provide a single one")
+
         local_vars = {
             'openerp': odoo,
             'odoo': odoo,
         }
+        dbname = dbnames[0] if dbnames else None
         if dbname:
             threading.current_thread().dbname = dbname
             registry = Registry(dbname)
@@ -146,21 +153,13 @@ class Shell(Command):
                 uid = api.SUPERUSER_ID
                 ctx = api.Environment(cr, uid, {})['res.users'].context_get()
                 env = api.Environment(cr, uid, ctx)
-                local_vars['env'] = env
-                local_vars['self'] = env.user
+                local_vars.update({
+                    'env': env,
+                    'self': env.user,
+                })
                 self.console(local_vars)
                 cr.rollback()
         else:
             self.console(local_vars)
 
-    def run(self, args):
-        self.init(args)
-
-        dbnames = config['db_name']
-        if len(dbnames) > 1:
-            sys.exit("-d/--database/db_name has multiple database, please provide a single one")
-        if not dbnames:
-            self.shell(None)
-        else:
-            self.shell(dbnames[0])
         return 0
