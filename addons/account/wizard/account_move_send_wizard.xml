@@ -63,7 +63,14 @@
                             name="action_send_and_print"
                             type="object"
                             class="btn-primary"
-                            invisible="not sending_methods"/>
+                            invisible="not sending_methods or not is_partners_email_available"/>
+                    <button string="Send"
+                            disabled="1"
+                            data-hotkey="q"
+                            name="action_send_and_print"
+                            type="object"
+                            class="btn-primary"
+                            invisible="not sending_methods or is_partners_email_available"/>
                     <button string="Generate"
                             data-hotkey="q"
                             name="action_send_and_print"
