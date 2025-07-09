@@ -23,24 +23,24 @@ class TestImport(common.TransactionCase):
 
     def test_import_model_translation(self):
         self.env['res.lang']._activate_lang('fr_FR')
-        self.env['ir.module.module']._load_module_terms(['test_translation_import'], ['fr_FR'])
+        self.env['ir.module.module']._load_module_terms(['test_orm'], ['fr_FR'])
 
-        record = self.env.ref('test_translation_import.test_translation_import_model1_record1')
+        record = self.env.ref('test_orm.test_translation_import_model1_record1')
         self.assertEqual(
             record.with_context(lang='fr_FR').name,
             'Vaisselle'
         )
-        record = self.env.ref('test_translation_import.test_translation_import_model1_record2')
+        record = self.env.ref('test_orm.test_translation_import_model1_record2')
         self.assertEqual(
             record.with_context(lang='fr_FR').name,
             'Meuble'
         )
-        record = self.env.ref('test_translation_import.test_translation_import_model1_record3')
+        record = self.env.ref('test_orm.test_translation_import_model1_record3')
         self.assertEqual(
             record.with_context(lang='fr_FR').name,
             'Test de traduction CSV depuis PO'
         )
-        record = self.env.ref('test_translation_import.test_translation_import_model1_record4')
+        record = self.env.ref('test_orm.test_translation_import_model1_record4')
         self.assertEqual(
             record.with_context(lang='fr_FR').name,
             'Test de traduction CSV depuis les données'
@@ -48,9 +48,9 @@ class TestImport(common.TransactionCase):
 
     def test_import_model_term_translation(self):
         self.env['res.lang']._activate_lang('fr_FR')
-        self.env['ir.module.module']._load_module_terms(['test_translation_import'], ['fr_FR'])
+        self.env['ir.module.module']._load_module_terms(['test_orm'], ['fr_FR'])
 
-        record = self.env.ref('test_translation_import.test_translation_import_model1_record1')
+        record = self.env.ref('test_orm.test_translation_import_model1_record1')
         self.assertEqual(
             record.with_context(lang='fr_FR').xml,
             '<form string="Fourchette"><div>Couteau</div><div>Cuillère</div></form>'
@@ -60,15 +60,15 @@ class TestImport(common.TransactionCase):
         """
         Make sure no update do not overwrite translations
         """
-        menu = self.env.ref('test_translation_import.menu_test_translation_import')
+        menu = self.env.ref('test_orm.menu_test_translation_import')
         self.assertEqual(menu.name, 'Test translation model1')
         # install french and change translation content
         self.env['res.lang']._activate_lang('fr_FR')
-        self.env['ir.module.module']._load_module_terms(['test_translation_import'], ['fr_FR'])
+        self.env['ir.module.module']._load_module_terms(['test_orm'], ['fr_FR'])
         self.assertEqual(menu.with_context(lang='fr_FR').name, "Test translation import in french")
         menu.with_context(lang='fr_FR').name = "Nouveau nom"
         # reload with overwrite
-        self.env['ir.module.module']._load_module_terms(['test_translation_import'], ['fr_FR'], overwrite=True)
+        self.env['ir.module.module']._load_module_terms(['test_orm'], ['fr_FR'], overwrite=True)
 
         self.assertEqual(menu.name, "Test translation model1")
         self.assertEqual(menu.with_context(lang='fr_FR').name, "Nouveau nom")
@@ -76,10 +76,10 @@ class TestImport(common.TransactionCase):
     def test_lang_with_base(self):
         self.env['res.lang']._activate_lang('fr_BE')
         self.env['res.lang']._activate_lang('fr_CA')
-        self.env['ir.module.module']._load_module_terms(['test_translation_import'], ['fr_BE', 'fr_CA'], overwrite=True)
+        self.env['ir.module.module']._load_module_terms(['test_orm'], ['fr_BE', 'fr_CA'], overwrite=True)
 
         # language override base language
-        record = self.env.ref('test_translation_import.test_translation_import_model1_record1')
+        record = self.env.ref('test_orm.test_translation_import_model1_record1')
         self.assertEqual(
             record.with_context(lang='fr_BE').get_code_translation(),
             'Code, Français, Belgium'
@@ -109,7 +109,7 @@ class TestImport(common.TransactionCase):
 
     def test_import_from_po_file(self):
         """Test the import from a single po file works"""
-        with file_open('test_translation_import/i18n/tlh.po', 'rb') as f:
+        with file_open('test_orm/i18n/tlh.po', 'rb') as f:
             po_file = base64.encodebytes(f.read())
 
         import_tlh = self.env["base.language.import"].create({
@@ -124,7 +124,7 @@ class TestImport(common.TransactionCase):
         tlh_lang = self.env['res.lang']._lang_get('tlh')
         self.assertTrue(tlh_lang, "The imported language was not creates")
 
-        record = self.env.ref('test_translation_import.test_translation_import_model1_record1')
+        record = self.env.ref('test_orm.test_translation_import_model1_record1')
         self.assertEqual(
             record.with_context(lang='tlh').get_code_translation(),
             'Code, Klingon'
@@ -136,7 +136,7 @@ class TestImport(common.TransactionCase):
 
     def test_lazy_translation(self):
         """Test the import from a single po file works"""
-        with file_open('test_translation_import/i18n/tlh.po', 'rb') as f:
+        with file_open('test_orm/i18n/tlh.po', 'rb') as f:
             po_file = base64.encodebytes(f.read())
 
         import_tlh = self.env["base.language.import"].create({
@@ -179,7 +179,7 @@ class TestImport(common.TransactionCase):
 
     def test_import_from_csv_file(self):
         """Test the import from a single CSV file works"""
-        with file_open('test_translation_import/i18n/dot.csv', 'rb') as f:
+        with file_open('test_orm/i18n/dot.csv', 'rb') as f:
             po_file = base64.encodebytes(f.read())
 
         import_tlh = self.env["base.language.import"].create({
@@ -195,7 +195,7 @@ class TestImport(common.TransactionCase):
         self.assertTrue(dot_lang, "The imported language was not creates")
 
         # code translation cannot be changed or imported, it only depends on the po file in the module directory
-        record = self.env.ref('test_translation_import.test_translation_import_model1_record1')
+        record = self.env.ref('test_orm.test_translation_import_model1_record1')
         self.assertEqual(
             record.with_context(lang='dot').get_code_translation(),
             'Code, English'
@@ -259,7 +259,7 @@ class TestImport(common.TransactionCase):
 class TestTranslationFlow(common.TransactionCase):
 
     def test_export_pot(self):
-        module_name = 'test_translation_import'
+        module_name = 'test_orm'
         module = self.env.ref('base.module_' + module_name)
         export = self.env["base.language.export"].create({
             'format': 'po',
@@ -281,7 +281,7 @@ class TestTranslationFlow(common.TransactionCase):
             'lang_ids': [(6, 0, [self.env.ref('base.lang_fr').id])],
         }).lang_install()
 
-        module = self.env.ref('base.module_test_translation_import')
+        module = self.env.ref('base.module_test_orm')
         export = self.env["base.language.export"].create({
             'lang': 'fr_FR',
             'format': 'po',
@@ -299,12 +299,12 @@ class TestTranslationFlow(common.TransactionCase):
 
             def filter_func_for_python(row):
                 return row.get('value') and PYTHON_TRANSLATION_COMMENT in row['comments']
-            new_code_translations.python_translations[('test_translation_import', 'fr_FR')] = \
+            new_code_translations.python_translations[('test_orm', 'fr_FR')] = \
                 CodeTranslations._read_code_translations_file(po_file, filter_func_for_python)
 
             def filter_func_for_javascript(row):
                 return row.get('value') and JAVASCRIPT_TRANSLATION_COMMENT in row['comments']
-            new_code_translations.web_translations[('test_translation_import', 'fr_FR')] = {
+            new_code_translations.web_translations[('test_orm', 'fr_FR')] = {
                 "messages": tuple(
                     {"id": src, "string": value}
                     for src, value in CodeTranslations._read_code_translations_file(
@@ -312,12 +312,12 @@ class TestTranslationFlow(common.TransactionCase):
                 )
             }
 
-        old_python = code_translations.get_python_translations('test_translation_import', 'fr_FR')
-        new_python = new_code_translations.get_python_translations('test_translation_import', 'fr_FR')
+        old_python = code_translations.get_python_translations('test_orm', 'fr_FR')
+        new_python = new_code_translations.get_python_translations('test_orm', 'fr_FR')
         self.assertEqual(old_python, new_python, 'python code translations are not exported/imported correctly')
 
-        old_web = code_translations.get_web_translations('test_translation_import', 'fr_FR')
-        new_web = new_code_translations.get_web_translations('test_translation_import', 'fr_FR')
+        old_web = code_translations.get_web_translations('test_orm', 'fr_FR')
+        new_web = new_code_translations.get_web_translations('test_orm', 'fr_FR')
         self.assertEqual(old_web, new_web, 'web client code translations are not exported/imported correctly')
 
         self.assertNotIn('text node', new_python, 'web client only translations should not be stored as python translations')
@@ -329,7 +329,7 @@ class TestTranslationFlow(common.TransactionCase):
         )
 
         # test model and model terms translations
-        record = self.env.ref('test_translation_import.test_translation_import_model1_record1')
+        record = self.env.ref('test_orm.test_translation_import_model1_record1')
         record.invalidate_recordset()
         self.assertEqual(
             record.with_context(lang='fr_FR').name,
@@ -377,7 +377,7 @@ class TestTranslationFlow(common.TransactionCase):
         """ Ensure can reimport exported csv """
         self.env.ref("base.lang_fr").active = True
 
-        module = self.env.ref('base.module_test_translation_import')
+        module = self.env.ref('base.module_test_orm')
         export = self.env["base.language.export"].create({
             'lang': 'fr_FR',
             'format': 'csv',
@@ -399,10 +399,10 @@ class TestTranslationFlow(common.TransactionCase):
 
     def test_export_static_templates(self):
         trans_static = []
-        po_reader = TranslationModuleReader(self.env.cr, ['test_translation_import'])
+        po_reader = TranslationModuleReader(self.env.cr, ['test_orm'])
         for line in po_reader:
             module, ttype, name, res_id, source, value, comments = line
-            if name == "addons/test_translation_import/static/src/xml/js_templates.xml":
+            if name == "addons/test_orm/static/src/xml/js_templates.xml":
                 trans_static.append(source)
 
         self.assertNotIn('no export', trans_static)
@@ -413,10 +413,10 @@ class TestTranslationFlow(common.TransactionCase):
 
     def test_export_spreadsheet(self):
         terms = []
-        po_reader = TranslationModuleReader(self.env.cr, ['test_translation_import'])
+        po_reader = TranslationModuleReader(self.env.cr, ['test_orm'])
         for line in po_reader:
             _module, _ttype, name, _res_id, source, _value, _comments = line
-            if name == "addons/test_translation_import/data/files/test_spreadsheet_dashboard.json":
+            if name == "addons/test_orm/data/files/test_spreadsheet_dashboard.json":
                 terms.append(source)
         self.assertEqual(set(terms), {
             'exported 1',
@@ -434,10 +434,10 @@ class TestTranslationFlow(common.TransactionCase):
 
     def test_export_spreadsheet_new_dataset(self):
         terms = []
-        po_reader = TranslationModuleReader(self.env.cr, ['test_translation_import'])
+        po_reader = TranslationModuleReader(self.env.cr, ['test_orm'])
         for line in po_reader:
             _module, _ttype, name, _res_id, source, _value, _comments = line
-            if name == 'addons/test_translation_import/data/files/test_spreadsheet_v16_dashboard.json':
+            if name == 'addons/test_orm/data/files/test_spreadsheet_v16_dashboard.json':
                 terms.append(source)
         self.assertEqual(set(terms), {
             'Bar chart title',
@@ -456,8 +456,8 @@ class TestTranslationFlow(common.TransactionCase):
         }).lang_install()
 
         model1_ids = [
-            self.env.ref('test_translation_import.test_translation_import_model1_record1').id,
-            self.env.ref('test_translation_import.test_translation_import_model1_record2').id,
+            self.env.ref('test_orm.test_translation_import_model1_record1').id,
+            self.env.ref('test_orm.test_translation_import_model1_record2').id,
         ]
         po_reader = TranslationRecordReader(self.env.cr, 'test.translation.import.model1', model1_ids, lang='fr_FR')
         translations = {line[4]: line[5] for line in po_reader}
@@ -472,7 +472,7 @@ class TestTranslationFlow(common.TransactionCase):
             }
         )
 
-        model2_ids = self.env.ref('test_translation_import.test_translation_import_model2_record1').ids
+        model2_ids = self.env.ref('test_orm.test_translation_import_model2_record1').ids
         po_reader = TranslationRecordReader(self.env.cr, 'test.translation.import.model2', model2_ids, lang='fr_FR')
         translations = {line[4]: line[5] for line in po_reader}
         self.assertDictEqual(

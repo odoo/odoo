@@ -9,5 +9,6 @@ from . import (
     test_performance,
     test_read_group,
     test_rpc,
+    test_translation_import,
     test_unity_read,
 )
