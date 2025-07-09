@@ -52,6 +52,7 @@
 // @param {number} --treeEntry-padding-v - Entry's vertical padding.
 // @param {number} --treeEntry--before-top - Vertical-line top position.
 // @param {string} --treeEntry--after-display - Horizzontal-line display mode.
+// @param {string} --treeEntry--after-width - Horizontal-line width.
 // @param {color}  --treeEntry--beforeAfter-color - Lines color
 // @param {color}  --treeEntry--beforeAfter-left - Lines left position
 // ----------------------------------------------------------------------------
@@ -78,7 +79,7 @@
     &:after {
         display: var(--treeEntry--after-display, initial);
         top: calc(.5em + #{$-padding-v});
-        width: calc(#{$-padding-h} * .5);
+        width: var(--treeEntry--after-width, calc(#{$-padding-h} * .5));
         height: 1px;
     }
 
