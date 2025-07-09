@@ -11,6 +11,7 @@ import {
 } from "@website/js/tours/tour_utils";
 
 const carouselInnerSelector = ":iframe .carousel-inner";
+const ANCHOR_HOVER_BG_COLOR = '#EF6C6C17';
 
 registerWebsitePreviewTour("carousel_content_removal", {
     url: '/',
@@ -138,3 +139,89 @@ registerWebsitePreviewTour("snippet_carousel_autoplay", {
         trigger: `${carouselInnerSelector} > div.active:nth-child(2)`,
     },
 ]);
+
+registerWebsitePreviewTour(
+    "snippet_carousel_linkable_slides",
+    {
+        url: "/",
+        edition: true,
+    },
+    () => [
+        ...insertSnippet({ id: "s_carousel", name: "Carousel", groupName: "Intro" }),
+        ...clickOnSnippet(".carousel .carousel-item.active"),
+        {
+            content: "Make the Slide linkable",
+            trigger: "div[data-action-id='setSlideLink'] input",
+            run: "click",
+        },
+        {
+            content: "Enter the URL to be linked with slide",
+            trigger: "div[data-attribute-action='href'] input[title='Your URL']",
+            run: "edit /contactus",
+        },
+        {
+            content: "Select the URL from autocomplete dropdown",
+            trigger:
+                "ul.ui-autocomplete li div:contains('/contactus-thank-you (Thanks (Contact us))')",
+            run: "click",
+        },
+        {
+            content: "Enable opening the link in a new tab",
+            trigger: "div[data-label='Open in New Tab'] div[data-attribute-action='target'] input",
+            run: "click",
+        },
+        {
+            content: "Open the color picker",
+            trigger: "div[data-label='Hover Effect'] .o_we_color_preview",
+            run: "click",
+        },
+        {
+            content: "Switch to the Custom tab in the color picker",
+            trigger: `.o_popover .o_font_color_selector .btn-tab:contains("Custom")`,
+            run: "click",
+        },
+        {
+            content: "Pick hover background color",
+            trigger: ".o_popover .o_color_picker_inputs .o_hex_div input",
+            run: `edit ${ANCHOR_HOVER_BG_COLOR}`,
+        },
+        ...clickOnSave(),
+        {
+            content: "Check that the anchor tag is added to the carousel item",
+            trigger:
+                ":iframe .carousel-item div.slide-link-wrapper a.slide-link[href='/contactus-thank-you'][target='_blank']",
+        },
+        {
+            content: "Check that the hover effect is applied",
+            trigger: `:iframe .carousel-item div.slide-link-wrapper a.slide-link.slide-link-hover[style='--slide-hover-bg-color: ${ANCHOR_HOVER_BG_COLOR};']`,
+        },
+        {
+            content: "Click the button behind the slide anchor",
+            trigger: `:iframe .carousel-item a:contains("Contact Us")`,
+            run: function () {
+                const rect = this.anchor.getBoundingClientRect();
+
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2;
+
+                const clickEvent = new MouseEvent("click", {
+                    bubbles: true,
+                    cancelable: true,
+                    clientX: x,
+                    clientY: y,
+                    view: window,
+                });
+
+                const iframeContent = this.anchor.ownerDocument;
+                const targetEl = iframeContent.querySelector(".slide-link");
+                // Trigger anchor's handler to forward click to the
+                // button behind it.
+                targetEl.dispatchEvent(clickEvent);
+            },
+        },
+        {
+            content: "Verify that the click navigated to the Contact Us page.",
+            trigger: ":iframe [data-view-xmlid='website.contactus']",
+        },
+    ]
+);

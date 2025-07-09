@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CarouselSlidesOption">
+    <BuilderRow label.translate="Make it clickable" tooltip.translate="Enable to make the slide clickable">
+        <BuilderCheckbox id="'slideLinkable'" action="'setSlideLink'"/>
+    </BuilderRow>
+
+    <t t-if="isActiveItem('slideLinkable')">
+        <BuilderRow label.translate="Your URL" level="1">
+            <WebsiteUrlPicker title.translate="Your URL"
+                applyTo="'.slide-link'"
+                attributeAction="'href'"
+                placeholder.translate="e.g. /your-website-page"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Open in New Tab" tooltip.translate="Enable this to open the link in a new browser tab" level="1">
+            <BuilderCheckbox applyTo="'.slide-link'" attributeAction="'target'" attributeActionValue="'_blank'"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Hover Effect" tooltip.translate="Visually highlight the slide when hovered" level="1">
+            <BuilderCheckbox id="'isHover'" classAction="'slide-link-hover'" applyTo="'.slide-link'"/>
+            <t t-if="isActiveItem('isHover')">
+                <BuilderColorPicker
+                    applyTo="'.slide-link.slide-link-hover'"
+                    styleAction="'--slide-hover-bg-color'"
+                    enabledTabs="['solid', 'custom']"/>
+            </t>
+        </BuilderRow>
+    </t>
+</t>
+
+</templates>

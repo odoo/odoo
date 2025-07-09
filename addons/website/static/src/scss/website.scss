@@ -1420,6 +1420,19 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
     }
 }
 
+// To apply hover effect when slide is linkable.
+.carousel-item {
+    .slide-link {
+        transition: background-color 0.3s ease;
+        &.slide-link-hover[href] {
+            --slide-hover-bg-color: rgba(0, 0, 0, 0.2);
+            &:hover {
+                background-color: var(--slide-hover-bg-color);
+            }
+        }
+    }
+}
+
 // Parallax
 .parallax {
     // TODO this introduces a limitation: no dropdown will be able to
