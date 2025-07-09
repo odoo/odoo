@@ -17,16 +17,15 @@ export class CustomizeMailingPlugin extends Plugin {
 
     resources = {
         builder_actions: {
-            CustomizeSnippetColorAction,
+            CustomizeMassMailingStyleProperty,
         },
-        mass_mailing_css_prefix_selectors: ".o_mail_wrapper",
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
     };
     getRule = memoize((selector) => this._getRule(selector));
 
     setup() {
         this.iframeWindow = this.document.defaultView;
-        this.cssPrefix = this.getResource("mass_mailing_css_prefix_selectors").join(",");
+        this.cssPrefix = ".o_mail_wrapper";
         this.styleSheet = new this.iframeWindow.CSSStyleSheet();
         const styleEl = this.editable.querySelector("#design-element");
         if (styleEl) {
@@ -61,9 +60,9 @@ export class CustomizeMailingPlugin extends Plugin {
         Object.assign(ruleStyle, {
             styleObject,
             getPropertyValue: (styleName) =>
-                (styleObject[styleName] ?? "").match(prefixRegex)?.[1] ?? "",
+                (styleObject[styleName] ?? "").match(prefixRegex)?.[1].trim() ?? "",
             getPropertyPriority: (styleName) =>
-                (styleObject[styleName] ?? "").match(priorityRegex)?.[1] ?? "",
+                (styleObject[styleName] ?? "").match(priorityRegex)?.[1] ? "important" : "",
         });
         return ruleStyle;
     }
@@ -71,10 +70,7 @@ export class CustomizeMailingPlugin extends Plugin {
     parseDesignElement(styleEl) {
         const rules = [...styleEl.sheet.cssRules];
         for (const rule of rules) {
-            for (let selector of rule.selectorText.split(",")) {
-                if (!selector.trim().startsWith(this.cssPrefix)) {
-                    selector = `${this.cssPrefix} ${selector.trim()}`;
-                }
+            for (const selector of rule.selectorText.split(",")) {
                 for (const style of rule.style) {
                     let selectors = [selector];
                     if (style === "font-family") {
@@ -92,6 +88,9 @@ export class CustomizeMailingPlugin extends Plugin {
     }
 
     _getRule(selector) {
+        if (!selector.trim().startsWith(this.cssPrefix)) {
+            selector = `${this.cssPrefix} ${selector}`;
+        }
         for (const rule of this.styleSheet.cssRules) {
             if (rule.selectorText === selector) {
                 return rule;
@@ -115,6 +114,10 @@ export class CustomizeMailingPlugin extends Plugin {
     // which is not convenient since it can not be created manually
     // change/adapt API and usages, see convertObjectToRuleStyle
     addCSSRule({ selector, ruleStyle, whitelist }) {
+        const IframeCSSStyleDeclaration = this.iframeWindow.CSSStyleDeclaration;
+        if (!(ruleStyle instanceof IframeCSSStyleDeclaration)) {
+            ruleStyle = this.convertObjectToRuleStyle(ruleStyle);
+        }
         selector = selector.trim();
         const rule = this.getRule(selector);
         for (const style of whitelist ?? ruleStyle) {
@@ -127,48 +130,52 @@ export class CustomizeMailingPlugin extends Plugin {
     }
 }
 
-// TODO EGGMAIL: verify this selector
-const WRAPPER_SNIPPET_SELECTOR = ".o_mail_wrapper_td > [data-snippet]";
-export class CustomizeSnippetColorAction extends BuilderAction {
-    static id = "mass_mailing_egg.CustomizeSnippetColorAction";
+export const PRIORITY_STYLES = {
+    h1: new Set(["font-family"]),
+    h2: new Set(["font-family"]),
+    h3: new Set(["font-family"]),
+    p: new Set(["font-family"]),
+    hr: new Set(["border-top-width", "border-top-style", "border-top-color"]),
+};
+
+export class CustomizeMassMailingStyleProperty extends BuilderAction {
+    static id = "mass_mailing_egg.CustomizeMassMailingStyleProperty";
     static dependencies = ["builderActions", "mass_mailing.CustomizeMailingPlugin", "history"];
-    getValue() {
-        const rule =
-            this.dependencies["mass_mailing.CustomizeMailingPlugin"].getRule(
-                WRAPPER_SNIPPET_SELECTOR
-            );
-        return rule.style.getPropertyValue("background-color");
+    isApplied({ value }) {
+        return this.getValue(...arguments) === value;
     }
-    apply({ value }) {
-        const oldValue = this.getValue();
+    /**
+     * @param { Object } params
+     * @param { string } params.selector
+     * @param { string } params.property
+     */
+    getValue({ params }) {
+        const rule = this.dependencies["mass_mailing.CustomizeMailingPlugin"].getRule(
+            params.selector
+        );
+        return rule.style.getPropertyValue(params.property);
+    }
+    apply({ params, value }) {
+        const oldValue = this.getValue(...arguments);
+        const important = PRIORITY_STYLES[params.selector]?.has(params.property);
         this.dependencies.history.applyCustomMutation({
             apply: () => {
-                const ruleStyle = this.dependencies[
-                    "mass_mailing.CustomizeMailingPlugin"
-                ].convertObjectToRuleStyle({
-                    "background-color": `${value} !important;`,
-                });
                 this.dependencies["mass_mailing.CustomizeMailingPlugin"].addCSSRule({
-                    selector: WRAPPER_SNIPPET_SELECTOR,
-                    ruleStyle,
+                    selector: params.selector,
+                    ruleStyle: {
+                        [params.property]: `${value}${important ? "!important" : ""};`,
+                    },
                 });
             },
             revert: () => {
-                const ruleStyle = this.dependencies[
-                    "mass_mailing.CustomizeMailingPlugin"
-                ].convertObjectToRuleStyle({
-                    "background-color": `${oldValue} !important;`,
-                });
                 this.dependencies["mass_mailing.CustomizeMailingPlugin"].addCSSRule({
-                    selector: WRAPPER_SNIPPET_SELECTOR,
-                    ruleStyle,
+                    selector: params.selector,
+                    ruleStyle: {
+                        [params.property]: `${oldValue}${important ? "!important" : ""};`,
+                    },
                 });
             },
         });
-        // TODO EGGMAIL: do we want that ? Overwrite the custom style of every snippet?
-        for (const snippetEl of [...this.editable.querySelectorAll(WRAPPER_SNIPPET_SELECTOR)]) {
-            snippetEl.style["background-color"] = "";
-        }
     }
 }
 

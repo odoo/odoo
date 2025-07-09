@@ -20,30 +20,28 @@
 </t>
 
 <t t-name="mass_mailing_egg.DesignBodyOption">
-    <BuilderContext preview="false">
-        <BuilderRow label.translate="Body Width">
-            <BuilderSelect>
-                <!-- TODO EGGMAIL replace select by linked toggle buttons and recover images -->
-                <BuilderSelectItem classAction="'o_mail_small'" applyTo="'.o_mail_wrapper'">Small</BuilderSelectItem>
-                <BuilderSelectItem classAction="'o_mail_regular'" applyTo="'.o_mail_wrapper'">Regular</BuilderSelectItem>
-                <BuilderSelectItem classAction="''" applyTo="'.o_mail_wrapper'">Full</BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
-        <BuilderRow label.translate="Mailing Background">
-            <BuilderColorPicker noTransparency="true"
-                enabledTabs="['solid', 'custom']"
-                styleAction="'background-color'"
-                applyTo="'.o_layout'"
-            />
-        </BuilderRow>
-        <BuilderRow label.translate="Content Background">
-            <BuilderColorPicker noTransparency="true"
-                enabledTabs="['solid', 'custom']"
-                action="'mass_mailing_egg.CustomizeSnippetColorAction'"
-                actionParam="'.o_mail_wrapper_td > [data-snippet]'"
-            />
-        </BuilderRow>
-    </BuilderContext>
+    <BuilderRow label.translate="Body Width">
+        <BuilderSelect>
+            <!-- TODO EGGMAIL replace select by linked toggle buttons and recover images -->
+            <BuilderSelectItem classAction="'o_mail_small'" applyTo="'.o_mail_wrapper'">Small</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_mail_regular'" applyTo="'.o_mail_wrapper'">Regular</BuilderSelectItem>
+            <BuilderSelectItem classAction="''" applyTo="'.o_mail_wrapper'">Full</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Mailing Background">
+        <BuilderColorPicker noTransparency="true"
+            enabledTabs="['solid', 'custom']"
+            styleAction="'background-color'"
+            applyTo="'.o_layout'"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="Content Background">
+        <BuilderColorPicker noTransparency="true"
+            enabledTabs="['solid', 'custom']"
+            action="'mass_mailing_egg.CustomizeMassMailingStyleProperty'"
+            actionParam="{ selector: '.o_mail_wrapper_td > [data-snippet]', property: 'background-color' }"
+        />
+    </BuilderRow>
 </t>
 
 <t t-name="website.DesignHeadingsOption">

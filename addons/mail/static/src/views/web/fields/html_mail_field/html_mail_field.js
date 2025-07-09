@@ -15,6 +15,7 @@ export class HtmlMailField extends HtmlField {
      * @param {HTMLElement} el element to be processed
      * @param {Document} styleDocument source document for the style
      */
+    // TODO EGGMAIL: rename this as it returns an ELEMENT not html
     static async getInlineHTML(el, styleDocument) {
         if (!cssRulesByDocument.has(styleDocument)) {
             cssRulesByDocument.set(styleDocument, getCSSRules(styleDocument));
