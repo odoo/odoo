@@ -469,6 +469,11 @@ class HrAttendance(models.Model):
             not self.env.user.has_group('hr_attendance.group_hr_attendance_officer'):
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not his own."))
         attendances_dates = self._get_attendances_dates()
+
+        if vals.get('check_out') and self.out_mode == 'technical':
+            vals.update({'out_mode': 'manual'})
+        if vals.get('check_in') and self.in_mode == 'technical':
+            vals.update({'in_mode': 'manual'})
         result = super(HrAttendance, self).write(vals)
         if any(field in vals for field in ['employee_id', 'check_in', 'check_out']):
             # Merge attendance dates before and after write to recompute the
