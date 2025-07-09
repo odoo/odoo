@@ -861,6 +861,13 @@ class One2many(_RelationalMulti):
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
+    def _description_searchable(self, registry):
+        if self.comodel_name and self.inverse_name:
+            comodel = registry[self.comodel_name]
+            inverse_field = comodel._fields[self.inverse_name]
+            return inverse_field.store
+        return False
+
     def update_db(self, model, columns):
         if self.comodel_name in model.env:
             comodel = model.env[self.comodel_name]

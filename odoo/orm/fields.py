@@ -631,7 +631,7 @@ class Field(typing.Generic[T]):
         self.compute = self._compute_related
         if self.inherited or not (self.readonly or field.readonly):
             self.inverse = self._inverse_related
-        if not self.store and field._description_searchable:
+        if not self.store and field._description_searchable(model.env.registry):
             # allow searching on self only if the related field is searchable
             self.search = self._search_related
 
@@ -857,7 +857,7 @@ class Field(typing.Generic[T]):
                     warnings.warn(f"Field {self} cannot be precomputed as it depends on non-precomputed field {field}", stacklevel=1)
                     self.precompute = False
 
-                if field_seq and not field_seq[-1]._description_searchable:
+                if field_seq and not field_seq[-1]._description_searchable(registry):
                     # the field before this one is not searchable, so there is
                     # no way to know which on records to recompute self
                     warnings.warn(
@@ -922,8 +922,7 @@ class Field(typing.Generic[T]):
     def _description_depends(self, env: Environment):
         return env.registry.field_depends[self]
 
-    @property
-    def _description_searchable(self) -> bool:
+    def _description_searchable(self, registry: Registry) -> bool:
         return bool(self.store or self.search)
 
     def _description_sortable(self, env: Environment):
