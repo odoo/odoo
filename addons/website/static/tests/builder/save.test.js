@@ -1,16 +1,20 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, click, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, click, Deferred, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import {
+    addActionOption,
+    addOption,
     defineWebsiteModels,
     exampleWebsiteContent,
     modifyText,
     setupWebsiteBuilder,
     wrapExample,
 } from "./website_helpers";
+import { xml } from "@odoo/owl";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
@@ -129,6 +133,47 @@ test("content is not escaped twice inside root data-oe-model node which is not i
         return true;
     });
     await contains(".o-snippets-top-actions button:contains(Save)").click();
+});
+
+test("reload save with target, then discard and edit again should not reselect the target", async () => {
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        expect.step("save");
+        return true;
+    });
+    addActionOption({
+        testAction: class extends BuilderAction {
+            static id = "testAction";
+            reload = {};
+            apply({ editingElement }) {
+                editingElement.dataset.applied = "true";
+            }
+        },
+    });
+    addOption({
+        selector: ".test-option",
+        template: xml`<BuilderButton action="'testAction'"/>`,
+        reloadTarget: true,
+    });
+    const deferred = new Deferred();
+    await setupWebsiteBuilder(`<div class="test-option">b</div>`, {
+        delayReload: async () => await deferred,
+    });
+    await contains(":iframe .test-option").click();
+    await contains("[data-action-id=testAction]").click();
+    expect(":iframe .test-option").toHaveAttribute("data-applied");
+    deferred.resolve();
+    expect.verifySteps(["save"]);
+    await animationFrame();
+    // NOTE: the goal of the following assertion is to ensure that the relaod is
+    // completed. This relies on the "save" mocked for this test that does
+    // nothing to save anything and the reload (mocked in `setupWebsiteBuilder`)
+    // resets to initial content
+    expect(":iframe .test-option").not.toHaveAttribute("data-applied");
+    expect(".o-website-builder_sidebar button[data-name=customize]").toHaveClass("active");
+
+    await contains(".o-snippets-top-actions button[data-action='cancel']").click();
+    await contains(".o_edit_website_container button").click();
+    expect(".o-website-builder_sidebar button[data-name=blocks]").toHaveClass("active");
 });
 
 function setupSaveAndReloadIframe() {

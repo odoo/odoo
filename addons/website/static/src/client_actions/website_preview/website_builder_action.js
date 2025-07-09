@@ -490,6 +490,8 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     async reloadIframeAndCloseEditor() {
+        this.initialTab = null;
+        this.target = null;
         const isEditing = false;
         this.state.isEditing = isEditing;
         this.addSystrayItems();
