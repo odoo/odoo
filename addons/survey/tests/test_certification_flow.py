@@ -11,7 +11,7 @@ from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
 
-@tagged('-at_install', 'post_install', 'functional')
+@tagged('-at_install', 'post_install', 'functional', 'is_query_count')
 class TestCertificationFlow(common.TestSurveyCommon, MockEmail, HttpCase):
 
     def test_flow_certification(self):
