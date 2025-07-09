@@ -1555,7 +1555,9 @@ const MultiUserValueWidget = UserValueWidget.extend({
     async setValue(value, methodName) {
         let values = value.split(/\s*\|\s*/g);
         if (values.length === 1) {
-            values = value.split(/\s+/g);
+            // When input value is in rgba(...) format (e.g., for border color),
+            // we use a regex to correctly extract rgba and other values
+            values = value.match(/rgba?\([^)]+\)|[^ ,]+/g);
         }
         for (let i = 0; i < this._userValueWidgets.length - 1; i++) {
             await this._userValueWidgets[i].setValue(values.shift() || '', methodName);
@@ -7867,6 +7869,10 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
      */
     toggleBgImage(previewMode, widgetValue, params) {
         if (!widgetValue) {
+            // When background image with position "Repeat pattern" is removed,
+            // remove background size to avoid repeating gradient
+            this.$target[0].style.backgroundSize = "";
+            this.$target[0].classList.remove("o_bg_img_opt_repeat");
             this.$target.find('> .o_we_bg_filter').remove();
             // TODO: use setWidgetValue instead of calling background directly when possible
             const [bgImageWidget] = this._requestUserValueWidgets('bg_image_opt');
@@ -8647,7 +8653,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
     backgroundType: function (previewMode, widgetValue, params) {
         this.$target.toggleClass('o_bg_img_opt_repeat', widgetValue === 'repeat-pattern');
         this.$target.css('background-position', '');
-        this.$target.css('background-size', widgetValue !== 'repeat-pattern' ? '' : '100px');
+        this.$target[0].style.backgroundSize = widgetValue !== "repeat-pattern" ? "" : "100px, cover";
     },
     /**
      * Saves current background position and enables overlay.
@@ -8716,7 +8722,8 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      */
     _computeWidgetState: function (methodName, params) {
         if (methodName === 'backgroundType') {
-            return this.$target.css('background-repeat') === 'repeat' ? 'repeat-pattern' : 'cover';
+            const computedStyle = getComputedStyle(this.$target[0]);
+            return computedStyle.backgroundRepeat.includes("no-repeat") ? "cover" : "repeat-pattern";
         }
         return this._super(...arguments);
     },
