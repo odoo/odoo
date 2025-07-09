@@ -2,6 +2,9 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_coupon.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//tbody[hasclass('order-container')]//tr" position="attributes">
+            <attribute name="t-att-class">{"fst-italic": line.is_reward_line}</attribute>
+        </xpath>
         <xpath expr="//div[hasclass('pos-receipt')]//div[hasclass('before-footer')]" position="inside">
             <t t-if="order.new_coupon_info and order.new_coupon_info.length !== 0">
                 <div class="pos-coupon-rewards pt-3">

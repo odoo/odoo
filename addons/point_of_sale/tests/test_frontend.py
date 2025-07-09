@@ -1190,6 +1190,34 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour("point_of_sale.test_printed_receipt_tour")
 
+    def test_receipt_layout(self):
+        self.main_pos_config.write({
+            'receipt_layout': 'boxes',
+            'receipt_header': '<h2>Because boring receipts are so outdated</h2>',
+            'receipt_logo': False,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour("ReceiptLayoutTour")
+
+    def test_receipt_layout_configuration(self):
+        """ Test the Receipt Layout Configuration Wizard.
+
+            This test ensures that the receipt configurator wizard loads correctly. A failure here often
+            means the wizard is not opening properly, possibly due to missing data in `_getPreviewOrderData`,
+            which is responsible for generating the receipt preview.
+
+            To fix issues, ensure that `_getPreviewOrderData` returns all required fields to render the preview.
+        """
+        pos_config_id = self.main_pos_config
+        self.pos_admin.group_ids += self.env.ref('base.group_system')
+
+        def _default_pos_config_patch(*_args, **_kwargs):
+            return pos_config_id
+
+        with patch.object(self.env.registry.models['res.config.settings'], "_default_pos_config", _default_pos_config_patch):
+            self.start_tour("/odoo/settings#point_of_sale", 'ReceiptLayoutConfigurationTour', login="pos_admin")
+            self.assertEqual(self.main_pos_config.receipt_layout, 'boxes')
+
     def test_limited_product_pricelist_loading(self):
         self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', '1')
 
