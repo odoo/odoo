@@ -30,6 +30,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
 
         cls.sale_order.require_payment = True
 
+<<<<<<< 8f9194ed7e8155db03b3647b946f4f88ae964f31
     @mute_logger('odoo.http', 'werkzeug')
     def test_payment_amount_must_not_be_less_than_prepayment_amount(self):
         """ Test that accessing the portal page with a payment amount below prepayment amount raises
@@ -38,6 +39,22 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             'access_token': self.sale_order._portal_ensure_token(), 'payment_amount': 1
         })
         self.assertEqual(res.status_code, 404)
+||||||| 1484bac0a182c964f7267d9b5801164bdfefcfcd
+        with patch(
+            'odoo.addons.payment.controllers.portal.PaymentPortal'
+            '._compute_show_tokenize_input_mapping'
+        ) as patched:
+            tx_context = self._get_portal_pay_context(**route_values)
+            patched.assert_called_once_with(ANY, sale_order_id=ANY)
+=======
+        with patch(
+            'odoo.addons.payment.controllers.portal.PaymentPortal'
+            '._compute_show_tokenize_input_mapping'
+        ) as patched:
+            tx_context = self._get_portal_pay_context(**route_values)
+            patched.assert_called_once()
+            self.assertIn('sale_order_id', patched.call_args[1])
+>>>>>>> 9e87bed2c5c22f7b9f6ba18f447786e064313c11
 
     def test_is_down_payment_when_prepayment_amount_is_less_than_order_total(self):
         """Test that we are in the downpayment case when the prepayment amount is less than the
