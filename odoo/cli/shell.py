@@ -38,29 +38,6 @@ class Shell(Command):
     """Start odoo in an interactive shell"""
     supported_shells = ['ipython', 'ptpython', 'bpython', 'python']
 
-    def init(self, args):
-        config.parser.prog = self.prog
-
-        group = optparse.OptionGroup(config.parser, "Shell options")
-        group.add_option(
-            '--shell-file', dest='shell_file', type='string', my_default='',
-            help="Specify a python script to be run after the start of the shell. "
-                 "Overrides the env variable PYTHONSTARTUP."
-        )
-        group.add_option(
-            '--shell-interface', dest='shell_interface', type='string',
-            help="Specify a preferred REPL to use in shell mode. "
-                 "Supported REPLs are: [ipython|ptpython|bpython|python]"
-        )
-        config.parser.add_option_group(group)
-        config.parse_config(args, setup_logging=True)
-        cli_server.report_configuration()
-        server.start(preload=[], stop=True)
-
-        def raise_keyboard_interrupt(*a):
-            raise KeyboardInterrupt()
-        signal.signal(signal.SIGINT, raise_keyboard_interrupt)
-
     def console(self, local_vars):
         if not os.isatty(sys.stdin.fileno()):
             local_vars['__name__'] = '__main__'
@@ -135,7 +112,27 @@ class Shell(Command):
         console.interact(banner='')
 
     def run(self, args):
-        self.init(args)
+        config.parser.prog = self.prog
+
+        group = optparse.OptionGroup(config.parser, "Shell options")
+        group.add_option(
+            '--shell-file', dest='shell_file', type='string', my_default='',
+            help="Specify a python script to be run after the start of the shell. "
+                 "Overrides the env variable PYTHONSTARTUP."
+        )
+        group.add_option(
+            '--shell-interface', dest='shell_interface', type='string',
+            help="Specify a preferred REPL to use in shell mode. "
+                 "Supported REPLs are: [ipython|ptpython|bpython|python]"
+        )
+        config.parser.add_option_group(group)
+        config.parse_config(args, setup_logging=True)
+        cli_server.report_configuration()
+        server.start(preload=[], stop=True)
+
+        def raise_keyboard_interrupt(*a):
+            raise KeyboardInterrupt()
+        signal.signal(signal.SIGINT, raise_keyboard_interrupt)
 
         dbnames = config['db_name']
         if len(dbnames) > 1:
