@@ -27,12 +27,12 @@ test("avatar card preview with hr", async () => {
     const versionId = env["hr.version"].create({
         job_id: jobId,
         work_location_id: workLocationId,
-        work_location_type: "office",
         department_id: departmentId,
     });
     const employeeId = env["hr.employee"].create({
         version_id: versionId,
         work_email: "Mario@odoo.pro",
+        work_location_type: "office",
         work_phone: "+585555555",
     });
     const userId = env["res.users"].create({

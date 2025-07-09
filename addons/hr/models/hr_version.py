@@ -125,11 +125,6 @@ class HrVersion(models.Model):
         tracking=True)
     work_location_id = fields.Many2one('hr.work.location', 'Work Location',
                                        domain="[('address_id', '=', address_id)]", tracking=True)
-    work_location_name = fields.Char("Work Location Name", compute="_compute_work_location_name_type")
-    work_location_type = fields.Selection([
-        ("home", "Home"),
-        ("office", "Office"),
-        ("other", "Other")], compute="_compute_work_location_name_type", tracking=True)
 
     departure_reason_id = fields.Many2one("hr.departure.reason", string="Departure Reason",
                                           groups="hr.group_hr_user", copy=False, ondelete='restrict', tracking=True)
@@ -495,12 +490,6 @@ class HrVersion(models.Model):
         for version in self:
             if not version.structure_type_id or (version.structure_type_id.country_id and version.structure_type_id.country_id != version.company_id.country_id):
                 version.structure_type_id = _default_salary_structure(version.company_id.country_id.id)
-
-    @api.depends("work_location_id.name", "work_location_id.location_type")
-    def _compute_work_location_name_type(self):
-        for version in self:
-            version.work_location_name = version.work_location_id.name or None
-            version.work_location_type = version.work_location_id.location_type or 'other'
 
     @api.depends('distance_home_work', 'distance_home_work_unit')
     def _compute_km_home_work(self):

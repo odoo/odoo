@@ -17,9 +17,6 @@ class HrEmployeePublic(models.Model):
     leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
     show_leaves = fields.Boolean('Able to see Remaining Time Off', compute='_compute_show_leaves')
     is_absent = fields.Boolean('Absent Today', compute='_compute_leave_status', search='_search_absent_employee')
-    hr_icon_display = fields.Selection(selection_add=[
-        ('presence_holiday_absent', 'On leave'),
-        ('presence_holiday_present', 'Present but on leave')])
     allocation_display = fields.Char(compute='_compute_allocation_display')
 
     def _compute_show_leaves(self):
