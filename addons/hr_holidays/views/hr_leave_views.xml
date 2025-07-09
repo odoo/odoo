@@ -124,14 +124,16 @@
                             <widget name="web_ribbon" title="Approved" bg_color="bg-success" invisible="state != 'validate'"/>
                             <aside>
                                 <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128'"
-                                    class="o_image_64_cover float-start mb-2 me-2" alt="Employee's image"/>
+                                    class="o_image_64_cover float-start me-2" alt="Employee's image"/>
                             </aside>
-                            <main class="ps-3">
-                                <div class="o_holidays_kanban_card">
-                                    <field class="fw-bold fs-3 mb-2" name="employee_id"/>
+                            <main class="h-100">
+                                <div class="justify-content-center o_holidays_kanban_card">
                                     <div class="d-flex flex-row">
-                                        <div class="col-md-9 col-lg-9 col-10 d-flex flex-row o_hr_holidays_value">
-                                            <div class="col-md-5 col-lg-7 col-6 o_hr_holidays_name">
+                                        <div class="col-12 align-items-center o_hr_holidays_value">
+                                            <div class="col-4 o_hr_holidays_card">
+                                                <field class="fw-bold fs-3 mb-2" name="employee_id"/>
+                                            </div>
+                                            <div class="col-2 o_hr_holidays_name">
                                                 <field name="holiday_status_id" class="fw-bold"/>
                                                 <div class="d-flex flex-row">
                                                     <t t-out="luxon.DateTime.fromISO(record.request_date_from.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
@@ -151,13 +153,13 @@
                                                     </t>
                                                 </div>
                                             </div>
-                                            <div class="col-3 col-lg-2 o_hr_holidays_card">
+                                            <div class="col-2 o_hr_holidays_card">
                                                 <div class="fw-bold d-flex me-1">
                                                     <field name="duration_display"/>
                                                 </div>
                                                 Amount
                                             </div>
-                                            <div class="col-3 o_hr_holidays_card">
+                                            <div class="col-2 o_hr_holidays_card">
                                                 <div t-if="record.holiday_status_requires_allocation.raw_value"> <!-- To keep the same space-->
                                                     <div class="fw-bold d-flex gap-1 me-1">
                                                         <field name="virtual_remaining_leaves" widget="float" digits="[3,2]"/>
@@ -169,23 +171,23 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-3 o_hr_holidays_button flex-wrap d-flex pe-4 gap-2 justify-content-start">
-                                            <button
-                                                name="action_approve" type="object" class="btn btn-primary"
-                                                t-if="record.can_approve.raw_value">
-                                                Approve
-                                            </button>
-                                            <button
-                                                name="action_approve" type="object" class="btn btn-primary"
-                                                t-if="record.can_validate.raw_value and !record.can_approve.raw_value">
-                                                Validate
-                                            </button>
-                                            <button
-                                                name="action_refuse" type="object" class="btn btn-secondary"
-                                                t-if="record.can_refuse.raw_value">
-                                                Refuse
-                                            </button>
+                                            <div class="col-2 o_hr_holidays_button flex-wrap d-flex pe-4 gap-2 justify-content-start">
+                                                <button
+                                                    name="action_approve" type="object" class="btn btn-primary"
+                                                    t-if="record.can_approve.raw_value">
+                                                    Approve
+                                                </button>
+                                                <button
+                                                    name="action_approve" type="object" class="btn btn-primary"
+                                                    t-if="record.can_validate.raw_value and !record.can_approve.raw_value">
+                                                    Validate
+                                                </button>
+                                                <button
+                                                    name="action_refuse" type="object" class="btn btn-secondary"
+                                                    t-if="record.can_refuse.raw_value">
+                                                    Refuse
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
