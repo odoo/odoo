@@ -11,6 +11,7 @@ from threading import Thread
 from odoo.addons.iot_drivers import main
 from odoo.addons.iot_drivers.tools import helpers
 from odoo.addons.iot_drivers.server_logger import close_server_log_sender_handler
+from odoo.addons.iot_base.tools.payload_signature import verify_hmac_signature
 
 _logger = logging.getLogger(__name__)
 websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel()))
@@ -56,16 +57,25 @@ class WebsocketClient(Thread):
         for message in json.loads(messages):
             _logger.debug("websocket received a message: %s", pprint.pformat(message))
             self.last_message_id = message['id']
-            payload = message['message']['payload']
-            if not helpers.get_identifier() in payload.get('iot_identifiers', []):
+            payload = message['message']['payload']  # default "payload" in Odoo websocket messages
+            content = payload.get('content', {})  # "content" is our actual payload: allows "Authorizations" field
+
+            if not helpers.get_identifier() in content.get('iot_identifiers', []):
+                continue
+
+            if not any(
+                verify_hmac_signature(self.server_url, content, signature, helpers.get_token())
+                for signature in payload.get('Authorizations', [])
+            ):
+                _logger.error('%s: Websocket message authentication failed.', message['message']['type'])
                 continue
 
             match message['message']['type']:
                 case 'iot_action':
-                    for device_identifier in payload['device_identifiers']:
+                    for device_identifier in content['device_identifiers']:
                         if device_identifier in main.iot_devices:
                             _logger.debug("device '%s' action started with: %s", device_identifier, pprint.pformat(payload))
-                            main.iot_devices[device_identifier].action(payload)
+                            main.iot_devices[device_identifier].action(content)
                 case 'server_clear':
                     helpers.disconnect_from_server()
                     close_server_log_sender_handler()
