@@ -97,6 +97,9 @@ class Web_Unsplash(http.Controller):
             except requests.exceptions.Timeout as e:
                 logger.exception("Timeout: " + str(e))
                 continue
+            except requests.exceptions.ChunkedEncodingError as e:
+                logger.exception("Chunked Encoding Error: %s", e)
+                continue
 
             image = tools.image_process(image, verify_resolution=True)
             mimetype = guess_mimetype(image)
