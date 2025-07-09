@@ -109,16 +109,14 @@ class MailMail(models.Model):
         Compute the attachments we have access to,
         and the number of attachments we do not have access to.
         """
-        IrAttachment = self.env['ir.attachment']
         for mail_sudo, mail in zip(self.sudo(), self):
-            mail.unrestricted_attachment_ids = IrAttachment._filter_attachment_access(mail_sudo.attachment_ids.ids)
+            mail.unrestricted_attachment_ids = mail_sudo.attachment_ids.sudo(False)._filter_attachment_access()
             mail.restricted_attachment_count = len(mail_sudo.attachment_ids) - len(mail.unrestricted_attachment_ids)
 
     def _inverse_unrestricted_attachment_ids(self):
         """We can only remove the attachments we have access to."""
-        IrAttachment = self.env['ir.attachment']
         for mail_sudo, mail in zip(self.sudo(), self):
-            restricted_attaments = mail_sudo.attachment_ids - IrAttachment._filter_attachment_access(mail_sudo.attachment_ids.ids)
+            restricted_attaments = mail_sudo.attachment_ids - mail_sudo.attachment_ids.sudo(False)._filter_attachment_access()
             mail_sudo.attachment_ids = restricted_attaments | mail.unrestricted_attachment_ids
 
     def _search_body_content(self, operator, value):

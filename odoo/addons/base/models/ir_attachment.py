@@ -15,7 +15,7 @@ import werkzeug
 from collections import defaultdict
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError, ValidationError, UserError
+from odoo.exceptions import AccessError, MissingError, ValidationError, UserError
 from odoo.fields import Domain
 from odoo.http import Stream, root, request
 from odoo.tools import config, consteq, human_size, image, split_every, str2bool
@@ -440,72 +440,88 @@ class IrAttachment(models.Model):
     @api.model
     def check(self, mode, values=None):
         """ Restricts the access to an ir.attachment, according to referred mode """
-        if self.env.is_superuser():
-            return True
         # Always require an internal user (aka, employee) to access to a attachment
         if not (self.env.is_admin() or self.env.user._is_internal()):
             raise AccessError(_("Sorry, you are not allowed to access this document."))
+        # Filter returns the same instance if we have access to all documents
+        if self is not self._filter_attachment_access(mode, values):
+            raise AccessError(_("Sorry, you are not allowed to access this document."))
+
+    def _filter_attachment_access(self, mode='read', values=None):
+        """Filter the given attachment to return only the records the current user have access to.
+        Return ``self`` if the user has access to all records and values.
+
+        :return: <ir.attachment> the current user have access to
+        """
+        if self.env.su:
+            return self
+        Attachments = self.browse()
+        if not Attachments.has_access(mode):
+            return Attachments
+        if mode in ('create', 'unlink'):
+            # check write operation instead of unlinking and creating for
+            # related models and field access
+            mode = 'write'
+        att_accessible_ids = set()
+
+        # additional value to check
+        values = values or {}
+        additional_res = (values.get('res_model'), values.get('res_id'))
+        if not all(additional_res):
+            additional_res = None
+
         # collect the records to check (by model)
         model_ids = defaultdict(set)            # {model_name: set(ids)}
+        att_model_ids = []                      # [(att_id, (res_model, res_id))]
         if self:
             # DLE P173: `test_01_portal_attachment`
             self.env['ir.attachment'].flush_model(['res_model', 'res_id', 'create_uid', 'public', 'res_field'])
-            self.env.cr.execute('SELECT res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s', [tuple(self.ids)])
-            for res_model, res_id, create_uid, public, res_field in self.env.cr.fetchall():
+            self.env.cr.execute('SELECT id, res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s', [tuple(self.ids)])
+            for att_id, res_model, res_id, create_uid, public, res_field in self.env.cr.fetchall():
                 if public and mode == 'read':
+                    att_accessible_ids.add(att_id)
                     continue
                 if not self.env.is_system():
                     if not res_id and create_uid != self.env.uid:
-                        raise AccessError(_("Sorry, you are not allowed to access this document."))
+                        continue
                     if res_field:
                         field = self.env[res_model]._fields[res_field]
-                        if not self._has_field_access(field, 'read'):
-                            raise AccessError(_("Sorry, you are not allowed to access this document."))
-                if not (res_model and res_id):
-                    continue
-                model_ids[res_model].add(res_id)
-        if values and values.get('res_model') and values.get('res_id'):
-            model_ids[values['res_model']].add(values['res_id'])
+                        if not self._has_field_access(field, mode):
+                            continue
+                if res_model and res_id:
+                    model_ids[res_model].add(res_id)
+                    att_model_ids.append((att_id, (res_model, res_id)))
+                else:
+                    att_accessible_ids.add(att_id)
+        if additional_res:
+            model_ids[additional_res[0]].add(additional_res[1])
 
         # check access rights on the records
+        accessible_model_ids = set()
         for res_model, res_ids in model_ids.items():
             # ignore attachments that are not attached to a resource anymore
             # when checking access rights (resource was deleted but attachment
             # was not)
             if res_model not in self.env:
                 continue
-            if res_model == 'res.users' and len(res_ids) == 1 and self.env.uid == list(res_ids)[0]:
+            records = self.env[res_model].browse(res_ids)
+            if res_model == 'res.users' and len(records) == 1 and self.env.uid == records.id:
                 # by default a user cannot write on itself, despite the list of writeable fields
                 # e.g. in the case of a user inserting an image into his image signature
                 # we need to bypass this check which would needlessly throw us away
+                accessible_model_ids.add((res_model, records.id))
                 continue
-            records = self.env[res_model].browse(res_ids).exists()
-            # For related models, check if we can write to the model, as unlinking
-            # and creating attachments can be seen as an update to the model
-            access_mode = 'write' if mode in ('create', 'unlink') else mode
-            records.check_access(access_mode)
-
-    @api.model
-    def _filter_attachment_access(self, attachment_ids):
-        """Filter the given attachment to return only the records the current user have access to.
-
-        :param attachment_ids: List of attachment ids we want to filter
-        :return: <ir.attachment> the current user have access to
-        """
-        ret_attachments = self.env['ir.attachment']
-        attachments = self.browse(attachment_ids)
-        if not attachments.has_access('read'):
-            return ret_attachments
-
-        for attachment in attachments.sudo():
-            # Use SUDO here to not raise an error during the prefetch
-            # And then drop SUDO right to check if we can access it
             try:
-                attachment.sudo(False).check('read')
-                ret_attachments |= attachment
-            except AccessError:
-                continue
-        return ret_attachments
+                records = records._filtered_access(mode)
+            except MissingError:
+                records = records.exists()._filtered_access(mode)
+            accessible_model_ids.update((res_model, id_) for id_ in records._ids)
+        att_accessible_ids.update(att_id for att_id, res in att_model_ids if res in accessible_model_ids)
+
+        if len(att_accessible_ids) == len(self) and (not additional_res or additional_res in accessible_model_ids):
+            # all is accessible
+            return self
+        return Attachments.browse(id_ for id_ in self._ids if id_ in att_accessible_ids)
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, *, active_test=True, bypass_access=False):
