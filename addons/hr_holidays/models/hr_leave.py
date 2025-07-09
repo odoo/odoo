@@ -549,6 +549,10 @@ Contracts:
             if not leave.date_from or not leave.date_to or not calendar:
                 result[leave.id] = (0, 0)
                 continue
+            if leave.holiday_status_id.duration_count == 'calendar':
+                days = (leave.date_to.date() - leave.date_from.date()).days + 1
+                result[leave.id] = (days, days * HOURS_PER_DAY)
+                continue
             if leave.employee_id:
                 # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
                 # sudo as is_flexible is on version model and employee does not have access to it.
