@@ -461,19 +461,33 @@ class ProjectProject(models.Model):
     def _get_foldable_section(self):
         return ['materials', 'service_revenues']
 
-    def get_sale_items_data(self, offset=0, limit=None, with_action=True, section_id=None):
+    def prefetch_sale_items_data(self, ids):
+        for key, val in ids.items():
+            ids[key] = self.get_sale_items_data(limit=len(val), section_id=key, ids=val)
+        return ids
+
+    def get_sale_items_data(self, offset=0, limit=None, with_action=True, section_id=None, ids=None):
         if not self.env.user.has_group('project.group_project_user'):
             return {}
 
-        all_sols = self.env['sale.order.line'].sudo().search(
-            self._get_domain_from_section_id(section_id),
-            offset=offset,
-            limit=limit + 1,
-        )
+        order_lines_sudo = self.env['sale.order.line'].sudo()
+
         display_load_more = False
-        if len(all_sols) > limit:
-            all_sols = all_sols - all_sols[limit]
-            display_load_more = True
+        if ids:
+            already_fetched_sols = order_lines_sudo.browse(ids)
+            count = order_lines_sudo.search_count(self._get_domain_from_section_id(section_id))
+            if count > len(already_fetched_sols):
+                display_load_more = True
+            all_sols = already_fetched_sols
+        else:
+            all_sols = order_lines_sudo.search(
+                self._get_domain_from_section_id(section_id),
+                offset=offset,
+                limit=limit + 1,
+            )
+            if len(all_sols) > limit:
+                all_sols = all_sols - all_sols[limit]
+                display_load_more = True
 
         # filter to only get the action for the SOLs that the user can read
         action_per_sol = all_sols.sudo(False)._filtered_access('read')._get_action_per_item() if with_action else {}
