@@ -1,7 +1,7 @@
-import { useBus } from "@web/core/utils/hooks";
 import { BomOverviewLine } from "../bom_overview_line/mrp_bom_overview_line";
 import { BomOverviewSpecialLine } from "../bom_overview_special_line/mrp_bom_overview_special_line";
-import { Component, onWillUnmount, proxy, t, useOnChange, useProps } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, t, useOnChange, usePlugin, useProps } from "@odoo/owl";
+import { MrpOverviewPlugin } from "../mrp_overview_plugin";
 
 export class BomOverviewExtraBlock extends Component {
     static template = "mrp.BomOverviewExtraBlock";
@@ -20,6 +20,7 @@ export class BomOverviewExtraBlock extends Component {
     });
 
     setup() {
+        this.overviewPlugin = usePlugin(MrpOverviewPlugin);
         this.state = proxy({
             isFolded: !this.props.unfoldAll,
         });
@@ -27,12 +28,13 @@ export class BomOverviewExtraBlock extends Component {
             this.props.changeFolded({ ids: [this.identifier], isFolded: false });
         }
 
-        useBus(this.env.overviewBus, "toggle-fold-all", () => this._toggleFoldAll());
+        this.overviewPlugin.onToggleFoldAll((isFolded) => this._onToggleFoldAll(isFolded));
 
         useOnChange(
             () => [this.props.data.product_id],
             () => {
                 this.state.isFolded = true;
+                this.props.changeFolded({ ids: [this.identifier], isFolded: true });
             },
             { initialRun: false }
         );
@@ -51,9 +53,9 @@ export class BomOverviewExtraBlock extends Component {
         this.props.changeFolded({ ids: [this.identifier], isFolded: newState });
     }
 
-    _toggleFoldAll() {
-        this.state.isFolded = !this.state.isFolded;
-        this.props.changeFolded({ ids: [this.identifier], isFolded: this.state.isFolded });
+    _onToggleFoldAll(isFolded) {
+        this.state.isFolded = isFolded;
+        this.props.changeFolded({ ids: [this.identifier], isFolded });
     }
 
     //---- Getters ----

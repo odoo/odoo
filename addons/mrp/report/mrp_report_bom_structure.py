@@ -322,7 +322,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         bom_report_line['bom_unit_cost'] = bom_report_line['bom_cost']
         if product and not parent_product and bom.uom_id != product.uom_id:
             bom_report_line['bom_unit_cost'] = bom.uom_id._compute_price(bom_report_line['bom_cost'], product.uom_id)
-        bom_report_line['foldable'] = len(bom.operation_ids) > 0 or (len(bom_report_line['components']) > 0 and level > 0) or any(component.get('foldable', False) for component in bom_report_line['components'])
 
         available_components = unavail_component_has_route = True
         expected_components = False

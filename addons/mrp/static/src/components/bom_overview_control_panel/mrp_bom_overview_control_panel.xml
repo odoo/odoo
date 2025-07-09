@@ -6,7 +6,7 @@
             <t t-set-slot="control-panel-buttons">
                 <button t-on-click="this.manufactureFromBoM" type="button" class="btn btn-primary d-print-none">Manufacture</button>
                 <button t-on-click="() => this.props.print()" type="button" class="btn btn-secondary">Print</button>
-                <button t-if="this.props.foldable" t-on-click="this.clickTogglefold" type="button" class="btn btn-secondary d-print-none" t-out="this.foldButtonText"/>
+                <button t-if="this.props.foldable" t-on-click="this.clickToggleFold" type="button" class="btn btn-secondary d-print-none" t-out="this.foldButtonText"/>
             </t>
             <t t-set-slot="control-panel-actions">
                 <div t-if="this.props.showVariants" class="input-group align-items-center d-print-none">
