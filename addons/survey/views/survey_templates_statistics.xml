@@ -18,7 +18,7 @@
         <div class="o_survey_statistics_header mt32">
             <h2 t-field="survey.title"/>
             <div class="d-flex align-items-start">
-                <div t-if="question_and_page_data" t-call="survey.survey_results_filters" class="o_survey_results_topbar d-print-none"/>
+                <div t-if="question_and_page_data" class="o_survey_results_topbar d-print-none"><t t-call="survey.survey_results_filters"/></div>
                 <h3 t-else="">
                     Sorry, no one answered this survey yet.
                 </h3>
@@ -74,7 +74,7 @@
                 <h3 class="mt16 text-uppercase" t-field="question.title"/>
                 <hr class="mt-2 mb-4"/>
             </div>
-            <div t-else="" class="mt-2 o_survey_results_question_wrapper" t-call="survey.survey_page_statistics_question" />
+            <div t-else="" class="mt-2 o_survey_results_question_wrapper"><t t-call="survey.survey_page_statistics_question"/></div>
         </div>
     </template>
 
@@ -283,7 +283,7 @@
                             <td>
                                 <t t-if="question.question_type == 'numerical_box'">
                                     <t t-set="right_answer" t-value="common_line[0] == question.answer_numerical_box"/>
-                                    <span t-call="survey.survey_remove_unnecessary_decimals"><t t-set="value_to_format" t-value="common_line[0]"/></span>
+                                    <span><t t-call="survey.survey_remove_unnecessary_decimals" value_to_format="common_line[0]"/></span>
                                     <i t-if="right_answer" class="fa fa-check"/>
                                 </t>
                                 <t t-elif="question.question_type == 'date'">
@@ -299,8 +299,8 @@
                             </td>
                             <td><span t-esc="common_line[1]"></span></td>
                             <td t-if="question.is_scored_question">
-                                <span t-if="right_answer" t-call="survey.survey_remove_unnecessary_decimals">
-                                    <t t-set="value_to_format" t-value="question.answer_score"/>
+                                <span t-if="right_answer">
+                                    <t t-call="survey.survey_remove_unnecessary_decimals" value_to_format="question.answer_score"/>
                                 </span>
                                 <span t-else="">0</span>
                             </td>
@@ -357,8 +357,8 @@
                         <tr t-foreach="table_data" t-as="choice_data">
                             <td>
                                 <p class="text-nowrap my-0">
-                                    <span t-if="question.question_type == 'numerical_box'" t-call="survey.survey_remove_unnecessary_decimals">
-                                        <t t-set="value_to_format" t-value="choice_data['value']"/>
+                                    <span t-if="question.question_type == 'numerical_box'">
+                                        <t t-call="survey.survey_remove_unnecessary_decimals" value_to_format="choice_data['value']"/>
                                     </span>
                                     <span t-else="" t-esc="choice_data['value']"/>
                                     <i t-if="question.is_scored_question and choice_data['suggested_answer'].is_correct" class="fa fa-check"/>
@@ -377,15 +377,15 @@
                                     data-model-short-key="A" t-att-data-record-id="choice_data['suggested_answer'].id"
                                     role="img" aria-label="Filter surveys" title="Only show survey results having selected this answer"/>
                             </td>
-                            <td t-if="question.is_scored_question" t-call="survey.survey_remove_unnecessary_decimals">
-                                <t t-set="value_to_format" t-value="choice_data['suggested_answer'].answer_score"/>
+                            <td t-if="question.is_scored_question">
+                                <t t-call="survey.survey_remove_unnecessary_decimals" value_to_format="choice_data['suggested_answer'].answer_score"/>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div t-if="comment_lines" t-call="survey.question_result_comments" />
+        <div t-if="comment_lines"><t t-call="survey.question_result_comments"/></div>
     </template>
 
     <template id="question_result_matrix" name="Question: matrix result (matrix)">
@@ -431,7 +431,7 @@
                     </tbody>
                 </table>
             </div>
-        <div t-if="comment_lines" t-call="survey.question_result_comments" />
+        <div t-if="comment_lines"><t t-call="survey.question_result_comments"/></div>
         </div>
     </template>
 

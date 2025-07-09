@@ -18,6 +18,7 @@ from odoo.http import request
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.safe_eval import safe_eval
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
+from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.addons.http_routing.models import ir_http
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 
@@ -392,14 +393,10 @@ class IrHttp(models.AbstractModel):
     def _get_values_500_error(cls, env, values, exception):
         View = env["ir.ui.view"]
         values = super()._get_values_500_error(env, values, exception)
-        if 'qweb_exception' in values:
-            try:
-                # exception.name might be int, string
-                exception_template = int(exception.name)
-            except ValueError:
-                exception_template = exception.name
-            view = View.sudo()._get_template_view(exception_template)
-            if exception.html and exception.html in view.arch:
+        if isinstance(exception, QWebException):
+            exception_template = exception.ref
+            view = exception_template and View.sudo()._get_template_view(exception_template)
+            if not view or exception.html and exception.html in view.arch:
                 values['view'] = view
             else:
                 # There might be 2 cases where the exception code can't be found
@@ -409,7 +406,7 @@ class IrHttp(models.AbstractModel):
                 node = et.xpath(exception.path) if exception.path else et
                 line = node is not None and len(node) > 0 and etree.tostring(node[0], encoding='unicode')
                 if line:
-                    values['view'] = View._views_get(exception_template).filtered(
+                    values['view'] = View.sudo()._views_get(view.id).filtered(
                         lambda v: line in v.arch
                     )
                     values['view'] = values['view'] and values['view'][0]

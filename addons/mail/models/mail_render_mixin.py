@@ -225,10 +225,8 @@ class MailRenderMixin(models.AbstractModel):
             try:
                 node = html.fragment_fromstring(template_src, create_parent='div')
                 self.env["ir.qweb"].with_context(raise_on_forbidden_code_for_model=model)._generate_code(node)
-            except QWebException as e:
-                if isinstance(e.__cause__, PermissionError):
-                    return True
-                raise
+            except PermissionError:
+                return True
         return False
 
     @api.model
