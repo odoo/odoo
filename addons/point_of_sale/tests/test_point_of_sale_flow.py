@@ -285,6 +285,10 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(tracked_line.location_id, shelf1_location)
         self.assertEqual(untracked_line.location_id, shelf1_location)
 
+        res = order.action_pos_order_invoice()
+        invoice_test = self.env['account.move'].browse(res['res_id'])
+        self.assertEqual(invoice_test.ref, invoice_test.pos_order_ids.display_name)
+
         self.pos_config_usd.current_session_id.action_pos_session_closing_control()
 
     def test_order_to_payment_currency(self):
