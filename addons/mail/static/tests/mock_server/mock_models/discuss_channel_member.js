@@ -199,7 +199,7 @@ export class DiscussChannelMember extends models.ServerModel {
         if (notify) {
             const [channel] = this.search_read([["id", "in", ids]]);
             const [partner, guest] = ResPartner._get_current_persona();
-            let target = guest ?? partner;
+            let target = partner ?? guest;
             if (DiscussChannel._types_allowing_seen_infos().includes(channel.channel_type)) {
                 target = channel;
             }
@@ -240,7 +240,7 @@ export class DiscussChannelMember extends models.ServerModel {
         this.env["discuss.channel.member"].write([member.id], { message_unread_counter });
         const [partner, guest] = this.env["res.partner"]._get_current_persona();
         this.env["bus.bus"]._sendone(
-            guest ?? partner,
+            partner ?? guest,
             "mail.record/insert",
             new mailDataHelpers.Store(
                 DiscussChannelMember.browse(member.id),
