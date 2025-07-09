@@ -123,22 +123,20 @@ class ResourceCalendar(models.Model):
 
     @api.constrains('attendance_ids')
     def _check_attendance_ids(self):
-        for resource in self:
-            if (resource.two_weeks_calendar and
-                    resource.attendance_ids.filtered(lambda a: a.display_type == 'line_section') and
-                    not resource.attendance_ids.sorted('sequence')[0].display_type):
+        for res_calendar in self:
+            if (res_calendar.two_weeks_calendar and
+                    res_calendar.attendance_ids.filtered(lambda a: a.display_type == 'line_section') and
+                    not res_calendar.attendance_ids.sorted('sequence')[0].display_type):
                 raise ValidationError(_("In a calendar with 2 weeks mode, all periods need to be in the sections."))
 
-    @api.constrains('attendance_ids')
-    def _check_attendance(self):
-        # Avoid superimpose in attendance
-        for calendar in self:
-            attendance_ids = calendar.attendance_ids.filtered(lambda attendance: not attendance.resource_id and attendance.display_type is False)
-            if calendar.two_weeks_calendar:
-                calendar._check_overlap(attendance_ids.filtered(lambda attendance: attendance.week_type == '0'))
-                calendar._check_overlap(attendance_ids.filtered(lambda attendance: attendance.week_type == '1'))
+            # Avoid superimpose in attendance
+            attendance_ids = res_calendar.attendance_ids.filtered(
+                lambda attendance: not attendance.resource_id and attendance.display_type is False)
+            if res_calendar.two_weeks_calendar:
+                res_calendar._check_overlap(attendance_ids.filtered(lambda attendance: attendance.week_type == '0'))
+                res_calendar._check_overlap(attendance_ids.filtered(lambda attendance: attendance.week_type == '1'))
             else:
-                calendar._check_overlap(attendance_ids)
+                res_calendar._check_overlap(attendance_ids)
 
     # --------------------------------------------------
     # Compute Methods
