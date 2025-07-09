@@ -9,7 +9,7 @@ except ImportError:
 
 from odoo.tests import tagged, new_test_user
 from odoo.addons.bus.tests.common import WebsocketCase
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 
 
@@ -49,6 +49,7 @@ class TestMailPresence(WebsocketCase, MailCommon):
             sender_bus_target.id,
         )
 
+    @freeze_all_time()
     def test_receive_presences_as_guest(self):
         guest = self.env["mail.guest"].create({"name": "Guest"})
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
@@ -59,7 +60,6 @@ class TestMailPresence(WebsocketCase, MailCommon):
         channel.add_members(guest_ids=[guest.id], partner_ids=[bob.partner_id.id])
         # Now that they share a channel, guest should receive users's presence.
         self._receive_presence(sender=bob, recipient=guest)
-
         other_guest = self.env["mail.guest"].create({"name": "OtherGuest"})
         # Guest should not receive guest's presence: no common channel.
         with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
@@ -69,6 +69,7 @@ class TestMailPresence(WebsocketCase, MailCommon):
         self._receive_presence(sender=other_guest, recipient=guest)
         self.assertEqual(other_guest.im_status, "online")
 
+    @freeze_all_time()
     def test_receive_presences_as_portal(self):
         portal = new_test_user(self.env, login="portal_user", groups="base.group_portal")
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
@@ -79,7 +80,6 @@ class TestMailPresence(WebsocketCase, MailCommon):
         channel.add_members(partner_ids=[portal.partner_id.id, bob.partner_id.id])
         # Now that they share a channel, portal should receive users's presence.
         self._receive_presence(sender=bob, recipient=portal)
-
         guest = self.env["mail.guest"].create({"name": "Guest"})
         # Portal should not receive guest's presence: no common channel.
         with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
@@ -89,6 +89,7 @@ class TestMailPresence(WebsocketCase, MailCommon):
         self._receive_presence(sender=guest, recipient=portal)
         self.assertEqual(guest.im_status, "online")
 
+    @freeze_all_time()
     def test_receive_presences_as_internal(self):
         internal = new_test_user(self.env, login="internal_user", groups="base.group_user")
         guest = self.env["mail.guest"].create({"name": "Guest"})
