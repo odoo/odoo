@@ -54,3 +54,19 @@ class HrEmployeePublic(models.Model):
         self.ensure_one()
         if self.is_user:
             return self.employee_id.action_time_off_dashboard()
+
+    def action_open_time_off_calendar(self):
+        """Open the time off calendar filtered on this employee."""
+        self.ensure_one()
+        action = self.env.ref('hr_holidays.action_my_days_off_dashboard_calendar').sudo().read()[0]
+        action['domain'] = [('employee_id', '=', self.id)]
+        ctx = ({
+            'active_employee_id': self.id,
+            'search_default_employee_id': [self.id],
+            'search_default_my_leaves': 0,
+            'search_default_team': 0,
+            'search_default_current_year': 1,
+            'hide_employee_name': 1,
+        })
+        action['context'] = ctx
+        return action
