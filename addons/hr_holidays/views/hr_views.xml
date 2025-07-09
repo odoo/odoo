@@ -166,6 +166,23 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="show_leaves" invisible="1"/>
+                <button name="action_open_time_off_calendar"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-calendar"
+                        invisible="show_leaves"
+                        groups="base.group_user"
+                        help="Remaining leaves">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">
+                            Time Off
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="show_leaves" invisible="1"/>
                 <button name="%(hr_leave_action_new_request)d"
                         type="action"
                         class="oe_stat_button"

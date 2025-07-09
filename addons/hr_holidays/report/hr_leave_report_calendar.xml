@@ -23,6 +23,29 @@
         </field>
     </record>
 
+    <record id="hr_leave_report_calendar_year_view" model="ir.ui.view">
+        <field name="name">hr.leave.report.calendar.year.view</field>
+        <field name="model">hr.leave.report.calendar</field>
+        <field name="arch" type="xml">
+            <calendar
+                string="Time Off"
+                date_start="start_datetime"
+                date_stop="stop_datetime"
+                mode="year"
+                quick_create="0"
+                color="employee_id"
+                event_open_popup="True"
+                js_class="time_off_report_calendar"
+                show_unusual_days="True">
+                <field name="name"/>
+                <field name="employee_id" filters="1" invisible="1"/>
+                <field name="is_hatched" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="leave_manager_id" invisible="1"/>
+            </calendar>
+        </field>
+    </record>
+
     <record id="hr_leave_report_calendar_view_form" model="ir.ui.view">
         <field name="name">hr.leave.report.calendar.view.form</field>
         <field name="model">hr.leave.report.calendar</field>
@@ -97,6 +120,18 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Nobody here ? All of the people you're looking for will be working at that time.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_my_days_off_dashboard_calendar" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">hr.leave.report.calendar</field>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="hr_leave_report_calendar_year_view"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                You have no time off yet!
             </p>
         </field>
     </record>
