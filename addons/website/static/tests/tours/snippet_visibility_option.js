@@ -46,14 +46,8 @@ registerWebsitePreviewTour("snippet_visibility_option", {
     },
     {
         content: "Verify that both the banner and column are marked as invisible.",
-        trigger: ".o_we_invisible_root_parent",
-        run: () => {
-            const isBlockInvisible = document.querySelector("li .o_we_invisible_entry i").classList.contains("fa-eye-slash");
-            const isColumnInvisible = document.querySelector("li li .o_we_invisible_entry i").classList.contains("fa-eye-slash");
-            if (!isBlockInvisible || !isColumnInvisible) {
-                console.error("Visibility issue detected with the elements.");
-            }
-        }
+            trigger:
+                ".o_we_invisible_el_panel:has(.o_we_invisible_root_parent i.fa-eye):has(li .o_we_invisible_entry i.fa-eye-slash):has(li li .o_we_invisible_entry i.fa-eye-slash)",
     },
     ...clickOnSave(),
     ...clickOnEditAndWaitEditMode(),
@@ -64,14 +58,7 @@ registerWebsitePreviewTour("snippet_visibility_option", {
     },
     {
         content: "Verify that the popup is visible and the column is still invisible.",
-        trigger: "li > .o_we_invisible_entry",
-        run: () => {
-            const isPopupVisible = document.querySelector(".o_we_invisible_root_parent i").classList.contains("fa-eye");
-            const isColumnInvisible = document.querySelector("li li .o_we_invisible_entry i").classList.contains("fa-eye-slash");
-            if (!isPopupVisible || !isColumnInvisible) {
-                console.error("Visibility issue detected with the elements.");
-            }
-        }
+        trigger: ".o_we_invisible_el_panel:has(.o_we_invisible_root_parent i.fa-eye):has(li .o_we_invisible_entry i.fa-eye):has(li li .o_we_invisible_entry i.fa-eye-slash)"
     },
     ...clickOnSave(),
     ...clickOnEditAndWaitEditMode(),
@@ -82,23 +69,12 @@ registerWebsitePreviewTour("snippet_visibility_option", {
     },
     {
         content: "Verify that both the popup and the banner are now visible.",
-        trigger: ".o_we_invisible_root_parent",
-        run: () => {
-            const isPopupVisible = document.querySelector(".o_we_invisible_root_parent i").classList.contains("fa-eye");
-            const isBlockVisible = document.querySelector("li .o_we_invisible_entry i").classList.contains("fa-eye");
-            if (!isPopupVisible || !isBlockVisible) {
-                console.error("Visibility issue detected with the elements.");
-            }
-        }
+        trigger: ".o_we_invisible_el_panel:has(.o_we_invisible_root_parent i.fa-eye):has(li .o_we_invisible_entry i.fa-eye):has(li li .o_we_invisible_entry i.fa-eye)",
     },
     {
         content: "Click on the popup snippet to hide its descendant elements.",
-        trigger: ".o_we_invisible_root_parent",
-        run: () => {
-            setTimeout(() => {
-                document.querySelector(".o_we_invisible_root_parent").click();
-            }, 1000);
-        }
+        trigger: ".o_we_invisible_root_parent i.fa-eye",
+        run: "click",
     },
     {
         content: "Make sure the parent snippet is invisible.",
@@ -106,13 +82,6 @@ registerWebsitePreviewTour("snippet_visibility_option", {
     },
     {
         content: "Verify that both the banner and column snippets are marked as invisible.",
-        trigger: ".o_we_invisible_root_parent",
-        run: () => {
-            const isBlockInvisible = document.querySelector("li .o_we_invisible_entry i").classList.contains("fa-eye-slash");
-            const isColumnInvisible = document.querySelector("li li .o_we_invisible_entry i").classList.contains("fa-eye-slash");
-            if (!isColumnInvisible || !isBlockInvisible) {
-                console.error("Visibility issue detected with the elements.");
-            }
-        }
+        trigger: ".o_we_invisible_el_panel:has(li .o_we_invisible_entry i.fa-eye-slash):has(li li .o_we_invisible_entry i.fa-eye-slash)",
     },
 ]);
