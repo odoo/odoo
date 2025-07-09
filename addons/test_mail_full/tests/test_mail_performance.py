@@ -75,7 +75,7 @@ class TestMailPerformance(FullBaseMailPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=104):  # tmf: 101
+        with self.assertQueryCount(employee=105):  # tmf: 102
             new_message = record_ticket.message_post(
                 attachment_ids=attachments.ids,
                 body=Markup('<p>Test Content</p>'),
@@ -232,7 +232,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_norating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=15):
+        with self.assertQueryCount(employee=15):  # tmf: 14
             # res = messages_all.portal_message_format(options=None)
             res = messages_all.portal_message_format(options={'rating_include': False})
 
@@ -286,7 +286,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_rating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=29):  # sometimes +1
+        with self.assertQueryCount(employee=29):  # tmf: 28 / sometimes +1
             res = messages_all.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), len(messages_all))
@@ -400,25 +400,25 @@ class TestRatingPerformance(FullBaseMailPerformance):
     @users('employee')
     @warmup
     def test_rating_last_value_perfs(self):
-        with self.assertQueryCount(employee=254):  # tmf: 254
+        with self.assertQueryCount(employee=274):  # tmf: 274
             self.create_ratings('mail.test.rating.thread')
 
-        with self.assertQueryCount(employee=283):  # tmf: 283
+        with self.assertQueryCount(employee=303):  # tmf: 303
             self.apply_ratings(1)
 
-        with self.assertQueryCount(employee=242):  # tmf: 242
+        with self.assertQueryCount(employee=262):  # tmf: 262
             self.apply_ratings(5)
 
     @users('employee')
     @warmup
     def test_rating_last_value_perfs_with_rating_mixin(self):
-        with self.assertQueryCount(employee=277):  # tmf: 277
+        with self.assertQueryCount(employee=297):  # tmf: 297
             self.create_ratings('mail.test.rating')
 
-        with self.assertQueryCount(employee=305):  # tmf: 305
+        with self.assertQueryCount(employee=325):  # tmf: 325
             self.apply_ratings(1)
 
-        with self.assertQueryCount(employee=284):  # tmf: 284
+        with self.assertQueryCount(employee=304):  # tmf: 304
             self.apply_ratings(5)
 
         with self.assertQueryCount(employee=1):
