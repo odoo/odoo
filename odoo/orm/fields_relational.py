@@ -861,6 +861,13 @@ class One2many(_RelationalMulti):
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
+    def _description_searchable(self, registry):
+        if self.comodel_name and self.inverse_name:
+            comodel = registry[self.comodel_name]
+            inverse_field = comodel._fields[self.inverse_name]
+            return inverse_field.store
+        return False
+
     def update_db(self, model, columns):
         if self.comodel_name in model.env:
             comodel = model.env[self.comodel_name]
@@ -1133,21 +1140,9 @@ class One2many(_RelationalMulti):
 
         comodel = model.env[self.comodel_name].sudo()
         inverse_field = comodel._fields[self.inverse_name]
-        if inverse_field.store:
-            subselect = coquery.subselect(
-                comodel._field_to_sql(coquery.table, inverse_field.name, coquery)
-            )
-        else:
-            # determine ids1 in model related to ids2
-            # TODO should we support this in the future?
-            recs = comodel.browse(coquery).with_context(prefetch_fields=False)
-            if inverse_field.relational:
-                inverses = inverse_field.__get__(recs)
-            else:
-                # int values, map them
-                inverses = model.browse(inverse_field.__get__(rec) for rec in recs)
-            subselect = inverses._as_query(ordered=False).subselect()
-
+        subselect = coquery.subselect(
+            comodel._field_to_sql(coquery.table, inverse_field.name, coquery)
+        )
         return SQL(
             "%s%s%s",
             SQL.identifier(alias, 'id'),

@@ -2318,7 +2318,7 @@ actual arch.
                         model=Model._name, field=name, use=use,
                     )
                     self._raise_view_error(msg, node)
-                if not field._description_searchable:
+                if not field._description_searchable(self.env.registry):
                     msg = _(
                         'Unsearchable field “%(field)s” in path “%(field_path)s” in %(use)s)',
                         field=name, field_path=field_path, use=use,
