@@ -8,7 +8,12 @@ const RE_SELECTOR_ENDS_WITH_GT_STAR = />\s*\*\s*$/;
 export class CustomizeMailingPlugin extends Plugin {
     static id = "mass_mailing.CustomizeMailingPlugin";
     static dependencies = [];
-    static shared = ["addCSSRule", "getRule", "transformFontFamilySelector"];
+    static shared = [
+        "addCSSRule",
+        "convertObjectToRuleStyle",
+        "getRule",
+        "transformFontFamilySelector",
+    ];
 
     resources = {
         builder_actions: {
@@ -49,6 +54,20 @@ export class CustomizeMailingPlugin extends Plugin {
         }
         styleEl.textContent = cssTextArray.join("\n");
         layoutEl.prepend(styleEl);
+    }
+
+    convertObjectToRuleStyle(styleObject) {
+        const ruleStyle = Object.keys(styleObject);
+        const prefixRegex = /^(.+?)(?:\s*!important)?;?$/;
+        const priorityRegex = /\s*!important(?=;?$)/;
+        Object.assign(ruleStyle, {
+            styleObject,
+            getPropertyValue: (styleName) =>
+                (styleObject[styleName] ?? "").match(prefixRegex)?.[1] ?? "",
+            getPropertyPriority: (styleName) =>
+                (styleObject[styleName] ?? "").match(priorityRegex)?.[1] ?? "",
+        });
+        return ruleStyle;
     }
 
     parseDesignElement(styleEl) {
@@ -95,7 +114,7 @@ export class CustomizeMailingPlugin extends Plugin {
 
     // TODO EGGMAIL: currently receives a CSSStyleDeclaration as ruleStyle
     // which is not convenient since it can not be created manually
-    // change/adapt API and usages
+    // change/adapt API and usages, see convertObjectToRuleStyle
     addCSSRule({ selector, ruleStyle, whitelist }) {
         selector = selector.trim();
         const rule = this.getRule(selector);
@@ -171,20 +190,22 @@ export class CustomizeSnippetColorAction extends BuilderAction {
         const oldValue = this.getValue();
         const customMutation = {
             apply: () => {
-                const ruleStyle = ["background-color"];
-                // TODO EGGMAIL: hack to go forward, change API of addCSSRule
-                ruleStyle.getPropertyPriority = () => "important";
-                ruleStyle.getPropertyValue = () => value;
+                const ruleStyle = this.dependencies[
+                    "mass_mailing.CustomizeMailingPlugin"
+                ].convertObjectToRuleStyle({
+                    "background-color": `${value} !important;`,
+                });
                 this.dependencies["mass_mailing.CustomizeMailingPlugin"].addCSSRule({
                     selector: WRAPPER_SNIPPET_SELECTOR,
                     ruleStyle,
                 });
             },
             revert: () => {
-                const ruleStyle = ["background-color"];
-                // TODO EGGMAIL: hack to go forward, change API of addCSSRule
-                ruleStyle.getPropertyPriority = () => "important";
-                ruleStyle.getPropertyValue = () => oldValue;
+                const ruleStyle = this.dependencies[
+                    "mass_mailing.CustomizeMailingPlugin"
+                ].convertObjectToRuleStyle({
+                    "background-color": `${oldValue} !important;`,
+                });
                 this.dependencies["mass_mailing.CustomizeMailingPlugin"].addCSSRule({
                     selector: WRAPPER_SNIPPET_SELECTOR,
                     ruleStyle,
