@@ -56,6 +56,9 @@ class PosSelfOrderController(http.Controller):
             'amount_total': amount_total,
         })
 
+        if amount_total == 0:
+            order_ids._process_saved_order(False)
+
         return self._generate_return_values(order_ids, pos_config)
 
     def _get_prefixes(self, device_type):
