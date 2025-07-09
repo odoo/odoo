@@ -2,8 +2,8 @@ import { patch } from "@web/core/utils/patch";
 import { MoOverview } from "@mrp/components/mo_overview/mrp_mo_overview";
 
 patch(MoOverview.prototype, {
-    async getManufacturingData() {
-        await super.getManufacturingData();
+    async getManufacturingData(shouldInitializeFoldState = false) {
+        await super.getManufacturingData(shouldInitializeFoldState);
         this.state.showOptions.subcontractorAvailabilities = this.is_subcontract;
     },
 
