@@ -335,6 +335,10 @@ class IrAttachment(models.Model):
                     else:  # datas
                         img = ImageProcess(base64.b64decode(values['datas']), verify_resolution=False)
 
+                    if not img.image:
+                        _logger.info('Post processing ignored : Empty source, SVG, or WEBP')
+                        return values
+
                     w, h = img.image.size
                     nw, nh = map(int, max_resolution.split('x'))
                     if w > nw or h > nh:
