@@ -30,6 +30,7 @@ export class LinkPopover extends Component {
         LinkPopoverState: Object,
         recordInfo: Object,
         canEdit: { type: Boolean, optional: true },
+        canRemove: { type: Boolean, optional: true },
         canUpload: { type: Boolean, optional: true },
         onUpload: { type: Function, optional: true },
         allowCustomStyle: { type: Boolean, optional: true },
@@ -37,6 +38,7 @@ export class LinkPopover extends Component {
     };
     static defaultProps = {
         canEdit: true,
+        canRemove: true,
     };
     static components = { CheckBox };
     colorsData = [
