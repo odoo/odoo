@@ -38,19 +38,6 @@ def raise_keyboard_interrupt(*a):
     raise KeyboardInterrupt()
 
 
-class Console(code.InteractiveConsole):
-    def __init__(self, local_vars=None, filename="<console>"):
-        code.InteractiveConsole.__init__(self, locals=local_vars, filename=filename)
-        try:
-            import readline
-            import rlcompleter
-        except ImportError:
-            print('readline or rlcompleter not available, autocomplete disabled.')
-        else:
-            readline.set_completer(rlcompleter.Completer(local_vars).complete)
-            readline.parse_and_bind("tab: complete")
-
-
 class Shell(Command):
     """Start odoo in an interactive shell"""
     supported_shells = ['ipython', 'ptpython', 'bpython', 'python']
@@ -120,6 +107,21 @@ class Shell(Command):
         embed(local_vars, args=['-q', '-i', pythonstartup] if pythonstartup else None)
 
     def python(self, local_vars, pythonstartup=None):
+        class Console(code.InteractiveConsole):
+            def __init__(self, local_vars=None, filename="<console>"):
+                """ Initialize the tab completer.
+                    This module is not supported on mobile platforms or WebAssembly platforms.
+                """
+                code.InteractiveConsole.__init__(self, locals=local_vars, filename=filename)
+                try:
+                    import readline  # noqa: PLC0415
+                    import rlcompleter  # noqa: PLC0415
+                except ImportError:
+                    _logger.warning('readline or rlcompleter not available, autocomplete disabled.')
+                else:
+                    readline.set_completer(rlcompleter.Completer(local_vars).complete)
+                    readline.parse_and_bind("tab: complete")
+
         console = Console(local_vars)
         if pythonstartup:
             with open(pythonstartup, encoding='utf-8') as f:
