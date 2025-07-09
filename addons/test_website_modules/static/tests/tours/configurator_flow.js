@@ -117,7 +117,7 @@ registry.category("web_tour.tours").add("configurator_flow", {
         },
         ...["Contact us", "Privacy Policy"].map((menu) => ({
             content: `Check footer menu ${menu} is there`,
-            trigger: `:iframe #footer ul a:contains(${menu})`,
+            trigger: `:iframe footer a:contains(${menu})`,
         })),
         ...["Home", "Events", "Courses", "Pricing", "News", "Success Stories", "Contact us"].map(
             (menu) => ({
