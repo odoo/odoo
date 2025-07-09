@@ -33,9 +33,14 @@ export class BackgroundPositionOverlay extends Component {
         // If there is a Scroll Effect, a span.s_parallax_bg inside the section
         // contains the background. Otherwise it's the section itself.
         // And targetContainerEl should always be the section.
-        this.targetContainerEl = this.props.editingElement.classList.contains("s_parallax_bg")
-            ? this.props.editingElement.parentElement
-            : this.props.editingElement;
+        if (this.props.editingElement.matches(".s_parallax_bg")) {
+            const parallaxBgParentEl = this.props.editingElement.parentElement;
+            this.targetContainerEl = parallaxBgParentEl.matches(".s_parallax_bg_wrap")
+                ? parallaxBgParentEl.parentElement
+                : parallaxBgParentEl; // <- kept for compatibility
+        } else {
+            this.targetContainerEl = this.props.editingElement;
+        }
 
         this._dimensionOverlay = this.dimensionOverlay.bind(this);
 

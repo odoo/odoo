@@ -5,7 +5,8 @@ export class Parallax extends Interaction {
     static selector = ".parallax";
     dynamicSelectors = Object.assign(this.dynamicSelectors, {
         _modal: () => this.el.closest(".modal"),
-        _bg: () => this.el.querySelector(":scope > .s_parallax_bg"),
+        // ":scope > .s_parallax_bg" is kept for compatibility
+        _bg: () => this.el.querySelector(":scope > .s_parallax_bg_wrap > .s_parallax_bg, :scope > .s_parallax_bg"),
     });
     dynamicContent = {
         _document: { "t-on-scroll": this.onScroll },

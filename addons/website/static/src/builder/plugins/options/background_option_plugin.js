@@ -12,7 +12,8 @@ function getBgVideoOrParallax(editingElement) {
     if (bgVideoEl) {
         return bgVideoEl;
     }
-    return editingElement.querySelector(":scope > .s_parallax_bg");
+    return editingElement.querySelector(":scope > .s_parallax_bg_wrap")
+        || editingElement.querySelector(":scope > .s_parallax_bg"); // Kept for compatibility.
 }
 
 class WebsiteBackgroundImageOptionPlugin extends Plugin {

@@ -403,7 +403,9 @@ test("remove background image removes color filter", async () => {
     const backgroundImageUrl = "url('/web/image/123/transparent.png')";
     await setupWebsiteBuilder(`
         <section>
-            <span class='s_parallax_bg oe_img_bg o_bg_img_center' style="background-image: ${backgroundImageUrl} !important;">aaa</span>
+            <span class="s_parallax_bg_wrap">
+                <span class='s_parallax_bg oe_img_bg o_bg_img_center' style="background-image: ${backgroundImageUrl} !important;">aaa</span>
+            </span>
             <div class="o_we_bg_filter bg-black-50 o-paragraph"><br></div>
         </section>`);
     await contains(":iframe section").click();
