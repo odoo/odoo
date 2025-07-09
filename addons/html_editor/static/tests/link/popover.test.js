@@ -1113,6 +1113,17 @@ describe("links with inline image", () => {
 
         expect(cleanLinkArtifacts(getContent(el))).toBe(`<p>ab[]c</p>`);
     });
+    test("selecting text and a image with link should not extend the link element", async () => {
+        const { el } = await setupEditor(`<p>ab<a href="#">cd<img src="${base64Img}">ef</a>g</p>`);
+        setContent(el, `<p>ab<a href="#">c]d<img src="${base64Img}">e[f</a>g</p>`);
+        await waitFor(".o-we-linkpopover", { timeout: 1500 });
+        await waitFor(".o-we-toolbar");
+        setContent(el, `<p>a]b<a href="#">cd<img src="${base64Img}">e[f</a>g</p>`);
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            `<p>a]b<a href="#">cd<img src="${base64Img}">e[f</a>g</p>`
+        );
+    });
 });
 
 describe("readonly mode", () => {
