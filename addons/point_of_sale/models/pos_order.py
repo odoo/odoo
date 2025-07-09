@@ -816,6 +816,7 @@ class PosOrder(models.Model):
             'invoice_origin': ', '.join(ref or '' for ref in self.mapped('pos_reference')),
             'pos_refunded_invoice_ids': pos_refunded_invoice_ids,
             'pos_order_ids': self.ids,
+            'ref': self.name if is_single_order else False,
             'journal_id': self.config_id.invoice_journal_id.id,
             'move_type': move_type,
             'partner_id': self.partner_id.address_get(['invoice'])['invoice'],
