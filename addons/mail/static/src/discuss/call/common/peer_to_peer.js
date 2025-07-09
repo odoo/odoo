@@ -859,11 +859,6 @@ export class PeerToPeer extends EventTarget {
                     this._recover(peer.id, 1000, "connection disconnected");
                     break;
             }
-            this._emitLog(
-                id,
-                `connection state change: ${peerConnection.connectionState}`,
-                LOG_LEVEL.INFO
-            );
         });
         peerConnection.addEventListener("icecandidateerror", async (error) => {
             this._recover(id, `ice candidate error: ${error.errorText}`);
