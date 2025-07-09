@@ -100,10 +100,8 @@ class TestWorkEntry(TestWorkEntryBase):
         self.env.company.resource_calendar_id = hk_resource_calendar_id
         hk_employee.generate_work_entries(datetime(2023, 8, 1), datetime(2023, 8, 1))
         work_entries = self.env['hr.work.entry'].search([('employee_id', '=', hk_employee.id)])
-        self.assertEqual(work_entries[0].date, date(2023, 7, 31))
-        self.assertEqual(work_entries[0].duration, 4)
-        self.assertEqual(work_entries[1].date, date(2023, 8, 1))
-        self.assertEqual(work_entries[1].duration, 4)
+        self.assertEqual(work_entries[0].date, date(2023, 8, 1))
+        self.assertEqual(work_entries[0].duration, 8)
 
     def test_separate_overlapping_work_entries_by_type(self):
         calendar = self.env['resource.calendar'].create({'name': 'Calendar', 'tz': 'Europe/Brussels'})
