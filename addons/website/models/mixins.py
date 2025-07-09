@@ -367,7 +367,7 @@ class WebsiteSearchableMixin(models.AbstractModel):
             limit=limit,
             order=search_detail.get('order', order)
         )
-        count = model.search_count(domain)
+        count = model.search_count(domain) if limit and limit == len(results) else len(results)
         return results, count
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
