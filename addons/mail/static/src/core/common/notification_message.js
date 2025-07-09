@@ -1,5 +1,6 @@
 import {
     Component,
+    htmlEscape,
     onMounted,
     onPatched,
     onWillDestroy,
@@ -8,7 +9,6 @@ import {
 } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { escape } from "@web/core/utils/strings";
 
 export class NotificationMessage extends Component {
     static template = "mail.NotificationMessage";
@@ -23,7 +23,7 @@ export class NotificationMessage extends Component {
         onMounted(() => this.props.registerMessageRef?.(this.props.message, this.root));
         onPatched(() => this.props.registerMessageRef?.(this.props.message, this.root));
         onWillDestroy(() => this.props.registerMessageRef?.(this.props.message, null));
-        this.escape = escape;
+        this.htmlEscape = htmlEscape;
         this.store = useService("mail.store");
     }
 
