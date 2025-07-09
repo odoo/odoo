@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("mail_activity_schedule_from_chatter", {
             run: "edit Play Mario Kart",
         },
         {
-            trigger: "button.btn.btn-secondary:contains('Mark Done')",
+            trigger: "button.btn.btn-secondary:contains('Done')",
             run: "click",
         },
         {
