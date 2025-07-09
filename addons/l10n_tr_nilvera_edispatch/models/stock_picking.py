@@ -18,34 +18,40 @@ class StockPicking(models.Model):
         ],
         default='SEVK',
         tracking=True,
+        copy=False,
     )
     l10n_tr_nilvera_carrier_id = fields.Many2one(
         string="Carrier (TR)",
         help="Used when the dispatch is made through a third-party carrier company. Populating this makes the Vehicle Plate and Drivers optional.",
         comodel_name='res.partner',
+        copy=False,
     )
     l10n_tr_nilvera_buyer_id = fields.Many2one(
         string="Buyer",
         help="Used for the original party who purchases the good when the Delivery Address is for another recipient",
         comodel_name='res.partner',
+        copy=False,
     )
     l10n_tr_nilvera_seller_supplier_id = fields.Many2one(
         string="Seller Supplier",
         help="Used for the information of the supplier of the goods in the delivery note.",
         comodel_name='res.partner',
+        copy=False,
     )
     l10n_tr_nilvera_buyer_originator_id = fields.Many2one(
         string="Buyer Originator",
         help="Used for the original initiator of the goods acquisition and requesting process.",
         comodel_name='res.partner',
+        copy=False,
     )
-    l10n_tr_nilvera_delivery_printed_number = fields.Char(string="Printed Delivery Note Number")
-    l10n_tr_nilvera_delivery_date = fields.Date(string="Printed Delivery Note Date")
+    l10n_tr_nilvera_delivery_printed_number = fields.Char(string="Printed Delivery Note Number", copy=False)
+    l10n_tr_nilvera_delivery_date = fields.Date(string="Printed Delivery Note Date", copy=False)
     l10n_tr_vehicle_plate = fields.Many2one(
         string="Vehicle Plate",
         help="Used to input the plate number of the truck.",
         comodel_name='l10n_tr.nilvera.trailer.plate',
         domain="[('plate_number_type', '=', 'vehicle')]",
+        copy=False,
     )
     l10n_tr_nilvera_trailer_plate_ids = fields.Many2many(
         string="Trailer Plates",
@@ -53,17 +59,20 @@ class StockPicking(models.Model):
         comodel_name='l10n_tr.nilvera.trailer.plate',
         domain="[('plate_number_type', '=', 'trailer')]",
         relation='l10n_tr_nilvera_delivery_vehicle_rel',
+        copy=False,
     )
     l10n_tr_nilvera_driver_ids = fields.Many2many(
         string="Drivers",
         help="Used for the individuals driving the truck.",
         comodel_name='res.partner',
+        copy=False,
     )
-    l10n_tr_nilvera_delivery_notes = fields.Char(string="Delivery Notes")
+    l10n_tr_nilvera_delivery_notes = fields.Char(string="Delivery Notes", copy=False)
     l10n_tr_nilvera_dispatch_state = fields.Selection(
         string="e-Dispatch State",
         selection=[('to_send', "To Send"), ('sent', "Sent")],
         tracking=True,
+        copy=False,
     )
     l10n_tr_nilvera_edispatch_warnings = fields.Json(compute='_compute_edispatch_warnings')
 
@@ -75,38 +84,40 @@ class StockPicking(models.Model):
     )
     def _compute_edispatch_warnings(self):
         for picking in self:
-            if picking.country_code == 'TR' and picking.picking_type_code == 'outgoing' and picking.state == 'done':
+            if (
+                picking.country_code == "TR"
+                and picking.picking_type_code == "outgoing"
+                and picking.state in {"assigned", "done"}
+            ):
                 picking.l10n_tr_nilvera_edispatch_warnings = picking._l10n_tr_validate_edispatch_fields()
             else:
                 picking.l10n_tr_nilvera_edispatch_warnings = False
 
     def button_validate(self):
         res = super().button_validate()
-        self.filtered(
-            lambda p: p.country_code == 'TR' and p.state == 'done' and p.picking_type_code == 'outgoing'
-        ).l10n_tr_nilvera_dispatch_state = 'to_send'
+        for picking in self:
+            if picking.country_code != 'TR' or picking.picking_type_code != 'outgoing' or picking.state != 'done':
+                continue
+            if picking.partner_id:
+                picking.l10n_tr_nilvera_dispatch_state = 'to_send'
+            else:
+                picking.message_post(
+                    body=_("e-Dispatch will not be generated as the Delivery Address is not set.")
+                )
         return res
 
-    def _l10n_tr_validate_edispatch_fields(self):
-        self.ensure_one()
-
-        if self.state != 'done':
-            return {
-                'invalid_transfer_state': {
-                    'message': _("Please validate the transfer first to generate the XML"),
-                }
-            }
+    def _l10n_tr_validate_edispatch_on_done(self):
         partners = (
             self.company_id.partner_id
+            | self.partner_id
+            | self.partner_id.commercial_partner_id
             | self.l10n_tr_nilvera_carrier_id
             | self.l10n_tr_nilvera_buyer_id
             | self.l10n_tr_nilvera_seller_supplier_id
             | self.l10n_tr_nilvera_buyer_originator_id
         )
-        # `is_delivery_partner` ensures that Delivery Partner's ZIP is present regardless of the partner country.
-        error_messages = self.partner_id._l10n_tr_nilvera_validate_partner_details(is_delivery_partner=True)
-        partners = partners - self.partner_id
-        error_messages.update(partners._l10n_tr_nilvera_validate_partner_details())
+
+        error_messages = partners._l10n_tr_nilvera_validate_partner_details()
 
         if self.l10n_tr_nilvera_dispatch_type == 'MATBUDAN':
             if not self.l10n_tr_nilvera_delivery_date:
@@ -169,6 +180,23 @@ class StockPicking(models.Model):
             }
 
         return error_messages or False
+
+    def _l10n_tr_validate_edispatch_fields(self):
+        self.ensure_one()
+        if self.state not in {'assigned', 'done'}:
+            return {
+                'invalid_transfer_state': {
+                    'message': _("Please validate the transfer first to generate the XML"),
+                }
+            }
+        if not self.partner_id:
+            return {
+                'missing_delivery_partner_id': {
+                    'message': _("e-Dispatch will not be generated as the Delivery Address is not set."),
+                }
+            }
+        if self.state == 'done':
+            return self._l10n_tr_validate_edispatch_on_done()
 
     def _l10n_tr_generate_edispatch_xml(self):
         dispatch_uuid = str(uuid.uuid4())
