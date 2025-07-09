@@ -198,6 +198,7 @@ PKGS_TO_INSTALL="
     python3-psutil \
     python3-psycopg2 \
     python3-pydot \
+    python3-pyudev \
     python3-qrcode \
     python3-reportlab \
     python3-requests \
@@ -205,6 +206,7 @@ PKGS_TO_INSTALL="
     python3-stdnum \
     python3-tz \
     python3-vobject \
+    python3-zeroconf \
     rsync \
     screen \
     seatd \
@@ -254,6 +256,7 @@ PIP_TO_INSTALL="
     Werkzeug==2.0.2 \
     urllib3==1.26.5 \
     pyOpenssl==22.0.0 \
+    python-escpos==3.1 \
     cryptography==36.0.2 \
     screeninfo==0.8.1 \
     zeep==4.2.1 \
