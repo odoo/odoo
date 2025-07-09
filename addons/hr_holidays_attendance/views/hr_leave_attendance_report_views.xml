@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_leave_attendance_report_view_list" model="ir.ui.view">
+        <field name="name">hr.leave.attendance.report.list</field>
+        <field name="model">hr.leave.attendance.report</field>
+        <field name="arch" type="xml">
+            <list sample="1">
+                <field name="employee_id"/>
+                <field name="date"/>
+                <field name="schedule_id" optional="hide"/>
+                <field name="expected_hours" widget="float_time"/>
+                <field name="worked_hours" widget="float_time"/>
+                <field name="leave_hours" widget="float_time"/>
+                <field name="leave_type_names" optional="hide" groups="hr_holidays.group_hr_holidays_user"/>
+                <field name="difference_hours" widget="float_time" decoration-danger="difference_hours &lt; 0"
+                    decoration-success="difference_hours &gt;= 0" decoration-bf="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_leave_attendance_report_view_pivot" model="ir.ui.view">
+        <field name="name">hr.leave.attendance.report.pivot</field>
+        <field name="model">hr.leave.attendance.report</field>
+        <field name="arch" type="xml">
+            <pivot sample="1">
+                <field name="employee_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="expected_hours" type="measure" widget="float_time"/>
+                <field name="worked_hours" type="measure" widget="float_time"/>
+                <field name="leave_hours" type="measure" widget="float_time"/>
+                <field name="difference_hours" type="measure" widget="float_time"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_leave_attendance_report_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.attendance.report.form</field>
+        <field name="model">hr.leave.attendance.report</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <h1><field name="employee_id" widget="many2one_avatar_employee"/></h1>
+                    <group name="report_details">
+                        <group>
+                            <field name="date"/>
+                            <field name="worked_hours" widget="float_time"/>
+                            <field name="leave_hours" widget="float_time"/>
+                        </group>
+                        <group>
+                            <field name="schedule_id"/>
+                            <field name="expected_hours" widget="float_time"/>
+                            <field name="difference_hours" widget="float_time" decoration-danger="difference_hours &lt; 0"
+                                decoration-success="difference_hours &gt;= 0" decoration-bf="True"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="attendances" string="Attendance Records">
+                            <field name="attendance_ids">
+                                <list>
+                                    <field name="check_in"/>
+                                    <field name="check_out"/>
+                                    <field name="worked_hours" widget="float_time"/>
+                                    <field name="overtime_hours" string="Worked Extra Hours" widget="float_time"
+                                        optional="hide"/>
+                                    <field name="validated_overtime_hours" widget="float_time" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="leaves" string="Approved Time Offs">
+                            <field name="leave_ids">
+                                <list>
+                                    <field name="holiday_status_id"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="duration_display" string="Duration"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_leave_attendance_report_view_search" model="ir.ui.view">
+        <field name="name">hr.leave.attendance.report.search</field>
+        <field name="model">hr.leave.attendance.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id" string="Employee"/>
+                <field name="date" string="Date"/>
+                <field name="schedule_id" string="Working Schedule"/>
+                <filter name="less_than_0" string="Missing Hours" domain="[('difference_hours', '&lt;', 0)]"/>
+                <separator/>
+                <filter name="date" string="Date" date="date"/>
+                <filter string="Last 2 Months" name="last_two_months" invisible="1"
+                    domain="[('date', '>', (context_today() - relativedelta(months=2) + relativedelta(day=1)))]"/>
+                <separator/>
+                <filter string="Archived Employees" name="archived_employees"
+                    domain="[('active', '=', False)]"/>
+                <group name="groupby">
+                    <filter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
+                    <filter string="Employees" name="group_by_employees" context="{'group_by': 'employee_id'}"/>
+                    <separator/>
+                    <filter string="Department" name="group_by_departments" context="{'group_by': 'department_id'}"/>
+                    <filter string="Job Position" name="group_by_jobs" context="{'group_by': 'job_id'}"/>
+                    <filter string="Working Schedule" name="group_by_schedule" context="{'group_by': 'schedule_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_leave_attendance_report_action" model="ir.actions.act_window">
+        <field name="name">Time Off Ledger</field>
+        <field name="res_model">hr.leave.attendance.report</field>
+        <field name="path">absence-report</field>
+        <field name="view_mode">list,pivot,form</field>
+        <field name="domain">[('employee_id.company_id', 'in', allowed_company_ids)]</field>
+        <field name="context">{
+            'search_default_group_by_date': 1,
+            'search_default_group_by_employees': 1,
+            'search_default_less_than_0': 1,
+            'search_default_last_two_months': 1,
+        }</field>
+    </record>
+
+    <menuitem
+        id="hr_leave_attendance_report"
+        name="Time Off Ledger"
+        action="hr_leave_attendance_report_action"
+        parent="hr_attendance.menu_hr_attendance_reporting"
+        sequence="15"/>
+
+</odoo>
