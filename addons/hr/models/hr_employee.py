@@ -141,6 +141,11 @@ class HrEmployee(models.Model):
     study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
     emergency_contact = fields.Char(groups="hr.group_hr_user", tracking=True)
     emergency_phone = fields.Char(groups="hr.group_hr_user", tracking=True)
+    work_location_name = fields.Char("Work Location Name", compute="_compute_work_location_name")
+    work_location_type = fields.Selection([
+        ("home", "Home"),
+        ("office", "Office"),
+        ("other", "Other")], compute="_compute_work_location_type", tracking=True)
 
     # employee in company
     parent_id = fields.Many2one('hr.employee', 'Manager', tracking=True, index=True,
@@ -333,6 +338,16 @@ class HrEmployee(models.Model):
             else:
                 version = employee.current_version_id
             employee.version_id = version
+
+    @api.depends("version_id.work_location_id.name")
+    def _compute_work_location_name(self):
+        for employee in self:
+            employee.work_location_name = employee.version_id.work_location_id.name or None
+
+    @api.depends("version_id.work_location_id.location_type")
+    def _compute_work_location_type(self):
+        for employee in self:
+            employee.work_location_type = employee.version_id.work_location_id.location_type or 'other'
 
     @api.depends('version_ids.date_version', 'version_ids.active', 'active')
     def _compute_current_version_id(self):
