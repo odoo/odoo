@@ -25,6 +25,7 @@ const DEFAULT_ARCH_RESULTS = {
     isDateHidden: false,
     isTimeHidden: false,
     monthOverflow: true,
+    multiCreateFormTitle: null,
     multiCreateView: null,
     popoverFieldNodes: {},
     scale: "week",

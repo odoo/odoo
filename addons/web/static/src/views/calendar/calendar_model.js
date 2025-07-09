@@ -161,6 +161,9 @@ export class CalendarModel extends Model {
     get monthOverflow() {
         return this.meta.monthOverflow;
     }
+    get multiCreateFormTitle() {
+        return this.meta.multiCreateFormTitle;
+    }
     get popoverFieldNodes() {
         return this.meta.popoverFieldNodes;
     }
