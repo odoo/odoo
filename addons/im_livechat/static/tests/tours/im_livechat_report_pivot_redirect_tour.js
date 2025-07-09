@@ -4,8 +4,8 @@ registry.category("web_tour.tours").add("im_livechat_report_pivot_redirect_tour"
     steps: () => [
         {
             content: "open command palette",
-            trigger: "body",
-            run: "press ctrl+k",
+            trigger: "body:has(.o_action_manager)",
+            run: "click && press ctrl+k",
         },
         {
             trigger: ".o_command_palette_search input",
