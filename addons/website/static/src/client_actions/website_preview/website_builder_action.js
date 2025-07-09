@@ -137,6 +137,7 @@ export class WebsiteBuilderClientAction extends Component {
                 loadBundle("website.website_builder_assets").then(() => {
                     this.env.services["html_builder.snippets"].reload({
                         lang: this.websiteService.currentWebsite?.default_lang_id.code,
+                        website_id: this.websiteService.currentWebsite?.id,
                     });
                 });
             }

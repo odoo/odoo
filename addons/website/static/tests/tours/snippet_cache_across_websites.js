@@ -11,7 +11,7 @@ registerWebsitePreviewTour('snippet_cache_across_websites', {
 }, () => [
     {
         content: "Click on the Custom category block",
-        trigger: "#oe_snippets .oe_snippet[name='Custom'].o_we_draggable .oe_snippet_thumbnail",
+        trigger: ".o-website-builder_sidebar .o_snippet[name='Custom'].o_draggable .o_snippet_thumbnail_area",
         run: "click",
     },
     {
@@ -29,6 +29,6 @@ registerWebsitePreviewTour('snippet_cache_across_websites', {
     ...clickOnEditAndWaitEditMode(),
     {
         content: "Check that the custom snippet category is not here",
-        trigger: "#oe_snippets:not(:has(.oe_snippet[name='Custom']))",
+        trigger: ".o-website-builder_sidebar:not(:has(.o_snippet[name='Custom']))",
     },
 ]);
