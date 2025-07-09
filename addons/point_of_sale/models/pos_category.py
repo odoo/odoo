@@ -69,22 +69,6 @@ class PosCategory(models.Model):
         for category in self:
             category.has_image = bool(category.image_128)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if vals.get("parent_id"):
-                vals["color"] = self.search_read([("id", "=", vals["parent_id"])])[0][
-                    "color"
-                ]
-        return super().create(vals_list)
-
-    def write(self, vals):
-        if vals.get('parent_id') and not ("color" in vals):
-            vals["color"] = self.search_read([("id", "=", vals["parent_id"])])[0][
-                "color"
-            ]
-        return super().write(vals)
-
     def _get_descendants(self):
         available_categories = self
         for child in self.child_ids:
