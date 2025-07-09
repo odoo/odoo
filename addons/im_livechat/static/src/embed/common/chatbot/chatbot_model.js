@@ -10,7 +10,7 @@ export class Chatbot extends Record {
     // Time to wait without user input before considering a multi line step as
     // completed.
     static MULTILINE_STEP_DEBOUNCE_DELAY = 10000;
-    static MULTILINE_STEP_DEBOUNCE_DELAY_TOUR = 500;
+    static MULTILINE_STEP_DEBOUNCE_DELAY_TOUR = 2000;
 
     forwarded;
     isTyping = false;
