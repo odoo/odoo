@@ -22,6 +22,7 @@ export class BomOverviewComponent extends Component {
         this.warehouses = [];
         this.showVariants = false;
         this.uomName = "";
+        this.foldableIds = new Set();
         this.unfoldedIds = new Set();
 
         this.state = proxy({
@@ -45,8 +46,8 @@ export class BomOverviewComponent extends Component {
 
         useBus(
             this.env.overviewBus,
-            "toggle-fold-all",
-            () => (this.state.allFolded = !this.state.allFolded)
+            "toggle-fold-all-bom",
+            (ev) => (this.state.allFolded = ev.detail.foldAll)
         );
 
         onWillStart(async () => {
@@ -75,7 +76,14 @@ export class BomOverviewComponent extends Component {
             this.state.currentVariantId ||= this.state.bomData.product_id;
         }
         this.state.precision = bomData["precision"];
-        this.state.foldable = bomData["lines"]["foldable"];
+        this._collectFoldableIds(this.state.bomData);
+        if (this.state.bomData.byproducts?.length) {
+            this.foldableIds.add(`byproducts_${this.state.bomData.index}`);
+        }
+        if (this.state.bomData.components?.length) {
+            this.foldableIds.delete(`${this.state.bomData.type}_${this.state.bomData.index}`);
+        }
+        this.state.foldable = this.foldableIds.size > 0;
     }
 
     async getBomData() {
@@ -113,7 +121,16 @@ export class BomOverviewComponent extends Component {
     onChangeFolded(foldInfo) {
         const { ids, isFolded } = foldInfo;
         const operation = isFolded ? "delete" : "add";
-        ids.forEach(id => this.unfoldedIds[operation](id));
+        ids.forEach((id) => {
+            if (this.foldableIds.has(id)) {
+                this.unfoldedIds[operation](id);
+            }
+        });
+        if (this.unfoldedIds.size === 0) {
+            this.state.allFolded = true;
+        } else if (this.unfoldedIds.size === this.foldableIds.size) {
+            this.state.allFolded = false;
+        }
     }
 
     onChangeMode(mode) {
@@ -172,6 +189,16 @@ export class BomOverviewComponent extends Component {
             reportName += "&variant=" + this.state.currentVariantId;
         }
         return reportName;
+    }
+
+    _collectFoldableIds(data) {
+        if (data.components?.length) {
+            this.foldableIds.add(`${data.type}_${data.index}`);
+            data.components.forEach((component) => this._collectFoldableIds(component));
+        }
+        if (data.operations?.length) {
+            this.foldableIds.add(`operations_${data.index}`);
+        }
     }
 }
 
