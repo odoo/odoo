@@ -3,6 +3,7 @@
 import base64
 import json
 import logging
+from lxml import etree
 
 from werkzeug import urls
 from werkzeug.exceptions import NotFound
@@ -265,6 +266,7 @@ class Website(models.Model):
         views_to_disable = []
         views_to_enable = []
         ThemeUtils = self.env['theme.utils'].with_context(website_id=website.id)
+        Assets = self.env['web_editor.assets']
 
         def parse_style_config(style_config_):
             website_settings.update(style_config_['website_fields'])
@@ -281,6 +283,42 @@ class Website(models.Model):
             style_config = const.PRODUCT_PAGE_STYLE_MAPPING[product_page_style_option]
             parse_style_config(style_config)
 
+        try:
+            ecommerce_footer = self.env['website'].viewref(
+                'website_sale.template_footer_website_sale',
+            )
+            arch_string = etree.fromstring(ecommerce_footer.arch_db)
+            footer_div_node = arch_string.xpath("//section[hasclass('s_text_block')]/div")
+            # Deliberately hardcode catagories inside the view arch, it will be transformed into
+            # static nodes after a save/edit thanks to the t-ignore in parent node.
+            ecommerce_catagories_node = arch_string.xpath("//t[@t-set='ecommerce_categories']")[0]
+            ecommerce_catagories = self.env['product.public.category'].search([], limit=6)
+            ecommerce_catagories_node.attrib['t-value'] = json.dumps([
+                {
+                    'name': cat.name,
+                    'id': cat.id,
+                }
+                for cat in ecommerce_catagories
+            ])
+            width_class = None
+
+            # Update eCommerce footer view to match width of header
+            if 'website.footer_copyright_content_width_fluid' in views_to_enable and footer_div_node:
+                width_class = "container-fluid s_allow_columns"
+            elif 'website.footer_copyright_content_width_small' in views_to_enable and footer_div_node:
+                width_class = "o_container_small s_allow_columns"
+
+            if width_class:
+                footer_div_node[0].set("class", width_class)
+
+            ecommerce_footer.with_context(website_id=website.id).write(
+                {'arch_db': etree.tostring(arch_string), 'arch_updated': True},
+            )
+        except IndexError as e:
+            # The footer could've been modified in backend we don't want to break configurator
+            # step in this case
+            logger.warning("Failed to update eCommerce footer view.: %s", e)
+
         # Apply eCommerce page style configurations.
         if website_settings:
             website.write(website_settings)
@@ -293,6 +331,16 @@ class Website(models.Model):
             ThemeUtils.disable_view(xml_id)
         for xml_id in views_to_enable:
             ThemeUtils.enable_view(xml_id)
+
+        # For selecting light palette for footer
+        Assets.make_scss_customization(
+            '/website/static/src/scss/options/colors/user_color_palette.scss',
+            {'footer': 2},
+        )
+        Assets.make_scss_customization(
+            '/website/static/src/scss/options/user_values.scss',
+            {'footer-template': 'website_sale'},
+        )
 
         return res
 
