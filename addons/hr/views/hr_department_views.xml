@@ -23,8 +23,8 @@
                                 <field name="name"/>
                             </h1>
                         </div>
-                        <group>
-                            <group>
+                        <group col="12">
+                            <group colspan="7">
                                 <field name="name" invisible="1"/> <!-- Remove in master -->
                                 <field name="manager_id" widget="many2one_avatar_employee"/>
                                 <field name="parent_id"/>
@@ -32,9 +32,9 @@
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" placeholder="Visible to all"/>
                                 <field name="color" widget="color_picker" string="Color"/>
                             </group>
-                            <div invisible="not id or id and not child_ids and not parent_id">
+                            <group colspan="5" invisible="not id or id and not child_ids and not parent_id">
                                 <widget name="hr_department_chart"/>
-                            </div>
+                            </group>
                         </group>
                     </sheet>
                     <chatter/>
