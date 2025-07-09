@@ -1,6 +1,6 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
-import { useService, useBus } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { BomOverviewControlPanel } from "../bom_overview_control_panel/mrp_bom_overview_control_panel";
 import { BomOverviewTable } from "../bom_overview_table/mrp_bom_overview_table";
 import { Component, EventBus, onWillStart, proxy } from "@odoo/owl";
@@ -22,6 +22,7 @@ export class BomOverviewComponent extends Component {
         this.warehouses = [];
         this.showVariants = false;
         this.uomName = "";
+        this.foldableIds = new Set();
         this.unfoldedIds = new Set();
 
         this.state = proxy({
@@ -42,12 +43,6 @@ export class BomOverviewComponent extends Component {
         useSubEnv({
             overviewBus: new EventBus(),
         });
-
-        useBus(
-            this.env.overviewBus,
-            "toggle-fold-all",
-            () => (this.state.allFolded = !this.state.allFolded)
-        );
 
         onWillStart(async () => {
             await this.getWarehouses();
@@ -75,7 +70,6 @@ export class BomOverviewComponent extends Component {
             this.state.currentVariantId ||= this.state.bomData.product_id;
         }
         this.state.precision = bomData["precision"];
-        this.state.foldable = bomData["lines"]["foldable"];
     }
 
     async getBomData() {
@@ -96,6 +90,12 @@ export class BomOverviewComponent extends Component {
         );
         this.state.bomData = bomData["lines"];
         this.state.showOptions.attachments = bomData["has_attachments"];
+        this.foldableIds.clear();
+        this.getFoldableIds(this.state.bomData);
+        // Remove this root level id from foldableIds because it is always unfolded.
+        this.foldableIds.delete(`${this.state.bomData.type}_${this.state.bomData.index}`);
+        this.state.foldable = this.foldableIds.size > 0;
+        this.state.allFolded = this.foldableIds.size !== this.unfoldedIds.size;
         return bomData;
     }
 
@@ -113,7 +113,16 @@ export class BomOverviewComponent extends Component {
     onChangeFolded(foldInfo) {
         const { ids, isFolded } = foldInfo;
         const operation = isFolded ? "delete" : "add";
-        ids.forEach(id => this.unfoldedIds[operation](id));
+        ids.forEach((id) => {
+            if (isFolded || this.foldableIds.has(id)) {
+                this.unfoldedIds[operation](id);
+            }
+        });
+        if (this.unfoldedIds.size === 0) {
+            this.state.allFolded = true;
+        } else if (this.unfoldedIds.size === this.foldableIds.size) {
+            this.state.allFolded = false;
+        }
     }
 
     onChangeMode(mode) {
@@ -171,6 +180,19 @@ export class BomOverviewComponent extends Component {
             reportName += "&variant=" + this.state.currentVariantId;
         }
         return reportName;
+    }
+
+    getFoldableIds(data) {
+        if (data.components?.length || data.operations?.length || data.byproducts?.length) {
+            this.foldableIds.add(`${data.type}_${data.index}`);
+            data.components.forEach((component) => this.getFoldableIds(component));
+        }
+        if (data.operations?.length) {
+            this.foldableIds.add(`operations_${data.index}`);
+        }
+        if (data.byproducts?.length) {
+            this.foldableIds.add(`byproducts_${data.index}`);
+        }
     }
 }
 
