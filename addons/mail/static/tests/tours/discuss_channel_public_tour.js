@@ -137,13 +137,13 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             content: "Reload page (fetch reactions)",
-            trigger: ".o-mail-Message",
+            trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction:contains('🙂')))",
             run() {
                 location.reload();
             },
         },
         {
-            trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction))",
+            trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction:contains('🙂')))",
         },
         {
             content: "Click on more menu",
