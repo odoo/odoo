@@ -6,8 +6,12 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website_sale.res_config_settings_view_form" />
         <field name="arch" type="xml">
-            <setting id="cart_redirect_setting" position="after">
-                <setting id="product_availability_setting" string="Inventory Defaults">
+            <setting id="automatic_invoice_generation" position="after">
+                <setting
+                    id="product_availability_setting"
+                    string="Inventory Defaults"
+                    info="This setting is common to all Websites."
+                >
                     <div class="content-group">
                         <div class="row mt16"
                             id="website_warehouse_setting"

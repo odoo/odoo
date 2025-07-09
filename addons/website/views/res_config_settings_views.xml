@@ -59,7 +59,12 @@
                         <setting string="Company" title="The company this website is linked to" groups="base.group_multi_company">
                             <field name="website_company_id" required="website_id"/>
                         </setting>
-                        <setting id="shared_user_account_setting" groups="website.group_multi_website" help="Accounts are usable across all your multiple websites">
+                        <setting
+                            id="shared_user_account_setting"
+                            groups="website.group_multi_website"
+                            help="Accounts are usable across all your multiple websites"
+                            info="This setting is common to all Websites."
+                        >
                             <field name="shared_user_account"/>
                         </setting>
                         <setting id="website_login_documents" title=" To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*." help="Let your customers log in to see their documents">

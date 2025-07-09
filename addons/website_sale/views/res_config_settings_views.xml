@@ -67,7 +67,8 @@
                                     string="Configure Methods"
                                     type="action"
                                     name="%(delivery.action_delivery_carrier_form)d"
-                                class="btn-primary"/>
+                                    class="btn-primary"
+                                />
                             </div>
                             <button
                                 string="Find a Provider"
@@ -106,13 +107,18 @@
                 </setting>
                 <setting id="cart_redirect_setting" string="Add to Cart" help="What should be done on &quot;Add to Cart&quot;?">
                     <div class="content-group">
-                        <div class="row mt16 ms-4">
+                        <div class="row mt16">
                             <field name="add_to_cart_action" widget="radio"/>
                         </div>
                     </div>
                 </setting>
                 <field name='module_account' invisible="1"/>
-                <setting id="invoicing_policy_setting" title="The mode selected here applies as invoicing policy of any new product created but not of products already existing." string="Invoicing Policy">
+                <setting
+                    id="invoicing_policy_setting"
+                    title="The mode selected here applies as invoicing policy of any new product created but not of products already existing."
+                    string="Invoicing Policy"
+                    info="This setting is common to all Websites."
+                >
                     <div class="content-group">
                         <div class="mt16">
                             <field name="default_invoice_policy" class="o_light_label" widget="radio"/>
@@ -126,10 +132,18 @@
                         <field name="invoice_mail_template_id" class="oe_inline"/>
                     </div>
                 </setting>
-                <setting help="Add a strikethrough price, as a comparison">
+                <setting
+                    help="Add a strikethrough price, as a comparison"
+                    info="This setting is common to all Websites."
+                >
                     <field name="group_product_price_comparison"/>
                 </setting>
-                <setting id="ecom_uom_price_option_setting" string="Product Reference Price" help="Add a reference price per UoM on products (i.e $/kg), in addition to the sale price">
+                <setting
+                    id="ecom_uom_price_option_setting"
+                    string="Product Reference Price"
+                    help="Add a reference price per UoM on products (i.e $/kg), in addition to the sale price"
+                    info="This setting is common to all Websites."
+                >
                     <field name="group_show_uom_price"/>
                 </setting>
                 <setting
@@ -170,7 +184,11 @@
                             class="btn-link"/>
                     </div>
                 </setting>
-                <setting id="hide_add_to_cart_setting" help="If product price equals 0, replace 'Add to Cart' by 'Contact us'.">
+                <setting
+                    id="hide_add_to_cart_setting"
+                    help="If product price equals 0, replace 'Add to Cart' by 'Contact us'."
+                    info="This setting is common to all Websites."
+                >
                     <field name="website_sale_prevent_zero_price_sale"/>
                     <div class="content-group" invisible="not website_sale_prevent_zero_price_sale">
                         <div class="row mt16">
