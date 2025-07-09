@@ -5,11 +5,15 @@
         <record id="mail_template_data_portal_welcome" model="mail.template">
             <field name="name">Portal: User Invite</field>
             <field name="model_id" ref="portal.model_portal_wizard_user"/>
-            <field name="subject">Your account at {{ object.user_id.company_id.name }}</field>
-            <field name="email_to">{{ object.user_id.email_formatted }}</field>
+            <field name="subject">Your account at {{ object.user_id.company_id.name or object.partner_id.company_id.name }}</field>
+            <field name="email_to">{{ object.user_id.email_formatted or object.partner_id.email_formatted }}</field>
             <field name="use_default_to" eval="False"/>
             <field name="description">Invitation email to contacts to create a user account</field>
             <field name="body_html" type="html">
+            <!-- defaulting to the partner as fallback for preview wizard (used when user hasn't been created yet) -->
+            <t t-set="user_name" t-value="object.user_id.name or object.partner_id.name or ''"/>
+            <t t-set="company_name" t-value="object.user_id.company_id.name or object.partner_id.company_id.name or ''"/>
+            <t t-set="signup_url" t-value="object.user_id.partner_id and object.user_id.partner_id._get_signup_url() or object.partner_id and object.partner_id._get_signup_url()"/>
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
 <tbody>
@@ -19,7 +23,7 @@
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Your Account</span><br/>
-                    <span style="font-size: 20px; font-weight: bold;" t-out="object.user_id.name or ''">Marc Demo</span>
+                    <span style="font-size: 20px; font-weight: bold;" t-out="user_name">Marc Demo</span>
                 </td><td valign="middle" align="right" t-if="not object.user_id.company_id.uses_default_logo">
                     <img t-attf-src="/logo.png?company={{ object.user_id.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.user_id.company_id.name"/>
                 </td></tr>
@@ -35,12 +39,12 @@
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="top" style="font-size: 13px;">
                     <div>
-                        Dear <t t-out="object.user_id.name or ''">Marc Demo</t>,<br/> <br/>
-                        Welcome to <t t-out="object.user_id.company_id.name">YourCompany</t>'s Portal!<br/><br/>
+                        Dear <t t-out="user_name">Marc Demo</t>,<br/> <br/>
+                        Welcome to <t t-out="company_name">YourCompany</t>'s Portal!<br/><br/>
                         An account has been created for you with the following login: <t t-out="object.user_id.login">demo</t><br/><br/>
                         Click on the button below to pick a password and activate your account.
                         <div style="margin: 16px 0px 16px 0px; text-align: center;">
-                            <a t-att-href="object.user_id.partner_id._get_signup_url()" t-attf-style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; color: {{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;">
+                            <a t-att-href="signup_url" style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; color: {{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;">
                                 <strong>Activate Account</strong>
                             </a>
                         </div>
@@ -58,7 +62,7 @@
         <td align="center" style="min-width: 590px;">
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="middle" align="left">
-                    <t t-out="object.user_id.company_id.name or ''">YourCompany</t>
+                    <t t-out="company_name">YourCompany</t>
                 </td></tr>
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
                     <t t-out="object.user_id.company_id.phone or ''">+1 650-123-4567</t>
