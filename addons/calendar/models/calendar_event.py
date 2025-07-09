@@ -606,6 +606,10 @@ class CalendarEvent(models.Model):
 
         events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_invitation_emails()
 
+        if not self.env.user._has_any_active_synchronization():
+            for event in events.filtered(lambda event: not (event.location or event.videocall_location)):
+                event._set_discuss_videocall_location()
+
         events._sync_activities(fields={f for vals in vals_list for f in vals.keys()})
         if not self.env.context.get('dont_notify'):
             alarm_events = self.env['calendar.event']
