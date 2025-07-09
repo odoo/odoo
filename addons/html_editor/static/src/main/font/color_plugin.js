@@ -474,7 +474,14 @@ export class ColorPlugin extends Plugin {
             parts = backgroundImageCssToParts(element.style["background-image"]);
             element.classList.remove(...COLOR_COMBINATION_CLASSES);
             element.classList.add("o_cc", color);
-            setBackgroundImageAndOverride(element, element.style["background-image"]);
+
+            const hasBackgroundColor = !!getComputedStyle(element).backgroundColor;
+            const hasGradient = getComputedStyle(element).backgroundImage.includes("-gradient");
+            const backgroundImage = element.style["background-image"];
+            // Override gradient background image if coming from css rather than inline style.
+            if (hasBackgroundColor && hasGradient && !backgroundImage) {
+                element.style.backgroundImage = "none";
+            }
             this.fixColorCombination(element);
             return;
         }
@@ -483,9 +490,14 @@ export class ColorPlugin extends Plugin {
             if (!color) {
                 element.classList.remove("o_cc", ...COLOR_COMBINATION_CLASSES);
             }
+            const hasGradient = getComputedStyle(element).backgroundImage.includes("-gradient");
             delete parts.gradient;
-            const newBackgroundImage = backgroundImagePartsToCss(parts);
-            setBackgroundImageAndOverride(element, newBackgroundImage);
+            let newBackgroundImage = backgroundImagePartsToCss(parts);
+            // we override the bg image if the new bg image is empty, but the previous one is a gradient.
+            if (hasGradient && !newBackgroundImage) {
+                newBackgroundImage = "none";
+            }
+            element.style.backgroundImage = newBackgroundImage;
             element.style["background-color"] = "";
         }
 
@@ -576,16 +588,7 @@ function removePresetGradient(element) {
     } else {
         delete parts.gradient;
         const withoutGradient = backgroundImagePartsToCss(parts);
-        element.style["background-image"] = styleWithoutGradient === "none" ? "" : withoutGradient;
-    }
-}
-
-function setBackgroundImageAndOverride(el, backgroundImage) {
-    const isNone = !backgroundImage || backgroundImage === "none";
-    el.style.backgroundImage = isNone ? "" : backgroundImage;
-    // If the current background image is empty but the inherited one isn't
-    // force the background image to override the inherited one.
-    if (isNone && getComputedStyle(el).backgroundImage !== "none") {
-        el.style.backgroundImage = "none";
+        element.style["background-image"] =
+            styleWithoutGradient.backgroundImage === "none" ? "" : withoutGradient;
     }
 }
