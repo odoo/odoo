@@ -2,6 +2,7 @@ import { test, expect } from "@odoo/hoot";
 import { press, click, animationFrame } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ColorPicker, DEFAULT_COLORS } from "@web/core/color_picker/color_picker";
+import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 
 test("basic rendering", async () => {
     await mountWithCleanup(ColorPicker, {
@@ -140,4 +141,13 @@ test("keyboard navigation", async () => {
     expect(
         ".o_font_color_selector .o_color_section .o_color_button[data-color]:last-of-type"
     ).toBeFocused();
+});
+
+test("custom color picker sets default color as selected", async () => {
+    await mountWithCleanup(CustomColorPicker, {
+        props: {
+            defaultColor: "#FF0000",
+        },
+    });
+    expect("input.o_hex_input").toHaveValue("#FF0000");
 });

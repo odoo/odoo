@@ -41,7 +41,9 @@ export class CustomColorPicker extends Component {
         this.colorComponents = {};
         this.uniqueId = uniqueId("colorpicker");
         this.selectedHexValue = "";
-
+        if (!this.props.selectedColor || this.props.selectedColor === "#00000000") {
+            this.props.selectedColor = this.props.defaultColor;
+        }
         this.debouncedOnChangeInputs = debounce(this.onChangeInputs.bind(this), 10, true);
 
         this.elRef = useRef("el");
