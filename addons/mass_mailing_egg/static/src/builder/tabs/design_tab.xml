@@ -44,73 +44,51 @@
     </BuilderRow>
 </t>
 
-<t t-name="website.DesignHeadingsOption">
-    <BuilderContext preview="false">
-        <t t-set="heading_label">Heading</t>
-        <t t-set="display_label">Display</t>
-        <BuilderRow label.translate="Font Size" action="'mass_mailing_egg.CustomizeStyleProperty'">
-            <BuilderNumberInput title.translate="Heading 1" actionParam="{ selector: 'h1', property: 'font-size' }" unit="'px'"/>
-            <BuilderColorPicker noTransparency="true"
-                enabledTabs="['solid', 'custom']"
-                actionParam="{ selector: 'h1', property: 'color' }"
-            />
-            <t t-set-slot="collapse">
-                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'h' + depth + '-font-size'" unit="'px'"/>
-                        <BuilderColorPicker noTransparency="true"
-                            enabledTabs="['solid', 'custom']"
-                            action="'mass_mailing_egg.CustomizeStyleProperty'"
-                            actionParam="{ selector: '.o_mail_wrapper_td > [data-snippet]', property: 'background-color' }"
-                        />
-                    </BuilderRow>
-                </t>
+<t t-name="mass_mailing_egg.DesignHeadingsOption">
+    <t t-set="heading_label">Heading</t>
+    <t t-set="display_label">Display</t>
+    <BuilderRow label.translate="Font Size" action="'mass_mailing_egg.CustomizeStyleProperty'">
+        <BuilderNumberInput title.translate="Heading 1" actionParam="{ selector: 'h1', property: 'font-size' }" unit="'px'"/>
+        <BuilderColorPicker noTransparency="true"
+            enabledTabs="['solid', 'custom']"
+            actionParam="{ selector: 'h1', property: 'color' }"
+        />
+        <t t-set-slot="collapse">
+            <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+                <BuilderRow level="1" label="heading_label + ' ' + depth">
+                    <BuilderNumberInput actionParam="{ selector: `h${depth}`, property: 'font-size' }" unit="'px'"/>
+                    <BuilderColorPicker noTransparency="true"
+                        enabledTabs="['solid', 'custom']"
+                        actionParam="{ selector: `h${depth}`, property: 'color' }"
+                    />
+                </BuilderRow>
             </t>
-        </BuilderRow>
-        <BuilderRow label.translate="Font Family" tooltip.translate="Heading 1" action="'customizeWebsiteVariable'">
-            <BuilderFontFamilyPicker actionParam="'headings-font'" valueParamName="'actionValue'"/>
-            <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
-                title.translate="Reset to Paragraph Font Family"
-                action="'removeFont'"
-                actionParam="{ variable: 'headings-font', tbd: 'set-headings-font' }"
-            />
-            <t t-set-slot="collapse">
-                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderFontFamilyPicker actionParam="'h' + depth + '-font'" valueParamName="'actionValue'"/>
-                        <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
-                            title.translate="Reset to Headings Font Family"
-                            action="'removeFont'"
-                            actionParam="{ variable: 'h' + depth + '-font', tbd: 'set-h' + depth + '-font' }"
-                        />
-                    </BuilderRow>
-                </t>
+        </t>
+    </BuilderRow>
+    <!-- font family -->
+    <!-- "× ": \u00D7\u2000 -->
+    <!-- <BuilderRow label.translate="Line Height" action="'mass_mailing_egg.CustomizeStyleProperty'">
+        <BuilderNumberInput title.translate="Heading 1" actionParam="'headings-line-height'" unit="'✕'" saveUnit="''"/>
+        <t t-set-slot="collapse">
+            <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+                <BuilderRow level="1" label="heading_label + ' ' + depth">
+                    <BuilderNumberInput actionParam="'h' + depth + '-line-height'" unit="'✕'" saveUnit="''"/>
+                </BuilderRow>
             </t>
-        </BuilderRow>
-        <BuilderRow label.translate="Line Height" action="'customizeWebsiteVariable'">
-            <!-- "× ": \u00D7\u2000 -->
-            <BuilderNumberInput title.translate="Heading 1" actionParam="'headings-line-height'" unit="'✕'" saveUnit="''"/>
-            <t t-set-slot="collapse">
-                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'h' + depth + '-line-height'" unit="'✕'" saveUnit="''"/>
-                    </BuilderRow>
-                </t>
+        </t>
+    </BuilderRow> -->
+    <!-- <BuilderRow label.translate="Margins" tooltip.translate="Heading 1" action="'customizeWebsiteVariable'">
+        <BuilderNumberInput title.translate="Top" actionParam="'headings-margin-top'" unit="'px'" saveUnit="'px'"/>
+        <BuilderNumberInput title.translate="Bottom" actionParam="'headings-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+        <t t-set-slot="collapse">
+            <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+                <BuilderRow level="1" label="heading_label + ' ' + depth">
+                    <BuilderNumberInput title.translate="Top" actionParam="'h' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
+                    <BuilderNumberInput title.translate="Bottom" actionParam="'h' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+                </BuilderRow>
             </t>
-        </BuilderRow>
-        <BuilderRow label.translate="Margins" tooltip.translate="Heading 1" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput title.translate="Top" actionParam="'headings-margin-top'" unit="'px'" saveUnit="'px'"/>
-            <BuilderNumberInput title.translate="Bottom" actionParam="'headings-margin-bottom'" unit="'px'" saveUnit="'px'"/>
-            <t t-set-slot="collapse">
-                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput title.translate="Top" actionParam="'h' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
-                        <BuilderNumberInput title.translate="Bottom" actionParam="'h' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
-                    </BuilderRow>
-                </t>
-            </t>
-        </BuilderRow>
-    </BuilderContext>
+        </t>
+    </BuilderRow> -->
 </t>
 <t t-name="mass_mailing_egg.DesignButtonsOption">
     <BuilderRow label.translate="Primary Buttons" action="'mass_mailing_egg.CustomizeMassMailingStyleProperty'">
