@@ -1,25 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import contextlib
 from datetime import timedelta
 from unittest.mock import patch
-
-import freezegun
 
 import odoo
 from odoo import Command, fields
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
 from odoo.tests.common import users
-
-
-@contextlib.contextmanager
-def freeze_all_time(time=None):
-    """ Freeze time for datetime calls and create_date in odoo.sql_db.BaseCursor."""
-    if time is None:
-        time = fields.Datetime.now()
-    with patch('odoo.sql_db.BaseCursor.now', return_value=time), freezegun.freeze_time(time):
-        yield
 
 
 @odoo.tests.tagged("-at_install", "post_install")
