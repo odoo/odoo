@@ -34,10 +34,6 @@ _logger = logging.getLogger(__name__)
 """
 
 
-def raise_keyboard_interrupt(*a):
-    raise KeyboardInterrupt()
-
-
 class Shell(Command):
     """Start odoo in an interactive shell"""
     supported_shells = ['ipython', 'ptpython', 'bpython', 'python']
@@ -60,6 +56,9 @@ class Shell(Command):
         config.parse_config(args, setup_logging=True)
         cli_server.report_configuration()
         server.start(preload=[], stop=True)
+
+        def raise_keyboard_interrupt(*a):
+            raise KeyboardInterrupt()
         signal.signal(signal.SIGINT, raise_keyboard_interrupt)
 
     def console(self, local_vars):
