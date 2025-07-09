@@ -403,6 +403,10 @@ class HrExpense(models.Model):
         if any(attachment.res_id or attachment.res_model != 'hr.expense' for attachment in attachments):
             raise UserError(_("Invalid attachments!"))
 
+        employee = self.env.user.employee_id
+        if not employee or employee.company_id != self.env.company:
+            raise ValidationError(_("The current user has no related employee, or the related employee does not belong to this company."))
+
         product = self.env['product.product'].search([('can_be_expensed', '=', True)])
         if product:
             product = product.filtered(lambda p: p.default_code == "EXP_GEN")[:1] or product[0]
