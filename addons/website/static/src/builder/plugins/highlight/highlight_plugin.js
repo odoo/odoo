@@ -17,7 +17,7 @@ import { nodeSize } from "@html_editor/utils/position";
 
 export class HighlightPlugin extends Plugin {
     static id = "highlight";
-    static dependencies = ["history", "selection", "split", "format"];
+    static dependencies = ["history", "selection", "split", "format", "edit_interaction"];
     resources = {
         toolbar_groups: [withSequence(50, { id: "websiteDecoration" })],
         toolbar_items: [
@@ -43,24 +43,11 @@ export class HighlightPlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
-        clean_for_save_handlers: ({ root }) => {
-            for (const svg of root.querySelectorAll(".o_text_highlight_svg")) {
-                svg.remove();
-            }
-        },
-        /**
-         * @param {MutationRecord} mutationRecord
-         */
-        savable_mutation_record_predicates: (mutationRecord) =>
-            ![...mutationRecord.addedNodes, ...mutationRecord.removedNodes].some((node) =>
-                closestElement(node, ".o_text_highlight_svg")
-            ),
         normalize_handlers: (root) => {
-            // Remove highlight SVGs when the text is removed.
-            for (const svg of root.querySelectorAll(".o_text_highlight_svg")) {
-                if (!svg.closest(".o_text_highlight")) {
-                    svg.remove();
-                }
+            for (const node of root.querySelectorAll(".o_text_highlight")) {
+                // Signal to the interaction that there is (maybe) a new element
+                // (the interaction will ignore duplicates)
+                node.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
             }
         },
         format_splittable_class: (className) => className.startsWith("o_text_highlight"),
@@ -68,12 +55,14 @@ export class HighlightPlugin extends Plugin {
         collapsed_selection_toolbar_predicate: (selectionData) =>
             !!closestElement(selectionData.editableSelection.anchorNode, ".o_text_highlight"),
         remove_format_handlers: () => {
-            const highlightedNodes = this.getSelectedHighlightNodes();
-            for (const node of new Set(highlightedNodes)) {
-                for (const svg of node.querySelectorAll(".o_text_highlight_svg")) {
-                    svg.remove();
-                }
-            }
+            // we rely on the normalize handler to start it again
+            this.dependencies.edit_interaction.stopInteraction("website.text_highlight");
+        },
+        format_selection_handlers: () => {
+            this.dependencies.edit_interaction.stopInteraction("website.text_highlight");
+        },
+        on_will_save_snippet_handlers: () => {
+            this.dependencies.edit_interaction.stopInteraction("website.text_highlight");
         },
     };
 
@@ -121,12 +110,6 @@ export class HighlightPlugin extends Plugin {
 
     _applyHighlight(highlightId) {
         const highlightedNodes = this.getSelectedHighlightNodes();
-        for (const node of new Set(highlightedNodes)) {
-            for (const svg of node.querySelectorAll(".o_text_highlight_svg")) {
-                svg.remove();
-            }
-        }
-
         let thicknessToRestore;
         let colorToRestore;
         if (highlightedNodes.length > 0) {
@@ -230,16 +213,7 @@ export class HighlightPlugin extends Plugin {
     }
 
     deleteSelectedHighlight() {
-        const highlightedNodes = this.getSelectedHighlightNodes();
-        for (const node of new Set(highlightedNodes)) {
-            for (const svg of node.querySelectorAll(".o_text_highlight_svg")) {
-                svg.remove();
-            }
-        }
-
-        this.dependencies.format.formatSelection("highlight", {
-            applyStyle: false,
-        });
+        this.dependencies.format.formatSelection("highlight", { applyStyle: false });
         this.updateSelectedHighlight();
     }
 }
@@ -250,7 +224,6 @@ formatsSpecs.highlight = {
     isFormatted: (node) => closestElement(node)?.classList.contains("o_text_highlight"),
     hasStyle: (node) => closestElement(node)?.classList.contains("o_text_highlight"),
     addStyle: (node, { highlightId, thicknessToRestore, colorToRestore }) => {
-        node.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
         node.classList.add("o_text_highlight", `o_text_highlight_${highlightId}`);
         if (colorToRestore && colorToRestore !== "currentColor") {
             node.style.setProperty("--text-highlight-color", colorToRestore);
