@@ -290,7 +290,7 @@ export class FontPlugin extends Plugin {
         /** Processors */
         clipboard_content_processors: this.processContentForClipboard.bind(this),
 
-        format_splittable_class: (className) => FONT_SIZE_CLASSES.includes(className),
+        format_splittable_class_predicates: (className) => FONT_SIZE_CLASSES.includes(className),
     };
 
     setup() {

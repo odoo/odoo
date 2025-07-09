@@ -63,9 +63,9 @@ export class HighlightPlugin extends Plugin {
                 }
             }
         },
-        format_splittable_class: (className) => className.startsWith("o_text_highlight"),
+        format_splittable_class_predicates: (className) => className.startsWith("o_text_highlight"),
         selectionchange_handlers: this.updateSelectedHighlight.bind(this),
-        collapsed_selection_toolbar_predicate: (selectionData) =>
+        collapsed_selection_toolbar_predicates: (selectionData) =>
             !!closestElement(selectionData.editableSelection.anchorNode, ".o_text_highlight"),
         remove_format_handlers: () => {
             const highlightedNodes = this.getSelectedHighlightNodes();

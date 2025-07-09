@@ -357,7 +357,7 @@ export class ToolbarPlugin extends Plugin {
         }
         const isCollapsed = selectionData.editableSelection.isCollapsed;
         if (isCollapsed) {
-            return this.getResource("collapsed_selection_toolbar_predicate").some((fn) =>
+            return this.getResource("collapsed_selection_toolbar_predicates").some((fn) =>
                 fn(selectionData)
             );
         }
