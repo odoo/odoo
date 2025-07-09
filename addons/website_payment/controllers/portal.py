@@ -8,6 +8,7 @@ from odoo.tools.json import scriptsafe as json_safe
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
+from odoo.addons.account_payment.controllers import portal as account_payment_portal
 
 
 class PaymentPortal(payment_portal.PaymentPortal):
@@ -151,3 +152,11 @@ class PaymentPortal(payment_portal.PaymentPortal):
             for provider_sudo in providers_sudo:
                 res[provider_sudo.id] = False
         return res
+
+
+class PortalAccount(account_payment_portal.PortalAccount):
+    def _invoice_get_page_view_values(self, invoice, access_token, **kwargs):
+        kwargs.update({
+            "website_id": request.website.id,
+        })
+        return super()._invoice_get_page_view_values(invoice=invoice, access_token=access_token, **kwargs)
