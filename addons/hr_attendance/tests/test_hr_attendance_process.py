@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 from odoo import fields
 from odoo.tests import new_test_user
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import tagged, TransactionCase, freeze_time
 
 
 @tagged('attendance_process')
@@ -62,3 +62,32 @@ class TestHrAttendance(TransactionCase):
         # now = 2019/3/2 14:00 in the employee's timezone
         with patch.object(fields.Datetime, 'now', lambda: tz_datetime(2019, 3, 2, 14, 0).astimezone(pytz.utc).replace(tzinfo=None)):
             self.assertEqual(employee.hours_today, 5, "It should have counted 5 hours")
+
+    @freeze_time("2024-02-1")
+    def test_change_in_out_mode_when_manual_modification(self):
+        company = self.env['res.company'].create({
+            'name': 'Monsters, Inc.',
+            'absence_management': True,
+        })
+
+        employee = self.env['hr.employee'].create({
+            'name': "James P. Sullivan",
+            'company_id': company.id,
+        })
+
+        self.env['hr.attendance']._cron_absence_detection()
+
+        attendance = self.env['hr.attendance'].search([('employee_id', '=', employee.id)])
+
+        self.assertEqual(attendance.in_mode, 'technical')
+        self.assertEqual(attendance.out_mode, 'technical')
+        self.assertEqual(attendance.color, 1)
+
+        attendance.write({
+            'check_in': datetime(2021, 1, 4, 8, 0),
+            'check_out': datetime(2021, 1, 4, 17, 0),
+        })
+
+        self.assertEqual(attendance.in_mode, 'manual')
+        self.assertEqual(attendance.out_mode, 'manual')
+        self.assertEqual(attendance.color, 0)
