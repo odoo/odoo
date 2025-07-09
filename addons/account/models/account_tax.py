@@ -873,10 +873,10 @@ class AccountTax(models.Model):
 
     @api.model
     def _compute_taxes_for_single_line(self, base_line, handle_price_include=True, include_caba_tags=False, early_pay_discount_computation=None, early_pay_discount_percentage=None):
-        orig_price_unit_after_discount = base_line['price_unit'] * (1 - (base_line['discount'] / 100.0))
+        currency = base_line['currency'] or self.env.company.currency_id
+        orig_price_unit_after_discount = base_line['price_unit'] - currency.round(base_line['price_unit'] * (base_line['discount'] or 0.0) / 100.0)
         price_unit_after_discount = orig_price_unit_after_discount
         taxes = base_line['taxes']._origin
-        currency = base_line['currency'] or self.env.company.currency_id
         rate = base_line['rate']
 
         if early_pay_discount_computation in ('included', 'excluded'):
