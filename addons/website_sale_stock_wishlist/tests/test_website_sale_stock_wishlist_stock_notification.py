@@ -61,5 +61,5 @@ class TestStockNotificationWishlist(HttpCaseWithWebsiteUser):
 
         ProductProduct._send_availability_email()
         emails = self.env['mail.mail'].search([('email_to', '=', partner.email_formatted)])
-        self.assertEqual(emails[0].subject, "The product 'Macbook Pro' is now available")
+        self.assertEqual(emails[0].subject, "Macbook Pro is back in stock")
         self.assertFalse(product._has_stock_notification(partner))
