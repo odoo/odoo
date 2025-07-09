@@ -156,7 +156,7 @@ class UseSuggestion {
             after = text.substring(position, text.length);
         }
         if (option.partner) {
-            this.composer.mentionedPartners.add({
+            this.composer.mentionedPartners.push({
                 id: option.partner.id,
                 type: "partner",
             });
@@ -165,7 +165,7 @@ class UseSuggestion {
             this.composer.mentionedRoles.add(option.role);
         }
         if (option.thread) {
-            this.composer.mentionedChannels.add({
+            this.composer.mentionedChannels.push({
                 model: "discuss.channel",
                 id: option.thread.id,
             });
