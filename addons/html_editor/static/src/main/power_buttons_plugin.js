@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { closestBlock } from "@html_editor/utils/blocks";
-import { isEmptyBlock } from "@html_editor/utils/dom_info";
+import { isEmptyBlock, isTableCell } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { omit, pick } from "@web/core/utils/objects";
 
@@ -127,7 +127,7 @@ export class PowerButtonsPlugin extends Plugin {
             editableRect.bottom > blockRect.top &&
             isEmptyBlock(block) &&
             !this.services.ui.isSmall &&
-            !closestElement(editableSelection.anchorNode, "td") &&
+            !closestElement(editableSelection.anchorNode, isTableCell) &&
             !block.style.textAlign &&
             this.getResource("power_buttons_visibility_predicates").every((predicate) =>
                 predicate(editableSelection)
