@@ -58,6 +58,7 @@ class PaymentCommon(BaseCommon):
         redirect_form = cls.env['ir.ui.view'].create({
             'name': "Dummy Redirect Form",
             'type': 'qweb',
+            'key': 'payment.dummy_form',
             'arch': arch,
         })
 

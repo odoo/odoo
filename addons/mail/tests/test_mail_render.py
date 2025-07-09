@@ -74,6 +74,7 @@ class TestMailRenderCommon(common.MailCommon):
         cls.base_qweb_templates = cls.env['ir.ui.view'].create([
             {'name': 'TestRender%d' % index,
              'type': 'qweb',
+             'key': 'mail.TestRender%d' % index,
              'arch': qweb_content,
             } for index, qweb_content in enumerate(cls.base_qweb_bits)
         ])

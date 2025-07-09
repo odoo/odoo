@@ -38,34 +38,34 @@ class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
         untracked_view = self.env['ir.ui.view'].create({
             'name': 'UntackedView',
             'type': 'qweb',
-            'arch': '''<t name="Homepage" t-name="website.base_view">
+            'arch': '''<t name="UntackedView" t-name="website.UntackedView">
                         <t t-call="website.layout">
                             I am a generic page²
                         </t>
                     </t>''',
-            'key': 'test.base_view',
+            'key': 'test.UntackedView',
             'track': False,
         })
         tracked_view = self.env['ir.ui.view'].create({
             'name': 'TrackedView',
             'type': 'qweb',
-            'arch': '''<t name="Homepage" t-name="website.base_view">
+            'arch': '''<t name="TrackedView" t-name="website.TrackedView">
                         <t t-call="website.layout">
                             I am a generic page
                         </t>
                     </t>''',
-            'key': 'test.base_view',
+            'key': 'test.TrackedView',
             'track': True,
         })
         tracked_view_2 = self.env['ir.ui.view'].create({
             'name': 'TrackedView2',
             'type': 'qweb',
-            'arch': '''<t name="OtherPage" t-name="website.base_view">
+            'arch': '''<t name="TrackedView2" t-name="website.TrackedView2">
                         <t t-call="website.layout">
                             I am a generic second page
                         </t>
                     </t>''',
-            'key': 'test.base_view',
+            'key': 'test.TrackedView2',
             'track': True,
         })
         [self.untracked_page, self.tracked_page, self.tracked_page_2] = self.env['website.page'].create([

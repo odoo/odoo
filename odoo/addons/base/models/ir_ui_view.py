@@ -204,6 +204,15 @@ actual arch.
 
     invalid_locators = fields.Json(compute='_compute_invalid_locators')
 
+    _qweb_key_uniq = models.UniqueIndex(
+        "(key) WHERE type = 'qweb'",
+        "QWeb view must be unique. The key is used for rendering and t-call.",
+    )
+    _qweb_key_required = models.Constraint(
+        "CHECK(key IS NOT NULL OR type != 'qweb')",
+        "The key is used for rendering and t-call.",
+    )
+
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
     @api.depends_context('read_arch_from_file', 'lang', 'edit_translations', 'check_translations')
     def _compute_arch(self):
@@ -611,7 +620,7 @@ actual arch.
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
         for view, vals in zip(self, vals_list):
-            if view.key and has_default_without_key:
+            if view.type == 'qweb' or (view.key and has_default_without_key):
                 vals['key'] = default.get('key', view.key + '_%s' % str(uuid.uuid4())[:6])
         return vals_list
 
@@ -1124,24 +1133,6 @@ actual arch.
             view_by_id[view.id] = view
             if view.key:
                 view_by_id[view.key] = view
-
-        # search missing view from xmlid in ir.model.data
-        missing_xmlid_views = [xmlid for xmlid in xmlids if '.' in xmlid and xmlid not in view_by_id]
-        if missing_xmlid_views:
-            domain = Domain.OR(
-                Domain('model', '=', 'ir.ui.view') & Domain('module', '=', res[0]) & Domain('name', '=', res[1])
-                for xmlid in missing_xmlid_views
-                if (res := xmlid.split('.', 1))
-            )
-
-            for model_data in self.env['ir.model.data'].sudo().search(domain):
-                view = IrUiView.browse(model_data.res_id)
-                if view.exists():
-                    view_by_id[view.id] = view
-                    xmlid = f"{model_data.module}.{model_data.name}"
-                    view_by_id[xmlid] = view
-                    if view.key:
-                        view_by_id[view.key] = view
 
         for key, view in view_by_id.items():
             # push information in cache

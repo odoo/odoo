@@ -715,6 +715,7 @@ class TestAssetsBundleInBrowser(HttpCase):
         self.env['ir.ui.view'].create({
             'name': 'test bundle inheritance inline js',
             'type': 'qweb',
+            'key': 'test_assetsbundle.bundle_inheritance',
             'arch': view_arch,
             'inherit_id': self.browse_ref('test_assetsbundle.bundle1').id,
         })
@@ -848,6 +849,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test asset',
             'arch': arch,
             'type': 'qweb',
+            'key': 'test_assetsbundle.test_asset',
         })
         return view
 

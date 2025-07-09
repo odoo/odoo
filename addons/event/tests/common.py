@@ -185,15 +185,9 @@ class EventCase(common.TransactionCase):
         </t>
     </t>
 </t>""",
-            "key": "event_registration_test_report",
+            "key": "event.event_registration_test_report",
             "name": "event_registration_test_report",
             "type": "qweb",
-        })
-        cls.env["ir.model.data"].create({
-            "model": "ir.ui.view",
-            "module": "event",
-            "name": "event_registration_test_report",
-            "res_id": cls.test_report_view.id,
         })
 
         cls.test_report_action = cls.env['ir.actions.report'].create({

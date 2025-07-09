@@ -16,7 +16,7 @@ class TestDisableSnippetsAssets(TransactionCase):
             'name': 'Home',
             'type': 'qweb',
             'arch_db': HOMEPAGE_OUTDATED,
-            'key': 'website.homepage',
+            'key': 'website.homepage1',
         })
         self.mega_menu = self.WebsiteMenu.create({
             'name': 'Image Gallery V001',

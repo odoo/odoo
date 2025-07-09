@@ -14,6 +14,7 @@ class TestWebsiteSitemap(TransactionCase):
             'website_id': website.id,
             'url': page_url,
             'type': 'qweb',
+            'key': 'website.test_page',
             'arch': '<t t-call="website.layout"/>',
             'is_published': True,
         })

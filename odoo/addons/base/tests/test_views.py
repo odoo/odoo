@@ -973,6 +973,7 @@ class TestNoModel(ViewCase):
             'arch': '<template name="foo"/>',
             'inherit_id': False,
             'type': 'qweb',
+            'key': 'base.dummy',
         })
         fields = ['name', 'arch', 'type', 'priority', 'inherit_id', 'model']
         [data] = view.read(fields)
@@ -1011,6 +1012,7 @@ class TestNoModel(ViewCase):
             'arch': ARCH % TEXT_EN,
             'inherit_id': False,
             'type': 'qweb',
+            'key': 'base.dummy',
         })
         view.update_field_translations('arch_db', {'fr_FR': {TEXT_EN: TEXT_FR}})
         view = view.with_context(lang='fr_FR')
@@ -1026,6 +1028,7 @@ class TestTemplating(ViewCase):
         view1 = self.View.create({
             'name': "Base view",
             'type': 'qweb',
+            'key': 'base.base',
             'arch': """<root>
                 <div role="search">
                     <input type="search" name="search"/>
@@ -1039,6 +1042,7 @@ class TestTemplating(ViewCase):
         self.View.create({
             'name': "Extension view",
             'type': 'qweb',
+            'key': 'base.extension',
             'inherit_id': view1.id,
             'arch': """<xpath expr="//div[@role='search']" position="replace">
                 <form>
@@ -1060,6 +1064,7 @@ class TestTemplating(ViewCase):
         view1 = self.View.create({
             'name': "Base view",
             'type': 'qweb',
+            'key': 'base.base',
             'arch': """<root>
                 <item order="1"/>
             </root>
@@ -1068,6 +1073,7 @@ class TestTemplating(ViewCase):
         view2 = self.View.create({
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension',
             'inherit_id': view1.id,
             'arch': """<xpath expr="//item" position="before">
                 <item order="2"/>
@@ -1100,6 +1106,7 @@ class TestTemplating(ViewCase):
         view1 = self.View.create({
             'name': "Base view",
             'type': 'qweb',
+            'key': 'base.base',
             'arch': """<hello>
                 <world></world>
                 <world><t t-esc="hello"/></world>
@@ -1110,6 +1117,7 @@ class TestTemplating(ViewCase):
         self.View.create({
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension',
             'inherit_id': view1.id,
             'arch': """<xpath expr="/hello/world[1]" position="replace">
                 <world>Is a ghetto</world>
@@ -1155,6 +1163,7 @@ class TestTemplating(ViewCase):
         view1 = self.View.create({
             'name': "Base view",
             'type': 'qweb',
+            'key': 'base.base',
             'arch': """<hello>
                 <world></world>
                 <world><t t-esc="hello"/></world>
@@ -1165,6 +1174,7 @@ class TestTemplating(ViewCase):
         self.View.create({
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension',
             'inherit_id': view1.id,
             'arch': """<xpath expr="/hello/world[1]" position="replace">
                 <war>Is a ghetto</war>
@@ -1209,6 +1219,7 @@ class TestTemplating(ViewCase):
         view1 = self.View.create({
             'name': "Base view",
             'type': 'qweb',
+            'key': 'base.base',
             # The t-esc node is to ensure branding is distributed to both
             # <world/> elements from the start
             'arch': """
@@ -1223,6 +1234,7 @@ class TestTemplating(ViewCase):
         self.View.create({
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension',
             'inherit_id': view1.id,
             'arch': """
                 <data>
@@ -1247,6 +1259,7 @@ class TestTemplating(ViewCase):
         view1 = self.View.create({
             'name': "Base view",
             'type': 'qweb',
+            'key': 'base.base',
             'arch': """
                 <hello>
                     <world></world>
@@ -1257,6 +1270,7 @@ class TestTemplating(ViewCase):
         self.View.create({
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension',
             'inherit_id': view1.id,
             'arch': """
                 <data>
@@ -1289,6 +1303,7 @@ class TestTemplating(ViewCase):
         view1 = self.View.create({
             'name': "Base view",
             'type': 'qweb',
+            'key': 'base.base',
             'arch': """
                 <hello>
                     <world class="a"></world>
@@ -1300,6 +1315,7 @@ class TestTemplating(ViewCase):
         view2 = self.View.create({
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension',
             'inherit_id': view1.id,
             'arch': """
                 <data>
@@ -1313,6 +1329,7 @@ class TestTemplating(ViewCase):
         self.View.create({  # Inherit from the child view and target the added element
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension2',
             'inherit_id': view2.id,
             'arch': """
                 <data>
@@ -1347,6 +1364,7 @@ class TestTemplating(ViewCase):
         view1 = self.View.create({
             'name': "Base view",
             'type': 'qweb',
+            'key': 'base.base',
             'arch': """
                 <hello>
                     <world class="a"></world>
@@ -1358,6 +1376,7 @@ class TestTemplating(ViewCase):
         self.View.create({
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension',
             'inherit_id': view1.id,
             'arch': """
                 <data>
@@ -1372,6 +1391,7 @@ class TestTemplating(ViewCase):
                             # the element added by the first child view
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension2',
             'inherit_id': view1.id,
             'arch': """
                 <data>
@@ -1406,6 +1426,7 @@ class TestTemplating(ViewCase):
         view1 = self.View.create({
             'name': "Base view",
             'type': 'qweb',
+            'key': 'base.base',
             'arch': """
                 <hello>
                     <world class="a"></world>
@@ -1416,6 +1437,7 @@ class TestTemplating(ViewCase):
         view2 = self.View.create({
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension',
             'inherit_id': view1.id,
             # Note: class="x" instead of t-field="x" in this arch, should lead
             # to the same result that this test is ensuring but was actually
@@ -1432,6 +1454,7 @@ class TestTemplating(ViewCase):
         self.View.create({  # Inherit from the child view and target the added element
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension2',
             'inherit_id': view2.id,
             'arch': """
                 <data>
@@ -1465,6 +1488,7 @@ class TestTemplating(ViewCase):
         view1 = self.View.create({
             'name': "Base view",
             'type': 'qweb',
+            'key': 'base.base',
             'arch': """
                 <html>
                     <head>
@@ -1479,6 +1503,7 @@ class TestTemplating(ViewCase):
         self.View.create({
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension',
             'inherit_id': view1.id,
             'arch': """
                 <data>
@@ -1532,6 +1557,7 @@ class TestTemplating(ViewCase):
         view1 = self.View.create({
             'name': "Base view",
             'type': 'qweb',
+            'key': 'base.base',
             'arch': """
                 <hello>
                     <world></world>
@@ -1544,6 +1570,7 @@ class TestTemplating(ViewCase):
         self.View.create({
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension',
             'inherit_id': view1.id,
             'arch': """
                 <xpath expr="/hello/world[3]" position="after">
@@ -1582,6 +1609,7 @@ class TestTemplating(ViewCase):
         self.View.create({
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.dummy',
             'inherit_id': view1.id,
             'arch': """
                 <data>
@@ -1605,6 +1633,7 @@ class TestTemplating(ViewCase):
         view1 = self.View.create({
             'name': "Base view",
             'type': 'qweb',
+            'key': 'base.base',
             'arch': """<root>
                 <item order="1"/>
             </root>
@@ -1613,6 +1642,7 @@ class TestTemplating(ViewCase):
         view2 = self.View.create({
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension',
             'mode': 'primary',
             'inherit_id': view1.id,
             'arch': """<xpath expr="//item" position="after">
@@ -1653,6 +1683,7 @@ class TestTemplating(ViewCase):
         view1 = self.View.create({
             'name': "Base view",
             'type': 'qweb',
+            'key': 'base.base',
             'arch': """<root>
                 <item order="1"/>
             </root>"""
@@ -1660,6 +1691,7 @@ class TestTemplating(ViewCase):
         view2 = self.View.create({
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension',
             'inherit_id': view1.id,
             'arch': """<xpath expr="//item" position="before">
                 <item order="2">
@@ -1700,6 +1732,7 @@ class TestTemplating(ViewCase):
         view = self.View.create({
             'name': "Base View",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """<root>
                 <item groups="base.group_no_one"/>
             </root>""",
@@ -1721,6 +1754,7 @@ class TestTemplating(ViewCase):
         view = self.View.create({
             'name': "Base View",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """<root>
                 <item><span t-call="foo"/></item>
             </root>""",
@@ -1736,6 +1770,7 @@ class TestTemplating(ViewCase):
         view = self.View.create({
             'name': "Base View",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """<root>
                 <item><span t-esc="foo"/></item>
             </root>""",
@@ -1751,6 +1786,7 @@ class TestTemplating(ViewCase):
         view1 = self.View.create({
             'name': "Base view",
             'type': 'qweb',
+            'key': 'base.base',
             'arch': """<root>
                 <item order="1" t-ignore="true">
                     <t t-esc="foo"/>
@@ -1760,6 +1796,7 @@ class TestTemplating(ViewCase):
         view2 = self.View.create({
             'name': "Extension",
             'type': 'qweb',
+            'key': 'base.extension',
             'inherit_id': view1.id,
             'arch': """<xpath expr="//item[@order='1']" position="inside">
                 <item order="2">
@@ -4447,6 +4484,7 @@ class TestQWebRender(ViewCase):
         view1 = self.View.create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <div><span>something</span></div>
@@ -4456,6 +4494,7 @@ class TestQWebRender(ViewCase):
         view2 = self.View.create({
             'name': "dummy_ext",
             'type': 'qweb',
+            'key': 'base.dummy_ext',
             'inherit_id': view1.id,
             'arch': """
                 <xpath expr="//div" position="inside">
@@ -4466,6 +4505,7 @@ class TestQWebRender(ViewCase):
         view3 = self.View.create({
             'name': "dummy_primary_ext",
             'type': 'qweb',
+            'key': 'base.dummy_primary_ext',
             'inherit_id': view1.id,
             'mode': 'primary',
             'arch': """

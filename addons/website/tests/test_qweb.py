@@ -20,6 +20,7 @@ class TestQweb(TransactionCaseWithUserDemo):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'website.test_qweb_post_processing_att',
             'arch_db': '''<t t-name="attr-escaping">
                 <img src="http://test.external.img/img.png"/>
                 <img t-att-src="url"/>
@@ -463,6 +464,7 @@ class TestQwebDataSnippet(TransactionCase):
         render_template = self.env['ir.ui.view'].create({
             'name': f't-snippet-call_{snippet}',
             'type': 'qweb',
+            'key': f'website.test_{snippet}',
             'arch': f'''
                 <t t-snippet-call="{snippet}"/>
             '''

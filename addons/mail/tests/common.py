@@ -1935,7 +1935,7 @@ class MailCommon(MailCase):
 </body>"""
         view = cls.env['ir.ui.view'].create({
             'arch_db': layout_arch_db,
-            'key': 'test_layout',
+            'key': 'mail.test_layout',
             'name': 'test_layout',
             'type': 'qweb',
         })

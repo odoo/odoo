@@ -70,6 +70,7 @@ class TestQWebTField(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy"><root><span t-esc="5" t-options="{'widget': 'char'}" t-options-widget="'float'" t-options-precision="4"/></root></t>
             """
@@ -79,7 +80,9 @@ class TestQWebTField(TransactionCase):
 
     def test_xss_breakout(self):
         view = self.env['ir.ui.view'].create({
-            'name': 'dummy', 'type': 'qweb',
+            'name': 'dummy',
+            'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <root>
@@ -100,6 +103,7 @@ class TestQWebTField(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch_db': '''<t t-name="out-field-default">
                 <div t-field="record.name">
                     DEFAULT
@@ -143,6 +147,7 @@ class TestQWebTField(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch_db': '''<t t-name="out-field-default">
                 <div t-field="record.name"/>
             </t>''',
@@ -178,6 +183,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">%s</t>
             """ % expected_result
@@ -216,6 +222,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">%s</t>
             """ % expected_result
@@ -229,6 +236,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <root>
@@ -264,6 +272,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">%s</t>
             """ % expected_result
@@ -300,6 +309,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">%s</t>
             """ % tempate
@@ -345,6 +355,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">%s</t>
             """ % tempate
@@ -361,6 +372,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" t-esc="'test'"/>
@@ -379,6 +391,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" t-attf-test="test">
@@ -403,6 +416,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <root>
@@ -443,6 +457,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                 <root>
@@ -482,6 +497,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
@@ -515,6 +531,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd">abc</cfdi:Comprobante>
@@ -530,6 +547,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd" t-esc="'abc'"/>
@@ -542,9 +560,10 @@ class TestQWebNS(TransactionCase):
         self.assertEqual(etree.fromstring(self.env['ir.qweb']._render(view1.id)), expected_result)
 
     def test_render_static_xml_with_t_call(self):
-        view1 = self.env['ir.ui.view'].create({
+        self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <cac:fruit xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
@@ -557,13 +576,12 @@ class TestQWebNS(TransactionCase):
                 </t>
             """
         })
-        self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
-                            "VALUES ('dummy', 'ir.ui.view', %s, 'base')", [view1.id])
 
         # view2 will t-call view1
         view2 = self.env['ir.ui.view'].create({
             'name': "dummy2",
             'type': 'qweb',
+            'key': 'website.test_dummy2',
             'arch': """
                 <t t-name="base.dummy2">
                     <root xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
@@ -599,6 +617,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <root>
@@ -616,6 +635,7 @@ class TestQWebNS(TransactionCase):
         view2 = self.env['ir.ui.view'].create({
             'name': "dummy_ext",
             'type': 'qweb',
+            'key': 'base.dummy_ext',
             'inherit_id': view1.id,
             'arch': """
                 <xpath expr="//{http://www.example.org/table}table/{http://www.example.org/table}tr">
@@ -648,6 +668,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <Invoice xmlns:od="http://odoo.com/od">
@@ -687,6 +708,7 @@ class TestQWebNS(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">%s</t>
             """ % tempate
@@ -753,6 +775,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="iter-list">
                 <t t-foreach="[3, 2, 1]">
                     [<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/>]</t>
@@ -773,6 +796,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="iter-list">
                 <t t-foreach="[3, 2, 1]" t-as="">
                     [<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/>]</t>
@@ -793,6 +817,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="iter-list">
                 <t t-foreach="[3, 2, 1]" t-as="b-2">
                     [<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/>]</t>
@@ -813,6 +838,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="attr-escaping">
                 <div>
                     <t t-set="o" t-value="(lambda a=open: a)()"/>
@@ -828,6 +854,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="iter-list">
                 <t t-foreach="[3, 2, 1]" t-as="item">
                     [<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/>]</t>
@@ -846,6 +873,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="iter-dict">
                 <t t-foreach="{'a': 3, 'b': 2, 'c': 1}" t-as="item">
                     [<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/>]</t>
@@ -864,6 +892,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="attr-escaping">
                 <div t-att-bibi="json.dumps(bibi)">1</div>
                 <div t-att-toto="toto">2</div>
@@ -882,6 +911,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="attr-escaping">
                 <t t-set="abc"> <t t-if="add_abc"><t t-out="add_abc"/> <span a="b"> | </span></t><t t-out="efg"/> </t>
                 <div t-att-abc="abc">123</div>
@@ -898,6 +928,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="attr-escaping">
                 <div t-attf-bibi="a, b &gt; c &gt; #{d}">1</div>
             </t>'''
@@ -913,6 +944,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="attr-escaping">
                 <a t-attf-href="/link/#{ url }/#{other and 'sub'}">link</a>
                 <a t-attf-href="/link/#{ url }/#{(not other) and 'sub'}">link2</a>
@@ -931,6 +963,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="attr-escaping">
                 <div t-attf-abc="abc #{val} { other }">123</div>
             </t>'''
@@ -946,6 +979,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="bibi">
                 <div t-foreach="[1, 2]" t-as="v" class="toto"/>
                 <t class="remove_me" t-set="data">a</t>
@@ -963,6 +997,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="bibi">
                 <section>
                     <div t-foreach="[1, 2]" t-as="v">
@@ -997,6 +1032,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="set">
                 <t t-set="a" t-value="'abc %s' % 1"/>
                 <div t-out="a"/>
@@ -1012,6 +1048,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="set">
                 <t t-set="a" t-valuef="abc {{1}}"/>
                 <div t-out="a"/>
@@ -1027,6 +1064,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="set">
                 <t t-set='{"a": "abc %s" % 1,
                     "b": 2}'/>
@@ -1043,6 +1081,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="set">
                 <t t-set="abc"> <span a="b"> [%s] </span> </t>
                 <div t-att-abc="abc % add_abc">123</div>
@@ -1059,6 +1098,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="set">
                 <t t-set="abc"> <span a="b"> toto </span> </t>
                 <div t-att-abc="'[%s]' % abc">123</div>
@@ -1079,6 +1119,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="set">
                 <t t-set="" t-value="1"/>
             </t>'''
@@ -1099,6 +1140,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="set">
                 <t t-set="b-2" t-value="1"/>
             </t>'''
@@ -1118,6 +1160,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="out-format"><div t-out="a">Default</div></t>'''
         })
         result = """<div>1</div>"""
@@ -1128,6 +1171,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="out-format">
                 <t t-set="final_message">Powered by %s%s</t>
                 <div t-out="final_message % (a, b and ('-%s' % b) or '')"/>
@@ -1143,6 +1187,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="set">
                 <t t-set="toto">Toto %s</t>
                 <t t-set="abc"> <span a="b"> [%s , %s] </span> </t>
@@ -1160,6 +1205,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="attr-set">
                 <t t-set="toto">Toto %s</t>
                 <t t-set="abc"> <span a="b"> a </span> </t>
@@ -1177,6 +1223,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="attr-set">
                 <t t-set="abc"> <span a="b"> a </span> </t>
                 <div t-out="(v + abc)">123</div>
@@ -1193,6 +1240,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="attr-set">
                 <t t-set="abc"> <span a="b"> a </span> </t>
                 <div t-out="(abc + v)">123</div>
@@ -1210,6 +1258,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="attr-set">
                 <t t-set="abc"> <span a="b"> a </span> </t>
                 <div t-out="(abc.strip() + v)">123</div>
@@ -1226,6 +1275,7 @@ class TestQWebBasic(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy"><root><span t-out="text" t-options-widget="'text'"/></root></t>
             """
@@ -1239,6 +1289,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="esc-markup">
                 <t t-set="content"><span>toto</span></t>
                 <div t-out="content"/>
@@ -1254,6 +1305,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="out-default">
                 <span rows="10" t-out="a">
                     DEFAULT
@@ -1281,6 +1333,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="esc-markup">
                 <t t-set="content"><span>toto</span></t>
                 <div t-esc="content"/>
@@ -1289,6 +1342,7 @@ class TestQWebBasic(TransactionCase):
         ref = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view2',
             'arch_db': '''<t t-name="esc-markup">
                 <t t-set="content"><span>toto</span></t>
                 <div t-out="content"/>
@@ -1302,6 +1356,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="attr-set">
                 <t t-set="abc"> <span a="b"> a </span> </t>
                 <div t-if="abc">123</div>
@@ -1318,6 +1373,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="test">
                 <div>
                     0
@@ -1360,6 +1416,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="test">
                 <section>
                     <div t-esc="abc + def">
@@ -1381,6 +1438,7 @@ class TestQWebBasic(TransactionCase):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch_db': '''<t t-name="test">
                 <section>
                     <div t-esc="abc + def + (">
@@ -1486,6 +1544,7 @@ class TestQWebBasic(TransactionCase):
         view0 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <table>
@@ -1501,6 +1560,7 @@ class TestQWebBasic(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "other",
             'type': 'qweb',
+            'key': 'base.test_view',
             'arch': """
                 <t t-name="base.other">
                     <div>
@@ -1531,6 +1591,7 @@ class TestQWebBasic(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "other",
             'type': 'qweb',
+            'key': 'base.other',
             'arch': """
                 <t t-name="base.other">
                     <div>
@@ -1560,25 +1621,21 @@ class TestQWebBasic(TransactionCase):
             'thousands_sep': '/'
         })
 
-        view1 = self.env['ir.ui.view'].create({
+        self.env['ir.ui.view'].create({
             'name': "callee",
             'type': 'qweb',
+            'key': 'base.callee',
             'arch': """
                 <t t-name="base.callee">
                     <t t-esc="9000000.00" t-options="{'widget': 'float', 'precision': 2}" />
                 </t>
             """
         })
-        self.env['ir.model.data'].create({
-            'name': 'callee',
-            'model': 'ir.ui.view',
-            'module': 'base',
-            'res_id': view1.id,
-        })
 
         view2 = self.env['ir.ui.view'].create({
             'name': "calling",
             'type': 'qweb',
+            'key': 'base.calling',
             'arch': """
                 <t t-name="base.calling">
                     <t t-call="base.callee" t-lang="'%s'" />
@@ -1598,6 +1655,7 @@ class TestQWebBasic(TransactionCase):
         view = self.env['ir.ui.view'].create({
             'name': "a_barcode_view",
             'type': 'qweb',
+            'key': 'base.a_barcode_view',
         })
 
         view.arch = """<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'width': 100, 'height': 30}"/>"""
@@ -1643,6 +1701,7 @@ class TestQWebBasic(TransactionCase):
         view = self.env['ir.ui.view'].create({
             'name': 'dummy',
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': f'<t><p>{comment}</p></t>'
         })
         QWeb = self.env['ir.qweb']
@@ -1664,6 +1723,7 @@ class TestQWebBasic(TransactionCase):
         view = self.env['ir.ui.view'].create({
             'name': 'dummy',
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': f'<t><p>{p_instruction}</p></t>'
         })
         QWeb = self.env['ir.qweb']
@@ -1686,6 +1746,7 @@ class TestQWebBasic(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy"><root><span t-esc="user" t-options='{"widget": "contact", "fields": ["name"]}' /></root></t>
             """
@@ -1697,6 +1758,7 @@ class TestQWebBasic(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy"><root><span t-esc="3600" t-options='{"widget": "duration", "format": "short"}' /></root></t>
             """
@@ -1743,6 +1805,7 @@ class TestQWebBasic(TransactionCase):
         view = self.env['ir.ui.view'].create({
             'name': 'master',
             'type': 'qweb',
+            'key': 'base.master',
             'arch_db': '''<t t-name='master'>
                 <meta name="1"/>
                 <t t-set="data" t-value="1"/>
@@ -1766,6 +1829,7 @@ class TestQWebBasic(TransactionCase):
         view = self.env['ir.ui.view'].create({
             'name': 'master',
             'type': 'qweb',
+            'key': 'base.master',
             'arch_db': '''<t t-name='master'>
                     <section>
                         <article t-foreach="[0, 1, 2]" t-as="value" t-esc="value"/>
@@ -1791,6 +1855,7 @@ class TestQWebBasic(TransactionCase):
         test = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'base.test',
             'arch_db': '''<t t-name='test'>
                 <span t-out="value"/>
             </t>'''
@@ -1801,6 +1866,7 @@ class TestQWebBasic(TransactionCase):
         view = self.env['ir.ui.view'].create({
             'name': 'master',
             'type': 'qweb',
+            'key': 'base.master',
             'arch_db': '''<t t-name='master'>
 
                     <section>
@@ -2035,6 +2101,7 @@ class TestQwebCache(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <div t-cache="cache_id" class="toto">
@@ -2069,6 +2136,7 @@ class TestQwebCache(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <div class="toto">
@@ -2135,6 +2203,7 @@ class TestQwebCache(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <div t-cache="cache_id" class="toto">
@@ -2175,6 +2244,7 @@ class TestQwebCache(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <div class="toto">
@@ -2275,6 +2345,7 @@ class TestQwebCache(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <div class="toto">
@@ -2375,6 +2446,7 @@ class TestQwebCache(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <div t-cache="cache_id" class="toto">
@@ -2415,6 +2487,7 @@ class TestQwebCache(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <div class="toto">
@@ -2481,6 +2554,7 @@ class TestQwebCache(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <div t-cache="cache_id" class="toto">
@@ -2521,6 +2595,7 @@ class TestQwebCache(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <div class="toto">
@@ -2620,6 +2695,7 @@ class TestQwebCache(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <div class="toto">
@@ -2719,6 +2795,7 @@ class TestQwebCache(TransactionCase):
         template_page = self.env['ir.ui.view'].create({
             'name': "template_page",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="template_page">
                     <section t-cache="cache_id">
@@ -2772,6 +2849,7 @@ class TestQwebCache(TransactionCase):
         template_page = self.env['ir.ui.view'].create({
             'name': "template_page",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="template_page">
                     <section t-cache="cache_id">
@@ -2825,6 +2903,7 @@ class TestQwebCache(TransactionCase):
         template_page = self.env['ir.ui.view'].create({
             'name': "template_page",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="template_page">
                     <section t-cache="cache_id">
@@ -2844,6 +2923,7 @@ class TestQwebCache(TransactionCase):
         template_page = self.env['ir.ui.view'].create({
             'name': "template_page",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="template_page">
                     <root>
@@ -2905,6 +2985,7 @@ class TestQwebCache(TransactionCase):
         template_page = self.env['ir.ui.view'].create({
             'name': "template_page",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="template_page">
                     <root>
@@ -2969,6 +3050,7 @@ class TestQwebCache(TransactionCase):
         template_page = self.env['ir.ui.view'].create({
             'name': "template_page",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="template_page">
                     <root t-cache="cache_1">
@@ -3065,6 +3147,7 @@ class TestQwebCache(TransactionCase):
         template_page = self.env['ir.ui.view'].create({
             'name': "template_page",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="template_page">
                     <root>
@@ -3140,6 +3223,7 @@ class TestQwebCache(TransactionCase):
         template_page = self.env['ir.ui.view'].create({
             'name': "template_page",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="template_page">
                     <root>
@@ -3211,6 +3295,7 @@ class TestQwebCache(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <div t-cache="cache_id if condition else None" class="toto">
@@ -3258,6 +3343,7 @@ class TestQwebCache(TransactionCase):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
             'type': 'qweb',
+            'key': 'base.dummy',
             'arch': """
                 <t t-name="base.dummy">
                     <div t-cache="True" class="toto">

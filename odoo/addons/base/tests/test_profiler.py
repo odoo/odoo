@@ -474,7 +474,7 @@ class TestProfiling(TransactionCase):
         child_template = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
-            'key': 'dummy',
+            'key': 'base.dummy',
             'arch_db': '<t t-name="dummy"><span t-attf-class="myclass"><t t-out="record"/> <t t-out="add_one_query()"/></span></t>'
         })
         self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"

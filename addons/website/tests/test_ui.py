@@ -383,6 +383,7 @@ class TestUi(HttpCaseWithWebsiteUser):
             """,
         }, {
             'type': 'qweb',
+            'key': 'website.test_snippets_ext',
             'inherit_id': website_snippets.id,
             'arch': """
                 <xpath expr="//t[@t-snippet='website.s_parallax']" position="after">
@@ -644,6 +645,7 @@ class TestUi(HttpCaseWithWebsiteUser):
             """,
         }, {
             'type': 'qweb',
+            'key': 'website.test_snippets_ext',
             'inherit_id': website_snippets.id,
             'arch': """
                 <xpath expr="//t[@t-snippet='website.s_parallax']" position="after">

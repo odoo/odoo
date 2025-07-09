@@ -584,6 +584,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
             'name': 'Base',
             'type': 'qweb',
             'arch': '<div>content</div>',
+            'key': 'website.test_view',
         })
 
         total_views = View.with_context(active_test=False).search_count([])
@@ -610,6 +611,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
             'name': 'Base',
             'type': 'qweb',
             'arch': view_arch,
+            'key': 'website.test_already_existing_specific',
         })
 
         total_views = View.with_context(active_test=False).search_count([])

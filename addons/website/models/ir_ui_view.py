@@ -34,6 +34,11 @@ class IrUiView(models.Model):
     visibility_password = fields.Char(groups='base.group_system', copy=False)
     visibility_password_display = fields.Char(compute='_get_pwd', inverse='_set_pwd', groups='website.group_website_designer')
 
+    _qweb_key_uniq = models.UniqueIndex(
+        "(key, coalesce(website_id, 0)) WHERE type = 'qweb'",
+        "Specific QWeb view per website must be unique and the generic view must be unique. Information from specific views is used whether they are active or not.",
+    )
+
     @api.depends('visibility_password')
     def _get_pwd(self):
         for r in self:
@@ -156,7 +161,10 @@ class IrUiView(models.Model):
                     # original tree. Indeed, the order of children 'id' fields
                     # must remain the same so that the inheritance is applied
                     # in the same order in the copied tree.
-                    child = inherit_child.copy({'inherit_id': website_specific_view.id, 'key': inherit_child.key})
+                    key = inherit_child.key
+                    inherit_child.key = f'{key}_to_remove'
+                    inherit_child.flush_recordset()
+                    child = inherit_child.copy({'inherit_id': website_specific_view.id,'key': key})
                     inherit_child.inherit_children_ids.write({'inherit_id': child.id})
                     inherit_child.unlink()
                 else:

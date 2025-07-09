@@ -25,6 +25,7 @@ class TestSystray(HttpCase):
             'name': "Patch to recognize other website",
             'website_id': other_website.id,
             'type': 'qweb',
+            'key': 'test_website.patch_recognize',
             'inherit_id': cls.env.ref('test_website.test_model_page_layout').id,
             'arch': """
                 <xpath expr="//span" position="after">
