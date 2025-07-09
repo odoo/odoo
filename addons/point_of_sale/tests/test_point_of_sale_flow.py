@@ -810,6 +810,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # I test that the total of the attached invoice is correct
         invoice = self.env['account.move'].browse(res['res_id'])
+        self.assertEqual(invoice.ref, invoice.pos_order_ids.display_name)
         if invoice.state != 'posted':
             invoice.action_post()
         self.assertAlmostEqual(
