@@ -498,8 +498,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_23_website_multi_edition(self):
         self.start_tour('/@/', 'website_multi_edition', login='admin')
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_24_snippet_cache_across_websites(self):
         default_website = self.env.ref('website.default_website')
         website = self.env['website'].create({
