@@ -1651,25 +1651,37 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         match step_href:
             case '/shop/cart':
-                # Addresses must be checked before accessing '/shop/checkout'
-                return self._check_address_step(order_sudo)
+                return self._check_shop_cart_ready(order_sudo)
             case '/shop/checkout':
-                return self._check_delivery_step(order_sudo)
+                return self._check_checkout_step_ready(order_sudo)
+            case '/shop/extra_info':
+                return self._check_extra_info_step(order_sudo)
+            case '/shop/confirm_order':
+                return self._check_confirm_order_step(order_sudo)
+
+    def self._check_shop_cart_ready(order_sudo):
+        # order exists and not empty
+        # public orders are allowed
+        order_sudo._is_in_stock()
+
+
+    def _check_checkout_step_ready(self, order_sudo):
+        self.check_delivery(order_sudo)
+
+
 
     def _check_cart(self, order_sudo):
         # Check that the cart exists and is in the draft state.
-        if not order_sudo or order_sudo.state != 'draft':
-            request.session['sale_order_id'] = None
-            request.session['sale_transaction_id'] = None
-            return request.redirect('/shop')
+        self.basic_check(order_sudo)
+        step_href = request.httprequest.path
+        if step_href == '/shop/payment':
+            step_href = '/shop/confirm_order'
+        previous_steps = request.website._get_previous_checkout_steps(step_href)
 
-        if not order_sudo._is_cart_ready_for_checkout():
-            return request.redirect('/shop/cart')
+        for prev_step_href in previous_steps.mapped('step_href'):
+            if redirection := self._check_checkout_step(prev_step_href, order_sudo):
+                return redirection
 
-        # Check that public orders are allowed.
-        if request.env.user._is_public() and request.website.account_on_checkout == 'mandatory':
-            next_step = request.website._get_next_checkout_step('/shop/cart')
-            return request.redirect(f'/web/login?redirect={next_step.step_href}')
 
     def _check_address_step(self, order_sudo):
         # Check that an address has been added.
@@ -1696,7 +1708,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 f'/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing'
             )
 
-    def _check_delivery_step(self, order_sudo):
+    def _check_delivery(self, order_sudo):
         if not order_sudo._is_cart_ready_to_confirm():
             return request.redirect('/shop/checkout')
 
