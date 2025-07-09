@@ -28,6 +28,7 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             'zip': '1367',
             'country_id': cls.country_be.id,
             'phone': '+323333333333333',
+            'vat': 'BE0477472701',
         }
         base_url = cls.base_url()
         cls.submit_url = urls.url_join(base_url, '/my/address/submit')
