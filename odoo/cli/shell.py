@@ -5,9 +5,10 @@ import os
 import signal
 import sys
 import threading
+from contextlib import contextmanager
 
 import odoo  # to expose in the shell
-from odoo import api
+from odoo.api import SUPERUSER_ID, Environment
 from odoo.modules.registry import Registry
 from odoo.service import server
 from odoo.tools import config
@@ -16,6 +17,7 @@ from . import Command
 from . import server as cli_server
 
 _logger = logging.getLogger(__name__)
+SHELLS = ['ipython', 'ptpython', 'bpython', 'python']
 
 
 """ Exit behaviors
@@ -36,37 +38,17 @@ _logger = logging.getLogger(__name__)
 
 class Shell(Command):
     """Start odoo in an interactive shell"""
-    supported_shells = ['ipython', 'ptpython', 'bpython', 'python']
 
-    def console(self, local_vars):
-        if not os.isatty(sys.stdin.fileno()):
-            local_vars['__name__'] = '__main__'
-            exec(sys.stdin.read(), local_vars)
-            return
-
-        if 'env' not in local_vars:
-            _logger.warning('No environment set, use `%s shell -d dbname` to get one.', sys.argv[0])
-        for key, val in sorted(local_vars.items()):
-            print(f'{key}: {val}')  # noqa: T201
-
-        pythonstartup = config.options.get('shell_file') or os.environ.get('PYTHONSTARTUP')
-
-        preferred_interface = config.options.get('shell_interface')
-        if preferred_interface:
-            shells_to_try = [preferred_interface, 'python']
+    @contextmanager
+    def _build_env(self, dbname):
+        if dbname:
+            with Registry(dbname).cursor() as cr:
+                ctx = Environment(cr, SUPERUSER_ID, {})['res.users'].context_get()
+                env = Environment(cr, SUPERUSER_ID, ctx)
+                yield env
+                cr.rollback()
         else:
-            shells_to_try = self.supported_shells
-
-        for shell in shells_to_try:
-            try:
-                shell_func = getattr(self, shell)
-                shell_func(local_vars, pythonstartup)
-                break
-            except ImportError:
-                pass
-            except Exception:  # noqa: BLE001
-                _logger.warning("Could not start '%s' shell.", shell)
-                _logger.debug("Shell error:", exc_info=True)
+            yield None
 
     def ipython(self, local_vars, pythonstartup=None):
         from IPython import start_ipython  # noqa: PLC0415
@@ -128,35 +110,52 @@ class Shell(Command):
         config.parser.add_option_group(group)
         config.parse_config(args, setup_logging=True)
         cli_server.report_configuration()
-        server.start(preload=[], stop=True)
-
-        def raise_keyboard_interrupt(*a):
-            raise KeyboardInterrupt()
-        signal.signal(signal.SIGINT, raise_keyboard_interrupt)
 
         dbnames = config['db_name']
         if len(dbnames) > 1:
             sys.exit("-d/--database/db_name has multiple database, please provide a single one")
+        dbname = dbnames[0] if dbnames else None
+
+        pythonstartup = config.options.get('shell_file') or os.environ.get('PYTHONSTARTUP')
+        preferred_interface = config.options.get('shell_interface')
+        shells_to_try = [preferred_interface, 'python'] if preferred_interface else SHELLS
+
+        threading.current_thread().dbname = dbname
+
+        def raise_keyboard_interrupt(*a):
+            raise KeyboardInterrupt()
+        signal.signal(signal.SIGINT, raise_keyboard_interrupt)
+        server.start(preload=[], stop=True)
 
         local_vars = {
             'openerp': odoo,
             'odoo': odoo,
         }
-        dbname = dbnames[0] if dbnames else None
-        if dbname:
-            threading.current_thread().dbname = dbname
-            registry = Registry(dbname)
-            with registry.cursor() as cr:
-                uid = api.SUPERUSER_ID
-                ctx = api.Environment(cr, uid, {})['res.users'].context_get()
-                env = api.Environment(cr, uid, ctx)
+        with self._build_env(dbname) as env:
+            if env:
                 local_vars.update({
                     'env': env,
                     'self': env.user,
                 })
-                self.console(local_vars)
-                cr.rollback()
-        else:
-            self.console(local_vars)
+            else:
+                _logger.warning('No environment set, use `%s shell -d dbname` to get one.', sys.argv[0])
 
-        return 0
+            if not os.isatty(sys.stdin.fileno()):
+                # If not interactive, read and run the script from stdin
+                local_vars['__name__'] = '__main__'
+                exec(sys.stdin.read(), local_vars)
+                return
+
+            for key, val in sorted(local_vars.items()):
+                print(f'{key}: {val}')  # noqa: T201
+
+            for shell in shells_to_try:
+                try:
+                    shell_func = getattr(self, shell)
+                    shell_func(local_vars, pythonstartup)
+                    break
+                except ImportError:
+                    pass
+                except Exception:  # noqa: BLE001
+                    _logger.warning("Could not start '%s' shell.", shell)
+                    _logger.debug("Shell error:", exc_info=True)
