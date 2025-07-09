@@ -144,7 +144,7 @@ class HrVersion(models.Model):
     date_end = fields.Date(compute='_compute_dates', groups="hr.group_hr_user")
     is_current = fields.Boolean(compute='_compute_is_current', groups="hr.group_hr_user")
     is_past = fields.Boolean(compute='_compute_is_past', groups="hr.group_hr_user")
-    is_future = fields.Boolean(compute='_compute_future', groups="hr.group_hr_user")
+    is_future = fields.Boolean(compute='_compute_is_future', groups="hr.group_hr_user")
     is_in_contract = fields.Boolean(compute='_compute_is_in_contract', groups="hr.group_hr_user")
 
     contract_template_id = fields.Many2one(
