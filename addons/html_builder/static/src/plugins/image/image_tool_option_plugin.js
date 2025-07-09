@@ -213,24 +213,9 @@ export class ResetTransformImageAction extends BuilderAction {
 }
 export class ReplaceMediaAction extends BuilderAction {
     static id = "replaceMedia";
-    static dependencies = ["media", "history", "builderOptions"];
-    async load({ editingElement }) {
-        let image;
-        await this.dependencies.media.openMediaDialog({
-            node: editingElement,
-            save: (newImage) => {
-                image = newImage;
-            },
-        });
-        return image;
-    }
-    apply({ editingElement, loadResult: newImage }) {
-        if (!newImage) {
-            return;
-        }
-        editingElement.replaceWith(newImage);
-        this.dependencies.history.addStep();
-        this.dependencies["builderOptions"].updateContainers(newImage);
+    static dependencies = ["media_website"];
+    async apply({ editingElement: mediaEl }) {
+        await this.dependencies["media_website"].replaceMedia(mediaEl);
     }
 }
 export class SetLinkAction extends BuilderAction {
