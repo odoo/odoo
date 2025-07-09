@@ -344,7 +344,7 @@ class HrIndividualSkillMixin(models.AbstractModel):
             .ids
         )
         for vals in vals_list:
-            individual_skill_id = vals[self._linked_field_name()]
+            individual_skill_id = vals.get(self._linked_field_name(), False)
             skill_id = vals["skill_id"]
             skill_type_id = vals["skill_type_id"]
             skill_level_id = vals["skill_level_id"]
