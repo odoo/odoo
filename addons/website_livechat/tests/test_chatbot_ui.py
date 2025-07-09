@@ -7,7 +7,7 @@ from odoo.addons.website_livechat.tests.common import TestLivechatCommon as Test
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 
 
-@tests.tagged('post_install', '-at_install')
+@tests.tagged('post_install', '-at_install', 'is_tour')
 class TestLivechatChatbotUICommon(TestGetOperatorCommon, TestWebsiteLivechatCommon, ChatbotCase):
     def setUp(self):
         super().setUp()
