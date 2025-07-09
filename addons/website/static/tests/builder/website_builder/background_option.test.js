@@ -1,7 +1,7 @@
 import { BackgroundOption } from "@website/builder/plugins/background_option/background_option";
 import { BackgroundPositionOverlay } from "@website/builder/plugins/background_option/background_position_overlay";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 
@@ -191,4 +191,25 @@ test("remove the background image of a snippet", async () => {
     expect(":iframe section").toHaveStyle("backgroundImage");
     await contains("[data-action-id='toggleBgImage']").click();
     expect(":iframe section").not.toHaveStyle("backgroundImage", { inline: true });
+});
+
+test("changing shape's background color doesn't hide the shape itself", async () => {
+    await setupWebsiteBuilder(
+        `<section style="background-image: url('/web_editor/shape/http_routing/404.svg?c2=o-color-2');">
+            AAAA
+        </section>`,
+        {
+            loadIframeBundles: true,
+        }
+    );
+    await contains(":iframe section").click();
+    await contains("button[data-action-id='toggleBgShape']").click();
+    await contains(
+        ".o_pager_container .o-hb-bg-shape-btn [data-action-value='web_editor/Connections/01'][data-action-id='setBackgroundShape']"
+    ).click();
+    const backgroundImageValue = getComputedStyle(queryOne(":iframe .o_we_shape")).backgroundImage;
+    expect(backgroundImageValue).toMatch(/Connections\/01/);
+    await contains("[data-label='Colors'] button:nth-child(2)").click();
+    await contains(".o_colorpicker_section button[data-color='o-color-1']").click();
+    expect(":iframe .o_we_shape").toHaveStyle({ backgroundImage: backgroundImageValue });
 });
