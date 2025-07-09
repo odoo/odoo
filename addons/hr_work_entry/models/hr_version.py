@@ -419,6 +419,19 @@ class HrVersion(models.Model):
         # Regroup work entries of the same type
         mapped_periods = defaultdict(lambda: defaultdict(lambda: self.env['hr.employee']))
         cached_periods = defaultdict(float)
+        tz_by_version = {}
+
+        def _get_tz(version_id):
+            if version_id in tz_by_version:
+                return tz_by_version[version_id]
+            version = self.env['hr.version'].browse(version_id)
+            tz = version.resource_calendar_id.tz or version.employee_id.resource_calendar_id.tz or version.company_id.resource_calendar_id.tz
+            if not tz:
+                raise UserError(_('Missing timezone for work entries generation.'))
+            tz = pytz.timezone(tz)
+            tz_by_version[version_id] = tz
+            return tz
+
         new_vals_list = []
         for vals in vals_list:
             new_vals = vals.copy()
@@ -433,21 +446,14 @@ class HrVersion(models.Model):
             date_start_utc = new_vals['date_start']
             date_stop_utc = new_vals['date_stop']
 
-            # Get timezone from calendar
-            version = self.env['hr.version'].browse(new_vals['version_id'])
-            calendar = version.resource_calendar_id
-            tz = version.resource_calendar_id.tz or version.employee_id.resource_calendar_id.tz or version.company_id.resource_calendar_id.tz
-            if not tz:
-                raise UserError(_('Missing timezone for work entries generation.'))
-
-            tz = pytz.timezone(tz)
+            tz = _get_tz(new_vals['version_id'])
             local_start = date_start_utc.astimezone(tz)
             local_stop = date_stop_utc.astimezone(tz)
 
             # Handle multi-local-day spans
             current = local_start
             while current < local_stop:
-                next_local_midnight = datetime.combine(current.date() + timedelta(days=1), datetime.min.time()).replace(tzinfo=tz)
+                next_local_midnight = datetime.combine(current.date() + timedelta(days=1), time.min).replace(tzinfo=tz)
                 segment_end = min(local_stop, next_local_midnight)
 
                 partial_vals = new_vals.copy()
@@ -467,8 +473,9 @@ class HrVersion(models.Model):
                 continue
             date_start = vals['date_start']
             date_stop = vals['date_stop']
+            tz = _get_tz(vals['version_id'])
             if not self._generate_work_entries_postprocess_adapt_to_calendar(vals):
-                vals['date'] = date_start.date()
+                vals['date'] = date_start.astimezone(tz).date()
                 if (date_start, date_stop) in cached_periods:
                     vals['duration'] = cached_periods[date_start, date_stop]
                 else:
@@ -480,7 +487,7 @@ class HrVersion(models.Model):
             version = self.env['hr.version'].browse(vals['version_id'])
             calendar = version.resource_calendar_id
             if not calendar:
-                vals['date'] = date_start.date()
+                vals['date'] = date_start.astimezone(tz).date()
                 vals['duration'] = 0.0
                 continue
             employee = version.employee_id
