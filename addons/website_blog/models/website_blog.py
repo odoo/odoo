@@ -189,6 +189,8 @@ class BlogPost(models.Model):
     content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
     teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser', translate=True)
     teaser_manual = fields.Text(string='Teaser Content', translate=True)
+    recommended_post_id = fields.Many2one('blog.post', string='Recommended Posts',
+        help="Posts that will be displayed at the end of this post, to recommend other content to your readers.")
 
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment')])
 
