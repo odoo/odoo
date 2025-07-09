@@ -3,8 +3,7 @@
 import geoip2.errors
 import geoip2.models
 from html.parser import HTMLParser
-from odoo.http import FilesystemSessionStore
-from odoo.tools._vendor.sessions import SessionStore
+from odoo.http import OdooSessionStore, SessionStore
 
 
 TEST_IP = '192.0.2.42'  # 192.0.2.0/24 are reserved for documentation,
@@ -46,22 +45,48 @@ class MemoryGeoipResolver:
             raise geoip2.errors.AddressNotFoundError(ip)
         return record
 
+
 class MemorySessionStore(SessionStore):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.__session_store_cls = OdooSessionStore
         self.store = {}
 
-    def get(self, sid):
-        session = self.store.get(sid)
-        if not session:
-            session = self.new()
-        return session
+    def new_session_id(self):
+        return self.__session_store_cls.new_session_id(self)
+
+    def is_valid_session_id(self, sid):
+        return self.__session_store_cls.is_valid_session_id(self, sid)
+
+    def get_session_path(self, sid):
+        return self.__session_store_cls.get_session_path(self, sid)
+
+    def new(self):
+        return self.__session_store_cls.new(self)
 
     def save(self, session):
         self.store[session.sid] = session
 
     def delete(self, session):
         self.store.pop(session.sid, None)
+
+    def get(self, sid, keep_sid=False):
+        if not self.is_valid_session_id(sid):
+            return self.new()
+
+        session = self.store.get(sid)
+        if not session:
+            session = self.new()
+            if keep_sid:
+                session.sid = sid
+        return session
+
+    def rotate(self, session, env):
+        self.__session_store_cls.rotate(self, session, env)
+
+    def vacuum(self):
+        return
 
     def delete_from_identifiers(self, identifiers):
         sid_to_remove = []
@@ -70,12 +95,6 @@ class MemorySessionStore(SessionStore):
                 sid_to_remove.append(sid)
         for sid in sid_to_remove:
             self.store.pop(sid)
-
-    def rotate(self, session, env):
-        FilesystemSessionStore.rotate(self, session, env)
-
-    def vacuum(self):
-        return
 
 
 # pylint: disable=W0223(abstract-method)
