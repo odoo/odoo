@@ -124,7 +124,7 @@ class SaleReport(models.Model):
             LEFT JOIN stock_picking_type picking ON picking.id = config.picking_type_id
             JOIN {currency_table} ON account_currency_table.company_id = pos.company_id
             """.format(
-            currency_table=self.env.cr.mogrify(currency_table).decode(self.env.cr.connection.encoding),
+            currency_table=self.env.cr.mogrify(currency_table).decode(self.env.cr.encoding),
             )
 
     def _where_pos(self):

@@ -86,7 +86,7 @@ class EventTypeTicket(models.Model):
                 'model': 'product.product',
                 'res_id': product_id,
             })
-        self.env.cr._obj.execute(
+        self.env.cr._obj__.execute(
             f'UPDATE {self._table} SET product_id = %s WHERE id IN %s;',
             (product_id, tuple(ticket_type_ids))
         )
