@@ -215,7 +215,7 @@ class WithContext(HttpCase):
         self.base_view = View.create({
             'name': 'Base',
             'type': 'qweb',
-            'arch': '''<t name="Homepage" t-name="website.base_view">
+            'arch': '''<t name="Homepage" t-name="test.base_view">
                         <t t-call="website.layout">
                             I am a generic page
                         </t>
