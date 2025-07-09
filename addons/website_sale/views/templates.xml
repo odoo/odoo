@@ -53,6 +53,157 @@
         </head>
     </template>
 
+    <template
+        id="template_footer_website_sale"
+        name="eCommerce Footer"
+        inherit_id="website.layout"
+        active="False"
+    >
+        <div id="footer" position="replace">
+            <div
+                t-if="not no_footer"
+                id="footer"
+                class="oe_structure oe_structure_solo"
+                t-ignore="true"
+            >
+                <section class="s_text_block pt48 pb32" data-snippet="s_text_block" data-name="Text">
+                    <div class="container s_allow_columns">
+                        <div class="row">
+                            <!-- Column 1: Products -->
+                            <div class="col-lg-3 o_colored_level">
+                                <h5>
+                                    <a href="/shop">All Products</a>
+                                </h5>
+                                <br/>
+                                <ul class="list-unstyled">
+                                    <t t-set="ecommerce_categories" t-value="[]"/>
+                                    <li t-foreach="ecommerce_categories" t-as="category">
+                                        <a
+                                            t-att-href="'/shop/category/' + str(category['id'])"
+                                            t-esc="category['name']"
+                                        />
+                                    </li>
+                                    <t t-if="not ecommerce_categories">
+                                        <li><a href="#">Accessories</a></li>
+                                        <li><a href="#">Apparel</a></li>
+                                        <li><a href="#">Beauty</a></li>
+                                        <li><a href="#">Essentials</a></li>
+                                        <li><a href="#">Fitness</a></li>
+                                        <li><a href="#">Gadgets</a></li>
+                                    </t>
+                                </ul>
+                            </div>
+
+                            <!-- Column 2: Customer Care -->
+                            <div class="col-lg-2 o_colored_level">
+                                <h5>Customer Care</h5>
+                                <br/>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Help Center</a></li>
+                                    <li><a href="#">Returns</a></li>
+                                    <li><a href="#">Delivery</a></li>
+                                    <li><a href="#">Shipping</a></li>
+                                    <li><a href="/contactus">Contact us</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Column 3: Badges, Social, Payments -->
+                            <div class="col-12 col-lg-5 offset-lg-1 o_colored_level">
+                                <!-- Service Badges -->
+                                <span
+                                    class="s_badge badge text-bg-primary border border-dark o_animable"
+                                    data-name="Badge"
+                                >
+                                    <i class="fa fa-dollar fa-fw o_not-animable"/> Low Prices
+                                </span>
+                                <span
+                                    class="s_badge badge text-bg-primary border border-dark o_animable"
+                                    data-name="Badge"
+                                >
+                                    <i class="fa fa-shopping-basket fa-fw o_not-animable"/>
+                                    Easy Returns
+                                </span>
+                                <span
+                                    class="s_badge badge text-bg-primary border border-dark o_animable"
+                                    data-name="Badge"
+                                >
+                                    <i class="fa fa-truck fa-fw o_not-animable"/> Fast Shipping
+                                </span>
+
+                                <!-- Social Media -->
+                                <div class="row">
+                                    <div
+                                        class="pt32 pb32 s_social_media text-start o_not_editable"
+                                        data-snippet="s_social_media"
+                                        data-name="Social Media"
+                                        contenteditable="false"
+                                    >
+                                        <h5 class="s_social_media_title d-block">
+                                            Follow us
+                                        </h5>
+                                        <a
+                                            href="/website/social/instagram"
+                                            class="s_social_media_instagram"
+                                            target="_blank"
+                                            aria-label="Instagram"
+                                        >
+                                            <i class="fa fa-instagram o_editable_media rounded shadow-sm"/>
+                                        </a>
+                                        <a
+                                            href="/website/social/youtube"
+                                            class="s_social_media_youtube"
+                                            target="_blank"
+                                            aria-label="YouTube"
+                                        >
+                                            <i class="fa fa-youtube-play o_editable_media rounded shadow-sm"/>
+                                        </a>
+                                        <a
+                                            href="/website/social/tiktok"
+                                            class="s_social_media_tiktok"
+                                            target="_blank"
+                                            aria-label="TikTok"
+                                        >
+                                            <i class="fa fa-tiktok o_editable_media rounded shadow-sm"/>
+                                        </a>
+                                        <a
+                                            href="/website/social/twitter"
+                                            class="s_social_media_twitter"
+                                            aria-label="Twitter"
+                                        >
+                                            <i class="fa fa-twitter o_editable_media rounded shadow-sm"/>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Icons -->
+                                <div class="row">
+                                    <h5>We accept</h5>
+                                    <div
+                                        class="s_supported_payment_methods o_not_editable"
+                                        data-snippet="s_supported_payment_methods"
+                                        data-name="Supported Payment Methods"
+                                        data-limit="8"
+                                        data-height="32px"
+                                        data-oe-protected="true"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <xpath expr="//span[hasclass('o_footer_copyright_name')]" position="replace">
+            <span>
+                &amp;copy;
+                <span class="o_footer_copyright_name">Company name</span>
+                 - <a href="#">Terms &amp; Conditions</a>
+                 - <a href="#">Privacy Policy</a>
+            </span>
+        </xpath>
+    </template>
+
     <template id="product_category_extra_link" name="Product Category Extra Link">
         <button  class="btn btn-link btn-sm pe-0" disabled="disabled">
             <t t-if="len(categories) == 1">Category:</t>
