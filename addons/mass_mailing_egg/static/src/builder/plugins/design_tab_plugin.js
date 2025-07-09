@@ -22,8 +22,9 @@ class DesignTabPlugin extends Plugin {
         design_options: [
             withSequence(
                 OPTION_POSITIONS.BODY,
-                this.getDesignOptionBlock("design-body", _t("Body"), {
+                this.getDesignOptionBlock("design-body", {
                     template: "mass_mailing_egg.DesignBodyOption",
+                    title: _t("Body"),
                 })
             ),
             // withSequence(
@@ -53,16 +54,12 @@ class DesignTabPlugin extends Plugin {
         ],
     };
 
-    getDesignOptionBlock(id, name, options) {
-        const el = this.document.createElement("div");
-        el.dataset.name = name;
-        this.document.body.appendChild(el); // Currently editingElement needs to be isConnected
-
+    getDesignOptionBlock(id, options) {
         options.selector = "*";
 
         return {
             id: id,
-            element: el,
+            element: this.editable,
             hasOverlayOptions: false,
             headerMiddleButton: false,
             isClonable: false,

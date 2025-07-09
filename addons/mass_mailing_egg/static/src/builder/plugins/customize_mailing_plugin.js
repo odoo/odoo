@@ -17,8 +17,6 @@ export class CustomizeMailingPlugin extends Plugin {
 
     resources = {
         builder_actions: {
-            MailWrapperMaxWidthAction,
-            CustomizeLayoutColorAction,
             CustomizeSnippetColorAction,
         },
         mass_mailing_css_prefix_selectors: ".o_mail_wrapper",
@@ -80,6 +78,7 @@ export class CustomizeMailingPlugin extends Plugin {
                 for (const style of rule.style) {
                     let selectors = [selector];
                     if (style === "font-family") {
+                        // TODO EGGMAIL: maybe a better way to protect FontAwesome.
                         // Ensure font-family gets passed to all descendants and never
                         // overwrite font awesome.
                         selectors = this.transformFontFamilySelector(selector);
@@ -128,52 +127,6 @@ export class CustomizeMailingPlugin extends Plugin {
     }
 }
 
-const BODY_WIDTH_CLASSES = new Set(["o_mail_small", "o_mail_regular"]);
-export class MailWrapperMaxWidthAction extends BuilderAction {
-    static id = "mass_mailing_egg.MailWrapperMaxWidthAction";
-    static dependencies = ["builderActions"];
-    setup() {
-        this.mailWrapper = this.editable.querySelector(".o_mail_wrapper");
-    }
-    isApplied({ value }) {
-        return this.getValue() === value;
-    }
-    getValue() {
-        for (const className of BODY_WIDTH_CLASSES) {
-            if (this.mailWrapper.matches(`.${className}`)) {
-                return className;
-            }
-        }
-        return "";
-    }
-    apply({ value }) {
-        const currentValue = this.getValue();
-        if (currentValue === value) {
-            return;
-        }
-        if (currentValue) {
-            this.mailWrapper.classList.remove(currentValue);
-        }
-        if (value) {
-            this.mailWrapper.classList.add(value);
-        }
-    }
-}
-
-export class CustomizeLayoutColorAction extends BuilderAction {
-    static id = "mass_mailing_egg.CustomizeLayoutColorAction";
-    static dependencies = ["builderActions"];
-    setup() {
-        this.layoutEl = this.editable.querySelector(".o_layout");
-    }
-    getValue() {
-        return this.layoutEl.style.backgroundColor;
-    }
-    apply({ value }) {
-        this.layoutEl.style.backgroundColor = value;
-    }
-}
-
 // TODO EGGMAIL: verify this selector
 const WRAPPER_SNIPPET_SELECTOR = ".o_mail_wrapper_td > [data-snippet]";
 export class CustomizeSnippetColorAction extends BuilderAction {
@@ -188,7 +141,7 @@ export class CustomizeSnippetColorAction extends BuilderAction {
     }
     apply({ value }) {
         const oldValue = this.getValue();
-        const customMutation = {
+        this.dependencies.history.applyCustomMutation({
             apply: () => {
                 const ruleStyle = this.dependencies[
                     "mass_mailing.CustomizeMailingPlugin"
@@ -211,9 +164,7 @@ export class CustomizeSnippetColorAction extends BuilderAction {
                     ruleStyle,
                 });
             },
-        };
-        customMutation.apply();
-        this.dependencies.history.addCustomMutation(customMutation);
+        });
         // TODO EGGMAIL: do we want that ? Overwrite the custom style of every snippet?
         for (const snippetEl of [...this.editable.querySelectorAll(WRAPPER_SNIPPET_SELECTOR)]) {
             snippetEl.style["background-color"] = "";
