@@ -118,7 +118,7 @@ const threadPatch = {
     },
     onPinStateUpdated() {
         super.onPinStateUpdated();
-        if (this.is_pinned) {
+        if (this.selfMember?.is_pinned) {
             this.isLocallyPinned = false;
         }
         if (this.isLocallyPinned) {
@@ -126,7 +126,7 @@ const threadPatch = {
         } else {
             this.store.env.services["bus_service"].deleteChannel(this.busChannel);
         }
-        if (!this.is_pinned && !this.isLocallyPinned) {
+        if (!(this.selfMember && this.selfMember.is_pinned) && !this.isLocallyPinned) {
             this.sub_channel_ids.forEach((c) => (c.isLocallyPinned = false));
         }
     },
