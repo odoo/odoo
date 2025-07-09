@@ -21,6 +21,7 @@ export class BomOverviewComponent extends Component {
         this.warehouses = [];
         this.showVariants = false;
         this.uomName = "";
+        this.foldableIds = new Set();
         this.unfoldedIds = new Set();
 
         this.state = useState({
@@ -44,8 +45,8 @@ export class BomOverviewComponent extends Component {
 
         useBus(
             this.env.overviewBus,
-            "toggle-fold-all",
-            () => (this.state.allFolded = !this.state.allFolded)
+            "toggle-fold-all-bom",
+            (ev) => this.state.allFolded = ev.detail.isFolded
         );
 
         onWillStart(async () => {
@@ -75,6 +76,8 @@ export class BomOverviewComponent extends Component {
         }
         this.state.precision = bomData["precision"];
         this.state.foldable = bomData["lines"]["foldable"];
+        this.setFoldableIds(this.state.bomData);
+        this.foldableIds.delete(`${this.state.bomData.type}_${this.state.bomData.index}`);
     }
 
     async getBomData() {
@@ -112,7 +115,16 @@ export class BomOverviewComponent extends Component {
     onChangeFolded(foldInfo) {
         const { ids, isFolded } = foldInfo;
         const operation = isFolded ? "delete" : "add";
-        ids.forEach(id => this.unfoldedIds[operation](id));
+        ids.forEach((id) => {
+            if (this.foldableIds.has(id)) {
+                this.unfoldedIds[operation](id);
+            }
+        });
+        if (this.unfoldedIds.size === 0) {
+            this.state.allFolded = true;
+        } else if (this.unfoldedIds.size === this.foldableIds.size) {
+            this.state.allFolded = false;
+        }
     }
 
     onChangeMode(mode) {
@@ -169,6 +181,19 @@ export class BomOverviewComponent extends Component {
             reportName += "&variant=" + this.state.currentVariantId;
         }
         return reportName;
+    }
+
+    setFoldableIds(data) {
+        if (data.components && data.components.length > 0) {
+            this.foldableIds.add(`${data.type}_${data.index}`);
+            data.components.forEach((component) => this.setFoldableIds(component));
+        }
+        if (data.operations && data.operations.length > 0) {
+            this.foldableIds.add(`operations_${data.index}`);
+        }
+        if (data.byproducts && data.byproducts.length > 0) {
+            this.foldableIds.add(`byproducts_${data.index}`);
+        }
     }
 }
 
