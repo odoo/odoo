@@ -35,6 +35,7 @@ list of filtered posts (by date or tag).
         <t t-set="opt_blog_list_view" t-value="is_view_active('website_blog.opt_blog_list_view')"/>
         <t t-set="opt_blog_large_list_view" t-value="is_view_active('website_blog.opt_blog_large_list_view')"/>
         <t t-set="opt_blog_sidebar_show" t-value="is_view_active('website_blog.opt_blog_sidebar_show')"/>
+        <t t-set="opt_blog_grid_view" t-value="not opt_blog_compact_list_view and not opt_blog_list_view and not opt_blog_large_list_view"/>
 
         <div id="o_wblog_blog_top">
             <!-- Selectively display droppable-areas for 'all blogs' or single-blog pages -->
@@ -235,7 +236,7 @@ list of filtered posts (by date or tag).
                     </div>
                 </div>
             </section>
-            <section id="o_wblog_post_footer" t-att-class="'mb-5 ' +('o_container_small' if not opt_blog_post_sidebar and not opt_blog_post_regular_cover else 'mx-auto')"/>
+            <section id="o_wblog_post_footer" t-att-class="'mb-5 ' + ('o_container_small' if not opt_blog_post_sidebar and opt_blog_post_regular_cover else '')"/>
         </div>
     </t>
 </template>
@@ -384,11 +385,11 @@ list of filtered posts (by date or tag).
 -->
 <template id="opt_blog_post_read_next" name="Read Next Article" inherit_id="website_blog.blog_post_complete" active="True">
     <xpath expr="//section[@id='o_wblog_post_footer']" position="inside">
-        <div t-if="next_post" t-attf-class="my-5 #{'mt-0 mt-lg-5' if opt_blog_post_sidebar else ''} #{opt_blog_post_regular_cover and 'mb-0'}">
+        <div t-if="next_post">
             <t t-if="opt_blog_post_regular_cover or opt_blog_post_split_cover">
                 <div t-attf-class="#{opt_blog_post_regular_cover and not opt_blog_post_sidebar and 'o_container_small' or 'container'}">
                     <div class="row">
-                        <div t-att-class="'position-relativecol-12 p-lg-0' + (opt_blog_post_split_cover and (' col-lg-7 offset-lg-5' + (opt_blog_post_sidebar and ' offset-lg-1' or ' offset-lg-5')) or (opt_blog_post_regular_cover and opt_blog_post_sidebar and ' col-lg-6 offset-lg-1' or ''))">
+                        <div t-att-class="'position-relative col-12 p-lg-0' + (opt_blog_post_split_cover and (' col-lg-7 offset-lg-5' + (opt_blog_post_sidebar and ' offset-lg-1' or ' offset-lg-5')) or (opt_blog_post_regular_cover and opt_blog_post_sidebar and ' col-lg-6 offset-lg-1' or ''))">
                             <div class="flex-grow-1 mb-3">
                                 <span class="bg-o-color-3 h6 d-inline-block mb-3 py-1 px-2 rounded-1">Read Next</span>
                                 <t t-call="website.record_cover">
