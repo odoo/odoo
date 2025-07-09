@@ -11,27 +11,26 @@ from odoo import api
 from odoo.modules.registry import Registry
 from odoo.service import server
 from odoo.tools import config
-from . import Command, server as cli_server
+
+from . import Command
+from . import server as cli_server
 
 _logger = logging.getLogger(__name__)
 
 
-"""
-    Shell exit behaviors
-    ====================
+""" Exit behaviors
+    ==============
 
-    Legend:
-        stop = The REPL main loop stop.
-        raise = Exception raised.
-        loop = Stay in REPL.
+    shell    | ^D    | exit() | quit() | sys.exit() | raise SystemExit()
+    ----------------------------------------------------------------------
+    python   | stop  | raise  | raise  | raise      | raise
+    ipython  | stop  | stop   | stop   | loop       | loop
+    ptpython | stop  | raise  | raise  | raise      | raise
+    bpython  | stop  | stop   | stop   | stop       | stop
 
-   Shell  | ^D    | exit() | quit() | sys.exit() | raise SystemExit()
-----------------------------------------------------------------------
- python   | stop  | raise  | raise  | raise      | raise
- ipython  | stop  | stop   | stop   | loop       | loop
- ptpython | stop  | raise  | raise  | raise      | raise
- bpython  | stop  | stop   | stop   | stop       | stop
-
+    stop = The REPL main loop stop.
+    raise = Exception raised.
+    loop = Stay in REPL.
 """
 
 
