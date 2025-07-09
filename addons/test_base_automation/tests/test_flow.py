@@ -2,6 +2,7 @@
 # # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 import json
+import re
 import sys
 from freezegun import freeze_time
 from unittest.mock import patch
@@ -1650,8 +1651,16 @@ class TestCompute(common.TransactionCase):
     def test_03_server_action_code_history_wizard(self):
         self.env.user.tz = 'Europe/Brussels'  # UTC +2 for May 2025
 
+        def normalize_display_name(records):
+            # we need this because, depending on the environment's locale, the
+            # formatted date in the display name could have special whitespaces
+            # i.e. \u202f (NARROW NON-BREAK WHITESPACE)
+            for record in records:
+                record.display_name = re.sub(r"\s", " ", record.display_name)
+            return records
+
         def get_history(action):
-            return self.env["ir.actions.server.history"].search([("action_id", "=", action.id)])
+            return normalize_display_name(self.env["ir.actions.server.history"].search([("action_id", "=", action.id)]))
 
         def assert_history(action, expected):
             history = get_history(action)
@@ -1694,7 +1703,7 @@ class TestCompute(common.TransactionCase):
         with freeze_time("2025-05-12 09:30:00"):
             self.env.cr._now = datetime.datetime.now()  # reset transaction's NOW
             with Form(self.env['server.action.history.wizard'].with_context(default_action_id=action.id)) as wizard_form:
-                self.assertRecordValues(wizard_form.revision, [
+                self.assertRecordValues(normalize_display_name(wizard_form.revision), [
                     {
                         "code": "hello",
                         "display_name": f"May 1, 2025, 10:30:00 AM - {self.env.ref('base.user_admin').name}",
