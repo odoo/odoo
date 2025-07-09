@@ -53,7 +53,7 @@
             <field name="name">discuss.channel.list</field>
             <field name="model">discuss.channel</field>
             <field name="arch" type="xml">
-                <list js_class="im_livechat.discuss_channel_list" sample="1" string="History" create="false" default_order="create_date desc">
+                <list js_class="im_livechat.discuss_channel_list" sample="1" string="History" create="false" default_order="create_date desc, id desc">
                     <field name="create_date" string="Date"/>
                     <field name="livechat_agent_history_ids" string="Agents" widget="many2many_tags_avatar" optional="show"/>
                     <field name="livechat_agent_requesting_help_history" widget="many2one_avatar"/>
