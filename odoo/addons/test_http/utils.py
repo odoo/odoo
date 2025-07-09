@@ -3,8 +3,7 @@
 import geoip2.errors
 import geoip2.models
 from html.parser import HTMLParser
-from odoo.http import FilesystemSessionStore
-from odoo.tools._vendor.sessions import SessionStore
+from odoo.http import SessionStore
 
 
 TEST_IP = '192.0.2.42'  # 192.0.2.0/24 are reserved for documentation,
@@ -46,22 +45,51 @@ class MemoryGeoipResolver:
             raise geoip2.errors.AddressNotFoundError(ip)
         return record
 
+
 class MemorySessionStore(SessionStore):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.__session_store_cls = SessionStore
         self.store = {}
 
-    def get(self, sid):
-        session = self.store.get(sid)
-        if not session:
-            session = self.new()
-        return session
+    def generate_key(self):
+        return self.__session_store_cls.generate_key(self)
+
+    def is_valid_session_id(self, sid):
+        return self.__session_store_cls.is_valid_session_id(self, sid)
+
+    def get_session_path(self, sid):
+        return self.__session_store_cls.get_session_path(self, sid)
+
+    def new(self):
+        return self.__session_store_cls.new(self)
 
     def save(self, session):
         self.store[session.sid] = session
 
     def delete(self, session):
         self.store.pop(session.sid, None)
+
+    def get(self, sid, keep_sid=False):
+        if not self.is_valid_session_id(sid):
+            return self.new()
+
+        session = self.store.get(sid)
+        if not session:
+            session = self.new()
+            if keep_sid:
+                session.sid = sid
+        return session
+
+    def rotate(self, session, env, *, soft=False):
+        self.__session_store_cls.rotate(self, session, env, soft=soft)
+
+    def vacuum(self):
+        return
+
+    def get_missing_session_identifiers(self, identifiers):
+        return set(identifiers).difference(self.store)
 
     def delete_from_identifiers(self, identifiers):
         sid_to_remove = []
@@ -71,23 +99,8 @@ class MemorySessionStore(SessionStore):
         for sid in sid_to_remove:
             self.store.pop(sid)
 
-    def get_missing_session_identifiers(self, identifiers):
-        return set(identifiers).difference(self.store)
-
     def delete_old_sessions(self, session):
-        return FilesystemSessionStore.delete_old_sessions(self, session)
-
-    def rotate(self, session, env, soft=None):
-        FilesystemSessionStore.rotate(self, session, env, soft)
-
-    def generate_key(self, salt=None):
-        return FilesystemSessionStore.generate_key(self, salt)
-
-    def is_valid_key(self, key):
-        return FilesystemSessionStore.is_valid_key(self, key)
-
-    def vacuum(self):
-        return
+        return self.__session_store_cls.delete_old_sessions(self, session)
 
 
 # pylint: disable=W0223(abstract-method)

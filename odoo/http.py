@@ -143,14 +143,16 @@ import logging
 import mimetypes
 import os
 import re
+import secrets
 import threading
+import tempfile
 import time
 import traceback
+import typing
 import warnings
 import weakref
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
-from hashlib import sha512
 from http import HTTPStatus
 from io import BytesIO
 from os.path import join as opj
@@ -939,172 +941,12 @@ def _check_and_complete_route_definition(controller_cls, submethod, merged_routi
 # Session
 # =========================================================
 
-_base64_urlsafe_re = re.compile(r'^[A-Za-z0-9_-]{84}$')
-_session_identifier_re = re.compile(r'^[A-Za-z0-9_-]{%s}$' % STORED_SESSION_BYTES)
-
-
-class FilesystemSessionStore(sessions.FilesystemSessionStore):
-    """ Place where to load and save session objects. """
-    def get_session_filename(self, sid):
-        # scatter sessions across 4096 (64^2) directories
-        if not self.is_valid_key(sid):
-            raise ValueError(f'Invalid session id {sid!r}')
-        sha_dir = sid[:2]
-        dirname = os.path.join(self.path, sha_dir)
-        session_path = os.path.join(dirname, sid)
-        return session_path
-
-    def save(self, session):
-        session_path = self.get_session_filename(session.sid)
-        dirname = os.path.dirname(session_path)
-        if not os.path.isdir(dirname):
-            with contextlib.suppress(OSError):
-                os.mkdir(dirname, 0o0755)
-        super().save(session)
-
-    def delete_old_sessions(self, session):
-        if 'gc_previous_sessions' in session:
-            if session['create_time'] + SESSION_DELETION_TIMER < time.time():
-                self.delete_from_identifiers([session.sid[:STORED_SESSION_BYTES]])
-                del session['gc_previous_sessions']
-                self.save(session)
-
-    def get(self, sid):
-        # retro compatibility
-        old_path = super().get_session_filename(sid)
-        session_path = self.get_session_filename(sid)
-        if os.path.isfile(old_path) and not os.path.isfile(session_path):
-            dirname = os.path.dirname(session_path)
-            if not os.path.isdir(dirname):
-                with contextlib.suppress(OSError):
-                    os.mkdir(dirname, 0o0755)
-            with contextlib.suppress(OSError):
-                os.rename(old_path, session_path)
-        session = super().get(sid)
-        return session
-
-    def rotate(self, session, env, soft=False):
-        # With a soft rotation, things like the CSRF token will still work. It's used for rotating
-        # the session in a way that half the bytes remain to identify the user and the other half
-        # to authenticate the user. Meanwhile with a hard rotation the entire session id is changed,
-        # which is useful in cases such as logging the user out.
-        if soft:
-            # Multiple network requests can occur at the same time, all using the old session.
-            # We don't want to create a new session for each request, it's better to reference the one already made.
-            static = session.sid[:STORED_SESSION_BYTES]
-            recent_session = self.get(session.sid)
-            if 'next_sid' in recent_session:
-                # A new session has already been saved on disk by a concurrent request,
-                # the _save_session is going to simply use session.sid to set a new cookie.
-                session.sid = recent_session['next_sid']
-                return
-            next_sid = static + self.generate_key()[STORED_SESSION_BYTES:]
-            session['next_sid'] = next_sid
-            session['deletion_time'] = time.time() + SESSION_DELETION_TIMER
-            self.save(session)
-            # Now prepare the new session
-            session['gc_previous_sessions'] = True
-            session.sid = next_sid
-            del session['deletion_time']
-            del session['next_sid']
-        else:
-            self.delete(session)
-            session.sid = self.generate_key()
-        if session.uid and env:
-            session.session_token = security.compute_session_token(session, env)
-        session.should_rotate = False
-        session['create_time'] = time.time()
-        self.save(session)
-
-    def vacuum(self, max_lifetime=SESSION_LIFETIME):
-        threshold = time.time() - max_lifetime
-        for fname in glob.iglob(os.path.join(root.session_store.path, '*', '*')):
-            path = os.path.join(root.session_store.path, fname)
-            with contextlib.suppress(OSError):
-                if os.path.getmtime(path) < threshold:
-                    os.unlink(path)
-
-    def generate_key(self, salt=None):
-        # The generated key is case sensitive (base64) and the length is 84 chars.
-        # In the worst-case scenario, i.e. in an insensitive filesystem (NTFS for example)
-        # taking into account the proportion of characters in the pool and a length
-        # of 42 (stored part in the database), the entropy for the base64 generated key
-        # is 217.875 bits which is better than the 160 bits entropy of a hexadecimal key
-        # with a length of 40 (method ``generate_key`` of ``SessionStore``).
-        # The risk of collision is negligible in practice.
-        # Formulas:
-        #   - L: length of generated word
-        #   - p_char: probability of obtaining the character in the pool
-        #   - n: size of the pool
-        #   - k: number of generated word
-        #   Entropy = - L * sum(p_char * log2(p_char))
-        #   Collision ~= (1 - exp((-k * (k - 1)) / (2 * (n**L))))
-        key = str(time.time()).encode() + os.urandom(64)
-        hash_key = sha512(key).digest()[:-1]  # prevent base64 padding
-        return base64.urlsafe_b64encode(hash_key).decode('utf-8')
-
-    def is_valid_key(self, key):
-        return _base64_urlsafe_re.match(key) is not None
-
-    def get_missing_session_identifiers(self, identifiers):
-        """
-            :param identifiers: session identifiers whose file existence must be checked
-                                identifiers are a part session sid (first 42 chars)
-            :type identifiers: iterable
-            :return: the identifiers which are not present on the filesystem
-            :rtype: set
-
-            Note 1:
-            Working with identifiers 42 characters long means that
-            we don't have to work with the entire sid session,
-            while maintaining sufficient entropy to avoid collisions.
-            See details in ``generate_key``.
-
-            Note 2:
-            Scans the session store for inactive (GC'd) sessions.
-            Works even if GC is done externally (not via ``vacuum()``).
-            Performance is acceptable for an infrequent background job:
-                - listing ``directories``: 1-5s on SSD
-                - iterating sessions:
-                    - 25k on standard SSD: ~1.5 min
-                    - 2M on RAID10 SSD: ~25s
-        """
-        # There are a lot of session files.
-        # Use the param ``identifiers`` to select the necessary directories.
-        # In the worst case, we have 4096 directories (64^2).
-        identifiers = set(identifiers)
-        directories = {
-            os.path.normpath(os.path.join(self.path, identifier[:2]))
-            for identifier in identifiers
-        }
-        # Remove the identifiers for which a file is present on the filesystem.
-        for directory in directories:
-            with contextlib.suppress(OSError), os.scandir(directory) as session_files:
-                identifiers.difference_update(sf.name[:42] for sf in session_files)
-        return identifiers
-
-    def delete_from_identifiers(self, identifiers: list):
-        files_to_unlink = []
-        for identifier in identifiers:
-            # Avoid to remove a session if it does not match an identifier.
-            # This prevent malicious user to delete sessions from a different
-            # database by specifying a custom ``res.device.log``.
-            if not _session_identifier_re.match(identifier):
-                raise ValueError("Identifier format incorrect, did you pass in a string instead of a list?")
-            normalized_path = os.path.normpath(os.path.join(self.path, identifier[:2], identifier + '*'))
-            if normalized_path.startswith(self.path):
-                files_to_unlink.extend(glob.glob(normalized_path))
-        for fn in files_to_unlink:
-            with contextlib.suppress(OSError):
-                os.unlink(fn)
-
-
 class Session(collections.abc.MutableMapping):
     """ Structure containing data persisted across requests. """
     __slots__ = ('can_save', '_Session__data', 'is_dirty', 'is_new',
                  'should_rotate', 'sid')
 
-    def __init__(self, data, sid, new=False):
+    def __init__(self, data, sid, /, new=False):
         self.can_save = True
         self.__data = {}
         self.update(data)
@@ -1308,6 +1150,227 @@ class Session(collections.abc.MutableMapping):
 
 
 # =========================================================
+# Session Store
+# =========================================================
+
+S = typing.TypeVar('S', bound=Session)
+
+# TODO: remove `84` length when v18.4 is deprecated
+# This will invalidate sessions generated with the old sid generator
+_base64_urlsafe_re = re.compile(r'^[A-Za-z0-9_-]{84,86}$')
+_session_identifier_re = re.compile(r'^[A-Za-z0-9_-]{42}$')
+
+
+class SessionStore(typing.Generic[S]):
+    """ Odoo implementation of the filesystem session store. """
+
+    def __init__(self, /, path: str | None = None, session_cls: S | None = None):
+        """
+        :param path: the path to the folder used for storing the sessions.
+            If not provided the default temporary directory is used.
+        :param session_cls: The session class to use.
+            Defaults to :class:`Session`.
+        """
+        if path is None:
+            path = os.path.join(tempfile.gettempdir(), 'odoo_session_store')
+            os.makedirs(path, exist_ok=True)
+        self.path: str = path
+        self.session_cls: Session = session_cls or Session
+
+    def generate_key(self) -> str:
+        """ Generate a 86-chars long token with 64 bytes of entropy. """
+        # To be secure, random token must have at least 256 bits (32 bytes) of entropy.
+        # Here we decide the use a token of 512 bits (2x32 bytes). The session (and
+        # cookie) will use the full 64-bytes long token. We will also store the first 32
+        # bytes in the `res.device.log` model. In case the `res.device.log` model gets
+        # compromised (e.g. data breach), pirates will not be able to exploit the
+        # session token because they will lack the remaining 32 bytes.
+        return secrets.token_urlsafe(64)
+
+    def is_valid_session_id(self, sid: str) -> bool:
+        """ Check if a session identifier has the correct format. """
+        return _base64_urlsafe_re.fullmatch(sid) is not None
+
+    def new(self) -> S:
+        """ Generate a new session. """
+        return self.session_cls({}, self.generate_key(), new=True)
+
+    def get_session_path(self, sid: str) -> str:
+        """Get complete session path."""
+        # scatter sessions across 4096 (64^2) directories
+        if not self.is_valid_session_id(sid):
+            raise ValueError(f'Invalid session id {sid!r}')
+        return os.path.join(self.path, sid[:2], sid)
+
+    def save(self, session: S) -> None:
+        """ Save a session. """
+        # Perform an atomic save
+        session_path = self.get_session_path(session.sid)
+        # Create session in a transaction file in the
+        # root directory of file session store
+        fd, tmp = tempfile.mkstemp(suffix='.__tx_sess__', dir=self.path)
+        with os.fdopen(fd, 'w', encoding='utf-8') as f:
+            json.dump(dict(session), f)
+        # Move the transaction file to the correct sub directory
+        with contextlib.suppress(OSError):
+            try:
+                os.replace(tmp, session_path)
+            except FileNotFoundError:
+                # Ensure directory then retry
+                session_dir = os.path.dirname(session_path)
+                os.mkdir(session_dir, mode=0o755)
+                os.replace(tmp, session_path)
+            os.chmod(session_path, 0o644)
+
+    def delete(self, session: S) -> None:
+        """ Delete a session. """
+        session_path = self.get_session_path(session.sid)
+        with contextlib.suppress(OSError):
+            os.unlink(session_path)
+
+    def get(self, sid: str, *, keep_sid: bool = False) -> S:
+        """
+        Get a session for the sid.
+
+        It returns a new session (with a new sid, not matter `keep_sid`)
+        in case the input sid is invalid.
+
+        It returns a new session (with a same or new sid depending on
+        `keep_sid`) in case the sid is valid but that the session wasn't
+        found on disk.
+        """
+        if not self.is_valid_session_id(sid):
+            return self.new()
+
+        try:
+
+            with open(self.get_session_path(sid), encoding='utf-8') as f:
+                try:
+                    data = json.load(f)
+                    return self.session_cls(data, sid, new=False)
+                except ValueError:
+                    _logger.debug("Could not load session data. Use empty session.", exc_info=True)
+                    # The session file exists on the filesystem (the sid must be retained)
+                    return self.session_cls({}, sid, new=False)
+
+        except OSError:
+            if keep_sid:
+                _logger.debug("Could not load session from disk. Use empty session.", exc_info=True)
+                return self.session_cls({}, sid, new=False)
+            _logger.debug("Could not load session from disk. Use new session.", exc_info=True)
+            return self.new()
+
+    def rotate(self, session, env, *, soft=False):
+        """
+        Rotate the session sid.
+
+        With a soft rotation, things like the CSRF token will still work. It's
+        used for rotating the session in a way that half the bytes remain to
+        identify the user and the other half to authenticate the user.
+
+        Meanwhile with a hard rotation the entire session id is changed, which
+        is useful in cases such as logging the user out.
+        """
+        if soft:
+            # Multiple network requests can occur at the same time, all using the old session.
+            # We don't want to create a new session for each request, it's better to reference the one already made.
+            static = session.sid[:STORED_SESSION_BYTES]
+            recent_session = self.get(session.sid)
+            if 'next_sid' in recent_session:
+                # A new session has already been saved on disk by a concurrent request,
+                # the _save_session is going to simply use session.sid to set a new cookie.
+                session.sid = recent_session['next_sid']
+                return
+            next_sid = static + self.generate_key()[STORED_SESSION_BYTES:]
+            session['next_sid'] = next_sid
+            session['deletion_time'] = time.time() + SESSION_DELETION_TIMER
+            self.save(session)
+            # Now prepare the new session
+            session['gc_previous_sessions'] = True
+            session.sid = next_sid
+            del session['deletion_time']
+            del session['next_sid']
+        else:
+            self.delete(session)
+            session.sid = self.generate_key()
+        if session.uid and env:
+            session.session_token = security.compute_session_token(session, env)
+        session.should_rotate = False
+        session['create_time'] = time.time()
+        self.save(session)
+
+    def vacuum(self, max_lifetime=SESSION_LIFETIME):
+        """ Remove expired session files older than the given lifetime. """
+        threshold = time.time() - max_lifetime
+        for fname in glob.iglob(os.path.join(self.path, '*', '*')):
+            path = os.path.join(self.path, fname)
+            with contextlib.suppress(OSError):
+                if os.path.getmtime(path) < threshold:
+                    os.unlink(path)
+
+    def get_missing_session_identifiers(self, identifiers):
+        """
+        :param identifiers: session identifiers whose file existence must be checked
+                            identifiers are a part session sid (first 42 chars)
+        :type identifiers: iterable
+        :return: the identifiers which are not present on the filesystem
+        :rtype: set
+
+        Note 1:
+        Working with identifiers 42 characters long means that
+        we don't have to work with the entire sid session,
+        while maintaining sufficient entropy to avoid collisions.
+        See details in ``generate_key``.
+
+        Note 2:
+        Scans the session store for inactive (GC'd) sessions.
+        Works even if GC is done externally (not via ``vacuum()``).
+        Performance is acceptable for an infrequent background job:
+            - listing ``directories``: 1-5s on SSD
+            - iterating sessions:
+                - 25k on standard SSD: ~1.5 min
+                - 2M on RAID10 SSD: ~25s
+        """
+        # There are a lot of session files.
+        # Use the param ``identifiers`` to select the necessary directories.
+        # In the worst case, we have 4096 directories (64^2).
+        identifiers = set(identifiers)
+        directories = {
+            os.path.normpath(os.path.join(self.path, identifier[:2]))
+            for identifier in identifiers
+        }
+        # Remove the identifiers for which a file is present on the filesystem.
+        for directory in directories:
+            with contextlib.suppress(OSError), os.scandir(directory) as session_files:
+                identifiers.difference_update(sf.name[:42] for sf in session_files)
+        return identifiers
+
+    def delete_from_identifiers(self, identifiers):
+        """ Delete session files matching identifiers within the session store. """
+        files_to_unlink = []
+        for identifier in identifiers:
+            # Avoid to remove a session if it does not match an identifier.
+            # This prevent malicious user to delete sessions from a different
+            # database by specifying a custom ``res.device.log``.
+            if not _session_identifier_re.match(identifier):
+                continue
+            normalized_path = os.path.normpath(os.path.join(self.path, identifier[:2], identifier + '*'))
+            if normalized_path.startswith(self.path):
+                files_to_unlink.extend(glob.glob(normalized_path))
+        for fn in files_to_unlink:
+            with contextlib.suppress(OSError):
+                os.unlink(fn)
+
+    def delete_old_sessions(self, session):
+        """ Delete old sessions based on expiration and cleanup flag value. """
+        if 'gc_previous_sessions' in session:
+            if session['create_time'] + SESSION_DELETION_TIMER < time.time():
+                self.delete_from_identifiers([session.sid[:STORED_SESSION_BYTES]])
+                del session['gc_previous_sessions']
+                self.save(session)
+
+
+# =========================================================
 # GeoIP
 # =========================================================
 
@@ -1450,7 +1513,7 @@ class HTTPRequest:
         httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableMultiDict
         httprequest.max_content_length = DEFAULT_MAX_CONTENT_LENGTH
         httprequest.max_form_memory_size = 10 * 1024 * 1024  # 10 MB
-        self._session_id__ = httprequest.cookies.get('session_id')
+        self._session_id__ = httprequest.cookies.get('session_id', '')
 
         self.__wrapped = httprequest
         self.__environ = self.__wrapped.environ
@@ -1779,11 +1842,7 @@ class Request:
 
     def _get_session_and_dbname(self):
         sid = self.httprequest._session_id__
-        if not sid or not root.session_store.is_valid_key(sid):
-            session = root.session_store.new()
-        else:
-            session = root.session_store.get(sid)
-            session.sid = sid  # in case the session was not persisted
+        session = root.session_store.get(sid, keep_sid=True)
 
         for key, val in get_default_session().items():
             session.setdefault(key, val)
@@ -2141,7 +2200,7 @@ class Request:
         if sess.should_rotate:
             root.session_store.rotate(sess, env)  # it saves
         elif sess.uid and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL:
-            root.session_store.rotate(sess, env, True)
+            root.session_store.rotate(sess, env, soft=True)
         elif sess.is_dirty:
             root.session_store.save(sess)
 
@@ -2722,7 +2781,7 @@ class Application:
     def session_store(self):
         path = odoo.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
-        return FilesystemSessionStore(path, session_class=Session, renew_missing=True)
+        return SessionStore(path=path, session_cls=Session)
 
     def get_db_router(self, db):
         if not db:
