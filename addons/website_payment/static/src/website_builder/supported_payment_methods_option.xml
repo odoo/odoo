@@ -4,7 +4,11 @@
     <t t-name="website_payment.SupportedPaymentMethodsOption">
         <BuilderRow label.translate="Limit">
             <BuilderNumberInput
-                min="1" step="1" unit="'icons'" applyWithUnit="false" action="'applyLimit'"
+                min="1"
+                step="1"
+                unit="'icons'"
+                applyWithUnit="false"
+                action="'supportedPaymentMethodsLimit'"
             />
         </BuilderRow>
         <BuilderRow label.translate="Height">
@@ -15,7 +19,7 @@
                 step="1"
                 unit="'px'"
                 displayRangeValue="true"
-                action="'applyHeight'"
+                action="'supportedPaymentMethodsHeight'"
             />
         </BuilderRow>
     </t>

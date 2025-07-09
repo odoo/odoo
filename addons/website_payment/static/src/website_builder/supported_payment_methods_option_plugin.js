@@ -40,7 +40,7 @@ class SupportedPaymentMethodsOptionPlugin extends Plugin {
 
 
 class SupportedPaymentMethodsLimit extends BuilderAction {
-    static id = 'applyLimit';
+    static id = 'supportedPaymentMethodsLimit';
 
     getValue({ editingElement }) {
         return editingElement.dataset.limit;
@@ -53,7 +53,7 @@ class SupportedPaymentMethodsLimit extends BuilderAction {
 
 
 class SupportedPaymentMethodsHeight extends BuilderAction {
-    static id = 'applyHeight';
+    static id = 'supportedPaymentMethodsHeight';
 
     getValue({ editingElement }) {
         return editingElement.dataset.height;

@@ -2,36 +2,18 @@
 <templates xml:space="preserve">
 
     <t t-name="website_payment.s_supported_payment_methods.icons">
-        <!-- The `image` field on the payment method has a max height of 64px. -->
-        <t t-set="height" t-value="Math.min(height, 64)"/>
-        <!-- The `min-height` ensures that in the event that no payment methods are given, then the
-             element stays selectable. -->
-        <div class="d-flex flex-wrap gap-1" t-attf-style="min-height: #{height}px">
+        <div name="container" class="d-flex flex-wrap gap-1">
             <t t-foreach="payment_methods" t-as="pm" t-key="pm.id">
+                <!-- The `image` field on the payment method has a max height of 64px. -->
                 <img
                     t-attf-src="/web/image/payment.method/#{pm.id}/image"
                     t-att-title="pm.name"
                     t-att-alt="pm.name"
                     class="img img-fluid rounded"
-                    t-attf-style="height: #{height}px;"
+                    t-attf-style="height: #{Math.min(height, 64)}px;"
                     loading="lazy"
                 />
             </t>
-        </div>
-    </t>
-
-    <t t-name="website_payment.s_supported_payment_methods.view_providers">
-        <div class="alert alert-warning container my-0 px-3 border-2 border-warning">
-            <div class="row gx-1 text-warning">
-                <span class="col-auto me-auto">No published payment methods</span>
-                <a
-                    class="btn-view_providers col-auto text-warning"
-                    href="/odoo/action-payment.action_payment_provider"
-                    target="_blank"
-                >
-                    <strong><i class="oi oi-arrow-right"/> View providers</strong>
-                </a>
-            </div>
         </div>
     </t>
 

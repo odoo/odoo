@@ -12,24 +12,16 @@ export class SupportedPaymentMethods extends Interaction {
     }
 
     async willStart() {
-        await this._fetchPaymentMethods();
+        await this.fetchPaymentMethods();
     }
 
-    start() {
-        this.render();
-    }
-
-    get limit() { return parseInt(this.el.dataset.limit) || 6; }
-
-    get height() { return parseInt(this.el.dataset.height) || 30; }
-
-    async _fetchPaymentMethods() {
+    async fetchPaymentMethods() {
         this.payment_methods = await this.waitFor(rpc(
             '/website_payment/snippet/supported_payment_methods', { limit: this.limit },
         )).catch(_ => []);
     }
 
-    async render() {
+    start() {
         this.el.replaceChildren();
         this.renderAt(
             this.templateKey,
@@ -37,6 +29,10 @@ export class SupportedPaymentMethods extends Interaction {
             this.el,
         );
     }
+
+    get limit() { return parseInt(this.el.dataset.limit) || 6; }
+
+    get height() { return parseInt(this.el.dataset.height) || 30; }
 }
 
 registry
