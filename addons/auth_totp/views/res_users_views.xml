@@ -72,10 +72,14 @@
                         </span>
                     </div>
                     <field name="totp_enabled" invisible="1"/>
-                    <button invisible="totp_enabled" name="action_totp_enable_wizard"
-                        type="object" class="fa fa-toggle-off o_auth_2fa_btn" aria-label="Enable 2FA"/>
-                    <button invisible="not totp_enabled" name="action_totp_disable"
-                        type="object" class="fa fa-toggle-on o_auth_2fa_btn text-primary" aria-label="Disable 2FA"/>
+<!--                    <button invisible="totp_enabled" name="action_totp_enable_wizard"-->
+<!--                        type="object" class="btn btn-secondary h-100" string="Enable 2FA"/>-->
+<!--                    <button invisible="not totp_enabled" name="action_totp_disable"-->
+                    <button name="action_totp_disable"
+                        type="object" class="btn btn-primary o_auth_2fa_btn_disable h-100">
+<!--                        <i class="fa fa-fw fa-check"/>-->
+                        Enable
+                    </button>
                 </div>
             </xpath>
         </field>
