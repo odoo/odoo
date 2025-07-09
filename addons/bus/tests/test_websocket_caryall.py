@@ -131,9 +131,30 @@ class TestWebsocketCaryall(WebsocketCase):
         self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
     def test_user_logout_outgoing_message(self):
+<<<<<<< a7be3b45a850e392e4e660231475e384507cf5ca
+||||||| a0b6a091032bfe44a0a73531070e05089e4bf8f4
+        subscribe_done_event = Event()
+        original_subscribe = Websocket.subscribe
+        odoo_ws = None
+
+        def patched_subscribe(self, *args):
+            nonlocal odoo_ws
+            odoo_ws = self
+            original_subscribe(self, *args)
+            subscribe_done_event.set()
+
+=======
+        odoo_ws = None
+
+        def patched_subscribe(self, *args):
+            nonlocal odoo_ws
+            odoo_ws = self
+
+>>>>>>> 77486446729159e0afaf0692faf00f6a481d2116
         new_test_user(self.env, login='test_user', password='Password!1')
         user_session = self.authenticate('test_user', 'Password!1')
         websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
+<<<<<<< a7be3b45a850e392e4e660231475e384507cf5ca
         self.subscribe(websocket, ['channel1'], self.env['bus.bus']._bus_last_id())
         self.url_open('/web/session/logout')
         # Simulate postgres notify. The session with whom the websocket
@@ -142,6 +163,35 @@ class TestWebsocketCaryall(WebsocketCase):
         self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
         self.trigger_notification_dispatching(["channel1"])
         self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
+||||||| a0b6a091032bfe44a0a73531070e05089e4bf8f4
+        with patch.object(Websocket, 'subscribe', patched_subscribe):
+            websocket.send(json.dumps({
+                'event_name': 'subscribe',
+                'data': {'channels': ['channel1'], 'last': 0}
+            }))
+            subscribe_done_event.wait(timeout=5)
+            self.url_open('/web/session/logout')
+            # Simulate postgres notify. The session with whom the websocket
+            # connected has been deleted. WebSocket should be closed without
+            # receiving the message.
+            self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
+            odoo_ws.trigger_notification_dispatching()
+            self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
+=======
+        with patch.object(Websocket, 'subscribe', patched_subscribe):
+            self.subscribe(
+                websocket,
+                ["channel1"],
+                self.env["bus.bus"].search([], limit=1, order="id DESC").id or 0,
+            )
+            self.url_open('/web/session/logout')
+            # Simulate postgres notify. The session with whom the websocket
+            # connected has been deleted. WebSocket should be closed without
+            # receiving the message.
+            self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
+            odoo_ws.trigger_notification_dispatching()
+            self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
+>>>>>>> 77486446729159e0afaf0692faf00f6a481d2116
 
     def test_channel_subscription_disconnect(self):
         websocket = self.websocket_connect()

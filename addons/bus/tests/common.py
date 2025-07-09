@@ -13,8 +13,14 @@ except ImportError:
 
 import odoo.tools
 from odoo.tests import HOST, HttpCase, TEST_CURSOR_COOKIE_NAME
+<<<<<<< a7be3b45a850e392e4e660231475e384507cf5ca
 from ..websocket import CloseCode, Websocket, WebsocketConnectionHandler
 from ..models.bus import dispatch, hashable, channel_with_db
+||||||| a0b6a091032bfe44a0a73531070e05089e4bf8f4
+from ..websocket import CloseCode, WebsocketConnectionHandler
+=======
+from ..websocket import CloseCode, Websocket, WebsocketConnectionHandler
+>>>>>>> 77486446729159e0afaf0692faf00f6a481d2116
 
 
 class WebsocketCase(HttpCase):
@@ -84,6 +90,7 @@ class WebsocketCase(HttpCase):
         self._websockets.add(ws)
         return ws
 
+<<<<<<< a7be3b45a850e392e4e660231475e384507cf5ca
     def subscribe(self, websocket, channels=None, last=None, wait_for_dispatch=True):
         """ Subscribe the websocket to the given channels.
 
@@ -125,6 +132,34 @@ class WebsocketCase(HttpCase):
         for websocket in websockets:
             websocket.trigger_notification_dispatching()
 
+||||||| a0b6a091032bfe44a0a73531070e05089e4bf8f4
+=======
+    def subscribe(self, websocket, channels=None, last=None, wait_for_dispatch=True):
+        """ Subscribe the websocket to the given channels.
+        :param websocket: The websocket of the client.
+        :param channels: The list of channels to subscribe to.
+        :param last: The last notification id the client received.
+        :param wait_for_dispatch: Whether to wait for the notification
+            dispatching trigerred by the subscription.
+        """
+        dispatch_bus_notification_done = Event()
+        original_dispatch_bus_notifications = Websocket._dispatch_bus_notifications
+
+        def _mocked_dispatch_bus_notifications(self, *args):
+            original_dispatch_bus_notifications(self, *args)
+            dispatch_bus_notification_done.set()
+
+        with patch.object(Websocket, '_dispatch_bus_notifications', _mocked_dispatch_bus_notifications):
+            sub = {'event_name': 'subscribe', 'data': {
+                'channels': channels or [],
+            }}
+            if last:
+                sub['data']['last'] = last
+            websocket.send(json.dumps(sub))
+            if wait_for_dispatch:
+                dispatch_bus_notification_done.wait(timeout=5)
+
+>>>>>>> 77486446729159e0afaf0692faf00f6a481d2116
     def wait_remaining_websocket_connections(self):
         """ Wait for the websocket connections to terminate. """
         for event in self._websocket_events:
