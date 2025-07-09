@@ -137,6 +137,9 @@ export class WebsiteLoader extends Component {
             this.state.showLoader = props && props.showLoader !== false;
         });
         useBus(this.props.bus, "HIDE-WEBSITE-LOADER", () => {
+            if (!this.state.isVisible) {
+                return;
+            }
             for (const key of Object.keys(initialState)) {
                 this.state[key] = initialState[key];
             }

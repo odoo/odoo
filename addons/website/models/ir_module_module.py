@@ -416,7 +416,6 @@ class IrModuleModule(models.Model):
         self._theme_upgrade_upstream()
 
         result = website.button_go_website()
-        result['params']['with_loader'] = True
         return result
 
     def button_remove_theme(self):
