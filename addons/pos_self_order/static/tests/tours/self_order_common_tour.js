@@ -15,6 +15,7 @@ registry.category("web_tour.tours").add("self_order_is_close", {
 registry.category("web_tour.tours").add("self_order_is_open_consultation", {
     steps: () => [
         Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-In"),
         LandingPage.isOpened(),
         ProductPage.clickProduct("Coca-Cola"),
         Utils.checkIsNoBtn("Order"),
@@ -30,6 +31,7 @@ registry.category("web_tour.tours").add("self_order_pos_closed", {
         LandingPage.isClosed(),
         // Normal product
         Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-In"),
         ProductPage.clickProduct("Coca-Cola"),
         Utils.checkIsNoBtn("Checkout"),
         // Product with attributes
@@ -73,6 +75,7 @@ registry.category("web_tour.tours").add("kiosk_order_pos_closed", {
     steps: () => [
         LandingPage.isClosed(),
         Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-In"),
         ProductPage.clickCategory("Miscellaneous"),
 
         ProductPage.clickProduct("Coca-Cola"),
