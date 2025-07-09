@@ -59,9 +59,18 @@ test("basic rendering", async () => {
     await click("[title='More']");
     await contains("[title='Raise Hand']");
     await contains("[title='Enter Full Screen']");
-    // screen sharing not available in mobile OS
+});
+
+test("mobile UI", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     mockUserAgent("Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)");
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains(".o-discuss-Call");
     expect(isMobileOS()).toBe(true);
+    await contains(".o-discuss-CallActionList button[aria-label='Deafen']");
     await contains("[title='Share Screen']", { count: 0 });
 });
 

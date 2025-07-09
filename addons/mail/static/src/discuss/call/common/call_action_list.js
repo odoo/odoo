@@ -12,7 +12,7 @@ import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/thread_model_
 
 export class CallActionList extends Component {
     static components = { CallPopover, CallActionButton };
-    static props = ["thread", "fullscreen?", "compact?"];
+    static props = ["thread", "compact?"];
     static template = "discuss.CallActionList";
 
     setup() {
@@ -44,7 +44,7 @@ export class CallActionList extends Component {
     }
 
     get isSmall() {
-        return Boolean(this.props.compact && !this.props.fullscreen?.isActive);
+        return Boolean(this.props.compact && this.rtc.state.isFullscreen);
     }
 
     get isMobileOS() {
@@ -65,7 +65,7 @@ export class CallActionList extends Component {
      * @param {MouseEvent} ev
      */
     async onClickToggleAudioCall(ev, { camera = false } = {}) {
-        await this.rtc.toggleCall(this.props.thread, { camera, fullscreen: this.props.fullscreen });
+        await this.rtc.toggleCall(this.props.thread, { camera });
     }
 
     onMouseenterMore() {

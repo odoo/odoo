@@ -92,17 +92,18 @@ callActionsRegistry
         sequence: 60,
     })
     .add("fullscreen", {
-        condition: (component) => component.props?.fullscreen && !component.rtc?.state.isPipMode,
+        condition: (component) => Boolean(component.rtc),
         name: (component) =>
-            component.props.fullscreen.isActive ? _t("Exit Fullscreen") : _t("Enter Full Screen"),
-        isActive: (component) => component.props.fullscreen.isActive,
+            component.rtc.state.isFullscreen ? _t("Exit Fullscreen") : _t("Enter Full Screen"),
+        isActive: (component) => component.rtc.state.isFullscreen,
         inactiveIcon: "fa-arrows-alt",
         icon: "fa-compress",
         select: (component) => {
-            if (component.props.fullscreen.isActive) {
-                component.props.fullscreen.exit();
+            if (component.rtc.state.isFullscreen) {
+                component.rtc.exitFullscreen();
             } else {
-                component.props.fullscreen.enter();
+                component.rtc.closePip();
+                component.rtc.enterFullscreen();
             }
         },
         sequence: 70,

@@ -15,7 +15,6 @@ import { debounce } from "@web/core/utils/timing";
 import { loadBundle, loadJS } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { url } from "@web/core/utils/urls";
-import { callActionsRegistry } from "./call_actions";
 
 let sequence = 1;
 const getSequence = () => sequence++;
@@ -74,6 +73,7 @@ export const CROSS_TAB_CLIENT_MESSAGE = {
 };
 const PING_INTERVAL = 30_000;
 const UNAVAILABLE_AS_REMOTE = _t("This action can only be done in the call tab.");
+const CALL_FULLSCREEN_ID = Symbol("CALL_FULLSCREEN");
 
 /**
  * @param {Array<RTCIceServer>} iceServers
@@ -320,7 +320,8 @@ export class Rtc extends Record {
 
     callActions = fields.Attr([], {
         compute() {
-            return callActionsRegistry
+            return registry
+                .category("discuss.call/actions")
                 .getEntries()
                 .filter(([key, action]) => action.condition({ rtc: this }))
                 .map(([key, action]) => [key, action.isActive({ rtc: this }), action.isTracked]);
@@ -377,6 +378,7 @@ export class Rtc extends Record {
              */
             fallbackMode: false,
             isPipMode: false,
+            isFullscreen: false,
         });
         this.blurManager = undefined;
     }
@@ -672,15 +674,22 @@ export class Rtc extends Record {
         this.soundEffectsService.play("mic-off");
     }
 
+    async enterFullscreen() {
+        const Call = registry.category("discuss.call/components").get("Call");
+        await this.fullscreen.enter(Call, { id: CALL_FULLSCREEN_ID });
+    }
+
+    async exitFullscreen() {
+        await this.fullscreen.exit(CALL_FULLSCREEN_ID);
+    }
+
     /**
      * @param {import("models").Thread} channel
      * @param {Object} [initialState={}]
      * @param {boolean} [initialState.audio]
-     * @param {{ exit: () => {} }} [initialState.fullscreen] if set, the call view is using fullscreen.
-     *   Providing fullscreen object allows to exit on call leave.
      * @param {boolean} [initialState.camera]
      */
-    async toggleCall(channel, { audio = true, fullscreen, camera } = {}) {
+    async toggleCall(channel, { audio = true, camera } = {}) {
         if (channel.id === this._remotelyHostedChannelId) {
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.LEAVE });
             this.clear();
@@ -696,7 +705,6 @@ export class Rtc extends Record {
         }
         const isActiveCall = channel.eq(this.state.channel);
         if (this.state.channel) {
-            fullscreen?.exit();
             await this.leaveCall(this.state.channel);
         }
         if (!isActiveCall) {
@@ -1533,6 +1541,7 @@ export class Rtc extends Record {
                 session.isTalking = false;
             }
         }
+        this.exitFullscreen();
         this._remotelyHostedSessionId = undefined;
         this._remotelyHostedChannelId = undefined;
         browser.clearTimeout(this._crossTabTimeoutId);
@@ -2158,6 +2167,7 @@ export const rtcService = {
         "discuss.p2p",
         "discuss.pip_service",
         "discuss.ptt_extension",
+        "mail.fullscreen",
         "mail.sound_effects",
         "mail.store",
         "multi_tab",
@@ -2182,6 +2192,10 @@ export const rtcService = {
                 type: CROSS_TAB_HOST_MESSAGE.PIP_CHANGE,
                 changes: { isPipMode },
             });
+        });
+        rtc.fullscreen = services["mail.fullscreen"];
+        onChange(rtc.fullscreen, "id", () => {
+            rtc.state.isFullscreen = rtc.fullscreen.id === CALL_FULLSCREEN_ID;
         });
         rtc.p2pService = services["discuss.p2p"];
         rtc.p2pService.acceptOffer = async (id, sequence) => {

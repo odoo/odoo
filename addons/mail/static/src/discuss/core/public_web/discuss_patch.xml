@@ -3,7 +3,7 @@
     <t t-inherit="mail.Discuss" t-inherit-mode="extension">
         <xpath expr="//Thread" position="before">
             <PipBanner t-if="rtc.state.isPipMode and thread.eq(rtc.channel)"/>
-            <Call t-elif="thread.rtc_session_ids.length gt 0" thread="thread"/>
+            <Call t-elif="thread.showCallView" thread="thread"/>
         </xpath>
     </t>
 </templates>
