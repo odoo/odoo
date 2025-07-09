@@ -750,10 +750,17 @@ export class LinkPlugin extends Plugin {
             this.linkInDocument = null;
             this.closeLinkTools();
         } else if (!selection.isCollapsed) {
-            // Open the link tool only if we have an image selected
+            // Open the link tool only if we have an image selected and the selection
+            // is fully contained in the image parent link.
             const imageNode = findInSelection(selection, "img");
+            const parentElement = imageNode?.parentElement;
             const linkContainingImage = imageNode && closestElement(imageNode, "a");
-            if (linkContainingImage && this.isLinkAllowedOnSelection()) {
+            if (
+                linkContainingImage &&
+                this.isLinkAllowedOnSelection() &&
+                parentElement.contains(selection.anchorNode) &&
+                parentElement.contains(selection.focusNode)
+            ) {
                 this.openLinkTools(linkContainingImage);
             } else {
                 this.linkInDocument = null;
