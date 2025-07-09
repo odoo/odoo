@@ -129,7 +129,27 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             run: "click",
         },
         {
+<<<<<<< 276174f751025c5a2eb9cc0f2ba70a0677ee9f5c
             trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction))",
+||||||| a7a29ed691db4f1607c0d12929c56845681164fa
+            content: "Reload page (fetch reactions)",
+            trigger: ".o-mail-Message",
+            run() {
+                location.reload();
+            },
+        },
+        {
+            trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction))",
+=======
+            content: "Reload page (fetch reactions)",
+            trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction:contains('🙂')))",
+            run() {
+                location.reload();
+            },
+        },
+        {
+            trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction:contains('🙂')))",
+>>>>>>> d0665ae50935dfc17cb6937df8c14976daf0dee3
         },
         {
             content: "Click on more menu",
