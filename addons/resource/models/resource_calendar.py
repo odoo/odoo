@@ -85,14 +85,18 @@ class ResourceCalendar(models.Model):
     name = fields.Char(required=True)
     active = fields.Boolean("Active", default=True,
                             help="If the active field is set to false, it will allow you to hide the Working Time without removing it.")
-    company_id = fields.Many2one(
-        'res.company', 'Company', domain=lambda self: [('id', 'in', self.env.companies.ids)],
-        default=lambda self: self.env.company, index='btree_not_null')
     attendance_ids = fields.One2many(
         'resource.calendar.attendance', 'calendar_id', 'Working Time',
         compute='_compute_attendance_ids', store=True, readonly=False, copy=True)
+    company_id = fields.Many2one(
+        'res.company', 'Company', domain=lambda self: [('id', 'in', self.env.companies.ids)],
+        default=lambda self: self.env.company, index='btree_not_null')
     leave_ids = fields.One2many(
         'resource.calendar.leaves', 'calendar_id', 'Time Off')
+    flexible_hours = fields.Boolean(string="Flexible Hours",
+                                    help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours).")
+    full_time_required_hours = fields.Float(string="Company Full Time",
+                                            help="Number of hours to work on the company schedule to be considered as fulltime.")
     global_leave_ids = fields.One2many(
         'resource.calendar.leaves', 'calendar_id', 'Global Time Off',
         compute='_compute_global_leave_ids', store=True, readonly=False,
@@ -100,30 +104,83 @@ class ResourceCalendar(models.Model):
     )
     hours_per_day = fields.Float("Average Hour per Day", store=True, compute="_compute_hours_per_day", digits=(2, 2), readonly=False,
                                  help="Average hours per day a resource is supposed to work with this calendar.")
+    hours_per_week = fields.Float(compute="_compute_hours_per_week", string="Hours per Week", store=True)
+    is_fulltime = fields.Boolean(compute='_compute_work_time_rate', string="Is Full Time")
+    two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
+    two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
         default=lambda self: self.env.context.get('tz') or self.env.user.tz or self.env.ref('base.user_admin').tz or 'UTC',
         help="This field is used in order to define in which timezone the resources will work.")
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset')
-    two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
-    two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
-    flexible_hours = fields.Boolean(string="Flexible Hours",
-                                    help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours).")
-    hours_per_week = fields.Float(compute="_compute_hours_per_week", string="Hours per Week", store=True)
-    full_time_required_hours = fields.Float(string="Company Full Time", help="Number of hours to work on the company schedule to be considered as fulltime.")
-    is_fulltime = fields.Boolean(compute='_compute_work_time_rate', string="Is Full Time")
+    work_resources_count = fields.Integer("Work Resources count", compute='_compute_work_resources_count')
     work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', search='_search_work_time_rate',
         help='Work time rate versus full time working schedule, should be between 0 and 100 %.')
-    work_resources_count = fields.Integer("Work Resources count", compute='_compute_work_resources_count')
 
-    def _compute_work_resources_count(self):
-        count_data = self.env['resource.resource']._read_group(
-            domain=[('calendar_id', 'in', self.ids)],
-            groupby=['calendar_id'],
-            aggregates=['__count'])
-        mapped_counts = {resource_calendar.id: count for resource_calendar, count in count_data}
+    # --------------------------------------------------
+    # Constrains
+    # --------------------------------------------------
+
+    @api.constrains('attendance_ids')
+    def _check_attendance_ids(self):
+        for resource in self:
+            if (resource.two_weeks_calendar and
+                    resource.attendance_ids.filtered(lambda a: a.display_type == 'line_section') and
+                    not resource.attendance_ids.sorted('sequence')[0].display_type):
+                raise ValidationError(_("In a calendar with 2 weeks mode, all periods need to be in the sections."))
+
+    @api.constrains('attendance_ids')
+    def _check_attendance(self):
+        # Avoid superimpose in attendance
         for calendar in self:
-            calendar.work_resources_count = mapped_counts.get(calendar.id, 0)
+            attendance_ids = calendar.attendance_ids.filtered(lambda attendance: not attendance.resource_id and attendance.display_type is False)
+            if calendar.two_weeks_calendar:
+                calendar._check_overlap(attendance_ids.filtered(lambda attendance: attendance.week_type == '0'))
+                calendar._check_overlap(attendance_ids.filtered(lambda attendance: attendance.week_type == '1'))
+            else:
+                calendar._check_overlap(attendance_ids)
+
+    # --------------------------------------------------
+    # Compute Methods
+    # --------------------------------------------------
+
+    @api.depends('company_id')
+    def _compute_attendance_ids(self):
+        for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id and c.company_id):
+            company_calendar = calendar.company_id.resource_calendar_id
+            calendar.update({
+                'two_weeks_calendar': company_calendar.two_weeks_calendar,
+                'tz': company_calendar.tz,
+                'attendance_ids': [(5, 0, 0)] + [
+                    (0, 0, attendance._copy_attendance_vals()) for attendance in company_calendar.attendance_ids if not attendance.resource_id]
+            })
+
+    @api.onchange('attendance_ids')
+    def _onchange_attendance_ids(self):
+        if not self.two_weeks_calendar:
+            return
+
+        even_week_seq = self.attendance_ids.filtered(lambda att: att.display_type == 'line_section' and att.week_type == '0')
+        odd_week_seq = self.attendance_ids.filtered(lambda att: att.display_type == 'line_section' and att.week_type == '1')
+        if len(even_week_seq) != 1 or len(odd_week_seq) != 1:
+            raise ValidationError(_("You can't delete section between weeks."))
+
+        even_week_seq = even_week_seq.sequence
+        odd_week_seq = odd_week_seq.sequence
+
+        for line in self.attendance_ids.filtered(lambda att: att.display_type is False):
+            if even_week_seq > odd_week_seq:
+                line.week_type = '1' if even_week_seq > line.sequence else '0'
+            else:
+                line.week_type = '0' if odd_week_seq > line.sequence else '1'
+
+    @api.depends('company_id')
+    def _compute_global_leave_ids(self):
+        for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id):
+            calendar.update({
+                'global_leave_ids': [(5, 0, 0)] + [
+                    (0, 0, leave._copy_leave_vals()) for leave in calendar.company_id.resource_calendar_id.global_leave_ids]
+            })
 
     @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar', 'flexible_hours')
     def _compute_hours_per_day(self):
@@ -139,6 +196,34 @@ class ResourceCalendar(models.Model):
             sum_hours = sum(
                 (attendance.hour_to - attendance.hour_from) for attendance in calendar.attendance_ids if attendance._is_work_period())
             calendar.hours_per_week = sum_hours / 2 if calendar.two_weeks_calendar else sum_hours
+
+    @api.depends('two_weeks_calendar')
+    def _compute_two_weeks_explanation(self):
+        today = fields.Date.today()
+        week_type = self.env['resource.calendar.attendance'].get_week_type(today)
+        week_type_str = _("second") if week_type else _("first")
+        first_day = date_utils.start_of(today, 'week')
+        last_day = date_utils.end_of(today, 'week')
+        self.two_weeks_explanation = _(
+            "The current week (from %(first_day)s to %(last_day)s) corresponds to week number %(number)s.",
+            first_day=first_day,
+            last_day=last_day,
+            number=week_type_str,
+        )
+
+    @api.depends('tz')
+    def _compute_tz_offset(self):
+        for calendar in self:
+            calendar.tz_offset = datetime.now(timezone(calendar.tz or 'GMT')).strftime('%z')
+
+    def _compute_work_resources_count(self):
+        count_data = self.env['resource.resource']._read_group(
+            domain=[('calendar_id', 'in', self.ids)],
+            groupby=['calendar_id'],
+            aggregates=['__count'])
+        mapped_counts = {resource_calendar.id: count for resource_calendar, count in count_data}
+        for calendar in self:
+            calendar.work_resources_count = mapped_counts.get(calendar.id, 0)
 
     @api.depends('hours_per_week', 'full_time_required_hours')
     def _compute_work_time_rate(self):
@@ -172,91 +257,17 @@ class ResourceCalendar(models.Model):
             calender = calendar_ids.filtered(lambda m: m.work_time_rate > value)
         return [('id', 'in', calender.ids)]
 
-    @api.depends('company_id')
-    def _compute_attendance_ids(self):
-        for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id and c.company_id):
-            company_calendar = calendar.company_id.resource_calendar_id
-            calendar.update({
-                'two_weeks_calendar': company_calendar.two_weeks_calendar,
-                'tz': company_calendar.tz,
-                'attendance_ids': [(5, 0, 0)] + [
-                    (0, 0, attendance._copy_attendance_vals()) for attendance in company_calendar.attendance_ids if not attendance.resource_id]
-            })
-
-    @api.depends('company_id')
-    def _compute_global_leave_ids(self):
-        for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id):
-            calendar.update({
-                'global_leave_ids': [(5, 0, 0)] + [
-                    (0, 0, leave._copy_leave_vals()) for leave in calendar.company_id.resource_calendar_id.global_leave_ids]
-            })
-
-    @api.depends('tz')
-    def _compute_tz_offset(self):
-        for calendar in self:
-            calendar.tz_offset = datetime.now(timezone(calendar.tz or 'GMT')).strftime('%z')
+    # --------------------------------------------------
+    # Overrides
+    # --------------------------------------------------
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
         return [dict(vals, name=self.env._("%s (copy)", calendar.name)) for calendar, vals in zip(self, vals_list)]
 
-    @api.constrains('attendance_ids')
-    def _check_attendance_ids(self):
-        for resource in self:
-            if (resource.two_weeks_calendar and
-                    resource.attendance_ids.filtered(lambda a: a.display_type == 'line_section') and
-                    not resource.attendance_ids.sorted('sequence')[0].display_type):
-                raise ValidationError(_("In a calendar with 2 weeks mode, all periods need to be in the sections."))
-
-    @api.depends('two_weeks_calendar')
-    def _compute_two_weeks_explanation(self):
-        today = fields.Date.today()
-        week_type = self.env['resource.calendar.attendance'].get_week_type(today)
-        week_type_str = _("second") if week_type else _("first")
-        first_day = date_utils.start_of(today, 'week')
-        last_day = date_utils.end_of(today, 'week')
-        self.two_weeks_explanation = _(
-            "The current week (from %(first_day)s to %(last_day)s) corresponds to week number %(number)s.",
-            first_day=first_day,
-            last_day=last_day,
-            number=week_type_str,
-        )
-
-    def _get_global_attendances(self):
-        return self.attendance_ids.filtered(lambda attendance:
-            attendance.day_period != 'lunch'
-            and not attendance.date_from and not attendance.date_to
-            and not attendance.resource_id and not attendance.display_type)
-
-    def _get_hours_per_day(self, attendances):
-        """
-        Calculate the average hours worked per workday.
-        """
-        if not attendances:
-            return 0
-
-        hour_count = 0.0
-        for attendance in attendances:
-            hour_count += attendance.hour_to - attendance.hour_from
-
-        if self.two_weeks_calendar:
-            number_of_days = len(set(attendances.filtered(lambda cal: cal.week_type == '1').mapped('dayofweek')))
-            number_of_days += len(set(attendances.filtered(lambda cal: cal.week_type == '0').mapped('dayofweek')))
-        else:
-            number_of_days = len(set(attendances.mapped('dayofweek')))
-
-        if not number_of_days:
-            return 0
-
-        return float_round(hour_count / float(number_of_days), precision_digits=2)
-
-    def _get_days_per_week(self):
-        # If the employee didn't work a full day, it is still counted, i.e. 19h / week (M/T/W(half day)) -> 3 days
-        self.ensure_one()
-        days = len(set(self.attendance_ids.filtered(
-            lambda attendance_id: attendance_id._is_work_period() and attendance_id.duration_hours)
-            .mapped(lambda attendance_id: f"{attendance_id.week_type} {attendance_id.dayofweek}")))
-        return days / 2 if self.two_weeks_calendar else days
+    # --------------------------------------------------
+    # Actions
+    # --------------------------------------------------
 
     def switch_calendar_type(self):
         if not self.two_weeks_calendar:
@@ -297,48 +308,6 @@ class ResourceCalendar(models.Model):
             self.two_weeks_calendar = False
             self.attendance_ids.unlink()
             self.attendance_ids = self.default_get(['attendance_ids'])['attendance_ids']
-
-    @api.onchange('attendance_ids')
-    def _onchange_attendance_ids(self):
-        if not self.two_weeks_calendar:
-            return
-
-        even_week_seq = self.attendance_ids.filtered(lambda att: att.display_type == 'line_section' and att.week_type == '0')
-        odd_week_seq = self.attendance_ids.filtered(lambda att: att.display_type == 'line_section' and att.week_type == '1')
-        if len(even_week_seq) != 1 or len(odd_week_seq) != 1:
-            raise ValidationError(_("You can't delete section between weeks."))
-
-        even_week_seq = even_week_seq.sequence
-        odd_week_seq = odd_week_seq.sequence
-
-        for line in self.attendance_ids.filtered(lambda att: att.display_type is False):
-            if even_week_seq > odd_week_seq:
-                line.week_type = '1' if even_week_seq > line.sequence else '0'
-            else:
-                line.week_type = '0' if odd_week_seq > line.sequence else '1'
-
-    def _check_overlap(self, attendance_ids):
-        """ attendance_ids correspond to attendance of a week,
-            will check for each day of week that there are no superimpose. """
-        result = []
-        for attendance in attendance_ids.filtered(lambda att: not att.date_from and not att.date_to):
-            # 0.000001 is added to each start hour to avoid to detect two contiguous intervals as superimposing.
-            # Indeed Intervals function will join 2 intervals with the start and stop hour corresponding.
-            result.append((int(attendance.dayofweek) * 24 + attendance.hour_from + 0.000001, int(attendance.dayofweek) * 24 + attendance.hour_to, attendance))
-
-        if len(Intervals(result)) != len(result):
-            raise ValidationError(_("Attendances can't overlap."))
-
-    @api.constrains('attendance_ids')
-    def _check_attendance(self):
-        # Avoid superimpose in attendance
-        for calendar in self:
-            attendance_ids = calendar.attendance_ids.filtered(lambda attendance: not attendance.resource_id and attendance.display_type is False)
-            if calendar.two_weeks_calendar:
-                calendar._check_overlap(attendance_ids.filtered(lambda attendance: attendance.week_type == '0'))
-                calendar._check_overlap(attendance_ids.filtered(lambda attendance: attendance.week_type == '1'))
-            else:
-                calendar._check_overlap(attendance_ids)
 
     # --------------------------------------------------
     # Computation API
@@ -624,6 +593,18 @@ class ResourceCalendar(models.Model):
     # Private Methods / Helpers
     # --------------------------------------------------
 
+    def _check_overlap(self, attendance_ids):
+        """ attendance_ids correspond to attendance of a week,
+            will check for each day of week that there are no superimpose. """
+        result = []
+        for attendance in attendance_ids.filtered(lambda att: not att.date_from and not att.date_to):
+            # 0.000001 is added to each start hour to avoid to detect two contiguous intervals as superimposing.
+            # Indeed Intervals function will join 2 intervals with the start and stop hour corresponding.
+            result.append((int(attendance.dayofweek) * 24 + attendance.hour_from + 0.000001, int(attendance.dayofweek) * 24 + attendance.hour_to, attendance))
+
+        if len(Intervals(result)) != len(result):
+            raise ValidationError(_("Attendances can't overlap."))
+
     def _get_attendance_intervals_days_data(self, attendance_intervals):
         """
         helper function to compute duration of `intervals` that have
@@ -651,49 +632,6 @@ class ResourceCalendar(models.Model):
             'days': float_round(sum(day_days[day] for day in day_days), precision_rounding=0.001),
             'hours': sum(day_hours.values()),
         }
-
-    def _get_days_data(self, intervals, day_total):
-        """
-        helper function to compute duration of `intervals`
-        expressed in days and hours.
-        `day_total` is a dict {date: n_hours} with the number of hours for each day.
-        """
-        day_hours = defaultdict(float)
-        for start, stop, _meta in intervals:
-            day_hours[start.date()] += (stop - start).total_seconds() / 3600
-
-        # compute number of days the hours span over
-        days = float_round(sum(
-            day_hours[day] / day_total[day] if day_total[day] else 0
-            for day in day_hours
-        ), precision_rounding=0.001)
-        return {
-            'days': days,
-            'hours': sum(day_hours.values()),
-        }
-
-    def _get_resources_day_total(self, from_datetime, to_datetime, resources=None):
-        """
-        @return dict with hours of attendance in each day between `from_datetime` and `to_datetime`
-        """
-        self.ensure_one()
-        if not resources:
-            resources = self.env['resource.resource']
-            resources_list = [resources]
-        else:
-            resources_list = list(resources) + [self.env['resource.resource']]
-        # total hours per day:  retrieve attendances with one extra day margin,
-        # in order to compute the total hours on the first and last days
-        from_full = from_datetime - timedelta(days=1)
-        to_full = to_datetime + timedelta(days=1)
-        intervals = self._attendance_intervals_batch(from_full, to_full, resources=resources)
-
-        result = defaultdict(lambda: defaultdict(float))
-        for resource in resources_list:
-            day_total = result[resource.id]
-            for start, stop, _meta in intervals[resource.id]:
-                day_total[start.date()] += (stop - start).total_seconds() / 3600
-        return result
 
     def _get_closest_work_time(self, dt, match_end=False, resource=None, search_range=None, compute_leaves=True):
         """Return the closest work interval boundary within the search range.
@@ -729,6 +667,85 @@ class ResourceCalendar(models.Model):
             key=lambda i: abs(interval_dt(i) - dt),
         )
         return interval_dt(work_intervals[0]) if work_intervals else None
+
+    def _get_days_data(self, intervals, day_total):
+        """
+        helper function to compute duration of `intervals`
+        expressed in days and hours.
+        `day_total` is a dict {date: n_hours} with the number of hours for each day.
+        """
+        day_hours = defaultdict(float)
+        for start, stop, _meta in intervals:
+            day_hours[start.date()] += (stop - start).total_seconds() / 3600
+
+        # compute number of days the hours span over
+        days = float_round(sum(
+            day_hours[day] / day_total[day] if day_total[day] else 0
+            for day in day_hours
+        ), precision_rounding=0.001)
+        return {
+            'days': days,
+            'hours': sum(day_hours.values()),
+        }
+
+    def _get_days_per_week(self):
+        # If the employee didn't work a full day, it is still counted, i.e. 19h / week (M/T/W(half day)) -> 3 days
+        self.ensure_one()
+        days = len(set(self.attendance_ids.filtered(
+            lambda attendance_id: attendance_id._is_work_period() and attendance_id.duration_hours)
+            .mapped(lambda attendance_id: f"{attendance_id.week_type} {attendance_id.dayofweek}")))
+        return days / 2 if self.two_weeks_calendar else days
+
+    def _get_global_attendances(self):
+        return self.attendance_ids.filtered(lambda attendance:
+            attendance.day_period != 'lunch'
+            and not attendance.date_from and not attendance.date_to
+            and not attendance.resource_id and not attendance.display_type)
+
+    def _get_hours_per_day(self, attendances):
+        """
+        Calculate the average hours worked per workday.
+        """
+        if not attendances:
+            return 0
+
+        hour_count = 0.0
+        for attendance in attendances:
+            hour_count += attendance.hour_to - attendance.hour_from
+
+        if self.two_weeks_calendar:
+            number_of_days = len(set(attendances.filtered(lambda cal: cal.week_type == '1').mapped('dayofweek')))
+            number_of_days += len(set(attendances.filtered(lambda cal: cal.week_type == '0').mapped('dayofweek')))
+        else:
+            number_of_days = len(set(attendances.mapped('dayofweek')))
+
+        if not number_of_days:
+            return 0
+
+        return float_round(hour_count / float(number_of_days), precision_digits=2)
+
+    def _get_resources_day_total(self, from_datetime, to_datetime, resources=None):
+        """
+        @return dict with hours of attendance in each day between `from_datetime` and `to_datetime`
+        """
+        self.ensure_one()
+        if not resources:
+            resources = self.env['resource.resource']
+            resources_list = [resources]
+        else:
+            resources_list = list(resources) + [self.env['resource.resource']]
+        # total hours per day:  retrieve attendances with one extra day margin,
+        # in order to compute the total hours on the first and last days
+        from_full = from_datetime - timedelta(days=1)
+        to_full = to_datetime + timedelta(days=1)
+        intervals = self._attendance_intervals_batch(from_full, to_full, resources=resources)
+
+        result = defaultdict(lambda: defaultdict(float))
+        for resource in resources_list:
+            day_total = result[resource.id]
+            for start, stop, _meta in intervals[resource.id]:
+                day_total[start.date()] += (stop - start).total_seconds() / 3600
+        return result
 
     def _get_unusual_days(self, start_dt, end_dt, company_id=False):
         if not self:
