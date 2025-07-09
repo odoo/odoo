@@ -151,7 +151,7 @@ export class CustomizeStyleProperty extends BuilderAction {
      */
     getValue({ params }) {
         const rule = this.dependencies["mass_mailing.CustomizeMailingPlugin"].getRule(
-            params.selector
+            params.selectors[0]
         );
         return rule.style.getPropertyValue(params.property);
     }
@@ -160,20 +160,24 @@ export class CustomizeStyleProperty extends BuilderAction {
         const important = PRIORITY_STYLES[params.selector]?.has(params.property);
         this.dependencies.history.applyCustomMutation({
             apply: () => {
-                this.dependencies["mass_mailing.CustomizeMailingPlugin"].addCSSRule({
-                    selector: params.selector,
-                    ruleStyle: {
-                        [params.property]: `${value}${important ? "!important" : ""};`,
-                    },
-                });
+                for (const selector in params.selectors) {
+                    this.dependencies["mass_mailing.CustomizeMailingPlugin"].addCSSRule({
+                        selector,
+                        ruleStyle: {
+                            [params.property]: `${value}${important ? "!important" : ""};`,
+                        },
+                    });
+                }
             },
             revert: () => {
-                this.dependencies["mass_mailing.CustomizeMailingPlugin"].addCSSRule({
-                    selector: params.selector,
-                    ruleStyle: {
-                        [params.property]: `${oldValue}${important ? "!important" : ""};`,
-                    },
-                });
+                for (const selector in params.selectors) {
+                    this.dependencies["mass_mailing.CustomizeMailingPlugin"].addCSSRule({
+                        selector,
+                        ruleStyle: {
+                            [params.property]: `${oldValue}${important ? "!important" : ""};`,
+                        },
+                    });
+                }
             },
         });
     }
