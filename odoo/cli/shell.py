@@ -92,15 +92,20 @@ class Shell(Command):
 
     def ipython(self, local_vars, pythonstartup=None):
         from IPython import start_ipython  # noqa: PLC0415
-        argv = (
-            ['--TerminalIPythonApp.display_banner=False']
-            + ([f'--TerminalIPythonApp.exec_files={pythonstartup}'] if pythonstartup else [])
-        )
+        argv = [
+            '--TerminalIPythonApp.display_banner=False',
+            '--TerminalInteractiveShell.confirm_exit=False',
+        ]
+        if pythonstartup:
+            argv.append(f'--TerminalIPythonApp.exec_files={pythonstartup}')
         start_ipython(argv=argv, user_ns=local_vars)
 
     def ptpython(self, local_vars, pythonstartup=None):
         from ptpython.repl import embed  # noqa: PLC0415
-        embed({}, local_vars, startup_paths=[pythonstartup] if pythonstartup else False)
+
+        def configure(repl=None):
+            repl.confirm_exit = False
+        embed({}, local_vars, configure=configure, startup_paths=[pythonstartup] if pythonstartup else False)
 
     def bpython(self, local_vars, pythonstartup=None):
         from bpython import embed  # noqa: PLC0415
