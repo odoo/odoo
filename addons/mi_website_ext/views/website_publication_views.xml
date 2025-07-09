@@ -21,7 +21,6 @@
                     <sheet>
                         <header>
                             <button name="open_view_wizard" type="object" string="Ver Lecturas" class="btn btn-primary"/>
-
                         </header>
                         <field name="image_1920" widget="image" class="oe_avatar"
                        invisible="publication_type in ['phrase', 'special_event', 'winner']"/>
@@ -43,7 +42,8 @@
                                 <field name="is_published" widget="boolean_toggle"/>
                             </group>
                             <group>
-                                <field name="user_id" readonly="1" force_save="1"/>
+                                <field name="user_id" readonly="0" force_save="1" groups="base.group_system"
+       options="{'no_create': True, 'no_open': True}" />
                                 <field name="publish_date"/>
                             </group>
                         </group>

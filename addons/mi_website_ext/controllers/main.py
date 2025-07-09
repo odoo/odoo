@@ -484,27 +484,18 @@ class WebsiteCustom(http.Controller):
             return {"error": "Tipo de contenido no válido."}
 
         try:
-            # Verificamos si ya existe un registro para no duplicarlo
-            existing_log = (
-                request.env["publication.view.log"]
-                .sudo()
-                .search(
-                    [
-                        ("res_model", "=", res_model),
-                        ("res_id", "=", int(res_id)),
-                        ("user_id", "=", request.env.user.id),
-                    ]
-                )
-            )
-            if not existing_log:
-                request.env["publication.view.log"].sudo().create(
-                    {
-                        "res_model": res_model,
-                        "res_id": int(res_id),
-                        "user_id": request.env.user.id,
-                    }
-                )
-            return {"success": True}
+            publication = request.env[res_model].sudo().browse(int(res_id))
+            if not publication.exists():
+                return {'success': False, 'error': 'El documento no fue encontrado.'}
+            
+            current_user = request.env.user
+
+            publication.sudo().write({
+                'read_by_user_ids': [(4, current_user.id)]
+            })
+
+            return {'success': True}
+            
         except Exception as e:
             _logger.error(f"Error al marcar como leído: {e}")
             return {"error": "No se pudo registrar la acción."}

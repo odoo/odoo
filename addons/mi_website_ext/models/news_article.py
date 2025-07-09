@@ -35,10 +35,10 @@ class NewsArticle(models.Model):
         sources = [
             # Puedes cambiar estas URLs por otras válidas más adelante
             ("https://www.muycomputer.com/feed/", "MuyComputer"),
-            ("https://www.businessinsider.es/rss", "Business Insider"),
+            ("https://diariodesign.com/feed/", "Diariodesign"),
             ("https://lamenteesmaravillosa.com/feed/", "La Mente es Maravillosa"),
             ("https://ielektro.es/feed/", "IElektro"),
-            ("https://www.micasarevista.com/rss/all.xml", "Nuevo Estilo"),
+            ("https://www.adslzone.net/feed/", "ADSLZone"),
         ]
 
         self.search([]).unlink() 

@@ -23,7 +23,7 @@
                 class="js-view-policy" 
                 t-att-data-policy-id="policy.id"
                 t-att-data-policy-name="policy.name"
-                t-att-data-pdf-url="policy.attachment_url">
+                t-attf-data-pdf-url="/web/content/website.publication/#{policy.id}/policy_pdf">
                                         <i class="fa fa-check text-success me-2" t-if="policy.id in read_policy_ids"/>
                                         <i class="fa fa-eye me-2"/>
                                         <span>Visualizar</span>

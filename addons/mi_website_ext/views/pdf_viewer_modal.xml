@@ -2,24 +2,24 @@
 <odoo>
     <template id="pdf_viewer_modal_template" name="Visor de PDF en Modal">
         <div id="pdf_viewer_modal" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-xl" role="document"> <div class="modal-content">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="pdf_modal_title">Visualizando Documento</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
-                        <embed id="pdf_embed_container" src="" type="application/pdf" width="100%" height="600px" />
+                        <iframe id="pdf_embed_container" src="" width="100%" height="650px" frameborder="0"></iframe>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <div id="pdf_modal_read_button_placeholder">
-                            </div>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <!-- El JavaScript insertará el botón aquí cuando sea necesario -->
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </template>
-
     <template id="pdf_viewer_modal_in_body" inherit_id="website.layout">
         <xpath expr="//body" position="inside">
             <t t-call="mi_website_ext.pdf_viewer_modal_template"/>

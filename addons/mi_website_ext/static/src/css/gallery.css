@@ -83,6 +83,12 @@
   font-style: normal;
   font-weight: 800;
   flex: 1 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 3.6em; 
 }
 
 .album_item p {

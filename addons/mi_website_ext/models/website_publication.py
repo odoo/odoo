@@ -1,5 +1,9 @@
 from odoo import models, fields, api
 from datetime import timedelta
+import logging
+
+from odoo.exceptions import UserError
+_logger = logging.getLogger(__name__)
 
 
 class WebsitePublication(models.Model):
@@ -7,6 +11,8 @@ class WebsitePublication(models.Model):
     _description = "Publicaciones del Sitio Web (Anuncios, Noticias, etc.)"
     _inherit = ["mail.thread", "mail.activity.mixin", "image.mixin"]
     _order = "publish_date desc, create_date desc"
+    policy_pdf = fields.Binary("PDF de la Política")
+    policy_pdf_filename = fields.Char("Nombre del archivo PDF")
 
     publication_type = fields.Selection(
         [
@@ -202,3 +208,36 @@ class WebsitePublication(models.Model):
         """
         if self.publication_type == "winner" and self.employee_id:
             self.name = f"Ganador: {self.employee_id.name}"
+
+    read_by_user_ids = fields.Many2many(
+        comodel_name='res.users',
+        relation='website_publication_read_user_rel',
+        column1='publication_id',
+        column2='user_id',
+        string='Leído por los usuarios',
+        copy=False
+    )   
+
+    @api.model
+    def _publish_scheduled_posts(self):
+        """
+        Este método es llamado por un cron para publicar posts programados.
+        Busca todas las publicaciones no publicadas cuya fecha de publicación
+        es hoy o anterior, y las marca como publicadas.
+        """
+        _logger.info("Ejecutando cron de publicación programada...")
+
+        # Buscamos los registros que cumplen la condición
+        posts_to_publish = self.search([
+            ('is_published', '=', False),
+            ('publish_date', '<=', fields.Date.today())
+        ])
+
+        if posts_to_publish:
+            # Si se encontraron posts, los marcamos como publicados
+            posts_to_publish.write({'is_published': True})
+            _logger.info(f"Se han publicado {len(posts_to_publish)} posts programados.")
+        else:
+            _logger.info("No se encontraron posts para publicar hoy.")
+
+        return True     
