@@ -10,7 +10,7 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.tests.common import users, tagged, HttpCase, warmup
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'is_query_count')
 class TestDiscussFullPerformance(HttpCase, MailCommon):
     # Queries for _query_count_init_store (in order):
     #   1: internalUserGroupId: ref exists
