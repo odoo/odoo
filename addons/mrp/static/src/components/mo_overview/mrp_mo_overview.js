@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { Component, EventBus, onWillStart, useSubEnv, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -28,6 +29,7 @@ export class MoOverview extends Component {
         this.state = useState({
             data: {},
             showOptions: this.getDefaultConfig(),
+            allFolded: true,
         });
 
         useSubEnv({ overviewBus: new EventBus() });
@@ -91,8 +93,9 @@ export class MoOverview extends Component {
         });
     }
 
-    onUnfold() {
-        this.env.overviewBus.trigger("unfold-all")
+    onToggleFolded() {
+        this.state.allFolded = !this.state.allFolded;
+        this.env.overviewBus.trigger("toggle-fold-all-mo", { foldAll: this.state.allFolded });
     }
 
     //---- Helpers ----
@@ -170,6 +173,10 @@ export class MoOverview extends Component {
 
     get isProductionDone() {
         return this.state.data?.summary?.state === "done";
+    }
+
+    get foldButtonText() {
+        return this.state.allFolded ? _t("Unfold") : _t("Fold");
     }
 
     get hasOperations() {
