@@ -318,6 +318,8 @@ class MaintenanceRequest(models.Model):
                 request.close_date = False
             if not request.close_date and request.stage_id.done:
                 request.close_date = fields.Date.today()
+            if not request.request_date:
+                request.request_date = fields.Date.today()
         maintenance_requests.activity_update()
         return maintenance_requests
 
