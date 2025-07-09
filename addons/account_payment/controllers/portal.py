@@ -152,6 +152,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         portal_page_values = {
             'company_mismatch': company_mismatch,
             'expected_company': invoice_company,
+            'tab_mode': kwargs.get('mode') or 'installment',
         }
         payment_form_values = {
             'show_tokenize_input_mapping': PaymentPortal._compute_show_tokenize_input_mapping(
