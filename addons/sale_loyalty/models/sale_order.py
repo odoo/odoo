@@ -106,6 +106,7 @@ class SaleOrder(models.Model):
             points_per_coupon[line.coupon_id]['cost'] += line.points_cost
 
         create_values = []
+        redemption_records = []
         base_values = {
             'order_id': self.id,
             'order_model': self._name,
@@ -119,9 +120,18 @@ class SaleOrder(models.Model):
                 'card_id': coupon.id,
                 'used': cost,
                 'issued': issued,
+                'available_issued_points': issued,
             })
+            if cost:
+                redemption_records.append({
+                    'card_id': coupon.id,
+                    'points_to_redeem': cost,
+                })
 
-        self.env['loyalty.history'].create(create_values)
+        loyalty_history = self.env['loyalty.history']
+        loyalty_history.create(create_values)
+        if redemption_records:
+            loyalty_history.redeem_loyalty_points(redemption_records)
 
     def _get_no_effect_on_threshold_lines(self):
         """Return the lines that have no effect on the minimum amount to reach."""
@@ -789,6 +799,8 @@ class SaleOrder(models.Model):
         order_coupon_history.update({
             'used': order_coupon_history.used + points,
         })
+        if order_coupon_history.used:
+            order_coupon_history.redeem_loyalty_points(order_coupon_history.used)
 
     def _remove_program_from_points(self, programs):
         self.coupon_point_ids.filtered(lambda p: p.coupon_id.program_id in programs).sudo().unlink()

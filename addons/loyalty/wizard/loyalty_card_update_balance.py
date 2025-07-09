@@ -35,5 +35,6 @@ class LoyaltyCardUpdateBalance(models.TransientModel):
             'description': self.description or _("Gift for customer"),
             'used': used,
             'issued': issued,
+            'available_issued_points': issued,
         })
         self.card_id.points = self.new_balance
