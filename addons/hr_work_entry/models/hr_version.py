@@ -463,6 +463,8 @@ class HrVersion(models.Model):
         vals_list = new_vals_list
 
         for vals in vals_list:
+            if not vals.get('date_start') or not vals.get('date_stop'):
+                continue
             date_start = vals['date_start']
             date_stop = vals['date_stop']
             if not self._generate_work_entries_postprocess_adapt_to_calendar(vals):
