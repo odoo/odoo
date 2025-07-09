@@ -95,9 +95,11 @@ class PaymentProvider(models.Model):
             return super()._parse_response_error(response)
         return response.json().get('message', '')
 
-    def _build_request_auth(self, **kwargs):
-        if self.code != 'paypal':
-            return super()._build_request_auth(**kwargs)
+    def _build_request_auth(self, is_refresh_token_request=False, **kwargs):
+        if self.code != 'paypal' or not is_refresh_token_request:
+            return super()._build_request_auth(
+                is_refresh_token_request=is_refresh_token_request, **kwargs
+            )
         return self.paypal_client_id, self.paypal_client_secret
 
     def _paypal_fetch_access_token(self):
@@ -111,7 +113,7 @@ class PaymentProvider(models.Model):
             response_content = self._send_api_request(
                 'POST',
                 '/v1/oauth2/token',
-                json={'grant_type': 'client_credentials'},
+                data={'grant_type': 'client_credentials'},
                 is_refresh_token_request=True,
             )
             access_token = response_content['access_token']
