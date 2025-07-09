@@ -35,7 +35,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "setPendingThemeRequests",
         "isPluginDestroyed",
         "reloadBundles",
-        "setViewOnSave",
+        "setViewsOnSave",
     ];
 
     resources = {
@@ -62,12 +62,14 @@ export class CustomizeWebsitePlugin extends Plugin {
     };
 
     async onSave() {
-        await rpc("/website/theme_customize_data", {
-            is_view_data: true,
-            enable: [...this.viewsToEnableOnSave],
-            disable: [...this.viewsToDisableOnSave],
-            reset_view_arch: false,
-        });
+        if (this.viewsToEnableOnSave.size || this.viewsToDisableOnSave.size) {
+            await rpc("/website/theme_customize_data", {
+                is_view_data: true,
+                enable: [...this.viewsToEnableOnSave],
+                disable: [...this.viewsToDisableOnSave],
+                reset_view_arch: false,
+            });
+        }
     }
     cache = {};
     activeRecords = {};
@@ -355,14 +357,37 @@ export class CustomizeWebsitePlugin extends Plugin {
             this.activeRecords[record] = resolvedValue;
         });
     }
-    setViewOnSave(view, to_disable = false) {
-        if (!to_disable) {
-            this.viewsToEnableOnSave.add(view);
-            this.viewsToDisableOnSave.delete(view);
-        } else {
-            this.viewsToEnableOnSave.delete(view);
-            this.viewsToDisableOnSave.add(view);
+    setViewsOnSave(views, to_enable) {
+        const operations = views.map((view) => ({
+            view: view.startsWith("!") ? view.substring(1) : view,
+            toEnable: view.startsWith("!") ? !to_enable : to_enable,
+            wasEnabled: this.viewsToEnableOnSave.has(view),
+            wasDisabled: this.viewsToDisableOnSave.has(view),
+        }));
+        for (const op of operations) {
+            if (op.toEnable) {
+                this.viewsToEnableOnSave.add(op.view);
+                this.viewsToDisableOnSave.delete(op.view);
+            } else {
+                this.viewsToDisableOnSave.add(op.view);
+                this.viewsToEnableOnSave.delete(op.view);
+            }
         }
+        return () => {
+            // "Undo" callback
+            for (const { view, wasEnabled, wasDisabled } of operations) {
+                if (wasEnabled) {
+                    this.viewsToEnableOnSave.add(view);
+                } else {
+                    this.viewsToEnableOnSave.delete(view);
+                }
+                if (wasDisabled) {
+                    this.viewsToDisableOnSave.add(view);
+                } else {
+                    this.viewsToDisableOnSave.delete(view);
+                }
+            }
+        };
     }
     isPluginDestroyed() {
         return this.isDestroyed;
@@ -723,51 +748,50 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
         }
         return el.classList.contains(params.previewClass);
     }
-    apply({ editingElement: el, isPreviewing, params, selectableContext }) {
+    apply({ editingElement: el, isPreviewing, params }) {
         if (params.previewClass) {
             el.classList.add(params.previewClass);
         }
         if (!isPreviewing) {
-            const applyViewAction = (reverting) => {
-                const prepareRecord = (record, disable) => {
-                    if (record.startsWith("!")) {
-                        const recordKey = record.substring(1);
-                        this.dependencies.customizeWebsite.setViewOnSave(recordKey, !disable);
-                    } else {
-                        this.dependencies.customizeWebsite.setViewOnSave(record, disable);
-                    }
-                };
-                const records = params["views"] || [];
-                if (selectableContext) {
-                    for (const item of selectableContext.items) {
-                        for (const a of item.getActions()) {
-                            if (a.actionId === "previewableWebsiteConfig") {
-                                for (const record of a.actionParam["views"] || []) {
-                                    // Start by disabling them all...
-                                    prepareRecord(record, !reverting);
-                                }
-                            }
-                        }
-                    }
-                    for (const record of records) {
-                        // ...then enable the selected one
-                        prepareRecord(record, reverting);
-                    }
-                }
+            const viewsToApply = params["views"] || [];
+            let undoApplyCallback;
+            const applyViewsAction = () => {
+                undoApplyCallback = this.dependencies.customizeWebsite.setViewsOnSave(
+                    viewsToApply,
+                    true
+                );
             };
             this.dependencies.history.applyCustomMutation({
                 apply: () => {
-                    applyViewAction(false);
+                    applyViewsAction();
                 },
                 revert: () => {
-                    applyViewAction(true);
+                    undoApplyCallback();
                 },
             });
         }
     }
-    clean({ editingElement: el, params }) {
+    clean({ editingElement: el, isPreviewing, params }) {
         if (params.previewClass) {
             el.classList.remove(params.previewClass);
+        }
+        if (!isPreviewing) {
+            const viewsToClean = params["views"] || [];
+            let undoCleanCallback;
+            const cleanViewsAction = () => {
+                undoCleanCallback = this.dependencies.customizeWebsite.setViewsOnSave(
+                    viewsToClean,
+                    false
+                );
+            };
+            this.dependencies.history.applyCustomMutation({
+                apply: () => {
+                    cleanViewsAction();
+                },
+                revert: () => {
+                    undoCleanCallback();
+                },
+            });
         }
     }
 }

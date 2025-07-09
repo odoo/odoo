@@ -3,7 +3,7 @@ import { animationFrame, Deferred } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
-import { undo } from "@html_editor/../tests/_helpers/user_actions";
+import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 
 defineWebsiteModels();
 
@@ -281,7 +281,7 @@ test("BuilderButton with action “previewableWebsiteConfig”", async () => {
         const { params } = await request.json();
         expect.step("theme_customize_data");
         expect(params.enable).toEqual(["test_template_2"]);
-        expect(params.disable).toEqual(["test_template_1"]);
+        expect(params.disable).toEqual(["test_template_1", "test_template_negation"]);
     });
     onRpc("ir.ui.view", "save", () => {
         expect.step("websiteSave");
@@ -292,7 +292,7 @@ test("BuilderButton with action “previewableWebsiteConfig”", async () => {
         template: xml`
             <BuilderButtonGroup action="'previewableWebsiteConfig'">
                 <BuilderButton actionParam="{views: ['test_template_1'], previewClass: 'test_class_1'}">1</BuilderButton>
-                <BuilderButton actionParam="{views: ['test_template_2'], previewClass: 'test_class_2'}">2</BuilderButton>
+                <BuilderButton actionParam="{views: ['test_template_2', '!test_template_negation'], previewClass: 'test_class_2'}">2</BuilderButton>
                 <BuilderButton actionParam="{views: [], previewClass: ''}">3</BuilderButton>
             </BuilderButtonGroup>`,
     });
@@ -332,7 +332,7 @@ test("BuilderButton with action “previewableWebsiteConfig”", async () => {
     expect.verifySteps(["websiteSave", "theme_customize_data"]);
 });
 
-test("Undo “previewableWebsiteConfig” action", async () => {
+test("Undo and redo “previewableWebsiteConfig” action", async () => {
     onRpc("/website/theme_customize_data", async (request) => {
         const { params } = await request.json();
         expect.step("theme_customize_data");
@@ -362,6 +362,18 @@ test("Undo “previewableWebsiteConfig” action", async () => {
     expect(":iframe .test-options-target").not.toHaveClass("test_class_2");
 
     await contains("[data-action-param*='test_template_2']").click();
+    expect("[data-action-param*='test_template_2']").toHaveClass("active");
+    expect(":iframe .test-options-target").not.toHaveClass("test_class_1");
+    expect(":iframe .test-options-target").toHaveClass("test_class_2");
+
+    undo(editor);
+    await animationFrame();
+    expect("[data-action-param*='test_template_1']").toHaveClass("active");
+    expect(":iframe .test-options-target").toHaveClass("test_class_1");
+    expect(":iframe .test-options-target").not.toHaveClass("test_class_2");
+
+    redo(editor);
+    await animationFrame();
     expect("[data-action-param*='test_template_2']").toHaveClass("active");
     expect(":iframe .test-options-target").not.toHaveClass("test_class_1");
     expect(":iframe .test-options-target").toHaveClass("test_class_2");
