@@ -179,7 +179,15 @@ export class Many2OneField extends Component {
         return this.props.canOpen && !!this.value && !this.state.isFloating;
     }
     get context() {
-        return this.props.context;
+        const { name, context, record } = this.props;
+        if (
+            context.active_model &&
+            context.active_model !== record.fields[name].context.active_model
+        ) {
+            context.active_model = record.fields[name].context.active_model;
+        }
+
+        return context;
     }
     get classFromDecoration() {
         const evalContext = this.props.record.evalContextWithVirtualIds;
