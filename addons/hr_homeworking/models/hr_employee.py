@@ -40,15 +40,6 @@ class HrEmployee(models.Model):
             res['views']['list']['arch'] = res['views']['list']['arch'].replace('work_location_name', dayfield)
         return res
 
-    @api.depends("work_location_id.name", "work_location_id.location_type", "exceptional_location_id")
-    def _compute_work_location_name_type(self):
-        super()._compute_work_location_name_type()
-        dayfield = self._get_current_day_location_field()
-        for employee in self:
-            current_location_id = employee.exceptional_location_id or employee[dayfield]
-            employee.work_location_name = current_location_id.name or employee.work_location_name
-            employee.work_location_type = current_location_id.location_type or employee.work_location_type
-
     def _compute_exceptional_location_id(self):
         today = fields.Date.today()
         current_employee_locations = self.env['hr.employee.location'].search([
@@ -70,3 +61,17 @@ class HrEmployee(models.Model):
                 continue
             employee.hr_icon_display = f'presence_{today_employee_location_id.location_type}'
             employee.show_hr_icon_display = True
+
+    @api.depends(*DAYS, "exceptional_location_id")
+    def _compute_work_location_name(self):
+        dayfield = self.env['hr.employee']._get_current_day_location_field()
+        for employee in self:
+            current_location = employee.exceptional_location_id or employee[dayfield]
+            employee.work_location_name = current_location.name
+
+    @api.depends(*DAYS, "exceptional_location_id")
+    def _compute_work_location_type(self):
+        dayfield = self.env['hr.employee']._get_current_day_location_field()
+        for employee in self:
+            current_location = employee.exceptional_location_id or employee[dayfield]
+            employee.work_location_type = current_location.location_type

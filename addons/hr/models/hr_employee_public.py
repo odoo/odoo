@@ -33,7 +33,7 @@ class HrEmployeePublic(models.Model):
     email = fields.Char(related='employee_id.email')
     work_contact_id = fields.Many2one('res.partner', readonly=True)
     work_location_id = fields.Many2one('hr.work.location', readonly=True)
-    work_location_name = fields.Char(compute="_compute_work_location_name")
+    work_location_name = fields.Char(related='employee_id.work_location_name')
     work_location_type = fields.Selection(related='employee_id.work_location_type')
     user_id = fields.Many2one('res.users', readonly=True)
     resource_id = fields.Many2one('resource.resource', readonly=True)
@@ -44,12 +44,9 @@ class HrEmployeePublic(models.Model):
         ('absent', 'Absent'),
         ('archive', 'Archived'),
         ('out_of_working_hour', 'Out of Working hours')], compute='_compute_presence_state', default='out_of_working_hour')
-    hr_icon_display = fields.Selection([
-        ('presence_present', 'Present'),
-        ('presence_out_of_working_hour', 'Out of Working hours'),
-        ('presence_absent', 'Absent'),
-        ('presence_archive', 'Archived'),
-        ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
+    hr_icon_display = fields.Selection(
+        selection='_get_selection_hr_icon_display',
+        compute='_compute_presence_icon')
     show_hr_icon_display = fields.Boolean(compute='_compute_presence_icon')
     last_activity = fields.Date(compute="_compute_last_activity")
     last_activity_time = fields.Char(compute="_compute_last_activity")
@@ -80,6 +77,9 @@ class HrEmployeePublic(models.Model):
 
     # Crap
     newly_hired = fields.Boolean('Newly Hired', compute='_compute_newly_hired', search='_search_newly_hired')
+
+    def _get_selection_hr_icon_display(self):
+        return self.env['hr.employee']._fields['hr_icon_display']._description_selection(self.env)
 
     def _compute_from_employee(self, field_names):
         if isinstance(field_names, str):
@@ -132,9 +132,6 @@ class HrEmployeePublic(models.Model):
 
     def _compute_member_of_department(self):
         self._compute_from_employee('member_of_department')
-
-    def _compute_work_location_name(self):
-        self._compute_from_employee('work_location_name')
 
     def _get_manager_only_fields(self):
         return []
