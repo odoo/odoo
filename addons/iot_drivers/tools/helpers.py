@@ -8,12 +8,12 @@ from importlib import util
 import inspect
 import io
 import logging
-import netifaces
 from pathlib import Path
 import re
 import requests
 import secrets
 import subprocess
+import socket
 from urllib.parse import parse_qs
 import urllib3.util
 from threading import Thread, Lock
@@ -202,12 +202,15 @@ def get_img_name():
 
 
 def get_ip():
-    interfaces = netifaces.interfaces()
-    for interface in interfaces:
-        if netifaces.ifaddresses(interface).get(netifaces.AF_INET):
-            addr = netifaces.ifaddresses(interface).get(netifaces.AF_INET)[0]['addr']
-            if addr != '127.0.0.1':
-                return addr
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(('8.8.8.8', 1))  # Google DNS
+        return s.getsockname()[0]
+    except OSError as e:
+        _logger.warning("Could not get local IP address: %s", e)
+        return None
+    finally:
+        s.close()
 
 
 @cache
