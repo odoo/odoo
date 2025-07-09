@@ -591,6 +591,9 @@ export class Message extends Record {
                 )
             )
         ).filter((channel) => channel?.exists());
+        const validRoles = Array.from(
+            doc.querySelectorAll(".o-discuss-mention[data-oe-model='res.role']")
+        ).map((el) => this.store["res.role"].get(el.dataset.oeId));
         const text = convertBrToLineBreak(this.body);
         if (thread?.messageInEdition) {
             thread.messageInEdition.composer = undefined;
@@ -599,6 +602,7 @@ export class Message extends Record {
             composerHtml: getNonEditableMentions(this.body),
             mentionedChannels: validChannels,
             mentionedPartners: this.partner_ids,
+            mentionedRoles: validRoles,
             selection: {
                 start: text.length,
                 end: text.length,
