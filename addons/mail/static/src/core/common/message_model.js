@@ -589,7 +589,7 @@ export class Message extends Record {
         };
     }
 
-    // Async enterEditMode that fetches mentioned channels from the message body.
+    // Async enterEditMode that fetches mentioned channels and roles from the message body.
     async enterEditModeAsync(thread) {
         this.enterEditMode(thread);
         const doc = createDocumentFragmentFromContent(this.body);
@@ -605,7 +605,11 @@ export class Message extends Record {
                 )
             )
         ).filter((channel) => channel?.exists());
+        const validRoles = Array.from(
+            doc.querySelectorAll(".o-discuss-mention[data-oe-model='res.role']")
+        ).map((el) => this.store["res.role"].get(el.dataset.oeId));
         this.composer.mentionedChannels = validChannels;
+        this.composer.mentionedRoles = validRoles;
     }
 
     /** @param {import("models").Thread} thread the thread where the message is being viewed when stopping edition */
