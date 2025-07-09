@@ -686,7 +686,7 @@ class MrpWorkorder(models.Model):
         return self.end_previous(doall=True)
 
     def button_pending(self):
-        self.end_previous()
+        self.end_all()
         return True
 
     def button_unblock(self):
