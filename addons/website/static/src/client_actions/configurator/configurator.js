@@ -754,7 +754,7 @@ export class Configurator extends Component {
             }
         });
 
-        const initialStep = this.props.action.context.params && this.props.action.context.params.step;
+        const initialStep = router.current.step;
         const store = reactive(new Store(), () => this.updateStorage(store));
 
         this.state = useState({
