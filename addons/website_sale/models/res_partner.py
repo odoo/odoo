@@ -76,7 +76,9 @@ class ResPartner(models.Model):
             ]):
                 orders_by_fpos = orders_sudo.grouped('fiscal_position_id')
                 self.env.add_to_compute(orders_sudo._fields['fiscal_position_id'], orders_sudo)
-                orders_sudo.filtered(
+                if fpos_changed := orders_sudo.filtered(
                     lambda so: so not in orders_by_fpos.get(so.fiscal_position_id, []),
-                )._recompute_taxes()
+                ):
+                    fpos_changed._recompute_taxes()
+                    fpos_changed._recompute_prices()
         return res
