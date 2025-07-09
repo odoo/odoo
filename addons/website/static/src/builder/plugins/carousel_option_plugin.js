@@ -103,7 +103,7 @@ export class CarouselOptionPlugin extends Plugin {
     async addSlide(editingElement) {
         // Clone the active item and remove the "active" class.
         const activeItemEl = editingElement.querySelector(".carousel-item.active");
-        const newItemEl = this.dependencies.clone.cloneElement(activeItemEl, {
+        const newItemEl = await this.dependencies.clone.cloneElement(activeItemEl, {
             activateClone: false,
         });
         newItemEl.classList.remove("active");

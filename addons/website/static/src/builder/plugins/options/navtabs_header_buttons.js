@@ -21,8 +21,8 @@ export class NavTabsHeaderMiddleButtons extends Component {
     }
 
     addItem() {
-        this.callOperation(() => {
-            this.props.addItem(this.env.getEditingElement());
+        this.callOperation(async () => {
+            await this.props.addItem(this.env.getEditingElement());
         });
     }
 
