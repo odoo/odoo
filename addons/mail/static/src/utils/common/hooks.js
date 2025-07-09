@@ -17,6 +17,7 @@ import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
 
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
@@ -635,4 +636,59 @@ export function useLongPress(refName, { action, predicate = () => true } = {}) {
     );
     useLazyExternalListener(() => ref.el, "touchend", reset);
     useLazyExternalListener(() => ref.el, "touchcancel", reset);
+}
+
+function transformAction(component, id, action) {
+    return {
+        id,
+        /** Condition to display this action */
+        get condition() {
+            return action.condition(component);
+        },
+        get available() {
+            return action.available?.(component) ?? true;
+        },
+        /** Name of this action, displayed to the user */
+        get name() {
+            return typeof action.name === "function" ? action.name(component) : action.name;
+        },
+        get hotkey() {
+            return typeof action.hotkey === "function" ? action.hotkey(component) : action.hotkey;
+        },
+        get isActive() {
+            return action.isActive(component);
+        },
+        inactiveIcon: action.inactiveIcon,
+        /** Icon for the button of this action */
+        get icon() {
+            return typeof action.icon === "function" ? action.icon(component) : action.icon;
+        },
+        activeClass: action.activeClass,
+        /**  Action to execute when this action is selected */
+        select() {
+            action.select(component);
+        },
+        /** Determines the order of this action (smaller first) */
+        get sequence() {
+            return typeof action.sequence === "function"
+                ? action.sequence(component)
+                : action.sequence;
+        },
+    };
+}
+
+export function useCallActions() {
+    const component = useComponent();
+    const state = useState({ actions: [] });
+    const callActionsRegistry = registry.category("discuss.call/actions");
+    state.actions = callActionsRegistry
+        .getEntries()
+        .map(([id, action]) => transformAction(component, id, action));
+    return {
+        get actions() {
+            return state.actions
+                .filter((action) => action.condition)
+                .sort((a1, a2) => a1.sequence - a2.sequence);
+        },
+    };
 }

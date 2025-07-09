@@ -4,15 +4,16 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { CallPopover } from "@mail/discuss/call/common/call_popover";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { useCallActions } from "@mail/discuss/call/common/call_actions";
+import { useCallActions } from "@mail/utils/common/hooks";
 import { CallActionButton } from "@mail/discuss/call/common/call_action_button";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/thread_model_patch";
+import { CALL_FULLSCREEN } from "@mail/discuss/call/common/const";
 
 export class CallActionList extends Component {
     static components = { CallPopover, CallActionButton };
-    static props = ["thread", "fullscreen?", "compact?"];
+    static props = ["thread", "compact?"];
     static template = "discuss.CallActionList";
 
     setup() {
@@ -20,6 +21,7 @@ export class CallActionList extends Component {
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
         this.pipService = useService("discuss.pip_service");
+        this.fullscreen = useService("mail.fullscreen");
         this.callActions = useCallActions();
         this.more = useRef("more");
         this.root = useRef("root");
@@ -44,7 +46,7 @@ export class CallActionList extends Component {
     }
 
     get isSmall() {
-        return Boolean(this.props.compact && !this.props.fullscreen?.isActive);
+        return Boolean(this.props.compact && this.fullscreen.id !== CALL_FULLSCREEN);
     }
 
     get isMobileOS() {
@@ -65,7 +67,7 @@ export class CallActionList extends Component {
      * @param {MouseEvent} ev
      */
     async onClickToggleAudioCall(ev, { camera = false } = {}) {
-        await this.rtc.toggleCall(this.props.thread, { camera, fullscreen: this.props.fullscreen });
+        await this.rtc.toggleCall(this.props.thread, { camera });
     }
 
     onMouseenterMore() {
