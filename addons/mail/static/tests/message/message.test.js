@@ -262,6 +262,24 @@ test("Editing message keeps the mentioned channels", async () => {
     await contains(".o-mail-DiscussContent-threadName", { value: "other" });
 });
 
+test("Editing message keeps the mentioned roles", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.role"].create([{ name: "admin" }]);
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@");
+    await click(".o-mail-Composer-suggestion strong", { text: "admin" });
+    await press("Enter");
+    await contains(".o-discuss-mention", { text: "@admin" });
+    await click(".o-mail-Message [title='Edit']");
+    await contains(".o-mail-Message .o-mail-Composer-input", { value: "@admin" });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "@admin edit", { replace: true });
+    await click(".o-mail-Message button", { text: "save" });
+    await contains(".o-mail-Message-content", { text: "@admin edit (edited)" });
+    await contains(".o-discuss-mention", { text: "@admin" });
+});
+
 test("Can edit message comment in chatter", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
