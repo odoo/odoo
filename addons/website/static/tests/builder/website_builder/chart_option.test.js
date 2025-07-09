@@ -271,11 +271,16 @@ test("Focusing input displays related data color/data border colorpickers", asyn
     const type = "bar";
     await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
-    expect(".options-container [data-label='Dataset Color']").not.toHaveCount();
-    expect(".options-container [data-label='Dataset Border']").not.toHaveCount();
-    await contains(".options-container table tbody input:eq(1)").click();
+    expect(".options-container [data-label='Data Color']").not.toHaveCount();
+    expect(".options-container [data-label='Data Border']").not.toHaveCount();
     expect(".options-container [data-label='Dataset Color']").toBeVisible();
     expect(".options-container [data-label='Dataset Border']").toBeVisible();
+    await contains(".options-container [data-label='Type'] button.o-dropdown").click();
+    await contains(".o_popover [data-action-id='setChartType'][data-action-value='pie']").click();
+    expect(".options-container [data-label='Data Color']").toBeVisible();
+    expect(".options-container [data-label='Data Border']").toBeVisible();
+    expect(".options-container [data-label='Dataset Color']").not.toHaveCount();
+    expect(".options-container [data-label='Dataset Border']").not.toHaveCount();
 });
 
 test("CSS colors and CSS custom variables are correctly computed", async () => {

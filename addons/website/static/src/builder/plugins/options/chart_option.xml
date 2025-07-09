@@ -36,7 +36,8 @@
             t-on-mouseover="onTableMouseover"
             t-on-mouseout="onTableMouseoutOrFocusout"
             t-on-focusin="onTableFocusin"
-            t-on-focusout="onTableMouseoutOrFocusout">
+            t-on-focusout="onTableMouseoutOrFocusout"
+            t-on-click="onTableClick">
         <thead>
             <tr>
                 <th></th> <!-- Empty cell in the top left corner -->
@@ -123,7 +124,8 @@
                 datasetIndex: state.currentCell.datasetIndex,
                 dataIndex: state.currentCell.dataIndex,
                 backgroundColor: state.currentCell.backgroundColor,
-            }"/>
+            }"
+            enabledTabs = "['solid', 'custom']"/>
     </BuilderRow>
     <BuilderRow t-if="state.currentCell.datasetIndex or state.currentCell.datasetIndex === 0"
                 t-key="window.String(state.currentCell.datasetIndex) + window.String(state.currentCell.dataIndex)"
@@ -136,7 +138,8 @@
                 datasetIndex: state.currentCell.datasetIndex,
                 dataIndex: state.currentCell.dataIndex,
                 borderColor: state.currentCell.borderColor,
-            }"/>
+            }"
+            enabledTabs = "['solid', 'custom']"/>
     </BuilderRow>
     <BuilderRow t-if="isActiveItem('bar_chart_opt') or isActiveItem('horizontal_bar_chart_opt') or isActiveItem('line_chart_opt')"
                 label.translate="Min Axis">
