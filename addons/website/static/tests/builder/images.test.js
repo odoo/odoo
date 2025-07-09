@@ -9,8 +9,9 @@ import {
     queryAll,
     queryFirst,
     waitFor,
+    waitForNone,
 } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder, dummyBase64Img } from "./website_helpers";
 import { testImg } from "./image_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
@@ -32,13 +33,27 @@ test("click on Image shouldn't open toolbar", async () => {
     await expectElementCount(".o-we-toolbar", 0);
 });
 
-test("double click on Image", async () => {
+test("Double click on image and replace it", async () => {
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
     await setupWebsiteBuilder(`<div><img class=a_nice_img src='${dummyBase64Img}'></div>`);
     expect(".modal-content").toHaveCount(0);
     await dblclick(":iframe img.a_nice_img");
     await animationFrame();
     expect(".modal-content:contains(Select a media) .o_upload_media_button").toHaveCount(1);
     expect("div.o-tooltip").toHaveCount(0);
+    await contains(".o_select_media_dialog img[title='logo']").click();
+    await waitForNone(".o_select_media_dialog");
+    expect(":iframe img").toHaveClass("o_modified_image_to_save");
+    expect(".options-container[data-container-title='Image']").toHaveCount(1);
 });
 
 test("simple click on Image", async () => {
@@ -49,7 +64,6 @@ test("simple click on Image", async () => {
     await advanceTime(1600);
     expect("div.o-tooltip").toHaveCount(0);
 });
-
 
 test("double click on text", async () => {
     await setupWebsiteBuilder("<div><p class=text_class>Text</p></div>");
