@@ -151,7 +151,7 @@ export class CustomizeStyleProperty extends BuilderAction {
      */
     getValue({ params }) {
         const rule = this.dependencies["mass_mailing.CustomizeMailingPlugin"].getRule(
-            params.selectors[0]
+            params.selector
         );
         return rule.style.getPropertyValue(params.property);
     }
@@ -160,7 +160,7 @@ export class CustomizeStyleProperty extends BuilderAction {
         const important = PRIORITY_STYLES[params.selector]?.has(params.property);
         this.dependencies.history.applyCustomMutation({
             apply: () => {
-                for (const selector in params.selectors) {
+                for (const selector of [params.selector, ...(params.extraSelectors ?? [])]) {
                     this.dependencies["mass_mailing.CustomizeMailingPlugin"].addCSSRule({
                         selector,
                         ruleStyle: {
@@ -170,7 +170,7 @@ export class CustomizeStyleProperty extends BuilderAction {
                 }
             },
             revert: () => {
-                for (const selector in params.selectors) {
+                for (const selector of [params.selector, ...(params.extraSelectors ?? [])]) {
                     this.dependencies["mass_mailing.CustomizeMailingPlugin"].addCSSRule({
                         selector,
                         ruleStyle: {

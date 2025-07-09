@@ -114,9 +114,12 @@
 </t>
 <t t-name="mass_mailing_egg.DesignButtonsOption">
     <BuilderRow label.translate="Primary Buttons" action="'mass_mailing_egg.CustomizeMassMailingStyleProperty'">
-        <BuilderNumberInput actionParam="{ selectors: ['a.btn.btn-fill-primary', 'a.btn.btn-outline-primary'], property: 'font-size'}" unit="'px'" saveUnit="'px'"/>
-        <BuilderColorPicker title.translate="Text Color" enabledTabs="['solid', 'custom']" actionParam="{ selectors: ['a.btn.btn-fill-primary', 'a.btn.btn-outline-primary'], 'color'}"/>
-        <BuilderColorPicker title.translate="Background Color" enabledTabs="['solid', 'custom']" actionParam="{ selectors: ['a.btn.btn-fill-primary', 'a.btn.btn-outline-primary'], property: 'background-color'}"/>
+        <BuilderNumberInput unit="'px'" saveUnit="'px'"
+            actionParam="{ selector: 'a.btn.btn-fill-primary', extraSelectors: ['a.btn.btn-outline-primary'], property: 'font-size'}"/>
+        <BuilderColorPicker title.translate="Text Color" enabledTabs="['solid', 'custom']"
+            actionParam="{ selector: 'a.btn.btn-fill-primary', extraSelectors: ['a.btn.btn-outline-primary'], property: 'color'}"/>
+        <BuilderColorPicker title.translate="Background Color" enabledTabs="['solid', 'custom']"
+            actionParam="{ selector: 'a.btn.btn-fill-primary', extraSelectors: ['a.btn.btn-outline-primary'], property: 'background-color'}"/>
     </BuilderRow>
 </t>
 </templates>
