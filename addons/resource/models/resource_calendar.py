@@ -666,26 +666,6 @@ class ResourceCalendar(models.Model):
         )
         return interval_dt(work_intervals[0]) if work_intervals else None
 
-    def _get_days_data(self, intervals, day_total):
-        """
-        helper function to compute duration of `intervals`
-        expressed in days and hours.
-        `day_total` is a dict {date: n_hours} with the number of hours for each day.
-        """
-        day_hours = defaultdict(float)
-        for start, stop, _meta in intervals:
-            day_hours[start.date()] += (stop - start).total_seconds() / 3600
-
-        # compute number of days the hours span over
-        days = float_round(sum(
-            day_hours[day] / day_total[day] if day_total[day] else 0
-            for day in day_hours
-        ), precision_rounding=0.001)
-        return {
-            'days': days,
-            'hours': sum(day_hours.values()),
-        }
-
     def _get_days_per_week(self):
         # If the employee didn't work a full day, it is still counted, i.e. 19h / week (M/T/W(half day)) -> 3 days
         self.ensure_one()
@@ -722,29 +702,6 @@ class ResourceCalendar(models.Model):
             return 0
 
         return float_round(hour_count / float(number_of_days), precision_digits=2)
-
-    def _get_resources_day_total(self, from_datetime, to_datetime, resources=None):
-        """
-        @return dict with hours of attendance in each day between `from_datetime` and `to_datetime`
-        """
-        self.ensure_one()
-        if not resources:
-            resources = self.env['resource.resource']
-            resources_list = [resources]
-        else:
-            resources_list = list(resources) + [self.env['resource.resource']]
-        # total hours per day:  retrieve attendances with one extra day margin,
-        # in order to compute the total hours on the first and last days
-        from_full = from_datetime - timedelta(days=1)
-        to_full = to_datetime + timedelta(days=1)
-        intervals = self._attendance_intervals_batch(from_full, to_full, resources=resources)
-
-        result = defaultdict(lambda: defaultdict(float))
-        for resource in resources_list:
-            day_total = result[resource.id]
-            for start, stop, _meta in intervals[resource.id]:
-                day_total[start.date()] += (stop - start).total_seconds() / 3600
-        return result
 
     def _get_unusual_days(self, start_dt, end_dt, company_id=False):
         if not self:
