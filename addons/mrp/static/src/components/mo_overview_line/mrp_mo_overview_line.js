@@ -148,10 +148,6 @@ export class MoOverviewLine extends Component {
         return this.formatFloat(this.data.quantity);
     }
 
-    get hasFoldButton() {
-        return false;
-    }
-
     get marginMultiplicator() {
         return this.data.level - (this.props.hasFoldButton ? 1 : 0);
     }

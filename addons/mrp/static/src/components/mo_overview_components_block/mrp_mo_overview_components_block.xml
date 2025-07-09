@@ -27,16 +27,20 @@
                 </t>
             </t>
         </t>
-        <MoOverviewOperationsBlock
-            unfoldAll="this.state.unfoldAll"
-            summary="this.props.operations.summary"
-            operations="this.props.operations.details"
-            showOptions="this.props.showOptions"/>
-        <MoOverviewByproductsBlock
-            unfoldAll="this.state.unfoldAll"
-            summary="this.props.byproducts.summary"
-            byproducts="this.props.byproducts.details"
-            showOptions="this.props.showOptions"/>
+        <t t-if="this.props.operations.details.length">
+            <MoOverviewOperationsBlock
+                unfoldAll="this.state.unfoldAll"
+                summary="this.props.operations.summary"
+                operations="this.props.operations.details"
+                showOptions="this.props.showOptions"/>
+        </t>
+        <t t-if="this.props.byproducts.details.length">
+            <MoOverviewByproductsBlock
+                unfoldAll="this.state.unfoldAll"
+                summary="this.props.byproducts.summary"
+                byproducts="this.props.byproducts.details"
+                showOptions="this.props.showOptions"/>
+        </t>
     </t>
 
 </templates>
