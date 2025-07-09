@@ -281,17 +281,6 @@ export function applyTextHighlight(highlightEl, highlightID) {
         highlightEl.appendChild(svg);
     }
 }
-export function switchTextHighlight(el) {
-    const highlightID = getCurrentTextHighlight(el);
-    const svgs = makeHighlightSvgs(el, highlightID);
-    const currentSVGs = el.querySelectorAll(".o_text_highlight_svg");
-    for (const svg of currentSVGs) {
-        svg.remove();
-    }
-    for (const svg of svgs) {
-        el.appendChild(svg);
-    }
-}
 
 /**
  * Returns a new highlight SVG adapted to the text container.

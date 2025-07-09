@@ -1,6 +1,6 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-import { switchTextHighlight } from "@website/js/highlight_utils";
+import { getCurrentTextHighlight, makeHighlightSvgs } from "@website/js/highlight_utils";
 
 export class TextHighlight extends Interaction {
     static selector = "#wrapwrap";
@@ -24,18 +24,14 @@ export class TextHighlight extends Interaction {
     }
 
     destroy() {
-        for (const svg of this.el.querySelectorAll(".o_text_highlight_svg")) {
-            svg.remove();
-        }
         this.resizeObserver.disconnect();
         this.mutationObserver.disconnect();
     }
 
-    async updateEntries(entries) {
-        await new Promise( r => requestAnimationFrame(r));
-        if (this.isDestroyed) {
-            return;
-        }
+    updateEntries(entries) {
+        this.waitForAnimationFrame(() => this._updateEntries(entries));
+    }
+    _updateEntries(entries) {
         const closestToObserves = new Set();
         for (const { target, addedNodes = [], removedNodes = [] } of entries) {
             const elements = [target, ...(addedNodes), ...(removedNodes)]
@@ -52,7 +48,15 @@ export class TextHighlight extends Interaction {
         }
         for (const closestToObserve of closestToObserves) {
             for (const el of closestToObserve.querySelectorAll(".o_text_highlight")) {
-                switchTextHighlight(el);
+                const highlightID = getCurrentTextHighlight(el);
+                const svgs = makeHighlightSvgs(el, highlightID);
+                const currentSVGs = el.querySelectorAll(".o_text_highlight_svg");
+                for (const svg of currentSVGs) {
+                    svg.remove();
+                }
+                for (const svg of svgs) {
+                    this.insert(svg, el);
+                }
             }
         }
     }
