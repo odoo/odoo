@@ -6,6 +6,6 @@ import { patch } from "@web/core/utils/patch";
 patch(Thread.prototype, {
     setup() {
         super.setup();
-        this.limitedMentions = fields.Many("Persona");
+        this.limitedMentions = fields.Many("res.partner");
     },
 });

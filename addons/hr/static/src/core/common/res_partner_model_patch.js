@@ -1,8 +1,8 @@
-import { Persona } from "@mail/core/common/persona_model";
+import { ResPartner } from "@mail/core/common/res_partner_model";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Persona.prototype, {
+patch(ResPartner.prototype, {
     /** @type {number|undefined} */
     employeeId: undefined,
 });

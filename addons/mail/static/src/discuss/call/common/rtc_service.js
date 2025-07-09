@@ -653,8 +653,8 @@ export class Rtc extends Record {
     setVolume(session, volume) {
         session.volume = volume;
         this.store.settings.saveVolumeSetting({
-            guestId: session?.guestId,
-            partnerId: session?.partnerId,
+            guestId: session?.guest_id.id,
+            partnerId: session?.partner_id.id,
             volume,
         });
         this._postToTabs({
@@ -1146,7 +1146,7 @@ export class Rtc extends Record {
                 const { id } = payload;
                 const session = this.store["discuss.channel.rtc.session"].get(id);
                 if (
-                    this.selfSession?.persona.main_user_id?.share !== false ||
+                    this.selfSession?.partner_id.main_user_id?.share !== false ||
                     this.serverInfo ||
                     this.state.fallbackMode ||
                     !session?.channel.eq(this.state.channel)

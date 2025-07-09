@@ -10,7 +10,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 /**
  * @typedef SuggestedRecipient
  * @property {string} email
- * @property {import("models").Persona|false} persona
+ * @property {import("models").ResPartner|false} partner_id
  * @property {string} lang
  * @property {string} reason
  */
@@ -83,7 +83,7 @@ export class Thread extends Record {
         return (
             this.allowedToLeaveChannelTypes.includes(this.channel_type) &&
             this.group_ids.length === 0 &&
-            this.store.self?.type === "partner"
+            this.store.self_partner
         );
     }
     get allowedToUnpinChannelTypes() {
@@ -239,27 +239,11 @@ export class Thread extends Record {
     transientMessages = fields.Many("mail.message");
     /* The additional recipients are the recipients that are manually added
      * by the user by using the "To" field of the Chatter. */
-    additionalRecipients = fields.Attr([], {
-        onUpdate() {
-            for (const recipient of this.additionalRecipients) {
-                recipient.persona = recipient.partner_id
-                    ? { type: "partner", id: recipient.partner_id }
-                    : false;
-            }
-        },
-    });
+    additionalRecipients = fields.Attr([]);
     /* The suggested recipients are the recipients that are suggested by the
      * current model and includes the recipients of the last message. (e.g: for
      * a crm lead, the model will suggest the customer associated to the lead). */
-    suggestedRecipients = fields.Attr([], {
-        onUpdate() {
-            for (const recipient of this.suggestedRecipients) {
-                recipient.persona = recipient.partner_id
-                    ? { type: "partner", id: recipient.partner_id }
-                    : false;
-            }
-        },
-    });
+    suggestedRecipients = fields.Attr([]);
     hasLoadingFailed = false;
     canPostOnReadonly;
     /** @type {Boolean} */
@@ -333,7 +317,7 @@ export class Thread extends Record {
         return (
             !this.isTransient &&
             this.typesAllowingCalls.includes(this.channel_type) &&
-            !this.correspondent?.persona.eq(this.store.odoobot)
+            !this.correspondent?.partner_id?.eq(this.store.odoobot)
         );
     }
 
@@ -341,7 +325,7 @@ export class Thread extends Record {
      * Return the name of the given persona to display in the context of this
      * thread.
      *
-     * @param {import("models").Persona} persona
+     * @param {import("models").ResPartner|import("models").MailGuest} persona
      */
     getPersonaName(persona) {
         return persona.displayName;
@@ -756,7 +740,7 @@ export class Thread extends Record {
     }
 
     pin() {
-        if (this.model !== "discuss.channel" || this.store.self.type !== "partner") {
+        if (this.model !== "discuss.channel" || !this.store.self_partner) {
             return;
         }
         this.is_pinned = true;
@@ -799,7 +783,12 @@ export class Thread extends Record {
 
     addOrReplaceMessage(message, tmpMsg) {
         // The message from other personas (not self) should not replace the tmpMsg
-        if (tmpMsg && tmpMsg.in(this.messages) && message.author.eq(this.store.self)) {
+        if (
+            tmpMsg &&
+            tmpMsg.in(this.messages) &&
+            (message.author_id?.eq(this.store.self_partner) ||
+                message.author_guest_id?.eq(this.store.self_guest))
+        ) {
             this.messages.splice(this.messages.indexOf(tmpMsg), 1, message);
             return;
         }
@@ -831,11 +820,10 @@ export class Thread extends Record {
                 res_id: this.id,
                 model: "discuss.channel",
             };
-            if (this.store.self.type === "partner") {
-                tmpData.author_id = this.store.self;
-            }
-            if (this.store.self.type === "guest") {
-                tmpData.author_guest_id = this.store.self;
+            if (this.store.self_partner) {
+                tmpData.author_id = this.store.self_partner;
+            } else {
+                tmpData.author_guest_id = this.store.self_guest;
             }
             if (parentId) {
                 tmpData.parent_id = this.store["mail.message"].get(parentId);
@@ -906,7 +894,7 @@ export class Thread extends Record {
     async leaveChannel({ force = false } = {}) {
         if (
             this.channel_type !== "group" &&
-            this.create_uid?.eq(this.store.self.main_user_id) &&
+            this.create_uid?.eq(this.store.self_partner?.main_user_id) &&
             !force
         ) {
             await this.askLeaveConfirmation(

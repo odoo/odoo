@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
     <t t-inherit="discuss.channel_member" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='displayName']" position="inside">
-            <span t-if="member.persona.outOfOfficeDateEndText" class="text-warning small ms-2 text-truncate fw-bold">
-                <t t-esc="member.persona.outOfOfficeDateEndText"/>
+            <span t-if="member.partner_id?.outOfOfficeDateEndText" class="text-warning small ms-2 text-truncate fw-bold">
+                <t t-esc="member.partner_id.outOfOfficeDateEndText"/>
             </span>
         </xpath>
     </t>

@@ -10,7 +10,8 @@ import { useGifPicker } from "./gif_picker";
 
 composerActionsRegistry.add("add-gif", {
     condition: (component) =>
-        (component.store.hasGifPickerFeature || component.store.self.main_user_id?.is_admin) &&
+        (component.store.hasGifPickerFeature ||
+            component.store.self_partner?.main_user_id?.is_admin) &&
         !component.env.inChatter &&
         !component.props.composer.message,
     isPicker: true,

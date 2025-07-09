@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.ImStatusDropdown">
         <Dropdown>
-            <button><ImStatus persona='store.self'/> <span t-esc="readableImStatus"/></button>
+            <button><ImStatus partner="store.self_partner"/> <span t-esc="readableImStatus"/></button>
             <t t-set-slot="content">
                 <DropdownItem class="{ 'active': this.store.self.im_status.includes('online') }" onSelected="() => this.setManualImStatus('online')"><i class="fa fa-circle text-success me-1" title="Online" role="img"/> Online</DropdownItem>
                 <hr class="my-1"/>

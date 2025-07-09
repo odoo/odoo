@@ -8,14 +8,9 @@ export class MessageReactions extends Record {
     content;
     /** @type {number} */
     count;
-    guests = fields.Many("Persona");
+    guests = fields.Many("mail.guest");
     message = fields.One("mail.message");
-    partners = fields.Many("Persona");
-    personas = fields.Many("Persona", {
-        compute() {
-            return [...this.partners, ...this.guests];
-        },
-    });
+    partners = fields.Many("res.partner");
     /** @type {number} */
     sequence;
 

@@ -21,12 +21,12 @@ export class TranscriptSender extends Component {
     setup() {
         this.isValidEmail = isValidEmail;
         this.state = useState({
-            email: this.props.thread.livechatVisitorMember?.persona.email,
+            email: this.props.thread.livechatVisitorMember?.partner_id?.email || this.props.thread.livechatVisitorMember?.guest_id?.email,
             status: this.STATUS.IDLE,
         });
         onWillUpdateProps((newProps) => {
             if (this.props.thread?.notEq(newProps.thread)) {
-                this.state.email = newProps.thread.livechatVisitorMember?.persona.email;
+                this.state.email = newProps.thread.livechatVisitorMember?.partner_id?.email || newProps.thread.livechatVisitorMember?.guest_id?.email;
                 this.state.status = this.STATUS.IDLE;
             }
         });

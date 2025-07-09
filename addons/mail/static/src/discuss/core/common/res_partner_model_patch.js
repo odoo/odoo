@@ -3,9 +3,11 @@ import { fields } from "@mail/core/common/record";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(ResPartner.prototype, {
+/** @type {import("models").ResPartner} */
+const resPartnerPatch = {
     setup() {
         super.setup();
-        this.opportunity_ids = fields.Many("crm.lead");
+        this.channelMembers = fields.Many("discuss.channel.member");
     },
-});
+};
+patch(ResPartner.prototype, resPartnerPatch);

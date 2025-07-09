@@ -25,9 +25,7 @@ let temporaryIdOffset = 0.01;
 
 export const pyToJsModels = {
     "discuss.channel": "Thread",
-    "mail.guest": "Persona",
     "mail.thread": "Thread",
-    "res.partner": "Persona",
 };
 
 export const addFieldsByPyModel = {
@@ -65,16 +63,16 @@ patch(storeInsertFns, {
 export class Store extends BaseStore {
     static FETCH_DATA_DEBOUNCE_DELAY = 1;
     static OTHER_LONG_TYPING = 60000;
+    static IM_STATUS_DEBOUNCE_DELAY = 1000;
 
     FETCH_LIMIT = 30;
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
     isReady = new Deferred();
     /** This is the current logged partner / guest */
-    self_partner = fields.One("Persona");
-    self_guest = fields.One("Persona");
-    /** @returns {import("models").Persona} */
-    get self() {
-        return this.self_partner || this.self_guest;
+    self_partner = fields.One("res.partner");
+    self_guest = fields.One("mail.guest");
+    get selfAvatarUrl() {
+        return this.self_partner?.avatarUrl || this.self_guest?.avatarUrl;
     }
     allChannels = fields.Many("Thread", {
         inverse: "storeAsAllChannels",
@@ -90,7 +88,7 @@ export class Store extends BaseStore {
      * public page.
      */
     inPublicPage = false;
-    odoobot = fields.One("Persona");
+    odoobot = fields.One("res.partner");
     useMobileView = fields.Attr(undefined, {
         compute() {
             return this.store.env.services.ui.isSmall || isMobileOS();
@@ -345,7 +343,7 @@ export class Store extends BaseStore {
     async startMeeting() {
         const thread = await this.createGroupChat({
             default_display_mode: "video_full_screen",
-            partners_to: [this.self.id],
+            partners_to: [this.self_partner.id],
         });
         await this.store.chatHub.initPromise;
         this.ChatWindow.get(thread)?.update({ autofocus: 0 });
@@ -507,10 +505,10 @@ export class Store extends BaseStore {
         if (!isNote) {
             const allRecipients = [...thread.suggestedRecipients, ...thread.additionalRecipients];
             const recipientIds = allRecipients
-                .filter((recipient) => recipient.persona)
-                .map((recipient) => recipient.persona.id);
+                .filter((recipient) => recipient.partner_id)
+                .map((recipient) => recipient.partner_id);
             allRecipients
-                .filter((recipient) => !recipient.persona)
+                .filter((recipient) => !recipient.partner_id)
                 .forEach((recipient) => {
                     recipientEmails.push(recipient.email);
                 });
@@ -570,7 +568,7 @@ export class Store extends BaseStore {
      * @param {Object} param0
      * @param {number} param0.userId
      * @param {number} param0.partnerId
-     * @returns {Promise<import("models").Persona> | undefined}
+     * @returns {Promise<import("models").ResPartner> | undefined}
      */
     async getPartner({ userId, partnerId }) {
         if (userId) {
@@ -599,7 +597,7 @@ export class Store extends BaseStore {
             partnerId = user.partner_id;
         }
         if (partnerId) {
-            const partner = this.Persona.insert({ id: partnerId, type: "partner" });
+            const partner = this["res.partner"].insert({ id: partnerId });
             if (!partner.main_user_id) {
                 const [userId] = await this.env.services.orm.silent.search(
                     "res.users",
@@ -686,7 +684,7 @@ export const storeService = {
          * these values will still be executed immediately. Providing a dummy default is enough to
          * avoid crashes, the actual values being filled at livechat init when they are necessary.
          */
-        store.self_guest ??= { id: -1, type: "guest" };
+        store.self_guest ??= { id: -1 };
         store.settings ??= {};
         store.initialize();
         store.onStarted();

@@ -8,7 +8,7 @@ patch(Thread.prototype, {
     setup() {
         super.setup();
         this.livechat_end_dt = fields.Datetime();
-        this.livechat_operator_id = fields.One("Persona");
+        this.livechat_operator_id = fields.One("res.partner");
         this.livechatVisitorMember = fields.One("discuss.channel.member", {
             compute() {
                 if (this.channel_type !== "livechat") {
@@ -19,7 +19,7 @@ patch(Thread.prototype, {
                 const orderedChannelMembers = [...this.channel_member_ids].sort(
                     (a, b) => a.id - b.id
                 );
-                const isFirstMemberOperator = orderedChannelMembers[0]?.persona.eq(
+                const isFirstMemberOperator = orderedChannelMembers[0]?.partner_id?.eq(
                     this.livechat_operator_id
                 );
                 const visitor = isFirstMemberOperator
@@ -48,7 +48,8 @@ patch(Thread.prototype, {
     get showCorrespondentCountry() {
         if (this.channel_type === "livechat") {
             return (
-                this.livechat_operator_id?.eq(this.store.self) && Boolean(this.correspondentCountry)
+                this.livechat_operator_id?.eq(this.store.self_partner) &&
+                Boolean(this.correspondentCountry)
             );
         }
         return super.showCorrespondentCountry;
@@ -72,7 +73,7 @@ patch(Thread.prototype, {
     },
     /**
      * @override
-     * @param {import("models").Persona} persona
+     * @param {import("models").ResPartner|import("models").MailGuest} persona
      */
     getPersonaName(persona) {
         if (this.channel_type === "livechat" && persona.user_livechat_username) {
