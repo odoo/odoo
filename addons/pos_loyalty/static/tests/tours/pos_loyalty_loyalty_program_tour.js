@@ -8,6 +8,7 @@ import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
+import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
     steps: () =>
@@ -345,5 +346,20 @@ registry.category("web_tour.tours").add("test_buy_x_get_y_reward_qty", {
             PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
             PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-9.60", "3.00"),
             PosLoyalty.finalizeOrder("Cash", "32"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_multiple_loyalty_products", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            {
+                content: "Check that selection popup is not opened",
+                trigger: negate(`.selection-item`),
+            },
+            Order.hasLine({ productName: "Whiteboard Pen", quantity: "1" }),
+            Order.hasLine({ productName: "10% on your order", quantity: "1" }),
         ].flat(),
 });
