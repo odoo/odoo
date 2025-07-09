@@ -351,7 +351,7 @@ class TestDevice(TestHttpBase):
     def _create_device_log_for_user(self, session, count):
         for _ in range(count):
             self.DeviceLog.create({
-                'session_identifier': odoo.http.root.session_store.generate_key(),
+                'session_identifier': odoo.http.root.session_store.new_session_id(),
                 'user_id': session.uid,
                 'revoked': False,
             })

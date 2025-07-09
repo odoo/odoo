@@ -20,7 +20,7 @@ class TestHttpBase(HttpCaseWithUserDemo):
     def setUpClass(cls):
         super().setUpClass()
         geoip_resolver = MemoryGeoipResolver()
-        session_store = MemorySessionStore(session_class=Session)
+        session_store = MemorySessionStore(session_cls=Session)
 
         reset_cached_properties(odoo.http.root)
         cls.addClassCleanup(reset_cached_properties, odoo.http.root)
