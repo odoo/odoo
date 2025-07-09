@@ -6,12 +6,16 @@ import contextlib
 import enum
 import functools
 import inspect
+import io
 import keyword
 import operator
 import sys
 import types as _types
 import typing
 import warnings
+
+if sys.version_info >= (3, 14):
+    import annotationlib
 
 __all__ = [
     # Super-special typing primitives.
@@ -56,6 +60,8 @@ __all__ = [
     'SupportsIndex',
     'SupportsInt',
     'SupportsRound',
+    'Reader',
+    'Writer',
 
     # One-off things.
     'Annotated',
@@ -83,6 +89,7 @@ __all__ = [
     'overload',
     'override',
     'Protocol',
+    'Sentinel',
     'reveal_type',
     'runtime',
     'runtime_checkable',
@@ -166,12 +173,9 @@ if sys.version_info >= (3, 10):
         return isinstance(
             t, (typing._GenericAlias, _types.GenericAlias, _types.UnionType)
         )
-elif sys.version_info >= (3, 9):
-    def _should_collect_from_parameters(t):
-        return isinstance(t, (typing._GenericAlias, _types.GenericAlias))
 else:
     def _should_collect_from_parameters(t):
-        return isinstance(t, typing._GenericAlias) and not t._special
+        return isinstance(t, (typing._GenericAlias, _types.GenericAlias))
 
 
 NoReturn = typing.NoReturn
@@ -434,28 +438,14 @@ else:
     def _is_dunder(attr):
         return attr.startswith('__') and attr.endswith('__')
 
-    # Python <3.9 doesn't have typing._SpecialGenericAlias
-    _special_generic_alias_base = getattr(
-        typing, "_SpecialGenericAlias", typing._GenericAlias
-    )
 
-    class _SpecialGenericAlias(_special_generic_alias_base, _root=True):
+    class _SpecialGenericAlias(typing._SpecialGenericAlias, _root=True):
         def __init__(self, origin, nparams, *, inst=True, name=None, defaults=()):
-            if _special_generic_alias_base is typing._GenericAlias:
-                # Python <3.9
-                self.__origin__ = origin
-                self._nparams = nparams
-                super().__init__(origin, nparams, special=True, inst=inst, name=name)
-            else:
-                # Python >= 3.9
-                super().__init__(origin, nparams, inst=inst, name=name)
+            super().__init__(origin, nparams, inst=inst, name=name)
             self._defaults = defaults
 
         def __setattr__(self, attr, val):
             allowed_attrs = {'_name', '_inst', '_nparams', '_defaults'}
-            if _special_generic_alias_base is typing._GenericAlias:
-                # Python <3.9
-                allowed_attrs.add("__origin__")
             if _is_dunder(attr) or attr in allowed_attrs:
                 object.__setattr__(self, attr, val)
             else:
@@ -538,11 +528,16 @@ def _get_protocol_attrs(cls):
     return attrs
 
 
-def _caller(depth=2):
+def _caller(depth=1, default='__main__'):
     try:
-        return sys._getframe(depth).f_globals.get('__name__', '__main__')
+        return sys._getframemodulename(depth + 1) or default
+    except AttributeError:  # For platforms without _getframemodulename()
+        pass
+    try:
+        return sys._getframe(depth + 1).f_globals.get('__name__', default)
     except (AttributeError, ValueError):  # For platforms without _getframe()
-        return None
+        pass
+    return None
 
 
 # `__match_args__` attribute was removed from protocol members in 3.13,
@@ -550,7 +545,7 @@ def _caller(depth=2):
 if sys.version_info >= (3, 13):
     Protocol = typing.Protocol
 else:
-    def _allow_reckless_class_checks(depth=3):
+    def _allow_reckless_class_checks(depth=2):
         """Allow instance and class checks for special stdlib modules.
         The abc and functools modules indiscriminately call isinstance() and
         issubclass() on the whole MRO of a user class, which may contain protocols.
@@ -585,7 +580,7 @@ else:
         # but is necessary for several reasons...
         #
         # NOTE: DO NOT call super() in any methods in this class
-        # That would call the methods on typing._ProtocolMeta on Python 3.8-3.11
+        # That would call the methods on typing._ProtocolMeta on Python <=3.11
         # and those are slow
         def __new__(mcls, name, bases, namespace, **kwargs):
             if name == "Protocol" and len(bases) < 2:
@@ -786,7 +781,7 @@ else:
 runtime = runtime_checkable
 
 
-# Our version of runtime-checkable protocols is faster on Python 3.8-3.11
+# Our version of runtime-checkable protocols is faster on Python <=3.11
 if sys.version_info >= (3, 12):
     SupportsInt = typing.SupportsInt
     SupportsFloat = typing.SupportsFloat
@@ -863,19 +858,39 @@ else:
             pass
 
 
-def _ensure_subclassable(mro_entries):
-    def inner(func):
-        if sys.implementation.name == "pypy" and sys.version_info < (3, 9):
-            cls_dict = {
-                "__call__": staticmethod(func),
-                "__mro_entries__": staticmethod(mro_entries)
-            }
-            t = type(func.__name__, (), cls_dict)
-            return functools.update_wrapper(t(), func)
-        else:
-            func.__mro_entries__ = mro_entries
-            return func
-    return inner
+if hasattr(io, "Reader") and hasattr(io, "Writer"):
+    Reader = io.Reader
+    Writer = io.Writer
+else:
+    @runtime_checkable
+    class Reader(Protocol[T_co]):
+        """Protocol for simple I/O reader instances.
+
+        This protocol only supports blocking I/O.
+        """
+
+        __slots__ = ()
+
+        @abc.abstractmethod
+        def read(self, size: int = ..., /) -> T_co:
+            """Read data from the input stream and return it.
+
+            If *size* is specified, at most *size* items (bytes/characters) will be
+            read.
+            """
+
+    @runtime_checkable
+    class Writer(Protocol[T_contra]):
+        """Protocol for simple I/O writer instances.
+
+        This protocol only supports blocking I/O.
+        """
+
+        __slots__ = ()
+
+        @abc.abstractmethod
+        def write(self, data: T_contra, /) -> int:
+            """Write *data* to the output stream and return the number of items written."""  # noqa: E501
 
 
 _NEEDS_SINGLETONMETA = (
@@ -940,8 +955,6 @@ if _NEEDS_SINGLETONMETA:
 _PEP_728_IMPLEMENTED = False
 
 if _PEP_728_IMPLEMENTED:
-    # The standard library TypedDict in Python 3.8 does not store runtime information
-    # about which (if any) keys are optional.  See https://bugs.python.org/issue38834
     # The standard library TypedDict in Python 3.9.0/1 does not honour the "total"
     # keyword with old-style TypedDict().  See https://bugs.python.org/issue42059
     # The standard library TypedDict below Python 3.11 does not store runtime
@@ -1003,6 +1016,8 @@ else:
             else:
                 generic_base = ()
 
+            ns_annotations = ns.pop('__annotations__', None)
+
             # typing.py generally doesn't let you inherit from plain Generic, unless
             # the name of the class happens to be "Protocol"
             tp_dict = type.__new__(_TypedDictMeta, "Protocol", (*generic_base, dict), ns)
@@ -1014,21 +1029,31 @@ else:
                 tp_dict.__orig_bases__ = bases
 
             annotations = {}
-            if "__annotations__" in ns:
-                own_annotations = ns["__annotations__"]
-            elif "__annotate__" in ns:
-                # TODO: Use inspect.VALUE here, and make the annotations lazily evaluated
-                own_annotations = ns["__annotate__"](1)
+            own_annotate = None
+            if ns_annotations is not None:
+                own_annotations = ns_annotations
+            elif sys.version_info >= (3, 14):
+                if hasattr(annotationlib, "get_annotate_from_class_namespace"):
+                    own_annotate = annotationlib.get_annotate_from_class_namespace(ns)
+                else:
+                    # 3.14.0a7 and earlier
+                    own_annotate = ns.get("__annotate__")
+                if own_annotate is not None:
+                    own_annotations = annotationlib.call_annotate_function(
+                        own_annotate, Format.FORWARDREF, owner=tp_dict
+                    )
+                else:
+                    own_annotations = {}
             else:
                 own_annotations = {}
             msg = "TypedDict('Name', {f0: t0, f1: t1, ...}); each t must be a type"
             if _TAKES_MODULE:
-                own_annotations = {
+                own_checked_annotations = {
                     n: typing._type_check(tp, msg, module=tp_dict.__module__)
                     for n, tp in own_annotations.items()
                 }
             else:
-                own_annotations = {
+                own_checked_annotations = {
                     n: typing._type_check(tp, msg)
                     for n, tp in own_annotations.items()
                 }
@@ -1041,7 +1066,8 @@ else:
             for base in bases:
                 base_dict = base.__dict__
 
-                annotations.update(base_dict.get('__annotations__', {}))
+                if sys.version_info <= (3, 14):
+                    annotations.update(base_dict.get('__annotations__', {}))
                 required_keys.update(base_dict.get('__required_keys__', ()))
                 optional_keys.update(base_dict.get('__optional_keys__', ()))
                 readonly_keys.update(base_dict.get('__readonly_keys__', ()))
@@ -1051,8 +1077,8 @@ else:
             # is retained for backwards compatibility, but only for Python
             # 3.13 and lower.
             if (closed and sys.version_info < (3, 14)
-                       and "__extra_items__" in own_annotations):
-                annotation_type = own_annotations.pop("__extra_items__")
+                       and "__extra_items__" in own_checked_annotations):
+                annotation_type = own_checked_annotations.pop("__extra_items__")
                 qualifiers = set(_get_typeddict_qualifiers(annotation_type))
                 if Required in qualifiers:
                     raise TypeError(
@@ -1066,8 +1092,8 @@ else:
                     )
                 extra_items_type = annotation_type
 
-            annotations.update(own_annotations)
-            for annotation_key, annotation_type in own_annotations.items():
+            annotations.update(own_checked_annotations)
+            for annotation_key, annotation_type in own_checked_annotations.items():
                 qualifiers = set(_get_typeddict_qualifiers(annotation_type))
 
                 if Required in qualifiers:
@@ -1085,7 +1111,38 @@ else:
                     mutable_keys.add(annotation_key)
                     readonly_keys.discard(annotation_key)
 
-            tp_dict.__annotations__ = annotations
+            if sys.version_info >= (3, 14):
+                def __annotate__(format):
+                    annos = {}
+                    for base in bases:
+                        if base is Generic:
+                            continue
+                        base_annotate = base.__annotate__
+                        if base_annotate is None:
+                            continue
+                        base_annos = annotationlib.call_annotate_function(
+                            base_annotate, format, owner=base)
+                        annos.update(base_annos)
+                    if own_annotate is not None:
+                        own = annotationlib.call_annotate_function(
+                            own_annotate, format, owner=tp_dict)
+                        if format != Format.STRING:
+                            own = {
+                                n: typing._type_check(tp, msg, module=tp_dict.__module__)
+                                for n, tp in own.items()
+                            }
+                    elif format == Format.STRING:
+                        own = annotationlib.annotations_to_string(own_annotations)
+                    elif format in (Format.FORWARDREF, Format.VALUE):
+                        own = own_checked_annotations
+                    else:
+                        raise NotImplementedError(format)
+                    annos.update(own)
+                    return annos
+
+                tp_dict.__annotate__ = __annotate__
+            else:
+                tp_dict.__annotations__ = annotations
             tp_dict.__required_keys__ = frozenset(required_keys)
             tp_dict.__optional_keys__ = frozenset(optional_keys)
             tp_dict.__readonly_keys__ = frozenset(readonly_keys)
@@ -1105,17 +1162,94 @@ else:
 
     _TypedDict = type.__new__(_TypedDictMeta, 'TypedDict', (), {})
 
-    @_ensure_subclassable(lambda bases: (_TypedDict,))
-    def TypedDict(
+    def _create_typeddict(
         typename,
-        fields=_marker,
+        fields,
         /,
         *,
-        total=True,
-        closed=None,
-        extra_items=NoExtraItems,
-        **kwargs
+        typing_is_inline,
+        total,
+        closed,
+        extra_items,
+        **kwargs,
     ):
+        if fields is _marker or fields is None:
+            if fields is _marker:
+                deprecated_thing = (
+                    "Failing to pass a value for the 'fields' parameter"
+                )
+            else:
+                deprecated_thing = "Passing `None` as the 'fields' parameter"
+
+            example = f"`{typename} = TypedDict({typename!r}, {{}})`"
+            deprecation_msg = (
+                f"{deprecated_thing} is deprecated and will be disallowed in "
+                "Python 3.15. To create a TypedDict class with 0 fields "
+                "using the functional syntax, pass an empty dictionary, e.g. "
+            ) + example + "."
+            warnings.warn(deprecation_msg, DeprecationWarning, stacklevel=2)
+            # Support a field called "closed"
+            if closed is not False and closed is not True and closed is not None:
+                kwargs["closed"] = closed
+                closed = None
+            # Or "extra_items"
+            if extra_items is not NoExtraItems:
+                kwargs["extra_items"] = extra_items
+                extra_items = NoExtraItems
+            fields = kwargs
+        elif kwargs:
+            raise TypeError("TypedDict takes either a dict or keyword arguments,"
+                            " but not both")
+        if kwargs:
+            if sys.version_info >= (3, 13):
+                raise TypeError("TypedDict takes no keyword arguments")
+            warnings.warn(
+                "The kwargs-based syntax for TypedDict definitions is deprecated "
+                "in Python 3.11, will be removed in Python 3.13, and may not be "
+                "understood by third-party type checkers.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+
+        ns = {'__annotations__': dict(fields)}
+        module = _caller(depth=4 if typing_is_inline else 2)
+        if module is not None:
+            # Setting correct module is necessary to make typed dict classes
+            # pickleable.
+            ns['__module__'] = module
+
+        td = _TypedDictMeta(typename, (), ns, total=total, closed=closed,
+                            extra_items=extra_items)
+        td.__orig_bases__ = (TypedDict,)
+        return td
+
+    class _TypedDictSpecialForm(_ExtensionsSpecialForm, _root=True):
+        def __call__(
+            self,
+            typename,
+            fields=_marker,
+            /,
+            *,
+            total=True,
+            closed=None,
+            extra_items=NoExtraItems,
+            **kwargs
+        ):
+            return _create_typeddict(
+                typename,
+                fields,
+                typing_is_inline=False,
+                total=total,
+                closed=closed,
+                extra_items=extra_items,
+                **kwargs,
+            )
+
+        def __mro_entries__(self, bases):
+            return (_TypedDict,)
+
+    @_TypedDictSpecialForm
+    def TypedDict(self, args):
         """A simple typed namespace. At runtime it is equivalent to a plain dict.
 
         TypedDict creates a dictionary type such that a type checker will expect all
@@ -1162,57 +1296,22 @@ else:
 
         See PEP 655 for more details on Required and NotRequired.
         """
-        if fields is _marker or fields is None:
-            if fields is _marker:
-                deprecated_thing = "Failing to pass a value for the 'fields' parameter"
-            else:
-                deprecated_thing = "Passing `None` as the 'fields' parameter"
-
-            example = f"`{typename} = TypedDict({typename!r}, {{}})`"
-            deprecation_msg = (
-                f"{deprecated_thing} is deprecated and will be disallowed in "
-                "Python 3.15. To create a TypedDict class with 0 fields "
-                "using the functional syntax, pass an empty dictionary, e.g. "
-            ) + example + "."
-            warnings.warn(deprecation_msg, DeprecationWarning, stacklevel=2)
-            # Support a field called "closed"
-            if closed is not False and closed is not True and closed is not None:
-                kwargs["closed"] = closed
-                closed = None
-            # Or "extra_items"
-            if extra_items is not NoExtraItems:
-                kwargs["extra_items"] = extra_items
-                extra_items = NoExtraItems
-            fields = kwargs
-        elif kwargs:
-            raise TypeError("TypedDict takes either a dict or keyword arguments,"
-                            " but not both")
-        if kwargs:
-            if sys.version_info >= (3, 13):
-                raise TypeError("TypedDict takes no keyword arguments")
-            warnings.warn(
-                "The kwargs-based syntax for TypedDict definitions is deprecated "
-                "in Python 3.11, will be removed in Python 3.13, and may not be "
-                "understood by third-party type checkers.",
-                DeprecationWarning,
-                stacklevel=2,
+        # This runs when creating inline TypedDicts:
+        if not isinstance(args, dict):
+            raise TypeError(
+                "TypedDict[...] should be used with a single dict argument"
             )
 
-        ns = {'__annotations__': dict(fields)}
-        module = _caller()
-        if module is not None:
-            # Setting correct module is necessary to make typed dict classes pickleable.
-            ns['__module__'] = module
+        return _create_typeddict(
+            "<inline TypedDict>",
+            args,
+            typing_is_inline=True,
+            total=True,
+            closed=True,
+            extra_items=NoExtraItems,
+        )
 
-        td = _TypedDictMeta(typename, (), ns, total=total, closed=closed,
-                            extra_items=extra_items)
-        td.__orig_bases__ = (TypedDict,)
-        return td
-
-    if hasattr(typing, "_TypedDictMeta"):
-        _TYPEDDICT_TYPES = (typing._TypedDictMeta, _TypedDictMeta)
-    else:
-        _TYPEDDICT_TYPES = (_TypedDictMeta,)
+    _TYPEDDICT_TYPES = (typing._TypedDictMeta, _TypedDictMeta)
 
     def is_typeddict(tp):
         """Check if an annotation is a TypedDict class
@@ -1225,9 +1324,6 @@ else:
             is_typeddict(Film)  # => True
             is_typeddict(Union[list, str])  # => False
         """
-        # On 3.8, this would otherwise return True
-        if hasattr(typing, "TypedDict") and tp is typing.TypedDict:
-            return False
         return isinstance(tp, _TYPEDDICT_TYPES)
 
 
@@ -1257,7 +1353,7 @@ else:  # <=3.13
     # replaces _strip_annotations()
     def _strip_extras(t):
         """Strips Annotated, Required and NotRequired from a given type."""
-        if isinstance(t, _AnnotatedAlias):
+        if isinstance(t, typing._AnnotatedAlias):
             return _strip_extras(t.__origin__)
         if hasattr(t, "__origin__") and t.__origin__ in (Required, NotRequired, ReadOnly):
             return _strip_extras(t.__args__[0])
@@ -1311,23 +1407,11 @@ else:  # <=3.13
         - If two dict arguments are passed, they specify globals and
           locals, respectively.
         """
-        if hasattr(typing, "Annotated"):  # 3.9+
-            hint = typing.get_type_hints(
-                obj, globalns=globalns, localns=localns, include_extras=True
-            )
-        else:  # 3.8
-            hint = typing.get_type_hints(obj, globalns=globalns, localns=localns)
+        hint = typing.get_type_hints(
+            obj, globalns=globalns, localns=localns, include_extras=True
+        )
         if sys.version_info < (3, 11):
             _clean_optional(obj, hint, globalns, localns)
-        if sys.version_info < (3, 9):
-            # In 3.8 eval_type does not flatten Optional[ForwardRef] correctly
-            # This will recreate and and cache Unions.
-            hint = {
-                k: (t
-                    if get_origin(t) != Union
-                    else Union[t.__args__])
-                for k, t in hint.items()
-            }
         if include_extras:
             return hint
         return {k: _strip_extras(t) for k, t in hint.items()}
@@ -1336,8 +1420,7 @@ else:  # <=3.13
 
     def _could_be_inserted_optional(t):
         """detects Union[..., None] pattern"""
-        # 3.8+ compatible checking before _UnionGenericAlias
-        if get_origin(t) is not Union:
+        if not isinstance(t, typing._UnionGenericAlias):
             return False
         # Assume if last argument is not None they are user defined
         if t.__args__[-1] is not _NoneType:
@@ -1381,17 +1464,12 @@ else:  # <=3.13
                         localns = globalns
                 elif localns is None:
                     localns = globalns
-                if sys.version_info < (3, 9):
-                    original_value = ForwardRef(original_value)
-                else:
-                    original_value = ForwardRef(
-                        original_value,
-                        is_argument=not isinstance(obj, _types.ModuleType)
-                    )
+
+                original_value = ForwardRef(
+                    original_value,
+                    is_argument=not isinstance(obj, _types.ModuleType)
+                )
             original_evaluated = typing._eval_type(original_value, globalns, localns)
-            if sys.version_info < (3, 9) and get_origin(original_evaluated) is Union:
-                # Union[str, None, "str"] is not reduced to Union[str, None]
-                original_evaluated = Union[original_evaluated.__args__]
             # Compare if values differ. Note that even if equal
             # value might be cached by typing._tp_cache contrary to original_evaluated
             if original_evaluated != value or (
@@ -1402,130 +1480,13 @@ else:  # <=3.13
             ):
                 hints[name] = original_evaluated
 
-# Python 3.9+ has PEP 593 (Annotated)
-if hasattr(typing, 'Annotated'):
-    Annotated = typing.Annotated
-    # Not exported and not a public API, but needed for get_origin() and get_args()
-    # to work.
-    _AnnotatedAlias = typing._AnnotatedAlias
-# 3.8
-else:
-    class _AnnotatedAlias(typing._GenericAlias, _root=True):
-        """Runtime representation of an annotated type.
-
-        At its core 'Annotated[t, dec1, dec2, ...]' is an alias for the type 't'
-        with extra annotations. The alias behaves like a normal typing alias,
-        instantiating is the same as instantiating the underlying type, binding
-        it to types is also the same.
-        """
-        def __init__(self, origin, metadata):
-            if isinstance(origin, _AnnotatedAlias):
-                metadata = origin.__metadata__ + metadata
-                origin = origin.__origin__
-            super().__init__(origin, origin)
-            self.__metadata__ = metadata
-
-        def copy_with(self, params):
-            assert len(params) == 1
-            new_type = params[0]
-            return _AnnotatedAlias(new_type, self.__metadata__)
-
-        def __repr__(self):
-            return (f"typing_extensions.Annotated[{typing._type_repr(self.__origin__)}, "
-                    f"{', '.join(repr(a) for a in self.__metadata__)}]")
-
-        def __reduce__(self):
-            return operator.getitem, (
-                Annotated, (self.__origin__, *self.__metadata__)
-            )
-
-        def __eq__(self, other):
-            if not isinstance(other, _AnnotatedAlias):
-                return NotImplemented
-            if self.__origin__ != other.__origin__:
-                return False
-            return self.__metadata__ == other.__metadata__
-
-        def __hash__(self):
-            return hash((self.__origin__, self.__metadata__))
-
-    class Annotated:
-        """Add context specific metadata to a type.
-
-        Example: Annotated[int, runtime_check.Unsigned] indicates to the
-        hypothetical runtime_check module that this type is an unsigned int.
-        Every other consumer of this type can ignore this metadata and treat
-        this type as int.
-
-        The first argument to Annotated must be a valid type (and will be in
-        the __origin__ field), the remaining arguments are kept as a tuple in
-        the __extra__ field.
-
-        Details:
-
-        - It's an error to call `Annotated` with less than two arguments.
-        - Nested Annotated are flattened::
-
-            Annotated[Annotated[T, Ann1, Ann2], Ann3] == Annotated[T, Ann1, Ann2, Ann3]
-
-        - Instantiating an annotated type is equivalent to instantiating the
-        underlying type::
-
-            Annotated[C, Ann1](5) == C(5)
-
-        - Annotated can be used as a generic type alias::
-
-            Optimized = Annotated[T, runtime.Optimize()]
-            Optimized[int] == Annotated[int, runtime.Optimize()]
-
-            OptimizedList = Annotated[List[T], runtime.Optimize()]
-            OptimizedList[int] == Annotated[List[int], runtime.Optimize()]
-        """
-
-        __slots__ = ()
-
-        def __new__(cls, *args, **kwargs):
-            raise TypeError("Type Annotated cannot be instantiated.")
-
-        @typing._tp_cache
-        def __class_getitem__(cls, params):
-            if not isinstance(params, tuple) or len(params) < 2:
-                raise TypeError("Annotated[...] should be used "
-                                "with at least two arguments (a type and an "
-                                "annotation).")
-            allowed_special_forms = (ClassVar, Final)
-            if get_origin(params[0]) in allowed_special_forms:
-                origin = params[0]
-            else:
-                msg = "Annotated[t, ...]: t must be a type."
-                origin = typing._type_check(params[0], msg)
-            metadata = tuple(params[1:])
-            return _AnnotatedAlias(origin, metadata)
-
-        def __init_subclass__(cls, *args, **kwargs):
-            raise TypeError(
-                f"Cannot subclass {cls.__module__}.Annotated"
-            )
-
-# Python 3.8 has get_origin() and get_args() but those implementations aren't
-# Annotated-aware, so we can't use those. Python 3.9's versions don't support
+# Python 3.9 has get_origin() and get_args() but those implementations don't support
 # ParamSpecArgs and ParamSpecKwargs, so only Python 3.10's versions will do.
 if sys.version_info[:2] >= (3, 10):
     get_origin = typing.get_origin
     get_args = typing.get_args
-# 3.8-3.9
+# 3.9
 else:
-    try:
-        # 3.9+
-        from typing import _BaseGenericAlias
-    except ImportError:
-        _BaseGenericAlias = typing._GenericAlias
-    try:
-        # 3.9+
-        from typing import GenericAlias as _typing_GenericAlias
-    except ImportError:
-        _typing_GenericAlias = typing._GenericAlias
-
     def get_origin(tp):
         """Get the unsubscripted version of a type.
 
@@ -1541,9 +1502,9 @@ else:
             get_origin(List[Tuple[T, T]][int]) == list
             get_origin(P.args) is P
         """
-        if isinstance(tp, _AnnotatedAlias):
+        if isinstance(tp, typing._AnnotatedAlias):
             return Annotated
-        if isinstance(tp, (typing._GenericAlias, _typing_GenericAlias, _BaseGenericAlias,
+        if isinstance(tp, (typing._BaseGenericAlias, _types.GenericAlias,
                            ParamSpecArgs, ParamSpecKwargs)):
             return tp.__origin__
         if tp is typing.Generic:
@@ -1561,11 +1522,9 @@ else:
             get_args(Union[int, Tuple[T, int]][str]) == (int, Tuple[str, int])
             get_args(Callable[[], T][int]) == ([], int)
         """
-        if isinstance(tp, _AnnotatedAlias):
+        if isinstance(tp, typing._AnnotatedAlias):
             return (tp.__origin__, *tp.__metadata__)
-        if isinstance(tp, (typing._GenericAlias, _typing_GenericAlias)):
-            if getattr(tp, "_special", False):
-                return ()
+        if isinstance(tp, (typing._GenericAlias, _types.GenericAlias)):
             res = tp.__args__
             if get_origin(tp) is collections.abc.Callable and res[0] is not Ellipsis:
                 res = (list(res[:-1]), res[-1])
@@ -1577,7 +1536,7 @@ else:
 if hasattr(typing, 'TypeAlias'):
     TypeAlias = typing.TypeAlias
 # 3.9
-elif sys.version_info[:2] >= (3, 9):
+else:
     @_ExtensionsSpecialForm
     def TypeAlias(self, parameters):
         """Special marker indicating that an assignment should
@@ -1591,21 +1550,6 @@ elif sys.version_info[:2] >= (3, 9):
         It's invalid when used anywhere except as in the example above.
         """
         raise TypeError(f"{self} is not subscriptable")
-# 3.8
-else:
-    TypeAlias = _ExtensionsSpecialForm(
-        'TypeAlias',
-        doc="""Special marker indicating that an assignment should
-        be recognized as a proper type alias definition by type
-        checkers.
-
-        For example::
-
-            Predicate: TypeAlias = Callable[..., bool]
-
-        It's invalid when used anywhere except as in the example
-        above."""
-    )
 
 
 def _set_default(type_param, default):
@@ -1615,7 +1559,7 @@ def _set_default(type_param, default):
 
 def _set_module(typevarlike):
     # for pickling:
-    def_mod = _caller(depth=3)
+    def_mod = _caller(depth=2)
     if def_mod != 'typing_extensions':
         typevarlike.__module__ = def_mod
 
@@ -1679,7 +1623,7 @@ else:
 if hasattr(typing, 'ParamSpecArgs'):
     ParamSpecArgs = typing.ParamSpecArgs
     ParamSpecKwargs = typing.ParamSpecKwargs
-# 3.8-3.9
+# 3.9
 else:
     class _Immutable:
         """Mixin to indicate that object should not be copied."""
@@ -1790,7 +1734,7 @@ elif hasattr(typing, 'ParamSpec'):
         def __init_subclass__(cls) -> None:
             raise TypeError(f"type '{__name__}.ParamSpec' is not an acceptable base type")
 
-# 3.8-3.9
+# 3.9
 else:
 
     # Inherits from list as a workaround for Callable checks in Python < 3.9.2.
@@ -1895,7 +1839,7 @@ else:
             pass
 
 
-# 3.8-3.9
+# 3.9
 if not hasattr(typing, 'Concatenate'):
     # Inherits from list as a workaround for Callable checks in Python < 3.9.2.
 
@@ -1920,9 +1864,6 @@ if not hasattr(typing, 'Concatenate'):
         # Trick Generic into looking into this for __parameters__.
         __class__ = typing._GenericAlias
 
-        # Flag in 3.8.
-        _special = False
-
         def __init__(self, origin, args):
             super().__init__(args)
             self.__origin__ = origin
@@ -1946,7 +1887,6 @@ if not hasattr(typing, 'Concatenate'):
                 tp for tp in self.__args__ if isinstance(tp, (typing.TypeVar, ParamSpec))
             )
 
-        # 3.8; needed for typing._subst_tvars
         # 3.9 used by __getitem__ below
         def copy_with(self, params):
             if isinstance(params[-1], _ConcatenateGenericAlias):
@@ -1974,7 +1914,7 @@ if not hasattr(typing, 'Concatenate'):
                 prepare = getattr(param, "__typing_prepare_subst__", None)
                 if prepare is not None:
                     args = prepare(self, args)
-                # 3.8 - 3.9 & typing.ParamSpec
+                # 3.9 & typing.ParamSpec
                 elif isinstance(param, ParamSpec):
                     i = params.index(param)
                     if (
@@ -1990,7 +1930,7 @@ if not hasattr(typing, 'Concatenate'):
                         args = (args,)
                     elif (
                         isinstance(args[i], list)
-                        # 3.8 - 3.9
+                        # 3.9
                         # This class inherits from list do not convert
                         and not isinstance(args[i], _ConcatenateGenericAlias)
                     ):
@@ -2063,11 +2003,11 @@ else:
                 return value
 
 
-# 3.8-3.9.2
+# 3.9.2
 class _EllipsisDummy: ...
 
 
-# 3.8-3.10
+# <=3.10
 def _create_concatenate_alias(origin, parameters):
     if parameters[-1] is ... and sys.version_info < (3, 9, 2):
         # Hack: Arguments must be types, replace it with one.
@@ -2091,7 +2031,7 @@ def _create_concatenate_alias(origin, parameters):
     return concatenate
 
 
-# 3.8-3.10
+# <=3.10
 @typing._tp_cache
 def _concatenate_getitem(self, parameters):
     if parameters == ():
@@ -2110,8 +2050,8 @@ def _concatenate_getitem(self, parameters):
 # 3.11+; Concatenate does not accept ellipsis in 3.10
 if sys.version_info >= (3, 11):
     Concatenate = typing.Concatenate
-# 3.9-3.10
-elif sys.version_info[:2] >= (3, 9):
+# <=3.10
+else:
     @_ExtensionsSpecialForm
     def Concatenate(self, parameters):
         """Used in conjunction with ``ParamSpec`` and ``Callable`` to represent a
@@ -2125,30 +2065,13 @@ elif sys.version_info[:2] >= (3, 9):
         See PEP 612 for detailed information.
         """
         return _concatenate_getitem(self, parameters)
-# 3.8
-else:
-    class _ConcatenateForm(_ExtensionsSpecialForm, _root=True):
-        def __getitem__(self, parameters):
-            return _concatenate_getitem(self, parameters)
 
-    Concatenate = _ConcatenateForm(
-        'Concatenate',
-        doc="""Used in conjunction with ``ParamSpec`` and ``Callable`` to represent a
-        higher order function which adds, removes or transforms parameters of a
-        callable.
-
-        For example::
-
-           Callable[Concatenate[int, P], int]
-
-        See PEP 612 for detailed information.
-        """)
 
 # 3.10+
 if hasattr(typing, 'TypeGuard'):
     TypeGuard = typing.TypeGuard
 # 3.9
-elif sys.version_info[:2] >= (3, 9):
+else:
     @_ExtensionsSpecialForm
     def TypeGuard(self, parameters):
         """Special typing form used to annotate the return type of a user-defined
@@ -2195,64 +2118,13 @@ elif sys.version_info[:2] >= (3, 9):
         """
         item = typing._type_check(parameters, f'{self} accepts only a single type.')
         return typing._GenericAlias(self, (item,))
-# 3.8
-else:
-    class _TypeGuardForm(_ExtensionsSpecialForm, _root=True):
-        def __getitem__(self, parameters):
-            item = typing._type_check(parameters,
-                                      f'{self._name} accepts only a single type')
-            return typing._GenericAlias(self, (item,))
 
-    TypeGuard = _TypeGuardForm(
-        'TypeGuard',
-        doc="""Special typing form used to annotate the return type of a user-defined
-        type guard function.  ``TypeGuard`` only accepts a single type argument.
-        At runtime, functions marked this way should return a boolean.
-
-        ``TypeGuard`` aims to benefit *type narrowing* -- a technique used by static
-        type checkers to determine a more precise type of an expression within a
-        program's code flow.  Usually type narrowing is done by analyzing
-        conditional code flow and applying the narrowing to a block of code.  The
-        conditional expression here is sometimes referred to as a "type guard".
-
-        Sometimes it would be convenient to use a user-defined boolean function
-        as a type guard.  Such a function should use ``TypeGuard[...]`` as its
-        return type to alert static type checkers to this intention.
-
-        Using  ``-> TypeGuard`` tells the static type checker that for a given
-        function:
-
-        1. The return value is a boolean.
-        2. If the return value is ``True``, the type of its argument
-        is the type inside ``TypeGuard``.
-
-        For example::
-
-            def is_str(val: Union[str, float]):
-                # "isinstance" type guard
-                if isinstance(val, str):
-                    # Type of ``val`` is narrowed to ``str``
-                    ...
-                else:
-                    # Else, type of ``val`` is narrowed to ``float``.
-                    ...
-
-        Strict type narrowing is not enforced -- ``TypeB`` need not be a narrower
-        form of ``TypeA`` (it can even be a wider form) and this may lead to
-        type-unsafe results.  The main reason is to allow for things like
-        narrowing ``List[object]`` to ``List[str]`` even though the latter is not
-        a subtype of the former, since ``List`` is invariant.  The responsibility of
-        writing type-safe type guards is left to the user.
-
-        ``TypeGuard`` also works with type variables.  For more information, see
-        PEP 647 (User-Defined Type Guards).
-        """)
 
 # 3.13+
 if hasattr(typing, 'TypeIs'):
     TypeIs = typing.TypeIs
-# 3.9
-elif sys.version_info[:2] >= (3, 9):
+# <=3.12
+else:
     @_ExtensionsSpecialForm
     def TypeIs(self, parameters):
         """Special typing form used to annotate the return type of a user-defined
@@ -2293,58 +2165,13 @@ elif sys.version_info[:2] >= (3, 9):
         """
         item = typing._type_check(parameters, f'{self} accepts only a single type.')
         return typing._GenericAlias(self, (item,))
-# 3.8
-else:
-    class _TypeIsForm(_ExtensionsSpecialForm, _root=True):
-        def __getitem__(self, parameters):
-            item = typing._type_check(parameters,
-                                      f'{self._name} accepts only a single type')
-            return typing._GenericAlias(self, (item,))
 
-    TypeIs = _TypeIsForm(
-        'TypeIs',
-        doc="""Special typing form used to annotate the return type of a user-defined
-        type narrower function.  ``TypeIs`` only accepts a single type argument.
-        At runtime, functions marked this way should return a boolean.
-
-        ``TypeIs`` aims to benefit *type narrowing* -- a technique used by static
-        type checkers to determine a more precise type of an expression within a
-        program's code flow.  Usually type narrowing is done by analyzing
-        conditional code flow and applying the narrowing to a block of code.  The
-        conditional expression here is sometimes referred to as a "type guard".
-
-        Sometimes it would be convenient to use a user-defined boolean function
-        as a type guard.  Such a function should use ``TypeIs[...]`` as its
-        return type to alert static type checkers to this intention.
-
-        Using  ``-> TypeIs`` tells the static type checker that for a given
-        function:
-
-        1. The return value is a boolean.
-        2. If the return value is ``True``, the type of its argument
-        is the intersection of the type inside ``TypeIs`` and the argument's
-        previously known type.
-
-        For example::
-
-            def is_awaitable(val: object) -> TypeIs[Awaitable[Any]]:
-                return hasattr(val, '__await__')
-
-            def f(val: Union[int, Awaitable[int]]) -> int:
-                if is_awaitable(val):
-                    assert_type(val, Awaitable[int])
-                else:
-                    assert_type(val, int)
-
-        ``TypeIs`` also works with type variables.  For more information, see
-        PEP 742 (Narrowing types with TypeIs).
-        """)
 
 # 3.14+?
 if hasattr(typing, 'TypeForm'):
     TypeForm = typing.TypeForm
-# 3.9
-elif sys.version_info[:2] >= (3, 9):
+# <=3.13
+else:
     class _TypeFormForm(_ExtensionsSpecialForm, _root=True):
         # TypeForm(X) is equivalent to X but indicates to the type checker
         # that the object is a TypeForm.
@@ -2372,36 +2199,6 @@ elif sys.version_info[:2] >= (3, 9):
         """
         item = typing._type_check(parameters, f'{self} accepts only a single type.')
         return typing._GenericAlias(self, (item,))
-# 3.8
-else:
-    class _TypeFormForm(_ExtensionsSpecialForm, _root=True):
-        def __getitem__(self, parameters):
-            item = typing._type_check(parameters,
-                                      f'{self._name} accepts only a single type')
-            return typing._GenericAlias(self, (item,))
-
-        def __call__(self, obj, /):
-            return obj
-
-    TypeForm = _TypeFormForm(
-        'TypeForm',
-        doc="""A special form representing the value that results from the evaluation
-        of a type expression. This value encodes the information supplied in the
-        type expression, and it represents the type described by that type expression.
-
-        When used in a type expression, TypeForm describes a set of type form objects.
-        It accepts a single type argument, which must be a valid type expression.
-        ``TypeForm[T]`` describes the set of all type form objects that represent
-        the type T or types that are assignable to T.
-
-        Usage:
-
-            def cast[T](typ: TypeForm[T], value: Any) -> T: ...
-
-            reveal_type(cast(int, "x"))  # int
-
-        See PEP 747 for more information.
-        """)
 
 
 # Vendored from cpython typing._SpecialFrom
@@ -2525,7 +2322,7 @@ else:
 if hasattr(typing, 'Required'):  # 3.11+
     Required = typing.Required
     NotRequired = typing.NotRequired
-elif sys.version_info[:2] >= (3, 9):  # 3.9-3.10
+else:  # <=3.10
     @_ExtensionsSpecialForm
     def Required(self, parameters):
         """A special typing construct to mark a key of a total=False TypedDict
@@ -2563,49 +2360,10 @@ elif sys.version_info[:2] >= (3, 9):  # 3.9-3.10
         item = typing._type_check(parameters, f'{self._name} accepts only a single type.')
         return typing._GenericAlias(self, (item,))
 
-else:  # 3.8
-    class _RequiredForm(_ExtensionsSpecialForm, _root=True):
-        def __getitem__(self, parameters):
-            item = typing._type_check(parameters,
-                                      f'{self._name} accepts only a single type.')
-            return typing._GenericAlias(self, (item,))
-
-    Required = _RequiredForm(
-        'Required',
-        doc="""A special typing construct to mark a key of a total=False TypedDict
-        as required. For example:
-
-            class Movie(TypedDict, total=False):
-                title: Required[str]
-                year: int
-
-            m = Movie(
-                title='The Matrix',  # typechecker error if key is omitted
-                year=1999,
-            )
-
-        There is no runtime checking that a required key is actually provided
-        when instantiating a related TypedDict.
-        """)
-    NotRequired = _RequiredForm(
-        'NotRequired',
-        doc="""A special typing construct to mark a key of a TypedDict as
-        potentially missing. For example:
-
-            class Movie(TypedDict):
-                title: str
-                year: NotRequired[int]
-
-            m = Movie(
-                title='The Matrix',  # typechecker error if key is omitted
-                year=1999,
-            )
-        """)
-
 
 if hasattr(typing, 'ReadOnly'):
     ReadOnly = typing.ReadOnly
-elif sys.version_info[:2] >= (3, 9):  # 3.9-3.12
+else:  # <=3.12
     @_ExtensionsSpecialForm
     def ReadOnly(self, parameters):
         """A special typing construct to mark an item of a TypedDict as read-only.
@@ -2624,30 +2382,6 @@ elif sys.version_info[:2] >= (3, 9):  # 3.9-3.12
         """
         item = typing._type_check(parameters, f'{self._name} accepts only a single type.')
         return typing._GenericAlias(self, (item,))
-
-else:  # 3.8
-    class _ReadOnlyForm(_ExtensionsSpecialForm, _root=True):
-        def __getitem__(self, parameters):
-            item = typing._type_check(parameters,
-                                      f'{self._name} accepts only a single type.')
-            return typing._GenericAlias(self, (item,))
-
-    ReadOnly = _ReadOnlyForm(
-        'ReadOnly',
-        doc="""A special typing construct to mark a key of a TypedDict as read-only.
-
-        For example:
-
-            class Movie(TypedDict):
-                title: ReadOnly[str]
-                year: int
-
-            def mutate_movie(m: Movie) -> None:
-                m["year"] = 1992  # allowed
-                m["title"] = "The Matrix"  # typechecker error
-
-        There is no runtime checking for this propery.
-        """)
 
 
 _UNPACK_DOC = """\
@@ -2698,7 +2432,7 @@ if sys.version_info >= (3, 12):  # PEP 692 changed the repr of Unpack[]
     def _is_unpack(obj):
         return get_origin(obj) is Unpack
 
-elif sys.version_info[:2] >= (3, 9):  # 3.9+
+else:  # <=3.11
     class _UnpackSpecialForm(_ExtensionsSpecialForm, _root=True):
         def __init__(self, getitem):
             super().__init__(getitem)
@@ -2735,43 +2469,6 @@ elif sys.version_info[:2] >= (3, 9):  # 3.9+
     def Unpack(self, parameters):
         item = typing._type_check(parameters, f'{self._name} accepts only a single type.')
         return _UnpackAlias(self, (item,))
-
-    def _is_unpack(obj):
-        return isinstance(obj, _UnpackAlias)
-
-else:  # 3.8
-    class _UnpackAlias(typing._GenericAlias, _root=True):
-        __class__ = typing.TypeVar
-
-        @property
-        def __typing_unpacked_tuple_args__(self):
-            assert self.__origin__ is Unpack
-            assert len(self.__args__) == 1
-            arg, = self.__args__
-            if isinstance(arg, typing._GenericAlias):
-                if arg.__origin__ is not tuple:
-                    raise TypeError("Unpack[...] must be used with a tuple type")
-                return arg.__args__
-            return None
-
-        @property
-        def __typing_is_unpacked_typevartuple__(self):
-            assert self.__origin__ is Unpack
-            assert len(self.__args__) == 1
-            return isinstance(self.__args__[0], TypeVarTuple)
-
-        def __getitem__(self, args):
-            if self.__typing_is_unpacked_typevartuple__:
-                return args
-            return super().__getitem__(args)
-
-    class _UnpackForm(_ExtensionsSpecialForm, _root=True):
-        def __getitem__(self, parameters):
-            item = typing._type_check(parameters,
-                                      f'{self._name} accepts only a single type.')
-            return _UnpackAlias(self, (item,))
-
-    Unpack = _UnpackForm('Unpack', doc=_UNPACK_DOC)
 
     def _is_unpack(obj):
         return isinstance(obj, _UnpackAlias)
@@ -3545,10 +3242,6 @@ else:
         nm_tpl = collections.namedtuple(name, fields,
                                         defaults=defaults, module=module)
         nm_tpl.__annotations__ = nm_tpl.__new__.__annotations__ = annotations
-        # The `_field_types` attribute was removed in 3.9;
-        # in earlier versions, it is the same as the `__annotations__` attribute
-        if sys.version_info < (3, 9):
-            nm_tpl._field_types = annotations
         return nm_tpl
 
     _prohibited_namedtuple_fields = typing._prohibited
@@ -3630,7 +3323,6 @@ else:
         assert NamedTuple in bases
         return (_NamedTuple,)
 
-    @_ensure_subclassable(_namedtuple_mro_entries)
     def NamedTuple(typename, fields=_marker, /, **kwargs):
         """Typed version of namedtuple.
 
@@ -3695,6 +3387,8 @@ else:
         nt = _make_nmtuple(typename, fields, module=_caller())
         nt.__orig_bases__ = (NamedTuple,)
         return nt
+
+    NamedTuple.__mro_entries__ = _namedtuple_mro_entries
 
 
 if hasattr(collections.abc, "Buffer"):
@@ -3826,10 +3520,10 @@ else:
 
 if sys.version_info >= (3, 14):
     TypeAliasType = typing.TypeAliasType
-# 3.8-3.13
+# <=3.13
 else:
     if sys.version_info >= (3, 12):
-        # 3.12-3.14
+        # 3.12-3.13
         def _is_unionable(obj):
             """Corresponds to is_unionable() in unionobject.c in CPython."""
             return obj is None or isinstance(obj, (
@@ -3840,7 +3534,7 @@ else:
                 TypeAliasType,
             ))
     else:
-        # 3.8-3.11
+        # <=3.11
         def _is_unionable(obj):
             """Corresponds to is_unionable() in unionobject.c in CPython."""
             return obj is None or isinstance(obj, (
@@ -3875,11 +3569,6 @@ else:
                     return object.__getattr__(self, attr)
                 return getattr(self.__origin__, attr)
 
-            if sys.version_info < (3, 9):
-                def __getitem__(self, item):
-                    result = super().__getitem__(item)
-                    result.__class__ = type(self)
-                    return result
 
     class TypeAliasType:
         """Create named, parameterized type aliases.
@@ -3922,7 +3611,7 @@ else:
             for type_param in type_params:
                 if (
                     not isinstance(type_param, (TypeVar, TypeVarTuple, ParamSpec))
-                    # 3.8-3.11
+                    # <=3.11
                     # Unpack Backport passes isinstance(type_param, TypeVar)
                     or _is_unpack(type_param)
                 ):
@@ -4140,26 +3829,15 @@ if _CapsuleType is not None:
     __all__.append("CapsuleType")
 
 
-# Using this convoluted approach so that this keeps working
-# whether we end up using PEP 649 as written, PEP 749, or
-# some other variation: in any case, inspect.get_annotations
-# will continue to exist and will gain a `format` parameter.
-_PEP_649_OR_749_IMPLEMENTED = (
-    hasattr(inspect, 'get_annotations')
-    and inspect.get_annotations.__kwdefaults__ is not None
-    and "format" in inspect.get_annotations.__kwdefaults__
-)
-
-
-class Format(enum.IntEnum):
-    VALUE = 1
-    FORWARDREF = 2
-    STRING = 3
-
-
-if _PEP_649_OR_749_IMPLEMENTED:
-    get_annotations = inspect.get_annotations
+if sys.version_info >= (3,14):
+    from annotationlib import Format, get_annotations
 else:
+    class Format(enum.IntEnum):
+        VALUE = 1
+        VALUE_WITH_FAKE_GLOBALS = 2
+        FORWARDREF = 3
+        STRING = 4
+
     def get_annotations(obj, *, globals=None, locals=None, eval_str=False,
                         format=Format.VALUE):
         """Compute the annotations dict for an object.
@@ -4198,6 +3876,10 @@ else:
 
         """
         format = Format(format)
+        if format is Format.VALUE_WITH_FAKE_GLOBALS:
+            raise ValueError(
+                "The VALUE_WITH_FAKE_GLOBALS format is for internal use only"
+            )
 
         if eval_str and format is not Format.VALUE:
             raise ValueError("eval_str=True is only supported with format=Format.VALUE")
@@ -4378,57 +4060,6 @@ else:
         forward_ref.__forward_value__ = value
         return value
 
-    def _lax_type_check(
-        value, msg, is_argument=True, *, module=None, allow_special_forms=False
-    ):
-        """
-        A lax Python 3.11+ like version of typing._type_check
-        """
-        if hasattr(typing, "_type_convert"):
-            if (
-                sys.version_info >= (3, 10, 3)
-                or (3, 9, 10) < sys.version_info[:3] < (3, 10)
-            ):
-                # allow_special_forms introduced later cpython/#30926 (bpo-46539)
-                type_ = typing._type_convert(
-                    value,
-                    module=module,
-                    allow_special_forms=allow_special_forms,
-                )
-            # module was added with bpo-41249 before is_class (bpo-46539)
-            elif "__forward_module__" in typing.ForwardRef.__slots__:
-                type_ = typing._type_convert(value, module=module)
-            else:
-                type_ = typing._type_convert(value)
-        else:
-            if value is None:
-                return type(None)
-            if isinstance(value, str):
-                return ForwardRef(value)
-            type_ = value
-        invalid_generic_forms = (Generic, Protocol)
-        if not allow_special_forms:
-            invalid_generic_forms += (ClassVar,)
-            if is_argument:
-                invalid_generic_forms += (Final,)
-        if (
-            isinstance(type_, typing._GenericAlias)
-            and get_origin(type_) in invalid_generic_forms
-        ):
-            raise TypeError(f"{type_} is not valid as type argument") from None
-        if type_ in (Any, LiteralString, NoReturn, Never, Self, TypeAlias):
-            return type_
-        if allow_special_forms and type_ in (ClassVar, Final):
-            return type_
-        if (
-            isinstance(type_, (_SpecialForm, typing._SpecialForm))
-            or type_ in (Generic, Protocol)
-        ):
-            raise TypeError(f"Plain {type_} is not valid as type argument") from None
-        if type(type_) is tuple:  # lax version with tuple instead of callable
-            raise TypeError(f"{msg} Got {type_!r:.100}.")
-        return type_
-
     def evaluate_forward_ref(
         forward_ref,
         *,
@@ -4436,7 +4067,7 @@ else:
         globals=None,
         locals=None,
         type_params=None,
-        format=Format.VALUE,
+        format=None,
         _recursive_guard=frozenset(),
     ):
         """Evaluate a forward reference as a type hint.
@@ -4481,24 +4112,15 @@ else:
             else:
                 raise
 
-        msg = "Forward references must evaluate to types."
-        if not _FORWARD_REF_HAS_CLASS:
-            allow_special_forms = not forward_ref.__forward_is_argument__
-        else:
-            allow_special_forms = forward_ref.__forward_is_class__
-        type_ = _lax_type_check(
-            value,
-            msg,
-            is_argument=forward_ref.__forward_is_argument__,
-            allow_special_forms=allow_special_forms,
-        )
+        if isinstance(value, str):
+            value = ForwardRef(value)
 
         # Recursively evaluate the type
-        if isinstance(type_, ForwardRef):
-            if getattr(type_, "__forward_module__", True) is not None:
+        if isinstance(value, ForwardRef):
+            if getattr(value, "__forward_module__", True) is not None:
                 globals = None
             return evaluate_forward_ref(
-                type_,
+                value,
                 globals=globals,
                 locals=locals,
                  type_params=type_params, owner=owner,
@@ -4510,75 +4132,107 @@ else:
             for tvar in type_params:
                 if tvar.__name__ not in locals:  # lets not overwrite something present
                     locals[tvar.__name__] = tvar
-        if sys.version_info < (3, 9):
-            return typing._eval_type(
-                type_,
-                globals,
-                locals,
-            )
         if sys.version_info < (3, 12, 5):
             return typing._eval_type(
-                type_,
+                value,
                 globals,
                 locals,
                 recursive_guard=_recursive_guard | {forward_ref.__forward_arg__},
             )
-        if sys.version_info < (3, 14):
+        else:
             return typing._eval_type(
-                type_,
+                value,
                 globals,
                 locals,
                 type_params,
                 recursive_guard=_recursive_guard | {forward_ref.__forward_arg__},
             )
-        return typing._eval_type(
-            type_,
-            globals,
-            locals,
-            type_params,
-            recursive_guard=_recursive_guard | {forward_ref.__forward_arg__},
-            format=format,
-            owner=owner,
-        )
 
 
-# Aliases for items that have always been in typing.
-# Explicitly assign these (rather than using `from typing import *` at the top),
-# so that we get a CI error if one of these is deleted from typing.py
-# in a future version of Python
-AbstractSet = typing.AbstractSet
-AnyStr = typing.AnyStr
-BinaryIO = typing.BinaryIO
-Callable = typing.Callable
-Collection = typing.Collection
-Container = typing.Container
-Dict = typing.Dict
-ForwardRef = typing.ForwardRef
-FrozenSet = typing.FrozenSet
+class Sentinel:
+    """Create a unique sentinel object.
+
+    *name* should be the name of the variable to which the return value shall be assigned.
+
+    *repr*, if supplied, will be used for the repr of the sentinel object.
+    If not provided, "<name>" will be used.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        repr: typing.Optional[str] = None,
+    ):
+        self._name = name
+        self._repr = repr if repr is not None else f'<{name}>'
+
+    def __repr__(self):
+        return self._repr
+
+    if sys.version_info < (3, 11):
+        # The presence of this method convinces typing._type_check
+        # that Sentinels are types.
+        def __call__(self, *args, **kwargs):
+            raise TypeError(f"{type(self).__name__!r} object is not callable")
+
+    if sys.version_info >= (3, 10):
+        def __or__(self, other):
+            return typing.Union[self, other]
+
+        def __ror__(self, other):
+            return typing.Union[other, self]
+
+    def __getstate__(self):
+        raise TypeError(f"Cannot pickle {type(self).__name__!r} object")
+
+
+# Aliases for items that are in typing in all supported versions.
+# We use hasattr() checks so this library will continue to import on
+# future versions of Python that may remove these names.
+_typing_names = [
+    "AbstractSet",
+    "AnyStr",
+    "BinaryIO",
+    "Callable",
+    "Collection",
+    "Container",
+    "Dict",
+    "FrozenSet",
+    "Hashable",
+    "IO",
+    "ItemsView",
+    "Iterable",
+    "Iterator",
+    "KeysView",
+    "List",
+    "Mapping",
+    "MappingView",
+    "Match",
+    "MutableMapping",
+    "MutableSequence",
+    "MutableSet",
+    "Optional",
+    "Pattern",
+    "Reversible",
+    "Sequence",
+    "Set",
+    "Sized",
+    "TextIO",
+    "Tuple",
+    "Union",
+    "ValuesView",
+    "cast",
+    "no_type_check",
+    "no_type_check_decorator",
+    # This is private, but it was defined by typing_extensions for a long time
+    # and some users rely on it.
+    "_AnnotatedAlias",
+]
+globals().update(
+    {name: getattr(typing, name) for name in _typing_names if hasattr(typing, name)}
+)
+# These are defined unconditionally because they are used in
+# typing-extensions itself.
 Generic = typing.Generic
-Hashable = typing.Hashable
-IO = typing.IO
-ItemsView = typing.ItemsView
-Iterable = typing.Iterable
-Iterator = typing.Iterator
-KeysView = typing.KeysView
-List = typing.List
-Mapping = typing.Mapping
-MappingView = typing.MappingView
-Match = typing.Match
-MutableMapping = typing.MutableMapping
-MutableSequence = typing.MutableSequence
-MutableSet = typing.MutableSet
-Optional = typing.Optional
-Pattern = typing.Pattern
-Reversible = typing.Reversible
-Sequence = typing.Sequence
-Set = typing.Set
-Sized = typing.Sized
-TextIO = typing.TextIO
-Tuple = typing.Tuple
-Union = typing.Union
-ValuesView = typing.ValuesView
-cast = typing.cast
-no_type_check = typing.no_type_check
-no_type_check_decorator = typing.no_type_check_decorator
+ForwardRef = typing.ForwardRef
+Annotated = typing.Annotated

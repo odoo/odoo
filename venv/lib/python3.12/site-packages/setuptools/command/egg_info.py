@@ -655,8 +655,6 @@ def write_pkg_info(cmd, basename, filename) -> None:
         metadata.name, oldname = cmd.egg_name, metadata.name
 
         try:
-            # write unescaped data to PKG-INFO, so older pkg_resources
-            # can still parse it
             metadata.write_pkg_info(cmd.egg_info)
         finally:
             metadata.name, metadata.version = oldname, oldver

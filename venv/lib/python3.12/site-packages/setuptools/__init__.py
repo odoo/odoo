@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import functools
 import os
-import re
 import sys
 from abc import abstractmethod
 from collections.abc import Mapping
@@ -30,7 +29,6 @@ from .version import __version__ as __version__
 from .warnings import SetuptoolsDeprecationWarning
 
 import distutils.core
-from distutils.errors import DistutilsOptionError
 
 __all__ = [
     'setup',
@@ -174,42 +172,6 @@ class Command(_Command):
         """
         super().__init__(dist)
         vars(self).update(kw)
-
-    def _ensure_stringlike(self, option, what, default=None):
-        val = getattr(self, option)
-        if val is None:
-            setattr(self, option, default)
-            return default
-        elif not isinstance(val, str):
-            raise DistutilsOptionError(f"'{option}' must be a {what} (got `{val}`)")
-        return val
-
-    def ensure_string_list(self, option: str) -> None:
-        r"""Ensure that 'option' is a list of strings.  If 'option' is
-        currently a string, we split it either on /,\s*/ or /\s+/, so
-        "foo bar baz", "foo,bar,baz", and "foo,   bar baz" all become
-        ["foo", "bar", "baz"].
-
-        ..
-           TODO: This method seems to be similar to the one in ``distutils.cmd``
-           Probably it is just here for backward compatibility with old Python versions?
-
-        :meta private:
-        """
-        val = getattr(self, option)
-        if val is None:
-            return
-        elif isinstance(val, str):
-            setattr(self, option, re.split(r',\s*|\s+', val))
-        else:
-            if isinstance(val, list):
-                ok = all(isinstance(v, str) for v in val)
-            else:
-                ok = False
-            if not ok:
-                raise DistutilsOptionError(
-                    f"'{option}' must be a list of strings (got {val!r})"
-                )
 
     @overload
     def reinitialize_command(

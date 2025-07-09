@@ -20,6 +20,7 @@ from .constant import (
     UNICODE_RANGES_COMBINED,
     UNICODE_SECONDARY_RANGE_KEYWORD,
     UTF8_MAXIMAL_ALLOCATION,
+    COMMON_CJK_CHARACTERS,
 )
 
 
@@ -198,6 +199,11 @@ def is_arabic_isolated_form(character: str) -> bool:
         return False
 
     return "ARABIC" in character_name and "ISOLATED FORM" in character_name
+
+
+@lru_cache(maxsize=UTF8_MAXIMAL_ALLOCATION)
+def is_cjk_uncommon(character: str) -> bool:
+    return character not in COMMON_CJK_CHARACTERS
 
 
 @lru_cache(maxsize=len(UNICODE_RANGES_COMBINED))

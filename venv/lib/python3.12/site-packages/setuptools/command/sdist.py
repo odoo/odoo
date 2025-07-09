@@ -30,7 +30,7 @@ class sdist(orig.sdist):
         (
             'keep-temp',
             'k',
-            "keep the distribution tree around after creating " + "archive file(s)",
+            "keep the distribution tree around after creating archive file(s)",
         ),
         (
             'dist-dir=',

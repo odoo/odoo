@@ -37,6 +37,6 @@ def parse(strs: _StrOrIter) -> Iterator[Requirement]: ...
 def parse(strs: _StrOrIter, parser: Callable[[str], _T]) -> Iterator[_T]: ...
 def parse(strs: _StrOrIter, parser: Callable[[str], _T] = parse_req) -> Iterator[_T]:  # type: ignore[assignment]
     """
-    Replacement for ``pkg_resources.parse_requirements`` that uses ``packaging``.
+    Parse requirements.
     """
     return map(parser, parse_strings(strs))

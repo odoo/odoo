@@ -46,8 +46,6 @@ from distutils.util import strtobool
 if TYPE_CHECKING:
     from typing_extensions import TypeAlias
 
-    from pkg_resources import Distribution as _pkg_resources_Distribution
-
 
 __all__ = ['Distribution']
 
@@ -471,12 +469,13 @@ class Distribution(_Distribution):
         cls, patterns: list[str], enforce_match: bool = True
     ) -> Iterator[str]:
         """
-        >>> list(Distribution._expand_patterns(['LICENSE']))
-        ['LICENSE']
+        >>> getfixture('sample_project_cwd')
+        >>> list(Distribution._expand_patterns(['LICENSE.txt']))
+        ['LICENSE.txt']
         >>> list(Distribution._expand_patterns(['pyproject.toml', 'LIC*']))
-        ['pyproject.toml', 'LICENSE']
-        >>> list(Distribution._expand_patterns(['setuptools/**/pyprojecttoml.py']))
-        ['setuptools/config/pyprojecttoml.py']
+        ['pyproject.toml', 'LICENSE.txt']
+        >>> list(Distribution._expand_patterns(['src/**/*.dat']))
+        ['src/sample/package_data.dat']
         """
         return (
             path.replace(os.sep, "/")
@@ -488,8 +487,9 @@ class Distribution(_Distribution):
     @staticmethod
     def _find_pattern(pattern: str, enforce_match: bool = True) -> list[str]:
         r"""
-        >>> Distribution._find_pattern("LICENSE")
-        ['LICENSE']
+        >>> getfixture('sample_project_cwd')
+        >>> Distribution._find_pattern("LICENSE.txt")
+        ['LICENSE.txt']
         >>> Distribution._find_pattern("/LICENSE.MIT")
         Traceback (most recent call last):
         ...
@@ -759,9 +759,7 @@ class Distribution(_Distribution):
         self._finalize_license_expression()
         self._finalize_license_files()
 
-    def fetch_build_eggs(
-        self, requires: _StrOrIter
-    ) -> list[_pkg_resources_Distribution]:
+    def fetch_build_eggs(self, requires: _StrOrIter) -> list[metadata.Distribution]:
         """Resolve pre-setup requirements"""
         from .installer import _fetch_build_eggs
 

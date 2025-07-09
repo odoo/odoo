@@ -36,7 +36,6 @@ def safe_name(component: str) -> str:
     >>> safe_name("hello_world")
     'hello_world'
     """
-    # See pkg_resources.safe_name
     return _UNSAFE_NAME_CHARS.sub("-", component)
 
 
@@ -81,7 +80,6 @@ def best_effort_version(version: str) -> str:
     >>> best_effort_version("42.+?1")
     '42.dev0+sanitized.1'
     """
-    # See pkg_resources._forgiving_version
     try:
         return safe_version(version)
     except packaging.version.InvalidVersion:

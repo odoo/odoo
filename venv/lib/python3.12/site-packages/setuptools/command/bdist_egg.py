@@ -9,7 +9,7 @@ import os
 import re
 import sys
 import textwrap
-from sysconfig import get_path, get_python_version
+from sysconfig import get_path, get_platform, get_python_version
 from types import CodeType
 from typing import TYPE_CHECKING, Literal
 
@@ -55,12 +55,12 @@ def write_stub(resource, pyfile) -> None:
         """
         def __bootstrap__():
             global __bootstrap__, __loader__, __file__
-            import sys, pkg_resources, importlib.util
-            __file__ = pkg_resources.resource_filename(__name__, %r)
-            __loader__ = None; del __bootstrap__, __loader__
-            spec = importlib.util.spec_from_file_location(__name__,__file__)
-            mod = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(mod)
+            import sys, importlib.resources as irs, importlib.util
+            with irs.as_file(irs.files(__name__).joinpath(%r)) as __file__:
+                __loader__ = None; del __bootstrap__, __loader__
+                spec = importlib.util.spec_from_file_location(__name__,__file__)
+                mod = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mod)
         __bootstrap__()
         """
     ).lstrip()
@@ -77,7 +77,7 @@ class bdist_egg(Command):
             'plat-name=',
             'p',
             "platform name to embed in generated filenames "
-            "(by default uses `pkg_resources.get_build_platform()`)",
+            "(by default uses `sysconfig.get_platform()`)",
         ),
         ('exclude-source-files', None, "remove all .py files from the generated egg"),
         (
@@ -110,9 +110,7 @@ class bdist_egg(Command):
             self.bdist_dir = os.path.join(bdist_base, 'egg')
 
         if self.plat_name is None:
-            from pkg_resources import get_build_platform
-
-            self.plat_name = get_build_platform()
+            self.plat_name = get_platform()
 
         self.set_undefined_options('bdist', ('dist_dir', 'dist_dir'))
 

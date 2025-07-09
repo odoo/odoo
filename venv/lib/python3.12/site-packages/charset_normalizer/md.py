@@ -26,6 +26,7 @@ from .utils import (
     is_unprintable,
     remove_accent,
     unicode_range,
+    is_cjk_uncommon,
 )
 
 
@@ -365,35 +366,39 @@ class SuperWeirdWordPlugin(MessDetectorPlugin):
         return self._bad_character_count / self._character_count
 
 
-class CjkInvalidStopPlugin(MessDetectorPlugin):
+class CjkUncommonPlugin(MessDetectorPlugin):
     """
-    GB(Chinese) based encoding often render the stop incorrectly when the content does not fit and
-    can be easily detected. Searching for the overuse of '丅' and '丄'.
+    Detect messy CJK text that probably means nothing.
     """
 
     def __init__(self) -> None:
-        self._wrong_stop_count: int = 0
-        self._cjk_character_count: int = 0
+        self._character_count: int = 0
+        self._uncommon_count: int = 0
 
     def eligible(self, character: str) -> bool:
-        return True
+        return is_cjk(character)
 
     def feed(self, character: str) -> None:
-        if character in {"丅", "丄"}:
-            self._wrong_stop_count += 1
+        self._character_count += 1
+
+        if is_cjk_uncommon(character):
+            self._uncommon_count += 1
             return
-        if is_cjk(character):
-            self._cjk_character_count += 1
 
     def reset(self) -> None:  # Abstract
-        self._wrong_stop_count = 0
-        self._cjk_character_count = 0
+        self._character_count = 0
+        self._uncommon_count = 0
 
     @property
     def ratio(self) -> float:
-        if self._cjk_character_count < 16:
+        if self._character_count < 8:
             return 0.0
-        return self._wrong_stop_count / self._cjk_character_count
+
+        uncommon_form_usage: float = self._uncommon_count / self._character_count
+
+        # we can be pretty sure it's garbage when uncommon characters are widely
+        # used. otherwise it could just be traditional chinese for example.
+        return uncommon_form_usage / 10 if uncommon_form_usage > 0.5 else 0.0
 
 
 class ArchaicUpperLowerPlugin(MessDetectorPlugin):

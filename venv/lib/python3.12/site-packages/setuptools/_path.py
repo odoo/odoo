@@ -39,11 +39,20 @@ def same_path(p1: StrPath, p2: StrPath) -> bool:
     return normpath(p1) == normpath(p2)
 
 
+def _cygwin_patch(filename: StrPath):  # pragma: nocover
+    """
+    Contrary to POSIX 2008, on Cygwin, getcwd (3) contains
+    symlink components. Using
+    os.path.abspath() works around this limitation. A fix in os.getcwd()
+    would probably better, in Cygwin even more so, except
+    that this seems to be by design...
+    """
+    return os.path.abspath(filename) if sys.platform == 'cygwin' else filename
+
+
 def normpath(filename: StrPath) -> str:
     """Normalize a file/dir name for comparison purposes."""
-    # See pkg_resources.normalize_path for notes about cygwin
-    file = os.path.abspath(filename) if sys.platform == 'cygwin' else filename
-    return os.path.normcase(os.path.realpath(os.path.normpath(file)))
+    return os.path.normcase(os.path.realpath(os.path.normpath(_cygwin_patch(filename))))
 
 
 @contextlib.contextmanager

@@ -1,10 +1,5 @@
-"""
-maxminddb.errors
-~~~~~~~~~~~~~~~~
-
-This module contains custom errors for the MaxMind DB reader
-"""
+"""Typed errors thrown by this library."""
 
 
 class InvalidDatabaseError(RuntimeError):
-    """This error is thrown when unexpected data is found in the database."""
+    """An error thrown when unexpected data is found in the database."""

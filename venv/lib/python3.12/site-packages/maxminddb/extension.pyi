@@ -1,27 +1,24 @@
-"""
-maxminddb.extension
-~~~~~~~~~~~~~~~~
+"""C extension database reader and related classes."""
 
-This module contains the C extension database reader and related classes.
-
-"""
-
+# pylint: disable=E0601,E0602
 from ipaddress import IPv4Address, IPv6Address
 from os import PathLike
-from typing import Any, AnyStr, Dict, IO, List, Optional, Tuple, Union
-from maxminddb import MODE_AUTO
+from typing import IO, Any, AnyStr, Optional, Union
+
+from maxminddb.const import MODE_AUTO
 from maxminddb.types import Record
 
 class Reader:
-    """
-    A C extension implementation of a reader for the MaxMind DB format. IP
+    """A C extension implementation of a reader for the MaxMind DB format. IP
     addresses can be looked up using the ``get`` method.
     """
 
     closed: bool = ...
 
     def __init__(
-        self, database: Union[AnyStr, int, PathLike, IO], mode: int = MODE_AUTO
+        self,
+        database: Union[AnyStr, int, PathLike, IO],
+        mode: int = MODE_AUTO,
     ) -> None:
         """Reader for the MaxMind DB file format
 
@@ -30,6 +27,7 @@ class Reader:
                     file, or a file descriptor in the case of MODE_FD.
         mode -- mode to open the database with. The only supported modes are
                 MODE_AUTO and MODE_MMAP_EXT.
+
         """
 
     def close(self) -> None:
@@ -38,25 +36,26 @@ class Reader:
     def get(self, ip_address: Union[str, IPv6Address, IPv4Address]) -> Optional[Record]:
         """Return the record for the ip_address in the MaxMind DB
 
-
         Arguments:
         ip_address -- an IP address in the standard string notation
+
         """
 
     def get_with_prefix_len(
-        self, ip_address: Union[str, IPv6Address, IPv4Address]
-    ) -> Tuple[Optional[Record], int]:
+        self,
+        ip_address: Union[str, IPv6Address, IPv4Address],
+    ) -> tuple[Optional[Record], int]:
         """Return a tuple with the record and the associated prefix length
-
 
         Arguments:
         ip_address -- an IP address in the standard string notation
+
         """
 
-    def metadata(self) -> "Metadata":
+    def metadata(self) -> Metadata:
         """Return the metadata associated with the MaxMind DB file"""
 
-    def __enter__(self) -> "Reader": ...
+    def __enter__(self) -> Reader: ...
     def __exit__(self, *args) -> None: ...
 
 # pylint: disable=too-few-public-methods
@@ -85,7 +84,7 @@ class Metadata:
     A string identifying the database type, e.g., "GeoIP2-City".
     """
 
-    description: Dict[str, str]
+    description: dict[str, str]
     """
     A map from locales to text descriptions of the database.
     """
@@ -97,7 +96,7 @@ class Metadata:
     both IPv4 and IPv6 lookups.
     """
 
-    languages: List[str]
+    languages: list[str]
     """
     A list of locale codes supported by the databse.
     """

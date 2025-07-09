@@ -11,7 +11,7 @@ except ImportError:
 
 
 class FileBuffer:
-    """A slice-able file reader"""
+    """A slice-able file reader."""
 
     def __init__(self, database: str) -> None:
         # pylint: disable=consider-using-with
@@ -28,31 +28,31 @@ class FileBuffer:
         raise TypeError("Invalid argument type.")
 
     def rfind(self, needle: bytes, start: int) -> int:
-        """Reverse find needle from start"""
+        """Reverse find needle from start."""
         pos = self._read(self._size - start - 1, start).rfind(needle)
         if pos == -1:
             return pos
         return start + pos
 
     def size(self) -> int:
-        """Size of file"""
+        """Size of file."""
         return self._size
 
     def close(self) -> None:
-        """Close file"""
+        """Close file."""
         self._handle.close()
 
     if hasattr(os, "pread"):
 
         def _read(self, buffersize: int, offset: int) -> bytes:
-            """read that uses pread"""
+            """Read that uses pread."""
             # pylint: disable=no-member
             return os.pread(self._handle.fileno(), buffersize, offset)  # type: ignore
 
     else:
 
         def _read(self, buffersize: int, offset: int) -> bytes:
-            """read with a lock
+            """Read with a lock.
 
             This lock is necessary as after a fork, the different processes
             will share the same file table entry, even if we dup the fd, and
