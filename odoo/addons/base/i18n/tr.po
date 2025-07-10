@@ -1389,6 +1389,14 @@ msgid ""
 "It adds a new button \"EDI VAT\" on the French vat report and a new menu item \"EDI exports\" (below \"Reporting\",\n"
 "in the \"Statement Reports\" section).\n"
 msgstr ""
+"\n"
+"Accounting reports for France\n"
+"================================\n"
+"\n"
+"This module also allows exporting the French vat report and send it to the DGFiP, an OGA or an expert accountant.\n"
+"\n"
+"It adds a new button \"EDI VAT\" on the French vat report and a new menu item \"EDI exports\" (below \"Reporting\",\n"
+"in the \"Statement Reports\" section).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ga_reports
@@ -1792,6 +1800,11 @@ msgid ""
 "Allows to send the tax report via the\n"
 "MTD-VAT API to HMRC.\n"
 msgstr ""
+"\n"
+"Accounting reports for UK\n"
+"\n"
+"Allows to send the tax report via the\n"
+"MTD-VAT API to HMRC.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_reports
@@ -3508,6 +3521,9 @@ msgid ""
 "Construction Industry Scheme for United Kingdom\n"
 "================================================\n"
 msgstr ""
+"\n"
+"Construction Industry Scheme for United Kingdom\n"
+"================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_enterprise
@@ -4112,6 +4128,12 @@ msgid ""
 "\n"
 "This module allows the creation of the EDI documents and the communication with the Mexican certification providers (PACs) to sign/cancel them.\n"
 msgstr ""
+"\n"
+"EDI Mexican Localization\n"
+"========================\n"
+"Allow the user to generate the EDI document for Mexican invoicing.\n"
+"\n"
+"This module allows the creation of the EDI documents and the communication with the Mexican certification providers (PACs) to sign/cancel them.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe_edi
@@ -4256,6 +4278,12 @@ msgid ""
 "\n"
 "DIOT Report\n"
 msgstr ""
+"\n"
+"Electronic accounting reports\n"
+"    - COA\n"
+"    - Trial Balance\n"
+"\n"
+"DIOT Report\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe_reports
@@ -4982,6 +5010,8 @@ msgid ""
 "\n"
 "Generates Intrastat XML report (DEBWEB2) for declaration based on invoices for France.\n"
 msgstr ""
+"\n"
+"Generates Intrastat XML report (DEBWEB2) for declaration based on invoices for France.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_intrastat
@@ -5064,6 +5094,9 @@ msgid ""
 "HMRC API for the United Kingdom\n"
 "================================================\n"
 msgstr ""
+"\n"
+"HMRC API for the United Kingdom\n"
+"================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_drivers
@@ -6017,6 +6050,24 @@ msgid ""
 "\n"
 ".. _SAT: http://www.sat.gob.mx/\n"
 msgstr ""
+"\n"
+"Minimal accounting configuration for Mexico.\n"
+"============================================\n"
+"\n"
+"This Chart of account is a minimal proposal to be able to use OoB the\n"
+"accounting feature of Odoo.\n"
+"\n"
+"This doesn't pretend be all the localization for MX it is just the minimal\n"
+"data required to start from 0 in mexican localization.\n"
+"\n"
+"This modules and its content is updated frequently by openerp-mexico team.\n"
+"\n"
+"With this module you will have:\n"
+"\n"
+" - Minimal chart of account tested in production environments.\n"
+" - Minimal chart of taxes, to comply with SAT_ requirements.\n"
+"\n"
+".. _SAT: http://www.sat.gob.mx/\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports_2024
@@ -6133,6 +6184,22 @@ msgid ""
 "https://github.com/DGFiP/Test-Compta-Demat\n"
 "\n"
 msgstr ""
+"\n"
+"Module for the import of FEC standard files, useful for importing accounting history.\n"
+"\n"
+"FEC files (fichier des écritures comptables) are the standard accounting reports that French businesses have to submit to the tax authorities.\n"
+"This module allows the import of accounts, journals, partners and moves from these files.\n"
+"\n"
+"Only the CSV format of FEC is implemented.\n"
+"'utf-8', 'utf-8-sig' and 'iso8859_15' are the only allowed encodings.\n"
+"Several delimiters are allowed: ';' or '|' or ',' or '\t'.\n"
+"\n"
+"Official Technical Specification (fr)\n"
+"https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000027804775/\n"
+"\n"
+"FEC Testing tool from the tax authorities\n"
+"https://github.com/DGFiP/Test-Compta-Demat\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk_saft_import
@@ -7672,6 +7739,12 @@ msgid ""
 "It is only when a delivery order is validated that you can create the delivery\n"
 "guide.\n"
 msgstr ""
+"\n"
+"The delivery guide (Complemento XML Carta de Porte) is needed as a proof\n"
+"that you are sending goods between A and B.\n"
+"\n"
+"It is only when a delivery order is validated that you can create the delivery\n"
+"guide.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_edi_stock
@@ -8402,6 +8475,27 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"\n"
+"This is the module to manage the accounting chart for France in Odoo.\n"
+"========================================================================\n"
+"\n"
+"This module applies to companies based in France mainland. It doesn't apply to\n"
+"companies based in the DOM-TOMs (Guadeloupe, Martinique, Guyane, Réunion, Mayotte).\n"
+"\n"
+"This localisation module creates the VAT taxes of type 'tax included' for purchases\n"
+"(it is notably required when you use the module 'hr_expense'). Beware that these\n"
+"'tax included' VAT taxes are not managed by the fiscal positions provided by this\n"
+"module (because it is complex to manage both 'tax excluded' and 'tax included'\n"
+"scenarios in fiscal positions).\n"
+"\n"
+"This localisation module doesn't properly handle the scenario when a France-mainland\n"
+"company sells services to a company based in the DOMs. We could manage it in the\n"
+"fiscal positions, but it would require to differentiate between 'product' VAT taxes\n"
+"and 'service' VAT taxes. We consider that it is too 'heavy' to have this by default\n"
+"in l10n_fr_account; companies that sell services to DOM-based companies should update the\n"
+"configuration of their taxes and fiscal positions manually.\n"
+"\n"
+"**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mn
@@ -9113,6 +9207,12 @@ msgid ""
 "\n"
 "This module follows the implementation guidelines issued by the Bacs Payment Schemes Limited (BPSL). For more information about the BACS standards: https://www.bacs.co.uk/\n"
 msgstr ""
+"\n"
+"This module enables generating payment orders as required by the BACS Direct Debit and Direct Credit standards. The generated plain text files can then be uploaded to your bank for processing.\n"
+"\n"
+"Direct Debit allows businesses to collect payments directly from the bank accounts of customers, whereas the Direct Credit functionality enables businesses to make payments directly to bank accounts of individuals or other businesses.\n"
+"\n"
+"This module follows the implementation guidelines issued by the Bacs Payment Schemes Limited (BPSL). For more information about the BACS standards: https://www.bacs.co.uk/\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_saft
@@ -13736,7 +13836,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/timbuktu
 msgid "Africa/Timbuktu"
-msgstr ""
+msgstr "Africa/Timbuktu"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/tripoli
@@ -14676,7 +14776,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/nuuk
 msgid "America/Nuuk"
-msgstr ""
+msgstr "America/Nuuk"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/ojinaga
@@ -17639,7 +17739,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_sale
 msgid "CFDI 4.0 fields for sale orders"
-msgstr ""
+msgstr "CFDI 4.0 fields for sale orders"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_uk_cis
@@ -17842,7 +17942,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__canada/yukon
 msgid "Canada/Yukon"
-msgstr ""
+msgstr "Canada/Yukon"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ca_check_printing
@@ -18002,7 +18102,7 @@ msgstr ""
 #: model:res.currency,currency_subunit_label:base.NIO
 #: model:res.currency,currency_subunit_label:base.PHP
 msgid "Centavos"
-msgstr ""
+msgstr "Centavos"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.PAB
@@ -22989,7 +23089,7 @@ msgstr "Ödemeleri ABA Kredi Transferi dosyaları olarak dışa aktarma"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_uk_bacs
 msgid "Export payments as BACS Direct Debit and Direct Credit files"
-msgstr ""
+msgstr "Export payments as BACS Direct Debit and Direct Credit files"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ca_payment_cpa005
@@ -23966,7 +24066,7 @@ msgstr "Fransız Guyanası"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_intrastat
 msgid "French Intrastat Declaration"
-msgstr ""
+msgstr "French Intrastat Declaration"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll
@@ -24216,7 +24316,7 @@ msgstr "Genel Ayarlar"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_landing
 msgid "Generate Electronic Invoice with custom numbers"
-msgstr ""
+msgstr "Generate Electronic Invoice with custom numbers"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_iap_mine
@@ -29274,7 +29374,7 @@ msgstr "EDI Belgeleri için Meksika Yerelleştirmesi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_website_sale
 msgid "Mexican Localization for eCommerce"
-msgstr ""
+msgstr "Mexican Localization for eCommerce"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_pos
@@ -29299,7 +29399,7 @@ msgstr "Meksika - Elektronik Teslimat Rehberi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_reports_closing
 msgid "Mexico - Month 13 Trial Balance"
-msgstr ""
+msgstr "Mexico - Month 13 Trial Balance"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll
@@ -29314,7 +29414,7 @@ msgstr "Meksika - Muhasebe ile Bordro"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports_closing
 msgid "Mexico Month 13 Trial Balance Report"
-msgstr ""
+msgstr "Mexico Month 13 Trial Balance Report"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__mexico/bajanorte
@@ -33063,7 +33163,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/chuuk
 msgid "Pacific/Chuuk"
-msgstr ""
+msgstr "Pacific/Chuuk"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/easter
@@ -33243,7 +33343,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/truk
 msgid "Pacific/Truk"
-msgstr ""
+msgstr "Pacific/Truk"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__pacific/wake
@@ -33857,7 +33957,7 @@ msgstr ""
 #: model:res.currency,currency_unit_label:base.DOP
 #: model:res.currency,currency_unit_label:base.MXN
 msgid "Pesos"
-msgstr ""
+msgstr "Pesos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pharmacy_retail
@@ -36141,7 +36241,7 @@ msgstr "S - DİĞER HİZMET FAALİYETLERİ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_saft_import
 msgid "SAF-T Import"
-msgstr ""
+msgstr "Partnerleri Görüntüle"
 
 #. module: base
 #: model:res.country.group,name:base.sepa_zone
@@ -41273,17 +41373,17 @@ msgstr "Birleşik Krallık - Muhasebe Raporları"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_reports_cis
 msgid "UK - Construction Industry Scheme"
-msgstr ""
+msgstr "UK - Construction Industry Scheme"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_hmrc
 msgid "UK - HMRC API"
-msgstr ""
+msgstr "UK - HMRC API"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_bacs
 msgid "UK BACS Payment Files"
-msgstr ""
+msgstr "UK BACS Payment Files"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_unspsc
@@ -43268,6 +43368,8 @@ msgid ""
 "XML Export of the Journal Entries for the Mexican Tax Authorities for a "
 "compulsory audit."
 msgstr ""
+"XML Export of the Journal Entries for the Mexican Tax Authorities for a "
+"compulsory audit."
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.VND
