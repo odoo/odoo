@@ -133,6 +133,7 @@ export class Builder extends Component {
                 updateInvisibleElementsPanel: () => this.updateInvisibleEls(),
                 allowCustomStyle: true,
                 allowTargetBlank: true,
+                dropImageAsAttachment: true,
                 getAnimateTextConfig: () => ({ editor: this.editor, editorBus: this.editorBus }),
             },
             this.env.services

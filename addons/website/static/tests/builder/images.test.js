@@ -8,9 +8,10 @@ import {
     manuallyDispatchProgrammaticEvent,
     queryAll,
     queryFirst,
+    queryOne,
     waitFor,
 } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder, dummyBase64Img } from "./website_helpers";
 import { testImg } from "./image_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
@@ -50,7 +51,6 @@ test("simple click on Image", async () => {
     expect("div.o-tooltip").toHaveCount(0);
 });
 
-
 test("double click on text", async () => {
     await setupWebsiteBuilder("<div><p class=text_class>Text</p></div>");
     expect(".modal-content").toHaveCount(0);
@@ -72,6 +72,74 @@ test("image should not be draggable", async () => {
     });
 
     expect(events.get("dragstart").defaultPrevented).toBe(true);
+});
+
+test("pasted/dropped images are converted to attachments on save in website editor", async () => {
+    function pasteFile(editor, file) {
+        const clipboardData = new DataTransfer();
+        clipboardData.items.add(file);
+        const pasteEvent = new ClipboardEvent("paste", { clipboardData, bubbles: true });
+        editor.editable.dispatchEvent(pasteEvent);
+    }
+
+    function createBase64ImageFile(base64ImageData) {
+        const binaryImageData = atob(base64ImageData);
+        const uint8Array = new Uint8Array(binaryImageData.length);
+        for (let i = 0; i < binaryImageData.length; i++) {
+            uint8Array[i] = binaryImageData.charCodeAt(i);
+        }
+        return new File([uint8Array], "test_image.png", { type: "image/png" });
+    }
+
+    onRpc("/html_editor/attachment/add_data", async (request) => {
+        const { params } = await request.json();
+        expect(
+            params.data ===
+                "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII="
+        ).toBe(true);
+        expect.step("add_data");
+        return {
+            image_src: "/test_image_url.png",
+            access_token: "1234",
+            public: false,
+        };
+    });
+
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        expect.step("save");
+        expect(args[1]).toInclude('src="/test_image_url.png?access_token=1234"');
+        return true;
+    });
+
+    const { getEditor } = await setupWebsiteBuilder(`
+        <section>
+            <p>Text</p>
+            <p><br></p>
+            <p>More Text</p>
+        </section>
+    `);
+
+    const editor = getEditor();
+
+    // Paste image
+    var p = queryOne(":iframe section > p:has(br)");
+    setSelection({ anchorNode: p, anchorOffset: 0 });
+    pasteFile(
+        editor,
+        createBase64ImageFile(
+            "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
+        )
+    );
+
+    // Check if image is set to be saved as attachment
+    await waitFor(":iframe img.o_b64_image_to_save");
+    expect(
+        queryOne(":iframe img.o_b64_image_to_save").src.startsWith("data:image/png;base64,")
+    ).toBe(true);
+
+    // Save and check if image has been saved as attachment
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect.verifySteps(["add_data", "save"]);
 });
 
 describe("Image format/optimize", () => {
