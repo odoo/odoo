@@ -1,7 +1,7 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { ChartOption, DATASET_KEY_PREFIX } from "./chart_option";
-import { getCSSVariableValue } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
+import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { registry } from "@web/core/registry";
 import { isCSSColor } from "@web/core/utils/colors";
 

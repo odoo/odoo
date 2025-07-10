@@ -2,6 +2,7 @@ import { Component, onWillStart, useState } from "@odoo/owl";
 import { ColorPicker } from "@web/core/color_picker/color_picker";
 import { HighlightPicker } from "./highlight_picker";
 import { normalizeColor } from "@html_builder/utils/utils_css";
+import { getHtmlStyle } from "@html_editor/utils/formatting";
 
 export const highlightIdToName = {
     underline: "Underline",
@@ -78,7 +79,7 @@ export class HighlightConfigurator extends Component {
                 applyColorPreview: (color) =>
                     this.props.previewHighlightStyle(
                         "--text-highlight-color",
-                        normalizeColor(color)
+                        normalizeColor(color, getHtmlStyle(document))
                     ),
                 applyColorResetPreview: this.props.revertHighlightStyle,
                 className: "d-contents",
@@ -95,7 +96,10 @@ export class HighlightConfigurator extends Component {
 
     selectHighlightColor(color) {
         this.props.componentStack.pop();
-        this.props.applyHighlightStyle("--text-highlight-color", normalizeColor(color));
+        this.props.applyHighlightStyle(
+            "--text-highlight-color",
+            normalizeColor(color, getHtmlStyle(document))
+        );
     }
 
     deleteHighlight() {

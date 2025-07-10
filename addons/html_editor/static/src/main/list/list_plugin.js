@@ -30,7 +30,7 @@ import { _t } from "@web/core/l10n/translation";
 import { compareListTypes, createList, insertListAfter, isListItem } from "./utils";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "@html_editor/utils/resource";
-import { FONT_SIZE_CLASSES, getFontSizeOrClass } from "@html_editor/utils/formatting";
+import { FONT_SIZE_CLASSES, getFontSizeOrClass, getHtmlStyle } from "@html_editor/utils/formatting";
 import { getTextColorOrClass } from "@html_editor/utils/color";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { ListSelector } from "./list_selector";
@@ -1221,8 +1221,7 @@ export class ListPlugin extends Plugin {
         const largestMarkerPadding = Math.round(largestMarker) * (list.nodeName === "UL" ? 2 : 1);
 
         // bootstrap sets ul { padding-left: 2rem; }
-        const defaultPadding =
-            parseFloat(this.window.getComputedStyle(document.documentElement).fontSize) * 2;
+        const defaultPadding = parseFloat(getHtmlStyle(this.document).fontSize) * 2;
         // Align the whole list based on the item that requires the largest padding.
         // For smaller font sizes, doubling the width of the dot marker is still lower than the
         // default. The default is kept in that case.

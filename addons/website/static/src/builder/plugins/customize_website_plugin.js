@@ -1,9 +1,6 @@
-import {
-    getCSSVariableValue,
-    isCSSVariable,
-    setBuilderCSSVariables,
-} from "@html_builder/utils/utils_css";
+import { isCSSVariable, setBuilderCSSVariables } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { parseHTML } from "@html_editor/utils/html";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -52,7 +49,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         color_combination_getters: withSequence(5, (el, actionParam) => {
             const combination = actionParam.combinationColor;
             if (combination) {
-                const style = this.window.getComputedStyle(this.document.documentElement);
+                const style = getHtmlStyle(this.document);
                 return `o_cc${getCSSVariableValue(combination, style)}`;
             }
         }),
@@ -86,7 +83,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         this.pendingThemeRequests = pendingThemeRequests;
     }
     getWebsiteVariableValue(variable) {
-        const style = this.window.getComputedStyle(this.document.documentElement);
+        const style = getHtmlStyle(this.document);
         let finalValue = getCSSVariableValue(variable, style);
         /* TODO dedicated action ?
         if (!params.colorNames) {
@@ -428,7 +425,7 @@ export class CustomizeBodyBgTypeAction extends BuilderAction {
         if (bgImage === "none") {
             return "NONE";
         }
-        const style = this.window.getComputedStyle(this.document.documentElement);
+        const style = getHtmlStyle(this.document);
         return getCSSVariableValue("body-image-type", style);
     }
     async load({ editingElement: el, params, value, historyImageSrc }) {
@@ -742,7 +739,7 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
         this.dependencies.customizeWebsite.withCustomHistory(this);
     }
     getValue({ params: { mainParam: color, colorType, gradientColor, combinationColor } }) {
-        const style = this.window.getComputedStyle(this.document.documentElement);
+        const style = getHtmlStyle(this.document);
         if (gradientColor) {
             const gradientValue =
                 this.dependencies.customizeWebsite.getWebsiteVariableValue(gradientColor);
@@ -796,7 +793,7 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
                 { colorType, combinationColor, resetCcOnEmpty: true, nullValue }
             );
         }
-        setBuilderCSSVariables();
+        setBuilderCSSVariables(getHtmlStyle(this.document));
     }
 }
 
@@ -811,7 +808,7 @@ export class CustomizeButtonStyleAction extends BuilderAction {
         return this.getValue({ params }) === value;
     }
     getValue({ params: { mainParam: which } }) {
-        const style = this.window.getComputedStyle(this.document.documentElement);
+        const style = getHtmlStyle(this.document);
         const isOutline = getCSSVariableValue(`btn-${which}-outline`, style);
         const isFlat = getCSSVariableValue(`btn-${which}-flat`, style);
         return isFlat === "true" ? "flat" : isOutline === "true" ? "outline" : "fill";
