@@ -83,10 +83,6 @@ class StockWarehouseOrderpoint(models.Model):
     qty_to_order_manual = fields.Float('To Order Manual', digits='Product Unit')
 
     days_to_order = fields.Float(compute='_compute_days_to_order', help="Numbers of days  in advance that replenishments demands are created.")
-    visibility_days = fields.Float(
-        compute='_compute_visibility_days', inverse='_set_visibility_days', readonly=False,
-        help="Consider product forecast these many days in the future upon product replenishment, set to 0 for just-in-time.\n"
-             "The value depends on the type of the route (Buy or Manufacture)")
 
     unwanted_replenish = fields.Boolean('Unwanted Replenish', compute="_compute_unwanted_replenish")
     show_supply_warning = fields.Boolean(compute="_compute_show_supply_warning")
@@ -150,13 +146,6 @@ class StockWarehouseOrderpoint(models.Model):
             orderpoint.allowed_replenishment_uom_ids = orderpoint.product_id.uom_ids
             if 'buy' in orderpoint.rule_ids.mapped('action'):
                 orderpoint.allowed_replenishment_uom_ids += orderpoint.product_id.seller_ids.product_uom_id
-
-    @api.depends('route_id', 'product_id')
-    def _compute_visibility_days(self):
-        self.visibility_days = 0
-
-    def _set_visibility_days(self):
-        return True
 
     @api.depends('route_id', 'product_id')
     def _compute_days_to_order(self):
@@ -228,7 +217,7 @@ class StockWarehouseOrderpoint(models.Model):
             'active_model': 'product.product',
             'lead_days_date': format_date(self.env, self.lead_days_date),
             'qty_to_order': self._get_qty_to_order(force_visibility_days=0),
-            'visibility_days_date': format_date(self.env, fields.Date.add(self.lead_days_date, days=int(self.visibility_days))),
+            'visibility_days_date': format_date(self.env, self.lead_days_date),
             'qty_to_order_with_visibility_days': self.qty_to_order_computed,
         }
         warehouse = self.warehouse_id
@@ -331,7 +320,7 @@ class StockWarehouseOrderpoint(models.Model):
                 ]
 
     @api.depends('replenishment_uom_id', 'product_min_qty', 'product_max_qty',
-    'visibility_days', 'product_id', 'location_id', 'product_id.seller_ids.delay')
+    'product_id', 'location_id', 'product_id.seller_ids.delay')
     def _compute_qty_to_order_computed(self):
         def to_compute(orderpoint):
             rounding = orderpoint.product_uom.rounding
@@ -348,12 +337,8 @@ class StockWarehouseOrderpoint(models.Model):
             orderpoint.qty_to_order_computed = orderpoint._get_qty_to_order(qty_in_progress_by_orderpoint=qty_in_progress_by_orderpoint)
         (self - orderpoints).qty_to_order_computed = False
 
-    def _get_qty_to_order(self, force_visibility_days=False, qty_in_progress_by_orderpoint=None):
+    def _get_qty_to_order(self, force_visibility_days=0, qty_in_progress_by_orderpoint=None):
         self.ensure_one()
-        visibility_days = self.visibility_days
-        if force_visibility_days is not False:
-            # Accepts falsy values such as 0.
-            visibility_days = force_visibility_days
         qty_to_order = 0.0
         qty_in_progress_by_orderpoint = qty_in_progress_by_orderpoint or {}
         qty_in_progress = qty_in_progress_by_orderpoint.get(self.id)
@@ -363,7 +348,7 @@ class StockWarehouseOrderpoint(models.Model):
         # The check is on purpose. We only want to consider the visibility days if the forecast is negative and
         # there is a already something to ressuply base on lead times.
         if float_compare(self.qty_forecast, self.product_min_qty, precision_rounding=rounding) < 0:
-            product_context = self._get_product_context(visibility_days=visibility_days)
+            product_context = self._get_product_context(visibility_days=force_visibility_days)
             qty_forecast_with_visibility = self.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + qty_in_progress
             qty_to_order = max(self.product_min_qty, self.product_max_qty) - qty_forecast_with_visibility
             qty_multiple = self.replenishment_uom_id._compute_quantity(1, self.product_uom) if self.replenishment_uom_id else 0.0
@@ -643,9 +628,9 @@ class StockWarehouseOrderpoint(models.Model):
                             origin = orderpoint.name
                         if orderpoint.product_uom.compare(orderpoint.qty_to_order, 0.0) == 1:
                             date = orderpoint._get_orderpoint_procurement_date()
-                            global_visibility_days = self.env.context.get('global_visibility_days', self.env['ir.config_parameter'].sudo().get_param('stock.visibility_days', 0))
-                            if global_visibility_days:
-                                date -= relativedelta.relativedelta(days=int(global_visibility_days))
+                            global_horizon_days = self.get_horizon_days()
+                            if global_horizon_days:
+                                date -= relativedelta.relativedelta(days=int(global_horizon_days))
                             values = orderpoint._prepare_procurement_values(date=date)
                             procurements.append(self.env['procurement.group'].Procurement(
                                 orderpoint.product_id, orderpoint.qty_to_order, orderpoint.product_uom,
@@ -712,5 +697,5 @@ class StockWarehouseOrderpoint(models.Model):
         return self.env['stock.location'].search([('replenish_location', '=', True)])
 
     @api.model
-    def get_visibility_days(self):
-        return self.env['ir.config_parameter'].sudo().get_param('stock.visibility_days', 0)
+    def get_horizon_days(self):
+        return self.env.context.get('global_horizon_days', self.env.company.horizon_days)

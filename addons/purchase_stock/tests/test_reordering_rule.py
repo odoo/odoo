@@ -1112,7 +1112,6 @@ class TestReorderingRule(TransactionCase):
             'product_id': self.product_01.id,
             'product_min_qty': 0,
             'product_max_qty': 0,
-            'visibility_days': 10,
         })
 
         # out move on January 20th
@@ -1151,7 +1150,6 @@ class TestReorderingRule(TransactionCase):
             'product_id': self.product_01.id,
             'product_min_qty': 0,
             'product_max_qty': 0,
-            'visibility_days': 5,
         })
 
         # Out move in 5 days
@@ -1168,7 +1166,6 @@ class TestReorderingRule(TransactionCase):
         replenishment_info = loads(self.env['stock.replenishment.info'].create({'orderpoint_id': orderpoint.id}).json_lead_days)
         self.assertEqual(replenishment_info['lead_days_date'], format_date(orderpoint.env, today + td(days=1)))
         self.assertEqual(float(replenishment_info['qty_to_order']), 0)
-        self.assertEqual(replenishment_info['visibility_days'], 0)
         # Extra lines for forecast are given through its context
         context = orderpoint.action_product_forecast_report()['context']
         self.assertEqual(context['qty_to_order'], 0)
@@ -1190,7 +1187,6 @@ class TestReorderingRule(TransactionCase):
         replenishment_info = loads(self.env['stock.replenishment.info'].create({'orderpoint_id': orderpoint.id}).json_lead_days)
         self.assertEqual(replenishment_info['lead_days_date'], format_date(orderpoint.env, today + td(days=1)))
         self.assertEqual(float(replenishment_info['qty_to_order']), 8)
-        self.assertEqual(replenishment_info['visibility_days'], 5)
         self.assertEqual(replenishment_info['visibility_days_date'], format_date(orderpoint.env, today + td(days=1) + td(days=5)))
         # Extra lines for forecast are given through its context
         context = orderpoint.action_product_forecast_report()['context']

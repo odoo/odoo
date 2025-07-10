@@ -128,5 +128,4 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
         self.assertTrue(self.orderpoint_A.unwanted_replenish, 'Orderpoint A not set to unwanted_replenish')
         self.assertFalse(self.orderpoint_B.unwanted_replenish, 'Orderpoint B is set to unwanted_replenish')
         #Update Orderpoint A
-        self.orderpoint_A.visibility_days = 10
         self.assertFalse(self.orderpoint_A.unwanted_replenish, 'Orderpoint A shall not be set to unwanted_replenish')

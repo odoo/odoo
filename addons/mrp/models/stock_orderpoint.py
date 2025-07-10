@@ -13,7 +13,6 @@ class StockWarehouseOrderpoint(models.Model):
     bom_id = fields.Many2one(
         'mrp.bom', string='Bill of Materials', check_company=True,
         domain="[('type', '=', 'normal'), '&', '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
-    manufacturing_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the manufacturing routes.")
 
     def _get_replenishment_order_notification(self):
         self.ensure_one()
@@ -56,20 +55,6 @@ class StockWarehouseOrderpoint(models.Model):
             manufacture_route.append(res['route_id'][0])
         for orderpoint in self:
             orderpoint.show_bom = orderpoint.route_id.id in manufacture_route
-
-    def _compute_visibility_days(self):
-        res = super()._compute_visibility_days()
-        for orderpoint in self:
-            if 'manufacture' in orderpoint.rule_ids.mapped('action'):
-                orderpoint.visibility_days = orderpoint.manufacturing_visibility_days
-        return res
-
-    def _set_visibility_days(self):
-        res = super()._set_visibility_days()
-        for orderpoint in self:
-            if 'manufacture' in orderpoint.rule_ids.mapped('action'):
-                orderpoint.manufacturing_visibility_days = orderpoint.visibility_days
-        return res
 
     def _compute_days_to_order(self):
         res = super()._compute_days_to_order()
