@@ -87,9 +87,14 @@
                         <i t-else="" class="fa fa-floppy-o" role="img" aria-label="Save" title="Save"/>
                     </button>
                 </div>
+                <div class="floor-selector d-flex gap-2 p-2 align-items-center overflow-auto">
+                    <a role="button" href="https://www.odoo.com/app/point-of-sale-restaurant-qr-code/" class="btn btn-primary text-white btn-lg lh-lg">
+                        <i class="fa fa-qrcode fa-fw" role="img" aria-label="Get QR Codes" title="Get QR Codes"></i><span class="ms-1">Get QR Codes</span>
+                    </a>
+                </div>
             </div>
             <t t-set="isKanban" t-value="pos.floorPlanStyle == 'kanban'"/>
-            <div t-ref="floor-map-scroll" class="overflow-auto flex-grow-1 flex-shrink-1 flex-basis-0 w-auto" t-attf-style="background: {{activeFloor?.background_color}}"> 
+            <div t-ref="floor-map-scroll" class="overflow-auto flex-grow-1 flex-shrink-1 flex-basis-0 w-auto" t-attf-style="background: {{activeFloor?.background_color}}">
                 <div t-on-click="onClickFloorMap" t-on-touchstart="_onPinchStart" t-on-touchmove="_onPinchMove" t-on-touchend="_onPinchEnd"
                     t-attf-class="floor-map position-relative w-100 h-100 {{ pos.isEditMode ? 'floor-grid' : ''}}"
                     t-ref="floor-map-ref"
