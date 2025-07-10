@@ -258,9 +258,6 @@ class IrRule(models.Model):
             failing_rules = _("Blame the following rules:\n%s", rules_description)
             msg = f"{operation_error}\n{failing_records}\n\n{failing_rules}\n\n{resolution_info}"
 
-        # clean up the cache of records prefetched with display_name above
-        records_sudo.invalidate_recordset()
-
         exception = AccessError(msg)
         if context:
             exception.context = context

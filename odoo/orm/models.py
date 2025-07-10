@@ -3806,6 +3806,7 @@ class BaseModel(metaclass=MetaModel):
             Rule = self.env['ir.rule']
             domain = Rule._compute_domain(self._name, operation)
             if domain and (forbidden := self - self.sudo().filtered_domain(domain)):
+                forbidden.invalidate_recordset()
                 return forbidden, functools.partial(Rule._make_access_error, operation, forbidden)
 
         return None
@@ -6416,6 +6417,9 @@ class BaseModel(metaclass=MetaModel):
         self._invalidate_cache(fnames, self._ids)
 
     def _invalidate_cache(self, fnames: Collection[str] | None = None, ids: Sequence[IdType] | None = None) -> None:
+        if ids is not None and not ids:  # Avoid invalidating field_inverses for no reason
+            return
+
         if fnames is None:
             fields = self._fields.values()
         else:
