@@ -12,39 +12,4 @@
             </button>
         </div>
     </template>
-    <template id="s_add_to_cart_options" inherit_id="website.snippet_options">
-        <xpath expr="." position="inside">
-            <div data-js="AddToCart"
-                 data-selector=".s_add_to_cart">
-                <we-row>
-                    <we-many2one string="Product"
-                                 data-model="product.template"
-                                 data-set-product-template=""
-                                 data-name="product_template_picker_opt"
-                                 data-no-preview="true"
-                                 data-domain='[["is_published", "=", true], ["sale_ok", "=", true]]'
-                    />
-                    <we-button data-name="product_template_reset_opt"
-                               class="reset-product-picker align-self-end fa fa-fw fa-times">
-                    </we-button>
-                </we-row>
-                <we-row>
-                    <we-many2one string="Variant" class="o_we_sublevel_1"
-                                 data-model="product.product"
-                                 data-set-product-variant=""
-                                 data-name="product_variant_picker_opt"
-                                 data-no-preview="true"
-                                 data-default-message="Visitor's Choice"
-                    />
-                    <we-button data-name="product_variant_reset_opt"
-                               class="reset-variant-picker align-self-end fa fa-fw fa-times">
-                    </we-button>
-                </we-row>
-                <we-select data-name="action_picker_opt" string="Action" data-no-preview="true">
-                    <we-button data-set-action="add_to_cart">Add to Cart</we-button>
-                    <we-button data-set-action="buy_now">Buy Now</we-button>
-                </we-select>
-            </div>
-        </xpath>
-    </template>
 </odoo>

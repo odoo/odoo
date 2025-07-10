@@ -68,30 +68,6 @@
     </section>
 </template>
 
-<template id="s_table_of_content_options" inherit_id="website.snippet_options">
-    <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="before">
-        <div data-js="MultipleItems" data-selector=".s_table_of_content">
-            <we-row string="Content">
-                <we-button data-add-item="" data-item=".s_table_of_content_main > section:last" data-select-item="" data-no-preview="true" class="o_we_bg_brand_primary">
-                    Add Item
-                </we-button>
-            </we-row>
-        </div>
-    </xpath>
-    <xpath expr="." position="inside">
-        <div data-js="TableOfContent" data-selector=".s_table_of_content" data-drop-exclude-ancestor=".s_table_of_content"/>
-        <div data-js="TableOfContentNavbar" data-selector=".s_table_of_content_navbar_wrap">
-            <we-button-group string="Position">
-                <we-button class="fa fa-fw fa-long-arrow-left" title="Left" data-navbar-position="left"/>
-                <we-button class="fa fa-fw fa-long-arrow-up" title="Top" data-navbar-position="top"/>
-                <we-button class="fa fa-fw fa-long-arrow-right" title="Right" data-navbar-position="right"/>
-            </we-button-group>
-            <we-checkbox string="Sticky" data-select-class="s_table_of_content_navbar_sticky" data-no-preview="true"/>
-        </div>
-        <div data-js="TableOfContentMainColumns" data-selector=".s_table_of_content_navbar_wrap, .s_table_of_content_main"/>
-    </xpath>
-</template>
-
 <record id="website.s_table_of_content_000_scss" model="ir.asset">
     <field name="name">Table of content 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>

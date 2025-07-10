@@ -58,12 +58,4 @@
     </section>
 </template>
 
-<template id="newsletter_subscribe_options" name="Newsletter Subscribe Options" inherit_id="website.snippet_options">
-    <xpath expr="//div[@data-js='NewsletterLayout']/we-select/we-button[@data-select-data-attribute='email']" position="after">
-        <we-button title="SMS Newsletter" string="SMS Subscription"
-                   data-select-template="website_mass_mailing_sms.s_newsletter_block_sms_template"
-                   data-select-data-attribute="sms" data-name="sms_opt"/>
-    </xpath>
-</template>
-
 </odoo>

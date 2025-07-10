@@ -51,43 +51,6 @@
     </section>
 </template>
 
-<template id="s_timeline_list_options" inherit_id="website.snippet_options">
-    <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="before">
-        <div data-js="MultipleItems" data-selector=".s_timeline_list">
-            <we-row string="Milestones">
-                <we-button data-add-item="" data-item=".s_timeline_list_row:first" data-select-item="" data-add-before="true" data-no-preview="true" class="o_we_bg_brand_primary">
-                    Add New
-                </we-button>
-            </we-row>
-        </div>
-    </xpath>
-    <xpath expr="." position="inside">
-        <div data-selector=".s_timeline_list_row" data-drop-near=".s_timeline_list_row"/>
-        <div data-selector=".s_timeline_list">
-            <we-button-group string="Alignment" title="Alignment" data-apply-to=".s_timeline_list_wrapper">
-                <we-button title="Align Left"
-                        data-select-class="justify-content-start"
-                        class="fa fa-align-left"/>
-                <we-button title="Align Center"
-                        data-select-class="justify-content-center"
-                        class="fa fa-align-center"/>
-                <we-button title="Align Right"
-                        data-select-class="justify-content-end"
-                        class="fa fa-align-right"/>
-            </we-button-group>
-        </div>
-    </xpath>
-    <xpath expr="//t[@t-set='o_dot_color_selector']" position="attributes">
-        <attribute name="t-valuef" add=".s_timeline_list .s_timeline_list_row" separator=", "/>
-    </xpath>
-    <xpath expr="//t[@t-set='o_dot_line_color_selector']" position="attributes">
-        <attribute name="t-valuef" add=".s_timeline_list" separator=", "/>
-    </xpath>
-    <xpath expr="//div[@data-js='SnippetMove'][contains(@data-selector,'section')]" position="attributes">
-        <attribute name="data-selector" add=".s_timeline_list_row" separator=","/>
-    </xpath>
-</template>
-
 <record id="website.s_timeline_list_000_scss" model="ir.asset">
     <field name="name">Timeline List 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>

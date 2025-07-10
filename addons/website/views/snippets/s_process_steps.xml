@@ -66,34 +66,6 @@
     </section>
 </template>
 
-<template id="s_process_steps_options" inherit_id="website.snippet_options">
-    <xpath expr="." position="inside">
-        <div data-js="StepsConnector" data-selector=".s_process_steps">
-            <we-row string="Connector">
-                <we-select data-name="connector_type">
-                    <we-button data-select-class="" data-name="no_connector_opt">None</we-button>
-                    <we-button data-select-class="s_process_steps_connector_line">Line</we-button>
-                    <we-button data-select-class="s_process_steps_connector_arrow">Straight arrow</we-button>
-                    <we-button data-select-class="s_process_steps_connector_curved_arrow">Curved arrow</we-button>
-                </we-select>
-                <we-colorpicker
-                    data-select-style="true"
-                    data-name="connector_color_opt"
-                    data-dependencies="!no_connector_opt"
-                    data-apply-to=".s_process_step_connector path"
-                    data-css-property="stroke" data-change-color="true"/>
-            </we-row>
-        </div>
-        <t t-call="website.snippet_options_background_options">
-            <t t-set="selector" t-value="'.s_process_step .s_process_step_number'"/>
-            <t t-set="with_colors" t-value="True"/>
-            <t t-set="with_images" t-value="False"/>
-            <t t-set="with_color_combinations" t-value="False"/>
-            <t t-set="with_gradients" t-value="True"/>
-        </t>
-    </xpath>
-</template>
-
 <record id="website.s_process_steps_000_scss" model="ir.asset">
     <field name="name">Process steps 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>

@@ -91,27 +91,6 @@
     </section>
 </template>
 
-<template id="s_tabs_images_snippet_options_tabs" inherit_id="website.snippet_options_tabs" primary="True">
-    <xpath expr="//div[@data-js='NavTabs']" position="attributes">
-        <attribute name="data-selector">.s_tabs_images</attribute>
-    </xpath>
-    <xpath expr="//div[@data-js='NavTabsStyle']" position="attributes">
-        <attribute name="data-selector">.s_tabs_images</attribute>
-    </xpath>
-    <xpath expr="//we-button[@data-set-direction='vertical']" position="attributes">
-        <attribute name="data-select-class">s_tabs_nav_vertical</attribute>
-    </xpath>
-    <xpath expr="(//we-select)[2]" position="after">
-        <we-checkbox string="Descriptions" data-select-class="s_tabs_nav_with_descriptions" data-name="description_opt" data-dependencies="vertical_opt"/>
-    </xpath>
-</template>
-
-<template id="s_tabs_images_options" inherit_id="website.snippet_options">
-    <xpath expr="//t[@t-call='website.snippet_options_tabs']" position="after">
-        <t t-call="website.s_tabs_images_snippet_options_tabs"/>
-    </xpath>
-</template>
-
 <record id="website.s_tabs_images_000_scss" model="ir.asset">
     <field name="name">Tabs Images 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>

@@ -63,27 +63,6 @@
     </section>
 </template>
 
-<template id="s_timeline_options" inherit_id="website.snippet_options">
-    <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="before">
-        <div data-js="MultipleItems" data-selector=".s_timeline">
-            <we-row string="Date">
-                <we-button data-add-item="" data-item=".s_timeline_row:first" data-select-item="" data-add-before="true" data-no-preview="true" class="o_we_bg_brand_primary">
-                    Add Date
-                </we-button>
-            </we-row>
-        </div>
-    </xpath>
-    <xpath expr="." position="inside">
-        <div data-selector=".s_timeline_row" data-drop-near=".s_timeline_row"/>
-        <div data-js="Timeline" data-selector=".s_timeline_card">
-            <we-button data-timeline-card="" data-no-preview="true" class="o_we_overlay_opt"><i class="fa fa-fw fa-angle-left"/><i class="fa fa-fw fa-angle-right"/></we-button>
-        </div>
-    </xpath>
-    <xpath expr="//div[@data-js='SnippetMove'][contains(@data-selector,'section')]" position="attributes">
-        <attribute name="data-selector" add=".s_timeline_row" separator=","/>
-    </xpath>
-</template>
-
 <record id="website.s_timeline_000_scss" model="ir.asset">
     <field name="name">Timeline 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>
