@@ -100,6 +100,7 @@ class PaymentTransaction(models.Model):
     # Fields used for user redirection & payment post-processing
     is_post_processed = fields.Boolean(
         string="Is Post-processed", help="Has the payment been post-processed")
+    error_on_post_process = Fields.Text(string="Error on Post-process")
     tokenize = fields.Boolean(
         string="Create Token",
         help="Whether a payment token should be created when post-processing the transaction")
@@ -930,6 +931,9 @@ class PaymentTransaction(models.Model):
                     tx.reference, e
                 )
                 self.env.cr.rollback()
+                #Don't add in domain of txs_to_post_process because this is bug and we need fix it.
+                tx.error_on_post_process = str(e)
+
 
     def _post_process(self):
         """ Post-process the transactions.
