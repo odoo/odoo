@@ -394,19 +394,19 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: "<p>[]<b>abc</b></p>",
                 stepFunction: splitBlock,
-                contentAfterEdit: `<p><b data-oe-zws-empty-inline="">\u200b</b><br></p><p><b>[]abc</b></p>`,
+                contentAfterEdit: `<p><b data-oe-zws-empty-inline="">\u200b</b></p><p><b>[]abc</b></p>`,
                 contentAfter: "<p><br></p><p><b>[]abc</b></p>",
             });
             await testEditor({
                 contentBefore: "<p><b>[]abc</b></p>",
                 stepFunction: splitBlock,
-                contentAfterEdit: `<p><b data-oe-zws-empty-inline="">\u200b</b><br></p><p><b>[]abc</b></p>`,
+                contentAfterEdit: `<p><b data-oe-zws-empty-inline="">\u200b</b></p><p><b>[]abc</b></p>`,
                 contentAfter: "<p><br></p><p><b>[]abc</b></p>",
             });
             await testEditor({
                 contentBefore: "<p><b>[] abc</b></p>",
                 stepFunction: splitBlock,
-                contentAfterEdit: `<p><b data-oe-zws-empty-inline="">\u200b</b><br></p><p><b>[] abc</b></p>`,
+                contentAfterEdit: `<p><b data-oe-zws-empty-inline="">\u200b</b></p><p><b>[] abc</b></p>`,
                 // The space should have been parsed away.
                 // JW cAfter: '<p><br></p><p><b>[]abc</b></p>',
                 contentAfter: "<p><br></p><p><b>[] abc</b></p>",
@@ -439,21 +439,21 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: "<p><b>abc</b>[]</p>",
                 stepFunction: splitBlock,
-                contentAfterEdit: `<p><b>abc</b></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><b data-oe-zws-empty-inline="">[]\u200b</b><br></p>`,
+                contentAfterEdit: `<p><b>abc</b></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><b data-oe-zws-empty-inline="">[]\u200b</b></p>`,
                 contentAfter: "<p><b>abc</b></p><p>[]<br></p>",
             });
             await testEditor({
                 // That selection is equivalent to </b>[]
                 contentBefore: "<p><b>abc[]</b></p>",
                 stepFunction: splitBlock,
-                contentAfterEdit: `<p><b>abc</b></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><b data-oe-zws-empty-inline="">[]\u200b</b><br></p>`,
+                contentAfterEdit: `<p><b>abc</b></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><b data-oe-zws-empty-inline="">[]\u200b</b></p>`,
                 contentAfter: "<p><b>abc</b></p><p>[]<br></p>",
             });
             await testEditor({
                 contentBefore: "<p><b>abc[] </b></p>",
                 stepFunction: splitBlock,
                 // The space should have been parsed away.
-                contentAfterEdit: `<p><b>abc</b></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><b data-oe-zws-empty-inline="">[]\u200b</b><br></p>`,
+                contentAfterEdit: `<p><b>abc</b></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><b data-oe-zws-empty-inline="">[]\u200b</b></p>`,
                 contentAfter: "<p><b>abc</b></p><p>[]<br></p>",
             });
         });
@@ -589,11 +589,11 @@ describe("Selection collapsed", () => {
         test("should insert a paragraph after an empty h1 with styles and a zero-width space", async () => {
             await testEditor({
                 contentBefore:
-                    '<h1><font style="color: red;" data-oe-zws-empty-inline="">[]\u200B</font><br></h1>',
+                    '<h1><font style="color: red;" data-oe-zws-empty-inline="">[]\u200B</font></h1>',
                 stepFunction: splitBlock,
                 contentAfterEdit:
-                    '<h1><font style="color: red;" data-oe-zws-empty-inline="">\u200b</font><br></h1>' +
-                    `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><font style="color: red;" data-oe-zws-empty-inline="">[]\u200b</font><br></p>`,
+                    '<h1><font style="color: red;" data-oe-zws-empty-inline="">\u200b</font></h1>' +
+                    `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><font style="color: red;" data-oe-zws-empty-inline="">[]\u200b</font></p>`,
                 contentAfter: "<h1><br></h1><p>[]<br></p>",
             });
         });
@@ -619,19 +619,19 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: '<p><font style="color: red;">abc[]</font></p>',
                 stepFunction: splitBlock,
-                contentAfterEdit: `<p><font style="color: red;">abc</font></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><font style="color: red;" data-oe-zws-empty-inline="">[]\u200b</font><br></p>`,
+                contentAfterEdit: `<p><font style="color: red;">abc</font></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><font style="color: red;" data-oe-zws-empty-inline="">[]\u200b</font></p>`,
                 contentAfter: `<p><font style="color: red;">abc</font></p><p>[]<br></p>`,
             });
             await testEditor({
                 contentBefore: '<p><font style="background-color: red;">abc[]</font></p>',
                 stepFunction: splitBlock,
-                contentAfterEdit: `<p><font style="background-color: red;">abc</font></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><font style="background-color: red;" data-oe-zws-empty-inline="">[]\u200b</font><br></p>`,
+                contentAfterEdit: `<p><font style="background-color: red;">abc</font></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><font style="background-color: red;" data-oe-zws-empty-inline="">[]\u200b</font></p>`,
                 contentAfter: `<p><font style="background-color: red;">abc</font></p><p>[]<br></p>`,
             });
             await testEditor({
                 contentBefore: '<p><span style="font-size: 36px;">abc[]</span></p>',
                 stepFunction: splitBlock,
-                contentAfterEdit: `<p><span style="font-size: 36px;">abc</span></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><span style="font-size: 36px;" data-oe-zws-empty-inline="">[]\u200b</span><br></p>`,
+                contentAfterEdit: `<p><span style="font-size: 36px;">abc</span></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><span style="font-size: 36px;" data-oe-zws-empty-inline="">[]\u200b</span></p>`,
                 contentAfter: `<p><span style="font-size: 36px;">abc</span></p><p>[]<br></p>`,
             });
         });
