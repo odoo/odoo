@@ -110,7 +110,7 @@ export class LandingPage extends Component {
         if (
             this.selfOrder.hasPresets() &&
             !this.selfOrder.currentOrder.preset_id &&
-            this.selfOrder.ordering
+            this.selfOrder.config.self_ordering_mode != "nothing"
         ) {
             this.router.navigate("location");
         } else {
