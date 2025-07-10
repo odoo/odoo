@@ -201,6 +201,10 @@ class PosConfig(models.Model):
     order_edit_tracking = fields.Boolean(string="Track orders edits", help="Store edited orders in the backend", default=False)
     last_data_change = fields.Datetime(string='Last Write Date', readonly=True, compute='_compute_local_data_integrity', store=True)
     fallback_nomenclature_id = fields.Many2one('barcode.nomenclature', string="Fallback Nomenclature")
+    set_fast_payment_methods = fields.Boolean('Fast payment validation', help="Set fast payment methods to validate orders faster.")
+    fast_payment_method_ids = fields.Many2many(
+        'pos.payment.method', string='Fast Payment Methods', relation="pos_payment_method_fast_validation_relation",
+        help="These payment methods will be available for fast payment")
 
     def notify_synchronisation(self, session_id, login_number, records={}):
         self.ensure_one()
@@ -510,7 +514,9 @@ class PosConfig(models.Model):
                     ", ".join(forbidden_fields)
                 ))
 
+        config_methods_dict_before_write = {config.id: config.payment_method_ids.ids for config in self} if 'payment_method_ids' in vals else {}
         result = super(PosConfig, self).write(vals)
+        config_methods_dict_after_write = {config.id: config.payment_method_ids.ids for config in self} if 'payment_method_ids' in vals else {}
 
         for config in self:
             if config.use_presets and config.default_preset_id.id not in config.available_preset_ids.ids:
@@ -521,6 +527,18 @@ class PosConfig(models.Model):
         self.sudo()._check_groups_implied()
         if 'is_order_printer' in vals:
             self._update_preparation_printers_menuitem_visibility()
+
+        # Remove fast payment methods that are being unlinked from the payment_method_ids
+        if 'payment_method_ids' in vals:
+            for config in self:
+                before_ids = set(config_methods_dict_before_write[config.id])
+                after_ids = set(config_methods_dict_after_write[config.id])
+
+                unlink_ids = before_ids - after_ids
+                if unlink_ids:
+                    config.fast_payment_method_ids = config.fast_payment_method_ids.filtered(lambda pm: pm.id not in unlink_ids)
+                    if not config.fast_payment_method_ids:
+                        config.set_fast_payment_methods = False
         return result
 
     def _preprocess_x2many_vals_from_settings_view(self, vals):

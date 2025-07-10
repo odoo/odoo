@@ -12,6 +12,7 @@ patch(OrderSummary.prototype, {
         }
         return (
             this.pos.config.module_pos_restaurant &&
+            !this.pos.isFastPaymentRunning &&
             !this.pos.models["pos.order"].some(
                 (o) =>
                     o.table_id?.id === this.pos.selectedTable.id &&

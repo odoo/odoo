@@ -156,6 +156,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.closeOtherTabs();
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
         this._searchTriggered = false;
+        this.isFastPaymentRunning = false;
 
         if (this.env.debug) {
             registry.category("main_components").add("DebugWidget", {

@@ -5,7 +5,16 @@ import { useLongPress } from "@point_of_sale/app/hooks/long_press_hook";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, useEffect, useState, onWillRender, onWillUnmount } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    useEffect,
+    useState,
+    onWillRender,
+    onWillUnmount,
+    App,
+    useRef,
+} from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import {
@@ -26,6 +35,8 @@ import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
 import { OptionalProductPopup } from "@point_of_sale/app/components/popups/optional_products_popup/optional_products_popup";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 import { debounce } from "@web/core/utils/timing";
+import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
+import { getTemplate } from "@web/core/templates";
 
 const { DateTime } = luxon;
 
@@ -58,6 +69,7 @@ export class ProductScreen extends Component {
             currentOffset: 0,
             quantityByProductTmplId: {},
         });
+        this.virtualPaymentScreen = useRef("virtualPaymentScreen");
 
         useRouterParamsChecker();
         onMounted(() => {
@@ -71,7 +83,7 @@ export class ProductScreen extends Component {
 
         onWillRender(() => {
             // If its a shared order it can be paid from another POS
-            if (this.currentOrder?.state !== "draft") {
+            if (this.currentOrder?.state !== "draft" && !this.pos.isFastPaymentRunning) {
                 this.pos.addNewOrder();
             }
         });
@@ -388,6 +400,21 @@ export class ProductScreen extends Component {
                 productTemplate: product,
             });
         }
+    }
+
+    async fastValidate(paymentMethod) {
+        this.pos.isFastPaymentRunning = true;
+        const app = new App(PaymentScreen, {
+            getTemplate,
+            props: { orderUuid: this.currentOrder.uuid, fastValidated: true },
+            translateFn: _t,
+            env: this.env,
+        });
+        const paymentScreen = await app.mount(this.virtualPaymentScreen.el);
+        await paymentScreen.addNewPaymentLine(paymentMethod);
+        await paymentScreen.validateOrder(false);
+        app.destroy();
+        this.pos.isFastPaymentRunning = false;
     }
 }
 

@@ -842,3 +842,14 @@ registry.category("web_tour.tours").add("test_preset_timing_retail", {
             TicketScreen.nthRowContains(2, "Dine in", false),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_fast_payment_validation_from_product_screen", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            ProductScreen.clickFastPaymentButton("Bank"),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
