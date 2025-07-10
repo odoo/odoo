@@ -15,8 +15,8 @@ class L10nEsEdiVerifactuDocument(models.Model):
         readonly=True,
     )
 
-    def _post_send_hook(self, info):
-        super()._post_send_hook(info)
+    def _cancel_after_sending(self, info):
+        super()._cancel_after_sending(info)
         for document in self:
             order = document.pos_order_id
             if order.l10n_es_edi_verifactu_state == 'cancelled' and order.state != 'cancel':

@@ -25,6 +25,8 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
         # Else the associated move does not get posted (since it will be in the future / on the order date).
         cls.fakenow = datetime.datetime(2025, 1, 1)
         cls.startClassPatcher(freeze_time(cls.fakenow))
+        # `freeze_time` does not change the `create_date`
+        cls.startClassPatcher(cls._mock_create_date(cls, '2025-01-01'))
 
     @contextmanager
     def with_pos_session(self):

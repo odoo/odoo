@@ -281,7 +281,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
                             refund_reason=vals['refund_reason']))
 
         if vals['verifactu_move_type'] == 'invoice' and not partner_specified and not vals['is_simplified']:
-            errors.append(_("A non-simplified invoices needs a partner."))
+            errors.append(_("A non-simplified invoice needs a partner."))
 
         if not vals['verifactu_tax_type']:
             errors.append(_("Missing Veri*Factu Tax Type (Impuesto)."))
@@ -740,11 +740,14 @@ class L10nEsEdiVerifactuDocument(models.Model):
             ('account_fiscal_country_id.code', '=', 'ES'),
         ], limit=2)
 
+        # Note: We have to declare (self-certify) that we meet the Veri*Factu spec.
+        # (DECLARACIÓN RESPONSABLE DE SISTEMAS INFORMÁTICOS DE FACTURACIÓN)
+        # The values should match the values given in the declaration.
         render_vals = {
             'SistemaInformatico': {
-                'NombreRazon': 'ODOO ERP SP SL',
-                'NIF': 'B72659014',
-                'NombreSistemaInformatico': odoo.release.product_name,
+                'NombreRazon': 'Odoo SA',
+                'NIF': 'BE0477472701',
+                'NombreSistemaInformatico': 'Odoo',
                 'IdSistemaInformatico': '00',  # identifies Odoo the software as product of Odoo the company
                 'Version': odoo.release.version,
                 'NumeroInstalacion':  self._get_db_identifier(),
@@ -969,11 +972,6 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 errors.append(_("The response of the server had the wrong format (HTML instead of XML). It is most likely a problem with the certificate."))
             else:
                 errors.append(_("Error while sending the batch document:\n%s", error))
-        except zeep.exceptions.ValidationError as error:
-            # This should not happen since we validate the individual documents when generating them.
-            error = _("Error while validating the batch document (before sending):\n%s", error)
-            errors.append(error)
-            _logger.error("%s:\n%s", error, batch_dict)
         except zeep.exceptions.Error as error:
             _logger.error("raw zeep response:\n%s", zeep_info.get('raw_response'))
             errors.append(_("Error while sending the batch document:\n%s", error))
@@ -1046,16 +1044,47 @@ class L10nEsEdiVerifactuDocument(models.Model):
         # See error with code 2004:
         #   El valor del campo FechaHoraHusoGenRegistro debe ser la fecha actual del sistema de la AEAT,
         #   admitiéndose un margen de error de: 240 segundos.
-        incident = any(document.create_date > self.env.cr.now() + timedelta(seconds=240) for document in self)
+        incident = any(document.create_date > fields.Datetime.now() + timedelta(seconds=240) for document in self)
 
         document_dict_list = [document._get_document_dict() for document in self]
         batch_dict = self.with_company(sender_company)._get_batch_dict(document_dict_list, incident=incident)
 
         info = self.with_company(sender_company)._send_batch(batch_dict)
 
+        batch_failure_info = {}
+        if not info.get('state') and info['errors']:
+            # Handle case that something went wrong while sending or parsing the respone
+            batch_failure_info = {
+                'errors': info['errors'],
+            }
+        elif not info.get('record_info', {}):
+            # I.e. in case of soapfault and access denied there is no `record_info`.
+            # So we just return the global 'state' / 'errors'.
+            batch_failure_info = {
+                'state': info['state'],
+                'errors': info['errors'],
+            }
+
         # Store the information from the response split over the individual documents
-        for document in self:
-            response_info = document._get_response_info(info)
+        for document, document_dict in zip(self, document_dict_list):
+            if batch_failure_info:
+                response_info = batch_failure_info
+            else:
+                # In this case we have info['record_info']
+                record_key = self._extract_record_key(document_dict)
+                response_info = info['record_info'].get(record_key, None)
+                # We expect an entry for `record_identifier`.
+                # If there is none we "build" one; it indicates a parsing failure.
+                if response_info is None:
+                    response_info = {
+                        'errors': [_("We could not find any information about the record in the linked batch document.")],
+                }
+
+            # Add some information from the batch level in any case.
+            response_info.update({
+                'waiting_time_seconds': info.get('waiting_time_seconds', False),
+                'response_csv': info.get('response_csv', False),
+            })
 
             # The errors have to be formatted (as HTML) before storing them on the document
             errors_html = False
@@ -1084,7 +1113,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
             next_batch_time = now + timedelta(seconds=waiting_time_seconds)
             self.env.company.l10n_es_edi_verifactu_next_batch_time = next_batch_time
 
-        self._post_send_hook(info)
+        self._cancel_after_sending(info)
 
         if self.env['account.move']._can_commit():
             self._cr.commit()
@@ -1135,46 +1164,12 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
         return batch_dict
 
-    def _get_response_info(self, info):
-        # `info` is like returned from `_send_batch`
-        self.ensure_one()
-        record_info = info.get('record_info', {})
-
-        response_info = None
-        if not info.get('state') and info['errors']:
-            # Handle case that something went wrong while sending or parsing the respone
-            response_info = {'errors': info['errors']}
-        elif record_info:
-            # We expect an entry for `record_identifier`.
-            # If there is none we "build" one; it indicates a parsing failure.
-            record_key = self._get_record_key()
-            response_info = record_info.get(record_key, None)
-            if response_info is None:
-                response_info = {
-                    'errors': [_("We could not find any information about the record in the linked batch document.")],
-                }
-        else:
-            # I.e. in case of soapfault and access denied there is no `record_info`.
-            # So we just return the global 'state' / 'errors'.
-            response_info = {
-                'state': info['state'],
-                'errors': info['errors'],
-            }
-
-        # Add some information from the batch level in any case.
-        response_info.update({
-            'waiting_time_seconds': info.get('waiting_time_seconds', False),
-            'response_csv': info.get('response_csv', False),
-        })
-
-        return response_info
-
-    def _get_record_key(self):
-        self.ensure_one()
-        record_identifier = self._get_record_identifier()
+    @api.model
+    def _extract_record_key(self, document_dict):
+        record_identifier = self._extract_record_identifiers(self._get_document_dict())
         return str((record_identifier['IDEmisorFactura'], record_identifier['NumSerieFactura']))
 
-    def _post_send_hook(self, info):
+    def _cancel_after_sending(self, info):
         # This function should not raise since it may be called "in the middle" of the sending process
         for document in self:
             invoice = document.move_id

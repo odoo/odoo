@@ -153,6 +153,9 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
         function_path = 'odoo.addons.l10n_es_edi_verifactu.models.res_company.ResCompany._l10n_es_edi_verifactu_get_last_document'
         return mock.patch(function_path, return_value=(document or self.env['l10n_es_edi_verifactu.document']))
 
+    def _mock_create_date(self, date):
+        return mock.patch.object(self.env.cr, 'now', lambda: date)
+
     def _create_dummy_invoice(self, name=None, invoice_date=None):
         # The only values we care about are the ones relevant for the record identifier.
         invoice_vals = {

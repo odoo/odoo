@@ -18,7 +18,7 @@ patch(TicketScreen.prototype, {
                 return { 'id': el[0], 'label': el[1], 'item': el[0]}
             })
             const { confirmed, payload } = await this.popup.add(SelectionPopup, {
-                title: _t("Select the refund reason"),
+                title: _t("Select the refund reason (Veri*Factu)"),
                 list: selectionList,
             });
             if (payload && confirmed) {

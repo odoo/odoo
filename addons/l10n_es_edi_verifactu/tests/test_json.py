@@ -16,6 +16,8 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
         super().setUpClass()
         cls.fakenow = datetime.datetime(2024, 12, 5)
         cls.startClassPatcher(freeze_time(cls.fakenow))
+        # `freeze_time` does not change the `create_date`
+        cls.startClassPatcher(cls._mock_create_date(cls, '2024-12-05'))
 
     def test_huella_generation(self):
         """

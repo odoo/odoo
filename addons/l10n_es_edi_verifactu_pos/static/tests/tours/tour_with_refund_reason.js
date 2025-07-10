@@ -27,6 +27,8 @@ registry.category("web_tour.tours").add("l10n_es_edi_verifactu_pos.tour_with_ref
         TicketScreen.toRefundTextContains("To Refund: 1.00"),
         TicketScreen.confirmRefund(),
         Utils.selectButton("R5:"),
+        // TicketBAI also adds a refund popup
+        ...(registry.category("web_tour.tours").contains("spanish_pos_tbai_tour") ? [Utils.selectButton("R5:")] : []),
         ProductScreen.isShown(),
         ProductScreen.clickPayButton(),
         PaymentScreen.clickPaymentMethod("Bank"),
@@ -59,9 +61,11 @@ registry.category("web_tour.tours").add("l10n_es_edi_verifactu_pos.tour_invoiced
         TicketScreen.toRefundTextContains("To Refund: 1.00"),
         TicketScreen.confirmRefund(),
         Utils.selectButton("R4:"),
+        // TicketBAI also adds a refund popup
+        ...(registry.category("web_tour.tours").contains("spanish_pos_tbai_tour") ? [Utils.selectButton("R4:")] : []),
         ProductScreen.isShown(),
         ProductScreen.clickPayButton(),
-        PaymentScreen.clickInvoiceButton(),
+        // The order should be marked as "To Invoice" already
         PaymentScreen.clickPaymentMethod("Bank"),
         PaymentScreen.clickValidate(),
         ReceiptScreen.isShown(),

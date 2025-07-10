@@ -348,8 +348,9 @@ class PosOrder(models.Model):
             return res
 
         res['l10n_es_edi_verifactu_refund_reason'] = self.l10n_es_edi_verifactu_refund_reason
-        # We rely on the compute to determine whether the invoice is simplified for the other cases
-        if self.amount_total > 400:
-            res['l10n_es_is_simplified'] = False
+        # Note: `l10n_es_pos` overwrites `_compute_l10n_es_is_simplified`.
+        #       Since we set the value here it is not triggered.
+        # Note: The logic here should match the javascript logic for the PaymentScreen.
+        res['l10n_es_is_simplified'] = self.amount_total <= 400
 
         return res
