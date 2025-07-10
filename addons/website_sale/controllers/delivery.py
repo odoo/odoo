@@ -181,7 +181,7 @@ class Delivery(WebsiteSale):
             # already accepted the amount and validated the payment.
             with request.env.protecting([order_sudo._fields['pricelist_id']], order_sudo):
                 order_sudo.partner_id = new_partner_sudo
-        elif order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
+        elif order_sudo.name in order_sudo.partner_shipping_id.name:
             order_sudo.partner_shipping_id.write(partial_delivery_address)
             # TODO VFE TODO VCR do we want to trigger cart recomputation here ?
             # order_sudo._update_address(
