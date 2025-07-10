@@ -165,7 +165,7 @@ def initialize_sys_path() -> None:
     # hook for upgrades and namespace freeze
     if not getattr(initialize_sys_path, 'called', False):  # only initialize once
         odoo.addons.__path__._path_finder = lambda *a: None  # prevent path invalidation
-        odoo.upgrade.__path__._path_finder = lambda *a: None  # prevent path invalidation
+        #odoo.upgrade.__path__._path_finder = lambda *a: None  # prevent path invalidation
         sys.meta_path.insert(0, UpgradeHook())
         initialize_sys_path.called = True  # type: ignore
 

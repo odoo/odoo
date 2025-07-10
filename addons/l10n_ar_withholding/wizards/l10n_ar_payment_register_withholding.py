@@ -98,10 +98,11 @@ class L10n_ArPaymentRegisterWithholding(models.TransientModel):
             else:
                 line.amount = line._tax_compute_all_helper()[0]
 
-    @api.depends('payment_register_id.amount', 'tax_id')
+    @api.depends('payment_register_id.is_main_payment', 'payment_register_id.payment_total' ,'payment_register_id.amount', 'tax_id')
     def _compute_base_amount(self):
         for wth in self:
+            withholdable_amount = wth.payment_register_id.amount if not wth.payment_register_id.is_main_payment else wth.payment_register_id.payment_total
             if wth.tax_id.l10n_ar_tax_type == 'iibb_total':
-                wth.base_amount = wth.payment_register_id.amount
+                wth.base_amount = withholdable_amount
             else:
-                wth.base_amount = wth.payment_register_id.amount * sum(wth.payment_register_id.line_ids.mapped('move_id.amount_untaxed')) / sum(wth.payment_register_id.line_ids.mapped("move_id.amount_total"))
+                wth.base_amount = withholdable_amount * sum(wth.payment_register_id.line_ids.mapped('move_id.amount_untaxed')) / sum(wth.payment_register_id.line_ids.mapped("move_id.amount_total"))

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_form" model="ir.ui.view">
+        <field name="name">account.payment.form.inherited</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form" />
+        <field name="arch" type="xml">
+           <notebook name="payment_notebook">
+                <page name="link_payment_ids" string="Payments" invisible="not is_main_payment">
+                        <!-- pasar en el contexto company_id es necesario para que se elija bien el primer diario sugerido -->
+                        <field name="link_payment_ids" 
+                            context="{
+                                'default_move_journal_types': ('bank', 'cash'),
+                                'default_company_id': company_id,
+                                'default_main_payment_id': id,
+                                'default_partner_id': partner_id,
+                                'default_payment_type': payment_type,
+                                'default_partner_type': partner_type,
+                            }"
+                            readonly="state != 'draft'"/>
+                                <!-- 'form_view_ref': 'l10n_ar_payment_bundle.view_account_payment_from_bundle_form',
+                                'list_view_ref': 'l10n_ar_payment_bundle.view_account_payment_from_bundle_tree',
+                                'default_to_pay_amount': payment_difference, -->
+                </page>
+            </notebook>
+            <label for="amount" position="attributes">
+                <attribute name="invisible">is_main_payment</attribute>
+            </label>
+            <div name="amount_div" position="attributes">
+                <attribute name="invisible">is_main_payment</attribute>
+            </div>
+            <div name="amount_div" position="after">
+                <label for="payment_total" invisible="not is_main_payment"/>
+                <div name="payment_total_div" class="o_row" invisible="not is_main_payment">
+                    <field name="payment_total"/>
+                    <field name="currency_id"
+                            required="1"
+                            readonly="state != 'draft'"
+                    groups="base.group_multi_currency"/>
+                </div>
+            </div>
+        </field>
+    </record>
+    <record id="view_account_payment_search_bundle" model="ir.ui.view">
+        <field name="name">account.payment.search.bundle</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_search" />
+        <field name="arch" type="xml">
+            <filter name="date" position="after">
+                <separator/>
+                    <filter string="Main Payments"
+                            name="main_payments_filter"
+                            domain="[('main_payment_id', '=', False)]"/>
+                    <filter string="Linked Payments"
+                            name="linked_payments_filter"
+                            domain="[('main_payment_id', '!=', False)]"/>
+            </filter>
+        </field>
+    </record>
+    <record id="account.action_account_payments" model="ir.actions.act_window">
+        <field name="context">{
+        'default_payment_type': 'inbound',
+        'default_partner_type': 'customer',
+        'search_default_inbound_filter': 1,
+        'default_move_journal_types': ('bank', 'cash'),
+        'display_account_trust': True,
+        'search_default_main_payments_filter': 1,
+        }</field>
+
+    </record>
+    <record id="account.action_account_payments_payable" model="ir.actions.act_window">
+        <field name="context">{
+            'default_payment_type': 'outbound',
+            'default_partner_type': 'supplier',
+            'search_default_outbound_filter': 1,
+            'default_move_journal_types': ('bank', 'cash'),
+            'display_account_trust': True,
+            'search_default_main_payments_filter': 1,
+        }</field>
+    </record>
+
+</odoo>
