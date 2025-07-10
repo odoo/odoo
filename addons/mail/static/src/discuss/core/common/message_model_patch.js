@@ -23,7 +23,7 @@ const messagePatch = {
         this.hasSomeoneFetched = fields.Attr(false, {
             /** @this {import("models").Message} */
             compute() {
-                return this.thread?.channel_member_ids.some(
+                return this.thread?.channel.channel_member_ids.some(
                     (m) => m.persona.notEq(this.author) && m.fetched_message_id?.id >= this.id
                 );
             },
@@ -39,10 +39,10 @@ const messagePatch = {
         this.isMessagePreviousToLastSelfMessageSeenByEveryone = fields.Attr(false, {
             /** @this {import("models").Message} */
             compute() {
-                if (!this.thread?.lastSelfMessageSeenByEveryone) {
+                if (!this.thread?.channel.lastSelfMessageSeenByEveryone) {
                     return false;
                 }
-                return this.id < this.thread.lastSelfMessageSeenByEveryone.id;
+                return this.id < this.thread.channel.lastSelfMessageSeenByEveryone.id;
             },
         });
         /** @type {Promise<Thread>[]} */

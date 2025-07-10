@@ -162,22 +162,22 @@
         >
             <div class="o-mail-DiscussSidebarChannel-itemMain border-0 rounded-start-2 text-reset d-flex align-items-center p-0" t-att-class="{ 'overflow-hidden': !store.discuss.isSidebarCompact }" t-att-title="store.discuss.isSidebarCompact ? undefined : thread.displayName">
                 <div class="bg-inherit position-relative d-flex flex-shrink-0 o-my-0_5 rounded-3" style="width:32px;height:32px;" name="threadAvatar" t-att-class="{ 'ms-2': !store.discuss.isSidebarCompact }">
-                    <img class="w-100 h-100 rounded-3 object-fit-cover shadow-sm" t-att-class="threadAvatarAttClass" t-att-src="thread.avatarUrl" alt="Thread Image"/>
-                    <ThreadIcon t-if="thread.channel_type?.includes('chat') or (thread.channel_type === 'channel' and !thread.group_public_id)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute top-100 start-100 translate-middle mt-n1 ms-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
-                    <CountryFlag t-if="thread.showCorrespondentCountry" country="thread.correspondentCountry" class="'position-absolute o-mail-DiscussSidebarChannel-country border shadow-sm'"/>
+                    <img class="w-100 h-100 rounded-3 object-fit-cover shadow-sm" t-att-class="threadAvatarAttClass" t-att-src="thread.channel.avatarUrl" alt="Thread Image"/>
+                    <ThreadIcon t-if="thread.channel.channel_type?.includes('chat') or (thread.channel.channel_type === 'channel' and !thread.group_public_id)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute top-100 start-100 translate-middle mt-n1 ms-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
+                    <CountryFlag t-if="thread.channel?.showCorrespondentCountry" country="thread.channel.correspondentCountry" class="'position-absolute o-mail-DiscussSidebarChannel-country border shadow-sm'"/>
                 </div>
                 <span t-if="!store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarChannel-itemName mx-2 text-truncate" t-att-class="itemNameAttClass">
-                    <t t-esc="thread.displayName"/>
+                    <t t-esc="thread.channel.name"/>
                 </span>
             </div>
             <div t-if="indicators.length" class="position-absolute rounded-circle p-0 smaller o-mail-DiscussSidebarChannel-indicatorCompact lh-1 bg-inherit" name="indicator-compact">
                 <t t-component="indicators[0]" t-props="{ thread }"/>
             </div>
             <div t-if="!store.discuss.isSidebarCompact" class="flex-grow-1"/>
-            <t t-if="thread.selfMember?.message_unread_counter > 0 and !thread.selfMember?.mute_until_dt and thread.importantCounter === 0" t-call="mail.DiscussSidebar.unreadIndicator"/>
+            <t t-if="thread.channel.selfMember?.message_unread_counter > 0 and !thread.channel.selfMember?.mute_until_dt and thread.importantCounter === 0" t-call="mail.DiscussSidebar.unreadIndicator"/>
             <t t-if="thread.importantCounter > 0 and (showingActions.isOpen or store.discuss.isSidebarCompact or !hover.isHover)" t-call="mail.discuss_badge">
                 <t t-set="counter" t-value="thread.importantCounter"/>
-                <t t-set="badgeClass" t-value="'o-mail-DiscussSidebarChannel-badge o-mail-DiscussSidebar-badge shadow-sm flex-shrink-0 fw-bold ' + (thread.selfMember?.mute_until_dt ? 'o-muted' : '') + ' ' + (store.discuss.isSidebarCompact ? 'position-absolute top-0 o-compact' : showingActions.isOpen ? 'ms-1 me-0' : 'ms-1 me-2')"/>
+                <t t-set="badgeClass" t-value="'o-mail-DiscussSidebarChannel-badge o-mail-DiscussSidebar-badge shadow-sm flex-shrink-0 fw-bold ' + (thread.channel.selfMember?.mute_until_dt ? 'o-muted' : '') + ' ' + (store.discuss.isSidebarCompact ? 'position-absolute top-0 o-compact' : showingActions.isOpen ? 'ms-1 me-0' : 'ms-1 me-2')"/>
                 <t t-set="floating" t-value="store.discuss.isSidebarCompact"/>
             </t>
             <t t-if="!store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarChannel.actions"/>
