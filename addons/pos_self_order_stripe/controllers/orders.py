@@ -44,18 +44,6 @@ class PosSelfOrderControllerStripe(PosSelfOrderController):
             order.action_pos_order_paid()
 
             if order.config_id.self_ordering_mode == 'kiosk':
-                order.config_id._notify('PAYMENT_STATUS', {
-                    'payment_result': 'Success',
-                    'data': {
-                        'pos.order': order.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
-                        'pos.order.line': order.lines.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
-                    }
-                })
+                order._send_payment_result('Success')
         else:
-            order.config_id._notify('PAYMENT_STATUS', {
-                'payment_result': 'fail',
-                'data': {
-                    'pos.order': order.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
-                    'pos.order.line': order.lines.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
-                }
-            })
+            order._send_payment_result('fail')

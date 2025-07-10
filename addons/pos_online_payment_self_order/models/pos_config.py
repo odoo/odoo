@@ -21,3 +21,9 @@ class PosConfig(models.Model):
         payment_methods = self._get_self_ordering_payment_methods_data(self.self_order_online_payment_method_id)
         res['pos_payment_methods'] += payment_methods
         return res
+
+    def has_valid_kiosk_payment_method(self):
+        return (
+            super().has_valid_kiosk_payment_method()
+            or any(pm.is_online_payment for pm in self.payment_method_ids)
+        )
