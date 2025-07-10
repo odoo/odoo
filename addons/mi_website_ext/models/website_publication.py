@@ -209,14 +209,14 @@ class WebsitePublication(models.Model):
         if self.publication_type == "winner" and self.employee_id:
             self.name = f"Ganador: {self.employee_id.name}"
 
-    read_by_user_ids = fields.Many2many(
-        comodel_name='res.users',
-        relation='website_publication_read_user_rel',
-        column1='publication_id',
-        column2='user_id',
-        string='Leído por los usuarios',
-        copy=False
-    )   
+    #read_by_user_ids = fields.Many2many(
+    #    comodel_name='res.users',
+    #    relation='website_publication_read_user_rel',
+    ##    column1='publication_id',
+    #    column2='user_id',
+    #    string='Leído por los usuarios',
+    #    copy=False
+    #)   
 
     @api.model
     def _publish_scheduled_posts(self):

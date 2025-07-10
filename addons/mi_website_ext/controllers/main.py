@@ -488,11 +488,25 @@ class WebsiteCustom(http.Controller):
             if not publication.exists():
                 return {'success': False, 'error': 'El documento no fue encontrado.'}
             
+            Log = request.env['publication.view.log'].sudo()
             current_user = request.env.user
 
-            publication.sudo().write({
-                'read_by_user_ids': [(4, current_user.id)]
-            })
+            already_read = Log.search_count([
+                ('res_model', '=', res_model),
+                ('res_id', '=', int(res_id)),
+                ('user_id', '=', current_user.id)
+            ]) > 0
+
+            if not already_read:
+                Log.create({
+                    'res_model': res_model,
+                    'res_id': int(res_id),
+                    'user_id': current_user.id,
+                })
+
+            #publication.sudo().write({
+            #    'read_by_user_ids': [(4, current_user.id)]
+            #})
 
             return {'success': True}
             

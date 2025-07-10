@@ -45,6 +45,9 @@ publicWidget.registry.PolicyViewer = publicWidget.Widget.extend({
       this.currentPolicyId &&
       this.currentButtonPlaceholder
     ) {
+      const $modal = this.currentButtonPlaceholder.closest('.modal');
+      const $headerCloseButton = $modal.find('.btn-close');
+      $headerCloseButton.prop('disabled', false);
       const markReadButton = $(
         '<button class="btn btn-primary js_mark_as_read_in_modal">Marcar como Leído</button>'
       );
@@ -77,6 +80,9 @@ publicWidget.registry.PolicyViewer = publicWidget.Widget.extend({
         `${viewerBaseUrl}?file=${encodedPdfUrl}&policy_id=${policyId}`
       );
 
+    const $headerCloseButton = modalElement.find('.btn-close');
+    $headerCloseButton.prop('disabled', true);
+
     const readButtonPlaceholder = modalElement.find(
       "#pdf_modal_read_button_placeholder"
     );
@@ -85,6 +91,7 @@ publicWidget.registry.PolicyViewer = publicWidget.Widget.extend({
 
     if (alreadyRead) {
       // Tu lógica para políticas ya leídas (esta parte no cambia, es correcta)
+      $headerCloseButton.prop('disabled', false);
       readButtonPlaceholder.html(`
                 <div class="alert alert-success m-0 p-2">
                     <i class="fa fa-check-circle me-2"/>Leído y Entendido
