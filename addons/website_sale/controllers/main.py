@@ -1210,7 +1210,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             self._include_country_and_state_in_address(shipping_address)
             shipping_address, _side_values = self._parse_form_data(shipping_address)
 
-            if order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
+            if order_sudo.name in order_sudo.partner_shipping_id.name:
                 # The existing partner was created by `process_express_checkout_delivery_choice`, it
                 # means that the partner is missing information, so we update it.
                 order_sudo.partner_shipping_id.write(shipping_address)
