@@ -156,21 +156,22 @@ class DiscussChannelMember(models.Model):
             )
         ]
 
-    def _get_store_partner_fields(self, fields):
+    def _get_store_partner_fields(self, fields, target):
         self.ensure_one()
         if self.channel_id.channel_type == 'livechat':
             new_fields = [
                 "active",
                 "avatar_128",
                 Store.One("country_id", ["code", "name"]),
-                "im_status",
                 "is_public",
                 *self.env["res.partner"]._get_store_livechat_username_fields(),
             ]
             if self.livechat_member_type == "visitor":
                 new_fields += ["offline_since", "email"]
+            if target and target.is_internal(self.env):
+                new_fields += ["im_status"]
             return new_fields
-        return super()._get_store_partner_fields(fields)
+        return super()._get_store_partner_fields(fields, target)
 
     def _get_store_guest_fields(self, fields):
         self.ensure_one()

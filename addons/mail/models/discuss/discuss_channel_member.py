@@ -274,14 +274,14 @@ class DiscussChannelMember(models.Model):
         members.write({"mute_until_dt": False})
         members._notify_mute()
 
-    def _to_store_persona(self, fields=None):
+    def _to_store_persona(self, fields=None, target=None):
         if fields == "avatar_card":
             fields = ["avatar_128", "im_status", "name"]
         return [
             # sudo: res.partner - reading partner related to a member is considered acceptable
             Store.Attr(
                 "partner_id",
-                lambda m: Store.One(m.partner_id.sudo(), m._get_store_partner_fields(fields)),
+                lambda m: Store.One(m.partner_id.sudo(), m._get_store_partner_fields(fields, target)),
                 predicate=lambda m: m.partner_id,
             ),
             # sudo: mail.guest - reading guest related to a member is considered acceptable
@@ -299,10 +299,10 @@ class DiscussChannelMember(models.Model):
             "fetched_message_id",
             "last_seen_dt",
             "seen_message_id",
-            *self.env["discuss.channel.member"]._to_store_persona(),
+            *self.env["discuss.channel.member"]._to_store_persona(target=target),
         ]
 
-    def _get_store_partner_fields(self, fields):
+    def _get_store_partner_fields(self, fields, target):
         self.ensure_one()
         return fields
 
