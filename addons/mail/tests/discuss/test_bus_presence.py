@@ -9,7 +9,7 @@ except ImportError:
 
 from odoo.tests import tagged, new_test_user
 from odoo.addons.bus.tests.common import WebsocketCase
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 
 
@@ -51,6 +51,7 @@ class TestBusPresence(WebsocketCase, MailCommon):
             sender_bus_target.id,
         )
 
+    @freeze_all_time()
     def test_receive_presences_as_guest(self):
         guest = self.env["mail.guest"].create({"name": "Guest"})
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
@@ -70,6 +71,7 @@ class TestBusPresence(WebsocketCase, MailCommon):
         # Now that they share a channel, guest should receive guest's presence.
         self._receive_presence(sender=other_guest, recipient=guest)
 
+    @freeze_all_time()
     def test_receive_presences_as_portal(self):
         portal = new_test_user(self.env, login="portal_user", groups="base.group_portal")
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
@@ -89,6 +91,7 @@ class TestBusPresence(WebsocketCase, MailCommon):
         # Now that they share a channel, portal should receive guest's presence.
         self._receive_presence(sender=guest, recipient=portal)
 
+    @freeze_all_time()
     def test_receive_presences_as_internal(self):
         internal = new_test_user(self.env, login="internal_user", groups="base.group_user")
         guest = self.env["mail.guest"].create({"name": "Guest"})
