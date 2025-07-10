@@ -182,18 +182,16 @@ class ResourceCalendar(models.Model):
 
     @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar', 'flexible_hours')
     def _compute_hours_per_day(self):
-        for calendar in self:
-            if calendar.flexible_hours:
-                continue
-            attendances = calendar._get_global_attendances()
-            calendar.hours_per_day = calendar._get_hours_per_day(attendances)
+        """ Compute the average hours per day.
+            Cannot directly depend on hours_per_week because of rounding issues. """
+        for calendar in self.filtered(lambda c: not c.flexible_hours):
+            calendar.hours_per_day = float_round(calendar._get_hours_per_day(), precision_digits=2)
 
-    @api.depends('attendance_ids.hour_from', 'attendance_ids.hour_to')
+    @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar', 'flexible_hours')
     def _compute_hours_per_week(self):
-        for calendar in self:
-            sum_hours = sum(
-                (attendance.hour_to - attendance.hour_from) for attendance in calendar.attendance_ids if attendance._is_work_period())
-            calendar.hours_per_week = sum_hours / 2 if calendar.two_weeks_calendar else sum_hours
+        """ Compute the average hours per week """
+        for calendar in self.filtered(lambda c: not c.flexible_hours):
+            calendar.hours_per_week = float_round(calendar._get_hours_per_week(), precision_digits=2)
 
     @api.depends('two_weeks_calendar')
     def _compute_two_weeks_explanation(self):
@@ -669,39 +667,33 @@ class ResourceCalendar(models.Model):
     def _get_days_per_week(self):
         # If the employee didn't work a full day, it is still counted, i.e. 19h / week (M/T/W(half day)) -> 3 days
         self.ensure_one()
-        days = len(set(
-            (attendance.week_type, attendance.dayofweek)  # ensure week + weekday unicity
-            for attendance in self.attendance_ids.filtered(lambda a: a._is_work_period() and a.duration_hours)
-        ))
-        return days / 2 if self.two_weeks_calendar else days
+        attendances = self._get_global_attendances()
+        if self.two_weeks_calendar:
+            number_of_days = len(set(attendances.filtered(lambda cal: cal.week_type == '1').mapped('dayofweek')))
+            number_of_days += len(set(attendances.filtered(lambda cal: cal.week_type == '0').mapped('dayofweek')))
+        else:
+            number_of_days = len(set(attendances.mapped('dayofweek')))
+        return number_of_days / 2 if self.two_weeks_calendar else number_of_days
+
+    def _get_hours_per_week(self):
+        """ Calculate the average hours worked per week. """
+        self.ensure_one()
+        hour_count = 0.0
+        for attendance in self._get_global_attendances():
+            hour_count += attendance.hour_to - attendance.hour_from
+        return hour_count / 2 if self.two_weeks_calendar else hour_count
+
+    def _get_hours_per_day(self):
+        """ Calculate the average hours worked per workday. """
+        hour_per_week = self._get_hours_per_week()
+        number_of_days = self._get_days_per_week()
+        return hour_per_week / number_of_days if number_of_days else 0
 
     def _get_global_attendances(self):
         return self.attendance_ids.filtered(lambda attendance:
             attendance.day_period != 'lunch'
             and not attendance.date_from and not attendance.date_to
             and not attendance.resource_id and not attendance.display_type)
-
-    def _get_hours_per_day(self, attendances):
-        """
-        Calculate the average hours worked per workday.
-        """
-        if not attendances:
-            return 0
-
-        hour_count = 0.0
-        for attendance in attendances:
-            hour_count += attendance.hour_to - attendance.hour_from
-
-        if self.two_weeks_calendar:
-            number_of_days = len(set(attendances.filtered(lambda cal: cal.week_type == '1').mapped('dayofweek')))
-            number_of_days += len(set(attendances.filtered(lambda cal: cal.week_type == '0').mapped('dayofweek')))
-        else:
-            number_of_days = len(set(attendances.mapped('dayofweek')))
-
-        if not number_of_days:
-            return 0
-
-        return float_round(hour_count / float(number_of_days), precision_digits=2)
 
     def _get_unusual_days(self, start_dt, end_dt, company_id=False):
         if not self:
