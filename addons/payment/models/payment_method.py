@@ -190,13 +190,13 @@ class PaymentMethod(models.Model):
 
     #=== CRUD METHODS ===#
 
-    def write(self, values):
+    def write(self, vals):
         # Handle payment methods being archived, detached from providers, or blocking tokenization.
-        archiving = values.get('active') is False
+        archiving = vals.get('active') is False
         detached_provider_ids = [
-            vals[0] for command, *vals in values['provider_ids'] if command == Command.UNLINK
-        ] if 'provider_ids' in values else []
-        blocking_tokenization = values.get('support_tokenization') is False
+            v[0] for command, *v in vals['provider_ids'] if command == Command.UNLINK
+        ] if 'provider_ids' in vals else []
+        blocking_tokenization = vals.get('support_tokenization') is False
         if archiving or detached_provider_ids or blocking_tokenization:
             linked_tokens = self.env['payment.token'].with_context(active_test=True).search(
                 Domain('payment_method_id', 'in', (self + self.brand_ids).ids)
@@ -205,7 +205,7 @@ class PaymentMethod(models.Model):
             linked_tokens.active = False
 
         # Prevent enabling a payment method if it is not linked to an enabled provider.
-        if values.get('active'):
+        if vals.get('active'):
             for pm in self:
                 primary_pm = pm if pm.is_primary else pm.primary_payment_method_id
                 if (
@@ -217,7 +217,7 @@ class PaymentMethod(models.Model):
                         " provider supporting this method first."
                     ))
 
-        return super().write(values)
+        return super().write(vals)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_not_default_payment_method(self):

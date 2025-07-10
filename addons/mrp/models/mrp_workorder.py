@@ -475,7 +475,8 @@ class MrpWorkorder(models.Model):
             if res is not True:
                 return res
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         new_workcenter = False
         if 'qty_produced' in values:
             if any(w.state in ['done', 'cancel'] for w in self):

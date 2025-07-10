@@ -154,13 +154,13 @@ class IrUiMenu(models.Model):
         for values in vals_list:
             if 'web_icon' in values:
                 values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
-        return super(IrUiMenu, self).create(vals_list)
+        return super().create(vals_list)
 
-    def write(self, values):
+    def write(self, vals):
         self.env.registry.clear_cache()
-        if 'web_icon' in values:
-            values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
-        return super(IrUiMenu, self).write(values)
+        if 'web_icon' in vals:
+            vals['web_icon_data'] = self._compute_web_icon_data(vals.get('web_icon'))
+        return super().write(vals)
 
     def _compute_web_icon_data(self, web_icon):
         """ Returns the image associated to ``web_icon``.

@@ -319,21 +319,21 @@ class PaymentProvider(models.Model):
             self._toggle_post_processing_cron()
         return providers
 
-    def write(self, values):
+    def write(self, vals):
         # Handle provider state changes.
         deactivated_providers = self.env['payment.provider']
         activated_providers = self.env['payment.provider']
-        if 'state' in values:
+        if 'state' in vals:
             state_changed_providers = self.filtered(
-                lambda p: p.state not in ('disabled', values['state'])
+                lambda p: p.state not in ('disabled', vals['state'])
             )  # Don't handle providers being enabled or whose state is not updated.
             state_changed_providers._archive_linked_tokens()
-            if values['state'] == 'disabled':
+            if vals['state'] == 'disabled':
                 deactivated_providers = state_changed_providers
             else:  # 'enabled' or 'test'
                 activated_providers = self.filtered(lambda p: p.state == 'disabled')
 
-        result = super().write(values)
+        result = super().write(vals)
         self._check_required_if_provider()
 
         deactivated_providers._deactivate_unsupported_payment_methods()

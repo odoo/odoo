@@ -105,10 +105,10 @@ class SlideSlide(models.Model):
         slides_with_survey._ensure_challenge_category()
         return slides
 
-    def write(self, values):
+    def write(self, vals):
         old_surveys = self.mapped('survey_id')
-        result = super().write(values)
-        if 'survey_id' in values:
+        result = super().write(vals)
+        if 'survey_id' in vals:
             self._ensure_challenge_category(old_surveys=old_surveys - self.mapped('survey_id'))
         return result
 

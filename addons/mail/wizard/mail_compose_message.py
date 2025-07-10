@@ -45,7 +45,7 @@ class MailComposeMessage(models.TransientModel):
     _batch_size = 50
 
     @api.model
-    def default_get(self, fields_list):
+    def default_get(self, fields):
         """ Handle composition mode and contextual computation, until moving
         to computed fields. Support active_model / active_id(s) as valid default
         values, as this comes from standard web client usage.
@@ -64,15 +64,15 @@ class MailComposeMessage(models.TransientModel):
         if 'default_res_id' in self.env.context:
             raise ValueError(_("Deprecated usage of 'default_res_id', should use 'default_res_ids'."))
 
-        result = super().default_get(fields_list)
+        result = super().default_get(fields)
 
         # when being in new mode, create_uid is not granted -> ACLs issue may arise
-        if 'create_uid' in fields_list and 'create_uid' not in result:
+        if 'create_uid' in fields and 'create_uid' not in result:
             result['create_uid'] = self.env.uid
 
         return {
             fname: result[fname]
-            for fname in result if fname in fields_list
+            for fname in result if fname in fields
         }
 
     # content

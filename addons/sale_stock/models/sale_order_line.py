@@ -212,17 +212,17 @@ class SaleOrderLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        lines = super(SaleOrderLine, self).create(vals_list)
+        lines = super().create(vals_list)
         lines.filtered(lambda line: line.state == 'sale')._action_launch_stock_rule()
         return lines
 
-    def write(self, values):
+    def write(self, vals):
         lines = self.env['sale.order.line']
-        if 'product_uom_qty' in values:
+        if 'product_uom_qty' in vals:
             lines = self.filtered(lambda r: r.state == 'sale' and not r.is_expense)
 
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
-        res = super(SaleOrderLine, self).write(values)
+        res = super().write(vals)
         if lines:
             lines._action_launch_stock_rule(previous_product_uom_qty=previous_product_uom_qty)
         return res

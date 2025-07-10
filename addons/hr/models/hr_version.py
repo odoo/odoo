@@ -264,7 +264,8 @@ class HrVersion(models.Model):
         if self.employee_id.versions_count == len(self):
             raise ValidationError(_('An employee must always have at least one version.'))
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         # Employee Versions Validation
         # ARPI TODO: what if mass edit ?
         if 'employee_id' in values:

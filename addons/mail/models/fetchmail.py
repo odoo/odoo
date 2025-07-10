@@ -172,17 +172,17 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(FetchmailServer, self).create(vals_list)
+        res = super().create(vals_list)
         self._update_cron()
         return res
 
-    def write(self, values):
-        res = super(FetchmailServer, self).write(values)
+    def write(self, vals):
+        res = super().write(vals)
         self._update_cron()
         return res
 
     def unlink(self):
-        res = super(FetchmailServer, self).unlink()
+        res = super().unlink()
         self._update_cron()
         return res
 

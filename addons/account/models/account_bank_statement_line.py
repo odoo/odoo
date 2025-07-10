@@ -336,13 +336,14 @@ class AccountBankStatementLine(models.Model):
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
 
-    def default_get(self, fields_list):
+    @api.model
+    def default_get(self, fields):
         self_ctx = self.with_context(is_statement_line=True)
-        defaults = super(AccountBankStatementLine, self_ctx).default_get(fields_list)
-        if 'journal_id' in fields_list and not defaults.get('journal_id'):
+        defaults = super(AccountBankStatementLine, self_ctx).default_get(fields)
+        if 'journal_id' in fields and not defaults.get('journal_id'):
             defaults['journal_id'] = self_ctx.env['account.move']._search_default_journal().id
 
-        if 'date' in fields_list and not defaults.get('date') and 'journal_id' in defaults:
+        if 'date' in fields and not defaults.get('date') and 'journal_id' in defaults:
             # copy the date and statement from the latest transaction of the same journal to help the user
             # to enter the next transaction, they do not have to enter the date and the statement every time until the
             # statement is completed. It is only possible if we know the journal that is used, so it can only be done

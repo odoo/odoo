@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -149,7 +148,8 @@ class SaleOrder(models.Model):
         if any(c not in other_company_warehouses.company_id.ids for c in other_company):
             raise UserError(_("You must have a warehouse for line using a delivery in different company."))
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         if values.get('order_line') and self.state == 'sale':
             for order in self:
                 pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line') if not order_line.is_expense}

@@ -207,13 +207,13 @@ class CrmTeam(models.Model):
         teams.filtered(lambda t: t.member_ids)._add_members_to_favorites()
         return teams
 
-    def write(self, values):
-        res = super(CrmTeam, self).write(values)
+    def write(self, vals):
+        res = super().write(vals)
         # manually launch company sanity check
-        if values.get('company_id'):
+        if vals.get('company_id'):
             self.crm_team_member_ids._check_company(fnames=['crm_team_id'])
 
-        if values.get('member_ids'):
+        if vals.get('member_ids'):
             self._add_members_to_favorites()
         return res
 

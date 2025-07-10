@@ -131,12 +131,12 @@ class RatingRating(models.Model):
                 values['rated_on'] = fields.Datetime.now()
         return super().create(vals_list)
 
-    def write(self, values):
-        if values.get('res_model_id') and values.get('res_id'):
-            values.update(self._find_parent_data(values))
-        if 'rating' in values or 'feedback' in values:
-            values['rated_on'] = fields.Datetime.now()
-        return super().write(values)
+    def write(self, vals):
+        if vals.get('res_model_id') and vals.get('res_id'):
+            vals.update(self._find_parent_data(vals))
+        if 'rating' in vals or 'feedback' in vals:
+            vals['rated_on'] = fields.Datetime.now()
+        return super().write(vals)
 
     def unlink(self):
         # OPW-2181568: Delete the chatter message too

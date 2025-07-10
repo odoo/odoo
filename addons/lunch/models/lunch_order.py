@@ -173,7 +173,8 @@ class LunchOrder(models.Model):
                 orders |= super().create(vals)
         return orders
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         change_topping = 'topping_ids_1' in values or 'topping_ids_2' in values or 'topping_ids_3' in values
         merge_needed = 'note' in values or change_topping or 'state' in values
         default_location_id = self.env.user.last_lunch_location_id and self.env.user.last_lunch_location_id.id or False

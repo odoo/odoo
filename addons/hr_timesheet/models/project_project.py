@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 
@@ -151,13 +150,13 @@ class ProjectProject(models.Model):
                 vals['account_id'] = analytic_account.id
         return super().create(vals_list)
 
-    def write(self, values):
+    def write(self, vals):
         # create the AA for project still allowing timesheet
-        if values.get('allow_timesheets') and not values.get('account_id'):
+        if vals.get('allow_timesheets') and not vals.get('account_id'):
             project_wo_account = self.filtered(lambda project: not project.account_id and not project.is_template)
             if project_wo_account:
                 project_wo_account._create_analytic_account()
-        return super().write(values)
+        return super().write(vals)
 
     @api.depends('is_internal_project', 'company_id')
     @api.depends_context('allowed_company_ids')

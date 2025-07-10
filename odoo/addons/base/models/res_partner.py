@@ -196,14 +196,14 @@ class ResPartner(models.Model):
         return self.env['res.partner.category'].browse(self.env.context.get('category_id'))
 
     @api.model
-    def default_get(self, default_fields):
+    def default_get(self, fields):
         """Add the company of the parent as default if we are creating a child partner. """
-        values = super().default_get(default_fields)
-        if 'parent_id' in default_fields and values.get('parent_id'):
+        values = super().default_get(fields)
+        if 'parent_id' in fields and values.get('parent_id'):
             parent = self.browse(values.get('parent_id'))
             values['company_id'] = parent.company_id.id
         # protection for `default_type` values leaking from menu action context (e.g. for crm's email)
-        if 'type' in default_fields and values.get('type'):
+        if 'type' in fields and values.get('type'):
             if values['type'] not in self._fields['type'].get_values(self.env):
                 values['type'] = None
         return values

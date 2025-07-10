@@ -338,40 +338,39 @@ class ResCompany(models.Model):
         self.env.registry.clear_cache()
         return res
 
-    def write(self, values):
+    def write(self, vals):
         invalidation_fields = self.cache_invalidation_fields()
         asset_invalidation_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
 
         companies_needs_l10n = (
-            values.get('country_id')
+            vals.get('country_id')
             and self.filtered(lambda company: not company.country_id)
-            or self.browse()
-        )
-        if not invalidation_fields.isdisjoint(values):
+        ) or self.browse()
+        if not invalidation_fields.isdisjoint(vals):
             self.env.registry.clear_cache()
 
-        if not asset_invalidation_fields.isdisjoint(values):
+        if not asset_invalidation_fields.isdisjoint(vals):
             # this is used in the content of an asset (see asset_styles_company_report)
             # and thus needs to invalidate the assets cache when this is changed
             self.env.registry.clear_cache('assets')  # not 100% it is useful a test is missing if it is the case
 
-        if 'parent_id' in values:
+        if 'parent_id' in vals:
             raise UserError(self.env._("The company hierarchy cannot be changed."))
 
-        if values.get('currency_id'):
-            currency = self.env['res.currency'].browse(values['currency_id'])
+        if vals.get('currency_id'):
+            currency = self.env['res.currency'].browse(vals['currency_id'])
             if not currency.active:
                 currency.write({'active': True})
 
-        res = super().write(values)
+        res = super().write(vals)
 
         # Archiving a company should also archive all of its branches
-        if values.get('active') is False:
+        if vals.get('active') is False:
             self.child_ids.active = False
 
         for company in self:
             # Copy modified delegated fields from root to branches
-            if (changed := set(values) & set(self._get_company_root_delegated_field_names())) and not company.parent_id:
+            if (changed := set(vals) & set(self._get_company_root_delegated_field_names())) and not company.parent_id:
                 branches = self.sudo().search([
                     ('id', 'child_of', company.id),
                     ('id', '!=', company.id),
@@ -384,7 +383,7 @@ class ResCompany(models.Model):
 
         # invalidate company cache to recompute address based on updated partner
         company_address_fields = self._get_company_address_field_names()
-        company_address_fields_upd = set(company_address_fields) & set(values.keys())
+        company_address_fields_upd = set(company_address_fields) & set(vals.keys())
         if company_address_fields_upd:
             self.invalidate_model(company_address_fields)
         return res

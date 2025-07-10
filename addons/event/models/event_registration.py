@@ -105,6 +105,7 @@ class EventRegistration(models.Model):
                 )
             ])
 
+    @api.model
     def default_get(self, fields):
         ret_vals = super().default_get(fields)
         utm_mixin_fields = ("campaign_id", "medium_id", "source_id")

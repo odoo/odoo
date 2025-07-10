@@ -91,7 +91,8 @@ class PurchaseOrderLine(models.Model):
         lines.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
         return lines
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         if values.get('date_planned'):
             new_date = fields.Datetime.to_datetime(values['date_planned'])
             self.filtered(lambda l: not l.display_type)._update_move_date_deadline(new_date)

@@ -32,8 +32,8 @@ class DecimalPrecision(models.Model):
         self.env.registry.clear_cache()
         return res
 
-    def write(self, data):
-        res = super().write(data)
+    def write(self, vals):
+        res = super().write(vals)
         self.env.registry.clear_cache()
         return res
 

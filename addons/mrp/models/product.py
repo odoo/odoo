@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import collections
@@ -6,7 +5,6 @@ from datetime import timedelta
 import operator as py_operator
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_round, float_is_zero
 
 
 PY_OPERATORS = {
@@ -68,12 +66,12 @@ class ProductTemplate(models.Model):
             template.used_in_bom_count = self.env['mrp.bom'].search_count(
                 [('bom_line_ids.product_tmpl_id', 'in', template.ids)])
 
-    def write(self, values):
-        if 'active' in values:
-            self.filtered(lambda p: p.active != values['active']).with_context(active_test=False).bom_ids.write({
-                'active': values['active']
+    def write(self, vals):
+        if 'active' in vals:
+            self.filtered(lambda p: p.active != vals['active']).with_context(active_test=False).bom_ids.write({
+                'active': vals['active']
             })
-        return super().write(values)
+        return super().write(vals)
 
     def action_used_in_bom(self):
         self.ensure_one()
@@ -213,12 +211,12 @@ class ProductProduct(models.Model):
         ]).move_raw_ids.product_id.ids
         return [('id', operator, product_ids)]
 
-    def write(self, values):
-        if 'active' in values:
-            self.filtered(lambda p: p.active != values['active']).with_context(active_test=False).variant_bom_ids.write({
-                'active': values['active']
+    def write(self, vals):
+        if 'active' in vals:
+            self.filtered(lambda p: p.active != vals['active']).with_context(active_test=False).variant_bom_ids.write({
+                'active': vals['active']
             })
-        return super().write(values)
+        return super().write(vals)
 
     def get_components(self):
         """ Return the components list ids in case of kit product.

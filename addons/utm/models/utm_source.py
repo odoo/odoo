@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -61,9 +59,9 @@ class UtmSourceMixin(models.AbstractModel):
     source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='restrict', copy=False)
 
     @api.model
-    def default_get(self, fields_list):
-        # Exclude 'name' from fields_list to avoid retrieving it from context.
-        return super().default_get([field for field in fields_list if field != "name"])
+    def default_get(self, fields):
+        # Exclude 'name' from fields to avoid retrieving it from context.
+        return super().default_get([field for field in fields if field != "name"])
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -90,20 +88,20 @@ class UtmSourceMixin(models.AbstractModel):
 
         return super().create(vals_list)
 
-    def write(self, values):
-        if (values.get(self._rec_name) or values.get('name')) and len(self) > 1:
+    def write(self, vals):
+        if (vals.get(self._rec_name) or vals.get('name')) and len(self) > 1:
             raise ValueError(
                 _('You cannot update multiple records with the same name. The name should be unique!')
             )
 
-        if values.get(self._rec_name) and not values.get('name'):
-            values['name'] = self.env['utm.source']._generate_name(self, values[self._rec_name])
-        if values.get('name'):
-            values['name'] = self.env['utm.mixin'].with_context(
+        if vals.get(self._rec_name) and not vals.get('name'):
+            vals['name'] = self.env['utm.source']._generate_name(self, vals[self._rec_name])
+        if vals.get('name'):
+            vals['name'] = self.env['utm.mixin'].with_context(
                 utm_check_skip_record_ids=self.source_id.ids
-            )._get_unique_names("utm.source", [values['name']])[0]
+            )._get_unique_names("utm.source", [vals['name']])[0]
 
-        return super().write(values)
+        return super().write(vals)
 
     def copy_data(self, default=None):
         """Increment the counter when duplicating the source."""

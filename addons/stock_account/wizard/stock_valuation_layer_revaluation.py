@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -13,8 +12,8 @@ class StockValuationLayerRevaluation(models.TransientModel):
     _check_company_auto = True
 
     @api.model
-    def default_get(self, default_fields):
-        res = super().default_get(default_fields)
+    def default_get(self, fields):
+        res = super().default_get(fields)
         context = self.env.context
         if context.get('active_model') == 'stock.lot':
             # coming from action button where lot is group_by in valuation layer list view.
@@ -43,14 +42,14 @@ class StockValuationLayerRevaluation(models.TransientModel):
             if product.lot_valuated:
                 res['lot_ids'] = [(6, 0, product.stock_valuation_layer_ids.filtered(lambda layer: layer.remaining_qty != 0).lot_id.ids)]
 
-        if 'product_id' in default_fields:
+        if 'product_id' in fields:
             if not product:
                 raise UserError(_("You cannot adjust valuation without a product"))
             if product.cost_method == 'standard':
                 raise UserError(_("You cannot revalue a product with a standard cost method."))
             if product.quantity_svl <= 0:
                 raise UserError(_("You cannot revalue a product with an empty or negative stock."))
-            if 'account_journal_id' not in res and 'account_journal_id' in default_fields and product.valuation == 'real_time':
+            if 'account_journal_id' not in res and 'account_journal_id' in fields and product.valuation == 'real_time':
                 accounts = product.product_tmpl_id.get_product_accounts()
                 res['account_journal_id'] = accounts['stock_journal'].id
         return res

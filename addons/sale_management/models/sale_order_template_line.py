@@ -79,10 +79,10 @@ class SaleOrderTemplateLine(models.Model):
                 vals.update(product_id=False, product_uom_qty=0, product_uom_id=False)
         return super().create(vals_list)
 
-    def write(self, values):
-        if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
+    def write(self, vals):
+        if 'display_type' in vals and self.filtered(lambda line: line.display_type != vals.get('display_type')):
             raise UserError(_("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type."))
-        return super().write(values)
+        return super().write(vals)
 
     #=== BUSINESS METHODS ===#
 

@@ -330,9 +330,10 @@ class Website(models.Model):
 
         return websites
 
-    def write(self, values):
+    def write(self, vals):
         public_user_to_change_websites = self.env['website']
         original_company = self.company_id
+        values = vals
         self._handle_create_write(values)
 
         self.env.registry.clear_cache()

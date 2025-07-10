@@ -180,9 +180,9 @@ class ProjectProject(models.Model):
             if project.sale_line_id.is_expense:
                 raise ValidationError(_("You cannot link a billable project to a sales order item that comes from an expense or a vendor bill."))
 
-    def write(self, values):
-        res = super().write(values)
-        if 'allow_billable' in values and not values.get('allow_billable'):
+    def write(self, vals):
+        res = super().write(vals)
+        if 'allow_billable' in vals and not vals.get('allow_billable'):
             self.task_ids._get_timesheet().write({
                 'so_line': False,
             })

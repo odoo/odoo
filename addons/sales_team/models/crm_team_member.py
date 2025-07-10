@@ -160,7 +160,7 @@ class CrmTeamMember(models.Model):
             mail_create_nosubscribe=True
         )).create(vals_list)
 
-    def write(self, values):
+    def write(self, vals):
         """ Specific behavior about active. If you change user_id / team_id user
         get warnings in form view and a raise in constraint check. We support
         archive / activation of memberships that toggles other memberships. But
@@ -171,12 +171,12 @@ class CrmTeamMember(models.Model):
         modifying user_id or team_id is advanced and does not benefit from our
         support. """
         is_membership_multi = self.env['ir.config_parameter'].sudo().get_param('sales_team.membership_multi', False)
-        if not is_membership_multi and values.get('active'):
+        if not is_membership_multi and vals.get('active'):
             self._synchronize_memberships([
                 dict(user_id=membership.user_id.id, crm_team_id=membership.crm_team_id.id)
                 for membership in self
             ])
-        return super(CrmTeamMember, self).write(values)
+        return super().write(vals)
 
     def _synchronize_memberships(self, user_team_ids):
         """ Synchronize memberships: archive other memberships.

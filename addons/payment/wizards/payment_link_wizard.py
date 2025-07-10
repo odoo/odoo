@@ -12,8 +12,8 @@ class PaymentLinkWizard(models.TransientModel):
     _description = "Generate Payment Link"
 
     @api.model
-    def default_get(self, fields_list):
-        res = super().default_get(fields_list)
+    def default_get(self, fields):
+        res = super().default_get(fields)
         res_id = self.env.context.get('active_id')
         res_model = self.env.context.get('active_model')
         if res_id and res_model:

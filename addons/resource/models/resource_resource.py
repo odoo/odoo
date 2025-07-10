@@ -77,16 +77,16 @@ class ResourceResource(models.Model):
         vals_list = super().copy_data(default=default)
         return [dict(vals, name=self.env._("%s (copy)", resource.name)) for resource, vals in zip(self, vals_list)]
 
-    def write(self, values):
+    def write(self, vals):
         if self.env.context.get('check_idempotence') and len(self) == 1:
-            values = {
+            vals = {
                 fname: value
-                for fname, value in values.items()
+                for fname, value in vals.items()
                 if self._fields[fname].convert_to_write(self[fname], self) != value
             }
-        if not values:
+        if not vals:
             return True
-        return super().write(values)
+        return super().write(vals)
 
     @api.onchange('company_id')
     def _onchange_company_id(self):

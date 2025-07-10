@@ -26,11 +26,11 @@ class SurveySurvey(models.Model):
         return str(uuid.uuid4())
 
     @api.model
-    def default_get(self, fields_list):
-        result = super().default_get(fields_list)
+    def default_get(self, fields):
+        result = super().default_get(fields)
         # allows to propagate the text one write in a many2one widget after
         # clicking on 'Create and Edit...' to the popup form.
-        if 'title' in fields_list and not result.get('title') and self.env.context.get('default_name'):
+        if 'title' in fields and not result.get('title') and self.env.context.get('default_name'):
             result['title'] = self.env.context.get('default_name')
         return result
 

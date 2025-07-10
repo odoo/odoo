@@ -58,14 +58,14 @@ class PhoneBlacklist(models.Model):
         numbers_to_id = {record.number: record.id for record in existing | created}
         return self.browse(numbers_to_id[number] for number in numbers_requested)
 
-    def write(self, values):
-        if 'number' in values:
+    def write(self, vals):
+        if 'number' in vals:
             try:
-                sanitized = self.env.user._phone_format(number=values['number'], raise_exception=True)
+                sanitized = self.env.user._phone_format(number=vals['number'], raise_exception=True)
             except UserError as err:
                 raise UserError(_("%(error)s Please correct the number and try again.", error=str(err))) from err
-            values['number'] = sanitized
-        return super().write(values)
+            vals['number'] = sanitized
+        return super().write(vals)
 
     def _search_number(self, operator, value):
         sanitize = self.env.user._phone_format

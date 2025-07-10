@@ -24,6 +24,7 @@ class ProjectUpdate(models.Model):
     _order = 'id desc'
     _inherit = ['mail.thread.cc', 'mail.activity.mixin']
 
+    @api.model
     def default_get(self, fields):
         result = super().default_get(fields)
         if 'project_id' in fields and not result.get('project_id'):

@@ -6,6 +6,7 @@ from pytz import timezone, utc
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.fields import Datetime
 
 
 class ResourceCalendarLeaves(models.Model):
@@ -13,11 +14,12 @@ class ResourceCalendarLeaves(models.Model):
     _description = "Resource Time Off Detail"
     _order = "date_from"
 
-    def default_get(self, fields_list):
-        res = super().default_get(fields_list)
-        if 'date_from' in fields_list and 'date_to' in fields_list and not res.get('date_from') and not res.get('date_to'):
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if 'date_from' in fields and 'date_to' in fields and not res.get('date_from') and not res.get('date_to'):
             # Then we give the current day and we search the begin and end hours for this day in resource.calendar of the current company
-            today = fields.Datetime.now()
+            today = Datetime.now()
             calendar = self.env.company.resource_calendar_id
             if 'calendar_id' in res:
                 calendar = self.env['resource.calendar'].browse(res['calendar_id'])

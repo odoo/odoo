@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -57,14 +56,14 @@ class ForumPostVote(models.Model):
             vote._vote_update_karma('0', vote.vote)
         return votes
 
-    def write(self, values):
+    def write(self, vals):
         # can't modify owner of a vote
         if not self.env.is_admin():
-            values.pop('user_id', None)
+            vals.pop('user_id', None)
 
         for vote in self:
-            vote._check_general_rights(values)
-            vote_value = values.get('vote')
+            vote._check_general_rights(vals)
+            vote_value = vals.get('vote')
             if vote_value is not None:
                 upvote = vote.vote == '-1' if vote_value == '0' else vote_value == '1'
                 vote._check_karma_rights(upvote)
@@ -72,8 +71,7 @@ class ForumPostVote(models.Model):
                 # karma update
                 vote._vote_update_karma(vote.vote, vote_value)
 
-        res = super().write(values)
-        return res
+        return super().write(vals)
 
     def _check_general_rights(self, vals=None):
         if vals is None:

@@ -143,9 +143,9 @@ class LunchAlert(models.Model):
         alerts._sync_cron()
         return alerts
 
-    def write(self, values):
-        res = super().write(values)
-        if not CRON_DEPENDS.isdisjoint(values):
+    def write(self, vals):
+        res = super().write(vals)
+        if not CRON_DEPENDS.isdisjoint(vals):
             self._sync_cron()
         return res
 

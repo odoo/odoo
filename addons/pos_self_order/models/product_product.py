@@ -74,14 +74,14 @@ class ProductTemplate(models.Model):
         for product in self:
             product.self_order_visible = any(p_cat_id in categ_ids for p_cat_id in product.pos_categ_ids.ids)
 
-    def write(self, vals_list):
-        if 'available_in_pos' in vals_list:
-            if not vals_list['available_in_pos']:
-                vals_list['self_order_available'] = False
+    def write(self, vals):
+        if 'available_in_pos' in vals:
+            if not vals['available_in_pos']:
+                vals['self_order_available'] = False
 
-        res = super().write(vals_list)
+        res = super().write(vals)
 
-        if 'self_order_available' in vals_list:
+        if 'self_order_available' in vals:
             for record in self:
                 for product in record.product_variant_ids:
                     product._send_availability_status()
@@ -109,9 +109,9 @@ class ProductProduct(models.Model):
             if attributes_by_ptal_id.get(id) is not None
         ]
 
-    def write(self, vals_list):
-        res = super().write(vals_list)
-        if 'self_order_available' in vals_list:
+    def write(self, vals):
+        res = super().write(vals)
+        if 'self_order_available' in vals:
             for record in self:
                 record._send_availability_status()
         return res
