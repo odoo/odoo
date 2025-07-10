@@ -34,10 +34,10 @@ class TestProjectMilestone(TestProjectCommon):
         # Now, enable the feature
         self.env.user.group_ids |= self.env.ref('project.group_project_milestone')
         project2 = self.env['project.project'].create({'name': 'Test allow_milestones on New Project'})
-        self.assertTrue(project2.allow_milestones, 'The "Milestones" feature should be enabled by default when the feature is enabled globally.')
+        self.assertFalse(project2.allow_milestones, 'The "Milestones" feature should still be disabled by default when the feature is enabled globally.')
         with Form(self.env['project.project']) as project_form:
             project_form.name = 'My Mouses Project'
-            self.assertTrue(project_form.allow_milestones, 'New projects allow_milestones should be True by default.')
+            self.assertFalse(project_form.allow_milestones, 'New projects allow_milestones should be False by default.')
 
     def test_change_project_in_task(self):
         """ Test when a task is linked to a milestone and when we change its project the milestone is removed (and

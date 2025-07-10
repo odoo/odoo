@@ -34,7 +34,8 @@ class TestProjectRecurrence(TransactionCase):
             'type_ids': [
                 (4, cls.stage_a.id),
                 (4, cls.stage_b.id),
-            ]
+            ],
+            'allow_recurring_tasks': True,
         })
         cls.user = cls.env['res.users'].create({
             'name': 'Recurring Project User',

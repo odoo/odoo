@@ -143,9 +143,9 @@ class ProjectProject(models.Model):
     date_start = fields.Date(string='Start Date', copy=False)
     date = fields.Date(string='Expiration Date', copy=False, index=True, tracking=True,
         help="Date on which this project ends. The timeframe defined on the project is taken into account when viewing its planning.")
-    allow_task_dependencies = fields.Boolean('Task Dependencies', inverse='_inverse_allow_task_dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'))
-    allow_milestones = fields.Boolean('Milestones', inverse='_inverse_allow_milestones', default=lambda self: self.env.user.has_group('project.group_project_milestone'))
-    allow_recurring_tasks = fields.Boolean('Recurring Tasks', inverse='_inverse_allow_recurring_tasks', default=lambda self: self.env.user.has_group('project.group_project_recurring_tasks'))
+    allow_task_dependencies = fields.Boolean('Task Dependencies', inverse='_inverse_allow_task_dependencies')
+    allow_milestones = fields.Boolean('Milestones', inverse='_inverse_allow_milestones')
+    allow_recurring_tasks = fields.Boolean('Recurring Tasks', inverse='_inverse_allow_recurring_tasks')
     tag_ids = fields.Many2many('project.tags', relation='project_project_project_tags_rel', string='Tags')
     task_properties_definition = fields.PropertiesDefinition('Task Properties')
     closed_task_count = fields.Integer(compute="_compute_closed_task_count", export_string_translation=False)
@@ -774,8 +774,6 @@ class ProjectProject(models.Model):
 
     def _mail_get_message_subtypes(self):
         res = super()._mail_get_message_subtypes()
-        if not self.type_ids.rating_active:
-            res -= self.env.ref('project.mt_project_task_rating')
         if len(self) == 1:
             waiting_subtype = self.env.ref('project.mt_project_task_waiting')
             if not self.allow_task_dependencies and waiting_subtype in res:
@@ -1026,7 +1024,6 @@ class ProjectProject(models.Model):
                 'number': f'{int(self.rating_avg) if self.rating_avg.is_integer() else round(self.rating_avg, 1)} / 5',
                 'action_type': 'object',
                 'action': 'action_view_all_rating',
-                'show': self.type_ids.rating_active,
                 'sequence': 15,
             })
         if self.env.user.has_group('project.group_project_user'):

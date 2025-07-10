@@ -16,7 +16,6 @@
                     <separator invisible="context.get('default_project_id')"/>
                     <filter string="Favorite Projects" name="favorite_projects" domain="[('project_id.is_favorite', '=', True)]" invisible="context.get('default_project_id')"/>
                     <separator groups="project.group_project_task_dependencies" invisible="not context.get('allow_task_dependencies', True)"/>
-                    <filter string="Blocked" name="blocked" domain="[('state', '=', '04_waiting_normal')]" groups="project.group_project_task_dependencies" invisible="not context.get('allow_task_dependencies', True)"/>
                     <filter string="Blocking" name="blocking" domain="[('is_closed', '=', False), ('dependent_ids', '!=', False)]" groups="project.group_project_task_dependencies" invisible="not context.get('allow_task_dependencies', True)"/>
                     <separator/>
                     <filter string="Creation Date" name="creation_date_filter" date="create_date"/>

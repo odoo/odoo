@@ -98,14 +98,14 @@ class TestTaskDependencies(TestProjectCommon):
         self.project_chickens = self.env['project.project'].create({
             'name': 'My Chicken Project'
         })
-        self.assertTrue(self.project_chickens.allow_task_dependencies, "New Projects allow_task_dependencies should default to group_project_task_dependencies")
+        self.assertFalse(self.project_chickens.allow_task_dependencies, "New Projects allow_task_dependencies should default to False")
 
         # set group_project_task_dependencies(False)
         self.env.user.group_ids -= self.env.ref('project.group_project_task_dependencies')
         self.project_ducks = self.env['project.project'].create({
             'name': 'My Ducks Project'
         })
-        self.assertFalse(self.project_ducks.allow_task_dependencies, "New Projects allow_task_dependencies should default to group_project_task_dependencies")
+        self.assertFalse(self.project_ducks.allow_task_dependencies, "New Projects allow_task_dependencies should still default to False")
 
     def test_duplicate_project_with_task_dependencies(self):
         self.project_pigs.allow_task_dependencies = True
