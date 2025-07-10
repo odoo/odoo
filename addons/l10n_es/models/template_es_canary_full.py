@@ -34,3 +34,7 @@ class AccountChartTemplate(models.AbstractModel):
                 del data['tax_ids']
 
         return res
+
+    @template('es_canary_full', 'account.asset')
+    def _get_es_canary_full_account_asset(self):
+        return self._parse_csv('es_full', 'account.asset', module='l10n_es')
