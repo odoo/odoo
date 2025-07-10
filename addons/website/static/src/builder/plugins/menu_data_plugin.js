@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { NavbarLinkPopover } from "@html_editor/main/link/navbar_link_popover";
+import { NavbarLinkPopover } from "./navbar_link_popover/navbar_link_popover";
 import { MenuDialog, EditMenuDialog } from "@website/components/dialog/edit_menu";
 import { withSequence } from "@html_editor/utils/resource";
 
@@ -54,7 +54,23 @@ export class MenuDataPlugin extends Plugin {
                 }),
             }),
         ],
+        is_link_editable_predicates: this.isMenuLink.bind(this),
     };
+
+    /**
+     * This predicate is used to determine if the link element is editable.
+     * It checks if the link element is a menu item or a nav link
+     * @param {HTMLElement} linkElement - The link element to check.
+     * @returns {boolean} - True if the link element is editable, false otherwise.
+     */
+    isMenuLink(linkElement) {
+        return (
+            linkElement &&
+            (linkElement.getAttribute("role") === "menuitem" ||
+            linkElement.classList.contains("nav-link")) &&
+            !linkElement.dataset.bsToggle
+        );
+    }
 }
 
 registry.category("website-plugins").add(MenuDataPlugin.id, MenuDataPlugin);
