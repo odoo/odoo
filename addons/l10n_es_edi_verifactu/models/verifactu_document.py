@@ -233,8 +233,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
     def _check_record_values(self, vals):
         errors = []
 
-        company_values = vals['company'].partner_id._l10n_es_edi_verifactu_get_values()
-        company_NIF = company_values['NIF']
+        company_NIF = vals['company'].partner_id._l10n_es_edi_verifactu_get_values()['NIF']
         if not company_NIF or len(company_NIF) != 9:  # NIFType
             errors.append(_("The NIF '%(company_NIF)s' of the company is not exactly 9 characters long.",
                             company_NIF=company_NIF))
@@ -938,6 +937,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         info = {
             'errors': [],
             'record_info': {},
+            'soap_fault': False,
         }
         errors = info['errors']
         record_info = info['record_info']
@@ -962,7 +962,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         except requests.exceptions.RequestException as error:
             errors.append(_("Networking error while sending the document:\n%s", error))
         except zeep.exceptions.Fault as soapfault:
-            info['state'] = 'rejected'
+            info['soap_fault'] = True
             errors.append(f"[{soapfault.code}] {soapfault.message}")
         except zeep.exceptions.XMLSyntaxError as error:
             _logger.error("raw zeep response:\n%s", zeep_info.get('raw_response'))
@@ -978,17 +978,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
         if errors:
             return info
 
-        received_batch_state = res['EstadoEnvio']
-        batch_state = {
-            'Incorrecto': 'rejected',
-            'ParcialmenteCorrecto': 'registered_with_errors',
-            'Correcto': 'accepted',
-        }[received_batch_state]
-
         info.update({
             'response_csv': res['CSV'] if 'CSV' in res else None,  # noqa: SIM401 - `res` is of type 'zeep.client.SerialProxy'
             'waiting_time_seconds': int(res['TiempoEsperaEnvio']),
-            'state': batch_state,
         })
 
         for response_line in res['RespuestaLinea']:
@@ -1051,33 +1043,20 @@ class L10nEsEdiVerifactuDocument(models.Model):
         info = self.with_company(sender_company)._send_batch(batch_dict)
 
         batch_failure_info = {}
-        if not info.get('state') and info['errors']:
-            # Handle case that something went wrong while sending or parsing the respone
+        if info['soap_fault'] or info['errors']:
+            # Handle SOAP fault or the case that something went wrong while sending or parsing the respone.
             batch_failure_info = {
                 'errors': info['errors'],
-            }
-        elif not info.get('record_info', {}):
-            # I.e. in case of soapfault and access denied there is no `record_info`.
-            # So we just return the global 'state' / 'errors'.
-            batch_failure_info = {
-                'state': info['state'],
-                'errors': info['errors'],
+                'state': 'rejected' if info['soap_fault'] else False
             }
 
         # Store the information from the response split over the individual documents
         for document, document_dict in zip(self, document_dict_list):
-            if batch_failure_info:
-                response_info = batch_failure_info
-            else:
-                # In this case we have info['record_info']
-                record_key = self._extract_record_key(document_dict)
-                response_info = info['record_info'].get(record_key, None)
-                # We expect an entry for `record_identifier`.
-                # If there is none we "build" one; it indicates a parsing failure.
-                if response_info is None:
-                    response_info = {
-                        'errors': [_("We could not find any information about the record in the linked batch document.")],
-                }
+            response_info = (
+                batch_failure_info
+                or info['record_info'].get(self._extract_record_key(document_dict), None)
+                or {'errors': [_("We could not find any information about the record in the linked batch document.")]}
+            )
 
             # Add some information from the batch level in any case.
             response_info.update({
@@ -1125,8 +1104,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         errors = []
         company = self.env.company  # sending company
 
-        company_values = company.partner_id._l10n_es_edi_verifactu_get_values()
-        company_NIF = company_values['NIF']
+        company_NIF = company.partner_id._l10n_es_edi_verifactu_get_values()['NIF']
         if not company_NIF or len(company_NIF) != 9:  # NIFType
             errors.append(_("The NIF '%(company_NIF)s' of the company is not exactly 9 characters long.",
                             company_NIF=company_NIF))
@@ -1134,9 +1112,6 @@ class L10nEsEdiVerifactuDocument(models.Model):
         certificate = company.sudo()._l10n_es_edi_verifactu_get_certificate()
         if not certificate:
             errors.append(_("There is no certificate configured for Veri*Factu on the company."))
-
-        if company != self.company_id:
-            errors.append(_("Some of the documents do not belong to the active company."))
 
         if len(self) != len(self._filter_waiting()):
             errors.append(_("Some of the documents can not be sent. They were sent already or could not be generated correctly."))

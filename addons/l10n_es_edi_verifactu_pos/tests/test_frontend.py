@@ -26,7 +26,7 @@ class TestL10nEsEdiVerifactuPosFrontend(TestL10nEsEdiVerifactuPosCommon, TestPoi
             self.start_tour(
                 f'/pos/ui?config_id={self.config.id}',
                 'l10n_es_edi_verifactu_pos.tour_with_refund_reason',
-                step_delay=100,
+                step_delay=200,
                 login='pos_user',
             )
         orders = self.env['pos.order'].search([], order='id DESC', limit=2)
@@ -51,7 +51,7 @@ class TestL10nEsEdiVerifactuPosFrontend(TestL10nEsEdiVerifactuPosCommon, TestPoi
                 self.start_tour(
                     f'/pos/ui?config_id={self.config.id}',
                     'l10n_es_edi_verifactu_pos.tour_invoiced_with_refund_reason',
-                    step_delay=100,
+                    step_delay=200,
                     login='pos_user',
                 )
         orders = self.env['pos.order'].search([], order='id DESC', limit=2)
