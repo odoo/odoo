@@ -1,5 +1,13 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, queryOne, queryAll, select, waitFor, waitForNone } from "@odoo/hoot-dom";
+import {
+    click,
+    queryOne,
+    queryAll,
+    select,
+    waitFor,
+    waitForNone,
+    manuallyDispatchProgrammaticEvent,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts, unformat } from "../_helpers/format";
@@ -234,6 +242,26 @@ describe("button edit", () => {
         await insertText(editor, "X");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="http://test.test/">X[]</a></p>'
+        );
+    });
+
+    test("triple click select should select the full button text", async () => {
+        const { el, editor } = await setupEditor(
+            '<p>this is a <a href="http://test.test/" class="btn btn-fill-primary">test b[]tn</a></p>'
+        );
+        const button = el.querySelector("a");
+        // simulate triple click selection
+        manuallyDispatchProgrammaticEvent(button, "mousedown", { detail: 3 });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '<p>this is a \ufeff<a href="http://test.test/" class="btn btn-fill-primary">[\ufefftest btn\ufeff]</a>\ufeff</p>'
+        );
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.test/" class="btn btn-fill-primary">[test btn]</a></p>'
+        );
+        await insertText(editor, "X");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.test/" class="btn btn-fill-primary">X[]</a></p>'
         );
     });
 });
