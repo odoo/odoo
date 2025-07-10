@@ -35,7 +35,7 @@
             <img t-if="autoCompleteItemScope.value" class="rounded me-1"
                 t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.value}}/avatar_128"/>
             <span t-att-class="{ 'fw-bold': isSelected(autoCompleteItemScope.record) }" t-out="autoCompleteItemScope.label">
-                <t t-out="autoCompleteItemScope.label"/>
+                <span t-out="autoCompleteItemScope.label"/>
             </span>
         </span>
     </t>

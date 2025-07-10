@@ -27,7 +27,7 @@
                 >
                     <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                         <span t-att-class="{ 'fw-bold': isSelected(autoCompleteItemScope.record) }">
-                            <t t-out="autoCompleteItemScope.label"/>
+                            <span t-out="autoCompleteItemScope.label"/>
                         </span>
                     </t>
                 </Many2XAutocomplete>
