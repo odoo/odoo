@@ -23,6 +23,7 @@ class AccountMove(models.Model):
         comodel_name='account.payment',
         string="Indian TDS Ref Payment",
         readonly=True,
+        index='btree_not_null',
         copy=False,
         help="Reference Payment for withholding entry",
     )
