@@ -12,6 +12,23 @@ export const PRIORITY_STYLES = {
     p: new Set(["font-family"]),
     hr: new Set(["border-top-width", "border-top-style", "border-top-color"]),
 };
+export const BTN_SIZE_STYLES = {
+    "btn-sm": {
+        padding: "3px 7.5px",
+        "font-size": "0.875rem",
+        "line-height": "1.5rem",
+    },
+    "btn-md": {
+        padding: "inherit",
+        "font-size": "14px",
+        "line-height": "inherit",
+    },
+    "btn-lg": {
+        padding: "7px 14px",
+        "font-size": "1.25rem",
+        "line-height": "1.5rem",
+    },
+};
 
 export class CustomizeMailingPlugin extends Plugin {
     static id = "mass_mailing.CustomizeMailingPlugin";
@@ -175,7 +192,7 @@ export class CustomizeMailingVariable extends BuilderAction {
     }
     /**
      * @param { Object } params
-     * @param { string } params.selector
+     * @param { String[] } params.selectors
      * @param { string } params.property
      */
     getValue({ params }) {

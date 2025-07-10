@@ -10,6 +10,7 @@ export const OPTION_POSITIONS = {
     PARAGRAPH: 40,
     BUTTON: 50,
     LINK: 60,
+    SEPARATORS: 70,
 };
 
 // TODO EGGMAIL: ensure that there is a .o_layout and a .o_mail_wrapper element
@@ -27,31 +28,41 @@ class DesignTabPlugin extends Plugin {
                     title: _t("Body"),
                 })
             ),
-            // withSequence(
-            //     OPTION_POSITIONS.HEADINGS,
-            //     this.getDesignOptionBlock("design-headings", {
-            //         template: "mass_mailing_egg.DesignHeadingsOption",
-            //         title: _t("Headings"),
-            //     })
-            // ),
-            // withSequence(
-            //     OPTION_POSITIONS.PARAGRAPH,
-            //     this.getDesignOptionBlock("design-paragraph", _t("Paragraph"), {
-            //         template: "mass_mailing_egg.DesignParagraphOption",
-            //     })
-            // ),
-            // withSequence(
-            //     OPTION_POSITIONS.BUTTON,
-            //     this.getDesignOptionBlock("design-button", _t("Button"), {
-            //         template: "mass_mailing_egg.DesignButtonOption",
-            //     })
-            // ),
-            // withSequence(
-            //     OPTION_POSITIONS.LINK,
-            //     this.getDesignOptionBlock("design-link", _t("Link"), {
-            //         template: "mass_mailing_egg.DesignLinkOption",
-            //     })
-            // ),
+            withSequence(
+                OPTION_POSITIONS.HEADINGS,
+                this.getDesignOptionBlock("design-headings", {
+                    template: "mass_mailing_egg.DesignHeadingsOption",
+                    title: _t("Headings"),
+                })
+            ),
+            withSequence(
+                OPTION_POSITIONS.PARAGRAPH,
+                this.getDesignOptionBlock("design-paragraph", {
+                    template: "mass_mailing_egg.DesignParagraphOption",
+                    title: _t("Paragraph"),
+                })
+            ),
+            withSequence(
+                OPTION_POSITIONS.BUTTON,
+                this.getDesignOptionBlock("design-button", {
+                    template: "mass_mailing_egg.DesignButtonOption",
+                    title: _t("Button"),
+                })
+            ),
+            withSequence(
+                OPTION_POSITIONS.LINK,
+                this.getDesignOptionBlock("design-link", {
+                    template: "mass_mailing_egg.DesignLinkOption",
+                    title: _t("Link"),
+                })
+            ),
+            withSequence(
+                OPTION_POSITIONS.SEPARATORS,
+                this.getDesignOptionBlock("design-separators", {
+                    template: "mass_mailing_egg.DesignLinkOption",
+                    title: _t("Link"),
+                })
+            ),
         ],
     };
 
