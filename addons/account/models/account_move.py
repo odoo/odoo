@@ -20,6 +20,7 @@ from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.fields import Command, Domain
 from odoo.tools.misc import clean_context
+from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools import (
     date_utils,
     float_compare,
@@ -6116,9 +6117,13 @@ class AccountMove(models.Model):
         elif allow_fallback:
             return [self._get_invoice_pdf_proforma()]
 
-    def _get_invoice_report_filename(self, extension='pdf'):
+    def _get_invoice_report_filename(self, extension='pdf', report=None):
         """ Get the filename of the generated invoice report with extension file. """
         self.ensure_one()
+        if not report:
+            report = self.env['ir.actions.report']._get_report('account.account_invoices')
+        if report.print_report_name:
+            return f"{safe_eval(report.print_report_name, {'object': self, 'time': time}).replace('/', '_')}.{extension}"
         return f"{self.name.replace('/', '_')}.{extension}"
 
     def _get_invoice_proforma_pdf_report_filename(self):
