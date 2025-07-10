@@ -608,6 +608,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
     def _process_single_pick_old_logic(self, picking, scanned_lines):
         product_lines = []
         for line in scanned_lines:
+            partner = picking.partner_id
+            country_code = partner.country_id.code if partner and partner.country_id else "AU"
+            international_flag = 1 if country_code.upper() != "AU" else 0
             product_lines.append({
                 "sku_code": line.product_id.default_code,
                 "name": line.product_id.name,
@@ -626,7 +629,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "site_code": line.site_code_id.name if line.site_code_id else "",
                 "receipt_number": line.picking_id.name,
                 "partner_id": line.picking_id.partner_id.name,
-                "business_name": line.picking_id.partner_id.business_name,
+                "business_name": line.picking_id.partner_id.business_name or "",
                 "origin": line.picking_id.origin or "N/A",
                 "package_name": (line.package_box_type_id.name if line.package_box_type_id else "NoBox") + '_' + str(
                     line.product_package_number),
@@ -643,8 +646,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "hs_code": line.product_id.hs_code or "",
                 "cost_price": line.product_id.standard_price or "0.0",
                 "sale_price": line.product_id.list_price or "0.0",
-                "shipmentid": line.picking_id.sale_id.shipmentid,
-                "items": line.picking_id.sale_id.items,
+                "shipmentid": line.picking_id.sale_id.shipmentid or "",
+                "items": line.picking_id.sale_id.items or "",
+                "international":international_flag,
             })
 
         payload = {
@@ -702,6 +706,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 _("No scanned lines found to build legacy multi-pick payload. Please scan at least one SKU."))
 
         for line in scanned_lines:
+            partner = scanned_lines[0].picking_id.partner_id if scanned_lines else False
+            country_code = partner.country_id.code if partner and partner.country_id else "AU"
+            international_flag = 1 if country_code.upper() != "AU" else 0
             product_lines.append({
                 "sku_code": line.product_id.default_code,
                 "name": line.product_id.name,
@@ -720,7 +727,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "site_code": line.site_code_id.name if line.site_code_id else "",
                 "receipt_number": line.picking_id.name,
                 "partner_id": line.picking_id.partner_id.name,
-                "business_name": line.picking_id.partner_id.business_name,
+                "business_name": line.picking_id.partner_id.business_name or "",
                 "origin": line.picking_id.origin or "N/A",
                 "package_name": (line.package_box_type_id.name if line.package_box_type_id else "NoBox") + '_' + str(
                     line.product_package_number),
@@ -738,8 +745,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "so_reference": line.picking_id.sale_id.client_order_ref or "N/A",
                 "cost_price": line.product_id.standard_price or "0.0",
                 "sale_price": line.product_id.list_price or "0.0",
-                "shipmentid": line.picking_id.sale_id.shipmentid,
-                "items":line.picking_id.sale_id.items,
+                "shipmentid": line.picking_id.sale_id.shipmentid or "",
+                "items":line.picking_id.sale_id.items or "",
+                "international": international_flag,
             })
 
         payload = {
