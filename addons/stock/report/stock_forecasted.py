@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import itertools
 
 from collections import defaultdict
 from datetime import date
@@ -58,6 +59,21 @@ class StockForecasted_Product_Product(models.AbstractModel):
         in_domain += [('state', 'in', ['waiting', 'confirmed', 'partially_available', 'assigned'])]
         return in_domain, out_domain
 
+    def _get_draft_moves(self, product_template_ids, product_ids, wh_location_ids):
+        """ Draft move quantities grouped by warehouse"""
+        in_domain, out_domain = self._move_draft_domain(product_template_ids, product_ids, wh_location_ids)
+        return {
+            'in_sum': dict(self.env['stock.move']._read_group(in_domain, ['warehouse_id'], aggregates=['product_qty:sum'])),
+            'out_sum': dict(self.env['stock.move']._read_group(out_domain, ['warehouse_id'], aggregates=['product_qty:sum']))
+        }
+
+    def _get_product_records(self, product_template_ids, product_ids):
+        if product_template_ids:
+            return self.env['product.template'].browse(product_template_ids), None
+        if product_ids:
+            return None, self.env['product.product'].browse(product_ids)
+        return None, None
+
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
         # Get the products we're working, fill the rendering context with some of their attributes.
         res = {}
@@ -82,27 +98,18 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 'multiple_product' : len(products) > 1,
             })
 
-        res['uom'] = products[:1].uom_id.display_name
-        res['quantity_on_hand'] = sum(products.mapped('qty_available'))
-        res['virtual_available'] = sum(products.mapped('virtual_available'))
-        res['incoming_qty'] = sum(products.mapped('incoming_qty'))
-        res['outgoing_qty'] = sum(products.mapped('outgoing_qty'))
-
-        in_domain, out_domain = self._move_draft_domain(product_template_ids, product_ids, wh_location_ids)
-        [in_sum] = self.env['stock.move']._read_group(in_domain, aggregates=['product_qty:sum'])[0]
-        [out_sum] = self.env['stock.move']._read_group(out_domain, aggregates=['product_qty:sum'])[0]
-
-        res.update({
-            'draft_picking_qty': {
-                'in': in_sum,
-                'out': out_sum
-            },
-            'qty': {
-                'in': in_sum,
-                'out': out_sum
-            }
-        })
+        res.update(self._get_product_quantities(products))
         return res
+
+    def _get_product_quantities(self, products):
+        context = dict(self.env.context)
+        return {
+            'uom': products[:1].uom_id.display_name,
+            'quantity_on_hand': sum(products.with_context(**context).mapped('qty_available')),
+            'virtual_available': sum(products.with_context(**context).mapped('virtual_available')),
+            'incoming_qty': sum(products.with_context(**context).mapped('incoming_qty')),
+            'outgoing_qty': sum(products.with_context(**context).mapped('outgoing_qty')),
+        }
 
     def _get_reservation_data(self, move):
         return {
@@ -111,22 +118,77 @@ class StockForecasted_Product_Product(models.AbstractModel):
             'id': move.picking_id.id
         }
 
+    def _get_warehouses(self):
+        warehouse_id = self.env.context.get('warehouse_id')
+        domain = [['active', '=', True]]
+        if isinstance(warehouse_id, int) and warehouse_id > 0:
+            return self.env['stock.warehouse'].browse(warehouse_id)
+        else:
+            return self.env['stock.warehouse'].search(domain, limit=None if warehouse_id == 0 else 1)
+
+    def _get_warehouse_locations(self, warehouses):
+        domain = [('id', 'child_of', warehouses.view_location_id.ids)]
+        location_groups = dict(self.env['stock.location']._read_group(
+            domain, groupby=['warehouse_id'], aggregates=['id:array_agg']
+        ))
+        all_location_ids = list(itertools.chain(*location_groups.values()))
+        return all_location_ids, location_groups
+
     def _get_report_data(self, product_template_ids=False, product_ids=False):
         assert product_template_ids or product_ids
-        res = {}
-
-        warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse_id', False)) or self.env['stock.warehouse'].search([['active', '=', True]])[0]
-        wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
-            [('id', 'child_of', warehouse.view_location_id.id)],
-            ['id'],
-        )]
-        # any quantities in this location will be considered free stock, others are free stock in transit
-        wh_stock_location = warehouse.lot_stock_id
-
-        res.update(self._get_report_header(product_template_ids, product_ids, wh_location_ids))
-
-        res['lines'] = self._get_report_lines(product_template_ids, product_ids, wh_location_ids, wh_stock_location)
+        res = {'warehouses': [], 'multiple_warehouses': False}
         res['user_can_edit_pickings'] = self.env.user.has_group('stock.group_stock_user')
+
+        # Fetch warehouses
+        warehouses = self._get_warehouses()
+        res['multiple_warehouses'] = len(warehouses) > 1
+
+        # Fetch product records
+        product_tmpl_record, product_record = self._get_product_records(product_template_ids, product_ids)
+        products = product_tmpl_record or product_record
+
+        # Get location data
+        wh_location_ids, wh_location_groups = self._get_warehouse_locations(warehouses)
+        res['warehouse_view_locations'] = wh_location_ids
+        res.update(self.with_context(
+            warehouse_id=warehouses.ids,
+        )._get_report_header(product_template_ids, product_ids, wh_location_ids))
+
+        # Compute draft move quantities
+        draft_moves = self._get_draft_moves(product_template_ids, product_ids, wh_location_ids)
+        if res['multiple_warehouses']:
+            for warehouse in warehouses:
+                # any quantities in this location will be considered free stock, others are free stock in transit
+                wh_stock_location = warehouse.lot_stock_id
+                res['warehouses'].append({
+                    'id': warehouse.id,
+                    'name': warehouse.name,
+                    'lines': self._get_report_lines(product_template_ids, product_ids, wh_location_groups[warehouse], wh_stock_location),
+                    **self.with_context(warehouse_id=warehouse.id)._get_product_quantities(products),
+                    'draft_picking_qty': {
+                        'in': draft_moves['in_sum'].get(warehouse, 0),
+                        'out': draft_moves['out_sum'].get(warehouse, 0),
+                    },
+                    'qty': {
+                        'in': draft_moves['in_sum'].get(warehouse, 0),
+                        'out': draft_moves['out_sum'].get(warehouse, 0),
+                    },
+                })
+        else:
+            wh_stock_location = warehouses.lot_stock_id
+            res['lines'] = self._get_report_lines(product_template_ids, product_ids, wh_location_ids, wh_stock_location)
+            res['warehouses'].append({'id': warehouses.id, 'name': warehouses.name})
+            res.update({
+                'draft_picking_qty': {
+                    'in': draft_moves['in_sum'].get(warehouses, 0),
+                    'out': draft_moves['out_sum'].get(warehouses, 0),
+                },
+                'qty': {
+                    'in': draft_moves['in_sum'].get(warehouses, 0),
+                    'out': draft_moves['out_sum'].get(warehouses, 0),
+                },
+            })
+
         return res
 
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
