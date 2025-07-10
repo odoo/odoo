@@ -1,9 +1,9 @@
-import { escapeRegExp } from "@web/core/utils/strings";
-import { Setting } from "@web/views/form/setting/setting";
 import { onMounted, useRef, useState } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { normalizedMatch } from "@web/core/l10n/utils";
+import { Setting } from "@web/views/form/setting/setting";
 import { FormLabelHighlightText } from "../highlight_text/form_label_highlight_text";
 import { HighlightText } from "../highlight_text/highlight_text";
-import { browser } from "@web/core/browser/browser";
 
 export class SearchableSetting extends Setting {
     static template = "web.SearchableSetting";
@@ -49,8 +49,7 @@ export class SearchableSetting extends Setting {
         if (this.state.showAllContainer.showAllContainer) {
             return true;
         }
-        const regexp = new RegExp(escapeRegExp(this.state.search.value), "i");
-        if (regexp.test(this.labels.join())) {
+        if (normalizedMatch(this.labels.join(), this.state.search.value).match) {
             return true;
         }
         return false;
