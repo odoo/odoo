@@ -120,6 +120,11 @@ class StockWarehouseOrderpoint(models.Model):
     vendor_ids = fields.One2many(related='product_id.seller_ids', string="Vendors")
     product_supplier_id = fields.Many2one('res.partner', compute='_compute_product_supplier_id', store=True, string='Product Supplier')
 
+    @api.depends('supplier_id')
+    def _compute_deadline_date(self):
+        """ Extend to add more depends values """
+        super()._compute_deadline_date()
+
     @api.depends('product_id.purchase_order_line_ids.product_qty', 'product_id.purchase_order_line_ids.state', 'supplier_id', 'supplier_id.product_uom_id', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
     def _compute_qty_to_order_computed(self):
         """ Extend to add more depends values
