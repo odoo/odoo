@@ -25,4 +25,4 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
                 'partner_longitude': 2.0,
             }
         )
-        self.start_tour('/', 'website_sale_collect_buy_product')
+        self.start_tour('/', 'website_sale_collect_buy_product', login="demo")
