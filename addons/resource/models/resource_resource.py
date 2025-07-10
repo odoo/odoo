@@ -196,8 +196,8 @@ class ResourceResource(models.Model):
         for calendar in (calendars or []):
             calendar_resources[calendar] |= self.env['resource.resource']
         for calendar, resources in calendar_resources.items():
-            # for fully flexible resource, return the whole interval
-            if not calendar:
+            # For flexible calendars and fully flexible resources: -> return the whole interval
+            if not calendar or calendar.flexible_hours:
                 for resource in resources:
                     resource_work_intervals[resource.id] |= Intervals([(start, end, self.env['resource.calendar.attendance'])])
                 continue

@@ -43,3 +43,27 @@ class TestResourceCalendar(TransactionCase):
         self.assertEqual(end, end_dt, "Output end time should match the input end time")
         self.assertEqual(attendance.duration_hours, 3.0, "Attendance duration should be 3 hours")
         self.assertEqual(attendance.duration_days, 0.125, "Attendance duration should be 0.125 days (3 hours)")
+
+    def test_flexible_employee_work_intervals(self):
+        start = datetime(2015, 11, 8, 00, 00, 00, tzinfo=pytz.UTC)
+        end = datetime(2015, 11, 21, 23, 59, 59, tzinfo=pytz.UTC)
+
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible 40h/week',
+            'tz': 'UTC',
+            'hours_per_day': 8.0,
+            'flexible_hours': True,
+        })
+
+        resource = self.env['resource.resource'].create({
+            'name': 'Wade Wilson',
+            'calendar_id': calendar.id,
+            'tz': 'UTC',
+        })
+
+        work_intervals, _dummy = resource._get_valid_work_intervals(start, end)
+
+        # flexible employees have the full interval as work intervals
+        self.assertEqual(len(work_intervals[resource.id]._items), 1)
+        self.assertEqual(work_intervals[resource.id]._items[0][0], start)
+        self.assertEqual(work_intervals[resource.id]._items[0][1], end)
