@@ -6,6 +6,7 @@ import math
 import uuid
 from datetime import datetime, timedelta
 from itertools import repeat
+from markupsafe import Markup
 
 import pytz
 from werkzeug.urls import url_parse
@@ -129,6 +130,7 @@ class CalendarEvent(models.Model):
     # description
     name = fields.Char('Meeting Subject', required=True)
     description = fields.Html('Description')
+    booking_details = fields.Html('Booking details', compute='_compute_booking_details')
     user_id = fields.Many2one('res.users', 'Organizer', default=lambda self: self.env.user, index='btree_not_null')
     partner_id = fields.Many2one(
         'res.partner', string='Scheduled by', related='user_id.partner_id', readonly=True)
@@ -357,6 +359,23 @@ class CalendarEvent(models.Model):
             else:
                 meeting.start_date = False
                 meeting.stop_date = False
+
+    @api.depends('partner_id')
+    def _compute_booking_details(self):
+        for event in self:
+            booker_details = [event.partner_id.name]
+            if event.partner_id.email:
+                booker_details.append("<a href='mailto:%(email)s'>%(email)s</a>" % {
+                    'email': event.partner_id.email,
+                })
+            if event.partner_id.phone:
+                booker_details.append("<a href='tel:%(phone)s'>%(phone)s</a>" % {
+                    'phone': event.partner_id.phone,
+                })
+            event.booking_details = Markup('<strong>%s</strong><br/>%s') % (
+                _('Booked by'),
+                Markup(' - '.join(booker_details)),
+            )
 
     @api.depends('stop', 'start')
     def _compute_duration(self):
