@@ -56,12 +56,12 @@ class ResConfigSettings(models.TransientModel):
     replenish_on_order = fields.Boolean("Replenish on Order (MTO)", compute='_compute_replenish_on_order', inverse='_inverse_replenish_on_order')
 
     def _compute_replenish_on_order(self):
-        route = self.env.ref('stock.route_warehouse0_mto')
+        route = self.env.ref('stock.route_warehouse0_mto', raise_if_not_found=False)
         if route:
             self.replenish_on_order = route.active
 
     def _inverse_replenish_on_order(self):
-        route = self.env.ref('stock.route_warehouse0_mto')
+        route = self.env.ref('stock.route_warehouse0_mto', raise_if_not_found=False)
         if route:
             route.active = self.replenish_on_order
 
