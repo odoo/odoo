@@ -61,6 +61,10 @@ export class Toolbar extends Component {
         button.run();
         this.props.focusEditable();
     }
+
+    isGroupVisible(groupButtons) {
+        return groupButtons.some((button) => !button.isDisabled || button.isActive);
+    }
 }
 
 export const toolbarButtonProps = {
