@@ -238,6 +238,8 @@ class UserInputSession(http.Controller):
         """
 
         question = survey.session_question_id
+        if not question:
+            return {}
         answers_validity = []
         if (any(answer.is_correct for answer in question.suggested_answer_ids)):
             answers_validity = [answer.is_correct for answer in question.suggested_answer_ids]
