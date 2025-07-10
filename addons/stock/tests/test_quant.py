@@ -1403,6 +1403,57 @@ class StockQuant(TransactionCase):
             'lot_id': False,
         }])
 
+    def test_quants_search_last_count_date(self):
+        """
+        Test that the 'last_count_date' filter works correctly on stock quants with different operators.
+        """
+        products = [self.product, self.product_lot, self.product_serial]
+        lot = self.env['stock.lot'].create({
+            'name': 'LOT-001',
+            'product_id': self.product_lot.id,
+        })
+        serial = self.env['stock.lot'].create({
+            'name': 'SN-001',
+            'product_id': self.product_serial.id,
+        })
+        lots = [False, lot, serial]
+        dates = [datetime.today() + timedelta(days=1), datetime.today() - timedelta(days=1), datetime.today()]
+
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(self.product_lot, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1)
+
+        for i in range(len(products)):
+            move = self.env['stock.move'].create({
+                'name': 'Inventory Move',
+                'product_id': products[i].id,
+                'product_uom_qty': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.stock_location.id,
+                'is_inventory': True,
+            })
+
+            move._action_confirm()
+            move._action_assign()
+            move.picked = True
+            move._action_done()
+            move.move_line_ids.write({
+                'lot_id': lots[i],
+                'date': dates[i],
+            })
+
+        self.env.cr.flush()
+        today = datetime.today().date()
+
+        result_eq = self.env['stock.quant'].search_count([('last_count_date', '=', today)])
+        self.assertEqual(result_eq, 1)
+        result_lt = self.env['stock.quant'].search_count([('last_count_date', '<', today)])
+        self.assertEqual(result_lt, 1)
+        result_gt = self.env['stock.quant'].search_count([('last_count_date', '>', today)])
+        self.assertEqual(result_gt, 1)
+        result_ne = self.env['stock.quant'].search_count([('last_count_date', '!=', today)])
+        self.assertEqual(result_ne, 2)
+
 
 class StockQuantRemovalStrategy(TransactionCase):
     def setUp(self):
