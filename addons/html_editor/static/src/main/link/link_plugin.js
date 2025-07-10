@@ -14,6 +14,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
+import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -265,6 +266,7 @@ export class LinkPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
         delete_image_overrides: this.deleteImageLink.bind(this),
+        triple_click_overrides: this.tripleClickButtonOverrides.bind(this),
     };
 
     setup() {
@@ -1210,5 +1212,22 @@ export class LinkPlugin extends Plugin {
 
     isLinkImmutable(linkEl) {
         return this.getResource("immutable_link_selectors").some((s) => linkEl.matches(s));
+    }
+
+    tripleClickButtonOverrides(ev) {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const buttonElement = isBrowserFirefox()
+            ? findInSelection(selection, "a.btn")
+            : closestElement(selection.anchorNode, "a.btn");
+        if (buttonElement) {
+            this.dependencies.selection.setSelection({
+                anchorNode: buttonElement,
+                anchorOffset: 0,
+                focusNode: buttonElement,
+                focusOffset: nodeSize(buttonElement),
+            });
+            ev.preventDefault();
+            return true;
+        }
     }
 }
