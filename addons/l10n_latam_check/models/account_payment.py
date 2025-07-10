@@ -202,7 +202,7 @@ class AccountPayment(models.Model):
             check.outstanding_line_id.move_id.unlink()
 
     @api.depends(
-        'payment_method_line_id', 'state', 'date', 'amount', 'currency_id', 'company_id',
+        'payment_method_id', 'state', 'date', 'amount', 'currency_id', 'company_id',
         'l10n_latam_move_check_ids.issuer_vat', 'l10n_latam_move_check_ids.bank_id', 'l10n_latam_move_check_ids.payment_id.date',
         'l10n_latam_new_check_ids.amount', 'l10n_latam_new_check_ids.name',
     )
@@ -219,7 +219,7 @@ class AccountPayment(models.Model):
             if rec.payment_method_code == 'new_third_party_checks':
                 same_checks = self.env['l10n_latam.check']
                 for check in rec.l10n_latam_new_check_ids.filtered(
-                        lambda x: x.name and x.payment_method_line_id.code == 'new_third_party_checks' and
+                        lambda x: x.name and x.payment_method_id.code == 'new_third_party_checks' and
                         x.bank_id and x.issuer_vat):
                     same_checks += same_checks.search([
                         ('company_id', '=', rec.company_id.id),

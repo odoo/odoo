@@ -56,7 +56,7 @@ class PosSession(models.Model):
             'account_id': accounting_partner.property_account_receivable_id.id,
             'move_id': self.move_id.id,
             'partner_id': accounting_partner.id,
-            'name': '%s - %s (%s)' % (self.name, payment.payment_method_id.name, payment.online_account_payment_id.payment_method_line_id.payment_provider_id.name),
+            'name': '%s - %s' % (self.name, payment.payment_method_id.name),
         }
         return self._debit_amounts(partial_vals, amount, amount_converted)
 
