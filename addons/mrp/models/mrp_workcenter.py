@@ -3,6 +3,7 @@
 import json
 
 from babel.dates import format_date
+from collections import defaultdict
 from dateutil import relativedelta
 from datetime import timedelta, datetime
 from functools import partial
@@ -230,11 +231,28 @@ class MrpWorkcenter(models.Model):
 
     @api.depends('blocked_time', 'productive_time')
     def _compute_oee(self):
-        for order in self:
-            if order.productive_time:
-                order.oee = round(order.productive_time * 100.0 / (order.productive_time + order.blocked_time), 2)
+        time_data = self.env['mrp.workcenter.productivity']._read_group(
+            domain=[
+                ('date_start', '>=', fields.Datetime.to_string(datetime.now() - relativedelta.relativedelta(months=1))),
+                ('workcenter_id', 'in', self.ids),
+                ('date_end', '!=', False),
+            ],
+            groupby=['workcenter_id', 'loss_type'],
+            aggregates=['duration:sum'],
+        )
+        time_by_workcenter = defaultdict(lambda: {'productive_time': 0.0, 'blocked_time': 0.0})
+        for data in time_data:
+            workcenter, loss_type, duration = data
+            time_to_update = 'productive_time' if loss_type == 'productive' else 'blocked_time'
+            time_by_workcenter[workcenter.id][time_to_update] += duration
+        for workcenter in self:
+            workcenter_time = time_by_workcenter[workcenter.id]
+            productive_time = workcenter_time['productive_time']
+            if productive_time:
+                blocked_time = workcenter_time['blocked_time']
+                workcenter.oee = float_round(productive_time * 100.0 / (productive_time + blocked_time), precision_digits=2)
             else:
-                order.oee = 0.0
+                workcenter.oee = 0.0
 
     def _compute_performance(self):
         wo_data = self.env['mrp.workorder']._read_group([
