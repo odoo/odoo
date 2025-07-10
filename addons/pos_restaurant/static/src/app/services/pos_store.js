@@ -684,7 +684,7 @@ patch(PosStore.prototype, {
             const orders = this.getTableOrders(table.id);
             if (orders.length > 0) {
                 this.setOrder(orders[0]);
-                this.navigate(orders[0].getScreenData().name, {
+                this.navigate(orders[0].getScreenData().name || "ProductScreen", {
                     orderUuid: orders[0].uuid,
                 });
             } else {
