@@ -136,14 +136,7 @@ export class WebsiteBuilderClientAction extends Component {
             }
             if (!this.ui.isSmall) {
                 // preload builder and snippets so clicking on "edit" is faster
-                loadBundle("website.website_builder_assets").then(() => {
-                    this.env.services["html_builder.snippets"]
-                        .getSnippetModel(this.snippetsTemplate)
-                        .reload({
-                            lang: this.websiteService.currentWebsite?.default_lang_id.code,
-                            website_id: this.websiteService.currentWebsite?.id,
-                        });
-                });
+                loadBundle("website.website_builder_assets");
             }
         });
         onWillUnmount(() => {
@@ -197,7 +190,11 @@ export class WebsiteBuilderClientAction extends Component {
         const builderProps = {
             closeEditor: this.reloadIframeAndCloseEditor.bind(this),
             reloadEditor: this.reloadEditor.bind(this),
-            snippetsName: this.snippetsTemplate,
+            snippetsTemplate: this.snippetsTemplate,
+            snippetsContext: {
+                lang: this.websiteService.currentWebsite?.default_lang_id.code,
+                website_id: this.websiteService.currentWebsite?.id,
+            },
             toggleMobile: this.toggleMobile.bind(this),
             installSnippetModule: this.installSnippetModule.bind(this),
             overlayRef: this.overlayRef,

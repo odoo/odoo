@@ -19,7 +19,7 @@ export class OptionsContainer extends BaseOptionComponent {
         ShadowOption,
     };
     static props = {
-        snippetModel: { type: Object },
+        actionable: { type: Boolean, optional: true },
         options: { type: Array },
         editingElement: true, // HTMLElement from iframe
         isRemovable: false,
