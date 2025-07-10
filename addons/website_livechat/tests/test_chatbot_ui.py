@@ -158,3 +158,33 @@ class TestLivechatChatbotUI(TestImLivechatCommon, TestWebsiteLivechatCommon, Cha
         channel = self.livechat_channel.channel_ids[0]
         self.assertIn(channel.channel_member_ids.partner_id.user_ids, en_op)
         self.assertNotIn(channel.channel_member_ids.partner_id.user_ids, fr_op)
+
+    def test_chatbot_restore_state(self):
+        chatbot_state_restore_script = self.env["chatbot.script"].create(
+            {"title": "Restore state Bot"}
+        )
+        self.env["chatbot.script.step"].create([
+            {
+                "chatbot_script_id": chatbot_state_restore_script.id,
+                "step_type": "text",
+                "message": "How can I help you?",
+                "sequence": 2,  # Swapped sequence
+            },
+            {
+                "chatbot_script_id": chatbot_state_restore_script.id,
+                "step_type": "text",
+                "message": "Hello! I'm a bot for restoration test!",
+                "sequence": 1,  # Swapped sequence
+            },
+        ])
+        livechat_channel = self.env["im_livechat.channel"].create({
+            "name": "State restore Channel",
+            "rule_ids": [Command.create({
+                'regex_url': '/contactus',
+                "chatbot_script_id": chatbot_state_restore_script.id,
+            })]
+        })
+        default_website = self.env.ref("website.default_website")
+        default_website.channel_id = livechat_channel.id
+        self.env.ref("website.default_website").channel_id = livechat_channel.id
+        self.start_tour("/contactus", "website_livechat.chatbot_restore_state_tour")
