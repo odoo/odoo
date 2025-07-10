@@ -1,21 +1,25 @@
 import math
 
 
-def format_product_stock_values(product, wh_id=None, free_qty=None):
+def format_product_stock_values(product, wh_id=None, free_qty=None, include_out_of_stock=False):
     """ Format product stock values for the location selector.
 
     :param product.product|product.template product: The product whose stock values to format.
     :param int wh_id: The warehouse whose stock to check for the given product.
     :param int free_qty: The free quantity of the product. If not given, calculated from the
                          warehouse.
+    :param bool include_out_of_stock: Whether the product should be considered in stock even if
+                                     there's no free qty but the product allows out-of-stock
+                                     orders.
     :return: The formatted product stock values.
     :rtype: dict
     """
     if product.is_product_variant:  # Only available for `product.product` records.
         if free_qty is None:
             free_qty = product.with_context(warehouse_id=wh_id).free_qty
+        in_stock = free_qty > 0 or include_out_of_stock and product.allow_out_of_stock_order
         return {
-            'in_stock': free_qty > 0,
+            'in_stock': in_stock,
             'show_quantity': product.show_availability and product.available_threshold >= free_qty,
             'quantity': free_qty,
         }
