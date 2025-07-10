@@ -99,6 +99,10 @@ def download_odoo_certificate():
 
     certificate = result['x509_pem']
     private_key = result['private_key_pem']
+    if not certificate or not private_key:  # ensure not empty strings
+        _logger.error("The certificate received from odoo.com is not valid.")
+        return None
+
     if platform.system() == 'Linux':
         with writable():
             Path('/etc/ssl/certs/nginx-cert.crt').write_text(certificate, encoding='utf-8')
