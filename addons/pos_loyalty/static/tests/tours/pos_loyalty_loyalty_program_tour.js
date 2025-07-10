@@ -319,7 +319,7 @@ registry.category("web_tour.tours").add("PosLoyaltyMultipleOrders", {
             // Order1: Add a product and leave the order in draft.
             ProductScreen.addOrderline("Whiteboard Pen", "2"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickCustomer("Partner Test 1"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
 
