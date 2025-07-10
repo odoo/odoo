@@ -179,13 +179,25 @@ class AccountEdiXmlCII(models.AbstractModel):
             'document_context_id': "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended",
         }
 
-        template_values['billing_start'] = invoice.invoice_date
-        template_values['billing_end'] = invoice.invoice_date_due
-
         # data used for IncludedSupplyChainTradeLineItem / SpecifiedLineTradeSettlement
         for line_vals in template_values['invoice_line_vals_list']:
             line = line_vals['line']
             line_vals['unece_uom_code'] = self._get_uom_unece_code(line)
+
+            if line._fields.get('deferred_start_date') and (line.deferred_start_date or line.deferred_end_date):
+                line_vals['billing_start'] = line.deferred_start_date
+                line_vals['billing_end'] = line.deferred_end_date
+
+        # [BR - IC - 11] - In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is
+        # "Intra-community supply" the Actual delivery date (BT-72) or the Invoicing period (BG-14) shall not be blank.
+        billing_start_dates = [invoice.invoice_date] if invoice.invoice_date else []
+        billing_start_dates += [line_vals['billing_start'] for line_vals in template_values['invoice_line_vals_list'] if line_vals.get('billing_start')]
+        billing_end_dates = [invoice.invoice_date_due] if invoice.invoice_date_due else []
+        billing_end_dates += [line_vals['billing_end'] for line_vals in template_values['invoice_line_vals_list'] if line_vals.get('billing_end')]
+        if billing_start_dates:
+            template_values['billing_start'] = min(billing_start_dates)
+        if billing_end_dates:
+            template_values['billing_end'] = max(billing_end_dates)
 
         # data used for ApplicableHeaderTradeSettlement / ApplicableTradeTax (at the end of the xml)
         for tax_detail_vals in template_values['tax_details']['tax_details'].values():
@@ -196,12 +208,6 @@ class AccountEdiXmlCII(models.AbstractModel):
 
             if tax_detail_vals.get('tax_category_code') == 'K':
                 template_values['intracom_delivery'] = True
-            # [BR - IC - 11] - In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is
-            # "Intra-community supply" the Actual delivery date (BT-72) or the Invoicing period (BG-14) shall not be blank.
-            if tax_detail_vals.get('tax_category_code') == 'K' and not template_values['scheduled_delivery_time']:
-                date_range = self._get_invoicing_period(invoice)
-                template_values['billing_start'] = min(date_range)
-                template_values['billing_end'] = max(date_range)
 
         # Fixed taxes: add them as charges on the invoice lines
         for line_vals in template_values['invoice_line_vals_list']:
@@ -365,6 +371,16 @@ class AccountEdiXmlCII(models.AbstractModel):
         # force original line description instead of the one copied from product's Sales Description
         if name:
             invoice_line.name = name
+
+        # Start and End date (enterprise fields)
+        if invoice_line._fields.get('deferred_start_date'):
+            billing_start = tree.find('./{*}SpecifiedLineTradeSettlement/{*}BillingSpecifiedPeriod/{*}StartDateTime/{*}DateTimeString')
+            billing_end = tree.find('./{*}SpecifiedLineTradeSettlement/{*}BillingSpecifiedPeriod/{*}EndDateTime/{*}DateTimeString')
+            if billing_start is not None and billing_end is not None:  # there is a constraint forcing none or the two to be set
+                invoice_line.write({
+                    'deferred_start_date': datetime.strptime(billing_start.text.strip(), DEFAULT_FACTURX_DATE_FORMAT),
+                    'deferred_end_date': datetime.strptime(billing_end.text.strip(), DEFAULT_FACTURX_DATE_FORMAT),
+                })
 
         xpath_dict = {
             'basis_qty': [

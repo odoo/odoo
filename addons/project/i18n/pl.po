@@ -465,6 +465,11 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible=\"rating_status == 'periodic'\">Prośba o ocenę będzie wysłana jak tylko zadanie zostanie przeniesione do fazy, w której jest zdefiniowany szablon email oceny.</span>\n"
+"                                                    <span invisible=\"rating_status == 'stage'\">Prośby o ocenę będą wysłane, jeśli tylko zadanie zostanie w fazie, w której jest zdefiniowany szablon email oceny.</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1565,6 +1570,8 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
 "      communicate on the task directly."
 msgstr ""
+"Klienci proponują informacje zwrotne przez e-mail; Odoo automatycznie tworzy zadania, a Ty możesz\n"
+"       bezpośrednio komunikować się w sprawie zadania."
 
 #. module: project
 #. odoo-python
@@ -3343,13 +3350,14 @@ msgstr ""
 msgid ""
 "Partner company cannot be different from its assigned projects' company"
 msgstr ""
+"Firma partnerska nie może być różna od firmy jej przypisanych projektów"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 #, python-format
 msgid "Partner company cannot be different from its assigned tasks' company"
-msgstr ""
+msgstr "Firma partnerska nie może być różna od firmy jej przypisanych zadań"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -4695,7 +4703,7 @@ msgstr "Zadanie:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task: Rating Request"
-msgstr ""
+msgstr "Zadanie: Prośba o ocenę"
 
 #. module: project
 #. odoo-python
@@ -4892,7 +4900,7 @@ msgstr "Wyszukiwanie nie obsługuje operatora %s lub wartości %s."
 #, python-format
 msgid ""
 "The task and the associated partner must be linked to the same company."
-msgstr ""
+msgstr "Zadanie i powiązany partner muszą być powiązane z tą samą firmą."
 
 #. module: project
 #. odoo-python
@@ -4990,6 +4998,10 @@ msgid ""
 "update the company information for these records to align them under the "
 "same company."
 msgstr ""
+"Ten projekt jest powiązany z %s, natomiast wybrany etap jest częścią %s. "
+"Jest kilka opcji, do rozważenia: możesz usunąć oznaczenie firmy z projektu "
+"lub z etapu. Alternatywnie, możesz zaktualizować informacje o firmie dla "
+"tych zapisów, aby dopasować je do tej samej firmy."
 
 #. module: project
 #. odoo-python
@@ -5044,7 +5056,7 @@ msgstr "Porada: Twórz zadania z emaili przychodzących"
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Use task states to keep track of your tasks' progression"
-msgstr ""
+msgstr "Wskazówka: Korzystaj ze stanów zadań, aby śledzić ich postęp"
 
 #. module: project
 #. odoo-python
@@ -5344,6 +5356,9 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"Korzystaj z czatu, aby <b>wysyłać wiadomości e-mail</b> i skutecznie "
+"komunikować się z klientami. Dodaj nowe osoby do listy obserwujących, aby "
+"poinformować je o głównych zmianach w tym zadaniu."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5563,6 +5578,9 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
+"Nie możesz zmienić firmy tego etapu na %(company_name)s, ponieważ właśnie "
+"zawiera projekty związane z %(project_company_name)s. Upewnij się, że ten "
+"etap zawiera jedynie projekty powiązane z %(company_name)s."
 
 #. module: project
 #. odoo-python
@@ -5807,7 +5825,7 @@ msgstr "widok menu Moje zadania"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "on a periodic basis"
-msgstr ""
+msgstr "okresowo"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -5826,7 +5844,7 @@ msgstr "gotowy do oznaczenia jako osiągnięty"
 #, python-format
 msgid ""
 "state to indicate a request for changes or a need for discussion on a task."
-msgstr ""
+msgstr "stan wskazujący na prośbę o zmiany lub potrzebę omówienia zadania."
 
 #. module: project
 #. odoo-javascript
@@ -5836,6 +5854,8 @@ msgstr ""
 msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
 msgstr ""
+"stan służący do informowania współpracowników, że zadanie jest zaakceptowane"
+" do przejścia do następnego etapu."
 
 #. module: project
 #. odoo-javascript
