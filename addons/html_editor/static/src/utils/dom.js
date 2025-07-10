@@ -162,18 +162,19 @@ export function removeStyle(element, ...styleProperties) {
  */
 export function fillEmpty(el) {
     const document = el.ownerDocument;
-    const fillers = { ...fillShrunkPhrasingParent(el) };
     if (!isBlock(el) && !isVisible(el) && !el.hasAttribute("data-oe-zws-empty-inline")) {
         const zws = document.createTextNode("\u200B");
         el.appendChild(zws);
         el.setAttribute("data-oe-zws-empty-inline", "");
-        fillers.zws = zws;
         const previousSibling = el.previousSibling;
         if (previousSibling && previousSibling.nodeName === "BR") {
             previousSibling.remove();
         }
+        return { zws };
+    } else {
+        // If a ZWS was inserted, there is no need for a <br>.
+        return fillShrunkPhrasingParent(el);
     }
-    return fillers;
 }
 
 /**
