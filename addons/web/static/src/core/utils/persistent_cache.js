@@ -104,59 +104,60 @@ export class PersistentCache {
         if (ramValue && (!onFinish || hadPendingRequest)) {
             return ramValue.then((result) => deepCopy(result));
         }
-        const def = new Deferred();
-        const fromCache = new Deferred();
-        let fromCacheValue;
-        const onFullfilled = (result) => {
-            def.resolve(deepCopy(result));
-            this.ramCache.write(table, key, Promise.resolve(result));
-            const hasChanged =
-                (fromCacheValue && fromCacheValue !== JSON.stringify(result)) || false;
-            this.pendingRequests[requestKey]?.forEach((cb) => cb(hasChanged, deepCopy(result)));
-            delete this.pendingRequests[requestKey];
-            this.crypto.encrypt(result).then((encryptedResult) => {
-                this.indexedDB.write(table, key, encryptedResult);
-            });
-            return result;
-        };
-        const onRejected = async (error) => {
-            delete this.pendingRequests[requestKey];
-            await fromCache;
-            if (fromCacheValue) {
-                // def has already been fullfilled with the cached value
-                throw error;
-            }
-            this.ramCache.delete(table, key); // remove rejected prom from ram cache
-            def.reject(error);
-        };
-        const prom = fallback().then(onFullfilled, onRejected);
-        if (ramValue) {
-            ramValue.then((value) => {
-                def.resolve(deepCopy(value));
-                fromCacheValue = JSON.stringify(value);
-                fromCache.resolve();
-            });
-        } else {
-            this.ramCache.write(table, key, prom);
-            this.indexedDB.read(table, key).then(async (result) => {
-                if (result) {
-                    let decrypted;
-                    try {
-                        decrypted = await this.crypto.decrypt(result);
-                    } catch {
-                        fromCache.resolve();
-                        // Do nothing ! The cryptoKey is probably different.
-                        // The data will be updated with the new cryptoKey.
-                        return;
-                    }
-                    def.resolve(deepCopy(decrypted));
-                    this.ramCache.write(table, key, Promise.resolve(decrypted));
-                    fromCacheValue = JSON.stringify(decrypted);
+
+        return new Promise((resolve, reject) => {
+            const fromCache = new Deferred();
+            let fromCacheValue;
+            const onFullfilled = (result) => {
+                resolve(deepCopy(result));
+                this.ramCache.write(table, key, Promise.resolve(result));
+                const hasChanged =
+                    (fromCacheValue && fromCacheValue !== JSON.stringify(result)) || false;
+                this.pendingRequests[requestKey]?.forEach((cb) => cb(hasChanged, deepCopy(result)));
+                delete this.pendingRequests[requestKey];
+                this.crypto.encrypt(result).then((encryptedResult) => {
+                    this.indexedDB.write(table, key, encryptedResult);
+                });
+                return result;
+            };
+            const onRejected = async (error) => {
+                delete this.pendingRequests[requestKey];
+                await fromCache;
+                if (fromCacheValue) {
+                    // promise has already been fullfilled with the cached value
+                    throw error;
                 }
-                fromCache.resolve();
-            });
-        }
-        return def;
+                this.ramCache.delete(table, key); // remove rejected prom from ram cache
+                reject(error);
+            };
+            const prom = fallback().then(onFullfilled, onRejected);
+            if (ramValue) {
+                ramValue.then((value) => {
+                    resolve(deepCopy(value));
+                    fromCacheValue = JSON.stringify(value);
+                    fromCache.resolve();
+                });
+            } else {
+                this.ramCache.write(table, key, prom);
+                this.indexedDB.read(table, key).then(async (result) => {
+                    if (result) {
+                        let decrypted;
+                        try {
+                            decrypted = await this.crypto.decrypt(result);
+                        } catch {
+                            fromCache.resolve();
+                            // Do nothing ! The cryptoKey is probably different.
+                            // The data will be updated with the new cryptoKey.
+                            return;
+                        }
+                        resolve(deepCopy(decrypted));
+                        this.ramCache.write(table, key, Promise.resolve(decrypted));
+                        fromCacheValue = JSON.stringify(decrypted);
+                    }
+                    fromCache.resolve();
+                });
+            }
+        });
     }
 
     invalidate(tables) {
