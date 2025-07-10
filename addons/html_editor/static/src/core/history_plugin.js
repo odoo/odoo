@@ -824,6 +824,9 @@ export class HistoryPlugin extends Plugin {
 
         currentStep.previousStepId = this.steps.at(-1)?.id;
 
+        currentStep.selectionAfter = this.serializeSelection(
+            this.dependencies.selection.getEditableSelection()
+        );
         this.steps.push(currentStep);
         // @todo @phoenix add this in the linkzws plugin.
         // this._setLinkZws();
@@ -876,6 +879,7 @@ export class HistoryPlugin extends Plugin {
             this.stepsStates.set(revertedStep.id, "consumed");
             this.revertMutations(revertedStep.mutations, { forNewStep: true });
             this.setSerializedSelection(revertedStep.selection);
+            this.currentStep.selection = revertedStep.selectionAfter;
             this.addStep({ stepState: "undo", extraStepInfos: revertedStep.extraStepInfos });
             // Consider the last position of the history as an undo.
         }
@@ -899,6 +903,7 @@ export class HistoryPlugin extends Plugin {
             this.stepsStates.set(revertedStep.id, "consumed");
             this.revertMutations(revertedStep.mutations, { forNewStep: true });
             this.setSerializedSelection(revertedStep.selection);
+            this.currentStep.selection = revertedStep.selectionAfter;
             this.addStep({ stepState: "redo", extraStepInfos: revertedStep.extraStepInfos });
         }
         this.dispatchTo("post_redo_handlers", revertedStep);
