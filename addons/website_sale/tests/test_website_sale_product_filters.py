@@ -93,6 +93,16 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         When hiding variants, the case should be the most sold product.
         """
         computer = self.computer.product_variant_id
+        self.env['product.product'].search([
+            (
+                'id',
+                'in',
+                self.env['sale.order.line']._search([
+                    ('order_id.website_id', '!=', False),
+                    ('state', '=', 'sale'),
+                ]).subselect('product_id'),
+            )
+        ]).action_archive()
         self.empty_cart.write({
             'website_id': self.website.id,
             'order_line': [
