@@ -509,3 +509,32 @@ class TestRecruitmentSkills(TransactionCase):
         self.assertIn(applicant.id, applicants.ids, "The applicant should be in the matching applicants")
         applicant.with_context(context).action_add_to_job()
         self.assertEqual(applicant.job_id, second_job, "The applicant should be moved to the second job")
+
+    def test_create_employee_from_skilled_applicant(self):
+        applicant = self.t_applicant
+        applicant.write({
+            "applicant_skill_ids": [
+                (
+                    0,
+                    0,
+                    {
+                        "skill_id": self.t_skill_1.id,
+                        "skill_level_id": self.t_skill_level_1.id,
+                        "skill_type_id": self.t_skill_type.id,
+                    },
+                ),
+                (
+                    0,
+                    0,
+                    {
+                        "skill_id": self.t_skill_2.id,
+                        "skill_level_id": self.t_skill_level_3.id,
+                        "skill_type_id": self.t_skill_type.id,
+                    },
+                )
+            ]
+        })
+        applicant.create_employee_from_applicant()
+        applicant_skills_name_list = applicant.applicant_skill_ids.mapped(lambda s: (s.skill_id, s.skill_type_id, s.skill_level_id))
+        employee_skills_name_list = applicant.employee_id.employee_skill_ids.mapped(lambda s: (s.skill_id, s.skill_type_id, s.skill_level_id))
+        self.assertCountEqual(applicant_skills_name_list, employee_skills_name_list)
