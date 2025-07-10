@@ -28,6 +28,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
 
         common_view_values = self._get_common_page_view_values(
             invoices_data={
+                'invoice_id': invoice.id,
                 'partner': invoice.partner_id,
                 'company': invoice.company_id,
                 'total_amount': invoice.amount_total,
@@ -95,6 +96,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
 
         common_view_values = self._get_common_page_view_values(
             invoices_data={
+                'invoice_id': first_invoice.id,
                 'partner': partner,
                 'company': company,
                 'total_amount': total_amount,
@@ -130,6 +132,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             partner_sudo.id,
             currency_id=invoices_data['currency'].id,
             report=availability_report,
+            invoice_id=invoices_data['invoice_id'],
         )  # In sudo mode to read the fields of providers.
         tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
             providers_sudo.ids, partner_sudo.id

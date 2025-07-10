@@ -67,7 +67,10 @@
                         </t>
                     </div>
                     <div class="mt-4">
-                        <t t-call="payment.form"/>
+                        <t t-call="payment.form">
+                            <!-- Inject the invoice ID to allow Adyen to check if zip can be displayed. -->
+                            <t t-set="invoice_id" t-value="sale_order.id"/>
+                        </t>
                     </div>
                 </div>
             </div>
