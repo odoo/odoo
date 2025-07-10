@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { FontFamilyPicker } from "../fontfamily_picker";
 
 export const OPTION_POSITIONS = {
     BODY: 10,
@@ -20,6 +21,9 @@ class DesignTabPlugin extends Plugin {
     static id = "mass_mailing.DesignTab";
     static dependencies = ["builderActions"];
     resources = {
+        builder_components: {
+            FontFamilyPicker,
+        },
         design_options: [
             withSequence(
                 OPTION_POSITIONS.BODY,
