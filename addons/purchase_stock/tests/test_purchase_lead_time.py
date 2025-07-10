@@ -202,6 +202,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
     def test_reordering_days_to_purchase(self):
         company = self.env.ref('base.main_company')
+        company.horizon_days = 0
         company2 = self.env['res.company'].create({
             'name': 'Second Company',
         })
@@ -254,7 +255,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
         orderpoint_form.product_id = product
         orderpoint_form.product_min_qty = 0.0
-        orderpoint_form.visibility_days = 1.0
+        company.horizon_days = 1
         orderpoint_form.save()
 
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'].with_company(company2))
