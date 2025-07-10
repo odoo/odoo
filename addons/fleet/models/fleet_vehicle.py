@@ -383,37 +383,11 @@ class FleetVehicle(models.Model):
     def create(self, vals_list):
         ptc_values = [self._clean_vals_internal_user(vals) for vals in vals_list]
         vehicles = super().create(vals_list)
-        to_update_drivers_cars = set()
-        to_update_drivers_bikes = set()
-        state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
         for vehicle, vals, ptc_value in zip(vehicles, vals_list, ptc_values):
             if ptc_value:
                 vehicle.sudo().write(ptc_value)
             if 'driver_id' in vals and vals['driver_id']:
                 vehicle.create_driver_history(vals)
-            if 'future_driver_id' in vals and vals['future_driver_id']:
-                state_id = vehicle.state_id.id
-                if not state_waiting_list or state_waiting_list.id != state_id:
-                    future_driver = vals['future_driver_id']
-                    if vehicle.vehicle_type == 'bike':
-                        to_update_drivers_bikes.add(future_driver)
-                    elif vehicle.vehicle_type == 'car':
-                        to_update_drivers_cars.add(future_driver)
-        car_domain, bike_domain = [], []
-        if to_update_drivers_cars:
-            car_domain = [('driver_id', 'in', to_update_drivers_cars), ('vehicle_type', '=', 'car')]
-        if to_update_drivers_bikes:
-            bike_domain = [('driver_id', 'in', to_update_drivers_bikes), ('vehicle_type', '=', 'bike')]
-        if car_domain or bike_domain:
-            vehicle_read_group = dict(self.env['fleet.vehicle']._read_group(
-                domain=expression.OR([car_domain, bike_domain]),
-                groupby=['vehicle_type'],
-                aggregates=['id:recordset']
-            ))
-            if 'bike' in vehicle_read_group:
-                vehicle_read_group['bike'].write({'plan_to_change_bike': True})
-            if 'car' in vehicle_read_group:
-                vehicle_read_group['car'].write({'plan_to_change_car': True})
         return vehicles
 
     def write(self, vals):
