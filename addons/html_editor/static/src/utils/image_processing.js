@@ -204,7 +204,7 @@ export async function loadImageInfo(el, attachmentSrc = "") {
     const { original } = await rpc(
         "/html_editor/get_image_info",
         { src: relativeSrc },
-        { cached: true }
+        { cache: true }
     );
     // If src was an absolute "external" URL, we consider unlikely that its
     // relative part matches something from the DB and even if it does, nothing

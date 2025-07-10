@@ -6,7 +6,7 @@ import { getService, makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/
 
 import { rpc, rpcBus } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { PersistentCache } from "@web/core/utils/persistent_cache";
+import { RPCCache } from "@web/core/network/rpc_cache";
 
 describe.current.tags("headless");
 
@@ -458,7 +458,7 @@ test("optimize read and unlink if no ids", async () => {
 
 test("Cache: can cache a simple orm call", async () => {
     rpc.setCache(
-        new PersistentCache(
+        new RPCCache(
             "mockRpc",
             1,
             "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
@@ -471,15 +471,15 @@ test("Cache: can cache a simple orm call", async () => {
 
     const { services } = await makeMockEnv();
 
-    expect(await services.orm.cached().read("res.partner", [1], [])).toEqual({ name: 123 });
-    expect(await services.orm.cached().read("res.partner", [1], [])).toEqual({ name: 123 });
-    expect(await services.orm.cached().read("res.partner", [1], [])).toEqual({ name: 123 });
+    expect(await services.orm.cache().read("res.partner", [1], [])).toEqual({ name: 123 });
+    expect(await services.orm.cache().read("res.partner", [1], [])).toEqual({ name: 123 });
+    expect(await services.orm.cache().read("res.partner", [1], [])).toEqual({ name: 123 });
     expect.verifySteps(["Fetch"]);
 });
 
 test("Cache: can cache and update a orm call", async () => {
     rpc.setCache(
-        new PersistentCache(
+        new RPCCache(
             "mockRpc",
             1,
             "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
@@ -496,10 +496,10 @@ test("Cache: can cache and update a orm call", async () => {
 
     expect(
         await services.orm
-            .cached({
-                onFinish: (hasChanged, result) => {
+            .cache({
+                callback: (result, hasChanged) => {
                     expect.step(
-                        `onFinish - hasChanged:${hasChanged} result:${JSON.stringify(result)}`
+                        `callback - hasChanged:${hasChanged} result:${JSON.stringify(result)}`
                     );
                 },
             })
@@ -508,10 +508,11 @@ test("Cache: can cache and update a orm call", async () => {
     await microTick();
     expect(
         await services.orm
-            .cached({
-                onFinish: (hasChanged, result) => {
+            .cache({
+                update: "always",
+                callback: (result, hasChanged) => {
                     expect.step(
-                        `onFinish - hasChanged:${hasChanged} result:${JSON.stringify(result)}`
+                        `callback - hasChanged:${hasChanged} result:${JSON.stringify(result)}`
                     );
                 },
             })
@@ -522,8 +523,8 @@ test("Cache: can cache and update a orm call", async () => {
     await microTick();
     expect.verifySteps([
         "Fetch",
-        'onFinish - hasChanged:false result:{"name":123}',
+        'callback - hasChanged:false result:{"name":123}',
         "Fetch",
-        'onFinish - hasChanged:true result:{"name":456}',
+        'callback - hasChanged:true result:{"name":456}',
     ]);
 });

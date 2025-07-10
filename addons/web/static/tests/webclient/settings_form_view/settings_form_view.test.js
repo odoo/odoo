@@ -36,8 +36,8 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { rpc } from "@web/core/network/rpc";
+import { RPCCache } from "@web/core/network/rpc_cache";
 import { pick } from "@web/core/utils/objects";
-import { PersistentCache } from "@web/core/utils/persistent_cache";
 import { redirect } from "@web/core/utils/urls";
 import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
 import { WebClient } from "@web/webclient/webclient";
@@ -2255,7 +2255,7 @@ test("swipe settings on larger screen sizes has no effect", async () => {
 });
 
 test("Don't cache settings data", async () => {
-    const cache = new PersistentCache(
+    const cache = new RPCCache(
         "mockRpc",
         1,
         "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"

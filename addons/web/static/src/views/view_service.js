@@ -92,7 +92,7 @@ export const viewService = {
                 )
             );
 
-            const result = await orm.cached().call(resModel, "get_views", [], {
+            const result = await orm.cache({ type: "disk" }).call(resModel, "get_views", [], {
                 context: filteredContext,
                 views,
                 options: loadViewsOptions,
