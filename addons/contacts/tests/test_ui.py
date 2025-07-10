@@ -41,6 +41,7 @@ class TestUi(odoo.tests.HttpCase):
         # call get view to warm the cache
         partner.get_view()
 
+        self.env.user.company_id.country_id = self.env.ref('base.us')
         self.env.user.company_id.country_id.vat_label = "TVA"
         view = partner.get_view()
 
