@@ -128,6 +128,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
 
         # Check the status of picking after canceling po.
         self.assertNotEqual(self.move.picking_id.state, 'cancel')
+        self.assertEqual(self.move.procure_method, 'make_to_stock')
 
     def test_04_cancel_confirm_purchase_order_two_steps_push(self):
         """ Check the picking and moves status related PO, When canceling purchase order
@@ -191,6 +192,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         purchase_order.button_cancel()
 
         self.assertNotEqual(self.move.picking_id.state, 'cancel')
+        self.assertEqual(self.move.procure_method, 'make_to_stock')
 
     def test_06_cancel_confirm_purchase_order_three_steps_push(self):
         """ Check the picking and moves status related PO, When canceling purchase order
