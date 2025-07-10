@@ -381,6 +381,7 @@ class AccountWithholdingLine(models.AbstractModel):
                 'name': self.env._("WH Tax: %(name)s", name=tax_line_vals['name']),
                 'amount_currency': -tax_line_vals['amount_currency'],
                 'balance': -tax_line_vals['balance'],
+                'partner_id': self._get_comodel_partner().id,
             })
 
         # Aggregate the base lines.
@@ -406,6 +407,7 @@ class AccountWithholdingLine(models.AbstractModel):
                 'name': self.env._('WH Base: %(names)s', names=', '.join(amounts['names'])),
                 'amount_currency': amounts['amount_currency'],
                 'balance': amounts['balance'],
+                'partner_id': self._get_comodel_partner().id,
             })
             aml_create_values_list.append({
                 **grouping_key,
@@ -415,6 +417,7 @@ class AccountWithholdingLine(models.AbstractModel):
                 'analytic_distribution': None,
                 'amount_currency': -amounts['amount_currency'],
                 'balance': -amounts['balance'],
+                'partner_id': self._get_comodel_partner().id,
             })
 
         return aml_create_values_list
@@ -532,3 +535,7 @@ class AccountWithholdingLine(models.AbstractModel):
     def _get_valid_liquidity_accounts(self):
         """ Get the valid liquidity accounts for the payment; we need to ensure that the line account does not match any of them. """
         return ()
+
+    def _get_comodel_partner(self):
+        """ Get the partner from the comodel record; in order to have it available when required. """
+        return self.env['res.partner']
