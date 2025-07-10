@@ -184,7 +184,9 @@ export class ImagePlugin extends Plugin {
                 description: _t("Transform the picture (click twice to reset transformation)"),
                 Component: ImageTransformButton,
                 props: this.getImageTransformProps(),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: (selection) => isHtmlContentSupported(selection),
+                isDisabled: () =>
+                    "allowImageTransform" in this.config ? !this.config.allowImageTransform : false,
             },
             {
                 id: "image_delete",

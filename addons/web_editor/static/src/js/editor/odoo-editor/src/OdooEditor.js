@@ -3592,6 +3592,7 @@ export class OdooEditor extends EventTarget {
         const isInMedia = this.toolbar.classList.contains('oe-media');
         const linkNode = getInSelection(this.document, 'a');
         const linkButton = this.toolbar.querySelector('#create-link');
+        const transformButton = this.toolbar.querySelector("#image-transform");
         linkButton && linkButton.classList.toggle('active', !!linkNode);
         // Hide unlink button if no link in selection, always hide on media
         // elements.
@@ -3606,7 +3607,9 @@ export class OdooEditor extends EventTarget {
         const range = getDeepRange(this.editable, { sel, correctTripleClick: true });
         const spansBlocks = [...range.commonAncestorContainer.childNodes].some(isBlock);
         linkButton?.classList.toggle('d-none', spansBlocks || isInMedia);
-
+        if (this.options.disableTransform) {
+            transformButton.classList.add("d-none");
+        }
         // Hide link button group if it has no visible button.
         const linkBtnGroup = this.toolbar.querySelector('#link.btn-group');
         linkBtnGroup?.classList.toggle('d-none', !linkBtnGroup.querySelector('.btn:not(.d-none)'));
