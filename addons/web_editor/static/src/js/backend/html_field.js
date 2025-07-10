@@ -747,6 +747,9 @@ export const htmlField = {
 	    if ('style-inline' in options) {
 	        wysiwygOptions.inlineStyle = Boolean(options['style-inline']);
 	    }
+        if ('disableTransform' in options) {
+            wysiwygOptions.disableTransform = Boolean(options['disableTransform']);
+        }
         if ('allowCommandImage' in options) {
             // Set the option only if it is explicitly set in the view so a default
             // can be set elsewhere otherwise.
