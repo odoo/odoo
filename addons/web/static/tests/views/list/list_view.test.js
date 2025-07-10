@@ -1117,8 +1117,8 @@ test(`list view: action button in controlPanel with display='always' on mobile`,
         queryAllTexts(`div.o_control_panel_breadcrumbs button, div.o_control_panel_actions button`)
     ).toEqual([
         "New",
-        "Toggle Dropdown", // mobile dropdown
         "display",
+        "", // mobile dropdown
         "", // default selection
     ]);
 
@@ -1137,8 +1137,8 @@ test(`list view: action button in controlPanel with display='always' on mobile`,
         queryAllTexts(`div.o_control_panel_breadcrumbs button, div.o_control_panel_actions button`)
     ).toEqual([
         "New",
-        "Toggle Dropdown", // mobile dropdown
         "display",
+        "", // mobile dropdown
         "",
     ]);
 });
@@ -1890,7 +1890,11 @@ test(`discard a new record in editable="top" list with less than 4 records`, asy
     expect(`.o_data_row`).toHaveCount(4);
     expect(`tbody tr:eq(0)`).toHaveClass("o_selected_row");
 
-    await contains(`.o_list_button_discard:not(.dropdown-item)`).click();
+    if (getMockEnv().isSmall) {
+        await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
+    }
+
+    await contains(`.o_list_button_discard`).click();
     expect(`.o_data_row`).toHaveCount(3);
     expect(`tbody tr`).toHaveCount(4);
     expect(`tbody tr:eq(0)`).toHaveClass("o_data_row");
