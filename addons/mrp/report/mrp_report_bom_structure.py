@@ -222,7 +222,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'index': index,
             'bom': bom,
             'bom_id': bom and bom.id or False,
-            'bom_code': bom and bom.code or False,
             'type': 'bom',
             'is_storable': product.is_storable,
             'quantity': current_quantity,
