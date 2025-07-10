@@ -431,6 +431,10 @@ def load_certificate():
         _logger.error("An error received from odoo.com while trying to get the certificate: %s", certificate_error)
         return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
 
+    if not result.get('x509_pem') or not result.get('private_key_pem'):
+        _logger.error("The certificate received from odoo.com is not valid.")
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
+
     update_conf({'subject': result['subject_cn']})
 
     if platform.system() == 'Linux':
