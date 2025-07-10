@@ -63,12 +63,7 @@ class PurchaseOrderSuggest(models.TransientModel):
             products = products.with_context(suggest._get_suggested_products_context())
 
             for product in products:
-                if self.based_on == 'actual_demand':
-                    quantity = ceil(product.outgoing_qty * (self.percent_factor / 100))
-                else:
-                    quantity = ceil(product.monthly_demand * self.multiplier)
-                qty_to_deduce = max(product.qty_available, 0) + max(product.incoming_qty, 0)
-                quantity -= qty_to_deduce
+                quantity = product.suggest_quantity
                 if quantity <= 0:
                     continue
                 product_count += 1
@@ -179,6 +174,13 @@ class PurchaseOrderSuggest(models.TransientModel):
             }
         if self.warehouse_id and not self.hide_warehouse:
             context['warehouse_id'] = self.warehouse_id.id
+
+        context = {
+            **context,
+            "suggest_based_on": self.based_on,
+            "suggest_percent": self.percent_factor,
+            "suggest_multiplier": self.multiplier,
+        }
         return context
 
     def _get_period_of_time(self):

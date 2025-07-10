@@ -113,7 +113,7 @@ class ProductCatalogMixin(models.AbstractModel):
                 order_line_info[product.id]['uomDisplayName'] = product.uom_id.display_name
             product_ids.remove(product.id)
 
-        products = self.env['product.product'].browse(product_ids)
+        products = self.env['product.product'].with_context(kwargs).browse(product_ids)
         product_data = self._get_product_catalog_order_data(products, **kwargs)
         for product_id, data in product_data.items():
             order_line_info[product_id] = {**default_data, **data}

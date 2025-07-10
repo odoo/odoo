@@ -40,10 +40,12 @@ class PurchaseStockSuggestController(http.Controller):
             'basedOnOptions': wiz.fields_get(['based_on'])['based_on']['selection'],
             'basedOn': wiz.based_on,
             'numberOfDays': wiz.number_of_days,
+            'multiplier': wiz.multiplier,
             'vendorName': order.partner_id.display_name,
             'currencySymbol': wiz.currency_id.symbol,
             'percentFactor': wiz.percent_factor,
             'showSuggest': 1,
+            'warehouseId': wiz.warehouse_id.id,
         }
 
     @http.route("/purchase_stock/update_purchase_suggest", type="jsonrpc", auth="user")
@@ -52,4 +54,7 @@ class PurchaseStockSuggestController(http.Controller):
         wiz = request.env["purchase.order.suggest"].browse(wizard_id).ensure_one()
         wiz.write(vals)
 
-        return {"estimatedPrice": wiz.estimated_price}
+        return {
+            "estimatedPrice": wiz.estimated_price,
+            'multiplier': wiz.multiplier,
+        }

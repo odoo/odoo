@@ -11,9 +11,6 @@ export class PurchaseSuggestCatalogSearchPanel extends ProductCatalogSearchPanel
         super.setup();
         this.wizard = useState(useEnv().purchaseSuggestWizard);
         this.addAllProducts = useEnv().addAllProducts;
-        this.suggestToggle = useState(
-            JSON.parse(localStorage.getItem("purchase_stock.suggest_toggle") ?? '{"isOn": "true"}')
-        );
         this.tooltipTitle = _t(
             "Get recommendations of products to purchase at %(vendorName)s based on stock on hand and expected sales volumes.\n\n" +
                 "Set a reference period to estimate sales, and use the percentage to take into account " +
@@ -28,10 +25,13 @@ export class PurchaseSuggestCatalogSearchPanel extends ProductCatalogSearchPanel
         this.wizard.percentFactor = parseInt(ev.target.value, 10) || 0;
     }
     async onSuggestToggle() {
-        this.suggestToggle.isOn = !this.suggestToggle.isOn;
+        this.wizard.suggestToggle.isOn = !this.wizard.suggestToggle.isOn;
+        if (!this.wizard.suggestToggle || typeof this.wizard.suggestToggle !== "object") {
+            this.wizard.suggestToggle = { isOn: Boolean(this.wizard.suggestToggle) };
+        }
         localStorage.setItem(
             "purchase_stock.suggest_toggle",
-            JSON.stringify({ isOn: this.suggestToggle.isOn })
+            JSON.stringify({ isOn: this.wizard.suggestToggle.isOn })
         );
     }
     get timePeriodProps() {
