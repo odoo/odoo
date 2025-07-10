@@ -409,7 +409,7 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             Dialog.confirm("Add"),
             ProductScreen.totalAmountIs("10"),
             checkPreparationTicketData([{ name: "Product Test", qty: 1, attribute: ["Value 1"] }], {
-                visibleInDom: ["14:20", "Value 1", "Guest: 5"],
+                visibleInDom: ["14:20", "Value 1", "Guest: 5", "Eat in"],
                 invisibleInDom: ["DUPLICATA!"],
             }),
 
@@ -423,6 +423,15 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                 invisibleInDom: ["colorIndex"],
             }),
             Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Water"),
+            ProductScreen.selectPreset("Eat in", "Takeaway"),
+            Chrome.selectPresetTimingSlotHour("12:00"),
+            Chrome.presetTimingSlotIs("12:00"),
+            checkPreparationTicketData([{ name: "Water", qty: 1 }], {
+                visibleInDom: ["12:00", "Takeaway"],
+                invisibleInDom: ["colorIndex"],
+            }),
         ].flat(),
 });
 
