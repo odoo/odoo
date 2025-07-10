@@ -51,6 +51,7 @@
                 <button name="action_remove_manual_qty_to_order" type="object" icon="fa-undo" title="Remove manually entered value and replace by the quantity to order based on the forecasted quantities" invisible="not qty_to_order_manual"/>
                 <button name="action_remove_manual_qty_to_order" type="object" icon="fa-undo" title="-" class="disabled opacity-0" invisible="qty_to_order_manual"/>
                 <field name="product_uom_name" string="Unit" groups="uom.group_uom"/>
+                <field name="deadline_date" string="Deadline" optional="hide"/>
                 <field name="company_id" optional="hide" readonly="1" groups="base.group_multi_company"/>
                 <button name="action_replenish" string="Order" type="object" class="o_replenish_buttons" icon="fa-truck"
                     invisible="qty_to_order &lt;= 0.0"/>
@@ -68,13 +69,13 @@
         <field name="arch" type="xml">
             <search string="Replenishment Report Search">
                 <field name="product_id"/>
-                <field name="trigger"/>
                 <field name="product_category_id"/>
                 <field name="group_id" groups="stock.group_adv_location"/>
                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                <field name="name" string="Reordering Rule"/>
-                <filter string="Trigger Manual" name="filter_creation_trigger" domain="[('trigger', '=', 'manual')]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <filter string="Manual" name="filter_creation_manual_trigger" domain="[('trigger', '=', 'manual')]"/>
+                <filter string="Automatic" name="filter_creation_automatic_trigger" domain="[('trigger', '=', 'auto')]"/>
                 <separator/>
                 <filter string="To Reorder" name="filter_to_reorder" domain="[('qty_to_order', '&gt;', 0.0)]"/>
                 <separator/>
