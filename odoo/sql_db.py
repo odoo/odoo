@@ -316,6 +316,11 @@ class Cursor(BaseCursor):
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
         start = real_time()
+        hook_results = []
+        current_thread = threading.current_thread()
+        for hook in getattr(current_thread, 'query_hooks', ()):
+            hook_results.append(hook(self, query, params, start, 1))
+
         try:
             params = params or None
             res = self._obj.execute(query, params)
@@ -332,14 +337,13 @@ class Cursor(BaseCursor):
         self.sql_log_count += 1
         sql_counter += 1
 
-        current_thread = threading.current_thread()
         if hasattr(current_thread, 'query_count'):
             current_thread.query_count += 1
             current_thread.query_time += delay
 
         # optional hooks for performance and tracing analysis
-        for hook in getattr(current_thread, 'query_hooks', ()):
-            hook(self, query, params, start, delay)
+        for hook in hook_results:
+            hook(delay)
 
         # advanced stats
         if _logger.isEnabledFor(logging.DEBUG) or self._sql_table_tracking:
