@@ -28,6 +28,16 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             Chrome.startPoS(),
             OfflineUtil.setOfflineMode(),
             ProductScreen.firstProductIsFavorite("Whiteboard Pen"),
+            // Make sure we don't have any scroll bar on the product list
+            {
+                trigger: ".product-list",
+                run: function () {
+                    const productList = document.querySelector(".product-list");
+                    if (productList.scrollWidth > document.documentElement.scrollWidth) {
+                        throw new Error("Product list is overflowing");
+                    }
+                },
+            },
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1", "5.10"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2", "10.20"),
             ProductScreen.clickDisplayedProduct("Letter Tray", true, "1", "5.28"),
