@@ -18,7 +18,7 @@ class TestOee(TestMrpCommon):
             'description': loss_reason.name
         })
 
-    def test_wrokcenter_oee(self):
+    def test_workcenter_oee(self):
         """  Test case workcenter oee. """
         day = datetime.date(datetime.today())
         self.workcenter_1.resource_calendar_id.leave_ids.unlink()
@@ -58,15 +58,15 @@ class TestOee(TestMrpCommon):
         end_time = time_to_string_utc_datetime(time(10, 53, 22))
         self.create_productivity_line(self.env.ref('mrp.block_reason4'), start_time, end_time)
 
-        # Block time : ( Process Defact (1.33 min) + Reduced Speed (3.0 min) + Material Availability (1.52 min)) = 5.85 min
-        blocked_time_in_hour = round(((1.33 + 3.0 + 1.52) / 60.0), 2)
+        # Blocked time : ( Process Defect (1.33 min) + Reduced Speed (3.0 min) + Material Availability (1.52 min)) = 5.85 min
+        blocked_time = 1.33 + 3.0 + 1.52
         # Productive time : Productive time duration (13 min)
-        productive_time_in_hour = round((13.0 / 60.0), 2)
+        productive_time = 13.0
 
-        # Check blocked time and productive time
-        self.assertEqual(self.workcenter_1.blocked_time, blocked_time_in_hour, "Wrong block time on workcenter.")
-        self.assertEqual(self.workcenter_1.productive_time, productive_time_in_hour, "Wrong productive time on workcenter.")
+        # Blocked & Productive time are rounded to 2 digits when computed
+        self.assertEqual(self.workcenter_1.blocked_time, round(blocked_time / 60, 2), "Wrong blocked time on workcenter.")
+        self.assertEqual(self.workcenter_1.productive_time, round(productive_time / 60, 2), "Wrong productive time on workcenter.")
 
-        # Check overall equipment effectiveness
-        computed_oee = round(((productive_time_in_hour * 100.0)/(productive_time_in_hour + blocked_time_in_hour)), 2)
+        # OEE is not calculated with intermediary rounding
+        computed_oee = round((((productive_time / 60) * 100.0) / ((productive_time / 60) + (blocked_time / 60))), 2)
         self.assertEqual(self.workcenter_1.oee, computed_oee, "Wrong oee on workcenter.")
