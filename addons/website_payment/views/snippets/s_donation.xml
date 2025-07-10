@@ -77,45 +77,6 @@
     </section>
 </template>
 
-<template id="s_donation_options"  inherit_id="website.snippet_options">
-    <xpath expr="." position="inside">
-        <div data-js="Donation" data-selector=".s_donation">
-            <we-input class="o_we_large" string="Recipient Email" data-select-data-attribute=""
-                data-attribute-name="donationEmail"/>
-            <we-checkbox string="Display Options"
-                    data-name="display_options_opt"
-                    data-display-options="true"
-                    data-no-preview="true">
-            </we-checkbox>
-            <we-checkbox string="Pre-filled Options"
-                    data-name="pre_filled_opt"
-                    data-toggle-prefilled-options="true"
-                    data-dependencies="!no_input_opt"
-                    data-no-preview="true">
-            </we-checkbox>
-            <we-checkbox string="Descriptions"
-                         class="o_we_sublevel_1"
-                         data-toggle-option-description="true"
-                         data-dependencies="pre_filled_opt"
-                         data-no-preview="true">
-            </we-checkbox>
-            <we-select string="Custom Amount" data-no-preview="true">
-                <we-button data-name="free_amount_opt" data-select-amount-input="freeAmount">Input</we-button>
-                <we-button data-name="slider_opt" data-select-amount-input="slider" data-dependencies="display_options_opt">Slider</we-button>
-                <we-button data-name="no_input_opt" data-select-amount-input="" data-dependencies="pre_filled_opt">None</we-button>
-            </we-select>
-            <we-input string="Minimum" class="o_we_sublevel_1"
-                      data-step="1" data-set-minimum-amount="" data-dependencies="!no_input_opt"/>
-            <we-input string="Maximum" class="o_we_sublevel_1"
-                      data-step="1" data-set-maximum-amount="" data-dependencies="slider_opt"/>
-            <we-input string="Step" class="o_we_sublevel_1"
-                      data-step="1" data-set-slider-step="" data-dependencies="slider_opt"/>
-            <we-input string="Default Amount" data-step="1" data-attribute-default-value="25"
-                data-select-data-attribute="" data-attribute-name="defaultAmount"/>
-        </div>
-    </xpath>
-</template>
-
 <record id="website_payment.s_donation_000_scss" model="ir.asset">
     <field name="name">Donation 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>

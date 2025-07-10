@@ -163,26 +163,6 @@ Use t-snippet-call and fill it with its inner grid-mode row.
     </t>
 </template>
 
-<!-- Options -->
-<template id="s_masonry_block_options" inherit_id="website.snippet_options">
-    <!--  Box Vertical Alignment -->
-    <xpath expr="//div[@data-js='WebsiteAnimate']" position="after">
-        <div data-selector=".s_masonry_block .o_grid_item" data-exclude=".o_grid_item_image">
-            <we-button-group string="Vert. Alignment" title="Vertical Alignment">
-                <we-button title="Align Top"
-                        data-select-class="justify-content-start"
-                        data-img="/website/static/src/img/snippets_options/align_solo_top.svg"/>
-                <we-button title="Align Middle"
-                        data-select-class="justify-content-center"
-                        data-img="/website/static/src/img/snippets_options/align_solo_middle.svg"/>
-                <we-button title="Align Bottom"
-                        data-select-class="justify-content-end"
-                        data-img="/website/static/src/img/snippets_options/align_solo_bottom.svg"/>
-            </we-button-group>
-        </div>
-    </xpath>
-</template>
-
 <!-- Assets -->
 <record id="website.s_masonry_block_000_scss" model="ir.asset">
     <field name="name">Masonry block 000 SCSS</field>

@@ -15,44 +15,6 @@
     </section>
 </template>
 
-<!-- Snippet's Options -->
-<template id="s_map_options" inherit_id="website.snippet_options">
-    <xpath expr="//div[@data-js='Box']" position="before">
-        <div data-js="Map" data-selector=".s_map">
-            <we-input class="o_we_large" string="Address" data-select-data-attribute="" data-no-preview="true" data-attribute-name="mapAddress" placeholder="e.g. De Brouckere, Brussels, Belgium"/>
-            <we-select string="Type" data-no-preview="true" data-attribute-name="mapType">
-                <we-button data-select-data-attribute="m">Road</we-button>
-                <we-button data-select-data-attribute="k">Satellite</we-button>
-            </we-select>
-            <we-select string="Zoom" data-select-data-attribute="12" data-no-preview="true" data-attribute-name="mapZoom">
-                <we-button data-select-data-attribute="21">2.5 m</we-button>
-                <we-button data-select-data-attribute="20">5 m</we-button>
-                <we-button data-select-data-attribute="19">10 m</we-button>
-                <we-button data-select-data-attribute="18">20 m</we-button>
-                <we-button data-select-data-attribute="17">50 m</we-button>
-                <we-button data-select-data-attribute="16">100 m</we-button>
-                <we-button data-select-data-attribute="15">200 m</we-button>
-                <we-button data-select-data-attribute="14">400 m</we-button>
-                <we-button data-select-data-attribute="13">1 km</we-button>
-                <we-button data-select-data-attribute="12">2 km</we-button>
-                <we-button data-select-data-attribute="11">4 km</we-button>
-                <we-button data-select-data-attribute="10">8 km</we-button>
-                <we-button data-select-data-attribute="9">15 km</we-button>
-                <we-button data-select-data-attribute="8">30 km</we-button>
-                <we-button data-select-data-attribute="7">50 km</we-button>
-                <we-button data-select-data-attribute="6">100 km</we-button>
-                <we-button data-select-data-attribute="5">200 km</we-button>
-                <we-button data-select-data-attribute="4">400 km</we-button>
-                <we-button data-select-data-attribute="3">1000 km</we-button>
-                <we-button data-select-data-attribute="2">2000 km</we-button>
-            </we-select>
-            <we-colorpicker string="Color Filter" data-select-style="true"
-                data-css-property="background-color" data-color-prefix="bg-" data-apply-to=".s_map_color_filter"/>
-            <we-checkbox string="Description" data-no-preview="true" data-show-description="true"/>
-        </div>
-    </xpath>
-</template>
-
 <record id="website.s_map_000_scss" model="ir.asset">
     <field name="name">Map 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>

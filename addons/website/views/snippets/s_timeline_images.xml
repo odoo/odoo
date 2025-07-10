@@ -48,28 +48,4 @@
     </section>
 </template>
 
-<template id="s_timeline_images_options" inherit_id="website.snippet_options">
-    <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="after">
-        <div data-js="MultipleItems" data-selector=".s_timeline_images">
-            <we-row string="Date">
-                <we-button data-add-item="" data-item=".s_timeline_images_row:first" data-select-item="" data-add-before="true" data-no-preview="true" class="o_we_bg_brand_primary">
-                    Add Date
-                </we-button>
-            </we-row>
-        </div>
-    </xpath>
-    <xpath expr="." position="inside">
-        <div data-selector=".s_timeline_images_row" data-drop-near=".s_timeline_images_row"/>
-    </xpath>
-    <xpath expr="//t[@t-set='o_dot_color_selector']" position="attributes">
-        <attribute name="t-valuef" add=".s_timeline_images .s_timeline_images_row" separator=", "/>
-    </xpath>
-    <xpath expr="//t[@t-set='o_dot_line_color_selector']" position="attributes">
-        <attribute name="t-valuef" add=".s_timeline_images" separator=", "/>
-    </xpath>
-    <xpath expr="//div[@data-js='SnippetMove'][contains(@data-selector,'section')]" position="attributes">
-        <attribute name="data-selector" add=".s_timeline_images_row" separator=","/>
-    </xpath>
-</template>
-
 </odoo>

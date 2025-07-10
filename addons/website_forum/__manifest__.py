@@ -45,7 +45,6 @@ Ask questions, get answers, no distractions
         'views/forum_forum_templates_tools.xml',
         'views/forum_templates_mail.xml',
         'views/website_profile_templates.xml',
-        'views/snippets/snippets.xml',
 
         'security/ir.model.access.csv',
         'security/ir_rule_data.xml',
