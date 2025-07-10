@@ -202,9 +202,12 @@ class PosConfig(models.Model):
     orderlines_sequence_in_cart_by_category = fields.Boolean(string="Order cart by category's sequence", default=False,
         help="When active, orderlines will be sorted based on product category and sequence in the product screen's order cart.")
 
-    def notify_synchronisation(self, session_id, login_number, records={}):
-        static_records = {}
+    def get_additional_notify_message(self):
+        return {}
 
+    def notify_synchronisation(self, session_id, login_number, records={}, serialized_data={}):
+        static_records = {}
+        additional_message = self.get_additional_notify_message()
         for model, ids in records.items():
             fields = self.env[model]._load_pos_data_fields(self.id)
             static_records[model] = self.env[model].browse(ids).read(fields, load=False)
@@ -213,7 +216,8 @@ class PosConfig(models.Model):
             'static_records': static_records,
             'session_id': session_id,
             'login_number': login_number,
-            'records': records
+            'records': records,
+            **additional_message,
         })
 
         for config in self.trusted_config_ids:
@@ -221,7 +225,8 @@ class PosConfig(models.Model):
                 'static_records': static_records,
                 'session_id': config.current_session_id.id,
                 'login_number': 0,
-                'records': records
+                'records': records,
+                **additional_message,
             })
 
     def read_config_open_orders(self, domain, record_ids=[]):
