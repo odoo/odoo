@@ -6,12 +6,12 @@
             <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                 <t t-if="autoCompleteItemScope.record?.relative_info">
                     <div class="uom_autocomplete_grid">
-                        <div t-out="autoCompleteItemScope.label"/>
+                        <span t-out="autoCompleteItemScope.label"/>
                         <div t-esc="autoCompleteItemScope.record.relative_info" class="text-muted"/>
                     </div>
                 </t>
                 <t t-else="">
-                    <div t-out="autoCompleteItemScope.label"/>
+                    <span t-out="autoCompleteItemScope.label"/>
                 </t>
             </t>
         </UomMany2One>
