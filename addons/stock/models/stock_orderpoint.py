@@ -74,6 +74,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     rule_ids = fields.Many2many('stock.rule', string='Rules used', compute='_compute_rules')
     lead_days_date = fields.Date(compute='_compute_lead_days')
+    lead_days = fields.Float(compute='_compute_lead_days')
     route_id = fields.Many2one(
         'stock.route', string='Route', domain="[('product_selectable', '=', True)]")
     qty_on_hand = fields.Float('On Hand', readonly=True, compute='_compute_qty', digits='Product Unit')
@@ -86,6 +87,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     unwanted_replenish = fields.Boolean('Unwanted Replenish', compute="_compute_unwanted_replenish")
     show_supply_warning = fields.Boolean(compute="_compute_show_supply_warning")
+    deadline_date = fields.Date("Deadline", compute="_compute_deadline_date", help="Date before which you should order to avoid falling below the minimum.")
 
     _product_location_check = models.Constraint(
         'unique (product_id, location_id, company_id)',
@@ -109,6 +111,39 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint in self:
             orderpoint.show_supply_warning = not orderpoint.product_id.seller_ids
 
+    def _compute_deadline_date(self):
+        for orderpoint in self:
+            if orderpoint.qty_on_hand < orderpoint.product_min_qty:
+                orderpoint.deadline_date = fields.Date.today()
+            elif orderpoint.qty_forecast < orderpoint.product_min_qty:
+                _, domain_move_in, domain_move_out = orderpoint.product_id._get_domain_locations()
+                domain_move_in = ([('product_id', '=', orderpoint.product_id.id)]
+                                  + [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))]
+                                  + domain_move_in
+                                  + [('date', '<=', orderpoint.lead_days_date)])
+                domain_move_out = ([('product_id', '=', orderpoint.product_id.id)]
+                                  + [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))]
+                                  + domain_move_out
+                                  + [('date', '<=', orderpoint.lead_days_date)])
+
+                Move = self.env['stock.move'].with_context(active_test=False)
+                moves_dict = defaultdict(float)
+                for in_date, in_qty in Move._read_group(domain_move_in, ['date:day'], ['product_qty:sum']):
+                    moves_dict[in_date.date()] += in_qty
+                for out_date, out_qty in Move._read_group(domain_move_out, ['date:day'], ['product_qty:sum']):
+                    moves_dict[out_date.date()] -= out_qty
+
+                qty_on_hand_at_date = orderpoint.qty_on_hand
+                tentative_deadline = orderpoint.lead_days_date
+                for move_date, move_qty in moves_dict.items():
+                    qty_on_hand_at_date += move_qty
+                    if qty_on_hand_at_date < orderpoint.product_min_qty:
+                        tentative_deadline = move_date - relativedelta.relativedelta(days=orderpoint.lead_days)
+                        break
+                orderpoint.deadline_date = max(tentative_deadline, fields.Date.today())
+            else:
+                orderpoint.deadline_date = orderpoint.lead_days_date
+
     @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_lead_days(self):
         orderpoints_to_compute = self.filtered(lambda orderpoint: orderpoint.product_id and orderpoint.location_id)
@@ -117,7 +152,9 @@ class StockWarehouseOrderpoint(models.Model):
             lead_days, dummy = orderpoint.rule_ids._get_lead_days(orderpoint.product_id, **values)
             lead_days_date = fields.Date.today() + relativedelta.relativedelta(days=lead_days['total_delay'])
             orderpoint.lead_days_date = lead_days_date
+            orderpoint.lead_days = lead_days['total_delay'] - self.get_horizon_days()
         (self - orderpoints_to_compute).lead_days_date = False
+        (self - orderpoints_to_compute).lead_days = 0
 
     @api.depends('route_id', 'product_id', 'location_id', 'company_id', 'warehouse_id', 'product_id.route_ids')
     def _compute_rules(self):
