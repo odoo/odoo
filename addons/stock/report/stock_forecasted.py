@@ -194,6 +194,9 @@ class StockForecasted_Product_Product(models.AbstractModel):
     def _get_quant_domain(self, location_ids, products):
         return [('location_id', 'in', location_ids), ('quantity', '>', 0), ('product_id', 'in', products.ids)]
 
+    def _calculate_transit_stock(self, product, product_stock, free_stock, wh_stock_location):
+        return product_stock - free_stock
+
     def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
 
         def _get_out_move_reserved_data(out, linked_moves, used_reserved_moves, currents, wh_stock_location, wh_stock_sub_location_ids):
@@ -369,7 +372,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
             unreconciled_outs = []
             # remaining stock
             free_stock = currents[product.id, wh_stock_location.id]
-            transit_stock = product_sum[product.id] - free_stock
+            transit_stock = self._calculate_transit_stock(product, product_sum[product.id], free_stock, wh_stock_location)
+            transit_diff = transit_stock - (product_sum[product.id] - free_stock)
             # add report lines and see if remaining demand can be reconciled by unreservable stock or ins
             for out in outs_per_product[product.id]:
                 reserved_out = moves_data[out].get('reserved')
@@ -420,7 +424,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 lines.append(self._prepare_report_line(transit_stock, product=product, in_transit=True, read=read))
 
             # Unused remaining stock.
-            lines += self._free_stock_lines(product, free_stock, moves_data, wh_location_ids, read)
+            lines += self._free_stock_lines(product, free_stock, moves_data, wh_location_ids, read, transit_diff)
 
             # In moves not used.
             for in_ in ins_per_product[product.id]:
@@ -429,7 +433,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 lines.append(self._prepare_report_line(in_['qty'], move_in=in_['move'], read=read))
         return lines
 
-    def _free_stock_lines(self, product, free_stock, moves_data, wh_location_ids, read):
+    def _free_stock_lines(self, product, free_stock, moves_data, wh_location_ids, read, transit_diff):
         if not float_is_zero(free_stock, precision_rounding=product.uom_id.rounding):
             return [self._prepare_report_line(free_stock, product=product, read=read)]
         return []
