@@ -47,10 +47,10 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
             validated_work_entry_ids = self.env['hr.work.entry']
             if wizard.search_criteria_completed:
                 search_domain = [('employee_id', 'in', wizard.employee_ids.ids),
-                                 ('date_start', '>=', wizard.date_from),
-                                 ('date_stop', '<=', wizard.date_to),
+                                 ('date', '>=', wizard.date_from),
+                                 ('date', '<=', wizard.date_to),
                                  ('state', '=', 'validated')]
-                validated_work_entry_ids = self.env['hr.work.entry'].search(search_domain, order="date_start")
+                validated_work_entry_ids = self.env['hr.work.entry'].search(search_domain, order="date")
             wizard.validated_work_entry_ids = validated_work_entry_ids
 
     @api.depends('validated_work_entry_ids')
