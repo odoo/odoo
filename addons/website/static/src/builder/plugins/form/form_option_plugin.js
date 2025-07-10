@@ -32,6 +32,7 @@ import {
     setActiveProperties,
     setVisibilityDependency,
     getParsedDataFor,
+    rerenderField,
 } from "./utils";
 import { SyncCache } from "@html_builder/utils/sync_cache";
 import { _t } from "@web/core/l10n/translation";
@@ -194,6 +195,8 @@ export class FormOptionPlugin extends Plugin {
             },
         ],
         so_content_addition_selector: [".s_website_form"],
+        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        on_cloned_handlers: this.onCloned.bind(this),
     };
     setup() {
         this.modelsCache = new SyncCache(this._fetchModels.bind(this));
@@ -370,11 +373,14 @@ export class FormOptionPlugin extends Plugin {
         if (formInfo) {
             const formatInfo = getDefaultFormat(el);
             formInfo.formFields.forEach((field) => {
-                field.formatInfo = formatInfo;
+                // Create a shallow copy of field to prevent unintended
+                // mutations to the original field stored in the registry
+                const _field = { ...field };
+                _field.formatInfo = formatInfo;
                 const locationEl = el.querySelector(
                     ".s_website_form_submit, .s_website_form_recaptcha"
                 );
-                locationEl.insertAdjacentElement("beforebegin", renderField(field));
+                locationEl.insertAdjacentElement("beforebegin", renderField(_field));
             });
         }
     }
@@ -714,6 +720,54 @@ export class FormOptionPlugin extends Plugin {
             valueList,
             conditionValueList,
         };
+    }
+    /**
+     * Retrieves all field definitions for the given form element.
+     *
+     * @param {HTMLElement} formEl - Form element to retrieve field data from.
+     * @returns {Promise<Object<string, Object>>} A promise that resolves to an
+     *                                            object mapping field names to
+     *                                            their definitions.
+     */
+    async getFields(formEl) {
+        const fieldEl = formEl.querySelector(".s_website_form_field");
+        if (!fieldEl) {
+            return {};
+        }
+        const { fields } = await this.loadFieldOptionData(fieldEl);
+        return fields;
+    }
+    async onSnippetDropped({ snippetEl }) {
+        const fields = await this.getFields(snippetEl);
+        const fieldElsToRerender = snippetEl.querySelectorAll(
+            "[data-name='Field']:not(.s_website_form_dnone)"
+        );
+        for (const fieldEl of fieldElsToRerender) {
+            rerenderField(fieldEl, fields);
+        }
+    }
+    async onCloned({ cloneEl }) {
+        const formEl = cloneEl.closest(".s_website_form");
+        if (!formEl) {
+            return;
+        }
+
+        const fields = await this.getFields(formEl);
+        const isClonedElementField = cloneEl.classList.contains("s_website_form_field");
+        let fieldElsToRerender = [];
+
+        if (isClonedElementField) {
+            fieldElsToRerender = [cloneEl];
+        } else {
+            // The entire form was cloned - re-render all the fields
+            fieldElsToRerender = Array.from(
+                cloneEl.querySelectorAll("[data-name='Field']:not(.s_website_form_dnone)")
+            );
+        }
+
+        for (const fieldEl of fieldElsToRerender) {
+            rerenderField(fieldEl, fields);
+        }
     }
 }
 
