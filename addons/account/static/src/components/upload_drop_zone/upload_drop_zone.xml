@@ -37,7 +37,10 @@
                   </div>
                 </t>
                 <t t-elif="props.visible">
-                    <i class="fa fa-upload fa-10x pe-none"/>
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="fa fa-upload fa-10x text-white pe-none"/>
+                        <t t-out="props.dropZoneHelper"/>
+                    </div>
                 </t>
             </div>
         </t>
