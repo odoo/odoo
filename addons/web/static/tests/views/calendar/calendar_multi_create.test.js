@@ -118,10 +118,10 @@ class Event extends models.Model {
                 <!-- Popover -->
                 <field name="name"/>
                 <field name="type"/>
-                
+
                 <!-- Filter -->
                 <field name="user_id" write_model="filter.user" write_field="filter_user_id" filter_field="is_checked"/>
-            
+
                 <!-- For filter to work -->
                 <field name="date_start" invisible="1"/>
                 <field name="filter_user_id" invisible="1"/>
@@ -338,7 +338,7 @@ test("multi_create: basic creation (datetime field)", async () => {
                 <!-- Popover -->
                 <field name="name"/>
                 <field name="type"/>
-                
+
                 <!-- Filter -->
                 <field name="user_id" write_model="filter.user" write_field="filter_user_id" filter_field="is_checked"/>
             </calendar>
@@ -457,7 +457,7 @@ test("multi_create: input validation (datetime field)", async () => {
                 <!-- Popover -->
                 <field name="name"/>
                 <field name="type"/>
-                
+
                 <!-- Filter -->
                 <field name="user_id" write_model="filter.user" write_field="filter_user_id" filter_field="is_checked"/>
             </calendar>
@@ -517,9 +517,9 @@ test("multi_create: filter mode (normal calendar)", async () => {
         context: { default_name: "Sick" },
     });
 
-    await click(".o_calendar_sidebar .btn-group .btn[data-tooltip='Filter']");
+    await click(".o_calendar_sidebar .btn-group .btn .fa-pencil");
     await animationFrame();
-    expect(".o_calendar_sidebar .btn-group .btn.active").toHaveAttribute("data-tooltip", "Filter", {
+    expect(".o_calendar_sidebar .btn-group .btn.active .fa-pencil").toHaveCount(1, {
         message: "filter mode (normal) should be active",
     });
 
@@ -626,7 +626,7 @@ test("multi_create: test onChange on TimePicker with no blur (input text)", asyn
                 <!-- Popover -->
                 <field name="name"/>
                 <field name="type"/>
-                
+
                 <!-- Filter -->
                 <field name="user_id" write_model="filter.user" write_field="filter_user_id" filter_field="is_checked"/>
             </calendar>
@@ -673,7 +673,7 @@ test("multi_create: test popover in all mode", async () => {
     await animationFrame();
     expect(".o_popover").toHaveCount(1);
 
-    await click(".o_calendar_sidebar .btn-group .btn[data-tooltip='Filter']");
+    await click(".o_calendar_sidebar .btn-group .btn .fa-pencil");
     await animationFrame();
     expect(".o_popover").toHaveCount(0);
 
