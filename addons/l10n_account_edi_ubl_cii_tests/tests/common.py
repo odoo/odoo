@@ -207,7 +207,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         account_move = self.env['account.move'].create({
             'partner_id': buyer.id,
             'partner_bank_id': (seller if move_type == 'out_invoice' else buyer).bank_ids[:1].id,
-            'invoice_payment_term_id': self.pay_terms_b.id,
+            'invoice_payment_term_id': invoice_kwargs.get('invoice_payment_term_id', self.pay_terms_b.id),
             'invoice_date': '2017-01-01',
             'date': '2017-01-01',
             'currency_id': self.currency_data['currency'].id,
