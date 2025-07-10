@@ -293,10 +293,12 @@ export class PosOrder extends Base {
                 orderlineIdx.push(line.preparationKey);
 
                 if (this.last_order_preparation_change.lines[line.preparationKey]) {
-                    this.last_order_preparation_change.lines[line.preparationKey]["quantity"] =
-                        line.getQuantity();
-                    this.last_order_preparation_change.lines[line.preparationKey]["note"] =
-                        line.getNote();
+                    this.last_order_preparation_change.lines[line.preparationKey] = {
+                        ...this.last_order_preparation_change.lines[line.preparationKey],
+                        quantity: line.getQuantity(),
+                        note: line.getNote(),
+                        customer_note: line.getCustomerNote(),
+                    };
                 } else {
                     this.last_order_preparation_change.lines[line.preparationKey] = {
                         attribute_value_ids: line.attribute_value_ids.map((a) => a.name),
@@ -307,6 +309,7 @@ export class PosOrder extends Base {
                         basic_name: line.getProduct().name,
                         display_name: line.getProduct().name,
                         note: line.getNote(),
+                        customer_note: line.getCustomerNote(),
                         quantity: line.getQuantity(),
                     };
                 }
