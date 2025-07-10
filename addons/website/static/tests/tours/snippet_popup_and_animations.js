@@ -5,6 +5,7 @@ import {
     clickOnSave,
     insertSnippet,
     registerWebsitePreviewTour,
+    changeOptionInPopover,
 } from "@website/js/tours/tour_utils";
 
 const snippets = [
@@ -27,10 +28,12 @@ const snippets = [
 
 const setOnScrollAnim = function () {
     return [
-        changeOption("WebsiteAnimate", 'we-select[data-is-animation-type-selection="true"] we-toggler'),
-        changeOption("WebsiteAnimate", 'we-button[data-animation-mode="onScroll"]'),
-        changeOption("WebsiteAnimate", 'we-select[data-name="animation_effect_opt"] we-toggler'),
-        changeOption("WebsiteAnimate", 'we-button[data-name="o_anim_slide_in_opt"]'),
+        // changeOption("WebsiteAnimate", 'we-select[data-is-animation-type-selection="true"] we-toggler'),
+        // changeOption("WebsiteAnimate", 'we-button[data-animation-mode="onScroll"]'),
+        // changeOption("WebsiteAnimate", 'we-select[data-name="animation_effect_opt"] we-toggler'),
+        // changeOption("WebsiteAnimate", 'we-button[data-name="o_anim_slide_in_opt"]'),
+        ...changeOptionInPopover("Card", "Animation", "On Scroll"),
+        ...changeOptionInPopover("Card", "Effect", "Slide"),
     ];
 };
 
@@ -101,7 +104,7 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Click on the s_three_columns snippet.",
-        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_three_columns"]',
+        trigger: ':iframe .o_add_snippets_preview [data-snippet-id="s_three_columns"]',
         run: "click",
     },
     clickOnElement("3rd columns", ":iframe .s_popup .s_three_columns .row > :last-child"),
@@ -144,8 +147,8 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup') i.fa-eye-slash",
     },
     clickOnElement("Last image of the 'Columns' snippet", ":iframe .s_three_columns .o_animate_on_scroll img"),
-    changeOption("WebsiteAnimate", 'we-toggler:contains("None")'),
-    changeOption("WebsiteAnimate", 'we-button[data-animation-mode="onHover"]'),
+    // TODO: SHSA  // NBY is on it On Hover option is missing. Continue from here.
+    ...changeOptionInPopover("Image", "Animation", "On Hover"),
     {
         trigger: ".snippet-option-WebsiteAnimate we-row:contains('Animation') we-select[data-is-animation-type-selection] we-toggler:contains('On Hover')",
     },
