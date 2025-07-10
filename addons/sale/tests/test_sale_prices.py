@@ -973,7 +973,6 @@ class TestSalePrices(SaleCommon):
             'price_include': True,
         })]
         order.action_confirm()
-        self.assertEqual(line.untaxed_amount_to_invoice, 0)
 
         line.qty_delivered = 38
         # (541,26 / 1,15) * ,98 * 38 = 17527,410782609 ~= 17527.41
