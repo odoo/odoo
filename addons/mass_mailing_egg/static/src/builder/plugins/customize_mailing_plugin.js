@@ -107,12 +107,22 @@ export class CustomizeMailingPlugin extends Plugin {
             if (currentValue === "" && defaultValue !== "") {
                 varRule.style.setProperty(variable, defaultValue);
             }
-            for (const selector of options.selectors) {
-                const rule = this.getRule(selector);
-                for (const property of options.properties) {
-                    const important = PRIORITY_STYLES[selector]?.has(property) ? "important" : "";
-                    rule.style.setProperty(property, `var(${variable})`, important);
-                }
+            this.refreshMailingVariableSelector(variable);
+        }
+    }
+
+    refreshMailingVariableSelector(variable) {
+        const options = CUSTOMIZE_MAILING_VARIABLES[variable];
+        const currentValue = this.getVariableValue(variable);
+        let value = "";
+        if (currentValue !== "") {
+            value = `var(${variable})`;
+        }
+        for (const selector of options.selectors) {
+            const rule = this.getRule(selector);
+            for (const property of options.properties) {
+                const important = PRIORITY_STYLES[selector]?.has(property) ? "important" : "";
+                rule.style.setProperty(property, value, important);
             }
         }
     }
@@ -154,7 +164,11 @@ export class CustomizeMailingPlugin extends Plugin {
     }
 
     setVariable(variable, value) {
-        return this.getRule(this.cssPrefix).style.setProperty(variable, value);
+        const currentValue = this.getVariableValue(variable);
+        this.getRule(this.cssPrefix).style.setProperty(variable, value);
+        if (Boolean(currentValue) !== Boolean(value)) {
+            this.refreshMailingVariableSelector(variable);
+        }
     }
 
     transformFontFamilySelector(selector) {

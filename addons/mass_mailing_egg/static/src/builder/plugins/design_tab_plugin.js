@@ -36,7 +36,7 @@ class DesignTabPlugin extends Plugin {
                 OPTION_POSITIONS.HEADINGS,
                 this.getDesignOptionBlock("design-headings", {
                     template: "mass_mailing_egg.DesignHeadingsOption",
-                    title: _t("Headings"),
+                    title: _t("Heading"),
                 })
             ),
             withSequence(
@@ -46,13 +46,13 @@ class DesignTabPlugin extends Plugin {
                     title: _t("Paragraph"),
                 })
             ),
-            // withSequence(
-            //     OPTION_POSITIONS.BUTTON,
-            //     this.getDesignOptionBlock("design-button", {
-            //         template: "mass_mailing_egg.DesignButtonOption",
-            //         title: _t("Button"),
-            //     })
-            // ),
+            withSequence(
+                OPTION_POSITIONS.BUTTON,
+                this.getDesignOptionBlock("design-button", {
+                    template: "mass_mailing_egg.DesignButtonOption",
+                    title: _t("Button"),
+                })
+            ),
             withSequence(
                 OPTION_POSITIONS.LINK,
                 this.getDesignOptionBlock("design-link", {
@@ -60,13 +60,13 @@ class DesignTabPlugin extends Plugin {
                     title: _t("Link"),
                 })
             ),
-            // withSequence(
-            //     OPTION_POSITIONS.SEPARATORS,
-            //     this.getDesignOptionBlock("design-separators", {
-            //         template: "mass_mailing_egg.DesignLinkOption",
-            //         title: _t("Link"),
-            //     })
-            // ),
+            withSequence(
+                OPTION_POSITIONS.SEPARATORS,
+                this.getDesignOptionBlock("design-separators", {
+                    template: "mass_mailing_egg.DesignSeparatorOption",
+                    title: _t("Separator"),
+                })
+            ),
         ],
     };
 

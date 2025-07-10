@@ -24,7 +24,6 @@ export class MassMailingBuilder extends Component {
         const mainEditorPluginsToRemove = [
             "PowerButtonsPlugin",
             "DoubleClickImagePreviewPlugin",
-            "SeparatorPlugin",
             "StarPlugin",
             "BannerPlugin",
             "MoveNodePlugin",

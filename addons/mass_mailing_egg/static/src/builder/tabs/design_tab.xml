@@ -70,7 +70,7 @@
 <t t-name="mass_mailing_egg.DesignTextOption">
     <BuilderContext action="'mass_mailing_egg.CustomizeMailingVariable'">
         <BuilderRow label="label">
-            <BuilderNumberInput actionParam="{ variable: `${prefix}font-size` }" unit="'px'" saveUnit="'px'"/>
+            <BuilderNumberInput actionParam="{ variable: `${prefix}font-size` }" unit="'px'" saveUnit="'px'" default="0"/>
             <BuilderColorPicker noTransparency="true" colorPrefix="'text-'" title.translate="Text Color" enabledTabs="['solid', 'custom']"
                 actionParam="{ variable: `${prefix}color` }"/>
         </BuilderRow>
@@ -86,21 +86,17 @@
 <t t-name="mass_mailing_egg.DesignGenericButtonOption">
     <BuilderContext action="'mass_mailing_egg.CustomizeMailingVariable'">
         <BuilderRow label="label">
-            variable: `${prefix}
-            <BuilderNumberInput actionParam="{ variable: `${prefix}font-size` }" unit="'px'" saveUnit="'px'"/>
+            <BuilderNumberInput actionParam="{ variable: `${prefix}font-size` }" unit="'px'" saveUnit="'px'" default="0"/>
             <BuilderColorPicker noTransparency="true" colorPrefix="'text-'" title.translate="Text Color" enabledTabs="['solid', 'custom']"
                 actionParam="{ variable: `${prefix}color` }"/>
             <BuilderColorPicker noTransparency="true" colorPrefix="'bg-'" title.translate="Background Color" enabledTabs="['solid', 'custom']"
                 actionParam="{ variable: `${prefix}background-color` }"/>
         </BuilderRow>
-        <BuilderRow label.translate="Padding ↕" level="1">
-            <BuilderNumberInput unit="'px'" saveUnit="'px'" actionParam="{ variable: `${prefix}padding-top` }"/>
-            <BuilderNumberInput unit="'px'" saveUnit="'px'" actionParam="{ variable: `${prefix}padding-bottom` }"/>
+        <BuilderRow label.translate="Padding" level="1">
+            <BuilderNumberInput title.translate="Y" unit="'px'" saveUnit="'px'" actionParam="{ variable: `${prefix}padding-y` }" default="0"/>
+            <BuilderNumberInput title.translate="X" unit="'px'" saveUnit="'px'" actionParam="{ variable: `${prefix}padding-x` }" default="0"/>
         </BuilderRow>
-        <BuilderRow label.translate="Padding ↔" level="1">
-            <BuilderNumberInput unit="'px'" saveUnit="'px'" actionParam="{ variable: `${prefix}padding-left` }"/>
-            <BuilderNumberInput unit="'px'" saveUnit="'px'" actionParam="{ variable: `${prefix}padding-right` }"/>
-        </BuilderRow>
+        <FontFamilyPicker action="'mass_mailing_egg.CustomizeMailingVariable'" actionParam="{ variable: `${prefix}font-family`}"/>
         <BuilderRow label.translate="Border" level="1">
             <BuilderNumberInput actionParam="{ variable: `${prefix}border-width` }" unit="'px'" saveUnit="'px'" min="0"
                 default="0" composable="true"/>
@@ -108,7 +104,7 @@
                 <BuilderSelectItem title.translate="Solid" actionValue="'solid'"><div class="o-hb-border-preview" style="border-style: solid;"/></BuilderSelectItem>
                 <BuilderSelectItem title.translate="Dashed" actionValue="'dashed'"><div class="o-hb-border-preview" style="border-style: dashed;"/></BuilderSelectItem>
                 <BuilderSelectItem title.translate="Dotted" actionValue="'dotted'"><div class="o-hb-border-preview" style="border-style: dotted;"/></BuilderSelectItem>
-                <BuilderSelectItem title.translate="Double" actionValue="'double'"><div class="o-hb-border-preview" style="border-style: double; border-left: none; border-right: none;"/></BuilderSelectItem>
+                <BuilderSelectItem title.translate="Double" actionValue="'double'"><div class="o-hb-border-preview" style="border-style: double;"/></BuilderSelectItem>
             </BuilderSelect>
             <BuilderColorPicker actionParam="{ variable: `${prefix}border-color` }"
                 colorPrefix="'border-'" noTransparency="true"
@@ -119,16 +115,36 @@
 </t>
 
 <t t-name="mass_mailing_egg.DesignButtonOption">
-    <t t-set="primary_selectors" t-value="['a.btn.btn-fill-primary', 'a.btn.btn-outline-primary', 'a.btn.btn-primary']"/>
-    <t t-set="secondary_selectors" t-value="['a.btn.btn-fill-secondary', 'a.btn.btn-outline-secondary', 'a.btn.btn-secondary']"/>
-
     <t t-call="mass_mailing_egg.DesignGenericButtonOption">
-        <t t-set="prefix" t-value="`--btn-primary`"/>
+        <t t-set="prefix" t-value="`--btn-primary-`"/>
         <t t-set="label" t-value="`Primary Button`"/>
     </t>
     <t t-call="mass_mailing_egg.DesignGenericButtonOption">
-        <t t-set="prefix" t-value="`--btn-secondary`"/>
+        <t t-set="prefix" t-value="`--btn-secondary-`"/>
         <t t-set="label" t-value="`Secondary Button`"/>
     </t>
+</t>
+
+<t t-name="mass_mailing_egg.DesignSeparatorOption">
+    <t t-set="prefix" t-value="`--separator-`"/>
+    <BuilderContext action="'mass_mailing_egg.CustomizeMailingVariable'">
+        <BuilderRow label.translate="Separators">
+            <BuilderNumberInput actionParam="{ variable: `${prefix}border-top-width` }" unit="'px'" saveUnit="'px'" min="0"
+                default="0" composable="true"/>
+            <BuilderSelect actionParam="{ variable: `${prefix}border-style` }">
+                <BuilderSelectItem title.translate="Solid" actionValue="'solid'"><div class="o-hb-border-preview" style="border-style: solid;"/></BuilderSelectItem>
+                <BuilderSelectItem title.translate="Dashed" actionValue="'dashed'"><div class="o-hb-border-preview" style="border-style: dashed;"/></BuilderSelectItem>
+                <BuilderSelectItem title.translate="Dotted" actionValue="'dotted'"><div class="o-hb-border-preview" style="border-style: dotted;"/></BuilderSelectItem>
+                <BuilderSelectItem title.translate="Double" actionValue="'double'"><div class="o-hb-border-preview" style="border-style: double;"/></BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderColorPicker actionParam="{ variable: `${prefix}border-color` }"
+                colorPrefix="'border-'" noTransparency="true"
+                enabledTabs="['solid', 'custom']"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Width" level="1">
+            <BuilderNumberInput title.translate="Width" unit="'%'" saveUnit="'%'" actionParam="{ variable: `${prefix}width` }" default="100"/>
+        </BuilderRow>
+    </BuilderContext>
 </t>
 </templates>

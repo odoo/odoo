@@ -10,11 +10,12 @@ function getProperties(propertyDescription) {
         case "padding-x":
             return ["padding-left", "padding-right"];
         default:
-            return [propertyDescription]
+            return [propertyDescription];
     }
 }
 
-function generateSimpleMailingVariables(object, prefix, selectors, properties) {
+function generateSimpleMailingVariables(prefix, selectors, properties) {
+    const object = {};
     for (const propertyDescription of properties) {
         object[`--${prefix}-${propertyDescription}`] = {
             properties: getProperties(propertyDescription),
@@ -43,36 +44,33 @@ const buttonProperties = [
     "border-style",
     "border-width",
     "border-color",
-]
+];
 
 export const CUSTOMIZE_MAILING_VARIABLES = Object.assign(
-    {
-        "--wrapper-background-color": {
-            properties: ["background-color"],
-            selectors: [".o_mail_wrapper_td > [data-snippet]"],
-            default: "transparent",
-        },
-    },
+    generateSimpleMailingVariables("wrapper", ["> [data-snippet]"], ["background-color"]),
     (() => {
-        const object = {};
+        const objects = [];
         for (const depth of [1, 2, 3]) {
             const prefix = `h${depth.toString()}`;
-            generateSimpleMailingVariables(object, prefix, [prefix], textProperties);
+            objects.push(generateSimpleMailingVariables(prefix, [prefix], textProperties));
         }
-        return object;
+        return Object.assign(...objects);
     })(),
-    generateSimpleMailingVariables({}, "text", ["p", "p > *", "li", "li > *"], textProperties),
-    generateSimpleMailingVariables({}, "link", ["a:not(.btn)", "a.btn.btn-link"], textProperties),
+    generateSimpleMailingVariables("text", ["p", "p > *", "li", "li > *"], textProperties),
+    generateSimpleMailingVariables("link", ["a:not(.btn)", "a.btn.btn-link"], textProperties),
     generateSimpleMailingVariables(
-        {},
         "btn-primary",
         ["a.btn.btn-fill-primary", "a.btn.btn-outline-primary", "a.btn.btn-primary"],
         buttonProperties
     ),
     generateSimpleMailingVariables(
-        {},
         "btn-secondary",
         ["a.btn.btn-fill-secondary", "a.btn.btn-outline-secondary", "a.btn.btn-secondary"],
         buttonProperties
+    ),
+    generateSimpleMailingVariables(
+        "separator",
+        ["hr"],
+        ["border-top-width", "border-style", "border-color", "width"]
     )
 );
