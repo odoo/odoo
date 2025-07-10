@@ -29,7 +29,7 @@ function createChatbotSteps(...stepMessages) {
                 },
                 {
                     trigger: ".modal textarea#message_0",
-                    run: () => waitFor(".modal textarea#message_0:value()"),
+                    run: () => waitFor(".modal textarea#message_0:empty"),
                 },
             ])
             .flat(),
