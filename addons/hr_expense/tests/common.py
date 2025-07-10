@@ -13,6 +13,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.user.group_ids += cls.env.ref('hr.group_hr_manager')
 
         cls.company_data_2 = cls.setup_other_company()
         cls.other_currency = cls.setup_other_currency('HRK')
