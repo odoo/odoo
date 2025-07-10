@@ -5,7 +5,7 @@ import pytz
 from calendar import monthrange
 from collections import defaultdict
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
+from dateutil.relativedelta import relativedelta, MO, SU
 from operator import itemgetter
 from pytz import timezone
 from random import randint
@@ -319,6 +319,55 @@ class HrAttendance(models.Model):
     def _update_overtime(self, employee_attendance_dates=None):
         if employee_attendance_dates is None:
             employee_attendance_dates = self._get_attendances_dates()
+        employee_attendance_dates = {
+            employee: attendance_dates
+            for employee, attendance_dates in employee_attendance_dates.items()
+            if not employee.is_fully_flexible
+        }
+        expanded_attendance_dates = dict(employee_attendance_dates)
+        # Collect week boundaries per flexible employee, then fetch all attendances in a single query
+        flexible_emp_data = {}
+        for emp in list(employee_attendance_dates.keys()):
+            calendar = emp.resource_calendar_id or emp.company_id.resource_calendar_id
+            if calendar and calendar.flexible_hours and calendar.full_time_required_hours:
+                employee_tz = pytz.timezone(emp._get_tz())
+                week_starts = set()
+                for attendance_tuple in employee_attendance_dates[emp]:
+                    attendance_date = attendance_tuple[1]
+                    week_starts.add(attendance_date + relativedelta(weekday=MO(-1)))
+
+                if week_starts:
+                    min_week_start = min(week_starts)
+                    max_week_start = max(week_starts)
+                    min_week_start_utc = employee_tz.localize(datetime.combine(min_week_start, datetime.min.time())).astimezone(pytz.utc).replace(tzinfo=None)
+                    max_week_end_utc = employee_tz.localize(datetime.combine(max_week_start + relativedelta(weekday=SU(1)), datetime.max.time())).astimezone(pytz.utc).replace(tzinfo=None)
+                    flexible_emp_data[emp] = {
+                        'week_starts': week_starts,
+                        'min_utc': min_week_start_utc,
+                        'max_utc': max_week_end_utc,
+                    }
+
+        if flexible_emp_data:
+            att_groups = self.env['hr.attendance']._read_group(
+                domain=[
+                    ('employee_id', 'in', [emp.id for emp in flexible_emp_data]),
+                    ('check_in', '>=', min(d['min_utc'] for d in flexible_emp_data.values())),
+                    ('check_in', '<=', max(d['max_utc'] for d in flexible_emp_data.values())),
+                ],
+                groupby=['employee_id'],
+                aggregates=['id:recordset'],
+            )
+            att_by_emp = dict(att_groups)
+            for emp, emp_data in flexible_emp_data.items():
+                week_dates_to_add = set()
+                for att in att_by_emp.get(emp, self.browse()):
+                    day_start_tuple = att._get_day_start_and_day(emp, att.check_in)
+                    week_start = day_start_tuple[1] + relativedelta(weekday=MO(-1))
+                    if week_start in emp_data['week_starts']:
+                        week_dates_to_add.add(day_start_tuple)
+                expanded_attendance_dates[emp] = expanded_attendance_dates.get(emp, set()) | week_dates_to_add
+
+        employee_attendance_dates = expanded_attendance_dates
 
         overtime_to_unlink = self.env['hr.attendance.overtime']
         overtime_vals_list = []
@@ -363,7 +412,14 @@ class HrAttendance(models.Model):
             company_threshold = emp.company_id.overtime_company_threshold / 60.0
             employee_threshold = emp.company_id.overtime_employee_threshold / 60.0
 
-            for day_data in attendance_dates:
+            is_flexible = bool(calendar and calendar.flexible_hours)
+            has_weekly_cap = bool(calendar and calendar.full_time_required_hours)
+            is_weekly_flexible = is_flexible and has_weekly_cap
+            weekly_limit = calendar.full_time_required_hours if is_weekly_flexible else 0.0
+
+            weekly_expected_hours = defaultdict(float)
+
+            for day_data in sorted(attendance_dates, key=lambda x: x[1]):
                 attendance_date = day_data[1]
                 attendances = attendances_per_day.get(attendance_date, self.browse())
                 unfinished_shifts = attendances.filtered(lambda a: not a.check_out)
@@ -372,17 +428,34 @@ class HrAttendance(models.Model):
                 # Overtime is not counted if any shift is not closed or if there are no attendances for that day,
                 # this could happen when deleting attendances.
 
-                # No overtime computed for fully flexible employees
-                if emp.is_fully_flexible:
-                    continue
-
                 if not unfinished_shifts and attendances:
-                    # The employee usually doesn't work on that day
-                    if not working_times[attendance_date]:
+                    if is_weekly_flexible:
+                        # For flexible schedules with weekly limits, calculate overtime based on weekly cap
+                        week_key = attendance_date + relativedelta(weekday=MO(-1))
+                        expected_hours_so_far_this_week = weekly_expected_hours[week_key]
+                        hours_today = sum(attendances.mapped('worked_hours'))
+
+                        # Calculate expected hours for today based on:
+                        # 1. hours_per_day from calendar
+                        # 2. remaining weekly hours allowed - weekly cap based on expected hours
+                        # Expected is the minimum of these two (what they should work, capped by weekly limit)
+                        hours_per_day = calendar.hours_per_day or 0.0
+                        hours_remaining_this_week = max(0.0, weekly_limit - expected_hours_so_far_this_week)
+                        expected_hours_today = min(hours_per_day, hours_remaining_this_week)
+                        weekly_expected_hours[week_key] = expected_hours_so_far_this_week + expected_hours_today
+                        overtime_duration = hours_today - expected_hours_today
+                        overtime_duration_real = overtime_duration
+                    # For flexible schedules without weekly limits, calculate based on hours_per_day
+                    elif is_flexible:
+                        hours_today = sum(attendances.mapped('worked_hours'))
+                        hours_per_day = calendar.hours_per_day or 8.0
+                        overtime_duration = hours_today - hours_per_day
+                        overtime_duration_real = overtime_duration
+                    # For non-flexible schedules: check if it's a weekend/non-working day
+                    elif not working_times[attendance_date]:
                         # User does not have any resource_calendar_attendance for that day (week-end for example)
                         overtime_duration = sum(attendances.mapped('worked_hours'))
                         overtime_duration_real = overtime_duration
-                    # The employee usually work on that day
                     else:
                         # Count time before, during and after 'working hours'
                         pre_work_time, work_duration, post_work_time, planned_work_duration = attendances._get_pre_post_work_time(emp, working_times, attendance_date)
