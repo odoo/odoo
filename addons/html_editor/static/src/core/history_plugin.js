@@ -1263,6 +1263,9 @@ export class HistoryPlugin extends Plugin {
      *        of other mutations
      */
     applyMutations(mutations, { forNewStep = false, reverse } = {}) {
+        if (forNewStep) {
+            this.fixClassListMutationsForNewStep(mutations);
+        }
         for (const mutation of mutations) {
             switch (mutation.type) {
                 case "custom": {
@@ -1277,7 +1280,7 @@ export class HistoryPlugin extends Plugin {
                     break;
                 }
                 case "classList": {
-                    const node = this.idToNodeMap.get(mutation.id);
+                    const node = this.nodeMap.getNode(mutation.id);
                     if (node) {
                         toggleClass(node, mutation.className, mutation.value);
                     }
@@ -1312,6 +1315,38 @@ export class HistoryPlugin extends Plugin {
                     break;
                 }
             }
+        }
+    }
+
+    /**
+     * When applying mutations for a new step, we expect them to produce
+     * observable mutations, which will then be stored in a new step. However,
+     * there are situations where applying a classList mutation would not
+     * produce an observable mutation:
+     * - adding a class that is already present
+     * - removing a class that is already absent
+     * These scenarios might happen due to the class having been already added
+     * or removed by a previous unobserved mutation. We want, nevertheless to
+     * produce the observable mutation of adding/removing this class, as this
+     * does correspond to a state change in observable history and should be
+     * included in the new step. In order to produce such observable mutations,
+     * we set the dom state to the one that would produce the desired result.
+     * This is equivalent to restoring the dom to the observed state in recorded
+     * history before applying a mutation, that is, oldValue (as oldValue is
+     * always !value for staged classList records).
+     *
+     * @param { HistoryMutation[] } mutations
+     */
+    fixClassListMutationsForNewStep(mutations) {
+        // Mutations that when applied would not produce observable classList mutations
+        const nonObservableClassMutations = mutations
+            .filter(({ type }) => type === "classList")
+            .map((mutation) => ({ ...mutation, node: this.nodeMap.getNode(mutation.id) }))
+            .filter(({ node, className, value }) => value === node?.classList.contains(className));
+        if (nonObservableClassMutations.length) {
+            const setToOldValue = ({ node, className, oldValue }) =>
+                toggleClass(node, className, oldValue);
+            this.withObserverOff(() => nonObservableClassMutations.forEach(setToOldValue));
         }
     }
 
