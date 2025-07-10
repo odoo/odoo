@@ -49,17 +49,13 @@ export function getCrudMethodsExamples(model) {
         create: {
             responseCode: `true`,
             request: {
-                kwargs: {
-                    vals_list: [getCreateDict(model)],
-                },
+                vals_list: [getCreateDict(model)],
             },
         },
         read: {
             request: {
                 ids: [0, 1],
-                kwargs: {
-                    fields: ["display_name", "name", "create_date"],
-                },
+                fields: ["display_name", "name", "create_date"],
             },
         },
         search: {
@@ -69,27 +65,21 @@ export function getCrudMethodsExamples(model) {
     2
 ]`,
             request: {
-                kwargs: {
-                    domain: [["display_name", "ilike", "a%"]],
-                },
+                domain: [["display_name", "ilike", "a%"]],
             },
         },
         search_count: {
             responseCode: `10`,
             request: {
-                kwargs: {
-                    domain: [["display_name", "ilike", "a%"]],
-                },
+                domain: [["display_name", "ilike", "a%"]],
             },
         },
         search_read: {
             responseCode: `10`,
             request: {
-                kwargs: {
-                    domain: [["display_name", "ilike", "a%"]],
-                    fields: ["display_name"],
-                    limit: 20,
-                },
+                domain: [["display_name", "ilike", "a%"]],
+                fields: ["display_name"],
+                limit: 20,
             },
         },
         unlink: {
@@ -102,18 +92,14 @@ export function getCrudMethodsExamples(model) {
             responseCode: `true`,
             request: {
                 ids: [0],
-                kwargs: {
-                    values: {
-                        display_name: "Dope New Name",
-                    },
+                vals: {
+                    display_name: "Dope New Name",
                 },
             },
         },
         name_search: {
             request: {
-                kwargs: {
-                    domain: [["display_name", "ilike", "a%"]],
-                },
+                domain: [["display_name", "ilike", "a%"]],
             },
             responseCode: `\
 [
@@ -130,11 +116,9 @@ export function getCrudMethodsExamples(model) {
         read_group: {
             name: "read_group",
             request: {
-                kwargs: {
-                    fields: ["id", "display_name", "write_date"],
-                    groupby: "write_date",
-                    domain: [["display_name", "ilike", "a%"]],
-                },
+                fields: ["id", "display_name", "write_date"],
+                groupby: "write_date",
+                domain: [["display_name", "ilike", "a%"]],
             },
         },
     };
