@@ -85,6 +85,7 @@ class AccountMove(models.Model):
     l10n_in_withholding_ref_payment_id = fields.Many2one(
         comodel_name='account.payment',
         string="Indian TDS Ref Payment",
+        index='btree_not_null',
         readonly=True,
         copy=False,
         help="Reference Payment for withholding entry",
