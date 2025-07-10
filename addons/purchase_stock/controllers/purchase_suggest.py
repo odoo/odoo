@@ -59,7 +59,7 @@ class PurchaseStockSuggestController(http.Controller):
             'multiplier': wiz.multiplier,
         }
 
-    # TODO Finish migration
+    # TODO Finish migration to purchase order
     # @http.route("/purchase_stock/action_purchase_suggest", type="jsonrpc", auth="user")
     # def action_purchase_order_suggest(self, po_id, product_context):
     #     """ Auto-fill the Purchase Order with vendor's product regarding the

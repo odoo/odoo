@@ -110,7 +110,7 @@ class PurchaseOrder(models.Model):
     def action_add_from_catalog(self):
         # Replaces the product's kanban view by the purchase specific one.
         action = super().action_add_from_catalog()
-        kanban_view_id = self.env.ref('purchase_stock.product_view_kanban_catalog_purchase_only').id
+        kanban_view_id = self.env.ref('purchase_stock.product_view_kanban_catalog_purchase_stock_only').id
         action['views'][0] = (kanban_view_id, 'kanban')
         return action
 
@@ -370,3 +370,9 @@ class PurchaseOrder(models.Model):
 
     def _is_display_stock_in_catalog(self):
         return True
+
+    def _get_product_price_and_data(self, product):
+        """ Fetch the product's data used by the purchase's catalog."""
+        res = super()._get_product_price_and_data(product)
+        res["suggested_qty"] = product.suggest_quantity
+        return res
