@@ -4,7 +4,7 @@ import { Component, useExternalListener, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 class PasswordMeter extends Component {
-    static template = "auth_password_policy_signup.PasswordMeter";
+    static template = "auth_password_policy.PasswordMeter";
     static components = { Meter };
     static props = {
         selector: String,
