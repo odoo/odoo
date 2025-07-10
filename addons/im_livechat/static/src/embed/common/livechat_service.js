@@ -122,7 +122,7 @@ export class LivechatService {
                 previous_operator_id: expirableStorage.getItem(OPERATOR_STORAGE_KEY),
                 persisted: persist,
             },
-            { shadow: true }
+            { silent: true }
         );
         if (!channel_id) {
             this.notificationService.add(_t("No available collaborator, please try again later."));

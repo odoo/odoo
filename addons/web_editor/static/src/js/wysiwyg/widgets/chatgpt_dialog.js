@@ -108,7 +108,7 @@ export class ChatGPTDialog extends Component {
         this.pendingRpcPromise = rpc('/web_editor/generate_text', {
             prompt,
             conversation_history: this.state.conversationHistory,
-        }, { shadow: true });
+        }, { silent: true });
         return this.pendingRpcPromise
             .then(content => protectedCallback(content))
             .catch(error => protectedCallback(_t(error.data?.message || error.message), true));
