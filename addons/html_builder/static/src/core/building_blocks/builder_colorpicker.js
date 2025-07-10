@@ -59,9 +59,9 @@ export function useColorPickerBuilderComponent() {
     }
 
     let preventNextPreview = false;
-    function onApply(colorValue) {
+    async function onApply(colorValue) {
         preventNextPreview = false;
-        callOperation(applyOperation.commit, { userInputValue: getColor(colorValue) });
+        await callOperation(applyOperation.commit, { userInputValue: getColor(colorValue) });
     }
     let onPreview = (colorValue) => {
         // Avoid previewing the same color twice. It won't block previewing

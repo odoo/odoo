@@ -474,12 +474,12 @@ export function useClickableBuilderComponent() {
 
     let preventNextPreview = false;
     const operation = {
-        commit: () => {
+        commit: async () => {
             preventNextPreview = false;
             if (reload) {
-                callOperation(operationWithReload);
+                await callOperation(operationWithReload);
             } else {
-                callOperation(applyOperation.commit, {
+                await callOperation(applyOperation.commit, {
                     operationParams: {
                         withLoadingEffect: withLoadingEffect,
                     },
@@ -661,18 +661,27 @@ export function useInputBuilderComponent({
         };
     }
 
-    function commit(userInputValue) {
+    async function commit(userInputValue) {
         if (defaultValue !== undefined) {
             userInputValue ||= formatRawValue(defaultValue);
         }
         const rawValue = parseDisplayValue(userInputValue);
         if (reload) {
-            callOperation(operationWithReload, { userInputValue: rawValue });
+            await callOperation(operationWithReload, { userInputValue: rawValue });
         } else {
-            callOperation(applyOperation.commit, {
+            await callOperation(applyOperation.commit, {
                 userInputValue: rawValue,
                 withLoadingEffect: withLoadingEffect,
             });
+        }
+
+        if (
+            !rawValue ||
+            !state.value ||
+            !defaultValue ||
+            (rawValue === defaultValue && rawValue === state.value)
+        ) {
+            state.value = rawValue;
         }
         // If the parsed value is not equivalent to the user input, we want to
         // normalize the displayed value. It is useful in cases of invalid
@@ -889,7 +898,7 @@ export function getAllActionsAndOperations(comp) {
         const isPreviewing = !!params.preview;
         const actionsSpecs = getActionsSpecs(getAllActions(), params.userInputValue);
 
-        comp.env.editor.shared.operation.next(() => fn(actionsSpecs, isPreviewing), {
+        return comp.env.editor.shared.operation.next(() => fn(actionsSpecs, isPreviewing), {
             load: async () =>
                 Promise.all(
                     actionsSpecs.map(async (applySpec) => {
