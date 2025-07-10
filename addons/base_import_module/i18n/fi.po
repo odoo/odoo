@@ -29,8 +29,8 @@ msgid ""
 "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
 msgstr ""
 "\n"
-"Saatat tarvita Enterprise-version datamoduulin asentamiseen. Lisätietoja on osoitteessa https://www.odoo.com/pricing-plan.\n"
-"Jos tarvitset Website-teemoja, ne voi ladata osoitteesta https://github.com/odoo/design-themes.\n"
+"Saatat tarvita Yritys-version asentaaksesi datamoduulin. Lisätietoja on osoitteessa: https://www.odoo.com/pricing-plan.\n"
+"Jos tarvitset Verkkosivun teemoja, niitä voi ladata osoitteesta: https://github.com/odoo/design-themes.\n"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
@@ -43,7 +43,7 @@ msgstr "Aktivoi"
 #: code:addons/base_import_module/models/ir_module.py:0
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_module_filter_apps_inherit
 msgid "Apps"
-msgstr "Sovelluskauppa"
+msgstr "Sovellukset"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -60,19 +60,23 @@ msgstr "Sulje"
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid ""
 "Connection to %(url)s failed, the module %(module)s cannot be downloaded."
-msgstr "Yhteys %(url)s epäonnistui, moduulia %(module)s ei voida ladata."
+msgstr ""
+"Yhteyden muodostominen kohteen %(url)s kanssa epäonnistui; %(module)s ei "
+"voida ladata."
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Connection to %s failed The list of industry modules cannot be fetched"
-msgstr "Yhteys %s epäonnistui Teollisuusmoduulien luetteloa ei voida hakea"
+msgstr ""
+"Yhteyden muodostominen kohteen %s kanssa epäonnistui. Teollisuusmoduulien "
+"luetteloa ei voida noutaa"
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 msgid "Could not select database '%s'"
-msgstr "Ei voi valita tietokantaa '%s'"
+msgstr "Ei voitu valita tietokantaa '%s'"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_uid
@@ -101,7 +105,7 @@ msgid ""
 " %(error_message)s \n"
 "\n"
 msgstr ""
-"Virhe tuotaessa moduulia '%(module)s'.\n"
+"Virhe, kun tuotiin moduulia '%(module)s'.\n"
 "\n"
 " %(error_message)s\n"
 "\n"
@@ -115,15 +119,15 @@ msgstr "Tiedoston '%s' koko ylittää sallitun maksimikoon"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__force
 msgid "Force init"
-msgstr "Pakota alustus"
+msgstr "Pakota init"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module__force
 msgid ""
 "Force init mode even if installed. (will update `noupdate='1'` records)"
 msgstr ""
-"Pakota alustus vaikka moduuli olisi asennettuna. (päivittää myös "
-"noupdate=\"1\"-tietueet)"
+"Pakota init-tila vaikka moduuli olisi asennettu. (päivittää myös "
+"noupdate=\"1\" -kirjaukset)"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
@@ -131,7 +135,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__id
 #: model:ir.model.fields,field_description:base_import_module.field_ir_ui_view__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__import_message
@@ -189,7 +193,7 @@ msgstr "Viimeksi päivitetty"
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Load demo data"
-msgstr "Lataa Demodata"
+msgstr "Lataa demotiedot"
 
 #. module: base_import_module
 #. odoo-python
@@ -198,7 +202,7 @@ msgid ""
 "Load demo data to test the industry's features with sample records. Do not "
 "load them if this is your production database."
 msgstr ""
-"Lataa demotietoja testataksesi alan ominaisuuksia esimerkkitietueiden "
+"Lataa demotietoja testataksesi toimialan ominaisuuksia esimerkkikirjausten "
 "avulla. Älä lataa niitä, jos tämä on tuotantotietokantasi."
 
 #. module: base_import_module
@@ -219,7 +223,7 @@ msgstr "Moduulin tyyppi"
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_base_module_uninstall
 msgid "Module Uninstall"
-msgstr "Moduulin poisto"
+msgstr "Moduulin poistaminen"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -265,7 +269,7 @@ msgstr "Vain pääkäyttäjä pystyy lataamaan modulin"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Only zip files are supported."
-msgstr "Vain .zip-tiedostot ovat tuettuja."
+msgstr "Vain .zip-tiedostoja tuetaan."
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__state
@@ -285,8 +289,8 @@ msgid ""
 "The installation of the data module would fail as the following dependencies"
 " can't be found in the addons-path:\n"
 msgstr ""
-"Datamoduulin asennus epäonnistuu, koska seuraavia riippuvuuksia ei löydy "
-"addons-polusta:\n"
+"Datamoduulin asennus epäonnistuisi, koska seuraavia riippuvuuksia ei löydy "
+"addons-polusta (lisäosat):\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -294,7 +298,7 @@ msgstr ""
 msgid ""
 "The list of industry applications cannot be fetched. Please try again later"
 msgstr ""
-"Luetteloa toimialan sovelluksista ei voida hakea. Yritä myöhemmin uudelleen"
+"Luetteloa toimialasovelluksista ei voida hakea. Yritä myöhemmin uudelleen"
 
 #. module: base_import_module
 #. odoo-python
@@ -306,7 +310,7 @@ msgstr "Moduulia %s ei voi ladata"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Unknown module dependencies:"
-msgstr "Tuntemattomat moduuliriippuvuudet:"
+msgstr "Tuntemattomat moduulien riippuvuudet:"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
@@ -327,4 +331,4 @@ msgstr "valmis"
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__base_import_module__state__init
 msgid "init"
-msgstr "alustus"
+msgstr "init"

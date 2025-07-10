@@ -53,7 +53,7 @@ msgstr "<span>Toimituspaino: </span>"
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
-msgstr "<strong>Huolitsija</strong>"
+msgstr "<strong>Kuljetusyritys</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
@@ -119,17 +119,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_id
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier"
-msgstr "Huolitsija"
+msgstr "Kuljetusyritys"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__shipper_package_code
 msgid "Carrier Code"
-msgstr "Huolitsijan koodi"
+msgstr "Kuljetusyrityksen koodi"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
-msgstr "Huolitsijan nimi"
+msgstr "Kuljetusyrityksen nimi"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__company_id
@@ -155,7 +155,7 @@ msgstr "Luotu"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
-msgstr "Ohjattu toimittajan valinta"
+msgstr "Ohjattu kuljetusyrityksen valinta"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
@@ -223,7 +223,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Exception occurred with respect to carrier on the transfer"
-msgstr "Tapahtui poikkeus, joka liittyy kuljetukseen"
+msgstr "Tapahtui poikkeus, joka liittyy kuljetusyritykseen"
 
 #. module: stock_delivery
 #. odoo-python
@@ -300,7 +300,7 @@ msgstr "Siirtorivi"
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
-msgstr "Ei huolitsijan integrointia"
+msgstr "Ei kuljetusyrityksen integraatiota"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
@@ -419,7 +419,7 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s"
 msgstr ""
-"Lähetys lähetetty rahdinkuljettajalle %(carrier_name)s toimitettavaksi "
+"Lähetys lähetetty kuljetusyritykselle %(carrier_name)s toimitettavaksi "
 "seurantanumerolla %(ref)s"
 
 #. module: stock_delivery
@@ -596,9 +596,9 @@ msgid ""
 "carriers (i.e. check that all of their transfers have a carrier assigned and"
 " are using the same carrier)."
 msgstr ""
-"Tuotteita ei voi pakata samaan pakettiin, jos niillä on eri kuljetusliikkeet"
-" (tarkista, että kaikille niiden siirroille on määritetty kuljetusliike ja "
-"että ne käyttävät samaa kuljetusliikettä)."
+"Tuotteita ei voi pakata samaan pakettiin, jos niillä on eri "
+"kuljetusyritykset (tarkista, että kaikille niiden siirroille on määritetty "
+"kuljetusyritys ja että ne käyttävät samaa kuljetusyritystä)."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form

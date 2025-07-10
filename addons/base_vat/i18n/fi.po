@@ -88,7 +88,7 @@ msgstr "Yritykset"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
-msgstr "Asetukset"
+msgstr "Kokoonpanoasetukset"
 
 #. module: base_vat
 #. odoo-python
@@ -97,7 +97,8 @@ msgid ""
 "Connection with the VIES server failed. The VAT number %s could not be "
 "validated."
 msgstr ""
-"Yhteys VIES-palvelimeen epäonnistui. ALV-numeroa %s ei voitu vahvistaa."
+"Yhteyden muodostaminen VIES-palvelimeen epäonnistui. ALV-numeroa %s ei voitu"
+" vahvistaa."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -172,7 +173,7 @@ msgid ""
 "depend upon the output of the verification by the European VIES Service."
 msgstr ""
 "Jos valittu, sovellettava oletusarvoinen verovelvollisuusasema riippuu "
-"eurooppalaisen VIES-palvelun suorittaman tarkastuksen tuloksesta."
+"Euroopan VIES-palvelun suorittaman tarkastuksen tuloksesta."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
@@ -204,8 +205,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
-"ALV-tunnuksen %(vat_label)s numero [%(wrong_vat)s] ei näytä kelvolliselta. \n"
-"Huomaa: odotettu muotoilu on %(expected_format)s"
+"ALV-tunnuksen %(vat_label)s numero [%(wrong_vat)s] ei näytä olevan kelvollinen. \n"
+"Huomaa: odotettu muoto on %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
@@ -214,8 +215,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
-"ALV-tunnuksen %(vat_label)s numero [%(wrong_vat)s] tietueelle %(record_label)s ei näytä kelvolliselta. \n"
-"Huomaa: odotettu muotoilu on %(expected_format)s"
+"ALV-tunnuksen %(vat_label)s numero [%(wrong_vat)s] kirjaukselle %(record_label)s ei näytä olevan kelvollinen. \n"
+"Huomaa: odotettu muoto on %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
@@ -230,8 +231,8 @@ msgid ""
 "The country detected for this foreign VAT number does not match any of the "
 "countries composing the country group set on this fiscal position."
 msgstr ""
-"Tämän ulkomaisen ALV-numeron kohdalla havaittu maa ei vastaa mitään maata, "
-"joka muodostaa tämän verovelvollisuusaseman maaryhmän."
+"Tähän ulkomaiseen ALV-numeroon liittyvä maa ei vastaa mitään maata, joka on "
+"tämän verovelvollisuusaseman maaryhmässä."
 
 #. module: base_vat
 #. odoo-python
@@ -240,8 +241,8 @@ msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a"
 " country to the fiscal position or set a country group"
 msgstr ""
-"Ulkomaisen alv-numeron maata ei voitu havaita. Määritä maa "
-"verovelvollisuusasemaan tai aseta maaryhmä"
+"Ulkomaisen ALV-numeron maata ei havaittu. Määritä maa "
+"verovelvollisuusasemalle tai aseta maaryhmä"
 
 #. module: base_vat
 #. odoo-python
@@ -263,18 +264,18 @@ msgstr "ALV"
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr "Varmista ALV-numerot"
+msgstr "Vahvista ALV-numerot"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr "Varmista ALV-numerot eurooppalaisen VIES-palvelun avulla"
+msgstr "Vahvista ALV-numerot Euroopan VIES-palvelun avulla"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
-msgstr "VIES-palvelun ALV-tarkastettavaksi"
+msgstr "VIES ALV tarkastettava"
 
 #. module: base_vat
 #. odoo-python
@@ -288,7 +289,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "either 11 digits for CPF or 14 digits for CNPJ"
-msgstr "joko 11 numeroa CPF:n osalta tai 14 numeroa CNPJ:n osalta"
+msgstr "joko 11 numeroa, kun CPF, tai 14 numeroa, kun CNPJ"
 
 #. module: base_vat
 #. odoo-python
