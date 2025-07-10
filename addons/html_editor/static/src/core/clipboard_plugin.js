@@ -456,10 +456,7 @@ export class ClipboardPlugin extends Plugin {
             if (
                 (isParagraphRelatedElement(block) ||
                     this.dependencies.baseContainer.isCandidateForBaseContainer(block)) &&
-                // TODO specific exception for "PRE" to keep everything inside one PRE.
-                // Consider removing this if PRE is to be used as a paragraph.
-                block.nodeName !== "PRE" &&
-                !block.closest("li")
+                block.nodeName !== "PRE"
             ) {
                 // A linebreak at the beginning of a block is an empty line.
                 const isEmptyLine = block.firstChild.nodeName === "BR";
@@ -493,8 +490,23 @@ export class ClipboardPlugin extends Plugin {
             } else {
                 let childrenNodes;
                 if (node.nodeName === "DIV") {
-                    if (this.dependencies.baseContainer.isCandidateForBaseContainer(node)) {
-                        childrenNodes = childNodes(node);
+                    if (!node.hasChildNodes()) {
+                        node.remove();
+                        return;
+                    } else if (this.dependencies.baseContainer.isCandidateForBaseContainer(node)) {
+                        const whiteSpace = node.style?.whiteSpace;
+                        if (whiteSpace && !["normal", "nowrap"].includes(whiteSpace)) {
+                            node.innerHTML = node.innerHTML.replace(/\n/g, "<br>");
+                        }
+                        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                        const dir = node.getAttribute("dir");
+                        if (dir) {
+                            baseContainer.setAttribute("dir", dir);
+                        }
+                        baseContainer.append(...node.childNodes);
+
+                        node.replaceWith(baseContainer);
+                        childrenNodes = childNodes(baseContainer);
                     } else {
                         childrenNodes = unwrapContents(node);
                     }

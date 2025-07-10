@@ -58,3 +58,4 @@ from . import test_account_merge_wizard
 from . import test_account_move_attachment
 from . import test_account_move_auto_post
 from . import test_dict_to_xml
+from . import test_duplicate_res_partner_bank

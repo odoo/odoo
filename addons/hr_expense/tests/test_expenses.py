@@ -7,7 +7,7 @@ from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
-from odoo.exceptions import RedirectWarning, UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged, Form
 from odoo.tools.misc import format_date
 
@@ -1221,24 +1221,6 @@ class TestExpenses(TestExpenseCommon):
             ).unlink()
             assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
 
-    def test_expense_sheet_with_employee_of_no_work_email(self):
-        """
-        Should raise a RedirectWarning when the selected employee in the sheet doesn't have a work email.
-        """
-        # Create two employees with no work email
-        employee = self.env["hr.employee"].create([
-            {
-                'name': "Test Employee1"
-            },
-        ])
-        # Create an expense with the above created employees
-        expense = self.create_expense({'employee_id': employee.id})
-        sheet = expense._create_sheets_from_expense()
-
-        sheet.action_submit_sheet()
-        with self.assertRaises(RedirectWarning):
-            sheet.action_approve_expense_sheets()
-
     def test_create_report_name(self):
         """
             When an expense sheet is created from one or more expense, the report name is generated through the expense name or date.
@@ -1827,3 +1809,54 @@ class TestExpenses(TestExpenseCommon):
             {'balance': 4000.0, 'name': 'expense_employee: Test expense line', 'quantity': 5},
             {'balance': -4000.0, 'name': 'expense_employee: Test expense line', 'quantity': 1},
         ])
+
+    def test_expense_sheet_journal_id(self):
+        """
+        Ensure the journal_id is set to the one defined on the payment method line
+        when adding an expense line which uses the 'Company Account' payment method
+        and set back to the employee journal when using the 'Own Account' payment method.
+        """
+
+        expense_paid_by_company = self.env['hr.expense'].create({
+            'employee_id': self.expense_employee.id,
+            'name': 'Company expense',
+            'payment_mode': 'company_account',
+            'product_id': self.product_a.id,
+            'quantity': 1,
+        })
+
+        expense_paid_by_employee = self.env['hr.expense'].create({
+            'employee_id': self.expense_employee.id,
+            'name': 'Employee expense',
+            'payment_mode': 'own_account',
+            'product_id': self.product_a.id,
+            'quantity': 1,
+        })
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'employee_id': self.expense_employee.id,
+            'expense_line_ids': [],
+            'name': 'Expense for John Smith',
+        })
+
+        self.assertEqual(
+            expense_sheet.journal_id,
+            expense_sheet.employee_journal_id,
+            "The journal_id should be set to the employee journal when no expense line is set",
+        )
+
+        expense_sheet.expense_line_ids = expense_paid_by_company.ids
+
+        self.assertEqual(
+            expense_sheet.journal_id,
+            expense_sheet.payment_method_line_id.journal_id,
+            "The journal_id should be set to the one defined on the payment method line when using the 'Company Account' payment method",
+        )
+
+        expense_sheet.expense_line_ids = expense_paid_by_employee.ids
+
+        self.assertEqual(
+            expense_sheet.journal_id,
+            expense_sheet.employee_journal_id,
+            "The journal_id should be set back to the employee journal when using the 'Own Account' payment method",
+        )

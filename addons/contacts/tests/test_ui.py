@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from lxml import etree
 
 import odoo.tests
 
@@ -31,3 +32,20 @@ class TestUi(odoo.tests.HttpCase):
         self.assertEqual(self.env['res.partner'].with_context(**action_context).new().company_type, "company")
 
         self.start_tour("/odoo", 'debug_menu_set_defaults', login="admin")
+
+    def test_vat_label_string(self):
+        """ Test changing the vat_label field of the user company_id.
+            It be immediately reflected on partners views.
+        """
+        partner = self.env['res.partner'].create({'name': 'Jean'})
+        # call get view to warm the cache
+        partner.get_view()
+
+        self.env.user.company_id.country_id.vat_label = "TVA"
+        view = partner.get_view()
+
+        arch = etree.fromstring(view['arch'])
+        for node in arch.iterfind(".//field[@name='vat']"):
+            self.assertEqual(node.get("string"), 'TVA')
+        for node in arch.iterfind(".//label[@for='vat']"):
+            self.assertEqual(node.get("string"), 'TVA')

@@ -184,47 +184,72 @@ class TestCalendar(SavepointCaseWithUserDemo):
     def test_activity_event_multiple_meetings(self):
         # Creating multiple meetings from an activity creates additional activities
         # ensure meeting activity type exists
-        meeting_act_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
-        if not meeting_act_type:
-            meeting_act_type = self.env['mail.activity.type'].create({
-                'name': 'Meeting Test',
-                'category': 'meeting',
-            })
+        meeting_act_type = self.env.ref('mail.mail_activity_data_meeting')
 
         # have a test model inheriting from activities
         test_record = self.env['res.partner'].create({
             'name': 'Test',
         })
 
-        activity_id = self.env['mail.activity'].create({
-            'summary': 'Meeting with partner',
+        activity_1 = self.env['mail.activity'].create({
+            'summary': 'Meeting 1 with partner',
             'activity_type_id': meeting_act_type.id,
             'res_model_id': self.env['ir.model']._get_id('res.partner'),
             'res_id': test_record.id,
         })
 
-        calendar_action = activity_id.with_context(default_res_model='res.partner', default_res_id=test_record.id).action_create_calendar_event()
-        event_1 = self.env['calendar.event'].with_context(calendar_action['context']).create({
+        # default usage in successive create
+        event_1_1 = self.env['calendar.event'].with_context(default_activity_ids=[(6, 0, activity_1.ids)]).create({
             'name': 'Meeting 1',
             'start': datetime(2025, 3, 10, 17),
             'stop': datetime(2025, 3, 10, 22),
         })
-
-        self.assertEqual(event_1.activity_ids, activity_id)
-
-        total_activities = self.env['mail.activity'].search_count(domain=[])
-
-        event_2 = self.env['calendar.event'].with_context(calendar_action['context']).create({
+        self.assertEqual(event_1_1.activity_ids, activity_1)
+        self.assertEqual(activity_1.calendar_event_id, event_1_1)
+        self.assertEqual(activity_1.date_deadline, date(2025, 3, 10))
+        event_1_2 = self.env['calendar.event'].with_context(default_activity_ids=[(6, 0, activity_1.ids)]).create({
             'name': 'Meeting 2',
-            'start': datetime(2025, 3, 11, 17),
-            'stop': datetime(2025, 3, 11, 22),
+            'start': datetime(2025, 3, 12, 17),
+            'stop': datetime(2025, 3, 12, 22),
         })
-        self.assertEqual(event_1.activity_ids, activity_id, "Event 1's activity should still be the first activity")
-        self.assertEqual(activity_id.calendar_event_id, event_1, "The first activity's event should still be event 1")
-        self.assertEqual(total_activities + 1, self.env['mail.activity'].search_count(domain=[]), "1 more activity record should have been created (by event 2)")
-        self.assertNotEqual(event_2.activity_ids, activity_id, "Event 2's activity should not be the first activity")
-        self.assertEqual(event_2.activity_ids.activity_type_id, activity_id.activity_type_id, "Event 2's activity should be the same activity type as the first activity")
-        self.assertEqual(test_record.activity_ids, activity_id | event_2.activity_ids, "Resource record should now have both activities")
+        self.assertFalse(event_1_1.activity_ids, 'Changes activity ownership')
+        self.assertEqual(event_1_2.activity_ids, activity_1, 'Changes activity ownership')
+        self.assertEqual(activity_1.calendar_event_id, event_1_2)
+        self.assertEqual(activity_1.date_deadline, date(2025, 3, 12))
+
+        activity_2 = self.env['mail.activity'].create({
+            'summary': 'Meeting 2 with partner',
+            'activity_type_id': meeting_act_type.id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': test_record.id,
+        })
+        existing_activities = self.env['mail.activity'].search([])
+
+        # specific action that creates activities instead of replacing
+        calendar_action = activity_2.with_context(default_res_model='res.partner', default_res_id=test_record.id).action_create_calendar_event()
+        event_2_1 = self.env['calendar.event'].with_context(calendar_action['context']).create({
+            'name': 'Meeting 1',
+            'start': datetime(2025, 4, 10, 17),
+            'stop': datetime(2025, 4, 10, 22),
+        })
+        self.assertEqual(event_2_1.activity_ids, activity_2)
+        self.assertEqual(activity_2.calendar_event_id, event_2_1)
+        self.assertEqual(activity_2.date_deadline, date(2025, 4, 10))
+
+        event_2_2 = self.env['calendar.event'].with_context(calendar_action['context']).create({
+            'name': 'Meeting 2',
+            'start': datetime(2025, 4, 11, 17),
+            'stop': datetime(2025, 4, 11, 22),
+        })
+        new_existing_activities = self.env['mail.activity'].search([])
+        new_activity = new_existing_activities - existing_activities
+        self.assertEqual(event_2_1.activity_ids, activity_2, "Event 1's activity should still be the first activity")
+        self.assertEqual(activity_2.calendar_event_id, event_2_1, "The first activity's event should still be event 1")
+
+        self.assertEqual(len(new_activity), 1, "1 more activity record should have been created (by event 2)")
+        self.assertEqual(event_2_2.activity_ids, new_activity, "Event 2's activity should not be the first activity")
+        self.assertEqual(event_2_2.activity_ids.activity_type_id, activity_2.activity_type_id, "Event 2's activity should be the same activity type as the first activity")
+        self.assertEqual(test_record.activity_ids, activity_1 + activity_2 + new_activity, "Resource record should now have all activities")
 
     def test_event_allday(self):
         self.env.user.tz = 'Pacific/Honolulu'

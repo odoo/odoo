@@ -299,7 +299,7 @@ class TestAccountPayment(AccountPaymentCommon):
 
     def test_vendor_payment_name_remains_same_after_repost(self):
         """
-        Test that modifying and reposting a vendor payment does not change its name.
+        Test that modifying and reposting a vendor payment does not change its name, except when the journal is changed.
         """
         journal = self.company_data['default_journal_bank']
 
@@ -335,6 +335,22 @@ class TestAccountPayment(AccountPaymentCommon):
             payment.move_id.name,
             original_name,
             "Payment name should remain the same after reposting"
+        )
+
+        # Now try to change the journal, and check if the name is now updated
+        payment.move_id.button_draft()
+        new_journal = journal.copy()
+        new_payment_method_line = new_journal.inbound_payment_method_line_ids[0]
+        new_payment_method_line.write({'payment_account_id': self.company_data['default_account_receivable'].id})
+        payment.write({
+            'journal_id': new_journal.id,
+            'payment_method_line_id': new_payment_method_line.id,
+        })
+        payment.move_id.action_post()
+        self.assertNotEqual(
+            payment.move_id.name,
+            original_name,
+            "Payment name should be updated after changing the journal"
         )
 
     def test_post_process_does_not_fail_on_cancelled_invoice(self):
