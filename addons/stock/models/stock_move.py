@@ -1011,8 +1011,8 @@ Please change the quantity done or the rounding precision in your settings.""",
         return move_lines_vals
 
     @api.model
-    def action_generate_lot_line_vals(self, context, mode, first_lot, count, lot_text):
-        if not context.get('default_product_id'):
+    def action_generate_lot_line_vals(self, context_data, mode, first_lot, count, lot_text):
+        if not context_data.get('default_product_id'):
             raise UserError(_("No product found to generate Serials/Lots for."))
         assert mode in ('generate', 'import')
         default_vals = {}
@@ -1032,9 +1032,9 @@ Please change the quantity done or the rounding precision in your settings.""",
             if text.startswith(prefix):
                 return text[len(prefix):]
             return text
-        for key in context:
+        for key in context_data:
             if key.startswith('default_'):
-                default_vals[remove_prefix(key, 'default_')] = context[key]
+                default_vals[remove_prefix(key, 'default_')] = context_data[key]
 
         if default_vals['tracking'] == 'lot' and mode == 'generate':
             lot_qties = generate_lot_qty(default_vals['quantity'], count)

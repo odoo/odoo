@@ -282,10 +282,10 @@ class IrQwebFieldContact(models.AbstractModel):
             attrs['data-oe-contact-options'] = json.dumps(options)
         return attrs
 
-    # helper to call the rendering of contact field
     @api.model
-    def get_record_to_html(self, ids, options=None):
-        return self.value_to_html(self.env['res.partner'].search([('id', '=', ids[0])]), options=options)
+    def get_record_to_html(self, contact_ids, options=None):
+        """ Helper to call the rendering of contact field. """
+        return self.value_to_html(self.env['res.partner'].search([('id', '=', contact_ids[0])]), options=options)
 
 
 class IrQwebFieldDate(models.AbstractModel):

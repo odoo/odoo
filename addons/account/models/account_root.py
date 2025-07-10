@@ -15,6 +15,7 @@ class AccountRoot(models.Model):
     name = fields.Char(compute='_compute_root')
     parent_id = fields.Many2one('account.root', compute='_compute_root')
 
+    @api.private
     def browse(self, ids=()):
         if isinstance(ids, str):
             ids = (ids,)
