@@ -7,4 +7,8 @@ export class RottingKanbanHeader extends KanbanHeader {
         ...KanbanHeader.components,
         ColumnProgress: RottingColumnProgress,
     };
+
+    async onRotIconClicked() {
+        await this.progressBarState.toggleFilterRotten(this.group.id);
+    }
 }

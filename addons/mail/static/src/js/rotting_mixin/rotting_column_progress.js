@@ -5,6 +5,7 @@ export class RottingColumnProgress extends ColumnProgress {
     static props = {
         ...ColumnProgress.props,
         progressBarState: { type: Object },
+        onRotIconClicked: { type: Function },
     };
 
     getRottingGroupCount(group) {
@@ -16,5 +17,9 @@ export class RottingColumnProgress extends ColumnProgress {
             }
         });
         return rotCount;
+    }
+
+    async onRotIconClick() {
+        await this.props.onRotIconClicked();
     }
 }
