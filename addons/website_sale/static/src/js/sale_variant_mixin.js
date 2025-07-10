@@ -533,9 +533,8 @@ var VariantMixin = {
                 isCombinationPossible
             );
             $parent
-                .find('.o_product_tags')
-                .first()
-                .html(combination.product_tags);
+                .find('.o_product_tags:first')
+                .replaceWith(combination.product_tags);
         }
 
         $parent
