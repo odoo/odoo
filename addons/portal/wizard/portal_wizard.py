@@ -229,7 +229,16 @@ class PortalWizardUser(models.TransientModel):
         partner = self.user_id.sudo().partner_id
         partner.signup_prepare()
 
-        template.with_context(dbname=self.env.cr.dbname, lang=lang, welcome_message=self.wizard_id.welcome_message, medium='portalinvite').send_mail(self.user_id.id, force_send=True)
+        template.with_context(
+            email_notification_force_header=True,
+            email_notification_force_footer=True,
+            dbname=self.env.cr.dbname, lang=lang, welcome_message=self.wizard_id.welcome_message, medium='portalinvite'
+        ).send_mail(
+            self.user_id.id, force_send=True,
+            email_layout_xmlid='mail.mail_notification_layout',
+            subtitles=[_("Your Account"), self.sudo().user_id.name or ''],
+            subtitles_highlight_2nd=True,
+        )
 
         return True
 
