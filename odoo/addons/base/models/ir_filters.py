@@ -68,6 +68,7 @@ class IrFilters(models.Model):
         return safe_eval(self.domain, {
             'datetime': datetime,
             'context_today': datetime.datetime.now,
+            'uid': self.env.user.id,
         })
 
     @api.model
