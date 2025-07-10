@@ -12,6 +12,7 @@ describe.current.tags("headless");
 test("update presence if IM status changes to offline while this device is online", async () => {
     mockService("bus_service", { send: (type) => asyncStep(type) });
     const pyEnv = await startServer();
+    pyEnv["res.partner"].write(serverState.partnerId, { im_status: "online" });
     await start();
     await waitForSteps(["update_presence"]);
     pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
@@ -26,6 +27,7 @@ test("update presence if IM status changes to away while this device is online",
     mockService("bus_service", { send: (type) => asyncStep(type) });
     localStorage.setItem("presence.lastPresence", Date.now());
     const pyEnv = await startServer();
+    pyEnv["res.partner"].write(serverState.partnerId, { im_status: "online" });
     await start();
     await waitForSteps(["update_presence"]);
     pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
@@ -40,6 +42,7 @@ test("do not update presence if IM status changes to away while this device is a
     mockService("bus_service", { send: (type) => asyncStep(type) });
     localStorage.setItem("presence.lastPresence", Date.now() - AWAY_DELAY);
     const pyEnv = await startServer();
+    pyEnv["res.partner"].write(serverState.partnerId, { im_status: "away" });
     await start();
     await waitForSteps(["update_presence"]);
     pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
@@ -54,6 +57,7 @@ test("do not update presence if other user's IM status changes to away", async (
     mockService("bus_service", { send: (type) => asyncStep(type) });
     localStorage.setItem("presence.lastPresence", Date.now());
     const pyEnv = await startServer();
+    pyEnv["res.partner"].write(serverState.partnerId, { im_status: "online" });
     await start();
     await waitForSteps(["update_presence"]);
     pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
@@ -73,6 +77,8 @@ test("update presence when user comes back from away", async () => {
         },
     });
     localStorage.setItem("presence.lastPresence", Date.now() - AWAY_DELAY);
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].write(serverState.partnerId, { im_status: "away" });
     await start();
     await waitForSteps([AWAY_DELAY]);
     localStorage.setItem("presence.lastPresence", Date.now());
@@ -88,6 +94,8 @@ test("update presence when user status changes to away", async () => {
         },
     });
     localStorage.setItem("presence.lastPresence", Date.now());
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].write(serverState.partnerId, { im_status: "online" });
     await start();
     await waitForSteps([0]);
     await advanceTime(AWAY_DELAY);
