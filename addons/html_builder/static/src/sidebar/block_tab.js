@@ -5,8 +5,8 @@ import { getScrollingElement } from "@web/core/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
 import { closest } from "@web/core/utils/ui";
 import { useDragAndDrop } from "@html_editor/utils/drag_and_drop";
+import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { useSnippets } from "@html_builder/snippets/snippet_service";
-import { getCSSVariableValue } from "@html_builder/utils/utils_css";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import { Snippet } from "./snippet";
 import { CustomInnerSnippet } from "./custom_inner_snippet";
@@ -290,7 +290,12 @@ export class BlockTab extends Component {
                         if (match) {
                             colorCustomizedURL.searchParams.set(
                                 key,
-                                getCSSVariableValue(`o-color-${match[1]}`)
+                                getCSSVariableValue(
+                                    `o-color-${match[1]}`,
+                                    this.document.defaultView.getComputedStyle(
+                                        this.document.documentElement
+                                    )
+                                )
                             );
                         }
                     });
