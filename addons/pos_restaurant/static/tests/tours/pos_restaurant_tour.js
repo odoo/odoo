@@ -439,12 +439,14 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                 trigger: "body",
                 run: async () => {
                     const receipts = await PreparationReceipt.generatePreparationReceipts();
-
                     if (!receipts[0].innerHTML.includes("Value 1")) {
                         throw new Error("Value 1 not found in printed receipt");
                     }
                     if (!receipts[0].innerHTML.includes("14:20")) {
                         throw new Error("14:20 not found in printed receipt");
+                    }
+                    if (!receipts[0].innerHTML.includes("Eat in")) {
+                        throw new Error("Eat in not found in printed receipt");
                     }
                     if (receipts[0].innerHTML.includes("DUPLICATA!")) {
                         throw new Error("DUPLICATA! should not be present in printed receipt");
@@ -472,6 +474,25 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                     }
                     if (receipts[1].innerHTML.includes("colorIndex")) {
                         throw new Error("colorIndex should not be displayed in printed receipt");
+                    }
+                },
+            },
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Water"),
+            ProductScreen.selectPreset("Eat in", "Takeaway"),
+            Chrome.selectPresetTimingSlotHour("12:00"),
+            Chrome.presetTimingSlotIs("12:00"),
+            {
+                content: "Check if order preparation order contains Takeaway and its timing slot",
+                trigger: "body",
+                run: async () => {
+                    const receipts = await PreparationReceipt.generatePreparationReceipts();
+                    if (!receipts[0].innerHTML.includes("Takeaway")) {
+                        throw new Error("Takeaway not found in printed receipt");
+                    }
+                    if (!receipts[0].innerHTML.includes("12:00")) {
+                        throw new Error("12:00 not found in printed receipt");
                     }
                 },
             },
