@@ -82,12 +82,18 @@ class Holidays(models.Model):
             if not leave.employee_id:
                 continue
 
-            if leave.employee_id.resource_calendar_id.flexible_hours and (leave.request_unit_hours or leave.request_unit_half):
-                calendar_timezone = pytz.timezone(leave.employee_id.resource_calendar_id.tz)
+            calendar = leave.employee_id.resource_calendar_id
+            calendar_timezone = pytz.timezone(calendar.tz)
+
+            if calendar.flexible_hours and (leave.request_unit_hours or leave.request_unit_half or leave.date_from.date() == leave.date_to.date()):
+                leave_date = leave.date_from.astimezone(calendar_timezone).date()
                 if leave.request_unit_hours:
-                    work_hours_data = [(leave.date_from.astimezone(calendar_timezone).date(), leave.request_hour_to - leave.request_hour_from)]
-                else:
-                    work_hours_data = [(leave.date_from.astimezone(calendar_timezone).date(), leave.employee_id.resource_calendar_id.hours_per_day / 2)]
+                    hours = leave.request_hour_to - leave.request_hour_from
+                elif leave.request_unit_half:
+                    hours = calendar.hours_per_day / 2
+                else:  # Single-day leave
+                    hours = calendar.hours_per_day
+                work_hours_data = [(leave_date, hours)]
             else:
                 work_hours_data = leave.employee_id._list_work_time_per_day(
                     leave.date_from,
