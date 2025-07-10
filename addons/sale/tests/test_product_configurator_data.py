@@ -321,6 +321,21 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         # Make sure that deleted value is not selected
         self.assertNotIn(archived_ptav.id, selected_values)
 
+    def test_edit_config_on_cleared_line(self):
+        configurable_product_template = self.create_product_template_with_2_attribute_no_variant()
+        product_variant = configurable_product_template.product_variant_ids[0]
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product_variant.id,
+                    'product_uom_qty': 1,
+                })
+            ]
+        })
+        url = f'odoo/sales/{order.id}'
+        self.start_tour(url, 'sale_product_configurator_test_tour', login="admin")
+
 
 @tagged('post_install', '-at_install')
 class TestSaleProductVariants(ProductAttributesCommon, SaleCommon):
