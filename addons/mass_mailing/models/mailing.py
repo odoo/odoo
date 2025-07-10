@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -21,7 +20,7 @@ from PIL import Image, UnidentifiedImageError
 from odoo import api, fields, models, modules, tools, _
 from odoo.addons.base_import.models.base_import import ImportValidationError
 from odoo.exceptions import UserError, ValidationError
-from odoo.fields import Domain
+from odoo.fields import Datetime, Domain
 from odoo.tools.float_utils import float_round
 from odoo.tools.image import ImageProcess
 
@@ -49,20 +48,20 @@ class MailingMailing(models.Model):
     _systray_view = 'list'
 
     @api.model
-    def default_get(self, fields_list):
-        vals = super().default_get(fields_list)
+    def default_get(self, fields):
+        vals = super().default_get(fields)
 
         # field sent by the calendar view when clicking on a date block
         # we use it to setup the scheduled date of the created mailing.mailing
         default_calendar_date = self.env.context.get('default_calendar_date')
-        if default_calendar_date and ('schedule_type' in fields_list and 'schedule_date' in fields_list) \
-           and fields.Datetime.from_string(default_calendar_date) > fields.Datetime.now():
+        if default_calendar_date and ('schedule_type' in fields and 'schedule_date' in fields) \
+           and Datetime.to_datetime(default_calendar_date) > Datetime.now():
             vals.update({
                 'schedule_type': 'scheduled',
                 'schedule_date': default_calendar_date
             })
 
-        if 'contact_list_ids' in fields_list and not vals.get('contact_list_ids') and vals.get('mailing_model_id'):
+        if 'contact_list_ids' in fields and not vals.get('contact_list_ids') and vals.get('mailing_model_id'):
             if vals.get('mailing_model_id') == self.env['ir.model']._get_id('mailing.list'):
                 mailing_list = self.env['mailing.list'].search([], limit=2)
                 if len(mailing_list) == 1:
@@ -532,7 +531,8 @@ class MailingMailing(models.Model):
                 mailing.body_html = mailing._convert_inline_images_to_urls(mailing.body_html)
         return mailings
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         if values.get('body_arch'):
             values['body_arch'] = self._convert_inline_images_to_urls(values['body_arch'])
         if values.get('body_html'):

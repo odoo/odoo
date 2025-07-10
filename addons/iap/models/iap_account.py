@@ -57,11 +57,11 @@ class IapAccount(models.Model):
     def web_save(self, *args, **kwargs):
         return super(IapAccount, self.with_context(disable_iap_fetch=True)).web_save(*args, **kwargs)
 
-    def write(self, values):
-        res = super().write(values)
+    def write(self, vals):
+        res = super().write(vals)
         if (
             not self.env.context.get('disable_iap_update')
-            and any(warning_attribute in values for warning_attribute in ('warning_threshold', 'warning_user_ids'))
+            and any(warning_attribute in vals for warning_attribute in ('warning_threshold', 'warning_user_ids'))
         ):
             route = '/iap/1/update-warning-email-alerts'
             endpoint = iap_tools.iap_get_endpoint(self.env)

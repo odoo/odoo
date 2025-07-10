@@ -261,11 +261,11 @@ class AccountBankStatement(models.Model):
     # -------------------------------------------------------------------------
 
     @api.model
-    def default_get(self, fields_list):
+    def default_get(self, fields):
         # EXTENDS base
-        defaults = super().default_get(fields_list)
+        defaults = super().default_get(fields)
 
-        if 'line_ids' not in fields_list:
+        if 'line_ids' not in fields:
             return defaults
 
         active_ids = self.env.context.get('active_ids', [])
@@ -345,11 +345,11 @@ class AccountBankStatement(models.Model):
             container['records'] = stmts = super().create(vals_list)
         return stmts
 
-    def write(self, values):
-        if len(self) != 1 and 'attachment_ids' in values:
-            values.pop('attachment_ids')
+    def write(self, vals):
+        if len(self) != 1 and 'attachment_ids' in vals:
+            vals.pop('attachment_ids')
 
         container = {'records': self}
-        with self._check_attachments(container, [values]):
-            result = super().write(values)
+        with self._check_attachments(container, [vals]):
+            result = super().write(vals)
         return result

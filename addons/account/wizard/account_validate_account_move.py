@@ -36,9 +36,10 @@ class ValidateAccountMove(models.TransientModel):
         for wizard in self:
             wizard.abnormal_amount_partner_ids = wizard.move_ids.filtered('abnormal_amount_warning').partner_id
 
-    def default_get(self, fields_list):
-        result = super().default_get(fields_list)
-        if 'move_ids' in fields_list and not result.get('move_ids'):
+    @api.model
+    def default_get(self, fields):
+        result = super().default_get(fields)
+        if 'move_ids' in fields and not result.get('move_ids'):
             if self.env.context.get('active_model') == 'account.move':
                 domain = [('id', 'in', self.env.context.get('active_ids', [])), ('state', '=', 'draft')]
             elif self.env.context.get('active_model') == 'account.journal':

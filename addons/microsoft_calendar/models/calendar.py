@@ -164,7 +164,8 @@ class CalendarEvent(models.Model):
         """
         raise UserError(_("Due to an Outlook Calendar limitation, recurrent events must be created directly in Outlook Calendar."))
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         recurrence_update_setting = values.get('recurrence_update')
         notify_context = self.env.context.get('dont_notify', False)
 

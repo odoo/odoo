@@ -10,6 +10,7 @@ from odoo.fields import Domain
 class HrLeaveAllocation(models.Model):
     _inherit = 'hr.leave.allocation'
 
+    @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
         if 'holiday_status_id' in fields and self.env.context.get('deduct_extra_hours'):

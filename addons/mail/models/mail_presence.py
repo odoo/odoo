@@ -46,9 +46,9 @@ class MailPresence(models.Model):
         presences._send_presence()
         return presences
 
-    def write(self, values):
+    def write(self, vals):
         status_by_presence = {presence: presence.status for presence in self}
-        result = super().write(values)
+        result = super().write(vals)
         updated = self.filtered(lambda p: status_by_presence[p] != p.status)
         updated._send_presence()
         return result

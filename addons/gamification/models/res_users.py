@@ -84,17 +84,17 @@ class ResUsers(models.Model):
 
         return res
 
-    def write(self, values):
-        if 'karma' in values:
+    def write(self, vals):
+        if 'karma' in vals:
             self._add_karma_batch({
                 user: {
-                    'gain': int(values['karma']) - user.karma,
+                    'gain': int(vals['karma']) - user.karma,
                     'origin_ref': f'res.users,{self.env.uid}',
                 }
                 for user in self
-                if int(values['karma']) != user.karma
+                if int(vals['karma']) != user.karma
             })
-        return super().write(values)
+        return super().write(vals)
 
     def _add_karma(self, gain, source=None, reason=None):
         self.ensure_one()

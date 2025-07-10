@@ -17,12 +17,13 @@ class MailingContact(models.Model):
     _order = 'name ASC, id DESC'
     _mailing_enabled = True
 
-    def default_get(self, fields_list):
+    @api.model
+    def default_get(self, fields):
         """ When coming from a mailing list we may have a default_list_ids context
         key. We should use it to create subscription_ids default value that
         are displayed to the user as list_ids is not displayed on form view. """
-        res = super().default_get(fields_list)
-        if 'subscription_ids' in fields_list and not res.get('subscription_ids'):
+        res = super().default_get(fields)
+        if 'subscription_ids' in fields and not res.get('subscription_ids'):
             list_ids = self.env.context.get('default_list_ids')
             if 'default_list_ids' not in res and list_ids and isinstance(list_ids, (list, tuple)):
                 res['subscription_ids'] = [

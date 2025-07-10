@@ -50,10 +50,10 @@ class MailBlacklist(models.Model):
         results = super().create(to_create)
         return self.env['mail.blacklist'].browse(bl_entries.values()) | results
 
-    def write(self, values):
-        if 'email' in values:
-            values['email'] = tools.email_normalize(values['email'])
-        return super().write(values)
+    def write(self, vals):
+        if 'email' in vals:
+            vals['email'] = tools.email_normalize(vals['email'])
+        return super().write(vals)
 
     def _search(self, domain, *args, **kwargs):
         """ Override _search in order to grep search on email field and make it

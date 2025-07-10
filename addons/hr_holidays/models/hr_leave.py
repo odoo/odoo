@@ -16,7 +16,7 @@ from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.date_utils import float_to_time
-from odoo.fields import Command, Domain
+from odoo.fields import Command, Date, Domain
 from odoo.tools.float_utils import float_round, float_compare
 from odoo.tools.misc import format_date
 from odoo.tools.translate import _
@@ -76,10 +76,10 @@ class HrLeave(models.Model):
     _mail_post_access = 'read'
 
     @api.model
-    def default_get(self, fields_list):
-        defaults = super().default_get(fields_list)
+    def default_get(self, fields):
+        defaults = super().default_get(fields)
         defaults = self._default_get_request_dates(defaults)
-        if self.env.context.get('holiday_status_display_name', True) and 'holiday_status_id' in fields_list and not defaults.get('holiday_status_id'):
+        if self.env.context.get('holiday_status_display_name', True) and 'holiday_status_id' in fields and not defaults.get('holiday_status_id'):
             domain = ['|', ('requires_allocation', '=', False), ('has_valid_allocation', '=', True)]
             defaults['holiday_status_id'] = False
             leave_types = self.env['hr.leave.type'].search(domain, order='sequence')
@@ -94,10 +94,10 @@ class HrLeave(models.Model):
                 defaults['holiday_status_id'] = selected_leave_type.id
                 defaults['request_unit_hours'] = (selected_leave_type.request_unit == 'hour')
 
-        if 'request_date_from' in fields_list and 'request_date_from' not in defaults:
-            defaults['request_date_from'] = fields.Date.today()
-        if 'request_date_to' in fields_list and 'request_date_to' not in defaults:
-            defaults['request_date_to'] = fields.Date.today()
+        if 'request_date_from' in fields and 'request_date_from' not in defaults:
+            defaults['request_date_from'] = Date.today()
+        if 'request_date_to' in fields and 'request_date_to' not in defaults:
+            defaults['request_date_to'] = Date.today()
 
         return defaults
 
@@ -834,7 +834,8 @@ Contracts:
                     holiday_sudo.activity_update()
         return holidays
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
         if not is_officer and values.keys() - {'attachment_ids', 'supported_attachment_ids', 'message_main_attachment_id'}:
             if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user

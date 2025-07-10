@@ -913,11 +913,11 @@ class AccountPaymentRegister(models.TransientModel):
     # -------------------------------------------------------------------------
 
     @api.model
-    def default_get(self, fields_list):
+    def default_get(self, fields):
         # OVERRIDE
-        res = super().default_get(fields_list)
+        res = super().default_get(fields)
 
-        if 'line_ids' in fields_list and 'line_ids' not in res:
+        if 'line_ids' in fields and 'line_ids' not in res:
 
             # Retrieve moves to pay from the context.
 
