@@ -1,15 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-"""
-OpenERP - Server
-OpenERP is an ERP+CRM program for small and medium businesses.
-
-The whole source code is distributed under the terms of the
-GNU Public Licence.
-
-(c) 2003-TODAY, Fabien Pinckaers - OpenERP SA
-"""
-
 import atexit
 import logging
 import os
