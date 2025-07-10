@@ -2,20 +2,23 @@
 
 import base64
 from collections import defaultdict
+from datetime import timedelta
 from hashlib import sha512
 from secrets import choice
-from markupsafe import Markup
-from datetime import timedelta
 
-from odoo import _, api, fields, models, tools, Command
-from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
-from odoo.addons.mail.tools.discuss import Store
-from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
+from markupsafe import Markup
+
+from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import format_list, get_lang, html_escape
 from odoo.tools.misc import OrderedSet
 from odoo.tools.sql import SQL
+
+from .discuss_channel_member import BYPASS_CREATE_CHECK
+from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
+from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
 
 channel_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 530.06">
 <rect width="530.06" height="530.06" fill="#875a7b"/>
@@ -346,7 +349,14 @@ class DiscussChannel(models.Model):
             vals.pop('channel_partner_ids', False)
 
         # Create channel and alias
-        channels = super(DiscussChannel, self.with_context(mail_create_bypass_create_check=self.env['discuss.channel.member']._bypass_create_check, mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals_list)
+        channels = super(
+            DiscussChannel,
+            self.with_context(
+                mail_create_bypass_create_check=BYPASS_CREATE_CHECK,
+                mail_create_nolog=True,
+                mail_create_nosubscribe=True,
+            ),
+        ).create(vals_list)
         # pop the mail_create_bypass_create_check key to avoid leaking it outside of create)
         channels = channels.with_context(mail_create_bypass_create_check=None)
         channels._subscribe_users_automatically()

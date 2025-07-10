@@ -1,20 +1,26 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import ast
 import itertools
 import logging
 from datetime import date, timedelta
 
-from dateutil.relativedelta import relativedelta, MO
+from dateutil.relativedelta import MO, relativedelta
 from markupsafe import Markup
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models, _
 from odoo.http import SESSION_LIFETIME
 
 _logger = logging.getLogger(__name__)
 
 # display top 3 in ranking, could be db variable
 MAX_VISIBILITY_RANKING = 3
+REPORT_OFFSETS = {
+    'daily': timedelta(days=1),
+    'weekly': timedelta(days=7),
+    'monthly': relativedelta(months=1),
+    'yearly': relativedelta(years=1),
+}
+
 
 def start_end_date_for_period(period, default_start_date=False, default_end_date=False):
     """Return the start and end date for a goal period based on today
@@ -161,12 +167,6 @@ class GamificationChallenge(models.Model):
         for challenge in self:
             challenge.user_count = mapped_data.get(challenge.id, 0)
 
-    REPORT_OFFSETS = {
-        'daily': timedelta(days=1),
-        'weekly': timedelta(days=7),
-        'monthly': relativedelta(months=1),
-        'yearly': relativedelta(years=1),
-    }
     @api.depends('last_report_date', 'report_message_frequency')
     def _get_next_report_date(self):
         """ Return the next report date based on the last report date and
@@ -174,7 +174,7 @@ class GamificationChallenge(models.Model):
         """
         for challenge in self:
             last = challenge.last_report_date
-            offset = self.REPORT_OFFSETS.get(challenge.report_message_frequency)
+            offset = REPORT_OFFSETS.get(challenge.report_message_frequency)
 
             if offset:
                 challenge.next_report_date = last + offset

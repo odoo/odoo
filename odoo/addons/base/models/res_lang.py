@@ -52,14 +52,15 @@ class LangDataDict(ReadonlyDict):
             return LangData(dict.fromkeys(some_lang, False))
 
 
+_disallowed_datetime_patterns = list(tools.misc.DATETIME_FORMATS_MAP)
+_disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
+
+
 class ResLang(models.Model):
     _name = 'res.lang'
     _description = "Languages"
     _order = "active desc,name"
     _allow_sudo_commands = False
-
-    _disallowed_datetime_patterns = list(tools.misc.DATETIME_FORMATS_MAP)
-    _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
 
     name = fields.Char(required=True)
     code = fields.Char(string='Locale Code', required=True, help='This field is used to set/get locales for user')

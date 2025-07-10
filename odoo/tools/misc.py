@@ -26,11 +26,19 @@ import unicodedata
 import warnings
 import zlib
 from collections import defaultdict
-from collections.abc import Iterable, Iterator, Mapping, MutableMapping, MutableSet, Reversible
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSet,
+    Reversible,
+)
 from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
 from functools import reduce, wraps
-from itertools import islice, groupby as itergroupby
+from itertools import groupby as itergroupby
+from itertools import islice
 from operator import itemgetter
 
 import babel
@@ -50,10 +58,9 @@ from .which import which
 K = typing.TypeVar('K')
 T = typing.TypeVar('T')
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable, Collection, Sequence
+    from collections.abc import Callable, Collection, Sequence  # noqa: I001
     from odoo.api import Environment
     from odoo.addons.base.models.res_lang import LangData
-
     P = typing.TypeVar('P')
 
 __all__ = [
@@ -65,6 +72,7 @@ __all__ = [
     'DotDict',
     'LastOrderedSet',
     'OrderedSet',
+    'ReadonlyDict',
     'Reverse',
     'babel_locale_parse',
     'clean_context',
@@ -86,9 +94,8 @@ __all__ = [
     'get_iso_codes',
     'get_lang',
     'groupby',
-    'hmac',
     'hash_sign',
-    'verify_hash_signed',
+    'hmac',
     'html_escape',
     'human_size',
     'is_list_of',
@@ -98,6 +105,7 @@ __all__ = [
     'parse_date',
     'partition',
     'posix_to_ldml',
+    'real_time',
     'remove_accents',
     'replace_exceptions',
     'reverse_enumerate',
@@ -107,7 +115,7 @@ __all__ = [
     'topological_sort',
     'unique',
     'ustr',
-    'real_time',
+    'verify_hash_signed',
 ]
 
 _logger = logging.getLogger(__name__)
@@ -917,6 +925,7 @@ def dumpstacks(sig=None, frame=None, thread_idents=None, log_level=logging.INFO)
     if odoo.evented:
         # code from http://stackoverflow.com/questions/12510648/in-gevent-how-can-i-dump-stack-traces-of-all-running-greenlets
         import gc
+
         from greenlet import greenlet
         for ob in gc.get_objects():
             if not isinstance(ob, greenlet) or not ob:

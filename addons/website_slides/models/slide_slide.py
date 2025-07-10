@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -6,16 +5,16 @@ import datetime
 import io
 import logging
 import re
-import requests
 
+import requests
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from werkzeug import urls
 
 from odoo import api, fields, models, _
-from odoo.exceptions import RedirectWarning, UserError, AccessError
+from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.http import request
-from odoo.tools import html2plaintext, sql
+from odoo.tools import ReadonlyDict, html2plaintext, sql
 from odoo.tools.pdf import PdfFileReader
 
 _logger = logging.getLogger(__name__)
@@ -32,12 +31,12 @@ class SlideSlide(models.Model):
     ]
     _description = 'Slides'
     _mail_post_access = 'read'
-    _order_by_strategy = {
+    _order_by_strategy = ReadonlyDict({
         'sequence': 'sequence asc, id asc',
         'most_viewed': 'total_views desc',
         'most_voted': 'likes desc',
         'latest': 'date_published desc',
-    }
+    })
     _order = 'sequence asc, is_category asc, id asc'
     _partner_unfollow_enabled = True
 

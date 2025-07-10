@@ -2,6 +2,8 @@
 
 from odoo import fields, models
 
+from .. import BOUNCE_DELIVERY_ERRORS, DELIVERY_ERRORS, SMS_STATE_TO_NOTIFICATION_STATUS
+
 
 class SmsTracker(models.Model):
     """Relationship between a sent SMS and tracking records such as notifications and traces.
@@ -18,15 +20,6 @@ class SmsTracker(models.Model):
     """
     _name = 'sms.tracker'
     _description = "Link SMS to mailing/sms tracking models"
-
-    SMS_STATE_TO_NOTIFICATION_STATUS = {
-        'canceled': 'canceled',
-        'process': 'process',
-        'error': 'exception',
-        'outgoing': 'ready',
-        'sent': 'sent',
-        'pending': 'pending',
-    }
 
     sms_uuid = fields.Char('SMS uuid', required=True)
     mail_notification_id = fields.Many2one('mail.notification', ondelete='cascade', index='btree_not_null')
@@ -45,17 +38,17 @@ class SmsTracker(models.Model):
         failure_reason = False
         failure_type = f'sms_{provider_error}'
         error_status = None
-        if failure_type not in self.env['sms.sms'].DELIVERY_ERRORS:
+        if failure_type not in DELIVERY_ERRORS:
             failure_type = 'unknown'
             failure_reason = provider_error
-        elif failure_type in self.env['sms.sms'].BOUNCE_DELIVERY_ERRORS:
+        elif failure_type in BOUNCE_DELIVERY_ERRORS:
             error_status = "bounce"
 
         self._update_sms_notifications(error_status or 'exception', failure_type=failure_type, failure_reason=failure_reason)
         return error_status, failure_type, failure_reason
 
     def _action_update_from_sms_state(self, sms_state, failure_type=False, failure_reason=False):
-        notification_status = self.SMS_STATE_TO_NOTIFICATION_STATUS[sms_state]
+        notification_status = SMS_STATE_TO_NOTIFICATION_STATUS[sms_state]
         self._update_sms_notifications(notification_status, failure_type=failure_type, failure_reason=failure_reason)
 
     def _update_sms_notifications(self, notification_status, failure_type=False, failure_reason=False):

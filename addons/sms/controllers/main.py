@@ -7,6 +7,8 @@ from odoo import _
 from odoo.exceptions import UserError
 from odoo.http import Controller, request, route
 
+from .. import IAP_TO_SMS_STATE_SUCCESS
+
 _logger = logging.getLogger(__name__)
 
 
@@ -32,7 +34,7 @@ class SmsController(Controller):
         for uuids, iap_status in ((status['uuids'], status['sms_status']) for status in message_statuses):
             self._check_status_values(uuids, iap_status, message_statuses)
             if sms_trackers_sudo := request.env['sms.tracker'].sudo().search([('sms_uuid', 'in', uuids)]):
-                if state := request.env['sms.sms'].IAP_TO_SMS_STATE_SUCCESS.get(iap_status):
+                if state := IAP_TO_SMS_STATE_SUCCESS.get(iap_status):
                     sms_trackers_sudo._action_update_from_sms_state(state)
                 else:
                     sms_trackers_sudo._action_update_from_provider_error(iap_status)

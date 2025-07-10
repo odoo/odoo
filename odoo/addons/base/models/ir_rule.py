@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import config, SQL
+from odoo.tools import SQL, config
 from odoo.tools.safe_eval import safe_eval, time
-
 
 _logger = logging.getLogger(__name__)
 
@@ -16,7 +14,7 @@ class IrRule(models.Model):
     _name = 'ir.rule'
     _description = 'Record Rule'
     _order = 'model_id DESC,id'
-    _MODES = ['read', 'write', 'create', 'unlink']
+    _MODES = ('read', 'write', 'create', 'unlink')
     _allow_sudo_commands = False
 
     name = fields.Char()

@@ -23,10 +23,10 @@ from markupsafe import Markup, escape_silent
 from PIL import Image as I
 from werkzeug import urls
 
-from odoo import _, api, models, fields
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import posix_to_ldml
-from odoo.tools.misc import file_open, get_lang, babel_locale_parse
+from odoo.tools.misc import babel_locale_parse, file_open, get_lang
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
 
@@ -460,6 +460,10 @@ class IrQwebFieldHtml(models.AbstractModel):
         return '\n'.join(content)
 
 
+LOCAL_URL_RE = re.compile(r'^/(?P<module>[^]]+)/static/(?P<rest>.+)$')
+REDIRECT_URL_RE = re.compile(r'\/web\/image\/\d+-redirect\/')
+
+
 class IrQwebFieldImage(models.AbstractModel):
     """
     Widget options:
@@ -471,8 +475,6 @@ class IrQwebFieldImage(models.AbstractModel):
     _description = 'Qweb Field Image'
     _inherit = ['ir.qweb.field.image']
 
-    local_url_re = re.compile(r'^/(?P<module>[^]]+)/static/(?P<rest>.+)$')
-    redirect_url_re = re.compile(r'\/web\/image\/\d+-redirect\/')
 
     @api.model
     def from_html(self, model, field, element):
@@ -496,17 +498,17 @@ class IrQwebFieldImage(models.AbstractModel):
                 oid = query.get('id', fragments[4])
                 field = query.get('field', fragments[5])
             item = self.env[model].browse(int(oid))
-            if self.redirect_url_re.match(url_object.path):
+            if REDIRECT_URL_RE.match(url_object.path):
                 return self.load_remote_url(item.url)
             return item[field]
 
-        if self.local_url_re.match(url_object.path):
+        if LOCAL_URL_RE.match(url_object.path):
             return self.load_local_url(url)
 
         return self.load_remote_url(url)
 
     def load_local_url(self, url):
-        match = self.local_url_re.match(urls.url_parse(url).path)
+        match = LOCAL_URL_RE.match(urls.url_parse(url).path)
         rest = match.group('rest')
 
         path = os.path.join(

@@ -48,11 +48,11 @@ class ProductProduct(models.Model):
     expected_margin_rate = fields.Float(compute='_compute_product_margin_fields_values', string='Expected Margin (%)',
         help="Expected margin * 100 / Expected Sale")
 
-    _SPECIAL_SUM_AGGREGATES = {f"{name}:sum" for name in (
+    _SPECIAL_SUM_AGGREGATES = frozenset({f"{name}:sum" for name in (
         'turnover', 'sale_avg_price', 'sale_num_invoiced', 'purchase_num_invoiced',
         'sales_gap', 'purchase_gap', 'total_cost', 'sale_expected', 'normal_cost',
         'total_margin', 'expected_margin', 'total_margin_rate', 'expected_margin_rate',
-    )}
+    )})
 
     def _read_group_select(self, aggregate_spec, query):
         # the purpose of this override is to flag the aggregates above as such:

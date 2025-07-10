@@ -2,13 +2,14 @@
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby, starmap
+
 from markupsafe import Markup
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_is_zero, float_compare, plaintext2html, split_every
-from odoo.tools.constants import PREFETCH_MAX
 from odoo.osv.expression import AND
+from odoo.tools import float_compare, float_is_zero, plaintext2html, split_every
+from odoo.tools.constants import PREFETCH_MAX
 
 
 class PosSession(models.Model):
@@ -16,13 +17,6 @@ class PosSession(models.Model):
     _order = 'id desc'
     _description = 'Point of Sale Session'
     _inherit = ['mail.thread', 'mail.activity.mixin', "pos.bus.mixin", 'pos.load.mixin']
-
-    POS_SESSION_STATE = [
-        ('opening_control', 'Opening Control'),  # method action_pos_session_open
-        ('opened', 'In Progress'),               # method action_pos_session_closing_control
-        ('closing_control', 'Closing Control'),  # method action_pos_session_close
-        ('closed', 'Closed & Posted'),
-    ]
 
     company_id = fields.Many2one('res.company', related='config_id.company_id', string="Company", readonly=True)
 
@@ -43,7 +37,13 @@ class PosSession(models.Model):
     stop_at = fields.Datetime(string='Closing Date', readonly=True, copy=False)
 
     state = fields.Selection(
-        POS_SESSION_STATE, string='Status',
+        [
+            ('opening_control', 'Opening Control'),  # method action_pos_session_open
+            ('opened', 'In Progress'),               # method action_pos_session_closing_control
+            ('closing_control', 'Closing Control'),  # method action_pos_session_close
+            ('closed', 'Closed & Posted'),
+        ],
+        string='Status',
         required=True, readonly=True,
         index=True, copy=False, default='opening_control')
 

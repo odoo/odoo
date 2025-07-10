@@ -1,11 +1,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from odoo import api, fields, models, modules
-from odoo.tools.translate import xml_translate
-from odoo.modules.module import get_resource_from_path
 
-from odoo.addons.base.models.ir_asset import AFTER_DIRECTIVE, APPEND_DIRECTIVE, BEFORE_DIRECTIVE, DEFAULT_SEQUENCE, INCLUDE_DIRECTIVE, PREPEND_DIRECTIVE, REMOVE_DIRECTIVE, REPLACE_DIRECTIVE
+from odoo import api, fields, models, modules
+from odoo.modules.module import get_resource_from_path
+from odoo.tools.translate import xml_translate
+
+from odoo.addons.base.models.ir_asset import (
+    AFTER_DIRECTIVE,
+    APPEND_DIRECTIVE,
+    BEFORE_DIRECTIVE,
+    DEFAULT_SEQUENCE,
+    INCLUDE_DIRECTIVE,
+    PREPEND_DIRECTIVE,
+    REMOVE_DIRECTIVE,
+    REPLACE_DIRECTIVE,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -216,7 +226,7 @@ class ThemeUtils(models.AbstractModel):
     _description = 'Theme Utils'
     _auto = False
 
-    _header_templates = [
+    _header_templates = (
         'website.template_header_hamburger',
         'website.template_header_vertical',
         'website.template_header_sidebar',
@@ -229,8 +239,8 @@ class ThemeUtils(models.AbstractModel):
         'website.template_header_sales_four',
         # Default one, keep it last
         'website.template_header_default',
-    ]
-    _footer_templates = [
+    )
+    _footer_templates = (
         'website.template_footer_descriptive',
         'website.template_footer_centered',
         'website.template_footer_links',
@@ -240,7 +250,7 @@ class ThemeUtils(models.AbstractModel):
         'website.template_footer_headline',
         # Default one, keep it last
         'website.footer_custom',
-    ]
+    )
 
     def _post_copy(self, mod):
         # Call specific theme post copy

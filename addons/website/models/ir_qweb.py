@@ -1,32 +1,30 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
-
 from collections import OrderedDict
 from urllib.parse import urlsplit
 
 from odoo import models
+from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import lazy
+
 from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import add_form_signature
-from odoo.exceptions import AccessError
-
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
+URL_ATTRS = {
+    'form': 'action',
+    'a': 'href',
+    'link': 'href',
+    'script': 'src',
+    'img': 'src',
+}
 
 
 class IrQweb(models.AbstractModel):
     """ IrQweb object for rendering stuff in the website context """
 
     _inherit = 'ir.qweb'
-
-    URL_ATTRS = {
-        'form': 'action',
-        'a': 'href',
-        'link': 'href',
-        'script': 'src',
-        'img': 'src',
-    }
 
     def _get_template(self, template):
         element, document, ref = super()._get_template(template)
@@ -167,7 +165,7 @@ class IrQweb(models.AbstractModel):
                     atts['data-nocookie-src'] = atts['src']
                     atts['src'] = 'about:blank'
 
-        name = self.URL_ATTRS.get(tagName)
+        name = URL_ATTRS.get(tagName)
         if request:
             value = atts.get(name) if name else None
             if value is not None and value is not False:

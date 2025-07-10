@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -16,7 +15,13 @@ class MailAliasMixinOptional(models.AbstractModel):
     """
     _name = 'mail.alias.mixin.optional'
     _description = 'Email Aliases Mixin (light)'
-    ALIAS_WRITEABLE_FIELDS = ['alias_domain_id', 'alias_name', 'alias_contact', 'alias_defaults', 'alias_bounced_content']
+    ALIAS_WRITEABLE_FIELDS = frozenset({
+        'alias_bounced_content',
+        'alias_contact',
+        'alias_defaults',
+        'alias_domain_id',
+        'alias_name',
+    })
 
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=False, copy=False)
     alias_name = fields.Char(related='alias_id.alias_name', readonly=False)
@@ -144,7 +149,7 @@ class MailAliasMixinOptional(models.AbstractModel):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        not_writable_fields = set(self.env['mail.alias']._fields.keys()) - set(self.ALIAS_WRITEABLE_FIELDS)
+        not_writable_fields = set(self.env['mail.alias']._fields.keys()) - self.ALIAS_WRITEABLE_FIELDS
         for vals in vals_list:
             for not_writable_field in not_writable_fields:
                 if not_writable_field in vals:

@@ -3,53 +3,74 @@
 import ast
 import base64
 import datetime
-import dateutil
 import email
 import email.policy
 import hashlib
 import hmac
 import json
-import lxml
 import logging
-import pytz
 import time
-
 from collections import defaultdict, namedtuple
 from collections.abc import Iterable
 from email import message_from_string
 from email.message import EmailMessage
+from typing import Any, NamedTuple
 from xmlrpc import client as xmlrpclib
 
+import dateutil
+import lxml
+import pytz
 from lxml import etree
 from markupsafe import Markup, escape
 from requests import Session
 from werkzeug import urls
 
-from odoo import _, api, exceptions, fields, models, tools
-from odoo.addons.mail.tools.discuss import Store
-from odoo.addons.mail.tools.web_push import (
-    push_to_end_point, DeviceUnreachableError,
-    ENCRYPTION_BLOCK_OVERHEAD, ENCRYPTION_HEADER_SIZE, MAX_PAYLOAD_SIZE
-)
-from odoo.exceptions import MissingError, AccessError
+from odoo import api, exceptions, fields, models, tools, _
+from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.tools import (
-    is_html_empty, html_escape, html2plaintext,
-    clean_context, split_every, Query, SQL,
-    ormcache, is_list_of,
+    SQL,
+    Query,
+    clean_context,
+    html2plaintext,
+    html_escape,
+    is_html_empty,
+    is_list_of,
+    ormcache,
+    split_every,
 )
 from odoo.tools.mail import (
-    append_content_to_html, decode_message_header,
-    email_normalize, email_normalize_all, email_split,
-    email_split_and_format, email_split_and_format_normalize,
-    formataddr, html_sanitize,
+    append_content_to_html,
+    decode_message_header,
+    email_normalize,
+    email_normalize_all,
+    email_split,
+    email_split_and_format,
+    email_split_and_format_normalize,
+    formataddr,
     generate_tracking_message_id,
+    html_sanitize,
     unfold_references,
+)
+
+from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.web_push import (
+    ENCRYPTION_BLOCK_OVERHEAD,
+    ENCRYPTION_HEADER_SIZE,
+    MAX_PAYLOAD_SIZE,
+    DeviceUnreachableError,
+    push_to_end_point,
 )
 
 MAX_DIRECT_PUSH = 5
 
 _logger = logging.getLogger(__name__)
+
+
+class _Attachment(NamedTuple):
+    fname: str
+    content: str
+    info: dict[str, Any]
 
 
 class MailThread(models.AbstractModel):
@@ -125,8 +146,6 @@ class MailThread(models.AbstractModel):
     _primary_email = 'email'  # Must be set for the models that can be created by alias
 
     _CUSTOMER_HEADERS_LIMIT_COUNT = 50
-
-    _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
 
     message_is_follower = fields.Boolean(
         'Is Follower', compute='_compute_message_is_follower', search='_search_message_is_follower')
@@ -1615,7 +1634,7 @@ class MailThread(models.AbstractModel):
         attachments = []
         body = ''
         if save_original:
-            attachments.append(self._Attachment('original_email.eml', message.as_string(), {}))
+            attachments.append(_Attachment('original_email.eml', message.as_string(), {}))
 
         # Be careful, content-type may contain tricky content like in the
         # following example so test the MIME type with startswith()
@@ -1667,11 +1686,11 @@ class MailThread(models.AbstractModel):
                 # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
                 if filename and part.get('content-id'):
                     info['cid'] = part.get('content-id').strip('><')
-                    attachments.append(self._Attachment(filename, content, info))
+                    attachments.append(_Attachment(filename, content, info))
                     continue
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append(self._Attachment(filename or 'attachment', content, info))
+                    attachments.append(_Attachment(filename or 'attachment', content, info))
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and not (alternative and body):
@@ -1690,7 +1709,7 @@ class MailThread(models.AbstractModel):
                     body = html_sanitize(body, sanitize_tags=False, strip_classes=True)
                 # 4) Anything else -> attachment
                 else:
-                    attachments.append(self._Attachment(filename or 'attachment', content, info))
+                    attachments.append(_Attachment(filename or 'attachment', content, info))
 
         return self._message_parse_extract_payload_postprocess(message, {'body': body, 'attachments': attachments})
 
