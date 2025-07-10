@@ -96,7 +96,7 @@ class PosSession(models.Model):
     def write(self, vals):
         if vals.get('state') == 'closed':
             for record in self:
-                record.config_id._notify(('CLOSING_SESSION', {'login_number': self.env.context.get('login_number', False)}))
+                record.config_id._notify(('CLOSING_SESSION', {'login_number': self.env.context.get('login_number', False), 'session_id': self.id}))
         return super().write(vals)
 
     @api.model
