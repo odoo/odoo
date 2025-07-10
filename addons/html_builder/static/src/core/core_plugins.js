@@ -1,3 +1,5 @@
+import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
+import { removePlugins } from "@html_builder/utils/utils";
 import { AnchorPlugin } from "./anchor/anchor_plugin";
 import { BuilderActionsPlugin } from "./builder_actions_plugin";
 import { BuilderComponentPlugin } from "./builder_component_plugin";
@@ -5,6 +7,7 @@ import { BuilderOptionsPlugin } from "./builder_options_plugin";
 import { BuilderOverlayPlugin } from "./builder_overlay/builder_overlay_plugin";
 import { CachedModelPlugin } from "./cached_model_plugin";
 import { ClonePlugin } from "./clone_plugin";
+import { ColorPlugin } from "./color_plugin";
 import { CoreBuilderActionPlugin } from "./core_builder_action_plugin";
 import { CompositeActionPlugin } from "./composite_action_plugin";
 import { CustomizeTabPlugin } from "./customize_tab_plugin";
@@ -24,7 +27,24 @@ import { SetupEditorPlugin } from "./setup_editor_plugin";
 import { VersionControlPlugin } from "./version_control_plugin";
 import { VisibilityPlugin } from "./visibility_plugin";
 
+const mainEditorPluginsToRemove = [
+    "PowerButtonsPlugin",
+    "DoubleClickImagePreviewPlugin",
+    "SeparatorPlugin",
+    "StarPlugin",
+    "BannerPlugin",
+    "MoveNodePlugin",
+    // Replaced plugins:
+    "ColorPlugin",
+];
+
+export const MAIN_PLUGINS = [
+    ...removePlugins(MAIN_EDITOR_PLUGINS, mainEditorPluginsToRemove),
+    ColorPlugin,
+];
+
 export const CORE_PLUGINS = [
+    ...MAIN_PLUGINS,
     BuilderOptionsPlugin,
     BuilderActionsPlugin,
     BuilderComponentPlugin,

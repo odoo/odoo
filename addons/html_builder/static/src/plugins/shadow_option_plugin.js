@@ -1,6 +1,7 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { parseBoxShadow } from "@html_builder/utils/utils_css";
 
 const shadowClass = "shadow";
 
@@ -48,9 +49,7 @@ function parseShadow(value) {
     if (!value || value === "none") {
         return {};
     }
-    const regex =
-        /(?<color>(rgb(a)?\([^)]*\))|(var\([^)]+\)))\s+(?<offsetX>-?\d+px)\s+(?<offsetY>-?\d+px)\s+(?<blur>-?\d+px)\s+(?<spread>-?\d+px)(?:\s+(?<mode>\w+))?/;
-    return value.match(regex).groups;
+    return parseBoxShadow(value);
 }
 
 export function shadowToString(shadow) {
