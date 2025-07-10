@@ -83,7 +83,6 @@ class TestSettings(AccountTestInvoicingCommon):
         # Create an invoice for company B
         invoice = self.env['account.move'].create({
             'move_type': "in_invoice",
-            'extract_state': "waiting_extraction",
             'company_id': company_b.id,
             'journal_id': journal.id,
         })
