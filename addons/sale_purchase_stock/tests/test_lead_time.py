@@ -61,6 +61,7 @@ class TestLeadTime(TestCommonSalePurchaseNoChart):
         self.assertEqual(po.order_line.price_unit, product.seller_ids.price)
 
     def test_dynamic_lead_time_delay(self):
+        self.env.company.horizon_days = 0
         self.product_a.write({
             'seller_ids': [(0, 0, {
                 'partner_id': self.partner_a.id,

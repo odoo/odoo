@@ -4085,6 +4085,7 @@ class TestMrpOrder(TestMrpCommon):
     def test_manufacture_lead_days(self):
         """Test the lead days computation for manufacturing route.
         """
+        self.env.company.horizon_days = 0
         warehouse = self.warehouse_1
         rule = warehouse.manufacture_pull_id
 

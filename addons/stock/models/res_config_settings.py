@@ -56,6 +56,7 @@ class ResConfigSettings(models.TransientModel):
     replenish_on_order = fields.Boolean("Replenish on Order (MTO)", compute='_compute_replenish_on_order', inverse='_inverse_replenish_on_order')
     stock_text_confirmation = fields.Boolean(related='company_id.stock_text_confirmation', string='Stock Text Validation with stock move', readonly=False)
     stock_confirmation_type = fields.Selection(related='company_id.stock_confirmation_type', string='Stock Text Validation type', readonly=False)
+    horizon_days = fields.Float(related='company_id.horizon_days', readonly=False)
 
     def _compute_replenish_on_order(self):
         route = self.env.ref('stock.route_warehouse0_mto', raise_if_not_found=False)

@@ -882,6 +882,8 @@ class TestReorderingRule(TransactionCase):
         postpones the scheduled date of the delivery. The quantities of the
         orderpoint should be reset to zero.
         """
+        # Set horizon_days to 0 because we're in Just-in-Time
+        self.env.company.horizon_days = 0
         delivery_form = Form(self.env['stock.picking'])
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.env.ref('stock.picking_type_out')
@@ -1052,7 +1054,7 @@ class TestReorderingRule(TransactionCase):
         self.assertNotEqual(po02, po01)
 
         with freeze_time(dt.today() + td(days=1)):
-            op_02.invalidate_recordset(fnames=['lead_days_date'])
+            op_02.invalidate_recordset(fnames=['lead_horizon_date'])
             op_02.action_replenish()
             self.assertEqual(po02.date_order, expected_order_date)
             self.assertRecordValues(po02.order_line, [
@@ -1070,7 +1072,7 @@ class TestReorderingRule(TransactionCase):
         self.assertNotEqual(po03, po02)
 
         with freeze_time(dt.today() + td(days=2)):
-            op_02.invalidate_recordset(fnames=['lead_days_date'])
+            op_02.invalidate_recordset(fnames=['lead_horizon_date'])
             op_02.action_replenish()
             self.assertEqual(po03.date_order, expected_order_date)
             self.assertRecordValues(po03.order_line, [
@@ -1085,28 +1087,29 @@ class TestReorderingRule(TransactionCase):
         self.assertNotEqual(po04, po03)
 
         with freeze_time(dt.today() + td(days=3)):
-            op_02.invalidate_recordset(fnames=['lead_days_date'])
+            op_02.invalidate_recordset(fnames=['lead_horizon_date'])
             op_02.action_replenish()
             self.assertEqual(po04.order_line.product_id, self.product_01, 'There should be only a line for product 01')
             po05 = self.env['purchase.order'].search([], order='id desc', limit=1)
             self.assertNotEqual(po05, po04, 'A new PO should be generated')
             self.assertEqual(po05.order_line.product_id, product_02)
 
-    def test_reordering_rule_visibility_days(self):
+    def test_reordering_rule_horizon_days(self):
         """
-            Test the visibility days on the reordering rule update the qty_to_order but do not
+            Test the horizon days on the reordering rule update the qty_to_order but do not
             update the forecasted quantity of the current day.
 
             ex:
             - We are January 14th
-            - visibility days = 10
+            - horizon_days = 4 -> January 18th, +1 days for seller.delay -> January 19th
             - A sale order is scheduled on January 20th
             -> 2 scenarios
-            1. Today's forecasted quantity is < orderpoint's min qty
-                the sale order will be taken into account in the forecasted quantity
-            2. Todays's forecasted quantity is >= orderpoint's min qty
+            1. Today's forecasted quantity is >= orderpoint's min qty
                 the sale order will not be taken into account in the forecasted quantity
+            2. Today's forecasted quantity is < orderpoint's min qty
+                the sale order will be taken into account in the forecasted quantity
         """
+        self.env.company.horizon_days = 4
         # create reordering rule
         wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         op = self.env['stock.warehouse.orderpoint'].create({
@@ -1115,7 +1118,6 @@ class TestReorderingRule(TransactionCase):
             'product_id': self.product_01.id,
             'product_min_qty': 0,
             'product_max_qty': 0,
-            'visibility_days': 10,
         })
 
         # out move on January 20th
@@ -1141,11 +1143,11 @@ class TestReorderingRule(TransactionCase):
 
         # virtual available is -1 but we need to replenish 2
         self.product_01.virtual_available = -1
-        self.assertEqual(op.qty_to_order, 2, 'sale order is ignored')
+        self.assertEqual(op.qty_to_order, 1, 'sale order is ignored')
 
-    def test_reordering_rule_visibility_days_display(self):
-        """ Checks that the visibility days are properly shown on the info wizard & the orderpoint forecast.
-        """
+    def test_reordering_rule_horizon_days_display(self):
+        """ Checks that the horizon days are properly shown on the info wizard & the orderpoint forecast. """
+        self.env.company.horizon_days = 3
         today = dt.today()
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
@@ -1154,7 +1156,6 @@ class TestReorderingRule(TransactionCase):
             'product_id': self.product_01.id,
             'product_min_qty': 0,
             'product_max_qty': 0,
-            'visibility_days': 5,
         })
 
         # Out move in 5 days
@@ -1167,16 +1168,15 @@ class TestReorderingRule(TransactionCase):
         })
         out_5_days._action_confirm()
 
-        # Visibility days should be ignored if nothing is found within lead times (today + 1 day)
+        # Horizon days should always be shown
         replenishment_info = loads(self.env['stock.replenishment.info'].create({'orderpoint_id': orderpoint.id}).json_lead_days)
-        self.assertEqual(replenishment_info['lead_days_date'], format_date(orderpoint.env, today + td(days=1)))
+        # Lead days date = today + horizon days + vendor lead time
+        self.assertEqual(replenishment_info['lead_horizon_date'], format_date(orderpoint.env, today + td(days=3) + td(days=1)))
         self.assertEqual(float(replenishment_info['qty_to_order']), 0)
-        self.assertEqual(replenishment_info['visibility_days'], 0)
         # Extra lines for forecast are given through its context
         context = orderpoint.action_product_forecast_report()['context']
         self.assertEqual(context['qty_to_order'], 0)
-        self.assertEqual(context['lead_days_date'], format_date(orderpoint.env, today + td(days=1)))
-        self.assertEqual(context['qty_to_order_with_visibility_days'], 0)
+        self.assertEqual(context['lead_horizon_date'], format_date(orderpoint.env, today + td(days=3) + td(days=1)))
 
         # Out move today
         out_today = self.env['stock.move'].create({
@@ -1189,18 +1189,14 @@ class TestReorderingRule(TransactionCase):
         })
         out_today._action_confirm()
 
-        # Visibility days should be used something is found within lead times
+        # Horizon days should be used something is found within lead times
         replenishment_info = loads(self.env['stock.replenishment.info'].create({'orderpoint_id': orderpoint.id}).json_lead_days)
-        self.assertEqual(replenishment_info['lead_days_date'], format_date(orderpoint.env, today + td(days=1)))
-        self.assertEqual(float(replenishment_info['qty_to_order']), 8)
-        self.assertEqual(replenishment_info['visibility_days'], 5)
-        self.assertEqual(replenishment_info['visibility_days_date'], format_date(orderpoint.env, today + td(days=1) + td(days=5)))
+        self.assertEqual(replenishment_info['lead_horizon_date'], format_date(orderpoint.env, today + td(days=3) + td(days=1)))
+        self.assertEqual(float(replenishment_info['qty_to_order']), 3)
         # Extra lines for forecast are given through its context
         context = orderpoint.action_product_forecast_report()['context']
         self.assertEqual(context['qty_to_order'], 3)
-        self.assertEqual(context['lead_days_date'], format_date(orderpoint.env, today + td(days=1)))
-        self.assertEqual(context['qty_to_order_with_visibility_days'], 8)
-        self.assertEqual(context['visibility_days_date'], format_date(orderpoint.env, today + td(days=1) + td(days=5)))
+        self.assertEqual(context['lead_horizon_date'], format_date(orderpoint.env, today + td(days=3) + td(days=1)))
 
     def test_update_po_line_without_purchase_access_right(self):
         """ Test that a user without purchase access right can update a PO line from picking."""
