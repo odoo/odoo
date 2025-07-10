@@ -89,4 +89,24 @@
             </p>
         </field>
     </record>
+
+    <record id="action_my_days_off_dashboard_calendar" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">hr.leave.report.calendar</field>
+        <field name="view_mode">calendar</field>
+        <field name="views" eval="[(ref('hr_leave_report_calendar_view'), 'calendar')]"/>
+        <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+        <field name="context">
+            {
+                'search_default_current_year': 1,
+                'hide_employee_name': 1
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                You have no time off yet!
+            </p>
+        </field>
+    </record>
+
 </odoo>
