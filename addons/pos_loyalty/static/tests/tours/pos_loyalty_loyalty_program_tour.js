@@ -363,3 +363,21 @@ registry.category("web_tour.tours").add("test_multiple_loyalty_products", {
             Order.hasLine({ productName: "10% on your order", quantity: "1" }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_max_usage_partner_with_point", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Organizer", "3"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAA Partner 2"),
+            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.claimReward("100% on your order"),
+            PosLoyalty.finalizeOrder("Cash", "0"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAA Partner"),
+            ProductScreen.addOrderline("Desk Organizer", "3"),
+            PosLoyalty.isRewardButtonHighlighted(false),
+        ].flat(),
+});
