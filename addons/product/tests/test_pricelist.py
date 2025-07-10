@@ -148,6 +148,7 @@ class TestPricelist(ProductCommon):
 
         self.assertEqual(self.pricelist.company_id, first_company)
         self.assertFalse(shared_pricelist.company_id)
+        self.assertEqual(second_pricelist.company_id, first_company)
 
         with self.assertRaises(UserError):
             shared_pricelist.item_ids = [
@@ -172,6 +173,8 @@ class TestPricelist(ProductCommon):
         ]
 
         with self.assertRaises(UserError):
+            # Should raise because the pricelist would have a rule based on a pricelist
+            # from another company
             self.pricelist.company_id = second_company
 
     def test_pricelists_res_partner_form(self):
