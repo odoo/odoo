@@ -174,7 +174,7 @@ export async function handleCheckIdentity(wrapped, ormService, dialogService) {
                         return false;
                     }
                     let result;
-                    await ormService.write("res.users.identitycheck", [checkId], { password: inputEl.value });
+                    await ormService.write("res.users.identitycheck", [checkId], { password: inputEl.value, 'auth_method': 'password' });
                     try {
                         result = await ormService.call("res.users.identitycheck", "run_check", [checkId]);
                     } catch {
