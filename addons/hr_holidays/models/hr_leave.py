@@ -1,31 +1,38 @@
 import logging
-import pytz
-
-from collections import namedtuple, defaultdict
-
-from datetime import datetime, timedelta, time
-from dateutil.relativedelta import relativedelta
+from collections import defaultdict
+from datetime import datetime, time, timedelta
 from math import ceil
-from pytz import timezone, UTC
-from markupsafe import Markup
+from typing import NamedTuple
 
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
-from odoo.addons.resource.models.utils import HOURS_PER_DAY
+import pytz
+from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
+from pytz import UTC, timezone
 
 from odoo import api, fields, models
-from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools.date_utils import float_to_time
 from odoo.fields import Command, Domain
-from odoo.tools.float_utils import float_round, float_compare
+from odoo.tools.date_utils import float_to_time
+from odoo.tools.float_utils import float_compare, float_round
 from odoo.tools.misc import format_date
 from odoo.tools.translate import _
 
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+from odoo.addons.base.models.res_partner import _tz_get
+from odoo.addons.resource.models.utils import HOURS_PER_DAY
+
 _logger = logging.getLogger(__name__)
+
 
 # Used to agglomerate the attendances in order to find the hour_from and hour_to
 # See _compute_date_from_to
-DummyAttendance = namedtuple('DummyAttendance', 'hour_from, hour_to, dayofweek, day_period, week_type')
+class DummyAttendance(NamedTuple):
+    hour_from: float
+    hour_to: float
+    dayofweek: str
+    day_period: str | None
+    week_type: str | None
+
 
 def get_employee_from_context(values, context, user_employee_id):
     employee_ids_list = [value[2] for value in values.get('employee_ids', []) if len(value) == 3 and value[0] == Command.SET]
@@ -1520,9 +1527,46 @@ is approved, validated or refused.')
                     else:
                         attendances.append(DummyAttendance(default_start, default_end, day, None, week_type))
             attendances = sorted(attendances, key=lambda att: att.dayofweek)
-        else:
+        elif self.resource_calendar_id.duration_based:
+            # handel new cass
+            # Must be sorted by dayofweek ASC and day_period DESC
+            init_attendances = self.env['resource.calendar.attendance']._read_group(domain,
+                ['week_type', 'dayofweek'],
+                ['hour_from:min', 'hour_to:max'], order="dayofweek ASC")
+
+            init_attendances = [DummyAttendance(hour_from, hour_to, dayofweek, None, week_type) for week_type, dayofweek, hour_from, hour_to in init_attendances]
+            attendances = []
             if day_period:
-                domain.append(('day_period', '=', day_period))
+                for attendance in init_attendances:
+                    attendances.append(attendance._replace(
+                        hour_from=attendance.hour_from if day_period == 'morning' else 12,
+                        hour_to=attendance.hour_to if day_period == 'afternoon' else 12,
+                    ))
+            else:
+                attendances = init_attendances
+
+            default_start = min((attendance.hour_from for attendance in attendances), default=0)
+            default_end = max((attendance.hour_to for attendance in attendances), default=0)
+        elif day_period:
+            period_domain = domain + [('day_period', '=', day_period)]
+            full_days_domain = domain + [('day_period', '=', 'full_day')]
+            attendances = self.env['resource.calendar.attendance']._read_group(period_domain,
+                ['week_type', 'dayofweek'],
+                ['hour_from:min', 'hour_to:max'], order="dayofweek ASC")
+            attendances = [DummyAttendance(hour_from, hour_to, dayofweek, None, week_type) for week_type, dayofweek, hour_from, hour_to in attendances]
+            full_days_attendances = self.env['resource.calendar.attendance']._read_group(full_days_domain,
+                ['week_type', 'dayofweek'],
+                ['hour_from:min', 'hour_to:max'], order="dayofweek ASC")
+            full_days_attendances = [DummyAttendance(hour_from, hour_to, dayofweek, None, week_type) for week_type, dayofweek, hour_from, hour_to in full_days_attendances]
+            for attendance in full_days_attendances:
+                hour_mid = attendance.hour_from + (attendance.hour_to - attendance.hour_from) / 2.0
+                attendances.append(attendance._replace(
+                    hour_from=attendance.hour_from if day_period == 'morning' else hour_mid,
+                    hour_to=attendance.hour_to if day_period == 'afternoon' else hour_mid,
+                ))
+            default_start = min((attendance.hour_from for attendance in attendances), default=0)
+            default_end = max((attendance.hour_to for attendance in attendances), default=0)
+        else:
             # Must be sorted by dayofweek ASC and day_period DESC
             attendances = self.env['resource.calendar.attendance']._read_group(domain,
                 ['week_type', 'dayofweek'],

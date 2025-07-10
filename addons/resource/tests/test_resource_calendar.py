@@ -26,7 +26,6 @@ class TestResourceCalendar(TransactionCase):
             'dayofweek': '2',  # Wednesday
             'hour_from': 14,   # 18:00 UTC
             'hour_to': 17,     # 21:00 UTC
-            'date_from': datetime(2025, 6, 4, 0, 0, 0).date(),
         })
         UTC = pytz.timezone('UTC')
         start_dt = datetime(2025, 6, 4, 18, 0, 0).astimezone(UTC)
