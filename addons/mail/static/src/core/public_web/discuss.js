@@ -13,8 +13,10 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { session } from "@web/session";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
+import { showRealtimeTzDiff } from "@mail/utils/common/dates";
 
 export class Discuss extends Component {
     static components = {
@@ -89,6 +91,29 @@ export class Discuss extends Component {
             () => this.actionPanelAutoOpenFn(),
             () => [this.thread]
         );
+        useEffect(() => {
+            Object.assign(this.state, {
+                shouldDisplayUserTime: false,
+                otherUserTime: null,
+                otherUserDate: null,
+                otherUserTz: null,
+            });
+            if (!this.thread || this.thread.channel_type !== "chat") return;
+            const currentPartner = Object.values(session.storeData?.["res.partner"] || {}).find(p => p.active);
+            const currentUserTz = currentPartner?.tz || null;
+            const otherUserTz = this.thread.correspondent.persona.tz || null;
+            if (otherUserTz && currentUserTz && otherUserTz !== currentUserTz) {
+                const stopRealtimeTzDiff = showRealtimeTzDiff( currentUserTz, otherUserTz, ({ otherUserTime, otherUserDate }) => {
+                    Object.assign(this.state, {
+                        shouldDisplayUserTime: true,
+                        otherUserTime,
+                        otherUserDate,
+                        otherUserTz,
+                    });
+                });
+                return () => stopRealtimeTzDiff();
+            }
+        }, () => [this.thread]);
     }
 
     actionPanelAutoOpenFn() {

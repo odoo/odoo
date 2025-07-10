@@ -351,6 +351,7 @@ class ResUsers(models.Model):
                             ],
                         ),
                         "name",
+                        "tz"
                     ],
                 ),
                 settings=settings._res_users_settings_format(),

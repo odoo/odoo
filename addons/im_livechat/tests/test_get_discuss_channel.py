@@ -75,6 +75,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
+                    "tz": False,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
@@ -130,6 +131,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
+                    "tz": False,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
@@ -144,6 +146,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "name": "Roger",
                     "email": test_user.partner_id.email,
                     "offline_since": False,
+                    "tz": False,
                     "user_livechat_username": False,
                     "write_date": fields.Datetime.to_string(test_user.write_date),
                 },
@@ -239,6 +242,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
+                    "tz": False,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
@@ -252,6 +256,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "main_user_id": operator.id,
                     "name": "Michel",
                     "email": operator.email,
+                    "tz": False,
                     "user_livechat_username": "Michel Operator",
                     "write_date": fields.Datetime.to_string(operator.partner_id.write_date),
                 },

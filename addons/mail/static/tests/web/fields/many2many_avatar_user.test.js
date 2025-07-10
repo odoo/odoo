@@ -305,6 +305,7 @@ test("avatar card preview", async () => {
             "im_status",
             "share",
             "partner_id",
+            "tz"
         ]);
         asyncStep("user read");
     });
