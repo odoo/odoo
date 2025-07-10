@@ -81,6 +81,7 @@ class LivechatChatbotScriptController(http.Controller):
                 'isLast': next_step._is_last_step(discuss_channel),
                 'message': plaintext2html(next_step.message) if not is_html_empty(next_step.message) else False,
                 'type': next_step.step_type,
+                'sequence': next_step.sequence,
             }
         }
 

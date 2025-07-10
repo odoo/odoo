@@ -29,6 +29,8 @@ import { assignDefined } from "@mail/utils/common/misc";
 export class ChatbotStep {
     /** @type {number} */
     id;
+    /** @type {number} */
+    sequence;
     /** @type {StepAnswer[]} */
     answers = [];
     /** @type {string} */
@@ -53,6 +55,7 @@ export class ChatbotStep {
             "hasAnswer",
             "type",
             "isEmailValid",
+            "sequence",
         ]);
         this.hasAnswer = data.hasAnswer ?? Boolean(data.selectedAnswerId);
     }
