@@ -522,3 +522,13 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         # Tag name_search should not raise Error if project_id is False
         task.tag_ids.with_context(project_id=task.project_id.id).name_search(
             args=["!", ["id", "in", []]])
+
+    def test_project_message(self):
+        project = self.env['project.project'].create({
+            'name': 'Test Project',
+            'partner_id': self.partner_1.id,
+        })
+
+        partner = project._message_get_suggested_recipients()
+        # Assert that partner_1.id exists in the partner result
+        self.assertEqual(self.partner_1.id, partner[project.id][0][0])
