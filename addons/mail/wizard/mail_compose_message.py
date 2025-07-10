@@ -1240,6 +1240,8 @@ class MailComposeMessage(models.TransientModel):
                 message_inmem = self.env['mail.message'].new({
                     'body': mail_values['body'],
                 })
+                if self.template_id:
+                    message_inmem.email_add_signature = False
                 for _lang, render_values, recipients_group_data in record._notify_get_classified_recipients_iterator(
                     message_inmem,
                     [{
