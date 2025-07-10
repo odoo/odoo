@@ -20,6 +20,7 @@ import urllib3.util
 from threading import Thread, Lock
 import time
 import zipfile
+from werkzeug.exceptions import Locked
 
 from odoo import http, release, service
 from odoo.addons.iot_drivers.tools.system import IOT_RPI_CHAR, IOT_SYSTEM, IOT_WINDOWS_CHAR, IS_RPI, IS_WINDOWS
@@ -62,15 +63,18 @@ def toggleable(function):
 
     @wraps(function)
     def devtools_wrapper(*args, **kwargs):
-        if function.__name__ == 'action':
+        if args and args[0].__class__.__name__ == 'DriverController' and get_conf('longpolling', section='devtools'):
+            _logger.warning("Refusing call to %s: longpolling is disabled by devtools", fname)
+            raise Locked("Longpolling disabled by devtools")  # raise to make the http request fail
+        elif function.__name__ == 'action':
             action = args[1].get('action', 'default')  # first argument is self (containing Driver instance), second is 'data'
             disabled_actions = (get_conf('actions', section='devtools') or '').split(',')
             if action in disabled_actions or '*' in disabled_actions:
                 _logger.warning("Ignoring call to %s: '%s' action is disabled by devtools", fname, action)
-                return
+                return None
         elif get_conf('general', section='devtools'):
             _logger.warning("Ignoring call to %s: method is disabled by devtools", fname)
-            return
+            return None
 
         return function(*args, **kwargs)
     return devtools_wrapper

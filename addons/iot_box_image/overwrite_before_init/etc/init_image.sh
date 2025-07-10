@@ -113,14 +113,14 @@ devtools() {
   case \"\$1\" in
     enable|disable)
       case \"\$2\" in
-        general|actions)
+        general|actions|longpolling)
           write_mode
           if ! grep -q '^\[devtools\]' /home/pi/odoo.conf; then
             sudo -u odoo bash -c \"printf '\n[devtools]\n' >> /home/pi/odoo.conf\"
           fi
           if [ \"\$1\" == \"disable\" ]; then
             value=\"\${3:-*}\" # Default to '*' if no action name is provided
-            devtools enable \"\$2\" # Remove action/general from conf to avoid duplicate keys
+            devtools enable \"\$2\" # Remove action/general/longpolling from conf to avoid duplicate keys
             write_mode
             sudo sed -i \"/^\[devtools\]/a\\\\\$2 = \$value\" /home/pi/odoo.conf
           elif [ \"\$1\" == \"enable\" ]; then
