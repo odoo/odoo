@@ -29,9 +29,10 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             run: "click",
         },
         {
-            trigger: ".o-mail-SubChannelList-thread:contains(Sub Channel 10)",
+            trigger: ".o-mail-SubChannelList",
             async run() {
                 await contains(".o-mail-SubChannelList-thread", { count: 1 });
+                await contains(".o-mail-SubChannelList-thread", { text: "Sub Channel 10" });
             },
         },
         {
@@ -39,7 +40,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             run: "clear",
         },
         {
-            trigger: ".o-mail-SubChannelList-thread:contains(Sub Channel 99)",
+            trigger: ".o-mail-SubChannelList",
             async run() {
                 await contains(".o-mail-SubChannelList-thread", { count: 31 });
                 // Already fetched sub channels are shown in addition to the one
@@ -55,7 +56,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             },
         },
         {
-            trigger: ".o-mail-SubChannelList-thread:contains(Sub Channel 40)",
+            trigger: ".o-mail-SubChannelList",
             async run() {
                 await contains(".o-mail-SubChannelList-thread", { count: 61 });
                 for (let i = 99; i > 39; i--) {
@@ -67,7 +68,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             },
         },
         {
-            trigger: ".o-mail-SubChannelList-thread:contains(Sub Channel 11)",
+            trigger: ".o-mail-SubChannelList",
             async run() {
                 await contains(".o-mail-SubChannelList-thread", { count: 90 });
                 for (let i = 99; i > 9; i--) {
@@ -79,7 +80,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             },
         },
         {
-            trigger: ".o-mail-SubChannelList-thread:contains(Sub Channel 0)",
+            trigger: ".o-mail-SubChannelList",
             async run() {
                 await contains(".o-mail-SubChannelList-thread", { count: 100 });
                 for (let i = 99; i > 0; i--) {
