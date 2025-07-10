@@ -87,7 +87,7 @@ export class Thread extends Record {
         );
     }
     get allowedToUnpinChannelTypes() {
-        return ["chat"];
+        return ["channel", "chat"];
     }
     get canUnpin() {
         return (
@@ -123,7 +123,7 @@ export class Thread extends Record {
         compute() {
             return (
                 this.is_pinned ||
-                (["channel", "group"].includes(this.channel_type) &&
+                (["group"].includes(this.channel_type) &&
                     this.hasSelfAsMember &&
                     !this.parent_channel_id)
             );
