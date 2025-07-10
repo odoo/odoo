@@ -1948,18 +1948,21 @@ test("highlight search in many2many", async () => {
     await runAllTimers();
     expect(`.o-autocomplete.dropdown li a > span`).toHaveCount(2);
     expect(`.o-autocomplete.dropdown li:eq(0) a > span`).toHaveInnerHTML(`
+    <span>
         first
         <span class="text-primary fw-bold">
             rec
         </span>
         ord
-    `);
+    </span>`);
     expect(`.o-autocomplete.dropdown li:eq(1) a > span`).toHaveInnerHTML(`
+    <span>
         second
         <span class="text-primary fw-bold">
             rec
         </span>
         ord
+    </span>
     `);
 });
 
