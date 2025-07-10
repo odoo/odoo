@@ -9,7 +9,11 @@ export const DYNAMIC_SNIPPET_CAROUSEL = DYNAMIC_SNIPPET;
 
 class DynamicSnippetCarouselOptionPlugin extends Plugin {
     static id = "dynamicSnippetCarouselOption";
-    static shared = ["setOptionsDefaultValues", "updateTemplateSnippetCarousel"];
+    static shared = [
+        "disableRefreshOnSnippetSave",
+        "setOptionsDefaultValues",
+        "updateTemplateSnippetCarousel",
+    ];
     static dependencies = ["dynamicSnippetOption"];
     selector = ".s_dynamic_snippet_carousel";
     modelNameFilter = "";
@@ -26,6 +30,7 @@ class DynamicSnippetCarouselOptionPlugin extends Plugin {
         }),
         dynamic_snippet_template_updated: this.onTemplateUpdated.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        clone_snippet_for_save: this.onCloneSnippetForSave.bind(this),
     };
     onTemplateUpdated({ el, template }) {
         if (el.matches(this.selector)) {
@@ -48,6 +53,14 @@ class DynamicSnippetCarouselOptionPlugin extends Plugin {
         if (snippetEl.matches(this.selector)) {
             await this.setOptionsDefaultValues(snippetEl, this.modelNameFilter);
         }
+    }
+    onCloneSnippetForSave({ snippetEl }) {
+        if (snippetEl.matches(this.selector)) {
+            this.disableRefreshOnSnippetSave();
+        }
+    }
+    disableRefreshOnSnippetSave() {
+        return this.dependencies.dynamicSnippetOption.disableRefreshOnSnippetSave();
     }
     async setOptionsDefaultValues(snippetEl, modelNameFilter, contextualFilterDomain = []) {
         await this.dependencies.dynamicSnippetOption.setOptionsDefaultValues(

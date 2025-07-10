@@ -22,6 +22,7 @@ class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
             selector: this.selector,
         }),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        clone_snippet_for_save: this.onCloneSnippetForSave.bind(this),
     };
     setup() {
         this.blogs = undefined;
@@ -33,6 +34,11 @@ class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
                 snippetEl,
                 this.modelNameFilter
             );
+        }
+    }
+    onCloneSnippetForSave({ snippetEl }) {
+        if (snippetEl.matches(this.selector)) {
+            this.dependencies.dynamicSnippetOption.disableRefreshOnSnippetSave();
         }
     }
     async fetchBlogs() {

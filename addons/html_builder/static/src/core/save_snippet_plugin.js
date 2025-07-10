@@ -58,6 +58,7 @@ export class SaveSnippetPlugin extends Plugin {
      * @param {Function} callback
      */
     wrapWithSaveSnippetHandlers(snippetEl, callback) {
+        this.dispatchTo("clone_snippet_for_save", { snippetEl });
         const onWillSaveHandlers = this.getResource("on_will_save_snippet_handlers");
         const onSavedHandlers = this.getResource("on_saved_snippet_handlers");
         onWillSaveHandlers.forEach((handler) => handler({ snippetEl }));

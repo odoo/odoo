@@ -24,6 +24,7 @@ class DynamicSnippetProductsOptionPlugin extends Plugin {
         }),
         dynamic_snippet_template_updated: this.onTemplateUpdated.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        clone_snippet_for_save: this.onCloneSnippetForSave.bind(this),
     };
     setup() {
         this.categories = undefined;
@@ -45,6 +46,11 @@ class DynamicSnippetProductsOptionPlugin extends Plugin {
                 this.modelNameFilter,
                 getContextualFilterDomain(this.editable)
             );
+        }
+    }
+    onCloneSnippetForSave({ snippetEl }) {
+        if (snippetEl.matches(this.selector)) {
+            this.dependencies.dynamicSnippetCarouselOption.disableRefreshOnSnippetSave();
         }
     }
     onTemplateUpdated({ el, template }) {
