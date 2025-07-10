@@ -2,10 +2,8 @@ import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
 import { Img } from "@html_builder/core/img";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
-import { removePlugins } from "@html_builder/utils/utils";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { Plugin } from "@html_editor/plugin";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { after } from "@odoo/hoot";
@@ -161,18 +159,7 @@ export async function setupHTMLBuilder(
         render_public_asset: () => getSnippetView(snippets),
     });
 
-    const mainPlugins = removePlugins(
-        [...MAIN_PLUGINS],
-        [
-            "PowerButtonsPlugin",
-            "DoubleClickImagePreviewPlugin",
-            "SeparatorPlugin",
-            "StarPlugin",
-            "BannerPlugin",
-            "MoveNodePlugin",
-        ]
-    );
-    const Plugins = [...mainPlugins, ...CORE_PLUGINS];
+    const Plugins = [...CORE_PLUGINS];
 
     if (dropzoneSelectors) {
         const pluginId = uniqueId("test-dropzone-selector");

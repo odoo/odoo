@@ -10,6 +10,7 @@ import {
     useHasPreview,
 } from "../utils";
 import { isColorGradient } from "@web/core/utils/colors";
+import { getAllUsedColors } from "@html_builder/utils/utils_css";
 
 // TODO replace by useInputBuilderComponent after extract unit by AGAU
 export function useColorPickerBuilderComponent() {
@@ -110,7 +111,6 @@ export class BuilderColorPicker extends Component {
         defaultColor: { type: String, optional: true },
     };
     static defaultProps = {
-        getUsedCustomColors: () => [],
         enabledTabs: ["theme", "gradient", "custom"],
         defaultColor: "#FFFFFF00",
     };
@@ -132,7 +132,8 @@ export class BuilderColorPicker extends Component {
                 applyColor: onApply,
                 applyColorPreview: onPreview,
                 applyColorResetPreview: onPreviewRevert,
-                getUsedCustomColors: this.props.getUsedCustomColors,
+                getUsedCustomColors:
+                    this.props.getUsedCustomColors || this.getUsedCustomColors.bind(this),
                 colorPrefix: "color-prefix-",
                 showRgbaField: true,
                 noTransparency: this.props.noTransparency,
@@ -164,5 +165,9 @@ export class BuilderColorPicker extends Component {
             }
         }
         return "";
+    }
+
+    getUsedCustomColors() {
+        return getAllUsedColors(this.env.editor.editable);
     }
 }
