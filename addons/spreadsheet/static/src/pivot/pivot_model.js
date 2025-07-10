@@ -95,7 +95,6 @@ export class OdooPivotModel extends PivotModel {
     }
 
     updateCollapsedDomains(collapsedDomains) {
-        console.log("updateCollapsedDomains", collapsedDomains);
         this.definition.collapsedDomains = collapsedDomains;
         this.resetTableStructure();
     }
@@ -504,7 +503,7 @@ export class OdooPivotModel extends PivotModel {
 
         rows.push({
             fields: rowGroupBys.slice(0, indent),
-            values: group.values.map((val) => val.toString()),
+            values: group.values.map((val) => val),
             indent,
         });
 
@@ -537,7 +536,7 @@ export class OdooPivotModel extends PivotModel {
                 const leafCount = leafCounts[JSON.stringify(tree.root.values)];
                 const cell = {
                     fields: colGroupBys.slice(0, rowIndex),
-                    values: group.values.map((val) => val.toString()),
+                    values: group.values.map((val) => val),
                     width: leafCount * measureCount,
                 };
                 row.push(cell);
@@ -635,6 +634,178 @@ export class OdooPivotModel extends PivotModel {
             .join(",");
         params.kwargs.order = order;
         return super._getSubGroups(groupBys, params);
+    }
+
+    _aggretateSubGroups(subGroups, measures) {
+        if (subGroups.length === 1) {
+            return subGroups[0];
+        }
+        const subGroup = { ...subGroups[0] };
+        for (const measure of measures) {
+            const aggregator = measure.split(":")[1];
+            switch (aggregator) {
+                case "sum":
+                case "count":
+                    subGroup[measure] = subGroups.reduce((sum, sg) => sum + sg[measure], 0);
+                    break;
+                case "min":
+                    subGroup[measure] = Math.min(...subGroups.map((sg) => sg[measure]));
+                    break;
+                case "max":
+                    subGroup[measure] = Math.max(...subGroups.map((sg) => sg[measure]));
+                    break;
+                case "avg": {
+                    const totalCount = subGroups.reduce((sum, sg) => sum + (sg.__count || 0), 0);
+                    if (totalCount === 0) {
+                        subGroup[measure] = 0;
+                    } else {
+                        subGroup[measure] =
+                            subGroups.reduce((sum, sg) => sum + sg[measure] * sg.__count, 0) /
+                            totalCount;
+                    }
+                    break;
+                }
+            }
+        }
+        subGroup.__count = subGroups.reduce((sum, sg) => sum + (sg.__count || 0), 0);
+
+        const domains = subGroups.map((sg) => sg.__domain || []);
+        subGroup.__domain = Domain.combine(domains, "OR").toList();
+        const extraDomains = subGroups.map((sg) => sg.__extraDomain || []);
+        subGroup.__extraDomain = Domain.combine(extraDomains, "OR").toList();
+
+        return subGroup;
+    }
+
+    _sortCustomFieldsInSubGroups(groupBys, subGroups) {
+        const isInOthersGroup = (subGroup, groupBy, customField) => {
+            const value = Array.isArray(subGroup[groupBy])
+                ? subGroup[groupBy][0]
+                : subGroup[groupBy];
+            const otherGroup = customField.groups.find((g) => g.isOtherGroup);
+            return otherGroup && value === otherGroup.name;
+        };
+
+        const sortFn = (subGroupA, subGroupB, order, groupBy, customField) => {
+            if (isInOthersGroup(subGroupB, groupBy, customField)) {
+                return -1;
+            }
+            if (isInOthersGroup(subGroupA, groupBy, customField)) {
+                return 1;
+            }
+            const aValue = subGroupA[groupBy];
+            const bValue = subGroupB[groupBy];
+            if (aValue === false) {
+                return order === "asc" ? 1 : -1;
+            } else if (bValue === false) {
+                return order === "asc" ? -1 : 1;
+            }
+
+            const aLabel = (Array.isArray(aValue) ? aValue[1] : String(aValue)).toLowerCase();
+            const bLabel = (Array.isArray(bValue) ? bValue[1] : String(bValue)).toLowerCase();
+            return order === "asc" ? aLabel.localeCompare(bLabel) : bLabel.localeCompare(aLabel);
+        };
+
+        const sortSubGroups = (groupBys, subGroups) => {
+            const groupBy = groupBys[0];
+            const childrenMap = new Map();
+
+            for (const item of subGroups) {
+                const value = item[groupBy];
+                const key = Array.isArray(value) ? value[0] : value;
+                if (!childrenMap.has(key)) {
+                    childrenMap.set(key, []);
+                }
+                childrenMap.get(key).push(item);
+            }
+
+            // Sort group keys
+            const customField = this.definition.customFields?.[groupBy];
+            const keys = Array.from(childrenMap.keys());
+            const order = this.definition.getDimension(groupBy)?.order;
+
+            if (customField && order) {
+                keys.sort((a, b) => {
+                    const subGroupB = childrenMap.get(b)[0];
+                    const subGroupA = childrenMap.get(a)[0];
+                    return sortFn(subGroupA, subGroupB, order, groupBy, customField);
+                });
+            }
+
+            return keys.flatMap((key) =>
+                groupBys.length > 1
+                    ? sortSubGroups(groupBys.slice(1), childrenMap.get(key))
+                    : childrenMap.get(key)
+            );
+        };
+
+        return sortSubGroups(groupBys, subGroups);
+    }
+
+    /**
+     * If the measures can be aggregated client side (not `count_distinct`), we can do a single RPC to get all the
+     * subgroups, then do a Object.groupBy() client side to aggregate the subgroups.
+     */
+    async _doCustomGroupSubdivision(group, rowGroupBy, colGroupBy, params) {
+        const customFields = this.definition.customFields || {};
+        const groupBys = [...rowGroupBy, ...colGroupBy];
+
+        const mockRowGroupBy = rowGroupBy.map((gb) => customFields[gb]?.parentField || gb);
+        const mockColGroupBy = colGroupBy.map((gb) => customFields[gb]?.parentField || gb);
+
+        const result = await super._getGroupSubdivision(
+            group,
+            mockRowGroupBy,
+            mockColGroupBy,
+            params
+        );
+
+        // Add custom fields to the rpc result
+        for (const groupBy of groupBys) {
+            const customField = customFields[groupBy];
+            if (!customField) {
+                continue;
+            }
+
+            for (const subGroup of result.subGroups) {
+                const parentFieldName = customField.parentField;
+                const parentValue = Array.isArray(subGroup[parentFieldName])
+                    ? subGroup[parentFieldName][0]
+                    : subGroup[parentFieldName];
+                const group =
+                    customField.groups.find((g) => g.values.includes(parentValue)) ||
+                    customField.groups.find((g) => g.isOtherGroup);
+
+                subGroup[groupBy] = group ? group.name : subGroup[parentFieldName];
+            }
+        }
+
+        // Note: we need to preserve the order of the subGroups from the server. Object.groupBy() has no guarantee
+        // on the order of keys, but its implementation in major browsers does seem to preserve the order. We'll use
+        // Object.groupBy() until we find practical issues with it.
+        const getKey = (subGroup) => JSON.stringify(groupBys.map((groupBy) => subGroup[groupBy]));
+        const groupedSubgroups = Object.groupBy(result.subGroups, getKey);
+
+        const aggregatedSubgroups = Object.values(groupedSubgroups).map((subGroups) =>
+            this._aggretateSubGroups(subGroups, params.measureSpecs)
+        );
+        const sortedSubGroups = this._sortCustomFieldsInSubGroups(groupBys, aggregatedSubgroups);
+
+        return { rowGroupBy, colGroupBy, group, subGroups: sortedSubGroups };
+    }
+
+    async _getGroupSubdivision(group, rowGroupBy, colGroupBy, params) {
+        const customFields = this.definition.customFields || {};
+        const groupBys = [...rowGroupBy, ...colGroupBy];
+
+        const hasCustomField = groupBys.some((gb) => customFields[gb] !== undefined);
+        if (!hasCustomField) {
+            return super._getGroupSubdivision(group, rowGroupBy, colGroupBy, params);
+        } else if (params.measureSpecs.some((measure) => measure.endsWith(":count_distinct"))) {
+            throw new Error(_t('Cannot use custom pivot groups with "Count Distinct" measure'));
+        } else {
+            return this._doCustomGroupSubdivision(group, rowGroupBy, colGroupBy, params);
+        }
     }
 
     /**

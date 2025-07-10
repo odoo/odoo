@@ -10,8 +10,14 @@ import { omit } from "@web/core/utils/objects";
 import { OdooPivotLoader } from "./odoo_pivot_loader";
 
 const { pivotRegistry, supportedPivotPositionalFormulaRegistry } = registries;
-const { pivotTimeAdapter, toString, areDomainArgsFieldsValid, toNormalizedPivotValue, deepEquals } =
-    helpers;
+const {
+    pivotTimeAdapter,
+    toString,
+    areDomainArgsFieldsValid,
+    toNormalizedPivotValue,
+    deepEquals,
+    createCustomFields,
+} = helpers;
 
 /**
  * @typedef {import("@odoo/o-spreadsheet").FunctionResultObject} FunctionResultObject
@@ -98,7 +104,8 @@ export class OdooPivot {
             deepEquals(actualDefinition.domain, nextDefinition.domain) &&
             deepEquals(actualDefinition.context, nextDefinition.context) &&
             deepEquals(actualDefinition.actionXmlId, nextDefinition.actionXmlId) &&
-            deepEquals(actualDefinition.model, nextDefinition.model)
+            deepEquals(actualDefinition.model, nextDefinition.model) &&
+            deepEquals(actualDefinition.customFields, nextDefinition.customFields)
         ) {
             if (deepEquals(actualDefinition.measures, nextDefinition.measures)) {
                 // Nothing change for the table structure, no need to reload the data
@@ -163,7 +170,7 @@ export class OdooPivot {
     }
 
     getFields() {
-        return this._fields || {};
+        return { ...this._fields, ...createCustomFields(this.coreDefinition, this._fields) };
     }
 
     /**
@@ -589,6 +596,10 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
             },
         };
     }
+
+    get invalidAggregatorsForCustomField() {
+        return ["count_distinct"];
+    }
 }
 
 const MEASURES_TYPES = ["integer", "float", "monetary"];
@@ -618,6 +629,10 @@ pivotRegistry.add("ODOO", {
         field.name !== "id" &&
         field.store,
     isGroupable: (field) => field.groupable,
+    canHaveCustomGroup: (field) =>
+        field.groupable &&
+        !field.isCustomField &&
+        ["many2one", "char", "one2many", "many2many", "selection"].includes(field.type),
 });
 
 supportedPivotPositionalFormulaRegistry.add("ODOO", true);
