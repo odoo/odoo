@@ -7,6 +7,10 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="arch" type="xml">
+                <!--  Set Default Code field as a readonly type               -->
+                <xpath expr="//field[@name='default_code']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
                 <!-- Add the fields in the appropriate position -->
                 <xpath expr="//sheet/notebook/page[@name='general_information']/group" position="after">
                     <field name="tenant_id" string="Tenant ID" invisible="True"/>
@@ -43,5 +47,16 @@
                 </xpath>
             </field>
         </record>
+<!--        Set Default code as Readonly on Product.product-->
+        <record id="product_product_form_readonly_default_code" model="ir.ui.view">
+        <field name="name">product.product.form.readonly.default.code</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+        </field>
+    </record>
     </data>
 </odoo>
