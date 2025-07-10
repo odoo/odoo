@@ -16,10 +16,10 @@ class StockMove(models.Model):
         string='Use Expiration Date', related='product_id.use_expiration_date')
 
     @api.model
-    def action_generate_lot_line_vals(self, context, mode, first_lot, count, lot_text):
-        vals_list = super().action_generate_lot_line_vals(context, mode, first_lot, count, lot_text)
-        product = self.env['product.product'].browse(context.get('default_product_id'))
-        picking = self.env['stock.picking'].browse(context.get('default_picking_id'))
+    def action_generate_lot_line_vals(self, context_data, mode, first_lot, count, lot_text):
+        vals_list = super().action_generate_lot_line_vals(context_data, mode, first_lot, count, lot_text)
+        product = self.env['product.product'].browse(context_data.get('default_product_id'))
+        picking = self.env['stock.picking'].browse(context_data.get('default_picking_id'))
         if product.use_expiration_date:
             from_date = picking.scheduled_date or fields.Datetime.today()
             expiration_date = from_date + datetime.timedelta(days=product.expiration_time)

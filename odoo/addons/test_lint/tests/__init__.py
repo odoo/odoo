@@ -9,6 +9,7 @@ from . import test_jstranslate
 from . import test_l10n
 from . import test_manifests
 from . import test_markers
+from . import test_naming
 from . import test_onchange_domains
 from . import test_orm_import
 from . import test_override_signatures
