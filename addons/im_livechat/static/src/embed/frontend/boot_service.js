@@ -1,6 +1,6 @@
 import { makeRoot, makeShadow } from "@im_livechat/embed/common/boot_helpers";
 import { LivechatRoot } from "@im_livechat/embed/frontend/livechat_root";
-import { _t } from "@web/core/l10n/translation";
+import { appTranslateFn } from "@web/core/l10n/translation";
 import { App } from "@odoo/owl";
 
 import { getTemplate } from "@web/core/templates";
@@ -28,7 +28,7 @@ export const livechatBootService = {
                 env,
                 getTemplate,
                 translatableAttributes: ["data-tooltip"],
-                translateFn: _t,
+                translateFn: appTranslateFn,
                 dev: env.debug,
             }).mount(shadow);
         });
