@@ -64,5 +64,6 @@ class StockQuantInherit(models.Model):
                 quant.product_packaging_qty = quant.inventory_packaging_quantity
 
         # Now call the base method to apply the inventory quantity to stock
-        return super(StockQuantInherit, self).action_apply_inventory()
+        super(StockQuantInherit, self).action_apply_inventory()
+        return None
 
