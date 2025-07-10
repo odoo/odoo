@@ -1426,7 +1426,7 @@ export class SearchModel extends EventBus {
             categories.map(async (category) => {
                 const result = await this.orm
                     .cached({
-                        onFinish: (hasChanged, result) => {
+                        callback: (result, hasChanged) => {
                             if (!hasChanged || categoriesLoadId !== this.categoriesLoadId) {
                                 return;
                             }
@@ -1468,7 +1468,7 @@ export class SearchModel extends EventBus {
             filters.map(async (filter) => {
                 const result = await this.orm
                     .cached({
-                        onFinish: (hasChanged, result) => {
+                        callback: (result, hasChanged) => {
                             if (!hasChanged || filtersLoadId !== this.filtersLoadId) {
                                 return;
                             }
