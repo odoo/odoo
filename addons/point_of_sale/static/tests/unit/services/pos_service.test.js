@@ -131,6 +131,28 @@ describe("pos_store.js", () => {
         expect(store.models["pos.order"].getBy("uuid", order1.uuid).state).toBe("cancel");
     });
 
+    test("getOrderData", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const orderData = store.getOrderData(order);
+        expect(orderData).toEqual({
+            reprint: undefined,
+            pos_reference: "",
+            config_name: "Hoot",
+            time: "10:30",
+            tracking_number: "",
+            preset_time: false,
+            preset_name: "In",
+            employee_name: "Administrator",
+            internal_note: "",
+            general_customer_note: "",
+            changes: {
+                title: "",
+                data: [],
+            },
+        });
+    });
+
     test("productsToDisplay", async () => {
         const store = await setupPosEnv();
         store.selectedCategory = store.models["pos.category"].get(1);

@@ -341,63 +341,89 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('test_pos_restaurant_course')
 
     def test_preparation_printer_content(self):
-            self.env['pos.printer'].create({
-                'name': 'Printer',
-                'printer_type': 'epson_epos',
-                'epson_printer_ip': '0.0.0.0',
-                'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
-            })
+        self.preset_eat_in = self.env['pos.preset'].create({
+            'name': 'Eat in',
+        })
+        self.preset_takeaway = self.env['pos.preset'].create({
+            'name': 'Takeaway',
+            'identification': 'name',
+        })
+        self.main_pos_config.write({
+            'use_presets': True,
+            'default_preset_id': self.preset_eat_in.id,
+            'available_preset_ids': [(6, 0, [self.preset_takeaway.id])],
+        })
+        resource_calendar = self.env['resource.calendar'].create({
+            'name': 'Takeaway',
+            'attendance_ids': [(0, 0, {
+                'name': 'Takeaway',
+                'dayofweek': str(day),
+                'hour_from': 0,
+                'hour_to': 24,
+                'day_period': 'morning',
+            }) for day in range(0, 7)],
+        })
+        self.preset_takeaway.write({
+            'use_timing': True,
+            'resource_calendar_id': resource_calendar
+        })
+        self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
 
-            self.main_pos_config.write({
-                'is_order_printer' : True,
-                'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
-            })
+        self.main_pos_config.write({
+            'is_order_printer': True,
+            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+        })
 
-            self.product_test = self.env['product.product'].create({
-                'name': 'Product Test',
-                'available_in_pos': True,
-                'list_price': 10,
-                'pos_categ_ids': [(6, 0, [self.env['pos.category'].search([], limit=1).id])],
-                'taxes_id': False,
-            })
+        self.product_test = self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 10,
+            'pos_categ_ids': [(6, 0, [self.env['pos.category'].search([], limit=1).id])],
+            'taxes_id': False,
+        })
 
-            attribute = self.env['product.attribute'].create({
-                'name': 'Attribute 1',
-                'create_variant': 'no_variant',
-            })
-            attribute_value = self.env['product.attribute.value'].create({
-                'name': 'Value 1',
-                'attribute_id': attribute.id,
-            })
-            attribute_value_2 = self.env['product.attribute.value'].create({
-                'name': 'Value 2',
-                'attribute_id': attribute.id,
-            })
-            self.env['product.template.attribute.line'].create({
-                'product_tmpl_id': self.product_test.product_tmpl_id.id,
-                'attribute_id': attribute.id,
-                'value_ids': [(6, 0, [attribute_value.id, attribute_value_2.id])],
-            })
+        attribute = self.env['product.attribute'].create({
+            'name': 'Attribute 1',
+            'create_variant': 'no_variant',
+        })
+        attribute_value = self.env['product.attribute.value'].create({
+            'name': 'Value 1',
+            'attribute_id': attribute.id,
+        })
+        attribute_value_2 = self.env['product.attribute.value'].create({
+            'name': 'Value 2',
+            'attribute_id': attribute.id,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.product_test.product_tmpl_id.id,
+            'attribute_id': attribute.id,
+            'value_ids': [(6, 0, [attribute_value.id, attribute_value_2.id])],
+        })
 
-            attribute_2 = self.env['product.attribute'].create({
-                'name': 'Attribute 1',
-                'create_variant': 'always',
-            })
-            attribute_2_value = self.env['product.attribute.value'].create({
-                'name': 'Value 1',
-                'attribute_id': attribute_2.id,
-            })
-            attribute_2_value_2 = self.env['product.attribute.value'].create({
-                'name': 'Value 2',
-                'attribute_id': attribute_2.id,
-            })
-            self.env['product.template.attribute.line'].create({
-                'product_tmpl_id': self.product_test.product_tmpl_id.id,
-                'attribute_id': attribute_2.id,
-                'value_ids': [(6, 0, [attribute_2_value.id, attribute_2_value_2.id])],
-            })
-            self.main_pos_config.with_user(self.pos_user).open_ui()
-            self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PreparationPrinterContent', login="pos_user")
+        attribute_2 = self.env['product.attribute'].create({
+            'name': 'Attribute 1',
+            'create_variant': 'always',
+        })
+        attribute_2_value = self.env['product.attribute.value'].create({
+            'name': 'Value 1',
+            'attribute_id': attribute_2.id,
+        })
+        attribute_2_value_2 = self.env['product.attribute.value'].create({
+            'name': 'Value 2',
+            'attribute_id': attribute_2.id,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.product_test.product_tmpl_id.id,
+            'attribute_id': attribute_2.id,
+            'value_ids': [(6, 0, [attribute_2_value.id, attribute_2_value_2.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PreparationPrinterContent', login="pos_user")
 
     def test_course_restaurant_preparation_tour(self):
         self.env['pos.printer'].create({
