@@ -6,14 +6,18 @@
             <t t-if="value !== false">
                 <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id" noSpacing="true"/>
             </t>
-            <Many2One t-props="m2oProps" cssClass="'w-100'">
+            <Many2OneAvatarUser t-props="m2oProps" cssClass="'w-100'">
+                <t t-set-slot="inviteTeammates" t-slot-scope="inviteTeammatesScope">
+                    <i class="fa fa-envelope-o fa-lg me-2 d-inline"/>
+                    <t t-out="inviteTeammatesScope.label"/>
+                </t>
                 <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                     <div class="o_avatar_many2x_autocomplete d-flex align-items-center">
                         <Avatar resModel="relation" resId="autoCompleteItemScope.record.id" canOpenPopover="false"/>
                         <t t-out="autoCompleteItemScope.label"/>
                     </div>
                 </t>
-            </Many2One>
+            </Many2OneAvatarUser>
         </div>
     </t>
 

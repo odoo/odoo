@@ -25,7 +25,7 @@ from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, DEFAULT_LANG
-from odoo.tools import is_html_empty, frozendict, reset_cached_properties, SQL
+from odoo.tools import email_domain_extract, is_html_empty, frozendict, reset_cached_properties, SQL
 
 
 _logger = logging.getLogger(__name__)
@@ -263,6 +263,7 @@ class ResUsers(models.Model):
                                  compute='_compute_accesses_count', compute_sudo=True)
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
                                   compute='_compute_accesses_count', compute_sudo=True)
+    email_placeholder = fields.Char(compute="_compute_email_placeholder")
 
     def _default_view_group_hierarchy(self):
         return self.env['res.groups']._get_view_group_hierarchy()
@@ -393,6 +394,11 @@ class ResUsers(models.Model):
                 }
 
         raise AccessDenied()
+
+    @api.depends_context('uid')
+    def _compute_email_placeholder(self):
+        domain = email_domain_extract(self.env.user.email)
+        self.email_placeholder = f'e.g. email@{domain}' if domain else ''
 
     def _compute_password(self):
         for user in self:
