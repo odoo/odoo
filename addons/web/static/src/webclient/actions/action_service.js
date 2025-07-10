@@ -1,4 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
+import { Domain } from "@web/core/domain";
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
@@ -1500,12 +1501,22 @@ export function makeActionManager(env, router = _router) {
             if (action.help) {
                 action.help = markup(action.help);
             }
+            if (params.domain) {
+                const actionDomain = typeof action.domain === "string" ? evaluateExpr(action.domain) : (action.domain || []);
+                const paramsDomain = typeof params.domain === "string" ? evaluateExpr(params.domain) : params.domain;
+                action.domain = Domain.and([actionDomain, paramsDomain || []]).toList();
+            }
         } else if (params.type === "action") {
             // execute a given action, so load it first
             context.active_id = params.resId || null;
             context.active_ids = params.resIds;
             context.active_model = params.resModel;
             action = await keepLast.add(_loadAction(params.name, context));
+            if (params.domain) {
+                const actionDomain = typeof action.domain === "string" ? evaluateExpr(action.domain) : (action.domain || []);
+                const paramsDomain = typeof params.domain === "string" ? evaluateExpr(params.domain) : params.domain;
+                action.domain = Domain.and([actionDomain, paramsDomain || []]).toList();
+            }
         } else {
             if (blockUi) {
                 env.services.ui.unblock();

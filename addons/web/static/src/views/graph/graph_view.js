@@ -40,6 +40,7 @@ export const graphView = {
                 cumulated: archInfo.cumulated || false,
                 cumulatedStart: archInfo.cumulatedStart || false,
                 title: archInfo.title || _t("Untitled"),
+                openAction: archInfo.openAction || false,
             };
         }
 
