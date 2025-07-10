@@ -647,7 +647,7 @@ patch(PosStore.prototype, {
                 if (orders[0].getScreenData().name === "PaymentScreen") {
                     props.orderUuid = orders[0].uuid;
                 }
-                this.showScreen(orders[0].getScreenData().name, props);
+                this.showScreen(orders[0].getScreenData().name || "ProductScreen", props);
             } else {
                 this.addNewOrder({ table_id: table });
                 this.showScreen("ProductScreen");
