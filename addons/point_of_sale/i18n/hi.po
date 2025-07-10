@@ -1408,7 +1408,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Card"
-msgstr ""
+msgstr "कार्ड"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_no
@@ -6995,7 +6995,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sale_journal
 msgid "Sales Journal"
-msgstr ""
+msgstr "सेल्स जर्नल"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -8019,6 +8019,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"जो रिफंड ऑर्डर पहले से बिल बन चुके ऑर्डरों के लिए हैं, उन्हें एक साथ इनवॉइस में नहीं जोड़ा जा सकता. हर रिफंड ऑर्डर को अलग से ही निपटाना होगा.\n"
+"\n"
+"%s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -8139,6 +8142,8 @@ msgid ""
 "The pricelist used if no customer is selected or if the customer has no Sale"
 " Pricelist configured if any."
 msgstr ""
+"अगर ग्राहक नहीं चुना या उसकी अपनी कोई सेल प्राइसलिस्ट नहीं है, तो यह वाली "
+"प्राइसलिस्ट इस्तेमाल होगी."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__hour_after
@@ -8219,6 +8224,10 @@ msgid ""
 "the meantime have been saved in a Rescue Session, which can be reviewed "
 "anytime and posted to Accounting from Point of Sale's dashboard."
 msgstr ""
+"जिस सेशन में आप थे, उसे किसी और ने बंद कर दिया है. इस दौरान जितनी भी सेल्स "
+"हुई है, वह सब एक खास 'रेस्क्यू सेशन' में अपने-आप सुरक्षित हो गई है. आप इस "
+"'रेस्क्यू सेशन' को कभी भी देख सकते हैं और 'पॉइंट ऑफ सेल' के डैशबोर्ड से इसे "
+"अपने अकाउंटिंग हिसाब-किताब में डाल सकते हैं."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -8247,6 +8256,8 @@ msgid ""
 "The tip has been added to the order. However,the selected payment line does "
 "not allow tips to be added."
 msgstr ""
+"आपने ऑर्डर में टिप जोड़ दी है, लेकिन जिस तरीके से पेमेंट किया जा रहा है, वह "
+"टिप लेने की सुविधा नहीं देता."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_adyen
@@ -8255,6 +8266,8 @@ msgid ""
 "The transactions are processed by Adyen. Set your Adyen credentials on the "
 "related payment method."
 msgstr ""
+"आपके सारे ट्रांज़ैक्शन Adyen संभालती है. अपने पेमेंट के तरीके में Adyen की "
+"जानकारी (यूज़रनेम/पासवर्ड) डालें."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8267,6 +8280,8 @@ msgid ""
 "The transactions are processed by Mercado Pago. Set your Mercado Pago "
 "credentials on the related payment method."
 msgstr ""
+"आपके सारे ट्रांज़ैक्शन Mercado Pago संभालती है. अपने पेमेंट के तरीके में "
+"Mercado Pago की जानकारी (यूज़रनेम/पासवर्ड) डालें."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_razorpay
@@ -8275,6 +8290,8 @@ msgid ""
 "The transactions are processed by Razorpay. Set your Razorpay credentials on"
 " the related payment method."
 msgstr ""
+"आपके सारे ट्रांज़ैक्शन Razorpay संभालती है. अपने पेमेंट के तरीके में "
+"Razorpay की जानकारी (यूज़रनेम/पासवर्ड) डालें."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -8283,6 +8300,8 @@ msgid ""
 "The transactions are processed by Stripe. Set your Stripe credentials on the"
 " related payment method."
 msgstr ""
+"आपके सारे ट्रांज़ैक्शन Stripe संभालती है. अपने पेमेंट के तरीके में Stripe की"
+" जानकारी (यूज़रनेम/पासवर्ड) डालें."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_viva_wallet
@@ -8322,6 +8341,9 @@ msgid ""
 "There is a difference between the amounts to post and the amounts of the "
 "orders, it is probably caused by taxes or accounting configurations changes."
 msgstr ""
+"जो रकम खाते में दर्ज करनी है, वह ऑर्डर की असल रकम से अलग है. ऐसा शायद टैक्स "
+"में बदलाव या आपके अकाउंटिंग सिस्टम की सेटिंग में हुए बदलावों की वजह से हुआ "
+"है."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8336,6 +8358,8 @@ msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
 msgstr ""
+"आपकी कंपनी में खातों की कोई सूची सेट नहीं है. कृपया 'इनवॉइसिंग सेटिंग्स' में"
+" जाकर, खातों की सूची को इंस्टॉल करें."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8365,6 +8389,8 @@ msgid ""
 "There is no serial/lot number for the selected product, and their creation "
 "is not allowed from the Point of Sale app."
 msgstr ""
+"आपने जो प्रॉडक्ट चुना है, उसका कोई सीरियल नंबर या बैच नंबर नहीं है, और आप "
+"इसे 'पॉइंट ऑफ़ सेल' ऐप्लिकेशन से बना भी नहीं सकते."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8399,6 +8425,11 @@ msgid ""
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
 msgstr ""
+"यह फ़ील्ड बताता है कि जब कोई गैर-पीओएस (पॉइंट ऑफ सेल) मैनेजर अपना काम का "
+"सेशन बंद करता है, तो उसके पास मौजूद असल कैश और कंप्यूटर में दिख रहे कैश की "
+"रकम में ज़्यादा से ज़्यादा कितना अंतर स्वीकार किया जा सकता है. अगर यह अंतर "
+"तय सीमा से ज़्यादा हो जाता है, तो उसे एक एरर मैसेज मिलेगा और कहा जाएगा कि वह"
+" अपने मैनेजर से बात करे."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id
@@ -8748,7 +8779,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_transaction
 msgid "Transaction"
-msgstr ""
+msgstr "ट्रांज़ैक्शन"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9114,7 +9145,7 @@ msgstr "वेबसाइट मैसेज"
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__website_message_ids
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "वेबसाइट कम्यूनिकेशन हिस्ट्री"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9480,7 +9511,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/controllers/main.py:0
 msgid "by Email"
-msgstr ""
+msgstr "ईमेल के ज़रिए"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9623,7 +9654,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "on"
-msgstr ""
+msgstr " "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9636,7 +9667,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "or"
-msgstr ""
+msgstr " "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
