@@ -18,24 +18,6 @@
     </section>
 </template>
 
-<!-- Snippet's Options -->
-<template id="s_embed_code_options" inherit_id="website.snippet_options">
-    <xpath expr="//div[@data-js='Box']" position="before">
-        <div data-js="EmbedCode" data-selector=".s_embed_code">
-            <we-row string="Code">
-                <we-button data-edit-code="" data-no-preview="true"
-                        class="o_we_edit_code o_we_no_toggle o_we_bg_success active"
-                        title="Edit embedded code">Edit</we-button>
-            </we-row>
-            <we-button-group string="Alignment">
-                <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="text-start"/>
-                <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="text-center"/>
-                <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="text-end"/>
-            </we-button-group>
-        </div>
-    </xpath>
-</template>
-
 <!-- Snippet assets -->
 <record id="website.s_embed_code_000_scss" model="ir.asset">
     <field name="name">Embed Code 000 SCSS</field>

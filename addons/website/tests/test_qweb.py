@@ -520,22 +520,22 @@ class TestQwebDataSnippet(TransactionCase):
         with contextmanager(lambda: self._patchExecute(actual_queries))():
             with MockRequest(self.env, website=self.env['website'].browse(1)):
                 render = self.env['ir.ui.view'].render_public_asset('website.snippets')
-                self.assertTrue('data-selector=".s_blockquote"' in render)
+                self.assertTrue('name="Blockquote"' in render)
 
         re_sql = re.compile(r'\bir_ui_view\b', re.IGNORECASE)
         ir_ui_view_queries = [q for q in actual_queries if re_sql.search(q)]
 
         # nb_snippets = 156
         first_search = 1
-        t_call_snippets = 3
+        t_call_snippets = 2
         fetch_snippets = 0
         get_root_view = 3
         combine_views = 3
 
-        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views  # 10
+        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views  # 9
         self.assertEqual(len(ir_ui_view_queries), all_ir_ui_view_queries, f'ir_ui_view queries: {all_ir_ui_view_queries}')
 
         re_sql = re.compile(r'\bwebsite\b', re.IGNORECASE)
         website_queries = [q for q in actual_queries if re_sql.search(q)]
 
-        self.assertEqual(len(website_queries), 21, f'Maximum queries: {21}')
+        self.assertEqual(len(website_queries), 19, f'Maximum queries: {19}')

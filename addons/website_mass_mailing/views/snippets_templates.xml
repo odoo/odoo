@@ -52,16 +52,6 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
     </div>
 </template>
 
-<template id="s_newsletter_subscribe_form_options" inherit_id="website.snippet_options">
-    <xpath expr="." position="inside">
-        <div data-selector=".s_newsletter_subscribe_form">
-            <we-input string="Placeholder" class="o_we_large"
-                data-select-attribute="" data-attribute-name="placeholder"
-                data-apply-to=".s_newsletter_subscribe_form_input"/>
-        </div>
-    </xpath>
-</template>
-
 <!--
 Users upgraded from a version lower than 16.0 may have those blocks in their
 database, without the s_newsletter_list class. See fixNewsletterListClass.
@@ -294,50 +284,6 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                 </div>
             </div>
         </div>
-    </div>
-</template>
-
-<template id="newsletter_subscribe_options" name="Newsletter Subscribe Options" inherit_id="website.snippet_options">
-    <xpath expr="//*[@t-set='so_snippet_addition_selector']" position="inside" t-translation="off">, .o_newsletter_popup</xpath>
-    <xpath expr="//div[1]" position="before">
-        <div data-js="NewsletterLayout" data-selector=".s_newsletter_block">
-            <we-select string="Template"
-                       data-name="newsletter_template_opt"
-                       data-attribute-name="newsletterTemplate"
-                       data-attribute-default-value="email">
-                <we-button title="Email Subscription" string="Email Subscription"
-                           data-select-template="website_mass_mailing.s_newsletter_block_default_template"
-                           data-select-data-attribute="email" data-name="email_opt"/>
-                <we-button title="Form Subscription" string="Form Subscription"
-                           data-select-template="website_mass_mailing.s_newsletter_block_form_template"
-                           data-select-data-attribute="form" data-name="form_opt"/>
-            </we-select>
-        </div>
-        <t t-call="website_mass_mailing.newsletter_subscribe_options_common">
-            <t t-set="_selector">.o_newsletter_popup</t>
-            <t t-set="_target">.s_newsletter_list</t>
-        </t>
-        <t t-call="website_mass_mailing.newsletter_subscribe_options_common">
-            <t t-set="_selector">.s_newsletter_list</t>
-            <t t-set="_exclude">.s_newsletter_block .s_newsletter_list, .o_newsletter_popup .s_newsletter_list, .s_newsletter_box .s_newsletter_list, .s_newsletter_centered .s_newsletter_list, .s_newsletter_grid .s_newsletter_list</t>
-        </t>
-        <div data-selector=".js_subscribe" data-drop-near="p, h1, h2, h3, blockquote, .card"/>
-    </xpath>
-</template>
-
-<template id="newsletter_subscribe_options_common">
-    <div data-js="mailing_list_subscribe"
-         t-att-data-selector="_selector"
-         t-att-data-exclude="_exclude"
-         t-att-data-target="_target">
-        <we-select string="Newsletter" data-attribute-name="listId" data-dependencies="!form_opt"></we-select>
-    </div>
-    <div data-js="recaptchaSubscribe"
-         t-att-data-selector="_selector"
-         t-att-data-exclude="_exclude"
-         t-att-data-target="_target">
-        <t t-set="recaptcha_public_key" t-value="request.env['ir.config_parameter'].sudo().get_param('recaptcha_public_key')"/>
-        <we-checkbox t-if="recaptcha_public_key" string="Show reCaptcha Policy" data-toggle-recaptcha-legal="" data-no-preview="true"/>
     </div>
 </template>
 

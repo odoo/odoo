@@ -302,41 +302,6 @@
     </t>
 </template>
 
-<!--SNIPPET OPTIONS -->
-
-<template id="s_events_options" inherit_id="website.snippet_options">
-    <xpath expr="." position="inside">
-        <t t-call="website_event.s_dynamic_snippet_options_template">
-            <t t-set="snippet_name" t-value="'event_upcoming_snippet'"/>
-            <t t-set="snippet_selector" t-value="'.s_event_upcoming_snippet'"/>
-        </t>
-    </xpath>
-</template>
-
-<template id="s_dynamic_snippet_options_template" inherit_id="website.s_dynamic_snippet_options_template">
-    <xpath expr="//we-select[@data-name='filter_opt']" position="after">
-        <we-many2many t-if="snippet_name == 'event_upcoming_snippet'"
-                      string="Event Tags"
-                      data-name="event_tag_opt"
-                      data-model="event.tag"
-                      data-fakem2m="true"
-                      data-domain='[["category_id.website_published", "=", true], ["color", "not in", ["0", false]]]'
-                      data-limit="10"
-                      data-attribute-name="filterByTagIds"
-                      data-fields="[&quot;category_id&quot;]"
-                      data-select-data-attribute=""
-                      data-no-preview="true"/>
-    </xpath>
-    <xpath expr="//we-select[@data-name='template_opt']" position="after">
-        <we-checkbox t-if="snippet_name == 'event_upcoming_snippet'"
-            data-name="time_opt"
-            string="Show time"
-            data-no-preview="true"
-            data-customize-template-key="events_event_time_active"
-            data-customize-template-values="false|true"/>
-    </xpath>
-</template>
-
 <!--ASSETS-->
 
 <record id="website_event.s_events_000_scss" model="ir.asset">

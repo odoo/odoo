@@ -46,34 +46,6 @@
             <t t-set="snippet_name" t-value="'s_dynamic_snippet'"/>
         </t>
     </template>
-    <template id="website.s_dynamic_snippet_options_template">
-        <div t-attf-data-js="#{snippet_name}" t-attf-data-selector="#{snippet_selector}" data-no-preview="true">
-            <we-select string="Filter" data-name="filter_opt" data-attribute-name="filterId" data-no-preview="true">
-            </we-select>
-            <we-select string="Template" data-name="template_opt" data-attribute-name="templateKey" data-no-preview="true">
-            </we-select>
-            <we-select string="Fetched Elements" data-name="number_of_records_opt" data-attribute-name="numberOfRecords" data-no-preview="true">
-                <we-button t-foreach="range(1, 17)" t-as="value" t-att-data-select-data-attribute="value" t-out="value"/>
-            </we-select>
-            <t t-out="0"/>
-        </div>
-        <div data-no-preview="true" t-attf-data-selector="#{snippet_selector}" data-target=".s_dynamic_snippet_title">
-            <we-button-group string="Section Title">
-                <we-button data-select-class="justify-content-between" title="Top">Top</we-button>
-                <we-button data-select-class="s_dynamic_snippet_title_aside col-lg-3 justify-content-between flex-lg-column justify-content-lg-start" title="Left">Left</we-button>
-                <we-button data-select-class="d-none" title="No title">None</we-button>
-            </we-button-group>
-            <div data-js="DynamicSnippetTitle" data-selector=".s_dynamic_snippet_title"/>
-        </div>
-    </template>
-    <template id="s_dynamic_snippet_options" inherit_id="website.snippet_options">
-        <xpath expr="." position="inside">
-            <t t-call="website.s_dynamic_snippet_options_template">
-                <t t-set="snippet_name" t-value="'dynamic_snippet'"/>
-                <t t-set="snippet_selector" t-value="'.s_dynamic_snippet'"/>
-            </t>
-        </xpath>
-    </template>
 
 <record id="website.s_dynamic_snippet_000_scss" model="ir.asset">
     <field name="name">Dynamic snippet 000 SCSS</field>
