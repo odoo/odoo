@@ -17,6 +17,14 @@
     </template>
 
     <template id="payment_adyen.method_form" inherit_id="payment.method_form">
+        <xpath expr="//t[@t-set='provider_sudo']" position="after">
+            <!-- Zip requires a delivery address with Adyen. -->
+            <t
+                t-if="pm_sudo.code == 'zip' and not (invoice_id or sale_order_id) and provider_sudo.code == 'adyen'"
+                t-set="provider_sudo"
+                t-value="pm_sudo.provider_ids.filtered(lambda p: p in providers_sudo)[1:2]"
+            />
+        </xpath>
         <xpath expr="//input[@name='o_payment_radio']" position="attributes">
             <attribute name="t-att-data-adyen-inline-form-values">
                 provider_sudo._adyen_get_inline_form_values(pm_sudo.code, amount, currency)
