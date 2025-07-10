@@ -284,7 +284,7 @@ export class RelationalModel extends Model {
             (config.isMonoRecord && (this.root.config.resId !== config.resId || !config.resId))
         ) {
             return {
-                onFinish: async (hasChanged, result) => {
+                callback: async (result, hasChanged) => {
                     if (!hasChanged) {
                         return;
                     }

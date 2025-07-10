@@ -269,7 +269,7 @@ test("update callback - Ram Value", async () => {
                 return Promise.resolve(def);
             },
             {
-                onFinish: (hasChanged, result) => {
+                callback: (result) => {
                     expect.step("Callback");
                     expect(result).toEqual({ test: 456 });
                 },
@@ -332,7 +332,7 @@ test("update callback - Disk Value", async () => {
                 return Promise.resolve(def);
             },
             {
-                onFinish: (hasChanged, result) => {
+                callback: (result) => {
                     expect.step("Callback");
                     expect(result).toEqual({ test: 456 });
                 },
@@ -465,7 +465,7 @@ test("Ram value shouldn't change (update the IndexedDB response)", async () => {
     });
 });
 
-test("Changing the result shouldn't force the call to onFinish with hasChanged (RAM value)", async () => {
+test("Changing the result shouldn't force the call to callback with hasChanged (RAM value)", async () => {
     const persistentCache = new PersistentCache(
         "mockRpc",
         1,
@@ -492,9 +492,9 @@ test("Changing the result shouldn't force the call to onFinish with hasChanged (
     // read the RAM Value !
     const def = new Deferred();
     res = await persistentCache.read("table", "key", () => def, {
-        onFinish: (hasChanged) => {
+        callback: (_result, hasChanged) => {
             if (hasChanged) {
-                expect.step("onFinish with hasChanged shouldn't be called");
+                expect.step("callback with hasChanged shouldn't be called");
             }
         },
     });
@@ -513,7 +513,7 @@ test("Changing the result shouldn't force the call to onFinish with hasChanged (
     def.resolve({ test: 123 });
 });
 
-test("Changing the result shouldn't force the call to onFinish with hasChanged (IndexedDB value)", async () => {
+test("Changing the result shouldn't force the call to callback with hasChanged (IndexedDB value)", async () => {
     const persistentCache = new PersistentCache(
         "mockRpc",
         1,
@@ -544,9 +544,9 @@ test("Changing the result shouldn't force the call to onFinish with hasChanged (
     // read the IndexedDB Value !
     const def = new Deferred();
     res = await persistentCache.read("table", "key", () => def, {
-        onFinish: (hasChanged) => {
+        callback: (_res, hasChanged) => {
             if (hasChanged) {
-                expect.step("onFinish with hasChanged shouldn't be called");
+                expect.step("callback with hasChanged shouldn't be called");
             }
         },
     });
@@ -569,7 +569,7 @@ test("DiskCache: multiple consecutive calls, call once fallback", async () => {
     // The fist call to persistentCache.read will save the promise to the Ram Cache.
     // Each next call (before the end of the first call) will retrive the promise of the first call
     // without executing the fallback
-    // the onFinish callback of each call is executed.
+    // the callback of each call is executed.
 
     const persistentCache = new PersistentCache(
         "mockRpc",
@@ -587,8 +587,8 @@ test("DiskCache: multiple consecutive calls, call once fallback", async () => {
                 return def;
             },
             {
-                onFinish: () => {
-                    expect.step("onFinish" + id++);
+                callback: () => {
+                    expect.step("callback " + id++);
                 },
             }
         );
@@ -602,5 +602,5 @@ test("DiskCache: multiple consecutive calls, call once fallback", async () => {
     def.resolve({ test: 123 });
     await microTick();
 
-    expect.verifySteps(["fallback", "onFinish0", "onFinish1", "onFinish2", "onFinish3"]);
+    expect.verifySteps(["fallback", "callback 0", "callback 1", "callback 2", "callback 3"]);
 });

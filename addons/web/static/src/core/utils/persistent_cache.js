@@ -93,15 +93,15 @@ export class PersistentCache {
         this.pendingRequests = {};
     }
 
-    read(table, key, fallback, { onFinish } = {}) {
+    read(table, key, fallback, { callback } = {}) {
         const ramValue = this.ramCache.read(table, key);
         const requestKey = `${table}/${key}`;
         const hadPendingRequest = requestKey in this.pendingRequests;
-        if (onFinish) {
+        if (callback) {
             this.pendingRequests[requestKey] = this.pendingRequests[requestKey] || [];
-            this.pendingRequests[requestKey].push(onFinish);
+            this.pendingRequests[requestKey].push(callback);
         }
-        if (ramValue && (!onFinish || hadPendingRequest)) {
+        if (ramValue && (!callback || hadPendingRequest)) {
             return ramValue.then((result) => deepCopy(result));
         }
 
@@ -113,7 +113,7 @@ export class PersistentCache {
                 this.ramCache.write(table, key, Promise.resolve(result));
                 const hasChanged =
                     (fromCacheValue && fromCacheValue !== JSON.stringify(result)) || false;
-                this.pendingRequests[requestKey]?.forEach((cb) => cb(hasChanged, deepCopy(result)));
+                this.pendingRequests[requestKey]?.forEach((cb) => cb(deepCopy(result), hasChanged));
                 delete this.pendingRequests[requestKey];
                 this.crypto.encrypt(result).then((encryptedResult) => {
                     this.indexedDB.write(table, key, encryptedResult);
