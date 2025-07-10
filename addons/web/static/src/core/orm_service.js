@@ -99,7 +99,7 @@ export class ORM {
         this.rpc = rpc; // to be overridable by the SampleORM
         /** @protected */
         this._silent = false;
-        this._cached = false;
+        this._cache = false;
     }
 
     /** @returns {ORM} */
@@ -111,8 +111,8 @@ export class ORM {
      * @param {object} options
      * @returns {ORM}
      */
-    cached(options = {}) {
-        return Object.assign(Object.create(this), { _cached: options });
+    cache(options = {}) {
+        return Object.assign(Object.create(this), { _cache: options });
     }
 
     /**
@@ -135,7 +135,7 @@ export class ORM {
         };
         return this.rpc(url, params, {
             silent: this._silent,
-            cached: this._cached,
+            cache: this._cache,
         });
     }
 

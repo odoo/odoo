@@ -37,7 +37,7 @@ export const fieldService = {
                 throw new Error(`Invalid model name: ${resModel}`);
             }
             return orm
-                .cached()
+                .cache({ type: "disk" })
                 .call(resModel, "fields_get", [options.fieldNames, options.attributes]);
         }
 

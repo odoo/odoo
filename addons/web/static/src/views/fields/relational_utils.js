@@ -158,8 +158,10 @@ export function useSpecialData(loadFn) {
         const key = JSON.stringify(args);
         if (!specialDataCaches[key]) {
             return await orm
-                .cached({
-                    onFinish: (hasChanged, res) => {
+                .cache({
+                    type: "disk",
+                    update: "always",
+                    callback: (res, hasChanged) => {
                         specialDataCaches[key] = Promise.resolve(res);
                         if (status(component) !== "destroyed" && hasChanged) {
                             loadFn(ormWithCache, component.props).then((res) => {

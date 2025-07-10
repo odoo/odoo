@@ -1425,8 +1425,10 @@ export class SearchModel extends EventBus {
         await Promise.all(
             categories.map(async (category) => {
                 const result = await this.orm
-                    .cached({
-                        onFinish: (hasChanged, result) => {
+                    .cache({
+                        type: "disk",
+                        update: "always",
+                        callback: (result, hasChanged) => {
                             if (!hasChanged || categoriesLoadId !== this.categoriesLoadId) {
                                 return;
                             }
@@ -1467,8 +1469,10 @@ export class SearchModel extends EventBus {
         await Promise.all(
             filters.map(async (filter) => {
                 const result = await this.orm
-                    .cached({
-                        onFinish: (hasChanged, result) => {
+                    .cache({
+                        type: "disk",
+                        update: "always",
+                        callback: (result, hasChanged) => {
                             if (!hasChanged || filtersLoadId !== this.filtersLoadId) {
                                 return;
                             }

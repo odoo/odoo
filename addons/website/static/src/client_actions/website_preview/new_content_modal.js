@@ -22,7 +22,7 @@ export class NewContentModal extends Component {
         this.dialogs = useService("dialog");
         this.website = useService("website");
         // preload the new page templates so they are ready as soon as possible
-        rpc("/website/get_new_page_templates", { context: { website_id: this.website.currentWebsiteId}}, { cached: true, silent: true });
+        rpc("/website/get_new_page_templates", { context: { website_id: this.website.currentWebsiteId}}, { cache: true, silent: true });
         this.action = useService("action");
         this.isSystem = user.isSystem;
         useActiveElement("modalRef");
@@ -107,7 +107,7 @@ export class NewContentModal extends Component {
                 .filter(({ status }) => status === MODULE_STATUS.NOT_INSTALLED)
                 .map(({ moduleName }) => moduleName);
             this.modulesInfo = {};
-            for (const record of await this.orm.cached().searchRead(
+            for (const record of await this.orm.cache().searchRead(
                 "ir.module.module",
                 [["name", "in", moduleNames]],
                 ["id", "name", "shortdesc"]
@@ -125,7 +125,7 @@ export class NewContentModal extends Component {
         }
         const accesses = await rpc("/website/check_new_content_access_rights", {
             models: modelsToCheck,
-        }, { cached: true });
+        }, { cache: true });
         for (const [model, access] of Object.entries(accesses)) {
             elementsToUpdate[model].isDisplayed = access;
         }

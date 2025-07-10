@@ -319,7 +319,7 @@ class AddPageTemplates extends Component {
     }
 
     async preparePages() {
-        const loadTemplates = rpc("/website/get_new_page_templates", { context: { website_id: this.website.currentWebsiteId}}, { cached: true, silent: true });
+        const loadTemplates = rpc("/website/get_new_page_templates", { context: { website_id: this.website.currentWebsiteId}}, { cache: true, silent: true });
 
         // Forces the correct website if needed before fetching the templates.
         // Displaying the correct images in the previews also relies on the
