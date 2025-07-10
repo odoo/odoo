@@ -77,12 +77,9 @@ class HrEmployeePublic(models.Model):
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     birthday_public_display_string = fields.Char("Public Date of Birth", related='employee_id.birthday_public_display_string')
 
-    # Crap
     newly_hired = fields.Boolean('Newly Hired', compute='_compute_newly_hired', search='_search_newly_hired')
 
-    def _compute_from_employee(self, field_names):
-        if isinstance(field_names, str):
-            field_names = [field_names]
+    def _compute_from_employee(self, *field_names):
         employees_sudo = self.sudo().env['hr.employee'].browse(self.ids)
         employee_per_id = {emp.id: emp for emp in employees_sudo}
         for public_employee in self:
@@ -198,11 +195,8 @@ class HrEmployeePublic(models.Model):
             SELECT
                 %s
             FROM hr_employee e
-            LEFT JOIN (
-                SELECT DISTINCT ON (employee_id) *
-                FROM hr_version
-                ORDER BY employee_id, date_version DESC
-            ) v ON v.employee_id = e.id
+            JOIN hr_version v
+              ON v.id = e.current_version_id
         )""" % (self._table, self._get_fields()))
 
     def get_avatar_card_data(self, fields):

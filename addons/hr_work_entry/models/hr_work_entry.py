@@ -84,20 +84,20 @@ class HrWorkEntry(models.Model):
                 SET version_id = result.version_id
                 FROM (
                     SELECT
-                        hc.id AS version_id,
+                        v.id AS version_id,
                         array_agg(hwe.id) AS entry_ids
                     FROM
                         hr_work_entry AS hwe
                     LEFT JOIN
-                        hr_version AS hc
+                        hr_version AS v
                     ON
-                        hwe.employee_id=hc.employee_id AND
-                        hwe.date_start >= hc.date_start AND
-                        hwe.date_stop < COALESCE(hc.date_end + integer '1', '9999-12-31 23:59:59')
+                        hwe.employee_id=v.employee_id AND
+                        hwe.date_start >= v.contract_date_start AND
+                        hwe.date_stop < COALESCE(v.contract_date_end + integer '1', '9999-12-31 23:59:59')
                     WHERE
                         hwe.version_id IS NULL
                     GROUP BY
-                        hwe.employee_id, hc.id
+                        hwe.employee_id, v.id
                 ) AS result
                 WHERE _hwe.id = ANY(result.entry_ids)
             """)
