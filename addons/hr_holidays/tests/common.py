@@ -181,3 +181,14 @@ class TestHolidayContract(TransactionCase):
             'request_date_to': date_to or Datetime.today(),
             'request_date_from': date_from or Datetime.today(),
         })
+
+
+def assert_virtual_leaves_equal(test, date, allocation, leave_type, value, employee, digits=False):
+    allocation._update_accrual()
+    allocation_data = leave_type.get_allocation_data(employee)
+    if digits:
+        test.assertAlmostEqual(allocation_data[employee][0][1]['virtual_remaining_leaves'], value,
+            digits, f"Virtual leaves for date '{date}' are incorrect.")
+    else:
+        test.assertEqual(allocation_data[employee][0][1]['virtual_remaining_leaves'], value,
+            f"Virtual leaves for date '{date}' are incorrect.")
