@@ -82,7 +82,7 @@ export const formatsSpecs = {
             ),
     },
     fontSize: {
-        isFormatted: (node) => closestElement(node)?.style["font-size"],
+        isFormatted: (node) => !!closestElement(node, (el) => el?.style["font-size"]),
         hasStyle: (node) => node.style && node.style["font-size"],
         addStyle: (node, props) => {
             node.style["font-size"] = props.size;
@@ -92,7 +92,9 @@ export const formatsSpecs = {
     },
     setFontSizeClassName: {
         isFormatted: (node) =>
-            FONT_SIZE_CLASSES.find((cls) => closestElement(node)?.classList?.contains(cls)),
+            !!closestElement(node, (el) =>
+                FONT_SIZE_CLASSES.find((cls) => el?.classList.contains(cls))
+            ),
         hasStyle: (node, props) => FONT_SIZE_CLASSES.find((cls) => node.classList.contains(cls)),
         addStyle: (node, props) => {
             node.style.removeProperty("font-size");
