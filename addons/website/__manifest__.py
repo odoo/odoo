@@ -164,6 +164,7 @@
         'views/snippets/s_google_map.xml',
         'views/snippets/s_cta_mockups.xml',
         'views/snippets/s_map.xml',
+        'views/snippets/s_store_locator.xml',
         'views/snippets/s_dynamic_snippet.xml',
         'views/snippets/s_dynamic_snippet_carousel.xml',
         'views/snippets/s_banner_product.xml',
@@ -259,6 +260,7 @@
             'website/static/src/js/text_processing.js',
             'website/static/src/js/highlight_utils.js',
             'website/static/src/client_actions/website_preview/website_builder_action.editor.scss',
+            'website/static/src/components/store_locator_map/*',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/utils/misc.js',
@@ -375,6 +377,7 @@
             ('remove', 'website/static/src/xml/website.editor.xml'),
             ('remove', 'website/static/src/xml/web_editor.xml'),
             'website/static/src/snippets/s_table_of_content/000.scss',
+            'website/static/src/components/store_locator_map/*',
             'google_recaptcha/static/src/js/recaptcha.js',
         ],
         'web.tests_assets': [
@@ -427,6 +430,7 @@
             'website/static/src/snippets/s_media_list/options.js',
             'website/static/src/snippets/s_google_map/options.js',
             'website/static/src/snippets/s_map/options.js',
+            'website/static/src/snippets/s_store_locator/options.js',
             'website/static/src/snippets/s_dynamic_snippet/options.js',
             'website/static/src/snippets/s_dynamic_snippet_carousel/options.js',
             'website/static/src/snippets/s_website_controller_page_listing_layout/options.js',

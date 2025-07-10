@@ -18,6 +18,7 @@ export class BuilderRow extends Component {
         slots: { type: Object, optional: true },
         level: { type: Number, optional: true },
         expand: { type: Boolean, optional: true },
+        vertical: { type: Boolean, optional: true },
     };
     static defaultProps = { expand: false };
 

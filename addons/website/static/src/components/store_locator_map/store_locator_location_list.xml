@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="website.store_locator_location_list">
+        <div class="d-flex flex-grow-1 h-100 h-md-auto overflow-x-auto">
+            <div id="o_location_selector_list_view" class="list-group list-group-flush flex-grow-1">
+                <t
+                    t-foreach="this.props.locations"
+                    t-as="location"
+                    t-key="location.id"
+                >
+                    <StoreLocatorLocation
+                        id="location.id.toString()"
+                        number="location_index + 1"
+                        name="location.name"
+                        street="location.street"
+                        city="location.city"
+                        zip="location.zip"
+                        openingHours="location.opening_hours"
+                        additionalData="location.additional_data"
+                        isSelected="this.props.selectedLocationId === location.id.toString()"
+                        setSelectedLocation="this.props.setSelectedLocation"
+                        hiddenLocations="this.props.hiddenLocations"
+                    />
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
