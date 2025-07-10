@@ -43,7 +43,6 @@ PAYMENT_METHODS_MAPPING = {
     'bancontact': 'bcmc_mobile',
     'gopay': 'gopay_wallet',
     'becs_direct_debit': 'au_becs_debit',
-    'afterpay': 'afterpaytouch',
     'klarna_pay_over_time': 'klarna_account',
     'momo': 'momo_wallet',
     'napas_card': 'momo_atm',
