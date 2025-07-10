@@ -31,6 +31,15 @@ describe("button style", () => {
         const button = el.querySelector(".o_embedded_toolbar button");
         expect(button).toHaveStyle({ cursor: "pointer" });
     });
+    test("editable button is user-selectable", async () => {
+        await setupEditor('<p><a href="#" class="btn test-btn">button</a></p>');
+        expect(queryOne(".test-btn")).toHaveStyle({ userSelect: "auto" });
+    });
+    test("non-editable button should not be user-selectable", async () => {
+        const { el } = await setupEditor('<p><a href="#" class="btn test-btn">button</a></p>');
+        el.setAttribute("contenteditable", "false");
+        expect(queryOne(".test-btn")).toHaveStyle({ userSelect: "none" });
+    });
 });
 
 const allowCustomOpt = {
