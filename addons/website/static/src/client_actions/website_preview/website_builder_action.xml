@@ -2,7 +2,9 @@
 <templates xml:space="preserve">
 
 <t t-name="website.WebsiteBuilderClientAction">
-    <div class="d-flex h-100 w-100" t-ref="container">
+    <t t-set="show_404_page_message" t-value="this.state.is404 and !state.isEditing"/>
+    <div class="d-flex h-100 w-100" t-att-class="{'flex-column': show_404_page_message}" t-ref="container">
+        <CreatePageMessage t-if="show_404_page_message" createPage="() => this.onNewPage(true)"/>
         <div class="o_website_preview border-top flex-grow-1" t-ref="website_preview">
             <div class="o_iframe_container">
                 <iframe t-if="!testMode" t-att-src="iframeFallbackUrl"

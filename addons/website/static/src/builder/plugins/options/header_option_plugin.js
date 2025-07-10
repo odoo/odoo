@@ -16,6 +16,7 @@ import { registry } from "@web/core/registry";
 import { HeaderBorderOption } from "./header_border_option";
 import { HeaderElementOption } from "./header_element_option";
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
+import { HeaderTopOptions } from "./header_top_options";
 
 const [
     HEADER_TEMPLATE,
@@ -41,9 +42,22 @@ export {
 
 class HeaderOptionPlugin extends Plugin {
     static id = "headerOption";
-    static dependencies = ["customizeWebsite"];
+    static dependencies = [
+        "customizeWebsite",
+        "menuDataPlugin",
+    ];
 
     resources = {
+        builder_header_middle_buttons: [
+            {
+                Component: HeaderTopOptions,
+                editableOnly: false,
+                selector: "#wrapwrap > header",
+                props: {
+                    openEditMenu: () => this.openEditMenu(),
+                },
+            },
+        ],
         builder_options: [
             withSequence(HEADER_TEMPLATE, {
                 editableOnly: false,
@@ -96,6 +110,10 @@ class HeaderOptionPlugin extends Plugin {
             SetShadowHeaderAction,
         },
     };
+
+    openEditMenu() {
+        this.dependencies.menuDataPlugin.openEditMenu();
+    }
 }
 
 export class StyleActionHeaderAction extends StyleAction {
