@@ -53,8 +53,6 @@ class ResourceCalendar(models.Model):
                         'hour_from': attendance.hour_from,
                         'hour_to': attendance.hour_to,
                         'day_period': attendance.day_period,
-                        'date_from': attendance.date_from,
-                        'date_to': attendance.date_to,
                     })
                     for attendance in company_attendance_ids
                 ]
@@ -109,6 +107,7 @@ class ResourceCalendar(models.Model):
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
     flexible_hours = fields.Boolean(string="Flexible Hours",
                                     help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours).")
+    duration_based = fields.Boolean("Attendance based on duration", help="The hours will be centered around 12:00 to cover the duration for the day")
     hours_per_week = fields.Float(compute="_compute_hours_per_week", string="Hours per Week", store=True)
     full_time_required_hours = fields.Float(string="Company Full Time", help="Number of hours to work on the company schedule to be considered as fulltime.")
     is_fulltime = fields.Boolean(compute='_compute_work_time_rate', string="Is Full Time")
@@ -180,7 +179,7 @@ class ResourceCalendar(models.Model):
                 'two_weeks_calendar': company_calendar.two_weeks_calendar,
                 'tz': company_calendar.tz,
                 'attendance_ids': [(5, 0, 0)] + [
-                    (0, 0, attendance._copy_attendance_vals()) for attendance in company_calendar.attendance_ids if not attendance.resource_id]
+                    (0, 0, attendance._copy_attendance_vals()) for attendance in company_calendar.attendance_ids]
             })
 
     @api.depends('company_id')
@@ -224,9 +223,7 @@ class ResourceCalendar(models.Model):
 
     def _get_global_attendances(self):
         return self.attendance_ids.filtered(lambda attendance:
-            attendance.day_period != 'lunch'
-            and not attendance.date_from and not attendance.date_to
-            and not attendance.resource_id and not attendance.display_type)
+            attendance._is_work_period())
 
     def _get_hours_per_day(self, attendances):
         """
@@ -321,7 +318,7 @@ class ResourceCalendar(models.Model):
         """ attendance_ids correspond to attendance of a week,
             will check for each day of week that there are no superimpose. """
         result = []
-        for attendance in attendance_ids.filtered(lambda att: not att.date_from and not att.date_to):
+        for attendance in attendance_ids:
             # 0.000001 is added to each start hour to avoid to detect two contiguous intervals as superimposing.
             # Indeed Intervals function will join 2 intervals with the start and stop hour corresponding.
             result.append((int(attendance.dayofweek) * 24 + attendance.hour_from + 0.000001, int(attendance.dayofweek) * 24 + attendance.hour_to, attendance))
@@ -333,7 +330,7 @@ class ResourceCalendar(models.Model):
     def _check_attendance(self):
         # Avoid superimpose in attendance
         for calendar in self:
-            attendance_ids = calendar.attendance_ids.filtered(lambda attendance: not attendance.resource_id and attendance.display_type is False)
+            attendance_ids = calendar.attendance_ids.filtered(lambda attendance: attendance.display_type is False)
             if calendar.two_weeks_calendar:
                 calendar._check_overlap(attendance_ids.filtered(lambda attendance: attendance.week_type == '0'))
                 calendar._check_overlap(attendance_ids.filtered(lambda attendance: attendance.week_type == '1'))
@@ -352,11 +349,9 @@ class ResourceCalendar(models.Model):
             resources_list = [resources]
         else:
             resources_list = list(resources) + [self.env['resource.resource']]
-        resource_ids = [r.id for r in resources_list]
         domain = Domain.AND([
             Domain(domain or Domain.TRUE),
             Domain('calendar_id', '=', self.id),
-            Domain('resource_id', 'in', resource_ids),
             Domain('display_type', '=', False),
             Domain('day_period', '!=' if not lunch else '=', 'lunch'),
         ])
@@ -368,14 +363,11 @@ class ResourceCalendar(models.Model):
         for resource in resources_list:
             resources_per_tz[tz or timezone((resource or self).tz)].append(resource)
         # Resource specific attendances
-        attendance_per_resource = defaultdict(lambda: self.env['resource.calendar.attendance'])
         # Calendar attendances per day of the week
         # * 7 days per week * 2 for two week calendars
         attendances_per_day = [self.env['resource.calendar.attendance']] * 7 * 2
         weekdays = set()
         for attendance in attendances:
-            if attendance.resource_id:
-                attendance_per_resource[attendance.resource_id] |= attendance
             weekday = int(attendance.dayofweek)
             weekdays.add(weekday)
             if self.two_weeks_calendar:
@@ -399,20 +391,13 @@ class ResourceCalendar(models.Model):
         days = rrule(DAILY, start.date(), until=end.date(), byweekday=weekdays)
         ResourceCalendarAttendance = self.env['resource.calendar.attendance']
         base_result = []
-        per_resource_result = defaultdict(list)
         for day in days:
             week_type = ResourceCalendarAttendance.get_week_type(day)
             attendances = attendances_per_day[day.weekday() + 7 * week_type]
             for attendance in attendances:
-                if (attendance.date_from and day.date() < attendance.date_from) or\
-                    (attendance.date_to and attendance.date_to < day.date()):
-                    continue
                 day_from = datetime.combine(day, float_to_time(attendance.hour_from))
                 day_to = datetime.combine(day, float_to_time(attendance.hour_to))
-                if attendance.resource_id:
-                    per_resource_result[attendance.resource_id].append((day_from, day_to, attendance))
-                else:
-                    base_result.append((day_from, day_to, attendance))
+                base_result.append((day_from, day_to, attendance))
 
 
         # Copy the result localized once per necessary timezone
@@ -495,9 +480,6 @@ class ResourceCalendar(models.Model):
                         current_monday += timedelta(days=7)
 
                     result_per_resource_id[resource.id] = Intervals(intervals, keep_distinct=True)
-                elif resource in per_resource_result:
-                    resource_specific_result = [(max(bounds_per_tz[tz][0], tz.localize(val[0])), min(bounds_per_tz[tz][1], tz.localize(val[1])), val[2]) for val in per_resource_result[resource]]
-                    result_per_resource_id[resource.id] = Intervals(itertools.chain(res, resource_specific_result), keep_distinct=True)
                 else:
                     result_per_resource_id[resource.id] = res_intervals
         return result_per_resource_id
@@ -899,7 +881,7 @@ class ResourceCalendar(models.Model):
         if not self.attendance_ids:
             return 0
         mapped_data = defaultdict(lambda: 0)
-        for attendance in self.attendance_ids.filtered(lambda a: a.day_period != 'lunch' and ((not a.date_from or not a.date_to) or (a.date_from <= end.date() and a.date_to >= start.date()))):
+        for attendance in self.attendance_ids.filtered(lambda a: a.day_period != 'lunch'):
             mapped_data[(attendance.week_type, attendance.dayofweek)] += attendance.hour_to - attendance.hour_from
         return max(mapped_data.values())
 
