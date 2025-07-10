@@ -254,7 +254,7 @@ export class PosStore extends Reactive {
     }
 
     async closingSessionNotification(data) {
-        if (data.login_number == this.session.login_number) {
+        if (data.login_number == odoo.login_number) {
             return;
         }
 
@@ -1038,7 +1038,7 @@ export class PosStore extends Reactive {
         return (
             zero_pad(this.session.id, 5) +
             "-" +
-            zero_pad(this.session.login_number, 3) +
+            zero_pad(parseInt(odoo.login_number), 3) +
             "-" +
             zero_pad(this.getNextSequenceNumber(), 4)
         );
@@ -1149,7 +1149,7 @@ export class PosStore extends Reactive {
     getSyncAllOrdersContext(orders, options = {}) {
         return {
             config_id: this.config.id,
-            login_number: this.session.login_number,
+            login_number: parseInt(odoo.login_number),
             ...(options.context || {}),
         };
     }
