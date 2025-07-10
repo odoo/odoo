@@ -17,7 +17,6 @@
         'views/slide_channel_views.xml',
         'views/website_sale_templates.xml',
         'views/website_slides_templates.xml',
-        'views/snippets.xml',
     ],
     'demo': [
         'data/product_demo.xml',

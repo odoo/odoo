@@ -45,65 +45,6 @@
     </section>
 </template>
 
-<template id="s_media_list_options" inherit_id="website.snippet_options">
-    <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="before">
-        <div data-js="MultipleItems" data-selector=".s_media_list">
-            <we-row string="Media">
-                <we-button data-add-item="" data-item=".s_media_list_item:last" data-select-item="" data-no-preview="true" class="o_we_bg_brand_primary">
-                    Add Media
-                </we-button>
-            </we-row>
-        </div>
-    </xpath>
-    <xpath expr="." position="inside">
-        <t t-call="website.snippet_options_background_options">
-            <t t-set="selector" t-value="'.s_media_list_item'"/>
-            <t t-set="target" t-value="'&gt; .row'"/>
-            <t t-set="with_colors" t-value="True"/>
-            <t t-set="with_images" t-value="False"/>
-            <t t-set="with_color_combinations" t-value="True"/>
-            <t t-set="with_gradients" t-value="True"/>
-        </t>
-        <div data-js="Box" data-selector=".s_media_list_item" data-target="&gt; .row">
-            <t t-call="website.snippet_options_border_widgets"/>
-            <t t-call="website.snippet_options_shadow_widgets"/>
-        </div>
-        <div data-selector=".s_media_list_item" data-target="&gt; .row">
-            <we-button-group string="Layout">
-                <we-button title="Left" data-name="media_left_opt" data-select-class="" data-img="/website/static/src/img/snippets_options/image_left.svg"/>
-                <we-button title="Right" data-select-class="flex-row-reverse" data-img="/website/static/src/img/snippets_options/image_right.svg"/>
-            </we-button-group>
-        </div>
-        <div data-js="MediaItemLayout" data-selector=".s_media_list_item">
-            <we-button-group string="Image Size" data-dependencies="media_left_opt">
-                <we-button data-layout="3" data-img="/website/static/src/img/snippets_options/media_layout_1_4.svg" title="1/4 - 3/4"/>
-                <we-button data-layout="4" data-img="/website/static/src/img/snippets_options/media_layout_1_3.svg" title="1/3 - 2/3"/>
-                <we-button data-layout="6" data-img="/website/static/src/img/snippets_options/media_layout_1_2.svg" title="1/2 - 1/2"/>
-            </we-button-group>
-            <we-button-group string="Image Size" data-dependencies="!media_left_opt">
-                <we-button data-layout="3" data-img="/website/static/src/img/snippets_options/media_layout_1_4_right.svg" title="1/4 - 3/4"/>
-                <we-button data-layout="4" data-img="/website/static/src/img/snippets_options/media_layout_1_3_right.svg" title="1/3 - 2/3"/>
-                <we-button data-layout="6" data-img="/website/static/src/img/snippets_options/media_layout_1_2_right.svg" title="1/2 - 1/2"/>
-            </we-button-group>
-        </div>
-
-        <div data-selector=".s_media_list_item" data-target="&gt; .row">
-            <!-- Don't use the standard Vert. Alignement option to not suggest
-                 Equal Height, which is useless for this snippet. -->
-            <we-button-group string="Text Position" title="Text Position" data-dependencies="media_left_opt">
-                <we-button title="Align Top" data-select-class="align-items-start" data-img="/website/static/src/img/snippets_options/align_top_right.svg"/>
-                <we-button title="Align Middle" data-select-class="align-items-center" data-img="/website/static/src/img/snippets_options/align_middle_right.svg"/>
-                <we-button title="Align Bottom" data-select-class="align-items-end" data-img="/website/static/src/img/snippets_options/align_bottom_right.svg"/>
-            </we-button-group>
-            <we-button-group string="Text Position" title="Text Position" data-dependencies="!media_left_opt">
-                <we-button title="Align Top" data-select-class="align-items-start" data-img="/website/static/src/img/snippets_options/align_top.svg"/>
-                <we-button title="Align Middle" data-select-class="align-items-center" data-img="/website/static/src/img/snippets_options/align_middle.svg"/>
-                <we-button title="Align Bottom" data-select-class="align-items-end" data-img="/website/static/src/img/snippets_options/align_bottom.svg"/>
-            </we-button-group>
-        </div>
-    </xpath>
-</template>
-
 <record id="website.s_media_list_000_scss" model="ir.asset">
     <field name="name">Media list 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>

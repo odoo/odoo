@@ -13,19 +13,4 @@
             </div>
         </div>
     </template>
-    <template id="s_group_options" inherit_id="website.snippet_options">
-        <xpath expr="." position="inside">
-            <div data-js='Group'
-                 data-selector=".s_group"
-                 data-drop-near="p, h1, h2, h3, blockquote, .card">
-                <we-row>
-                    <we-select class="select_discussion_list" data-attribute-name="id" data-no-preview="true">
-                        <!-- 'we-button' added programmatically with DB data -->
-                    </we-select>
-                    <we-button class="fa fa-fw fa-plus" title="Create a public discussion group in your backend"
-                               data-create-group="" data-no-preview="true" data-name="create_mail_group_opt"/>
-                </we-row>
-            </div>
-        </xpath>
-    </template>
 </odoo>

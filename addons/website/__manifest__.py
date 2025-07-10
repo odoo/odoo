@@ -168,7 +168,6 @@
         'views/snippets/s_dynamic_snippet_carousel.xml',
         'views/snippets/s_banner_product.xml',
         'views/snippets/s_embed_code.xml',
-        'views/snippets/s_website_controller_page_listing_layout.xml',
         'views/snippets/s_website_form.xml',
         'views/snippets/s_website_form_overlay.xml',
         'views/snippets/s_title_form.xml',
