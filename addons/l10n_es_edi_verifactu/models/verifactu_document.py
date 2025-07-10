@@ -579,14 +579,25 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
     @api.model
     def _render_vals_previous_submissions(self, vals):
-        # See "Sistemas Informáticos de Facturación y Sistemas VERI*FACTU" Version 1.0.0 - "Validaciones" p. 22 f.
+        """
+        See "Sistemas Informáticos de Facturación y Sistemas VERI*FACTU" Version 1.1.1 - "Validaciones" p. 22 f.
+        https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/VERI-FACTU/Validaciones_Errores_Veri-Factu.pdf
+        For submissions (ALTA) we do not support any subsanación cases (update of a previously sent invoice).
+        (Instead the user can issue a credit note and possibly a new substituting invoice).
+        With the nomenclature from the Validations document above the following cases are supported (✓) / unsupported (✗):
+          ✓ ALTA (new record)
+          ✓ ALTA POR RECHAZO (new record, previously rejected)
+          ✗ ALTA DE SUBSANACIÓN (update, previously rejected)
+          ✗ ALTA POR RECHAZO DE SUBSANACIÓN (update, previously rejected)
+          ✗ ALTA DE SUBSANACIÓN SIN REGISTRO PREVIO (update, record not known to the AEAT)
+          ✗ ALTA POR RECHAZO DE SUBSANACIÓN SIN REGISTRO PREVIO (update, record not known to the AEAT, previously rejected)
+          ✓ ANULACIÓN (cancellation)
+          ✓ ANULACIÓN POR RECHAZO (cancellation, previously rejected)
+          ✓ ANULACIÓN SIN REGISTRO PREVIO (cancellation, record not known to the AEAT)
+          ✓ ANULACIÓN POR RECHAZO SIN REGISTRO PREVIO  (cancellation, record not known to the AEAT, previously rejected)
+        """
         render_vals = {}
-
         verifactu_registered = vals['verifactu_state'] in ('registered_with_errors', 'accepted')
-        # The record may be otherwise known to the AEAT;
-        # i.e. when switching to Veri*Factu after the original invoice was created.
-        # Note: Currently not implemented / can not happen
-        otherwise_known_to_AEAT = not verifactu_registered and vals['record_identifier']
 
         if vals['cancellation']:
             render_vals = {
@@ -595,21 +606,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 'RechazoPrevio': 'S' if vals['rejected_before'] else 'N',
             }
         else:
-            substitution = verifactu_registered or otherwise_known_to_AEAT
-            if substitution and not verifactu_registered:
-                # Cases: ALTA DE SUBSANACIÓN SIN REGISTRO PREVIO, ALTA POR RECHAZO DE SUBSANACIÓN SIN REGISTRO PREVIO
-                # Note: This case can only happen after `otherwise_known_to_AEAT` is implemented
-                previously_rejected_state = 'X'
-            elif vals['rejected_before']:
-                # Cases: ALTA POR RECHAZO, ALTA POR RECHAZO DE SUBSANACIÓN
-                previously_rejected_state = 'S' if substitution else 'X'
-            else:
-                # Cases: ALTA, ALTA DE SUBSANACIÓN
-                previously_rejected_state = None  # 'N'
             render_vals = {
-                # We only put 'N' for 'Subsanacion' in case ALTA (we also put 'S' in case ALTA POR RECHAZO)
-                'Subsanacion': 'S' if substitution or vals['rejected_before'] else 'N',
-                'RechazoPrevio': previously_rejected_state,
+                'Subsanacion': 'S' if vals['rejected_before'] else 'N',
+                'RechazoPrevio': 'X' if vals['rejected_before'] else None,
             }
 
         return render_vals

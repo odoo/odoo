@@ -13,7 +13,7 @@ patch(TicketScreen.prototype, {
             selectionList = selectionList.filter((el) => {
                 // Allow values that are not R5 only if a partner is specified; see Error [1189]:
                 // Si TipoFactura es F1 o F3 o R1 o R2 o R3 o R4 el bloque Destinatarios tiene que estar cumplimentado.
-                return order.partner || (el[0] === 'R5')
+                return destinationOrder.partner || (el[0] === 'R5')
             }).map((el) => {
                 return { 'id': el[0], 'label': el[1], 'item': el[0]}
             })
@@ -23,6 +23,8 @@ patch(TicketScreen.prototype, {
             });
             if (payload && confirmed) {
                 destinationOrder.l10n_es_edi_verifactu_refund_reason = payload;
+                // Mark the new order as to invoice if the original order was invoiced.
+                destinationOrder.to_invoice = order.to_invoice;
             }
         }
         super.addAdditionalRefundInfo(...arguments);
