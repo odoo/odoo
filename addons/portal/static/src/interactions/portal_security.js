@@ -162,6 +162,7 @@ export async function handleCheckIdentity(wrapped, ormService, dialogService) {
         }
         const checkId = r.res_id;
         return new Promise((resolve) => {
+            ormService.write("res.users.identitycheck", [checkId], {auth_method: 'password'});
             dialogService.add(InputConfirmationDialog, {
                 title: _t("Security Control"),
                 body: renderToMarkup("portal.identitycheck"),
