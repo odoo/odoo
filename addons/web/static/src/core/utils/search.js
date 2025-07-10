@@ -88,3 +88,60 @@ export function fuzzyLookup(pattern, list, fn) {
 export function fuzzyTest(pattern, string) {
     return _match(pattern, string) !== 0;
 }
+
+const MAX_NBR_CORRECTION = 3;
+//Damerau-Levenshtein fuzzy matching for word autocorrect
+export function fuzzyDLLookup(pattern, list, fn) {
+    const results = [];
+    list.forEach((data) => {
+        let score = -1;
+        if (data.includes(pattern)) {
+            score = 0;
+            results.push({ score, elem: pattern });
+        } else {
+            score = getScore(pattern, fn(data));
+            if (score >= 0 && score <= MAX_NBR_CORRECTION) {
+                results.push({ score, elem: data });
+            }
+        }
+    });
+
+    results.sort((a, b) => a.score - b.score);
+    console.log("30 premiers", results.slice(0, Math.min(30, results.length)));  
+
+    return results.map((r) => r.elem);
+}
+
+function getScore(a, b) {
+    let a_length = a.length;
+    let b_length = b.length;
+
+    let distanceMatrix = [];
+    for (let i = 0; i <= a_length; i++) {
+        distanceMatrix[i] = [];
+        for (let j = 0; j <= b_length; j++) {
+            distanceMatrix[i][j] = 0;
+        }
+    }
+
+    for (let i = 0; i <= a_length; i++) {
+        for (let j = 0; j <= b_length; j++) {
+            if (Math.min(i, j) === 0) {
+                distanceMatrix[i][j] = Math.max(i, j); 
+            } else {
+                if (a[i-1] === b[j-1]) {
+                    distanceMatrix[i][j] = distanceMatrix[i-1][j-1];
+                } else {
+                    distanceMatrix[i][j] = Math.min(
+                        distanceMatrix[i-1][j] + 1,
+                        distanceMatrix[i][j-1] + 1,
+                        distanceMatrix[i-1][j-1] + 1
+                    );
+                }
+            }
+        }
+    }
+
+    return distanceMatrix[a_length][b_length];
+}
+
