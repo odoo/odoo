@@ -7,6 +7,7 @@ import {
     defineModels,
     fields,
     getService,
+    getMockEnv,
     mockService,
     models,
     mountWebClient,
@@ -614,7 +615,12 @@ describe("Import view", () => {
         );
 
         await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Display name");
-        await contains(".o_control_panel_main_buttons button:nth-child(2)").click();
+        if (getMockEnv().isSmall) {
+            await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
+            await contains(".o-dropdown--menu button:visible").click();
+        } else {
+            await contains(".o_control_panel_main_buttons button:nth-child(2)").click();
+        }
         expect.verifySteps([
             "/web/dataset/call_kw/base_import.import/execute_import",
             "1 records successfully imported",
@@ -651,7 +657,12 @@ describe("Import view", () => {
         await animationFrame();
         // For this test, we force the display of an error message if this field is set
         await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Selection");
-        await contains(".o_control_panel_main_buttons button:nth-child(2)").click();
+        if (getMockEnv().isSmall) {
+            await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
+            await contains(".o-dropdown--menu button:visible").click();
+        } else {
+            await contains(".o_control_panel_main_buttons button:nth-child(2)").click();
+        }
         expect(".o_import_data_content .alert-danger:first").toHaveText(
             "The file contains blocking errors (see below)",
             { message: "a message is shown if the import was blocked" }
@@ -709,7 +720,12 @@ describe("Import view", () => {
         await animationFrame();
         // For this test, we force the display of an error message if this field is set
         await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Bar");
-        await contains(".o_control_panel_main_buttons button:nth-child(2)").click();
+        if (getMockEnv().isSmall) {
+            await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
+            await contains(".o-dropdown--menu button:visible").click();
+        } else {
+            await contains(".o_control_panel_main_buttons button:nth-child(2)").click();
+        }
         expect(".o_import_data_content .alert-danger:first").toHaveText(
             "The file contains blocking errors (see below)",
             { message: "a message is shown if the import was blocked" }
@@ -774,7 +790,12 @@ describe("Import view", () => {
             message: "import is now successful",
         });
         await contains(".o_import_field_many2many select").select("import_skip_records");
-        await contains(".o_control_panel_main_buttons button:nth-child(2)").click();
+        if (getMockEnv().isSmall) {
+            await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
+            await contains(".o-dropdown--menu button:visible").click();
+        } else {
+            await contains(".o_control_panel_main_buttons button:nth-child(2)").click();
+        }
         expect.verifySteps(["execute_import"]);
         expect(".o_import_data_content .alert-info:first").toHaveText("Everything seems valid.", {
             message: "import is still successful",
@@ -927,7 +948,12 @@ describe("Import view", () => {
         await setInputFiles([file]);
         await animationFrame();
         await contains("input#o_import_batch_limit").edit(1);
-        await contains(".o_control_panel_main_buttons button:nth-child(2)").click();
+        if (getMockEnv().isSmall) {
+            await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
+            await contains(".o-dropdown--menu button:visible").click();
+        } else {
+            await contains(".o_control_panel_main_buttons button:nth-child(2)").click();
+        }
         // Since a animationFrame is added to each batch, we must wait twice before the end of the second batch
         await animationFrame();
         await animationFrame();
@@ -1215,7 +1241,12 @@ describe("Import view", () => {
         await animationFrame();
         // For this test, we force the display of an error message if this field is set
         await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Many2Many");
-        await contains(".o_control_panel_main_buttons button:nth-child(2)").click();
+        if (getMockEnv().isSmall) {
+            await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
+            await contains(".o-dropdown--menu button:visible").click();
+        } else {
+            await contains(".o_control_panel_main_buttons button:nth-child(2)").click();
+        }
 
         expect(".o_import_data_content .alert-danger:first").toHaveText(
             "The file contains blocking errors (see below)",
@@ -1272,9 +1303,12 @@ describe("Import view", () => {
         // Parse the file again with the updated date format to check that
         // the format is correctly formatted in the UI
         await contains(".o_import_formatting button").click();
-        await contains(
-            ".o_control_panel_main_buttons > div:visible > button:contains(Import):eq(0)"
-        ).click();
+        if (getMockEnv().isSmall) {
+            await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
+            await contains(".o-dropdown--menu button:visible").click();
+        } else {
+            await contains(".o_control_panel_main_buttons button:contains(Import):eq(0)").click();
+        }
         expect.verifySteps(["parse_preview", "parse_preview", "execute_import"]);
         expect(".o_import_date_format").toHaveValue("YYYYMMDD", {
             message: "UI displays the human formatted date",

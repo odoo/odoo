@@ -143,8 +143,10 @@ kbd {
 .o_web_client.o_touch_device {
   .btn {
       &, .btn-sm {
+        &:where(:not(.dropdown-item)) {
           font-size: $font-size-base;
           padding: $o-touch-btn-padding;
+        }
       }
 
       &:has(.fa-fw:only-child, .oi-fw:only-child) {
