@@ -5,8 +5,8 @@
 # Translators:
 # lhmflexerp <lhm@flexerp.dk>, 2025
 # Mads Søndergaard, 2025
-# Kira Petersen, 2025
 # Wil Odoo, 2025
+# Kira Petersen, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -125,7 +125,7 @@ msgstr "%(label)s, tilbage den %(date)s"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(leave_name)s has been cancelled for the following reason: %(reason)s"
-msgstr ""
+msgstr "%(leave_name)s blev annulleret af følgende årsag: %(reason)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -247,6 +247,8 @@ msgid ""
 "(s)\n"
 "                                    and a balance cap is set to"
 msgstr ""
+"(er)\n"
+"                                    og den maksimale grænse er sat til"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -268,7 +270,7 @@ msgstr "00:00"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid ": the"
-msgstr ""
+msgstr ": den"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -442,7 +444,7 @@ msgstr "<strong>Afdelinger og medarbejdere</strong>"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "A balance cap is set to"
-msgstr ""
+msgstr "Den maksimale grænse er sat til"
 
 #. module: hr_holidays
 #. odoo-python
@@ -512,7 +514,7 @@ msgstr "Et fravær kan ikke kopieres."
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "A yearly cap is set to"
-msgstr ""
+msgstr "Den årlige grænse er sat til"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__show_leaves
@@ -590,7 +592,7 @@ msgstr "Optjeningsniveau"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Accrual Level Options"
-msgstr ""
+msgstr "Mulige optjeningsniveauer"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_accrual_plan
@@ -629,12 +631,14 @@ msgstr "Optjent ferie: Opdaterer antallet af tilgængelige fridage"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "Accrual frequency :"
-msgstr ""
+msgstr "Periodiseringshyppighed:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Accrual will stop until next carry-over date if accrued time's reach"
 msgstr ""
+"Når den optjente tid er nået, stopper optjeningen indtil næste "
+"overførselsdato."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accruals_ids
@@ -721,7 +725,7 @@ msgstr "Aktivitetstype"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "Add a milestone"
-msgstr ""
+msgstr "Tilføj en milepæl"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -751,7 +755,7 @@ msgstr "Efter"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "After a year, unused time off will be :"
-msgstr ""
+msgstr "Efter et år vil ubrugte optjeninger blive:"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__transition_mode__end_of_accrual
@@ -946,10 +950,10 @@ msgid ""
 "- By Employee Tag: all employees of the specific employee group category"
 msgstr ""
 "Oprettelse af anmodninger i grupper:\n"
-"- Per medarbejder: For en specifik medarbejder\n"
-"- Per virksomhed: For alle medarbejdere i den valgte virksomhed\n"
-"- Per afdeling: For alle medarbejdere i den valgte afdeling\n"
-"- Per medarbejder-tag: For alle medarbejdere i den valgte medarbejdergruppekategori"
+"- Efter medarbejder: For en specifik medarbejdere\n"
+"- Efter virksomhed: For alle medarbejdere i den valgte virksomhed\n"
+"- Efter afdeling: For alle medarbejdere i den valgte afdeling\n"
+"- Efter medarbejder-tag: For alle medarbejdere tilknyttet en bestemt kategori"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__already_accrued
@@ -968,6 +972,8 @@ msgstr "Beløb"
 #: code:addons/hr_holidays/static/src/fields/radio_followed_by_element.js:0
 msgid "An element name parent of the radio to observe updates"
 msgstr ""
+"Navnet på det overordnede element til radiofeltet, som overvåger "
+"opdateringer"
 
 #. module: hr_holidays
 #. odoo-python
@@ -979,7 +985,7 @@ msgstr "Denne periode overlapper med eksisterende fravær for medarbejderen:"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/radio_followed_by_element.js:0
 msgid "An object to link select options and element id to move"
-msgstr ""
+msgstr "Et objekt til at forbinde valgmuligheder og element-ID for at flytte"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1089,7 +1095,7 @@ msgstr "Spørg efter"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__milestone_date__creation
 msgid "At allocation creation"
-msgstr ""
+msgstr "Ved oprettelse af tildeling"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_date__allocation
@@ -1208,7 +1214,7 @@ msgstr "Baseret på optjeningsplan"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.js:0
 msgid "Boolean display as radio field with translatable labels"
-msgstr ""
+msgstr "Boolesk visning som radiofelt med oversættelige etiketter"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__both
@@ -1344,12 +1350,12 @@ msgstr "Annulleret fravær"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Cap Options"
-msgstr ""
+msgstr "Valgmuligheder for øvre grænser"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__all
 msgid "Carried over"
-msgstr ""
+msgstr "Overført"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__carried_over_days_expiration_date
@@ -1359,7 +1365,7 @@ msgstr "Udløbsdato for de overførte dage"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Carry Over Options"
-msgstr ""
+msgstr "Overførselsmuligheder"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1387,8 +1393,8 @@ msgid ""
 "allocation accordingly."
 msgstr ""
 "En ændring af denne arbejdsplan betyder, at den eller de berørte "
-"medarbejder(e) fremover ikke vil få tildelt tilstrækkeligt med feriedage til"
-" at dække de allerede afholdte. Gennemgå venligst medarbejderens feriedage, "
+"medarbejdere fremover ikke vil få tildelt tilstrækkeligt med feriedage til "
+"at dække de allerede afholdte. Gennemgå venligst medarbejderens feriedage, "
 "og justér berettigede feriedage derefter."
 
 #. module: hr_holidays
@@ -1505,7 +1511,7 @@ msgstr "Kontakt"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Contract %(contract)s from %(start_date)s to %(end_date)s"
-msgstr ""
+msgstr "Kontrakt %(contract)s fra %(start_date)s til %(end_date)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1554,7 +1560,7 @@ msgstr "Opret en kunde"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Create a milestone"
-msgstr ""
+msgstr "Opret en milepæl"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
@@ -1620,7 +1626,7 @@ msgstr "På nuværende tidspunkt gyldig"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_date__other
 msgid "Custom date"
-msgstr ""
+msgstr "Brugerdefineret dato"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__daily
@@ -1675,7 +1681,7 @@ msgstr "Dag"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__added_value_type__day
 msgid "Day(s)"
-msgstr ""
+msgstr "Dag(e)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1691,7 +1697,7 @@ msgstr "Dage"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_death
 msgid "Death Leave"
-msgstr ""
+msgstr "Sorgorlov"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__12
@@ -1703,17 +1709,17 @@ msgstr "December"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Define a balance cap?"
-msgstr ""
+msgstr "Vil du fastsætte en maksimal mængde?"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Define a carry over validity?"
-msgstr ""
+msgstr "Vil du fastsætte en gyldig overførsel?"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Define a yearly cap?"
-msgstr ""
+msgstr "Vil du fastsætte en maksimal mængde pr. år?"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__max_allowed_negative
@@ -1838,7 +1844,7 @@ msgstr "Vis fravær i kalender"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Do you need a carry-over of the accrued days from one year to another?"
-msgstr ""
+msgstr "Har du brug for at overføre de optjente dage fra et år til et andet?"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1847,6 +1853,8 @@ msgid ""
 "Do you want to save the changes made to the accrual plan before creating a "
 "new milestone?"
 msgstr ""
+"Vil du gemme de foretagne ændringer i periodiseringsplanen, inden du "
+"opretter en ny milepæl?"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1855,6 +1863,8 @@ msgid ""
 "Do you want to save the changes made to the accrual plan before editing this"
 " milestone?"
 msgstr ""
+"Vil du gemme de foretagne ændringer i periodiseringsplanen, inden du "
+"redigerer milepælen?"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1924,13 +1934,13 @@ msgstr "Varighed i dage. Referencerfelt, der anvendes ved behov."
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/radio_followed_by_element.js:0
 msgid "Element association"
-msgstr ""
+msgstr "Elementtilknytning"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/radio_followed_by_element.js:0
 msgid "Element to observe"
-msgstr ""
+msgstr "Element, der skal overvåges"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_employee
@@ -2008,8 +2018,8 @@ msgid ""
 "End date has been updated because the employee will leave the company on "
 "%(departure_date)s."
 msgstr ""
-"Gyldighedens slutdato er blevet opdateret, fordi medarbejderen fratræder "
-"virksomheden den %(departure_date)s."
+"Slutdatoen er blevet opdateret, fordi medarbejderen fratræder virksomheden "
+"den %(departure_date)s."
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_be_leave_type_european
@@ -2046,7 +2056,7 @@ msgstr "Ekstra ferie"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.js:0
 msgid "False association"
-msgstr ""
+msgstr "Forkert tilknytning"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__2
@@ -2246,7 +2256,7 @@ msgstr "HR – Oversigt over medarbejderens ferie"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_hajj
 msgid "Hajj Leave"
-msgstr ""
+msgstr "Hajj-orlov"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_half
@@ -2310,7 +2320,7 @@ msgstr "Time til"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__added_value_type__hour
 msgid "Hour(s)"
-msgstr ""
+msgstr "Time(r)"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__hourly
@@ -2329,7 +2339,7 @@ msgstr "Timer"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "How much time can be carried over :"
-msgstr ""
+msgstr "Hvor meget tid kan overføres:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__hr_icon_display
@@ -2426,8 +2436,7 @@ msgstr "Inaktiv"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
-"Hvis denne indstilling er aktiveret, kræver nye beskeder din opmærksomhed."
+msgstr "Hvis dette felt er markeret, kræver nye beskeder din opmærksomhed."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
@@ -2436,8 +2445,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
-"Hvis denne indstilling er aktiveret, indeholder nogle beskeder en "
-"leveringsfejl."
+"Hvis dette felt er markeret, indeholder nogle beskeder en leveringsfejl."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__allows_negative
@@ -2445,8 +2453,8 @@ msgid ""
 "If checked, users request can exceed the allocated days and balance can go "
 "in negative."
 msgstr ""
-"Hvis denne indstilling er aktiveret, kan en ferieanmodning overstige det "
-"tildelte antal dage og resultere i negativ feriesaldo."
+"Hvis dette felt er markeret, kan en ferieanmodning overstige det tildelte "
+"antal dage og resultere i negativ feriesaldo."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__active_employee
@@ -2531,7 +2539,7 @@ msgstr "Er brugt"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "It is based on worked time?"
-msgstr ""
+msgstr "Baseres tiden på den arbejdede tid?"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__1
@@ -2670,13 +2678,13 @@ msgstr "Niveauer"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.js:0
 msgid "Link an element with the boolean False value."
-msgstr ""
+msgstr "Knyt et element til den booleske Falsk-værdi."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.js:0
 msgid "Link an element with the boolean True value."
-msgstr ""
+msgstr "Knyt et element til den booleske Sandt-værdi."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__lost
@@ -2723,7 +2731,7 @@ msgstr "Marts"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_marriage
 msgid "Marriage Leave"
-msgstr ""
+msgstr "Bryllupsorlov"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_mx_leave_type_maternity_imss
@@ -2738,7 +2746,7 @@ msgstr "Forældreorlov"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_maternity
 msgid "Maternity Leave"
-msgstr ""
+msgstr "Barselsorlov"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_be_leave_type_maternity
@@ -2815,7 +2823,7 @@ msgstr "Beskeder"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
 msgid "Milestone Edition"
-msgstr ""
+msgstr "Redigering af milepæl"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2920,7 +2928,7 @@ msgstr "Mit fravær"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.xml:0
 msgid "NO"
-msgstr ""
+msgstr "NEJ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__name
@@ -2945,7 +2953,7 @@ msgstr "Ny"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "New !"
-msgstr ""
+msgstr "Ny!"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3076,18 +3084,20 @@ msgstr "Ingen obligatoriske dage!"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "No milestones on the plan yet. Let's create a new one"
-msgstr ""
+msgstr "Ingen milepæle i planen endnu. Lad os oprette en ny"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "No, always consider the entire accrual period (whole calendar days)."
 msgstr ""
+"Nej, man skal altid tage hele periodiseringen i betragtning (dvs. hele "
+"kalenderdage)."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "No, keep the old version"
-msgstr ""
+msgstr "Nej, behold den gamle version"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_holidays_dashboard
@@ -3215,7 +3225,7 @@ msgstr "På ferie"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
 msgid "On Leave (Busy)"
-msgstr ""
+msgstr "Fraværende (optaget)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3308,7 +3318,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__is_based_on_worked_time
 msgid ""
 "Only excludes requests where the time off type is set as unpaid kind of."
-msgstr ""
+msgstr "Udelukker kun anmodninger, hvor fraværstypen er angivet som ubetalt."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3333,7 +3343,7 @@ msgstr "Oversigt"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_paid_sick_time_off
 msgid "Paid Sick time off"
-msgstr ""
+msgstr "Betalt sygefravær"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.leave_type_paid_time_off
@@ -3411,7 +3421,7 @@ msgstr "Når der ansøges om ferie, tælles helligdage med i ferieperioden"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/radio_followed_by_element.js:0
 msgid "Radio followed by element"
-msgstr ""
+msgstr "Radio efterfulgt af element"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
@@ -3602,7 +3612,7 @@ msgstr "Gem"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Save & New"
-msgstr "Gem & ny"
+msgstr "Gem og ny"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3716,7 +3726,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Set the employee accrual frequency :"
-msgstr ""
+msgstr "Angiv medarbejderens periodiseringshyppighed:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3727,12 +3737,12 @@ msgstr "Vis alle poster med en næste aktivitetsdato, der er før i dag"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_sick_leave_75
 msgid "Sick Leave (75% Paid)"
-msgstr ""
+msgstr "Sygefravær (75% betalt)"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_sick_leave_unpaid
 msgid "Sick Leave (UnPaid)"
-msgstr ""
+msgstr "Sygefravær (ubetalt)"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_ae_leave_type_sick_leave_0
@@ -3900,7 +3910,7 @@ msgstr "Understøttende dokumenter"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Switch employees to the new accrual level:"
-msgstr ""
+msgstr "Sæt medarbejdere på det nye optjeningsniveau:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_request_unit
@@ -3963,7 +3973,7 @@ msgstr "Farven, du vælger her, anvendes i alle visninger af fraværstypen."
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "The days carried over will be effective for"
-msgstr ""
+msgstr "De overførte dage gælder i"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__time_type
@@ -4031,7 +4041,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "The plan will be on hold if the balance reach"
-msgstr ""
+msgstr "Planen sættes på pause, når grænses nås"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check3
@@ -4072,7 +4082,7 @@ msgstr "Fraværet er blevet godkendt automatisk"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "The time off request has been cancelled for the following reason:%(reason)s"
-msgstr ""
+msgstr "Fraværsanmodningen er blevet annulleret af følgende årsag:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -4105,9 +4115,10 @@ msgid ""
 "to the days allocated to the employee. If you need to change the "
 "configuration of the allocation, delete and create a new one."
 msgstr ""
-"Optjeningen er allerede blevet kørt én gang, og ændringer vil derfor ikke "
-"påvirke de dage, der allerede er tildelt medarbejderen. Hvis du har brug for"
-" at ændre indstillingerne for tildelingen, kan du slette og oprette en ny."
+"Denne optjening har allerede kørt en gang, og ændringer vil derfor ikke "
+"træde i kraft for de dage, der er tildelt til medarbejderen. Hvis du har "
+"behov for at ændre opsætningen for tildelingen, kan du slette og oprette en "
+"ny."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -4138,7 +4149,7 @@ msgid ""
 "with second level (If time off type need second validation)"
 msgstr ""
 "Dette felt udfyldes automatisk af den bruger, der validerer tildelingen på "
-"andet niveau (hvis fraværstypen kræver en anden godkendelse)"
+"andet niveau (hvis fraværstypen kræver en anden validering)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
@@ -4162,7 +4173,7 @@ msgstr "Dette angiver, om denne fraværstype fortsat kan anvendes."
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "This milestone will be reached :"
-msgstr ""
+msgstr "Milepælen nås:"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4506,7 +4517,7 @@ msgstr "Kursusfravær"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.js:0
 msgid "True association"
-msgstr ""
+msgstr "Sand tilknytning"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
@@ -4581,7 +4592,7 @@ msgstr "Ubegrænset"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
 msgid "Unnamed Plan"
-msgstr ""
+msgstr "Unavngivet plan"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.leave_type_unpaid
@@ -4613,19 +4624,19 @@ msgstr "Ulæste beskeder"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "Unused days will be lost."
-msgstr ""
+msgstr "Du mister ikke afholdte dage."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "Unused days will be transferred totally on each"
-msgstr ""
+msgstr "Ikke afholdte dage overføres fuldt ud, og det gælder hver"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "Unused days will be transferred with a max of"
-msgstr ""
+msgstr "Ikke afholdte dage overføres med maksimalt"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__carryover_options__limited
@@ -4653,7 +4664,7 @@ msgstr "Bruger"
 #: code:addons/hr_holidays/static/src/avatar_card_popover_patch.xml:0
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 msgid "User is busy"
-msgstr ""
+msgstr "Bruger er optaget"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4672,7 +4683,7 @@ msgstr "Bruger har fri"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
 msgid "User is on leave and busy"
-msgstr ""
+msgstr "Bruger har fri og er optaget"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4684,7 +4695,7 @@ msgstr "Bruger har fri og er inaktiv"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
 msgid "User is on leave and online"
-msgstr "Bruger har ferie og er online"
+msgstr "Bruger har fri og er online"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4816,7 +4827,7 @@ msgstr "Ugentlig"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "When do you want the accrued time left to be carried-over?"
-msgstr ""
+msgstr "Hvornår ønsker du at overføre den resterende optjente tid?"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
@@ -4825,6 +4836,9 @@ msgid ""
 "what you want to happen with the unused time off: Lost (time will be reset "
 "to zero), Carried over (accrued time carried over to the next period.)"
 msgstr ""
+"Når overførselstidspunktet nås, vælger du, hvad der skal ske med den ubrugte"
+" tid afhængigt af planens indstillinger: Tabt (tiden nulstilles), overført "
+"(oerføres til næste periode)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time
@@ -4847,7 +4861,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "When the time is accrued?"
-msgstr ""
+msgstr "Hvornår optjenes tid?"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
@@ -4879,7 +4893,7 @@ msgstr "Arbejdstimer"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.xml:0
 msgid "YES"
-msgstr ""
+msgstr "JA"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__yearly
@@ -4897,12 +4911,14 @@ msgid ""
 "Yes, consider the worked hours, excluding any time off taken during that "
 "period."
 msgstr ""
+"Ja, tag højde for de faktisk arbejdede timer, eksklusive eventuelle "
+"fraværsperioder i den pågældende periode."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "Yes, save changes"
-msgstr ""
+msgstr "Ja, gem ændringer"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4945,6 +4961,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__carryover_options
 msgid "You can limit the accrued time carried over for the next period."
 msgstr ""
+"Du kan begrænse, hvor meget optjent tid der overføres til næste periode."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
@@ -5013,7 +5030,7 @@ msgstr "Du kan ikke godkende dette afviste fravær."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can't delete a time off request that is in the past."
-msgstr ""
+msgstr "Du kan ikke slette en fraværsanmodning, der ligger i fortiden."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5091,7 +5108,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
 msgid "You cannot have a balance cap on accrued time set to 0."
-msgstr ""
+msgstr "Det er ikke tilladt at sætte den øvre grænse for optjent tid til 0."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_valid_yearly_cap_value
@@ -5105,12 +5122,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_valid_postpone_max_days_value
 msgid "You cannot have a maximum quantity to carryover set to 0."
-msgstr ""
+msgstr "Det er ikke tilladt at sætte den maksimale overførselsmængde til 0."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_valid_accrual_validity_value
 msgid "You cannot have an accrual validity time set to 0."
-msgstr ""
+msgstr "Det er ikke tilladt at sætte den maksimale overførselsmængde til 0."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5214,14 +5231,14 @@ msgstr "Dit fravær er blevet annulleret"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "allocation date"
-msgstr ""
+msgstr "tildelingsdato"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "and the"
-msgstr ""
+msgstr "og"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5285,7 +5302,7 @@ msgstr "f.eks. nytårsdag"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "e.g. Seniority Plan, PTO, RTT, ..."
-msgstr ""
+msgstr "f.eks. anciennitetsordning, PTO, RTT osv."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -5303,36 +5320,36 @@ msgstr "f.eks. årlig ferie"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "every day."
-msgstr ""
+msgstr "hver dag."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "every hour."
-msgstr ""
+msgstr "hver time."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "every month on the"
-msgstr ""
+msgstr "hver måned den"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "every week on"
-msgstr ""
+msgstr "hver uge den"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "every year on the"
-msgstr ""
+msgstr "hvert år den"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "from the start of allocation"
-msgstr ""
+msgstr "fra tildelingens start"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5367,7 +5384,7 @@ msgstr "af"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "of available time."
-msgstr ""
+msgstr "af den tilgængelige tid."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -5384,7 +5401,7 @@ msgstr "i måneden"
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "of the month."
-msgstr ""
+msgstr "om måneden."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -5395,7 +5412,7 @@ msgstr "på"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "on each"
-msgstr ""
+msgstr "på hver"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -5406,18 +5423,18 @@ msgstr "på den"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "select a day"
-msgstr ""
+msgstr "vælg en dag"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "select a month"
-msgstr ""
+msgstr "vælg en måned"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "select a weekday"
-msgstr ""
+msgstr "vælg en ugedag"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__sequence
@@ -5428,7 +5445,7 @@ msgstr "sekvens"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "start of the year"
-msgstr ""
+msgstr "året begyndelse"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5451,13 +5468,13 @@ msgstr "til"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "twice a month on the"
-msgstr ""
+msgstr "to gange om måneden den"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "twice a year on the"
-msgstr ""
+msgstr "to gange om året den"
 
 #. module: hr_holidays
 #. odoo-python

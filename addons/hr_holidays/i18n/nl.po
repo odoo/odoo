@@ -3,11 +3,10 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Martin Trigaux, 2025
 # Tiffany Chang, 2025
 # Manon Rondou, 2025
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # Wil Odoo, 2025
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -127,7 +126,7 @@ msgstr "%(label)s, terug op %(date)s"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(leave_name)s has been cancelled for the following reason: %(reason)s"
-msgstr ""
+msgstr "%(leave_name)s is geannuleerd om de volgende reden: %(reason)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -249,6 +248,8 @@ msgid ""
 "(s)\n"
 "                                    and a balance cap is set to"
 msgstr ""
+"(s)\n"
+"                                    en een balansbovengrens is ingesteld op"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -270,7 +271,7 @@ msgstr "00:00"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid ": the"
-msgstr ""
+msgstr ": de"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -444,7 +445,7 @@ msgstr "<strong>Afdelingen en personeel</strong>"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "A balance cap is set to"
-msgstr ""
+msgstr "Een saldoplafond is ingesteld op"
 
 #. module: hr_holidays
 #. odoo-python
@@ -514,7 +515,7 @@ msgstr "Een verlof kan niet gedupliceerd worden."
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "A yearly cap is set to"
-msgstr ""
+msgstr "Een jaarlijks maximum is vastgesteld op"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__show_leaves
@@ -592,7 +593,7 @@ msgstr "Opbouwniveau"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Accrual Level Options"
-msgstr ""
+msgstr "Opties op opbouwniveau"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_accrual_plan
@@ -631,12 +632,14 @@ msgstr "Verlofopbouw: Werkt het aantal verloven bij"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "Accrual frequency :"
-msgstr ""
+msgstr "Opbouwfrequentie :"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Accrual will stop until next carry-over date if accrued time's reach"
 msgstr ""
+"De opbouw stopt tot de volgende overdrachtsdatum als de opgebouwde tijd is "
+"bereikt"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accruals_ids
@@ -723,7 +726,7 @@ msgstr "Soort activiteit"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "Add a milestone"
-msgstr ""
+msgstr "Voeg een mijlpaal toe"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -752,7 +755,7 @@ msgstr "Na"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "After a year, unused time off will be :"
-msgstr ""
+msgstr "Na een jaar worden ongebruikte vrije dagen :"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__transition_mode__end_of_accrual
@@ -969,7 +972,7 @@ msgstr "Bedrag"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/radio_followed_by_element.js:0
 msgid "An element name parent of the radio to observe updates"
-msgstr ""
+msgstr "Een elementnaam ouder van de radio om updates te observeren"
 
 #. module: hr_holidays
 #. odoo-python
@@ -982,6 +985,8 @@ msgstr "Een werknemer heeft al verlof geboekt dat overlapt met deze periode:"
 #: code:addons/hr_holidays/static/src/fields/radio_followed_by_element.js:0
 msgid "An object to link select options and element id to move"
 msgstr ""
+"Een object om selectiemogelijkheden en element-id aan te koppelen om te "
+"verplaatsen"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1091,7 +1096,7 @@ msgstr "Aanvragen"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__milestone_date__creation
 msgid "At allocation creation"
-msgstr ""
+msgstr "Bij het aanmaken van toewijzingen"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_date__allocation
@@ -1210,7 +1215,7 @@ msgstr "Gebaseerd op een opbouwplan"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.js:0
 msgid "Boolean display as radio field with translatable labels"
-msgstr ""
+msgstr "Booleaanse weergave als radioveld met vertaalbare labels"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__both
@@ -1347,12 +1352,12 @@ msgstr "Geannuleerd verlof"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Cap Options"
-msgstr ""
+msgstr "Cap opties"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__all
 msgid "Carried over"
-msgstr ""
+msgstr "Overgedragen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__carried_over_days_expiration_date
@@ -1362,7 +1367,7 @@ msgstr "Overgedragen dagen vervaldatum"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Carry Over Options"
-msgstr ""
+msgstr "Overdraagopties"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1498,7 +1503,7 @@ msgstr "Bevestigd en goedgekeurd"
 #. module: hr_holidays
 #: model_terms:web_tour.tour,rainbow_man_message:hr_holidays.hr_holidays_tour
 msgid "Congrats, we can see that your request has been validated."
-msgstr "Gefeliciteerd, we kunnen zien dat je verzoek is gevalideerd."
+msgstr "Gefeliciteerd, we kunnen zien dat je verzoek is goedgekeurd."
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_partner
@@ -1509,7 +1514,7 @@ msgstr "Contact"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Contract %(contract)s from %(start_date)s to %(end_date)s"
-msgstr ""
+msgstr "Contract %(contract)s van %(start_date)s naar %(end_date)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1517,13 +1522,13 @@ msgid ""
 "Count of allocations for this time off type (approved or waiting for "
 "approbation) with a validity period starting this year."
 msgstr ""
-"Telling van toewijzing voor dit verlof (goedgekeurd of wachtend op "
+"Telling van toewijzing voor deze verlofsoort (goedgekeurd of wachtend op "
 "goedkeuring) met een geldigheidsperiode vanaf dit jaar."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Count of plans linked to this time off type."
-msgstr "Aantal plannen gekoppeld aan dit type verlof."
+msgstr "Aantal plannen gekoppeld aan dit verlofsoort."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1531,7 +1536,7 @@ msgid ""
 "Count of time off requests for this time off type (approved or waiting for "
 "approbation) with a start date in the current year."
 msgstr ""
-"Aantal verlofaanvragen voor dit type verlof (goedgekeurd of wachtend op "
+"Aantal verlofaanvragen voor dit soort verlof (goedgekeurd of wachtend op "
 "goedkeuring) met een startdatum in het lopende jaar."
 
 #. module: hr_holidays
@@ -1558,7 +1563,7 @@ msgstr "Een klant aanmaken"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Create a milestone"
-msgstr ""
+msgstr "Maak een mijlpaal"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
@@ -1614,7 +1619,7 @@ msgstr "Huidige verlofstatus"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_id
 msgid "Current Time Off Type"
-msgstr "Huidig verloftype"
+msgstr "Huidig verlofsoort"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -1624,7 +1629,7 @@ msgstr "Momenteel geldig"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_date__other
 msgid "Custom date"
-msgstr ""
+msgstr "Aangepaste datum"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__daily
@@ -1695,7 +1700,7 @@ msgstr "Dagen"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_death
 msgid "Death Leave"
-msgstr ""
+msgstr "Overlijdensverlof"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__12
@@ -1707,17 +1712,17 @@ msgstr "December"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Define a balance cap?"
-msgstr ""
+msgstr "Definieer een evenwichtsplafond?"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Define a carry over validity?"
-msgstr ""
+msgstr "Definieer een overdraagbaarheid?"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Define a yearly cap?"
-msgstr ""
+msgstr "Definieer een jaarlijks maximum?"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__max_allowed_negative
@@ -1843,6 +1848,7 @@ msgstr "Toon verlof in kalender"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Do you need a carry-over of the accrued days from one year to another?"
 msgstr ""
+"Moet je de opgebouwde dagen van het ene naar het andere jaar overdragen?"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1851,6 +1857,8 @@ msgid ""
 "Do you want to save the changes made to the accrual plan before creating a "
 "new milestone?"
 msgstr ""
+"Wil je de wijzigingen in het opbouwschema opslaan voordat je een nieuwe "
+"mijlpaal aanmaakt?"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1859,6 +1867,8 @@ msgid ""
 "Do you want to save the changes made to the accrual plan before editing this"
 " milestone?"
 msgstr ""
+"Wil je de wijzigingen in het opbouwschema opslaan voordat je deze mijlpaal "
+"bewerkt?"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1929,13 +1939,13 @@ msgstr "Duur in dagen. Referentieveld om te gebruiken wanneer nodig."
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/radio_followed_by_element.js:0
 msgid "Element association"
-msgstr ""
+msgstr "Elementassociatie"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/radio_followed_by_element.js:0
 msgid "Element to observe"
-msgstr ""
+msgstr "Element om te observeren"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_employee
@@ -2051,7 +2061,7 @@ msgstr "Extra verlof"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.js:0
 msgid "False association"
-msgstr ""
+msgstr "Valse associatie"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__2
@@ -2251,7 +2261,7 @@ msgstr "Personeel verlof samenvatting per werknemer"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_hajj
 msgid "Hajj Leave"
-msgstr ""
+msgstr "Hadj verlof"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_half
@@ -2315,7 +2325,7 @@ msgstr "Uur t/m"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__added_value_type__hour
 msgid "Hour(s)"
-msgstr ""
+msgstr "Uren"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__hourly
@@ -2334,7 +2344,7 @@ msgstr "Uren"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "How much time can be carried over :"
-msgstr ""
+msgstr "Hoeveel tijd kan worden overgedragen :"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__hr_icon_display
@@ -2533,7 +2543,7 @@ msgstr "Is in gebruik"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "It is based on worked time?"
-msgstr ""
+msgstr "Is het gebaseerd op gewerkte tijd?"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__1
@@ -2626,7 +2636,7 @@ msgstr "Verlofdatum tot"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_increases_duration
 msgid "Leave Type Increases Duration"
-msgstr "Verloftype verhoogt duur"
+msgstr "Verlofsoort verhoogt duur"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__left
@@ -2673,18 +2683,18 @@ msgstr "Niveaus"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.js:0
 msgid "Link an element with the boolean False value."
-msgstr ""
+msgstr "Koppel een element met de booleaanse waarde False."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.js:0
 msgid "Link an element with the boolean True value."
-msgstr ""
+msgstr "Koppel een element met de booleaanse waarde True."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__lost
 msgid "Lost"
-msgstr "verwijderd"
+msgstr "Vervallen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_main_attachment_id
@@ -2818,7 +2828,7 @@ msgstr "Berichten"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
 msgid "Milestone Edition"
-msgstr ""
+msgstr "Mijlpaal Editie"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2948,7 +2958,7 @@ msgstr "Nieuw"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "New !"
-msgstr ""
+msgstr "Nieuw !"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3079,18 +3089,18 @@ msgstr "Nog geen verplichte dagen!"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "No milestones on the plan yet. Let's create a new one"
-msgstr ""
+msgstr "Er staan nog geen mijlpalen op het plan. Laten we een nieuwe aanmaken"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "No, always consider the entire accrual period (whole calendar days)."
-msgstr ""
+msgstr "Nee, kijk altijd naar de hele opbouwperiode (hele kalenderdagen)."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "No, keep the old version"
-msgstr ""
+msgstr "Nee, bewaar de oude versie"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_holidays_dashboard
@@ -3126,7 +3136,7 @@ msgid ""
 "Not possible state. State Approve is only used for leave needed 2 approvals"
 msgstr ""
 "Ongeldige status. De status 'Goedgekeurd' wordt alleen gebruikt voor verlof "
-"dat 2 goedkeuringen vereist."
+"dat 2 goedkeuringen vereist"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_ids
@@ -3216,7 +3226,7 @@ msgstr "Met verlof"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
 msgid "On Leave (Busy)"
-msgstr ""
+msgstr "Met verlof (druk)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3311,6 +3321,8 @@ msgstr ""
 msgid ""
 "Only excludes requests where the time off type is set as unpaid kind of."
 msgstr ""
+"Sluit alleen verzoeken uit waarbij het verlofsoort is ingesteld op "
+"onbetaald."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3336,7 +3348,7 @@ msgstr "Overzicht"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_paid_sick_time_off
 msgid "Paid Sick time off"
-msgstr ""
+msgstr "Betaald ziekteverzuim"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.leave_type_paid_time_off
@@ -3403,7 +3415,7 @@ msgid ""
 "Public Holidays are non-working days that don't impact employees' balances"
 msgstr ""
 "Officiële feestdagen zijn niet-werkdagen die geen invloed hebben op het "
-"verlofsaldo van medewerkers."
+"verlofsaldo van medewerkers"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__include_public_holidays_in_duration
@@ -3418,7 +3430,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/radio_followed_by_element.js:0
 msgid "Radio followed by element"
-msgstr ""
+msgstr "Radio gevolgd door element"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
@@ -3724,7 +3736,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Set the employee accrual frequency :"
-msgstr ""
+msgstr "Stel de opbouwfrequentie voor werknemers in :"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3735,12 +3747,12 @@ msgstr "Toon alle records waarvan de volgende activiteitsdatum is verstreken"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_sick_leave_75
 msgid "Sick Leave (75% Paid)"
-msgstr ""
+msgstr "Ziekteverzuim (75% betaald)"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_sick_leave_unpaid
 msgid "Sick Leave (UnPaid)"
-msgstr ""
+msgstr "Ziekteverzuim (onbetaald)"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_ae_leave_type_sick_leave_0
@@ -3799,7 +3811,7 @@ msgid ""
 "Specify if this accrual plan can only be used with this Time Off Type.\n"
 "                Leave empty if this accrual plan can be used with any Time Off Type."
 msgstr ""
-"Geef aan of dit opbouwplan alleen kan worden gebruikt met dit type verlof.\n"
+"Geef aan of dit opbouwplan alleen kan worden gebruikt met dit soort verlof.\n"
 "Laat dit leeg als dit opbouwplan kan worden gebruikt met elk type verlof."
 
 #. module: hr_holidays
@@ -3911,7 +3923,7 @@ msgstr "Ondersteunende documenten"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Switch employees to the new accrual level:"
-msgstr ""
+msgstr "Werknemers overschakelen naar het nieuwe opbouwniveau:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_request_unit
@@ -3962,7 +3974,7 @@ msgid ""
 "The allocation requirement of a time off type cannot be changed once leaves "
 "of that type have been taken. You should create a new time off type instead."
 msgstr ""
-"De toewijzingseis van een verloftype kan niet worden gewijzigd als er "
+"De toewijzingseis van een verlofsoort kan niet worden gewijzigd als er "
 "eenmaal verlof van dat type is genomen. In plaats daarvan moet je een nieuw "
 "verloftype aanmaken."
 
@@ -3972,13 +3984,13 @@ msgstr ""
 msgid ""
 "The color selected here will be used in every screen with the time off type."
 msgstr ""
-"De hier geselecteerde kleur wordt in elk scherm gebruikt met het type "
+"De hier geselecteerde kleur wordt in elk scherm gebruikt met het soort "
 "verlof."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "The days carried over will be effective for"
-msgstr ""
+msgstr "De overgedragen dagen zijn effectief voor"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__time_type
@@ -4047,7 +4059,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "The plan will be on hold if the balance reach"
-msgstr ""
+msgstr "Het plan zal worden opgeschort als het saldo bereikt"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check3
@@ -4090,6 +4102,7 @@ msgstr "De verlofaanvraag werd automatisch goedgekeurd"
 msgid ""
 "The time off request has been cancelled for the following reason:%(reason)s"
 msgstr ""
+"De aanvraag voor verlof is geannuleerd om de volgende reden:%(reason)s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -4161,7 +4174,7 @@ msgid ""
 "with second level (If time off type need second validation)"
 msgstr ""
 "Deze velden worden automatisch ingevuld door de gebruiker die de toewijzing "
-"goedkeurt op het tweede niveau (indien het type verlof een tweede "
+"goedkeurt op het tweede niveau (indien het verlofsoort een tweede "
 "goedkeuring vereist)."
 
 #. module: hr_holidays
@@ -4184,7 +4197,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "This milestone will be reached :"
-msgstr ""
+msgstr "Deze mijlpaal wordt bereikt :"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4357,7 +4370,7 @@ msgstr "Opgenomen verlof:"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
 msgid "Time Off Type"
-msgstr "Soort verlof"
+msgstr "Verlofsoort"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
@@ -4379,7 +4392,7 @@ msgstr "Verlof per werknemer"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_report
 msgid "Time Off by Type"
-msgstr "Verlof per type"
+msgstr "Verlof per soort"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -4414,7 +4427,7 @@ msgstr "Eerder opgenomen verlof"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_holidays_by_employee_and_type_report
 msgid "Time off Analysis by Employee and Time Off Type"
-msgstr "Verlofanalyse per werknemer en verloftype"
+msgstr "Verlofanalyse per werknemer en verlofsoort"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_graph
@@ -4443,7 +4456,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Time off type"
-msgstr "Verloftype"
+msgstr "Verlofsoort"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__tz
@@ -4479,7 +4492,7 @@ msgstr "Goed te keuren"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "To Approve or Approved Allocations"
-msgstr "Toewijzingen goedkeuren of goedkeuren"
+msgstr "Goed te keuren of goedgekeurde toewijzingen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_to
@@ -4528,7 +4541,7 @@ msgstr "Opleidingsverlof"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/fields/boolean_radio.js:0
 msgid "True association"
-msgstr ""
+msgstr "Ware associatie"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
@@ -4571,7 +4584,7 @@ msgstr "Soort"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__type_request_unit
 msgid "Type Request Unit"
-msgstr "Eenheid aanvraagtype"
+msgstr "Eenheid aanvraag"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_exception_decoration
@@ -4603,7 +4616,7 @@ msgstr "Onbeperkt"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
 msgid "Unnamed Plan"
-msgstr ""
+msgstr "Naamloos plan"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.leave_type_unpaid
@@ -4635,19 +4648,19 @@ msgstr "Ongelezen berichten"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "Unused days will be lost."
-msgstr ""
+msgstr "Ongebruikte dagen gaan verloren."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "Unused days will be transferred totally on each"
-msgstr ""
+msgstr "Ongebruikte dagen worden volledig overgedragen op elke"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "Unused days will be transferred with a max of"
-msgstr ""
+msgstr "Ongebruikte dagen worden overgedragen met een maximum van"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__carryover_options__limited
@@ -4675,7 +4688,7 @@ msgstr "Gebruiker"
 #: code:addons/hr_holidays/static/src/avatar_card_popover_patch.xml:0
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 msgid "User is busy"
-msgstr ""
+msgstr "Gebruiker is bezet"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4694,7 +4707,7 @@ msgstr "Gebruiker is met verlof"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
 msgid "User is on leave and busy"
-msgstr ""
+msgstr "Gebruiker is met verlof en bezet"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4739,13 +4752,13 @@ msgstr "Bevestigen"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/calendar/calendar_side_panel/calendar_side_panel.xml:0
 msgid "Validated"
-msgstr "Bevestigd"
+msgstr "Goedgekeurd"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__validation_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__validation_type
 msgid "Validation Type"
-msgstr "Validatietype"
+msgstr "Validatiesoort"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4840,7 +4853,7 @@ msgstr "Wekelijks"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "When do you want the accrued time left to be carried-over?"
-msgstr ""
+msgstr "Wanneer wil je dat de opgebouwde resterende tijd wordt overgedragen?"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
@@ -4849,6 +4862,10 @@ msgid ""
 "what you want to happen with the unused time off: Lost (time will be reset "
 "to zero), Carried over (accrued time carried over to the next period.)"
 msgstr ""
+"Wanneer de overboektijd is bereikt, selecteer je volgens de instelling van "
+"het plan wat je wilt dat er met de ongebruikte vrije tijd gebeurt: Verloren "
+"(tijd wordt op nul gezet), Overgedragen (opgebouwde tijd wordt overgedragen "
+"naar de volgende periode)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time
@@ -4871,7 +4888,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "When the time is accrued?"
-msgstr ""
+msgstr "Wanneer wordt de tijd opgebouwd?"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
@@ -4920,12 +4937,14 @@ msgid ""
 "Yes, consider the worked hours, excluding any time off taken during that "
 "period."
 msgstr ""
+"Ja, kijk naar de gewerkte uren, exclusief de vrije tijd die je in die "
+"periode hebt opgenomen."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "Yes, save changes"
-msgstr ""
+msgstr "Ja, wijzigingen opslaan"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4968,6 +4987,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__carryover_options
 msgid "You can limit the accrued time carried over for the next period."
 msgstr ""
+"Je kunt de opgebouwde tijd die wordt overgedragen naar de volgende periode "
+"beperken."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
@@ -4989,7 +5010,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can only validate a leave with validation by Time Off Manager."
 msgstr ""
-"Je kunt een verlof alleen valideren met goedkeuring van de verlofmanager."
+"Je kunt een verlof alleen goedkeuren met goedkeuring van de verlofmanager."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4997,7 +5018,7 @@ msgstr ""
 msgid ""
 "You can only validate an allocation with validation by Time Off Manager."
 msgstr ""
-"Je kunt een toekenning alleen valideren als deze door de verlofmanager is "
+"Je kunt een toekenning alleen goedkeuren als deze door de verlofmanager is "
 "goedgekeurd."
 
 #. module: hr_holidays
@@ -5010,13 +5031,13 @@ msgstr "Je kunt de periode selecteren waarin je verlof wilt opnemen"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "You can't approve a validated allocation."
-msgstr "Je kunt geen gevalideerde toekenning goedkeuren."
+msgstr "Je kunt geen goedgekeurde toekenning goedkeuren."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can't approve a validated leave."
-msgstr "Je kunt geen gevalideerd verlof goedkeuren."
+msgstr "Je kunt geen goedgekeurd verlof goedkeuren."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5034,7 +5055,7 @@ msgstr "Je kunt dit geweigerde verlof niet goedkeuren."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can't delete a time off request that is in the past."
-msgstr ""
+msgstr "Je kunt een verlofaanvraag uit het verleden niet verwijderen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5048,7 +5069,7 @@ msgstr "Je kunt niet twee keer dezelfde actie uitvoeren."
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can't refuse a leave with validation by Time Off Officer."
 msgstr ""
-"Je kunt een verlof niet weigeren dat gevalideerd moet worden door de "
+"Je kunt een verlof niet weigeren dat goedgekeurd moet worden door de "
 "verlofbeheerder."
 
 #. module: hr_holidays
@@ -5056,7 +5077,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "You can't refuse an allocation with validation by Time Off Officer."
 msgstr ""
-"Je kunt een toekenning niet weigeren die gevalideerd moet worden door de "
+"Je kunt een toekenning niet weigeren die goedgekeurd moet worden door de "
 "verlofbeheerder."
 
 #. module: hr_holidays
@@ -5065,7 +5086,7 @@ msgstr ""
 msgid "You can't reset a leave. Cancel/delete this one and create an other"
 msgstr ""
 "Je kunt een verlof niet resetten. Annuleer/verwijder deze en maak een nieuwe"
-" aan."
+" aan"
 
 #. module: hr_holidays
 #. odoo-python
@@ -5074,13 +5095,13 @@ msgid ""
 "You can't reset an allocation. Cancel/delete this one and create an other"
 msgstr ""
 "Je kunt een toekenning niet resetten. Annuleer/verwijder deze en maak een "
-"nieuwe aan."
+"nieuwe aan"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can't validate this leave."
-msgstr "Je kunt dit verlof niet valideren."
+msgstr "Je kunt dit verlof niet goedkeuren."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5094,7 +5115,7 @@ msgstr "Je kunt dit verlof niet goedkeuren."
 msgid ""
 "You cannot delete an allocation request which has some validated leaves."
 msgstr ""
-"Je kunt een toewijzingsverzoek met enkele gevalideerde bladeren niet "
+"Je kunt een toewijzingsverzoek met alleen goedgekeurde verloven niet "
 "verwijderen."
 
 #. module: hr_holidays
@@ -5117,7 +5138,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
 msgid "You cannot have a balance cap on accrued time set to 0."
-msgstr ""
+msgstr "Je kunt geen saldolimiet op opgebouwde tijd op 0 zetten."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_valid_yearly_cap_value
@@ -5131,12 +5152,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_valid_postpone_max_days_value
 msgid "You cannot have a maximum quantity to carryover set to 0."
-msgstr ""
+msgstr "Je kunt de maximale over te dragen hoeveelheid niet op 0 zetten."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_valid_accrual_validity_value
 msgid "You cannot have an accrual validity time set to 0."
-msgstr ""
+msgstr "Je kunt de geldigheidsduur van een opbouw niet op 0 zetten."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5148,8 +5169,8 @@ msgid ""
 "affected by this change."
 msgstr ""
 "Je kunt de instelling 'Feestdag inbegrepen' niet wijzigen omdat een of meer "
-"verlofdagen voor dat                         verloftype overlappen met "
-"feestdagen. Deze wijzinging zou het saldo van de betrokken werknemers "
+"verlofdagen voor dat                         verlofsoort overlappen met "
+"feestdagen. Deze wijziging zou het saldo van de betrokken werknemers "
 "beïnvloeden."
 
 #. module: hr_holidays
@@ -5242,14 +5263,14 @@ msgstr "Je verlof is geannuleerd."
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "allocation date"
-msgstr ""
+msgstr "toewijzingsdatum"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "and the"
-msgstr ""
+msgstr "en de"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5313,14 +5334,14 @@ msgstr "bijv. Nieuwjaar"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "e.g. Seniority Plan, PTO, RTT, ..."
-msgstr ""
+msgstr "bijv. anciënniteitsplan, PTO, RTT, ..."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "e.g. Time Off type (From validity start to validity end / no limit)"
 msgstr ""
-"b.v. Type verlof (Van begin geldigheid t/m einde geldigheid / geen limiet)"
+"b.v. Verlofsoort (Van begin geldigheid t/m einde geldigheid / geen limiet)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -5331,36 +5352,36 @@ msgstr "bijv. Jaarlijkse vakantie"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "every day."
-msgstr ""
+msgstr "elke dag."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "every hour."
-msgstr ""
+msgstr "elk uur."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "every month on the"
-msgstr ""
+msgstr "elke maand op de"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "every week on"
-msgstr ""
+msgstr "elke week op"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "every year on the"
-msgstr ""
+msgstr "elk jaar op de"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "from the start of allocation"
-msgstr ""
+msgstr "vanaf het begin van de toewijzing"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5395,7 +5416,7 @@ msgstr "van"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "of available time."
-msgstr ""
+msgstr "van de beschikbare tijd."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -5412,7 +5433,7 @@ msgstr "van de maand"
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "of the month."
-msgstr ""
+msgstr "van de maand."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -5423,7 +5444,7 @@ msgstr "op"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "on each"
-msgstr ""
+msgstr "op iedere"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -5434,18 +5455,18 @@ msgstr "op de"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "select a day"
-msgstr ""
+msgstr "Kies een datum"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "select a month"
-msgstr ""
+msgstr "selecteer een maand"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "select a weekday"
-msgstr ""
+msgstr "kies een weekdag"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__sequence
@@ -5456,7 +5477,7 @@ msgstr "reeks"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "start of the year"
-msgstr ""
+msgstr "begin van het jaar"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5479,19 +5500,19 @@ msgstr "aan"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "twice a month on the"
-msgstr ""
+msgstr "twee keer per maand op de"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "twice a year on the"
-msgstr ""
+msgstr "twee keer per jaar op de"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "undefined"
-msgstr "Niet gedefinieerd"
+msgstr "niet gedefinieerd"
 
 #. module: hr_holidays
 #. odoo-javascript

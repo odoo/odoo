@@ -1270,6 +1270,8 @@ msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
+"Allow Make to Order, or automate PO, when a product is sold and get direct "
+"links between documents."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
@@ -1608,6 +1610,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"Available quantity (computed as Quantity On Hand - reserved quantity - quantity to remove)\n"
+"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
@@ -2320,6 +2326,9 @@ msgid ""
 "                    products later. Do not create a backorder if you will not\n"
 "                    process the remaining products."
 msgstr ""
+"Create a backorder if you expect to process the remaining\n"
+"                    products later. Do not create a backorder if you will not\n"
+"                    process the remaining products."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -2845,6 +2854,11 @@ msgid ""
 "\n"
 "Try changing the “done” quantity to 0 instead."
 msgstr ""
+"Deleting product moves after the transfer is done?\n"
+"\n"
+"That would be like going back in time to revert all operations triggered after this move. Who knows what the end result would be, So let's not do it.\n"
+"\n"
+"Try changing the “done” quantity to 0 instead."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__ship_only
@@ -2999,12 +3013,12 @@ msgstr "Descrição"
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
 msgid "Description Of Picking"
-msgstr ""
+msgstr "Description Of Picking"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking_manual
 msgid "Description Picking Manual"
-msgstr ""
+msgstr "Description Picking Manual"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -4648,7 +4662,7 @@ msgstr "Gerenciamento de inventário"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__inventory_name
 msgid "Inventory Name"
-msgstr ""
+msgstr "Inventory Name"
 
 #. module: stock
 #. odoo-javascript
@@ -5525,7 +5539,7 @@ msgstr "Movimentação"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Move Date"
-msgstr ""
+msgstr "Move Date"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -6053,6 +6067,8 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer and is still "
 "fresh, in the default unit of measure of the product"
 msgstr ""
+"On hand quantity which hasn't been reserved on a transfer and is still "
+"fresh, in the default unit of measure of the product"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -8037,7 +8053,7 @@ msgstr "Reverter ajuste de estoque"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "Reverted Moves"
-msgstr ""
+msgstr "Reverted Moves"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__route_id
@@ -8225,7 +8241,7 @@ msgstr "Data programada ou de processamento"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Scheduled time for the first part of the shipment to be processed."
-msgstr ""
+msgstr "Scheduled time for the first part of the shipment to be processed."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__scheduled_date
@@ -8681,7 +8697,7 @@ msgstr "Exibir transferências"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Mostrar todos os registros cuja data da próxima atividade já passou"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
@@ -9244,7 +9260,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "The actual date when the transfer was processed."
-msgstr ""
+msgstr "The actual date when the transfer was processed."
 
 #. module: stock
 #. odoo-python
@@ -10107,6 +10123,8 @@ msgid ""
 "Transfer trouble alert! Validating a zero quantity transfer? You're not moving invisible goods around are you?\n"
 "Set some quantities and let's get moving!"
 msgstr ""
+"Transfer trouble alert! Validating a zero quantity transfer? You're not moving invisible goods around are you?\n"
+"Set some quantities and let's get moving!"
 
 #. module: stock
 #. odoo-python

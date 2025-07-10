@@ -3,8 +3,8 @@
 # 	* stock
 # 
 # Translators:
-# Marianna Ciofani, 2025
 # Wil Odoo, 2025
+# Marianna Ciofani, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
 "PO-Revision-Date: 2025-07-01 13:07+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1270,6 +1270,8 @@ msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
+"Consenti di utilizzare il metodo MTO, o di automatizzare l'OdA quando un "
+"prodotto viene venduto e ottieni collegamenti diretti tra i documenti."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
@@ -1608,6 +1610,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"Quantità disponibile (calcolata come quantità a disposizione - quantità riservata - quantità da eliminare)\n"
+"In un contesto di singola ubicazione delle giacenze, include le merci stoccate nell'ubicazione principale o in una delle secondarie.\n"
+"In un contesto di singolo magazzino, include le merci stoccate nel'ubicazione principale delle giacenze di magazzino o in una delle secondarie.\n"
+"Diversamente, include le merci stoccate in qualsiasi ubicazione di giacenza di tipo “interno”."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
@@ -2324,6 +2330,9 @@ msgid ""
 "                    products later. Do not create a backorder if you will not\n"
 "                    process the remaining products."
 msgstr ""
+"Crea un ordine residuo se l'elaborazione dei prodotti\n"
+"                    rimanenti è prevista in seguito. In caso contrario, non\n"
+"                    procedere alla creazione."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -2853,6 +2862,11 @@ msgid ""
 "\n"
 "Try changing the “done” quantity to 0 instead."
 msgstr ""
+"Stai eliminando movimenti prodotto dopo l'esecuzione del trasferimento?\n"
+"\n"
+"Sarebbe come tornare indietro nel tempo per annullare tutte le operazioni attivate dopo il movimento. Dato che non sappiamo cosa potrebbe succedere è meglio evitare di farlo. \n"
+"\n"
+"Prova a impostare la quantità \"completata\" su 0."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__ship_only
@@ -3008,12 +3022,12 @@ msgstr "Descrizione"
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
 msgid "Description Of Picking"
-msgstr ""
+msgstr "Descrizione del prelievo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking_manual
 msgid "Description Picking Manual"
-msgstr ""
+msgstr "Descrizione prelievo manuale"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -3657,6 +3671,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"Quantità prevista (calcolata come quantità a disposizione - in uscita + in entrata - quantità da eliminare)\n"
+"In un contesto di singola ubicazione delle giacenze, include le merci stoccate nell'ubicazione principale o in una delle secondarie.\n"
+"In un contesto di singolo magazzino, include le merci stoccate nel'ubicazione principale delle giacenze di magazzino o in una delle secondarie.\n"
+"Diversamente, include le merci stoccate in qualsiasi ubicazione di giacenza di tipo “interno”."
 
 #. module: stock
 #. odoo-javascript
@@ -4653,7 +4671,7 @@ msgstr "Gestione inventario"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__inventory_name
 msgid "Inventory Name"
-msgstr ""
+msgstr "Nome magazzino"
 
 #. module: stock
 #. odoo-javascript
@@ -5527,7 +5545,7 @@ msgstr "Movimento"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Move Date"
-msgstr ""
+msgstr "Data movimento"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -6057,6 +6075,8 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer and is still "
 "fresh, in the default unit of measure of the product"
 msgstr ""
+"Quantità a disposizione che non è stata prenotata su un trasferimento ed è "
+"quindi pronta, nell'unità di misura predefinita del prodotto"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -8041,7 +8061,7 @@ msgstr "Annulla rettifiche inventario"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "Reverted Moves"
-msgstr ""
+msgstr "Movimenti annullati"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__route_id
@@ -8230,6 +8250,7 @@ msgstr "Data programmata o di elaborazione"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Scheduled time for the first part of the shipment to be processed."
 msgstr ""
+"Tempo programmato per l'elaborazione della prima parte della spedizione."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__scheduled_date
@@ -9244,7 +9265,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "The actual date when the transfer was processed."
-msgstr ""
+msgstr "La data effettiva di elaborazione del trasferimento."
 
 #. module: stock
 #. odoo-python
@@ -9572,6 +9593,12 @@ msgid ""
 "manufacturing orders, etc. are triggered based on what way to replenish is "
 "set on the product (Buy or Manufacture route)."
 msgstr ""
+"Aggiunge un percorso Rifornimento su ordine (MTO) da applicare ai prodotti "
+"per generare un rifornimento su richiesta legato agli ordini di vendita (ad "
+"esempio) non appena vengono confermati, con un collegamento diretto. Gli "
+"ordini di acquisto, gli ordini di produzione, ecc. vengono attivati in base "
+"alla modalità di rifornimento impostata sul prodotto (percorso Acquisto o "
+"Produzione)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10108,6 +10135,8 @@ msgid ""
 "Transfer trouble alert! Validating a zero quantity transfer? You're not moving invisible goods around are you?\n"
 "Set some quantities and let's get moving!"
 msgstr ""
+"Problema trasferimento! Vuoi convalidare un trasferimento con quantità pari a zero? Sai che non stai spostando beni invisibili?\n"
+"Seleziona le quantità e muoviti! "
 
 #. module: stock
 #. odoo-python

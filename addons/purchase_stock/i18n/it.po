@@ -3,8 +3,8 @@
 # 	* purchase_stock
 # 
 # Translators:
-# Marianna Ciofani, 2025
 # Wil Odoo, 2025
+# Marianna Ciofani, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-01 09:07+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -136,6 +136,8 @@ msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
+"Consenti di utilizzare il metodo MTO, o di automatizzare l'OdA quando un "
+"prodotto viene venduto e ottieni collegamenti diretti tra i documenti."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
@@ -369,6 +371,9 @@ msgid ""
 "based on actual demand. Use the percentage to take into account seasonality "
 "or business growth."
 msgstr ""
+"Stima il volume delle vendite in base a un periodo passato oppure ordina ciò"
+" che ti serve in base alla domanda effettiva. Utilizza la percentuale per "
+"tenere conto della stagionalità o della crescita dell'attività."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_suggest__based_on
@@ -376,6 +381,8 @@ msgid ""
 "Estimate the sales volume for the period based on past period or order the "
 "forecasted quantity for that period."
 msgstr ""
+"Stima il volume delle vendite per un periodo specifico in base al periodo "
+"passato oppure ordina la quantità prevista per quel periodo."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -1000,6 +1007,8 @@ msgid ""
 "Suggested quantities to replenish will be computed to cover this amount of "
 "days for all filtered products in this catalog."
 msgstr ""
+"Le quantità suggerite per il rifornimento saranno calcolate per coprire "
+"questo numero di giorni per tutti i prodotti filtrati di questo catalogo."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_supplierinfo
@@ -1088,6 +1097,12 @@ msgid ""
 "manufacturing orders, etc. are triggered based on what way to replenish is "
 "set on the product (Buy or Manufacture route)."
 msgstr ""
+"Aggiunge un percorso Rifornimento su ordine (MTO) da applicare ai prodotti "
+"per generare un rifornimento su richiesta legato agli ordini di vendita (ad "
+"esempio) non appena vengono confermati, con un collegamento diretto. Gli "
+"ordini di acquisto, gli ordini di produzione, ecc. vengono attivati in base "
+"alla modalità di rifornimento impostata sul prodotto (percorso Acquisto o "
+"Produzione)."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -1197,7 +1212,7 @@ msgstr "Analisi puntualità di consegna fornitore"
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
 msgid "Vendor Pricelist"
-msgstr ""
+msgstr "Listino prezzi fornitore"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.view_stock_replenishment_info_stock_purchase_inherit
@@ -1256,11 +1271,16 @@ msgid ""
 "\n"
 "Try creating a return first silly billy!"
 msgstr ""
+"Stai cercando di diminuire la quantità ordinata al di sotto della quantità ricevuta, imbranato. \n"
+"\n"
+"Prova prima a creare un reso sciocchino!"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
 msgid "based on stock on hand, and expected sales volumes or actual demand."
 msgstr ""
+"in base alle scorte disponibili e ai volumi di vendita attesi o alla "
+"richiesta attuale."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form

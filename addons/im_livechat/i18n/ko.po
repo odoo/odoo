@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Daye Jeong, 2025
-# Sarah Park, 2025
 # Wil Odoo, 2025
+# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:09+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,12 +40,12 @@ msgstr "# 평점"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__message_count
 msgid "# of Messages per Session"
-msgstr ""
+msgstr "세션당 메시지 수"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_count
 msgid "# of Sessions with Calls"
-msgstr ""
+msgstr "통화 세션 수"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__number_of_calls
@@ -130,6 +130,8 @@ msgid ""
 "<span groups=\"im_livechat.im_livechat_group_manager\">Configure Channel</span>\n"
 "                                <span groups=\"!im_livechat.im_livechat_group_manager\">View Channel</span>"
 msgstr ""
+"<span groups=\"im_livechat.im_livechat_group_manager\">채널 환경설정</span>\n"
+"                                <span groups=\"!im_livechat.im_livechat_group_manager\">채널 보기</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -213,7 +215,7 @@ msgstr "웹사이트 &lt;head&gt; 섹션에 다음과 같이 코드를 추가합
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Add your notes here..."
-msgstr ""
+msgstr "여기에 메모를 추가하세요..."
 
 #. module: im_livechat
 #: model:res.groups,name:im_livechat.im_livechat_group_manager
@@ -543,12 +545,12 @@ msgstr "닫기"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/thread_actions.js:0
 msgid "Close Information"
-msgstr ""
+msgstr "정보 닫기"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_end_dt_status_constraint
 msgid "Closed Live Chat session should not have a status."
-msgstr ""
+msgstr "실시간 채팅 세션이 종료되면 상태가 표시되지 않습니다."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
@@ -813,7 +815,7 @@ msgstr "표시명"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Do not redirect visitors"
-msgstr ""
+msgstr "방문자를 리디렉션하지 않습니다"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -897,7 +899,7 @@ msgstr "이 세션에서 사용된 전문 지식"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_expertises
 msgid "Expertises used in this session (String)"
-msgstr ""
+msgstr "이 세션에서 사용된 전문 분야 (문자열)"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1031,7 +1033,7 @@ msgstr "좋음"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__has_call
 msgid "Has Call"
-msgstr ""
+msgstr "통화 있음"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__has_message
@@ -1064,29 +1066,29 @@ msgstr "안녕하세요, 무엇을 도와드릴까요?"
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__help_status__provided
 msgid "Help Provided"
-msgstr ""
+msgstr "지원 제공"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_providing_help_history
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__agent_providing_help_history
 msgid "Help Provided (Agent)"
-msgstr ""
+msgstr "고객 지원 (상담원)"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__help_status__requested
 msgid "Help Requested"
-msgstr ""
+msgstr "지원 요청"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_requesting_help_history
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__agent_requesting_help_history
 msgid "Help Requested (Agent)"
-msgstr ""
+msgstr "지원 요청 (상담원)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__help_status
 msgid "Help Status"
-msgstr ""
+msgstr "지원 상태"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__hide_button
@@ -1234,7 +1236,7 @@ msgstr "512 이미지"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 msgid "In Call"
-msgstr ""
+msgstr "통화 중"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1247,7 +1249,7 @@ msgstr "진행중"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__buffer_time
 msgid "Individual Buffer Time (sec)"
-msgstr ""
+msgstr "개별 버퍼 시간(초)"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1334,7 +1336,7 @@ msgstr "언어"
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_lang_id
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__lang_id
 msgid "Lang of the visitor of the channel."
-msgstr ""
+msgstr "채널 방문자의 언어입니다."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1462,7 +1464,7 @@ msgstr "실시간 채팅 기록"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_note
 msgid "Live Chat Note"
-msgstr ""
+msgstr "실시간 채팅 메모"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_failure
@@ -1472,7 +1474,7 @@ msgstr "실시간 채팅 세션 실패"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_livechat_channel_id
 msgid "Live chat channel"
-msgstr ""
+msgstr "실시간 채팅 채널"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
@@ -1535,7 +1537,7 @@ msgstr "실시간채팅 외부 테스트"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_is_in_call
 msgid "Livechat Is In Call"
-msgstr ""
+msgstr "실시간 채팅 통화 중"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_lang_ids
@@ -1562,17 +1564,17 @@ msgstr "실시간 채팅 유형의 채널에는 실시간 채팅 운영자 ID가
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_outcome
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_outcome
 msgid "Livechat Outcome"
-msgstr ""
+msgstr "실시간 채팅 결과"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_call_history__livechat_participant_history_ids
 msgid "Livechat Participant History"
-msgstr ""
+msgstr "실시간 채팅 참여 기록"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_status
 msgid "Livechat Status"
-msgstr ""
+msgstr "실시간 채팅 상태"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -1609,7 +1611,7 @@ msgstr "실시간 채팅 언어"
 #: code:addons/im_livechat/static/src/core/web/thread_model_patch.js:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_status__need_help
 msgid "Looking for help"
-msgstr ""
+msgstr "지원 요청"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_discuss_channel_rtc_session
@@ -1724,7 +1726,7 @@ msgstr "신규 세션 생성"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__block_assignment_during_call
 msgid "No Chats During Call"
-msgstr ""
+msgstr "통화 중에는 채팅을 받지 않음"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_failure__no_failure
@@ -1734,7 +1736,7 @@ msgstr "실패 없음"
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__help_status__none
 msgid "No Help"
-msgstr ""
+msgstr "지원 없음"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1808,12 +1810,12 @@ msgstr "챗봇 수"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__ongoing_session_count
 msgid "Number of Ongoing Sessions"
-msgstr ""
+msgstr "진행 중인 세션 수"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_ongoing_session_count
 msgid "Number of Ongoing sessions"
-msgstr ""
+msgstr "진행 중인 세션 수"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__nbr_channel
@@ -2061,7 +2063,7 @@ msgstr "평가 수 "
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__rating_text
 msgid "Rating text"
-msgstr ""
+msgstr "평가 텍스트"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_ids
@@ -2095,7 +2097,7 @@ msgstr "관련된 메일 메시지"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__remaining_session_capacity
 msgid "Remaining Session Capacity"
-msgstr ""
+msgstr "잔여 세션 수용량"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
@@ -2136,7 +2138,7 @@ msgstr "대화를 다시 시작 중입니다."
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__review_link
 msgid "Review Link"
-msgstr ""
+msgstr "리뷰 링크"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rule_ids
@@ -2205,7 +2207,7 @@ msgstr "스크립트 단계"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 msgid "Search Agent"
-msgstr ""
+msgstr "검색 에이전트"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_search
@@ -2266,7 +2268,7 @@ msgstr "세션 양식"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Session Limits"
-msgstr ""
+msgstr "세션 제한"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_outcome
@@ -2277,12 +2279,12 @@ msgstr "세션 결과"
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_start_hour
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_start_hour
 msgid "Session Start Hour"
-msgstr ""
+msgstr "세션 시작 시간"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_end_dt
 msgid "Session end date"
-msgstr ""
+msgstr "세션 종료일"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_end_dt
@@ -2350,7 +2352,7 @@ msgstr "세션 시작일"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date_minutes
 msgid "Start Date of session, truncated to minutes"
-msgstr ""
+msgstr "세션 시작일로, 분 단위로 표시되어 있습니다."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_hour
@@ -2527,7 +2529,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_member_history__session_duration_hour
 msgid "Time spent by the persona in the session in hours"
-msgstr ""
+msgstr "해당 직원이 세션에서 작업한 시간 기준의 기간"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_response
@@ -2714,7 +2716,7 @@ msgstr "방문객이 긍정적인 리뷰를 남길 경우 해당 추가 선택 �
 #: code:addons/im_livechat/static/src/core/web/thread_model_patch.js:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_status__waiting
 msgid "Waiting for customer"
-msgstr ""
+msgstr "고객 대기 중"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__web_page
@@ -2803,7 +2805,7 @@ msgstr "사용자가 통화 중인 경우에는, 사용자가 실시간 채팅 �
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__block_assignment_during_call
 msgid "While on a call, agents will not receive new conversations."
-msgstr ""
+msgstr "통화 중에는 상담원에게 새로운 채팅이 수신되지 않습니다."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form

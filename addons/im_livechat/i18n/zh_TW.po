@@ -3,8 +3,8 @@
 # 	* im_livechat
 # 
 # Translators:
-# Tony Ng, 2025
 # Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:09+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,12 +39,12 @@ msgstr "評分數目"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__message_count
 msgid "# of Messages per Session"
-msgstr ""
+msgstr "每個對話時段的訊息數目"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_count
 msgid "# of Sessions with Calls"
-msgstr ""
+msgstr "曾進行通話的對話時段數目"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__number_of_calls
@@ -129,6 +129,8 @@ msgid ""
 "<span groups=\"im_livechat.im_livechat_group_manager\">Configure Channel</span>\n"
 "                                <span groups=\"!im_livechat.im_livechat_group_manager\">View Channel</span>"
 msgstr ""
+"<span groups=\"im_livechat.im_livechat_group_manager\">配置頻道</span>\n"
+"                                <span groups=\"!im_livechat.im_livechat_group_manager\">檢視頻道</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -210,7 +212,7 @@ msgstr "將以下程式碼，加入你網站的 &lt;head&gt; 部份："
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Add your notes here..."
-msgstr ""
+msgstr "在此處加入你的備註⋯"
 
 #. module: im_livechat
 #: model:res.groups,name:im_livechat.im_livechat_group_manager
@@ -538,12 +540,12 @@ msgstr "關閉"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/thread_actions.js:0
 msgid "Close Information"
-msgstr ""
+msgstr "關閉訊息"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_end_dt_status_constraint
 msgid "Closed Live Chat session should not have a status."
-msgstr ""
+msgstr "已關閉的即時聊天對話時段，不應仍有狀態。"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
@@ -806,7 +808,7 @@ msgstr "顯示名稱"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Do not redirect visitors"
-msgstr ""
+msgstr "不要將訪客重新導向"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -880,7 +882,7 @@ msgstr "專業知識"
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_list
 msgid "Expertises"
-msgstr ""
+msgstr "專業知識"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_expertise_ids
@@ -890,7 +892,7 @@ msgstr "本節對話時段所用專業知識"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_expertises
 msgid "Expertises used in this session (String)"
-msgstr ""
+msgstr "本次對話時段所使用的專業知識（字串）"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1022,7 +1024,7 @@ msgstr "快樂"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__has_call
 msgid "Has Call"
-msgstr ""
+msgstr "有通話"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__has_message
@@ -1055,29 +1057,29 @@ msgstr "你好！我可以如何幫助你？"
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__help_status__provided
 msgid "Help Provided"
-msgstr ""
+msgstr "提供的幫助"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_providing_help_history
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__agent_providing_help_history
 msgid "Help Provided (Agent)"
-msgstr ""
+msgstr "提供的幫助（代理）"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__help_status__requested
 msgid "Help Requested"
-msgstr ""
+msgstr "要求的幫助"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_requesting_help_history
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__agent_requesting_help_history
 msgid "Help Requested (Agent)"
-msgstr ""
+msgstr "要求的幫助（代理）"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__help_status
 msgid "Help Status"
-msgstr ""
+msgstr "幫助狀態"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__hide_button
@@ -1092,7 +1094,7 @@ msgstr "歷史"
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_partner_id_or_guest_3b134909
 msgid "History should either be linked to a partner or a guest but not both"
-msgstr ""
+msgstr "歷史記錄只可連結至合作夥伴或訪客之其一，不可同時連結至兩者"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing
@@ -1188,7 +1190,7 @@ msgstr "勾選代表有訊息發生傳送錯誤。"
 msgid ""
 "If limited, operators will only handle the selected number of sessions at a "
 "time."
-msgstr ""
+msgstr "若設數量限制，操作員同一時間只可處理指定數量的對話時段。"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit
@@ -1225,7 +1227,7 @@ msgstr "圖像 512"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 msgid "In Call"
-msgstr ""
+msgstr "通話中"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1238,7 +1240,7 @@ msgstr "進行中"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__buffer_time
 msgid "Individual Buffer Time (sec)"
-msgstr ""
+msgstr "個人緩衝時間（秒）"
 
 #. module: im_livechat
 #. odoo-javascript

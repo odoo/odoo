@@ -3,8 +3,8 @@
 # 	* mrp
 # 
 # Translators:
-# Marianna Ciofani, 2025
 # Wil Odoo, 2025
+# Marianna Ciofani, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1101,12 +1101,12 @@ msgstr "Basato su"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__cost_mode__actual
 msgid "Based on Actual resources"
-msgstr ""
+msgstr "In base alle risorse attuali"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__cost_mode__estimated
 msgid "Based on Estimated resources"
-msgstr ""
+msgstr "In base alle risorse stimate"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_batch_produce
@@ -1693,12 +1693,12 @@ msgstr "Abbattimento costo del Prodotto"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__cost_mode
 msgid "Cost Computation"
-msgstr ""
+msgstr "Calcolo costo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__cost_mode
 msgid "Cost Mode"
-msgstr ""
+msgstr "Modalità costo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__cost_share
@@ -1952,6 +1952,11 @@ msgid ""
 "                                           Orange if the scheduled date is "
 "in the past."
 msgstr ""
+"Data in cui pianifichi di iniziare."
+"                                           Rosso se la fine programmata è "
+"prevista dopo la scadenza dell'ordine di produzione."
+"                                           Arancione se la data programmata "
+"è nel passato."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -2101,6 +2106,9 @@ msgid ""
 "- Based on Actual resources: the cost will be calculated based on tracked time and real employee costs.\n"
 "- Based on Estimated resources: the cost will be calculated based on estimated time and costs."
 msgstr ""
+"Stabilisce il modo in cui Odoo calcola il costo dell'operazione:\n"
+"- In base alle risorse attuali: il costo verrà calcolato in base al tempo tracciato e ai costi reali del dipendente.\n"
+"- Jn base alle risorse stimate: il costo verrà calcolato in base al tempo e ai costi stimati."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unbuild_id
@@ -2311,7 +2319,7 @@ msgstr "Guasto attrezzatura"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__cost_mode__estimated
 msgid "Estimated"
-msgstr ""
+msgstr "Stimato"
 
 #. module: mrp
 #. odoo-python
@@ -2491,6 +2499,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"Quantità prevista (calcolata come quantità a disposizione - in uscita + in entrata - quantità da eliminare)\n"
+"In un contesto di singola ubicazione delle giacenze, include le merci stoccate nell'ubicazione principale o in una delle secondarie.\n"
+"In un contesto di singolo magazzino, include le merci stoccate nel'ubicazione principale delle giacenze di magazzino o in una delle secondarie.\n"
+"Diversamente, include le merci stoccate in qualsiasi ubicazione di giacenza di tipo “interno”."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -4299,6 +4311,8 @@ msgid ""
 "Please specify a manufacturing order.\n"
 "It will allow us to retrieve the lots/serial numbers of the correct components and/or byproducts."
 msgstr ""
+"Specifica un ordine di produzione.\n"
+"Ci permetterà di recuperare i lotti/numeri di serie dei componenti e/o dei sottoprodotti giusti."
 
 #. module: mrp
 #. odoo-python
@@ -6972,7 +6986,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
 msgid "You produced less than the initial demand"
-msgstr ""
+msgstr "La produzione è inferiore alla domanda iniziale"
 
 #. module: mrp
 #. odoo-python

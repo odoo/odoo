@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Sarah Park, 2025
 # Wil Odoo, 2025
+# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -295,7 +295,7 @@ msgstr "%s 또는 해당 없음"
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
-msgstr ""
+msgstr "'%(filename)s' ('%(root_filename)s' 파일에서 추출, 유형=%(type)s)"
 
 #. module: account
 #. odoo-python
@@ -959,6 +959,9 @@ msgid ""
 "                                        To Review\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"badge text-bg-info\">\n"
+"                                        검토하기\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -2120,7 +2123,7 @@ msgstr "계정 이동 수"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__line_ids
 msgid "Account Move Line Items"
-msgstr ""
+msgstr "계정 이동 항목"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -3439,7 +3442,7 @@ msgstr "첨부 파일"
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "Attachment %(filename)s not imported: %(reason)s"
-msgstr ""
+msgstr "%(filename)s 첨부 파일을 가져오지 못했습니다: %(reason)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_attachment_count
@@ -4137,7 +4140,7 @@ msgstr "예산"
 #. module: account
 #: model:ir.model,name:account.model_account_document_import_mixin
 msgid "Business document import mixin"
-msgstr ""
+msgstr "비즈니스 문서 가져오기 믹스인"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__foldable
@@ -4337,7 +4340,7 @@ msgstr "생성된 PDF 파일에서 청구서를 식별할 수 없습니다: %s"
 #. module: account
 #: model:account.account,name:account.1_capital
 msgid "Capital"
-msgstr ""
+msgstr "자본"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice
@@ -6131,7 +6134,7 @@ msgstr "기본 POS 미수금 계정"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_receipt_tax_id
 msgid "Default Purchase Receipt Tax"
-msgstr ""
+msgstr "기본 구매 수령 세금"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
@@ -6142,7 +6145,7 @@ msgstr "기본 구매세"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_sale_receipt_tax_id
 msgid "Default Sale Receipt Tax"
-msgstr ""
+msgstr "기본 판매 수령 세금"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_sale_tax_id
@@ -6678,7 +6681,7 @@ msgstr "SEPA QR 코드 표시"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_send_button
 #: model:ir.model.fields,field_description:account.field_account_move__display_send_button
 msgid "Display Send Button"
-msgstr ""
+msgstr "전송 버튼 표시"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__display_type
@@ -7148,7 +7151,7 @@ msgstr "직원 급여 세금"
 #. module: account
 #: model:account.account,name:account.1_employer_payroll_taxes
 msgid "Employer Payroll Taxes"
-msgstr ""
+msgstr "직원 급여 세금"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
@@ -7292,7 +7295,7 @@ msgstr "자기 자본"
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "Error importing attachment %(filename)s:"
-msgstr ""
+msgstr "%(filename)s 첨부 파일을 가져오는 동안 오류가 발생했습니다:"
 
 #. module: account
 #. odoo-python
@@ -7335,7 +7338,7 @@ msgstr "유럽 연합 부가가치세"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Even magicians can't post nothing!"
-msgstr ""
+msgstr "반드시 게시해야 합니다!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_amount
@@ -8352,7 +8355,7 @@ msgstr "최고명"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highlight_send_button
 #: model:ir.model.fields,field_description:account.field_account_move__highlight_send_button
 msgid "Highlight Send Button"
-msgstr ""
+msgstr "전송 버튼 강조 표시"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
@@ -10272,7 +10275,7 @@ msgstr "신탁 필드 잠금"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Log changes to posted journal entries immutably"
-msgstr ""
+msgstr "게시된 전표 항목의 변경 사항을 영구적으로 기록합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -13599,12 +13602,12 @@ msgstr "표준 판매 이용 약관"
 #. module: account
 #: model:account.account,name:account.1_expense_salary
 msgid "Salary Expenses"
-msgstr ""
+msgstr "급여"
 
 #. module: account
 #: model:account.account,name:account.1_salary_payable
 msgid "Salary Payable"
-msgstr ""
+msgstr "급여 미지급금"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -14253,7 +14256,7 @@ msgstr "표시용 줄임말입니다. 전표에 입력할 때도 이 머릿말�
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__show_aba_routing
 msgid "Show Aba Routing"
-msgstr ""
+msgstr "Aba 라우팅 보기"
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
@@ -14302,7 +14305,7 @@ msgstr "변경 불가능 기능 표시"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.js:0
 msgid "Show Label Warning"
-msgstr ""
+msgstr "라벨 경고 표시"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -15670,7 +15673,7 @@ msgstr "전자 청구서 수신 알림 이메일은 판매 전표에만 설정�
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The invoice already contains lines."
-msgstr ""
+msgstr "청구서에 이미 내역이 있습니다."
 
 #. module: account
 #. odoo-javascript
@@ -16310,7 +16313,7 @@ msgstr "이 문서는 해시로 보호됩니다. 따라서 다음 필드를 수�
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "This document was created from the following attachment(s)."
-msgstr ""
+msgstr "이 문서는 다음 첨부 파일에서 생성되었습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -17259,7 +17262,7 @@ msgstr "세금 마감에 사용합니다."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use negative numbers to reverse original entries"
-msgstr ""
+msgstr "원본 항목을 역분개하려면 음수 값을 입력하세요."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__currency_translation__current
@@ -17744,7 +17747,7 @@ msgstr "마법사 명세"
 #. module: account
 #: model:account.account,name:account.1_wip
 msgid "Work in Progress"
-msgstr ""
+msgstr "진행 중인 작업"
 
 #. module: account
 #. odoo-javascript
@@ -18419,7 +18422,7 @@ msgstr "계좌를 신뢰하거나 신뢰하지 않을 권한이 없습니다."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You don't have the access rights to perform this action."
-msgstr ""
+msgstr "이 작업을 수행할 권한이 없습니다."
 
 #. module: account
 #. odoo-python

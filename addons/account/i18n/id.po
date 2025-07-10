@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Abe Manyo, 2025
 # Wil Odoo, 2025
+# Abe Manyo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +30,11 @@ msgid ""
 "\n"
 "Consider adding a default account on the journal \"%(journal)s\" to automatically balance each journal entry and restore order to the accounting universe!"
 msgstr ""
+"\n"
+"\n"
+"Entri jurnal tidak seimbang, dengan %(debit_total)s di sisi debit dan %(credit_total)s di sisi kredit, harus terdapat keseimbangan!\n"
+"\n"
+"Pertimbangkan menambahkan akun default di jurnal \"%(journal)s\" untuk secara otomatis menyeimbangkan setiap entri jurnal dan memulihkan keseimbangan di akuntansi!"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -291,13 +296,13 @@ msgstr "%s, atau tidak berlaku"
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
-msgstr ""
+msgstr "'%(filename)s' (diekstrak dari '%(root_filename)s', type=%(type)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
-msgstr ""
+msgstr "'%(filename)s' (type=%(type)s)"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -960,6 +965,9 @@ msgid ""
 "                                        To Review\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"badge text-bg-info\">\n"
+"                                        Untuk Ditinjau\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -2150,7 +2158,7 @@ msgstr "Jumlah Pergerakkan Akun"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__line_ids
 msgid "Account Move Line Items"
-msgstr ""
+msgstr "Item Baris Pergerakkan Akun"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -3519,7 +3527,7 @@ msgstr "Lampiran"
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "Attachment %(filename)s not imported: %(reason)s"
-msgstr ""
+msgstr "Lampiran %(filename)s tidak diimpor: %(reason)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_attachment_count
@@ -4225,7 +4233,7 @@ msgstr "Anggaran"
 #. module: account
 #: model:ir.model,name:account.model_account_document_import_mixin
 msgid "Business document import mixin"
-msgstr ""
+msgstr "Business document import mixin"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__foldable
@@ -4442,7 +4450,7 @@ msgstr "Tidak dapat mengidentifikasi faktur di PDF yang dibuat: %s"
 #. module: account
 #: model:account.account,name:account.1_capital
 msgid "Capital"
-msgstr ""
+msgstr "Modal"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice
@@ -6264,7 +6272,7 @@ msgstr "Default PoS Receivable Account"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_receipt_tax_id
 msgid "Default Purchase Receipt Tax"
-msgstr ""
+msgstr "Kwitansi Pajak Pembelian Default"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
@@ -6275,7 +6283,7 @@ msgstr "Pajak Pembelian Standar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_sale_receipt_tax_id
 msgid "Default Sale Receipt Tax"
-msgstr ""
+msgstr "Kwitansi Pajak Penjualan Default"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_sale_tax_id
@@ -6821,7 +6829,7 @@ msgstr "Tampilkan kode-QR SEPA"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_send_button
 #: model:ir.model.fields,field_description:account.field_account_move__display_send_button
 msgid "Display Send Button"
-msgstr ""
+msgstr "Tampilan Tombol Kirim"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__display_type
@@ -7295,7 +7303,7 @@ msgstr "Pajak Payroll Karyawan"
 #. module: account
 #: model:account.account,name:account.1_employer_payroll_taxes
 msgid "Employer Payroll Taxes"
-msgstr ""
+msgstr "Pajak Payroll Employer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
@@ -7441,7 +7449,7 @@ msgstr "Ekuitas"
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "Error importing attachment %(filename)s:"
-msgstr ""
+msgstr "Error mengimpor lampiran %(filename)s:"
 
 #. module: account
 #. odoo-python
@@ -7485,7 +7493,7 @@ msgstr "PPN Uni Eropa"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Even magicians can't post nothing!"
-msgstr ""
+msgstr "Bahkan penyulap pun tidak bisa posting hal yang kosong!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_amount
@@ -8523,7 +8531,7 @@ msgstr "Highest Name"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highlight_send_button
 #: model:ir.model.fields,field_description:account.field_account_move__highlight_send_button
 msgid "Highlight Send Button"
-msgstr ""
+msgstr "Highlight Tombol Kirim"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
@@ -10522,7 +10530,7 @@ msgstr "Kunci Trust Field"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Log changes to posted journal entries immutably"
-msgstr ""
+msgstr "Rekam perubahan yang tidak bisa diubah ke entri jurnal yang diposting"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -11671,6 +11679,8 @@ msgid ""
 "Once a document has been posted once, its type is set in stone and you can't"
 " change it anymore."
 msgstr ""
+"Setelah dokumen diposting sekali, tipe-nya ditetapkan dan Anda tidak dapat "
+"mengubahnya lagi."
 
 #. module: account
 #. odoo-javascript
@@ -11789,6 +11799,8 @@ msgid ""
 "Oops! You can only change the period or account for items that are not yet "
 "reconciled! Other ones aren't up for an adventure like that!"
 msgstr ""
+"Oops! Anda hanya dapat mengubah periode atau akun untuk barang yang belum "
+"direkonsiliasi! Yang lainnya tidak bisa Anda ubah!"
 
 #. module: account
 #. odoo-python
@@ -11797,6 +11809,8 @@ msgid ""
 "Oops! You can only change the period or account for posted entries! Other "
 "ones aren't up for an adventure like that!"
 msgstr ""
+"Oops! Anda hanya dapat mengubah periode atau akun untuk entri yang sudah "
+"dipost! Yang lainnya tidak bisa Anda ubah!"
 
 #. module: account
 #. odoo-python
@@ -12947,7 +12961,7 @@ msgstr "Produk"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Product Accounts:"
-msgstr ""
+msgstr "Akun-Akun Produk:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_product_product_categories
@@ -13053,6 +13067,8 @@ msgid ""
 "Propose to validate bills automatically when AI accuracy is right 3 times in"
 " a row for a vendor."
 msgstr ""
+"Ajukan untuk memvalidasi tagihan secara otomatis saat akurasi AI tepat 3 "
+"kali berturut-turut untuk vendor."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_restricted
@@ -13762,14 +13778,14 @@ msgstr "Tinjau Bagan Akun"
 #. module: account
 #: model:ir.actions.server,name:account.accountant_confirm_entries_action
 msgid "Review Entries"
-msgstr ""
+msgstr "Tinjau Entri-Entri"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__checked
 #: model:ir.model.fields,field_description:account.field_account_move__checked
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reviewed"
-msgstr ""
+msgstr "Ditinjau"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -13888,12 +13904,12 @@ msgstr "SYARAT DAN KETENTUAN STANDAR PENJUALAN "
 #. module: account
 #: model:account.account,name:account.1_expense_salary
 msgid "Salary Expenses"
-msgstr ""
+msgstr "Biaya Gaji"
 
 #. module: account
 #: model:account.account,name:account.1_salary_payable
 msgid "Salary Payable"
-msgstr ""
+msgstr "Utang Gaji"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -14028,7 +14044,7 @@ msgstr "Scan Kode QR ini dengan<br/>aplikasi bank Anda"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__search_account_id
 msgid "Search Account"
-msgstr ""
+msgstr "Cari Aku"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -14567,7 +14583,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__show_aba_routing
 msgid "Show Aba Routing"
-msgstr ""
+msgstr "Tunjukkan Aba Routing"
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
@@ -14616,7 +14632,7 @@ msgstr "Tunjukan Fitur-Fitur Inalterability"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.js:0
 msgid "Show Label Warning"
-msgstr ""
+msgstr "Tunjukkan Label Peringatan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -15166,7 +15182,7 @@ msgstr "Termasuk Pajak"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_label
 msgid "Tax Label"
-msgstr ""
+msgstr "Label Pajak"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_lock_date_message
@@ -15534,6 +15550,8 @@ msgid ""
 "The 'Customer' field is required to validate the invoice.\n"
 "You probably don't want to explain to your auditor that you invoiced an invisible man :)"
 msgstr ""
+"Field 'Pelanggan' diperlukan untuk memvalidasi faktur.\n"
+"Anda tentu tidak ingin menjelaskan ke auditor Anda bahwa Anda memfaktur manusia yang tidak kasat mata :)"
 
 #. module: account
 #. odoo-python
@@ -16054,7 +16072,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The invoice already contains lines."
-msgstr ""
+msgstr "Faktur sudah memiliki baris."
 
 #. module: account
 #. odoo-javascript
@@ -16633,6 +16651,9 @@ msgid ""
 "registration is necessary. You've got your finances under control like a "
 "boss!"
 msgstr ""
+"Tidak ada lagi yang tersisa untuk dibayar untuk item-item jurnal terpilih, "
+"sehinga tidak ada pendaftaran pembayaran yang diperlukan. Keuangan Anda "
+"sudah sepenuhnya terkendali!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -16751,7 +16772,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "This document was created from the following attachment(s)."
-msgstr ""
+msgstr "Dokumen ini dibuat dari lampiran berikut."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -17100,13 +17121,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "To reverse a journal entry, it has to be posted first."
-msgstr ""
+msgstr "Untuk memutarbalikkan entri jurnal, harus diposting terlebih dahulu."
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/char_with_placeholder_field_to_check/char_with_placeholder_field.xml:0
 msgid "To review"
-msgstr ""
+msgstr "Untuk ditinjau"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -17434,6 +17455,9 @@ msgid ""
 "there are still some records referencing them. How about archiving them "
 "instead?"
 msgstr ""
+"Uh-oh! Termin pembayaran tersebut cukup populer dan tidak dapat dihapus "
+"karena masih terdapat beberapa rekaman yang mereferensikan mereka. Bagaimana"
+" bila Anda mengarsipnya saja?"
 
 #. module: account
 #. odoo-python
@@ -17666,7 +17690,7 @@ msgstr "Diupdate"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Updated Data"
-msgstr ""
+msgstr "Data Diupdate"
 
 #. module: account
 #. odoo-javascript
@@ -17736,6 +17760,7 @@ msgstr "Digunakan di tax closing"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use negative numbers to reverse original entries"
 msgstr ""
+"Gunakan angka-angka negatif untuk memutarbalikkan entri-entri original"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__currency_translation__current
@@ -17914,7 +17939,7 @@ msgstr "Sudah Divalidasi"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Validated entries can only be changed by your accountant."
-msgstr ""
+msgstr "Entri-entri yang divalidasi hanya dapat diubah oleh akuntan Anda."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -18242,7 +18267,7 @@ msgstr "Baris Wizard"
 #. module: account
 #: model:account.account,name:account.1_wip
 msgid "Work in Progress"
-msgstr ""
+msgstr "Work in Progress"
 
 #. module: account
 #. odoo-javascript
@@ -19025,7 +19050,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You don't have the access rights to perform this action."
-msgstr ""
+msgstr "Anda tidak memiliki hak akses untuk melakukan tindakan ini."
 
 #. module: account
 #. odoo-python

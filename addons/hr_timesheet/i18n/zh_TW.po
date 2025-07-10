@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-01 09:07+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,19 +66,19 @@ msgstr "%(name)s 的工時表"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(days)sd)"
-msgstr ""
+msgstr "%(project_name)s（%(days)s 天）"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(hours)sh%(minutes)s)"
-msgstr ""
+msgstr "%(project_name)s（%(hours)s 小時 %(minutes)s 分鐘）"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(hours)sh)"
-msgstr ""
+msgstr "%(project_name)s（%(hours)s 小時）"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -162,6 +163,18 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"not has_timesheet\">\n"
+"                        哎唷！你正在嘗試刪除的員工，仍有一些工時記錄，故此無法刪除。\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            此情況有兩個選擇：你可刪除相關工時表，或將該員工封存。\n"
+"                        </span>\n"
+"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            請先刪除他們的所有工時表。\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span invisible=\"has_timesheet\">\n"
+"                        確定要刪除這些員工？\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -328,7 +341,7 @@ msgstr "致電客戶並討論專案項目"
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
 msgid "Choose an employee to create their timesheet."
-msgstr ""
+msgstr "選擇一名員工，為他們建立工時表。"
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -336,7 +349,7 @@ msgstr ""
 msgid ""
 "Click on a day or select a range of days to generate timesheets for the "
 "selected employees on the chosen dates"
-msgstr ""
+msgstr "在適用的日子按一下，或選取一個日期範圍，為所選員工產生所選日期的工時表"
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -344,14 +357,14 @@ msgstr ""
 msgid ""
 "Click on a day or select a range of days to generate timesheets for the "
 "selected project on the chosen dates"
-msgstr ""
+msgstr "在適用的日子按一下，或選取一個日期範圍，為所選專案產生所選日期的工時表"
 
 #. module: hr_timesheet
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar_my_timesheets/timesheet_calendar_my_timesheets_side_panel/timesheet_calendar_my_timesheets_side_panel.xml:0
 msgid ""
 "Click on a day or select a range of days to permanently delete its contents"
-msgstr ""
+msgstr "在適用的日子按一下，或選取一個日期範圍，以永久刪除其內容"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
@@ -568,7 +581,7 @@ msgstr "額外工時"
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_side_panel/timesheet_calendar_side_panel.xml:0
 msgid "Filter by specific employees to view only their timesheets"
-msgstr ""
+msgstr "可按指定員工篩選記錄，只查看相關員工的工時表"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -783,7 +796,7 @@ msgstr "業務夥伴"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line_calendar_employee
 msgid "Personal Filters on Employees for the Calendar view"
-msgstr ""
+msgstr "日曆檢視畫面中篩選員工的個人篩選器"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -939,7 +952,7 @@ msgstr "設定"
 msgid ""
 "Some timesheet entries are weighing down these tasks! Remove them first, "
 "then you’ll be able to delete the tasks!"
-msgstr ""
+msgstr "有一些工時表記項阻礙此操作。請先移除它們，然後便可刪除任務。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1468,7 +1481,7 @@ msgstr "日期"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_calendar_account_analytic_line_multi_create
 msgid "e.g. Sending E-mails"
-msgstr ""
+msgstr "例：傳送電子郵件"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task

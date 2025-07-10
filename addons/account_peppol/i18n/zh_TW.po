@@ -138,6 +138,66 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td align=\"center\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                <!-- HEADER -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                                <td valign=\"middle\">\n"
+"                                    <span style=\"font-size: 10px;\">通知</span>\n"
+"                                    <br/>\n"
+"                                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                                        歡迎使用 Peppol\n"
+"                                    </span>\n"
+"                                    <div style=\"margin-bottom: 5px; margin-top: 18px;\">\n"
+"                                        <a t-attf-href=\"/odoo/accounting/\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !important; font-weight: 400; background-color: {{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"                                            傳送發票\n"
+"                                        </a>\n"
+"                                    </div>\n"
+"                                </td>\n"
+"                                <td valign=\"middle\" align=\"right\">\n"
+"                                    <t t-if=\"not object.uses_default_logo\">\n"
+"                                        <img t-att-src=\"'/logo.png?company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: 10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
+"                                    </t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr>\n"
+"                                <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                    <hr style=\"background-color:#CCCCCC; border:none; height:1px; margin:16px 0;\"/>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- BODY -->\n"
+"                <tr>\n"
+"                    <td align=\"center\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                                <td style=\"font-size: 14px;\">\n"
+"                                    <p><t t-out=\"object.name or ''\">YourCompany</t> 你好！</p>\n"
+"\n"
+"                                    <p>我們已成功將你的公司加入 <strong>Peppol 網絡</strong>。</p>\n"
+"\n"
+"                                    <p>你現可透過 Odoo <strong>傳送<t t-if=\"object.account_peppol_proxy_state == 'receiver'\">及接收</t></strong>電子發票，費用全免！</p>\n"
+"\n"
+"                                    <p>順祝  安康</p>\n"
+"\n"
+"                                    <p style=\"margin-bottom: 24px;\">Odoo 團隊</p>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"            "
 
 #. module: account_peppol
 #. odoo-python
@@ -785,7 +845,7 @@ msgstr "收到第一個片段後，已過了超過 %s 的時間，但尚未完�
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "No UBL document was provided to the Peppol Outbound Service."
-msgstr ""
+msgstr "未有向 Peppol 發送服務提供 UBL 文件。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1297,13 +1357,13 @@ msgstr "未能存取與此參與者相關的服務元資料發佈者。網址：
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The UBL document provided to the Peppol Outbound Service is malformed."
-msgstr ""
+msgstr "向 Peppol 發送服務提供的 UBL 文件，格式不正確。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document could not be canonicalized."
-msgstr ""
+msgstr "未能將 XML 文件規範化。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1483,24 +1543,24 @@ msgstr "使用 MIME 的方式，不符合此規範所要求的用法。"
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "There is no message available for pulling from this MPC at this moment."
-msgstr ""
+msgstr "目前沒有可從這個 MPC 拉取的訊息。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "There was an error while sending this invoice via Peppol."
-msgstr ""
+msgstr "透過 Peppol 傳送此發票時，發生錯誤。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an error with the Peppol Request"
-msgstr ""
+msgstr "Peppol 請求發生錯誤"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an error with the incoming message."
-msgstr ""
+msgstr "傳入的訊息有錯誤。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1508,13 +1568,13 @@ msgstr ""
 msgid ""
 "There was an issue with the Hermes Migration Token Collection Interface "
 "(MTCI)."
-msgstr ""
+msgstr "Hermes 遷移標記收集介面（MTCI）發生問題。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an issue with the Peppol Participant."
-msgstr ""
+msgstr "Peppol 參與者出現問題。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -1525,7 +1585,7 @@ msgstr "此發票也已經"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "This user is not registered on our Access Point."
-msgstr ""
+msgstr "此使用者未在我們的接入點上註冊。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1551,13 +1611,13 @@ msgstr "要產生完整的電子發票，請亦為此合作夥伴設定國家/�
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unable to verify the digest value."
-msgstr ""
+msgstr "未能驗證摘要值。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unexpected end of MIME multipart message."
-msgstr ""
+msgstr "MIME 分段訊息意外結束。"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1715,7 +1775,7 @@ msgstr "你將收到發送至此流動電話號碼的驗證碼"
 msgid ""
 "Your Peppol registration will be activated soon. You can already send "
 "invoices."
-msgstr ""
+msgstr "你的 Peppol 註冊會很快啟動。你現已可以傳送發票。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1734,7 +1794,7 @@ msgstr "你的終端點"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your identification has not been approved for this action yet"
-msgstr ""
+msgstr "你的身份尚未獲批准執行此操作"
 
 #. module: account_peppol
 #. odoo-python
@@ -1761,7 +1821,7 @@ msgstr "你的註冊應該會在一天內啟動。"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your request is still being processed."
-msgstr ""
+msgstr "你的請求仍在處理中。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1783,7 +1843,7 @@ msgstr "已透過 Peppol 傳送"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "to send invoices, but this one"
-msgstr ""
+msgstr "以傳送發票，但這個"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol

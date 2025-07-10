@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
-# Jessica Jakara, 2025
 # Wil Odoo, 2025
 # Dylan Kiss, 2025
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
 "PO-Revision-Date: 2025-07-01 13:07+0000\n"
-"Last-Translator: Dylan Kiss, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +33,9 @@ msgid ""
 "\"Optional\" allows guests to place an order without signing in and later "
 "register via the order confirmation page when free sign-up is enabled."
 msgstr ""
+"\"Valinnainen\" sallii vierailijan tehdä tilauksen ilman kirjautumista. "
+"Rekisteröitymisen voi tehdä myöhemmin tilausvahvistuksen yhteydessä, jos "
+"ilmainen rekisteröityminen on käytössä."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -52,12 +55,12 @@ msgstr "'. Näytetään tulokset  '"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.tax_indication
 msgid "(Tax excluded)"
-msgstr ""
+msgstr "(veroton)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.tax_indication
 msgid "(Tax included)"
-msgstr ""
+msgstr "(sisältää verot)"
 
 #. module: website_sale
 #. odoo-javascript
@@ -241,6 +244,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart me-2\"/>\n"
 "                    Add to cart"
 msgstr ""
+"<i class=\"fa fa-shopping-cart me-2\"/>\n"
+"                    Lisää ostoskoriin"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -306,6 +311,11 @@ msgid ""
 "            Shipping: 2-3 Business Days\n"
 "        </small>"
 msgstr ""
+"<small class=\"text-muted mb-0\">\n"
+"            <a href=\"/terms\" class=\"o_translate_inline text-muted\"><u>Ehdot ja edellytykset</u></a><br/>\n"
+"            30 päivän rahat takaisin takuu<br/>\n"
+"            Toimitus: 2-3 arkipäivää\n"
+"        </small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -415,7 +425,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper_boxed
 msgid "<span class=\"text-muted\">Price</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Hinta</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -673,7 +683,7 @@ msgstr "Tietoa ristiinmyyntituotteista"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
 msgid "Accept Terms"
-msgstr ""
+msgstr "Hyväksy ehdot"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1263,7 +1273,7 @@ msgstr "Kategorian alatunniste"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filmstrip_categories
 msgid "Category image"
-msgstr ""
+msgstr "Kategorian kuva"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_category_extra_link
@@ -1644,7 +1654,7 @@ msgstr "Sohvat"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "Coupon, Gift card, Promo-code?"
-msgstr ""
+msgstr "Kuponki, lahjakortti, alennuskoodi?"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2457,7 +2467,7 @@ msgstr "Sisältää viestin"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__has_published_products
 msgid "Has Published Products"
-msgstr ""
+msgstr "Sisältää julkaistuja tuotteita"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_attribute__preview_variants__hidden
@@ -2493,7 +2503,7 @@ msgstr "Tuntia."
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_attribute__preview_variants__hover
 msgid "Hover"
-msgstr ""
+msgstr "Leijuta"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__step_href
@@ -2694,6 +2704,8 @@ msgstr "Välitön sirtyminen kassalle ostoskoriin lisäämisen sijaan"
 msgid ""
 "Instantly created variants are available for selection from your /shop page."
 msgstr ""
+"Heti luodut variantit ovat käytettävissä /shop page -kauppasivusi "
+"valinnoissa."
 
 #. module: website_sale
 #. odoo-python
@@ -2812,7 +2824,7 @@ msgstr "Suuri kuva"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Large Images"
-msgstr ""
+msgstr "Suuret kuvat"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -3333,7 +3345,7 @@ msgstr "Toimistopöydät"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__preview_variants
 msgid "On Product Cards"
-msgstr ""
+msgstr "Tuotekorteissa"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
@@ -3733,7 +3745,7 @@ msgstr "Tuotteiden vertailutyökalu"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Product Details"
-msgstr ""
+msgstr "Tuotetiedot"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_document
@@ -3964,13 +3976,13 @@ msgstr "Julkaistu"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Purchase Options"
-msgstr ""
+msgstr "Ostovaihtoehdot"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Purchase Style"
-msgstr ""
+msgstr "Ostotyyli"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4535,7 +4547,7 @@ msgstr "Näytä tyhjä"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__is_thumbnail_visible
 msgid "Show Thumbnails"
-msgstr ""
+msgstr "Näytä pikkukuvat"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5179,7 +5191,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_attribute__is_thumbnail_visible
 msgid "Use product variant images instead of the attribute values displays."
-msgstr ""
+msgstr "Näytä tuotevariantin kuvat attribuuttiarvojen sijaan."
 
 #. module: website_sale
 #. odoo-javascript
@@ -5286,7 +5298,7 @@ msgstr "Vierailijan tuotteen katseluhistoria"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/add_to_cart_option.xml:0
 msgid "Visitor's Choice"
-msgstr ""
+msgstr "Vierailijan valinta"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_wardrobes

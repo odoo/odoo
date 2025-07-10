@@ -3,8 +3,8 @@
 # 	* hr_timesheet
 # 
 # Translators:
-# Jessica Jakara, 2025
 # Wil Odoo, 2025
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-01 09:07+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,19 +66,19 @@ msgstr "%(name)s:n työaikakirjaukset"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(days)sd)"
-msgstr ""
+msgstr "%(project_name)s (%(days)s päivää)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(hours)sh%(minutes)s)"
-msgstr ""
+msgstr "%(project_name)s (%(hours)sh %(minutes)smin)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(hours)sh)"
-msgstr ""
+msgstr "%(project_name)s (%(hours)sh)"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -165,6 +165,18 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"not has_timesheet\">\n"
+"                        Voi ei! Työtekijällä, jota yrität poistaa, on yhä työkirjauksia, eikä häntä voi siksi poistaa.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            Voit joko arkistoida nämä työntekijät tai poistaa ensin kaikki heidän työaikakirjauksensa.\n"
+"                        </span>\n"
+"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            Poista ensin kaikki hänen työaikakirjauksensa.\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span invisible=\"has_timesheet\">\n"
+"                        Haluatko varmasti poistaa nämä työntekijät?\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -331,7 +343,7 @@ msgstr "Soita asiakkaalle ja keskustele hankkeesta"
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
 msgid "Choose an employee to create their timesheet."
-msgstr ""
+msgstr "Valitse työntekijä luodaksesi heille työaikakirjauksia."
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -340,6 +352,8 @@ msgid ""
 "Click on a day or select a range of days to generate timesheets for the "
 "selected employees on the chosen dates"
 msgstr ""
+"Klikkaa päivää tai valitse ajanjakso luodaksesi työaikakirjauksia valituille"
+" työntekijöille valittuina päivinä."
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -348,6 +362,8 @@ msgid ""
 "Click on a day or select a range of days to generate timesheets for the "
 "selected project on the chosen dates"
 msgstr ""
+"Klikkaa päivää tai valitse ajanjakso luodaksesi työaikakirjauksia valittuun "
+"projektiin valittuina päivinä."
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -355,6 +371,7 @@ msgstr ""
 msgid ""
 "Click on a day or select a range of days to permanently delete its contents"
 msgstr ""
+"Klikkaa päivää tai valitse ajanjakso poistaaksesi sen sisältö pysyvästi."
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
@@ -578,6 +595,8 @@ msgstr "Lisäaika"
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_side_panel/timesheet_calendar_side_panel.xml:0
 msgid "Filter by specific employees to view only their timesheets"
 msgstr ""
+"Suodata tiettyjen työntekijöiden mukaan nähdäksesi vain heidän "
+"työaikakirjauksensa."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -795,6 +814,8 @@ msgstr "Kumppani"
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line_calendar_employee
 msgid "Personal Filters on Employees for the Calendar view"
 msgstr ""
+"Henkilökohtaiset suodattimet Työntekijät-sovelluksessa kalenterinäkymän "
+"käyttöön."
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -957,6 +978,8 @@ msgid ""
 "Some timesheet entries are weighing down these tasks! Remove them first, "
 "then you’ll be able to delete the tasks!"
 msgstr ""
+"Jotkin työaikakirjaukset ovat painolastina näille tehtäville! Poista ne "
+"ensin, jonka jälkeen voit poistaa tehtävät."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1512,7 +1535,7 @@ msgstr "päivämäärä"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_calendar_account_analytic_line_multi_create
 msgid "e.g. Sending E-mails"
-msgstr ""
+msgstr "esim. Sähköpostien lähettäminen"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task

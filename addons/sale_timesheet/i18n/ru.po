@@ -66,6 +66,8 @@ msgid ""
 "distribution of the sale order item '%(so_line_name)s' linked to the "
 "timesheet."
 msgstr ""
+"Необходимо указать аналитический план: %(missing_plan_names)s, связанный с "
+"позицией заказа на продажу %(so_line_name)s, используемой в табеле."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -115,7 +117,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "<b>Unit Price: </b>"
-msgstr ""
+msgstr "<b>Цена за единицу: </b>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -126,6 +128,11 @@ msgid ""
 "                            To bill the same service at a different rate, create separate sales order items.\n"
 "                        </span>"
 msgstr ""
+"<i class=\"fa fa-lightbulb-o\"/>\n"
+"                        <span>\n"
+"                            Определите ставку, по которой оплачивается рабочее время сотрудника, исходя из его квалификации, навыков или опыта.\n"
+"                            Чтобы выставить счет за одну и ту же услугу по разным тарифам, создайте отдельные позиции в заказе на продажу.\n"
+"                        </span>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -141,6 +148,9 @@ msgid ""
 "order associated with this timesheet entry has been cancelled.\" "
 "invisible=\"sale_order_state != 'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Заказ на "
+"продажу, связанный с этой записью в табеле учета рабочего времени, был "
+"отменен.\" invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -202,7 +212,7 @@ msgstr "<strong>Заказ на продажу:</strong>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 msgid "<strong>Time Remaining on SO: </strong>"
-msgstr ""
+msgstr "<strong>Оставшееся время в заказе на продажу: </strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -538,6 +548,11 @@ msgid ""
 "                    Several activities are often organized all over the year, such as weekly\n"
 "                    sports sessions, team building events, monthly drink, and much more"
 msgstr ""
+"Каждый сотрудник видит результат своего труда\n"
+"                    и может реально повлиять на успех компании.\n"
+"                    <br>\n"
+"                    В течение года мы проводим различные активности: еженедельные\n"
+"                    спортивные занятия, тимбилдинги, ежемесячные встречи и многое другое"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -549,7 +564,7 @@ msgstr "Еда и напитки"
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_elevator_installation_product_template
 msgid "Elevator Installation"
-msgstr ""
+msgstr "Монтаж лифта"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -620,7 +635,7 @@ msgstr "Отличная команда умных людей, дружелюб�
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_labour
 msgid "Handyman"
-msgstr ""
+msgstr "Специалист по бытовым услугам"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
@@ -658,12 +673,12 @@ msgstr "ID"
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_interior_designer
 msgid "Interior Designer"
-msgstr ""
+msgstr "Дизайнер интерьеров"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_interior_designing_product_template
 msgid "Interior Designing"
-msgstr ""
+msgstr "Проектирование интерьеров"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -686,7 +701,7 @@ msgstr "Политика выставления счетов"
 #. odoo-python
 #: code:addons/sale_timesheet/models/product_template.py:0
 msgid "Invoice based on timesheets (delivered quantity)."
-msgstr ""
+msgstr "Счет на основе табелей (по отработанным часам)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -879,7 +894,7 @@ msgstr "Не оплачиваемые"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__non_billable_time
 msgid "Non-billable Time"
-msgstr ""
+msgstr "Неоплачиваемое время"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -1092,7 +1107,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_roofing_product_template
 msgid "Roofing"
-msgstr ""
+msgstr "Кровельные работы"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -1209,12 +1224,12 @@ msgstr "Услуги"
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_engineer
 msgid "Site Manager"
-msgstr ""
+msgstr "Руководитель проекта"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_solar_installation_product_template
 msgid "Solar Panel Installation"
-msgstr ""
+msgstr "Установка солнечных панелей"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1325,7 +1340,7 @@ msgstr "Биллинг времени"
 #: model:ir.model.fields,field_description:sale_timesheet.field_report_project_task_user__remaining_hours_so
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__remaining_hours
 msgid "Time Remaining on SO"
-msgstr ""
+msgstr "Оставшееся время в заказе на продажу"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_graph_employee_per_date
@@ -1424,7 +1439,7 @@ msgstr "Временные таблицы (фиксированная цена)"
 #. odoo-python
 #: code:addons/sale_timesheet/models/project_project.py:0
 msgid "Timesheets (Non-Billable)"
-msgstr ""
+msgstr "Табели (Неоплачиваемые)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
@@ -1487,7 +1502,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Timesheets without a sales order item are reported as"
-msgstr ""
+msgstr "Табели без позиции заказа на продажу учитываются как"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1569,7 +1584,7 @@ msgstr "Значение не существует в типе ценообра�
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
 msgid "View Timesheet"
-msgstr ""
+msgstr "Посмотреть табель"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
