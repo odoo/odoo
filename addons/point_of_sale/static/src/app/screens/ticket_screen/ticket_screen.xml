@@ -43,7 +43,7 @@
                                                 <div class="fs-6 fw-bolder"><t t-esc="this.pos.getDate(order.date_order)"></t></div>
                                                 <div class="small text-muted"><t t-esc="this.pos.getTime(order.date_order)"></t></div>
                                             </td>
-                                            <td>
+                                            <td class="order-name">
                                                 <div class="fw-bolder"><t t-esc="order.getName()"></t></div>
                                                 <div class="small text-muted"><t t-esc="order.pos_reference"></t></div>
                                             </td>
@@ -97,7 +97,7 @@
                                             <div class="fw-bolder"><t t-esc="this.pos.getDate(order.date_order)"></t></div>
                                             <div class="small text-muted"><t t-esc="this.pos.getTime(order.date_order)"></t></div>
                                     </div>
-                                    <div class="p-2 d-flex flex-column flex-grow-1 justify-content-center align-items-start">
+                                    <div class="order-name p-2 d-flex flex-column flex-grow-1 justify-content-center align-items-start">
                                         <div class="fw-bolder"><t t-esc="order.getName()"></t></div>
                                         <div class="small text-muted"><t t-esc="order.pos_reference"></t></div>
                                     </div>
