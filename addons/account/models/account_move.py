@@ -983,15 +983,21 @@ class AccountMove(models.Model):
             else:
                 move.partner_shipping_id = False
 
-    @api.depends('partner_id', 'partner_shipping_id', 'company_id')
+    @api.depends('partner_id', 'partner_shipping_id', 'company_id', 'move_type')
     def _compute_fiscal_position_id(self):
         for move in self:
-            delivery_partner = self.env['res.partner'].browse(
-                move.partner_shipping_id.id
-                or move.partner_id.address_get(['delivery'])['delivery']
-            )
-            move.fiscal_position_id = self.env['account.fiscal.position'].with_company(move.company_id)._get_fiscal_position(
-                move.partner_id, delivery=delivery_partner)
+            if move.is_receipt():
+                if move.move_type == 'in_receipt':
+                    move.fiscal_position_id = move.company_id.account_purchase_receipt_fiscal_position_id
+                else:
+                    move.fiscal_position_id = move.company_id.account_sale_receipt_fiscal_position_id
+            if not move.fiscal_position_id or not move.is_receipt():
+                delivery_partner = self.env['res.partner'].browse(
+                    move.partner_shipping_id.id
+                    or move.partner_id.address_get(['delivery'])['delivery']
+                )
+                move.fiscal_position_id = self.env['account.fiscal.position'].with_company(move.company_id)._get_fiscal_position(
+                    move.partner_id, delivery=delivery_partner)
 
     @api.depends('bank_partner_id')
     def _compute_partner_bank_id(self):
