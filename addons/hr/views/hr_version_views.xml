@@ -4,7 +4,7 @@
         <field name="name">hr.version.list</field>
         <field name="model">hr.version</field>
         <field name="arch" type="xml">
-            <list string="Versions" default_order='date_version DESC' editable="top" create="0">
+            <list string="Versions" multi_edit="1" default_order='date_version DESC' create="0" action="action_open_version" type="object">
                 <field name="date_version" readonly="False" string="Version"/>
                 <field name="contract_date_start" string="Start"/>
                 <field name="contract_date_end" string="End"/>
@@ -53,6 +53,7 @@
         <field name="model">hr.version</field>
         <field name="arch" type="xml">
             <search>
+                <field name="employee_id"/>
                 <field name="job_id"/>
                 <field name="department_id" operator="child_of"/>
                 <field name="resource_calendar_id"/>
