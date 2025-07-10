@@ -1,6 +1,7 @@
 import { EDITOR_COLOR_CSS_VARIABLES, isColorCombinationName } from "@html_editor/utils/color";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { backgroundImageCssToParts, getBgImageURLFromURL } from "@html_editor/utils/image";
-import { normalizeCSSColor, isCSSColor, isColorGradient } from "@web/core/utils/colors";
+import { normalizeCSSColor, isCSSColor, isColorGradient, rgbaToHex } from "@web/core/utils/colors";
 import { convertNumericToUnit, getCSSVariableValue } from "@html_editor/utils/formatting";
 
 /**
@@ -438,4 +439,58 @@ export function setBuilderCSSVariables(htmlStyle) {
     }
     builderStylesheet.replaceSync(`html { ${styles.join(" ")} }`);
     window.top.document.adoptedStyleSheets = [builderStylesheet];
+}
+
+export function parseBoxShadow(value) {
+    const regex =
+        /(?<color>(rgb(a)?\([^)]*\))|(var\([^)]+\)))\s+(?<offsetX>-?\d+px)\s+(?<offsetY>-?\d+px)\s+(?<blur>-?\d+px)\s+(?<spread>-?\d+px)(?:\s+(?<mode>\w+))?/;
+    return value.match(regex).groups;
+}
+
+export function getAllUsedColors(el) {
+    const usedCustomColors = new Set();
+    const collectColor = (colorValue) => {
+        if (isCSSColor(colorValue)) {
+            usedCustomColors.add(rgbaToHex(colorValue));
+        }
+    };
+    for (const coloredEl of selectElements(el, '[style*="color"]')) {
+        for (const colorProperty of ["color", "background-color", "border-color"]) {
+            collectColor(coloredEl.style[colorProperty]);
+        }
+    }
+    for (const shadowEl of selectElements(el, '[style*="box-shadow"]')) {
+        const shadowValue = shadowEl.style["box-shadow"];
+        if (shadowValue) {
+            collectColor(parseBoxShadow(shadowValue).color);
+        }
+    }
+    // Find data-*color attributes.
+    for (const dataColoredEl of selectElements(el, "*")) {
+        for (const attributeName of Object.keys(dataColoredEl.dataset)) {
+            if (attributeName.endsWith("olor")) {
+                collectColor(dataColoredEl.dataset[attributeName]);
+            }
+        }
+    }
+    // Shapes & illustrations.
+    const collectUrlColors = (urlString) => {
+        const url = new URL(urlString, window.location);
+        for (const colorKey of [...url.searchParams.keys()].filter((key) => /c\d/.test(key))) {
+            collectColor(url.searchParams.get(colorKey));
+        }
+    };
+    for (const imgEl of selectElements(
+        el,
+        'img[src^="/html_editor/shape/"], img[src^="/web_editor/shape/"]'
+    )) {
+        collectUrlColors(imgEl.src);
+    }
+    for (const bgEl of selectElements(
+        el,
+        `[style*="background-image: url(\\"/html_editor/shape/"], [style*="background-image: url(\\"/web_editor/shape/"]`
+    )) {
+        collectUrlColors(getBgImageURLFromEl(bgEl));
+    }
+    return usedCustomColors;
 }
