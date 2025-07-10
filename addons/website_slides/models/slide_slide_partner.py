@@ -34,13 +34,13 @@ class SlideSlidePartner(models.Model):
             completed._recompute_completion()
         return res
 
-    def write(self, values):
+    def write(self, vals):
         slides_completion_to_recompute = self.env['slide.slide.partner']
-        if 'completed' in values:
+        if 'completed' in vals:
             slides_completion_to_recompute = self.filtered(
-                lambda slide_partner: slide_partner.completed != values['completed'])
+                lambda slide_partner: slide_partner.completed != vals['completed'])
 
-        res = super().write(values)
+        res = super().write(vals)
 
         if slides_completion_to_recompute:
             slides_completion_to_recompute._recompute_completion()

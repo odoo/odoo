@@ -1471,8 +1471,9 @@ class AccountMoveLine(models.Model):
         )
         return super(AccountMoveLine, contextualized).search_fetch(domain, field_names, offset, limit, order)
 
-    def default_get(self, fields_list):
-        defaults = super().default_get(fields_list)
+    @api.model
+    def default_get(self, fields):
+        defaults = super().default_get(fields)
         quick_encode_suggestion = self.env.context.get('quick_encoding_vals')
         if quick_encode_suggestion and self.env.context.get('default_display_type') not in ('line_section', 'line_note'):
             defaults['account_id'] = quick_encode_suggestion['account_id']

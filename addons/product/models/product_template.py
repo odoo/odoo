@@ -22,9 +22,10 @@ class ProductTemplate(models.Model):
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
-    def default_get(self, fields_list):
-        res = super().default_get(fields_list)
-        if 'uom_id' in fields_list and not res.get('uom_id') or self.env.context.get('default_uom_id') is False:
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if ('uom_id' in fields and not res.get('uom_id')) or self.env.context.get('default_uom_id') is False:
             res['uom_id'] = self._get_default_uom_id().id
         return res
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 from odoo import api, models, _
 from odoo.exceptions import UserError
@@ -7,13 +6,13 @@ from odoo.exceptions import UserError
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    def write(self, values):
+    def write(self, vals):
         # We compute the l10n_fi/SaleOrder.reference from itself the same way
         # we compute the l10n_fi/AccountMove.invoice_payment_ref from its name.
-        reference = values.get('reference', False)
+        reference = vals.get('reference', False)
         if reference:
-            values['reference'] = self.compute_payment_reference_finnish(reference)
-        return super().write(values)
+            vals['reference'] = self.compute_payment_reference_finnish(reference)
+        return super().write(vals)
 
     @api.model
     def number2numeric(self, number):

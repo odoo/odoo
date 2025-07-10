@@ -63,9 +63,9 @@ class GamificationChallenge(models.Model):
     _order = 'end_date, start_date, name, id'
 
     @api.model
-    def default_get(self, fields_list):
-        res = super().default_get(fields_list)
-        if 'user_domain' in fields_list and 'user_domain' not in res:
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if 'user_domain' in fields and 'user_domain' not in res:
             user_group_id = self.env.ref('base.group_user')
             res['user_domain'] = f'["&", ("all_group_ids", "in", [{user_group_id.id}]), ("active", "=", True)]'
         return res

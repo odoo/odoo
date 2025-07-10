@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
 from dateutil.relativedelta import relativedelta
 
 from odoo import models, fields, api, exceptions, _
-from odoo.tools import float_round
 
 
 class HrEmployee(models.Model):
@@ -59,18 +57,18 @@ class HrEmployee(models.Model):
             officer_group.sudo().write({'user_ids': group_updates})
         return super().create(vals_list)
 
-    def write(self, values):
+    def write(self, vals):
         old_officers = self.env['res.users']
-        if 'attendance_manager_id' in values:
+        if 'attendance_manager_id' in vals:
             old_officers = self.attendance_manager_id
             # Officer was added
-            if values['attendance_manager_id']:
-                officer = self.env['res.users'].browse(values['attendance_manager_id'])
+            if vals['attendance_manager_id']:
+                officer = self.env['res.users'].browse(vals['attendance_manager_id'])
                 officers_group = self.env.ref('hr_attendance.group_hr_attendance_officer', raise_if_not_found=False)
                 if officers_group and not officer.has_group('hr_attendance.group_hr_attendance_officer'):
                     officer.sudo().write({'group_ids': [(4, officers_group.id)]})
 
-        res = super(HrEmployee, self).write(values)
+        res = super().write(vals)
         old_officers.sudo()._clean_attendance_officers()
 
         return res

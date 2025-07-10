@@ -28,11 +28,11 @@ class StockLot(models.Model):
     _order = 'name, id'
 
     @api.model
-    def default_get(self, fields_list):
+    def default_get(self, fields):
         context = dict(self.env.context)
         # We always want the company_id to be computed, regardless of where it's been created.
         context.pop('default_company_id', False)
-        return super(StockLot, self.with_context(context)).default_get(fields_list)
+        return super(StockLot, self.with_context(context)).default_get(fields)
 
     def _read_group_location_id(self, locations, domain):
         partner_locations = locations.search([('usage', 'in', ('customer', 'supplier'))])

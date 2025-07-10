@@ -114,13 +114,14 @@ class ProductTemplateAttributeLine(models.Model):
             res._update_product_template_attribute_values()
         return res
 
-    def write(self, values):
+    def write(self, vals):
         """Override to:
         - Add constraints to prevent doing changes that are not supported such
             as modifying the template or the attribute of existing lines.
         - Clean up related values and related variants when archiving or when
             updating `value_ids`.
         """
+        values = vals
         if 'product_tmpl_id' in values:
             for ptal in self:
                 if ptal.product_tmpl_id.id != values['product_tmpl_id']:

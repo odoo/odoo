@@ -46,9 +46,9 @@ class L10n_LatamPaymentMassTransfer(models.TransientModel):
         self.company_id = journal.company_id.id
 
     @api.model
-    def default_get(self, fields_list):
-        res = super().default_get(fields_list)
-        if 'check_ids' in fields_list and 'check_ids' not in res:
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if 'check_ids' in fields and 'check_ids' not in res:
             if self.env.context.get('active_model') != 'l10n_latam.check':
                 raise UserError(_("The register payment wizard should only be called on account.payment records."))
             checks = self.env['l10n_latam.check'].browse(self.env.context.get('active_ids', []))

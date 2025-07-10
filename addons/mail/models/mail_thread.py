@@ -365,18 +365,18 @@ class MailThread(models.AbstractModel):
                     self.env.cr.precommit.data.setdefault(f'mail.tracking.create.{self._name}.{thread.id}', changes)
         return threads
 
-    def write(self, values):
+    def write(self, vals):
         if self.env.context.get('tracking_disable'):
-            return super(MailThread, self).write(values)
+            return super().write(vals)
 
         if not self.env.context.get('mail_notrack'):
             self._track_prepare(self._fields)
 
         # Perform write
-        result = super(MailThread, self).write(values)
+        result = super().write(vals)
 
         # update followers
-        self._message_auto_subscribe(values)
+        self._message_auto_subscribe(vals)
 
         return result
 

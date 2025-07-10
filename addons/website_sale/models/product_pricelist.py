@@ -69,8 +69,8 @@ class ProductPricelist(models.Model):
             self.env.registry.clear_cache()
         return pricelists
 
-    def write(self, data):
-        res = super().write(data)
+    def write(self, vals):
+        res = super().write(vals)
         self and self.env.registry.clear_cache()
         return res
 

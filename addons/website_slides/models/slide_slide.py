@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -591,7 +590,8 @@ class SlideSlide(models.Model):
                 slide.channel_id.channel_partner_ids._recompute_completion()
         return slides
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         if values.get('is_category'):
             values['is_preview'] = True
             values['is_published'] = True

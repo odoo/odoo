@@ -13,9 +13,9 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     @api.model
-    def default_get(self, fields_list):
-        res = super().default_get(fields_list)
-        if 'origin' in fields_list and (task_id := self.env.context.get('create_for_task_id')):
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if 'origin' in fields and (task_id := self.env.context.get('create_for_task_id')):
             task = self.env['project.task'].browse(task_id)
             res['origin'] = self.env._('[Project] %(task_name)s', task_name=task.name)
         return res
@@ -308,9 +308,9 @@ class SaleOrder(models.Model):
                 task.sale_line_id = service_sol
         return created_records
 
-    def write(self, values):
-        res = super().write(values)
-        if 'state' in values and values['state'] == 'cancel':
+    def write(self, vals):
+        res = super().write(vals)
+        if 'state' in vals and vals['state'] == 'cancel':
             # Remove sale line field reference from all projects
             self.env['project.project'].sudo().search([('sale_line_id.order_id', 'in', self.ids)]).sale_line_id = False
         return res

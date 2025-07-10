@@ -6,7 +6,7 @@ from collections import defaultdict
 from datetime import timedelta, datetime, time
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.fields import Command, Domain
+from odoo.fields import Command, Date, Domain
 from odoo.addons.rating.models import rating_data
 from odoo.addons.web_editor.tools import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError
@@ -969,18 +969,18 @@ class ProjectTask(models.Model):
         return key + (self.env.user._is_portal(),)
 
     @api.model
-    def default_get(self, default_fields):
-        vals = super().default_get(default_fields)
+    def default_get(self, fields):
+        vals = super().default_get(fields)
 
         if project_id := self.env.context.get('default_create_in_project_id'):
             vals['project_id'] = project_id
 
         # prevent creating new task in the waiting state
-        if 'state' in default_fields and vals.get('state') == '04_waiting_normal':
+        if 'state' in fields and vals.get('state') == '04_waiting_normal':
             vals['state'] = '01_in_progress'
 
-        if 'repeat_until' in default_fields:
-            vals['repeat_until'] = fields.Date.today() + timedelta(days=7)
+        if 'repeat_until' in fields:
+            vals['repeat_until'] = Date.today() + timedelta(days=7)
 
         if 'partner_id' in vals and not vals['partner_id']:
             # if the default_partner_id=False or no default_partner_id then we search the partner based on the project and parent
@@ -996,9 +996,9 @@ class ProjectTask(models.Model):
         project_id = vals.get('project_id', self.env.context.get('default_project_id'))
         if project_id:
             project = self.env['project.project'].browse(project_id)
-            if 'company_id' in default_fields and 'default_project_id' not in self.env.context:
+            if 'company_id' in fields and 'default_project_id' not in self.env.context:
                 vals['company_id'] = project.sudo().company_id.id
-        elif 'default_user_ids' not in self.env.context and 'user_ids' in default_fields:
+        elif 'default_user_ids' not in self.env.context and 'user_ids' in fields:
             user_ids = vals.get('user_ids', [])
             user_ids.append(Command.link(self.env.user.id))
             vals['user_ids'] = user_ids

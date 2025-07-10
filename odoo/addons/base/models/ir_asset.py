@@ -67,10 +67,10 @@ class IrAsset(models.Model):
         self.env.registry.clear_cache('assets')
         return super().create(vals_list)
 
-    def write(self, values):
+    def write(self, vals):
         if self:
             self.env.registry.clear_cache('assets')
-        return super().write(values)
+        return super().write(vals)
 
     def unlink(self):
         self.env.registry.clear_cache('assets')

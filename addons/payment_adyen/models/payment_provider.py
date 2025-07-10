@@ -48,9 +48,9 @@ class PaymentProvider(models.Model):
             self._adyen_extract_prefix_from_api_url(values)
         return super().create(vals_list)
 
-    def write(self, values):
-        self._adyen_extract_prefix_from_api_url(values)
-        return super().write(values)
+    def write(self, vals):
+        self._adyen_extract_prefix_from_api_url(vals)
+        return super().write(vals)
 
     @api.model
     def _adyen_extract_prefix_from_api_url(self, values):
