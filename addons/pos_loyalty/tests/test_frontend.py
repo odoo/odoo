@@ -870,7 +870,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             })],
         })
 
-        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        partner = self.env['res.partner'].create({'name': 'Partner Test 1'})
         card = self.env['loyalty.card'].create({
             'partner_id': partner.id,
             'program_id': loyalty_program.id,
