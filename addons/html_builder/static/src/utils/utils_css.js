@@ -1,6 +1,7 @@
 import { EDITOR_COLOR_CSS_VARIABLES } from "@html_editor/utils/color";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { backgroundImageCssToParts, getBgImageURLFromURL } from "@html_editor/utils/image";
-import { normalizeCSSColor, isCSSColor, isColorGradient } from "@web/core/utils/colors";
+import { normalizeCSSColor, isCSSColor, isColorGradient, rgbaToHex } from "@web/core/utils/colors";
 
 let editableWindow = window;
 export const setEditableWindow = (ew) => (editableWindow = ew);
@@ -518,4 +519,43 @@ export function setBuilderCSSVariables() {
         }
         editableWindow.top.document.documentElement.style.setProperty(`--hb-cp-${style}`, value);
     }
+}
+
+export function parseBoxShadow(value) {
+    const regex =
+        /(?<color>(rgb(a)?\([^)]*\))|(var\([^)]+\)))\s+(?<offsetX>-?\d+px)\s+(?<offsetY>-?\d+px)\s+(?<blur>-?\d+px)\s+(?<spread>-?\d+px)(?:\s+(?<mode>\w+))?/;
+    return value.match(regex).groups;
+}
+
+export function getAllUsedColors(el) {
+    const usedCustomColors = new Set();
+    for (const coloredEl of selectElements(el, '[style*="color"]')) {
+        for (const colorProperty of ["color", "background-color", "border-color"]) {
+            const colorValue = coloredEl.style[colorProperty];
+            if (isCSSColor(colorValue)) {
+                usedCustomColors.add(rgbaToHex(colorValue));
+            }
+        }
+    }
+    for (const shadowEl of selectElements(el, '[style*="box-shadow"]')) {
+        const shadowValue = shadowEl.style["box-shadow"];
+        if (shadowValue) {
+            const colorValue = parseBoxShadow(shadowValue).color;
+            if (isCSSColor(colorValue)) {
+                usedCustomColors.add(rgbaToHex(colorValue));
+            }
+        }
+    }
+    // Find data-*color attributes.
+    for (const dataColoredEl of selectElements(el, "*")) {
+        for (const attributeName of Object.keys(dataColoredEl.dataset)) {
+            if (attributeName.endsWith("olor")) {
+                const colorValue = dataColoredEl.dataset[attributeName];
+                if (isCSSColor(colorValue)) {
+                    usedCustomColors.add(rgbaToHex(colorValue));
+                }
+            }
+        }
+    }
+    return usedCustomColors;
 }
