@@ -754,11 +754,13 @@ export class Configurator extends Component {
             }
         });
 
-        const initialStep = this.props.action.context.params && this.props.action.context.params.step;
+        const initialStep = router.current?.step
+        const infoFromUrl = router.current?.info;
         const store = reactive(new Store(), () => this.updateStorage(store));
 
         this.state = useState({
             currentStep: initialStep,
+            infoFromUrl: infoFromUrl,
         });
 
         useSubEnv({ store });
@@ -785,7 +787,7 @@ export class Configurator extends Component {
     }
 
     get pathname() {
-        return `/website/configurator${this.state.currentStep ? `/${encodeURIComponent(this.state.currentStep)}` : ''}`;
+        return `/website/configurator${this.state.currentStep ? `/${encodeURIComponent(this.state.currentStep)}` : ''}${this.state.infoFromUrl ? `?info=${encodeURIComponent(this.state.infoFromUrl)}` : ''}`;
     }
 
     get storageItemName() {
