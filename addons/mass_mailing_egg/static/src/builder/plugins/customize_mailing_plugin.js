@@ -52,7 +52,11 @@ export class CustomizeMailingPlugin extends Plugin {
 
     setup() {
         this.iframeWindow = this.document.defaultView;
-        this.cssPrefix = ".o_mail_wrapper";
+        // TODO EGGMAIL: evaluate if assets must be cleaned (i.e. ('include', 'web._assets_helpers'))
+        // because there were not present in the previous implementation of mass_mailing.
+        // to have priority over some rules from this asset, the `cssPrefix` is intentionally made
+        // very specific (3 depth level).
+        this.cssPrefix = ".o_layout .o_mail_wrapper .o_mail_wrapper_td";
         this.styleSheet = new this.iframeWindow.CSSStyleSheet();
         const styleEl = this.editable.querySelector("#design-element");
         if (styleEl) {

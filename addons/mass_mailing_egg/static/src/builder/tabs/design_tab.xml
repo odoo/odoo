@@ -56,28 +56,29 @@
 <t t-name="mass_mailing_egg.DesignParagraphOption">
     <t t-call="mass_mailing_egg.DesignTextOption">
         <t t-set="label" t-value="'Text'"/>
-        <t t-set="variable" t-value="`--text-`"/>
+        <t t-set="prefix" t-value="`--text-`"/>
     </t>
 </t>
 
 <t t-name="mass_mailing_egg.DesignLinkOption">
     <t t-call="mass_mailing_egg.DesignTextOption">
         <t t-set="label" t-value="'Links'"/>
-        <t t-set="variable" t-value="`--link-`"/>
+        <t t-set="prefix" t-value="`--link-`"/>
     </t>
 </t>
 
 <t t-name="mass_mailing_egg.DesignTextOption">
-    <BuilderContext action="'mass_mailing_egg.CustomizeStyleProperty'">
+    <BuilderContext action="'mass_mailing_egg.CustomizeMailingVariable'">
         <BuilderRow label="label">
-            <BuilderNumberInput actionParam="{ selectors: selectors, property: 'font-size'}" unit="'px'" saveUnit="'px'"/>
-            <BuilderColorPicker noTransparency="true" colorPrefix="'text-'" title.translate="Text Color" enabledTabs="['solid', 'custom']" actionParam="{ selectors: selectors, property: 'color' }"/>
+            <BuilderNumberInput actionParam="{ variable: `${prefix}font-size` }" unit="'px'" saveUnit="'px'"/>
+            <BuilderColorPicker noTransparency="true" colorPrefix="'text-'" title.translate="Text Color" enabledTabs="['solid', 'custom']"
+                actionParam="{ variable: `${prefix}color` }"/>
         </BuilderRow>
         <BuilderRow>
             <!-- <BuilderFontFamilyPicker/> -->
-            <BuilderButton icon="'fa-fw fa-bold'" actionParam="{ selectors: selectors, property: 'font-weight'}"  actionValue="'bolder'"/>
-            <BuilderButton icon="'fa-fw fa-italic'" actionParam="{ selectors: selectors, property: 'font-style'}" actionValue="'italic'"/>
-            <BuilderButton icon="'fa-fw fa-underline'" actionParam="{ selectors: selectors, property: 'text-decoration-line'}" actionValue="'underline'"/>
+            <BuilderButton icon="'fa-fw fa-bold'" actionParam="{ variable: `${prefix}font-weight` }" actionValue="'bolder'"/>
+            <BuilderButton icon="'fa-fw fa-italic'" actionParam="{ variable: `${prefix}font-style` }" actionValue="'italic'"/>
+            <BuilderButton icon="'fa-fw fa-underline'" actionParam="{ variable: `${prefix}text-decoration-line`}" actionValue="'underline'"/>
         </BuilderRow>
     </BuilderContext>
 </t>
@@ -85,7 +86,7 @@
 <t t-name="mass_mailing_egg.DesignButtonOption">
     <t t-set="primary_selectors" t-value="['a.btn.btn-fill-primary', 'a.btn.btn-outline-primary', 'a.btn.btn-primary']"/>
     <t t-set="secondary_selectors" t-value="['a.btn.btn-fill-secondary', 'a.btn.btn-outline-secondary', 'a.btn.btn-secondary']"/>
-    <t t-set="builder_action" t-value="'mass_mailing_egg.CustomizeStyleProperty'"/>
+    <t t-set="builder_action" t-value="'mass_mailing_egg.CustomizeMailingVariable'"/>
     <BuilderContext action="builder_action">
         <BuilderRow label.translate="Primary Buttons">
             <BuilderNumberInput actionParam="{ selectors: primary_selectors, property: 'font-size'}" unit="'px'" saveUnit="'px'"/>
