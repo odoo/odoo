@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { getHtmlStyle } from "@html_editor/utils/formatting";
 import {
     CSS_SHORTHANDS,
     applyNeededCss,
@@ -38,13 +39,22 @@ function getStyleValue(el, styleName) {
     const computedStyle = window.getComputedStyle(el);
     const cssProps = CSS_SHORTHANDS[styleName] || [styleName];
     const cssValues = cssProps.map((cssProp) => computedStyle.getPropertyValue(cssProp).trim());
-    if (cssValues.length === 4 && areCssValuesEqual(cssValues[3], cssValues[1], styleName)) {
+    if (
+        cssValues.length === 4 &&
+        areCssValuesEqual(cssValues[3], cssValues[1], styleName, computedStyle)
+    ) {
         cssValues.pop();
     }
-    if (cssValues.length === 3 && areCssValuesEqual(cssValues[2], cssValues[0], styleName)) {
+    if (
+        cssValues.length === 3 &&
+        areCssValuesEqual(cssValues[2], cssValues[0], styleName, computedStyle)
+    ) {
         cssValues.pop();
     }
-    if (cssValues.length === 2 && areCssValuesEqual(cssValues[1], cssValues[0], styleName)) {
+    if (
+        cssValues.length === 2 &&
+        areCssValuesEqual(cssValues[1], cssValues[0], styleName, computedStyle)
+    ) {
         cssValues.pop();
     }
     return cssValues.join(" ");
@@ -165,7 +175,10 @@ class DataAttributeAction extends BuilderAction {
         if (!/(^color|Color)($|(?=[A-Z]))/.test(attributeName)) {
             return editingElement.dataset[attributeName];
         }
-        const color = normalizeColor(editingElement.dataset[attributeName]);
+        const color = normalizeColor(
+            editingElement.dataset[attributeName],
+            getHtmlStyle(this.document)
+        );
         return color;
     }
     isApplied({ editingElement, params: { mainParam: attributeName } = {}, value }) {

@@ -20,12 +20,9 @@ import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements
 import { BlockTab } from "@html_builder/sidebar/block_tab";
 import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
 import { useSnippets } from "@html_builder/snippets/snippet_service";
-import {
-    setBuilderCSSVariables,
-    setEditableDocument,
-    setEditableWindow,
-} from "@html_builder/utils/utils_css";
+import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
+import { getHtmlStyle } from "@html_editor/utils/formatting";
 
 export class Builder extends Component {
     static template = "html_builder.Builder";
@@ -151,8 +148,6 @@ export class Builder extends Component {
             // editor.
             const iframeEl = await this.props.iframeLoaded;
             this.editableEl = iframeEl.contentDocument.body.querySelector("#wrapwrap");
-            setEditableWindow(iframeEl.contentWindow);
-            setEditableDocument(iframeEl.contentDocument);
 
             // Prevent image dragging in the website builder. Not via css because
             // if one of the image ancestor has a dragstart listener, the dragstart handler
@@ -188,7 +183,7 @@ export class Builder extends Component {
 
         onMounted(() => {
             this.editor.document.body.classList.add("editor_enable");
-            setBuilderCSSVariables();
+            setBuilderCSSVariables(getHtmlStyle(this.editor.document));
             // TODO: onload editor
             this.updateInvisibleEls();
         });

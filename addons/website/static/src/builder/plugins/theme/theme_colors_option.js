@@ -1,6 +1,6 @@
 import { onMounted } from "@odoo/owl";
-import { getCSSVariableValue } from "@html_builder/utils/utils_css";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { getCSSVariableValue } from "@html_editor/utils/formatting";
 
 export class ThemeColorsOption extends BaseOptionComponent {
     static template = "website.ThemeColorsOption";

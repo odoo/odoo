@@ -1,11 +1,7 @@
-import { EDITOR_COLOR_CSS_VARIABLES } from "@html_editor/utils/color";
+import { EDITOR_COLOR_CSS_VARIABLES, isColorCombinationName } from "@html_editor/utils/color";
 import { backgroundImageCssToParts, getBgImageURLFromURL } from "@html_editor/utils/image";
 import { normalizeCSSColor, isCSSColor, isColorGradient } from "@web/core/utils/colors";
-
-let editableWindow = window;
-export const setEditableWindow = (ew) => (editableWindow = ew);
-let editableDocument = document;
-export const setEditableDocument = (ed) => (editableDocument = ed);
+import { convertNumericToUnit, getCSSVariableValue } from "@html_editor/utils/formatting";
 
 /**
  * window.getComputedStyle cannot work properly with CSS shortcuts (like
@@ -43,35 +39,6 @@ export const CSS_SHORTHANDS = {
     padding: ["padding-top", "padding-right", "padding-bottom", "padding-left"],
 };
 /**
- * Key-value mapping to list converters from an unit A to an unit B.
- * - The key is a string in the format '$1-$2' where $1 is the CSS symbol of
- *   unit A and $2 is the CSS symbol of unit B.
- * - The value is a function that converts the received value (expressed in
- *   unit A) to another value expressed in unit B. Two other parameters is
- *   received: the css property on which the unit applies and the jQuery element
- *   on which that css property may change.
- */
-export const CSS_UNITS_CONVERSION = {
-    "s-ms": () => 1000,
-    "ms-s": () => 0.001,
-    "rem-px": () => computePxByRem(),
-    "px-rem": () => computePxByRem(true),
-    "%-px": () => -1, // Not implemented but should simply be ignored for now
-    "px-%": () => -1, // Not implemented but should simply be ignored for now
-};
-/**
- * Colors of the default palette, used for substitution in shapes/illustrations.
- * key: number of the color in the palette (ie, o-color-<1-5>)
- * value: color hex code
- */
-export const DEFAULT_PALETTE = {
-    1: "#3AADAA",
-    2: "#7C6576",
-    3: "#F6F6F6",
-    4: "#FFFFFF",
-    5: "#383E45",
-};
-/**
  * Set of all the data attributes relative to the background images.
  */
 const BACKGROUND_IMAGE_ATTRIBUTES = new Set([
@@ -86,21 +53,6 @@ const BACKGROUND_IMAGE_ATTRIBUTES = new Set([
 ]);
 
 /**
- * Computes the number of "px" needed to make a "rem" unit. Subsequent calls
- * returns the cached computed value.
- *
- * @param {boolean} [toRem=false]
- * @returns {float} - number of px by rem if 'toRem' is false
- *                  - the inverse otherwise
- */
-export function computePxByRem(toRem) {
-    if (editableDocument.PX_BY_REM === undefined) {
-        const htmlStyle = editableWindow.getComputedStyle(editableDocument.documentElement);
-        editableDocument.PX_BY_REM = parseFloat(htmlStyle["font-size"]);
-    }
-    return toRem ? 1 / editableDocument.PX_BY_REM : editableDocument.PX_BY_REM;
-}
-/**
  * Converts the given (value + unit) string to a numeric value expressed in
  * the other given css unit.
  *
@@ -111,36 +63,14 @@ export function computePxByRem(toRem) {
  * @param {string} [cssProp] - the css property on which the unit applies
  * @returns {number}
  */
-export function convertValueToUnit(value, unitTo, cssProp) {
+export function convertValueToUnit(value, unitTo, htmlStyle) {
     const m = getNumericAndUnit(value);
     if (!m) {
         return NaN;
     }
     const numValue = parseFloat(m[0]);
     const valueUnit = m[1];
-    return convertNumericToUnit(numValue, valueUnit, unitTo, cssProp);
-}
-/**
- * Converts the given numeric value expressed in the given css unit into
- * the corresponding numeric value expressed in the other given css unit.
- *
- * e.g. fct(400, 'ms', 's') -> 0.4
- *
- * @param {number} value
- * @param {string} unitFrom
- * @param {string} unitTo
- * @param {string} [cssProp] - the css property on which the unit applies
- * @returns {number}
- */
-export function convertNumericToUnit(value, unitFrom, unitTo, cssProp) {
-    if (Math.abs(value) < Number.EPSILON || unitFrom === unitTo) {
-        return value;
-    }
-    const converter = CSS_UNITS_CONVERSION[`${unitFrom}-${unitTo}`];
-    if (converter === undefined) {
-        throw new Error(`Cannot convert '${unitFrom}' units into '${unitTo}' units !`);
-    }
-    return value * converter(cssProp);
+    return convertNumericToUnit(numValue, valueUnit, unitTo, htmlStyle);
 }
 /**
  * Returns the numeric value and unit of a css value.
@@ -162,10 +92,11 @@ export function getNumericAndUnit(value) {
  *
  * @param {string} value1
  * @param {string} value2
- * @param {string} [cssProp] - the css property on which the unit applies
+ * @param {string} cssProp - the css property on which the unit applies
+ * @param {CSSStyleDeclaration} htmlStyle
  * @returns {boolean}
  */
-export function areCssValuesEqual(value1, value2, cssProp) {
+export function areCssValuesEqual(value1, value2, cssProp, htmlStyle) {
     // String comparison first
     if (value1 === value2) {
         return true;
@@ -181,7 +112,7 @@ export function areCssValuesEqual(value1, value2, cssProp) {
         for (const index of [0, 1]) {
             const part1 = parts1 && parts1.length > index ? parts1[index] : "auto";
             const part2 = parts2 && parts2.length > index ? parts2[index] : "auto";
-            if (!areCssValuesEqual(part1, part2, pseudoPartProp)) {
+            if (!areCssValuesEqual(part1, part2, pseudoPartProp, htmlStyle)) {
                 return false;
             }
         }
@@ -191,10 +122,10 @@ export function areCssValuesEqual(value1, value2, cssProp) {
     // It could be a CSS variable, in that case the actual value has to be
     // retrieved before comparing.
     if (isCSSVariable(value1)) {
-        value1 = getCSSVariableValue(value1.substring(6, value1.length - 1));
+        value1 = getCSSVariableValue(value1.substring(6, value1.length - 1), htmlStyle);
     }
     if (isCSSVariable(value2)) {
-        value2 = getCSSVariableValue(value2.substring(6, value2.length - 1));
+        value2 = getCSSVariableValue(value2.substring(6, value2.length - 1), htmlStyle);
     }
     if (value1 === value2) {
         return true;
@@ -259,16 +190,8 @@ export function areCssValuesEqual(value1, value2, cssProp) {
         return false;
     }
     const numValue1 = data[0];
-    const numValue2 = convertValueToUnit(value2, data[1], cssProp);
+    const numValue2 = convertValueToUnit(value2, data[1], htmlStyle);
     return Math.abs(numValue1 - numValue2) < Number.EPSILON;
-}
-/**
- * @param {string|number} name
- * @returns {boolean}
- */
-export function isColorCombinationName(name) {
-    const number = parseInt(name);
-    return !isNaN(number) && number % 100 !== 0;
 }
 /**
  * @param {string} value
@@ -299,46 +222,27 @@ export function computeColorClasses(colorNames, prefix = "bg-") {
     return classes;
 }
 /**
- * @param {string} key
- * @param {CSSStyleDeclaration} [htmlStyle] if not provided, it is computed
- * @returns {string}
- */
-export function getCSSVariableValue(key, htmlStyle) {
-    if (htmlStyle === undefined) {
-        htmlStyle = editableWindow.getComputedStyle(editableDocument.documentElement);
-    }
-    // Get trimmed value from the HTML element
-    let value = htmlStyle.getPropertyValue(`--${key}`).trim();
-    // If it is a color value, it needs to be normalized
-    value = normalizeCSSColor(value);
-    // Normally scss-string values are "printed" single-quoted. That way no
-    // magic conversation is needed when customizing a variable: either save it
-    // quoted for strings or non quoted for colors, numbers, etc. However,
-    // Chrome has the annoying behavior of changing the single-quotes to
-    // double-quotes when reading them through getPropertyValue...
-    return value.replace(/"/g, "'");
-}
-/**
  * Normalize a color in case it is a variable name so it can be used outside of
  * css.
  *
  * @param {string} color the color to normalize into a css value
  * @returns {string} the normalized color
  */
-export function normalizeColor(color) {
+export function normalizeColor(color, htmlStyle) {
     if (isCSSColor(color)) {
         return color;
     }
-    return getCSSVariableValue(color);
+    return getCSSVariableValue(color, htmlStyle);
 }
 /**
  * Parse an element's background-image's url.
  *
- * @param {string} string a css value in the form 'url("...")'
+ * @param {HTMLElement} el
  * @returns {string|false} the src of the image or false if not parsable
  */
 export function getBgImageURLFromEl(el) {
-    const parts = backgroundImageCssToParts(window.getComputedStyle(el).backgroundImage);
+    const style = el.ownerDocument.defaultView.getComputedStyle(el);
+    const parts = backgroundImageCssToParts(style.backgroundImage);
     const string = parts.url || "";
     return getBgImageURLFromURL(string);
 }
@@ -487,7 +391,7 @@ export function applyNeededCss(
     el,
     cssProp,
     cssValue,
-    computedStyle = window.getComputedStyle(el),
+    computedStyle = el.ownerDocument.defaultView.getComputedStyle(el),
     { force = false, allowImportant = true } = {}
 ) {
     if (force) {
@@ -495,12 +399,24 @@ export function applyNeededCss(
         return true;
     }
     el.style.removeProperty(cssProp);
-    if (!areCssValuesEqual(computedStyle.getPropertyValue(cssProp), cssValue, cssProp)) {
+    if (
+        !areCssValuesEqual(
+            computedStyle.getPropertyValue(cssProp),
+            cssValue,
+            cssProp,
+            computedStyle
+        )
+    ) {
         el.style.setProperty(cssProp, cssValue);
         // If change had no effect then make it important.
         if (
             allowImportant &&
-            !areCssValuesEqual(computedStyle.getPropertyValue(cssProp), cssValue, cssProp)
+            !areCssValuesEqual(
+                computedStyle.getPropertyValue(cssProp),
+                cssValue,
+                cssProp,
+                computedStyle
+            )
         ) {
             el.style.setProperty(cssProp, cssValue, "important");
         }
@@ -509,13 +425,17 @@ export function applyNeededCss(
     return false;
 }
 
-export function setBuilderCSSVariables() {
+const builderStylesheet = new CSSStyleSheet();
+export function setBuilderCSSVariables(htmlStyle) {
+    const styles = [];
     for (const style of EDITOR_COLOR_CSS_VARIABLES) {
-        let value = getCSSVariableValue(style);
+        let value = getCSSVariableValue(style, htmlStyle);
         if (value.startsWith("'") && value.endsWith("'")) {
             // Gradient values are recovered within a string.
             value = value.substring(1, value.length - 1);
         }
-        editableWindow.top.document.documentElement.style.setProperty(`--hb-cp-${style}`, value);
+        styles.push(`--hb-cp-${style}: ${value};`);
     }
+    builderStylesheet.replaceSync(`html { ${styles.join(" ")} }`);
+    window.top.document.adoptedStyleSheets = [builderStylesheet];
 }

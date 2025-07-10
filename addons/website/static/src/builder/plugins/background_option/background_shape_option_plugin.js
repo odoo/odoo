@@ -10,6 +10,7 @@ import { getDefaultColors } from "./background_shape_option";
 import { withSequence } from "@html_editor/utils/resource";
 import { getBgImageURLFromURL } from "@html_editor/utils/image";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { getHtmlStyle } from "@html_editor/utils/formatting";
 
 export class BackgroundShapeOptionPlugin extends Plugin {
     static id = "backgroundShapeOption";
@@ -445,7 +446,7 @@ class BackgroundShapeColorAction extends BaseAnimationAction {
         const { shape, colors: customColors } = this.getShapeData(editingElement);
         const colors = Object.assign(getDefaultColors(editingElement), customColors);
         const color = shape && colors[colorName];
-        return (color && normalizeColor(color)) || "";
+        return (color && normalizeColor(color, getHtmlStyle(this.document))) || "";
     }
     apply({ editingElement, params: { mainParam: colorName }, value }) {
         this.applyShape(editingElement, () => {
