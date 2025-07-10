@@ -140,8 +140,30 @@ export class ChatBotService {
         return _t("Say something");
     }
 
+<<<<<<< 178dff30131a93680dfd994fd22b29a766ee9354
     get chatbot() {
         return this.livechatService.thread?.chatbot;
+||||||| 5ea09d68a8ac8cf2b8bb62330875728772849d49
+    get savedState() {
+        const raw = browser.localStorage.getItem(
+            `im_livechat.chatbot.state.uuid_${this.livechatService.savedState?.uuid}`
+        );
+        return raw ? JSON.parse(raw) : null;
+    }
+
+    get isRestoringSavedState() {
+        return this.savedState?._chatbotCurrentStep.id > this.currentStep?.id;
+=======
+    get savedState() {
+        const raw = browser.localStorage.getItem(
+            `im_livechat.chatbot.state.uuid_${this.livechatService.savedState?.uuid}`
+        );
+        return raw ? JSON.parse(raw) : null;
+    }
+
+    get isRestoringSavedState() {
+        return this.savedState?._chatbotCurrentStep.sequence > this.currentStep?.sequence;
+>>>>>>> cb50eda9cb2391054f77c222fd0b6a38365ee0bc
     }
 }
 

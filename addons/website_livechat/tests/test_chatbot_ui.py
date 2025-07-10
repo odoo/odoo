@@ -230,6 +230,7 @@ class TestLivechatChatbotUI(TestImLivechatCommon, TestWebsiteLivechatCommon, Cha
         channel = self.livechat_channel.channel_ids[0]
         self.assertIn(channel.channel_member_ids.partner_id.user_ids, en_op)
         self.assertNotIn(channel.channel_member_ids.partner_id.user_ids, fr_op)
+<<<<<<< 178dff30131a93680dfd994fd22b29a766ee9354
 
     def test_question_selection_overlapping_answers(self):
         chatbot_script = self.env["chatbot.script"].create({"title": "Question selection bot"})
@@ -286,3 +287,36 @@ class TestLivechatChatbotUI(TestImLivechatCommon, TestWebsiteLivechatCommon, Cha
             ]
         )
         self.start_tour("/", "website_livechat.question_selection_overlapping_answers")
+||||||| 5ea09d68a8ac8cf2b8bb62330875728772849d49
+=======
+
+    def test_chatbot_restore_state(self):
+        chatbot_state_restore_script = self.env["chatbot.script"].create(
+            {"title": "Restore state Bot"}
+        )
+        self.env["chatbot.script.step"].create([
+            {
+                "chatbot_script_id": chatbot_state_restore_script.id,
+                "step_type": "text",
+                "message": "How can I help you?",
+                "sequence": 2,  # Swapped sequence
+            },
+            {
+                "chatbot_script_id": chatbot_state_restore_script.id,
+                "step_type": "text",
+                "message": "Hello! I'm a bot for restoration test!",
+                "sequence": 1,  # Swapped sequence
+            },
+        ])
+        livechat_channel = self.env["im_livechat.channel"].create({
+            "name": "State restore Channel",
+            "rule_ids": [Command.create({
+                'regex_url': '/contactus',
+                "chatbot_script_id": chatbot_state_restore_script.id,
+            })]
+        })
+        default_website = self.env.ref("website.default_website")
+        default_website.channel_id = livechat_channel.id
+        self.env.ref("website.default_website").channel_id = livechat_channel.id
+        self.start_tour("/contactus", "website_livechat.chatbot_restore_state_tour")
+>>>>>>> cb50eda9cb2391054f77c222fd0b6a38365ee0bc

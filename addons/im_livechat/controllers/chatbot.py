@@ -65,6 +65,7 @@ class LivechatChatbotScriptController(http.Controller):
             return None
 
         posted_message = next_step._process_step(discuss_channel)
+<<<<<<< 178dff30131a93680dfd994fd22b29a766ee9354
         store = Store(posted_message, for_current_user=True)
         store.add(next_step)
         store.add(
@@ -92,6 +93,42 @@ class LivechatChatbotScriptController(http.Controller):
             },
         )
         return store.get_result()
+||||||| 5ea09d68a8ac8cf2b8bb62330875728772849d49
+        return {
+            'chatbot_posted_message': posted_message.message_format()[0] if posted_message else None,
+            'chatbot_step': {
+                'operatorFound': next_step.step_type == 'forward_operator' and len(
+                    discuss_channel.channel_member_ids) > 2,
+                'id': next_step.id,
+                'answers': [{
+                    'id': answer.id,
+                    'label': answer.name,
+                    'redirectLink': answer.redirect_link,
+                } for answer in next_step.answer_ids],
+                'isLast': next_step._is_last_step(discuss_channel),
+                'message': plaintext2html(next_step.message) if not is_html_empty(next_step.message) else False,
+                'type': next_step.step_type,
+            }
+        }
+=======
+        return {
+            'chatbot_posted_message': posted_message.message_format()[0] if posted_message else None,
+            'chatbot_step': {
+                'operatorFound': next_step.step_type == 'forward_operator' and len(
+                    discuss_channel.channel_member_ids) > 2,
+                'id': next_step.id,
+                'answers': [{
+                    'id': answer.id,
+                    'label': answer.name,
+                    'redirectLink': answer.redirect_link,
+                } for answer in next_step.answer_ids],
+                'isLast': next_step._is_last_step(discuss_channel),
+                'message': plaintext2html(next_step.message) if not is_html_empty(next_step.message) else False,
+                'type': next_step.step_type,
+                'sequence': next_step.sequence,
+            }
+        }
+>>>>>>> cb50eda9cb2391054f77c222fd0b6a38365ee0bc
 
     @http.route("/chatbot/step/validate_email", type="json", auth="public")
     @add_guest_to_context
