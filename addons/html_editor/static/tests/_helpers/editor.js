@@ -1,7 +1,7 @@
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { expect, getFixture } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { Component, markup, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { getContent, getSelection, setContent } from "./selection";
 import { animationFrame, tick } from "@odoo/hoot-mock";
@@ -95,7 +95,9 @@ export async function setupEditor(content, options = {}) {
     const styleContent = options.styleContent || "";
     await mountWithCleanup(TestEditor, {
         props: {
-            content,
+            // TODO: Move the markup call up the chain and call markup at source.
+            // markup: Not the correct place to call markup as content can be anything but would be okay for the tests.
+            content: markup(content),
             wysiwygProps,
             styleContent,
             onMounted: options.onMounted,
