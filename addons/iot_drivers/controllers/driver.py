@@ -22,6 +22,7 @@ DEVICE_TYPES = [
 
 
 class DriverController(http.Controller):
+    @helpers.toggleable
     @route.iot_route('/iot_drivers/action', type='jsonrpc', cors='*', csrf=False, sign=True)
     def action(self, session_id, device_identifier, data):
         """This route is called when we want to make an action with device (take picture, printing,...)
@@ -53,6 +54,7 @@ class DriverController(http.Controller):
         """
         helpers.get_certificate_status()
 
+    @helpers.toggleable
     @route.iot_route('/iot_drivers/event', type='jsonrpc', cors='*', csrf=False, sign=True)
     def event(self, listener):
         """
