@@ -37,6 +37,11 @@ class StockWarehouseOrderpoint(models.Model):
             }
         return super()._get_replenishment_order_notification()
 
+    @api.depends('bom_id', 'product_id.bom_ids.produce_delay')
+    def _compute_deadline_date(self):
+        """ Extend to add more depends values """
+        super()._compute_deadline_date()
+
     @api.depends('bom_id', 'bom_id.product_uom_id', 'product_id.bom_ids', 'product_id.bom_ids.product_uom_id')
     def _compute_qty_to_order_computed(self):
         """ Extend to add more depends values """

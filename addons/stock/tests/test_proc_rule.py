@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime, timedelta
+from freezegun import freeze_time
 
 from odoo.fields import Command
 from odoo.tests import Form, TransactionCase
@@ -710,6 +711,132 @@ class TestProcRule(TransactionCase):
         self.product.write({'route_ids': [Command.set(product_route.ids)]})
         orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
         self.assertFalse(orderpoint.show_supply_warning)
+
+    @freeze_time('2025-09-02 14:00:00')
+    def test_orderpoint_deadline_date(self):
+        """ Test that the deadline date is correctly computed. """
+        self.product.is_storable = True
+        product_1 = self.env['product.product'].create({
+            'name': 'product_1',
+            'type': 'consu',
+            'is_storable': True,
+        })
+        product_2 = self.env['product.product'].create({
+            'name': 'product_2',
+            'type': 'consu',
+            'is_storable': True,
+        })
+
+        self.env['stock.quant'].create({
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'quantity': 20,
+        })
+        self.env['stock.quant'].create({
+            'product_id': product_1.id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'quantity': 20,
+        })
+        self.env['stock.quant'].create({
+            'product_id': product_2.id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'quantity': 20,
+        })
+        orderpoint_0 = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product.id,
+            'product_min_qty': 10,
+            'product_max_qty': 50,
+        })
+        orderpoint_1 = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product_1.id,
+            'product_min_qty': 10,
+            'product_max_qty': 50,
+        })
+        orderpoint_2 = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product_2.id,
+            'product_min_qty': 10,
+            'product_max_qty': 50,
+        })
+
+        delivery_date_0 = datetime.today() + timedelta(days=15)
+        delivery_date_1 = datetime.today() + timedelta(days=25)
+        delivery_date_2 = datetime.today() + timedelta(days=35)
+
+        stock_moves = self.env['stock.move']
+        # product 0: 15 OUT in 15 days, 10 IN in 25 days -> deadline in 15 days
+        stock_moves |= self.env['stock.move'].create({
+            'product_id': self.product.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 15,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'date': delivery_date_0,
+        })
+        stock_moves |= self.env['stock.move'].create({
+            'product_id': self.product.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 10,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.ref('stock.stock_location_stock'),
+            'date': delivery_date_1,
+        })
+        # product 1: 10 OUT in 25, 5 OUT in 35 days -> deadline in 35 days
+        stock_moves |= self.env['stock.move'].create({
+            'product_id': product_1.id,
+            'product_uom': product_1.uom_id.id,
+            'product_uom_qty': 10,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'date': delivery_date_1,
+        })
+        stock_moves |= self.env['stock.move'].create({
+            'product_id': product_1.id,
+            'product_uom': product_1.uom_id.id,
+            'product_uom_qty': 5,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'date': delivery_date_2,
+        })
+        # product 2: 15 OUT in 15 days, 15 IN in 15 days, 15 OUT in 25 days -> deadline in 25 days
+        stock_moves |= self.env['stock.move'].create({
+            'product_id': product_2.id,
+            'product_uom': product_2.uom_id.id,
+            'product_uom_qty': 15,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'date': delivery_date_0,
+        })
+        stock_moves |= self.env['stock.move'].create({
+            'product_id': product_2.id,
+            'product_uom': product_2.uom_id.id,
+            'product_uom_qty': 15,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.ref('stock.stock_location_stock'),
+            'date': delivery_date_0,
+        })
+        stock_moves |= self.env['stock.move'].create({
+            'product_id': product_2.id,
+            'product_uom': product_2.uom_id.id,
+            'product_uom_qty': 15,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'date': delivery_date_1,
+        })
+
+        # There should be no deadline since no move was confirmed
+        self.assertEqual(orderpoint_0.deadline_date, False)
+        self.assertEqual(orderpoint_1.deadline_date, False)
+        self.assertEqual(orderpoint_2.deadline_date, False)
+        # After confirming the moves, deadline dates should have been applied to all orderpoints
+        stock_moves._action_confirm()
+        self.assertEqual(orderpoint_0.deadline_date, delivery_date_0.date())
+        self.assertEqual(orderpoint_1.deadline_date, delivery_date_2.date())
+        self.assertEqual(orderpoint_2.deadline_date, delivery_date_1.date())
+        # After changing the horizon days, the deadline dates should have been recomputed
+        self.env.company.horizon_days = 30
+        self.assertEqual(orderpoint_0.deadline_date, delivery_date_0.date())
+        self.assertEqual(orderpoint_1.deadline_date, False)
+        self.assertEqual(orderpoint_2.deadline_date, delivery_date_1.date())
 
 
 class TestProcRuleLoad(TransactionCase):

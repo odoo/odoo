@@ -74,6 +74,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     rule_ids = fields.Many2many('stock.rule', string='Rules used', compute='_compute_rules')
     lead_horizon_date = fields.Date(compute='_compute_lead_days')
+    lead_days = fields.Float(compute='_compute_lead_days')
     route_id = fields.Many2one(
         'stock.route', string='Route', domain="[('product_selectable', '=', True)]")
     qty_on_hand = fields.Float('On Hand', readonly=True, compute='_compute_qty', digits='Product Unit')
@@ -86,6 +87,11 @@ class StockWarehouseOrderpoint(models.Model):
 
     unwanted_replenish = fields.Boolean('Unwanted Replenish', compute="_compute_unwanted_replenish")
     show_supply_warning = fields.Boolean(compute="_compute_show_supply_warning")
+    deadline_date = fields.Date("Deadline", compute="_compute_deadline_date", store=True, readonly=True,
+                                help="Date before which you should order to avoid falling below the minimum. If you "
+                                     "have nothing to order while a deadline is found, it may be because a future "
+                                     "arrival is expected after the minimum quantity is reached (potential stockout). "
+                                     "Check the Forecast Report.")
 
     _product_location_check = models.Constraint(
         'unique (product_id, location_id, company_id)',
@@ -109,6 +115,60 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint in self:
             orderpoint.show_supply_warning = not orderpoint.rule_ids
 
+    @api.depends('location_id', 'product_min_qty', 'route_id', 'product_id.route_ids', 'product_id.stock_move_ids',
+                 'product_id.stock_move_ids.state', 'product_id.seller_ids', 'product_id.seller_ids.delay', 'company_id.horizon_days')
+    def _compute_deadline_date(self):
+        """ This function first checks if the qty_on_hand is less than the product_min_qty. If it is the case,
+        the deadline_date is set to the current day. Afterwards if there are still orderpoints to compute,
+        it retrieves all the outgoing and incoming moves until the lead_horizon_date and adds (or subtracts)
+        them to the qty_on_hand. The first instance when the qty_on_hand dips below the product_min_qty is
+        the deadline date. """
+        self.fetch(['qty_on_hand'])
+        critical_orderpoints = self.filtered(lambda o: o.qty_on_hand < o.product_min_qty)
+        critical_orderpoints.deadline_date = fields.Date.today()
+        orderpoints_to_compute = self - critical_orderpoints
+        if not orderpoints_to_compute:
+            return
+
+        horizon_date = fields.Date.today() + relativedelta.relativedelta(days=orderpoints_to_compute.get_horizon_days())
+        _, domain_move_in, domain_move_out = orderpoints_to_compute.product_id._get_domain_locations()
+        domain_move_in = Domain.AND([
+            [('product_id', 'in', orderpoints_to_compute.product_id.ids)],
+            [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))],
+            domain_move_in,
+            [('date', '<=', horizon_date)],
+        ])
+        domain_move_out = Domain.AND([
+            [('product_id', '=', orderpoints_to_compute.product_id.ids)],
+            [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))],
+            domain_move_out,
+            [('date', '<=', horizon_date)],
+        ])
+
+        Move = self.env['stock.move'].with_context(active_test=False)
+        incoming_moves_by_product_date = Move._read_group(domain_move_in, ['product_id', 'date:day'], ['product_qty:sum'])
+        outgoing_moves_by_product_date = Move._read_group(domain_move_out, ['product_id', 'date:day'], ['product_qty:sum'])
+
+        moves_by_product_dict = {}
+        for product, in_date, in_qty in incoming_moves_by_product_date:
+            if not moves_by_product_dict.get(product.id):
+                moves_by_product_dict[product.id] = defaultdict(float)
+            moves_by_product_dict[product.id][in_date.date()] += in_qty
+        for product, out_date, out_qty in outgoing_moves_by_product_date:
+            if not moves_by_product_dict.get(product.id):
+                moves_by_product_dict[product.id] = defaultdict(float)
+            moves_by_product_dict[product.id][out_date.date()] -= out_qty
+
+        for orderpoint in orderpoints_to_compute:
+            qty_on_hand_at_date = orderpoint.qty_on_hand
+            tentative_deadline = horizon_date
+            for move_date, move_qty in sorted(moves_by_product_dict.get(orderpoint.product_id.id, {}).items()):
+                qty_on_hand_at_date += move_qty
+                if qty_on_hand_at_date < orderpoint.product_min_qty:
+                    tentative_deadline = move_date - relativedelta.relativedelta(days=orderpoint.lead_days)
+                    break
+            orderpoint.deadline_date = max(tentative_deadline, fields.Date.today()) if tentative_deadline < horizon_date else False
+
     @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay', 'company_id.horizon_days')
     def _compute_lead_days(self):
         orderpoints_to_compute = self.filtered(lambda orderpoint: orderpoint.product_id and orderpoint.location_id)
@@ -116,7 +176,9 @@ class StockWarehouseOrderpoint(models.Model):
             values = orderpoint._get_lead_days_values()
             lead_days, dummy = orderpoint.rule_ids._get_lead_days(orderpoint.product_id, **values)
             orderpoint.lead_horizon_date = fields.Date.today() + relativedelta.relativedelta(days=lead_days['total_delay'])
+            orderpoint.lead_days = lead_days['total_delay'] - orderpoint.get_horizon_days()
         (self - orderpoints_to_compute).lead_horizon_date = False
+        (self - orderpoints_to_compute).lead_days = 0
 
     @api.depends('route_id', 'product_id', 'location_id', 'company_id', 'warehouse_id', 'product_id.route_ids')
     def _compute_rules(self):
@@ -410,6 +472,7 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoints = orderpoints - orderpoints_removed
         if self.env.context.get('force_orderpoint_recompute', False):
             orderpoints._compute_qty_to_order_computed()
+            orderpoints._compute_deadline_date()
         to_refill = defaultdict(float)
         all_product_ids = self._get_orderpoint_products()
         all_replenish_location_ids = self._get_orderpoint_locations()
