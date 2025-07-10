@@ -1,4 +1,5 @@
 /** @odoo-module */
+import { formatDate, today } from "@web/core/l10n/dates";
 
 export function clickNextOrder() {
     return [
@@ -119,12 +120,7 @@ export function shippingDateExists() {
 }
 
 export function shippingDateIsToday() {
-    // format the date in US, the language used by the tests
-    const expectedDelivery = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-    });
+    const expectedDelivery = formatDate(today());
 
     return [
         {

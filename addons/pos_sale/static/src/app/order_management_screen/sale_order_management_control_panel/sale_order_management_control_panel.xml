@@ -16,7 +16,7 @@
                     <span class="icon input-group-text">
                         <i class="oi oi-search" />
                     </span>
-                    <input type="text" class="form-control form-control-lg" t-ref="autofocus" t-model="pos.orderManagement.searchString" t-on-keydown="onInputKeydown" placeholder="E.g. customer: Steward, date: 2020-05-09" />
+                    <input type="text" class="form-control form-control-lg" t-ref="autofocus" t-model="pos.orderManagement.searchString" t-on-keydown="onInputKeydown" t-attf-placeholder="E.g. customer: Steward &amp; date: {{ sampleDate }}" />
                     <button type="button" class="clear  btn btn-secondary" t-on-click="() => this.clearSearch()">
                         <i class="oi oi-close" />
                     </button>

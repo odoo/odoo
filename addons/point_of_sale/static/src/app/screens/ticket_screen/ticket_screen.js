@@ -3,7 +3,7 @@
 import { Order } from "@point_of_sale/app/store/models";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { deserializeDateTime, formatDateTime, parseDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime, formatDateTime, parseDate, parseDateTime, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
 
@@ -677,6 +677,10 @@ export class TicketScreen extends Component {
         orderStates.set("SYNCED", { text: _t("Paid") });
         return orderStates;
     }
+    _hasTime(value) {
+        const dt = DateTime.fromFormat(value, this.env.services.localization.dateTimeFormat);
+        return dt.isValid && !dt.hasSame(dt.startOf('day'), 'minute');
+    }
     /**
      * @returns {Record<string, { repr: (order: models.Order) => string, displayName: string, modelField: string }>}
      */
@@ -697,17 +701,14 @@ export class TicketScreen extends Component {
                 displayName: _t("Date"),
                 modelField: "date_order",
                 formatSearch: (searchTerm) => {
-                    const includesTime = searchTerm.includes(':');
-                    let parsedDateTime;
                     try {
-                        parsedDateTime = parseDateTime(searchTerm);
+                        if (this._hasTime(searchTerm)) {
+                            return serializeDateTime(parseDateTime(searchTerm));
+                        } else {
+                            return serializeDate(parseDate(searchTerm));
+                        }
                     } catch {
                         return searchTerm;
-                    }
-                    if (includesTime) {
-                        return parsedDateTime.toUTC().toFormat("yyyy-MM-dd HH:mm:ss");
-                    } else {
-                        return parsedDateTime.toFormat("yyyy-MM-dd");
                     }
                 }
             },

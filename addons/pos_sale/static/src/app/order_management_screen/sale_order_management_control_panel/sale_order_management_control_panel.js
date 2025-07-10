@@ -3,6 +3,7 @@
 import { useAutofocus, useService, useBus } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { today, formatDate, serializeDate, parseDate } from "@web/core/l10n/dates";
 
 // NOTE: These are constants so that they are only instantiated once
 // and they can be used efficiently by the OrderManagementControlPanel.
@@ -63,6 +64,9 @@ export class SaleOrderManagementControlPanel extends Component {
     get searchFields() {
         return SEARCH_FIELDS;
     }
+    get sampleDate() {
+        return formatDate(today());
+    }
     /**
      * E.g. 1
      * ```
@@ -86,7 +90,7 @@ export class SaleOrderManagementControlPanel extends Component {
      *
      * E.g. 3
      * ```
-     *   searchString = 'customer: Steward, date: 2020-05-01'
+     *   searchString = 'customer: Steward & date: 2020-05-01'
      *   result = [
      *      ['partner_id.complete_name', 'ilike', '%Steward%'],
      *      ['date_order', 'ilike', '%2020-05-01%']
@@ -109,7 +113,7 @@ export class SaleOrderManagementControlPanel extends Component {
             searchConditions = [input.slice(1, -1)];
             isQuoted = true;
         } else {
-            searchConditions = input.split(/[,&]\s*/);
+            searchConditions = input.split(/\s*[&]\s*/);
         }
 
         if (searchConditions.length === 1) {
@@ -117,16 +121,33 @@ export class SaleOrderManagementControlPanel extends Component {
             if (cond.length === 1 || isQuoted) {
                 domain = domain.concat(Array(this.searchFields.length - 1).fill("|"));
                 domain = domain.concat(
-                    this.searchFields.map((field) => [field, "ilike", `%${cond[0]}%`])
+                    this.searchFields.map((field) => {
+                        if (field === "date_order") {
+                            try {
+                                return [field, "ilike", `%${serializeDate(parseDate(cond[0]))}%`];
+                            } catch {
+                                // If date can't be parsed, just use the original input
+                            }
+                        }
+                        return [field, "ilike", `%${cond[0]}%`];
+                    })
                 );
                 return domain;
             }
         }
 
         for (const cond of searchConditions) {
-            const [tag, value] = cond.split(/:\s*/);
+            let [tag, value] = cond.split(/:\s*/);
             if (!this.validSearchTags.has(tag)) {
                 continue;
+            }
+
+            if (tag === "date") {
+                try {
+                    value = serializeDate(parseDate(value));
+                } catch {
+                    // If date can't be parsed, just use the original input
+                }
             }
             domain.push([this.fieldMap[tag], "ilike", `%${value}%`]);
         }

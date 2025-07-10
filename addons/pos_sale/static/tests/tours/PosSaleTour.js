@@ -6,12 +6,14 @@ import * as ReceiptScreenPos from "@point_of_sale/../tests/tours/helpers/Receipt
 import * as ReceiptScreenSale from "@pos_sale/../tests/helpers/ReceiptScreenTourMethods";
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as ProductScreenSale from "@pos_sale/../tests/helpers/ProductScreenTourMethods";
+import * as OrderManagementScreen from "@pos_sale/../tests/helpers/OrderManagementScreenTourMethods";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenSale };
 const ReceiptScreen = { ...ReceiptScreenPos, ...ReceiptScreenSale };
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import { negateStep } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
+import { formatDate, today } from "@web/core/l10n/dates";
 
 registry.category("web_tour.tours").add("PosSettleOrder", {
     test: true,
@@ -365,6 +367,21 @@ registry.category("web_tour.tours").add("PoSDownPaymentFixedTax", {
                 quantity: "1.0",
                 price: "22.00",
             }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosSaleOrderSearchByDate", {
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            OrderManagementScreen.search("Test Partner Z4"),
+            OrderManagementScreen.countNumberOfRows(1),
+            OrderManagementScreen.search(formatDate(today().minus({ days: 2 }))),
+            OrderManagementScreen.countNumberOfRows(3),
+            OrderManagementScreen.search(`customer: Test Partner   &  date: ${formatDate(today().minus({ days: 3 }))}`),
+            OrderManagementScreen.countNumberOfRows(2),
+            Chrome.endTour(),
         ].flat(),
 });
 

@@ -10,12 +10,14 @@ import * as ErrorPopup from "@point_of_sale/../tests/tours/helpers/ErrorPopupTou
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
+import { formatDate, today } from "@web/core/l10n/dates";
 
 registry.category("web_tour.tours").add("TicketScreenTour", {
     test: true,
     url: "/pos/ui",
     steps: () =>
         [
+            Chrome.freezeDateTime(today().toMillis()),
             ProductScreen.confirmOpeningPopup(),
             ProductScreen.clickHomeCategory(),
             Chrome.clickMenuButton(),
@@ -172,10 +174,29 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
             ReceiptScreen.clickNextOrder(),
+            // Check if shipping date is in l10n format
+            ProductScreen.addOrderline("Desk Pad", "1", "3"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Full"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickShipLaterButton(),
+            PaymentScreen.shippingLaterHighlighted(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.shippingDateIsToday(),
+            ReceiptScreen.clickNextOrder(),
             // Check refunded quantity.
             ProductScreen.clickRefund(),
             TicketScreen.selectOrder("-0005"),
             TicketScreen.refundedNoteContains("2.00 Refunded"),
+            // Check date search works with l10n format
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.search("Date", formatDate(today())),
+            TicketScreen.nthRowContains(2, formatDate(today())),
+            TicketScreen.nthRowContains(3, formatDate(today())),
+            TicketScreen.nthRowContains(4, formatDate(today())),
+            Chrome.endTour(),
         ].flat(),
 });
 

@@ -45,7 +45,7 @@
                             <div>
                                 <span>Valid until: </span> 
                                 <t t-if="coupon_info['expiration_date']">
-                                    <t t-esc="coupon_info['expiration_date']"/>
+                                    <t t-esc="formatLocalizedDate(coupon_info['expiration_date'])"/>
                                 </t>
                                 <t t-else="">
                                     no expiration

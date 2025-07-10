@@ -1,4 +1,5 @@
 /** @odoo-module */
+import { negate } from "@point_of_sale/../tests/tours/helpers/utils";
 
 export function confirmPopup() {
     return [
@@ -61,6 +62,21 @@ export function isCashMoveButtonShown() {
             run: () => {},
         },
     ];
+}
+export function freezeDateTime(ms) {
+    return [
+        {
+            trigger: "body",
+            run: () => {
+                luxon.DateTime.now = () => luxon.DateTime.fromMillis(ms);
+            },
+        },
+    ];
+}
+export function isSynced() {
+    return {
+        trigger: negate(".fa-spin"),
+    }
 }
 export function endTour() {
     return {
