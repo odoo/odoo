@@ -353,6 +353,14 @@ export class SelfOrder extends Reactive {
         // When no payment methods redirect to confirmation page
         // the client will be able to pay at counter
         if (paymentMethods.length === 0 || order.amount_total === 0) {
+            if (this.config.self_ordering_mode === "mobile" && order.amount_total === 0) {
+                await rpc(`/pos-self-order/process-saved-order`, {
+                    order_id: order.id,
+                    access_token: this.access_token,
+                    order_access_token: order.access_token,
+                });
+            }
+
             let screenMode = "pay";
 
             if (Object.keys(order.changes).length > 0) {
