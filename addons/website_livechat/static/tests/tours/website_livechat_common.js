@@ -12,6 +12,10 @@ export const start = [
         run: "click",
     },
     {
+        trigger:
+            ".o-livechat-root:shadow .o-mail-ChatWindow:contains(El Deboulonnator) .o-mail-Thread[data-transient]",
+    },
+    {
         content: "Say hello!",
         trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
         run: "edit Hello Sir!",
@@ -42,6 +46,10 @@ export const start = [
         async run() {
             await waitForStable(document.body, 1000);
         },
+    },
+    {
+        trigger:
+            ".o-livechat-root:shadow .o-mail-ChatWindow:contains(El Deboulonnator) .o-mail-Thread:not([data-transient])",
     },
 ];
 
