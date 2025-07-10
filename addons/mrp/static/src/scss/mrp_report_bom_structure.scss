@@ -1,17 +1,34 @@
-.o_mrp_bom_report_page {
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    page-break-inside: avoid;
-  }
+.o_mrp_bom_report {
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        page-break-inside: avoid;
+    }
 
-  tfoot {
-    display: table-row-group !important;
-  }
+    tfoot {
+        display: table-row-group !important;
+    }
 
-  tr {
-    page-break-inside: avoid;
-    page-break-after: avoid;
-    page-break-before: avoid;
-  }
+    tr {
+        page-break-inside: avoid;
+        page-break-after: avoid;
+        page-break-before: avoid;
+    }
+
+    td {
+        font-size: 16px;
+    }
+
+    th {
+        font-size: 18px;
+    }
+
+    .o_mrp_bom_report_product_cell,
+    .o_mrp_bom_report_route_cell {
+        max-width: 280px;
+    }
+
+    .o_mrp_bom_report_byproduct_cell {
+        max-width: 450px;
+    }
 }
