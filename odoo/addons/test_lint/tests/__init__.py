@@ -9,6 +9,7 @@ from . import test_jstranslate
 from . import test_l10n
 from . import test_manifests
 from . import test_markers
+from . import test_mutable_class_attr
 from . import test_deprecations
 from . import test_naming
 from . import test_onchange_domains
