@@ -51,7 +51,7 @@ class TestHrSkillsSlides(TransactionCase):
             'partner_id': self.user.partner_id.id,
             'slide_id': self.slide.id,
         }])
-        self.assertEqual(len(self.employee.resume_line_ids), 2)  # Course line + current position
+        self.assertEqual(len(self.employee.resume_line_ids), 1)
         resume_line = self.employee.resume_line_ids.filtered(lambda rl: rl.channel_id)
         self.assertEqual(resume_line.channel_id.id, self.channel.id)
         self.assertEqual(resume_line.course_url, self.channel.website_absolute_url)
@@ -71,4 +71,4 @@ class TestHrSkillsSlides(TransactionCase):
         self.assertEqual(resume_line.channel_id.id, self.channel.id)
         resume_line.unlink()
         channel_partner._recompute_completion()
-        self.assertEqual(len(self.employee.resume_line_ids), 1)  # Only current position
+        self.assertEqual(len(self.employee.resume_line_ids), 0)
