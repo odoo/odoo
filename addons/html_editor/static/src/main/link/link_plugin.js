@@ -18,6 +18,7 @@ import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
+import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -605,7 +606,37 @@ export class LinkPlugin extends Plugin {
 
             const link = this.document.createElement("a");
             if (!selection.isCollapsed) {
-                const content = this.dependencies.selection.extractContent(selection);
+                const getFontSizeWrapper = (node) =>
+                    closestElement(
+                        node,
+                        (el) =>
+                            el.tagName === "SPAN" &&
+                            (FONT_SIZE_CLASSES.some((cls) => el.classList.contains(cls)) ||
+                                el.style?.fontSize)
+                    );
+
+                let content;
+                let fontSizeWrapper = getFontSizeWrapper(selection.commonAncestorContainer);
+                // Split selection to include font-size <span>
+                // inside <a> to preserve styling.
+                if (fontSizeWrapper) {
+                    // Merge adjacent text nodes.
+                    fontSizeWrapper.normalize();
+                    let { anchorNode, focusNode } = this.dependencies.split.splitSelection();
+                    // If selection is backward, swap anchor and focus.
+                    if (!selection.direction) {
+                        [anchorNode, focusNode] = [focusNode, anchorNode];
+                    }
+
+                    // Split from anchorNode up to the font-size wrapper.
+                    this.dependencies.split.splitAroundUntil(anchorNode, fontSizeWrapper);
+
+                    // Split from focusNode to extract selected content.
+                    fontSizeWrapper = getFontSizeWrapper(focusNode);
+                    content = this.dependencies.split.splitAroundUntil(focusNode, fontSizeWrapper);
+                } else {
+                    content = this.dependencies.selection.extractContent(selection);
+                }
                 link.append(content);
                 link.normalize();
             }
