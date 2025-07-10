@@ -89,3 +89,6 @@ class AccountPaymentWithholdingLine(models.Model):
             self.payment_id.journal_id.outbound_payment_method_line_ids.payment_account_id |
             self.payment_id.outstanding_account_id
         )
+
+    def _get_comodel_partner(self):
+        return self.payment_id.partner_id
