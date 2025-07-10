@@ -11,7 +11,7 @@
         <xpath expr="//div[hasclass('o_search_panel')]/section" position="before">
             <t t-if="wizard.showSuggest">
                 <t t-call="PurchaseSuggest.SearchPanel.Header"/>
-                <t t-if="suggestToggle.isOn">
+                <t t-if="wizard.suggestToggle and wizard.suggestToggle.isOn">
                     <t t-call="PurchaseSuggest.SearchPanel.DaysInput"/>
                     <t t-call="PurchaseSuggest.SearchPanel.BasedOn"/>
                     <t t-call="PurchaseSuggest.SearchPanel.Footer"/>
@@ -26,7 +26,7 @@
             <i class="fa fa-lg fa-lightbulb-o text-primary me-2"/>
             <b class="me-2">Suggest</b>
             <button name="toggle_suggest_catalog" class="fa fa-lg bg-white border-0 text-primary"
-                t-attf-class="fa-toggle-{{suggestToggle.isOn?'on':'off'}}"
+                t-attf-class="fa-toggle-{{wizard.suggestToggle.isOn?'on':'off'}}"
                 t-on-click.stop="onSuggestToggle"/>
         </header>
     </t>
