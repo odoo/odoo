@@ -977,15 +977,6 @@ class ResUsers(models.Model):
         }
 
     @check_identity
-    def preference_change_password(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'res_model': 'change.password.own',
-            'view_mode': 'form',
-        }
-
-    @check_identity
     def api_key_wizard(self):
         return {
             'type': 'ir.actions.act_window',

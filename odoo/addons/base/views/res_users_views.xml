@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="change_password_own_form" model="ir.ui.view">
-            <field name="name">Change Own Password</field>
-            <field name="model">change.password.own</field>
-            <field name="arch" type="xml">
-                <form string="Change Password">
-                    <group>
-                        <field name="new_password" password="True" required="1"/>
-                        <field name="confirm_password" password="True" required="1"/>
-                    </group>
-                    <footer>
-                        <button string="Change Password" name="change_password" type="object" class="btn-primary" data-hotkey="q"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
-                    </footer>
-                </form>
-            </field>
-        </record>
-
         <!-- change password wizard -->
         <record id="change_password_wizard_view" model="ir.ui.view">
             <field name="name">Change Password</field>
@@ -401,12 +384,16 @@
                         <page string="Account Security" name="page_account_security">
                             <div name="auth" class="d-flex">
                                 <div class="w-25 d-flex flex-column">
-                                    <label for="preference_change_password" string="Change Password" class="o_form_label"/>
+                                    <span class="o_form_label">
+                                        Change Password
+                                    </span>
                                     <span class="text-muted">
                                         Update if compromised.
                                     </span>
                                 </div>
-                                <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary h-100"/>
+                                <a name="change_password" role="button" class="btn btn-secondary h-100" href="/web/change_password">
+                                    Change password
+                                </a>
                             </div>
                             <div name="api_keys" class="mt-3">
                                 <div class="d-flex">

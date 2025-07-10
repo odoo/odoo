@@ -164,6 +164,25 @@ class Home(http.Controller):
         valid_values = {k: v for k, v in kwargs.items() if k in LOGIN_SUCCESSFUL_PARAMS}
         return request.render('web.login_successful', valid_values)
 
+    @http.route('/web/change_password', type='http', auth='user', website=True, methods=['GET', 'POST'], readonly=False)
+    def web_change_password(self, **kwargs):
+        context = {}
+        if request.httprequest.method == 'POST':
+            if kwargs['new_password'] != kwargs['confirm_new_password']:
+                 context['error'] = _('The new password and its confirmation must be identical.')
+            else:
+                try:
+                    request.env['res.users'].change_password(kwargs['current_password'], kwargs['new_password'])
+                    context['message'] = _('Your password has been successfully changed.')
+                    # update session token so the user does not get logged out (cache cleared by passwd change)
+                    new_token = request.env.user._compute_session_token(request.session.sid)
+                    request.session.session_token = new_token
+                except odoo.exceptions.AccessDenied:
+                    context['error'] = _('The current password you provided is incorrect. Your password was not changed.')
+                except odoo.exceptions.UserError as e:
+                    context['error'] = str(e)
+        return request.render('web.change_password', context)
+
     @http.route('/web/become', type='http', auth='user', sitemap=False, readonly=True)
     def switch_to_admin(self):
         uid = request.env.user.id

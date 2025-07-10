@@ -215,6 +215,46 @@
         </div>
     </template>
 
+    <template id="web.change_password" name="Change password">
+        <t t-call="web.login_layout">
+            <div class="oe_structure"/>
+            <div class="oe_login_form">
+                <form t-if="not message" role="form" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <label for="current_password" class="form-label">Current Password</label>
+                    <div class="input-group mb-4">
+                        <input type="password" placeholder="Enter your current password" name="current_password" id="current_password" class="form-control" required="required" autofocus="autofocus" maxlength="4096"/>
+                        <button type="button" class="btn btn-sm btn-secondary o_show_password">
+                            <i class="fa fa-eye"/>
+                        </button>
+                    </div>
+                    <label for="new_password" class="form-label">New Password</label>
+                    <div class="input-group mb-3">
+                        <input type="password" placeholder="Enter your new password" name="new_password" id="new_password" class="form-control" required="required" maxlength="4096"/>
+                        <button type="button" class="btn btn-sm btn-secondary o_show_password">
+                            <i class="fa fa-eye"/>
+                        </button>
+                    </div>
+                    <label for="confirm_new_password" class="form-label">Confirm New Password</label>
+                    <div class="input-group mb-3">
+                        <input type="password" placeholder="Confirm your new password" name="confirm_new_password" id="confirm_new_password" class="form-control" required="required" maxlength="4096"/>
+                        <button type="button" class="btn btn-sm btn-secondary o_show_password">
+                            <i class="fa fa-eye"/>
+                        </button>
+                    </div>
+                    <p t-if="error" t-out="error" class="alert alert-danger" role="alert"/>
+                    <div class="clearfix oe_login_buttons d-grid mt-3">
+                        <button type="submit" class="btn btn-primary">Update password</button>
+                    </div>
+                </form>
+                <p t-if="message" t-out="message" class="alert alert-success" role="status"/>
+                <div class="mt-2">
+                    <a href="/" class="small">Back to home page</a>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <template id="web.test_helpers">
         <t t-call-assets="web.tests_assets" t-js="False"/>
         <style>

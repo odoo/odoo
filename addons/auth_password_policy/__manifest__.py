@@ -7,6 +7,7 @@
         'data/defaults.xml',
         'views/res_users.xml',
         'views/res_config_settings_views.xml',
+        'views/webclient_templates.xml',
     ],
     'assets': {
         'web.assets_backend': [

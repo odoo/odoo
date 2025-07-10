@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="change_password" inherit_id="web.change_password" name="Che">
+        <xpath expr="//label[@for='new_password']" position="after">
+            <owl-component name="password_meter" props='{"selector": "input[name=new_password]"}'/>
+        </xpath>
+        <xpath expr="//input[@name='new_password']" position="attributes">
+            <attribute name="t-att-minlength">password_minimum_length</attribute>
+        </xpath>
+    </template>
+</odoo>
