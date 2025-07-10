@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
-import { getCSSVariableValue } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { showAddFontDialog } from "./add_font_dialog";
 
 // TODO Website-specific
@@ -70,7 +70,7 @@ class WebsiteFontPlugin extends Plugin {
         }
 
         // Adapt font variable indexes to the removal
-        const style = window.getComputedStyle(this.document.documentElement);
+        const style = getHtmlStyle(this.document);
         this.getResource("fontCssVariables").forEach((variable) => {
             const value = getCSSVariableValue(variable, style);
             if (value.substring(1, value.length - 1) === fontName) {

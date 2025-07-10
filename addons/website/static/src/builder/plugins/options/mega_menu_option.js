@@ -1,5 +1,5 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { getCSSVariableValue } from "@html_builder/utils/utils_css";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 
 export class MegaMenuOption extends BaseOptionComponent {
     static template = "website.MegaMenuOption";
@@ -15,7 +15,10 @@ export class MegaMenuOption extends BaseOptionComponent {
     }
 
     hasHeaderTemplates(headerTemplates) {
-        const currentHeaderTemplate = getCSSVariableValue("header-template");
+        const currentHeaderTemplate = getCSSVariableValue(
+            "header-template",
+            getHtmlStyle(this.env.editor.document)
+        );
         return headerTemplates.includes(currentHeaderTemplate.slice(1, -1));
     }
 }

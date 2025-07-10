@@ -1,5 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { getBgImageURLFromEl, normalizeColor } from "@html_builder/utils/utils_css";
+import { getHtmlStyle } from "@html_editor/utils/formatting";
 
 export class BackgroundImageOption extends BaseOptionComponent {
     static template = "website.BackgroundImageOption";
@@ -48,6 +49,6 @@ export function getBackgroundImageColor(editingEl, colorName) {
         window.location.origin
     ).searchParams.get(colorName);
     if (backgroundImageColor) {
-        return normalizeColor(backgroundImageColor);
+        return normalizeColor(backgroundImageColor, getHtmlStyle(editingEl.ownerDocument));
     }
 }
