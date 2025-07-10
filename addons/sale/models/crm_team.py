@@ -56,41 +56,6 @@ class CrmTeam(models.Model):
     def _in_sale_scope(self):
         return self.env.context.get('in_sales_app')
 
-    def _graph_get_model(self):
-        if self._in_sale_scope():
-            return 'sale.report'
-        return super()._graph_get_model()
-
-    def _graph_date_column(self):
-        if self._in_sale_scope():
-            return SQL('date')
-        return super()._graph_date_column()
-
-    def _graph_get_table(self, GraphModel):
-        if self._in_sale_scope():
-            # For a team not shared between company, we make sure the amounts are expressed
-            # in the currency of the team company and not converted to the current company currency,
-            # as the amounts of the sale report are converted in the currency
-            # of the current company (for multi-company reporting, see #83550)
-            GraphModel = GraphModel.with_company(self.company_id)
-            return SQL(f"({GraphModel._table_query}) AS {GraphModel._table}")
-        return super()._graph_get_table(GraphModel)
-
-    def _graph_y_query(self):
-        if self._in_sale_scope():
-            return SQL('SUM(price_subtotal)')
-        return super()._graph_y_query()
-
-    def _extra_sql_conditions(self):
-        if self._in_sale_scope():
-            return SQL("state = 'sale'")
-        return super()._extra_sql_conditions()
-
-    def _graph_title_and_key(self):
-        if self._in_sale_scope():
-            return ['', _('Sales: Untaxed Total')] # no more title
-        return super()._graph_title_and_key()
-
     def _compute_dashboard_button_name(self):
         super(CrmTeam,self)._compute_dashboard_button_name()
         if self._in_sale_scope():

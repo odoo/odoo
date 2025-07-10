@@ -1,10 +1,7 @@
 import random
 
-from dateutil.relativedelta import relativedelta
-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import SQL
 
 
 class CrmTeam(models.Model):
@@ -246,80 +243,3 @@ class CrmTeam(models.Model):
     def _add_members_to_favorites(self):
         for team in self:
             team.favorite_user_ids = [(4, member.id) for member in team.member_ids]
-
-    # ------------------------------------------------------------
-    # GRAPH
-    # ------------------------------------------------------------
-
-    def _graph_get_model(self) -> str:
-        """ skeleton function defined here because it'll be called by crm and/or sale
-        """
-        raise UserError(_('Undefined graph model for Sales Team: %s', self.name))
-
-    def _graph_get_dates(self, today):
-        """ return a coherent start and end date for the dashboard graph covering a month period grouped by week.
-        """
-        start_date = today - relativedelta(months=1)
-        # we take the start of the following week if we group by week
-        # (to avoid having twice the same week from different month)
-        start_date += relativedelta(days=8 - start_date.isocalendar()[2])
-        return [start_date, today]
-
-    def _graph_date_column(self) -> SQL:
-        return SQL('create_date')
-
-    def _graph_get_table(self, GraphModel) -> SQL:
-        return SQL(GraphModel._table)
-
-    def _graph_x_query(self) -> SQL:
-        return SQL('EXTRACT(WEEK FROM %s)', self._graph_date_column())
-
-    def _graph_y_query(self) -> SQL:
-        raise UserError(_('Undefined graph model for Sales Team: %s', self.name))
-
-    def _extra_sql_conditions(self) -> SQL:
-        return SQL()
-
-    def _graph_title_and_key(self):
-        """ Returns an array containing the appropriate graph title and key respectively.
-
-            The key is for lineCharts, to have the on-hover label.
-        """
-        return ['', '']
-
-    def _graph_data(self, start_date, end_date):
-        """ return format should be an iterable of dicts that contain {'x_value': ..., 'y_value': ...}
-            x_values should be weeks.
-            y_values are floats.
-        """
-        # apply rules
-        extra_conditions = self._extra_sql_conditions() or SQL("TRUE")
-        dashboard_graph_model = self._graph_get_model()
-        GraphModel = self.env[dashboard_graph_model]
-        where_query = GraphModel._where_calc([])
-        GraphModel._apply_ir_rules(where_query, 'read')
-        if where_clause := where_query.where_clause:
-            extra_conditions = SQL("%s AND (%s)", extra_conditions, where_clause)
-
-        sql = SQL(
-            """
-            SELECT %(x_query)s as x_value, %(y_query)s as y_value
-            FROM %(table)s
-            WHERE team_id = %(team_id)s
-                AND DATE(%(date_column)s) >= %(start_date)s
-                AND DATE(%(date_column)s) <= %(end_date)s
-                AND %(extra_conditions)s
-            GROUP BY x_value
-            """,
-            x_query=self._graph_x_query(),
-            y_query=self._graph_y_query(),
-            table=self._graph_get_table(GraphModel),
-            team_id=self.id,
-            date_column=self._graph_date_column(),
-            start_date=start_date,
-            end_date=end_date,
-            extra_conditions=extra_conditions,
-        )
-
-        self.env.cr.execute(sql)
-        return self.env.cr.dictfetchall()
