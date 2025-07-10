@@ -2870,7 +2870,7 @@ export class Order extends PosModel {
         this.shippingDate = shippingDate;
     }
     getShippingDate() {
-        return this.shippingDate;
+        return this.shippingDate ? formatDate(deserializeDate(this.shippingDate)) : false;
     }
     getHasRefundLines() {
         for (const line of this.get_orderlines()) {
