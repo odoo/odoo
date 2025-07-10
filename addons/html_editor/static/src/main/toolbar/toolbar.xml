@@ -10,6 +10,7 @@
                             <t t-if="button.Component">
                                 <t t-component="button.Component"
                                     t-props="button.props"
+                                    isDisabled="'isDisabled' in button.props ? button.props.isDisabled : !!state.buttonsDisabledState[button.id]"
                                     title="state.buttonsTitleState[button.id]"
                                     getSelection.bind="props.toolbar.getSelection"/>
                             </t>

@@ -1,7 +1,7 @@
 import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
+import { toolbarButtonProps, toolbarButtonPropsDefaults } from "@html_editor/main/toolbar/toolbar";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { cookie } from "@web/core/browser/cookie";
@@ -17,6 +17,7 @@ export class FontSizeSelector extends Component {
         onSelected: Function,
         ...toolbarButtonProps,
     };
+    static defaultProps = { ...toolbarButtonPropsDefaults };
     static components = { Dropdown, DropdownItem };
 
     setup() {
