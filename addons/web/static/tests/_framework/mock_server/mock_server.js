@@ -10,7 +10,7 @@ import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
 import { rpc, RPCError } from "@web/core/network/rpc";
 import { ensureArray, isIterable } from "@web/core/utils/arrays";
 import { isObject } from "@web/core/utils/objects";
-import { PersistentCache } from "@web/core/utils/persistent_cache";
+import { RPCCache } from "@web/core/network/rpc_cache";
 import { hashCode } from "@web/core/utils/strings";
 import { serverState } from "../mock_server_state.hoot";
 import { fetchModelDefinitions, globalCachedFetch, registerModelToFetch } from "../module_set.hoot";
@@ -511,7 +511,7 @@ export class MockServer {
         registerDebugInfo("mock server", this);
 
         // Add RPC cache
-        rpc.setCache(new PersistentCache("mockRpc", 1, "23aeb0ff5d46cfa8aa44163720d871ac"));
+        rpc.setCache(new RPCCache("mockRpc", 1, "23aeb0ff5d46cfa8aa44163720d871ac"));
         after(() => rpc.setCache(null));
 
         // Intercept all server calls

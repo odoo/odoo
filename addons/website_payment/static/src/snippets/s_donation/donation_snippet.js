@@ -36,7 +36,7 @@ export class DonationSnippet extends Interaction {
     }
 
     async willStart() {
-        this.currency = await rpc("/website/get_current_currency", { cached: true });
+        this.currency = await rpc("/website/get_current_currency", { cache: true });
     }
 
     start() {

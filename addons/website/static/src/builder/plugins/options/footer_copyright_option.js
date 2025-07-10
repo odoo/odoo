@@ -11,7 +11,7 @@ export class FooterCopyrightOption extends BaseOptionComponent {
         this.languages = null;
 
         onWillStart(async () => {
-            this.languages = await rpc("/website/get_languages", {}, { cached: true });
+            this.languages = await rpc("/website/get_languages", {}, { cache: true });
         });
     }
 }

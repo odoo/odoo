@@ -5,7 +5,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { user } from "@web/core/user";
 import { Component, whenReady } from "@odoo/owl";
 import { rpc } from "./core/network/rpc";
-import { PersistentCache } from "./core/utils/persistent_cache";
+import { RPCCache } from "./core/network/rpc_cache";
 
 /**
  * Function to start a webclient.
@@ -25,9 +25,7 @@ export async function startWebClient(Webclient) {
     odoo.isReady = false;
 
     if (window.isSecureContext && session.browser_cache_secret) {
-        rpc.setCache(
-            new PersistentCache("rpc", session.registry_hash, session.browser_cache_secret)
-        );
+        rpc.setCache(new RPCCache("rpc", session.registry_hash, session.browser_cache_secret));
     }
 
     await whenReady();

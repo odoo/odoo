@@ -849,7 +849,7 @@ export function buildSampleORM(resModel, fields, user) {
     const sampleORM = new ORM(user);
     sampleORM.rpc = fakeRPC;
     sampleORM.isSample = true;
-    sampleORM.cached = () => sampleORM;
+    sampleORM.cache = () => sampleORM;
     sampleORM.setGroups = (groups) => sampleServer.setExistingGroups(groups);
     return sampleORM;
 }

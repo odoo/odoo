@@ -4,12 +4,12 @@ import { omit } from "../utils/objects";
 
 export const rpcBus = new EventBus();
 
-const RPC_SETTINGS = new Set(["cached", "silent", "xhr", "headers"]);
+const RPC_SETTINGS = new Set(["cache", "silent", "xhr", "headers"]);
 function validateRPCSettings(settings) {
     if (!Object.keys(settings).every((key) => RPC_SETTINGS.has(key))) {
         throw new Error(`The settings for rpc should be ${[...RPC_SETTINGS].join(" ")}`);
     }
-    if ("cached" in settings && "xhr" in settings) {
+    if ("cache" in settings && "xhr" in settings) {
         throw new Error("Can't use 'cache' and 'xhr' at the same time");
     }
 }
@@ -78,12 +78,12 @@ export function rpc(url, params = {}, settings = {}) {
 // such that it can be overriden in tests
 rpc._rpc = function (url, params, settings) {
     validateRPCSettings(settings);
-    if (settings.cached && rpcCache) {
+    if (settings.cache && rpcCache) {
         return rpcCache.read(
             params?.method || url, // table
             JSON.stringify({ url, params }), // key
-            () => rpc._rpc(url, params, omit(settings, "cached")),
-            typeof settings.cached === "boolean" ? {} : settings.cached // cached can be boolean or an object with options (or an empty object of course)
+            () => rpc._rpc(url, params, omit(settings, "cache")),
+            typeof settings.cache === "boolean" ? {} : settings.cache // cache can be boolean or an object with options (or an empty object of course)
         );
     }
     const XHR = browser.XMLHttpRequest;

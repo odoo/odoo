@@ -428,7 +428,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
                 },
             },
         },
-        settings: { silent: false, cached: false },
+        settings: { silent: false, cache: false },
         error: {
             name: "RPC_ERROR",
             type: "server",

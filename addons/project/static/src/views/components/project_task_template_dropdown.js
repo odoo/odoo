@@ -43,8 +43,10 @@ export class ProjectTaskTemplateDropdown extends Component {
     async onWillStart() {
         if (this.props.projectId && !this.props.context.default_is_template) {
             this.state.taskTemplates = await this.orm
-                .cached({
-                    onFinish: (hasChanged, result) => {
+                .cache({
+                    type: "disk",
+                    update: "always",
+                    callback: (result, hasChanged) => {
                         if (hasChanged) {
                             this.state.taskTemplates = result;
                         }

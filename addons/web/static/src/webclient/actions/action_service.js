@@ -355,7 +355,7 @@ export function makeActionManager(env, router = _router) {
                     action_id: actionRequest,
                     context: ctx,
                 },
-                { cached: true }
+                { cache: { type: "disk" } }
             );
             if (action.help) {
                 action.help = markup(action.help);

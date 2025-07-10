@@ -49,8 +49,10 @@ export class ProjectTemplateDropdown extends Component {
 
     async onWillStart() {
         this.state.projectTemplates = await this.orm
-            .cached({
-                onFinish: (hasChanged, result) => {
+            .cache({
+                type: "disk",
+                update: "always",
+                callback: (result, hasChanged) => {
                     if (hasChanged) {
                         this.state.projectTemplates = result;
                     }
