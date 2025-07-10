@@ -116,9 +116,8 @@ class WebJson2Controller(http.Controller):
         model: str,
         method: str,
         ids: Sequence[int] = (),
-        args: Sequence[Any] = (),
-        kwargs: Mapping[str, Any] = frozendict(),
         context: Mapping[str, Any] = frozendict(),
+        **kwargs,
     ):
         if request.httprequest.method != 'POST':
             raise MethodNotAllowed()
@@ -140,11 +139,11 @@ class WebJson2Controller(http.Controller):
         records = Model.browse(ids)
         signature = inspect.signature(func)
         try:
-            signature.bind(records, *args, **kwargs)
+            signature.bind(records, **kwargs)
         except TypeError as exc:
             raise UnprocessableEntity(exc.args[0])
 
-        result = func(records, *args, **kwargs)
+        result = func(records, **kwargs)
         if isinstance(result, BaseModel):
             result = result.ids
 
