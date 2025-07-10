@@ -538,7 +538,7 @@ patch(Order.prototype, {
             for (let idx = 0; idx < Math.min(pointsAdded.length, oldChanges.length); idx++) {
                 Object.assign(oldChanges[idx], pointsAdded[idx]);
             }
-            if (pointsAdded.length < oldChanges.length) {
+            if (pointsAdded.length < oldChanges.length || !this._programIsApplicable(program)) {
                 const removedIds = oldChanges.map((pe) => pe.coupon_id);
                 this.couponPointChanges = Object.fromEntries(
                     Object.entries(this.couponPointChanges).filter(([k, pe]) => {
