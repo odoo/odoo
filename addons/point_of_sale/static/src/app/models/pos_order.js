@@ -329,6 +329,7 @@ export class PosOrder extends Base {
     }
 
     hasSkippedChanges() {
+<<<<<<< d67e5a55e29bfa5f72fb016933dd6082cb4642f9
         return Boolean(
             this.lines.find(
                 (orderline) =>
@@ -343,6 +344,44 @@ export class PosOrder extends Base {
         return this.lines.length === 0;
     }
 
+||||||| 03ef117d35545dad21b9adf223406c301feabfab
+        return this.lines.find((orderline) => orderline.skip_change) ? true : false;
+    }
+
+    is_empty() {
+        return this.lines.length === 0;
+    }
+
+    generate_unique_id() {
+        // Generates a public identification number for the order.
+        // The generated number must be unique and sequential. They are made 12 digit long
+        // to fit into EAN-13 barcodes, should it be needed
+
+        function zero_pad(num, size) {
+            var s = "" + num;
+            while (s.length < size) {
+                s = "0" + s;
+            }
+            return s;
+        }
+        return (
+            zero_pad(this.session.id, 5) +
+            "-" +
+            zero_pad(this.session.login_number, 3) +
+            "-" +
+            zero_pad(this.sequence_number, 4)
+        );
+    }
+
+=======
+        return this.lines.find((orderline) => orderline.skip_change) ? true : false;
+    }
+
+    is_empty() {
+        return this.lines.length === 0;
+    }
+
+>>>>>>> 52e53a98342a5bf905763999d85c255e8037ea0b
     updateSavedQuantity() {
         this.lines.forEach((line) => line.updateSavedQuantity());
     }
