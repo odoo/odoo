@@ -11,7 +11,7 @@
                 <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                     <div class="o_avatar_many2x_autocomplete d-flex align-items-center">
                         <AvatarEmployee resModel="relation" resId="autoCompleteItemScope.record.id" canOpenPopover="false"/>
-                        <t t-out="autoCompleteItemScope.label"/>
+                        <span t-out="autoCompleteItemScope.label"/>
                     </div>
                 </t>
             </Many2One>
