@@ -17,7 +17,7 @@ registerWebsitePreviewTour('course_publisher', {
     run: "click",
 }, {
     content: 'eLearning: click on New Course',
-    trigger: '#o_new_content_menu_choices a:contains("Course")',
+    trigger: '.o_new_content_menu_choices a:contains("Course")',
     run: "click",
 }, {
     content: 'eLearning: set name',

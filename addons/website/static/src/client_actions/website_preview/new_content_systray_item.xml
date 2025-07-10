@@ -2,9 +2,41 @@
 <templates xml:space="preserve">
 
 <t t-name="website.NewContentSystrayItem">
-    <div class="o_menu_systray_item o_new_content_container d-none d-md-flex" t-on-click="onClick">
-        <button accesskey="c" class="o-website-btn-custo-secondary btn d-flex align-items-center rounded-0 border-0 px-3">New</button>
-        <NewContentModal t-if="websiteContext.showNewContentModal" onNewPage="props.onNewPage"/>
+    <div class="o_menu_systray_item o_new_content_container d-none d-md-flex">
+        <Dropdown state="dropdown" menuClass="'o_new_content_menu_choices'">
+            <button accesskey="c" class="o-website-btn-custo-secondary btn d-flex align-items-center rounded-0 border-0 px-3">New</button>
+            <t t-set-slot="content">
+                <DropdownItem
+                    attrs="{title: 'New Page', 'aria-label': 'New Page'}"
+                    onSelected="() => props.onNewPage(false)"
+                    tag="'button'"
+                    class="'o_new_content_element'">
+                    <span><i class="fa fa-file-text-o"></i></span>
+                    <div>
+                        <span>Page</span>
+                        <small>Create a new page</small>
+                    </div>
+                </DropdownItem>
+                <t t-foreach="sortedNewContentElements" t-as="element" t-key="element.moduleXmlId" t-if="'isDisplayed' in element ? element.isDisplayed : isSystem ">
+                    <DropdownItem
+                        attrs="{
+                            title: element.title,
+                            'aria-label': element.title,
+                            'data-module-xml-id': element.moduleXmlId
+                        }"
+                        tag="'button'"
+                        class="'o_new_content_element'"
+                        onSelected="() => this.onClickNewContent(element)">
+                        <span>
+                            <img t-att-src="element.icon"/>
+                        </span>
+                        <div>
+                            <span><t t-out="element.title"/></span>
+                            <small><t t-out="element.description"/></small>
+                        </div></DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
     </div>
 </t>
 
