@@ -49,7 +49,7 @@ function parseShadow(value) {
         return {};
     }
     const regex =
-        /(?<color>(rgb(a)?\([^)]*\))|(var\([^)]+\)))\s+(?<offsetX>\d+px)\s+(?<offsetY>\d+px)\s+(?<blur>\d+px)\s+(?<spread>\d+px)(\s+)?(?<mode>\w+)?/;
+        /(?<color>(rgb(a)?\([^)]*\))|(var\([^)]+\)))\s+(?<offsetX>-?\d+px)\s+(?<offsetY>-?\d+px)\s+(?<blur>-?\d+px)\s+(?<spread>-?\d+px)(?:\s+(?<mode>\w+))?/;
     return value.match(regex).groups;
 }
 
