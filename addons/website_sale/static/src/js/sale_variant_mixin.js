@@ -395,9 +395,8 @@ var VariantMixin = {
                 combination.carousel,
             );
             $parent
-                .find('.o_product_tags')
-                .first()
-                .html(combination.product_tags);
+                .find('.o_product_tags:first')
+                .replaceWith(combination.product_tags);
         }
 
         const productIdInput = $parent[0].querySelector('.product_id');
