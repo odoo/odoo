@@ -7,28 +7,6 @@
     </div>
 </template>
 
-<template id="s_hr_options" inherit_id="website.snippet_options">
-    <xpath expr="." position="inside">
-        <div data-selector=".s_hr" data-target="hr">
-            <t t-call="website.snippet_options_border_line_widgets">
-                <t t-set="label">Border</t>
-                <t t-set="direction" t-value="'top'"/>
-            </t>
-            <we-select string="Width">
-                <we-button data-select-class="w-25">25%</we-button>
-                <we-button data-select-class="w-50">50%</we-button>
-                <we-button data-select-class="w-75">75%</we-button>
-                <we-button data-select-class="w-100" data-name="so_width_100">100%</we-button>
-            </we-select>
-            <we-button-group string="Alignment" data-dependencies="!so_width_100">
-                <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="me-auto"/>
-                <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="mx-auto"/>
-                <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="ms-auto"/>
-            </we-button-group>
-        </div>
-    </xpath>
-</template>
-
 <record id="website.s_hr_000_scss" model="ir.asset">
     <field name="name">Hr 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>

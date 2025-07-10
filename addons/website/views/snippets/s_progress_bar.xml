@@ -14,30 +14,6 @@
     </div>
 </template>
 
-<template id="s_progress_bar_options" inherit_id="website.snippet_options">
-    <xpath expr="." position="inside">
-        <div data-js="progress" data-selector=".s_progress_bar" >
-            <we-input string="Value" data-progress-bar-value="" data-unit="%"/>
-            <we-select string="Label">
-                <we-button data-display="inline" data-select-class="s_progress_bar_label_inline">Display Inside</we-button>
-                <we-button data-display="below" data-select-class="s_progress_bar_label_below">Display Below</we-button>
-                <we-button data-display="after" data-select-class="s_progress_bar_label_after">Display After</we-button>
-                <we-button data-display="none" data-select-class="s_progress_bar_label_hidden">Hide</we-button>
-            </we-select>
-            <we-colorpicker string="Colors" data-apply-to=".progress-bar"
-                data-select-style="true"
-                data-css-property="background-color"
-                data-color-prefix="bg-"/>
-            <we-checkbox string="Striped" data-name="progress_striped_opt" data-select-class="progress-bar-striped" data-apply-to=".progress-bar" data-no-preview="true"/>
-            <we-checkbox string="Animated" class="o_we_sublevel_1" data-dependencies="progress_striped_opt" data-select-class="progress-bar-animated" data-apply-to=".progress-bar" data-no-preview="true"/>
-        </div>
-    </xpath>
-    <xpath expr="//div[@id='so_content_addition']" position="attributes">
-        <attribute name="data-selector" add=".s_progress_bar" separator=","/>
-        <attribute name="data-drop-near" add=".s_progress_bar" separator=","/>
-    </xpath>
-</template>
-
 
 <record id="website.s_progress_bar_001_scss" model="ir.asset">
     <field name="name">Progress bar 001 SCSS</field>

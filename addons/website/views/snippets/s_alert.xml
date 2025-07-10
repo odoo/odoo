@@ -10,41 +10,6 @@
     </div>
 </template>
 
-<template id="s_alert_options" inherit_id="website.snippet_options">
-    <xpath expr="//div[@id='so_width']" position="before">
-        <div data-selector=".s_alert" data-js="Alert">
-            <we-select string="Type">
-                <we-button data-select-alert-icon="fa-user-circle"
-                           data-select-class="alert-primary">Primary</we-button>
-                <we-button data-select-alert-icon="fa-user-circle-o"
-                           data-select-class="alert-secondary">Secondary</we-button>
-                <we-button data-select-alert-icon="fa-info-circle"
-                           data-select-class="alert-info">Info</we-button>
-                <we-button data-select-alert-icon="fa-check-circle"
-                           data-select-class="alert-success">Success</we-button>
-                <we-button data-select-alert-icon="fa-exclamation-triangle"
-                           data-select-class="alert-warning">Warning</we-button>
-                <we-button data-select-alert-icon="fa-exclamation-circle"
-                           data-select-class="alert-danger">Danger</we-button>
-                <we-button data-select-alert-icon="fa-info-circle"
-                           data-select-class="alert-light">Light</we-button>
-                <we-button data-select-alert-icon="fa-info-circle"
-                           data-select-class="alert-dark">Dark</we-button>
-            </we-select>
-        </div>
-    </xpath>
-    <!-- Keep those options in separate xpath for options order -->
-    <xpath expr="//div[@id='so_width']" position="after">
-        <div data-selector=".s_alert">
-            <we-select string="Size">
-                <we-button data-select-class="s_alert_sm">Small</we-button>
-                <we-button data-select-class="s_alert_md">Medium</we-button>
-                <we-button data-select-class="s_alert_lg">Large</we-button>
-            </we-select>
-        </div>
-    </xpath>
-</template>
-
 <record id="website.s_alert_000_scss" model="ir.asset">
     <field name="name">Alert 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>
