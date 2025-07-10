@@ -200,8 +200,8 @@ class StockMove(models.Model):
                 raise ValidationError(_("Please enter a positive quantity."))
 
     @api.model
-    def default_get(self, fields_list):
-        defaults = super(StockMove, self).default_get(fields_list)
+    def default_get(self, fields):
+        defaults = super().default_get(fields)
         if self.env.context.get('default_raw_material_production_id') or self.env.context.get('default_production_id'):
             production_id = self.env['mrp.production'].browse(self.env.context.get('default_raw_material_production_id') or self.env.context.get('default_production_id'))
             if production_id.state not in ('draft', 'cancel'):

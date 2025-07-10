@@ -1261,12 +1261,12 @@ class BaseModel(metaclass=MetaModel):
                 check(records)
 
     @api.model
-    def default_get(self, fields_list: Sequence[str]) -> ValuesType:
+    def default_get(self, fields: Sequence[str]) -> ValuesType:
         """Return default values for the fields in ``fields_list``. Default
         values are determined by the context, user defaults, user fallbacks
         and the model itself.
 
-        :param fields_list: names of field whose default is requested
+        :param fields: names of field whose default is requested
         :return: a dictionary mapping field names to their corresponding default values,
             if they have a default value.
 
@@ -1279,7 +1279,7 @@ class BaseModel(metaclass=MetaModel):
         parent_fields = defaultdict(list)
         ir_defaults = self.env['ir.default']._get_model_defaults(self._name)
 
-        for name in fields_list:
+        for name in fields:
             # 1. look up context
             key = 'default_' + name
             if key in self.env.context:

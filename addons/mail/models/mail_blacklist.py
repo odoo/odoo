@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools, _
@@ -50,10 +49,10 @@ class MailBlacklist(models.Model):
         results = super().create(to_create)
         return self.env['mail.blacklist'].browse(bl_entries.values()) | results
 
-    def write(self, values):
-        if 'email' in values:
-            values['email'] = tools.email_normalize(values['email'])
-        return super().write(values)
+    def write(self, vals):
+        if 'email' in vals:
+            vals['email'] = tools.email_normalize(vals['email'])
+        return super().write(vals)
 
     def _search(self, domain, offset=0, limit=None, order=None):
         """ Override _search in order to grep search on email field and make it

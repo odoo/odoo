@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo import api, fields, models, exceptions, _
 
 
@@ -22,9 +20,9 @@ class RatingRating(models.Model):
             ratings._check_synchronize_publisher_values()
         return ratings
 
-    def write(self, values):
-        self._synchronize_publisher_values(values)
-        return super().write(values)
+    def write(self, vals):
+        self._synchronize_publisher_values(vals)
+        return super().write(vals)
 
     def _check_synchronize_publisher_values(self):
         """ Either current user is a member of website restricted editor group

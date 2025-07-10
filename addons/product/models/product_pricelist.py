@@ -69,12 +69,12 @@ class ProductPricelist(models.Model):
             pricelist_name = pricelist.name and pricelist.name or _('New')
             pricelist.display_name = f'{pricelist_name} ({pricelist.currency_id.name})'
 
-    def write(self, values):
-        res = super().write(values)
+    def write(self, vals):
+        res = super().write(vals)
 
         # Make sure that there is no multi-company issue in the existing rules after the company
         # change.
-        if 'company_id' in values and len(self) == 1:
+        if 'company_id' in vals and len(self) == 1:
             self.item_ids._check_company()
 
         return res

@@ -33,9 +33,9 @@ class StockRule(models.Model):
     _check_company_auto = True
 
     @api.model
-    def default_get(self, fields_list):
-        res = super().default_get(fields_list)
-        if 'company_id' in fields_list and not res['company_id']:
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if 'company_id' in fields and not res['company_id']:
             res['company_id'] = self.env.company.id
         return res
 

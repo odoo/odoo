@@ -312,14 +312,14 @@ class MailActivity(models.Model):
             todo_activities.user_id._bus_send("mail.activity/updated", {"activity_created": True})
         return activities
 
-    def write(self, values):
-        if values.get('user_id'):
-            user_changes = self.filtered(lambda activity: activity.user_id.id != values.get('user_id'))
+    def write(self, vals):
+        if vals.get('user_id'):
+            user_changes = self.filtered(lambda activity: activity.user_id.id != vals.get('user_id'))
             pre_responsibles = user_changes.user_id
-        res = super(MailActivity, self).write(values)
+        res = super().write(vals)
 
-        if values.get('user_id'):
-            if values['user_id'] != self.env.uid:
+        if vals.get('user_id'):
+            if vals['user_id'] != self.env.uid:
                 if not self.env.context.get('mail_activity_quick_update', False):
                     user_changes.action_notify()
             for activity in user_changes:

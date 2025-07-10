@@ -204,7 +204,8 @@ class HrEmployee(models.Model):
             approver_group.sudo().write({'user_ids': group_updates})
         return super().create(vals_list)
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         # Prevent the resource calendar of leaves to be updated by a write to
         # employee. When this module is enabled the resource calendar of
         # leaves are determined by those of the contracts.

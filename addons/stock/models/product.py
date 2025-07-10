@@ -626,12 +626,12 @@ class ProductProduct(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_forecasted_product_product_action")
         return action
 
-    def write(self, values):
-        if 'active' in values:
-            self.filtered(lambda p: p.active != values['active']).with_context(active_test=False).orderpoint_ids.write({
-                'active': values['active']
+    def write(self, vals):
+        if 'active' in vals:
+            self.filtered(lambda p: p.active != vals['active']).with_context(active_test=False).orderpoint_ids.write({
+                'active': vals['active']
             })
-        return super().write(values)
+        return super().write(vals)
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
         return defaultdict(float), defaultdict(float)
@@ -1236,13 +1236,16 @@ class UomUom(models.Model):
     package_type_id = fields.Many2one('stock.package.type', string='Package Type')
     route_ids = fields.Many2many(related='package_type_id.route_ids', string='Routes', help='Routes propagated from the package type')
 
-    def write(self, values):
+    def write(self, vals):
         # Users can not update the factor if open stock moves are based on it
         keys_to_protect = {'factor', 'relative_factor', 'relative_uom_id'}
-        if any(key in values for key in keys_to_protect):
+        if any(key in vals for key in keys_to_protect):
             changed = self.filtered(
-                lambda u: any(f in values and u[f] != values[f] for f in {'factor', 'relative_factor'}) or
-                          'relative_uom_id' in values and u.relative_uom_id.id != int(values['relative_uom_id']))
+                lambda u: any(
+                    f in vals and u[f] != vals[f]
+                    for f in ('factor', 'relative_factor')
+                ) or ('relative_uom_id' in vals and u.relative_uom_id.id != int(vals['relative_uom_id']))
+            )
             if changed:
                 error_msg = _(
                     "You cannot change the ratio of this unit of measure"
@@ -1264,7 +1267,7 @@ class UomUom(models.Model):
                     ('quantity', '!=', 0),
                 ]):
                     raise UserError(error_msg)
-        return super().write(values)
+        return super().write(vals)
 
     def _adjust_uom_quantities(self, qty, quant_uom):
         """ This method adjust the quantities of a procurement if its UoM isn't the same

@@ -11,8 +11,8 @@ class L10n_InWithholdWizard(models.TransientModel):
     _check_company_auto = True
 
     @api.model
-    def default_get(self, fields_list):
-        result = super().default_get(fields_list)
+    def default_get(self, fields):
+        result = super().default_get(fields)
         active_model = self.env.context.get('active_model')
         active_ids = self.env.context.get('active_ids', [])
         if len(active_ids) > 1:

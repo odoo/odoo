@@ -113,10 +113,10 @@ class WebsiteMenu(models.Model):
         # Only one record per vals is returned but multiple could have been created
         return menus
 
-    def write(self, values):
+    def write(self, vals):
         self.env.registry.clear_cache('templates')
-        res = super().write(values)
-        if 'group_ids' in values and not self.env.context.get("adding_designer_group_to_menu"):
+        res = super().write(vals)
+        if 'group_ids' in vals and not self.env.context.get("adding_designer_group_to_menu"):
             self.filtered("group_ids").with_context(
                 adding_designer_group_to_menu=True
             ).group_ids += self.env.ref("website.group_website_designer")

@@ -12,11 +12,11 @@ class MailActivity(models.Model):
 
     calendar_event_id = fields.Many2one('calendar.event', string="Calendar Meeting", index='btree_not_null', ondelete='cascade')
 
-    def write(self, values):
+    def write(self, vals):
         # synchronize calendar events
-        res = super().write(values)
+        res = super().write(vals)
         # protect against loops in case of ill-managed timezones
-        if 'date_deadline' in values and not self.env.context.get('calendar_event_meeting_update') and self.calendar_event_id:
+        if 'date_deadline' in vals and not self.env.context.get('calendar_event_meeting_update') and self.calendar_event_id:
             date_deadline = self[0].date_deadline  # updated, hence all same value
             # also protect against loops in case of ill-managed timezones
             events = self.calendar_event_id.with_context(mail_activity_meeting_update=True)

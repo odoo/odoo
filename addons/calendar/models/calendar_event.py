@@ -678,7 +678,8 @@ class CalendarEvent(models.Model):
 
         return events
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         detached_events = self.env['calendar.event']
         recurrence_update_setting = values.pop('recurrence_update', None)
         update_recurrence = recurrence_update_setting in ('all_events', 'future_events') and len(self) == 1 and self.recurrence_id

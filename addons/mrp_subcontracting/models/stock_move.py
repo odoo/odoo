@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -130,18 +129,18 @@ class StockMove(models.Model):
             vals['location_id'] = move.picking_id.location_id.id
         return vals_list
 
-    def write(self, values):
+    def write(self, vals):
         """ If the initial demand is updated then also update the linked
         subcontract order to the new quantity.
         """
-        self._check_access_if_subcontractor(values)
-        if 'product_uom_qty' in values and self.env.context.get('cancel_backorder') is not False and not self.env.context.get('extra_move_mode'):
+        self._check_access_if_subcontractor(vals)
+        if 'product_uom_qty' in vals and self.env.context.get('cancel_backorder') is not False and not self.env.context.get('extra_move_mode'):
             self.filtered(
                 lambda m: m.is_subcontract and m.state not in ['draft', 'cancel', 'done']
-                and m.product_uom.compare(m.product_uom_qty, values['product_uom_qty']) != 0
-            )._update_subcontract_order_qty(values['product_uom_qty'])
-        res = super().write(values)
-        if 'date' in values:
+                and m.product_uom.compare(m.product_uom_qty, vals['product_uom_qty']) != 0
+            )._update_subcontract_order_qty(vals['product_uom_qty'])
+        res = super().write(vals)
+        if 'date' in vals:
             for move in self:
                 if move.state in ('done', 'cancel') or not move.is_subcontract:
                     continue

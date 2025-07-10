@@ -36,9 +36,9 @@ class AccountAnalyticLine(models.Model):
         return mode([t.project_id.id for t in last_timesheets])
 
     @api.model
-    def default_get(self, field_list):
-        result = super().default_get(field_list)
-        if not self.env.context.get('default_employee_id') and 'employee_id' in field_list and result.get('user_id'):
+    def default_get(self, fields):
+        result = super().default_get(fields)
+        if not self.env.context.get('default_employee_id') and 'employee_id' in fields and result.get('user_id'):
             result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id']), ('company_id', '=', result.get('company_id', self.env.company.id))], limit=1).id
         if not self.env.context.get('default_project_id') and self.env.context.get('is_timesheet'):
             employee_id = result.get('employee_id', self.env.context.get('default_employee_id', False))
@@ -333,7 +333,8 @@ class AccountAnalyticLine(models.Model):
                 line._timesheet_postprocess(values)
         return lines
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         self._check_can_write(values)
 
         task = self.env['project.task'].sudo().browse(values.get('task_id'))
