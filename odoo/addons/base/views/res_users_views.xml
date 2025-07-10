@@ -439,9 +439,12 @@
                                             Check if they are yours.
                                         </span>
                                     </div>
-                                    <button name="action_revoke_all_devices" type="object" string="Log out from all devices" class="btn btn-secondary h-100"/>
+                                    <div class="d-flex flex-column">
+                                        <field name="device_ids" mode="kanban" class="o_kanban_mobile"/>
+                                        <button name="action_revoke_all_devices" type="object" string="Log out from all devices" class="btn btn-secondary h-100"/>
+                                    </div>
                                 </div>
-                                <field name="device_ids" mode="kanban"/>
+
                             </div>
                         </page>
                     </notebook>
