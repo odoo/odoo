@@ -22,6 +22,7 @@ _logger = logging.getLogger(__name__)
 
 
 class DriverController(http.Controller):
+    @helpers.toggleable
     @http.route('/hw_drivers/action', type='jsonrpc', auth='none', cors='*', csrf=False, save_session=False)
     def action(self, session_id, device_identifier, data):
         """
@@ -55,6 +56,7 @@ class DriverController(http.Controller):
         """
         helpers.get_certificate_status()
 
+    @helpers.toggleable
     @http.route('/hw_drivers/event', type='jsonrpc', auth='none', cors='*', csrf=False, save_session=False)
     def event(self, listener):
         """
