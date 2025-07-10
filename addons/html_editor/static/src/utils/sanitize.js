@@ -1,6 +1,7 @@
 import { containsAnyInline } from "./dom_info";
 import { wrapInlinesInBlocks } from "./dom";
 import { markup } from "@odoo/owl";
+import { htmlReplace } from "@web/core/utils/html";
 
 export function initElementForEdition(element, options = {}) {
     if (
@@ -34,17 +35,20 @@ export function initElementForEdition(element, options = {}) {
  * Properly close common XML-like self-closing elements to avoid HTML parsing
  * issues.
  *
- * @param {string} content
- * @returns {string}
+ * @param {string | ReturnType<markup>} content
+ * @returns {ReturnType<markup>}
  */
 export function fixInvalidHTML(content) {
     if (!content) {
         return content;
     }
-    // TODO: improve the regex to support nodes with data-attributes containing
-    // `/` and `>` characters.
-    const regex = /<\s*(a|strong|t|span)[^<]*?\/\s*>/g;
-    return content.replace(regex, (match, g0) => match.replace(/\/\s*>/, `></${g0}>`));
+    const regex =
+        /<\s*(a|strong|t|span)\s*((?:(?:\s+[\w:-]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?)*))\s*\/>/g;
+    return htmlReplace(content, regex, (match, tag, attributes) => {
+        // markup: content is either already markup or escaped in htmlReplace
+        attributes = markup(attributes);
+        return markup`<${tag}${attributes}></${tag}>`;
+    });
 }
 
 let Markup = null;

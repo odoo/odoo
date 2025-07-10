@@ -13,16 +13,17 @@ import { useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
 patch(PropertyValue.prototype, {
     setup() {
         this.htmlUpgradeManager = new HtmlUpgradeManager();
-        this.lastHtmlValue = this.propertyValue;
+        this.lastHtmlValue = this.propertyValue?.toString();
         onWillStart(async () => {
             this.htmlState.isPortalUser = await user.hasGroup("base.group_portal");
         });
         this.htmlState = useState({ isPortalUser: false, key: 0 });
 
         onWillUpdateProps((newProps) => {
-            if (newProps.type === "html" && newProps.value !== this.lastHtmlValue) {
+            const newValueStr = newProps.value?.toString();
+            if (newProps.type === "html" && newValueStr !== this.lastHtmlValue) {
                 this.htmlState.key += 1;
-                this.lastHtmlValue = newProps.value;
+                this.lastHtmlValue = newValueStr;
             }
         });
 

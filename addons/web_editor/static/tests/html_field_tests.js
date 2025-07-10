@@ -367,6 +367,27 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         assert.containsN(target, '#codeview-btn-group > button', 0, 'Codeview toggle should not be possible in readonly mode.');
     });
 
+    QUnit.test("readonly sandboxed preview: properly close self-closing t-tags", async (assert) => {
+        assert.expect(1);
+        serverData.models.partner.records.push({
+            id: 1,
+            txt: `<div>foo<t t-out="object.id"/>bar <t t-out="object.id"/></div>`,
+        });
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html_legacy" readonly="1" options="{'sandboxedPreview': true}"/>
+                </form>`,
+        });
+        const readonlyIframe = target.querySelector('.o_field_html_legacy[name="txt"] iframe[sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"]');
+        await iframeReady(readonlyIframe);
+        assert.strictEqual(readonlyIframe.contentDocument.body.innerHTML, `<div>foo<t t-out="object.id" contenteditable="false" data-oe-t-inline="true"></t>bar <t t-out="object.id" contenteditable="false" data-oe-t-inline="true"></t></div>`);
+    });
+
     QUnit.test("sandboxed preview display and editing", async (assert) => {
         let codeViewState = false;
         const togglePromises = [makeDeferred(), makeDeferred()];

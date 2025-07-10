@@ -4,6 +4,9 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { setupWysiwyg } from "./_helpers/editor";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { range } from "@web/core/utils/numbers";
+import { htmlJoin } from "@web/core/utils/html";
+import { markup } from "@odoo/owl";
 
 describe("Wysiwyg Component", () => {
     test("Wysiwyg component can be instantiated", async () => {
@@ -22,7 +25,7 @@ describe("Wysiwyg Component", () => {
 
     test("Wysiwyg component can be instantiated with initial content", async () => {
         const { el } = await setupWysiwyg({
-            config: { content: "<p>hello rodolpho</p>" },
+            config: { content: markup`<p>hello rodolpho</p>` },
         });
         expect(el.innerHTML).toBe(`<p>hello rodolpho</p>`);
     });
@@ -40,7 +43,11 @@ describe("Wysiwyg Component", () => {
         const CLOSE_ENOUGH = 10;
         const { el } = await setupWysiwyg({
             iframe: true,
-            config: { content: "<p>editable text inside the iframe</p>".repeat(30) },
+            config: {
+                content: htmlJoin(
+                    range(0, 30).map(() => markup`<p>editable text inside the iframe</p>`)
+                ),
+            },
         });
 
         // Add some content before the iframe to make sure it's top does not
