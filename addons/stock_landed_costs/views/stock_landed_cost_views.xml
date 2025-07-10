@@ -24,6 +24,10 @@
                                     <span class="o_stat_text">Valuation</span>
                                 </div>
                             </button>
+                            <button class="oe_stat_button" name="action_view_pickings" icon="fa-truck"
+                                type="object" invisible="pickings_count == 0">
+                                <field name="pickings_count" string="Transfers" widget="statinfo" />
+                            </button>
                         </div>
                         <div class="oe_title">
                             <label for="name" string="Landed Cost"/>
