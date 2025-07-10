@@ -23,12 +23,15 @@ paymentButton.include({
      * @return {boolean}
      */
     _isTCCheckboxReady() {
-        const checkbox = document.querySelector('#website_sale_tc_checkbox');
-        if (!checkbox) { // The checkbox is not present.
+        // Find the one T&C checkbox that is not hidden, either the desktop or the mobile one.
+        const checkboxes = document.querySelectorAll('#website_sale_tc_checkbox');
+        const visibleCheckbox = Array.from(checkboxes).find(el => el.offsetParent !== null);
+
+        if (!visibleCheckbox) { // The checkbox is not present.
             return true;  // Ignore the check.
         }
 
-        return checkbox.checked;
+        return visibleCheckbox.checked;
     },
 
 });
