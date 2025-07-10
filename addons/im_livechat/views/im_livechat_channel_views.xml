@@ -18,11 +18,24 @@
             </field>
         </record>
 
+        <record id="im_livechat_channel_view_list" model="ir.ui.view">
+            <field name="name">im_livechat.channel.list</field>
+            <field name="model">im_livechat.channel</field>
+            <field name="arch" type="xml">
+                <list string="Live Chat Channels" sample="1">
+                    <field name="name" string="Name"/>
+                    <field name="user_ids" string="Operators" widget="many2many_avatar_user"/>
+                    <field name="nbr_channel" string="Sessions"/>
+                    <field name="rating_percentage_satisfaction" string="Rating (%)"/>
+                </list>
+            </field>
+        </record>
+
         <record id="im_livechat_channel_view_kanban" model="ir.ui.view">
             <field name="name">im_livechat.channel.kanban</field>
             <field name="model">im_livechat.channel</field>
             <field name="arch" type="xml">
-                <kanban js_class="im_livechat.livechat_channel_kanban" action="im_livechat.discuss_channel_action_from_livechat_channel" type="action">
+                <kanban sample="1" js_class="im_livechat.livechat_channel_kanban" action="im_livechat.discuss_channel_action_from_livechat_channel" type="action">
                     <field name="are_you_inside"/>
                     <field name="rating_count"/>
                     <templates>
@@ -234,7 +247,8 @@
             <field name="model">im_livechat.channel</field>
             <field name="arch" type="xml">
                 <search string="LiveChat Channel Search">
-                    <field name="name" string="Channel"/>
+                    <field name="name" string="Channel Name"/>
+                    <field name="user_ids" string="Operators"/>
                 </search>
             </field>
         </record>
