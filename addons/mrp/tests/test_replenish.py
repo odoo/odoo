@@ -42,6 +42,7 @@ class TestMrpReplenish(TestMrpCommon):
             self.assertEqual(fields.Datetime.from_string('2023-01-06 00:00:00'), wizard3.date_planned)
 
     def test_mrp_orderpoint_leadtime(self):
+        self.env.company.horizon_days = 0
         route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
         route_manufacture.supplied_wh_id = self.warehouse_1
         route_manufacture.supplier_wh_id = self.warehouse_1
@@ -182,8 +183,8 @@ class TestMrpReplenish(TestMrpCommon):
         self.assertEqual(move_to_scrap.quantity, 10, "Scrapped component should return to qty 10")
         self.assertEqual(move_other.quantity, 10, "Other component should still be qty 10")
 
-    def test_global_visibility_days_affect_lead_time_manufacture_rule(self):
-        """ Ensure global visibility days will only be captured one time in an orderpoint's
+    def test_global_horizon_days_affect_lead_time_manufacture_rule(self):
+        """ Ensure global horizon days will only be captured one time in an orderpoint's
         lead_days/json_lead_days.
         """
         self.warehouse_1.manufacture_steps = 'pbm'
@@ -205,12 +206,12 @@ class TestMrpReplenish(TestMrpCommon):
                 'location_dest_id': self.customer_location.id,
             })],
         })
-        out_picking.with_context(global_visibility_days=365).action_assign()
+        out_picking.with_context(global_horizon_days=365).action_assign()
         r = orderpoint.action_stock_replenishment_info()
         repl_info = self.env[r['res_model']].browse(r['res_id'])
-        lead_days_date = datetime.strptime(
-            loads(repl_info.json_lead_days)['lead_days_date'], '%m/%d/%Y').date()
-        self.assertEqual(lead_days_date, fields.Date.today() + timedelta(days=365))
+        lead_horizon_date = datetime.strptime(
+            loads(repl_info.json_lead_days)['lead_horizon_date'], '%m/%d/%Y').date()
+        self.assertEqual(lead_horizon_date, fields.Date.today() + timedelta(days=365))
 
     def test_orderpoint_onchange_reordering_rule(self):
         """ Ensure onchange logic works properly when editing a reordering rule
@@ -231,7 +232,7 @@ class TestMrpReplenish(TestMrpCommon):
         orderpoint.action_replenish()
 
         prod = self.env['mrp.production'].search([('origin', '=', orderpoint.name)])
-        # Error is triggered for date_start <= lead_days_date < date_finished
+        # Error is triggered for date_start <= lead_horizon_date < date_finished
         prod.date_start = fields.Date.today() + timedelta(days=1)
 
         with Form(orderpoint, view='stock.view_warehouse_orderpoint_tree_editable') as form:

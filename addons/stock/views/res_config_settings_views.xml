@@ -199,7 +199,10 @@
                                 </div>
                             </setting>
                         </block>
-                        <block title="Advanced Scheduling" id="schedule_info" invisible="1">
+                        <block title="Advanced Scheduling" id="schedule_info">
+                            <setting company_dependent="1" help="Configure your horizon to trigger reordering rules earlier to get a head start on replenishment and avoid delays, or trigger it just-in-time ('0 days') to avoid overstocking.">
+                                <field name="horizon_days" class="oe_inline"/><span> days</span>
+                            </setting>
                             <div id="sale_security_lead"/>
                             <div id="purchase_po_lead"/>
                         </block>

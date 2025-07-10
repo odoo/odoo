@@ -13,7 +13,6 @@ class StockWarehouseOrderpoint(models.Model):
     bom_id = fields.Many2one(
         'mrp.bom', string='Bill of Materials', check_company=True,
         domain="[('type', '=', 'normal'), '&', '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
-    manufacturing_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the manufacturing routes.")
 
     def _get_replenishment_order_notification(self):
         self.ensure_one()
@@ -63,20 +62,6 @@ class StockWarehouseOrderpoint(models.Model):
             manufacture_route.append(res['route_id'][0])
         for orderpoint in self:
             orderpoint.show_bom = orderpoint.route_id.id in manufacture_route
-
-    def _compute_visibility_days(self):
-        res = super()._compute_visibility_days()
-        for orderpoint in self:
-            if 'manufacture' in orderpoint.rule_ids.mapped('action'):
-                orderpoint.visibility_days = orderpoint.manufacturing_visibility_days
-        return res
-
-    def _set_visibility_days(self):
-        res = super()._set_visibility_days()
-        for orderpoint in self:
-            if 'manufacture' in orderpoint.rule_ids.mapped('action'):
-                orderpoint.manufacturing_visibility_days = orderpoint.visibility_days
-        return res
 
     def _compute_days_to_order(self):
         res = super()._compute_days_to_order()
@@ -157,8 +142,8 @@ class StockWarehouseOrderpoint(models.Model):
         ])
         for prod in in_progress_productions:
             date_start, date_finished, orderpoint = prod.date_start, prod.date_finished, prod.orderpoint_id
-            lead_days_date = datetime.combine(orderpoint.lead_days_date, time.max)
-            if date_start <= lead_days_date < date_finished:
+            lead_horizon_date = datetime.combine(orderpoint.lead_horizon_date, time.max)
+            if date_start <= lead_horizon_date < date_finished:
                 res[orderpoint.id] += prod.product_uom_id._compute_quantity(
                         prod.product_qty, orderpoint.product_uom, round=False)
         return res

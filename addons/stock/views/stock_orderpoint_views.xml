@@ -38,7 +38,6 @@
                 <field name="qty_forecast" force_save="1"/>
                 <button name="action_product_forecast_report" type="object" icon="fa-area-chart" title="Forecast Report" invisible="not id or unwanted_replenish"/>
                 <button name="action_product_forecast_report" type="object" icon="fa-warning text-warning" title="Due to receipts scheduled in the future, you might end up with excessive stock . Check the Forecasted Report  before reordering" invisible="not id or not unwanted_replenish"/>
-                <field name="visibility_days" optional="hidden"/>
                 <field name="route_id" options="{'no_create': True, 'no_open': True}" optional="hidden"/>
                 <button name="action_stock_replenishment_info" type="object" icon="fa-info-circle" title="Replenishment Information" invisible="not id or show_supply_warning"/>
                 <button name="action_stock_replenishment_info" type="object" icon="fa-warning text-warning" title="Your product is missing a way to be replenished (Route, Vendor, Bill of Materials)." invisible="not (id and show_supply_warning)"/>
@@ -158,7 +157,6 @@
                                 <field name="group_id" groups="stock.group_adv_location"/>
                             </div>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field name="visibility_days"/>
                         </group>
                     </group>
                 </sheet>

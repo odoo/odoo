@@ -9,6 +9,7 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env.company.horizon_days = 0
         cls.buy_route = cls.env.ref('purchase_stock.route_warehouse0_buy')
 
         # Create a vendor (& suppliers) and a customer
@@ -123,10 +124,12 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
             Product B
                 unwanted_replenish SHALL be FALSE
             Product A
-                Modify Visible Days past 1 Week -> unwanted_replenish SHALL be FALSE
+                Modify Horizon Days past 1 Week -> unwanted_replenish SHALL be FALSE
         """
         self.assertTrue(self.orderpoint_A.unwanted_replenish, 'Orderpoint A not set to unwanted_replenish')
         self.assertFalse(self.orderpoint_B.unwanted_replenish, 'Orderpoint B is set to unwanted_replenish')
         #Update Orderpoint A
-        self.orderpoint_A.visibility_days = 10
+        self.env.company.horizon_days = 20
+        self.orderpoint_A.invalidate_recordset(fnames=['lead_horizon_date'])
+        self.orderpoint_A._compute_qty_to_order_computed()
         self.assertFalse(self.orderpoint_A.unwanted_replenish, 'Orderpoint A shall not be set to unwanted_replenish')

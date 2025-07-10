@@ -55,10 +55,8 @@ export class StockForecasted extends Component {
         this.docs = {
             ...reportValues.docs,
             ...reportValues.precision,
-            lead_days_date: this.context.lead_days_date,
+            lead_horizon_date: this.context.lead_horizon_date,
             qty_to_order: this.context.qty_to_order,
-            visibility_days_date: this.context.visibility_days_date,
-            qty_to_order_with_visibility_days: this.context.qty_to_order_with_visibility_days
         };
     }
 
