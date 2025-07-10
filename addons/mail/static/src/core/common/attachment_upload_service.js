@@ -121,7 +121,7 @@ export class AttachmentUploadService {
             abort();
             return;
         }
-        await attachment.remove();
+        await attachment.delete();
     }
 
     async upload(thread, composer, file, options) {
