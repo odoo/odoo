@@ -6,15 +6,15 @@
             <attribute name="productId">["product.template", "product.product"].includes(this.props.record.resModel) ? (this.props.record.resId || 0) : this.props.record.data[this.props.productField][0] || 0</attribute>
             <attribute name="productQuantity">this.props.record.data[this.props.quantityField]</attribute>
         </xpath>
-        <xpath expr="//Many2XAutocomplete//t[@t-out]" position="replace">
+        <xpath expr="//Many2XAutocomplete//span[@t-out]" position="replace">
             <t t-if="autoCompleteItemScope.record?.relative_info">
                 <div class="uom_autocomplete_grid">
-                    <div t-out="autoCompleteItemScope.label"/>
+                    <span t-out="autoCompleteItemScope.label"/>
                     <div t-esc="autoCompleteItemScope.record.relative_info" class="text-muted"/>
                 </div>
             </t>
             <t t-else="">
-                <div t-out="autoCompleteItemScope.label"/>
+                <span t-out="autoCompleteItemScope.label"/>
             </t>
         </xpath>
     </t>
