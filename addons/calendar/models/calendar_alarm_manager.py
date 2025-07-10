@@ -30,31 +30,47 @@ class AlarmManager(models.AbstractModel):
             WHERE alarm.alarm_type = %s
             GROUP BY rel.calendar_event_id
         """
+        end_date_request = """
+            SELECT
+                cal.id,cal.start,cal.stop,cal.recurrency,cal.active,cal.recurrence_id,
+                CASE
+                    WHEN cal.recurrency AND rrule.end_type = 'end_date' THEN rrule.until
+                    WHEN cal.recurrency AND rrule.end_type = 'count' THEN
+                        cal.start +
+                        CASE
+                            WHEN rrule.rrule_type = 'daily' THEN (rrule.count - 1) * COALESCE(rrule.interval, 1) * interval '1 day'
+                            WHEN rrule.rrule_type = 'weekly' THEN (rrule.count - 1) * COALESCE(rrule.interval, 1) * interval '7 days'
+                            WHEN rrule.rrule_type = 'monthly' THEN make_interval(months => (rrule.count - 1) * COALESCE(rrule.interval, 1))
+                            WHEN rrule.rrule_type = 'yearly' THEN make_interval(years => (rrule.count - 1) * COALESCE(rrule.interval, 1))
+                            ELSE (rrule.count - 1) * COALESCE(rrule.interval, 1) * interval '1 day'
+                        END + (cal.stop - cal.start)
+                    ELSE cal.stop
+                END AS calculated_end_date,
+                rrule.rrule
+            FROM
+                calendar_event AS cal
+                LEFT JOIN calendar_recurrence AS rrule ON rrule.id = cal.recurrence_id
+            WHERE
+                cal.active = True
+        """
         base_request = """
-                    SELECT
-                        cal.id,
-                        cal.start - interval '1' minute  * calcul_delta.max_delta AS first_alarm,
-                        CASE
-                            WHEN cal.recurrency THEN rrule.until - interval '1' minute  * calcul_delta.min_delta
-                            ELSE cal.stop - interval '1' minute  * calcul_delta.min_delta
-                        END as last_alarm,
-                        cal.start as first_event_date,
-                        CASE
-                            WHEN cal.recurrency THEN rrule.until
-                            ELSE cal.stop
-                        END as last_event_date,
-                        calcul_delta.min_delta,
-                        calcul_delta.max_delta,
-                        rrule.rrule AS rule
-                    FROM
-                        calendar_event AS cal
-                    RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
-                    LEFT JOIN calendar_recurrence as rrule ON rrule.id = cal.recurrence_id
-             """
+            SELECT
+                eed.id,
+                eed.start - interval '1' minute  * calcul_delta.max_delta AS first_alarm,
+                eed.calculated_end_date - interval '1' minute * calcul_delta.min_delta AS last_alarm,
+                eed.start as first_event_date,
+                eed.calculated_end_date AS last_event_date,
+                calcul_delta.min_delta,
+                calcul_delta.max_delta,
+                eed.rrule AS rule
+            FROM
+                event_end_dates AS eed
+            RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = eed.id
+            """
 
         filter_user = """
-                RIGHT JOIN calendar_event_res_partner_rel AS part_rel ON part_rel.calendar_event_id = cal.id
-                    AND part_rel.res_partner_id IN %s
+            RIGHT JOIN calendar_event_res_partner_rel AS part_rel ON part_rel.calendar_event_id = eed.id
+            WHERE part_rel.res_partner_id IN %s
         """
 
         # Add filter on alarm type
@@ -82,12 +98,13 @@ class AlarmManager(models.AbstractModel):
 
         self.env.flush_all()
         self._cr.execute("""
-            WITH calcul_delta AS (%s)
+            WITH calcul_delta AS (%s), event_end_dates AS (%s)
             SELECT *
-                FROM ( %s WHERE cal.active = True ) AS ALL_EVENTS
-               WHERE ALL_EVENTS.first_alarm < %s
-                 AND ALL_EVENTS.last_event_date > (now() at time zone 'utc')
-        """ % (delta_request, base_request, first_alarm_max_value), tuple_params)
+                FROM ( %s ) AS ALL_EVENTS
+            WHERE ALL_EVENTS.first_alarm < %s
+                AND ALL_EVENTS.last_event_date > (now() at time zone 'utc')
+                AND ALL_EVENTS.last_alarm > (now() at time zone 'utc')
+        """ % (delta_request, end_date_request, base_request, first_alarm_max_value), tuple_params)
 
         for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration, rule in self._cr.fetchall():
             result[event_id] = {
