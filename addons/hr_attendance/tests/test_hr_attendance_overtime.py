@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from freezegun import freeze_time
 
 from odoo.tests import Form, new_test_user
@@ -777,3 +777,48 @@ class TestHrAttendanceOvertime(TransactionCase):
         with Form(attendance) as attendance_form:
             attendance_form.check_out = datetime(2023, 1, 2, 19, 15)
         self.assertAlmostEqual(attendance.validated_overtime_hours, 2.25, 2)
+
+    def test_weekly_expected_hours_limit(self):
+        calendar_flex_32h = self.env['resource.calendar'].create({
+            'name': 'Flexible 32 hours/week',
+            'company_id': self.company.id,
+            'hours_per_day': 8,
+            'flexible_hours': True,
+            'full_time_required_hours': 32,
+        })
+        flexible_employee = self.env['hr.employee'].create({
+            'name': ' Monkey D. Luffy',
+            'company_id': self.company.id,
+            'tz': 'UTC',
+            'resource_calendar_id': calendar_flex_32h.id,
+        })
+
+        base_date = datetime(2024, 4, 1)  # Monday
+
+        # Create attendances for Tuesday to Friday first
+        for i in range(1, 5):
+            self.env['hr.attendance'].create({
+                'employee_id': flexible_employee.id,
+                'check_in': base_date + timedelta(days=i, hours=9),
+                'check_out': base_date + timedelta(days=i, hours=17),
+                'worked_hours': 8,
+                'overtime_hours': 0,
+            })
+        attendances = self.env['hr.attendance'].search([('employee_id', '=', flexible_employee.id)], order='check_in')
+        expected_values = [8, 8, 8, 8]
+        for attendance, expected in zip(attendances, expected_values):
+            self.assertEqual(attendance.expected_hours, expected, f"Day {attendance.check_in.date()} should have {expected} expected hours")
+
+        # Add Monday (first day) afterward
+        self.env['hr.attendance'].create({
+            'employee_id': flexible_employee.id,
+            'check_in': base_date + timedelta(hours=9),
+            'check_out': base_date + timedelta(hours=17),
+            'worked_hours': 8,
+            'overtime_hours': 0,
+        })
+        # Still only first 4 days should count
+        attendances = self.env['hr.attendance'].search([('employee_id', '=', flexible_employee.id)], order='check_in')
+        expected_values = [8, 8, 8, 8, 0]
+        for attendance, expected in zip(attendances, expected_values):
+            self.assertEqual(attendance.expected_hours, expected, f"Day {attendance.check_in.date()} should have {expected} expected hours")
