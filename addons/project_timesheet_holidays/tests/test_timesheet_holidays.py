@@ -319,3 +319,31 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.assertEqual(fields.Date.to_string(timesheets[0].date), '2025-05-26')
         self.assertEqual(timesheets[1].employee_id, self.empl_employee)
         self.assertEqual(fields.Date.to_string(timesheets[1].date), '2025-05-29')
+
+    def test_one_day_timesheet_timeoff_flexible_employee(self):
+        flex_40h_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible 10h/week',
+            'hours_per_day': 10,
+            'full_time_required_hours': 10,
+            'flexible_hours': True,
+        })
+
+        self.empl_employee.resource_calendar_id = flex_40h_calendar
+
+        time_off = self.Requests.with_user(self.user_employee).create({
+            'name': 'Test 1 day Time off',
+            'employee_id': self.empl_employee.id,
+            'holiday_status_id': self.hr_leave_type_with_ts.id,
+            'request_date_from': datetime(2025, 7, 12),  # Random saturday
+            'request_date_to': datetime(2025, 7, 12),
+        })
+        time_off.with_user(SUPERUSER_ID)._action_validate()
+
+        timesheet = self.env['account.analytic.line'].search([
+            ('date', '>=', datetime(2025, 7, 12)),
+            ('date', '<=', datetime(2025, 7, 12)),
+            ('employee_id', '=', self.empl_employee.id),
+        ])
+        self.assertEqual(len(timesheet), 1, "One timesheet should be created")
+        self.assertEqual(sum(timesheet.mapped('unit_amount')), 10, "The duration of the timesheet for flexible employee leave "
+                                                        "should be 10 hours")
