@@ -11,6 +11,7 @@ from odoo.http import request
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
+from odoo.osv import expression
 
 from odoo.tools.translate import _
 
@@ -242,7 +243,16 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             base_partner_domain += [('grade_id.website_published', '=', True)]
         if search:
-            base_partner_domain += ['|', ('name', 'ilike', search), ('website_description', 'ilike', search)]
+            base_partner_domain += expression.OR([
+                [('name', 'ilike', search)],
+                [('website_description', 'ilike', search)],
+                [('street', 'ilike', search)],
+                [('street2', 'ilike', search)],
+                [('city', 'ilike', search)],
+                [('zip', '=', search)],
+                [('state_id.name', 'ilike', search)],
+                [('country_id.name', 'ilike', search)],
+            ])
 
         # Infer Country
         if not country and not country_all:

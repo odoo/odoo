@@ -61,8 +61,8 @@
                     <input t-if="country_all" type="hidden" name="country_all" value="True" />
                     <div class="input-group" role="search">
                         <input type="hidden" t-if='current_industry' name="industry" t-att-value='slug(current_industry)'/>
-                        <input type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="searches.get('search', '')"/>
-                        <button type="submit" aria-label="Search" title="Search" class="oe_search_button btn btn-light">
+                        <input type="search" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="searches.get('search', '')"/>
+                        <button type="submit" aria-label="Search" title="Search by name or address" class="oe_search_button btn btn-light">
                             <i class="oi oi-search"/>
                         </button>
                     </div>
@@ -144,7 +144,11 @@
             </div>
         </div>
         <div class="row mb-4">
-            <div class="my-5 py-5 text-center" t-if="not partners">
+            <div class="my-5 py-5 text-center" t-if="not partners and not searches.get('search', '')">
+                <h3>We're expanding our partner network.</h3>
+                <p class="lead">Please check back soon.</p>
+            </div>
+            <div class="my-5 py-5 text-center" t-elif="not partners">
                 <h5>No results found for "<span t-out="searches.get('search', '')"/>"</h5>
                 <a href="/partners">See all resellers</a>
             </div>
@@ -161,6 +165,7 @@
                         <t t-call="website.publish_management">
                             <t t-set="object" t-value="partner.grade_id"/>
                             <t t-set="publish_edit" t-value="True"/>
+                            <t t-set="action" t-value="'partnership.res_partner_grade_action'"/>
                         </t>
                     </h2>
                     <t t-set="last_grade" t-value="partner.grade_id.id"/>
@@ -305,6 +310,12 @@
     </t>
 </template>
 
+<template id="contact_details" inherit_id="website_crm_partner_assign.partner" name="Contact Details">
+    <xpath expr="//t[@t-call='website_partner.partner_detail']" position="inside">
+        <t t-set="contact_details" t-value="True"/>
+    </xpath>
+</template>
+
 <template id="grade_in_detail" inherit_id="website_partner.partner_detail">
     <xpath expr="//*[@id='partner_name']" position="before">
         <span class="col-lg-12 text-muted" t-if="partner.grade_id and partner.grade_id.website_published">
@@ -358,7 +369,7 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_lead" name="Leads / Opps" inherit_id="portal.portal_my_home" priority="15">
+    <template id="portal_my_home_lead" name="Leads / Opps" customize_show="True" inherit_id="portal.portal_my_home" priority="15">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
             <t t-set="portal_vendor_category_enable" t-value="True"/>
         </xpath>
