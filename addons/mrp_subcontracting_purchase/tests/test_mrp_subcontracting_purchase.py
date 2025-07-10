@@ -560,12 +560,12 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.bom.produce_delay = 3
         self.bom.days_to_prepare_mo = 4
         delays, _ = rule._get_lead_days(self.finished, supplierinfo=seller)
-        self.assertEqual(delays['total_delay'], seller.delay + self.env.company.po_lead + self.env.company.days_to_purchase)
+        self.assertEqual(delays['total_delay'], seller.delay + self.env.company.po_lead + self.env.company.days_to_purchase + self.env.company.horizon_days)
         # Case 2 Vendor lead time < Manufacturing lead time + DTPMO
         self.bom.produce_delay = 5
         self.bom.days_to_prepare_mo = 6
         delays, _ = rule._get_lead_days(self.finished, supplierinfo=seller)
-        self.assertEqual(delays['total_delay'], self.bom.produce_delay + self.bom.days_to_prepare_mo + self.env.company.po_lead + self.env.company.days_to_purchase)
+        self.assertEqual(delays['total_delay'], self.bom.produce_delay + self.bom.days_to_prepare_mo + self.env.company.po_lead + self.env.company.days_to_purchase + self.env.company.horizon_days)
 
     def test_subcontracting_lead_days_on_overview(self):
         """Test on the BOM overview, the lead days and resupply availability are
@@ -947,8 +947,8 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         return_picking.button_validate()
         self.assertEqual(return_picking.state, 'done')
 
-    def test_global_visibility_days_affect_lead_time(self):
-        """ Don't count global visibility days more than once, make sure a PO generated from
+    def test_global_horizon_days_affect_lead_time(self):
+        """ Don't count global horizon days more than once, make sure a PO generated from
         replenishment/orderpoint has a sensible planned reception date.
         """
         wh = self.env.user._get_default_warehouse_id()
@@ -969,12 +969,12 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             })],
         })
-        out_picking.with_context(global_visibility_days=365).action_assign()
+        out_picking.with_context(global_horizon_days=365).action_assign()
         r = orderpoint.action_stock_replenishment_info()
         repl_info = self.env[r['res_model']].browse(r['res_id'])
-        lead_days_date = datetime.strptime(
-            loads(repl_info.with_context(global_visibility_days=365).json_lead_days)['lead_days_date'],'%m/%d/%Y').date()
-        self.assertEqual(lead_days_date, Date.today() + timedelta(days=365))
+        lead_horizon_date = datetime.strptime(
+            loads(repl_info.with_context(global_horizon_days=365).json_lead_days)['lead_horizon_date'], '%m/%d/%Y').date()
+        self.assertEqual(lead_horizon_date, Date.today() + timedelta(days=365))
 
         orderpoint.action_replenish()
         purchase_order = self.env['purchase.order'].search([

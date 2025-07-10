@@ -724,6 +724,9 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.env.company.po_lead = 20
         # set manufacturing security lead time to 25 days
         self.env.company.manufacturing_lead = 25
+        # set horizon days to 0
+        self.env.company.horizon_days = 0
+
         product = self.env['product.product'].create({
             'name': 'super product',
             'is_storable': True,
@@ -750,8 +753,8 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             'warehouse_id': self.warehouse.id,
             'route_id': self.env.ref('mrp.route_warehouse0_manufacture').id,
         })
-        # lead_days_date should be today + manufacturing security lead time + product manufacturing lead time
-        self.assertEqual(orderpoint.lead_days_date, (fields.Date.today() + timedelta(days=25) + timedelta(days=1)))
+        # lead_horizon_date should be today + horizon days + manufacturing security lead time + product manufacturing lead time
+        self.assertEqual(orderpoint.lead_horizon_date, (fields.Date.today() + timedelta(days=25) + timedelta(days=1)))
         orderpoint.action_replenish()
         mo = self.env['mrp.production'].search([('product_id', '=', product.id)])
         self.assertEqual(mo.product_uom_qty, 5)
