@@ -367,14 +367,11 @@ export class ORM {
 /**
  * Note:
  *
- * when we will need a way to configure a rpc (for example, to setup a "shadow"
- * flag, or some way of not displaying errors), we can use the following api:
+ * To hide RPC errors, use the following API:
  *
  * this.orm = useService('orm');
- *
  * ...
- *
- * const result = await this.orm.withOption({shadow: true}).read('res.partner', [id]);
+ * const result = await this.orm.silent.read('res.partner', [id]);
  */
 export const ormService = {
     async: [
