@@ -1,16 +1,16 @@
 import {
     applyTransformations,
     areEqualTrees,
-    cloneTree,
+    Condition,
     condition,
+    Connector,
     connector,
-    expression,
     FALSE_TREE,
     isTree,
     normalizeValue,
     operate,
     rewriteNConsecutiveChildren,
-    TRUE_TREE,
+    TRUE_TREE
 } from "./condition_tree";
 
 function splitPath(path) {
@@ -24,13 +24,18 @@ function isSimplePath(path) {
     return typeof path === "string" && !splitPath(path).initialPath;
 }
 
+/**
+ * @param {Connector} tree
+ * @param {string} initialPath
+ * @param {boolean} negate
+ * @returns {Connector|Condition}
+ */
 function wrapInAny(tree, initialPath, negate) {
-    let con = cloneTree(tree);
     if (initialPath) {
-        con = condition(initialPath, "any", con);
+        tree = Condition.of(initialPath, "any", tree.clone());
     }
-    con.negate = negate;
-    return con;
+    tree.negate = negate;
+    return tree;
 }
 
 function introduceSetOperators(tree, options = {}) {
@@ -99,7 +104,7 @@ function isSimpleAnd(c) {
         c.value === "&" &&
         !c.negate &&
         c.children.length === 2 &&
-        c.children.every((child) => child.type === "condition" && !child.negate)
+        c.children.every((child) => child instanceof Condition && !child.negate)
     ) {
         return true;
     }
@@ -120,7 +125,7 @@ function isBetween(c) {
 }
 
 function makeBetween(path, value1, value2) {
-    return connector("&", [condition(path, ">=", value1), condition(path, "<=", value2)]);
+    return Connector.of("&", [Condition.of(path, ">=", value1), Condition.of(path, "<=", value2)]);
 }
 
 function isStrictBetween(c) {
@@ -137,23 +142,23 @@ function isStrictBetween(c) {
 }
 
 function makeStrictBetween(path, value1, value2) {
-    return connector("&", [condition(path, ">=", value1), condition(path, "<", value2)]);
+    return Connector.of("&", [Condition.of(path, ">=", value1), Condition.of(path, "<", value2)]);
 }
 
 function boundDate(delta) {
     if (!delta) {
-        return expression(`context_today().strftime("%Y-%m-%d")`);
+        return Expression.of(`context_today().strftime("%Y-%m-%d")`);
     }
-    return expression(`(context_today() + relativedelta(${delta})).strftime('%Y-%m-%d')`);
+    return Expression.of(`(context_today() + relativedelta(${delta})).strftime('%Y-%m-%d')`);
 }
 
 function boundDatetime(delta) {
     if (!delta) {
-        return expression(
+        return Expression.of(
             `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
         );
     }
-    return expression(
+    return Expression.of(
         `datetime.datetime.combine(context_today() + relativedelta(${delta}), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
     );
 }
@@ -269,14 +274,14 @@ function _eliminateAnyOperator(c) {
     if (
         operator === "any" &&
         isTree(value) &&
-        value.type === "condition" &&
+        value instanceof Condition &&
         typeof path === "string" &&
         typeof value.path === "string" &&
         !negate &&
         !value.negate &&
         ["between", "in range"].includes(value.operator)
     ) {
-        return condition(`${path}.${value.path}`, value.operator, value.value);
+        return Condition.of(`${path}.${value.path}`, value.operator, value.value);
     }
 }
 

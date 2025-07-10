@@ -1,4 +1,3 @@
-import { Domain } from "@web/core/domain";
 import { formatAST, parseExpr } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
 
@@ -7,46 +6,13 @@ import { toPyValue } from "@web/core/py_js/py_utils";
 
 /**
  * @typedef {number|string|boolean|Expression} Atom
- */
-
-/**
  * @typedef {Atom|Atom[]} Value
  */
 
-/**
- * @typedef {Object} Condition
- * @property {"condition"} type
- * @property {Value} path
- * @property {Value} operator
- * @property {Value|Tree} value
- * @property {boolean} negate
- */
-
-/**
- * @typedef {Object} ComplexCondition
- * @property {"complex_condition"} type
- * @property {string} value expression
- */
-
-/**
- * @typedef {Object} Connector
- * @property {"connector"} type
- * @property {boolean} negate
- * @property {"|"|"&"} value
- * @property {Tree[]} children
- */
-
-/**
- * @typedef {Connector|Condition|ComplexCondition} Tree
- */
-
-/**
- * @typedef {Object} Options
- * @property {(value: Value) => (null|Object)} [getFieldDef]
- * @property {boolean} [distributeNot]
- */
-
 export class Expression {
+    static of(ast) {
+        return Expression.of(ast);
+    }
     constructor(ast) {
         if (typeof ast === "string") {
             ast = parseExpr(ast);
@@ -54,81 +20,12 @@ export class Expression {
         this._ast = ast;
         this._expr = formatAST(ast);
     }
-
     toAST() {
         return this._ast;
     }
-
     toString() {
         return this._expr;
     }
-}
-
-/**
- * @param {string} expr
- * @returns {Expression}
- */
-export function expression(expr) {
-    return new Expression(expr);
-}
-
-/**
- * @param {"|"|"&"} value
- * @param {Tree[]} [children=[]]
- * @param {boolean} [negate=false]
- * @returns {Connector}
- */
-export function connector(value, children = [], negate = false) {
-    return { type: "connector", value, children, negate };
-}
-
-/**
- * @param {string} value
- * @returns {ComplexCondition}
- */
-export function complexCondition(value) {
-    parseExpr(value);
-    return { type: "complex_condition", value };
-}
-
-/**
- * @param {Value} path
- * @param {Value} operator
- * @param {Value|Tree} value
- * @param {boolean} [negate=false]
- * @returns {Condition}
- */
-export function condition(path, operator, value, negate = false) {
-    return { type: "condition", path, operator, value, negate };
-}
-
-export const TRUE_TREE = condition(1, "=", 1);
-export const FALSE_TREE = condition(0, "=", 1);
-
-/**
- * @param {Value} value
- * @returns {Value}
- */
-function cloneValue(value) {
-    if (value instanceof Expression) {
-        return new Expression(value.toAST());
-    }
-    if (Array.isArray(value)) {
-        return value.map(cloneValue);
-    }
-    return value;
-}
-
-/**
- * @param {Tree} tree
- * @returns {Tree}
- */
-export function cloneTree(tree) {
-    const clone = {};
-    for (const key in tree) {
-        clone[key] = cloneValue(tree[key]);
-    }
-    return clone;
 }
 
 const areEqualValues = (value, otherValue) => formatValue(value) === formatValue(otherValue);
@@ -140,57 +37,21 @@ const areEqualArraysOfTrees = (array, otherArray) => {
     for (let i = 0; i < array.length; i++) {
         const elem = array[i];
         const otherElem = otherArray[i];
-        if (!areEqualTrees(elem, otherElem)) {
+        if (!(elem instanceof ConditionTree) || !elem.equals(otherElem)) {
             return false;
         }
     }
     return true;
 };
 
-export const areEqualTrees = (tree, otherTree) => {
-    if (tree.type !== otherTree.type) {
-        return false;
-    }
-    if (tree.negate !== otherTree.negate) {
-        return false;
-    }
-    if (tree.type === "condition") {
-        if (!areEqualValues(tree.path, otherTree.path)) {
-            return false;
-        }
-        if (!areEqualValues(tree.operator, otherTree.operator)) {
-            return false;
-        }
-        if (isTree(tree.value)) {
-            if (isTree(otherTree.value)) {
-                return areEqualTrees(tree.value, otherTree.value);
-            }
-            return false;
-        } else if (isTree(otherTree.value)) {
-            return false;
-        }
-        if (!areEqualValues(tree.value, otherTree.value)) {
-            return false;
-        }
-        return true;
-    }
-    if (!areEqualValues(tree.value, otherTree.value)) {
-        return false;
-    }
-    if (tree.type === "complex_condition") {
-        return true;
-    }
-    return areEqualArraysOfTrees(tree.children, otherTree.children);
-};
-
 /**
  * @param {import("@web/core/py_js/py_parser").AST} ast
  * @returns {Value}
  */
-export function toValue(ast, isWithinArray = false) {
+export function valueFromAST(ast, isWithinArray = false) {
     if ([4, 10].includes(ast.type) && !isWithinArray) {
         /** 4: list, 10: tuple */
-        return ast.value.map((v) => toValue(v, true));
+        return ast.value.map((v) => valueFromAST(v, true));
     } else if ([0, 1, 2].includes(ast.type)) {
         /** 0: number, 1: string, 2: boolean */
         return ast.value;
@@ -201,56 +62,182 @@ export function toValue(ast, isWithinArray = false) {
         /** 5: name */
         return JSON.parse(ast.value);
     } else {
-        return new Expression(ast);
+        return Expression.of(ast);
     }
 }
 
-export function astFromValue(value) {
+export function ASTFromValue(value) {
     if (value instanceof Expression) {
         return value.toAST();
     }
     if (Array.isArray(value)) {
-        return { type: 4, value: value.map(astFromValue) };
+        return { type: 4, value: value.map(ASTFromValue) };
     }
     return toPyValue(value);
 }
 
 export function formatValue(value) {
-    return formatAST(astFromValue(value));
+    return formatAST(ASTFromValue(value));
 }
 
 export function normalizeValue(value) {
-    return toValue(astFromValue(value)); // no array in array (see isWithinArray)
+    return valueFromAST(ASTFromValue(value)); // no array in array (see isWithinArray)
+}
+
+export class ConditionTree {
+    static get TRUE() {
+        return Condition.of(1, "=", 1);
+    }
+    static get FALSE() {
+        return Condition.of(0, "=", 1);
+    }
+    static get AND() {
+        return Connector.of("&");
+    }
+    static get OR() {
+        return Connector.of("|");
+    }
+    equals(other) {
+        return false;
+    }
+    clone() {
+        throw new Error();
+    }
+}
+
+export class Connector extends ConditionTree {
+    /**
+     * @param {"&"|"|"} value
+     * @param {ConditionTree[]} [children=[]]
+     * @param {boolean} [negate=false]
+     */
+    static of(value, children, negate) {
+        return new Connector(value, children, negate);
+    }
+    /**
+     * @param {"&"|"|"} value
+     * @param {ConditionTree[]} [children=[]]
+     * @param {boolean} [negate=false]
+     */
+    constructor(value, children = [], negate = false) {
+        super();
+        this.value = value;
+        this.children = children;
+        this.negate = negate;
+    }
+    equals(other) {
+        return (
+            other instanceof Connector &&
+            this.value === other.value &&
+            areEqualArraysOfTrees(this.children, other.children) &&
+            this.negate === other.negate
+        );
+    }
+    clone() {
+        return Connector.of(
+            this.value,
+            // @ts-ignore
+            this.children.map((child) => child.clone()),
+            this.negate
+        );
+    }
+}
+
+export class Condition extends ConditionTree {
+    /**
+     * @param {Value} path
+     * @param {Value} operator
+     * @param {Value|ConditionTree} value
+     * @param {boolean} [negate=false]
+     */
+    static of(path, operator, value, negate = false) {
+        return new Condition(path, operator, value, negate);
+    }
+    /**
+     * @param {Value} path
+     * @param {Value} operator
+     * @param {Value|ConditionTree} value
+     * @param {boolean} [negate=false]
+     */
+    constructor(path, operator, value, negate = false) {
+        super();
+        this.path = path;
+        this.operator = operator;
+        this.value = value;
+        this.negate = negate;
+    }
+    equals(other) {
+        return other instanceof Condition &&
+            areEqualValues(this.path, other.path) &&
+            areEqualValues(this.operator, other.operator) &&
+            this.negate === other.negate &&
+            isTree(this.value)
+            ? isTree(other.value)
+                ? this.value.equals(other.value)
+                : false
+            : areEqualValues(this.value, other.value);
+    }
+    clone() {
+        return Condition.of(
+            cloneValue(this.path),
+            cloneValue(this.operator),
+            // @ts-ignore
+            isTree(this.value) ? this.value.clone() : cloneValue(this.value),
+            this.negate
+        );
+    }
+}
+
+export class ComplexCondition extends ConditionTree {
+    /**
+     * @param {string} str
+     */
+    static of(str) {
+        return new ComplexCondition(str);
+    }
+    /**
+     * @param {string} str
+     */
+    constructor(str) {
+        super();
+        this.value = str;
+    }
+    equals(other) {
+        return other instanceof ComplexCondition && this.value === other.value;
+    }
+    clone() {
+        return ComplexCondition.of(this.value);
+    }
+}
+
+/**
+ * @param {Value} value
+ * @returns {Value}
+ */
+function cloneValue(value) {
+    if (value instanceof Expression) {
+        return Expression.of(value.toAST());
+    }
+    if (Array.isArray(value)) {
+        return value.map(cloneValue);
+    }
+    return value;
 }
 
 export function isTree(value) {
-    return (
-        typeof value === "object" &&
-        !(value instanceof Domain) &&
-        !(value instanceof Expression) &&
-        !Array.isArray(value) &&
-        value !== null
-    );
+    return value instanceof ConditionTree;
 }
 
 /**
  * @param {Connector} parent
- * @param {Tree} child
+ * @param {ConditionTree} child
  */
 export function addChild(parent, child) {
-    if (child.type === "connector" && !child.negate && child.value === parent.value) {
+    if (child instanceof Connector && !child.negate && child.value === parent.value) {
         parent.children.push(...child.children);
     } else {
         parent.children.push(child);
     }
-}
-
-export function applyTransformations(transformations, transformed, ...fixedParams) {
-    for (let i = transformations.length - 1; i >= 0; i--) {
-        const fn = transformations[i];
-        transformed = fn(transformed, ...fixedParams);
-    }
-    return transformed;
 }
 
 function normalizeConnector(connector) {
@@ -286,10 +273,10 @@ function makeOptions(path, options) {
 
 /**
  * @param {Function} transformation
- * @param {Tree} tree
+ * @param {ConditionTree} tree
  * @param {Options} [options={}]
  * @param {"condition"|"connector"|"complex_condition"} [treeType="condition"]
- * @returns {Tree}
+ * @returns {ConditionTree}
  */
 export function operate(
     transformation,
@@ -298,7 +285,7 @@ export function operate(
     treeType = "condition",
     traverseSubTrees = true
 ) {
-    if (tree.type === "connector") {
+    if (tree instanceof Connector) {
         const newTree = {
             ...tree,
             children: tree.children.map((c) =>
@@ -311,7 +298,7 @@ export function operate(
         return normalizeConnector(newTree);
     }
     const clone = cloneTree(tree);
-    if (traverseSubTrees && tree.type === "condition" && isTree(tree.value)) {
+    if (traverseSubTrees && tree instanceof Condition && isTree(tree.value)) {
         clone.value = operate(
             transformation,
             tree.value,
@@ -324,25 +311,4 @@ export function operate(
         return transformation(clone, options) || clone;
     }
     return clone;
-}
-
-export function rewriteNConsecutiveChildren(transformation, N = 2) {
-    return (c, options) => {
-        const children = [];
-        const currentChildren = c.children;
-        for (let i = 0; i < currentChildren.length; i++) {
-            const NconsecutiveChildren = currentChildren.slice(i, i + N);
-            let replacement = null;
-            if (NconsecutiveChildren.length === N) {
-                replacement = transformation(connector(c.value, NconsecutiveChildren), options);
-            }
-            if (replacement) {
-                children.push(replacement);
-                i += N - 1;
-            } else {
-                children.push(NconsecutiveChildren[0]);
-            }
-        }
-        return { ...c, children };
-    };
 }
