@@ -233,6 +233,8 @@ class UserInputSession(http.Controller):
             if question.comment_count_as_answer:
                 answers_validity.append(False)
 
+        if not question:
+            return {}
         full_statistics = question._prepare_statistics(user_input_lines)[0]
         input_line_values = []
         if question.question_type in ['char_box', 'date', 'datetime']:
