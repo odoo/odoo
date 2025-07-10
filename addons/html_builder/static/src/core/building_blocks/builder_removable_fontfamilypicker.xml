@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderRemovableFontFamilyPicker">
+    <BuilderFontFamilyPicker 
+        actionParam="props.actionParam" 
+        valueParamName="'actionValue'"/>
+    <BuilderButton 
+        t-if="this.state.specified"
+        actionParam="props.actionParam"
+        className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
+        title="props.title"/>
+</t>
+
+</templates>
