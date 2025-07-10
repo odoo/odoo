@@ -578,9 +578,9 @@ var VariantMixin = {
             .trigger('change');
 
         $parent
-            .find('.o_product_tags')
-            .first()
-            .html(combination.product_tags);
+            .find('.o_product_tags:first')
+            .html($(combination.product_tags)
+            .html());
 
         this.handleCustomValues($(ev.target));
     },
