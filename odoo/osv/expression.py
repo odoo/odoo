@@ -181,6 +181,8 @@ class _ProtectedDomain(tuple):
     __hash__ = None
 
     def __eq__(self, other): return list(self).__eq__(other)
+    def __add__(self, other): return tuple(self) + tuple(other) if isinstance(other, (list, tuple)) else NotImplemented
+    def __radd__(self, other): return tuple(other) + tuple(self) if isinstance(other, (list, tuple)) else NotImplemented
     def copy(self): return list(self)
 
 
