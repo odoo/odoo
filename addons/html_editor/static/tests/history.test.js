@@ -210,6 +210,38 @@ describe("redo", () => {
         undo(editor);
         expect(getContent(el)).toBe(`<p>[]c</p>`);
     });
+
+    test("undo then redo, then re-undo, then re-redo and set the selection where we expect it", async () => {
+        const { editor, el } = await setupEditor("<p>a</p><p>b</p>");
+        const [p1, p2] = editor.editable.querySelectorAll("p");
+        editor.shared.selection.setCursorEnd(p1);
+        // DO
+        await insertText(editor, "A");
+        expect(getContent(el)).toBe("<p>aA[]</p><p>b</p>", { message: "insert A" });
+        editor.shared.selection.setCursorEnd(p2);
+        await insertText(editor, "B");
+        expect(getContent(el)).toBe("<p>aA</p><p>bB[]</p>", { message: "insert B" });
+        // UNDO
+        await press(["ctrl", "z"]);
+        expect(getContent(el)).toBe("<p>aA</p><p>b[]</p>", { message: "undo insert B" });
+        await press(["ctrl", "z"]);
+        expect(getContent(el)).toBe("<p>a[]</p><p>b</p>", { message: "undo insert A" });
+        // REDO
+        await press(["ctrl", "y"]);
+        expect(getContent(el)).toBe("<p>aA[]</p><p>b</p>", { message: "redo insert A" });
+        await press(["ctrl", "y"]);
+        expect(getContent(el)).toBe("<p>aA</p><p>bB[]</p>", { message: "redo insert B" });
+        // REUNDO
+        await press(["ctrl", "z"]);
+        expect(getContent(el)).toBe("<p>aA</p><p>b[]</p>", { message: "undo insert B" });
+        await press(["ctrl", "z"]);
+        expect(getContent(el)).toBe("<p>a[]</p><p>b</p>", { message: "undo insert A" });
+        // REREDO
+        await press(["ctrl", "y"]);
+        expect(getContent(el)).toBe("<p>aA[]</p><p>b</p>", { message: "redo insert A" });
+        await press(["ctrl", "y"]);
+        expect(getContent(el)).toBe("<p>aA</p><p>bB[]</p>", { message: "redo insert B" });
+    });
 });
 
 describe("selection", () => {
