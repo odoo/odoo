@@ -38,13 +38,13 @@
     <BuilderRow label.translate="Content Background">
         <BuilderColorPicker noTransparency="true"
             enabledTabs="['solid', 'custom']"
-            action="'mass_mailing_egg.CustomizeStyleProperty'"
-            actionParam="{ selector: '.o_mail_wrapper_td > [data-snippet]', property: 'background-color' }"
+            action="'mass_mailing_egg.CustomizeMailingVariable'"
+            actionParam="{ variable: '--wrapper-background-color' }"
         />
     </BuilderRow>
 </t>
 
-<t t-name="mass_mailing_egg.DesignHeadingsOption">
+<!-- <t t-name="mass_mailing_egg.DesignHeadingsOption">
     <t t-set="heading_label">Heading</t>
     <t t-set="display_label">Display</t>
     <BuilderRow label.translate="Font Size" action="'mass_mailing_egg.CustomizeStyleProperty'">
@@ -64,7 +64,7 @@
                 </BuilderRow>
             </t>
         </t>
-    </BuilderRow>
+    </BuilderRow> -->
     <!-- font family -->
     <!-- "× ": \u00D7\u2000 -->
     <!-- <BuilderRow label.translate="Line Height" action="'mass_mailing_egg.CustomizeStyleProperty'">
@@ -89,7 +89,7 @@
             </t>
         </t>
     </BuilderRow> -->
-</t>
+<!-- </t> -->
 <t t-name="mass_mailing_egg.DesignButtonsOption">
     <BuilderRow label.translate="Primary Buttons" action="'mass_mailing_egg.CustomizeMassMailingStyleProperty'">
         <BuilderNumberInput unit="'px'" saveUnit="'px'"

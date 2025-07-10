@@ -2,8 +2,16 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
+import { CUSTOMIZE_MAILING_VARIABLES } from "@mass_mailing_egg/builder/plugins/customize_mailing_variables";
 
 const RE_SELECTOR_ENDS_WITH_GT_STAR = />\s*\*\s*$/;
+export const PRIORITY_STYLES = {
+    h1: new Set(["font-family"]),
+    h2: new Set(["font-family"]),
+    h3: new Set(["font-family"]),
+    p: new Set(["font-family"]),
+    hr: new Set(["border-top-width", "border-top-style", "border-top-color"]),
+};
 
 export class CustomizeMailingPlugin extends Plugin {
     static id = "mass_mailing.CustomizeMailingPlugin";
@@ -12,12 +20,14 @@ export class CustomizeMailingPlugin extends Plugin {
         "addCSSRule",
         "convertObjectToRuleStyle",
         "getRule",
+        "getVariableValue",
+        "setVariable",
         "transformFontFamilySelector",
     ];
 
     resources = {
         builder_actions: {
-            CustomizeStyleProperty,
+            CustomizeMailingVariable,
         },
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
     };
@@ -32,6 +42,7 @@ export class CustomizeMailingPlugin extends Plugin {
             this.parseDesignElement(styleEl);
             styleEl.remove();
         }
+        this.setupMailingVariables();
         this.document.adoptedStyleSheets = [...this.document.adoptedStyleSheets, this.styleSheet];
     }
 
@@ -67,6 +78,24 @@ export class CustomizeMailingPlugin extends Plugin {
         return ruleStyle;
     }
 
+    setupMailingVariables() {
+        const varRule = this.getRule(this.cssPrefix);
+        for (const [variable, options] of Object.entries(CUSTOMIZE_MAILING_VARIABLES)) {
+            const currentValue = this.getVariableValue(variable);
+            const defaultValue = options.default ?? "";
+            if (currentValue === "" && defaultValue !== "") {
+                varRule.style.setProperty(variable, defaultValue);
+            }
+            for (const selector of options.selectors) {
+                const rule = this.getRule(selector);
+                for (const property of options.properties) {
+                    const important = PRIORITY_STYLES[selector]?.has(property) ? "important" : "";
+                    rule.style.setProperty(property, `var(${variable})`, important);
+                }
+            }
+        }
+    }
+
     parseDesignElement(styleEl) {
         const rules = [...styleEl.sheet.cssRules];
         for (const rule of rules) {
@@ -99,6 +128,14 @@ export class CustomizeMailingPlugin extends Plugin {
         return this.styleSheet.cssRules.item(this.styleSheet.insertRule(`${selector} { }`));
     }
 
+    getVariableValue(variable) {
+        return this.getRule(this.cssPrefix).style.getPropertyValue(variable);
+    }
+
+    setVariable(variable, value) {
+        return this.getRule(this.cssPrefix).style.setProperty(variable, value);
+    }
+
     transformFontFamilySelector(selector) {
         if (selector.trim().endsWith(":not(.fa)")) {
             return [selector];
@@ -120,26 +157,18 @@ export class CustomizeMailingPlugin extends Plugin {
         }
         selector = selector.trim();
         const rule = this.getRule(selector);
-        for (const style of whitelist ?? ruleStyle) {
+        for (const property of whitelist ?? ruleStyle) {
             rule.style.setProperty(
-                style,
-                ruleStyle.getPropertyValue(style),
-                ruleStyle.getPropertyPriority(style)
+                property,
+                ruleStyle.getPropertyValue(property),
+                ruleStyle.getPropertyPriority(property)
             );
         }
     }
 }
 
-export const PRIORITY_STYLES = {
-    h1: new Set(["font-family"]),
-    h2: new Set(["font-family"]),
-    h3: new Set(["font-family"]),
-    p: new Set(["font-family"]),
-    hr: new Set(["border-top-width", "border-top-style", "border-top-color"]),
-};
-
-export class CustomizeStyleProperty extends BuilderAction {
-    static id = "mass_mailing_egg.CustomizeStyleProperty";
+export class CustomizeMailingVariable extends BuilderAction {
+    static id = "mass_mailing_egg.CustomizeMailingVariable";
     static dependencies = ["builderActions", "mass_mailing.CustomizeMailingPlugin", "history"];
     isApplied({ value }) {
         return this.getValue(...arguments) === value;
@@ -150,34 +179,24 @@ export class CustomizeStyleProperty extends BuilderAction {
      * @param { string } params.property
      */
     getValue({ params }) {
-        const rule = this.dependencies["mass_mailing.CustomizeMailingPlugin"].getRule(
-            params.selector
+        return this.dependencies["mass_mailing.CustomizeMailingPlugin"].getVariableValue(
+            params.variable
         );
-        return rule.style.getPropertyValue(params.property);
     }
     apply({ params, value }) {
         const oldValue = this.getValue(...arguments);
-        const important = PRIORITY_STYLES[params.selector]?.has(params.property);
         this.dependencies.history.applyCustomMutation({
             apply: () => {
-                for (const selector of [params.selector, ...(params.extraSelectors ?? [])]) {
-                    this.dependencies["mass_mailing.CustomizeMailingPlugin"].addCSSRule({
-                        selector,
-                        ruleStyle: {
-                            [params.property]: `${value}${important ? "!important" : ""};`,
-                        },
-                    });
-                }
+                this.dependencies["mass_mailing.CustomizeMailingPlugin"].setVariable(
+                    params.variable,
+                    value
+                );
             },
             revert: () => {
-                for (const selector of [params.selector, ...(params.extraSelectors ?? [])]) {
-                    this.dependencies["mass_mailing.CustomizeMailingPlugin"].addCSSRule({
-                        selector,
-                        ruleStyle: {
-                            [params.property]: `${oldValue}${important ? "!important" : ""};`,
-                        },
-                    });
-                }
+                this.dependencies["mass_mailing.CustomizeMailingPlugin"].setVariable(
+                    params.variable,
+                    oldValue
+                );
             },
         });
     }
