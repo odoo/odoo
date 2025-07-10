@@ -19,7 +19,13 @@ from random import randint
 from unittest.mock import patch
 from urllib.parse import urlparse, urlencode, parse_qsl
 
+<<<<<<< 30394c53bdaeb58e800f3c0b7d5217c3ac078b72
 from odoo import tools, fields
+||||||| ef467c26502ea1432168373acb7679be69b9ea83
+from odoo import tools
+=======
+from odoo import fields, tools
+>>>>>>> 450372ca82755c845b53c1d532dda539d02c84b4
 from odoo.addons.base.models.ir_mail_server import IrMail_Server
 from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.addons.bus.models.bus import BusBus, json_dump
@@ -1980,6 +1986,7 @@ class MailCommon(common.TransactionCase, MailCase):
                 data.pop("rating_avg", None)
                 data.pop("rating_count", None)
         return list(threads_data)
+<<<<<<< 30394c53bdaeb58e800f3c0b7d5217c3ac078b72
 
 
 @contextlib.contextmanager
@@ -1995,3 +2002,21 @@ def freeze_all_time(dt=None):
         dt = fields.Datetime.now()
     with patch('odoo.sql_db.BaseCursor.now', return_value=dt), freeze_time(dt):
         yield
+||||||| ef467c26502ea1432168373acb7679be69b9ea83
+=======
+
+
+@contextlib.contextmanager
+def freeze_all_time(dt=None):
+    """Freeze both `cr.now` and `Datetime.now`. ORM `create_date` and `write_date`
+    are based on `cursor.now()`. Domains often use `Datetime.now()` which can
+    lead to inconsistencies when using `freeze_time`.
+
+    :param dt: Datetime to freeze the time to. Defaults to `Datetime.now()`.
+    :type dt: datetime.datetime
+    """
+    if not dt:
+        dt = fields.Datetime.now()
+    with patch('odoo.sql_db.Cursor.now', return_value=dt), freeze_time(dt):
+        yield
+>>>>>>> 450372ca82755c845b53c1d532dda539d02c84b4
