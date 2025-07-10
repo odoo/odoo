@@ -1,27 +1,26 @@
-import { registry } from "@web/core/registry";
-import { contains } from "@web/../tests/utils";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { contains } from "@web/../tests/utils";
+import { registry } from "@web/core/registry";
+import { Deferred } from "@web/core/utils/concurrency";
 import { TourHelpers } from "@web_tour/tour_service/tour_helpers";
 import { Chatbot } from "@im_livechat/core/common/chatbot_model";
 
 const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
+let chatbotDelayProcessingDef;
 
 registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
     steps: () => {
-        patchWithCleanup(window, {
-            debounceAnswerCount: 0,
-        });
         patchWithCleanup(Chatbot.prototype, {
             // Count the number of times this method is called to check whether the chatbot is regularly
             // checking the user's input in the multi line step until the user finishes typing.
             async _delayThenProcessAnswerAgain(message) {
-                window.debounceAnswerCount++;
+                chatbotDelayProcessingDef?.resolve();
                 return await super._delayThenProcessAnswerAgain(message);
             },
         });
         patchWithCleanup(Chatbot, {
             MESSAGE_DELAY: 0,
-            MULTILINE_STEP_DEBOUNCE_DELAY: 500,
+            MULTILINE_STEP_DEBOUNCE_DELAY: 2000,
             TYPING_DELAY: 0,
         });
         return [
@@ -139,29 +138,26 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             {
                 // Simulate that the user is typing, so the chatbot shouldn't go to the next step
                 trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run() {
-                    const counter = window.debounceAnswerCount;
+                async run() {
                     const target = new TourHelpers(this.anchor);
-                    const delay = Chatbot.MULTILINE_STEP_DEBOUNCE_DELAY;
+                    chatbotDelayProcessingDef = new Deferred();
+                    let failTimeout = setTimeout(() => {
+                        chatbotDelayProcessingDef.reject(
+                            "Chatbot should stay in multi line step when user is typing."
+                        );
+                    }, 5000);
+                    chatbotDelayProcessingDef.then(() => clearTimeout(failTimeout));
                     target.edit("Never mind!");
-                    setTimeout(() => {
-                        if (window.debounceAnswerCount <= counter) {
-                            console.error(
-                                "Chatbot should stay in multi line step when user is typing."
-                            );
-                        }
-                    }, delay);
-                    setTimeout(() => {
-                        target.edit("Never mind!!!!");
-                        const counter = window.debounceAnswerCount;
-                        setTimeout(() => {
-                            if (window.debounceAnswerCount <= counter) {
-                                console.error(
-                                    "Chatbot should stay in multi line step if user isn't done typing."
-                                );
-                            }
-                        }, delay * 2);
-                    }, delay + 200);
+                    await chatbotDelayProcessingDef;
+                    chatbotDelayProcessingDef = new Deferred();
+                    failTimeout = setTimeout(() => {
+                        chatbotDelayProcessingDef.reject(
+                            "Chatbot should stay in multi line step if user isn't done typing."
+                        );
+                    }, 5000);
+                    chatbotDelayProcessingDef.then(() => clearTimeout(failTimeout));
+                    target.edit("Never mind!!!");
+                    await chatbotDelayProcessingDef;
                 },
             },
             {
