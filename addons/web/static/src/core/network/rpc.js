@@ -7,7 +7,11 @@ export const rpcBus = new EventBus();
 const RPC_SETTINGS = new Set(["cached", "silent", "xhr", "headers"]);
 function validateRPCSettings(settings) {
     if (!Object.keys(settings).every((key) => RPC_SETTINGS.has(key))) {
-        throw new Error(`The settings for rpc should be ${[...RPC_SETTINGS].join(" ")}`);
+        throw new Error(
+            `The settings for rpc should be ${[...RPC_SETTINGS].join(" ")} and not : ${Object.keys(
+                settings
+            ).join(" ")}`
+        );
     }
     if ("cached" in settings && "xhr" in settings) {
         throw new Error("Can't use 'cache' and 'xhr' at the same time");
