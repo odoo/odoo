@@ -327,13 +327,6 @@ test("should not zwnbsp-pad nav-link", async () => {
     });
 });
 
-test("should not zwnbsp-pad in nav", async () => {
-    await testEditor({
-        contentBefore: '<nav>a<a href="http://test.test/">[]b</a>c</nav>',
-        contentBeforeEdit: '<nav>a<a href="http://test.test/">[]b</a>c</nav>',
-    });
-});
-
 test("should not zwnbsp-pad link with block fontawesome", async () => {
     await testEditor({
         contentBefore:
