@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { parseDateTime } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
+import { useDebounced } from "@web/core/utils/timing";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
@@ -67,6 +68,7 @@ export class TicketScreen extends Component {
         this.numberBuffer.use({
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
         });
+        this.debouncedGetServerOrders = useDebounced(() => this.pos.getServerOrders(), 1000);
 
         this.state = useState({
             nbrByPage: NBR_BY_PAGE,
@@ -85,7 +87,7 @@ export class TicketScreen extends Component {
             if (!this.pos.loadingOrderState) {
                 try {
                     this.pos.loadingOrderState = true;
-                    await this.pos.getServerOrders();
+                    this.debouncedGetServerOrders();
                 } catch (error) {
                     if (error instanceof ConnectionLostError) {
                         Promise.reject(error);
