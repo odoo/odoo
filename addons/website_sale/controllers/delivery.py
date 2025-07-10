@@ -77,7 +77,7 @@ class WebsiteSaleDelivery(WebsiteSale):
             # the price with another pricelist at this state since the customer has already accepted
             # the amount and validated the payment.
             order_sudo.env.remove_to_compute(order_sudo._fields['pricelist_id'], order_sudo)
-        elif order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
+        elif order_sudo.name in order_sudo.partner_shipping_id.name:
             self._create_or_edit_partner(
                 partial_shipping_address,
                 edit=True,
