@@ -82,7 +82,6 @@
             'website_sale/static/src/interactions/**/*',
             'website_sale/static/src/snippets/**/*.js',
             ('remove', 'website_sale/static/src/snippets/**/000.js'),
-            ('remove', 'website_sale/static/src/snippets/**/options.js'),
             'website_sale/static/src/js/tours/tour_utils.js',
             'website_sale/static/src/scss/website_sale.scss',
             'website_sale/static/src/scss/website_sale_frontend.scss',
@@ -159,11 +158,7 @@
         ],
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',
-            'website_sale/static/src/snippets/s_dynamic_snippet_products/options.js',
-            'website_sale/static/src/snippets/s_add_to_cart/options.js',
-            'website_sale/static/src/js/website_sale.editor.js',
             'website_sale/static/src/js/website_sale_form_editor.js',
-            'website_sale/static/src/js/editor/snippets.options.js',
         ],
         'website.assets_editor': [
             'website_sale/static/src/js/systray_items/*.js',
@@ -186,7 +181,6 @@
             'website_sale/static/src/js/website_sale_utils.js',
             # TODO Find out why these do not work:
             #'website_sale/static/src/snippets/**/*.js',
-            # ('remove', 'website_sale/static/src/snippets/**/options.js'),
             # TODO Re-activate when testing edit mode
             #('remove', 'website_sale/static/src/snippets/**/*.edit.js'),
             # TODO Remove when all 000 have been adapted
