@@ -777,7 +777,7 @@ describe("unobserved mutations", () => {
             editor.shared.history.undo();
             expect(p.className).toBe("b a");
         });
-        test.todo("should produce a undo step even with no class change", async () => {
+        test("should produce mutations in undo step even with no class change", async () => {
             const { editor } = await setupEditor(`<p>test</p>`);
             /** @type {HTMLElement} */
             const p = editor.editable.querySelector("p");
