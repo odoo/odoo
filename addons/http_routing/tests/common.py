@@ -13,7 +13,7 @@ from odoo.tools import DotDict, config, frozendict
 @contextlib.contextmanager
 def MockRequest(
     env, *, path='/mockrequest', routing=True, multilang=True,
-    context=frozendict(), cookies=frozendict(), country_code=None,
+    context=frozendict(), cookies=frozendict(), country_code=None, city_name=None,
     website=None, remote_addr=HOST, environ_base=None, url_root=None,
 ):
     """Mock of the ``http.request``.
@@ -74,11 +74,11 @@ def MockRequest(
         request.httprequest.url = werkzeug.urls.url_join(url_root, path)
     if website:
         request.website_routing = website.id
-    if country_code:
+    if country_code or city_name:
         try:
-            request.geoip._city_record = odoo.http.geoip2.models.City(['en'], country={'iso_code': country_code})
+            request.geoip._city_record = odoo.http.geoip2.models.City(['en'], country=(country_code and {'iso_code': country_code}) or {}, city=(city_name and {'names': {'en': city_name}}) or {})
         except TypeError:
-            request.geoip._city_record = odoo.http.geoip2.models.City({'country': {'iso_code': country_code}})
+            request.geoip._city_record = odoo.http.geoip2.models.City({'country': (country_code and {'iso_code': country_code}) or {}, 'city': (city_name and {'names': {'en': city_name}}) or {}})
 
     # The following code mocks match() to return a fake rule with a fake
     # 'routing' attribute (routing=True) or to raise a NotFound
