@@ -83,6 +83,7 @@
         'views/snippets/s_text_image.xml',
         'views/snippets/s_three_columns.xml',
         'views/snippets/s_title.xml',
+        'views/snippets/s_social_media.xml',
     ],
     'demo': [
         'demo/utm.xml',
@@ -151,6 +152,7 @@
             'mass_mailing/static/src/snippets/s_masonry_block/options.js',
             'mass_mailing/static/src/snippets/s_media_list/options.js',
             'mass_mailing/static/src/snippets/s_showcase/options.js',
+            'mass_mailing/static/src/snippets/s_social_media/options.js',
             'mass_mailing/static/src/snippets/s_rating/options.js'
         ],
         'mass_mailing.assets_snippets_menu': [

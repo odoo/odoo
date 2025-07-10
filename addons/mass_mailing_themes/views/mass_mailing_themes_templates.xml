@@ -59,19 +59,20 @@
                         </a>
                     </div>
                     <div class="col-lg-8 o_mail_header_social" style="text-align: right;" t-translation="off">
-                        <a title="Facebook" href="https://www.facebook.com/Odoo">
+                        <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
+                        <a title="Facebook" t-att-href="social_links.get('social_facebook')">
                             <span class="fa fa-facebook text-white" style="background-color: rgb(43, 59, 88) !important;"/>
                         </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
+                        <a style="margin-left:10px" title="LinkedIn" t-att-href="social_links.get('social_linkedin')">
                             <span class="fa fa-linkedin text-white" style="background-color: rgb(43, 59, 88) !important;"/>
                         </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" title="X" href="https://twitter.com/Odoo">
+                        <a style="margin-left:10px" title="X" t-att-href="social_links.get('social_twitter')">
                             <span class="fa fa-twitter text-white" style="background-color: rgb(43, 59, 88) !important;"/>​
                         </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
+                        <a style="margin-left:10px" title="Instagram" t-att-href="social_links.get('social_instagram')">
                             <span class="fa fa-instagram text-white" style="background-color: rgb(43, 59, 88) !important;"/>
                         </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" title="TikTok" href="https://www.tiktok.com/@odoo">
+                        <a style="margin-left:10px" title="TikTok" t-att-href="social_links.get('social_tiktok')">
                             <span class="fa fa-tiktok text-white" style="background-color: rgb(43, 59, 88) !important;"/>
                         </a>
                     </div>
@@ -214,23 +215,24 @@
                         </a>
                     </div>
                     <div class="col-lg-8 o_mail_header_social" style="text-align:right;">
-                        <a title="Facebook" href="https://www.facebook.com/Odoo">
+                        <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
+                        <a title="Facebook" t-att-href="social_links.get('social_facebook')">
                             <span class="fa fa-facebook" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>​
                         </a>
                         &amp;nbsp; &amp;nbsp;
-                        <a style="margin-left:10px" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
+                        <a style="margin-left:10px" title="LinkedIn" t-att-href="social_links.get('social_linkedin')">
                             <span class="fa fa-linkedin" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>​
                         </a>
                         &amp;nbsp; &amp;nbsp;
-                        <a style="margin-left:10px" title="X" href="https://twitter.com/Odoo">
+                        <a style="margin-left:10px" title="X" t-att-href="social_links.get('social_twitter')">
                             <span class="fa fa-twitter" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>​
                         </a>
                         &amp;nbsp; &amp;nbsp;
-                        <a style="margin-left:10px" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
+                        <a style="margin-left:10px" title="Instagram" t-att-href="social_links.get('social_instagram')">
                             <span class="fa fa-instagram" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>
                         </a>
                         &amp;nbsp; &amp;nbsp;
-                        <a style="margin-left:10px" title="TikTok" href="https://www.tiktok.com/@odoo">
+                        <a style="margin-left:10px" title="TikTok" t-att-href="social_links.get('social_tiktok')">
                             <span class="fa fa-tiktok" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>
                         </a>
                         &amp;nbsp; &amp;nbsp;
@@ -955,13 +957,14 @@
                         </a>
                     </div>
                     <div class="col-lg-4 o_mail_header_social" style="text-align: right">
-                            <a aria-label="Facebook" title="Facebook" target="_blank" href="https://www.facebook.com/Odoo">
+                            <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
+                            <a aria-label="Facebook" title="Facebook" target="_blank" t-att-href="social_links.get('social_facebook')">
                                 <span class="fa fa-facebook" style="color: rgb(84, 52, 39) !important; background-color: rgb(211, 197, 177) !important;">​</span>
                             </a>&amp;nbsp;&amp;nbsp;
-                            <a style="margin-left:10px" aria-label="X" title="X" target="_blank" href="https://twitter.com/Odoo">
+                            <a style="margin-left:10px" aria-label="X" title="X" target="_blank" t-att-href="social_links.get('social_twitter')">
                                 <span class="fa fa-twitter" style="color: rgb(84, 52, 39) !important; background-color: rgb(211, 197, 177) !important;">​</span>
                             </a>&amp;nbsp;&amp;nbsp;
-                            <a style="margin-left:10px" aria-label="Instagram" title="Instagram" target="_blank" href="https://www.instagram.com/explore/tags/odoo/" contenteditable="true">
+                            <a style="margin-left:10px" aria-label="Instagram" title="Instagram" target="_blank" t-att-href="social_links.get('social_instagram')" contenteditable="true">
                                 <span class="fa fa-instagram" style="color: rgb(84, 52, 39) !important; background-color: rgb(211, 197, 177) !important;">​</span>
                             </a>
                     </div>
@@ -1125,13 +1128,14 @@
         <div class="s_header_social o_mail_block_header_social o_mail_snippet_general bg-white px-3 pt24 pb24" style="" data-snippet="s_mail_block_header_social" data-name="Left Logo">
             <div class="container" style="">
                 <div class="col-lg-12 o_mail_header_social" style="background-color: rgb(255, 255, 255) !important; text-align: left;">
-                    <a aria-label="Facebook" target="_blank" href="https://www.facebook.com/Odoo" data-original-title="Facebook" rel="noreferrer">
+                     <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
+                    <a aria-label="Facebook" target="_blank" t-att-href="social_links.get('social_facebook')" data-original-title="Facebook" rel="noreferrer">
                         <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_newsletter/social-facebook.png" data-original-id="435" data-original-src="/mass_mailing_themes/static/src/img/theme_newsletter/social-facebook.png" data-mimetype="image/png" style="width: 30px;"/>
                     </a>&amp;nbsp;&amp;nbsp;
-                    <a aria-label="X" target="_blank" href="https://twitter.com/Odoo" data-original-title="X" rel="noreferrer">
+                    <a aria-label="X" target="_blank" t-att-href="social_links.get('social_twitter')" data-original-title="X" rel="noreferrer">
                         <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_newsletter/social-twitter.png" data-original-id="436" data-original-src="/mass_mailing_themes/static/src/img/theme_newsletter/social-twitter.png" data-mimetype="image/png" style="width: 30px;"/>
                     </a>&amp;nbsp;&amp;nbsp;
-                    <a  aria-label="Instagram" target="_blank" href="https://www.linkedin.com/company/odoo" data-original-title="Linkedin" rel="noreferrer">
+                    <a  aria-label="Instagram" target="_blank" t-att-href="social_links.get('social_instagram')" data-original-title="Linkedin" rel="noreferrer">
                         <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_newsletter/social-linkedin.png" data-original-id="437" data-original-src="/mass_mailing_themes/static/src/img/theme_newsletter/social-linkedin.png" data-mimetype="image/png" style="width: 30px;"/>
                     </a>
                 </div>
