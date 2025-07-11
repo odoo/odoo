@@ -1173,21 +1173,92 @@ class CrmLead(models.Model):
             return _('Phew, that took some effort — but you nailed it. Good job!')
 
         query = """
-            SELECT
-                SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as count_user_closed_year,
-                MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND user_id = %(user_id)s THEN expected_revenue ELSE 0 END) as max_user_30,
-                MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND user_id = %(user_id)s THEN expected_revenue ELSE 0 END) as max_user_7,
-                MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND team_id = %(team_id)s THEN expected_revenue ELSE 0 END) as max_team_30,
-                MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN expected_revenue ELSE 0 END) as max_team_7,
-                SUM(CASE WHEN date_closed::date = %(today)s::date AND user_id = %(user_id)s THEN 1 ELSE 0 END) as count_user_closed_today,
-                SUM(CASE WHEN country_id = %(country_id)s AND team_id = %(team_id)s THEN 1 ELSE 0 END) as count_country_closed_year,
-                SUM(CASE WHEN source_id = %(source_id)s AND team_id = %(team_id)s THEN 1 ELSE 0 END) as count_source_closed_year,
-                MIN(CASE WHEN date_closed >= %(today)s - INTERVAL '30 days' AND team_id = %(team_id)s THEN day_close ELSE 1000000 END) as min_day_close_30,
-
-                SUM(CASE WHEN date_closed::date = (%(today)s - INTERVAL '1 day')  AND user_id = %(user_id)s THEN 1 ELSE 0 END) as count_user_closed_yesterday,
-                SUM(CASE WHEN date_closed::date = (%(today)s - INTERVAL '2 days') AND user_id = %(user_id)s THEN 1 ELSE 0 END) as count_user_closed_minus2day,
-                SUM(CASE WHEN date_closed::date = (%(today)s - INTERVAL '3 days') AND user_id = %(user_id)s THEN 1 ELSE 0 END) as count_user_closed_minus3day
+        WITH
+            month_leads AS NOT MATERIALIZED (
+                SELECT id, date_closed, expected_revenue, day_close
+                FROM crm_lead
+                WHERE 
+                    date_closed >= %(today)s - INTERVAL '30 days'
+                    AND team_id = %(team_id)s
+            ),
+            week_leads AS NOT MATERIALIZED (
+                SELECT *
+                FROM month_leads
+                WHERE date_closed >= %(today)s - INTERVAL '7 days'
+            ),
+            user_year_leads AS NOT MATERIALIZED (
+                SELECT id, date_closed, expected_revenue
+                FROM crm_lead
+                WHERE user_id = %(user_id)s
+            ),
+            user_month_leads AS NOT MATERIALIZED (
+                SELECT *
+                FROM user_year_leads
+                WHERE date_closed >= %(today)s - INTERVAL '30 days'
+            ),
+            user_week_leads AS NOT MATERIALIZED (
+                SELECT *
+                FROM user_month_leads
+                    WHERE date_closed >= %(today)s - INTERVAL '7 days'
+            ),
+            user_3day_leads AS NOT MATERIALIZED (
+                SELECT *
+                FROM user_week_leads
+                WHERE date_closed >= %(today)s - INTERVAL '3 days'
+                    AND date_closed < %(today)s - INTERVAL '2 days'
+            ),
+            user_2day_leads AS NOT MATERIALIZED (
+                SELECT *
+                FROM user_week_leads
+                WHERE date_closed >= %(today)s - INTERVAL '2 days'
+                    AND date_closed < %(today)s - INTERVAL '1 days'
+            ),
+            user_yesterday_leads AS NOT MATERIALIZED (
+                SELECT *
+                FROM user_week_leads
+                WHERE date_closed >= %(today)s - INTERVAL '1 days'
+                    AND date_closed < %(today)s
+            ),
+            user_today_leads AS NOT MATERIALIZED (
+                SELECT *
+                FROM user_week_leads
+                WHERE date_closed >= %(today)s
+            ),
+            source_leads AS NOT MATERIALIZED (
+                SELECT id, source_id
+                FROM crm_lead
+                WHERE source_id = %(source_id)s
+            ),
+            country_leads AS NOT MATERIALIZED (
+                SELECT id, country_id
+                FROM crm_lead
+                WHERE country_id = %(country_id)s
+            )
+        SELECT
+            MAX(month_leads.expected_revenue) AS max_team_30,
+            MAX(week_leads.expected_revenue) AS max_team_7,
+            MAX(user_month_leads.expected_revenue) AS max_user_30,
+            MAX(user_week_leads.expected_revenue) AS max_user_7,
+            MIN(month_leads.day_close) AS min_day_close_30,
+            COUNT(user_year_leads.id) AS count_user_closed_year,
+            COUNT(user_3day_leads.id) AS count_user_closed_minus3day,
+            COUNT(user_2day_leads.id) AS count_user_closed_minus2day,
+            COUNT(user_yesterday_leads.id) AS count_user_closed_yesterday,
+            COUNT(user_today_leads.id) AS count_user_closed_today,
+            COUNT(country_leads.id) AS count_country_closed_year,
+            COUNT(source_leads.id) AS count_source_closed_year
             FROM crm_lead
+                LEFT JOIN month_leads ON crm_lead.id = month_leads.id
+                LEFT JOIN week_leads ON crm_lead.id = week_leads.id
+                LEFT JOIN user_year_leads ON crm_lead.id = user_year_leads.id
+                LEFT JOIN user_month_leads ON crm_lead.id = user_month_leads.id
+                LEFT JOIN user_week_leads ON crm_lead.id = user_week_leads.id
+                LEFT JOIN user_3day_leads ON crm_lead.id = user_3day_leads.id
+                LEFT JOIN user_2day_leads ON crm_lead.id = user_2day_leads.id
+                LEFT JOIN user_yesterday_leads ON crm_lead.id = user_yesterday_leads.id
+                LEFT JOIN user_today_leads ON crm_lead.id = user_today_leads.id
+                LEFT JOIN source_leads ON crm_lead.id = source_leads.id
+                LEFT JOIN country_leads ON crm_lead.id = country_leads.id
             WHERE
                 type = 'opportunity'
             AND
@@ -1195,7 +1266,7 @@ class CrmLead(models.Model):
             AND
                 probability = 100
             AND
-                DATE_TRUNC('year', date_closed) = DATE_TRUNC('year', %(today)s)
+                DATE_TRUNC('year', crm_lead.date_closed) = DATE_TRUNC('year', %(today)s)
             AND
                 (user_id = %(user_id)s OR team_id = %(team_id)s)
         """
