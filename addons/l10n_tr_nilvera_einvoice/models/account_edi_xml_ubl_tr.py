@@ -33,6 +33,9 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         if invoice.partner_id.l10n_tr_nilvera_customer_status == 'not_checked':
             invoice.partner_id.check_nilvera_customer()
 
+        # Update the Invoice Template
+        vals['InvoiceType_template'] = 'l10n_tr_nilvera_einvoice.ubl_tr_InvoiceType'
+
         vals['vals'].update({
             'id': _get_formatted_id(invoice),
             'customization_id': 'TR1.2',
@@ -53,6 +56,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         vals['vals']['note_vals'].append({'note': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_residual_signed, self.env.ref('base.TRY')), 'note_attrs': {}})
         if vals['invoice'].currency_id.name != 'TRY':
             vals['vals']['note_vals'].append({'note': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_residual, vals['invoice'].currency_id), 'note_attrs': {}})
+            vals['vals']['note_vals'].append({'note': self._get_invoice_currency_exchange_rate(invoice.currency_id, invoice.company_id, invoice.invoice_date)})
         return vals
 
     @api.model
@@ -64,6 +68,11 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         text_i = num2words(amount_integer_part * sign, lang="tr") or 'Sifir'
         text_d = num2words(amount_decimal_part * sign, lang="tr") or 'Sifir'
         return f'YALNIZ : {text_i} {currency.name} {text_d} {currency.currency_subunit_label}'.upper()
+
+    def _get_invoice_currency_exchange_rate(self, currency, company, date):
+        converted_rate = currency._convert(1, company.currency_id, company=company, date=date, round=False)
+        # Nilvera Portal accepts the exchange rate for 6 decimals places only.
+        return f'KUR : {converted_rate:.6f} TL'
 
     def _get_country_vals(self, country):
         # EXTENDS account.edi.xml.ubl_21
@@ -177,9 +186,34 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         vals = super()._get_invoice_monetary_total_vals(invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount)
         # allowance_total_amount needs to have a value even if 0.0 otherwise it's blank in the Nilvera PDF.
         vals['allowance_total_amount'] = allowance_total_amount
-        if invoice.currency_id.is_zero(vals.get('prepaid_amount', 1)):
-            del vals['prepaid_amount']
+
+        # <cac:PrepaidAmount> node is not supported by Nilvera, so it is removed and added to the payable_amount so that
+        # the total invoice amount (in invoice currency) is preserved.
+        prepaid_amount = vals.pop('prepaid_amount', None)
+        if prepaid_amount:
+            vals['payable_amount'] += prepaid_amount
         vals['currency_dp'] = 2
+        return vals
+
+    def _get_document_allowance_charge_vals_list(self, invoice):
+        vals = super()._get_document_allowance_charge_vals_list(invoice)
+        for val in vals:
+            # The allowance_charge_reason_code is not supported in UBL TR so we need to remove that.
+            val.pop('allowance_charge_reason_code', None)
+
+        invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
+        total_discount_amount = 0
+        for line in invoice_lines:
+            total_discount_amount += line.currency_id.round(line.price_unit * line.quantity * (line.discount / 100))
+        if total_discount_amount:
+            vals.append({
+                # Must be false since this is a discount.
+                'charge_indicator': 'false',
+                'amount': total_discount_amount,
+                'currency_dp': 2,
+                'currency_name': invoice.currency_id.name,
+                'allowance_charge_reason': "Discount",
+            })
         return vals
 
     def _get_invoice_line_item_vals(self, line, taxes_vals):
