@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
@@ -6,7 +5,7 @@ from odoo.tests import Form
 from odoo import Command
 
 
-class TestPurchaseRequisitionSale(TransactionCase):
+class TestPurchaseAlternativeSale(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
@@ -48,7 +47,7 @@ class TestPurchaseRequisitionSale(TransactionCase):
 
         # Create an alternative RFQ for another vendor
         action = purchase_order.action_create_alternative()
-        alt_po_wizard = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard = Form(self.env['purchase.alternative.create'].with_context(**action['context']))
         alt_po_wizard.partner_ids = self.vendor_2
         alt_po_wizard.copy_products = True
         alt_po_wizard = alt_po_wizard.save()
