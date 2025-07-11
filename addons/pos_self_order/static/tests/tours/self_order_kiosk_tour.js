@@ -39,6 +39,8 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
         Utils.clickBtn("Pay"),
         Numpad.click("3"),
         Utils.clickBtn("Pay"),
+        ConfirmationPage.orderNumberShown(),
+        ConfirmationPage.orderNumberIs("K", "1"),
         Utils.clickBtn("Close"),
         Utils.checkIsNoBtn("My Order"),
         ...clickOrderNowAndWaitLocation("Eat In"),

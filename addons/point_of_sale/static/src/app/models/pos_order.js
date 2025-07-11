@@ -287,7 +287,7 @@ export class PosOrder extends Base {
             shippingDate: this.shipping_date && formatDate(DateTime.fromSQL(this.shipping_date)),
             headerData: {
                 ...headerData,
-                trackingNumber: this.tracking_number,
+                trackingNumber: this.config.module_pos_restaurant ? this.tracking_number : "",
             },
             screenName: "ReceiptScreen",
         };

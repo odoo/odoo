@@ -6,6 +6,11 @@ import { patch } from "@web/core/utils/patch";
 patch(PosOrder.prototype, {
     setup() {
         super.setup(...arguments);
+        if (this.pos_reference?.startsWith("Self-Order")) {
+            this.tracking_number = "S" + this.tracking_number;
+        } else if (this.pos_reference?.startsWith("Kiosk")) {
+            this.tracking_number = "K" + this.tracking_number;
+        }
 
         if (!this.uiState.lineChanges) {
             this.uiState = {
