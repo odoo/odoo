@@ -134,7 +134,7 @@ export class DiscussSidebarChannel extends Component {
             "o-unread fw-bolder":
                 this.thread.selfMember?.message_unread_counter > 0 && !this.thread.isMuted,
             "text-muted":
-                this.thread.selfMember?.message_unread_counter !== 0 || this.thread.isMuted,
+                this.thread.selfMember?.message_unread_counter === 0 || this.thread.isMuted,
         };
     }
 
