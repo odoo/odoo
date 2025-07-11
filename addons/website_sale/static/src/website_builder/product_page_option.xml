@@ -42,14 +42,11 @@
 	    </BuilderRow>
     </t>
     <t t-if="domState.hasImages">
-	    <BuilderRow label.translate="Zoom" level="1">
-	        <BuilderSelect action="'websiteConfig'" id="'o_wsale_zoom_mode'">
-	            <t t-foreach="props.getZoomLevels()" t-as="zoomLevel" t-key="zoomLevel.id">
-	                <t t-if="zoomLevel.visible">
-                        <BuilderSelectItem id="zoomLevel.id" actionParam="{ views: zoomLevel.views }" t-out="zoomLevel.label"/>
-	                </t>
-	            </t>
-	        </BuilderSelect>
+	    <BuilderRow label.translate="Zoom on Click" level="1">
+            <BuilderCheckbox
+                action="'websiteConfig'"
+                actionParam="{ views: ['website_sale.product_picture_magnify_click'] }"
+            />
 	    </BuilderRow>
     </t>
     <!-- Carousel config -->
