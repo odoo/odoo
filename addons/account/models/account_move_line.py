@@ -1188,6 +1188,15 @@ class AccountMoveLine(models.Model):
         lines_to_modify = self.env['account.move.line'].browse([
             line.id for line in self if line.parent_state == "posted"
         ]).with_context(skip_analytic_sync=True)
+        old_distributions = dict(self.env.execute_query(SQL(
+            "SELECT id, analytic_distribution FROM account_move_line WHERE id = ANY(%s)",
+            self.ids,
+        )))
+        for line in self:
+            line.analytic_distribution = self._merge_distribution(
+                old_distribution=old_distributions.get(line._origin.id) or {},
+                new_distribution=line.analytic_distribution or {},
+            )
         lines_to_modify.analytic_line_ids.unlink()
         lines_to_modify._create_analytic_lines()
 
