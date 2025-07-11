@@ -34,9 +34,11 @@ async function get_session(request) {
         context = {},
     } = await parseRequestParams(request);
     previous_operator_id = parseInt(previous_operator_id);
+    let user_id;
     let country_id;
     // don't use the anonymous name if the user is logged in
     if (this.env.user && !ResUsers._is_public(this.env.uid)) {
+        user_id = this.env.user.id;
         country_id = this.env.user.country_id;
     } else {
         // simulate geoip
@@ -53,6 +55,7 @@ async function get_session(request) {
         channel_id,
         anonymous_name,
         previous_operator_id,
+        user_id,
         country_id,
         persisted
     );
