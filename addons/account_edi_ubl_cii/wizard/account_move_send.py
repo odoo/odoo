@@ -77,7 +77,7 @@ class AccountMoveSend(models.TransientModel):
         for wizard in self:
             wizard.show_ubl_company_warning = False
             wizard.ubl_partner_warning = False
-            if not set(wizard.move_ids.partner_id.commercial_partner_id.mapped('ubl_cii_format')) - {False, 'facturx', 'oioubl_201'}:
+            if not set(wizard.move_ids.partner_id.commercial_partner_id.mapped('ubl_cii_format')) - {False, 'facturx', 'oioubl_201', 'ubl_tr'}:
                 return
 
             wizard.show_ubl_company_warning = not (wizard.company_id.partner_id.peppol_eas and wizard.company_id.partner_id.peppol_endpoint)
