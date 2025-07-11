@@ -13,6 +13,7 @@ SHOP_PAGE_STYLE_MAPPING = {
         'views': {
             'enable': [
                 'website.template_header_sales_one',  # Header
+                'website_sale.template_footer_website_sale',  # Footer
             ],
             'disable': [],
         },
@@ -30,6 +31,8 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.floating_bar',  # Toolbar/floating
                 'website.template_header_search',  # Header
                 'website.header_width_full',  # Header width
+                'website.footer_copyright_content_width_fluid',  # Copyright Footer width
+                'website_sale.template_footer_website_sale',  # Footer
             ],
             'disable': [
                 'website_sale.products_design_card',  # Style
@@ -38,6 +41,7 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.products_thumb_2_3',  # Images size
                 'website_sale.products_attributes',  # Filters
                 'website.header_width_small',  # Header width
+                'website.footer_copyright_content_width_small',  # Copyright Footer width
             ],
         },
         'website_fields': {
@@ -53,6 +57,7 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.products_list_view',  # Listview layout
                 'website_sale.products_description',  # Description
                 'website.template_header_sales_two',  # Header
+                'website_sale.template_footer_website_sale',  # Footer
             ],
             'disable': [],
         },
@@ -68,6 +73,7 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.option_collapse_products_categories',  # Categories/Collapse
                 'website_sale.products_attributes_top',  # Filters
                 'website.template_header_sales_four',  # Header
+                'website_sale.template_footer_website_sale',  # Footer
             ],
             'disable': [
                 'website_sale.products_design_thumbs',  # Style
@@ -91,6 +97,7 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.products_attributes_top',  # Filters
                 'website_sale.floating_bar',  # Toolbar/floating
                 'website.template_header_sales_three',  # Header
+                'website_sale.template_footer_website_sale',  # Footer
             ],
             'disable': [
                 'website_sale.products_categories_top',  # Categories top
@@ -112,6 +119,7 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.products_categories',  # Categories/Sidebar
                 'website_sale.products_attributes_top',  # Filters
                 'website.template_header_stretch',  # Header
+                'website_sale.template_footer_website_sale',  # Footer
             ],
             'disable': [
                 'website_sale.products_design_card',  # Style
