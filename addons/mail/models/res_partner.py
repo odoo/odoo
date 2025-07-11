@@ -147,11 +147,16 @@ class ResPartner(models.Model):
         partners, tocreate_vals_list = self.env['res.partner'], []
         name_emails = [tools.parse_contact_from_email(email) for email in emails]
 
+        def in_ban_emails(email, ban_emails):
+            if not ban_emails:
+                return False
+            return email in ban_emails or email.split('@')[0] in ban_emails
+
         # find valid emails_normalized, filtering out false / void values, and search
         # for existing partners based on those emails
         emails_normalized = {email_normalized
                              for _name, email_normalized in name_emails
-                             if email_normalized and email_normalized not in (ban_emails or [])}
+                             if email_normalized and not in_ban_emails(email_normalized, ban_emails)}
         # find partners for invalid (but not void) emails, aka either invalid email
         # either no email and a name that will be used as email
         names = {

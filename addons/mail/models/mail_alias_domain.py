@@ -183,14 +183,17 @@ class MailAliasDomain(models.Model):
         or default from) and mail aliases from an email list. """
         if not email_list:
             return email_list
+        email_localparts = [email.split('@')[0] for email in email_list if email]
         all_domains = self.search([])
         aliases = all_domains.mapped('bounce_email') + all_domains.mapped('catchall_email') + all_domains.mapped('default_from_email')
-        # search on aliases using the proposed list, as we could have a lot of aliases
-        # better than returning 'all alias emails'
-        aliases += self.env['mail.alias'].search(
-            [('alias_full_name', 'in', email_list)]
-        ).mapped('alias_full_name')
-        return [email for email in email_list if email in aliases]
+        found_aliases = self.env['mail.alias'].search(
+            ['|', ('alias_full_name', 'in', email_list),
+             '&', ('alias_name', 'in', email_localparts), ('alias_incoming_local', '=', True)]
+        )
+        aliases += found_aliases.filtered(lambda x: not x.alias_incoming_local).mapped('alias_full_name')
+        local_match_aliases = [found_alias.split('@')[0] for found_alias in
+            found_aliases.filtered(lambda x: x.alias_incoming_local).mapped('alias_name')]
+        return [email for email in email_list if email in aliases] + local_match_aliases
 
     @api.model
     def _migrate_icp_to_domain(self):

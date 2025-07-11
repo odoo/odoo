@@ -167,6 +167,28 @@ class TestMailTools(MailCommon):
                 found = Partner._mail_find_partner_from_emails([self._test_email], records=record)
                 self.assertEqual(found, [expected], f'Found {found[0].name} instead of {expected[0].name}: {msg}')
 
+    def test_mail_find_partner_from_emails_alias_localpart(self):
+        Partner = self.env['res.partner']
+
+        self.env['mail.alias'].create([{
+            'alias_name': 'test_localpart',
+            'alias_domain_id': self.env.company.alias_domain_id.id,
+            'alias_model_id': self.env.ref('mail.model_res_partner').id,
+            'alias_incoming_local': True,
+        }])
+
+        found = Partner._mail_find_partner_from_emails(['test_localpart@gmail.com'])
+        self.assertEqual(found, [Partner], f'Found {found[0].name} instead of empty recordset.')
+
+        self.env['mail.alias'].create([{
+            'alias_name': 'test_no_localpart',
+            'alias_domain_id': self.env.company.alias_domain_id.id,
+            'alias_model_id': self.env.ref('mail.model_res_partner').id,
+        }])
+
+        found = Partner._mail_find_partner_from_emails(['test_no_localpart@gmail.com'], force_create=True)
+        self.assertNotEqual(found, [Partner], 'Did not find or create partner.')
+
 
 @tagged('mail_tools', 'mail_init')
 class TestMailUtils(MailCommon):
