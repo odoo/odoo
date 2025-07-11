@@ -1194,6 +1194,89 @@ describe('Paste', () => {
                     contentAfter: '<p>a</p><p><br></p><p><br></p><p><br>[]</p>',
                 });
             });
+            it('should unwrap li elements having no ul/ol', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<li><p>abc</p></li><li><p>def</p></li>');
+                    },
+                    contentAfter: '<p>abc</p><p>def[]</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<li><h1>abc</h1></li><li><h1>def</h1></li');
+                    },
+                    contentAfter: '<h1>abc</h1><h1>def[]</h1>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<li><blockquote>abc</blockquote></li><li><blockquote>def</blockquote></li>');
+                    },
+                    contentAfter: '<blockquote>abc</blockquote><blockquote>def[]</blockquote>',
+                });
+            });
+            it('should unwrap li elements with multiple blocks having no ul/ol', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<li><p>abc</p><p>def</p></li><li><p>abc</p><p>def</p></li>');
+                    },
+                    contentAfter: '<p>abc</p><p>def</p><p>abc</p><p>def[]</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<li><h1>abc</h1><h1>def</h1></li><li><h1>abc</h1><h1>def</h1></li');
+                    },
+                    contentAfter: '<h1>abc</h1><h1>def</h1><h1>abc</h1><h1>def[]</h1>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<li><blockquote>abc</blockquote><blockquote>def</blockquote></li><li><blockquote>abc</blockquote><blockquote>def</blockquote></li>');
+                    },
+                    contentAfter: '<blockquote>abc</blockquote><blockquote>def</blockquote><blockquote>abc</blockquote><blockquote>def[]</blockquote>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, unformat(`
+                            <li>
+                                <p>abc</p>
+                                <ul>
+                                    <li>abc</li>
+                                    <li>def</li>
+                                    <li>ghi</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p>abc</p>
+                                <ul>
+                                    <li>abc</li>
+                                    <li>def</li>
+                                    <li>ghi</li>
+                                </ul>
+                            </li>
+                        `));
+                    },
+                    contentAfter: unformat(`
+                        <p>abc</p>
+                        <ul>
+                            <li>abc</li>
+                            <li>def</li>
+                            <li>ghi</li>
+                        </ul>
+                        <p>abc</p>
+                        <ul>
+                            <li>abc</li>
+                            <li>def</li>
+                            <li>ghi[]</li>
+                        </ul>
+                    `),
+                });
+            });
         });
     });
     describe('Pasting within Blockquote', () => {

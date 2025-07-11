@@ -1283,7 +1283,8 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
 
     const selectedNodes = getSelectedNodes(editor.editable).filter(
         (n) =>
-            ((n.nodeType === Node.TEXT_NODE && (isVisibleTextNode(n) || isZWS(n))) ||
+            ((n.nodeType === Node.TEXT_NODE &&
+                (isVisibleTextNode(n) || isZWS(n) || (/^\n+$/.test(n.nodeValue) && !applyStyle))) ||
                 n.nodeName === "BR") &&
             closestElement(n).isContentEditable
     );
@@ -1666,8 +1667,12 @@ export function hasAnyFontSizeClass(node) {
  * @returns {boolean}
  */
 export function isSelectionFormat(editable, format) {
-    const selectedNodes = getTraversedNodes(editable)
-        .filter((n) => n.nodeType === Node.TEXT_NODE && n.nodeValue.replaceAll(ZWNBSP_CHAR, '').length);
+    const selectedNodes = getTraversedNodes(editable).filter(
+        (n) =>
+            n.nodeType === Node.TEXT_NODE &&
+            n.nodeValue.replaceAll(ZWNBSP_CHAR, "").length &&
+            (!/^\n+$/.test(n.nodeValue) || !isBlock(closestElement(n)))
+    );
     const isFormatted =
         format === "setFontSizeClassName" ? hasAnyFontSizeClass : formatsSpecs[format].isFormatted;
     return selectedNodes.length && selectedNodes.every(n => isFormatted(n, editable));
