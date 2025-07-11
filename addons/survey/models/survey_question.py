@@ -6,6 +6,7 @@ import contextlib
 import itertools
 import json
 import operator
+import re
 from textwrap import shorten
 
 from odoo import api, fields, models, tools, _
@@ -465,15 +466,13 @@ class SurveyQuestion(models.Model):
         return {}
 
     def _validate_numerical_box(self, answer):
-        try:
-            floatanswer = float(answer)
-        except ValueError:
+        if not re.match(r'^\d+(\.\d+)?$', answer):
             return {self.id: _('This is not a number')}
 
         if self.validation_required:
             # Answer is not in the right range
             with contextlib.suppress(Exception):
-                if not (self.validation_min_float_value <= floatanswer <= self.validation_max_float_value):
+                if not (self.validation_min_float_value <= float(answer) <= self.validation_max_float_value):
                     return {self.id: self.validation_error_msg  or _('The answer you entered is not valid.')}
         return {}
 
