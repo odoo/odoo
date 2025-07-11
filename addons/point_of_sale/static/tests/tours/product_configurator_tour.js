@@ -2,6 +2,8 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_scre
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as ProductConfigurator from "@point_of_sale/../tests/tours/utils/product_configurator_util";
+import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
+import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("ProductConfiguratorTour", {
@@ -73,5 +75,22 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductConfigurator.numberRadioOptions(2),
             Dialog.confirm(),
             Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_variant_mix", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // Click on Configurable Chair product
+            ProductScreen.clickDisplayedProduct("Test Product Combo"),
+            combo.select("Test Product (Large)"),
+            Dialog.is("Attribute selection"),
+            ProductConfigurator.pickRadio("Blue"),
+            Dialog.confirm("Add"),
+            Dialog.confirm(),
+            inLeftSide([...ProductScreen.orderLineHas("Test Product (Large) (Blue)", 1)]),
         ].flat(),
 });
