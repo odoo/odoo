@@ -6,6 +6,7 @@
             <t t-call="web.report_layout">
                 <div class="article o_report_layout_standard">
                     <t t-foreach="docs" t-as="o">
+                        <t t-call="web.external_layout">
                         <t t-set="address" t-value="None"/>
                         <div class="page o_report_stockpicking_operations">
                             <div class="row justify-content-between">
@@ -240,6 +241,7 @@
                             <p t-field="o.note"/>
                             <div class="oe_structure"></div>
                         </div>
+                        </t>
                     </t>
                 </div>
             </t>
