@@ -28,16 +28,19 @@ class ResConfigSettings(models.TransientModel):
         help='Users will still be able to render templates.\n'
         'However only Mail Template Editors will be able to create new dynamic templates or modify existing ones.')
     use_twilio_rtc_servers = fields.Boolean(
-        'Use Twilio ICE servers',
-        help="If you want to use twilio as TURN/STUN server provider",
+        'Custom ICE Server with Twilio',
+        help=(
+            "Set up your own server for small group calls using peer-to-peer connections.\n"
+            "https://www.odoo.com/documentation/18.0/applications/productivity/discuss/ice_servers.html"
+        ),
         config_parameter='mail.use_twilio_rtc_servers',
     )
     twilio_account_sid = fields.Char(
-        'Twilio Account SID',
+        'Account SID',
         config_parameter='mail.twilio_account_sid',
     )
     twilio_account_token = fields.Char(
-        'Twilio Account Auth Token',
+        'Account Auth Token',
         config_parameter='mail.twilio_account_token',
     )
     sfu_server_url = fields.Char("SFU Server URL", config_parameter="mail.sfu_server_url")
