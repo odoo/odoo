@@ -101,7 +101,7 @@ export function checkFilterDefaultValueIsValid(filter, defaultValue) {
 }
 
 const SET_OPERATORS_BEHAVIORS = {
-    operators: ["set", "not_set"],
+    operators: ["set", "not set"],
     validateValue: isSetValueValid,
     validateDefaultValue: isSetValueValid,
     getSearchBarFacetValues: (env, filter, filterValue) => [
@@ -147,7 +147,7 @@ const FILTERS_BEHAVIORS = {
             },
         },
         {
-            operators: ["starts_with"],
+            operators: ["starts with"],
             defaultValue: { strings: [] },
             validateValue: (filterValue) => isArrayOfStrings(filterValue.strings),
             validateDefaultValue: (filterValue) => isArrayOfStrings(filterValue.strings),
@@ -336,7 +336,7 @@ function isCurrentUserOrArrayOfIds(value) {
  * @returns {boolean}
  */
 function isSetValueValid(value) {
-    return value.operator === "set" || value.operator === "not_set";
+    return value.operator === "set" || value.operator === "not set";
 }
 
 /**
@@ -753,7 +753,7 @@ export function getDateDomain(from, to, field, fieldType) {
     return new Domain();
 }
 
-const TEXT_OPERATORS = ["ilike", "not ilike", "starts_with"];
+const TEXT_OPERATORS = ["ilike", "not ilike", "starts with"];
 
 export function getFilterTypeOperators(filterType) {
     if (filterType === "date") {
@@ -865,7 +865,7 @@ function getOperatorLabel(operator) {
         case "=":
         case "in":
         case "set":
-        case "not_set":
+        case "not set":
             return "";
         case "!=":
         case "not in":
