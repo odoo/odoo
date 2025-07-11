@@ -29,6 +29,13 @@
                     title="Changing Identification type is not allowed once document(s) have been
                         issued for your account. Please contact us directly for this operation."
                 />
+                <input
+                    t-if="not (is_commercial_address and can_edit_vat)"
+                    type="hidden"
+                    readonly="1"
+                    name="l10n_latam_identification_type_id"
+                    t-att-value="identification_type.id"
+                />
             </div>
         </div>
     </template>
