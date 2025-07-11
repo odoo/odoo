@@ -1,4 +1,5 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { isContentEditable } from "./dom_info";
 
 export const COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES = [
     "primary",
@@ -268,7 +269,11 @@ export function hasColor(element, mode) {
  */
 export function hasAnyNodesColor(nodes, mode) {
     for (const node of nodes) {
-        if (hasColor(closestElement(node), mode)) {
+        const element = closestElement(node);
+        if (
+            hasColor(element, mode) &&
+            (element.matches("[t-field], [t-out], [t-esc]") || isContentEditable(element))
+        ) {
             return true;
         }
     }
