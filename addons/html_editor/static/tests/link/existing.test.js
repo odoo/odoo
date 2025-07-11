@@ -122,8 +122,8 @@ test("should remove an empty link on save", async () => {
     });
     await testEditor({
         contentBefore: '<p>a<a href="http://test.test/"></a>b</p>',
-        contentBeforeEdit: '<p>a\ufeff<a href="http://test.test/">\ufeff</a>\ufeffb</p>',
-        contentAfterEdit: '<p>a\ufeff<a href="http://test.test/">\ufeff</a>\ufeffb</p>',
+        contentBeforeEdit: '<p>a\ufeff<a href="http://test.test/">\ufeff\ufeff</a>\ufeffb</p>',
+        contentAfterEdit: '<p>a\ufeff<a href="http://test.test/">\ufeff\ufeff</a>\ufeffb</p>',
         contentAfter: "<p>ab</p>",
     });
 });
