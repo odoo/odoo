@@ -611,14 +611,14 @@
                                                     t-if="profile_employee and profile_employee.job_id">
                                                     <t t-esc="profile_employee.job_id.name" />
                                         </t>
-                                                <t t-elif="user.job_title">
-                                                    <t t-esc="user.job_title" />
+                                                <t t-elif="profile_employee.job_title">
+                                                    <t t-esc="profile_employee.job_title" />
                                         </t>
                                                 <t t-else="">
                                         Puesto no definido
                                         </t>
-                                                <t t-if="user.company_id"> |
-                                                    <t t-esc="user.company_id.name" />
+                                                <t t-if="profile_employee.company_id"> |
+                                                    <t t-esc="profile_employee.company_id.name" />
                                         </t>
                                             </p>
                                             <p class="department">

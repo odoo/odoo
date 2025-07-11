@@ -48,20 +48,19 @@ class Users(models.Model):
         HrLeave = self.env['hr.leave']
         HrEmployee = self.env['hr.employee']
 
-        vacation_leave_type = self.env['hr.leave.type'].sudo().search([('name', '=', 'Vacaciones'), ('company_id', 'in', [user.company_id.id, False])], limit=1) # Asume que el nombre es exactamente "Vacaciones"
-        vacation_leave_type_id = vacation_leave_type.id if vacation_leave_type else None
+        
         
         # Si el ID 8 es fijo y seguro para tu instancia:
         # vacation_leave_type_id = 8 
 
-
-        if not vacation_leave_type_id:
-            _logger.warning("No se pudo encontrar el tipo de ausencia 'Vacaciones'. Verifica el nombre o ID.")
-            for user_no_type in self:
-                user_no_type.x_days_until_vacation_display = "--"
-            return
-
         for user in self:
+            vacation_leave_type = self.env['hr.leave.type'].sudo().search([('name', '=', 'Vacaciones'), ('company_id', 'in', [user.company_id.id, False])], limit=1) # Asume que el nombre es exactamente "Vacaciones"
+            vacation_leave_type_id = vacation_leave_type.id if vacation_leave_type else None
+
+            if not vacation_leave_type:
+                user.x_days_until_vacation_display = "--"
+                continue 
+            
             employee = HrEmployee.sudo().search([('user_id', '=', user.id), ('company_id', 'in', [user.company_id.id, False])], limit=1)
             if not employee:
                 user.x_days_until_vacation_display = "--"
