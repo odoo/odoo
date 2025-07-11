@@ -12,7 +12,6 @@ import {
     parseIrMenuIdLink,
 } from "./odoo_menu_link_cell";
 import { _t } from "@web/core/l10n/translation";
-import { sprintf } from "@web/core/utils/strings";
 import { navigateTo } from "../actions/helpers";
 
 const { urlRegistry, corePluginRegistry, errorTypes } = spreadsheet.registries;
@@ -26,7 +25,7 @@ errorTypes.add(LINK_ERROR);
 class BadOdooLinkError extends EvaluationError {
     constructor(menuId) {
         super(
-            sprintf(_t("Menu %s not found. You may not have the required access rights."), menuId),
+            _t("Menu %s not found. You may not have the required access rights.", menuId),
             LINK_ERROR
         );
     }

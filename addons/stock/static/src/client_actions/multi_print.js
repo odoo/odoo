@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { sprintf } from "@web/core/utils/strings";
 
 async function doMultiPrint(env, action) {
     for (const report of action.params.reports) {
@@ -11,12 +10,9 @@ async function doMultiPrint(env, action) {
             continue
         } else if (report.report_type === "qweb-html") {
             env.services.notification.add(
-                sprintf(
-                    _t("HTML reports cannot be auto-printed, skipping report: %s"),
-                            report.name)
-                , {
-                title: _t("Report Printing Error"),
-            });
+                _t("HTML reports cannot be auto-printed, skipping report: %s", report.name),
+                { title: _t("Report Printing Error") }
+            );
             continue
         }
         // WARNING: potential issue if pdf generation fails, then action_service defaults
