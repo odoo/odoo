@@ -823,6 +823,23 @@ registry.category("web_tour.tours").add("test_remove_archived_product_from_cache
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_group_product_by_categ", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.checkProductInGroup(1, "Whiteboard Pen"),
+            ProductScreen.checkProductInGroup(2, "Whiteboard Pen").map(negateStep),
+            ProductScreen.checkProductInGroup(3, "Whiteboard Pen").map(negateStep),
+            ProductScreen.checkProductInGroup(2, "Letter Tray"),
+            ProductScreen.checkProductInGroup(1, "Letter Tray").map(negateStep),
+            ProductScreen.checkProductInGroup(3, "Letter Tray").map(negateStep),
+            ProductScreen.checkProductInGroup(3, "Desk Pad"),
+            ProductScreen.checkProductInGroup(1, "Desk Pad").map(negateStep),
+            ProductScreen.checkProductInGroup(2, "Desk Pad").map(negateStep),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_preset_timing_retail", {
     steps: () =>
         [
