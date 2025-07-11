@@ -414,7 +414,14 @@ export class Message extends Record {
                 !this.isPending &&
                 this.thread &&
                 this.store.self.type === "partner" &&
+<<<<<<< 3dea12b244868754e4cda136af00b0e0945bde54
                 this.store.self.main_user_id?.share === false
+||||||| 1fb465c749900c1a025927c28e47f195ee09f692
+                this.store.self.isInternalUser
+=======
+                this.store.self.isInternalUser &&
+                this.persistent
+>>>>>>> 2942a9560f47f614cd6aee69388f09c4d4bf7065
         );
     }
 
