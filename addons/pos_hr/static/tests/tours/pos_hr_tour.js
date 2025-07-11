@@ -225,3 +225,32 @@ registry.category("web_tour.tours").add("test_cashier_changed_in_receipt", {
             ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_cost_and_margin_visibility", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickInfoProduct("product_a"),
+            {
+                trigger: ".section-financials :contains('Margin')",
+            },
+            Dialog.confirm("Close"),
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            ProductScreen.clickInfoProduct("product_a"),
+            {
+                trigger: ".section-financials :contains('Margin')",
+            },
+            Dialog.confirm("Close"),
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Test Employee 4", { run: "click" }),
+            ProductScreen.clickInfoProduct("product_a"),
+            Utils.negateStep({
+                trigger: ".section-financials :contains('Margin')",
+            }),
+        ].flat(),
+});
