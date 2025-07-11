@@ -107,6 +107,17 @@ class AccountMoveSend(models.AbstractModel):
                 )),
             }
 
+        if tr_einvoice_partners_missing_ref := moves.partner_id.filtered(
+            lambda p: p.l10n_tr_nilvera_customer_status == "einvoice" and not p.ref
+        ):
+            alerts["critical_partner_data_missing"] = {
+                "message": _("The following E-Invoice partner(s) must have the reference field set to the tax office name."),
+                "action_text": _("View Partner(s)"),
+                "action": tr_einvoice_partners_missing_ref._get_records_action(name=_("Check reference on Partner(s)")
+                ),
+                "level": "danger",
+            }
+
         return alerts
 
     # -------------------------------------------------------------------------
