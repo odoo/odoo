@@ -16,10 +16,10 @@ export class ProductInfoPopup extends Component {
         this.props.close();
     }
     _hasMarginsCostsAccessRights() {
-        const isAccessibleToEveryUser = this.pos.config.is_margins_costs_accessible_to_every_user;
-        const isCashierManager = this.pos.getCashier()._role === "manager";
-        const isMinimalCashier = this.pos.getCashier()._role === "minimal";
-        return isAccessibleToEveryUser || isCashierManager || isMinimalCashier;
+        if (!this.pos.config.is_margins_costs_accessible_to_every_user) {
+            return false;
+        }
+        return ["manager", "cashier"].includes(this.pos.getCashier()._role);
     }
     editProduct() {
         this.pos.editProduct(this.props.productTemplate);

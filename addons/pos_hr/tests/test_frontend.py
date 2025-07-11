@@ -52,8 +52,14 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
             "company_id": cls.env.company.id,
         })
 
+        cls.emp4 = cls.env['hr.employee'].create({
+            'name': 'Test Employee 4',
+            "company_id": cls.env.company.id,
+        })
+
         cls.main_pos_config.write({
-            'basic_employee_ids': [Command.link(cls.emp1.id), Command.link(cls.emp2.id), Command.link(cls.emp3.id)]
+            'basic_employee_ids': [Command.link(cls.emp1.id), Command.link(cls.emp2.id), Command.link(cls.emp3.id)],
+            'minimal_employee_ids': [Command.link(cls.emp4.id)],
         })
 
 
@@ -192,3 +198,16 @@ class TestUi(TestPosHrHttpCommon):
         })
         order_payment.with_context(**payment_context).check()
         self.start_pos_tour("test_minimal_employee_refund", login="pos_admin")
+
+    def test_cost_and_margin_visibility(self):
+        self.product_a.available_in_pos = True
+        self.main_pos_config.write({
+            'is_margins_costs_accessible_to_every_user': True,
+        })
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_cost_and_margin_visibility",
+            login="pos_admin",
+        )
