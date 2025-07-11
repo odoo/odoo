@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 
 const shadowClass = "shadow";
 
-class ShadowOptionPlugin extends Plugin {
+export class ShadowOptionPlugin extends Plugin {
     static id = "shadowOption";
     resources = {
         builder_actions: {
