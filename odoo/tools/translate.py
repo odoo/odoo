@@ -310,7 +310,15 @@ def translate_xml_node(node, callback, parse, serialize):
     return node
 
 
+def validate_xml_encoding(text):
+    if isinstance(text, str) and re.search(r'<\?xml[^>]*encoding=.*?\?>', text, re.IGNORECASE):
+        raise UserError(_(
+            "Unicode strings with encoding declaration are not supported in XML.\n"
+            "Remove the encoding declaration."
+        ))
+
 def parse_xml(text):
+    validate_xml_encoding(text)
     return etree.fromstring(text)
 
 def serialize_xml(node):
