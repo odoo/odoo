@@ -227,7 +227,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         last_modified0 = bundle0.get_checksum('js')
         version0 = bundle0.get_version('js')
 
-        path = file_path('test_orm/static/src/js/test_jsfile1.js')
+        path = file_path('test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js')
         bundle1 = self._get_asset(self.jsbundle_name, debug_assets=True)
 
         with self._touch(path):
@@ -258,7 +258,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         self.env['ir.asset'].create({
             'name': 'test bundle inheritance',
             'bundle': self.jsbundle_name,
-            'path': 'test_orm/static/src/js/test_jsfile4.js',
+            'path': 'test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js',
         })
 
         bundle1 = self._get_asset(self.jsbundle_name)
@@ -357,7 +357,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         self.env['ir.asset'].create({
             'name': 'test bundle inheritance',
             'bundle': self.cssbundle_name,
-            'path': 'test_orm/static/src/css/test_cssfile2.css',
+            'path': 'test_orm/static/assets_bundle_valid_src/css/test_cssfile2.css',
         })
 
         bundle1 = self._get_asset(self.cssbundle_name)
@@ -500,7 +500,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         # Touch test_cssfile1.css
         # Note: No lang specific context given while calling _get_asset so it will load assets for en_US
-        path = file_path('test_orm/static/src/css/test_cssfile1.css')
+        path = file_path('test_orm/static/assets_bundle_valid_src/css/test_cssfile1.css')
         ltr_bundle1 = self._get_asset(self.cssbundle_name, debug_assets=True)
 
         with self._touch(path):
@@ -552,7 +552,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         self.env['ir.asset'].create({
             'name': 'test bundle inheritance',
             'bundle': self.cssbundle_name,
-            'path': 'test_orm/static/src/css/test_cssfile3.css',
+            'path': 'test_orm/static/assets_bundle_valid_src/css/test_cssfile3.css',
         })
 
         ltr_bundle1 = self._get_asset(self.cssbundle_name)
@@ -655,7 +655,7 @@ class TestXMLAssetsBundle(FileTouchable):
 
             # there shouldn't be any test_orm.invalid_xml template.
             # there should be an parsing_error template with the parsing error message.
-            with self.assertRaisesRegex(XMLAssetError, "Invalid XML template: Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7\' in file \'/test_orm/static/invalid_src/xml/invalid_xml.xml"):
+            with self.assertRaisesRegex(XMLAssetError, "Invalid XML template: Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7\' in file \'/test_orm/static/assets_bundle_invalid_src/xml/invalid_xml.xml"):
                 self.bundle.xml()
 
     def test_02_multiple_broken_xml(self):
@@ -666,7 +666,7 @@ class TestXMLAssetsBundle(FileTouchable):
 
             # there shouldn't be any test_orm.invalid_xml template or test_orm.second_invalid_xml template.
             # there should be one parsing_error templates with the parsing error message for the first file.
-            with self.assertRaisesRegex(XMLAssetError, "Invalid XML template: Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7\' in file \'/test_orm/static/invalid_src/xml/invalid_xml.xml"):
+            with self.assertRaisesRegex(XMLAssetError, "Invalid XML template: Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7\' in file \'/test_orm/static/assets_bundle_invalid_src/xml/invalid_xml.xml"):
                 self.bundle.xml()
 
     def test_04_template_wo_name(self):
@@ -677,7 +677,7 @@ class TestXMLAssetsBundle(FileTouchable):
 
             # there shouldn't be raise a ValueError, there should a parsing_error template with
             # the error message.
-            with self.assertRaisesRegex(XMLAssetError, "'Template name is missing.' in file \'/test_orm/static/invalid_src/xml/template_wo_name.xml\'"):
+            with self.assertRaisesRegex(XMLAssetError, "'Template name is missing.' in file \'/test_orm/static/assets_bundle_invalid_src/xml/template_wo_name.xml\'"):
                 self.bundle.xml()
 
     def test_05_file_not_found(self):
@@ -688,7 +688,7 @@ class TestXMLAssetsBundle(FileTouchable):
 
             # there shouldn't be raise a ValueError, there should a parsing_error template with
             # the error message.
-            with self.assertRaisesRegex(XMLAssetError, "Could not get content for test_orm/static/invalid_src/xml/file_not_found.xml."):
+            with self.assertRaisesRegex(XMLAssetError, "Could not get content for test_orm/static/assets_bundle_invalid_src/xml/file_not_found.xml."):
                 self.bundle.xml()
 
 
@@ -808,7 +808,7 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
         self._bundle(self._get_asset(), False, False, '(Second access, no change)')
 
         # Touch the file and compile a third time
-        path = file_path('test_orm/static/src/scss/test_file1.scss')
+        path = file_path('test_orm/static/assets_bundle_valid_src/scss/test_file1.scss')
         t = time.time() + 5
         asset = self._get_asset()
         with self._touch(path, t):
@@ -867,16 +867,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile2.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_orm/static/src/js/test_jsfile4.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js */
             var d=4;
             ''',
         )
@@ -888,16 +888,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile2.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_orm/static/src/js/test_jsfile4.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js */
             var d=4;
             ''',
         )
@@ -909,16 +909,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile2.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_orm/static/src/js/test_jsfile4.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js */
             var d=4;
             ''',
         )
@@ -927,7 +927,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
             'bundle': 'test_orm.manifest4',
-            'path': 'test_orm/static/src/js/test_jsfile1.js',
+            'path': 'test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.manifest4')
         attach = bundle.js()
@@ -935,10 +935,10 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;
             ''',
         )
@@ -947,7 +947,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
             'bundle': 'test_orm.irasset1',
-            'path': 'test_orm/static/src/js/test_jsfile1.js',
+            'path': 'test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.irasset1')
         attach = bundle.js()
@@ -956,7 +956,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;
             ''',
         )
@@ -966,7 +966,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'bundle': 'test_orm.manifest1',
             'directive': 'replace',
-            'target': 'test_orm/static/src/js/test_jsfile1.js',
+            'target': 'test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js',
             'path': 'http://external.link/external.js',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.manifest1')
@@ -979,13 +979,13 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile2.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_orm/static/src/js/test_jsfile4.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js */
             var d=4;
             ''',
         )
@@ -995,8 +995,8 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'bundle': 'test_orm.manifest4',
             'directive': 'replace',
-            'path': 'test_orm/static/src/js/test_jsfile1.js',
-            'target': 'test_orm/static/src/js/test_jsfile3.js',
+            'path': 'test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js',
+            'target': 'test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.manifest4')
         attach = bundle.js()
@@ -1005,7 +1005,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;
             ''',
         )
@@ -1015,15 +1015,15 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'directive': 'prepend',
             'bundle': 'test_orm.manifest4',
-            'path': 'test_orm/static/src/js/test_jsfile4.js',
+            'path': 'test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js',
         })
         # asset is now: js_file4 ; js_file3
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
             'bundle': 'test_orm.manifest4',
             'directive': 'replace',
-            'path': 'test_orm/static/src/js/test_jsfile[12].js',
-            'target': 'test_orm/static/src/js/test_jsfile[45].js',
+            'path': 'test_orm/static/assets_bundle_valid_src/js/test_jsfile[12].js',
+            'target': 'test_orm/static/assets_bundle_valid_src/js/test_jsfile[45].js',
         })
         # asset is now: js_file1 ; js_file2 ; js_file3
         # because js_file is replaced by 1 and 2
@@ -1033,13 +1033,13 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile2.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;
             ''',
         )
@@ -1049,7 +1049,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'bundle': 'test_orm.manifest5',
             'directive': 'remove',
-            'path': 'test_orm/static/src/js/test_jsfile2.js',
+            'path': 'test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.manifest5')
         attach = bundle.js()
@@ -1057,13 +1057,13 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_orm/static/src/js/test_jsfile4.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js */
             var d=4;
             ''',
         )
@@ -1072,20 +1072,20 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
             'bundle': 'test_orm.remove_error',
-            'path': '/test_orm/static/src/js/test_jsfile1.js',
+            'path': '/test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js',
         })
 
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
             'bundle': 'test_orm.remove_error',
             'directive': 'remove',
-            'path': 'test_orm/static/src/js/test_doesntexist.js',
+            'path': 'test_orm/static/assets_bundle_valid_src/js/test_doesntexist.js',
         })
         with self.assertRaises(Exception) as cm:
             bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.remove_error')
             bundle.js()
         self.assertTrue(
-            "['test_orm/static/src/js/test_doesntexist.js'] not found" in str(cm.exception),
+            "['test_orm/static/assets_bundle_valid_src/js/test_doesntexist.js'] not found" in str(cm.exception),
         )
 
     def test_09_remove_wholeglob(self):
@@ -1093,7 +1093,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'bundle': 'test_orm.manifest2',
             'directive': 'remove',
-            'path': 'test_orm/static/src/*/**',
+            'path': 'test_orm/static/assets_bundle_valid_src/*/**',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.manifest2')
         # indeed everything in the bundle matches the glob, so there is no attachment
@@ -1105,7 +1105,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'directive': 'prepend',
             'bundle': 'test_orm.manifest4',
-            'path': 'test_orm/static/src/js/test_jsfile1.js',
+            'path': 'test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.manifest4')
         attach = bundle.js()
@@ -1113,10 +1113,10 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;
             ''',
         )
@@ -1134,7 +1134,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;
             ''',
         )
@@ -1146,7 +1146,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;
             ''',
         )
@@ -1201,7 +1201,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
             'bundle': 'test_orm.irasset_include3',
-            'path': 'test_orm/static/src/js/test_jsfile1.js',
+            'path': 'test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.irasset_include1')
         attach = bundle.js()
@@ -1209,7 +1209,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;
             ''',
         )
@@ -1232,7 +1232,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;
             ''',
         )
@@ -1245,7 +1245,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_orm.manifest4': [
-                    'test_orm/static/src/js/test_jsfile1.js',
+                    'test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js',
                 ],
             },
         }
@@ -1255,10 +1255,10 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;
             ''',
         )
@@ -1271,7 +1271,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_orm.manifest4': [
-                    ('prepend', 'test_orm/static/src/js/test_jsfile1.js'),
+                    ('prepend', 'test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js'),
                 ],
             },
         }
@@ -1281,10 +1281,10 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;
             ''',
         )
@@ -1297,7 +1297,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_orm.manifest4': [
-                    ('replace', 'test_orm/static/src/js/test_jsfile3.js', 'test_orm/static/src/js/test_jsfile1.js'),
+                    ('replace', 'test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js', 'test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js'),
                 ],
             },
         }
@@ -1307,7 +1307,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;
             ''',
         )
@@ -1320,8 +1320,8 @@ class TestAssetsManifest(AddonManifestPatched):
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_orm.manifest4': [
-                    ('remove', 'test_orm/static/src/js/test_jsfile3.js'),
-                    ('append', 'test_orm/static/src/js/test_jsfile1.js'),
+                    ('remove', 'test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js'),
+                    ('append', 'test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js'),
                 ],
             },
         }
@@ -1331,7 +1331,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;
             ''',
         )
@@ -1357,7 +1357,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;
             ''',
         )
@@ -1380,7 +1380,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '2',
             'bundle': 'test_orm.irasset2',
-            'path': 'test_orm/static/src/css/test_cssfile1.css',
+            'path': 'test_orm/static/assets_bundle_valid_src/css/test_cssfile1.css',
         })
         view = self.make_asset_view('test_orm.irasset2', {
             't-js': 'false',
@@ -1404,7 +1404,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '2',
             'bundle': 'test_orm.irasset2',
-            'path': 'test_orm/static/src/scss/test_file1.scss',
+            'path': 'test_orm/static/assets_bundle_valid_src/scss/test_file1.scss',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.irasset2')
         stylesheets = [link for link in bundle.get_links() if link.endswith('css')]
@@ -1414,7 +1414,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/scss/test_file1.scss */
+            /* /test_orm/static/assets_bundle_valid_src/scss/test_file1.scss */
              .rule1{color: black;}
             ''',
         )
@@ -1423,7 +1423,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_orm.irasset2',
-            'path': 'test_orm/static/src/scss/test_prefix.scss',
+            'path': 'test_orm/static/assets_bundle_valid_src/scss/test_prefix.scss',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.irasset2', js=False, autoprefix=True)
         content = bundle.css().raw.decode()
@@ -1467,7 +1467,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_other.bundle4': [
-                    ('before', 'test_orm/static/src/css/test_cssfile1.css', '/test_orm/static/src/js/test_jsfile4.js'),
+                    ('before', 'test_orm/static/assets_bundle_valid_src/css/test_cssfile1.css', '/test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js'),
                 ],
             },
         }
@@ -1477,13 +1477,13 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile2.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;
             ''',
         )
@@ -1496,7 +1496,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_orm.bundle4': [
-                    ('before', '/test_orm/static/src/js/test_jsfile3.js', '/test_orm/static/src/js/test_jsfile4.js'),
+                    ('before', '/test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js', '/test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js'),
                 ],
             },
         }
@@ -1506,16 +1506,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile2.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_orm/static/src/js/test_jsfile4.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js */
             var d=4;;
 
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;
             ''',
         )
@@ -1529,7 +1529,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_other.bundle4': [
-                    ('after', 'test_orm/static/src/css/test_cssfile1.css', '/test_orm/static/src/js/test_jsfile4.js'),
+                    ('after', 'test_orm/static/assets_bundle_valid_src/css/test_cssfile1.css', '/test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js'),
                 ],
             },
         }
@@ -1539,13 +1539,13 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile2.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;
             ''',
         )
@@ -1558,7 +1558,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_orm.bundle4': [
-                    ('after', '/test_orm/static/src/js/test_jsfile2.js', '/test_orm/static/src/js/test_jsfile4.js'),
+                    ('after', '/test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js', '/test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js'),
                 ],
             },
         }
@@ -1568,16 +1568,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile2.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_orm/static/src/js/test_jsfile4.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js */
             var d=4;;
 
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;
             ''',
         )
@@ -1586,8 +1586,8 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_orm.bundle4',
-            'path': '/test_orm/static/src/js/test_jsfile4.js',
-            'target': '/test_orm/static/src/js/test_jsfile3.js',
+            'path': '/test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js',
+            'target': '/test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js',
             'directive': 'before',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.bundle4')
@@ -1596,16 +1596,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile2.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_orm/static/src/js/test_jsfile4.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js */
             var d=4;;
 
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;
             ''',
         )
@@ -1614,8 +1614,8 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_orm.bundle4',
-            'path': '/test_orm/static/src/js/test_jsfile4.js',
-            'target': '/test_orm/static/src/js/test_jsfile2.js',
+            'path': '/test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js',
+            'target': '/test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js',
             'directive': 'after',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.bundle4')
@@ -1624,16 +1624,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile2.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_orm/static/src/js/test_jsfile4.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js */
             var d=4;;
 
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;
             ''',
         )
@@ -1642,15 +1642,15 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_orm.bundle4',
-            'path': '/test_orm/static/src/js/test_jsfile4.js',
-            'target': '/test_orm/static/src/css/test_cssfile1.css',
+            'path': '/test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js',
+            'target': '/test_orm/static/assets_bundle_valid_src/css/test_cssfile1.css',
             'directive': 'after',
         })
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_orm.bundle4',
-            'path': '/test_orm/static/src/css/test_cssfile3.css',
-            'target': '/test_orm/static/src/js/test_jsfile2.js',
+            'path': '/test_orm/static/assets_bundle_valid_src/css/test_cssfile3.css',
+            'target': '/test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js',
             'directive': 'before',
         })
         self.make_asset_view('test_orm.bundle4', {
@@ -1665,16 +1665,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             js_content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile2.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_orm/static/src/js/test_jsfile4.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js */
             var d=4;;
 
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;
             ''',
         )
@@ -1683,13 +1683,13 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             css_content,
             '''
-            /* /test_orm/static/src/css/test_cssfile3.css */
+            /* /test_orm/static/assets_bundle_valid_src/css/test_cssfile3.css */
             .rule4{color: green;}
 
-            /* /test_orm/static/src/css/test_cssfile1.css */
+            /* /test_orm/static/assets_bundle_valid_src/css/test_cssfile1.css */
             .rule1{color: black;}.rule2{color: yellow;}.rule3{color: red;}
 
-            /* /test_orm/static/src/css/test_cssfile2.css */
+            /* /test_orm/static/assets_bundle_valid_src/css/test_cssfile2.css */
             .rule4{color: blue;}
             ''',
         )
@@ -1698,28 +1698,28 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_orm.wrong_path',
-            'path': '/test_orm/static/src/js/test_jsfile4.js',
+            'path': '/test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js',
         })
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_orm.wrong_path',
-            'path': '/test_orm/static/src/js/test_jsfile1.js',
-            'target': '/test_orm/static/src/js/doesnt_exist.js',
+            'path': '/test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js',
+            'target': '/test_orm/static/assets_bundle_valid_src/js/doesnt_exist.js',
             'directive': 'after',
         })
         with self.assertRaises(Exception) as cm:
             bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.wrong_path')
             bundle.js()
         self.assertTrue(
-            "test_orm/static/src/js/doesnt_exist.js not found" in str(cm.exception),
+            "test_orm/static/assets_bundle_valid_src/js/doesnt_exist.js not found" in str(cm.exception),
         )
 
     def test_29_js_after_js_in_irasset_glob(self):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_orm.manifest4',
-            'path': '/test_orm/static/src/*/**',
-            'target': '/test_orm/static/src/js/test_jsfile3.js',
+            'path': '/test_orm/static/assets_bundle_valid_src/*/**',
+            'target': '/test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js',
             'directive': 'after',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.manifest4')
@@ -1728,16 +1728,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;;
 
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile2.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_orm/static/src/js/test_jsfile4.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js */
             var d=4;
             ''',
         )
@@ -1746,8 +1746,8 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_orm.manifest4',
-            'path': '/test_orm/static/src/js/test_jsfile[124].js',
-            'target': '/test_orm/static/src/js/test_jsfile3.js',
+            'path': '/test_orm/static/assets_bundle_valid_src/js/test_jsfile[124].js',
+            'target': '/test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js',
             'directive': 'before',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_orm.manifest4')
@@ -1756,16 +1756,16 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             '''
-            /* /test_orm/static/src/js/test_jsfile1.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile1.js */
             var a=1;;
 
-            /* /test_orm/static/src/js/test_jsfile2.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile2.js */
             var b=2;;
 
-            /* /test_orm/static/src/js/test_jsfile4.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile4.js */
             var d=4;;
 
-            /* /test_orm/static/src/js/test_jsfile3.js */
+            /* /test_orm/static/assets_bundle_valid_src/js/test_jsfile3.js */
             var c=3;
             ''',
         )
@@ -2063,7 +2063,7 @@ class TestErrorManagement(HttpCase):
         self.env['ir.asset'].create({
             'name': 'Css error',
             'bundle': 'web.assets_backend',
-            'path': 'test_orm/static/src/css/test_error.scss',
+            'path': 'test_orm/static/assets_bundle_invalid_src/css/test_error.scss',
         })
 
         with mute_logger('odoo.addons.base.models.assetsbundle'):
@@ -2075,7 +2075,7 @@ class TestErrorManagement(HttpCase):
         self.env['ir.asset'].create({
             'name': 'Css error',
             'bundle': 'web.assets_frontend',
-            'path': 'test_orm/static/src/css/test_error.scss',
+            'path': 'test_orm/static/assets_bundle_valid_src/css/test_error.scss',
         })
         with mute_logger('odoo.addons.base.models.assetsbundle'):
             self.start_tour('/', 'css_error_tour_frontend')
