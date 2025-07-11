@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import base64
 from io import BytesIO
-from odoo import api, fields, models
+from odoo import fields, models, _
+from odoo.exceptions import RedirectWarning
 
 
 class BaseImportModule(models.TransientModel):
@@ -22,12 +23,20 @@ class BaseImportModule(models.TransientModel):
         zip_data = base64.decodebytes(self.module_file)
         fp = BytesIO()
         fp.write(zip_data)
-        res = IrModule._import_zipfile(fp, force=self.force, with_demo=self.with_demo)
-        return {
+        different_version = IrModule.is_major_version_different(fp)
+        IrModule._import_zipfile(fp, force=self.force, with_demo=self.with_demo)
+        IMPORT_ACTION = {
             'type': 'ir.actions.act_url',
             'target': 'self',
             'url': '/odoo',
         }
+        if different_version:
+            raise RedirectWarning(
+                _("A new version is available!\n\nHowever upgrade script is not yet available to upgrade to new version.\nProceeding may break some data in your modules."),
+                IMPORT_ACTION,
+                _('Upgrade')
+            )
+        return IMPORT_ACTION
 
     def get_dependencies_to_install_names(self):
         module_ids, _not_found = self.env['ir.module.module']._get_missing_dependencies_modules(base64.decodebytes(self.module_file))
