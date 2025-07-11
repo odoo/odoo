@@ -32,6 +32,11 @@ class TestReports(odoo.tests.TransactionCase):
             'account.report_invoice': invoice_domain,
             'l10n_th.report_commercial_invoice': invoice_domain,
         }
+        extra_data_reports = {
+            "im_livechat.report_livechat_conversation": {
+                "company": self.env["res.company"].search([], limit=1)
+            },
+        }
         Report = self.env['ir.actions.report']
         for report in Report.search([('report_type', 'like', 'qweb')]):
             report_model = 'report.%s' % report.report_name
@@ -45,12 +50,13 @@ class TestReports(odoo.tests.TransactionCase):
                 if not report_records:
                     _logger.info("no record found skipping report %s", report.report_name)
 
+                data = extra_data_reports.get(report.report_name, {})
                 # Test report generation
                 if not report.multi:
                     for record in report_records:
-                        Report._render_qweb_html(report.id, record.ids)
+                        Report._render_qweb_html(report.id, record.ids, data)
                 else:
-                    Report._render_qweb_html(report.id, report_records.ids)
+                    Report._render_qweb_html(report.id, report_records.ids, data)
             else:
                 continue
 

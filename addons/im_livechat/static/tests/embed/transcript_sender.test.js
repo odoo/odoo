@@ -18,12 +18,14 @@ describe.current.tags("desktop");
 defineLivechatModels();
 
 test("send", async () => {
-    await startServer();
+    const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
     onRpcBefore("/im_livechat/email_livechat_transcript", (args) =>
         asyncStep(`send_transcript - ${args.email}`)
     );
-    await start({ authenticateAs: false });
+    const partnerId = pyEnv["res.partner"].create({ name: "Paul" });
+    pyEnv["res.users"].create({ partner_id: partnerId, login: "paul", password: "paul" });
+    await start({ authenticateAs: { login: "paul", password: "paul" } });
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
@@ -39,12 +41,14 @@ test("send", async () => {
 });
 
 test("send failed", async () => {
-    await startServer();
+    const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
     onRpc("/im_livechat/email_livechat_transcript", () => {
         throw new Error();
     });
-    await start({ authenticateAs: false });
+    const partnerId = pyEnv["res.partner"].create({ name: "Paul" });
+    pyEnv["res.users"].create({ partner_id: partnerId, login: "paul", password: "paul" });
+    await start({ authenticateAs: { login: "paul", password: "paul" } });
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
