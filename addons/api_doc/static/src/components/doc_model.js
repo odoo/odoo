@@ -1,4 +1,4 @@
-import { Component, useState, useEffect, onPatched } from "@odoo/owl";
+import { Component, useState, useEffect, onPatched, markup } from "@odoo/owl";
 import { DocTable, TABLE_TYPES } from "@api_doc/components/doc_table";
 import { getCrudMethodsExamples } from "@api_doc/utils/doc_model_utils";
 import { DocMethod } from "@api_doc/components/doc_method";
@@ -177,15 +177,24 @@ export class DocModel extends Component {
 
         for (const methodName in model.methods) {
             const method = model.methods[methodName];
+
+            let returnDoc = "";
+            let returnAnnotation = "";
+            if (method.return) {
+                returnDoc = method.return.doc ? markup(method.return.doc) : "";
+                returnAnnotation = method.return.annotation;
+            }
+
             methods.push({
                 name: methodName,
                 module: method.module,
                 api: method.api,
                 doc: method.doc,
                 model: model.model,
-                signature: `def ${methodName}${method.signature}`,
                 parameters: method.parameters,
                 url: `/json/2/${model.model}/${methodName}`,
+                returnDoc: returnDoc,
+                returnAnnotation: returnAnnotation,
             });
         }
 
