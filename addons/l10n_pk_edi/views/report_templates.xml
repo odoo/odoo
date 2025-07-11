@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <template id='external_layout_standard' inherit_id='web.external_layout_standard'>
+        <!-- Support for custom footer (Light PDF Template) -->
+        <div t-attf-class='footer o_standard_footer o_company_#{company.id}_layout' position='attributes'>
+            <attribute name='t-if'>not custom_footer</attribute>
+        </div>
+
+        <div t-attf-class='footer o_standard_footer o_company_#{company.id}_layout' position='after'>
+            <div t-attf-class='footer o_standard_footer o_company_#{company.id}_layout' t-if='custom_footer'>
+                <t t-out='custom_footer'/>
+            </div>
+        </div>
+    </template>
+
+    <template id='external_layout_bold' inherit_id='web.external_layout_bold'>
+        <!-- Support for custom footer (Bold PDF Template) -->
+        <div t-attf-class='footer o_clean_footer o_company_#{company.id}_layout' position='attributes'>
+            <attribute name='t-if'>not custom_footer</attribute>
+        </div>
+        <div t-attf-class='footer o_clean_footer o_company_#{company.id}_layout' position='after'>
+            <div t-attf-class='footer o_clean_footer o_company_#{company.id}_layout' t-if='custom_footer'>
+                <t t-out='custom_footer'/>
+            </div>
+        </div>
+    </template>
+
+    <template id='external_layout_boxed' inherit_id='web.external_layout_boxed'>
+        <!-- Support for custom footer (Boxed PDF Template) -->
+        <div t-attf-class='footer o_boxed_footer o_company_#{company.id}_layout' position='attributes'>
+            <attribute name='t-if'>not custom_footer</attribute>
+        </div>
+        <div t-attf-class='footer o_boxed_footer o_company_#{company.id}_layout' position='after'>
+            <div t-attf-class='footer o_boxed_footer o_company_#{company.id}_layout' t-if='custom_footer'>
+                <t t-out='custom_footer'/>
+            </div>
+        </div>
+    </template>
+
+    <template id='external_layout_striped' inherit_id='web.external_layout_striped'>
+        <!-- Support for custom footer (Striped PDF Template) -->
+        <div t-attf-class='o_company_#{company.id}_layout footer o_background_footer' position='attributes'>
+            <attribute name='t-if'>not custom_footer</attribute>
+        </div>
+        <div t-attf-class='o_company_#{company.id}_layout footer o_background_footer' position='after'>
+            <div t-attf-class='o_company_#{company.id}_layout footer o_background_footer' t-if='custom_footer'>
+                <t t-out='custom_footer'/>
+            </div>
+        </div>
+    </template>
+
+</odoo>
