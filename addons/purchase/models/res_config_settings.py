@@ -16,6 +16,7 @@ class ResConfigSettings(models.TransientModel):
     group_warning_purchase = fields.Boolean("Purchase Warnings", implied_group='purchase.group_warning_purchase')
     module_account_3way_match = fields.Boolean("3-way matching: purchases, receptions and bills")
     module_purchase_requisition = fields.Boolean("Purchase Agreements")
+    module_purchase_alternative = fields.Boolean("Purchase Alternative")
     module_purchase_product_matrix = fields.Boolean("Purchase Grid Entry")
 
     group_send_reminder = fields.Boolean("Receipt Reminder", implied_group='purchase.group_send_reminder', default=True,

@@ -30,12 +30,12 @@
                         </setting>
                         <setting id="manage_purchase_agreements" title="A blanket purchase order is a purchase agreement between a buyer and a supplier to deliver goods or services to the buyer at a preset price for a period of time." documentation="/applications/inventory_and_mrp/purchase/manage_deals/agreements.html" help="Manage blanket orders and purchase templates">
                             <field name="module_purchase_requisition"/>
-                            <div class="content-group" invisible="not module_purchase_requisition">
-                                <div id="use_purchase_requisition"/>
-                            </div>
                         </setting>
                         <setting id="auto_receipt_reminder" help="Automatically remind the receipt date to your vendors">
                             <field name="group_send_reminder"/>
+                        </setting>
+                        <setting id="manage_purchase_alternative" documentation="/applications/inventory_and_mrp/purchase/manage_deals/calls_for_tenders.html" help="Link RFQs together and compare them.">
+                            <field name="module_purchase_alternative"/>
                         </setting>
                     </block>
                     <block title="Invoicing" name="invoicing_settings_container">
