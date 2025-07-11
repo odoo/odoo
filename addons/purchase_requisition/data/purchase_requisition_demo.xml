@@ -51,40 +51,5 @@
             <field name="price_unit">60</field>
             <field name="product_qty">10</field>
         </record>
-
-        <!-- Call to Tender, i.e. linked RFQs -->
-        <!-- Note that forcecreate="0" is added to this demo data due to product type being updated to 'product'
-             by stock, but upgrade issue will occur since 'product' type won't exist yet in purchase when trying
-             to add the new PO lines (i.e. stock product type update won't exist yet, but it will be in the db) -->
-        <record id="rfq3" model="purchase.order" forcecreate="0">
-            <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="user_id" ref="base.user_admin"/>
-        </record>
-        <record id="rfq3_line" model="purchase.order.line" forcecreate="0">
-            <field name="order_id" ref="rfq3"/>
-            <field name="name" model="purchase.order.line" eval="obj().env.ref('product.product_product_13').partner_ref"/>
-            <field name="date_planned" eval="time.strftime('%Y-%m-10')"/>
-            <field name="product_id" ref="product.product_product_13"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="price_unit">100</field>
-            <field name="product_qty">5</field>
-        </record>
-
-        <record id="rfq4" model="purchase.order" forcecreate="0">
-            <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="user_id" ref="base.user_admin"/>
-        </record>
-        <record id="rfq4_line" model="purchase.order.line" forcecreate="0">
-            <field name="order_id" ref="rfq4"/>
-            <field name="name" model="purchase.order.line" eval="obj().env.ref('product.product_product_13').partner_ref"/>
-            <field name="date_planned" eval="time.strftime('%Y-%m-15')"/>
-            <field name="product_id" ref="product.product_product_13"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="price_unit">120</field>
-            <field name="product_qty">4</field>
-        </record>
-        <record id="rfq_group" model="purchase.order.group" forcecreate="0">
-            <field name="order_ids" eval="[Command.set([ref('purchase_requisition.rfq3'), ref('purchase_requisition.rfq4')])]"/>
-        </record>
     </data>
 </odoo>
