@@ -544,7 +544,7 @@ class MrpProduction(models.Model):
         produce and all work orders has been finished.
         """
         for production in self:
-            if not production.state or not production.product_uom_id or not (production.id or production._origin.id):
+            if not production.state or production.state == 'draft' or not production.product_uom_id or not (production.id or production._origin.id):
                 production.state = 'draft'
             elif production.state == 'cancel' or (production.move_finished_ids and all(move.state == 'cancel' for move in production.move_finished_ids)):
                 production.state = 'cancel'
@@ -1269,7 +1269,10 @@ class MrpProduction(models.Model):
             # allow changing a non-zero value to a 0 to not block mass produce feature
             if qty_producing_uom != 1 and not (qty_producing_uom == 0 and self._origin.qty_producing != self.qty_producing):
                 self.qty_producing = self.product_id.uom_id._compute_quantity(1, self.product_uom_id, rounding_method='HALF-UP')
+        # self._update_moves_qty_done(pick_manual_consumption_moves)
 
+    # def _update_moves_qty_done(self, pick_manual_consumption_moves=True):
+        """ Updates the quantity done of the raw and finished moves based on the workorders. """
         # waiting for a preproduction move before assignement
         is_waiting = self.warehouse_id.manufacture_steps != 'mrp_one_step' and self.picking_ids.filtered(lambda p: p.picking_type_id == self.warehouse_id.pbm_type_id and p.state not in ('done', 'cancel'))
 
@@ -2019,6 +2022,7 @@ class MrpProduction(models.Model):
         moves_to_consume.write({'picked': True})
 
         workorders_to_cancel = self.env['mrp.workorder']
+        self.workorder_ids.duration_expected = 0.0  # Reset duration_expected to allow recomputation of original WO
         for production in self:
             initial_qty = initial_qty_by_production[production]
             initial_workorder_remaining_qty = []
@@ -2061,7 +2065,7 @@ class MrpProduction(models.Model):
             productions_not_to_backorder = self
             productions_to_backorder = self.env['mrp.production']
         productions_not_to_backorder = productions_not_to_backorder.with_context(no_procurement=True)
-        self.workorder_ids.button_finish()
+        self.workorder_ids.with_context(bypass_qty_producing_update=True).button_finish()
 
         backorders = productions_to_backorder and productions_to_backorder._split_productions()
         backorders = backorders - productions_to_backorder

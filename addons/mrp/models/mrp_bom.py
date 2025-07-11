@@ -88,7 +88,11 @@ class MrpBom(models.Model):
         string="Days to prepare Manufacturing Order", default=0,
         help="Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
              "Note that security lead times will also be considered when appropriate.")
-
+    workorder_partial_qty = fields.Boolean(
+        'Process Partial Quantities in Work Orders',
+        help="If active, you will be able to process partial quantities in work orders.\n"
+             "On validation, subsequent work orders will be released/blocked accordingly."
+    )
     _qty_positive = models.Constraint(
         'check (product_qty > 0)',
         'The quantity to produce must be positive!',
