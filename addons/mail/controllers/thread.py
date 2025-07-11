@@ -7,6 +7,7 @@ from werkzeug.exceptions import NotFound
 from odoo import http
 from odoo.http import request
 from odoo.tools import frozendict
+from odoo.addons.bus.tools.bus import notify_bus_on_completion
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
 
@@ -205,8 +206,11 @@ class ThreadController(http.Controller):
         return store.add(message).get_result()
 
     @http.route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
+    @notify_bus_on_completion
     @add_guest_to_context
-    def mail_message_update_content(self, message_id, body, attachment_ids, attachment_tokens=None, partner_ids=None, **kwargs):
+    def mail_message_update_content(self, message_id, body, attachment_ids, attachment_tokens=None, partner_ids=None, context=None, **kwargs):
+        if context:
+            request.update_context(**context)
         guest = request.env["mail.guest"]._get_guest_from_context()
         guest.env["ir.attachment"].browse(attachment_ids)._check_attachments_access(attachment_tokens)
         message = self._get_message_with_access(message_id, mode="create", **kwargs)
@@ -230,7 +234,12 @@ class ThreadController(http.Controller):
                 if key in thread._get_allowed_message_update_params()
             }
         )
-        return Store(message).get_result()
+        store_data = Store(message).get_result()
+        target = guest or request.env.user
+        target._bus_send("mail.record/insert", store_data)
+        if self.env.context.get('bus_rpc_uuid'):
+            target._bus_send("bus.rpc/end", self.env.context.get('bus_rpc_uuid'))
+        return store_data
 
     # side check for access
     # ------------------------------------------------------------

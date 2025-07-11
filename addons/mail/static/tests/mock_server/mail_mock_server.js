@@ -671,8 +671,10 @@ async function mail_message_update_content(request) {
     const IrAttachment = this.env["ir.attachment"];
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
+    /** @type {import("mock_models").ResPartner} */
+    const ResPartner = this.env["res.partner"];
 
-    const { attachment_ids, body, message_id } = await parseRequestParams(request);
+    const { attachment_ids, body, message_id, context } = await parseRequestParams(request);
     const [message] = MailMessage.browse(message_id);
     const msg_values = {};
     if (body !== null) {
@@ -710,10 +712,16 @@ async function mail_message_update_content(request) {
             pinned_at: message.pinned_at,
         }).get_result()
     );
-    return new mailDataHelpers.Store(
+    const storeData = new mailDataHelpers.Store(
         MailMessage.browse(message_id),
         makeKwArgs({ for_current_user: true })
     ).get_result();
+    const [partner] = ResPartner.read(this.env.user.partner_id);
+    BusBus._sendone(partner, "mail.record/insert", storeData);
+    if (context?.bus_rpc_uuid) {
+        BusBus._sendone(partner, "bus.rpc/end", context.bus_rpc_uuid);
+    }
+    return storeData;
 }
 
 registerRoute("/discuss/channel/<int:cid>/partner/<int:pid>/avatar_128", partnerAvatar128);
