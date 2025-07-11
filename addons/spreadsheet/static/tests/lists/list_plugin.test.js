@@ -103,11 +103,11 @@ test("Numeric/monetary fields are correctly loaded and displayed", async () => {
 
     // prettier-ignore
     expect(getFormattedValueGrid(model, "A2:C6")).toEqual({
-        A2: "74.40€",    B2: "10.00",  C2: "1",
-        A3: "$74.80",    B3: "11.00",  C3: "2",
-        A4: "4.00€",     B4: "95.00",  C4: "3",      
-        A5: "$1,000.00", B5: "15.00",  C5: "4",
-        A6: "$0.00",     B6: "0.00",   C6: "0",
+        A2: "74.40€", B2: "10.00", C2: "1",
+        A3: "$74.80", B3: "11.00", C3: "2",
+        A4: "4.00€", B4: "95.00", C4: "3",
+        A5: "$1,000.00", B5: "15.00", C5: "4",
+        A6: "$0.00", B6: "0.00", C6: "0",
     });
 });
 
@@ -566,19 +566,19 @@ test("can edit list sorting", async () => {
     });
     // prettier-ignore
     const initialGrid = [
-        ["Foo", "Bar",   "Date", "Probability", "Money!"],
-        [12,     true,   42474,  10,                74.4],
-        [1,      true,   42669,  11,                74.8],
-        [17,     true,   42719,  95,                   4],
-        [2,      false,  42715,  15,                1000],
+        ["Foo", "Bar", "Date", "Probability", "Money!"],
+        [12, true, 42474, 10, 74.4],
+        [1, true, 42669, 11, 74.8],
+        [17, true, 42719, 95, 4],
+        [2, false, 42715, 15, 1000],
     ]
     // prettier-ignore
     const orderedGrid = [
-        ["Foo", "Bar",   "Date", "Probability", "Money!"],
-        [17,     true,   42719,   95,                  4],
-        [12,     true,   42474,   10,               74.4],
-        [1,      true,   42669,   11,               74.8],
-        [2,      false,  42715,   15,               1000],
+        ["Foo", "Bar", "Date", "Probability", "Money!"],
+        [17, true, 42719, 95, 4],
+        [12, true, 42474, 10, 74.4],
+        [1, true, 42669, 11, 74.8],
+        [2, false, 42715, 15, 1000],
     ]
     const [listId] = model.getters.getListIds();
     expect(model.getters.getListDefinition(listId).orderBy).toEqual([]);
@@ -674,6 +674,36 @@ test("Cannot see record of a list in dashboard mode if wrong list formula", asyn
     model.updateMode("dashboard");
     selectCell(model, "A2");
     expect.verifySteps([]);
+});
+
+test("Can see record with link to list cell", async function () {
+    mockService("action", {
+        async doAction(params) {
+            expect.step(`${params.res_model},${params.res_id}`);
+        },
+    });
+    const { model, env } = await createSpreadsheetWithList();
+    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    model.dispatch("ACTIVATE_SHEET", {
+        sheetIdFrom: model.getters.getActiveSheetId(),
+        sheetIdTo: "42",
+    });
+    setCellContent(model, "A1", '=ODOO.LIST(1, 1, "foo")');
+    setCellContent(model, "A2", '=ODOO.LIST(1, 2, "foo")');
+
+    setCellContent(model, "A3", "=A1");
+    setCellContent(model, "A4", "=IF(TRUE, A2, A1)");
+    const seeRecordAction = cellMenuRegistry.getAll().find((item) => item.id === "list_see_record");
+
+    selectCell(model, "A3");
+    expect(seeRecordAction.isVisible(env)).toBe(true);
+    await seeRecordAction.execute(env);
+    expect.verifySteps(["partner,1"]);
+
+    selectCell(model, "A4");
+    expect(seeRecordAction.isVisible(env)).toBe(true);
+    await seeRecordAction.execute(env);
+    expect.verifySteps(["partner,2"]);
 });
 
 test("Can see record on vectorized list index", async function () {
