@@ -2307,6 +2307,11 @@ export class PosStore extends WithLazyGetterTrap {
     weighProduct() {
         return makeAwaitable(this.env.services.dialog, ScaleScreen);
     }
+
+    async isSessionDeleted() {
+        const [session] = await this.data.orm.read("pos.session", [this.session.id]);
+        return !session;
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
