@@ -31,13 +31,6 @@
                         Mobile Menu
                  </button>
             </xpath>
-            <xpath expr="//field[@name='name']" position="after">
-                <field name="self_ordering_mode" invisible="1" />
-                <div class="badge text-bg-info o_kanban_inline_block me-2"
-                    invisible="not self_ordering_mode == 'mobile'">
-                    Self Ordering Enabled
-                </div>
-            </xpath>
             <xpath expr="//div[@name='card_left']" position="after">
                 <field name="self_ordering_mode" invisible="1" />
                 <field name="current_session_id" invisible="1" />
