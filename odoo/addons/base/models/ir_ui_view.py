@@ -421,7 +421,25 @@ actual arch.
                 if view.inherit_id:
                     view_arch = etree.fromstring(view.arch or '<data/>')
                     view._valid_inheritance(view_arch)
+
                 combined_arch = view._get_combined_arch()
+
+                # check primary view that extends this current view
+                if view.inherit_id or view.inherit_children_ids:
+                    root = view
+                    while root.inherit_id and root.mode != 'primary':
+                        root = root.inherit_id
+                    sibling_primary_views = self.env['ir.ui.view']
+                    stack = [root]
+                    while stack:
+                        root = stack.pop()
+                        for child in root.inherit_children_ids:
+                            if child.mode == 'primary':
+                                sibling_primary_views += child
+                            else:
+                                stack.append(child)
+                    sibling_primary_views._get_combined_archs()
+
                 if view.type == 'qweb':
                     continue
             except (etree.ParseError, ValueError) as e:
@@ -591,8 +609,8 @@ actual arch.
         res = super().write(self._compute_defaults(vals))
 
         # Check the xml of the view if it gets re-activated or changed.
-        if vals.get('active') or 'arch_db' in vals:
-            self.filtered('active')._check_xml()
+        if 'active' in vals or 'arch_db' in vals or 'inherit_id' in vals:
+            self._check_xml()
 
         return res
 
