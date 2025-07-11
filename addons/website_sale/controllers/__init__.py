@@ -2,6 +2,7 @@
 
 from . import combo_configurator
 from . import delivery
+from . import mail
 from . import main
 from . import payment
 from . import product_configurator

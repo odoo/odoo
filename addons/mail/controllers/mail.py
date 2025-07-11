@@ -227,6 +227,9 @@ class MailController(http.Controller):
             'access_url': record._notify_get_action_link('view', model=model, res_id=res_id) if display_link else False,
         })
 
+    def _get_public_chatter_url_data(self, message):
+        return {}
+
     @http.route('/mail/message/<int:message_id>', type='http', auth='public')
     @add_guest_to_context
     def mail_thread_message_redirect(self, message_id, **kwargs):
@@ -235,6 +238,14 @@ class MailController(http.Controller):
             if request.env.user._is_public():
                 return request.redirect(f'/web/login?redirect=/mail/message/{message_id}')
             raise Unauthorized()
+
+        if (
+            (data := self._get_public_chatter_url_data(message)) and
+            message.message_type == "comment" and
+            not request.env.user._is_internal()
+        ):
+            url_params = {**data.get("url_params", {}), "highlight_message_id": message_id}
+            return request.redirect(f"{data['url']}?{url_encode(url_params)}")
 
         # sudo: public user can access some relational fields of mail.message
         if message.sudo()._filter_empty():

@@ -4,7 +4,7 @@ from werkzeug.exceptions import NotFound, Forbidden
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.portal.controllers.mail import PortalChatter
+from odoo.addons.portal.controllers.mail import MailController, PortalChatter
 from odoo.tools import plaintext2html, html2plaintext
 
 
@@ -77,3 +77,13 @@ class SlidesPortalChatter(PortalChatter):
             'default_attachment_ids': message.attachment_ids.sudo().read(['id', 'name', 'mimetype', 'file_size', 'access_token']),
             'force_submit_url': '/slides/mail/update_comment',
         }
+
+
+class SlidesMailController(MailController):
+
+    def _get_public_chatter_url_data(self, message):
+        if message.model == "slide.channel":
+            return {"url": f"/slides/{message.res_id}", "url_params": {"active_tab": "review"}}
+        if message.model == "slide.slide":
+            return {"url": f"/slides/slide/{message.res_id}"}
+        return super()._get_public_chatter_url_data(message)
