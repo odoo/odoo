@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, waitFor } from "@odoo/hoot-dom";
+import { click, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { setupEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
@@ -93,7 +93,7 @@ test("icon toolbar is not displayed on rating stars", async () => {
         el,
         `<p>\u200B<span contenteditable="false" class="o_stars"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i>[<i class="fa fa-star-o" contenteditable="false">\u200B</i></span>]\u200B</p>`
     );
-    await animationFrame();
+    await waitForNone(".o-we-toolbar .btn-group[name='icon_size']");
     expect(".btn-group[name='icon_size']").toHaveCount(0);
 });
 

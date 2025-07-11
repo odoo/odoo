@@ -6,9 +6,10 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { ToolbarMobile } from "./mobile_toolbar";
 import { debounce } from "@web/core/utils/timing";
-import { omit } from "@web/core/utils/objects";
+import { omit, pick } from "@web/core/utils/objects";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
+import { memoize } from "@web/core/utils/functions";
 
 /** @typedef { import("@html_editor/core/selection_plugin").EditorSelection } EditorSelection */
 /** @typedef { import("@html_editor/core/user_command_plugin").UserCommand } UserCommand */
@@ -107,7 +108,7 @@ import { _t } from "@web/core/l10n/translation";
  * @typedef {Object} ToolbarCommandButton
  * @property {string} id
  * @property {string} groupId
- * @property {TranslatedString} description
+ * @property {TranslatedStringGetter} description
  * @property {Function} run
  * @property {string} [icon]
  * @property {string} [text]
@@ -115,11 +116,23 @@ import { _t } from "@web/core/l10n/translation";
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isDisabled]
  *
- * @typedef {ToolbarComponentItem} ToolbarComponentButton
+ * @typedef {Object} ToolbarComponentButton
+ * Adds a custom component to the toolbar (processed version with required fields).
+ * @property {string} id
+ * @property {string} groupId
+ * @property {string[]} [namespaces]
+ * @property {TranslatedStringGetter} description
+ * @property {Function} Component
+ * @property {Object} props
+ * @property {(selection: EditorSelection) => boolean} isAvailable
+ *
+ * @typedef {ToolbarCommandButton | ToolbarComponentButton} ToolbarButton
  */
 
 /** Delay in ms for toolbar open after keyup, double click or triple click. */
 const DELAY_TOOLBAR_OPEN = 300;
+/** Number of buttons below which toolbar will open directly in its expanded form */
+const MIN_SIZE_FOR_COMPACT = 7;
 
 /**
  * @typedef { Object } ToolbarShared
@@ -152,10 +165,10 @@ export class ToolbarPlugin extends Plugin {
             description: _t("Expand toolbar"),
             icon: "oi-ellipsis-v",
         },
-        toolbar_namespaces: withSequence(100, {
-            id: "compact",
-            isApplied: () => !this.isToolbarExpanded,
-        }),
+        toolbar_namespaces: [
+            withSequence(99, { id: "compact", isApplied: () => !this.isToolbarExpanded }),
+            withSequence(100, { id: "expanded", isApplied: () => true }),
+        ],
     };
 
     setup() {
@@ -167,6 +180,7 @@ export class ToolbarPlugin extends Plugin {
             groupIds.add(group.id);
         }
         this.buttonGroups = this.getButtonGroups();
+        this.buttonsByNamespace = this.getButtonsByNamespace();
 
         this.isMobileToolbar = hasTouch() && window.visualViewport;
 
@@ -180,23 +194,10 @@ export class ToolbarPlugin extends Plugin {
                 closeOnPointerdown: false,
             });
         }
-        this.state = reactive({
-            buttonsActiveState: this.buttonGroups.flatMap((g) =>
-                g.buttons.map((b) => [b.id, false])
-            ),
-            buttonsDisabledState: this.buttonGroups.flatMap((g) =>
-                g.buttons.map((b) => [b.id, false])
-            ),
-            buttonsAvailableState: this.buttonGroups.flatMap((g) =>
-                g.buttons.map((b) => [b.id, true])
-            ),
-            buttonsTitleState: this.buttonGroups.flatMap((g) => g.buttons.map((b) => [b.id, ""])),
-            namespace: undefined,
-        });
-        this.updateSelection = null;
+        this.state = reactive({ buttonGroups: [], namespace: undefined });
 
         this.onSelectionChangeActive = true;
-        this.debouncedUpdateToolbar = debounce(this.updateToolbar, DELAY_TOOLBAR_OPEN);
+        this.debouncedUpdateToolbar = debounce(this._updateToolbar, DELAY_TOOLBAR_OPEN);
 
         if (this.isMobileToolbar) {
             this.addDomListener(this.editable, "pointerup", () => {
@@ -247,29 +248,43 @@ export class ToolbarPlugin extends Plugin {
             });
         }
         this.isToolbarExpanded = false;
+        this.toolbarProps = {
+            class: "shadow rounded my-2",
+            getSelection: () => this.dependencies.selection.getSelectionData(),
+            focusEditable: () => this.dependencies.selection.focusEditable(),
+            state: this.state,
+        };
     }
 
     destroy() {
         this.debouncedUpdateToolbar.cancel();
+        this.updateToolbar.cancel();
         this.overlay.close();
         super.destroy();
     }
 
     /**
-     * @returns {(ToolbarCommandButton| ToolbarComponentButton)[]}
+     * @returns {ToolbarButton[]}
      */
     getButtons() {
         /** @type {ToolbarItem[]} */
         const toolbarItems = this.getResource("toolbar_items");
 
-        /** @returns {ToolbarCommandButton} */
-        const commandItemToButton = (/** @type {ToolbarCommandItem}*/ item) => {
+        /** @type {(item: ToolbarCommandItem) => ToolbarCommandButton} */
+        const commandItemToButton = (item) => {
             const command = this.dependencies.userCommand.getCommand(item.commandId);
             return composeToolbarButton(command, item);
         };
+        /** @type {(item: ToolbarComponentItem) => ToolbarComponentButton} */
+        const componentItemToButton = (item) => ({
+            isAvailable: () => true,
+            ...item,
+            description:
+                item.description instanceof Function ? item.description : () => item.description,
+        });
 
         return toolbarItems.map((item) =>
-            "Component" in item ? { isAvailable: () => true, ...item } : commandItemToButton(item)
+            "Component" in item ? componentItemToButton(item) : commandItemToButton(item)
         );
     }
 
@@ -289,12 +304,29 @@ export class ToolbarPlugin extends Plugin {
         }));
     }
 
+    /**
+     * @returns {Object<string, ToolbarButton[]>}
+     */
+    getButtonsByNamespace() {
+        const namespaces = this.getResource("toolbar_namespaces").map((ns) => ns.id);
+        const buttonsByNamespace = {};
+        for (const namespace of namespaces) {
+            buttonsByNamespace[namespace] = this.buttonGroups.flatMap((group) =>
+                group.buttons.filter((btn) => btn.namespaces.includes(namespace))
+            );
+        }
+        buttonsByNamespace["compact+expanded"] = [
+            ...new Set([
+                ...buttonsByNamespace["compact"].slice(0, -1), // ellipsis button not included
+                ...buttonsByNamespace["expanded"],
+            ]),
+        ];
+        return buttonsByNamespace;
+    }
+
     getToolbarInfo() {
         return {
             buttonGroups: this.buttonGroups,
-            getSelection: () => this.dependencies.selection.getSelectionData(),
-            state: this.state,
-            focusEditable: () => this.dependencies.selection.focusEditable(),
         };
     }
 
@@ -304,15 +336,20 @@ export class ToolbarPlugin extends Plugin {
         }
     }
 
-    updateToolbar(selectionData = this.dependencies.selection.getSelectionData()) {
-        this.updateNamespace();
-        if (!this.config.disableFloatingToolbar) {
-            this.updateToolbarVisibility(selectionData);
-            if (!this.overlay.isOpen) {
-                return;
-            }
+    /**
+     * Different handlers might call updateToolbar (e.g. step added and
+     * selection change) in the same tick. To avoid unnecessary updates, we
+     * batch the calls.
+     */
+    updateToolbar = debounce(this._updateToolbar, 0, { trailing: true });
+    _updateToolbar(selectionData = this.dependencies.selection.getSelectionData()) {
+        const targetedNodes = this.getFilteredTargetedNodes();
+        this.updateNamespace(targetedNodes);
+        this.updateToolbarVisibility(selectionData, targetedNodes);
+        if (!this.overlay.isOpen) {
+            return;
         }
-        this.updateButtonsStates(selectionData.editableSelection);
+        this.updateButtonsStates(selectionData.editableSelection, targetedNodes);
     }
 
     getFilteredTargetedNodes() {
@@ -326,19 +363,18 @@ export class ToolbarPlugin extends Plugin {
             );
     }
 
-    updateToolbarVisibility(selectionData) {
-        if (this.shouldBeVisible(selectionData)) {
+    updateToolbarVisibility(selectionData, targetedNodes) {
+        if (this.shouldBeVisible(selectionData, targetedNodes)) {
             // Do not reposition the toolbar if it's already open.
             if (!this.overlay.isOpen) {
-                const props = { toolbar: this.getToolbarInfo(), class: "shadow rounded my-2" };
-                this.overlay.open({ props });
+                this.overlay.open({ props: this.toolbarProps });
             }
         } else if (this.overlay.isOpen && !this.shouldPreventClosing()) {
             this.closeToolbar();
         }
     }
 
-    shouldBeVisible(selectionData) {
+    shouldBeVisible(selectionData, targetedNodes) {
         const inEditable =
             selectionData.currentSelectionIsInEditable &&
             !selectionData.documentSelectionIsProtected &&
@@ -361,7 +397,7 @@ export class ToolbarPlugin extends Plugin {
                 fn(selectionData)
             );
         }
-        return !!this.getFilteredTargetedNodes().length;
+        return !!targetedNodes.length;
     }
 
     shouldPreventClosing() {
@@ -372,44 +408,78 @@ export class ToolbarPlugin extends Plugin {
         return preventClosing?.dataset?.preventClosingOverlay === "true";
     }
 
-    updateNamespace() {
-        const targetedNodes = this.getFilteredTargetedNodes();
+    updateNamespace(targetedNodes) {
         const namespaces = this.getResource("toolbar_namespaces");
         const activeNamespace = namespaces.find((ns) => ns.isApplied(targetedNodes));
-        this.state.namespace = activeNamespace?.id || "expanded";
+        this.state.namespace = activeNamespace?.id;
     }
 
-    updateButtonsStates(selection) {
-        if (!this.updateSelection) {
-            queueMicrotask(() => {
-                if (!this.isDestroyed) {
-                    this._updateButtonsStates();
-                }
-            });
-        }
-        this.updateSelection = selection;
+    /**
+     * @param {EditorSelection} selection
+     * @param {Node[]} targetedNodes
+     */
+    updateButtonsStates(selection, targetedNodes) {
+        const availableButtons = this.getAvailableButtonsSet(selection);
+        const buttonGroups = this.buttonGroups
+            .map((group) => ({
+                id: group.id,
+                buttons: group.buttons
+                    .filter((button) => availableButtons.has(button))
+                    .map((button) => ({
+                        id: button.id,
+                        description: button.description(selection, targetedNodes),
+                        ...(button.Component
+                            ? pick(button, "Component", "props")
+                            : {
+                                  ...pick(button, "run", "icon", "text"),
+                                  isActive: !!button.isActive?.(selection, targetedNodes),
+                                  isDisabled: !!button.isDisabled?.(selection, targetedNodes),
+                              }),
+                    })),
+            }))
+            // Filter out groups left empty
+            .filter((group) => group.buttons.length > 0);
+
+        this.state.buttonGroups = buttonGroups;
     }
-    _updateButtonsStates() {
-        const selection = this.updateSelection;
-        if (!selection) {
-            return;
+
+    /**
+     * Get the set of available buttons for the current namespace and selection.
+     *
+     * @param {EditorSelection} selection
+     * @returns {Set<ToolbarButton>}
+     */
+    getAvailableButtonsSet(selection) {
+        if (this.state.namespace === "compact") {
+            return this.getAvailableButtonsCompact(selection);
         }
-        const nodes = this.getFilteredTargetedNodes();
-        for (const buttonGroup of this.buttonGroups) {
-            for (const button of buttonGroup.buttons) {
-                if (!button.namespaces.includes(this.state.namespace)) {
-                    continue;
-                }
-                this.state.buttonsActiveState[button.id] = button.isActive?.(selection, nodes);
-                this.state.buttonsDisabledState[button.id] = button.isDisabled?.(selection, nodes);
-                this.state.buttonsAvailableState[button.id] = button.isAvailable(selection);
-                this.state.buttonsTitleState[button.id] =
-                    button.description instanceof Function
-                        ? button.description(selection, nodes)
-                        : button.description;
-            }
+        const isAvailable = (button) => button.isAvailable(selection);
+        return new Set(this.buttonsByNamespace[this.state.namespace].filter(isAvailable));
+    }
+
+    /**
+     * We only display the toolbar in its compact form if the union of compact
+     * and expanded namespaces is larger than a threshold, and bigger than the
+     * compact version itself. Otherwise, we display the union of compact and
+     * expanded namespaces.
+     *
+     * @param {EditorSelection} selection
+     * @returns {Set<ToolbarButton>}
+     */
+    getAvailableButtonsCompact(selection) {
+        const isAvailable = memoize((button) => button.isAvailable(selection));
+        const compact = this.buttonsByNamespace["compact"].filter(isAvailable);
+        const merged = this.buttonsByNamespace["compact+expanded"].filter(isAvailable);
+        const shouldDisplayCompactToolbar =
+            // Merged version is big enough
+            merged.length >= MIN_SIZE_FOR_COMPACT &&
+            // Merged version is bigger than the compact version
+            merged.length > compact.length;
+        if (shouldDisplayCompactToolbar) {
+            return new Set(compact);
         }
-        this.updateSelection = null;
+        this.state.namespace = "compact+expanded";
+        return new Set(merged);
     }
 
     closeToolbar() {

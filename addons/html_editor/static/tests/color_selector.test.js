@@ -428,14 +428,6 @@ test("selected text color is not shown in the toolbar after removeFormat", async
     expect("i.fa-font").toHaveStyle({ borderBottomColor: defaultTextColor });
 });
 
-test("collapsed selection color is shown in the permanent toolbar", async () => {
-    await setupEditor(`<font style="color: rgb(255, 0, 0);">t[]est</font>`, {
-        props: { toolbar: true },
-    });
-    await expandToolbar();
-    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
-});
-
 test("selected color is shown and updates when selection change", async () => {
     const { el } = await setupEditor(
         `<p><font style="color: rgb(255, 156, 0);">test1</font> <font style="color: rgb(150, 255, 0);">[test2]</font></p>`

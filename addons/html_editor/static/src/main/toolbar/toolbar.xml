@@ -2,25 +2,25 @@
     <t t-name="html_editor.Toolbar">
         <div class="o-we-toolbar d-flex align-items-center m-0" t-att-class="props.class"
             style="overflow-x: auto; overflow-y:hidden" t-on-pointerdown.prevent=""
-            t-att-data-namespace="state.namespace" data-prevent-closing-overlay="true">
-            <t t-foreach="this.getFilteredButtonGroups()" t-as="buttonGroup" t-key="buttonGroup.id">
+                t-att-data-namespace="state.namespace" data-prevent-closing-overlay="true">
+            <t t-foreach="state.buttonGroups" t-as="buttonGroup" t-key="buttonGroup.id">
                 <span class="o-we-toolbar-vertical-separator"></span>
                 <div class="btn-group" t-att-name="buttonGroup.id">
                     <t t-foreach="buttonGroup.buttons" t-as="button" t-key="button.id">
                             <t t-if="button.Component">
                                 <t t-component="button.Component"
                                     t-props="button.props"
-                                    title="state.buttonsTitleState[button.id]"
-                                    getSelection.bind="props.toolbar.getSelection"/>
+                                    title="button.description"
+                                    getSelection.bind="props.getSelection"/>
                             </t>
                             <button t-else=""
                                 class="btn btn-light"
                                 t-att-class="{
-                                    active: state.buttonsActiveState[button.id],
-                                    disabled: state.buttonsDisabledState[button.id]
+                                    active: button.isActive,
+                                    disabled: button.isDisabled,
                                 }"
-                                t-att-disabled="state.buttonsDisabledState[button.id]"
-                                t-att-title="state.buttonsTitleState[button.id]"
+                                t-att-disabled="button.isDisabled"
+                                t-att-title="button.description"
                                 t-att-name="button.id"
                                 t-on-click="() => this.onButtonClick(button)"
                             >

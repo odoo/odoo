@@ -1,5 +1,12 @@
 import { expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent, click, press, queryOne, waitFor } from "@odoo/hoot-dom";
+import {
+    manuallyDispatchProgrammaticEvent,
+    click,
+    press,
+    queryOne,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
 import { CaptionPlugin } from "@html_editor/others/embedded_components/plugins/caption_plugin/caption_plugin";
@@ -825,6 +832,7 @@ test("previewing an image with a caption shows the caption as title", async () =
 
     // Add a caption
     await toggleCaption("Hello");
+    await waitForNone(".o-we-toolbar button[name='image_caption']");
 
     // Preview with a caption show the caption.
     await click("img");
@@ -850,6 +858,7 @@ test("previewing an image without caption doesn't show the caption as title (eve
 
     // Add a caption
     await toggleCaption("Hello");
+    await waitForNone(".o-we-toolbar button[name='image_caption']");
 
     // Remove the caption
     await toggleCaption();

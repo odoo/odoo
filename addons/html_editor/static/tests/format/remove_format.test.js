@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
-import { click, press, queryAll } from "@odoo/hoot-dom";
+import { click, press, queryAll, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { execCommand } from "../_helpers/userCommands";
 import { expandToolbar } from "../_helpers/toolbar";
@@ -802,7 +802,7 @@ describe("Toolbar", () => {
         expect(".btn[name='remove_format']").not.toHaveClass("disabled"); // remove format button should not be disabled
 
         await click(".btn[name='remove_format']");
-        await animationFrame();
+        await waitFor(".btn[name='remove_format'].disabled");
         await expectElementCount(".o-we-toolbar", 1);
         expect(".btn[name='remove_format']").toHaveClass("disabled"); // remove format button should be disabled
     }
@@ -873,7 +873,7 @@ describe("Toolbar", () => {
         expect(".btn[name='remove_format']").not.toHaveClass("disabled"); // remove format button should not be disabled
 
         await click(".btn[name='remove_format']");
-        await animationFrame();
+        await waitFor(".btn[name='remove_format'].disabled");
         await expectElementCount(".o-we-toolbar", 1);
         expect(".btn[name='remove_format']").toHaveClass("disabled"); // remove format button should now be disabled
         expect(getContent(el)).toBe(`<p>this <b>is</b>[ a UX te]st.</p>`);
