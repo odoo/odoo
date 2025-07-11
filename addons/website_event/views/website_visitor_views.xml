@@ -26,6 +26,32 @@
                     <field name="event_registration_count" widget="statinfo" string="Registrations"/>
                 </button>
             </xpath>
+
+            <!-- Add stat button near product views -->
+            <xpath expr="//button[@name='%(website.website_visitor_page_action)d']" position="after">
+                <button name="%(website_event_visitor_event_view_action)d"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-calendar">
+                    <field name="visitor_event_count" widget="statinfo" string="Event Views"/>
+                </button>
+            </xpath>
+
+            <!-- Show viewed events in tag list -->
+            <xpath expr="//group[@id='visits']/field[@name='page_ids']" position="after">
+                <field name="event_ids" string="Events" widget="many2many_tags"/>
+            </xpath>
         </field>
     </record>
+
+    <record id="website_event_visitor_view_list" model="ir.ui.view">
+    <field name="name">website.visitor.view.list</field>
+    <field name="model">website.visitor</field>
+    <field name="inherit_id" ref="website.website_visitor_view_tree"/>
+    <field name="arch" type="xml">
+        <field name="page_ids" position="after">
+            <field name="event_ids" widget="many2many_tags" string="Events"/>
+        </field>
+    </field>
+</record>
 </data></odoo>
