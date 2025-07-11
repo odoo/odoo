@@ -161,6 +161,33 @@ class TestHrEmployee(TestHrCommon):
             employees.filtered_domain(['!'] + employees._search_part_of_department('in', [True])),
             emp_other + emp_parent)
 
+    def test_batch_user_creation_skips_employees_with_existing_users_email(self):
+        existing_email_employee, new_employee = self.env['hr.employee'].create([
+            {
+                'name': 'Duplicate Email Employee',
+                'work_email': self.user_without_image.email,
+            }, {
+                'name': 'New Employee',
+                'work_email': 'newuser@example.com',
+            },
+        ])
+        employees = existing_email_employee + new_employee
+        context = {'selected_ids': employees.ids}
+        confirmed_employees = self.env['hr.employee'].with_context(context).browse(employees.ids)
+        action = confirmed_employees.action_create_users()
+
+        params = action.get('params')
+        self.assertEqual(params.get('type'), 'warning')
+        self.assertEqual(params.get('message'), f"User already exists with the same email for Employees {existing_email_employee.name}")
+
+        next_action = params.get('next')
+        next_params = next_action.get('params')
+        self.assertEqual(next_params.get('type'), 'success')
+        self.assertEqual(next_params.get('message'), f"Users {new_employee.name} creation successful")
+
+        new_user = self.env['res.users'].search([('login', '=', new_employee.work_email)])
+        self.assertTrue(new_user)
+
     def test_employee_create_from_user(self):
         employee = self.env['hr.employee'].create({
             'name': 'Test User 3 - employee'
