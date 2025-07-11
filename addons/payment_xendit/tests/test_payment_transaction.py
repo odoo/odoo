@@ -24,7 +24,9 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         return_value = {'invoice_url': url}
         with (
             patch.object(
-                type(self.env['payment.provider']), '_send_api_request', return_value=return_value
+                self.env.registry['payment.provider'],
+                '_send_api_request',
+                return_value=return_value,
             ),
             patch.object(payment_utils, 'generate_access_token', self._generate_test_access_token),
         ):

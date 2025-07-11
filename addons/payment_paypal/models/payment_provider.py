@@ -95,7 +95,7 @@ class PaymentProvider(models.Model):
             return super()._parse_response_error(response)
         return response.json().get('message', '')
 
-    def _build_request_auth(self, is_refresh_token_request=False, **kwargs):
+    def _build_request_auth(self, *, is_refresh_token_request=False, **kwargs):
         if self.code != 'paypal' or not is_refresh_token_request:
             return super()._build_request_auth(
                 is_refresh_token_request=is_refresh_token_request, **kwargs

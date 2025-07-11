@@ -150,21 +150,21 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
     def test_only_create_webhook_if_not_already_done(self):
         """ Test that a webhook is created only if the webhook secret is not already set. """
         self.stripe.stripe_webhook_secret = False
-        with patch.object(type(self.env['payment.provider']), '_send_api_request') as mock:
+        with patch.object(self.env.registry['payment.provider'], '_send_api_request') as mock:
             self.stripe.action_stripe_create_webhook()
             self.assertEqual(mock.call_count, 1)
 
     def test_do_not_create_webhook_if_already_done(self):
         """ Test that no webhook is created if the webhook secret is already set. """
         self.stripe.stripe_webhook_secret = 'dummy'
-        with patch.object(type(self.env['payment.provider']), '_send_api_request') as mock:
+        with patch.object(self.env.registry['payment.provider'], '_send_api_request') as mock:
             self.stripe.action_stripe_create_webhook()
             self.assertEqual(mock.call_count, 0)
 
     def test_create_account_link_pass_required_parameters(self):
         """ Test that the generation of an account link includes all the required parameters. """
         with patch.object(
-            type(self.env['payment.provider']), '_send_api_request',
+            self.env.registry['payment.provider'], '_send_api_request',
             return_value={'url': 'https://dummy.url'},
         ) as mock:
             self.stripe._stripe_create_account_link('dummy', 'dummy')

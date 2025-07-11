@@ -15,6 +15,7 @@ class SensitiveDataFilter(logging.Filter):
     def _compile_patterns(self):
         """Precompile regex patterns for all keys in SENSITIVE_KEYS,
         matching double/single-quoted JSON entries.
+        :return: None
         """
         self._patterns = []
         for key in self._sensitive_keys:
@@ -24,7 +25,10 @@ class SensitiveDataFilter(logging.Filter):
             self._patterns.append(pattern)
 
     def filter(self, record):
-        """Mask sensitive data in the log record args."""
+        """
+        Called by the logging framework. Masks any configured sensitive data in record.args before
+        the record is emitted. Always returns True to allow the record through.
+        """
         if len(self._patterns) != len(self._sensitive_keys):  # If keys changed
             self._compile_patterns()  # Recompile
         record.args = self._mask(record.args)
@@ -55,12 +59,12 @@ class SensitiveDataFilter(logging.Filter):
         :return: The masked string.
         :rtype: str
         """
+        def repl(m):
+            # m.group(1) is the quoted key, m.group(2) is the quote used for the value
+            quote = m.group(2)
+            return f"{m.group(1)}: {quote}******{quote}"
         for pattern in self._patterns:
-            def repl(m):
-                # m.group(1) is the quoted key, m.group(2) is the quote used for the value
-                quote = m.group(2)
-                return f"{m.group(1)}: {quote}******{quote}"
-            text = pattern.sub(repl, text)
+            text = re.sub(pattern, repl, text)
         return text
 
 

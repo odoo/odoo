@@ -174,7 +174,7 @@ class PaymentProvider(models.Model):
         if self.code != 'razorpay':
             return super()._build_request_auth(is_proxy_request=is_proxy_request, **kwargs)
 
-        auth = None
+        auth = tuple()
         if not is_proxy_request and self.razorpay_key_id:
             auth = (self.razorpay_key_id, self.razorpay_key_secret)
         return auth

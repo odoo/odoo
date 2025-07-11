@@ -777,7 +777,7 @@ class PaymentProvider(models.Model):
 
     def _build_request_auth(self, **kwargs):
         """Set the basic HTTP Auth of the request
-        
+
         This method serves as a hook to allow providers to build the request's basic HTTP Auth.
 
         :param dict kwargs: Provider-specific data.
