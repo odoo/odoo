@@ -1,6 +1,7 @@
 import code
 import logging
 import os
+import re
 import signal
 import sys
 import threading
@@ -47,12 +48,15 @@ class Shell(Command):
             '-d', '--database', dest='db_name', default=None,
             help="database name, connection details will be taken from the config file")
         self.parser.add_argument(
+            '-co', '--config-override', nargs='+',
+            help="override configuration entries. See the Odoo configuration reference")
+        self.parser.add_argument(
             '--shell-file', default=os.environ.get('PYTHONSTARTUP'),
-            help="Specify a python script to be run after the start of the shell. "
+            help="specify a python script to be run after the start of the shell. "
                  "Overrides the env variable PYTHONSTARTUP.")
         self.parser.add_argument(
             '--shell-interface', choices=SHELLS,
-            help="Specify a preferred REPL to use in shell mode.")
+            help="specify a preferred REPL to use in shell mode.")
 
     @contextmanager
     def _build_env(self, dbname):
@@ -69,12 +73,37 @@ class Shell(Command):
         parsed_args = self.parser.parse_args(args=cmdargs)
 
         config_args = []
+        log_warnings = []
+        for option in parsed_args.config_override:
+            if match := re.match(r"(?:(\w+)\.)?([a-zA-Z0-9-_.]+)=(.*)", option):
+                option_section, option_name, option_value = match.groups()
+                if option := config.options_index.get(option_name):
+                    # only allow override for file_loadable options
+                    if not option.file_loadable:
+                        log_warnings.append((
+                            'Option %s.%s is not file_loadable, ignored.',
+                            option_section,
+                            option_name,
+                        ))
+                        continue
+                    config_args.append(option.get_opt_string())
+                    config_args.append(option_value)
+                else:
+                    log_warnings.append((
+                        'Option %s.%s not found in the config file, ignored.',
+                        option_section,
+                        option_name,
+                    ))
+
         if parsed_args.config:
             config_args += ['-c', parsed_args.config]
         if parsed_args.db_name:
             config_args += ['-d', parsed_args.db_name]
 
         config.parse_config(config_args, setup_logging=True)
+        for log_warning in log_warnings:
+            _logger.warning(*log_warning)
+
         cli_server.report_configuration()
 
         db_names = config['db_name']
