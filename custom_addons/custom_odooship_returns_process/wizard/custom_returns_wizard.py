@@ -164,13 +164,13 @@ class ReturnsScanWizard(models.TransientModel):
         if is_production == 'True':
             api_url = (
                 "https://shiperoo-connect-fp.prod.automation.shiperoo.com/"
-                "sc-file-processor/api/receipt-completion"
+                "sc-file-processor/api/return-completion"
             )
             auth = ('apiuser', 'd7oX8L3af6D4FDobC8AFsWRgLamvQs')
         else:
             api_url = (
                 "https://shiperoo-connect.uat.automation.shiperoo.com/"
-                "sc-file-processor/api/receipt-completion"
+                "sc-file-processor/api/return-completion"
             )
             auth = ('apiuser', 'apipass')
 
