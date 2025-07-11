@@ -1715,10 +1715,34 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'taxes_id': False,
                 'available_in_pos': True,
             },
+            {
+                'name': 'galaxy',
+                'list_price': 100,
+                'taxes_id': False,
+                'available_in_pos': True,
+            },
         ])
 
+        # Product Attribute
+        att_color = self.env['product.attribute'].create({'name': 'Color', 'sequence': 1})
+
+        # Product Attribute color Value
+        att_color_values = self.env['product.attribute.value'].create([{'name': 'galaxy variant', 'attribute_id': att_color.id, 'sequence': 1},{'name': 'blue', 'attribute_id': att_color.id, 'sequence': 2}])
+
+        # Create Template Product
+        self.env['product.template'].create({
+            'name': 'Test Product variant',
+            'attribute_line_ids': [
+                (0, 0, {
+                    'attribute_id': att_color.id,
+                    'value_ids': [(6, 0, [att_color_values[0].id, att_color_values[1].id])]
+                }),
+            ],
+            'available_in_pos': True,
+        })
+
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductSearchTour', login="pos_user")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductSearchTour', login="pos_user", watch=True, step_delay= 500)
 
     def test_sort_orderlines_by_product_categoryies(self):
         """ Test to ensure orderlines are added to the cart in the correct order based on their categories"""
