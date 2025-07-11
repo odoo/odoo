@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="purchase_order_form" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.purchase.alternative</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='purchase_delivery_invoice']" position="after">
+                <page string="Alternatives" name="alternative_pos">
+                    <group>
+                        <div class="d-flex gap-5">
+                            <button name="action_create_alternative" type="object" class="btn-link d-block" help="Create a call for tender by adding alternative requests for quotation to different vendors.
+                                Make your choice by selecting the best combination of lead time, OTD and/or total amount.
+                                By comparing product lines you can also decide to order some products from one vendor and others from another vendor." string="Create Alternative" icon="fa-copy"/>
+                            <button name="action_compare_alternative_lines" type="object" class="btn-link d-block" string="Compare Product Lines" icon="fa-bar-chart" invisible="not alternative_po_ids"/>
+                        </div>
+                    </group>
+                    <field name="alternative_po_ids" readonly="not id" widget="many2many_alt_pos" context="{'quotation_only': True}">
+                        <list string="Alternative Purchase Order" decoration-muted="state in ['cancel', 'purchase']" default_order="amount_total_cc, date_planned, id">
+                            <control>
+                                <create string="Link to Existing RfQ"/>
+                            </control>
+                            <field name="currency_id" column_invisible="1"/> <!-- Invisible fields -->
+                            <field name="partner_id" readonly="state in ['cancel', 'purchase']"/>
+                            <field name="name" string="Reference"/>
+                            <field name="date_planned"/>
+                            <field name="amount_total" widget="monetary"/>
+                            <field name="company_currency_id" column_invisible="1"/> <!-- Invisible fields -->
+                            <field name="amount_total_cc" widget="monetary" optional="hide"/>
+                            <field name="state"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_line_view_compare_list" model="ir.ui.view">
+        <field name="name">purchase.order.line.view.compare.list</field>
+        <field name="model">purchase.order.line</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <list string="Purchase Order Lines"
+                decoration-muted="state == 'cancel' or product_qty == 0.0"
+                create="0" delete="0" editable="bottom" expand="1" multi_edit="1"
+                js_class="purchase_order_line_compare">
+                <header>
+                    <button name="action_clear_quantities" string="Clear Selected" type="object" class="o_clear_qty_buttons"/>
+                </header>
+                <field name="product_id" readonly="1"/>
+                <field name="partner_id" string="Vendor"/>
+                <field name="order_id" string="Reference" readonly="1" widget="many2one"/>
+                <field name="state" widget="badge"
+                    decoration-success="state == 'purchase'"
+                    decoration-warning="state == 'to approve'"
+                    decoration-info="state in ('draft', 'sent')"/>
+                <field name="name" readonly="1"/>
+                <field name="date_planned" readonly="1"/>
+                <field name="product_qty"/>
+                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom" options="{'no_open': True}" readonly="1"/>
+                <field name="price_unit" widget="monetary" readonly="1"/>
+                <field name="price_subtotal" string="Total"/>
+                <field name="currency_id" column_invisible="True"/> <!-- Invisible fields -->
+                <field name="price_total_cc" string="Company Total" widget="monetary"/>
+                <field name="company_currency_id" column_invisible="True"/> <!-- Invisible fields -->
+                <button name="action_choose" string="Choose" type="object" class="o_clear_qty_buttons" icon="fa-bullseye"
+                    invisible="product_qty &lt;= 0.0 or state in ['cancel', 'purchase']"/>
+                <button name="action_clear_quantities" string="Clear" type="object" class="o_clear_qty_buttons" icon="fa-times"
+                    invisible="product_qty &lt;= 0.0 or state in ['cancel', 'purchase']"/>
+            </list>
+        </field>
+    </record>
+</odoo>
