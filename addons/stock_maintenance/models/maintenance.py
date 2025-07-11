@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import api, fields, models
 
 
@@ -7,27 +5,37 @@ class MaintenanceEquipment(models.Model):
     _inherit = 'maintenance.equipment'
 
     location_id = fields.Many2one('stock.location', 'Location', domain="[('usage', '=', 'internal')]")
-    match_serial = fields.Boolean(compute='_compute_match_serial')
+    matching_serials = fields.Many2many('stock.lot', compute='_compute_matching_serials')
 
     @api.depends('serial_no')
-    def _compute_match_serial(self):
-        if not self.env['stock.lot'].has_access('read') or not self.env.user.has_group('stock.group_production_lot'):
-            self.match_serial = False
+    def _compute_matching_serials(self):
+        self.matching_serials = False
+        if not (self.env.user.has_group('stock.group_stock_user') and
+                self.env.user.has_group('stock.group_production_lot')):
             return
-        matched_serial_data = self.env['stock.lot']._read_group(
-            [('name', 'in', self.mapped('serial_no'))],
-            ['name'],
-            ['__count'],
-        )
-        matched_serial_count = dict(matched_serial_data)
+        serials = self.env['stock.lot'].search_fetch([], ['name'])
         for equipment in self:
-            equipment.match_serial = matched_serial_count.get(equipment.serial_no, 0)
+            equipment.matching_serials = self.env['stock.lot']
+            if not equipment.serial_no:
+                continue
+            # The same equipment can have more than one matching serial numbers
+            # and a serial number can be assigned to multiple equipment.
+            for serial in serials:
+                if equipment.serial_no == serial.name:
+                    equipment.matching_serials |= serial
 
     def action_open_matched_serial(self):
         self.ensure_one()
-        action = self.env.ref('stock.action_production_lot_form', raise_if_not_found=False)
-        if not action:
-            return True
-        action_dict = action._get_action_dict()
-        action_dict['context'] = {'search_default_name': self.serial_no}
-        return action_dict
+        action = self.env['ir.actions.act_window']._for_xml_id('stock.action_production_lot_form')
+        if len(self.matching_serials) == 1:
+            action.update({
+                'views': [(False, 'form')],
+                'res_id': self.matching_serials.id,
+            })
+        else:
+            action.update({
+                'context': {},
+                'views': [(False, 'list'), (False, 'form')],
+                'domain': [('id', 'in', self.matching_serials.ids)],
+            })
+        return action
