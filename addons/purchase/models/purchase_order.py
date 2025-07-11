@@ -927,8 +927,9 @@ class PurchaseOrder(models.Model):
         else:
             result = {'type': 'ir.actions.act_window_close'}
 
-        result['context'] = literal_eval(result['context'])
-        result['context']['default_partner_id'] = self.partner_id.id
+        if len(invoices.partner_id) == 1:
+            result['context'] = literal_eval(result['context'])
+            result['context']['default_partner_id'] = self.partner_id.id
         return result
 
     @api.model
