@@ -217,7 +217,7 @@ class StockQuant(TransactionCase):
         with closing(self.registry.cursor()) as cr:
             cr.execute("SELECT id FROM stock_quant WHERE product_id=%s AND location_id=%s", (product.id, self.stock_location.id))
             quant_id = cr.fetchone()
-            cr.execute("SELECT 1 FROM stock_quant WHERE id=%s FOR UPDATE", quant_id)
+            cr.execute("SELECT 1 FROM stock_quant WHERE id=%s FOR UPDATE", [quant_id])
             self.env['stock.quant']._update_available_quantity(product, self.stock_location, 1.0)
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product, self.stock_location, allow_negative=True), available_quantity + 1)
