@@ -166,6 +166,7 @@ $-seen-urls: ();
         $custom-colors: append($custom-colors, $key);
     }
     @include print-variable('custom-colors', $custom-colors);
+    -webkit-font-smoothing: antialiased;
 }
 
 @mixin body-image-bg-style() {
