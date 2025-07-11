@@ -532,6 +532,9 @@ function isValidFieldValue(record, fieldDef) {
         case "text": {
             return typeof value === "string";
         }
+        case "json": {
+            return typeof value === "string" || typeof value === "object";
+        }
         case "boolean": {
             return typeof value === "boolean";
         }
