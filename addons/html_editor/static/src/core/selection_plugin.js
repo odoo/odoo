@@ -208,7 +208,7 @@ export class SelectionPlugin extends Plugin {
 
     setup() {
         this.resetSelection();
-        this.addDomListener(this.document, "selectionchange", () => {
+        this.addGlobalDomListener("selectionchange", (ev) => {
             this.updateActiveSelection();
             const selection = this.document.getSelection();
             if (this.isSelectionInEditable(selection)) {
