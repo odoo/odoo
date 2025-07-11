@@ -4410,23 +4410,15 @@ var SnippetsMenu = Widget.extend({
         this.options.wysiwyg.odooEditor.observerUnactive();
         for (const el of $els) {
             if (!el.children.length) {
-                $(el).odooBounce('o_we_snippet_area_animation');
-                const observer = new MutationObserver((mutationsList) => {
-                    for (const mutation of mutationsList) {
-                        if (
-                            mutation.type === "attributes" &&
-                            mutation.attributeName === "class" &&
-                            !el.classList.contains("o_catch_attention")
-                        ) {
-                            this.options.wysiwyg.odooEditor.observerActive();
-                            observer.disconnect();
-                        }
+                el.classList.add("o_we_snippet_area_animation");
+                const onAnimationEnd = (event) => {
+                    if (event.animationName === "catchAttention") {
+                        el.classList.remove("o_we_snippet_area_animation");
+                        this.options.wysiwyg.odooEditor.observerActive();
+                        el.removeEventListener("animationend", onAnimationEnd, true);
                     }
-                });
-                observer.observe(el, {
-                    attributes: true,
-                    attributeFilter: ["class"],
-                });
+                };
+                el.addEventListener("animationend", onAnimationEnd, true);
             }
         }
     },
