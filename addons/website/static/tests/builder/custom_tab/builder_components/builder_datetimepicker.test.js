@@ -38,7 +38,7 @@ test("opens DateTimePicker on focus, closes on blur", async () => {
 test("defaults to now if undefined", async () => {
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderDateTimePicker dataAttributeAction="'date'"/>`,
+        template: xml`<BuilderDateTimePicker dataAttributeAction="'date'" acceptEmptyDate="false"/>`,
     });
     addOption({
         selector: ".test-options-target",
@@ -69,10 +69,24 @@ test("defaults to last one when invalid date provided", async () => {
     expect(".we-bg-options-container input").toHaveValue("04/01/2019 10:00:00");
 });
 
+test("defaults to last one when invalid date provided (date)", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderDateTimePicker type="'date'" dataAttributeAction="'date'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains(".we-bg-options-container input").edit("04/01/2019 10:00:00");
+    expect(".we-bg-options-container input").toHaveValue("04/01/2019");
+
+    await contains(".we-bg-options-container input").edit("INVALID DATE");
+    expect(".we-bg-options-container input").toHaveValue("04/01/2019");
+});
+
 test("defaults to now when no date is selected", async () => {
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderDateTimePicker dataAttributeAction="'date'"/>`,
+        template: xml`<BuilderDateTimePicker dataAttributeAction="'date'" acceptEmptyDate="false"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
@@ -87,7 +101,7 @@ test("defaults to now when no date is selected", async () => {
 test("defaults to now when clicking on clear button", async () => {
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderDateTimePicker dataAttributeAction="'date'"/>`,
+        template: xml`<BuilderDateTimePicker dataAttributeAction="'date'" acceptEmptyDate="false"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
@@ -104,7 +118,7 @@ test("defaults to now when clicking on clear button", async () => {
 test("selects a date and properly applies it", async () => {
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderDateTimePicker dataAttributeAction="'date'"/>`,
+        template: xml`<BuilderDateTimePicker dataAttributeAction="'date'" acceptEmptyDate="false"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
@@ -125,7 +139,7 @@ test("selects a date and properly applies it", async () => {
 test("selects a date and synchronize the input field, while still in preview", async () => {
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderDateTimePicker dataAttributeAction="'date'"/>`,
+        template: xml`<BuilderDateTimePicker dataAttributeAction="'date'" acceptEmptyDate="false"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
