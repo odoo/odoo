@@ -62,7 +62,7 @@ export class MessageReactionMenu extends Component {
 
     get contentClass() {
         const attClass = {
-            "o-mail-MessageReactionMenu h-50 d-flex": true,
+            "o-mail-MessageReactionMenu h-50 d-flex rounded-4": true,
             "position-absolute bottom-0": this.store.useMobileView,
         };
         return Object.entries(attClass)

@@ -1,4 +1,4 @@
-import { Component, useRef } from "@odoo/owl";
+import { Component, useRef, useSubEnv } from "@odoo/owl";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { CallPopover } from "@mail/discuss/call/common/call_popover";
@@ -26,6 +26,7 @@ export class CallActionList extends Component {
         this.popover = usePopover(Tooltip, {
             position: "top-middle",
         });
+        useSubEnv({ inCallActionList: true });
     }
 
     get isPromotingFullscreen() {

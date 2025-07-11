@@ -24,8 +24,12 @@ messageActionsRegistry
         }),
         condition: (component) => component.props.message.canAddReaction(component.props.thread),
         icon: "oi oi-smile-add",
-        title: _t("Add a Reaction"),
-        onClick: async (component, action) =>
+        /** @deprecated use `name` instead */
+        title: (comp, action) => action.name,
+        name: _t("Add a Reaction"),
+        /** @deprecated use `onSelected` instead */
+        onClick: (component, action, ...args) => action.onSelected(component, action, ...args),
+        onSelected: async (component, action) =>
             component.reactionPicker.open({
                 el: component.root?.el?.querySelector(`[name="${action.id}"]`),
             }),
@@ -48,8 +52,12 @@ messageActionsRegistry
     .add("reply-to", {
         condition: (component) => component.props.message.canReplyTo(component.props.thread),
         icon: "fa fa-reply",
-        title: _t("Reply"),
-        onClick: (component) => {
+        /** @deprecated use `name` instead */
+        title: (comp, action) => action.name,
+        name: _t("Reply"),
+        /** @deprecated use `onSelected` instead */
+        onClick: (component, action, ...args) => action.onSelected(component, action, ...args),
+        onSelected: (component) => {
             const message = toRaw(component.props.message);
             const thread = toRaw(component.props.thread);
             if (message.eq(thread.composer.replyToMessage)) {
@@ -68,23 +76,35 @@ messageActionsRegistry
         condition: (component) => component.props.message.canToggleStar,
         icon: (component) =>
             component.props.message.starred ? "fa fa-star o-mail-Message-starred" : "fa fa-star-o",
-        title: _t("Mark as Todo"),
-        onClick: (component) => component.props.message.toggleStar(),
+        /** @deprecated use `name` instead */
+        title: (comp, action) => action.name,
+        name: _t("Mark as Todo"),
+        /** @deprecated use `onSelected` instead */
+        onClick: (component, action, ...args) => action.onSelected(component, action, ...args),
+        onSelected: (component) => component.props.message.toggleStar(),
         sequence: 30,
         mobileCloseAfterClick: false,
     })
     .add("mark-as-read", {
         condition: (component) => component.props.thread?.eq(component.store.inbox),
         icon: "fa fa-check",
-        title: _t("Mark as Read"),
-        onClick: (component) => component.props.message.setDone(),
+        /** @deprecated use `name` instead */
+        title: (comp, action) => action.name,
+        name: _t("Mark as Read"),
+        /** @deprecated use `onSelected` instead */
+        onClick: (component, action, ...args) => action.onSelected(component, action, ...args),
+        onSelected: (component) => component.props.message.setDone(),
         sequence: 40,
     })
     .add("reactions", {
         condition: (component) => component.message.reactions.length,
         icon: "fa fa-smile-o",
-        title: _t("View Reactions"),
-        onClick: (component) => component.openReactionMenu(),
+        /** @deprecated use `name` instead */
+        title: (comp, action) => action.name,
+        name: _t("View Reactions"),
+        /** @deprecated use `onSelected` instead */
+        onClick: (component, action, ...args) => action.onSelected(component, action, ...args),
+        onSelected: (component) => component.openReactionMenu(),
         sequence: 50,
         mobileCloseAfterClick: false,
         dropdown: true,
@@ -92,15 +112,23 @@ messageActionsRegistry
     .add("unfollow", {
         condition: (component) => component.props.message.canUnfollow(component.props.thread),
         icon: "fa fa-user-times",
-        title: _t("Unfollow"),
-        onClick: (component) => component.props.message.unfollow(),
+        /** @deprecated use `name` instead */
+        title: (comp, action) => action.name,
+        name: _t("Unfollow"),
+        /** @deprecated use `onSelected` instead */
+        onClick: (component, action, ...args) => action.onSelected(component, action, ...args),
+        onSelected: (component) => component.props.message.unfollow(),
         sequence: 60,
     })
     .add("edit", {
         condition: (component) => component.props.message.editable,
         icon: "fa fa-pencil",
-        title: _t("Edit"),
-        onClick: (component) => {
+        /** @deprecated use `name` instead */
+        title: (comp, action) => action.name,
+        name: _t("Edit"),
+        /** @deprecated use `onSelected` instead */
+        onClick: (component, action, ...args) => action.onSelected(component, action, ...args),
+        onSelected: (component) => {
             component.props.message.enterEditMode(component.props.thread);
             component.optionsDropdown?.close();
         },
@@ -108,10 +136,14 @@ messageActionsRegistry
     })
     .add("delete", {
         condition: (component) => component.props.message.editable,
-        btnClass: "text-danger",
         icon: "fa fa-trash",
-        title: _t("Delete"),
-        onClick: async (component) => {
+        /** @deprecated use `name` instead */
+        title: (comp, action) => action.name,
+        name: _t("Delete"),
+        danger: true,
+        /** @deprecated use `onSelected` instead */
+        onClick: (component, action, ...args) => action.onSelected(component, action, ...args),
+        onSelected: async (component) => {
             const message = toRaw(component.message);
             const def = new Deferred();
             component.dialog.add(
@@ -138,8 +170,12 @@ messageActionsRegistry
         condition: (component) =>
             component.message.attachment_ids.length > 1 && component.store.self.isInternalUser,
         icon: "fa fa-download",
-        title: _t("Download Files"),
-        onClick: (component) =>
+        /** @deprecated use `name` instead */
+        title: (comp, action) => action.name,
+        name: _t("Download Files"),
+        /** @deprecated use `onSelected` instead */
+        onClick: (component, action, ...args) => action.onSelected(component, action, ...args),
+        onSelected: (component) =>
             download({
                 data: {
                     file_ids: component.message.attachment_ids.map((rec) => rec.id),
@@ -153,14 +189,22 @@ messageActionsRegistry
         condition: (component) => component.props.message.isTranslatable(component.props.thread),
         icon: (component) =>
             `fa fa-language ${component.state.showTranslation ? "o-mail-Message-translated" : ""}`,
-        title: (component) => (component.state.showTranslation ? _t("Revert") : _t("Translate")),
-        onClick: (component) => component.onClickToggleTranslation(),
+        /** @deprecated use `name` instead */
+        title: (comp, action) => action.name,
+        name: (component) => (component.state.showTranslation ? _t("Revert") : _t("Translate")),
+        /** @deprecated use `onSelected` instead */
+        onClick: (component, action, ...args) => action.onSelected(component, action, ...args),
+        onSelected: (component) => component.onClickToggleTranslation(),
         sequence: 100,
     })
     .add("copy-message", {
         condition: (component) => isMobileOS() && !component.message.isBodyEmpty,
-        onClick: (component) => component.message.copyMessageText(),
-        title: _t("Copy to Clipboard"),
+        /** @deprecated use `onSelected` instead */
+        onClick: (component, action, ...args) => action.onSelected(component, action, ...args),
+        onSelected: (component) => component.message.copyMessageText(),
+        /** @deprecated use `name` instead */
+        title: (comp, action) => action.name,
+        name: _t("Copy to Clipboard"),
         icon: "fa fa-copy",
         sequence: 25,
     })
@@ -169,8 +213,12 @@ messageActionsRegistry
             component.message.message_type &&
             component.message.message_type !== "user_notification",
         icon: "fa fa-link",
-        title: _t("Copy Link"),
-        onClick: (component) => component.message.copyLink(),
+        /** @deprecated use `name` instead */
+        title: (comp, action) => action.name,
+        name: _t("Copy Link"),
+        /** @deprecated use `onSelected` instead */
+        onClick: (component, action, ...args) => action.onSelected(component, action, ...args),
+        onSelected: (component) => component.message.copyLink(),
         sequence: 110,
     });
 
@@ -188,19 +236,43 @@ function transformAction(component, id, action) {
         get condition() {
             return messageActionsInternal.condition(component, id, action);
         },
+        /** If set, this is considered as a danger (destructive) action. */
+        get danger() {
+            return typeof action.danger === "function" ? action.danger(component) : action.danger;
+        },
         /** Icon for the button this action. */
         get icon() {
             return typeof action.icon === "function" ? action.icon(component) : action.icon;
         },
-        /** title of this action, displayed to the user. */
+        /** Name of this action, displayed to the user. */
+        get name() {
+            const res = this.isActive && action.nameActive ? action.nameActive : action.name;
+            return typeof res === "function" ? res(component) : res;
+        },
+        /** ClassName on name of this action */
+        get nameClass() {
+            return typeof action.nameClass === "function"
+                ? action.nameClass(component)
+                : action.nameClass;
+        },
+        /**
+         * title of this action, displayed to the user.
+         * @deprecated use `name` instead
+         */
         get title() {
-            return typeof action.title === "function" ? action.title(component) : action.title;
+            return typeof action.title === "function"
+                ? action.title(component, this)
+                : action.title;
         },
         get props() {
             return action.props(component);
         },
+        /** @deprecated use `onSelected` instead */
         onClick(ev) {
             return action.onClick?.(component, this, ev);
+        },
+        onSelected(ev) {
+            return action.onSelected?.(component, this, ev);
         },
         /** Determines the order of this action (smaller first). */
         get sequence() {
