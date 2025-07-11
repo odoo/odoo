@@ -18,7 +18,7 @@ class ProductTemplate(models.Model):
         help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
              "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
              "Create a task and track hours: Create a task on the sales order validation and track the work hours.")
-    sale_line_warn_msg = fields.Text(string="Message for Sales Order Line")
+    sale_line_warn_msg = fields.Text(string="Sales Order Line Warning")
     expense_policy = fields.Selection(
         selection=[
             ('no', "No"),
