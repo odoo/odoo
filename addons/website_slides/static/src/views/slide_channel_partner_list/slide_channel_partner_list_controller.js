@@ -3,7 +3,6 @@ import { useService } from '@web/core/utils/hooks';
 
 
 export default class SlideChannelPartnerListController extends ListController {
-    static template = "website_slides.SlideChannelPartnerListView";
     setup() {
         super.setup();
         this.action = useService('action');
