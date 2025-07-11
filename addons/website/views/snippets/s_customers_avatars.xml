@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Customers Avatars" id="s_customers_avatars">
+    <div class="s_customers_avatars o_avatar_medium d-flex align-items-center justify-content-start">
+        <div class="s_customers_avatars_wrapper d-flex">
+            <img
+                src="/web/image/website.s_company_team_image_1"
+                class="img border o_avatar rounded-5"
+                style="border-width: 3px !important; border-color: rgb(255, 255, 255) !important;"
+                alt=""
+                />
+            <img
+                src="/web/image/website.s_company_team_image_3"
+                class="img border o_avatar rounded-5" style="border-width: 3px !important; border-color: rgb(255, 255, 255) !important;"
+                alt=""
+                />
+            <img
+                src="/web/image/website.s_company_team_image_4"
+                class="img border o_avatar rounded-5"
+                style="border-width: 3px !important; border-color: rgb(255, 255, 255) !important;"
+                alt=""
+                />
+            <div class="o_avatar_count d-none">10+</div>
+        </div>
+        <p class="o_small s_customers_avatars_label">
+            <strong>100+<br/></strong>
+            Happy customers
+        </p>
+    </div>
+</template>
+
+
+<record id="website.s_customers_avatars_000_scss" model="ir.asset">
+    <field name="name">Customers Avatars 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_customers_avatars/000.scss</field>
+</record>
+
+</odoo>
