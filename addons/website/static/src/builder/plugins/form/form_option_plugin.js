@@ -32,6 +32,7 @@ import {
     setActiveProperties,
     setVisibilityDependency,
     getParsedDataFor,
+    defaultMessage,
 } from "./utils";
 import { SyncCache } from "@html_builder/utils/sync_cache";
 import { _t } from "@web/core/l10n/translation";
@@ -151,6 +152,9 @@ export class FormOptionPlugin extends Plugin {
             ToggleDescriptionAction,
             SelectTextareaValueAction,
             ToggleRequiredAction,
+            SetCustomErrorMessageAction,
+            SetDefaultErrorMessageAction,
+            SetRequirementComparatorAction,
             SetVisibilityAction,
             SetVisibilityDependencyAction,
             SetFormCustomFieldValueListAction,
@@ -924,6 +928,11 @@ export class CustomFieldAction extends BuilderAction {
         return this.dependencies.websiteFormOption.prepareFields(context);
     }
     apply({ editingElement: fieldEl, value, loadResult: fields }) {
+        delete fieldEl.dataset.customError;
+        delete fieldEl.dataset.errorMessage;
+        delete fieldEl.dataset.requirementBetween;
+        delete fieldEl.dataset.requirementCondition;
+        delete fieldEl.dataset.requirementComparator;
         const oldLabelText = fieldEl.querySelector(".s_website_form_label_content").textContent;
         const field = getCustomField(value, oldLabelText);
         setActiveProperties(fieldEl, field);
@@ -1115,6 +1124,44 @@ export class ToggleRequiredAction extends BuilderAction {
         return fieldEl.classList.contains(activeValue);
     }
 }
+
+export class SetRequirementComparatorAction extends BuilderAction {
+    static id = "setRequirementComparator";
+    apply({ editingElement: fieldEl }) {
+        delete fieldEl.dataset.customError;
+        delete fieldEl.dataset.errorMessage;
+        delete fieldEl.dataset.requirementBetween;
+        delete fieldEl.dataset.requirementCondition;
+    }
+}
+
+export class SetCustomErrorMessageAction extends BuilderAction {
+    static id = "setCustomErrorMessage";
+    apply({ editingElement: fieldEl }) {
+        if (!fieldEl.dataset.customError) {
+            fieldEl.dataset.customError = true;
+        } else {
+            delete fieldEl.dataset.customError;
+        }
+    }
+    isApplied({ editingElement: fieldEl }) {
+        return fieldEl.dataset.customError;
+    }
+}
+
+export class SetDefaultErrorMessageAction extends BuilderAction {
+    static id = "setDefaultErrorMessage";
+    apply({ editingElement: fieldEl }) {
+        const {
+            requirementComparator: comparator,
+            requirementCondition: condition,
+            requirementBetween: between,
+            type,
+        } = fieldEl.dataset;
+        fieldEl.dataset.errorMessage = defaultMessage(comparator, condition, between, type);
+    }
+}
+
 export class SetVisibilityAction extends BuilderAction {
     static id = "setVisibility";
     static dependencies = ["websiteFormOption"];

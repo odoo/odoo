@@ -1,6 +1,10 @@
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { generateHTMLId } from "@html_builder/utils/utils_css";
+import { localization } from "@web/core/l10n/localization";
+import { formatDate } from "@web/core/l10n/dates";
+
+const { DateTime } = luxon;
 
 export const VISIBILITY_DATASET = [
     "visibilityDependency",
@@ -410,6 +414,14 @@ export function getDependencyEl(fieldEl) {
 }
 
 /**
+ * @param {HTMLElement} fieldEl
+ * @returns {HTMLElement} The current field input
+ */
+export function getCurrentFieldInputEl(fieldEl) {
+    return fieldEl.querySelector(".s_website_form_input");
+}
+
+/**
  * @param {HTMLElement} dependentFieldEl
  * @param {HTMLElement} targetFieldEl
  * @returns {boolean} "true" if adding "dependentFieldEl" or any other field
@@ -521,4 +533,78 @@ export function setVisibilityDependency(fieldEl, value) {
     delete fieldEl.dataset.visibilityCondition;
     delete fieldEl.dataset.visibilityComparator;
     fieldEl.dataset.visibilityDependency = value;
+}
+
+/**
+ * Generates an error message for requirement set on field if validation fails.
+ *
+ * @private
+ * @param {string} comparator The method used to form the error message.
+ * @param {string} [condition] The expected value of the field.
+ * @param {string} [between] The maximum date value if the comparator is
+ *      'between' or '!between'.
+ * @returns {string} The default error message.
+ */
+export function defaultMessage(comparator, condition, between, type) {
+    const textMessages = {
+        contains: _t("This field must include keyword %s.", condition),
+        "!contains": _t("This field must not include keyword %s.", condition),
+        substring: _t("This field must include keyword %s.", condition),
+        "!substring": _t("This field must not include keyword %s.", condition),
+        greater: _t("Invalid: field is not greater than %s.", condition),
+        less: _t("Invalid: field is not less than %s.", condition),
+        "greater or equal": _t("Invalid: field is not greater than or equal to %s.", condition),
+        "less or equal": _t("Invalid: field is not less than or equal to %s.", condition),
+    };
+
+    if (condition && textMessages[comparator]) {
+        return textMessages[comparator];
+    }
+
+    if (["date", "datetime"].includes(type)) {
+        const format = type === "date" ? localization.dateFormat : localization.dateTimeFormat;
+        const start = formatDate(DateTime.fromSeconds(parseInt(condition)), { format });
+        const end = formatDate(DateTime.fromSeconds(parseInt(between)), { format });
+
+        const dateMessages = {
+            dateEqual: _t(
+                "Entered date or time is not correct! It must be %(start)s (%(format)s).",
+                { start, format }
+            ),
+            "date!equal": _t(
+                "Entered date or time is not correct! It must not be %(start)s (%(format)s).",
+                { start, format }
+            ),
+            before: _t(
+                "Entered date or time is not correct! It must be before %(start)s (%(format)s).",
+                { start, format }
+            ),
+            after: _t(
+                "Entered date or time is not correct! It must be after %(start)s (%(format)s).",
+                { start, format }
+            ),
+            "equal or before": _t(
+                "Entered date or time is not correct! It must be before or equal to %(start)s (%(format)s).",
+                { start, format }
+            ),
+            "equal or after": _t(
+                "Entered date or time is not correct! It must be after or equal to %(start)s (%(format)s).",
+                { start, format }
+            ),
+            between: _t(
+                "Entered date or time is not correct! It must be within %(start)s and %(end)s (%(format)s).",
+                { start, end, format }
+            ),
+            "!between": _t(
+                "Entered date or time is not correct! It must not be within %(start)s and %(end)s (%(format)s).",
+                { start, end, format }
+            ),
+        };
+
+        if (condition && dateMessages[comparator]) {
+            return dateMessages[comparator];
+        }
+    }
+
+    return _t("An error has occurred, the form has not been sent.");
 }
