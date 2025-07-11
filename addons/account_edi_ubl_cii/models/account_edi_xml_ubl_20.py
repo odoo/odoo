@@ -484,6 +484,26 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
                     if grouping_key
                 )
 
+<<<<<<< 781659a0a270ad6d41eca8121dea5333c08d1d77
+||||||| 9e22e3d657f36822c72339a8c3238a3b9db175dd
+        # Cash rounding for 'add_invoice_line' cash rounding strategy
+        # (For the 'biggest_tax' strategy the amounts are directly included in the tax amounts.)
+        for currency_suffix in ['', '_currency']:
+            vals[f'cash_rounding_base_amount{currency_suffix}'] = 0.0
+            for base_line in vals['cash_rounding_base_lines']:
+                tax_details = base_line['tax_details']
+                vals[f'cash_rounding_base_amount{currency_suffix}'] += tax_details[f'total_excluded{currency_suffix}']
+
+=======
+        # Cash rounding for 'add_invoice_line' cash rounding strategy
+        # (For the 'biggest_tax' strategy the amounts are directly included in the tax amounts.)
+        for currency_suffix in ['', '_currency']:
+            vals[f'cash_rounding_base_amount{currency_suffix}'] = 0.0
+            for base_line in vals.setdefault('cash_rounding_base_lines', []):
+                tax_details = base_line['tax_details']
+                vals[f'cash_rounding_base_amount{currency_suffix}'] += tax_details[f'total_excluded{currency_suffix}']
+
+>>>>>>> ef7d7f393ac15c61c7c0d70acae87befb24d2cf5
     # -------------------------------------------------------------------------
     # EXPORT: Generic templates - partner-related nodes
     # -------------------------------------------------------------------------
