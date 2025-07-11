@@ -435,6 +435,12 @@ class Track(models.Model):
     # MESSAGING
     # ------------------------------------------------------------
 
+    def _mail_get_timezone_with_default(self, default_tz=True):
+        tz = None
+        if self:
+            tz = self.event_id._mail_get_timezone_with_default(default_tz=default_tz)
+        return tz or super()._mail_get_timezone_with_default(default_tz=default_tz)
+
     def _message_get_default_recipients(self):
         return {
             track.id: {
