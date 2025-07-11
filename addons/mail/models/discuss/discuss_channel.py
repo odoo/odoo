@@ -1357,6 +1357,15 @@ class DiscussChannel(models.Model):
         )
         return Store(unknown_members).add(self, "member_count").get_result()
 
+    def _clean_empty_message(self, msg_values):
+        super()._clean_empty_message(msg_values)
+        msg_values.update({'parent_id': False})
+
+    def _get_message_update_store_fields(self):
+        return super()._get_message_update_store_fields() + [
+            Store.One("parent_id", rename="parentMessage")
+        ]
+
     # ------------------------------------------------------------
     # COMMANDS
     # ------------------------------------------------------------
