@@ -735,37 +735,21 @@ class MailTemplate(models.Model):
                     values['body'] = values['body_html']
                     continue
 
-                lang = res_ids_langs.get(record.id) or False
+                lang = res_ids_langs.get(record.id) or self.env.lang
                 company = res_ids_companies.get(record.id) or self.env.company
-                model_lang = record_ir_model.with_context(lang=lang) if lang else record_ir_model
+                model_lang = record_ir_model.with_context(lang=lang)
+                self_lang = self.with_context(lang=lang)
+                record_lang = record.with_context(lang=lang)
 
-                template_ctx = {
-                    # message
-                    'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
-                    'subtype': self.env['mail.message.subtype'].sudo(),
-                    # record
-                    'model_description': model_lang.display_name,
-                    'record': record,
-                    'record_name': False,
-                    'subtitles': False,
-                    # user / environment
-                    'company': company,
-                    'email_add_signature': False,
-                    'signature': '',
-                    'website_url': '',
-                    # tools
-                    'is_html_empty': is_html_empty,
-                }
-                body = model_lang.env['ir.qweb']._render(sending_email_layout_xmlid, template_ctx, minimal_qcontext=True, raise_if_not_found=False)
-                if not body:
-                    _logger.warning(
-                        'QWeb template %s not found when sending template %s. Sending without layout.',
-                        sending_email_layout_xmlid,
-                        self.name,
-                    )
-                    body = values['body_html']
-
-                values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
+                values['body_html'] = self_lang._render_encapsulate(
+                    sending_email_layout_xmlid,
+                    values['body_html'],
+                    add_context={
+                        'company': company,
+                        'model_description': model_lang.display_name,
+                    },
+                    context_record=record_lang,
+                )
                 values['body'] = values['body_html']
 
             mails = self.env['mail.mail'].sudo().create(values_list)

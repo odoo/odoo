@@ -228,9 +228,9 @@ class SlideChannelPartner(models.Model):
             email_values['body_html'] = template._render_encapsulate(
                 'mail.mail_notification_light', email_values['body_html'],
                 add_context={
-                    'message': self.env['mail.message'].sudo().new(dict(body=email_values['body_html'], record_name=record.channel_id.name)),
                     'model_description': _('Completed Course')  # tde fixme: translate into partner lang
-                }
+                },
+                context_record=record.channel_id,
             )
             mail_mail_values.append(email_values)
 

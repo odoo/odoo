@@ -145,8 +145,8 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
             with self.assertRaises(AccessError):
                 test_records_mc_c1.message_post(
                     body='<p>Hello</p>',
+                    force_record_name='CustomName',  # avoid ACL on display_name
                     message_type='comment',
-                    record_name='CustomName',  # avoid ACL on display_name
                     reply_to='custom.reply.to@test.example.com',  # avoid ACL in notify_get_reply_to
                     subtype_xmlid='mail.mt_comment',
                 )
@@ -173,9 +173,9 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
         # now able to post as was notified of parent message
         test_records_mc_c1.message_post(
             body='<p>Hello</p>',
+            force_record_name='CustomName',  # avoid ACL on display_name
             message_type='comment',
             parent_id=initial_message.id,
-            record_name='CustomName',  # avoid ACL on display_name
             reply_to='custom.reply.to@test.example.com',  # avoid ACL in notify_get_reply_to
             subtype_xmlid='mail.mt_comment',
         )
@@ -214,8 +214,8 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
             attachments=attachments_data,
             attachment_ids=attachments.ids,
             body='<p>Hello</p>',
+            force_record_name='CustomName',  # avoid ACL on display_name
             message_type='comment',
-            record_name='CustomName',  # avoid ACL on display_name
             reply_to='custom.reply.to@test.example.com',  # avoid ACL in notify_get_reply_to
             subtype_xmlid='mail.mt_comment',
         )
@@ -248,8 +248,8 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                 attachments=attachments_data,
                 attachment_ids=attachments.ids,
                 body='<p>Hello</p>',
+                force_record_name='CustomName',  # avoid ACL on display_name
                 message_type='comment',
-                record_name='CustomName',  # avoid ACL on display_name
                 reply_to='custom.reply.to@test.example.com',  # avoid ACL in notify_get_reply_to
                 subtype_xmlid='mail.mt_comment',
             )

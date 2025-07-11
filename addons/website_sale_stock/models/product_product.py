@@ -58,13 +58,11 @@ class ProductProduct(models.Model):
                     'website_sale_stock.availability_email_body',
                     {'product': product_ctxt},
                 )
-                msg = self_ctxt.env['mail.message'].sudo().new(
-                    {'body': body_html, 'record_name': product_ctxt.name}
-                )
-                full_mail = self_ctxt.env['mail.render.mixin']._render_encapsulate(
+                full_mail = product_ctxt.env['mail.render.mixin']._render_encapsulate(
                     'mail.mail_notification_light',
                     body_html,
-                    add_context={'message': msg, 'model_description': _("Product")},
+                    add_context={'model_description': _("Product")},
+                    context_record=product_ctxt,
                 )
                 context = {'lang': partner.lang}  # Use partner lang to translate mail subject below
                 mail_values = {

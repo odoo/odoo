@@ -6430,11 +6430,13 @@ class AccountMove(models.Model):
         }[self.move_type]
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
-                                                   force_email_company=False, force_email_lang=False):
+                                                   force_email_company=False, force_email_lang=False,
+                                                   force_record_name=False):
         # EXTENDS mail mail.thread
         render_context = super()._notify_by_email_prepare_rendering_context(
             message, msg_vals=msg_vals, model_description=model_description,
-            force_email_company=force_email_company, force_email_lang=force_email_lang
+            force_email_company=force_email_company, force_email_lang=force_email_lang,
+            force_record_name=force_record_name,
         )
         record = render_context['record']
         subtitles = [f"{record.name} - {record.partner_id.name}" if record.partner_id else record.name]
