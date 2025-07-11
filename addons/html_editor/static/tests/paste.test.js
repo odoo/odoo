@@ -4000,6 +4000,32 @@ describe("onDrop", () => {
             `<p>ab<img class="img-fluid" data-file-name="image.png" src="${base64Image}">[]c</p>`
         );
     });
+    test("should be able to drag and drop icon", async () => {
+        const { el } = await setupEditor(`<p>a<span class="fa fa-heart">[]</span>bc</p>`);
+        const pElement = el.firstChild;
+        const iconElement = el.querySelector(".fa");
+        const bcTextNode = pElement.lastChild;
+
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({ offsetNode: bcTextNode, offset: 1 }),
+        });
+
+        const dragdata = new DataTransfer();
+        await dispatch(iconElement, "dragstart", { dataTransfer: dragdata });
+        await animationFrame();
+        const iconHTML = dragdata.getData("application/vnd.odoo.odoo-editor-node");
+        expect(iconHTML).toBe('<span class="fa fa-heart" contenteditable="false">\u200b</span>');
+
+        const dropData = new DataTransfer();
+        // Simulate the application/vnd.odoo.odoo-editor-node data that the browser would do.
+        dropData.setData("application/vnd.odoo.odoo-editor-node", iconHTML);
+        await dispatch(pElement, "drop", { dataTransfer: dropData });
+        await animationFrame();
+
+        expect(getContent(el)).toBe(
+            '<p>ab\ufeff<span class="fa fa-heart" contenteditable="false">\u200b</span>\ufeff[]c</p>'
+        );
+    });
 });
 
 function dataURItoBlob(dataURI) {
