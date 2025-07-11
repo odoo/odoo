@@ -125,25 +125,18 @@ class PurchaseOrder(models.Model):
 
     def button_cancel(self):
         order_lines_ids = OrderedSet()
-        pickings_to_cancel_ids = OrderedSet()
 
-        purchase_orders_with_receipt = self.filtered(lambda po: any(move.state == 'done' for move in po.order_line.move_ids))
-        if purchase_orders_with_receipt:
-            raise UserError(_("Unable to cancel purchase order(s): %s since they have receipts that are already done.", purchase_orders_with_receipt.mapped('display_name')))
         for order in self:
             # If the product is MTO, change the procure_method of the closest move to purchase to MTS.
             # The purpose is to link the po that the user will manually generate to the existing moves's chain.
             if order.state in ('draft', 'sent', 'to approve', 'purchase'):
                 order_lines_ids.update(order.order_line.ids)
 
-            pickings_to_cancel_ids.update(order.picking_ids.filtered(lambda r: r.state != 'cancel').ids)
-
         order_lines = self.env['purchase.order.line'].browse(order_lines_ids)
-
         moves_to_cancel_ids = OrderedSet()
         moves_to_recompute_ids = OrderedSet()
         for order_line in order_lines:
-            moves_to_cancel_ids.update(order_line.move_ids.ids)
+            moves_to_cancel_ids.update(order_line.move_ids.filtered(lambda move: move.state != 'done').ids)
             if order_line.move_dest_ids:
                 move_dest_ids = order_line.move_dest_ids.filtered(lambda move: move.state != 'done' and not move.scrapped
                                                                   and move.rule_id.route_id == move.location_dest_id.warehouse_id.reception_route_id)
@@ -167,9 +160,20 @@ class PurchaseOrder(models.Model):
             moves_to_recompute.write({'procure_method': 'make_to_stock'})
             moves_to_recompute._recompute_state()
 
-        if pickings_to_cancel_ids:
-            pikings_to_cancel = self.env['stock.picking'].browse(pickings_to_cancel_ids)
-            pikings_to_cancel.action_cancel()
+        def deep_cancel(pickings):
+            if not pickings:
+                return
+            if nexts := pickings._get_next_transfers():
+                deep_cancel(nexts)
+            to_cancel = OrderedSet()
+            for p in pickings:
+                # We can't cancel pickings that are already done, so we leave them untouched but log a note about it.
+                if p.state == 'done':
+                    p.message_post(body=self.env._("The purchase order %s this transfer is linked to was cancelled.", self._get_html_link()))
+                elif p.state != 'cancel':
+                    to_cancel.add(p.id)
+            self.env['stock.picking'].browse(to_cancel).action_cancel()
+        deep_cancel(self.picking_ids)
 
         if order_lines:
             order_lines.write({'move_dest_ids': [(5, 0, 0)]})
