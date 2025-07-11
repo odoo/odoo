@@ -103,3 +103,14 @@ class ProductProduct(models.Model):
         if self._is_sold_out():
             gmc_info['availability'] = 'out_of_stock'
         return gmc_info
+
+    def _prepare_meta_stock_info(self):
+        """ Override of `website_sale` to check stock level for Meta feed. """
+        self.ensure_one()
+        if self._is_sold_out():
+            return {'availability': 'out of stock', 'quantity_to_sell_on_facebook': 0}
+
+        meta_info = super()._prepare_meta_stock_info()
+        if self.env.user.has_group('stock.group_stock_user'):
+            meta_info['quantity_to_sell_on_facebook'] = int(self.qty_available)
+        return meta_info

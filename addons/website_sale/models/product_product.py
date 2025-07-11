@@ -5,7 +5,7 @@ from urllib.parse import urljoin, urlparse
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.tools import float_is_zero, float_round
+from odoo.tools import float_is_zero, float_round, html_escape
 
 from odoo.addons.website_sale import const, utils
 
@@ -215,6 +215,75 @@ class ProductProduct(models.Model):
             if extra_image.image_1920  # only images, no video urls
         ]
 
+    @staticmethod
+    def _get_published_delivery_methods():
+        return request.env['delivery.carrier'].sudo().search(
+            [('is_published', '=', True), ('website_id', 'in', (request.website.id, False))],
+        )
+
+    def _prepare_general_additional_info(self):
+        self.ensure_one()
+        general_info = {
+            'product_type': [
+                category.replace('/', '>')  # Both platforms use > for hierarchy
+                for category in (
+                    # up to 5 categories
+                    self.public_categ_ids.sorted('sequence').mapped('display_name')[:5]
+                )
+            ],
+            'product_detail': [
+                (attr.attribute_id.name, attr.name)
+                for attr in self.product_template_attribute_value_ids
+            ],
+        }
+
+        # link variants together
+        if len(self.product_tmpl_id.product_variant_ids) > 1:
+            general_info['item_group_id'] = self.product_tmpl_id.id
+
+        return general_info
+
+    def _prepare_additional_info(self, for_meta=False):
+        info = self._prepare_general_additional_info()
+        if for_meta:
+            info['internal_label'] = [
+                    tag.name.lower().strip().replace(' ', '_')
+                    for tag in self.all_product_tag_ids
+                ]
+        else:
+            info.update({
+                'is_bundle': 'yes' if self.type == 'combo' else 'no',
+                'custom_label': [
+                    (f'custom_label_{i}', tag_name)
+                    for i, tag_name in enumerate(
+                        # supports up to 5 custom labels
+                        self.all_product_tag_ids.sorted('sequence').mapped('name')[:5],
+                    )
+                ],
+            })
+        return info
+
+    def _prepare_common_feed_items(self, format_product_link):
+        self.ensure_one()
+        return {
+            'id': self.default_code or self.id,
+            'title': self.with_context(display_default_code=False).display_name,
+            'description': self.website_meta_description or self.description_sale,
+            'link': format_product_link(self.website_url),
+        }
+
+    def _prepare_feed_setup(self):
+        base_url = request.website.get_base_url()
+        delivery_methods = self._get_published_delivery_methods()
+        all_countries = self.env['res.country'].search([])
+
+        def format_product_link(url_):
+            pricelist_url = f'pricelist={request.pricelist.id}' if request.pricelist.id else ''
+            url_ = urlparse(url_)._replace(query=pricelist_url).geturl()
+            return urljoin(base_url, self.env['ir.http']._url_lang(url_))
+
+        return base_url, delivery_methods, all_countries, format_product_link
+
     def _prepare_gmc_items(self):
         """ Prepare Google Merchant Center items' fields.
 
@@ -229,33 +298,23 @@ class ProductProduct(models.Model):
         :return: a dictionary for each product in this recordset.
         :rtype: list[dict]
         """
-        self = self.with_context(lang=request.lang.code)
-        base_url = request.website.get_base_url()
-
-        def format_product_link(url_):
-            url_ = urlparse(url_)._replace(query=f'pricelist={request.pricelist.id}').geturl()
-            return urljoin(base_url, self.env['ir.http']._url_lang(url_))
-
-        delivery_methods_sudo = self.env['delivery.carrier'].sudo().search(
-            [('is_published', '=', True), ('website_id', 'in', (request.website.id, False))],
+        records = self.with_context(lang=request.lang.code)
+        base_url, delivery_methods_sudo, all_countries, format_product_link = (
+            records._prepare_feed_setup()
         )
-        all_countries = self.env['res.country'].search([])
 
         return {
             product: {
-                'id': product.default_code or product.id,
-                'title': product.with_context(display_default_code=False).display_name,
-                'description': product.website_meta_description or product.description_sale,
-                'link': format_product_link(product.website_url),
+                **product._prepare_common_feed_items(format_product_link),
                 **product._prepare_gmc_identifier(),
-                **product._prepare_gmc_image_links(base_url),
+                **product._prepare_feed_image_links(base_url),
                 **price_info,
-                **product._prepare_gmc_shipping_info(delivery_methods_sudo, all_countries),
                 **product._prepare_gmc_stock_info(),
-                **product._prepare_gmc_additional_info(),
+                **product._prepare_additional_info(),
+                **product._prepare_gmc_shipping_info(delivery_methods_sudo, all_countries),
             }
-            for product in self
-            if product._is_variant_possible() and (price_info := product._prepare_gmc_price_info())
+            for product in records
+            if product._is_variant_possible() and (price_info := product._prepare_price_info())
         }
 
     def _prepare_gmc_identifier(self):
@@ -269,8 +328,8 @@ class ProductProduct(models.Model):
             return {'gtin': self.barcode, 'identifier_exists': 'yes'}
         return {'identifier_exists': 'no'}
 
-    def _prepare_gmc_image_links(self, base_url):
-        """ Prepare the product image links for Google Merchant Center.
+    def _prepare_feed_image_links(self, base_url):
+        """ Prepare the product image links for XML Feeds.
 
         :return: The main product image link, and the extra images. No videos.
         :rtype: dict
@@ -285,9 +344,10 @@ class ProductProduct(models.Model):
             ],
         }
 
-    def _prepare_gmc_price_info(self):
-        """ Prepare all the price related information for Google Merchant Center.
+    def _prepare_price_info(self, format='google'):
+        """ Prepare all the price related information for XML Feeds.
 
+        :param format: 'google' or 'meta'
         :return:
             - list price
             - sale price if one exists and can be shown
@@ -309,49 +369,56 @@ class ProductProduct(models.Model):
         if combination_info['prevent_zero_price_sale']:
             return {}
 
-        gmc_info = {
-            'price': utils.gmc_format_price(
+        price_info = {
+            'price': utils.product_feed_format_price(
                 combination_info['list_price'], combination_info['currency'],
             ),
         }
         # sales/promo/discount/etc.
         if combination_info['has_discounted_price']:
-            gmc_info['sale_price'] = utils.gmc_format_price(
+            price_info['sale_price'] = utils.product_feed_format_price(
                 combination_info['price'], combination_info['currency'],
             )
             start_date = combination_info['discount_start_date']
             end_date = combination_info['discount_end_date']
             if start_date and end_date:
-                gmc_info['sale_price_effective_date'] = '/'.join(
-                    map(utils.gmc_format_date, (start_date, end_date)),
+                price_info['sale_price_effective_date'] = utils.format_sale_price_effective_date(
+                    start_date, end_date, format=format,
                 )
 
-        # Note: Google only supports a restricted set of unit and computes the comparison prices
-        # differently than Odoo.
+        # Note: Google and Meta only supports a restricted set of unit and computes
+        # the comparison prices differently than Odoo.
         # Ex: product="Pack of wine (6 bottles)", price=$65.00, uom_name="Pack".
         #   - in odoo: base_unit_count=6.0, base_unit_name="750ml"
         #       => displayed: "$10.83 / 750ml"
-        #   - in google: unit_pricing_measure="4500ml", unit_pricing_base_measure="750ml"
+        #   - in google/meta: unit_pricing_measure="4500ml", unit_pricing_base_measure="750ml"
         #       => displayed: "$10.83 / 750ml"
-        if (
-            combination_info.get('base_unit_name')
-            and self.base_unit_count
-            and (match := const.GMC_BASE_MEASURE.match(
-                combination_info['base_unit_name'].strip().lower()
-            ))
-        ):
-            base_count, base_unit = match['base_count'] or '1', match['base_unit']
-            count = self.base_unit_count * int(base_count)
-            if (
-                base_unit in const.GMC_SUPPORTED_UOM
-                and not float_is_zero(count, precision_digits=2)
-            ):
-                gmc_info['unit_pricing_measure'] = (
-                    f'{float_round(count, precision_digits=2)}{base_unit}'
-                )
-                gmc_info['unit_pricing_base_measure'] = f'{base_count}{base_unit}'
 
-        return gmc_info
+        base_unit_name = combination_info.get('base_unit_name')
+        if base_unit_name and self.base_unit_count:
+            unit_name = base_unit_name.strip().lower()
+            match = const.BASE_MEASURE.match(unit_name)
+
+            if match:
+                base_count = int(match['base_count'] or '1')
+                base_unit = match['base_unit']
+                count = self.base_unit_count * base_count
+
+                if not float_is_zero(count, precision_digits=2):
+                    if format == "meta" and base_unit in const.META_SUPPORTED_UOM:
+                        price_per_unit = combination_info['price'] / count
+                        price_info['unit_price'] = {
+                            'value': float_round(price_per_unit, precision_digits=2),
+                            'currency': combination_info['currency'].name,
+                            'unit': base_unit,
+                        }
+                    elif base_unit in const.GMC_SUPPORTED_UOM:
+                        price_info['unit_pricing_measure'] = (
+                            f'{float_round(count, precision_digits=2)}{base_unit}'
+                        )
+                        price_info['unit_pricing_base_measure'] = f'{base_count}{base_unit}'
+
+        return price_info
 
     def _prepare_gmc_shipping_info(self, delivery_methods_sudo, countries):
         """ Computes the best shipping method info per country. This includes, per country:
@@ -361,7 +428,7 @@ class ProductProduct(models.Model):
         - if possible, the best free shipping threshold (not necessarily the same as the "best
           delivery method"),
 
-        Note: Google limits shipping information to 100 countries.
+        Note: Google/Meta limits shipping information to 100 countries.
         """
         self.ensure_one()
         best_delivery_by_country = list(delivery_methods_sudo._prepare_best_delivery_by_country(
@@ -372,14 +439,16 @@ class ProductProduct(models.Model):
                 {
                     'country': country.code,
                     'service': delivery['delivery_method'].name,
-                    'price': utils.gmc_format_price(delivery['price'], delivery['currency']),
+                    'price': utils.product_feed_format_price(
+                        delivery['price'], delivery['currency'],
+                    ),
                 }
                 for country, delivery in best_delivery_by_country[:100]
             ],
             'free_shipping_threshold': [
                 {
                     'country': country.code,
-                    'price_threshold': utils.gmc_format_price(
+                    'price_threshold': utils.product_feed_format_price(
                         delivery['free_over_threshold'], delivery['currency'],
                     ),
                 }
@@ -393,32 +462,75 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return {'availability': 'in_stock'}
 
-    def _prepare_gmc_additional_info(self):
-        self.ensure_one()
-        gmc_info = {
-            'product_detail': [
-                (attr.attribute_id.name, attr.name)
-                for attr in self.product_template_attribute_value_ids
-            ],
-            'is_bundle': 'yes' if self.type == 'combo' else 'no',
-            'product_type': [
-                category.replace('/', '>')  # google uses a different format
-                for category in (
-                    # up to 5 categories
-                    self.public_categ_ids.sorted('sequence').mapped('display_name')[:5]
-                )
-            ],
-            'custom_label': [
-                (f'custom_label_{i}', tag_name)
-                for i, tag_name in enumerate(
-                    # supports up to 5 custom labels
-                    self.all_product_tag_ids.sorted('sequence').mapped('name')[:5]
-                )
-            ],
+    def _prepare_meta_items(self):
+        """Prepare the Meta Catalog feed fields.
+        Note: Depends on:
+            - `request.pricelist` to compute the price,
+            - `request.website` to compute the links,
+            - `request.lang` to compute localized fields.
+        :return: a dictionary for each product in this recordset.
+        :rtype: dict[str, dict]
+        """
+        records = self.with_context(lang=request.lang.code)
+        base_url, delivery_methods_sudo, all_countries, format_product_link = (
+            records._prepare_feed_setup()
+        )
+
+        return {
+            product: {
+                'gtin': product.barcode or '',
+                'rich_text_description': html_escape(str(product.description or '')),
+                **product._prepare_common_feed_items(format_product_link),
+                **product._prepare_feed_image_links(base_url),
+                **product._prepare_price_info(format='meta'),
+                **product._prepare_meta_stock_info(),
+                **product._prepare_additional_info(for_meta=True),
+                **product._prepare_meta_shipping_info(delivery_methods_sudo, all_countries),
+            }
+            for product in records
+            if product._is_variant_possible()
         }
 
-        # link variants together
-        if len(self.product_tmpl_id.product_variant_ids) > 1:
-            gmc_info['item_group_id'] = self.product_tmpl_id.id
+    def _prepare_meta_stock_info(self):
+        """ Intended to be overridden in stock """
+        self.ensure_one()
+        return {'availability': 'in stock', 'quantity_to_sell_on_facebook': 0}
 
-        return gmc_info
+    def _prepare_meta_shipping_info(self, delivery_methods_sudo, countries):
+        """
+        Prepare Meta-compliant shipping info for XML feeds.
+
+        Format per line:
+            {'country': "XX", 'region': "YY", 'service': "ZZ", 'price': "AA CCC"}
+
+        Example:
+            {'country': "US", 'region': "CA", 'service': "", 'price': "9.99 USD"}
+            {'country': "PH", 'region': "", 'service': "", 'price': "300 PHP"}
+
+        :return: a dictionary containing a list of shipping lines for the product.
+        :rtype: dict
+
+        .. note::
+            - 'country' is the 2-letter ISO country code.
+            - 'region' is the state/region code if available, else empty.
+            - 'price' is formatted as "amount currency".
+            - 'service' is left empty since Odoo doesn't define service types like "Ground"/"Air".
+        """
+        self.ensure_one()
+
+        best_delivery_by_country = delivery_methods_sudo._prepare_best_delivery_by_country(
+            self, request.pricelist, countries,
+        )
+
+        shipping_lines = [
+            {
+                'country': country.code,
+                'region': state.code if state else '',
+                'service': '',
+                'price': utils.product_feed_format_price(delivery['price'], delivery['currency']),
+            }
+            for country, delivery in list(best_delivery_by_country.items())[:100]
+            for state in (delivery.get('states') or [None])
+        ]
+
+        return {'shipping': shipping_lines}

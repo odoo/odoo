@@ -7,7 +7,7 @@ from odoo.fields import Domain
 from odoo.http import Controller, request, route
 
 
-class GoogleMerchantCenter(Controller):
+class ProductXmlFeed(Controller):
 
     @route(
         ['/gmc.xml', '/gmc-<pricelist_name_ilike>.xml'],
@@ -16,22 +16,53 @@ class GoogleMerchantCenter(Controller):
         website=True,
         sitemap=False,
     )
-    def gmc_data_source(self, pricelist_name_ilike=None):
-        """Generate a Google Merchant Center (GMC) data source/feed.
+    def gmc_feed(self, pricelist_name_ilike=None):
+        """
+        Serve the Google Merchant Center product feed.
+            - Supports optional pricelist via `/gmc-<pricelist-name>.xml`
+            - Uses the GMC XML template and product formatting
+            - Only serves if GMC feed is enabled on the website
+        """
+        return self._render_feed(
+            pricelist_name_ilike=pricelist_name_ilike,
+            template='website_sale.gmc_xml',
+            item_fn=lambda products: products._prepare_gmc_items(),
+            enabled_feed='enabled_gmc_src',
+        )
 
+    @route(
+        ['/meta.xml', '/meta-<pricelist_name_ilike>.xml'],
+        type='http',
+        auth='public',
+        website=True,
+        sitemap=False,
+    )
+    def meta_feed(self, pricelist_name_ilike=None):
+        """
+        Serve the Meta product catalog feed.
+            - Supports optional pricelist via `/meta-<pricelist-name>.xml`
+            - Uses the Meta XML template and product formatting
+            - Only serves if Meta feed is enabled on the website
+        """
+        return self._render_feed(
+            pricelist_name_ilike=pricelist_name_ilike,
+            template='website_sale.meta_xml',
+            item_fn=lambda products: products._prepare_meta_items(),
+            enabled_feed='enabled_meta_src',
+        )
+
+    def _render_feed(self, pricelist_name_ilike, enabled_feed, item_fn, template):
+        """Generate data source/feed for the given enabled product feed.
         - The feed adapts to the context lang; product titles, descriptions, etc.
         - By default, it uses the connected user's pricelist. A specific pricelist can be selected
-          by including its name or part in the URL. E.g., /gmc-christmas.xml or /gmc-christ.xml will
+          by including its name or part in the URL. E.g., /gmc-christmas.xml or /meta-christ.xml will
           force the "christmas" pricelist as well as the pricelist's currency.
           Note: All the product link will also force the pricelist to ensure the feed's
           prices corresponds to the website's prices.
-
-        :param str pricelist_name_ilike: The name of the pricelist to use for the feed.
-        :return: The rendered GMC data source in XML.
-        :rtype: str
         """
         website = request.website
-        if not website.enabled_gmc_src or not website.has_ecommerce_access():
+
+        if not enabled_feed or not website.has_ecommerce_access():
             raise NotFound()
 
         # Find the pricelist by name if specified.
@@ -47,7 +78,7 @@ class GoogleMerchantCenter(Controller):
                 raise NotFound()
             request.pricelist = pricelist_sudo
 
-        # Generate the GMC data source.
+        # Generate data source for GMC/META.
         homepage_url = website.homepage_url or '/'
         website_homepage = website._get_website_pages(
             [('url', '=', homepage_url), ('website_id', '!=', False)], limit=1,
@@ -57,13 +88,11 @@ class GoogleMerchantCenter(Controller):
             Domain('type', 'in', ('consu', 'combo')),
             website.website_domain(),
         ]))
-        gmc_data = {
+        feed_data = {
             'title': website_homepage.website_meta_title or website.name,
             'link': urljoin(website.get_base_url(), request.env['ir.http']._url_lang(homepage_url)),
             'description': website_homepage.website_meta_description,
-            'items': products._prepare_gmc_items(),
+            'items': item_fn(products),
         }
-        content = request.env['ir.ui.view'].sudo()._render_template(
-            'website_sale.gmc_xml', gmc_data,
-        )
+        content = request.env['ir.ui.view'].sudo()._render_template(template, feed_data)
         return request.make_response(content, [('Content-Type', 'application/xml;charset=utf-8')])
