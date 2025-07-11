@@ -1,0 +1,163 @@
+import paymentForm from '@payment/js/payment_form';
+import { _t } from '@web/core/l10n/translation';
+import { rpc, RPCError } from '@web/core/network/rpc';
+
+paymentForm.include({
+
+    mercadoPagoCheckout: undefined,
+    mercadoPagoComponents: undefined,
+
+    // #=== DOM MANIPULATION ===#
+
+    /**
+     * Prepare the inline form of Adyen for direct payment.
+     *
+     * @override method from payment.payment_form
+     * @private
+     * @param {number} providerId - The id of the selected payment option's provider.
+     * @param {string} providerCode - The code of the selected payment option's provider.
+     * @param {number} paymentOptionId - The id of the selected payment option
+     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
+     * @param {string} flow - The online payment flow of the selected payment option
+     * @return {void}
+     */
+    async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {
+        if (providerCode !== 'mercado_pago' || paymentMethodCode !== 'card') {
+            this._super(...arguments);
+            return;
+        }
+
+        // Check if instantiation of the component is needed.
+        this.mercadoPagoComponents ??= {}; // Store the component of each instantiated payment method.
+        if (flow === 'token') {
+            return; // No component for tokens.
+        } else if (this.mercadoPagoComponents[paymentOptionId]) {
+            this._setPaymentFlow('direct'); // Overwrite the flow even if no re-instantiation.
+            return; // Don't re-instantiate if already done for this payment method.
+        }
+
+        // Overwrite the flow of the selected payment method.
+        this._setPaymentFlow('direct');
+
+        // Extract and deserialize the inline form values.
+        const radio = document.querySelector('input[name="o_payment_radio"]:checked');
+        const inlineFormValues = JSON.parse(radio.dataset['mercadoPagoInlineFormValues']);
+        this.mercadoPagoComponents ??= {};
+        const amount = this.paymentContext['amount'];
+
+        // Create the checkout object if not already done for another payment method.
+            try {
+                const mp = new MercadoPago('TEST-8ae53c37-e5e3-44b4-94d4-abf8dbe81689', {
+                    locale: 'en-US'
+                });
+                const bricksBuilder = mp.bricks();
+                let item = {}
+                item[paymentMethodCode] = 'all'
+
+                const settings = {
+                    initialization: {
+                        amount: amount,
+                        payer: {
+                            email: inlineFormValues['email'],
+                        },
+                    },
+                    customization: {
+                        visual: {
+                            hideFormTitle: true,
+                            hidePaymentButton: true,
+                            defaultPaymentOption: {
+                            ticketForm: true,
+                        }
+                        },
+                        paymentMethods: {
+                            ...item,
+                            maxInstallments: 1,
+
+                        },
+
+                    },
+                    callbacks: {
+                        onReady: () => {
+
+                        },
+                        onError: (error) => {
+                            // callback called to all error cases related to the Brick
+                            console.error(error);
+                        },
+                    },
+                };
+                const brickType = paymentMethodCode === 'card' ? 'cardPayment' : 'payment';
+                const method_container = `o_mercado_pago_express_checkout_container_${providerId}_${paymentOptionId}`
+
+                settings.paymentMethodCode = 'all'
+                this.mercadoPagoCheckout = await bricksBuilder.create(
+                    brickType,
+                    method_container,
+                    settings
+                );
+
+            } catch (error) {
+                if (error instanceof RPCError) {
+                    this._displayErrorDialog(
+                        _t("Cannot display the payment form"), error.data.message
+                    );
+                    this._enableButton();
+                    return;
+                } else {
+                    return Promise.reject(error);
+                }
+            }
+
+            this.mercadoPagoComponents[paymentOptionId] = this.mercadoPagoCheckout;
+    },
+    async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
+        if (providerCode !== 'mercado_pago' || flow === 'token' || paymentMethodCode !== 'card') {
+            await this._super(...arguments); // Tokens are handled by the generic flow.
+            return;
+        }
+
+        // Trigger form validation and wallet collection.
+        const _super = this._super.bind(this);
+        try {
+            this.response = await this.mercadoPagoCheckout.getFormData()
+            if (!this.response){
+                this._displayErrorDialog(_t("Incorrect payment details"));
+                this._enableButton();
+                return
+            }
+        } catch (error) {
+            this._displayErrorDialog(_t("Incorrect payment details"), error.message);
+            this._enableButton();
+            return
+        }
+
+        return await _super(...arguments);
+    },
+
+    async _processDirectFlow(providerCode, paymentOptionId, paymentMethodCode, processingValues) {
+        if (providerCode !== 'mercado_pago') {
+            this._super(...arguments);
+            return;
+        }
+
+        return rpc('/payment/mercado_pago/payments', {
+                'payer': this.response.payer || this.response.formData.payer,
+                'payment_method_id': this.response.payment_method_id || this.response.formData.payment_method_id,
+                'transaction_amount': processingValues.amount,
+                'token': this.response.token,
+                'provider_id': processingValues.provider_id,
+                'reference': processingValues.reference,
+                'issuer_id': this.response.issuer_id,
+            }).then(() => {
+            window.location = '/payment/status';
+        }).catch((error) => {
+            if (error instanceof RPCError) {
+                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+                this._enableButton();
+            } else {
+                return Promise.reject(error);
+            }
+        });
+    },
+
+});

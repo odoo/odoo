@@ -7,6 +7,7 @@ from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 
 _logger = logging.getLogger(__name__)
 
@@ -18,7 +19,6 @@ class MercadoPagoController(http.Controller):
     @http.route(_return_url, type='http', methods=['GET'], auth='public')
     def mercado_pago_return_from_checkout(self, **data):
         """ Process the notification data sent by Mercado Pago after redirection from checkout.
-
         :param dict data: The notification data.
         """
         # Handle the notification data.
@@ -75,3 +75,23 @@ class MercadoPagoController(http.Controller):
             f'/v1/payments/{data.get("payment_id")}', method='GET'
         )
         tx_sudo._handle_notification_data('mercado_pago', verified_data)
+
+    @http.route('/payment/mercado_pago/payments', type='jsonrpc', auth='public')
+    def make_mp_transacton(self, payment_method_id, payer, provider_id, reference, transaction_amount, token=None, issuer_id=None):
+        provider_sudo = request.env['payment.provider'].sudo().browse(provider_id)
+        tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
+
+        payload = {
+            "transaction_amount": float(transaction_amount),
+            "description": reference,
+            "installments": 1,
+            "payment_method_id": payment_method_id,
+            "payer": payer,
+            'token': token,
+        }
+
+        response_content = provider_sudo._mercado_pago_make_request(endpoint='/v1/payments', payload=payload, method='POST', idempotency_key=payment_utils.generate_idempotency_key(tx_sudo))
+
+        tx_sudo._handle_notification_data(
+            'mercado_pago', dict(response_content, merchantReference=reference, token=token),  # Match the transaction
+        )

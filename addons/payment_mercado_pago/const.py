@@ -47,6 +47,7 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
     'card',
     # Brand payment methods.
+    'amex',
     'visa',
     'mastercard',
     'argencard',
@@ -69,6 +70,7 @@ DEFAULT_PAYMENT_METHOD_CODES = {
 PAYMENT_METHODS_MAPPING = {
     'card': 'debit_card,credit_card,prepaid_card',
     'paypal': 'digital_wallet',
+    'mastercard': 'master',
 }
 
 # Mapping of transaction states to Mercado Pago payment statuses.
