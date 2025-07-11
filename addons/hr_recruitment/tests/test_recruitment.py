@@ -3,7 +3,7 @@
 import base64
 
 from odoo.fields import Domain
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import tagged, TransactionCase, Form
 
 
 @tagged('recruitment')
@@ -295,6 +295,17 @@ class TestRecruitment(TransactionCase):
 
         applicant.stage_id = stage_new
         self.assertEqual(job.no_of_recruitment, 1)
+
+    def test_open_refuse_applicant_wizard_without_partner_name(self):
+        """Test opening the refuse wizard when the applicant has no partner_name."""
+        applicant = self.env['hr.applicant'].create({
+            'partner_phone': '123',
+        })
+        wizard = Form(self.env['applicant.get.refuse.reason'].with_context(
+            default_applicant_ids=[applicant.id], active_test=False))
+
+        wizard_applicant = wizard.applicant_ids[0]
+        self.assertFalse(wizard_applicant.partner_name)
 
     def test_applicant_refuse_reason(self):
 
