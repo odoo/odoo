@@ -401,7 +401,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         self.setup_partner_as_be1(self.env.company.partner_id)
         self.setup_partner_as_be2(self.partner_a)
         tax_21_sale = self.percent_tax(21.0)
-        tax_21_purchase = self.percent_tax(21.0, type_tax_use='purchase')  # for the import
+        _tax_21_purchase = self.percent_tax(21.0, type_tax_use='purchase')  # for the import
         currency = self.setup_other_currency('USD', rounding=0.001)
         cash_rounding_line = self.env['account.cash.rounding'].create({
             'name': '1.0 Line',

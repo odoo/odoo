@@ -74,7 +74,8 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         AccountTax._add_tax_details_in_base_lines(base_lines, purchase_order.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, purchase_order.company_id)
 
-        vals['base_lines'] = base_lines
+        vals['base_lines'] = [base_line for base_line in base_lines if base_line['special_type'] != 'cash_rounding']
+        vals['cash_rounding_base_lines'] = [base_line for base_line in base_lines if base_line['special_type'] == 'cash_rounding']
 
     def _add_purchase_order_currency_vals(self, vals):
         self._add_document_currency_vals(vals)
