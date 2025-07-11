@@ -15,6 +15,7 @@ function isSavable(el) {
 
 export class SaveSnippetPlugin extends Plugin {
     static id = "saveSnippet";
+    static dependencies = ["snippets"];
     resources = {
         get_options_container_top_buttons: withSequence(
             1,
@@ -74,7 +75,7 @@ export class SaveSnippetPlugin extends Plugin {
             ...this.getResource("clean_for_save_handlers"),
             ({ root }) => escapeTextNodes(root),
         ];
-        const savedName = await this.config.saveSnippet(
+        const savedName = await this.dependencies.snippets.saveSnippet(
             el,
             cleanForSaveHandlers,
             this.wrapWithSaveSnippetHandlers.bind(this)

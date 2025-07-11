@@ -17,6 +17,7 @@ import { SaveTranslationPlugin } from "./plugins/save_translation_plugin";
 import { TranslationPlugin } from "./plugins/translation_plugin";
 import { WebsiteVisibilityPlugin } from "./plugins/website_visibility_plugin";
 import { EditInteractionPlugin } from "./plugins/edit_interaction_plugin";
+import { WebsiteSnippetsPlugin } from "./plugins/website_snippets_plugin";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsPlugin,
@@ -32,6 +33,8 @@ const TRANSLATION_PLUGINS = [
     OperationPlugin,
     EditInteractionPlugin,
 ];
+
+CORE_BUILDER_PLUGINS.push(WebsiteSnippetsPlugin);
 
 export class WebsiteBuilder extends Component {
     static template = "website.WebsiteBuilder";

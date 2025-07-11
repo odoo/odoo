@@ -19,13 +19,13 @@ import { useSetupAction } from "@web/search/action_hook";
 import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";
 import { BlockTab } from "@html_builder/sidebar/block_tab";
 import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
-import { useSnippets } from "@html_builder/snippets/snippet_service";
 import {
     setBuilderCSSVariables,
     setEditableDocument,
     setEditableWindow,
 } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
+import { SnippetViewer } from "@html_builder/snippets/snippet_viewer";
 
 export class Builder extends Component {
     static template = "html_builder.Builder";
@@ -35,7 +35,8 @@ export class Builder extends Component {
         reloadEditor: { type: Function, optional: true },
         onEditorLoad: { type: Function, optional: true },
         installSnippetModule: { type: Function, optional: true },
-        snippetsName: { type: String },
+        snippetsTemplate: { type: String },
+        snippetsContext: { type: Object, optional: true },
         toggleMobile: { type: Function },
         overlayRef: { type: Function },
         iframeLoaded: { type: Object },
@@ -43,6 +44,7 @@ export class Builder extends Component {
         Plugins: { type: Array, optional: true },
         config: { type: Object, optional: true },
         getThemeTab: { type: Function, optional: true },
+        snippetViewer: { type: Component, optional: true },
     };
     static defaultProps = {
         onEditorLoad: () => {},
@@ -67,8 +69,6 @@ export class Builder extends Component {
         this.dialog = useService("dialog");
         this.ui = useService("ui");
         this.notification = useService("notification");
-
-        this.snippetModel = useSnippets(this.props.snippetsName);
 
         this.lastTrigerUpdateId = 0;
         this.editorBus = new EventBus();
@@ -126,26 +126,21 @@ export class Builder extends Component {
                     key: this.env.localOverlayContainerKey,
                     ref: this.props.overlayRef,
                 },
-                saveSnippet: (snippetEl, cleanForSaveHandlers, wrapWithSaveSnippetHandlers) =>
-                    this.snippetModel.saveSnippet(
-                        snippetEl,
-                        cleanForSaveHandlers,
-                        wrapWithSaveSnippetHandlers
-                    ),
-                snippetModel: this.snippetModel,
+                snippetsTemplate: this.props.snippetsTemplate,
+                snippetsContext: this.props.snippetsContext,
                 getShared: () => this.editor.shared,
                 updateInvisibleElementsPanel: () => this.updateInvisibleEls(),
                 allowCustomStyle: true,
                 allowTargetBlank: true,
                 dropImageAsAttachment: true,
                 getAnimateTextConfig: () => ({ editor: this.editor, editorBus: this.editorBus }),
+                SnippetViewer: this.props.snippetViewer || SnippetViewer,
             },
             this.env.services
         );
         this.props.onEditorLoad(this.editor);
 
         onWillStart(async () => {
-            await this.snippetModel.load();
             // Ensure that the iframe is loaded and the editor is created before
             // instantiating the sub components that potentially need the
             // editor.
@@ -164,6 +159,7 @@ export class Builder extends Component {
                 }
             };
             this.editor.attachTo(this.editableEl);
+            await this.editor.shared.snippets.load();
             this.editableEl.addEventListener("dragstart", this.onDragStart);
         });
 

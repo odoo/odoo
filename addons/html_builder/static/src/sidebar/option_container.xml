@@ -6,14 +6,13 @@
          class="options-container mb-1" t-ref="root" t-att-data-container-title="title"
          t-on-mouseenter="onMouseEnter" t-on-mouseleave="onMouseLeave">
         <div class="options-container-header d-flex align-items-center justify-content-between">
-            <t t-set="isActionable" t-value="Object.keys(props.snippetModel).length > 0"></t>
             <span
                 class="options-container-label flex-grow-1 ps-2 py-2"
                 t-att-class="{
-                    'options-container-label-actionable cursor-pointer': isActionable,
+                    'options-container-label-actionable cursor-pointer': props.actionable,
                 }"
                 t-out="title"
-                t-att-role="isActionable ? 'button' : 'heading'"
+                t-att-role="props.actionable ? 'button' : 'heading'"
                 t-on-click="selectElement"
             />
 
@@ -73,7 +72,7 @@
                 <div>You can still access the block options but it might be ineffective.</div>
                 <button type="button" class="btn o_we_bg_brand_primary py-2 my-4 border-0" t-on-click="() => this.accessOutdated()">ACCESS OPTIONS ANYWAY</button>
             </div>
-        </t>        
+        </t>
     </div>
 </t>
 
