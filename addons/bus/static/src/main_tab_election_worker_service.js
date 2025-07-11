@@ -1,25 +1,13 @@
-import { browser } from "@web/core/browser/browser";
 import { Deferred } from "@web/core/utils/concurrency";
-import { session } from "@web/session";
 import { EventBus } from "@odoo/owl";
 
 export const electionWorkerService = {
-    dependencies: ["bus.parameters"],
-    start(env, { "bus.parameters": params }) {
+    dependencies: ["worker"],
+    start(env, { worker }) {
         const bus = new EventBus();
-        let worker;
+        worker.registerHandler(messageHandler);
         let responseDeferred = null;
-        startWorker();
-
-        function startWorker() {
-            const workerURL = `${params.serverURL}/bus/websocket_worker_bundle?v=${session.websocket_worker_version}`;
-            worker = new browser.SharedWorker(workerURL, {
-                name: "odoo:websocket_shared_worker",
-            });
-            worker.port.start();
-            worker.port.addEventListener("message", messageHandler);
-            worker.port.postMessage({ type: "ELECTION:REGISTER" });
-        }
+        worker.send("ELECTION:REGISTER");
 
         function messageHandler(messageEv) {
             const { type, data } = messageEv.data;
@@ -35,7 +23,7 @@ export const electionWorkerService = {
                     }
                     break;
                 case "ELECTION:HEARTBEAT_REQUEST":
-                    worker.port.postMessage({ type: "ELECTION:HEARTBEAT" });
+                    worker.send("ELECTION:HEARTBEAT");
                     break;
                 case "ELECTION:ASSIGN_MASTER":
                     console.log("This tab is now the master tab");
@@ -54,11 +42,11 @@ export const electionWorkerService = {
             bus,
             isOnMainTab: async () => {
                 responseDeferred = new Deferred();
-                worker.port.postMessage({ type: "ELECTION:IS_MASTER?" });
+                worker.send("ELECTION:IS_MASTER?");
                 return responseDeferred;
             },
             unregister: () => {
-                worker.port.postMessage({ type: "ELECTION:UNREGISTER" });
+                worker.send("ELECTION:UNREGISTER");
             },
         };
     },

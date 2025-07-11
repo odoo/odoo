@@ -100,12 +100,12 @@ export class ElectionWorker {
     }
 
     handleElectionMessage(event) {
-        const { type, data } = event.data;
-        if (!type?.startsWith("ELECTION:")) {
+        const { action, data } = event.data;
+        if (!action?.startsWith("ELECTION:")) {
             return;
         }
-        console.log("ElectionWorker received message:", type, data);
-        switch (type) {
+        console.log("ElectionWorker received message:", action, data);
+        switch (action) {
             case "ELECTION:REGISTER":
                 this.registerCandidate(event.target);
                 break;
@@ -128,7 +128,7 @@ export class ElectionWorker {
                 }
                 break;
             default:
-                console.warn("Unknown message type:", type);
+                console.warn("Unknown message action:", action);
         }
     }
 }

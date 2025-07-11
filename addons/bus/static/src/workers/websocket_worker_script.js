@@ -6,7 +6,7 @@ import { WebsocketWorker } from "./websocket_worker";
 
 (function () {
     const websocketWorker = new WebsocketWorker(self.name);
-    const electionWorker = new ElectionWorker(self.name);
+    const electionWorker = new ElectionWorker();
 
     if (self.name.includes("shared")) {
         // The script is running in a shared worker: let's register every
