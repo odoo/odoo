@@ -19,11 +19,20 @@ class StockMoveLine(models.Model):
                 _("Make sure you validate or adapt the related resupply picking to your subcontractor in order to avoid inconsistencies in your stock.")
         return res
 
-    def write(self, vals):
-        for move_line in self:
-            if vals.get('lot_id') and move_line.move_id.is_subcontract and move_line.location_id.is_subcontracting_location:
-                # Update related subcontracted production to keep consistency between production and reception.
-                subcontracted_production = move_line.move_id._get_subcontract_production().filtered(lambda p: p.state not in ('done', 'cancel') and p.lot_producing_id == move_line.lot_id)
-                if subcontracted_production:
-                    subcontracted_production.lot_producing_id = vals['lot_id']
-        return super().write(vals)
+    def write(self, values):
+        res = super().write(values)
+        if 'quantity' in values or 'lot_id' in values:
+            self.move_id.filtered(lambda m: m.is_subcontract)._sync_subcontracting_productions()
+        return res
+
+    def unlink(self):
+        moves_to_sync = self.move_id.filtered(lambda m: m.is_subcontract)
+        res = super().unlink()
+        moves_to_sync._sync_subcontracting_productions()
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        res.move_id.filtered(lambda m: m.is_subcontract)._sync_subcontracting_productions()
+        return res

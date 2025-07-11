@@ -302,7 +302,7 @@
                                 </button>
                                 <label for="product_uom_id" string="" class="oe_inline"/>
                                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True, 'quantity_field': 'product_qty'}" groups="uom.group_uom" widget="many2one_uom" readonly="state != 'draft'" class="flex-grow-0" style="width:auto!important"/>
-                                <span class='fw-bold text-nowrap'>To Produce</span>
+                                <span name="to_produce" class='fw-bold text-nowrap'>To Produce</span>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="forecasted_issue"/>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not forecasted_issue" class="text-danger"/>
                             </div>
@@ -330,9 +330,9 @@
                             </div>
                         </group>
                         <group name="group_extra_info">
-                            <label for="date_start" string="Scheduled Date" invisible="state in ['progress', 'to_close', 'done', 'cancel']"/>
-                            <label for="date_start" string="Start Date" invisible="state not in ['progress', 'to_close', 'done', 'cancel']"/>
-                            <div class="o_row">
+                            <label name="scheduled_date" for="date_start" string="Scheduled Date" invisible="state in ['progress', 'to_close', 'done', 'cancel']"/>
+                            <label name="start_date" for="date_start" string="Start Date" invisible="state not in ['progress', 'to_close', 'done', 'cancel']"/>
+                            <div class="o_row" name="date_start">
                                 <field name="date_start"
                                     readonly="state in ['done', 'to_close', 'cancel']"
                                     decoration-warning="state not in ('done', 'cancel') and date_start &lt; now"
