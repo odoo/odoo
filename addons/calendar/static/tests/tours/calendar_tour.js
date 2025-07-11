@@ -13,6 +13,12 @@ const todayDate = function () {
     return `${month}/${day}/${year} 10:00:00`;
 };
 
+function assert(current, expected, info) {
+    if (current !== expected) {
+        console.error(info + ': "' + current + '" instead of "' + expected + '".');
+    }
+}
+
 registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
     url: "/odoo",
     steps: () => [
@@ -150,6 +156,41 @@ registry.category("web_tour.tours").add("test_calendar_decline_with_everybody_fi
         {
             content: "Wait declined status",
             trigger: ".o_attendee_status_declined",
+        },
+    ],
+});
+
+registry.category("web_tour.tours").add("test_messages_shown_through_technical_messages", {
+    url: '/odoo',
+    steps: () => [
+        stepUtils.showAppsMenuItem(),
+        {
+            content: "Open Sign App",
+            trigger: '.o_app[data-menu-xmlid="base.menu_administration"]',
+            run: "click",
+        },
+        {
+            content: "Enable Debug mode",
+            trigger: 'div[id="developer_tool"] a.d-block',
+            run: "click",
+        },
+        {
+            content: "Click on Technical Menu",
+            trigger: 'button[data-menu-xmlid="base.menu_custom"]',
+            run: "click",
+        },
+        {
+            content: "Click on Messages",
+            trigger: 'a[data-menu-xmlid="mail.menu_mail_message"]',
+            run: "click",
+        },
+        {
+            content: "Check number of messages",
+            trigger: 'table thead',
+            run:  () => {
+                assert(Array.from(document.querySelectorAll('tbody.ui-sortable tr')).filter((x) => x.children['res_id'].textContent == 'pub').length,2);
+                assert(Array.from(document.querySelectorAll('tbody.ui-sortable tr')).filter((x) => x.children['res_id'].textContent == 'priv').length,0);
+            },
         },
     ],
 });
