@@ -413,7 +413,10 @@ export class LinkPlugin extends Plugin {
                 } else {
                     this.linkInDocument.removeAttribute("class");
                 }
-                if (this.linkInDocument.childElementCount == 0 && cleanZWChars(this.linkInDocument.innerText) !== label) {
+                if (
+                    this.linkInDocument.childElementCount == 0 &&
+                    cleanZWChars(this.linkInDocument.innerText) !== label
+                ) {
                     this.linkInDocument.innerText = label;
                     cursorsToRestore = null;
                 }
@@ -616,9 +619,19 @@ export class LinkPlugin extends Plugin {
             this.linkInDocument = null;
             this.closeLinkTools();
         } else if (!selection.isCollapsed) {
-            // Open the link tool only if we have an image selected
+            // Open the link tool only if we have an image selected and the selection
+            // is fully contained in the image parent link.
             const imageNode = findInSelection(selection, "img");
-            if (imageNode?.parentNode?.tagName === "A" && this.isLinkAllowedOnSelection()) {
+            const parentElement = imageNode?.parentElement;
+            const isParentElContainsSelection =
+                parentElement &&
+                parentElement.contains(selection.anchorNode) &&
+                parentElement.contains(selection.focusNode);
+            if (
+                imageNode?.parentNode?.tagName === "A" &&
+                this.isLinkAllowedOnSelection() &&
+                isParentElContainsSelection
+            ) {
                 this.openLinkTools(imageNode.parentElement);
             } else {
                 this.linkInDocument = null;
