@@ -122,7 +122,7 @@ class PurchaseOrder(models.Model):
         ('invoiced', 'Fully Billed'),
     ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
     date_planned = fields.Datetime(
-        string='Expected Arrival', index=True, copy=False, compute='_compute_date_planned', store=True, readonly=False,
+        string='Expected Arrival', index=True, copy=False, compute='_compute_date_planned', inverse='_inverse_date_planned', store=True, readonly=False,
         help="Delivery date promised by vendor. This date is used to determine expected arrival of products.")
     date_calendar_start = fields.Datetime(compute='_compute_date_calendar_start', readonly=True, store=True)
 
@@ -224,6 +224,11 @@ class PurchaseOrder(models.Model):
                 order.date_planned = min(dates_list)
             else:
                 order.date_planned = False
+
+    def _inverse_date_planned(self):
+        for order in self:
+            if order.date_planned:
+                order.order_line.filtered(lambda line: not line.display_type).write({'date_planned': order.date_planned})
 
     @api.depends('name', 'partner_ref', 'amount_total', 'currency_id')
     @api.depends_context('show_total_amount')
@@ -345,11 +350,6 @@ class PurchaseOrder(models.Model):
             'views': [(False, 'form')],
         }
 
-    @api.onchange('date_planned')
-    def onchange_date_planned(self):
-        if self.date_planned:
-            self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
-
     def _search_is_late(self, operator, value):
         if operator != 'in':
             return NotImplemented
@@ -394,20 +394,14 @@ class PurchaseOrder(models.Model):
                 line.date_planned = line._get_date_planned(line.selected_seller_id)
         return new_pos
 
-    def _must_delete_date_planned(self, field_name):
-        # To be overridden
-        return field_name == 'order_line'
-
     def onchange(self, values, field_names, fields_spec):
         """
         Override onchange to NOT update all date_planned on PO lines when
         date_planned on PO is updated by the change of date_planned on PO lines.
         """
         result = super().onchange(values, field_names, fields_spec)
-        if any(self._must_delete_date_planned(field) for field in field_names) and 'value' in result:
-            for line in result['value'].get('order_line', []):
-                if line[0] == Command.UPDATE and 'date_planned' in line[2]:
-                    del line[2]['date_planned']
+        if result and 'value' in result and 'date_planned' in result['value']:
+            result['value'].pop('date_planned')
         return result
 
     def _get_report_base_filename(self):
