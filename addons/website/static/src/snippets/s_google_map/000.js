@@ -33,55 +33,69 @@ publicWidget.registry.GoogleMap = publicWidget.Widget.extend({
                     onSuccess: () => resolve(),
                 });
             });
-            // The animation will be restarted for all maps as soon as the
-            // google map script has been executed.
-            return;
         }
 
-        // Define a default map's colors set
-        const std = [];
-        new google.maps.StyledMapType(std, {name: "Std Map"});
+        const p = this.el.dataset.mapGps.substring(1).slice(0, -1).split(",");
+        const gps = { lat: Number(p[0]), lng: Number(p[1]) };
 
         // Default options, will be overwritten by the user
         const myOptions = {
             zoom: 12,
-            center: new google.maps.LatLng(50.854975, 4.3753899),
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            center: gps,
+            mapId: "DEMO_MAP_ID",
+            mapTypeId: "roadmap",
             panControl: false,
             zoomControl: false,
             mapTypeControl: false,
             streetViewControl: false,
             scrollwheel: false,
             mapTypeControlOptions: {
-                mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
+                mapTypeIds: ["roadmap", "map_style"],
             }
         };
-
         // Render Map
         const mapC = this.$('.map_container');
-        const map = new google.maps.Map(mapC.get(0), myOptions);
-
-        // Update GPS position
-        const p = this.el.dataset.mapGps.substring(1).slice(0, -1).split(',');
-        const gps = new google.maps.LatLng(p[0], p[1]);
-        map.setCenter(gps);
-
+        const { Map } = await google.maps.importLibrary("maps");
+        const map = new Map(mapC[0], myOptions);
         // Update Map on screen resize
         window.addEventListener('resize', () => {
             map.setCenter(gps);
         });
 
+        let markerIcon;
+        if (this.el.dataset.pinStyle === "flat") {
+            markerIcon = document.createElement("img");
+            markerIcon.src = "/website/static/src/img/snippets_thumbs/s_google_map_marker.png";
+        } else {
+            const { PinElement } = await google.maps.importLibrary("marker");
+            const pinElement = new PinElement();
+            markerIcon = pinElement.element;
+        }
         // Create Marker & Infowindow
         const markerOptions = {
-            map: map,
-            animation: google.maps.Animation.DROP,
-            position: new google.maps.LatLng(p[0], p[1])
+            map,
+            position: { lat: Number(p[0]), lng: Number(p[1]) },
+            content: markerIcon,
         };
-        if (this.el.dataset.pinStyle === 'flat') {
-            markerOptions.icon = '/website/static/src/img/snippets_thumbs/s_google_map_marker.png';
+        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+        const advancedMarker = new AdvancedMarkerElement(markerOptions);
+        const content = advancedMarker.content;
+        const intersectionObserver = new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("s_google_map_drop");
+                    intersectionObserver.unobserve(entry.target);
+                }
+            }
+        });
+        if (content) {
+            intersectionObserver.observe(content);
+            content.style.opacity = "0";
+            content.addEventListener("animationend", (event) => {
+                content.classList.remove("s_google_map_drop");
+                content.style.opacity = "1";
+            });
         }
-        new google.maps.Marker(markerOptions);
-
         map.setMapTypeId(google.maps.MapTypeId[this.el.dataset.mapType]); // Update Map Type
         map.setZoom(parseInt(this.el.dataset.mapZoom)); // Update Map Zoom
 
