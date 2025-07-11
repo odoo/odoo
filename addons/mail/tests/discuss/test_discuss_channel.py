@@ -294,12 +294,12 @@ class TestChannelInternals(MailCommon, HttpCase):
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_channel_recipients_mention(self):
-        """ Posting a message on a classic channel should support mentioning somebody """
+        """ Posting a message on a classic channel should not send emails """
         with self.mock_mail_gateway():
             self.test_channel.message_post(
                 body="Test", partner_ids=self.test_partner.ids,
                 message_type='comment', subtype_xmlid='mail.mt_comment')
-        self.assertSentEmail(self.test_channel.env.user.partner_id, [self.test_partner])
+        self.assertNotSentEmail()
 
     @mute_logger('odoo.models.unlink')
     def test_channel_user_synchronize(self):
