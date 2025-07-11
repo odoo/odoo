@@ -90,6 +90,7 @@ export const UPDATE_METHODS = [
     "create",
     "write",
     "web_save",
+    "web_save_multi",
     "action_archive",
     "action_unarchive",
 ];
@@ -334,6 +335,25 @@ export class ORM {
         validatePrimitiveList("ids", "number", ids);
         validateObject("data", data);
         return this.call(model, "web_save", [ids, data], kwargs);
+    }
+
+    /**
+     * @param {string} model
+     * @param {number[]} ids
+     * @param {any} data
+     * @param {any} [kwargs={}]
+     * @param {Object} [kwargs.specification]
+     * @param {Object} [kwargs.context]
+     * @returns {Promise<any[]>}
+     */
+    webSaveMulti(model, data, kwargs = {}) {
+        validateArray("data", data);
+        for (const d of data) {
+            if (!d.id) {
+                throw new Error(`item of data has to have an id as a number.`);
+            }
+        }
+        return this.call(model, "web_save_multi", [data], kwargs);
     }
 }
 

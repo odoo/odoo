@@ -18593,3 +18593,40 @@ test(`cache web_search_read (onUpdate called after anoter load)`, async () => {
     expect(`.o_data_row`).toHaveCount(5);
     expect(queryAllTexts(`.o_list_char`)).toEqual(["blip", "blip", "gnap", "new record", "yop"]);
 });
+
+test.tags("desktop");
+test.only(`multi_edit: edit field with operator`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="int_field"/>
+                <field name="qux"/>
+                <field name="amount"/>
+                <field name="foo"/>
+            </list>
+        `,
+    });
+    await contains(`th .o-checkbox`).click();
+    async function checkFieldValue(field, value, text) {
+        await contains(`.o_data_cell[name=${field}]`).click();
+        await edit(value, { confirm: "tab" });
+        await waitFor(`.modal table [name=${field}]`);
+        expect(`.modal table [name=${field}]`).toHaveText(text);
+        expect(`.modal .alert`).toHaveCount(1);
+        await contains(".modal footer button:contains(cancel)").click();
+    }
+    await checkFieldValue("int_field", "+=100", "Int field + 100");
+    await checkFieldValue("int_field", "-=100", "Int field - 100");
+    await checkFieldValue("int_field", "/=100", "Int field / 100");
+    await checkFieldValue("int_field", "*=100", "Int field * 100");
+    await checkFieldValue("qux", "/=1,5", "Qux / 1.5");
+    await checkFieldValue("qux", "*=1.5", "Qux * 1.5");
+    await checkFieldValue("qux", "+=1,50", "Qux + 1.5");
+    await checkFieldValue("qux", "-=1.50000", "Qux - 1.5");
+    await checkFieldValue("amount", "/=1,4", "Amount / 1.4");
+    await checkFieldValue("amount", "*=1.4", "Amount * 1.4");
+    await checkFieldValue("amount", "-=1.4", "Amount - 1.4");
+    await checkFieldValue("amount", "+=1,4", "Amount + 1.4");
+});

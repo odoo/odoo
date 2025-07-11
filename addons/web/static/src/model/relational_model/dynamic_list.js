@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { unique } from "@web/core/utils/arrays";
 import { DataPoint } from "./datapoint";
 import { Record as RelationalRecord } from "./record";
-import { resequence } from "./utils";
+import { getFieldsSpec, resequence } from "./utils";
 
 /**
  * @typedef {import("./record").Record} RelationalRecord
@@ -133,6 +133,9 @@ export class DynamicList extends DataPoint {
             if (discard) {
                 this._recordToDiscard = editedRecord;
                 await editedRecord.discard();
+                for (const record of this.selection) {
+                    await record.discard();
+                }
                 this._recordToDiscard = null;
                 editedRecord = this.editedRecord;
                 if (editedRecord && editedRecord.isNew) {
@@ -328,14 +331,26 @@ export class DynamicList extends DataPoint {
         } else {
             const resIds = unique(validSelection.map((r) => r.resId));
             const context = this.context;
+            let records = [];
+            const payload = [];
+            for (const id of resIds) {
+                const record = validSelection.find((r) => r.resId === id);
+                payload.push({
+                    id,
+                    ...record._getChanges(),
+                });
+            }
+            const specification = getFieldsSpec(payload[0], record.fields);
             try {
-                await this.model.orm.write(this.resModel, resIds, changes, { context });
+                records = await this.model.orm.webSaveMulti(this.resModel, payload, {
+                    context,
+                    specification,
+                });
             } catch (e) {
                 record._discard();
                 this.model._updateConfig(record.config, { mode: "readonly" }, { reload: false });
                 throw e;
             }
-            const records = await this.model._loadRecords({ ...this.config, resIds });
             for (const record of validSelection) {
                 const serverValues = records.find((r) => r.id === record.resId);
                 record._applyValues(serverValues);

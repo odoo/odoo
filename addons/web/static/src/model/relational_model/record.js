@@ -14,6 +14,7 @@ import {
     getFieldsSpec,
     parseServerValue,
 } from "./utils";
+import { FieldOperator } from "@web/core/utils/field_operator";
 
 /**
  * Redefine default 'Record' type
@@ -354,7 +355,10 @@ export class Record extends DataPoint {
 
         // Apply changes
         for (const fieldName in changes) {
-            const change = changes[fieldName];
+            let change = changes[fieldName];
+            if (change instanceof FieldOperator) {
+                change = change.operate(this.data[fieldName]);
+            }
             this._changes[fieldName] = change;
             this.data[fieldName] = change;
             if (this.fields[fieldName].type === "html") {
@@ -1358,7 +1362,9 @@ export class Record extends DataPoint {
             await prom;
         }
         if (this.selected && this.model.multiEdit) {
-            this._applyChanges(changes);
+            this.model.root.selection.forEach((record) => {
+                record._applyChanges(changes);
+            });
             return this.model.root._multiSave(this);
         }
 

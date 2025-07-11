@@ -91,6 +91,25 @@ class Base(models.AbstractModel):
         if next_id:
             self = self.browse(next_id)
         return self.with_context(bin_size=True).web_read(specification)
+    
+    def web_save_multi(self, vals_list: list[dict], specification: dict[str, dict]) -> list[dict]:
+        record_ids_to_read = []
+
+        for vals in vals_list:
+            record_id = vals.get("id")
+            data = vals.copy()
+            data.pop("id", None)
+
+            if record_id:
+                record = self.browse(record_id)
+                record.write(data)
+            else:
+                record = self.create(data)
+
+            record_ids_to_read.append(record.id)
+
+        records = self.browse(record_ids_to_read)
+        return records.with_context(bin_size=True).web_read(specification)
 
     @api.readonly
     def web_read(self, specification: dict[str, dict]) -> list[dict]:

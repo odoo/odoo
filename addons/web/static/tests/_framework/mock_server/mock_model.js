@@ -2890,6 +2890,28 @@ export class Model extends Array {
     }
 
     /**
+     * @param {MaybeIterable<number>} idOrIds
+     * @param {Partial<ModelRecord>} values
+     * @param {Record<string, any>} specification
+     * @param {MaybeIterable<number>} [nextId]
+     */
+    web_save_multi(items, specification) {
+        const kwargs = getKwArgs(arguments, "items", "specification");
+        ({ items, specification } = kwargs);
+        if (!Array.isArray(items) || items.length === 0) {
+            return [];
+        }
+        const ids = [];
+        for (const item of items) {
+            const id = item.id;
+            ids.push(id);
+            delete item.id;
+            this.write([id], item);
+        }
+        return this.web_read(ids, specification);
+    }
+
+    /**
      * @param {DomainListRepr} domain
      * @param {Record<string, any>} specification
      * @param {number} [offset]
