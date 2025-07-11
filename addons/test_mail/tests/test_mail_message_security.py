@@ -883,6 +883,7 @@ class TestMailMessageAccess(MessageAccessCommon):
         # hence messages are out of search, symmetrical to reading therm
         records[2].write({'is_locked': True, 'name': 'Locked !'})
         records[2].flush_recordset()
+        self.env.transaction.clear_access_cache()
         found_emp = self.env['mail.message'].with_user(self.user_employee).search([
             ('body', 'ilike', 'AnchorForSearch')
         ])

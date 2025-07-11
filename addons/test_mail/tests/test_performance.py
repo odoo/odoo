@@ -1341,7 +1341,7 @@ class TestMailAccessPerformance(BaseMailPerformance):
     @warmup
     def test_message_read(self):
         # queries
-        # fetch messages: 1
+        # search messages: 1
         # filter records: 1 / model (except the one with _get_mail_message_access)
         # _get_mail_message_access: 2 on custom implementation, no prefetching (one unreachable)
         # 'read': 1
