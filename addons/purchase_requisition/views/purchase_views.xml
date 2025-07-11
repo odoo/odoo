@@ -58,16 +58,6 @@
         </field>
     </record>
 
-    <record id="purchase_order_tree_inherit_purchase_requisition" model="ir.ui.view">
-        <field name="name">purchase.order.list.inherit.purchase.requisition</field>
-        <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="purchase.purchase_order_tree"/>
-        <field name="arch" type="xml">
-            <field name="name" position="before">
-            </field>
-        </field>
-    </record>
-
     <record id="purchase_order_line_compare_tree" model="ir.ui.view">
         <field name="name">purchase.order.line.compare.list</field>
         <field name="model">purchase.order.line</field>
