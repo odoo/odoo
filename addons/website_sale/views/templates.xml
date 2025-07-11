@@ -1556,8 +1556,13 @@
     <template id="categories_recursive" name="Category list">
         <li class="nav-item mb-1" t-att-data-publish="c.has_published_products and 'on' or 'off'">
             <t t-call="website_sale.categorie_link"/>
-            <ul t-if="c.child_id" class="nav flex-column nav-hierarchy mt-1 ps-3">
-                <t t-foreach="c.child_id" t-as="c">
+            <!-- Dynamic category display based on search -->
+            <t t-set="children" t-value="not search and c.child_id or c.child_id.filtered(lambda c: c.id in search_categories_ids)"/>
+            <!-- Only show categories with published products to portal users preventing from access errors  -->
+            <t t-set="children" t-value="request.env.user._is_internal() and children or children.filtered('has_published_products')"/>
+
+            <ul t-if="children" class="nav flex-column nav-hierarchy mt-1 ps-3">
+                <t t-foreach="children" t-as="c">
                     <t t-if="not search or c.id in search_categories_ids">
                         <t t-call="website_sale.categories_recursive" />
                     </t>
@@ -1643,7 +1648,9 @@
     </template>
 
     <template id="option_collapse_categories_recursive" name="Collapse Category Recursive">
+        <!-- Dynamic category display based on search -->
         <t t-set="children" t-value="not search and c.child_id or c.child_id.filtered(lambda c: c.id in search_categories_ids)"/>
+        <!-- Only show categories with published products to portal users preventing from access errors  -->
         <t t-set="children" t-value="request.env.user._is_internal() and children or children.filtered('has_published_products')"/>
 
         <t t-if="children">
