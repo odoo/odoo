@@ -4,8 +4,7 @@
         <span name="sale_product_configurator_list_title" position="attributes">
             <attribute name="class" remove="h4" add="h5" separator=" "/>
         </span>
-        <span name="sale_product_configurator_list_total" position="attributes">
-            <attribute name="class" remove="h4" add="h5" separator=" "/>
-        </span>
+        <xpath expr="//span[@name='sale_product_configurator_list_total']" position="replace" />
+        <xpath expr="//thead" position="replace"/>
     </t>
 </templates>
