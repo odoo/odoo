@@ -105,7 +105,7 @@ test("Change the background position and discard", async () => {
 test("Change the background position and click out of the iframe", async () => {
     await dragAndDropBgImage();
     await contains(".o_customize_tab").click();
-    expect("button.fa-undo").not.toBeEnabled();
+    expect("button.fa-undo").toBeEnabled();
 });
 
 async function dragAndDropBgImage() {
