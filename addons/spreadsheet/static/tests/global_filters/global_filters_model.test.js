@@ -2797,7 +2797,7 @@ test("Check boolean filter domain", async () => {
     expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
         `[("active", "!=", False)]`
     );
-    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: { operator: "not_set" } });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: { operator: "not set" } });
     expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
         `[("active", "=", False)]`
     );
@@ -2900,7 +2900,7 @@ test("text global filter with starts_with operator", async () => {
         id: "42",
         label: "test",
         type: "text",
-        defaultValue: { operator: "starts_with", strings: ["hello", "world"] },
+        defaultValue: { operator: "starts with", strings: ["hello", "world"] },
     };
     await addGlobalFilter(model, filter);
     const fieldMatching = { chain: "product_id", type: "many2one" };

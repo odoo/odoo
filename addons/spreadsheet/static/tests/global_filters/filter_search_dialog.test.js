@@ -259,10 +259,10 @@ test("Can change a boolean filter value", async function () {
     await mountFiltersSearchDialog(env, { model });
     await contains(".o-add-global-filter").click();
     await contains(".o-add-global-filter-label").click();
-    await contains(".modal select").select("not_set");
+    await contains(".modal select").select("not set");
     await contains(".btn-primary").click();
     expect(model.getters.getGlobalFilterValue("42")).toEqual(
-        { operator: "not_set" },
+        { operator: "not set" },
         {
             message: "value is set",
         }
@@ -340,19 +340,19 @@ test("clearing a filter value preserves the operator", async function () {
         defaultValue: { operator: "ilike", strings: ["foo"] },
     });
     await mountFiltersSearchDialog(env, { model });
-    await contains(".modal select").select("starts_with");
+    await contains(".modal select").select("starts with");
 
     // remove the only value
     await contains(".o-filters-search-dialog .o-filter-item .o_tag .o_delete").click();
     expect(".o-filters-search-dialog .o-filter-item .o_tag").toHaveCount(0);
-    expect(".modal select").toHaveValue("starts_with");
+    expect(".modal select").toHaveValue("starts with");
 
     // add a value back
     await contains(".o-filters-search-dialog .o-filter-item .o-autocomplete input").edit("foo");
     await contains(".o-filters-search-dialog .o-filter-item .o-autocomplete input").press("Enter");
     await contains(".btn-primary").click();
     expect(model.getters.getGlobalFilterValue("42")).toEqual({
-        operator: "starts_with",
+        operator: "starts with",
         strings: ["foo"],
     });
 });
@@ -399,4 +399,48 @@ test(`Relational global filter with "set" operator doesn't have a record selecto
     });
     await mountFiltersSearchDialog(env, { model });
     expect(".o-filter-value input").toHaveCount(0);
+});
+
+test("relational global filter operator options", async function () {
+    onRpc("ir.model", "has_searchable_parent_relation", () => ({ partner: true }));
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "relation",
+        label: "Filter",
+        modelName: "partner",
+        defaultValue: { operator: "in", ids: [38] },
+    });
+    await mountFiltersSearchDialog(env, { model });
+    expect(queryAllTexts("option")).toEqual([
+        "is in",
+        "is not in",
+        "child of",
+        "contains",
+        "does not contain",
+        "is set",
+        "is not set",
+    ]);
+});
+
+test("text global filter operator options", async function () {
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "text",
+        label: "Filter",
+        defaultValue: { operator: "in", strings: ["hello"] },
+    });
+    await mountFiltersSearchDialog(env, { model });
+    expect(queryAllTexts("option")).toEqual([
+        "contains",
+        "does not contain",
+        "is in",
+        "is not in",
+        "starts with",
+        "is set",
+        "is not set",
+    ]);
 });
