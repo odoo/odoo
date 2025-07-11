@@ -2,7 +2,7 @@ import { test, expect } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { strong } from "../_helpers/tags";
-import { setFontSize, tripleClick } from "../_helpers/user_actions";
+import { setFontSize, setFontSizeClassName, tripleClick } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -209,6 +209,15 @@ test("should add style to br except line-break br", async () => {
     expect(getContent(el)).toBe(`<p><span style="font-size: 36px;">[abc]</span><br><br></p>`);
 });
 
+test("should update the font size currectly if already has one", async () => {
+    await testEditor({
+        contentBefore: '<h2 style="font-size: 14px;">[abcdefg]</h2>',
+        stepFunction: setFontSize("18px"),
+        contentAfter:
+            '<h2 style="font-size: 14px;"><span style="font-size: 18px;">[abcdefg]</span></h2>',
+    });
+});
+
 test("should add style to br except line-break br (2)", async () => {
     const { editor, el } = await setupEditor("<p>[]abc<br><br><br></p>");
     await press(["ctrl", "a"]);
@@ -216,4 +225,12 @@ test("should add style to br except line-break br (2)", async () => {
     expect(getContent(el)).toBe(
         `<p><span style="font-size: 36px;">[abc</span><br><span style="font-size: 36px;"><br>]</span><br></p>`
     );
+});
+
+test("should update the font class if the parent already has one", async () => {
+    await testEditor({
+        contentBefore: '<h2 class="h4-fs">[abcdefg]</h2>',
+        stepFunction: setFontSizeClassName("h3-fs"),
+        contentAfter: '<h2 class="h4-fs"><span class="h3-fs">[abcdefg]</span></h2>',
+    });
 });
