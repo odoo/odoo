@@ -488,6 +488,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
 
         var selectorsToFadeout = ['.o_survey_form_content'];
         if (options.isFinish && !this.nextScreenResult?.has_skipped_questions) {
+            // Fade out the top title
+            document.querySelector('.o_survey_main_title_fade')?.classList.replace("opacity-100", "opacity-0");
+        
             selectorsToFadeout.push('.breadcrumb', '.o_survey_timer');
             cookie.delete('survey_' + this.options.surveyToken);
         }
@@ -549,6 +552,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             // Hide timer if end screen (if page_per_question in case of conditional questions)
             if (self.options.questionsLayout === 'page_per_question' && this.$('.o_survey_finished').length > 0) {
                 options.isFinish = true;
+            }
+
+            // Force recompute the title's display condition and fade in it
+            if (this.options.isStartScreen && this.options.questionsLayout !== 'page_per_question') {
+                document.querySelector('.o_survey_main_title_fade')?.classList.replace("opacity-0", "opacity-100");
             }
 
             // Start datetime pickers
