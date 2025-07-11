@@ -23,6 +23,7 @@ Then it can be made specific at the product level.
         'views/website_pages_views.xml',
         'data/template_email.xml',
         'data/ir_cron_data.xml',
+        'data/product_ribbon_data.xml',
     ],
     'demo': [
         'data/website_sale_stock_demo.xml',

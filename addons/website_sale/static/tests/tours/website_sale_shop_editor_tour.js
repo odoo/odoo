@@ -47,5 +47,5 @@ registerWebsitePreviewTour("shop_editor_set_product_ribbon", {
 ...clickOnSave(),
 {
     content: "Check that the ribbon was properly saved",
-    trigger: ':iframe .oe_product:first .o_ribbon:contains("Sale")',
+    trigger: ':iframe .oe_product:first .o_ribbons:contains("Sale")',
 }]);
