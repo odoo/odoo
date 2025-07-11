@@ -210,10 +210,10 @@ test("Can change a boolean filter value", async function () {
     await mountFiltersSearchDialog(env, { model });
     await contains(".o-add-global-filter").click();
     await contains(".o-add-global-filter-label").click();
-    await contains(".modal select").select("not_set");
+    await contains(".modal select").select("not set");
     await contains(".btn-primary").click();
     expect(model.getters.getGlobalFilterValue("42")).toEqual(
-        { operator: "not_set" },
+        { operator: "not set" },
         {
             message: "value is set",
         }
@@ -336,4 +336,27 @@ test("Relational global filter with a parent/child model adds the child of opera
     });
     await mountFiltersSearchDialog(env, { model });
     expect('option[value="child_of"]').toHaveCount(1);
+});
+
+test("Global filter operator options", async function () {
+    onRpc("ir.model", "has_searchable_parent_relation", () => ({ partner: true }));
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "relation",
+        label: "Filter",
+        modelName: "partner",
+        defaultValue: { operator: "in", ids: [38] },
+    });
+    await mountFiltersSearchDialog(env, { model });
+    expect(queryAllTexts("option")).toEqual([
+        "is in",
+        "is not in",
+        "child of",
+        "contains",
+        "does not contain",
+        "is set",
+        "is not set",
+    ]);
 });

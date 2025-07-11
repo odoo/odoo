@@ -24,7 +24,7 @@ describe.current.tags("headless");
 const { DateTime } = luxon;
 
 const LAZY_TRANSLATED_SET = getOperatorLabel("set");
-const LAZY_TRANSLATED_NOT_SET = getOperatorLabel("not_set");
+const LAZY_TRANSLATED_NOT_SET = getOperatorLabel("not set");
 const LAZY_TRANSLATED_CONTAINS = getOperatorLabel("ilike");
 
 beforeEach(() => {
@@ -470,7 +470,7 @@ test("getFacetInfo for boolean values", async () => {
         operator: "",
         values: [LAZY_TRANSLATED_SET],
     });
-    expect(await getFacetInfo(env, filter, { operator: "not_set" })).toEqual({
+    expect(await getFacetInfo(env, filter, { operator: "not set" })).toEqual({
         title: "Boolean Filter",
         id: "1",
         separator: "or",
