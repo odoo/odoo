@@ -292,6 +292,8 @@ class PosConfig(models.Model):
     @api.model
     def _load_pos_self_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
+        if not read_records:
+            return read_records
         record = read_records[0]
         record['_self_ordering_image_home_ids'] = config.self_ordering_image_home_ids.ids
         record['_self_ordering_image_background_ids'] = config.self_ordering_image_background_ids.ids

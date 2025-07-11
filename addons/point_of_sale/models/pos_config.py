@@ -207,7 +207,7 @@ class PosConfig(models.Model):
         static_records = {}
 
         for model, ids in records.items():
-            records = self.env[model].browse(ids)
+            records = self.env[model].browse(ids).exists()
             static_records[model] = self.env[model]._load_pos_data_read(records, self)
 
         self._notify('SYNCHRONISATION', {
@@ -250,8 +250,10 @@ class PosConfig(models.Model):
     @api.model
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
-        record = read_records[0]
+        if not read_records:
+            return read_records
 
+        record = read_records[0]
         record['_server_version'] = exp_version()
         record['_base_url'] = self.get_base_url()
         record['_data_server_date'] = self.env.context.get('pos_last_server_date') or self.env.cr.now()

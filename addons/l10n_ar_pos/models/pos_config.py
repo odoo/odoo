@@ -13,6 +13,6 @@ class PosConfig(models.Model):
     @api.model
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
-        if self.env.company.country_id.code == 'AR':
+        if read_records and self.env.company.country_id.code == 'AR':
             read_records[0]['_consumidor_final_anonimo_id'] = self.env.ref('l10n_ar.par_cfa').id
         return read_records
