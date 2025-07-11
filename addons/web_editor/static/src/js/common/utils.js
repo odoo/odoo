@@ -35,6 +35,11 @@ for (let i = 1; i <= 5; i++) {
 for (let i = 100; i <= 900; i += 100) {
     EDITOR_COLOR_CSS_VARIABLES.push(`${i}`);
 }
+// Transparent Grays
+for (let i of [15, 25, 50, 75]) {
+    EDITOR_COLOR_CSS_VARIABLES.push(`black-${i}`);
+    EDITOR_COLOR_CSS_VARIABLES.push(`white-${100-i}`);
+}
 /**
  * window.getComputedStyle cannot work properly with CSS shortcuts (like
  * 'border-width' which is a shortcut for the top + right + bottom + left border
