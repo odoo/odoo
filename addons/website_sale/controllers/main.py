@@ -984,7 +984,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     order_sudo._set_delivery_method(delivery_method, rate=rate)
 
         if try_skip_step and can_skip_delivery:
-            return request.redirect('/shop/confirm_order')
+            return self._redirect_to_next_checkout_step()
 
         checkout_page_values.update(
             request.website._get_checkout_step_values()
@@ -1442,21 +1442,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         order_sudo._update_address(partner_id, partner_fnames)
 
-    @route(['/shop/confirm_order'], type='http', auth="public", website=True, sitemap=False)
-    def shop_confirm_order(self, **post):
-        order_sudo = request.cart
-
-        if redirection := self._check_cart_and_addresses(order_sudo):
-            return redirection
-
-        order_sudo._recompute_taxes()
-        order_sudo._recompute_prices()
-        extra_step = request.website.viewref('website_sale.extra_info')
-        if extra_step.active:
-            return request.redirect("/shop/extra_info")
-
-        return request.redirect("/shop/payment")
-
     # === CHECKOUT FLOW - EXTRA STEP METHODS === #
 
     @route(['/shop/extra_info'], type='http', auth="public", website=True, sitemap=False)
@@ -1542,6 +1527,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if redirection := self._check_cart_and_addresses(order_sudo):
             return redirection
 
+        order_sudo._recompute_taxes()
+        order_sudo._recompute_prices()
         render_values = self._get_shop_payment_values(order_sudo, **post)
         render_values['only_services'] = order_sudo and order_sudo.only_services
 
@@ -1549,8 +1536,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             render_values.pop('payment_methods_sudo', '')
             render_values.pop('tokens_sudo', '')
 
-        # As the initial page sending us to payment is /shop/confirm_order
-        render_values.update(request.website._get_checkout_step_values('/shop/confirm_order'))
+        render_values.update(request.website._get_checkout_step_values())
 
         return request.render("website_sale.payment", render_values)
 
@@ -1712,6 +1698,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return request.redirect(
                 f'/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing'
             )
+
+    def _redirect_to_next_checkout_step(self):
+        """Redirect to the next appropriate step in the checkout flow."""
+        extra_step = request.website.viewref('website_sale.extra_info')
+        if extra_step.active:
+            return request.redirect('/shop/extra_info')
+        return request.redirect('/shop/payment')
 
     # ------------------------------------------------------
     # Edit
