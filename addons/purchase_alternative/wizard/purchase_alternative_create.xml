@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="purchase_requisition_create_alternative_form" model="ir.ui.view">
+        <record id="purchase_alternative_create_form" model="ir.ui.view">
             <field name="name">Create Alternative</field>
-            <field name="model">purchase.requisition.create.alternative</field>
+            <field name="model">purchase.alternative.create</field>
             <field name="arch" type="xml">
                 <form string="Create Alternative">
                     <group>
-                        <field name="origin_po_id" invisible="1"/>
+                        <field name="origin_po_id" invisible="1"/> <!-- Invisible fields -->
                         <group>
                             <field name="partner_ids" widget="many2many_tags" />
                             <field name="copy_products"/>
