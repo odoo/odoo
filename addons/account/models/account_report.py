@@ -785,7 +785,14 @@ class AccountReportExpression(models.Model):
                     if candidate_expr.subformula and candidate_expr.subformula.startswith('cross_report'):
                         subformula_match = CROSS_REPORT_REGEX.match(candidate_expr.subformula)
                         if not subformula_match:
-                            raise UserError(_("Cross report expressions must follow this format: cross_report(xml_id|id)"))
+                            raise UserError(_(
+                                "Invalid cross report expression format in the report '%s' on line '%s' with label '%s'.\n"
+                                "Expected format: cross_report(xml_id|id)\n"
+                                "Example: cross_report(my_module.my_report) or cross_report(123)",
+                                candidate_expr.report_line_id.report_id.display_name,
+                                candidate_expr.report_line_name,
+                                candidate_expr.label,
+                            ))
                         cross_report_value = subformula_match.groups()[0]
                         try:
                             report_id = int(cross_report_value)
