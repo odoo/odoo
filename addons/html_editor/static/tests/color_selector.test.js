@@ -668,6 +668,175 @@ test("custom tab color navigation using keys", async () => {
 });
 
 describe.tags("desktop");
+describe("keyboard navigation", () => {
+    test("update saturation and brightness picker with keys", async () => {
+        await setupEditor(
+            `<p>
+                <font style="color: rgb(255, 0, 0);">[test]</font>
+            </p>`
+        );
+        await expandToolbar();
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await press("Tab");
+        expect(getActiveElement()).toBe(
+            queryFirst('.o_font_color_selector button:contains("Custom")')
+        );
+        await press("Enter");
+        await animationFrame();
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        expect(getActiveElement()).toBe(queryFirst(".o_font_color_selector .o_picker_pointer"));
+        expect(".o_hex_input").toHaveValue("#FF0000");
+        await press("ArrowUp");
+        expect(".o_hex_input").toHaveValue("#FF3333");
+        await press("ArrowLeft");
+        expect(".o_hex_input").toHaveValue("#F53D3D");
+        await press("ArrowDown");
+        expect(".o_hex_input").toHaveValue("#F20D0D");
+        await press("ArrowRight");
+        expect(".o_hex_input").toHaveValue("#FF0000");
+    });
+
+    test("update hue slider with keys", async () => {
+        await setupEditor(
+            `<p>
+                <font style="color: rgb(0, 255, 0);">[test]</font>
+            </p>`
+        );
+        await expandToolbar();
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await press("Tab");
+        expect(getActiveElement()).toBe(
+            queryFirst('.o_font_color_selector button:contains("Custom")')
+        );
+        await press("Enter");
+        await animationFrame();
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        expect(getActiveElement()).toBe(queryFirst(".o_font_color_selector .o_slider_pointer"));
+        expect(".o_hex_input").toHaveValue("#00FF00");
+        await press("ArrowUp");
+        expect(".o_hex_input").toHaveValue("#00FF2A");
+        await press("ArrowDown");
+        expect(".o_hex_input").toHaveValue("#00FF00");
+        await press("ArrowRight");
+        expect(".o_hex_input").toHaveValue("#00FF2A");
+        await press("ArrowLeft");
+        expect(".o_hex_input").toHaveValue("#00FF00");
+        await press("PageUp");
+        expect(".o_hex_input").toHaveValue("#00FF80");
+        await press("PageDown");
+        expect(".o_hex_input").toHaveValue("#00FF00");
+        await press("Home");
+        expect(".o_hex_input").toHaveValue("#FF0000");
+        await press("ArrowUp");
+        expect(".o_hex_input").not.toHaveValue("#FF0000");
+        await press("End");
+        expect(".o_hex_input").toHaveValue("#FF0000");
+    });
+
+    test("update opacity slider with keys", async () => {
+        await setupEditor(
+            `<p>
+                <font style="color: rgb(255, 0, 0);">[test]</font>
+            </p>`
+        );
+        await expandToolbar();
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await press("Tab");
+        expect(getActiveElement()).toBe(
+            queryFirst('.o_font_color_selector button:contains("Custom")')
+        );
+        await press("Enter");
+        await animationFrame();
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        expect(getActiveElement()).toBe(queryFirst(".o_font_color_selector .o_opacity_pointer"));
+        expect(".o_hex_input").toHaveValue("#FF0000");
+        await press("ArrowDown");
+        expect(".o_hex_input").toHaveValue("#FF0000E6");
+        await press("ArrowLeft");
+        expect(".o_hex_input").toHaveValue("#FF0000CC");
+        await press("Home");
+        expect(".o_hex_input").toHaveValue("#FF000000");
+        await press("ArrowUp");
+        expect(".o_hex_input").toHaveValue("#FF00001A");
+        await press("ArrowRight");
+        expect(".o_hex_input").toHaveValue("#FF000033");
+        await press("End");
+        expect(".o_hex_input").toHaveValue("#FF0000");
+    });
+
+    test("click on saturation and brightness picker sets implicit focus on it", async () => {
+        await setupEditor("<p>[test]</p>");
+        await expandToolbar();
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await contains('.o_font_color_selector button:contains("Custom")').click();
+        await contains(".o_font_color_selector .o_color_pick_area").click();
+        await press("Tab");
+        expect(getActiveElement()).toBe(queryFirst(".o_font_color_selector .o_slider_pointer"));
+        await contains(".o_font_color_selector .o_color_pick_area").click({
+            position: { top: 0, left: 0 }, // other positions don't guarantee a fixed color
+            relative: true,
+        });
+        expect(".o_hex_input").toHaveValue("#FFFFFF");
+        await press("ArrowDown");
+        expect(".o_hex_input").toHaveValue("#E6E6E6");
+    });
+
+    test("click on hue slider sets implicit focus on it", async () => {
+        await setupEditor(
+            `<p>
+                <font style="color: rgb(0, 255, 0);">[test]</font>
+            </p>`
+        );
+        await expandToolbar();
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await contains('.o_font_color_selector button:contains("Custom")').click();
+        await contains(".o_font_color_selector .o_color_slider").click();
+        await press("Tab");
+        expect(getActiveElement()).toBe(queryFirst(".o_font_color_selector .o_opacity_pointer"));
+        await contains(".o_font_color_selector .o_color_slider").click();
+        expect(".o_hex_input").not.toHaveValue("#00FF00");
+        await press("Home");
+        expect(".o_hex_input").toHaveValue("#FF0000");
+    });
+
+    test("click on opacity slider sets implicit focus on it", async () => {
+        await setupEditor(
+            `<p>
+                <font style="color: rgb(255, 0, 0);">[test]</font>
+            </p>`
+        );
+        await expandToolbar();
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await contains('.o_font_color_selector button:contains("Custom")').click();
+        const opacityPointer = queryOne(".o_opacity_pointer");
+        expect(opacityPointer.ariaValueNow).toBe("100.00");
+        await contains(".o_font_color_selector .o_opacity_slider").click();
+        await press("Tab");
+        expect(getActiveElement()).toBe(queryFirst(".o_font_color_selector .o_hex_input"));
+        await contains(".o_font_color_selector .o_opacity_slider").click();
+        expect(opacityPointer.ariaValueNow).not.toBe("100.00");
+        const opacityValue = opacityPointer.ariaValueNow;
+        await press("ArrowDown");
+        expect(opacityPointer.ariaValueNow).not.toBe(opacityValue);
+    });
+});
+
+describe.tags("desktop");
 describe("color preview", () => {
     test("preview color should work and be reverted", async () => {
         await setupEditor("<p>[test]</p>");
