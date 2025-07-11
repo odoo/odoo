@@ -115,27 +115,10 @@ export class MassMailingHtmlField extends HtmlMailField {
             },
             () => [this.codeViewRef.el]
         );
-        // If the ui becomes small, we only display the readonly html value
-        // TODO EGGMAIL: either hide the sidebar and stay in edit mode
-        // or save the content before switching (else all changes are lost without user confirmation)
-        // let isSmall;
-        // effect(
-        //     (state) => {
-        //         if (status(this) === "destroyed") {
-        //             return;
-        //         }
-        //         if (state.isSmall !== isSmall) {
-
-        //             this.state.key++;
-        //             isSmall = state.isSmall;
-        //         }
-        //     },
-        //     [this.ui]
-        // );
     }
 
     get isIframeReadonly() {
-        return this.props.readonly || this.ui.isSmall;
+        return this.props.readonly;
     }
 
     resetIframe() {
