@@ -449,3 +449,15 @@ registry.category("web_tour.tours").add("test_down_payment_displayed", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_multiple_lots_sale_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1, { loadSN: true }),
+            PosSale.selectedOrderLinesHasLots("Product", ["1002"]),
+            ProductScreen.clickOrderline("Product", "1"),
+            PosSale.selectedOrderLinesHasLots("Product", ["1001"]),
+        ].flat(),
+});
