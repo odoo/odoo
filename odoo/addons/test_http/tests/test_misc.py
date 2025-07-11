@@ -13,7 +13,7 @@ from odoo.tools import config, file_path, parse_version
 
 from .test_common import TestHttpBase
 from odoo.addons import test_http
-from odoo.addons.test_http.controllers import CT_JSON
+from odoo.addons.test_http.controllers.controllers import CT_JSON
 from odoo.addons.test_http.utils import TEST_IP
 
 try:
