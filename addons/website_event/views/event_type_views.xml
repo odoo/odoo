@@ -7,15 +7,15 @@
         <field name="inherit_id" ref="event.view_event_type_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_title')]" position="after">
-                    <span name="website_menu">
+                    <span name="website_menu" class="me-3">
                         <label for="website_menu" string="Website Submenu"/>
                         <field name="website_menu"/>
                     </span>
-                    <span name="community_menu" invisible="1">
+                    <span name="community_menu" invisible="1" class="me-3">
                         <label for="community_menu" string="Community"/>
                         <field name="community_menu"/>
                     </span>
-                    <span name="menu_register_cta" class="d-inline-block">
+                    <span name="menu_register_cta" class="d-inline-block me-3">
                         <label for="menu_register_cta" string="Register Button"/>
                         <field name="menu_register_cta"/>
                     </span>
