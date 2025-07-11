@@ -573,8 +573,8 @@ test("protected plugin is robust against other plugins which can filter mutation
         isMutationRecordSavable(record) {
             if (
                 record.type === "childList" &&
-                record.removedNodes.length === 1 &&
-                [...record.removedNodes][0] === a
+                record.removedTrees.length === 1 &&
+                record.removedTrees[0].node === a
             ) {
                 // Artificially hide the removal of `a` node
                 return false;

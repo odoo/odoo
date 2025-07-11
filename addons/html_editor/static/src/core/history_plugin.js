@@ -483,10 +483,6 @@ export class HistoryPlugin extends Plugin {
      * @returns { MutationRecord[] }
      */
     filterMutationRecords(records) {
-        this.dispatchTo("before_filter_mutation_record_handlers", records);
-        for (const callback of this.getResource("savable_mutation_record_predicates")) {
-            records = records.filter(callback);
-        }
         records = this.filterAttributeMutationRecords(records);
         records = this.filterSameTextContentMutationRecords(records);
         records = this.filterOutIntermediateStateMutationRecords(records);
@@ -728,17 +724,18 @@ export class HistoryPlugin extends Plugin {
      * @returns {HistoryMutationRecord[]}
      */
     filterAndAdjustHistoryMutationRecords(records) {
-        if (this.isObserverDisabled) {
-            records
-                .filter((record) => record.type !== "childList")
-                .filter((record) => this.isObservedNode(record.target))
-                .forEach((record) => this.storeOldValue(record));
-            return [];
-        }
-
+        this.dispatchTo("before_filter_mutation_record_handlers", records);
+        const savableRecordPredicates = this.getResource("savable_mutation_record_predicates");
+        const isRecordSavable = (record) => savableRecordPredicates.every((p) => p(record));
         const result = [];
         for (const record of records) {
             if (!this.isObservedNode(record.target)) {
+                continue;
+            }
+            if (this.isObserverDisabled || !isRecordSavable(record)) {
+                if (record.type !== "childList") {
+                    this.storeOldValue(record);
+                }
                 continue;
             }
             const updatedRecord =

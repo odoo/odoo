@@ -622,9 +622,9 @@ describe("destroy", () => {
             isMutationRecordSavable(record) {
                 if (
                     record.type === "childList" &&
-                    record.addedNodes.length === 1 &&
-                    record.addedNodes.item(0).nodeType === Node.ELEMENT_NODE &&
-                    record.addedNodes.item(0).matches(".test")
+                    record.addedTrees.length === 1 &&
+                    record.addedTrees[0].node.nodeType === Node.ELEMENT_NODE &&
+                    record.addedTrees[0].node.matches(".test")
                 ) {
                     expect.step("dispatch");
                     return false;
