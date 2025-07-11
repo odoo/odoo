@@ -2223,7 +2223,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         return self.picking_id or False
 
     def _get_upstream_documents_and_responsibles(self, visited):
-        if self.move_orig_ids and any(m.state not in ('done', 'cancel') for m in self.move_orig_ids):
+        if self not in visited and self.move_orig_ids and any(m.state not in ('done', 'cancel') for m in self.move_orig_ids):
             result = set()
             visited |= self
             for move in self.move_orig_ids:
