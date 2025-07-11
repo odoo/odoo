@@ -14,9 +14,6 @@
                 <i t-elif="!record.im_status" class="fa fa-fw fa-question-circle" title="No IM status available"/>
             </span>
         </xpath>
-        <xpath expr="//div[hasclass('o_card_user_infos')]/span" position="attributes">
-            <attribute name="t-esc">record.name</attribute>
-        </xpath>
         <xpath expr="//div[hasclass('o_avatar_card_buttons')]/button" position="attributes">
             <attribute name="t-if">record.user_id and !record.share</attribute>
         </xpath>

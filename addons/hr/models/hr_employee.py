@@ -16,6 +16,7 @@ from odoo.fields import Domain
 from odoo.exceptions import ValidationError, AccessError, RedirectWarning, UserError
 from odoo.tools import convert, format_time, SQL, Query
 from odoo.tools.intervals import Intervals
+from odoo.addons.mail.tools.discuss import Store
 
 
 class HrEmployee(models.Model):
@@ -1390,3 +1391,23 @@ class HrEmployee(models.Model):
             'contract_date_start': False,
             'contract_date_end': False,
         })
+
+    def _get_store_avatar_card_fields(self, target):
+        employee_fields = [
+            "company_id",
+            Store.One("department_id", ["name"]),
+            "work_email",
+            Store.One("work_location_id", ["location_type", "name"]),
+            "work_phone",
+        ]
+        user = target.get_user(self.env)
+        if user.has_group("hr.group_hr_user"):
+            # job_title is not a field of hr.employee.public, but it is a field of hr.employee
+            employee_fields.append("job_title")
+        # HACK: fetch the employee fields from employees to retrieve hr.employee.public fields if no access to hr.employee
+        if len(self) > 0:
+            self.fetch([
+                field.field_name if isinstance(field, Store.Attr) else field
+                for field in employee_fields
+            ])
+        return employee_fields

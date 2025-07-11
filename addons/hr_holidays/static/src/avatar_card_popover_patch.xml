@@ -7,7 +7,7 @@
             <i t-elif="user.im_status === 'leave_busy'" class="fa fa-fw fa-plane text-danger" title="Busy" role="img" aria-label="User is busy"/>
             <i t-elif="user.im_status === 'leave_offline'" class="fa fa-fw fa-plane text-500" title="Out of office" role="img" aria-label="User is out of office"/>
         </xpath>
-        <xpath expr="//span[@t-esc='user.name']" position="after">
+        <xpath expr="//span[hasclass('o-mail-avatar-card-name')]" position="after">
             <span t-if="outOfOfficeDateEndText" class="text-warning me-1 small fw-bold" t-esc="outOfOfficeDateEndText"/>
         </xpath>
     </t>
