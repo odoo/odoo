@@ -15,12 +15,7 @@ class TestUserLivechatUsername(TestGetOperatorCommon):
             }
         )
         data = self.make_jsonrpc_request(
-            "/im_livechat/get_session",
-            {
-                "anonymous_name": "Visitor",
-                "channel_id": livechat_channel.id,
-                "persisted": True,
-            },
+            "/im_livechat/get_session", {"channel_id": livechat_channel.id, "persisted": True}
         )
         john.partner_id.user_livechat_username = "ELOPERADOR"
         channel = self.env["discuss.channel"].browse(data["channel_id"])
@@ -37,8 +32,7 @@ class TestUserLivechatUsername(TestGetOperatorCommon):
             {"name": "Livechat Channel", "user_ids": [john.id]}
         )
         data = self.make_jsonrpc_request(
-            "/im_livechat/get_session",
-            {"anonymous_name": "Visitor", "channel_id": livechat_channel.id},
+            "/im_livechat/get_session", {"channel_id": livechat_channel.id}
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         message = channel.message_post(body="Hello, How can I help you?")
