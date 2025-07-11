@@ -279,19 +279,6 @@ class ChatbotScriptStep(models.Model):
             return step
         return self.env['chatbot.script.step']
 
-    def _is_last_step(self, discuss_channel=False):
-        self.ensure_one()
-        discuss_channel = discuss_channel or self.env['discuss.channel']
-
-        # if it's not a question and if there is no next step, then we end the script
-        # sudo: chatbot.script.answser - visitor can access their own answers
-        if self.step_type != "question_selection" and not self._fetch_next_step(
-            discuss_channel.sudo().chatbot_message_ids.user_script_answer_id
-        ):
-            return True
-
-        return False
-
     def _process_answer(self, discuss_channel, message_body):
         """ Method called when the user reacts to the current chatbot.script step.
         For most chatbot.script.step#step_types it simply returns the next chatbot.script.step of
@@ -436,7 +423,6 @@ class ChatbotScriptStep(models.Model):
     def _to_store_defaults(self, target):
         return [
             Store.Many("answer_ids"),
-            Store.Attr("is_last", lambda step: step._is_last_step()),
             Store.Attr("message", lambda s: plaintext2html(s.message) if s.message else False),
             "step_type",
         ]
