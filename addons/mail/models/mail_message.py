@@ -405,7 +405,7 @@ class MailMessage(models.Model):
     def _get_search_domain_share(self):
         if self.env.user._is_internal():
             return Domain.TRUE
-        return Domain(['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)])
+        return Domain('is_internal', '=', False) & Domain('subtype_id.internal', '=', False)
 
     def _filter_records_for_message_operation(self, doc_model, doc_res_ids, operation):
         """ Helper returning records on which 'operation' on mail.message is
@@ -521,22 +521,12 @@ class MailMessage(models.Model):
         forbidden = self.browse()
 
         # Non employees see only messages with a subtype (aka, not internal logs)
-        if not self.env.user._is_internal():
-            # reserve '_get_search_domain_share' domain, to make search and read coherent
-            rows = self.env.execute_query(SQL(
-                ''' SELECT message.id
-                    FROM "mail_message" AS message
-                    LEFT JOIN "mail_message_subtype" as subtype ON message.subtype_id = subtype.id
-                    WHERE message.id = ANY (%s) AND (message.is_internal IS TRUE OR message.subtype_id IS NULL OR subtype.internal IS TRUE)
-                ''',
-                self.ids,
-            ))
-            if rows:
-                internal = self.browse(id_ for [id_] in rows)
-                forbidden += internal
-                self -= internal  # noqa: PLW0642
-            if not self:
-                return forbidden
+        if domain_share := self._get_search_domain_share():
+            internal = self.sudo().search(~domain_share & Domain('id', 'in', self.ids), order='id')
+            forbidden += internal
+            self -= internal  # noqa: PLW0642
+        if not self:
+            return forbidden
 
         # Read the value of messages in order to determine their accessibility.
         # The values are put in 'messages_to_check', and entries are popped
