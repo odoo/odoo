@@ -150,7 +150,7 @@ migrationStepRegistry.add("18.5.10", {
                     delete globalFilter.defaultValue; // [true, false] no longer supported
                 } else {
                     globalFilter.defaultValue = {
-                        operator: globalFilter.defaultValue[0] ? "set" : "not_set",
+                        operator: globalFilter.defaultValue[0] ? "set" : "not set",
                     };
                 }
             }

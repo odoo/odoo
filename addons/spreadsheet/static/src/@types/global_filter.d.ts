@@ -61,7 +61,7 @@ declare module "@spreadsheet" {
         | DateRangeValue;
 
     interface SetValue {
-        operator: "set" | "not_set";
+        operator: "set" | "not set";
     }
 
     interface RelationIdsValue {
@@ -70,7 +70,7 @@ declare module "@spreadsheet" {
     }
 
     interface RelationContainsValue {
-        operator: "ilike" | "not ilike" | "starts_with" | "ends_with";
+        operator: "ilike" | "not ilike" | "starts with";
         strings: string[];
     }
 
@@ -101,7 +101,7 @@ declare module "@spreadsheet" {
     }
 
     interface TextContainsValue {
-        operator: "ilike" | "not ilike" | "starts_with";
+        operator: "ilike" | "not ilike" | "starts with";
         text: string;
     }
 

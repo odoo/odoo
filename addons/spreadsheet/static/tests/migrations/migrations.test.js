@@ -686,7 +686,7 @@ test("global filter default value have operators", () => {
         ids: [2],
     });
     expect(migratedData.globalFilters[3].defaultValue).toEqual({ operator: "set" });
-    expect(migratedData.globalFilters[4].defaultValue).toEqual({ operator: "not_set" });
+    expect(migratedData.globalFilters[4].defaultValue).toEqual({ operator: "not set" });
     expect(migratedData.globalFilters[5].defaultValue).toBe(undefined);
 });
 
