@@ -96,31 +96,22 @@
             </t>
         </BuilderRow>
         <BuilderRow label.translate="Font Family" tooltip.translate="Heading 1" action="'customizeWebsiteVariable'">
-            <BuilderFontFamilyPicker actionParam="'headings-font'" valueParamName="'actionValue'"/>
-            <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
-                title.translate="Reset to Paragraph Font Family"
-                action="'removeFont'"
-                actionParam="{ variable: 'headings-font', tbd: 'set-headings-font' }"
-            />
+            <BuilderRemovableFontFamilyPicker
+                actionParam="'headings-font'"
+                title.translate="Reset to default Font Family"/>
             <t t-set-slot="collapse">
                 <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderFontFamilyPicker actionParam="'h' + depth + '-font'" valueParamName="'actionValue'"/>
-                        <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
-                            title.translate="Reset to Headings Font Family"
-                            action="'removeFont'"
-                            actionParam="{ variable: 'h' + depth + '-font', tbd: 'set-h' + depth + '-font' }"
-                        />
+                        <BuilderRemovableFontFamilyPicker
+                            actionParam="'h' + depth + '-font'"
+                            title.translate="Reset to Headings Font Family"/>
                     </BuilderRow>
                 </t>
                 <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <BuilderFontFamilyPicker actionParam="'display-' + depth + '-font'" valueParamName="'actionValue'"/>
-                        <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
-                            title.translate="Reset to Headings Font Family"
-                            action="'removeFont'"
-                            actionParam="{ variable: 'display-' + depth + '-font', tbd: 'set-display-' + depth + '-font' }"
-                        />
+                        <BuilderRemovableFontFamilyPicker
+                            actionParam="'display-' + depth + '-font'"
+                            title.translate="Reset to Headings Font Family"/>
                     </BuilderRow>
                 </t>
             </t>
@@ -191,12 +182,9 @@
             <BuilderNumberInput actionParam="'btn-secondary-outline-border-width'" unit="'px'" saveUnit="'rem'"/>
         </BuilderRow>
         <BuilderRow label.translate="Font Family" action="'customizeWebsiteVariable'">
-            <BuilderFontFamilyPicker actionParam="'buttons-font'" valueParamName="'actionValue'"/>
-            <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
-                title.translate="Reset to Paragraph Font Family"
-                action="'removeFont'"
-                actionParam="{ variable: 'buttons-font', tbd: 'set-buttons-font' }"
-            />
+            <BuilderRemovableFontFamilyPicker
+                actionParam="'buttons-font'"
+                title.translate="Reset to default Font Family"/>
         </BuilderRow>
         <BuilderRow label.translate="Padding" action="'customizeWebsiteVariable'">
             <BuilderNumberInput title.translate="Y" actionParam="'btn-padding-y'" unit="'px'" saveUnit="'rem'"/>

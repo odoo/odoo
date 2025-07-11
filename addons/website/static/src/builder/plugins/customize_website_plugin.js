@@ -44,7 +44,6 @@ export class CustomizeWebsitePlugin extends Plugin {
             SwitchThemeAction,
             AddLanguageAction,
             CustomizeBodyBgTypeAction,
-            RemoveFontAction,
             CustomizeButtonStyleAction,
             WebsiteConfigAction,
             SelectTemplateAction,
@@ -483,23 +482,6 @@ export class CustomizeBodyBgTypeAction extends BuilderAction {
                         this.dispatchTo("trigger_dom_updated");
                     })
                     .finally(() => this.services.ui.unblock());
-            },
-        });
-    }
-}
-
-export class RemoveFontAction extends BuilderAction {
-    static id = "removeFont";
-    static dependencies = ["builderActions"];
-    setup() {
-        this.preview = false;
-    }
-    async apply({ params }) {
-        // TODO
-        const getAction = this.dependencies.builderActions.getAction;
-        await getAction("customizeWebsiteVariable").load({
-            params: {
-                mainParam: params.variable,
             },
         });
     }
