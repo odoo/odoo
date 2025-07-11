@@ -5,6 +5,7 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
 
 from markupsafe import Markup
+from pytz import timezone
 
 
 class DiscussChannel(models.Model):
@@ -433,9 +434,13 @@ class DiscussChannel(models.Model):
 
     def _email_livechat_transcript(self, email):
         company = self.env.user.company_id
+        # sudo: discuss.channel - access guest's timezone
+        guest = self.sudo().livechat_customer_guest_ids[:1]
+        tz = timezone(guest.timezone or self.env.user.tz or "UTC")
         render_context = {
             "company": company,
             "channel": self,
+            "tz": tz,
         }
         mail_body = self.env['ir.qweb']._render('im_livechat.livechat_email_template', render_context, minimal_qcontext=True)
         mail_body = self.env['mail.render.mixin']._replace_local_links(mail_body)
