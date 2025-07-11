@@ -2,6 +2,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { normalizeColor } from "@html_builder/utils/utils_css";
 import { defaultImageFilterOptions } from "@html_editor/main/media/image_post_process_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { getHtmlStyle } from "@html_editor/utils/formatting";
 import { registry } from "@web/core/registry";
 
 class ImageFilterOptionPlugin extends Plugin {
@@ -53,7 +54,9 @@ export class SetCustomFilterAction extends BuilderAction {
     async load({ editingElement: img, params: { mainParam: filterProperty }, value }) {
         const filterOptions = JSON.parse(img.dataset.filterOptions || "{}");
         filterOptions[filterProperty] =
-            filterProperty === "filterColor" ? normalizeColor(value) : value;
+            filterProperty === "filterColor"
+                ? normalizeColor(value, getHtmlStyle(this.document))
+                : value;
         return this.dependencies.imagePostProcess.processImage({
             img,
             newDataset: {

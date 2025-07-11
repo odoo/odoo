@@ -1,8 +1,8 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
+import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { loadBundle } from "@web/core/assets";
-import weUtils from "@web_editor/js/common/utils";
 
 export class Chart extends Interaction {
     static selector = ".s_chart";
@@ -122,7 +122,7 @@ export class Chart extends Interaction {
      * @param {string} color
      */
     convertToCSSColor(color) {
-        return color ? weUtils.getCSSVariableValue(color, this.style) || color : "transparent";
+        return color ? getCSSVariableValue(color, this.style) || color : "transparent";
     }
 }
 

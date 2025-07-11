@@ -14,19 +14,19 @@ const TARGET_BODY_COLOR_V2 = 'rgb(255, 0, 255)';
 
 const checkFontSize = function () {
     const style = document.defaultView.getComputedStyle(this.anchor);
-    if (!areCssValuesEqual(style.fontSize, `${TARGET_FONT_SIZE}px`, "font-size")) {
+    if (!areCssValuesEqual(style.fontSize, `${TARGET_FONT_SIZE}px`, "font-size", style)) {
         console.error(`Expected the font-size to be equal to ${TARGET_FONT_SIZE}px but found ${style.fontSize} instead`);
     }
 };
 const checkBodyBgColor = function () {
     const style = document.defaultView.getComputedStyle(this.anchor);
-    if (!areCssValuesEqual(style.backgroundColor, `${TARGET_BODY_BG_COLOR}`, "background-color")) {
+    if (!areCssValuesEqual(style.backgroundColor, `${TARGET_BODY_BG_COLOR}`, "background-color", style)) {
         console.error(`Expected the background color to be equal to ${TARGET_BODY_BG_COLOR} but found ${style.backgroundColor} instead`);
     }
 };
 const checkBodyColor = function () {
     const style = document.defaultView.getComputedStyle(this.anchor);
-    if (!areCssValuesEqual(style.color, `${TARGET_BODY_COLOR}`, "color")) {
+    if (!areCssValuesEqual(style.color, `${TARGET_BODY_COLOR}`, "color", style)) {
         console.error(`Expected the color to be equal to ${TARGET_BODY_COLOR} but found ${style.color} instead`);
     }
 };

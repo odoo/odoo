@@ -1,9 +1,9 @@
 import { Plugin } from "@html_editor/plugin";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { Cache } from "@web/core/utils/cache";
 import { loadCSS } from "@web/core/assets";
-import { getCSSVariableValue } from "@html_builder/utils/utils_css";
 import { BuilderFontSizeSelector } from "./font_size_selector";
 
 export class BuilderFontPlugin extends Plugin {
@@ -53,7 +53,7 @@ export class BuilderFontPlugin extends Plugin {
         return this.fontsCache.read({});
     }
     async _fetchFonts() {
-        const style = window.getComputedStyle(this.document.documentElement);
+        const style = getHtmlStyle(this.document);
         const nbFonts = parseInt(getCSSVariableValue("number-of-fonts", style));
         // User fonts served by google server.
         const googleFontsProperty = getCSSVariableValue("google-fonts", style);
