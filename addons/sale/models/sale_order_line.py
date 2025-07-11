@@ -305,6 +305,13 @@ class SaleOrderLine(models.Model):
         string='Tax calculation rounding method', readonly=True)
     company_price_include = fields.Selection(related="company_id.account_price_include")
     sale_line_warn_msg = fields.Text(related='product_id.sale_line_warn_msg')
+    section_line_id = fields.Many2one(
+        'sale.order.line',
+        string="Section Line",
+        compute='_compute_section_line_id',
+        search='_search_section_line_id',
+        help='Section under which this line is grouped.',
+    )
 
     #=== COMPUTE METHODS ===#
 
@@ -1128,6 +1135,33 @@ class SaleOrderLine(models.Model):
         for line in self:
             # line.ids checks whether it's a new record not yet saved
             line.product_uom_readonly = line.ids and line.state in ['sale', 'cancel']
+
+    def _compute_section_line_id(self):
+        order_lines = self.sorted(lambda l: l.sequence)
+        current_section_line = False
+        for line in order_lines:
+            if line.display_type == 'line_section':
+                current_section_line = line
+                line.section_line_id = False
+            else:
+                line.section_line_id = current_section_line
+
+    def _search_section_line_id(self, operator, value):
+        if operator != '=':
+            return NotImplemented
+        order_id = self.env.context.get('order_id')
+        if not order_id:
+            return []
+        sale_lines = self.search([('order_id', '=', order_id)], order='sequence')
+        result_ids = []
+        section_line_id = False
+        for line in sale_lines:
+            if line.display_type == 'line_section':
+                section_line_id = line.id
+            elif section_line_id == value:
+                result_ids.append(line.id)
+
+        return [('id', 'in', result_ids)]
 
     #=== CONSTRAINT METHODS ===#
 
