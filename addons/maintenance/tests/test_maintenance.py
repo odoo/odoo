@@ -3,7 +3,7 @@
 
 import time
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, Form
 
 class TestEquipment(TransactionCase):
     """ Test used to check that when doing equipment/maintenance_request/equipment_category creation."""
@@ -119,3 +119,22 @@ class TestEquipment(TransactionCase):
             {'kanban_state': 'blocked', 'stage_id': self.ref('maintenance.stage_0')},
             {'kanban_state': 'blocked', 'stage_id': self.ref('maintenance.stage_0')},
         ])
+
+    def test_create_maintenance_request_without_date(self):
+        # Create a new equipment
+        equipment = self.equipment.with_user(self.manager).create({
+            'name': 'Laptop',
+        })
+
+        # Check that equipment is created or not
+        assert equipment, "Equipment not created"
+
+        # Create new maintenance request without request date
+        self.maintenance_request.with_user(self.user).create({
+            'name': 'Not working',
+            'request_date': None,
+            'equipment_id': equipment.id,
+            'stage_id': self.ref('maintenance.stage_3'),
+        })
+        equipment_form = Form(equipment)
+        equipment_form.save()
