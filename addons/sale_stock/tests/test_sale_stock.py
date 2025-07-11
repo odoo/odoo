@@ -1266,6 +1266,41 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(sol.qty_delivered, -2)
         self.assertEqual(sol.order_id, sale_order)
 
+    def test_return_for_exchange_and_cancel_sol_qty(self):
+        """
+        SO, deliver, generate the return for exchange
+        Process the return
+        Then, SOL qty to 0
+        The new delivery should be canceled
+        """
+        warehouse = self.company_data['default_warehouse']
+        stock_location = warehouse.lot_stock_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        so = self._get_new_sale_order()
+        so.action_confirm()
+
+        delivery = so.picking_ids
+        delivery.move_ids.write({'quantity': 10, 'picked': True})
+        delivery.button_validate()
+
+        return_picking_form = Form(self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking'))
+        with return_picking_form.product_return_moves.edit(0) as line:
+            line.quantity = 10
+        return_wizard = return_picking_form.save()
+        res = return_wizard.action_create_exchanges()
+
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking.move_ids.write({'quantity': 10, 'picked': True})
+        return_picking.button_validate()
+
+        so.order_line.product_uom_qty = 0
+        self.assertRecordValues(so.picking_ids.move_ids.sorted(key='id'), [
+            {'location_id': stock_location.id, 'location_dest_id': customer_location.id, 'state': 'done'},
+            {'location_id': customer_location.id, 'location_dest_id': stock_location.id, 'state': 'done'},
+            {'location_id': stock_location.id, 'location_dest_id': customer_location.id, 'state': 'cancel'},
+        ])
+
     def test_return_multisteps_receipt(self):
         """test extra product returned are added to the sale order only once in 3 steps receipt"""
 
