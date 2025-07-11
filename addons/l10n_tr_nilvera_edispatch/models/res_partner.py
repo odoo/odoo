@@ -10,7 +10,7 @@ class ResPartner(models.Model):
         size=5,
     )
 
-    def _l10n_tr_nilvera_validate_partner_details(self, is_delivery_partner=False):
+    def _l10n_tr_nilvera_validate_partner_details(self):
         error_messages = {}
 
         for record in self:
@@ -27,7 +27,7 @@ class ResPartner(models.Model):
             if country_code == 'TR' and not record.vat:
                 missing_fields.append(_("TCKN/VKN"))
 
-            if (country_code == 'TR' or is_delivery_partner) and not record.zip:
+            if country_code == 'TR' and not record.zip:
                 missing_fields.append(_("ZIP"))
 
             if missing_fields:

@@ -98,15 +98,14 @@ class StockPicking(models.Model):
             }
         partners = (
             self.company_id.partner_id
+            | self.partner_id
             | self.l10n_tr_nilvera_carrier_id
             | self.l10n_tr_nilvera_buyer_id
             | self.l10n_tr_nilvera_seller_supplier_id
             | self.l10n_tr_nilvera_buyer_originator_id
         )
-        # `is_delivery_partner` ensures that Delivery Partner's ZIP is present regardless of the partner country.
-        error_messages = self.partner_id._l10n_tr_nilvera_validate_partner_details(is_delivery_partner=True)
-        partners = partners - self.partner_id
-        error_messages.update(partners._l10n_tr_nilvera_validate_partner_details())
+
+        error_messages = partners._l10n_tr_nilvera_validate_partner_details()
 
         if self.l10n_tr_nilvera_dispatch_type == 'MATBUDAN':
             if not self.l10n_tr_nilvera_delivery_date:
