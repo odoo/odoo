@@ -199,6 +199,17 @@ registry.category("web_tour.tours").add("FloatingOrderTour", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_tax_control_button_visiblity", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickReview(),
+            ProductScreen.clickControlButtonMore(),
+            negateStep(...ProductScreen.checkFiscalPositionButton()),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("FiscalPositionNoTax", {
     steps: () =>
         [

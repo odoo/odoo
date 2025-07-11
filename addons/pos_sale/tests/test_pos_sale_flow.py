@@ -1392,11 +1392,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'price_unit': product_a.lst_price,
             })]
         })
-        # Disable fiscal position in POS, it should works anyway.
         self.main_pos_config.write({
-            'tax_regime_selection': False,
+            'tax_regime_selection': True,
             'default_fiscal_position_id': False,
-            'fiscal_position_ids': [Command.clear()],
         })
         self.assertEqual(sale_a.fiscal_position_id, fp_1, "Sale order should have the fiscal position of the partner")
         self.assertEqual(sale_a.amount_total, 20, "Sale order amount should be 20 with the tax override 1")
