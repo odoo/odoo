@@ -77,6 +77,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
                 base_line['tax_details'][key] = new_base_line['tax_details'][key]
 
         vals['base_lines'] = base_lines
+        vals['base_lines'] = [base_line for base_line in base_lines if base_line['special_type'] != 'cash_rounding']
+        vals['cash_rounding_base_lines'] = [base_line for base_line in base_lines if base_line['special_type'] == 'cash_rounding']
 
     # -------------------------------------------------------------------------
     # EXPORT: Helpers
