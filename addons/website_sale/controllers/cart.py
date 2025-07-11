@@ -10,12 +10,12 @@ from odoo.tools.image import image_data_uri
 from odoo.tools.translate import _
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment.controllers.portal import PaymentPortal
 from odoo.addons.sale.controllers.portal import CustomerPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.checkout import Checkout
 
 
-class Cart(PaymentPortal):
+class Cart(Checkout):
 
     @route(route='/shop/cart', type='http', auth='public', website=True, sitemap=False)
     def cart(self, id=None, access_token=None, revive_method='', **post):
@@ -29,10 +29,9 @@ class Cart(PaymentPortal):
         :return: The rendered cart page.
         :rtype: str
         """
-        if not request.website.has_ecommerce_access():
-            return request.redirect('/web/login')
-
         order_sudo = request.cart
+        if redirection := self._chec_cart(order_sudo):
+            return redirection
 
         values = {}
         if id and access_token:
@@ -412,3 +411,23 @@ class Cart(PaymentPortal):
             infos['uom_name'] = line.product_uom_id.name
 
         return infos
+
+    # === CHECK METHODS === #
+
+    def _check_checkout_step(self, step_href, order_sudo):
+        if step_href == '/shop/cart' and (redirection := self._check_cart_ready(order_sudo)):
+            return redirection
+        return super()._check_checkout_step(step_href, order_sudo)
+
+    def _check_cart_ready(self, order_sudo):
+        if not order_sudo or order_sudo.state != 'draft':
+            request.session['sale_order_id'] = None
+            request.session['sale_transaction_id'] = None
+            return request.redirect('/shop')
+
+        if not order_sudo._is_cart_ready_for_checkout():
+            return request.redirect('/shop/cart')
+
+        # Check that public orders are allowed.
+        if request.env.user._is_public() and request.website.account_on_checkout == 'mandatory':
+            return request.redirect_query('/web/login', {'redirect': request.httprequest.full_path})
