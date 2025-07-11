@@ -2762,7 +2762,7 @@ describe("link", () => {
                 `<p>xy<a href="http://test.test/">[]</a>z</p>`
             );
             expect(getContent(el)).toBe(
-                `<p>xy\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff[]</a>\ufeffz</p>`
+                `<p>xy\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff[]\ufeff</a>\ufeffz</p>`
             );
             pasteText(editor, imgUrl);
             await animationFrame();
