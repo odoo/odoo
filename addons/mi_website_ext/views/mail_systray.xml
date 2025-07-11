@@ -1,0 +1,10 @@
+<odoo>
+    <template id="website_messaging_menu" name="Website Messaging Menu">
+        <li t-if="request.session.uid" class="o_no_autohide_menu">
+            <div class="o_mail_systray_item">
+                <i class="fa fa-comments" role="button" title="Mensajes"/>
+                <span class="o_notification_counter"/>
+            </div>
+        </li>
+    </template>
+    </odoo>

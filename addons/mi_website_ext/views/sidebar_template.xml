@@ -4,13 +4,14 @@
             <link rel="stylesheet" type="text/css" href="/mi_website_ext/static/src/css/sidebar.css" crossOrigin="anonymous"/>
             <link rel="stylesheet" type="text/css"
                 href="/mi_website_ext/static/src/css/tooltip_styles.css" crossOrigin="anonymous"/>
+            <t t-call-assets="mail.assets_messaging_systray" t-js="true" t-css="true"/>
+            <t t-call-assets="web.assets_core" t-js="true" t-css="false"/>
+            <t t-call-assets="bus.assets_core" t-js="true" t-css="false"/>
             <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous"/>
             <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
             <link
-                href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&amp;family=Rubik:ital,wght@0,300..900;1,300..900&amp;display=swap"
-                rel="stylesheet" crossOrigin="anonymous"/>
-            <t t-call-assets="web.assets_core" t-js="true" t-css="false"/>
-            <t t-call-assets="bus.assets_core" t-js="true" t-css="false"/>
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&amp;family=Roboto:ital,wght@0,100..900;1,100..900&amp;family=Rubik:ital,wght@0,300..900;1,300..900&amp;display=swap"
+    rel="stylesheet" crossOrigin="anonymous"/>
         </xpath>
         <xpath expr="//main" position="before">
             <t t-if="not hide_sidebar is defined">
@@ -33,12 +34,9 @@
                 <t t-set="hide_sidebar"
            t-value="current_path in exact_paths or any(current_path.startswith(p) for p in prefix_paths)" />
     </t>
-            <!--<div style="position: fixed; top: 60px; left: 10px; background: yellow; color: black; padding: 10px; z-index: 9999; border: 2px solid red; font-size: 14px; font-weight: bold;">
-        DEBUGGER: La variable 'hide_sidebar' es:
-                <t t-esc="hide_sidebar"/>
-            </div>-->
             <t t-if="request.website and request.session.uid and not hide_sidebar">
                 <t t-set="user" t-value="request.env.user" />
+                <t t-call="mi_website_ext.website_messaging_menu"/>
                 <div t-attf-class="company-theme-wrapper company-#{request.env.user.company_id.id}">
                     <div t-attf-class="company-theme-wrapper company-theme-#{request.env.user.company_id.id}">
                         <div class="three-column-layout">
