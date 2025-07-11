@@ -2,6 +2,7 @@ import { registry } from '@web/core/registry';
 import { post } from '@iot_base/network_utils/http';
 import { uuid } from "@web/core/utils/strings";
 import { _t } from '@web/core/l10n/translation';
+import {uniqueId} from "@web/core/utils/functions";
 
 export class IoTLongpolling {
     static serviceDependencies = ["notification", "orm"];
@@ -88,6 +89,47 @@ export class IoTLongpolling {
             data,
         };
         return this._rpcIoT(iot_ip, route || this.actionRoute, body, undefined, fallback);
+    }
+
+
+    /**
+     * Send a message to the IoT Box (action route)
+     * @param iotBoxIp IP Address of the IoT Box
+     * @param message Data to send to the device
+     * @param messageId Unique identifier for the message
+     * @param fallback If longpolling has a fallback option (e.g. websocket), do not display errors to the user
+     * @returns {Promise<*>} messageId if the request didn't throw an error
+     */
+    async sendMessage(iotBoxIp, message, messageId = null, fallback = false) {
+        messageId ??= uuid();
+        await this._rpcIoT(iotBoxIp, '/iot_drivers/action', { session_id: messageId, ...message }, undefined, fallback);
+
+        return messageId;
+    }
+
+    /**
+     * Listen for messages from the IoT Box (polling the IoT Box)
+     * @param iotBoxIp IP Address of the IoT Box
+     * @param iotDeviceIdentifier Identifier of the device connected to the IoT Box
+     * @param onSuccess Callback to run when a successful response is received (can return ``message``, ``deviceIdentifier``, and ``messageId``)
+     * @param onFailure Callback to run when the request fails (can return ``deviceIdentifier`` and ``messageId``)
+     */
+    onMessage(
+        iotBoxIp,
+        iotDeviceIdentifier,
+        onSuccess = (_message, _deviceIdentifier, _messageId) => {},
+        onFailure = (_message, _deviceIdentifier, _messageId) => {},
+    ) {
+        const listenerId = uniqueId('listener-');
+        const listenerCallback = (message) => {
+            this.removeListener(iotBoxIp, iotDeviceIdentifier, listenerId);
+            if (message.status === "success" || message.status?.status === "connected") { // 'connected' is the serial driver success status
+                onSuccess(message, iotDeviceIdentifier, listenerId);
+            } else {
+                onFailure(message, iotDeviceIdentifier, listenerId);
+            }
+        }
+        return this.addListener(iotBoxIp, [ iotDeviceIdentifier ], listenerId, listenerCallback, true);
     }
 
     /**
