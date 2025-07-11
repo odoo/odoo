@@ -60,16 +60,20 @@
                             class="badge bg-primary ms-1"/>
                     </button>
                     <div class="dropdown-menu">
-                        <span t-att-data-post="keep_event_url(tags=slugify_tags((search_tags - searched_category_tags).ids), prevent_redirect=True)"
+                        <t t-set="slugified_tags" t-value="slugify_tags((search_tags - searched_category_tags).ids)"/>
+                        <span t-att-data-post="keep_event_url(tags=slugified_tags, slug_tags=slugified_tags, prevent_redirect=True)"
                             t-attf-class="post_link cursor-pointer dropdown-item d-flex align-items-center justify-content-between #{'active' if not searched_category_tags else ''}">
                             All
                         </span>
                         <t t-foreach="category.tag_ids" t-as="tag">
-                            <span t-if="tag.color"
-                                t-att-data-post="keep_event_url(tags=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), prevent_redirect=True)"
-                                t-attf-class="post_link cursor-pointer dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
-                                <t t-out="tag.name"/>
-                            </span>
+                            <t t-if="tag.color">
+                                <t t-set="slugified_tags" t-value="slugify_tags(search_tags.ids, toggle_tag_id=tag.id)"/>
+                                <span
+                                    t-att-data-post="keep_event_url(tags=slugified_tags, slug_tags=slugified_tags, prevent_redirect=True)"
+                                    t-attf-class="post_link cursor-pointer dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
+                                    <t t-out="tag.name"/>
+                                </span>
+                            </t>
                         </t>
                     </div>
                 </div>

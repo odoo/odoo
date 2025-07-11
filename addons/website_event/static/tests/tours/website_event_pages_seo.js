@@ -39,3 +39,31 @@ registry.category("web_tour.tours").add("website_event_pages_seo", {
         },
     ],
 });
+
+registry.category("web_tour.tours").add("test_filters_persist_on_page_change_or_search", {
+    steps: () => [
+        {
+            trigger: '.btn[title="Filter by category"]:contains(Test Category)',
+            run: 'click'
+        },
+        {
+            trigger: '.post_link:contains(tag 1)',
+            run: 'click'
+        },
+        {
+            trigger: '.badge.bg-primary:contains(1)',
+        },
+        {
+            trigger: '.page-link:contains(2)',
+            run: 'click'
+        },
+        {
+            trigger: '.input-group .search-query.form-control',
+            run: 'edit Event 0 && click body',
+        },
+        {
+            trigger: '.badge.bg-primary:contains(1)',
+            run: () => {}
+        },
+    ],
+});
