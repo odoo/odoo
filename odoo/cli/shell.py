@@ -47,12 +47,15 @@ class Shell(Command):
             '-d', '--database', dest='db_name', default=None,
             help="database name, connection details will be taken from the config file")
         self.parser.add_argument(
+            '-co', '--config-override', nargs='+',
+            help="override configuration entries. See the Odoo configuration reference")
+        self.parser.add_argument(
             '--shell-file', default=os.environ.get('PYTHONSTARTUP'),
-            help="Specify a python script to be run after the start of the shell. "
+            help="specify a python script to be run after the start of the shell. "
                  "Overrides the env variable PYTHONSTARTUP.")
         self.parser.add_argument(
             '--shell-interface', choices=SHELLS,
-            help="Specify a preferred REPL to use in shell mode.")
+            help="specify a preferred REPL to use in shell mode.")
 
     @contextmanager
     def _build_env(self, dbname):
@@ -68,13 +71,15 @@ class Shell(Command):
     def run(self, cmdargs):
         parsed_args = self.parser.parse_args(args=cmdargs)
 
-        config_args = []
+        config_args, log_warnings = self._handle_config_override(parsed_args.config_override)
         if parsed_args.config:
             config_args += ['-c', parsed_args.config]
         if parsed_args.db_name:
             config_args += ['-d', parsed_args.db_name]
-
         config.parse_config(config_args, setup_logging=True)
+        for log_warning in log_warnings:
+            _logger.warning(*log_warning)
+
         cli_server.report_configuration()
 
         db_names = config['db_name']
