@@ -46,9 +46,7 @@ class AttachmentController(ThreadController):
     @http.route("/mail/attachment/upload", methods=["POST"], type="http", auth="public")
     @add_guest_to_context
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
-        thread = self._get_thread_with_access(
-            thread_model, thread_id, mode=request.env[thread_model]._mail_post_access, **kwargs
-        )
+        thread = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
         if not thread:
             raise NotFound()
         vals = {
