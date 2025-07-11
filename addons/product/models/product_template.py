@@ -1263,8 +1263,14 @@ class ProductTemplate(models.Model):
         line_index = 0
         # determines which ptav we're working on
         current_ptav = None
-
+        max_iterations = self.env['ir.config_parameter'].sudo().get_param('product.combination_limit', 200000)
+        count = 0
         while True:
+            count += 1
+            if count > max_iterations:
+                _logger.warning("'product.combination_limit' %s reached for product_template %s product_template_attribute_values_per_line %s parent_combination %s.",
+                                count, self.id, product_template_attribute_values_per_line, parent_combination)
+                break
             current_line_values = product_template_attribute_values_per_line[line_index]
             current_ptav_index = value_index_per_line[line_index]
 

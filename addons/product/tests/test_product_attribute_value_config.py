@@ -792,3 +792,15 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
             'price_extra'
         )
         self.assertEqual(extra_prices, copied_extra_prices)
+
+    def test_combination_infinite_loop(self):
+        """Test infinite-loop (while True) to get combinations"""
+        product_tmpls = self.env['product.template'].search([
+            ('attribute_line_ids.attribute_id.create_variant', '=', 'always'),
+            ('attribute_line_ids.product_template_value_ids', '!=', False)])
+        with self.assertLogs("odoo.addons.product.models.product_template", level="WARNING") as capture:
+            for product_tmpl in product_tmpls:
+                product_tmpl.attribute_line_ids.product_template_value_ids.unlink()
+                product_tmpl._get_first_possible_combination()
+        limit_warned = any("product.combination_limit" in rec.message for rec in capture.records)
+        self.assertTrue(limit_warned, "The combination was not stuck")
