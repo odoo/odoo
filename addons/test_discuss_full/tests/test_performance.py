@@ -50,10 +50,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: _init_messaging (discuss)
     #       - fetch discuss_channel_member (is_self)
     #       - _compute_message_unread
-    #   3: _init_messaging (mail)
+    #   4: _init_messaging (mail)
     #       - search bus_bus (_bus_last_id)
     #       - _get_needaction_count (inbox counter)
     #       - search mail_message (starred counter)
+    #           - _check_access
     #   23: _process_request_for_all (discuss):
     #       - search discuss_channel (channels_domain)
     #       22: channel add:
@@ -81,7 +82,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - _compute_message_needaction
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - fetch res_groups (group_public_id)
-    _query_count_init_messaging = 35
+    _query_count_init_messaging = 36
     # Queries for _query_count_discuss_channels (in order):
     #   1: insert res_device_log
     #   3: _search_is_member (for current user, first occurence _get_channels_as_member)
