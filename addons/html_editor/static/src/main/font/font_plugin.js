@@ -185,7 +185,7 @@ export class FontPlugin extends Plugin {
                 description: _t("Select font style"),
                 Component: FontSelector,
                 props: {
-                    getItems: () => fontItems,
+                    getItems: () => this.fontItems,
                     getDisplay: () => this.font,
                     onSelected: (item) => {
                         this.dependencies.dom.setTag({
@@ -307,6 +307,12 @@ export class FontPlugin extends Plugin {
         }
     }
 
+    get fontItems() {
+        return this.config.allowCustomStyle
+            ? fontItems.filter((n) => n.tagName !== "p")
+            : fontItems;
+    }
+
     get fontName() {
         const sel = this.dependencies.selection.getSelectionData().deepEditableSelection;
         // if (!sel) {
@@ -316,7 +322,7 @@ export class FontPlugin extends Plugin {
         const block = closestBlock(anchorNode);
         const tagName = block.tagName.toLowerCase();
 
-        const matchingItems = fontItems.filter((item) =>
+        const matchingItems = this.fontItems.filter((item) =>
             item.selector ? block.matches(item.selector) : item.tagName === tagName
         );
 

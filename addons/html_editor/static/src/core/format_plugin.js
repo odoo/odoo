@@ -145,7 +145,6 @@ export class FormatPlugin extends Plugin {
             {
                 id: "strikethrough",
                 groupId: "decoration",
-                namespaces: ["compact", "expanded"],
                 commandId: "formatStrikethrough",
                 isActive: isFormatted(this, "strikeThrough"),
             },
