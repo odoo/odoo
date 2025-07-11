@@ -1293,7 +1293,7 @@ def _optimize_any_domain(condition, model):
     """Make sure the value is an optimized domain (or Query or SQL)"""
     value = condition.value
     if isinstance(value, ANY_TYPES) and not isinstance(value, Domain):
-        if '!' not in condition.operator:
+        if condition.operator in ('any', 'not any'):
             # update operator to 'any!'
             return DomainCondition(condition.field_expr, condition.operator + '!', condition.value)
         return condition
@@ -1303,16 +1303,6 @@ def _optimize_any_domain(condition, model):
         # id ANY domain  <=>  domain
         # id NOT ANY domain  <=>  ~domain
         return domain if condition.operator in ('any', 'any!') else ~domain
-    # get the model to optimize with
-    try:
-        comodel = model.env[field.comodel_name]
-    except KeyError:
-        condition._raise("Cannot determine the comodel relation")
-    domain = domain._optimize(comodel, OptimizationLevel.BASIC)
-    # const if the domain is empty, the result is a constant
-    # if the domain is True, we keep it as is
-    if domain.is_false():
-        return _FALSE_DOMAIN if condition.operator in ('any', 'any!') else _TRUE_DOMAIN
     return DomainCondition(condition.field_expr, condition.operator, domain)
 
 
@@ -1329,13 +1319,17 @@ def _optimize_any_domain_at_level(level: OptimizationLevel, condition, model):
     except KeyError:
         condition._raise("Cannot determine the comodel relation")
     domain = domain._optimize(comodel, level)
+    # const if the domain is empty, the result is a constant
+    # if the domain is True, we keep it as is
+    if domain.is_false():
+        return _FALSE_DOMAIN if condition.operator in ('any', 'any!') else _TRUE_DOMAIN
     return DomainCondition(condition.field_expr, condition.operator, domain)
 
 
 [
     operator_optimization(('any', 'not any', 'any!', 'not any!'), level)(functools.partial(_optimize_any_domain_at_level, level))
     for level in OptimizationLevel
-    if level > OptimizationLevel.BASIC
+    if level > OptimizationLevel.NONE
 ]
 
 
