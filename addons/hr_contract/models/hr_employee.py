@@ -203,13 +203,19 @@ class Employee(models.Model):
         ])
         if not employee_contracts:
             return super()._get_unusual_days(date_from, date_to)
+
+        selected_contract = employee_contracts.filtered(lambda c: c.state == 'open')
+
+        if not selected_contract:
+            selected_contract = max(employee_contracts, key=lambda c: (c.create_date, c.id))
+
         unusual_days = {}
         date_from_date = datetime.strptime(date_from, '%Y-%m-%d %H:%M:%S').date()
         date_to_date = datetime.strptime(date_to, '%Y-%m-%d %H:%M:%S').date() if date_to else None
-        for contract in employee_contracts:
-            tmp_date_from = max(date_from_date, contract.date_start)
-            tmp_date_to = min(date_to_date, contract.date_end) if contract.date_end else date_to_date
-            unusual_days.update(contract.resource_calendar_id.sudo(False)._get_unusual_days(
+        if selected_contract:
+            tmp_date_from = max(date_from_date, selected_contract.date_start)
+            tmp_date_to = min(date_to_date, selected_contract.date_end) if selected_contract.date_end else date_to_date
+            unusual_days.update(selected_contract.resource_calendar_id.sudo(False)._get_unusual_days(
                 datetime.combine(fields.Date.from_string(tmp_date_from), time.min).replace(tzinfo=UTC),
                 datetime.combine(fields.Date.from_string(tmp_date_to), time.max).replace(tzinfo=UTC),
                 self.company_id,
@@ -307,13 +313,15 @@ class Employee(models.Model):
             return action
 
         target_contract = self.contract_id
-        if target_contract:
+        if target_contract.state == 'open' or \
+            (target_contract.state == 'draft' and target_contract.kanban_state == 'done'):
             action['res_id'] = target_contract.id
             return action
 
         target_contract = self.contract_ids.filtered(lambda c: c.state == 'draft')
-        if target_contract:
-            action['res_id'] = target_contract[0].id
+        latest_contract = max(target_contract, key=lambda c: (c.create_date, c.id), default=False)
+        if latest_contract:
+            action['res_id'] = latest_contract.id
             return action
 
         action['res_id'] = self.contract_ids[0].id
