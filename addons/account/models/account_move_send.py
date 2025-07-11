@@ -384,6 +384,7 @@ class AccountMoveSend(models.AbstractModel):
 
         company_id = next(iter(invoices_data)).company_id
         grouped_invoices_by_report = defaultdict(dict)
+        is_send_wizard = self._name == 'account.move.send.wizard'
         for invoice, invoice_data in invoices_data.items():
             grouped_invoices_by_report[invoice_data['pdf_report']][invoice] = invoice_data
 
@@ -400,8 +401,8 @@ class AccountMoveSend(models.AbstractModel):
                     'name': invoice._get_invoice_report_filename(),
                     'raw': content_by_id[invoice.id],
                     'mimetype': 'application/pdf',
-                    'res_model': invoice._name,
-                    'res_id': invoice.id,
+                    'res_model': 'mail.compose.message' if is_send_wizard and self.scheduled_date else invoice._name,
+                    'res_id': 0 if is_send_wizard and self.scheduled_date else invoice.id,
                     'res_field': 'invoice_pdf_report_file',  # Binary field
                 }
 
@@ -509,7 +510,8 @@ class AccountMoveSend(models.AbstractModel):
         # We must ensure the newly created PDF are added. At this point, the PDF has been generated but not added
         # to 'mail_attachments_widget'.
         mail_attachments_widget = move_data.get('mail_attachments_widget')
-        seen_attachment_ids = set()
+        generated_attachment_ids = set()
+        manual_attachment_ids = set()
         to_exclude = {x['name'] for x in mail_attachments_widget if x.get('skip')}
         for attachment_data in self._get_invoice_extra_attachments_data(move) + mail_attachments_widget:
             if attachment_data['name'] in to_exclude and not attachment_data.get('manual'):
@@ -520,19 +522,24 @@ class AccountMoveSend(models.AbstractModel):
             except ValueError:
                 continue
 
-            seen_attachment_ids.add(attachment_id)
+            if attachment_data.get('manual'):
+                manual_attachment_ids.add(attachment_id)
+                continue
+            generated_attachment_ids.add(attachment_id)
 
-        mail_attachments = [
+        generated_attachments_data = [
             (attachment.name, attachment.raw)
-            for attachment in self.env['ir.attachment'].browse(list(seen_attachment_ids)).exists()
+            for attachment in self.env['ir.attachment'].browse(list(generated_attachment_ids)).exists()
         ]
+        manual_attachments = self.env['ir.attachment'].browse(list(manual_attachment_ids)).exists()
 
         return {
             'author_id': move_data['author_partner_id'],
             'body': move_data['mail_body'],
             'subject': move_data['mail_subject'],
             'partner_ids': move_data['mail_partner_ids'],
-            'attachments': mail_attachments,
+            'attachments': generated_attachments_data,
+            'attachment_ids': manual_attachments.ids,
         }
 
     @api.model
