@@ -45,13 +45,12 @@ patch(Thread.prototype, {
                         (channel_notifications === "mentions" &&
                             message.recipients?.includes(this.store.self)))))
         ) {
-            if (this.model === "discuss.channel") {
+            if (!this.store.discuss.isActive && this.model === "discuss.channel") {
                 let chatWindow = this.store.ChatWindow.get({ thread: this });
                 if (!chatWindow) {
                     chatWindow = this.store.ChatWindow.insert({ thread: this });
                     if (
                         this.autoOpenChatWindowOnNewMessage &&
-                        !this.store.discuss.isActive &&
                         this.store.chatHub.opened.length < this.store.chatHub.maxOpened
                     ) {
                         chatWindow.open();

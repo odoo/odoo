@@ -12,7 +12,8 @@ import {
     step,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { Command, serverState, withUser, waitForSteps, asyncStep } from "@web/../tests/web_test_helpers";
+import { animationFrame } from "@odoo/hoot-mock";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -56,7 +57,7 @@ test("Receiving a new message out of discuss app should open a chat bubble", asy
     await contains(".o-mail-ChatBubble[name='Dumbledore']");
 });
 
-test("Receiving a new message in discuss app should open a chat bubble after leaving discuss app", async () => {
+test("No chat bubble after leaving discuss if message received while discuss is open", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -72,7 +73,7 @@ test("Receiving a new message in discuss app should open a chat bubble after lea
             step(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
-    await start();
+    const env = await start();
     await assertSteps([
         `/mail/data - ${JSON.stringify({
             init_messaging: {},
@@ -81,6 +82,9 @@ test("Receiving a new message in discuss app should open a chat bubble after lea
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
+    env.services.bus_service.subscribe("discuss.channel/new_message", () =>
+        asyncStep("discuss.channel/new_message")
+    );
     // send after init_messaging because bus subscription is done after init_messaging
     await openDiscuss();
     // simulate receiving new message
@@ -91,9 +95,12 @@ test("Receiving a new message in discuss app should open a chat bubble after lea
             thread_model: "discuss.channel",
         })
     );
+    await waitForSteps(["discuss.channel/new_message"]);
+    await contains(".o-mail-DiscussSidebarChannel-badge", { text: "1" });
     // leaving discuss.
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-ChatBubble[name='Dumbledore']");
+    await animationFrame();
+    await contains(".o-mail-ChatBubble[name='Dumbledore']", { count: 0 });
 });
 
 test("Posting a message in discuss app should not open a chat window after leaving discuss app", async () => {
