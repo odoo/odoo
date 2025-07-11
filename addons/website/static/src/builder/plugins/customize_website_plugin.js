@@ -35,6 +35,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "setPendingThemeRequests",
         "isPluginDestroyed",
         "reloadBundles",
+        "setViewsOnSave",
     ];
 
     resources = {
@@ -47,6 +48,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             RemoveFontAction,
             CustomizeButtonStyleAction,
             WebsiteConfigAction,
+            PreviewableWebsiteConfigAction,
             SelectTemplateAction,
         },
         color_combination_getters: withSequence(5, (el, actionParam) => {
@@ -56,11 +58,24 @@ export class CustomizeWebsitePlugin extends Plugin {
                 return `o_cc${getCSSVariableValue(combination, style)}`;
             }
         }),
+        save_handlers: this.onSave.bind(this),
     };
 
+    async onSave() {
+        if (this.viewsToEnableOnSave.size || this.viewsToDisableOnSave.size) {
+            await rpc("/website/theme_customize_data", {
+                is_view_data: true,
+                enable: [...this.viewsToEnableOnSave],
+                disable: [...this.viewsToDisableOnSave],
+                reset_view_arch: false,
+            });
+        }
+    }
     cache = {};
     activeRecords = {};
     activeTemplateViews = {};
+    viewsToEnableOnSave = new Set();
+    viewsToDisableOnSave = new Set();
     pendingViewRequests = new Set();
     pendingAssetRequests = new Set();
     /**
@@ -341,6 +356,38 @@ export class CustomizeWebsitePlugin extends Plugin {
         value.then((resolvedValue) => {
             this.activeRecords[record] = resolvedValue;
         });
+    }
+    setViewsOnSave(views, to_enable) {
+        const operations = views.map((view) => ({
+            view: view.startsWith("!") ? view.substring(1) : view,
+            toEnable: view.startsWith("!") ? !to_enable : to_enable,
+            wasEnabled: this.viewsToEnableOnSave.has(view),
+            wasDisabled: this.viewsToDisableOnSave.has(view),
+        }));
+        for (const op of operations) {
+            if (op.toEnable) {
+                this.viewsToEnableOnSave.add(op.view);
+                this.viewsToDisableOnSave.delete(op.view);
+            } else {
+                this.viewsToDisableOnSave.add(op.view);
+                this.viewsToEnableOnSave.delete(op.view);
+            }
+        }
+        return () => {
+            // "Undo" callback
+            for (const { view, wasEnabled, wasDisabled } of operations) {
+                if (wasEnabled) {
+                    this.viewsToEnableOnSave.add(view);
+                } else {
+                    this.viewsToEnableOnSave.delete(view);
+                }
+                if (wasDisabled) {
+                    this.viewsToDisableOnSave.add(view);
+                } else {
+                    this.viewsToDisableOnSave.delete(view);
+                }
+            }
+        };
     }
     isPluginDestroyed() {
         return this.isDestroyed;
@@ -683,6 +730,69 @@ export class WebsiteConfigAction extends BuilderAction {
             }
         }, 0);
         return def;
+    }
+}
+
+export class PreviewableWebsiteConfigAction extends BuilderAction {
+    static id = "previewableWebsiteConfig";
+    static dependencies = ["customizeWebsite", "history"];
+    setup() {
+        this.preview = true;
+    }
+    getPriority({ params }) {
+        return (params.previewClass || "")?.trim().split(/\s+/).filter(Boolean).length || 0;
+    }
+    isApplied({ editingElement: el, params }) {
+        if (params.previewClass === undefined || params.previewClass === "") {
+            return true;
+        }
+        return el.classList.contains(params.previewClass);
+    }
+    apply({ editingElement: el, isPreviewing, params }) {
+        if (params.previewClass) {
+            el.classList.add(params.previewClass);
+        }
+        if (!isPreviewing) {
+            const viewsToApply = params["views"] || [];
+            let undoApplyCallback;
+            const applyViewsAction = () => {
+                undoApplyCallback = this.dependencies.customizeWebsite.setViewsOnSave(
+                    viewsToApply,
+                    true
+                );
+            };
+            this.dependencies.history.applyCustomMutation({
+                apply: () => {
+                    applyViewsAction();
+                },
+                revert: () => {
+                    undoApplyCallback();
+                },
+            });
+        }
+    }
+    clean({ editingElement: el, isPreviewing, params }) {
+        if (params.previewClass) {
+            el.classList.remove(params.previewClass);
+        }
+        if (!isPreviewing) {
+            const viewsToClean = params["views"] || [];
+            let undoCleanCallback;
+            const cleanViewsAction = () => {
+                undoCleanCallback = this.dependencies.customizeWebsite.setViewsOnSave(
+                    viewsToClean,
+                    false
+                );
+            };
+            this.dependencies.history.applyCustomMutation({
+                apply: () => {
+                    cleanViewsAction();
+                },
+                revert: () => {
+                    undoCleanCallback();
+                },
+            });
+        }
     }
 }
 
