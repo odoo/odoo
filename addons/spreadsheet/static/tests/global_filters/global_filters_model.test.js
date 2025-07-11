@@ -2757,7 +2757,7 @@ test("Check boolean filter domain", async () => {
     expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
         `[("active", "!=", False)]`
     );
-    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: { operator: "not_set" } });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: { operator: "not set" } });
     expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
         `[("active", "=", False)]`
     );

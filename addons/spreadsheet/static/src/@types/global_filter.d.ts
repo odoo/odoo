@@ -61,7 +61,7 @@ declare module "@spreadsheet" {
         | DateRangeValue;
 
     interface SetValue {
-        operator: "set" | "not_set";
+        operator: "set" | "not set";
     }
 
     interface RelationIdsValue {
