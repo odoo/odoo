@@ -43,11 +43,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         """
         Test scenario of a product ordered through the portal.
         """
-        id_max = self.env['mail.message'].search([], order='id desc', limit=1)
-        if id_max:
-            id_max = id_max[0].id
-        else:
-            id_max = 0
+        id_max = self.env['mail.message'].sudo().search([], order='id desc', limit=1).id or 0
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.customer.id,
