@@ -1,7 +1,8 @@
-import { describe, test } from "@odoo/hoot";
-import { testEditor } from "../_helpers/editor";
+import { describe, expect, test } from "@odoo/hoot";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { toggleOrderedList, toggleUnorderedList, toggleCheckList } from "../_helpers/user_actions";
+import { expandToolbar } from "../_helpers/toolbar";
 
 describe("Mixed", () => {
     test("should turn an ordered list into an unordered list", async () => {
@@ -419,4 +420,17 @@ describe("Mixed", () => {
                     </ul>`),
         });
     });
+});
+
+test("should have list tool only if the block is content editable", async () => {
+    for (const [contenteditable, count] of [
+        [false, 0],
+        [true, 1],
+    ]) {
+        await setupEditor(
+            `<div contenteditable="${contenteditable}"><p><span contenteditable="true">ab[cde]fg</span></p></div>`
+        );
+        await expandToolbar();
+        expect(".btn[name='list_selector']").toHaveCount(count);
+    }
 });
