@@ -427,7 +427,7 @@ test("moving a protected node at an unprotected location, only remove should be 
     const lastStep = historySteps.at(-1);
     expect(lastStep.mutations.length).toBe(1);
     expect(lastStep.mutations[0].type).toBe("add");
-    expect(historyPlugin.idToNodeMap.get(lastStep.mutations[0].id)).toBe(a);
+    expect(historyPlugin.nodeMap.getNode(lastStep.mutations[0].id)).toBe(a);
     expect(getContent(el)).toBe(
         unformat(`
             <div data-oe-protected="true" contenteditable="false">
@@ -463,7 +463,7 @@ test("moving an unprotected node at a protected location, only add should be ign
     const lastStep = historySteps.at(-1);
     expect(lastStep.mutations.length).toBe(1);
     expect(lastStep.mutations[0].type).toBe("remove");
-    expect(historyPlugin.idToNodeMap.get(lastStep.mutations[0].id)).toBe(a);
+    expect(historyPlugin.nodeMap.getNode(lastStep.mutations[0].id)).toBe(a);
     expect(getContent(el)).toBe(
         unformat(`
             <div data-oe-protected="true" contenteditable="false">
@@ -573,8 +573,8 @@ test("protected plugin is robust against other plugins which can filter mutation
         isMutationRecordSavable(record) {
             if (
                 record.type === "childList" &&
-                record.removedNodes.length === 1 &&
-                [...record.removedNodes][0] === a
+                record.removedTrees.length === 1 &&
+                record.removedTrees[0].node === a
             ) {
                 // Artificially hide the removal of `a` node
                 return false;

@@ -116,18 +116,11 @@ export class ProtectedNodePlugin extends Plugin {
     }
 
     /**
-     * @param {MutationRecord} record
+     * @param {import("./history_plugin").HistoryMutationRecord} record
      * @return {boolean}
      */
     isMutationRecordSavable(record) {
-        if (record.type === "attributes") {
-            if (record.attributeName === "contenteditable") {
-                return (
-                    !this.protectedNodes.has(record.target) ||
-                    record.target.matches(UNPROTECTED_SELECTOR)
-                );
-            }
-        } else if (record.target.nodeType === Node.ELEMENT_NODE) {
+        if (record.type === "childList") {
             return !(
                 (this.protectedNodes.has(record.target) &&
                     !record.target.matches(UNPROTECTED_SELECTOR)) ||
