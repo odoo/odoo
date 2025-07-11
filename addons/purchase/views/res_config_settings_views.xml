@@ -37,6 +37,9 @@
                         <setting id="auto_receipt_reminder" help="Automatically remind the receipt date to your vendors">
                             <field name="group_send_reminder"/>
                         </setting>
+                        <setting id="manage_purchase_alternative" help="Link RFQs together and compare them">
+                            <field name="module_purchase_alternative"/>
+                        </setting>
                     </block>
                     <block title="Invoicing" name="invoicing_settings_container">
                         <setting id="three_way_matching" title="If enabled, activates 3-way matching on vendor bills : the items must be received in order to pay the invoice." documentation="/applications/inventory_and_mrp/purchase/manage_deals/control_bills.html" help="Make sure you only pay bills for which you received the goods you ordered">
