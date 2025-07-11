@@ -1,46 +1,35 @@
-import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
+import { Deferred } from "@web/core/utils/concurrency";
 import { EventBus } from "@odoo/owl";
 
-let multiTabId = 0;
-/**
- * This service uses a Master/Slaves with Leader Election architecture in
- * order to keep track of the main tab. Tabs are synchronized thanks to the
- * localStorage.
- *
- * localStorage used keys are:
- * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.lastPresenceByTab:
- *   mapping of tab ids to their last recorded presence.
- * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.main : id of the current
- *   main tab.
- * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.heartbeat : last main tab
- *   heartbeat time.
- *
- * trigger:
- * - become_main_tab : when this tab became the main.
- * - no_longer_main_tab : when this tab is no longer the main.
- * - shared_value_updated: when one of the shared values changes.
- */
 export const multiTabService = {
     start() {
+        const FAST_TIMEOUT = 1000;
+        const MASTER_TIMEOUT = 1500;
+        const JITTER = 1000;
+
         const bus = new EventBus();
+        const channel = new BroadcastChannel("master_election");
+        const id = generateUniqueId();
+        let unregistered = false;
+        let masterId = null;
+        let electionDeferred = new Deferred();
+        let lastHeardFromMaster = Date.now();
+        let electionTimeout;
+        let heartbeatCheckInterval;
+        let heartbeatInterval;
+        let fastElectTimeout;
 
-        // CONSTANTS
-        const TAB_HEARTBEAT_PERIOD = 10000; // 10 seconds
-        const MAIN_TAB_HEARTBEAT_PERIOD = 1500; // 1.5 seconds
-        const HEARTBEAT_OUT_OF_DATE_PERIOD = 5000; // 5 seconds
-        const HEARTBEAT_KILL_OLD_PERIOD = 15000; // 15 seconds
-        // Keys that should not trigger the `shared_value_updated` event.
-        const PRIVATE_LOCAL_STORAGE_KEYS = ["main", "heartbeat"];
+        window.addEventListener("pagehide", () => {
+            if (!unregistered && masterId === id) {
+                channel.postMessage({ type: "no_longer_main_tab", id: id });
+                bus.trigger("no_longer_main_tab");
+            }
+        });
 
-        // PROPERTIES
-        let _isOnMainTab = false;
-        let lastHeartbeat = 0;
-        let heartbeatTimeout;
         const sanitizedOrigin = location.origin.replace(/:\/{0,2}/g, "_");
         const localStoragePrefix = `${this.name}.${sanitizedOrigin}.`;
-        const now = new Date().getTime();
-        const tabId = `${this.name}${multiTabId++}:${now}`;
 
         function generateLocalStorageKey(baseKey) {
             return localStoragePrefix + baseKey;
@@ -59,83 +48,137 @@ export const multiTabService = {
             browser.localStorage.setItem(generateLocalStorageKey(key), JSON.stringify(value));
         }
 
-        function startElection() {
-            if (_isOnMainTab) {
-                return;
-            }
-            // Check who's next.
-            const now = new Date().getTime();
-            const lastPresenceByTab = getItemFromStorage("lastPresenceByTab", {});
-            const heartbeatKillOld = now - HEARTBEAT_KILL_OLD_PERIOD;
-            let newMain;
-            for (const [tab, lastPresence] of Object.entries(lastPresenceByTab)) {
-                // Check for dead tabs.
-                if (lastPresence < heartbeatKillOld) {
-                    continue;
-                }
-                newMain = tab;
-                break;
-            }
-            if (newMain === tabId) {
-                // We're next in queue. Electing as main.
-                lastHeartbeat = now;
-                setItemInStorage("heartbeat", lastHeartbeat);
-                setItemInStorage("main", true);
-                _isOnMainTab = true;
-                bus.trigger("become_main_tab");
-                // Removing main peer from queue.
-                delete lastPresenceByTab[newMain];
-                setItemInStorage("lastPresenceByTab", lastPresenceByTab);
+        function becomeMaster() {
+            clearAllTimeouts();
+            setMasterId(id);
+            channel.postMessage({ type: "become_main_tab", id: id });
+            bus.trigger("become_main_tab");
+            console.info("Multi-tab service: this tab is now the main tab.");
+            setHeartbeatInterval();
+        }
+
+        function connect() {
+            channel.postMessage({ type: "connect", id: id });
+            setFastElectTimeout();
+        }
+
+        function setFastElectTimeout() {
+            fastElectTimeout = setTimeout(() => {
+                becomeMaster();
+            }, FAST_TIMEOUT);
+        }
+
+        function clearAllTimeouts() {
+            clearTimeout(electionTimeout);
+            clearInterval(heartbeatCheckInterval);
+            clearInterval(heartbeatInterval);
+        }
+
+        function setMasterId(id) {
+            masterId = id;
+            if (electionDeferred) {
+                electionDeferred.resolve(id);
             }
         }
 
-        function heartbeat() {
-            const now = new Date().getTime();
-            let heartbeatValue = getItemFromStorage("heartbeat", 0);
-            const lastPresenceByTab = getItemFromStorage("lastPresenceByTab", {});
-            if (heartbeatValue + HEARTBEAT_OUT_OF_DATE_PERIOD < now) {
-                // Heartbeat is out of date. Electing new main.
-                startElection();
-                heartbeatValue = getItemFromStorage("heartbeat", 0);
+        function setElectionTimeout() {
+            clearTimeout(electionTimeout);
+            electionTimeout = setTimeout(() => {
+                becomeMaster();
+            }, JITTER);
+        }
+
+        function setHeartbeatCheckInterval() {
+            clearInterval(heartbeatCheckInterval);
+            heartbeatCheckInterval = setInterval(() => {
+                if (Date.now() - lastHeardFromMaster > MASTER_TIMEOUT + JITTER) {
+                    startElection();
+                }
+            }, MASTER_TIMEOUT);
+        }
+
+        function sendHeartbeat() {
+            lastHeardFromMaster = Date.now();
+            channel.postMessage({ type: "heartbeat", id: id });
+        }
+
+        function setHeartbeatInterval() {
+            clearInterval(heartbeatInterval);
+            channel.postMessage({ type: "heartbeat", id: id });
+            heartbeatInterval = setInterval(() => {
+                sendHeartbeat();
+            }, MASTER_TIMEOUT / 3);
+        }
+
+        function startElection() {
+            clearAllTimeouts();
+            electionDeferred = new Deferred();
+            channel.postMessage({ type: "election", id: id });
+            bus.trigger("election");
+            setElectionTimeout();
+            setHeartbeatCheckInterval();
+        }
+
+        function generateUniqueId() {
+            const randomSuffix = Math.floor(Math.random() * 1000);
+            const uid = `${Date.now()}${randomSuffix}`;
+            console.info(`Multi-tab service: generated unique ID for this tab: ${uid}`);
+            return uid;
+        }
+
+        function unregister() {
+            if (unregistered) {
+                return;
             }
-            if (_isOnMainTab) {
-                // Walk through all tabs and kill old ones.
-                const cleanedTabs = {};
-                for (const [tabId, lastPresence] of Object.entries(lastPresenceByTab)) {
-                    if (lastPresence + HEARTBEAT_KILL_OLD_PERIOD > now) {
-                        cleanedTabs[tabId] = lastPresence;
+            unregistered = true;
+            clearAllTimeouts();
+            if (masterId === id) {
+                channel.postMessage({ type: "no_longer_main_tab", id: id });
+                bus.trigger("no_longer_main_tab");
+            }
+        }
+
+        channel.onmessage = (e) => {
+            if (unregistered) {
+                return;
+            }
+            const msg = e.data;
+            if (msg.type === "heartbeat") {
+                lastHeardFromMaster = Date.now();
+                if (msg.id === masterId) {
+                    return;
+                } else if (!masterId) {
+                    setMasterId(msg.id);
+                    clearTimeout(fastElectTimeout);
+                } else if (masterId === id) {
+                    if (msg.id > masterId) {
+                        channel.postMessage({ type: "no_longer_main_tab", id: id });
+                        bus.trigger("no_longer_main_tab");
+                        masterId = msg.id;
+                        clearTimeout(heartbeatInterval);
+                        setHeartbeatCheckInterval();
                     }
                 }
-                if (heartbeatValue !== lastHeartbeat) {
-                    // Someone else is also main...
-                    // It should not happen, except in some race condition situation.
-                    _isOnMainTab = false;
-                    lastHeartbeat = 0;
-                    lastPresenceByTab[tabId] = now;
-                    setItemInStorage("lastPresenceByTab", lastPresenceByTab);
-                    bus.trigger("no_longer_main_tab");
+            } else if (msg.type === "election") {
+                lastHeardFromMaster = Date.now();
+                if (msg.id > id) {
+                    clearTimeout(electionTimeout);
+                    setHeartbeatCheckInterval();
+                    setMasterId(msg.id);
                 } else {
-                    lastHeartbeat = now;
-                    setItemInStorage("heartbeat", now);
-                    setItemInStorage("lastPresenceByTab", cleanedTabs);
+                    channel.postMessage({ type: "election", id: id });
+                    setElectionTimeout();
                 }
-            } else {
-                // Update own heartbeat.
-                lastPresenceByTab[tabId] = now;
-                setItemInStorage("lastPresenceByTab", lastPresenceByTab);
+            } else if (msg.type === "no_longer_main_tab") {
+                startElection();
+            } else if (msg.type === "connect") {
+                if (masterId === id) {
+                    sendHeartbeat();
+                }
             }
-            const hbPeriod = _isOnMainTab ? MAIN_TAB_HEARTBEAT_PERIOD : TAB_HEARTBEAT_PERIOD;
-            heartbeatTimeout = browser.setTimeout(heartbeat, hbPeriod);
-        }
+        };
 
         function onStorage({ key, newValue }) {
-            if (key === generateLocalStorageKey("main") && !newValue) {
-                // Main was unloaded.
-                startElection();
-            }
-            if (PRIVATE_LOCAL_STORAGE_KEYS.includes(key)) {
-                return;
-            }
             if (key && key.includes(localStoragePrefix)) {
                 // Only trigger the shared_value_updated event if the key is
                 // related to this service/origin.
@@ -144,52 +187,21 @@ export const multiTabService = {
             }
         }
 
-        /**
-         * Unregister this tab from the multi-tab service. It will no longer
-         * be able to become the main tab.
-         */
-        function unregister() {
-            clearTimeout(heartbeatTimeout);
-            const lastPresenceByTab = getItemFromStorage("lastPresenceByTab", {});
-            delete lastPresenceByTab[tabId];
-            setItemInStorage("lastPresenceByTab", lastPresenceByTab);
-
-            // Unload main.
-            if (_isOnMainTab) {
-                _isOnMainTab = false;
-                bus.trigger("no_longer_main_tab");
-                browser.localStorage.removeItem(generateLocalStorageKey("main"));
-            }
-        }
-
-        browser.addEventListener("pagehide", unregister);
         browser.addEventListener("storage", onStorage);
-
-        // REGISTER THIS TAB
-        const lastPresenceByTab = getItemFromStorage("lastPresenceByTab", {});
-        lastPresenceByTab[tabId] = now;
-        setItemInStorage("lastPresenceByTab", lastPresenceByTab);
-
-        if (!getItemFromStorage("main")) {
-            startElection();
-        }
-        heartbeat();
+        connect();
+        setHeartbeatCheckInterval();
 
         return {
             bus,
             get currentTabId() {
-                return tabId;
+                return id;
             },
-            /**
-             * Determine whether or not this tab is the main one.
-             *
-             * @returns {boolean}
-             */
-            isOnMainTab() {
-                return _isOnMainTab;
-            },
-            get isOnLastTab() {
-                return Object.keys(getItemFromStorage("lastPresenceByTab", {})).length === 0; // Main tab is not included.
+            async isOnMainTab() {
+                if (masterId) {
+                    return masterId === id;
+                }
+                await electionDeferred;
+                return masterId === id;
             },
             /**
              * Get value shared between all the tabs.

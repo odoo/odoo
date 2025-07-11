@@ -27,7 +27,7 @@ export class DiscussCoreWeb {
                 { user: username }
             );
             this.notificationService.add(notification, { type: "info" });
-            if (!this.multiTab.isOnMainTab()) {
+            if (!(await this.multiTab.isOnMainTab())) {
                 return;
             }
             const chat = await this.store.getChat({ partnerId });

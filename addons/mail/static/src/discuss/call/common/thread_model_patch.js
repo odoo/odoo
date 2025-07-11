@@ -52,7 +52,7 @@ const ThreadPatch = {
                 this.store.env.services["discuss.rtc"].deleteSession(r.id);
             },
             /** @this {import("models").Thread} */
-            onUpdate() {
+            async onUpdate() {
                 const hadSelfSession = this.hadSelfSession;
                 const lastSessionIds = this.lastSessionIds;
                 this.hadSelfSession = Boolean(this.store.rtc.selfSession?.in(this.rtc_session_ids));
@@ -60,7 +60,7 @@ const ThreadPatch = {
                 if (
                     !hadSelfSession || // sound for self-join is played instead
                     !this.hadSelfSession || // sound for self-leave is played instead
-                    !this.store.env.services["multi_tab"].isOnMainTab() // another tab playing sound
+                    !(await this.store.env.services["multi_tab"].isOnMainTab()) // another tab playing sound
                 ) {
                     return;
                 }
