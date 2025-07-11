@@ -585,6 +585,7 @@ class TestComposerForm(TestMailComposer):
                 form.template_id = template_no_subject
                 self.assertEqual(form.subject, template_complete.subject, "subject should be kept unchanged")
 
+
 @tagged('mail_composer')
 class TestComposerInternals(TestMailComposer):
 
@@ -601,7 +602,7 @@ class TestComposerInternals(TestMailComposer):
             'attachment_ids': False,
             'report_template_ids': False,
         })
-        attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])
+        attachs = self.env['ir.attachment'].sudo().search([('name', 'in', [a['name'] for a in attachment_data])])
         self.assertEqual(len(attachs), 3)
         extra_attach = self.env['ir.attachment'].create({
             'datas': base64.b64encode(b'ExtraData'),
@@ -1873,7 +1874,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
             'partner_to': '%s, {{ object.customer_id.id if object.customer_id else "" }}' % self.partner_admin.id,
             'report_template_ids': [(6, 0, (self.test_report + self.test_report_2).ids)],
         })
-        attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])
+        attachs = self.env['ir.attachment'].sudo().search([('name', 'in', [a['name'] for a in attachment_data])])
         self.assertEqual(len(attachs), 2)
 
         for batch_mode, scheduled_date, email_layout_xmlid, reply_to, use_lang in product(
@@ -2209,7 +2210,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
             'mail_server_id': False,  # let it find a server
             'partner_to': '%s, {{ object.customer_id.id if object.customer_id else "" }}' % self.partner_admin.id,
         })
-        attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])
+        attachs = self.env['ir.attachment'].sudo().search([('name', 'in', [a['name'] for a in attachment_data])])
         self.assertEqual(len(attachs), 2)
 
         for batch, companies, expected_companies, expected_alias_domains in [
@@ -2934,7 +2935,7 @@ class TestComposerResultsMass(TestMailComposer):
             'partner_to': '%s, {{ object.customer_id.id if object.customer_id else "" }}' % self.partner_admin.id,
             'report_template_ids': [(6, 0, self.test_report.ids)],
         })
-        attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])
+        attachs = self.env['ir.attachment'].sudo().search([('name', 'in', [a['name'] for a in attachment_data])])
         self.assertEqual(len(attachs), 2)
 
         # ensure initial data
@@ -3131,7 +3132,7 @@ class TestComposerResultsMass(TestMailComposer):
             'mail_server_id': False,  # let it find a server
             'partner_to': '%s, {{ object.customer_id.id if object.customer_id else "" }}' % self.partner_admin.id,
         })
-        attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])
+        attachs = self.env['ir.attachment'].sudo().search([('name', 'in', [a['name'] for a in attachment_data])])
         self.assertEqual(len(attachs), 2)
 
         for companies, expected_companies, expected_alias_domains in [
