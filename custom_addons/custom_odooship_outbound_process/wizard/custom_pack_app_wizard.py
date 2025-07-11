@@ -621,7 +621,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "customer_name": line.picking_id.partner_id.name or "",
                  "shipping_address": f"{line.picking_id.partner_id.name or ''}, {line.picking_id.partner_id.street or ''}, "
                                      f"{line.picking_id.partner_id.street2 or ''}, {line.picking_id.partner_id.city or ''}, "
-                                     f"{line.picking_id.partner_id.state_id.name if line.picking_id.partner_id.state_id else ''}, "
+                                     f"{line.picking_id.partner_id.state_id.code if line.picking_id.partner_id.state_id else ''}, "
                                      f"{line.picking_id.partner_id.country_id.code if line.picking_id.partner_id.country_id else ''}, "
                                      f"{line.picking_id.partner_id.zip or ''}",
                 "customer_email": line.picking_id.partner_id.email,
@@ -719,7 +719,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "customer_name": line.picking_id.partner_id.name or "",
                 "shipping_address": f"{line.picking_id.partner_id.name or ''}, {line.picking_id.partner_id.street or ''}, "
                                      f"{line.picking_id.partner_id.street2 or ''}, {line.picking_id.partner_id.city or ''}, "
-                                     f"{line.picking_id.partner_id.state_id.name if line.picking_id.partner_id.state_id else ''}, "
+                                     f"{line.picking_id.partner_id.state_id.code if line.picking_id.partner_id.state_id else ''}, "
                                      f"{line.picking_id.partner_id.country_id.code if line.picking_id.partner_id.country_id else ''}, "
                                      f"{line.picking_id.partner_id.zip or ''}",
                 "customer_email": line.picking_id.partner_id.email,
