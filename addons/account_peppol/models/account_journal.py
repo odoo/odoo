@@ -27,7 +27,7 @@ class AccountJournal(models.Model):
         super().button_fetch_in_einvoices()
         edi_users = self.env['account_edi_proxy_client.user'].search([
             ('company_id.account_peppol_proxy_state', '=', 'receiver'),
-            ('company_id', 'in', self.company_id.ids),
+            ('company_id', 'in', self.company_id._get_peppol_company().ids),
             ('proxy_type', '=', 'peppol')
         ])
         edi_users._peppol_get_new_documents()
@@ -38,7 +38,7 @@ class AccountJournal(models.Model):
         can_send = self.env['account_edi_proxy_client.user']._get_can_send_domain()
         edi_users = self.env['account_edi_proxy_client.user'].search([
             ('company_id.account_peppol_proxy_state', 'in', can_send),
-            ('company_id', 'in', self.company_id.ids),
+            ('company_id', 'in', self.company_id._get_peppol_company().ids),
             ('proxy_type', '=', 'peppol')
         ])
         edi_users._peppol_get_message_status()
