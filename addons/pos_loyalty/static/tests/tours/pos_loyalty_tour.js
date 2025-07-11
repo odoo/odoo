@@ -630,3 +630,13 @@ registry.category("web_tour.tours").add("test_refund_does_not_decrease_points", 
             PaymentScreen.clickValidate(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_scan_loyalty_card_select_customer", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            scan_barcode("0444-e050-4548"),
+            ProductScreen.customerIsSelected("Test Partner"),
+        ].flat(),
+});
