@@ -34,63 +34,6 @@
     </div>
 </template>
 
-<template id="s_accordion_options" inherit_id="website.snippet_options">
-    <xpath expr="." position="inside">
-        <div data-js="Accordion" data-selector=".s_accordion" data-target=".accordion">
-            <we-select string="Style">
-                <we-button title="Boxed" data-name="accordion_style_boxed_opt" data-select-class="">Boxed</we-button>
-                <we-button title="Highlight Active" data-select-class="s_accordion_highlight">Highlight Active</we-button>
-            </we-select>
-            <we-checkbox string="Hide Borders" class="o_we_sublevel_1" data-select-class="accordion-flush" data-dependencies="accordion_style_boxed_opt"/>
-            <we-input string="Round Corners" class="o_we_sublevel_1"
-                data-css-property="--accordion-border-radius"
-                data-unit="px"
-                data-select-style="0"
-                data-apply-to=".accordion-item"
-                />
-            <we-select string="Icons">
-                <we-button title="Default" data-custom-icon="" data-select-class="">Default</we-button>
-                <we-button title="Side / bottom" data-custom-icon="" data-select-class="o_icons_side_to_bottom">Side / bottom</we-button>
-                <we-button title="Plus / minus" data-custom-icon="plusToMinus" data-select-class="o_custom_icons o_icons_plus_to_minus">Plus / minus</we-button>
-                <we-button title="Custom" data-custom-icon="custom" data-select-icons="true" data-select-class="o_custom_icons" data-name="accordion_icons_custom_opt">Custom</we-button>
-            </we-select>
-            <we-row string="Active" class="o_we_sublevel_1">
-                <we-button data-dependencies="accordion_icons_custom_opt" data-define-custom-icon="true" data-custom-active-icon="true" data-no-preview="true">
-                    <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
-                </we-button>
-            </we-row>
-            <we-row string="Inactive" class="o_we_sublevel_1">
-                <we-button data-dependencies="accordion_icons_custom_opt" data-define-custom-icon="true" data-custom-active-icon="false" data-no-preview="true">
-                    <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
-                </we-button>
-            </we-row>
-            <we-select string="Transition" data-dependencies="accordion_icons_custom_opt" class="o_we_sublevel_1">
-                <we-button title="None" data-select-class="">None</we-button>
-                <we-button title="Fade" data-select-class="o_transition o_transition_fade">Fade</we-button>
-                <we-button title="Scale" data-select-class="o_transition o_transition_scale">Scale</we-button>
-                <we-button title="Translate" data-select-class="o_transition o_transition_translate">Translate</we-button>
-            </we-select>
-            <we-button-group string="Position" data-apply-to=".accordion-header" class="o_we_sublevel_1">
-                <we-button title="Left" data-select-class="justify-content-end flex-row-reverse o_icons_position_reversed"
-                    data-img="/website/static/src/img/snippets_options/pos_left.svg"/>
-                <we-button title="Right" data-select-class="justify-content-between"
-                    data-img="/website/static/src/img/snippets_options/pos_right.svg"/>
-            </we-button-group>
-        </div>
-        <div data-selector=".s_accordion .accordion-item">
-            <we-colorpicker string="Colors"
-                data-select-style="true"
-                data-css-property="background-color"
-                data-color-prefix="bg-"
-                data-select-color-combination=""
-                data-with-combinations="selectColorCombination"
-                data-with-gradients="true"
-                data-prevent-important="true"
-            />
-        </div>
-    </xpath>
-</template>
-
 <record id="website.s_accordion_000_scss" model="ir.asset">
     <field name="name">Accordion 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>
