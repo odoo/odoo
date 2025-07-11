@@ -40,7 +40,7 @@ class AccountMoveSendBatchWizard(models.TransientModel):
             edi_counter = Counter()
             sending_method_counter = Counter()
 
-            for move in wizard.move_ids:
+            for move in wizard.move_ids._origin:
                 edi_counter += Counter([edi for edi in self._get_default_extra_edis(move)])
                 sending_settings = self._get_default_sending_settings(move)
                 sending_method_counter += Counter([
@@ -60,8 +60,8 @@ class AccountMoveSendBatchWizard(models.TransientModel):
     @api.depends('summary_data')
     def _compute_alerts(self):
         for wizard in self:
-            moves_data = {move: self._get_default_sending_settings(move) for move in wizard.move_ids}
-            wizard.alerts = self._get_alerts(wizard.move_ids, moves_data)
+            moves_data = {move: self._get_default_sending_settings(move) for move in wizard.move_ids._origin}
+            wizard.alerts = self._get_alerts(wizard.move_ids._origin, moves_data)
 
     # -------------------------------------------------------------------------
     # CONSTRAINS
