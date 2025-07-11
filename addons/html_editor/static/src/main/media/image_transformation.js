@@ -37,6 +37,10 @@ export class ImageTransformation extends Component {
         image: { validate: (p) => p.tagName === "IMG" },
         destroy: { type: Function },
         onChange: { type: Function },
+        onComponentMounted: { type: Function, optional: true },
+    };
+    static defaultProps = {
+        onComponentMounted: () => {},
     };
 
     setup() {
@@ -49,9 +53,15 @@ export class ImageTransformation extends Component {
         this.computeImageTransformations();
         onMounted(() => {
             this.positionTransfoContainer();
+            this.props.onComponentMounted();
         });
         useExternalListener(window, "mousemove", this.mouseMove);
         useExternalListener(window, "mouseup", this.mouseUp);
+        if (this.document.defaultView.frameElement) {
+            const iframeWindow = this.document.defaultView;
+            useExternalListener(iframeWindow, "mousemove", this.mouseMove);
+            useExternalListener(iframeWindow, "mouseup", this.mouseUp);
+        }
         // When a character key is pressed and the image gets deleted,
         // close the image transform via selectionchange.
         useExternalListener(this.document, "selectionchange", () => this.props.destroy());
@@ -336,7 +346,6 @@ export class ImageTransformation extends Component {
             return { top: 0, left: 0 };
         } else {
             const rect = target.getBoundingClientRect();
-            const win = target.ownerDocument.defaultView;
             const frameElement = target.ownerDocument.defaultView.frameElement;
             const offset = { top: 0, left: 0 };
             if (frameElement) {
@@ -345,8 +354,8 @@ export class ImageTransformation extends Component {
                 offset.top += frameRect.top;
             }
             return {
-                top: rect.top + win.pageYOffset + offset.top,
-                left: rect.left + win.pageXOffset + offset.left,
+                top: rect.top + window.pageYOffset + offset.top,
+                left: rect.left + window.pageXOffset + offset.left,
             };
         }
     }
