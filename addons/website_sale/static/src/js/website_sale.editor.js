@@ -7,6 +7,7 @@ import options from "@web_editor/js/editor/snippets.options";
 import "@website/js/editor/snippets.options";
 import { useChildSubEnv } from "@odoo/owl";
 import weUtils from '@web_editor/js/common/utils';
+import wSaleUtils from "@website_sale/js/website_sale_utils";
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
@@ -645,28 +646,6 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         image.dispatchEvent(new Event('dblclick', {bubbles: true}));
     },
 
-    _getSelectedVariantValues($container) {
-        const combination = $container.find('input.js_product_change:checked').data('combination');
-
-        if (combination) {
-            return combination;
-        }
-        const values = [];
-
-        const variantsValuesSelectors = [
-            'input.js_variant_change:checked',
-            'select.js_variant_change'
-        ];
-        $container
-            .find(variantsValuesSelectors.join(", "))
-            .toArray()
-            .forEach((el) => {
-                values.push(+$(el).val());
-            });
-
-        return values;
-    },
-
     /**
      * Prompts the user for images, then saves the new images.
      */
@@ -703,7 +682,9 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
                     type: type,
                     product_product_id: this.productProductID,
                     product_template_id: this.productTemplateID,
-                    combination_ids: this._getSelectedVariantValues(this.$target.find('.js_add_cart_variants')),
+                    combination_ids: wSaleUtils.getSelectedAttributeValues(
+                        this.$target.find('.js_add_cart_variants')[0]
+                    ),
                 }).then(() => {
                     this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector});
                 });
@@ -773,7 +754,9 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             model: this.mode,
             product_product_id: this.productProductID,
             product_template_id: this.productTemplateID,
-            combination_ids: this._getSelectedVariantValues(this.$target.find('.js_add_cart_variants')),
+            combination_ids: wSaleUtils.getSelectedAttributeValues(
+                this.$target.find('.js_add_cart_variants')[0]
+            ),
         }).then(() => {
             this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector});
         });
