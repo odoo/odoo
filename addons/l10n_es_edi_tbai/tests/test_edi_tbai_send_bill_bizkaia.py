@@ -14,7 +14,7 @@ class TestSendBillEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
 
         self.assertEqual(bill.l10n_es_tbai_state, 'to_send')
         self.assertFalse(bill.l10n_es_tbai_chain_index)
-        self.assertFalse(bill.l10n_es_tbai_post_document_id.xml_attachment_id)
+        self.assertFalse(bill.l10n_es_tbai_post_document_id.xml_attachment_bin)
 
         with patch(
             'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
@@ -25,10 +25,10 @@ class TestSendBillEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
         self.assertEqual(bill.l10n_es_tbai_state, 'sent')
         # No chain index for vendor bills
         self.assertFalse(bill.l10n_es_tbai_chain_index)
-        self.assertTrue(bill.l10n_es_tbai_post_document_id.xml_attachment_id)
+        self.assertTrue(bill.l10n_es_tbai_post_document_id.xml_attachment_bin)
 
         self.assertEqual(bill.state, 'posted')
-        self.assertFalse(bill.l10n_es_tbai_cancel_document_id.xml_attachment_id)
+        self.assertFalse(bill.l10n_es_tbai_cancel_document_id.xml_attachment_bin)
 
         with patch(
             'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
@@ -38,7 +38,7 @@ class TestSendBillEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
 
         self.assertEqual(bill.l10n_es_tbai_state, 'cancelled')
         self.assertEqual(bill.state, 'cancel')
-        self.assertTrue(bill.l10n_es_tbai_cancel_document_id.xml_attachment_id)
+        self.assertTrue(bill.l10n_es_tbai_cancel_document_id.xml_attachment_bin)
 
     def test_post_bill_tbai_failure(self):
         bill = self._create_posted_bill()
