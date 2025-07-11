@@ -12,7 +12,7 @@ from io import BytesIO
 from os.path import join as opj
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessDenied, AccessError, UserError
+from odoo.exceptions import AccessDenied, AccessError, RedirectWarning, UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import MANIFEST_NAMES, Manifest
@@ -430,6 +430,37 @@ class IrModuleModule(models.Model):
         self.search([('imported', '=', True), ('state', '=', 'to upgrade')]).state = 'installed'
         return res
 
+    def is_major_version_different(self, zip_data):
+        if not self.env.is_admin():
+            raise AccessError(_("Only administrators can install data modules."))
+        if not zip_data:
+            raise Exception(_("No file sent."))
+        if not zipfile.is_zipfile(zip_data):
+            raise UserError(_('Only zip files are supported.'))
+
+        with zipfile.ZipFile(zip_data, "r") as z:
+            with file_open_temporary_directory(self.env) as module_dir:
+                manifest_files = sorted(
+                    (file.filename.split('/')[0], file)
+                    for file in z.infolist()
+                    if file.filename.count('/') == 1
+                    and file.filename.split('/')[1] in MANIFEST_NAMES
+                )
+                IrModule = self.env['ir.module.module']
+                for mod_name, manifest in manifest_files:
+                    z.extract(manifest, module_dir)
+                    terp = Manifest._from_path(opj(module_dir, mod_name), env=self.env)
+                    if not terp:
+                        continue
+                    installed_mod = IrModule.search([('name', '=', mod_name)])
+                    if not installed_mod:
+                        continue
+                    installed_version = int(installed_mod.installed_version.split('.')[2])
+                    latest_version = int(terp.version.split('.')[2])
+                    if installed_version != latest_version:
+                        return True
+        return False
+
     def button_immediate_install_app(self):
         if not self.env.is_admin():
             raise AccessDenied()
@@ -449,7 +480,7 @@ class IrModuleModule(models.Model):
                 'state': 'init',
                 'modules_dependencies': missing_dependencies_description,
             })
-            return {
+            IMPORT_ACTION = {
                 'name': _("Install an Industry"),
                 'view_mode': 'form',
                 'target': 'new',
@@ -458,6 +489,13 @@ class IrModuleModule(models.Model):
                 'type': 'ir.actions.act_window',
                 'context': {'data_module': True}
             }
+            if self.is_major_version_different(resp.content):
+                raise RedirectWarning(
+                    _("A new version is available!\n\nHowever upgrade script is not yet available to upgrade to new version.\nProceeding may break some data in your modules."),
+                    IMPORT_ACTION,
+                    _('Upgrade')
+                )
+            return IMPORT_ACTION
         except requests.exceptions.HTTPError:
             raise UserError(_('The module %s cannot be downloaded') % module_name)
         except requests.exceptions.ConnectionError:
