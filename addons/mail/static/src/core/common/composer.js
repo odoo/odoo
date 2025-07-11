@@ -36,6 +36,8 @@ import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/featur
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useComposerActions } from "./composer_actions";
+import { Wysiwyg } from "@html_editor/wysiwyg";
+import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "./plugin/plugin_sets";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
@@ -62,6 +64,7 @@ export class Composer extends Component {
         DropdownItem,
         FileUploader,
         NavigableList,
+        Wysiwyg,
     };
     static defaultProps = {
         mode: "normal",
@@ -104,8 +107,15 @@ export class Composer extends Component {
             { composer: this.props.composer }
         );
         this.ui = useService("ui");
-        this.ref = useRef("textarea");
-        this.fakeTextarea = useRef("fakeTextarea");
+        this.composerState = useService("mail.composer_state_service");
+        this.wysiwyg = {
+            config: this.wysiwygConfigs,
+            editor: undefined,
+        };
+        if (!this.composerState.htmlEnabled) {
+            this.ref = useRef("textarea");
+            this.fakeTextarea = useRef("fakeTextarea");
+        }
         this.inputContainerRef = useRef("input-container");
         this.pickerContainerRef = useRef("picker-container");
         this.state = useState({
@@ -167,7 +177,7 @@ export class Composer extends Component {
         useChildSubEnv({ inComposer: true });
         useEffect(
             (focus) => {
-                if (focus && this.ref.el) {
+                if (focus && this.ref?.el) {
                     this.selection.restore();
                     this.ref.el.focus();
                 }
@@ -184,7 +194,7 @@ export class Composer extends Component {
         );
         useEffect(
             () => {
-                if (this.fakeTextarea.el.scrollHeight) {
+                if (this.fakeTextarea?.el.scrollHeight) {
                     let wasEmpty = false;
                     if (!this.fakeTextarea.el.value) {
                         wasEmpty = true;
@@ -197,7 +207,7 @@ export class Composer extends Component {
                 }
                 this.saveContentDebounced();
             },
-            () => [this.props.composer.text, this.ref.el]
+            () => [this.props.composer.text, this.ref?.el]
         );
         useEffect(
             () => {
@@ -210,7 +220,7 @@ export class Composer extends Component {
             () => [this.props.composer.forceCursorMove]
         );
         onMounted(() => {
-            this.ref.el.scrollTo({ top: 0, behavior: "instant" });
+            this.ref?.el.scrollTo({ top: 0, behavior: "instant" });
             if (!this.props.composer.text) {
                 this.restoreContent();
             }
@@ -249,6 +259,25 @@ export class Composer extends Component {
 
     get showQuickAction() {
         return true;
+    }
+
+    get wysiwygConfigs() {
+        return {
+            content: markup("<p><br></p>"),
+            Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
+            classList: ["o-mail-Composer-input", "o-mail-Composer-inputStyle"],
+            onChange: this.onChange.bind(this),
+            onBlur: this.onBlurWysiwyg.bind(this),
+        };
+    }
+    onLoadWysiwyg(editor) {
+        this.wysiwyg.editor = editor;
+    }
+    onChange() {
+        this.props.composer.body = markup(this.wysiwyg.editor.getContent());
+    }
+    onBlurWysiwyg() {
+        this.props.composer.body = markup(this.wysiwyg.editor.getContent());
     }
 
     onClickCancelOrSaveEditText(ev) {
@@ -672,7 +701,7 @@ export class Composer extends Component {
             }
             this.clear();
             this.state.active = true;
-            this.ref.el?.focus();
+            this.ref?.el?.focus();
         }
     }
 
