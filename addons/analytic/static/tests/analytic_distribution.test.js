@@ -66,13 +66,14 @@ class Plan extends models.Model {
     color = fields.Integer({ string: "Color" });
     all_account_count = fields.Integer();
     parent_id = fields.Many2one({ relation: "account.analytic.plan" });
+    column_name = fields.Char();
     _records = [
-        { id: 1, name: "Internal", applicability: "optional", all_account_count: 2 },
-        { id: 2, name: "Departments", applicability: "mandatory", all_account_count: 3 },
-        { id: 3, name: "Projects", applicability: "optional" },
-        { id: 4, name: "Hidden", applicability: "unavailable", all_account_count: 1 },
-        { id: 5, name: "Country", applicability: "optional", all_account_count: 3 },
-        { id: 6, name: "City", applicability: "optional", all_account_count: 2, parent_id: 5 },
+        { id: 1, name: "Internal", applicability: "optional", all_account_count: 2, column_name: 'x_plan1_id' },
+        { id: 2, name: "Departments", applicability: "mandatory", all_account_count: 3, column_name: 'x_plan2_id' },
+        { id: 3, name: "Projects", applicability: "optional", column_name: 'account_id' },
+        { id: 4, name: "Hidden", applicability: "unavailable", all_account_count: 1, column_name: 'x_plan4_id' },
+        { id: 5, name: "Country", applicability: "optional", all_account_count: 3, column_name: 'x_plan5_id' },
+        { id: 6, name: "City", applicability: "optional", all_account_count: 2, parent_id: 5, column_name: 'x_plan5_id' },
     ];
 }
 

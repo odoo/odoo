@@ -32,7 +32,13 @@
                     <thead>
                         <tr class="border-bottom">
                             <th t-foreach="allPlans" t-as="plan" t-key="plan.id">
-                                <span t-out="plan.name"/> (<span t-att-class="totals[plan.id].class" t-out="totals[plan.id].formattedValue"/>)
+                                <t t-if="props.multi_edit">
+                                    <a t-if="state.update_plan[plan.column_name]" t-on-click="() => state.update_plan[plan.column_name] = false" href="#">Don't update</a>
+                                    <a t-else="" t-on-click="() => state.update_plan[plan.column_name] = true" href="#">Update</a>
+                                    <br/>
+                                </t>
+                                <span t-out="plan.name"/>
+                                <t t-if="state.update_plan[plan.column_name]">(<span t-att-class="totals[plan.id].class" t-out="totals[plan.id].formattedValue"/>)</t>
                             </th>
                             <th class="numeric_column_width">Percentage</th>
                             <th t-if="valueColumnEnabled" class="numeric_column_width" t-out="props.record.fields[props.amount_field].string"/>
@@ -42,9 +48,19 @@
                     <tbody>
                         <tr t-foreach="state.formattedData" t-as="line" t-key="line.id" t-att-id="line_index" t-att-name="'line_' + line_index">
                             <Record t-props="recordProps(line)" t-slot-scope="data">
-                                <td t-foreach="Object.keys(data.record.fields).filter((f) => f.startsWith('x_plan'))" t-as="field" t-key="field">
-                                    <Field id="field" name="field" record="data.record" domain="data.record.fields[field].domain" canOpen="false" canCreate="false" canCreateEdit="false" canQuickCreate="false"/>
-                                </td>
+                                <t t-foreach="Object.keys(data.record.fields).filter((f) => f.startsWith('x_plan') || f == 'account_id')" t-as="field" t-key="field">
+                                    <td t-att-style="state.update_plan[field] ? '' : '--table-bg-state: var(--table-hover-bg);'">
+                                        <Field t-if="state.update_plan[field]"
+                                               id="field"
+                                               name="field"
+                                               record="data.record"
+                                               domain="data.record.fields[field].domain"
+                                               canOpen="false"
+                                               canCreate="false"
+                                               canCreateEdit="false"
+                                               canQuickCreate="false"/>
+                                    </td>
+                                </t>
                                 <td class="numeric_column_width">
                                     <Field id="'percentage'" name="'percentage'" record="data.record"/>
                                 </td>

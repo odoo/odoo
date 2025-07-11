@@ -174,7 +174,7 @@
                            widget="analytic_distribution"
                            groups="analytic.group_analytic_accounting"
                            optional="hide"
-                           options="{'product_field': 'product_id', 'account_field': 'account_id', 'force_applicability': 'optional'}"
+                           options="{'product_field': 'product_id', 'account_field': 'account_id', 'force_applicability': 'optional', 'multi_edit': true}"
                     />
                     <field name="tax_ids" widget="many2many_tax_tags" optional="hide" readonly="1"/>
                     <field name="amount_currency" string="In Currency" groups="base.group_multi_currency" optional="hide" readonly="1" invisible="is_same_currency"/>
