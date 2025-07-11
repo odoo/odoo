@@ -262,6 +262,11 @@ class ProductAttribute(models.Model):
     def _load_pos_data_fields(self, config_id):
         return ['name', 'display_type', 'template_value_ids', 'attribute_line_ids', 'create_variant']
 
+    @api.model
+    def _load_pos_data_domain(self, data):
+        loaded_attribute_ids = {ptal['attribute_id'] for ptal in data['product.template.attribute.line']['data']}
+        return [('id', 'in', list(loaded_attribute_ids))]
+
 
 class ProductAttributeCustomValue(models.Model):
     _name = 'product.attribute.custom.value'
