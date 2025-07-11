@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import uuid
-
 from pprint import pformat
+
 import requests
 
 from odoo import _, api, fields, models
@@ -12,7 +12,7 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING, SENSITIVE_KEYS
 from odoo.addons.payment.logging import get_payment_logger
 
-
+# Pass the possibly empty set of sensitive keys to the logger in case a provider module extends it.
 _logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
 
 
@@ -205,7 +205,7 @@ class PaymentProvider(models.Model):
                 provider.available_currency_ids = None
 
     def _get_supported_currencies(self):
-        """ Return the supported currencies for the payment provider.
+        """Return the supported currencies for the payment provider.
 
         By default, all currencies are considered supported, including the inactive ones. For a
         provider to filter out specific currencies, it must override this method and return the
@@ -433,7 +433,7 @@ class PaymentProvider(models.Model):
             (pms + pms.brand_ids).filtered(lambda pm: pm.code in pm_codes).active = True
 
     def _get_default_payment_method_codes(self):
-        """ Return the default payment methods for this provider.
+        """Return the default payment methods for this provider.
 
         Note: `self.ensure_one()`
 
@@ -728,8 +728,7 @@ class PaymentProvider(models.Model):
         auth = self._build_request_auth(**kwargs)
 
         # Log the request.
-        payload = params or data or json
-        self._log_request(method, url, payload, reference=reference)
+        self._log_request(method, url, params or data or json, reference=reference)
 
         # Send the request.
         try:
@@ -748,7 +747,7 @@ class PaymentProvider(models.Model):
             response.raise_for_status()
         except requests.exceptions.HTTPError:
             error_msg = self._parse_response_error(response)
-            raise ValidationError(_("The payment provider rejected the request: %s", error_msg))
+            raise ValidationError(_("The payment provider rejected the request.\n%s", error_msg))
         return self._parse_response_content(response, **kwargs)
 
     def _build_request_url(self, endpoint, **kwargs):
@@ -798,18 +797,19 @@ class PaymentProvider(models.Model):
         :param str reference: The reference of the transaction, if any.
         :rtype: None
         """
-        log_msg = "Sending %(method)s API request to %(url)s"
-        log_values = {'method': method, 'url': url}
         if reference:
-            log_msg += " for transaction with reference %(ref)s"
-            log_values['ref'] = reference
+            log_msg = (
+                "Sending %(method)s API request to %(url)s for transaction with reference %(ref)s."
+            )
+            log_values = {'method': method, 'url': url, 'ref': reference}
         else:
-            log_msg += " for provider with id %(p_id)s"
-            log_values['p_id'] = str(self.id)
+            log_msg = "Sending %(method)s API request to %(url)s for provider with id %(p_id)s."
+            log_values = {'method': method, 'url': url, 'p_id': self.id}
 
-        if payload:  # Add the payload to the log if any.
-            log_msg += ":\n%(data)s"
-            log_values['data'] = pformat(payload)
+        # Add the payload to the log if any.
+        if payload:
+            log_msg += " Payload:\n%(payload)s"
+            log_values['payload'] = pformat(payload)
 
         _logger.info(log_msg, log_values)
 
@@ -826,11 +826,11 @@ class PaymentProvider(models.Model):
         """
         if reference:
             log_msg = (
-                "Received API response from %(url)s for transaction with reference %(ref)s:"
+                "Received API response from %(url)s for transaction with reference %(ref)s."
                 "\n%(data)s"
             )
         else:
-            log_msg = "Received API response from %(url)s for provider with id %(p_id)s:\n%(data)s"
+            log_msg = "Received API response from %(url)s for provider with id %(p_id)s.\n%(data)s"
         log_values = {'url': response.url, 'ref': reference, 'p_id': self.id, 'data': response.text}
         if response.ok:
             _logger.info(log_msg, log_values)
@@ -887,7 +887,7 @@ class PaymentProvider(models.Model):
         if response_content.get('error'):  # An exception was raised on the proxy.
             error_data = response_content['error']['data']
             raise ValidationError(_(
-                "The payment provider rejected the request: %s", error=error_data['message']
+                "The payment provider rejected the request.\n%s", pformat(error_data['message'])
             ))
         return response_content['result']
 
@@ -921,7 +921,7 @@ class PaymentProvider(models.Model):
 
     @api.model
     def _get_provider_domain(self, provider_code, **kwargs):
-        """ Return the payment provider domain.
+        """Return the payment provider domain.
 
         :param str provider_code: The code of the provider to search for.
         :param dict kwargs: Additional keyword arguments.

@@ -288,7 +288,7 @@ class PaymentTransaction(models.Model):
 
         raise UserError(_("Transactions processed by Razorpay can't be manually voided from Odoo."))
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
+    def _get_tx_from_payment_data(self, provider_code, notification_data):
         """ Override of `payment` to find the transaction based on razorpay data.
 
         :param str provider_code: The code of the provider that handled the transaction
@@ -298,7 +298,7 @@ class PaymentTransaction(models.Model):
         :raise: ValidationError if the data match no transaction
         """
         if provider_code != 'razorpay':
-            return super()._get_tx_from_notification_data(provider_code, notification_data)
+            return super()._get_tx_from_payment_data(provider_code, notification_data)
 
         entity_type = notification_data.get('entity_type', 'payment')
         tx = self
@@ -350,21 +350,21 @@ class PaymentTransaction(models.Model):
             converted_amount, is_refund=True, provider_reference=refund_provider_reference
         )
 
-    def _compare_notification_data(self, notification_data):
+    def _compare_payment_data(self, payment_data):
         """ Override of `payment` to compare the transaction based on Razorpay data.
 
-        :param dict notification_data: The notification data sent by the provider.
+        :param dict payment_data: The notification data sent by the provider.
         :return: None
         :raise ValidationError: If the transaction's amount and currency don't match the
             notification data.
         """
         if self.provider_code != 'razorpay':
-            return super()._compare_notification_data(notification_data)
+            return super()._compare_payment_data(payment_data)
 
         amount = payment_utils.to_major_currency_units(
-            notification_data.get('amount', 0), self.currency_id
+            payment_data.get('amount', 0), self.currency_id
         )
-        currency_code = notification_data.get('currency')
+        currency_code = payment_data.get('currency')
         self._validate_amount_and_currency(amount, currency_code)
 
     def _process_notification_data(self, notification_data):

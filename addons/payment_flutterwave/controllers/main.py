@@ -60,7 +60,7 @@ class FlutterwaveController(http.Controller):
         if data['event'] == 'charge.completed':
             notification_data = data['data']
             # Check the origin of the notification.
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
                 'flutterwave', notification_data
             )
             if tx_sudo:
@@ -99,7 +99,7 @@ class FlutterwaveController(http.Controller):
         :param dict data: The notification data.
         :return: None
         """
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'flutterwave', data
         )
         if not tx_sudo:

@@ -65,7 +65,7 @@ class WorldlineController(http.Controller):
         )
 
         # Check the integrity of the notification.
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'worldline', notification_data
         )
         if tx_sudo:

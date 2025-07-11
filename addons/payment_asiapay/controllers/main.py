@@ -37,7 +37,7 @@ class AsiaPayController(http.Controller):
         :rtype: str
         """
         _logger.info("Notification received from AsiaPay with data:\n%s", pprint.pformat(data))
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'asiapay', data
         )
         if tx_sudo:

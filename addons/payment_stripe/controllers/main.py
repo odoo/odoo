@@ -37,7 +37,7 @@ class StripeController(http.Controller):
                           `_get_specific_processing_values`.
         """
         # Retrieve the transaction based on the reference included in the return url.
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'stripe', data
         )
         endpoint = (
@@ -85,7 +85,7 @@ class StripeController(http.Controller):
                     'event_type': event['type'],
                     'object_id': stripe_object['id'],
                 }
-                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
                     'stripe', data
                 )
                 self._verify_notification_signature(tx_sudo)

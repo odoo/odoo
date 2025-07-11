@@ -44,7 +44,7 @@ class RazorpayController(http.Controller):
         _logger.info("Handling redirection from Razorpay with data:\n%s", pprint.pformat(data))
         if all(f'razorpay_{key}' in data for key in ('order_id', 'payment_id', 'signature')):
             # Check the integrity of the notification.
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
                 'razorpay', {'description': reference}
             )  # Use the same key as for webhook notifications' data.
             self._verify_notification_signature(data, data.get('razorpay_signature'), tx_sudo)
@@ -76,7 +76,7 @@ class RazorpayController(http.Controller):
 
             # Check the integrity of the event.
             received_signature = request.httprequest.headers.get('X-Razorpay-Signature')
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
                 'razorpay', entity_data
             )
             if tx_sudo:

@@ -150,10 +150,10 @@ class PaymentTransaction(models.Model):
         )
         return float_round(self.amount, decimal_places, rounding_method='DOWN')
 
-    def _get_ref_from_notification_data(self, provider_code, notification_data):
+    def _get_ref_from_payment_data(self, provider_code, payment_data):
         if provider_code != 'xendit':
-            return super()._get_ref_from_notification_data(provider_code, notification_data)
-        return notification_data.get('external_id')
+            return super()._get_ref_from_payment_data(provider_code, payment_data)
+        return payment_data.get('external_id')
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to compare the transaction based on Xendit data.

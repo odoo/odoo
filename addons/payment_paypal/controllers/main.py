@@ -29,7 +29,7 @@ class PaypalController(http.Controller):
                               key.
         :return: None
         """
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'paypal', {'reference_id': reference}
         )
         if tx_sudo:
@@ -40,7 +40,7 @@ class PaypalController(http.Controller):
                 'POST', f'/v2/checkout/orders/{order_id}/capture', idempotency_key=idempotency_key
             )
             normalized_response = self._normalize_paypal_data(response)
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
                 'paypal', normalized_response
             )
             tx_sudo._handle_notification_data('paypal', normalized_response)
@@ -59,7 +59,7 @@ class PaypalController(http.Controller):
             _logger.info("Notification received from PayPal with data:\n%s", pprint.pformat(data))
             normalized_data = self._normalize_paypal_data(data.get('resource'), from_webhook=True)
             # Check the origin and integrity of the notification.
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
                 'paypal', normalized_data
             )
             if tx_sudo:

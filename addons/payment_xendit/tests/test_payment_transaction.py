@@ -119,10 +119,10 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
             payload = mock_req.call_args.kwargs.get('json')
             self.assertEqual(payload['amount'], 1000)
 
-    def test_get_tx_from_notification_data_returns_tx(self):
+    def test_get_tx_from_payment_data_returns_tx(self):
         """ Test that the transaction is found based on the notification data. """
         tx = self._create_transaction('redirect')
-        tx_found = self.env['payment.transaction']._get_tx_from_notification_data(
+        tx_found = self.env['payment.transaction']._get_tx_from_payment_data(
             'xendit', self.webhook_notification_data
         )
         self.assertEqual(tx, tx_found)

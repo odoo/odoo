@@ -39,7 +39,7 @@ class BuckarooController(http.Controller):
 
         # Check the integrity of the notification
         received_signature = data.get('brq_signature')
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'buckaroo', data
         )
         if tx_sudo:
@@ -61,7 +61,7 @@ class BuckarooController(http.Controller):
         data = self._normalize_data_keys(raw_data)
         # Check the integrity of the notification
         received_signature = data.get('brq_signature')
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'buckaroo', data
         )
         if tx_sudo:

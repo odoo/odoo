@@ -85,11 +85,11 @@ class TestPaymentTransaction(RazorpayCommon):
                     self._assert_does_not_raise(UserError, other_tx._send_payment_request)
                 other_tx.state = 'draft'
 
-    def test_get_tx_from_notification_data_returns_refund_tx(self):
+    def test_get_tx_from_payment_data_returns_refund_tx(self):
         """ Test that the refund transaction is returned if it exists when processing refund
         notification data. """
         refund_tx = self._create_transaction('direct')
-        returned_tx = self.env['payment.transaction']._get_tx_from_notification_data(
+        returned_tx = self.env['payment.transaction']._get_tx_from_payment_data(
             'razorpay', dict(self.refund_data, **{
                 'entity_type': 'refund',
                 'notes': {
@@ -99,13 +99,13 @@ class TestPaymentTransaction(RazorpayCommon):
         )
         self.assertEqual(returned_tx, refund_tx)
 
-    def test_get_tx_from_notification_data_creates_refund_tx_when_missing(self):
+    def test_get_tx_from_payment_data_creates_refund_tx_when_missing(self):
         """ Test that a refund transaction is created when processing refund notification data
         without reference. """
         source_tx = self._create_transaction(
             'direct', state='done', provider_reference=self.payment_id
         )
-        refund_tx = self.env['payment.transaction']._get_tx_from_notification_data(
+        refund_tx = self.env['payment.transaction']._get_tx_from_payment_data(
             'razorpay', dict(self.refund_data, entity_type='refund')
         )
         self.assertTrue(

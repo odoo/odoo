@@ -187,7 +187,7 @@ class AdyenController(http.Controller):
                           the request to allow matching the transaction when redirected here.
         """
         # Retrieve the transaction based on the reference included in the return url
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'adyen', data
         )
         if not tx_sudo:
@@ -236,7 +236,7 @@ class AdyenController(http.Controller):
                 "notification received from Adyen with data:\n%s", pprint.pformat(notification_data)
             )
             # Check the integrity of the notification
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
                 'adyen', notification_data
             )
             if tx_sudo:

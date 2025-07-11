@@ -244,7 +244,7 @@ class PaymentTransaction(models.Model):
 
         # Make the capture request to Stripe
         payment_intent = self._send_api_request(
-            'POST', f'payment_intents/{self.provider_reference}/capture'
+            'POST', f'payment_intents/{self.source_transaction_id.provider_reference}/capture'
         )
 
         # Handle the capture request response
@@ -261,7 +261,7 @@ class PaymentTransaction(models.Model):
 
         # Make the void request to Stripe
         payment_intent = self._send_api_request(
-            'POST', f'payment_intents/{self.provider_reference}/cancel'
+            'POST', f'payment_intents/{self.source_transaction_id.provider_reference}/cancel'
         )
 
         # Handle the void request response
@@ -271,7 +271,7 @@ class PaymentTransaction(models.Model):
         )
         self._handle_notification_data('stripe', notification_data)
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
+    def _get_tx_from_payment_data(self, provider_code, notification_data):
         """ Override of payment to find the transaction based on Stripe data.
 
         :param str provider_code: The code of the provider that handled the transaction
@@ -280,7 +280,7 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         """
         if provider_code != 'stripe':
-            return super()._get_tx_from_notification_data(provider_code, notification_data)
+            return super()._get_tx_from_payment_data(provider_code, notification_data)
 
         reference = notification_data.get('reference')
         if reference:

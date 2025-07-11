@@ -33,7 +33,7 @@ class NuveiController(http.Controller):
             _logger.warning("Nuvei errored on transaction with reference: %s", tx_ref)
 
         tx_data = data or {'invoice_id': tx_ref}
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'nuvei', tx_data
         )
         if tx_sudo:
@@ -56,7 +56,7 @@ class NuveiController(http.Controller):
         """
         _logger.info("Notification received from Nuvei with data:\n%s", pprint.pformat(data))
         # Check the integrity of the notification.
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'nuvei', data
         )
         if tx_sudo:

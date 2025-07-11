@@ -213,12 +213,12 @@ class PaymentTransaction(models.Model):
         else:
             self._handle_notification_data('worldline', response_content)
 
-    def _get_ref_from_notification_data(self, provider_code, notification_data):
+    def _get_ref_from_payment_data(self, provider_code, payment_data):
         if provider_code != 'worldline':
-            return super()._get_ref_from_notification_data(provider_code, notification_data)
+            return super()._get_ref_from_payment_data(provider_code, payment_data)
 
         # In case of failed payment, paymentResult could be given as a separate key
-        payment_result = notification_data.get('paymentResult', notification_data)
+        payment_result = payment_data.get('paymentResult', payment_data)
         payment_output = payment_result.get('payment', {}).get('paymentOutput', {})
         return payment_output.get('references', {}).get('merchantReference', '')
 

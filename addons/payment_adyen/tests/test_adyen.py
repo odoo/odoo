@@ -71,7 +71,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
                 "the source transaction."
         )
 
-    def test_get_tx_from_notification_data_returns_refund_tx(self):
+    def test_get_tx_from_payment_data_returns_refund_tx(self):
         source_tx = self._create_transaction(
             'direct', state='done', provider_reference=self.original_reference
         )
@@ -93,10 +93,10 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             },
             eventCode='REFUND',
         )
-        returned_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        returned_tx = self.env['payment.transaction']._get_tx_from_payment_data('adyen', data)
         self.assertEqual(returned_tx, refund_tx, msg="The existing refund tx is the one returned")
 
-    def test_get_tx_from_notification_data_creates_refund_tx_when_missing(self):
+    def test_get_tx_from_payment_data_creates_refund_tx_when_missing(self):
         source_tx = self._create_transaction(
             'direct', state='done', provider_reference=self.original_reference
         )
@@ -108,7 +108,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             },
             eventCode='REFUND',
         )
-        refund_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        refund_tx = self.env['payment.transaction']._get_tx_from_payment_data('adyen', data)
         self.assertTrue(
             refund_tx,
             msg="If no refund tx is found with received refund data, a refund tx should be created"
@@ -116,7 +116,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.assertNotEqual(refund_tx, source_tx)
         self.assertEqual(refund_tx.source_transaction_id, source_tx)
 
-    def test_get_tx_from_notification_data_returns_partial_capture_child_tx(self):
+    def test_get_tx_from_payment_data_returns_partial_capture_child_tx(self):
         self.provider.capture_manually = True
         source_tx = self._create_transaction(
             'direct', state='authorized', provider_reference=self.original_reference
@@ -139,10 +139,10 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             },
             eventCode='CAPTURE',
         )
-        returned_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        returned_tx = self.env['payment.transaction']._get_tx_from_payment_data('adyen', data)
         self.assertEqual(returned_tx, capture_tx, msg="The existing capture tx is the one returned")
 
-    def test_get_tx_from_notification_data_creates_capture_tx_when_missing(self):
+    def test_get_tx_from_payment_data_creates_capture_tx_when_missing(self):
         self.provider.capture_manually = True
         source_tx = self._create_transaction(
             'direct', state='authorized', provider_reference=self.original_reference
@@ -157,7 +157,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             },
             eventCode='CAPTURE',
         )
-        capture_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        capture_tx = self.env['payment.transaction']._get_tx_from_payment_data('adyen', data)
         self.assertTrue(
             capture_tx,
             msg="If no child tx is found with received capture data, a child tx should be created.",
@@ -165,7 +165,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.assertNotEqual(capture_tx, source_tx)
         self.assertEqual(capture_tx.source_transaction_id, source_tx)
 
-    def test_get_tx_from_notification_data_returns_void_tx(self):
+    def test_get_tx_from_payment_data_returns_void_tx(self):
         self.provider.capture_manually = True
         source_tx = self._create_transaction(
             'direct', state='authorized', provider_reference=self.original_reference
@@ -188,10 +188,10 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             },
             eventCode='CANCELLATION',
         )
-        returned_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        returned_tx = self.env['payment.transaction']._get_tx_from_payment_data('adyen', data)
         self.assertEqual(returned_tx, cancel_tx, msg="The existing void tx is the one returned")
 
-    def test_get_tx_from_notification_data_creates_void_tx_when_missing(self):
+    def test_get_tx_from_payment_data_creates_void_tx_when_missing(self):
         self.provider.capture_manually = True
         source_tx = self._create_transaction(
             'direct', state='authorized', provider_reference=self.original_reference
@@ -206,7 +206,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             },
             eventCode='CANCELLATION',
         )
-        void_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        void_tx = self.env['payment.transaction']._get_tx_from_payment_data('adyen', data)
         self.assertTrue(
             void_tx,
             msg="If no child tx is found with received void data, a child tx should be created."

@@ -107,14 +107,14 @@ class PaymentTransaction(models.Model):
         notification_data = {'reference': self.reference, 'simulated_state': 'cancel'}
         self._handle_notification_data('demo', notification_data)
 
-    def _compare_notification_data(self, notification_data):
+    def _compare_payment_data(self, payment_data):
         """ Override of `payment` to skip the transaction comparison for dummy flows.
 
-        :param dict notification_data: The dummy notification data.
+        :param dict payment_data: The dummy payment data.
         :return: None
         """
         if self.provider_code != 'demo':
-            super()._compare_notification_data(notification_data)
+            super()._compare_payment_data(payment_data)
             return
 
     def _process_notification_data(self, notification_data):

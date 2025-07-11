@@ -104,10 +104,10 @@ class PaymentTransaction(models.Model):
         }
         return rendering_values
 
-    def _get_ref_from_notification_data(self, provider_code, notification_data):
+    def _get_ref_from_payment_data(self, provider_code, payment_data):
         if provider_code != 'nuvei':
-            return super()._get_ref_from_notification_data(provider_code, notification_data)
-        return notification_data.get('invoice_id')
+            return super()._get_ref_from_payment_data(provider_code, payment_data)
+        return payment_data.get('invoice_id')
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to compare the transaction based on Nuvei data.
