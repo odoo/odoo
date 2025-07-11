@@ -493,7 +493,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         # (For the 'biggest_tax' strategy the amounts are directly included in the tax amounts.)
         for currency_suffix in ['', '_currency']:
             vals[f'cash_rounding_base_amount{currency_suffix}'] = 0.0
-            for base_line in vals['cash_rounding_base_lines']:
+            for base_line in vals.setdefault('cash_rounding_base_lines', []):
                 tax_details = base_line['tax_details']
                 vals[f'cash_rounding_base_amount{currency_suffix}'] += tax_details[f'total_excluded{currency_suffix}']
 
