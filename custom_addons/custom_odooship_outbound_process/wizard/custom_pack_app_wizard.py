@@ -646,7 +646,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "hs_code": line.product_id.hs_code or "",
                 "cost_price": line.product_id.standard_price or "0.0",
                 "sale_price": line.product_id.list_price or "0.0",
-                "shipmentid": line.picking_id.sale_id.shipmentid or "",
+                "shipment_id": line.picking_id.sale_id.shipmentid or "",
                 "items": line.picking_id.sale_id.items or "",
                 "international":international_flag,
             })
@@ -745,7 +745,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "so_reference": line.picking_id.sale_id.client_order_ref or "N/A",
                 "cost_price": line.product_id.standard_price or "0.0",
                 "sale_price": line.product_id.list_price or "0.0",
-                "shipmentid": line.picking_id.sale_id.shipmentid or "",
+                "shipment_id": line.picking_id.sale_id.shipmentid or "",
                 "items":line.picking_id.sale_id.items or "",
                 "international": international_flag,
             })
