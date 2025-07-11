@@ -228,7 +228,8 @@ class MaintenanceRequest(models.Model):
     schedule_date = fields.Datetime('Scheduled Date', help="Date the maintenance team plans the maintenance.  It should not differ much from the Request Date. ")
     maintenance_team_id = fields.Many2one('maintenance.team', string='Team', required=True, index=True, default=_get_default_team_id,
                                           compute='_compute_maintenance_team_id', store=True, readonly=False, check_company=True)
-    duration = fields.Float(help="Duration in hours.")
+    schedule_end = fields.Datetime(string="Scheduled End", compute='_compute_schedule_end', readonly=False, store=True,
+                                          help="Expected completion date and time of the maintenance request.")
     done = fields.Boolean(related='stage_id.done')
     instruction_type = fields.Selection([
         ('pdf', 'PDF'), ('google_slide', 'Google Slide'), ('text', 'Text')],
@@ -259,6 +260,17 @@ class MaintenanceRequest(models.Model):
         first_stage_obj = self.env['maintenance.stage'].search([], order="sequence asc", limit=1)
         # self.write({'active': True, 'stage_id': first_stage_obj.id})
         self.write({'archive': False, 'stage_id': first_stage_obj.id})
+
+    @api.constrains('schedule_end')
+    def _check_schedule_end(self):
+        for request in self:
+            if request.schedule_date and request.schedule_end and request.schedule_date > request.schedule_end:
+                raise ValidationError(self.env._("End date cannot be earlier than start date."))
+
+    @api.depends('schedule_date')
+    def _compute_schedule_end(self):
+        for request in self:
+            request.schedule_end = request.schedule_date and request.schedule_date + relativedelta(hours=1)
 
     @api.constrains('repeat_interval')
     def _check_repeat_interval(self):
@@ -314,10 +326,11 @@ class MaintenanceRequest(models.Model):
             for request in self:
                 if request.maintenance_type != 'preventive' or not request.recurring_maintenance:
                     continue
-                schedule_date = request.schedule_date or now
-                schedule_date += relativedelta(**{f"{request.repeat_unit}s": request.repeat_interval})
+                delta = relativedelta(**{f"{request.repeat_unit}s": request.repeat_interval})
+                schedule_date = (request.schedule_date or now) + delta
+                schedule_end = (request.schedule_end or (schedule_date - delta + relativedelta(hours=1))) + delta
                 if request.repeat_type == 'forever' or schedule_date.date() <= request.repeat_until:
-                    request.copy({'schedule_date': schedule_date, 'stage_id': request._default_stage().id})
+                    request.copy({'schedule_date': schedule_date, 'schedule_end': schedule_end, 'stage_id': request._default_stage().id})
         res = super(MaintenanceRequest, self).write(vals)
         if vals.get('owner_user_id') or vals.get('user_id'):
             self._add_followers()
