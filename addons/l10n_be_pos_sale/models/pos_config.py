@@ -7,7 +7,7 @@ class PosConfig(models.Model):
     @api.model
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
-        if self.env.company.country_code == 'BE':
+        if read_records and self.env.company.country_code == 'BE':
             intracom_fpos = self.env["account.chart.template"].with_company(self.company_id.root_id).sudo().ref("fiscal_position_template_3", False)
             if intracom_fpos:
                 read_records[0]['_intracom_tax_ids'] = intracom_fpos.tax_ids.ids

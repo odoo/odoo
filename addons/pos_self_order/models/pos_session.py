@@ -19,6 +19,9 @@ class PosSession(models.Model):
 
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
+        if not read_records:
+            return read_records
+
         record = read_records[0]
         record['_self_ordering'] = (
             self.env["pos.config"]
