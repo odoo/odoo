@@ -32,6 +32,8 @@ if typing.TYPE_CHECKING:
 
 _logger = logging.getLogger('odoo.api')
 
+MAX_FIXPOINT_ITERATIONS = 10
+
 
 class Environment(Mapping[str, "BaseModel"]):
     """ The environment stores various contextual data used by the ORM:
@@ -352,14 +354,27 @@ class Environment(Mapping[str, "BaseModel"]):
 
     def _recompute_all(self) -> None:
         """ Process all pending computations. """
-        for field in list(self.fields_to_compute()):
-            self[field.model_name]._recompute_field(field)
+        for _ in range(MAX_FIXPOINT_ITERATIONS):
+            # fields to compute on real records (new records are not recomputed)
+            fields_ = [field for field, ids in self.transaction.tocompute.items() if any(ids)]
+            if not fields_:
+                break
+            for field in fields_:
+                self[field.model_name]._recompute_field(field)
+        else:
+            _logger.warning("Too many iterations for recomputing fields!")
 
     def flush_all(self) -> None:
         """ Flush all pending computations and updates to the database. """
-        self._recompute_all()
-        for model_name in OrderedSet(field.model_name for field in self._field_dirty):
-            self[model_name].flush_model()
+        for _ in range(MAX_FIXPOINT_ITERATIONS):
+            self._recompute_all()
+            model_names = OrderedSet(field.model_name for field in self._field_dirty)
+            if not model_names:
+                break
+            for model_name in model_names:
+                self[model_name].flush_model()
+        else:
+            _logger.warning("Too many iterations for flushing fields!")
 
     def is_protected(self, field: Field, record: BaseModel) -> bool:
         """ Return whether `record` is protected against invalidation or
