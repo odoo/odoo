@@ -2711,5 +2711,6 @@ class TestTourBoM(HttpCase):
 
         location = self.env.ref('stock.stock_location_stock')
         self.env['stock.quant']._update_available_quantity(comp, location, 3.0)
+        comp.invalidate_recordset()
         # With 3 components on hand, 1.5 products could be created, rounded down to 1.0 due to the integer uom
         self.assertEqual(prod.qty_available, 1.0)
