@@ -120,12 +120,27 @@
                     <setting id="comparator_option_setting" string="Product Comparison Tool" help="Allow shoppers to compare products based on their attributes">
                         <field name="module_website_sale_comparison"/>
                     </setting>
-                    <setting id="hide_add_to_cart_setting" help="If product price equals 0, replace 'Add to Cart' by 'Contact us'.">
+                    <setting id="hide_add_to_cart_setting" help="Show &quot;Contact Us&quot; for 0 price products or specific categories.">
                         <field name="website_sale_prevent_zero_price_sale"/>
                         <div class="content-group" invisible="not website_sale_prevent_zero_price_sale">
                             <div class="row mt16">
-                                <label class="o_light_label col-lg-3" string="Button url" for="website_sale_contact_us_button_url"/>
-                                <field name="website_sale_contact_us_button_url"/>
+                                <label
+                                    class="o_light_label col-lg-3"
+                                    for="website_sale_zero_price_categories"
+                                />
+                                <field
+                                    name="website_sale_zero_price_categories"
+                                    widget="many2many_tags"
+                                    options="{'no_create': True, 'no_create_edit': True}"
+                                />
+                            </div>
+                            <div class="row mt16">
+                                <label
+                                    class="o_light_label col-lg-3"
+                                    string="Button url"
+                                    for="website_sale_contact_us_link_url"
+                                />
+                                <field name="website_sale_contact_us_link_url"/>
                             </div>
                         </div>
                     </setting>
