@@ -1,7 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
+import { getInnerHtml } from "@web/core/utils/html";
 import snippetsEditor from "@web_editor/js/editor/snippets.editor";
 import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
-import { markup, useEffect, useState } from "@odoo/owl";
+import { useEffect, useState } from "@odoo/owl";
 
 export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
     static tabs = Object.assign({}, snippetsEditor.SnippetsMenu.tabs, {
@@ -214,7 +215,7 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
         });
         this.mobilePreview = this.dialog.add(MassMailingMobilePreviewDialog, {
             title: _t("Mobile Preview"),
-            preview: markup(mailingHtml.body.innerHTML),
+            preview: getInnerHtml(mailingHtml.body),
         }, {
             onClose: () => btn.removeAttribute("disabled"),
         });
