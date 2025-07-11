@@ -33,8 +33,8 @@
     <BuilderRow label.translate="Display">
         <BuilderSelect dataAttributeAction="'display'" preview="false">
             <BuilderSelectItem dataAttributeActionValue="'afterDelay'" id="'show_delay'">Delay</BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'mouseExit'">On Exit</BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'onClick'" id="'onclick_opt'" action="'copyAnchor'">On Click (via link)</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'mouseExit'" title.translate="Pop up appears when a user is about to leave the website">On Exit</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'onClick'" id="'onclick_opt'" action="'copyAnchor'" title.translate="Use the link generated to open the pop up">On Click (via link)</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow level="1" label.translate="Delay">
@@ -53,8 +53,15 @@
     <BuilderRow label.translate="Show on">
         <BuilderSelect action="'moveBlock'" preview="false">
             <BuilderSelectItem actionValue="'currentPage'">This page</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'specificPages'" id="'specific_pages'">These specific pages</BuilderSelectItem>
             <BuilderSelectItem actionValue="'allPages'">All pages</BuilderSelectItem>
         </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate=" ">
+        <WebsiteMultiUrlPicker t-if="isActiveItem('specific_pages')"
+                placeholder.translate="e.g. /my-awesome-page"
+                dataAttributeAction="'selectedUrls'"
+                />
     </BuilderRow>
 </t>
 
