@@ -3,6 +3,7 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
 import { CUSTOMIZE_MAILING_VARIABLES } from "@mass_mailing_egg/builder/plugins/customize_mailing_variables";
+import { CUSTOMIZE_MAILING_VARIABLES_DEFAULTS } from "./customize_mailing_variables";
 
 const RE_SELECTOR_ENDS_WITH_GT_STAR = />\s*\*\s*$/;
 export const PRIORITY_STYLES = {
@@ -101,17 +102,22 @@ export class CustomizeMailingPlugin extends Plugin {
 
     setupMailingVariables() {
         const varRule = this.getRule(this.cssPrefix);
-        for (const [variable, options] of Object.entries(CUSTOMIZE_MAILING_VARIABLES)) {
+        this.toRemove = {};
+        for (const variable of Object.keys(CUSTOMIZE_MAILING_VARIABLES)) {
             const currentValue = this.getVariableValue(variable);
-            const defaultValue = options.default ?? "";
+            const defaultValue =
+                Object.values(CUSTOMIZE_MAILING_VARIABLES_DEFAULTS[variable] ?? {})[0] ?? "";
             if (currentValue === "" && defaultValue !== "") {
                 varRule.style.setProperty(variable, defaultValue);
             }
             this.refreshMailingVariableSelector(variable);
         }
+        console.log(this.toRemove);
     }
 
     refreshMailingVariableSelector(variable) {
+        const toRemove = {};
+        this.toRemove[variable] = toRemove;
         const options = CUSTOMIZE_MAILING_VARIABLES[variable];
         const currentValue = this.getVariableValue(variable);
         let value = "";
@@ -125,6 +131,15 @@ export class CustomizeMailingPlugin extends Plugin {
                 rule.style.setProperty(property, value, important);
             }
         }
+        // toremove
+        const selector = options.selectors
+            .map((selector) => this.addSelectorPrefix(selector))
+            .join(", ");
+        const target = this.editable.querySelector(selector);
+        const computedStyle = target ? getComputedStyle(target) : null;
+        for (const property of options.properties) {
+            toRemove[property] = computedStyle?.[property];
+        }
     }
 
     parseDesignElement(styleEl) {
@@ -137,20 +152,27 @@ export class CustomizeMailingPlugin extends Plugin {
                         // TODO EGGMAIL: maybe a better way to protect FontAwesome.
                         // Ensure font-family gets passed to all descendants and never
                         // overwrite font awesome.
+                        // currently the `variable` flow does not handle custom selectors
+                        // for font-family, this needs to be reworked
                         selectors = this.transformFontFamilySelector(selector);
                     }
                     for (const selector of selectors) {
-                        this.addCSSRule({ selector, ruleStyle: rule.style, whitelist: [style] });
+                        this.addCSSRule(selector, rule.style, [style]);
                     }
                 }
             }
         }
     }
 
-    _getRule(selector) {
+    addSelectorPrefix(selector) {
         if (!selector.trim().startsWith(this.cssPrefix)) {
             selector = `${this.cssPrefix} ${selector}`;
         }
+        return selector;
+    }
+
+    _getRule(selector) {
+        selector = this.addSelectorPrefix(selector);
         for (const rule of this.styleSheet.cssRules) {
             if (rule.selectorText === selector) {
                 return rule;
@@ -185,7 +207,8 @@ export class CustomizeMailingPlugin extends Plugin {
     // TODO EGGMAIL: currently receives a CSSStyleDeclaration as ruleStyle
     // which is not convenient since it can not be created manually
     // change/adapt API and usages, see convertObjectToRuleStyle
-    addCSSRule({ selector, ruleStyle, whitelist }) {
+    // Prefer using a mail variable.
+    addCSSRule(selector, ruleStyle, whitelist) {
         const IframeCSSStyleDeclaration = this.iframeWindow.CSSStyleDeclaration;
         if (!(ruleStyle instanceof IframeCSSStyleDeclaration)) {
             ruleStyle = this.convertObjectToRuleStyle(ruleStyle);
@@ -225,6 +248,23 @@ export class CustomizeMailingVariable extends BuilderAction {
                 this.dependencies["mass_mailing.CustomizeMailingPlugin"].setVariable(
                     params.variable,
                     value
+                );
+            },
+            revert: () => {
+                this.dependencies["mass_mailing.CustomizeMailingPlugin"].setVariable(
+                    params.variable,
+                    oldValue
+                );
+            },
+        });
+    }
+    clean({ params }) {
+        const oldValue = this.getValue(...arguments);
+        this.dependencies.history.applyCustomMutation({
+            apply: () => {
+                this.dependencies["mass_mailing.CustomizeMailingPlugin"].setVariable(
+                    params.variable,
+                    params.clean ?? ""
                 );
             },
             revert: () => {

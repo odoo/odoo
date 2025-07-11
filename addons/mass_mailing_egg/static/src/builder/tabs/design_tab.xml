@@ -21,12 +21,17 @@
 
 <t t-name="mass_mailing_egg.DesignBodyOption">
     <BuilderRow label.translate="Body Width">
-        <BuilderSelect>
-            <!-- TODO EGGMAIL replace select by linked toggle buttons and recover images -->
-            <BuilderSelectItem classAction="'o_mail_small'" applyTo="'.o_mail_wrapper'">Small</BuilderSelectItem>
-            <BuilderSelectItem classAction="'o_mail_regular'" applyTo="'.o_mail_wrapper'">Regular</BuilderSelectItem>
-            <BuilderSelectItem classAction="''" applyTo="'.o_mail_wrapper'">Full</BuilderSelectItem>
-        </BuilderSelect>
+        <BuilderButtonGroup>
+            <BuilderButton classAction="'o_mail_small'" applyTo="'.o_mail_wrapper'">
+                <Img src="'/mass_mailing/static/src/img/snippets_options/content_width_small.svg'" />
+            </BuilderButton>
+            <BuilderButton classAction="'o_mail_regular'" applyTo="'.o_mail_wrapper'">
+                <Img src="'/mass_mailing/static/src/img/snippets_options/content_width_normal.svg'" />
+            </BuilderButton>
+            <BuilderButton classAction="''" applyTo="'.o_mail_wrapper'">
+                <Img src="'/mass_mailing/static/src/img/snippets_options/content_width_full.svg'" />
+            </BuilderButton>
+        </BuilderButtonGroup>
     </BuilderRow>
     <BuilderRow label.translate="Mailing Background">
         <BuilderColorPicker noTransparency="true"
@@ -143,7 +148,12 @@
             />
         </BuilderRow>
         <BuilderRow label.translate="Width" level="1">
-            <BuilderNumberInput title.translate="Width" unit="'%'" saveUnit="'%'" actionParam="{ variable: `${prefix}width` }" default="100"/>
+            <BuilderButtonGroup actionParam="{ variable: `${prefix}width` }">
+                <BuilderButton actionValue="'25%'" title.translate="Resize Quarter">25%</BuilderButton>
+                <BuilderButton actionValue="'50%'" title.translate="Resize Half">50%</BuilderButton>
+                <BuilderButton actionValue="'75%'" title.translate="Resize Three Quarters">75%</BuilderButton>
+                <BuilderButton actionValue="'100%'" title.translate="Resize Full">100%</BuilderButton>
+            </BuilderButtonGroup>
         </BuilderRow>
     </BuilderContext>
 </t>

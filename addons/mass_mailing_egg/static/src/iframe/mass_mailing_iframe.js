@@ -271,7 +271,9 @@ export class MassMailingIframe extends Component {
 
     getBuilderProps() {
         const getExternalScrollableAncestor = () =>
-            !this.showFullscreen && this.iframeRef.el && closestScrollableY(this.iframeRef.el);
+            !this.state.showFullscreen &&
+            this.iframeRef.el &&
+            closestScrollableY(this.iframeRef.el);
         return {
             overlayRef: this.overlayRef,
             iframeLoaded: this.iframeLoaded,
