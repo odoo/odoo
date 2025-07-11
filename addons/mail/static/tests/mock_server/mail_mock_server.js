@@ -934,6 +934,14 @@ async function search(request) {
     return store.get_result();
 }
 
+registerRoute("/mail/thread/recipients/get_suggested_recipients", get_suggested_recipients);
+/** @type {RouteCallback} */
+async function get_suggested_recipients(request) {
+    const { thread_model, thread_id, partner_ids, main_email } = await parseRequestParams(request);
+    const MailThread = this.env[thread_model];
+    return MailThread._message_get_suggested_recipients([thread_id], partner_ids, main_email);
+}
+
 /** @type {RouteCallback} */
 async function processRequest(request) {
     /** @type {import("mock_models").DiscussChannel} */
