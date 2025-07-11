@@ -189,6 +189,8 @@ class Test_Read_GroupRelated_Foo(models.Model):
 
     bar_base_ids = fields.Many2many(related='bar_id.base_ids')
 
+    schedule_datetime = fields.Datetime()
+
 
 class Test_Read_GroupRelated_Base(models.Model):
     _name = 'test_read_group.related_base'
