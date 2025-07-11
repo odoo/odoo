@@ -398,6 +398,11 @@ class AccountAnalyticLine(models.Model):
                 })
         return result
 
+    def _split_amount_fname(self):
+        # split the quantity instead of the amount, since the amount is postprocessed
+        # based on the quantity
+        return 'unit_amount' if self.project_id else super()._split_amount_fname()
+
     def _is_timesheet_encode_uom_day(self):
         company_uom = self.env.company.timesheet_encode_uom_id
         return company_uom == self.env.ref('uom.product_uom_day')
