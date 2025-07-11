@@ -370,7 +370,6 @@ class EventMail(models.Model):
             'composition_mode': 'mass_mail',
             'force_send': False,
             'model': registrations._name,
-            'record_name': False,
             'res_ids': registrations.ids,
             'template_id': self.template_ref.id,
         }

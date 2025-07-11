@@ -1329,7 +1329,6 @@ class ProjectTask(models.Model):
                     partner_ids=partner_ids,
                     email_layout_xmlid='mail.mail_notification_layout',
                     notify_author_mention=False,
-                    record_name=task.display_name,
                )
         return result
 
@@ -1447,10 +1446,12 @@ class ProjectTask(models.Model):
     # ---------------------------------------------------
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
-                                                   force_email_company=False, force_email_lang=False):
+                                                   force_email_company=False, force_email_lang=False,
+                                                   force_record_name=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
             message, msg_vals=msg_vals, model_description=model_description,
-            force_email_company=force_email_company, force_email_lang=force_email_lang
+            force_email_company=force_email_company, force_email_lang=force_email_lang,
+            force_record_name=force_record_name,
         )
         project_name = self.project_id.sudo().name
         stage_name = self.stage_id.name
@@ -1482,7 +1483,6 @@ class ProjectTask(models.Model):
                 subject=_('You have been invited to follow %s', self.display_name),
                 body=assignation_msg,
                 partner_ids=partner.ids,
-                record_name=self.display_name,
                 email_layout_xmlid='mail.mail_notification_layout',
                 model_description=task_model_description,
                 mail_auto_delete=True,
@@ -1513,7 +1513,6 @@ class ProjectTask(models.Model):
                     subject=_('You have been assigned to %s', task.display_name),
                     body=assignation_msg,
                     partner_ids=user.partner_id.ids,
-                    record_name=task.display_name,
                     email_layout_xmlid='mail.mail_notification_layout',
                     model_description=task_model_description,
                     mail_auto_delete=False,

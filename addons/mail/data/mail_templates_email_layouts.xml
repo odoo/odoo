@@ -44,7 +44,7 @@
                                         <br t-if="not subtitle_last"/>
                                     </t>
                                 </td>
-                                <td t-else=""><span style="font-weight:bold;" t-out="record_name"/><br/></td>
+                                <td t-else=""><span style="font-weight:bold;" t-out="record_name or (message.record_name and message.record_name.replace('/','-')) or ''"/><br/></td>
 
                             </tr>
                         </tbody>
@@ -114,13 +114,13 @@
                     <t t-if="has_button_access">
                         <a t-att-href="button_access['url']">
                             <span style="font-size: 20px; font-weight: bold;">
-                                <t t-out="message.record_name and message.record_name.replace('/','-') or ''"/>
+                                <t t-out="(record_name or message.record_name or '').replace('/','-')"/>
                             </span>
                         </a>
                     </t>
                     <t t-else="">
                         <span style="font-size: 20px; font-weight: bold;">
-                            <t t-out="message.record_name and message.record_name.replace('/','-') or ''"/>
+                            <t t-out="(record_name or message.record_name or '').replace('/','-')"/>
                         </span>
                     </t>
                 </td><td valign="middle" align="right" t-if="company and not company.uses_default_logo">
@@ -186,7 +186,7 @@
                   inherit_id="mail.mail_notification_layout" primary="True">
             <xpath expr="//t[hasclass('o_signature')]" position="replace">
                 <t class="o_signature">
-                    <div t-if="email_add_signature and 'user_id' in record and record.user_id and not record.env.user._is_superuser() and not is_html_empty(record.user_id.sudo().signature)"
+                    <div t-if="email_add_signature and record and 'user_id' in record and record.user_id and not record.env.user._is_superuser() and not is_html_empty(record.user_id.sudo().signature)"
                          t-out="record.user_id.sudo().signature" class="o_signature" style="font-size: 13px;"/>
                 </t>
             </xpath>
