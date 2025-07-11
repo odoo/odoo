@@ -32,7 +32,6 @@ export class Homepage extends Component {
     setup() {
         this.store = useStore();
         this.state = useState({ data: {}, loading: true, waitRestart: false });
-        this.store.advanced = localStorage.getItem("showAdvanced") === "true";
         this.store.dev = new URLSearchParams(window.location.search).has("debug");
 
         onWillStart(async () => {
@@ -71,7 +70,7 @@ export class Homepage extends Component {
     async loadInitialData() {
         try {
             const data = await this.store.rpc({
-                url: "/iot_drivers/data",
+                url: `/iot_drivers/data${this.store.dev ? "?more=True" : ""}`,
             });
 
             if (data.system === "Linux") {
@@ -99,11 +98,6 @@ export class Homepage extends Component {
         }
     }
 
-    toggleAdvanced() {
-        this.store.advanced = !this.store.advanced;
-        localStorage.setItem("showAdvanced", this.store.advanced);
-    }
-
     static template = xml`
     <LoadingFullScreen t-if="this.state.waitRestart">
         <t t-set-slot="body">
@@ -113,13 +107,8 @@ export class Homepage extends Component {
 
     <div t-if="!this.state.loading" class="w-100 d-flex flex-column align-items-center justify-content-center background">
         <div class="bg-white p-4 rounded overflow-auto position-relative w-100 main-container">
-            <div class="position-absolute end-0 top-0 mt-3 me-4 d-flex gap-1">
-                <IconButton t-if="!store.base.is_access_point_up" onClick.bind="toggleAdvanced" icon="this.store.advanced ? 'fa-cog' : 'fa-cogs'" />
-                <IconButton onClick.bind="restartOdooService" icon="'fa-power-off'" />
-            </div>
-            <div class="d-flex mb-4 flex-column align-items-center justify-content-center">
-                <h4 class="text-center m-0">IoT Box - <t t-esc="state.data.hostname" /></h4>
-            </div>
+            <div class="d-flex justify-content-end"><IconButton onClick.bind="restartOdooService" icon="'fa-power-off'" /></div>
+            <h4 class="w-100 text-center mb-4 mt-0">IoT Box - <t t-esc="state.data.hostname" /></h4>
             <div t-if="!state.data.certificate_end_date and !store.base.is_access_point_up" class="alert alert-warning" role="alert">
                 <p class="m-0 fw-bold">
                     No subscription linked to your IoT Box.
@@ -128,7 +117,7 @@ export class Homepage extends Component {
                     Please contact your account manager to take advantage of your IoT Box's full potential.
                 </small>
             </div>
-            <div t-if="store.advanced and state.data.certificate_end_date and !store.base.is_access_point_up" class="alert alert-info" role="alert">
+            <div t-if="store.dev and state.data.certificate_end_date and !store.base.is_access_point_up" class="alert alert-info" role="alert">
                 Your IoT Box subscription is valid until <span class="fw-bold" t-esc="state.data.certificate_end_date"/>.
             </div>
             <div t-if="store.base.is_access_point_up" class="alert alert-info" role="alert">
@@ -142,13 +131,13 @@ export class Homepage extends Component {
 					<HostnameDialog t-if="this.store.isLinux" />
 				</t>
 			</SingleData>
-            <SingleData t-if="store.advanced" name="'Version'" value="state.data.version" icon="'fa-microchip'">
+            <SingleData t-if="store.dev" name="'Version'" value="state.data.version" icon="'fa-microchip'">
                 <t t-set-slot="button">
                     <UpdateDialog />
                 </t>
             </SingleData>
-            <SingleData t-if="store.advanced" name="'IP address'" value="state.data.ip" icon="'fa-globe'" />
-            <SingleData t-if="store.advanced" name="'Identifier'" value="state.data.identifier" icon="'fa-address-card'" />
+            <SingleData t-if="store.dev" name="'IP address'" value="state.data.ip" icon="'fa-globe'" />
+            <SingleData t-if="store.dev" name="'Identifier'" value="state.data.identifier" icon="'fa-address-card'" />
             <SingleData t-if="store.isLinux" name="'Internet Status'" value="networkStatus" icon="'fa-wifi'">
                 <t t-set-slot="button">
                     <WifiDialog />
@@ -161,7 +150,7 @@ export class Homepage extends Component {
 			</SingleData>
             <SingleData t-if="state.data.pairing_code and !this.store.base.is_access_point_up and !state.data.pairing_code_expired" name="'Pairing Code'" value="state.data.pairing_code + ' - Enter this code in the IoT app in your Odoo database'" icon="'fa-code'"/>
             <SingleData t-if="state.data.pairing_code_expired" name="'Pairing Code'" value="'Code has expired - restart the IoT Box to generate a new one'" icon="'fa-code'"/>
-            <SingleData  t-if="store.advanced and !store.base.is_access_point_up" name="'Six terminal'" value="state.data.six_terminal" icon="'fa-money'">
+            <SingleData  t-if="store.dev and !store.base.is_access_point_up" name="'Six terminal'" value="state.data.six_terminal" icon="'fa-money'">
                 <t t-set-slot="button">
                     <SixDialog />
                 </t>
