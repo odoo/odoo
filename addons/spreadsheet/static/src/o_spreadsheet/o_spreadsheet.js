@@ -25600,38 +25600,112 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * In all the sheets, replace the table-only references in the formula cells with standard references.
      */
     function convertTableFormulaReferences(convertedSheets, xlsxSheets) {
+        let deconstructedSheets = null;
         for (let tableSheet of convertedSheets) {
             const tables = xlsxSheets.find((s) => isSheetNameEqual(s.sheetName, tableSheet.name)).tables;
+            if (!tables || tables.length === 0) {
+                continue;
+            }
+            // Only deconstruct sheets if we are sure there are tables to process
+            if (!deconstructedSheets) {
+                deconstructedSheets = deconstructSheets(convertedSheets);
+            }
             for (let table of tables) {
-                const tabRef = table.name + "[";
-                for (let sheet of convertedSheets) {
-                    for (let xc in sheet.cells) {
-                        const cell = sheet.cells[xc];
-                        if (cell && cell.content && cell.content.startsWith("=")) {
-                            let refIndex;
-                            while ((refIndex = cell.content.indexOf(tabRef)) !== -1) {
-                                let endIndex = refIndex + tabRef.length;
-                                let openBrackets = 1;
-                                while (openBrackets > 0 && endIndex < cell.content.length) {
-                                    if (cell.content[endIndex] === "[") {
-                                        openBrackets++;
-                                    }
-                                    else if (cell.content[endIndex] === "]") {
-                                        openBrackets--;
-                                    }
-                                    endIndex++;
-                                }
-                                let reference = cell.content.slice(refIndex + tabRef.length, endIndex - 1);
-                                const sheetPrefix = tableSheet.id === sheet.id ? "" : tableSheet.name + "!";
-                                const convertedRef = convertTableReference(sheetPrefix, reference, table, xc);
-                                cell.content =
-                                    cell.content.slice(0, refIndex) + convertedRef + cell.content.slice(endIndex);
+                for (let sheetId in deconstructedSheets) {
+                    const sheet = convertedSheets.find((s) => s.id === sheetId);
+                    for (let xc in deconstructedSheets[sheetId]) {
+                        const deconstructedCell = deconstructedSheets[sheetId][xc];
+                        for (let i = deconstructedCell.length - 3; i >= 0; i -= 2) {
+                            const possibleTable = deconstructedSheets[sheetId][xc][i];
+                            if (!possibleTable.endsWith(table.name)) {
+                                continue;
                             }
+                            const possibleRef = deconstructedSheets[sheetId][xc][i + 1];
+                            const sheetPrefix = tableSheet.id === sheet.id ? "" : tableSheet.name + "!";
+                            const convertedRef = convertTableReference(sheetPrefix, possibleRef, table, xc);
+                            deconstructedSheets[sheetId][xc][i + 2] =
+                                possibleTable.slice(0, possibleTable.indexOf(table.name)) +
+                                    convertedRef +
+                                    deconstructedSheets[sheetId][xc][i + 2];
+                            deconstructedSheets[sheetId][xc].splice(i, 2);
                         }
                     }
                 }
             }
         }
+        if (!deconstructedSheets) {
+            return;
+        }
+        for (let sheetId in deconstructedSheets) {
+            const sheet = convertedSheets.find((s) => s.id === sheetId);
+            for (let xc in deconstructedSheets[sheetId]) {
+                const deconstructedCell = deconstructedSheets[sheetId][xc];
+                if (deconstructedCell.length === 1) {
+                    sheet.cells[xc].content = deconstructedCell[0];
+                    continue;
+                }
+                let newContent = "";
+                for (let i = 0; i < deconstructedCell.length; i += 2) {
+                    newContent += deconstructedCell[i] + "[" + deconstructedCell[i + 1] + "]";
+                }
+                newContent += deconstructedCell[deconstructedCell.length - 1];
+                sheet.cells[xc].content = newContent;
+            }
+        }
+    }
+    /**
+     * Deconstruct the content of the cells in the sheets to extract possible table references.
+     * Example from "=AVERAGE(Table1[colName1])-AVERAGE(Table2[colName2])":
+     * return --> ["=AVERAGE(Table1", "colName1", ")-AVERAGE(Table2", "colName2", ")"]
+     */
+    function deconstructSheets(convertedSheets) {
+        var _a;
+        const deconstructedSheets = {};
+        for (let sheet of convertedSheets) {
+            for (let xc in sheet.cells) {
+                const cellContent = (_a = sheet.cells[xc]) === null || _a === void 0 ? void 0 : _a.content;
+                if (!cellContent || !cellContent.startsWith("=")) {
+                    continue;
+                }
+                const startIndex = cellContent.indexOf("[");
+                if (startIndex === -1) {
+                    continue;
+                }
+                const deconstructedCell = [];
+                let possibleTable = cellContent.slice(0, startIndex);
+                let possibleRef = "";
+                let openBrackets = 1;
+                let mainPossibleTableIndex = 0;
+                let mainOpenBracketIndex = startIndex;
+                for (let index = startIndex + 1; index < cellContent.length; index++) {
+                    if (cellContent[index] === "[") {
+                        if (openBrackets === 0) {
+                            possibleTable = cellContent.slice(mainPossibleTableIndex, index);
+                            mainOpenBracketIndex = index;
+                        }
+                        openBrackets++;
+                        continue;
+                    }
+                    if (cellContent[index] === "]") {
+                        openBrackets--;
+                        if (openBrackets === 0) {
+                            possibleRef = cellContent.slice(mainOpenBracketIndex + 1, index);
+                            deconstructedCell.push(possibleTable);
+                            deconstructedCell.push(possibleRef);
+                            mainPossibleTableIndex = index + 1;
+                        }
+                    }
+                }
+                if (deconstructedCell.length) {
+                    if (!deconstructedSheets[sheet.id]) {
+                        deconstructedSheets[sheet.id] = {};
+                    }
+                    deconstructedCell.push(cellContent.slice(mainPossibleTableIndex));
+                    deconstructedSheets[sheet.id][xc] = [...deconstructedCell];
+                }
+            }
+        }
+        return deconstructedSheets;
     }
     /**
      * Convert table-specific references in formulas into standard references. A table reference is composed of columns names,
@@ -43889,9 +43963,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.74';
-    __info__.date = '2025-06-27T09:14:38.112Z';
-    __info__.hash = 'a1d6303';
+    __info__.version = '16.0.75';
+    __info__.date = '2025-07-11T11:47:47.509Z';
+    __info__.hash = 'c6d8a41';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
