@@ -44,6 +44,12 @@ export class BuilderOptionsPlugin extends Plugin {
             //     reasons.push(`I hate ${el.dataset.name}`);
             // }
         ],
+        start_edition_handlers: () => {
+            if (this.config.initialTarget) {
+                const el = this.editable.querySelector(this.config.initialTarget);
+                this.updateContainers(el);
+            }
+        },
     };
 
     setup() {
@@ -68,10 +74,6 @@ export class BuilderOptionsPlugin extends Plugin {
         this.editable.addEventListener("click", this.onClick, { capture: true });
 
         this.lastContainers = [];
-        if (this.config.initialTarget) {
-            const el = this.editable.querySelector(this.config.initialTarget);
-            this.updateContainers(el);
-        }
 
         // Selector of elements that should not update/have containers when they
         // are clicked.
