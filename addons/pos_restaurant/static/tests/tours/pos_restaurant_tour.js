@@ -681,6 +681,12 @@ registry.category("web_tour.tours").add("test_multiple_preparation_printer_diffe
             Dialog.bodyIs("Printer 1: The printer is not reachable."),
             Dialog.bodyIs("Printer 2: The printer is not reachable."),
             Dialog.confirm(),
+            // OrderWarningDialog should not be shown as order already send for preparation
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
 
