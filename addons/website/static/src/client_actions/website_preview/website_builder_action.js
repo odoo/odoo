@@ -286,6 +286,7 @@ export class WebsiteBuilderClientAction extends Component {
             }),
             loadBundle("website.inside_builder_style", {
                 targetDoc: this.websiteContent.el.contentDocument,
+                js: false,
             }),
         ]);
     }
