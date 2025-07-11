@@ -343,6 +343,40 @@ class Website(Home):
         }
         return request.render('website.website_info', values)
 
+    @http.route(['/middleware'], type='http', auth="user", website=True, multilang=False)
+    def middleware(self, original_endpoint=None, **kwargs):
+        """
+        Controller that acts as a middleware to apply conditional rewrite rules.
+        It checks user roles against a rewrite rule and then performs the
+        configured action (404 Not Found or 308 Redirect).
+        """
+        original_path = request.httprequest.path
+        redirect_rule = request.env['website.rewrite'].sudo().search([('url_from', '=', original_path)], limit=1)
+        # If no rewrite rule is found, proceed to the original endpoint.
+        # This might happen if the rule is deleted after the routes have been cached.
+        if not redirect_rule:
+            return original_endpoint(**kwargs)
+
+        user_groups = request.env.user.group_ids
+        apply_to = redirect_rule.apply_to_group
+        rule_groups = redirect_rule.user_group_ids
+
+        # Determine if the rewrite rule should be applied to the current user
+        should_apply_rule = (
+            apply_to == '0' or  # Apply to all users
+            (apply_to == '1' and user_groups & rule_groups) or  # Apply if user is in a specified group
+            (apply_to == '2' and not (user_groups & rule_groups))  # Apply if user is NOT in a specified group
+        )
+
+        if should_apply_rule:
+            # If the condition is met, apply the rewrite action
+            if redirect_rule.redirect_type == '404':
+                return request.not_found("Page not found")
+            elif redirect_rule.redirect_type == '308':
+                return request.redirect(redirect_rule.url_to, code=308)
+        # If the rule's conditions are not met for the user, serve the original content
+        return original_endpoint(**kwargs)
+
     @http.route(['/website/configurator', '/website/configurator/<int:step>'], type='http', auth="user", website=True, multilang=False)
     def website_configurator(self, step=1, **kwargs):
         if not request.env.user.has_group('website.group_website_designer'):

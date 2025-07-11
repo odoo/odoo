@@ -127,26 +127,39 @@ class IrHttp(models.AbstractModel):
         logger.debug("_generate_routing_rules for website: %s", website_id)
         rewrites = self._get_rewrites(website_id)
         self._rewrite_len.__cache__.add_value(self, website_id, cache_value=len(rewrites))
+        middleware_endpoint = None
+        rules = super()._generate_routing_rules(modules, converters)
+        all_rules = list(rules)
+        for url, endpoint in all_rules:
+            if url == '/middleware':
+                middleware_endpoint = endpoint
+                logger.debug('Middleware endpoint found for URL: %s', url)
+                break
 
-        for url, endpoint in super()._generate_routing_rules(modules, converters):
+        for url, endpoint in all_rules:
             if url in rewrites:
                 rewrite = rewrites[url]
                 url_to = rewrite.url_to
                 if rewrite.redirect_type == '308':
                     logger.debug('Add rule %s for %s' % (url_to, website_id))
-                    yield url_to, endpoint  # yield new url
-
-                    if url != url_to:
-                        logger.debug('Redirect from %s to %s for website %s' % (url, url_to, website_id))
-                        # duplicate the endpoint to only register the redirect_to for this specific url
-                        redirect_endpoint = functools.partial(endpoint)
-                        functools.update_wrapper(redirect_endpoint, endpoint)
-                        _slug_matching = functools.partial(self._slug_matching, endpoint=endpoint)
-                        redirect_endpoint.routing = dict(endpoint.routing, redirect_to=_slug_matching)
-                        yield url, redirect_endpoint  # yield original redirected to new url
+                    yield url_to, endpoint
+                    # Wrap the original URL ('url') with the middleware to handle the conditional redirect
+                    if middleware_endpoint:
+                        logger.debug('Applying conditional 308 redirect for %s on website %s', url, website_id)
+                        handler_with_fallback = functools.partial(middleware_endpoint, original_endpoint=endpoint)
+                        functools.update_wrapper(handler_with_fallback, middleware_endpoint)
+                        yield url, handler_with_fallback
+                    else:
+                        logger.warning('Middleware not found, cannot apply conditional 308 for %s', url)
+                        yield url, endpoint
                 elif rewrite.redirect_type == '404':
-                    logger.debug('Return 404 for %s for website %s' % (url, website_id))
-                    continue
+                    if middleware_endpoint:
+                        handler_with_fallback = functools.partial(middleware_endpoint, original_endpoint=endpoint)
+                        functools.update_wrapper(handler_with_fallback, middleware_endpoint)
+                        yield url, handler_with_fallback
+                    else:
+                        logger.debug('Return 404 for %s for website %s' % (url, website_id))
+                        continue
             else:
                 yield url, endpoint
 
@@ -351,7 +364,24 @@ class IrHttp(models.AbstractModel):
             & Domain('url_from', 'in', [req_page_with_qs, req_page.rstrip('/'), req_page + '/'])
             & request.website.website_domain()
         )
-        return request.env['website.rewrite'].sudo().search(domain, order='url_from DESC', limit=1)
+        redirect = request.env['website.rewrite'].sudo().search(domain, order='url_from DESC', limit=1)
+        if not redirect:
+            return False
+        user_groups = request.env.user.group_ids
+        apply_to = redirect.apply_to_group
+        rule_groups = redirect.user_group_ids
+        if apply_to == '0':
+            # apply to all users
+            return redirect
+        elif apply_to == '1' and user_groups & rule_groups:
+            # If the user has one of the allowed groups, redirect to the URL
+            # specified in the rewrite rule.
+            return redirect
+        elif apply_to == '2' and not (user_groups & rule_groups):
+            # If the user is not part of groups mentioned in the redirect rule,
+            # redirect to the URL specified in the rewrite rule.
+            return redirect
+        return False
 
     @classmethod
     def _serve_fallback(cls):
