@@ -262,7 +262,9 @@ will update the cost of every lot/serial number in stock."),
         for product in self:
             value_sum, quantity_sum = group_mapping.get(product._origin, (0, 0))
             value_svl = company_id.currency_id.round(value_sum)
-            avg_cost = value_svl / quantity_sum if quantity_sum else 0
+            avg_cost = 0
+            if not float_is_zero(quantity_sum, precision_rounding=product.uom_id.rounding):
+                avg_cost = value_svl / quantity_sum
             product.value_svl = value_svl
             product.quantity_svl = quantity_sum
             product.avg_cost = avg_cost
