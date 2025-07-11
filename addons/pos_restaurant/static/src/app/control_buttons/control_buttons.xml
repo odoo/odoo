@@ -43,7 +43,7 @@
             </button>
         </xpath>
         <xpath expr="//button[hasclass('o_fiscal_position_button')]" position="attributes">
-            <attribute name="t-if">!pos.config.takeaway</attribute>
+            <attribute name="t-if">pos.models['account.fiscal.position']?.length and !pos.config.takeaway</attribute>
         </xpath>
     </t>
 </templates>
