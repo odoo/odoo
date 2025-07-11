@@ -202,7 +202,7 @@ class StockMove(models.Model):
         :rtype: dict
         """
         self.ensure_one()
-        detail = ', '.join(self.scrap_id.scrap_reason_tag_ids.mapped('name')) if self.scrapped else self.product_id.name
+        detail = ', '.join(self.scrap_reason_tag_ids.mapped('name')) if self.scrapped else self.product_id.name
         return {
             'stock_move_id': self.id,
             'company_id': self.company_id.id,

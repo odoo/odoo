@@ -3701,6 +3701,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         different `price_unit` than the receipt should not create pdiff AccountMoveLines.
         """
         self.env.company.anglo_saxon_accounting = False
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
         self.product1.categ_id.write({
             'property_valuation': 'manual_periodic',
             'property_cost_method': 'average',
@@ -3716,11 +3717,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         })
         purchase_order.button_confirm()
         purchase_order.picking_ids.button_validate()
-        with Form(self.env['stock.scrap']) as scrap_form:
-            scrap_form.product_id = product
-            scrap_form.scrap_qty = 10
-            scrap = scrap_form.save()
-        scrap.action_validate()
+        with Form(self.env['stock.move.line'], view='stock.view_scrap_move_line_form2') as move_line_form:
+            move_line_form.product_id = product
+            move_line_form.quantity = 10
+            move_line_form.location_id = self.env.ref('stock.stock_location_suppliers').id
+            scrap_move_line = move_line_form.save()
+        scrap_move_line.do_scrap()
         purchase_order.action_create_invoice()
         bill = purchase_order.invoice_ids
         bill.invoice_line_ids.price_unit = 120
