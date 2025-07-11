@@ -170,6 +170,7 @@ class Delivery(WebsiteSale):
                 'Anonymous express checkout partner for order %s',
                 order_sudo.name,
             )
+<<<<<<< 2c7897bb6ac614ef6431c0eb20a98e2f9e7e034a
             new_partner_sudo = self._create_new_address(
                 address_values=partial_delivery_address,
                 address_type='delivery',
@@ -190,6 +191,37 @@ class Delivery(WebsiteSale):
         elif not self._are_same_addresses(
             partial_delivery_address,
             order_sudo.partner_shipping_id,
+||||||| 169d9133c7d86278bc2ac679deb61bdcd6679cf7
+            # Pricelist are recomputed every time the partner is changed. We don't want to recompute
+            # the price with another pricelist at this state since the customer has already accepted
+            # the amount and validated the payment.
+            order_sudo.env.remove_to_compute(order_sudo._fields['pricelist_id'], order_sudo)
+        elif order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
+            self._create_or_edit_partner(
+                partial_shipping_address,
+                edit=True,
+                type='delivery',
+                partner_id=order_sudo.partner_shipping_id.id,
+            )
+        elif any(
+            partial_shipping_address[k] != order_sudo.partner_shipping_id[k]
+            for k in partial_shipping_address
+=======
+            # Pricelist are recomputed every time the partner is changed. We don't want to recompute
+            # the price with another pricelist at this state since the customer has already accepted
+            # the amount and validated the payment.
+            order_sudo.env.remove_to_compute(order_sudo._fields['pricelist_id'], order_sudo)
+        elif order_sudo.name in order_sudo.partner_shipping_id.name:
+            self._create_or_edit_partner(
+                partial_shipping_address,
+                edit=True,
+                type='delivery',
+                partner_id=order_sudo.partner_shipping_id.id,
+            )
+        elif any(
+            partial_shipping_address[k] != order_sudo.partner_shipping_id[k]
+            for k in partial_shipping_address
+>>>>>>> c5e5f7f7e4b9937c8f6d2211c97f2c9f770ddd25
         ):
             # Check if a child partner doesn't already exist with the same information. The phone
             # isn't always checked because it isn't sent in delivery information with Google Pay.
