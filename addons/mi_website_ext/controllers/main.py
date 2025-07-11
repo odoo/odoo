@@ -375,9 +375,12 @@ class WebsiteCustom(http.Controller):
             _logger.warning("✅ Iniciando proceso de notificación para %s", employee.name)
 
             # 1. Obtener tipo de ausencia por ID
-            leave_type = request.env['hr.leave.type'].sudo().browse(2).exists()
+            leave_type = request.env['hr.leave.type'].sudo().search([
+    ('name', '=', 'Ausencias por enfermedad'),
+    ('company_id', 'in', [False, user.company_id.id])
+], limit=1)
             if not leave_type:
-                _logger.warning("❌ No se encontró el tipo de ausencia con ID 2.")
+                _logger.warning("❌ No se encontró el tipo de ausencia.")
                 return {"error": "No se encontró el tipo de ausencia por enfermedad."}
             _logger.warning("✅ Tipo de ausencia obtenido: %s", leave_type.name)
 

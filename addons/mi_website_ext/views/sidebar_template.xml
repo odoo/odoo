@@ -9,6 +9,8 @@
             <link
                 href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&amp;family=Rubik:ital,wght@0,300..900;1,300..900&amp;display=swap"
                 rel="stylesheet" crossOrigin="anonymous"/>
+            <t t-call-assets="web.assets_core" t-js="true" t-css="false"/>
+            <t t-call-assets="bus.assets_core" t-js="true" t-css="false"/>
         </xpath>
         <xpath expr="//main" position="before">
             <t t-if="not hide_sidebar is defined">
@@ -74,7 +76,9 @@
                                     <div class="card-items">
                                         <a href="/policy">
                                             <img src="/mi_website_ext/static/src/img/Policy.svg" alt="Grupo" />
-                                            <p>Políticas, Reglamentos<br/>y Manuales</p>
+                                            <p>Políticas, Reglamentos
+                                                <br/>y Manuales
+                                            </p>
                                         </a>
                                     </div>
                                     <hr class="divider" />
@@ -589,6 +593,10 @@
                                 <aside class="custom-sidebar">
                                     <!-- Perfil -->
                                     <div class="profile-section">
+                                        <t t-set="profile_employee" t-value="request.env['hr.employee'].sudo().search([
+            ('user_id', '=', user.id),
+            ('company_id', '=', user.company_id.id)
+        ], limit=1)"/>
                                         <div class="avatar-section">
                                             <img
                                     t-att-src="'/web/image/res.users/' + str(user.id) + '/image_512'"
@@ -599,31 +607,33 @@
                                         </h2>
                                         <div class="position-group">
                                             <p class="position">
-                                                <t t-if="user.employee_id and user.employee_id.job_id">
-                                                    <t t-esc="user.employee_id.job_id.name" />
-                                    </t>
+                                                <t
+                                                    t-if="profile_employee and profile_employee.job_id">
+                                                    <t t-esc="profile_employee.job_id.name" />
+                                        </t>
                                                 <t t-elif="user.job_title">
                                                     <t t-esc="user.job_title" />
-                                    </t>
+                                        </t>
                                                 <t t-else="">
                                         Puesto no definido
-                                    </t>
+                                        </t>
                                                 <t t-if="user.company_id"> |
                                                     <t t-esc="user.company_id.name" />
-                                    </t>
+                                        </t>
                                             </p>
                                             <p class="department">
-                                                <t t-if="user.employee_id and user.employee_id.department_id">
-                                                    <t t-esc="user.employee_id.department_id.name" />
-                                    </t>
+                                                <t
+                                                    t-if="profile_employee and profile_employee.department_id">
+                                                    <t t-esc="profile_employee.department_id.name" />
+                                        </t>
                                                 <t t-else="">
                                         Departamento no asignado
-                                    </t>
+                                        </t>
                                             </p>
                                         </div>
                                         <hr class="divider" />
                                         <!--
-                                    <div class="badge-area">
+                                        <div class="badge-area">
                                         <div class="badge-title">
                                             <h3>Mis Logros</h3>
                                         </div>
@@ -636,10 +646,10 @@
                                         alt="Grupo" />
                                         </div>
                                         <a class="badge_editor">Ver mis logros</a>
-                                    </div>
-                                    -->
+                                        </div>
+                                        -->
                                         <div class="btn-section">
-                                           <a class="btn-time" href="https://odoo.calengs.com/odoo/time-off">Maneja tu tiempo</a>
+                                            <a class="btn-time" href="https://odoo.calengs.com/odoo/time-off">Maneja tu tiempo</a>
                                         </div>
                                     </div>
                                     <!-- Cards -->

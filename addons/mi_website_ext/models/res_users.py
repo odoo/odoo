@@ -48,7 +48,7 @@ class Users(models.Model):
         HrLeave = self.env['hr.leave']
         HrEmployee = self.env['hr.employee']
 
-        vacation_leave_type = self.env['hr.leave.type'].search([('name', '=', 'Vacaciones')], limit=1) # Asume que el nombre es exactamente "Vacaciones"
+        vacation_leave_type = self.env['hr.leave.type'].sudo().search([('name', '=', 'Vacaciones'), ('company_id', 'in', [user.company_id.id, False])], limit=1) # Asume que el nombre es exactamente "Vacaciones"
         vacation_leave_type_id = vacation_leave_type.id if vacation_leave_type else None
         
         # Si el ID 8 es fijo y seguro para tu instancia:
@@ -62,7 +62,7 @@ class Users(models.Model):
             return
 
         for user in self:
-            employee = HrEmployee.search([('user_id', '=', user.id)], limit=1)
+            employee = HrEmployee.sudo().search([('user_id', '=', user.id), ('company_id', 'in', [user.company_id.id, False])], limit=1)
             if not employee:
                 user.x_days_until_vacation_display = "--"
                 continue
@@ -74,7 +74,7 @@ class Users(models.Model):
                 ('holiday_status_id', '=', vacation_leave_type_id), # Solo tipo "Vacaciones"
             ]
 
-            next_vacation = HrLeave.search(domain, order='request_date_from asc', limit=1)
+            next_vacation = HrLeave.sudo().search(domain, order='request_date_from asc', limit=1)
 
             if next_vacation and next_vacation.request_date_from:
                 vacation_start_date = next_vacation.request_date_from
@@ -105,7 +105,7 @@ class Users(models.Model):
         HrLeave = self.env['hr.leave']
 
         for user in self:
-            permission_leave_type = self.env['hr.leave.type'].search([
+            permission_leave_type = self.env['hr.leave.type'].sudo().search([
                 ('name', '=', 'Solicitud de permiso'),
                 ('company_id', 'in', [user.company_id.id, False])
             ], limit=1)
@@ -117,7 +117,7 @@ class Users(models.Model):
 
             permission_leave_type_id = permission_leave_type.id
 
-            employee = HrEmployee.search([('user_id', '=', user.id)], limit=1)
+            employee = HrEmployee.sudo().search([('user_id', '=', user.id)], limit=1)
             if not employee:
                 user.x_available_remunerated_permission_hours = "--"
                 continue
@@ -170,7 +170,7 @@ class Users(models.Model):
         start_of_month = date_from.replace(day=1)
         end_of_month = (start_of_month + relativedelta(months=1)) - relativedelta(days=1)
 
-        permission_leave_type = self.env['hr.leave.type'].search([
+        permission_leave_type = self.env['hr.leave.type'].sudo().search([
             ('name', '=', 'Solicitud de permiso'),
             ('company_id', 'in', [employee.company_id.id, False])
         ], limit=1)
@@ -187,7 +187,7 @@ class Users(models.Model):
         ]
 
         HrLeave = self.env['hr.leave']
-        leaves = HrLeave.search(domain)
+        leaves = HrLeave.sudo().search(domain)
 
         hours_taken = 0.0
         for leave in leaves:
