@@ -1122,6 +1122,7 @@ test("Group unread counter up to date after mention is marked as seen", async ()
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "group",
+        auto_recompute_name: true,
     });
     const messageId = pyEnv["mail.message"].create({
         author_id: partnerId,

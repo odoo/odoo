@@ -529,7 +529,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._res_for_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._res_for_member(self.channel_channel_group_2, self.users[0].partner_id),
                 self._res_for_member(self.channel_group_1, self.users[0].partner_id),
-                self._res_for_member(self.channel_group_1, self.users[12].partner_id),
                 self._res_for_member(self.channel_chat_1, self.users[0].partner_id),
                 self._res_for_member(self.channel_chat_1, self.users[14].partner_id),
                 self._res_for_member(self.channel_chat_2, self.users[0].partner_id),
@@ -593,7 +592,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     also_notification=True,
                 ),
                 self._expected_result_for_persona(self.users[2]),
-                self._expected_result_for_persona(self.users[12]),
                 self._expected_result_for_persona(self.users[14]),
                 self._expected_result_for_persona(self.users[15]),
                 self._expected_result_for_persona(self.users[3]),
@@ -602,7 +600,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             ),
             "res.users": self._filter_users_fields(
                 self._res_for_user(self.users[0]),
-                self._res_for_user(self.users[12]),
                 self._res_for_user(self.users[14]),
                 self._res_for_user(self.users[15]),
                 self._res_for_user(self.users[2]),
