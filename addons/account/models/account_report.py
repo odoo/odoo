@@ -20,7 +20,7 @@ FIGURE_TYPE_SELECTION_VALUES = [
 ]
 
 DOMAIN_REGEX = re.compile(r'(-?sum)\((.*)\)')
-CROSS_REPORT_REGEX = re.compile(r'^cross_report\((.*)\)$')
+CROSS_REPORT_REGEX = re.compile(r'^cross_report\((.+)\)$')
 
 
 class AccountReport(models.Model):
@@ -785,15 +785,29 @@ class AccountReportExpression(models.Model):
                     if candidate_expr.subformula and candidate_expr.subformula.startswith('cross_report'):
                         subformula_match = CROSS_REPORT_REGEX.match(candidate_expr.subformula)
                         if not subformula_match:
-                            raise UserError(_("Cross report expressions must follow this format: cross_report(xml_id|id)"))
+                            raise UserError(_(
+                                "In report '%(report_name)s', on line '%(line_name)s', with label '%(label)s',\n"
+                                "The format of the cross report expression is invalid. \n"
+                                "Expected: cross_report(<report_id>|<xml_id>)"
+                                "Example:  cross_report(my_module.my_report) or cross_report(123)",
+                                report_name=candidate_expr.report_line_id.report_id.display_name,
+                                line_name=candidate_expr.report_line_name,
+                                label=candidate_expr.label,
+                            ))
                         cross_report_value = subformula_match.groups()[0]
                         try:
                             report_id = int(cross_report_value)
                         except ValueError:
-                            report_id = self.env.ref(cross_report_value).id
+                            report_id = report.id if (report := self.env.ref(cross_report_value, raise_if_not_found=False)) else None
 
                         if not report_id:
-                            raise UserError(_("Failed to parse cross_report id or xml_id"))
+                            raise UserError(_(
+                                "In report '%(report_name)s', on line '%(line_name)s', with label '%(label)s',\n"
+                                "Failed to parse the cross report id or xml_id.\n",
+                                report_name=candidate_expr.report_line_id.report_id.display_name,
+                                line_name=candidate_expr.report_line_name,
+                                label=candidate_expr.label,
+                            ))
                         elif report_id == candidate_expr.report_line_id.report_id.id:
                             raise UserError(_("You cannot use cross report on itself"))
 
