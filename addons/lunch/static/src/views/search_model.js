@@ -2,6 +2,7 @@ import { Domain } from '@web/core/domain';
 import { rpc } from "@web/core/network/rpc";
 import { SearchModel } from '@web/search/search_model';
 import { useState, onWillStart } from "@odoo/owl";
+const { DateTime } = luxon;
 
 export class LunchSearchModel extends SearchModel {
     setup() {
@@ -10,7 +11,7 @@ export class LunchSearchModel extends SearchModel {
         this.lunchState = useState({
             locationId: false,
             userId: false,
-            date: new Date(),
+            date: DateTime.now(),
         });
 
         onWillStart(async () => {
@@ -48,9 +49,10 @@ export class LunchSearchModel extends SearchModel {
     }
 
     updateDate(date) {
-        this.lunchState.date.setTime(date);
+        this.lunchState.date = date;
+        const weekday = this.lunchState.date.toJSDate().getDay();
         const domain_key = ['available_on_sun', 'available_on_mon', 'available_on_tue', 'available_on_wed',
-        'available_on_thu', 'available_on_fri', 'available_on_sat'][this.lunchState.date.getDay()];
+        'available_on_thu', 'available_on_fri', 'available_on_sat'][weekday];
         const filter = Object.values(this.searchItems).find(o => o['name'] === domain_key);
         this.deactivateGroup(filter.groupId)
         this.toggleSearchItem(filter.id);
