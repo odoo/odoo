@@ -42,6 +42,7 @@
                         </span>
                     </span>
                 </div>
+                <field name="reversed_entry_id" domain="[('move_type', '=', 'out_invoice'), ('commercial_partner_id', '=', commercial_partner_id)]" readonly="state != 'draft'" invisible="move_type != 'out_refund' or country_code != 'IN'"/>
             </xpath>
             <xpath expr="//page[@id='other_tab']/group[@id='other_tab_group']" position="after">
                 <group string="Export India" invisible="l10n_in_gst_treatment not in ['overseas', 'deemed_export'] or move_type not in ['out_invoice', 'out_refund']">

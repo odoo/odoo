@@ -12,6 +12,10 @@ class AccountTax(models.Model):
         selection=[('igst', 'igst'), ('cgst', 'cgst'), ('sgst', 'sgst'), ('cess', 'cess')],
         compute='_compute_l10n_in_tax_type',
     )
+    l10n_in_is_lut_tax = fields.Boolean(
+        string="LUT Tax",
+        help="Tick this if this tax is used in LUT (Letter of Undertaking) transactions. Only for Indian accounting.",
+    )
 
     # withholding related fields
     l10n_in_tds_tax_type = fields.Selection([
