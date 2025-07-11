@@ -991,7 +991,25 @@ function _process_request_for_all(store, name, params, context = {}) {
         );
     }
     if (name === "channels_as_member") {
-        const channels = DiscussChannel._get_channels_as_member();
+        const limit = params?.limit !== undefined ? parseInt(params.limit, 10) : false;
+        let channels = DiscussChannel._get_channels_as_member();
+        if (limit) {
+            const needaction = channels.filter((c) => c?.message_needaction);
+            const history = channels.filter((c) => !c?.message_needaction);
+            const sorted = [
+                ...needaction.sort(
+                    (a, b) => new Date(b.last_interest_dt || 0) - new Date(a.last_interest_dt || 0)
+                ),
+                ...history.sort(
+                    (a, b) => new Date(b.last_interest_dt || 0) - new Date(a.last_interest_dt || 0)
+                ),
+            ];
+            const sortedLimitedIds = sorted
+                .map((c) => c?.id)
+                .filter((id) => id != null)
+                .slice(0, limit);
+            channels = DiscussChannel.browse(sortedLimitedIds);
+        }
         store.add(
             MailMessage.browse(
                 channels
@@ -1068,6 +1086,134 @@ function _process_request_for_internal_user(store, name, params) {
         ];
         store.add(this.env["mail.canned.response"].search(domain));
     }
+    if (name === "load_messaging_menu_data") {
+        const tab = params?.tab || "main";
+        const limit = parseInt(params?.limit || "30", 10);
+        const offset = parseInt(params?.offset || "0", 10);
+        const loaders = {
+            inbox: loadInbox,
+            channel: loadChannel,
+            chat: loadChat,
+            main: loadMain,
+        };
+        const loader = loaders[tab];
+        if (typeof loader === "function") {
+            loader.call(this, store, offset, limit);
+        } else if (typeof loaders.main === "function") {
+            loaders.main.call(this, store, offset, limit);
+        }
+    }
+}
+
+function getMessages(context, offset, limit, needaction = true) {
+    const domain = [["needaction", "=", needaction]];
+    const order = "id DESC";
+    const kwargs = limit ? makeKwArgs({ limit, offset, order }) : makeKwArgs({ order });
+    return context.env["mail.message"].search(domain, kwargs);
+}
+
+function getChannels(context, domain, offset, limit = false, separateByNeedaction = false) {
+    let channels = context.env["discuss.channel"].search(domain, {
+        order: "last_interest_dt DESC",
+    });
+    const needactionChannels = channels.filter((c) => c.message_needaction);
+    const historyChannels = channels.filter((c) => !c.message_needaction);
+    if (separateByNeedaction) {
+        return {
+            needaction: needactionChannels,
+            history: historyChannels,
+        };
+    }
+    channels = [...needactionChannels, ...historyChannels];
+    if (limit) {
+        return channels.slice(offset, limit + offset);
+    }
+    return channels;
+}
+
+function loadInbox(store, offset, limit) {
+    const inboxMessages = getMessages(this, offset, limit, true);
+    const inboxMessagesCount = this.env["mail.message"].search_count([["needaction", "=", true]]);
+    const remaining = Math.max(0, limit - inboxMessages.length);
+    let historyMessages = [];
+    if (remaining > 0) {
+        historyMessages = getMessages(
+            this,
+            Math.max(0, offset - inboxMessagesCount),
+            remaining,
+            false
+        );
+    }
+    const allMessages = [...inboxMessages, ...historyMessages];
+    store
+        .add(
+            this.env["mail.message"].browse(allMessages),
+            makeKwArgs({ for_current_user: true, add_followers: true })
+        )
+        .resolve_data_request({ count: allMessages.length });
+}
+
+function loadChannel(store, offset, limit) {
+    const domain = [["channel_type", "=", "channel"]];
+    let channels = getChannels(this, domain, offset, limit);
+    channels = this.env["discuss.channel"].browse(channels);
+    store.add(channels).resolve_data_request({
+        count: channels.length,
+    });
+}
+
+function loadChat(store, offset, limit) {
+    const domain = [["channel_type", "in", ["chat", "group"]]];
+    let channels = getChannels(this, domain, offset, limit);
+    channels = this.env["discuss.channel"].browse(channels);
+    store.add(channels).resolve_data_request({
+        count: channels.length,
+    });
+}
+
+function loadMain(store, offset, limit) {
+    const MailMessage = this.env?.["mail.message"];
+    const DiscussChannel = this.env?.["discuss.channel"];
+    var inboxMessages = getMessages(this, 0, null, true);
+    inboxMessages = MailMessage.browse(inboxMessages);
+    const domain = [["channel_type", "in", ["chat", "group", "channel"]]];
+    const channels = getChannels(this, domain, 0, null, true);
+    const needactionChannels = DiscussChannel.browse(channels.needaction);
+    const readChannels = DiscussChannel.browse(channels.history);
+    const combinedUnread = [
+        ...inboxMessages.map((m) => ({
+            id: m.id,
+            model: "mail.message",
+            last_interest_dt: m.write_date,
+        })),
+        ...needactionChannels.map((c) => ({
+            id: c.id,
+            model: "discuss.channel",
+            last_interest_dt: c.last_interest_dt,
+        })),
+    ];
+    const combinedRead = readChannels.map((c) => ({
+        id: c.id,
+        model: "discuss.channel",
+        last_interest_dt: c.last_interest_dt,
+    }));
+    combinedUnread.sort((a, b) => new Date(b.last_interest_dt) - new Date(a.last_interest_dt));
+    const allSortedThreads = [...combinedUnread, ...combinedRead];
+    const limitedThreads = allSortedThreads.slice(offset, offset + limit);
+    const finalMessageIds = limitedThreads
+        .filter((t) => t.model === "mail.message")
+        .map((t) => t.id);
+    const finalChannelIds = limitedThreads
+        .filter((t) => t.model === "discuss.channel")
+        .map((t) => t.id);
+    store.add(
+        MailMessage.browse(finalMessageIds),
+        makeKwArgs({ for_current_user: true, add_followers: true })
+    );
+    store.add(DiscussChannel.browse(finalChannelIds));
+    store.resolve_data_request({
+        count: limitedThreads.length,
+    });
 }
 
 const ids_by_model = {
