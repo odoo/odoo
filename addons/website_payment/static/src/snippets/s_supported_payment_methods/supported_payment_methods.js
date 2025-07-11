@@ -1,3 +1,4 @@
+import { browser } from '@web/core/browser/browser';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { Interaction } from '@web/public/interaction';
@@ -16,9 +17,26 @@ export class SupportedPaymentMethods extends Interaction {
     }
 
     async fetchPaymentMethods() {
-        this.payment_methods = await this.waitFor(rpc(
-            '/website_payment/snippet/supported_payment_methods', { limit: this.limit },
-        )).catch(_ => []);
+        let cache = JSON.parse(
+            browser.sessionStorage.getItem('website_payment.supported_payment_methods') || '{}',
+        );
+
+        if (cache.limit < this.limit) {
+            cache.payment_methods = undefined;
+            cache.limit = this.limit;
+        }
+        if (cache.payment_methods === undefined) {
+            this.payment_methods = cache.payment_methods = await this.waitFor(rpc(
+                '/website_payment/snippet/supported_payment_methods',
+                { limit: this.limit },
+            )).catch(_ => []);
+            cache.limit = this.limit;
+            browser.sessionStorage.setItem(
+                'website_payment.supported_payment_methods', JSON.stringify(cache),
+            );
+        } else {
+            this.payment_methods = cache.payment_methods.slice(0, this.limit);
+        }
     }
 
     start() {

@@ -2,6 +2,7 @@ import { BuilderAction } from '@html_builder/core/builder_action';
 import { SNIPPET_SPECIFIC } from '@html_builder/utils/option_sequence';
 import { Plugin } from '@html_editor/plugin';
 import { withSequence } from '@html_editor/utils/resource';
+import { browser } from '@web/core/browser/browser';
 import { _t } from '@web/core/l10n/translation';
 import { registry } from '@web/core/registry';
 
@@ -33,7 +34,10 @@ class SupportedPaymentMethodsOptionPlugin extends Plugin {
         return [{
             class: 'fa fa-fw fa-rotate-right btn btn-outline-info',
             title: _t("Reload the payment methods"),
-            handler: () => this.dependencies.edit_interaction.restartInteractions(editingElement),
+            handler: () => {
+                browser.sessionStorage.removeItem('website_payment.supported_payment_methods');
+                this.dependencies.edit_interaction.restartInteractions(editingElement);
+            }
         }];
     }
 }

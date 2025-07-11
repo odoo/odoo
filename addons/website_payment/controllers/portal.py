@@ -168,7 +168,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         display the general payment methods linked to the website, regardless of the user.
 
         :param int limit: The number of payment methods to return.
-        :return: The supported payment methods, in [{'id': int, 'name': str, 'code': str}] format.
+        :return: The supported payment methods, in [{'name': str, 'image_url': str}] format.
         :rtype: list[dict]
         """
         limit = self._cast_as_int(limit)
@@ -198,8 +198,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
             ('brand_ids', '=', False),
             ('provider_ids', 'in', compatible_providers_sudo.ids),
         ])
-        return request.env['payment.method'].search_read(
+        return request.env['payment.method'].search(
             Domain.OR([brands_domain, primary_without_brands_domain]),
-            fields=('id', 'name', 'code'),
             limit=limit,
-        )
+        ).mapped(lambda pm: {
+            'name': pm.name,
+            'image_url': request.env['website'].image_url(pm, 'image'),
+        })

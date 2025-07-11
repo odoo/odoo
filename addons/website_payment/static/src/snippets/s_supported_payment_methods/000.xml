@@ -6,7 +6,7 @@
             <t t-foreach="payment_methods" t-as="pm" t-key="pm.id">
                 <!-- The `image` field on the payment method has a max height of 64px. -->
                 <img
-                    t-attf-src="/web/image/payment.method/#{pm.id}/image"
+                    t-att-src="pm.image_url"
                     t-att-title="pm.name"
                     t-att-alt="pm.name"
                     class="img img-fluid rounded"
