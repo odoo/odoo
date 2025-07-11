@@ -72,7 +72,7 @@ class AccountBankStatementLine(models.Model):
 
     # Transaction type is used in electronic format, when the type of transaction is available in the imported file.
     transaction_type = fields.Char()
-    payment_ref = fields.Char(string='Label')
+    payment_ref = fields.Char(string='Label', index='trigram')
     currency_id = fields.Many2one(
         comodel_name='res.currency',
         string='Journal Currency',
