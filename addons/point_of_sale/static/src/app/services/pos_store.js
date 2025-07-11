@@ -1790,10 +1790,15 @@ export class PosStore extends WithLazyGetterTrap {
         return receiptsData;
     }
 
-    async printChanges(order, orderChange, reprint = false) {
-        const unsuccedPrints = [];
+    async printChanges(
+        order,
+        orderChange,
+        reprint = false,
+        printerArray = this.unwatched.printers
+    ) {
+        const unsuccedPrinters = [];
 
-        for (const printer of this.unwatched.printers) {
+        for (const printer of printerArray) {
             const { orderData, changes } = this.generateOrderChange(
                 order,
                 orderChange,
@@ -1808,17 +1813,26 @@ export class PosStore extends WithLazyGetterTrap {
             for (const data of receiptsData) {
                 const result = await this.printOrderChanges(data, printer);
                 if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
+                    unsuccedPrinters.push(printer);
                 }
             }
         }
 
         // printing errors
-        if (unsuccedPrints.length) {
-            const failedReceipts = unsuccedPrints.join(", ");
+        if (unsuccedPrinters.length) {
+            const printerNames = unsuccedPrinters.map((up) => up.config.name).join(", ");
             this.dialog.add(AlertDialog, {
                 title: _t("Printing failed"),
-                body: _t("Failed in printing %s changes of the order", failedReceipts),
+                body: _t(
+                    "Unable to print order changes on %s.\nDo you want to retry ?",
+                    printerNames
+                ),
+                cancelLabel: _t("Discard"),
+                confirmLabel: _t("Retry"),
+                cancel: () => {},
+                confirm: () => {
+                    this.printChanges(order, orderChange, reprint, unsuccedPrinters);
+                },
             });
         }
     }
