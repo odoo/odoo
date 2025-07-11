@@ -138,10 +138,22 @@ class PosSession(models.Model):
 
     @api.model
     def _load_pos_data_models(self, config_id):
+<<<<<<< bf3bf86d40e798daf3cf5682f1a8bb57f103fcde
         return ['pos.config', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.pack.operation.lot', 'pos.payment', 'pos.payment.method', 'pos.printer',
             'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'product.attribute', 'product.attribute.custom.value',
             'product.template.attribute.line', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'res.users', 'res.partner', 'product.uom',
             'decimal.precision', 'uom.uom', 'res.country', 'res.country.state', 'res.lang', 'product.pricelist', 'product.pricelist.item', 'product.category',
+||||||| 9e22e3d657f36822c72339a8c3238a3b9db175dd
+        return ['pos.config', 'pos.order', 'pos.order.line', 'pos.pack.operation.lot', 'pos.payment', 'pos.payment.method', 'pos.printer',
+                        'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.product', 'product.attribute', 'product.attribute.custom.value',
+            'product.template.attribute.line', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'product.packaging', 'res.users', 'res.partner',
+            'decimal.precision', 'uom.uom', 'uom.category', 'res.country', 'res.country.state', 'res.lang', 'product.pricelist', 'product.pricelist.item', 'product.category',
+=======
+        return ['pos.config', 'pos.order', 'pos.order.line', 'pos.pack.operation.lot', 'pos.payment', 'pos.payment.method', 'pos.printer',
+                        'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.product', 'product.template.attribute.line', 'product.attribute',
+            'product.attribute.custom.value', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'product.packaging', 'res.users', 'res.partner',
+            'decimal.precision', 'uom.uom', 'uom.category', 'res.country', 'res.country.state', 'res.lang', 'product.pricelist', 'product.pricelist.item', 'product.category',
+>>>>>>> e06b5a1a07aeec1e13d5c92f7e387f40f97a200e
             'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'ir.ui.view', 'product.tag', 'ir.module.module']
 
     @api.model

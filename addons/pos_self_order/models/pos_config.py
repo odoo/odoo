@@ -252,12 +252,24 @@ class PosConfig(models.Model):
         return encoded_images
 
     def _load_self_data_models(self):
+<<<<<<< bf3bf86d40e798daf3cf5682f1a8bb57f103fcde
         return ['pos.session', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.partner',
             'res.currency', 'pos.category', 'product.template', 'product.product',  'product.combo', 'product.combo.item', 'res.company', 'account.tax',
             'account.tax.group', 'pos.printer', 'res.country', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position', 'account.fiscal.position.tax',
             'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value',
             'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
             'res.country', 'res.country.state']
+||||||| 9e22e3d657f36822c72339a8c3238a3b9db175dd
+        return ['pos.session', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.currency', 'pos.category', 'product.product', 'product.combo', 'product.combo.item',
+            'res.company', 'account.tax', 'account.tax.group', 'pos.printer', 'res.country', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position', 'account.fiscal.position.tax',
+            'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value',
+            'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding']
+=======
+        return ['pos.session', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.currency', 'pos.category', 'product.product', 'product.combo', 'product.combo.item',
+            'res.company', 'account.tax', 'account.tax.group', 'pos.printer', 'res.country', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position', 'account.fiscal.position.tax',
+            'res.lang', 'product.template.attribute.line', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.value',
+            'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding']
+>>>>>>> e06b5a1a07aeec1e13d5c92f7e387f40f97a200e
 
     def load_self_data(self):
         # Init our first record, in case of self_order is pos_config
