@@ -20,7 +20,6 @@ class GenericBlockOptionPlugin extends Plugin {
                 exclude: ".o_mail_snippet_general .row > div *"
             }),
         ],
-        so_snippet_addition_selector: [".o_mail_snippet_general"],
         so_content_addition_selector: [
             ".s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight"
         ]

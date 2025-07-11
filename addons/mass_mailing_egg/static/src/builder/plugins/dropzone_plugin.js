@@ -7,9 +7,6 @@ class DropzonePlugin extends Plugin {
     resources = {
         dropzone_selector: [
             {
-                selector: ".o_mail_snippet_general",
-                dropIn: ":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"
-            }, {
                 selector: ".s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight",
                 dropNear: "p, h1, h2, h3, ul, ol, .row > div > img, .s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight",
                 dropIn: ".content, nav",
@@ -26,7 +23,7 @@ class DropzonePlugin extends Plugin {
                 exclude: this.noOptionsSelector,
                 dropNear: "tr:has(> .row), tr:has(> .col_mv)",
             }, { // content
-                selector: ".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, .oe_snippet_body",
+                selector: ".note-editable > div:not(.o_layout), .note-editable .oe_structure > *, .oe_snippet_body",
                 exclude: this.noOptionsSelector,
                 dropNear: "[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *",
                 dropIn: "[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure",

@@ -1,7 +1,6 @@
 import { parseHTML } from "@html_editor/utils/html";
 import {
     Component,
-    markup,
     onMounted,
     onWillDestroy,
     onWillUpdateProps,
@@ -21,7 +20,6 @@ import { Editor } from "@html_editor/editor";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
-import { MassMailingMobilePreviewDialog } from "../mobile_preview_dialog/mobile_preview_dialog";
 
 const IFRAME_VALUE_SELECTOR = ".o_mass_mailing_value";
 
@@ -42,7 +40,7 @@ export class MassMailingIframe extends Component {
         readonly: { type: Boolean, optional: true },
         onEditorLoad: { type: Function, optional: true },
         onBlur: { type: Function, optional: true },
-        extraClass: { type: String, optional: true},
+        extraClass: { type: String, optional: true },
     };
     static defaultProps = {
         onEditorLoad: () => {},
@@ -109,6 +107,12 @@ export class MassMailingIframe extends Component {
         }
         const iframeResize = () => {
             const iframe = this.iframeRef.el;
+            if (this.state.isMobile) {
+                iframe.style.height = "668px"; // aspect-ratio of internal screen of /html_builder/static/img/phone.svg
+                iframe.style.width = "367px";
+                return;
+            }
+            iframe.style.width = "";
             if (this.state.showFullscreen) {
                 iframe.style.height = "100%";
             } else {
@@ -157,7 +161,9 @@ export class MassMailingIframe extends Component {
                           stickyHeight
                       }px`
                     : `${stickyHeight}px`;
-                const maxHeight = iframe.getBoundingClientRect().height;
+                const maxHeight = this.state.isMobile
+                    ? 1000
+                    : iframe.getBoundingClientRect().height;
                 const offsetHeight =
                     window.innerHeight -
                     stickyHeight -
@@ -270,6 +276,7 @@ export class MassMailingIframe extends Component {
     }
 
     getBuilderProps() {
+        // TODO EGGMAIL: Adapt mobile view
         const getExternalScrollableAncestor = () =>
             !this.state.showFullscreen &&
             this.iframeRef.el &&
@@ -286,7 +293,10 @@ export class MassMailingIframe extends Component {
             // codeView => make it an available option in the builder (optional), only in debug?
             // Plugins => provide plugins selection, properly filter excluded Plugins
             isMobile: this.state.isMobile,
-            toggleMobile: this.toggleMobile.bind(this),
+            toggleMobile: () => {
+                this.state.isMobile = !this.state.isMobile;
+                this.throttledResize();
+            },
             editableSelector: IFRAME_VALUE_SELECTOR,
             toggleFullscreen: () => {
                 this.state.showFullscreen = !this.state.showFullscreen;
@@ -316,16 +326,5 @@ export class MassMailingIframe extends Component {
     retargetLink(link) {
         link.setAttribute("target", "_blank");
         link.setAttribute("rel", "noreferrer");
-    }
-
-    toggleMobile(ev) {
-        this.state.isMobile = true;
-        this.mobilePreview = this.dialog.add(MassMailingMobilePreviewDialog, {
-            title: _t("Mobile Preview"),
-            value: markup(this.props.config.content),
-            IframeComponent: MassMailingIframe,
-        }, {
-            onClose: () => this.state.isMobile = false,
-        });
     }
 }
