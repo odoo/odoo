@@ -474,6 +474,12 @@ class EventTrack(models.Model):
     # MESSAGING
     # ------------------------------------------------------------
 
+    def _mail_get_timezone_with_default(self, default_tz=True):
+        tz = None
+        if self:
+            tz = self.event_id._mail_get_timezone_with_default(default_tz=default_tz)
+        return tz or super()._mail_get_timezone_with_default(default_tz=default_tz)
+
     def _message_add_default_recipients(self):
         recipients = super()._message_add_default_recipients()
         for track in self.filtered(lambda t: not t.partner_id.email_normalized and not email_normalize(t.contact_email) and t.partner_email):
