@@ -543,19 +543,25 @@ export class PosStore extends WithLazyGetterTrap {
         return false;
     }
 
-    async onDeleteOrder(order) {
+    async beforeDeleteOrder(order, { title, body } = {}) {
         if (order.getOrderlines().length > 0) {
-            const confirmed = await ask(this.dialog, {
-                title: _t("Existing orderlines"),
-                body: _t(
-                    "%s has a total amount of %s, are you sure you want to delete this order?",
-                    order.pos_reference,
-                    this.env.utils.formatCurrency(order.priceIncl)
-                ),
+            return await ask(this.dialog, {
+                title: title || _t("Existing orderlines"),
+                body:
+                    body ||
+                    _t(
+                        "%s has a total amount of %s, are you sure you want to delete this order?",
+                        order.pos_reference,
+                        this.env.utils.formatCurrency(order.priceIncl)
+                    ),
             });
-            if (!confirmed) {
-                return false;
-            }
+        }
+        return true;
+    }
+    async onDeleteOrder(order) {
+        const canDelete = await this.beforeDeleteOrder(order);
+        if (!canDelete) {
+            return false;
         }
         const refundedOrderLines = order.lines
             .filter((line) => line.refunded_orderline_id?.order_id)
