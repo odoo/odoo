@@ -961,7 +961,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         self.assertEqual(specific_view_arch, '<p>COMPARE EDITED</p>', "When a module updates an inherited view (on a generic tree), it should also update the copies of that view (COW).")
 
         # Test fields that should not be COW'd
-        random_views = View.search([('key', '!=', None)], limit=2)
+        random_views = self.env.ref('website.s_accordion_image') + self.env.ref('website.s_accordion')
         View._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
             'website_id': None,
             'inherit_id': random_views[0].id,

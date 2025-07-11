@@ -165,7 +165,7 @@ class WebSuite(QunitCommon, HOOTCommon):
     def _check_forbidden_statements(self, bundle):
         # As we currently are not in a request context, we cannot render `web.layout`.
         # We then re-define it as a minimal proxy template.
-        self.env.ref('web.layout').write({'arch_db': '<t t-name="web.layout"><head><meta charset="utf-8"/><t t-esc="head"/></head></t>'})
+        self.env.ref('web.layout').write({'arch_db': '<t t-name="web.layout"><html><head><meta charset="utf-8"/><link/><script id="web.layout.odooscript"/><meta/><t t-esc="head"/></head><body><t t-out="0"/></body></html></t>'})
 
         assets = self.env['ir.qweb']._get_asset_content(bundle)[0]
         if len(assets) == 0:
@@ -184,7 +184,7 @@ class WebSuite(QunitCommon, HOOTCommon):
         # ! DEPRECATED
         # As we currently aren't in a request context, we can't render `web.layout`.
         # redefinied it as a minimal proxy template.
-        self.env.ref('web.layout').write({'arch_db': '<t t-name="web.layout"><head><meta charset="utf-8"/><t t-esc="head"/></head></t>'})
+        self.env.ref('web.layout').write({'arch_db': '<t t-name="web.layout"><html><head><meta charset="utf-8"/><link/><script id="web.layout.odooscript"/><meta/><t t-esc="head"/></head><body><t t-out="0"/></body></html></t>'})
 
         assets = self.env['ir.qweb']._get_asset_content(suite)[0]
         if len(assets) == 0:
