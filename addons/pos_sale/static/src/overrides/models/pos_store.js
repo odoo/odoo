@@ -153,7 +153,7 @@ patch(PosStore.prototype, {
             newLine.set_unit_price(line.price_unit);
             newLine.set_discount(line.discount);
 
-            const product_unit = line.product_id.uom_id;
+            const product_unit = line.product_id.get_unit();
             if (product_unit && !product_unit.is_pos_groupable) {
                 let remaining_quantity = newLine.qty;
                 newLine.delete();
