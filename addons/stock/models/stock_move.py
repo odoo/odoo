@@ -2466,6 +2466,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             else:
                 raise UserError(_('Selection not supported.'))
 
+<<<<<<< cd056c7c2b739f955c633edcc0d1c1661dc40cb9
         if not value:
             raise UserError(_('Search not supported without a value.'))
 
@@ -2529,3 +2530,37 @@ Please change the quantity done or the rounding precision of your unit of measur
         return self.location_dest_id.usage in ('customer', 'supplier') or (
             self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id
         )
+||||||| 7df78a28dd7c05b1ea246e9f0735d8da0cb5486e
+        orderpoint_domain = []
+        for wh_id, prod_ids in prods_by_wh.items():
+            orderpoint_domain = OR([orderpoint_domain, [
+                ('warehouse_id', '=', wh_id),
+                ('product_id', 'in', list(prod_ids - prods_no_wh))
+            ]])
+        if prods_no_wh:
+            orderpoint_domain = OR([orderpoint_domain, [('product_id', 'in', list(prods_no_wh))]])
+        if orderpoint_domain:
+            self.env.add_to_compute(
+                self.env['stock.warehouse.orderpoint']._fields['qty_to_order'],
+                self.env['stock.warehouse.orderpoint'].sudo().search(orderpoint_domain, order='id')
+            )
+=======
+        orderpoint_domain = []
+        for wh_id, prod_ids in prods_by_wh.items():
+            orderpoint_domain = OR([orderpoint_domain, [
+                ('warehouse_id', '=', wh_id),
+                ('product_id', 'in', list(prod_ids - prods_no_wh))
+            ]])
+        if prods_no_wh:
+            orderpoint_domain = OR([orderpoint_domain, [('product_id', 'in', list(prods_no_wh))]])
+        if orderpoint_domain:
+            self.env.add_to_compute(
+                self.env['stock.warehouse.orderpoint']._fields['qty_to_order'],
+                self.env['stock.warehouse.orderpoint'].sudo().search(orderpoint_domain, order='id')
+            )
+
+    def _break_mto_link(self, parent_move):
+        self.move_orig_ids = [Command.unlink(parent_move.id)]
+        self.procure_method = 'make_to_stock'
+        self._recompute_state()
+>>>>>>> e317ea1f3bd9dc3b5030d4cac18e54d93fe5d8d1
