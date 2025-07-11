@@ -40,8 +40,8 @@ export class CaptionPlugin extends Plugin {
         ],
         clean_for_save_handlers: this.cleanForSave.bind(this),
         mount_component_handlers: this.setupNewCaption.bind(this),
-        delete_handlers: this.afterDelete.bind(this),
         delete_image_overrides: this.handleDeleteImage.bind(this),
+        delete_range_overrides: this.handleDeleteRange.bind(this),
         after_save_media_dialog_handlers: this.onImageReplaced.bind(this),
         hints: [{ selector: "FIGCAPTION", text: _t("Write a caption...") }],
         unsplittable_node_predicates: [
@@ -49,6 +49,7 @@ export class CaptionPlugin extends Plugin {
         ],
         image_name_predicates: [this.getImageName.bind(this)],
         link_compatible_selection_predicates: [this.isLinkAllowedOnSelection.bind(this)],
+        clipboard_content_processors: this.processContentForClipboard.bind(this),
     };
 
     setup() {
@@ -259,23 +260,6 @@ export class CaptionPlugin extends Plugin {
         }
     }
 
-    afterDelete() {
-        const { anchorNode } = this.dependencies.selection.getEditableSelection();
-        const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        for (const figure of this.editable.querySelectorAll("figure:not(:has(img))")) {
-            const isSelectionInFigure = targetedNodes.includes(figure) || anchorNode === figure;
-            const sibling = figure.nextSibling || figure.previousSibling;
-            figure.remove();
-            if (isSelectionInFigure) {
-                // Note: this assumes the selection is collapsed after delete.
-                this.dependencies.selection.setSelection({
-                    anchorNode: sibling,
-                    anchorOffset: 0,
-                });
-            }
-        }
-    }
-
     handleDeleteImage(image) {
         const figure = closestElement(image, "figure");
         if (figure) {
@@ -288,5 +272,32 @@ export class CaptionPlugin extends Plugin {
             this.dependencies.history.addStep();
             return true;
         }
+    }
+
+    handleDeleteRange(range) {
+        const startFigure = closestElement(range.startContainer, "figure");
+        const endFigure = closestElement(range.endContainer, "figure");
+
+        if (startFigure && startFigure === endFigure) {
+            const sibling = startFigure.nextSibling || startFigure.previousSibling;
+            startFigure.remove();
+            this.dependencies.selection.setSelection({
+                anchorNode: sibling,
+                anchorOffset: 0,
+            });
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param {DocumentFragment} clonedContents
+     * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
+     */
+    processContentForClipboard(clonedContents, selection) {
+        if (clonedContents.firstChild.nodeName === "IMG") {
+            clonedContents = selection.commonAncestorContainer.cloneNode(true);
+        }
+        return clonedContents;
     }
 }
