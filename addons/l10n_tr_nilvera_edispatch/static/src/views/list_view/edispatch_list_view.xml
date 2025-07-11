@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_tr_nilvera_edispatch.ListView.buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <button type="button" class="btn btn-secondary" t-if="this.isActionDisplayed" t-on-click.stop.prevent="() => this.actionService.doAction('l10n_tr_nilvera_edispatch.edispatch_import_action')">Upload e-Receipt</button>
+        </xpath>
+    </t>
+
+    <t t-name="l10n_tr_nilvera_edispatch.EreceiptUploader"
+        t-inherit="account.mail_attachments"
+        t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('oe_add')]" position="replace">
+            <div class="oe_add">
+                <FileInput
+                    acceptedFileExtensions="'.xml'"
+                    multiUpload="true"
+                    onUpload.bind="onFileUploaded"
+                    resModel="props.record.resModel"
+                    resId="props.record.resId or 0">
+                    <button class="btn btn-secondary o_attach">
+                        <span class="fa fa-paperclip" aria-label="Attach E-Receipts"/> Attach E-Receipts
+                    </button>
+                </FileInput>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

@@ -4,6 +4,8 @@ from lxml import etree
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import cleanup_xml_node
+from odoo.tools.xml_utils import find_xml_value
+from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
 
 
 class StockPicking(models.Model):
@@ -241,3 +243,169 @@ class StockPicking(models.Model):
         self.filtered(
             lambda p: p.country_code == 'TR' and p.picking_type_code == 'outgoing'
         ).l10n_tr_nilvera_dispatch_state = 'sent'
+
+    def _get_tag_text(self, xpath, tree, default=''):
+        return find_xml_value(xpath, tree, UBL_NAMESPACES) or default
+
+    def _import_partner_vals(self, tree, xpath):
+        party = tree.find(xpath, namespaces=UBL_NAMESPACES)
+        if party is None:
+            return
+        return {
+            'name': self._get_tag_text('./cac:PartyName/cbc:Name', party) or
+                    f"{self._get_tag_text('./cac:Person/cbc:FirstName', party)} {self._get_tag_text('./cac:Person/cbc:FamilyName', party)}",
+            'vat': self._get_tag_text('./cac:PartyIdentification/cbc:ID', party),
+            'street': self._get_tag_text('./cac:PostalAddress/cbc:StreetName', party),
+            'street2': self._get_tag_text('./cac:PostalAddress/cbc:CitySubdivisionName', party),
+            'city': self._get_tag_text('./cac:PostalAddress/cbc:CityName', party),
+            'zip': self._get_tag_text('./cac:PostalAddress/cbc:PostalZone', party),
+            'country_code': self._get_tag_text('./cac:PostalAddress/cac:Country/cbc:IdentificationCode', party),
+            'phone': self._get_tag_text('./cac:Contact/cbc:Telephone', party),
+            'email': self._get_tag_text('./cac:Contact/cbc:ElectronicMail', party),
+        }
+
+    def _find_or_create_partner_from_xml(self, partner_vals):
+        partner = self.env['res.partner']._retrieve_partner(name=partner_vals['name'], vat=partner_vals['vat'])
+        if not partner:
+            vals_to_create = {k: v for k, v in partner_vals.items() if k not in ['vat', 'country_code']}
+            partner = self.env['res.partner'].create(vals_to_create)
+            country_code = partner_vals['country_code']
+            country = self.env.ref(f'base.{country_code.lower()}', raise_if_not_found=False) if country_code else False
+            if country:
+                partner.country_id = country.id
+        return partner.id
+
+    def _import_receipt_lines(self, tree):
+        receipt_lines = tree.findall('./{*}DespatchLine', namespaces=UBL_NAMESPACES)
+        ProductProduct = self.env['product.product']
+        values = []
+        origin = self._get_tag_text('./cbc:ID', tree)
+        source_location = self.env.ref('stock.stock_location_suppliers', raise_if_not_found=False)
+
+        for receipt in receipt_lines:
+            product = ProductProduct._retrieve_product(
+                default_code=self._get_tag_text('./cac:Item/cac:SellersItemIdentification/cbc:ID', receipt),
+                name=self._get_tag_text('./cac:Item/cbc:Name', receipt),
+            )
+            received_quantity = receipt.find('./{*}DeliveredQuantity')
+            if not product:
+                product = ProductProduct.create({
+                    'name': self._get_tag_text('./cac:Item/cbc:Name', receipt),
+                    'detailed_type': 'product',
+                    'default_code': self._get_tag_text('./cac:Item/cac:SellersItemIdentification/cbc:ID', receipt),
+                })
+                unece_code = received_quantity.get('unitCode')
+                product.product_tmpl_id.uom_id = product.product_tmpl_id.uom_id._get_uom_from_unece_code(unece_code)
+
+            values.append({
+                'name': origin,
+                'product_id': product.id,
+                'product_uom_qty': float(received_quantity.text or 0),
+                'picking_id': self.id,
+                'location_dest_id': self.location_dest_id.id,
+                'location_id': source_location.id,
+            })
+        return values
+
+    def _import_vehicle_plate(self, tree):
+        vehicle_plate = self._get_tag_text('.//cac:RoadTransport/cbc:LicensePlateID', tree)
+        vehicle_plate_id = self.env['l10n_tr.nilvera.trailer.plate'].search(
+            [('name', '=', vehicle_plate), ('plate_number_type', '=', 'vehicle')], limit=1
+        )
+        if not vehicle_plate_id:
+            vehicle_plate_id = self.env['l10n_tr.nilvera.trailer.plate'].create({
+                'name': vehicle_plate,
+                'plate_number_type': 'vehicle',
+            })
+        return vehicle_plate_id.id
+
+    def _import_trailer_plate_ids(self, tree):
+        plate_ids = []
+        vehicle_plates = tree.findall('.//{*}TransportHandlingUnit/{*}TransportEquipment', namespaces=UBL_NAMESPACES)
+        for plate in vehicle_plates:
+            if not (plate_name := self._get_tag_text('./cbc:ID', plate)):
+                continue
+            trailer_plate = self.env['l10n_tr.nilvera.trailer.plate'].search(
+                [('name', '=', plate_name), ('plate_number_type', '=', 'trailer')], limit=1
+            )
+            if not trailer_plate:
+                trailer_plate = self.env['l10n_tr.nilvera.trailer.plate'].create({
+                    'name': plate_name,
+                    'plate_number_type': 'trailer'
+                })
+            plate_ids.append(trailer_plate.id)
+        return plate_ids
+
+    def _import_drivers(self, tree):
+        ResPartner = self.env['res.partner']
+        country_id = self.env.ref('base.tr', raise_if_not_found=False)
+        driver_ids = []
+        for driver in tree.findall('.//cac:DriverPerson', namespaces=UBL_NAMESPACES):
+            name = f"{self._get_tag_text('./cbc:FirstName', driver)} {self._get_tag_text('./cbc:FamilyName', driver)}"
+            partner_id = ResPartner.search([('name', '=', name), ('country_id', '=', country_id.id)], limit=1)
+            if not partner_id:
+                partner_id = ResPartner.create({
+                    'name': name,
+                    'vat': self._get_tag_text('./cbc:NationalityID', driver),
+                    'country_id': country_id.id
+                })
+            driver_ids.append(partner_id.id)
+        return driver_ids
+
+    def _import_edispatch_fields(self, tree):
+        vals = {
+            'l10n_tr_vehicle_plate': self._import_vehicle_plate(tree),
+            'l10n_tr_nilvera_trailer_plate_ids': self._import_trailer_plate_ids(tree),
+            'l10n_tr_nilvera_driver_ids': self._import_drivers(tree),
+            'l10n_tr_nilvera_delivery_notes': self._get_tag_text('./cbc:Note', tree),
+            'l10n_tr_nilvera_dispatch_type': self._get_tag_text('./cbc:DespatchAdviceTypeCode', tree),
+        }
+
+        if vals['l10n_tr_nilvera_dispatch_type'] == 'MATBUDAN':
+            vals['l10n_tr_nilvera_delivery_date'] = self._get_tag_text('./cac:AdditionalDocumentReference/cbc:IssueDate', tree)
+            vals['l10n_tr_nilvera_delivery_printed_number'] = self._get_tag_text('./cac:AdditionalDocumentReference/cbc:ID', tree)
+
+        # Other E-Dispatch Partners
+        partners_dict = {
+            'l10n_tr_nilvera_carrier_id': './/cac:CarrierParty',
+            'l10n_tr_nilvera_buyer_id': './/cac:BuyerCustomerParty/cac:Party',
+            'l10n_tr_nilvera_seller_supplier_id': './/cac:SellerSupplierParty/cac:Party',
+            'l10n_tr_nilvera_buyer_originator_id': './/cac:OriginatorCustomerParty/cac:Party',
+        }
+        for key, xpath in partners_dict.items():
+            partner_vals = self._import_partner_vals(tree, xpath)
+            if not partner_vals:
+                continue
+            partner_id = self._find_or_create_partner_from_xml(partner_vals)
+            vals[key] = partner_id
+
+        return vals
+
+    def _update_data_from_xml(self, file_data):
+        tree = file_data['xml_tree']
+        # Scheduled Date
+        date = self._get_tag_text('cbc:IssueDate', tree) + " " + self._get_tag_text('cbc:IssueTime', tree)
+
+        # Store the sequence of the e-receipt obtained from XML.
+        origin = self._get_tag_text('./cbc:ID', tree)
+
+        # Receiver Partner
+        partner_vals = self._import_partner_vals(tree, './/cac:DespatchSupplierParty/cac:Party')
+        partner_id = self._find_or_create_partner_from_xml(partner_vals) if partner_vals else False
+
+        # Stock move lines
+        move_line_ids = self._import_receipt_lines(tree)
+        move_ids_without_package = [(0, 0, value) for value in move_line_ids]
+
+        vals_to_update = {
+            'scheduled_date': date,
+            'origin': origin,
+            'partner_id': partner_id,
+            'move_ids_without_package': move_ids_without_package,
+        }
+
+        # e-Dispatch Fields
+        edispatch_vals = self._import_edispatch_fields(tree)
+        vals_to_update.update(edispatch_vals)
+
+        self.write(vals_to_update)
