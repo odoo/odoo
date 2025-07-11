@@ -1447,6 +1447,8 @@ class SaleOrderLine(models.Model):
                     or bool(self.combo_item_id)
                 ),
                 'uomDisplayName': self.product_uom_id.display_name,
+                'productUomDisplayName': self.product_id.uom_id.display_name,
+                'productUnitPrice': self.product_uom_id._compute_price(self.price_unit, self.product_id.uom_id),
             }
         elif self:
             self.product_id.ensure_one()
