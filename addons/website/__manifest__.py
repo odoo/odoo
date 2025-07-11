@@ -510,6 +510,7 @@
     },
     'configurator_snippets': {
         'homepage': ['s_cover', 's_text_image', 's_numbers'],
+        'homepage_website_sale': ['s_cover', 's_text_image', 's_numbers', 'website_sale.s_dynamic_snippet_products'],
         'about_us': ['s_text_image', 's_image_text', 's_title', 's_company_team'],
         'our_services': ['s_three_columns', 's_quotes_carousel', 's_references'],
         'pricing': ['s_comparisons'],

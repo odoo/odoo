@@ -8,6 +8,18 @@ export class Events extends DynamicSnippet {
     // option to include ongoing events. The name is kept for backward compatibility.
     static selector = ".s_event_upcoming_snippet";
 
+    setup() {
+        super.setup();
+        this.el.dataset.numberOfRecords ||= 3;
+    }
+
+    /**
+     * @override
+     */
+    getModelNameFilter() {
+        return 'event.event';
+    }
+
     /**
      * @override
      */
