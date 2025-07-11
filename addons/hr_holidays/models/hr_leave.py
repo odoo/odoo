@@ -197,6 +197,7 @@ class HrLeave(models.Model):
     can_validate = fields.Boolean(compute='_compute_can_validate', export_string_translation=False)
     can_refuse = fields.Boolean(compute='_compute_can_refuse', export_string_translation=False)
     can_cancel = fields.Boolean(compute='_compute_can_cancel', export_string_translation=False)
+    is_officer_can_edit_approved_leaves = fields.Boolean(compute='_compute_is_officer_can_edit_approved_leaves', export_string_translation=False)
 
     attachment_ids = fields.One2many('ir.attachment', 'res_id', string="Attachments")
     # To display in form view
@@ -645,6 +646,10 @@ Contracts:
         for holiday in self:
             holiday.can_cancel = holiday._check_approval_update('cancel', raise_if_not_possible=False)
 
+    @api.depends_context('uid')
+    def _compute_is_officer_can_edit_approved_leaves(self):
+        self.is_officer_can_edit_approved_leaves = self.env.user.has_group("hr_holidays.group_hr_holidays_user")
+
     @api.depends('state')
     def _compute_is_hatched(self):
         for holiday in self:
@@ -685,7 +690,7 @@ Contracts:
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date_state(self):
-        if self.env.context.get('leave_skip_state_check'):
+        if self.env.context.get('leave_skip_state_check') or self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             return
         for holiday in self:
             if holiday.state in ['validate1', 'validate']:
@@ -844,8 +849,9 @@ Contracts:
                 raise UserError(_('Only a manager can modify a canceled leave.'))
 
         # Unlink existing resource.calendar.leaves for validated time off
-        if 'state' in values and values['state'] != 'validate':
-            validated_leaves = self.filtered(lambda l: l.state == 'validate')
+        # Any change in approved(validate) stage by leave officer -> remove existing resource.calendar.leaves
+        validated_leaves = self.filtered(lambda l: l.state == 'validate')
+        if ('state' in values and values['state'] != 'validate'):
             validated_leaves._remove_resource_leave()
 
         employee_id = values.get('employee_id', False)
@@ -863,6 +869,30 @@ Contracts:
             if 'date_to' in values:
                 values['request_date_to'] = values['date_to']
         result = super().write(values)
+
+        # Any change in dates/time-off type in approved(validate) stage by leave officer
+        # ->create new resource.calendar.leaves & update meeting
+        recalc_keys = [
+            'holiday_status_id',
+            'request_unit_hours',
+            'request_unit_half',
+            'request_date_from',
+            'request_hour_from',
+            'request_date_to',
+            'request_hour_to',
+            'request_date_from_period',
+        ]
+        if 'state' not in values and any(key in values for key in recalc_keys):
+            resource_leaves = self.env['resource.calendar.leaves'].search([('holiday_id', 'in', validated_leaves.ids)])
+            for leave in validated_leaves:
+                to_update_resource_leave = resource_leaves.filtered(lambda l: l.holiday_id.id == leave.id)
+                leave_value = leave._prepare_resource_leave_vals()
+                meeting_value = leave._prepare_holidays_meeting_values().get(leave.user_id.id, [{}])[0]
+
+                del meeting_value['event_tz']
+                to_update_resource_leave.write(leave_value)
+                leave.meeting_id.write(meeting_value)
+
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'holiday_status_id', 'employee_id', 'state']):
             self._check_validity()
             self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
