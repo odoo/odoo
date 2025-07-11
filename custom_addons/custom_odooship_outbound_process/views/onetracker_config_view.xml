@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_onetraker_merchant_config_form" model="ir.ui.view">
+        <field name="name">onetracker.connection.config.form</field>
+        <field name="model">onetracker.connection.config</field>
+        <field name="arch" type="xml">
+            <form string="OneTraker Connection Configuration">
+                <sheet>
+                    <group string="Merchant Info">
+                        <group>
+                            <field name="name"/>
+                            <field name="merchant_code"/>
+                        </group>
+                        <group>
+                            <field name="tenant_code_id"/>
+                            <field name="site_code_id"/>
+                        </group>
+                    </group>
+                    <group string="API Settings">
+                        <field name="onetraker_order_url"/>
+                        <field name="default_from_location_id"/>
+                        <field name="default_auto_generate_label"/>
+                    </group>
+                    <group string="Authorization">
+                        <field name="bearer_token" widget="text"/>
+                        <field name="is_production"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_onetraker_merchant_config_tree" model="ir.ui.view">
+        <field name="name">onetracker.connection.config.tree</field>
+        <field name="model">onetracker.connection.config</field>
+        <field name="arch" type="xml">
+            <tree string="OneTraker Connections">
+                <field name="name"/>
+                <field name="merchant_code"/>
+                <field name="tenant_code_id"/>
+                <field name="site_code_id"/>
+                <field name="default_auto_generate_label"/>
+                <field name="is_production"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_onetracker_config" model="ir.actions.act_window">
+        <field name="name">OneTraker Setup</field>
+        <field name="res_model">onetracker.connection.config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure OneTraker API connection settings per tenant and warehouse.
+            </p>
+        </field>
+    </record>
+</odoo>

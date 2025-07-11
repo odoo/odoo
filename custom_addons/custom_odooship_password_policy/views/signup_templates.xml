@@ -1,0 +1,8 @@
+<odoo>
+    <template id="fields" inherit_id="auth_password_policy_signup.fields"
+              name="Hide password meter">
+        <xpath expr="//owl-component[@name='password_meter']" position="attributes">
+            <attribute name="style">visibility: hidden;</attribute>
+        </xpath>
+    </template>
+</odoo>
