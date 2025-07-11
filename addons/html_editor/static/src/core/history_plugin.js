@@ -484,9 +484,9 @@ export class HistoryPlugin extends Plugin {
      */
     filterMutationRecords(records) {
         this.dispatchTo("before_filter_mutation_record_handlers", records);
-        for (const callback of this.getResource("savable_mutation_record_predicates")) {
-            records = records.filter(callback);
-        }
+        // for (const callback of this.getResource("savable_mutation_record_predicates")) {
+        //     records = records.filter(callback);
+        // }
         records = this.filterAttributeMutationRecords(records);
         records = this.filterSameTextContentMutationRecords(records);
         records = this.filterOutIntermediateStateMutationRecords(records);
@@ -728,30 +728,58 @@ export class HistoryPlugin extends Plugin {
      * @returns {HistoryMutationRecord[]}
      */
     filterAndAdjustHistoryMutationRecords(records) {
-        if (this.isObserverDisabled) {
-            records
-                .filter((record) => record.type !== "childList")
-                .filter((record) => this.isObservedNode(record.target))
-                .forEach((record) => this.storeOldValue(record));
-            return [];
-        }
-
+        const savableRecordPredicates = this.getResource("savable_mutation_record_predicates");
+        // @todo adjust predicates to new type
+        const isRecordSavable = (record) => savableRecordPredicates.every((p) => p(record));
         const result = [];
         for (const record of records) {
             if (!this.isObservedNode(record.target)) {
+                continue;
+            }
+            if (this.isObserverDisabled || !isRecordSavable(record)) {
+                if (record.type !== "childList") {
+                    this.storeOldValue(record);
+                }
                 continue;
             }
             const updatedRecord =
                 record.type === "childList"
                     ? this.updateChildListRecord(record)
                     : this.updateOldValue(record);
-            if (!this.isValidRecord(updatedRecord)) {
-                continue;
+            if (this.isValidRecord(updatedRecord)) {
+                this.setIdOnAddedNodes(record);
+                result.push(updatedRecord);
             }
-            this.setIdOnAddedNodes(record);
-            result.push(updatedRecord);
         }
         return result;
+        // if (this.isObserverDisabled) {
+        //     records
+        //         .filter((record) => record.type !== "childList")
+        //         .filter((record) => this.isObservedNode(record.target))
+        //         .forEach((record) => this.storeOldValue(record));
+        //     return [];
+        // }
+
+        // for (const callback of this.getResource("savable_mutation_record_predicates")) {
+        //     records = records.filter(callback);
+        // }
+
+        // const result = [];
+        // for (const record of records) {
+        //     if (!this.isObservedNode(record.target)) {
+        //         continue;
+        //     }
+        //     const updatedRecord =
+        //         record.type === "childList"
+        //             ? this.updateChildListRecord(record)
+        //             : this.updateOldValue(record);
+        //     if (!this.isValidRecord(updatedRecord)) {
+        //         continue;
+        //     }
+        //     this.setIdOnAddedNodes(record);
+        //     result.push(updatedRecord);
+        // }
+        // return result;
     }
 
     /**
