@@ -3480,7 +3480,7 @@
             <div id="wrap" class="d-flex flex-column flex-grow-1">
                 <div class="oe_website_sale o_website_sale_checkout_container container d-flex flex-column flex-grow-1 py-lg-2">
                     <div t-attf-class="row #{not show_wizard_checkout and 'mt32'} mb32">
-                        <div t-if="show_wizard_checkout" class="col-12">
+                        <div t-if="show_wizard_checkout" class="col-12 px-0 px-md-3">
                             <t t-call="website_sale.wizard_checkout"/>
                         </div>
                         <!-- Checkout Page Content | Left Column -->
@@ -3543,7 +3543,7 @@
                                 role="button"
                                 aria-controls="o_cart_summary_offcanvas"
                             >
-                                Order
+                                <span class="text-primary">Order</span>
                                 <span
                                     id="amount_total_summary"
                                     class="monetary_field ms-auto"
