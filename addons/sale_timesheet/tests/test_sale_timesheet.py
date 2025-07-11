@@ -902,6 +902,48 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(10, sale_order_line_template_1.project_id.allocated_hours)
         self.assertEqual(5, sale_order_line_template_2.project_id.allocated_hours)
 
+    def test_timesheet_editable_after_invoice_reversal(self):
+        """Test that timesheet entries become editable again after invoice reversal"""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+        })
+        so_line = self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_timesheet2.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order.id,
+        })
+        sale_order.action_confirm()
+        task = so_line.task_id
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Test Invoice Reversal',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+        invoice = sale_order._create_invoices()[0]
+        invoice.action_post()
+        self.assertEqual(timesheet.timesheet_invoice_id, invoice, "Timesheet should be linked to the invoice")
+
+        with self.assertRaises(UserError):
+            timesheet.write({'unit_amount': 7})
+
+        # reverse the invoice
+        reversal_wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids
+        ).create({
+            'reason': 'test',
+            'journal_id': invoice.journal_id.id,
+        })
+        reversal_wizard.reverse_moves()
+        self.assertFalse(timesheet.timesheet_invoice_id, "Timesheet should not be linked to any invoice after reversal")
+        timesheet.write({'unit_amount': 7})
+        self.assertEqual(timesheet.unit_amount, 7, "Should be able to edit timesheet after invoice reversal")
+
 
 class TestSaleTimesheetView(TestCommonTimesheet):
     def test_get_view_timesheet_encode_uom(self):
