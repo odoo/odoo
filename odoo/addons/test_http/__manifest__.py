@@ -7,9 +7,9 @@
     'depends': ['web', 'web_tour', 'mail', 'rpc'],
     'installable': True,
     'data': [
-        'data.xml',
-        'ir.model.access.csv',
-        'views.xml'
+        'data/data.xml',
+        'security/ir.model.access.csv',
+        'views/views.xml',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
