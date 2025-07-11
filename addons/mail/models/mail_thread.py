@@ -4755,6 +4755,8 @@ class MailThread(models.AbstractModel):
         for thread in self:
             res = {}
             if is_request:
+                mail_models = self.env["ir.model"].sudo().search([("is_mail_thread", "=", True), ("transient", "=", False)])
+                res["hasMailThread"] = self.env["ir.model"]._get(thread._name).id in mail_models.ids
                 res["hasReadAccess"] = True
                 res["hasWriteAccess"] = False
                 res["canPostOnReadonly"] = self._mail_post_access == "read"
