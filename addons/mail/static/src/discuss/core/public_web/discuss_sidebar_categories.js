@@ -134,7 +134,13 @@ export class DiscussSidebarChannel extends Component {
             "o-unread fw-bolder":
                 this.thread.selfMember?.message_unread_counter > 0 && !this.thread.selfMember?.mute_until_dt,
             "text-muted":
+<<<<<<< bd9351a36cf7394bc5436806d4e6548e6477c497
                 this.thread.selfMember?.message_unread_counter !== 0 || this.thread.selfMember?.mute_until_dt,
+||||||| 83bc67079fe7f0c15b7c1683dd094614d34c508c
+                this.thread.selfMember?.message_unread_counter !== 0 || this.thread.isMuted,
+=======
+                this.thread.selfMember?.message_unread_counter === 0 || this.thread.isMuted,
+>>>>>>> b9ba126fc3d7194c7fe30dcf0728e5e5a4d59a51
         };
     }
 
