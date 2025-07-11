@@ -191,6 +191,11 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
             {}
         )
 
+        self.assertEqual(
+            question.validate_question('2e1'),
+            {question.id: _('This is not a number')}
+        )
+
     @users('survey_manager')
     def test_answer_validation_char_box_email(self):
         question = self._add_question(self.page_0, 'Q0', 'char_box', validation_email=True)

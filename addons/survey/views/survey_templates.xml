@@ -408,7 +408,7 @@
 
     <template id="question_numerical_box" name="Question: numerical box">
         <div class="o_survey_answer_wrapper p-1 rounded">
-            <input type="number" step="any" class="form-control o_survey_question_numerical_box bg-transparent rounded-0 p-0"
+            <input type="text" step="any" class="form-control o_survey_question_numerical_box bg-transparent rounded-0 p-0"
                 t-att-name="question.id" t-att-placeholder="question.question_placeholder"
                 t-att-value="answer_lines[0].value_numerical_box if answer_lines else None"
                 t-att-data-question-type="question.question_type"
