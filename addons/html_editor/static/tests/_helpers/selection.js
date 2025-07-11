@@ -114,7 +114,7 @@ export function setContent(el, content) {
     if (configSelection) {
         setSelection(configSelection);
     }
-    if (getContent(el) !== content) {
+    if (getContent(el) !== content.toString()) {
         throw new Error("error in setContent/getContent helpers");
     }
 }

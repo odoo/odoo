@@ -10,6 +10,9 @@ import {
 import { user } from "@web/core/user";
 import { htmlEditorVersions } from "@html_editor/html_migrations/html_migrations_utils";
 import { PropertyValue } from "@web/views/fields/properties/property_value";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { insertText } from "@html_editor/../tests/_helpers/user_actions";
+import { queryOne } from "@odoo/hoot-dom";
 
 const VERSIONS = htmlEditorVersions();
 const CURRENT_VERSION = VERSIONS.at(-1);
@@ -56,6 +59,7 @@ class User extends models.Model {
                 {
                     name: "bd6404492c244cff_html",
                     type: "html",
+                    string: "HTML Property",
                 },
             ],
         },
@@ -66,6 +70,13 @@ defineModels([Partner, User]);
 
 test("properties: html", async () => {
     patchWithCleanup(user, { hasGroup: (group) => false });
+    let editor;
+    patchWithCleanup(PropertyValue.prototype, {
+        onEditorLoad(ed) {
+            super.onEditorLoad(ed);
+            editor = ed;
+        },
+    });
     await mountView({
         type: "form",
         resId: 1,
@@ -79,6 +90,23 @@ test("properties: html", async () => {
     expect(`[name="properties"] .odoo-editor-editable`).toHaveCount(1);
     expect(`[name="properties"] .odoo-editor-editable .o-paragraph`).toHaveInnerHTML(
         "<b> test </b>"
+    );
+
+    setSelection({
+        anchorNode: queryOne(`[name="properties"] .odoo-editor-editable .o-paragraph b`),
+        anchorOffset: 0,
+    });
+    await insertText(editor, " foo");
+    expect(`[name="properties"] .odoo-editor-editable .o-paragraph`).toHaveInnerHTML(
+        "<b> foo test </b>"
+    );
+
+    // Ensure the shown value isn't replaced by escaped HTML upon saving the form.
+    // Blur to show the save button.
+    await contains(".o_field_property_label").click();
+    await contains(".o_form_button_save").click();
+    expect(`[name="properties"] .odoo-editor-editable .o-paragraph`).toHaveInnerHTML(
+        "<b> foo test </b>"
     );
 });
 

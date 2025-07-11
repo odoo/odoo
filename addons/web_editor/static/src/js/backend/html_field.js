@@ -29,6 +29,8 @@ import { rpc } from "@web/core/network/rpc";
 // Ensure `@web/views/fields/html/html_field` is loaded first as this module
 // must override the html field in the registry.
 import '@web/views/fields/html/html_field';
+import { fixInvalidHTML } from "@html_editor/utils/sanitize";
+import { setElementContent } from "@web/core/utils/html";
 
 let stripHistoryIds;
 
@@ -117,6 +119,13 @@ export class HtmlField extends Component {
                 if (this.props.readonly || (!this.state.showCodeView && this.sandboxedPreview)) {
                     if (this.showIframe) {
                         await this._setupReadonlyIframe();
+                        if (this.iframeTarget) {
+                            const qwebPlugin = new QWebPlugin();
+                            // Ensure that the dynamic fields are inlined.
+                            qwebPlugin.sanitizeElement(this.iframeTarget);
+                            // We can immediately destroy the plugin as we only need it to sanitize the content.
+                            qwebPlugin.destroy();
+                        }
                     } else if (this.readonlyElementRef.el) {
                         this._qwebPlugin = new QWebPlugin();
                         this._qwebPlugin.sanitizeElement(this.readonlyElementRef.el);
@@ -456,16 +465,17 @@ export class HtmlField extends Component {
             ? this.iframeRef.el.contentDocument.documentElement
             : this.iframeRef.el.contentDocument.querySelector('#iframe_target');
 
+        this.iframeTarget = iframeTarget;
+        const value = fixInvalidHTML(this.props.record.data[this.props.name]);
+
         if (this.iframePromise && iframeTarget) {
-            if (iframeTarget.innerHTML !== this.props.record.data[this.props.name]) {
-                iframeTarget.innerHTML = this.props.record.data[this.props.name];
+            if (iframeTarget.innerHTML !== value.toString()) {
+                setElementContent(iframeTarget, value);
                 retargetLinks(iframeTarget);
             }
             return this.iframePromise;
         }
         this.iframePromise = new Promise((resolve) => {
-            let value = this.props.record.data[this.props.name];
-
             // this bug only appears on some computers with some chrome version.
             let avoidDoubleLoad = 0;
 
@@ -520,7 +530,7 @@ export class HtmlField extends Component {
 
                 if (!this.sandboxedPreview) {
                     const iframeTarget = cwindow.document.querySelector('#iframe_target');
-                    iframeTarget.innerHTML = value;
+                    setElementContent(iframeTarget, value);
 
                     const script = cwindow.document.createElement('script');
                     script.setAttribute('type', 'text/javascript');
@@ -532,7 +542,7 @@ export class HtmlField extends Component {
                     script.append(scriptTextNode);
                     cwindow.document.body.append(script);
                 } else {
-                    cwindow.document.documentElement.innerHTML = value;
+                    setElementContent(cwindow.document.documentElement, value);
                 }
 
                 const height = cwindow.document.body.scrollHeight;
