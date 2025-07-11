@@ -417,6 +417,14 @@ export function checkFiscalPosition(name) {
         Dialog.cancel(),
     ];
 }
+export function checkFiscalPositionButton() {
+    return [
+        {
+            content: "click fiscal position button",
+            trigger: ".o_fiscal_position_button",
+        },
+    ];
+}
 export function closeWithCashAmount(val) {
     return [
         {
