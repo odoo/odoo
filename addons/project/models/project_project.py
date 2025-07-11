@@ -27,9 +27,8 @@ class ProjectProject(models.Model):
         'portal.mixin',
         'mail.alias.mixin',
         'rating.parent.mixin',
-        'mail.thread',
         'mail.activity.mixin',
-        'mail.tracking.duration.mixin',
+        'mail.thread.tracking.duration.mixin',
         'analytic.plan.fields.mixin',
     ]
     _order = "sequence, name, id"

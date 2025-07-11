@@ -5,7 +5,7 @@ from unittest.mock import patch
 from odoo.addons.mail.tests.common import MailCommon
 
 
-class MailTrackingDurationMixinCase(MailCommon):
+class MailThreadTrackingDurationMixinCase(MailCommon):
 
     @classmethod
     def setUpClass(cls, tested_model, model_fields=None):

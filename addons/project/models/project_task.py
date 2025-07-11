@@ -91,7 +91,7 @@ class ProjectTask(models.Model):
         'mail.thread.cc',
         'mail.activity.mixin',
         'rating.mixin',
-        'mail.tracking.duration.mixin',
+        'mail.thread.tracking.duration.mixin',
         'html.field.history.mixin',
     ]
     _mail_post_access = 'read'
@@ -99,6 +99,7 @@ class ProjectTask(models.Model):
     _primary_email = 'email_from'
     _systray_view = 'list'
     _track_duration_field = 'stage_id'
+    _stage_day_rot_field = 'day_rot'
 
     def _get_versioned_fields(self):
         return [ProjectTask.description.name]
@@ -395,6 +396,19 @@ class ProjectTask(models.Model):
         else:
             return NotImplemented
         return [('state', 'in', searched_states)]
+
+    @api.depends('state', 'stage_id.day_rot')
+    def _compute_rotting(self):
+        super()._compute_rotting()
+
+    def _resource_is_not_rotting_hook(self, task):
+        if task.is_closed:
+            return True
+        return super()._resource_is_not_rotting_hook(task)
+
+    def _search_is_rotting(self, operator, value):
+        sup = super()._search_is_rotting(operator, value)
+        return Domain.AND([sup, [('is_closed', '=', False)]])
 
     @property
     def OPEN_STATES(self):

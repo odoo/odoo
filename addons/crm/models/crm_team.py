@@ -51,7 +51,7 @@ class CrmTeam(models.Model):
             team.assignment_max = sum(member.assignment_max for member in team.crm_team_member_ids)
 
     def _compute_assignment_enabled(self):
-        assign_enabled = self.env['ir.config_parameter'].sudo().get_param('crm.lead.auto.assignment', False)
+        assign_enabled = self.env['ir.config_parameter'].sudo().get_param('crm.lead.auto.assignment.action', 'incoming_emails') in ['manual', 'auto']
         auto_assign_enabled = False
         if assign_enabled:
             assign_cron = self.sudo().env.ref('crm.ir_cron_crm_lead_assign', raise_if_not_found=False)

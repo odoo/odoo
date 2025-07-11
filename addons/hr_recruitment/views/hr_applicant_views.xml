@@ -38,6 +38,8 @@
                 <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="stage_id" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
+                <field name="is_rotting" column_invisible="True"/>
+                <field name="day_rotting" widget="rotting_list" string="Rotting" optional="show"/>
                 <field name="type_id" column_invisible="True"/>
                 <field name="application_status" optional="hide" invisible="application_status == 'ongoing'"/>
                 <field name="refuse_reason_id" optional='hide'/>
@@ -144,6 +146,8 @@
                     <label for="partner_name" class="oe_edit_only" string="Talent" invisible="not is_pool_applicant"/>
                     <h1 class="d-flex justify-content-between align-items-center me-4">
                         <field name="partner_name" options="{'line_breaks': False}" context="{'default_company_id': company_id}"/>
+                        <field name="is_rotting" invisible="1"/>
+                        <field name="day_rotting" class="d-flex" widget="rotting_form"/>
                     </h1>
                 </div>
                 <group>
@@ -274,6 +278,7 @@
                 <separator/>
                 <filter string="Ready for Next Stage" name="done" domain="[('kanban_state', '=', 'done')]"/>
                 <filter string="Blocked" name="blocked" domain="[('kanban_state', '=', 'blocked')]"/>
+                <filter string="Rotting" name="filter_rotting" domain="[('is_rotting', '=', True)]"/>
                 <separator/>
                 <filter string="Directly Available" name="applicant_availability" domain="['|',('availability', '&lt;=', context_today().strftime('%Y-%m-%d')),('availability','=', False)]"/>
                 <separator/>
@@ -357,7 +362,8 @@
         <field name="name">Hr Applicants kanban</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <kanban  highlight_color="color" default_group_by="stage_id" class="o_kanban_applicant o_search_matching_applicant" quick_create_view="hr_recruitment.quick_create_applicant_form" sample="1">
+            <kanban  highlight_color="color" default_group_by="stage_id" class="o_kanban_applicant o_search_matching_applicant" quick_create_view="hr_recruitment.quick_create_applicant_form" sample="1" 
+                js_class="rotting_kanban">
                 <header>
                     <button
                         name="action_talent_pool_add_applicants"
@@ -379,7 +385,7 @@
                 <field name="active"/>
                 <field name="application_status" />
                 <field name="company_id" invisible="1"/> <!-- We need to keep this field as it is used in the domain of user_id in the model -->
-                <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
+                <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}' rotting_count_field="is_rotting"/>
                 <templates>
                     <t t-name="menu">
                         <a role="menuitem" name="action_create_meeting" type="object" class="dropdown-item">Schedule Interview</a>
@@ -401,6 +407,8 @@
                         <footer>
                             <field name="priority" widget="priority"/>
                             <field class="ms-1 align-items-center" name="activity_ids" widget="kanban_activity"/>
+                            <field name="is_rotting" invisible="1"/>
+                            <field class="d-flex" name="day_rotting" widget="rotting_kanban"/>
                             <div class="d-flex ms-auto align-items-center">
                                 <a name="action_open_attachments" type="object">
                                     <i class='fa fa-paperclip' role="img" aria-label="Documents"/>

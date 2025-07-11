@@ -30,12 +30,13 @@ class HrApplicant(models.Model):
                'mail.thread.phone',
                'mail.activity.mixin',
                'utm.mixin',
-               'mail.tracking.duration.mixin',
+               'mail.thread.tracking.duration.mixin',
     ]
     _rec_name = "partner_name"
     _mailing_enabled = True
     _primary_email = 'email_from'
     _track_duration_field = 'stage_id'
+    _stage_day_rot_field = 'day_rot'
     _order = "sequence"
 
     sequence = fields.Integer(string='Sequence', index=True, default=10)
@@ -481,6 +482,23 @@ class HrApplicant(models.Model):
                 applicant.delay_close = applicant.day_close - applicant.day_open
             else:
                 applicant.delay_close = False
+
+    @api.depends('kanban_state', 'application_status', 'date_closed', 'stage_id.day_rot')
+    def _compute_rotting(self):
+        super()._compute_rotting()
+
+    def _resource_is_not_rotting_hook(self, applicant):
+        if applicant.application_status != 'ongoing' or applicant.date_closed:
+            return True
+        return super()._resource_is_not_rotting_hook(applicant)
+
+    def _search_is_rotting(self, operator, value):
+        sup = super()._search_is_rotting(operator, value)
+        dom = [
+            ('application_status', '=', 'ongoing'),
+            ('date_closed', '=', False),
+        ]
+        return Domain.AND([sup, dom])
 
     @api.depends_context('lang')
     @api.depends('meeting_ids', 'meeting_ids.start')

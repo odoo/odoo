@@ -170,16 +170,48 @@ class MailTestTrackCompute(models.Model):
 
 
 class MailTestTrackDurationMixin(models.Model):
-    _description = 'Fake model to test the mixin mail.tracking.duration.mixin'
+    _description = 'Fake model to test the mixin mail.thread.tracking.duration.mixin'
     _name = "mail.test.track.duration.mixin"
     _track_duration_field = 'customer_id'
-    _inherit = ['mail.thread', 'mail.tracking.duration.mixin']
+    _inherit = ['mail.thread.tracking.duration.mixin']
 
     name = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=True)
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
+
+
+class MailTestStageField(models.Model):
+    _description = 'Fake model to be a stage to help test rotting implementation'
+    _name = 'mail.test.rotting.stage.mixin'
+
+    name = fields.Char()
+
+    day_rot = fields.Integer(default=3)
+    no_rot = fields.Boolean(default=False)
+
+
+class MailTestRottingMixin(models.Model):
+    _description = 'Fake model to test the rotting part of the mixin mail.thread.tracking.duration.mixin'
+    _name = 'mail.test.rotting.resource.mixin'
+    _track_duration_field = 'stage_id'
+    _stage_day_rot_field = 'day_rot'
+    _inherit = ['mail.thread.tracking.duration.mixin']
+
+    name = fields.Char()
+
+    stage_id = fields.Many2one('mail.test.rotting.stage.mixin', 'Stage')
+    done = fields.Boolean(default=False)
+
+    @api.depends('done', 'stage_id.day_rot', 'stage_id.no_rot')
+    def _compute_rotting(self):
+        super()._compute_rotting()
+
+    def _resource_is_not_rotting_hook(self, resource):
+        if resource.done or resource.stage_id.no_rot:
+            return True
+        return super()._resource_is_not_rotting_hook(resource)
 
 
 class MailTestTrackGroups(models.Model):

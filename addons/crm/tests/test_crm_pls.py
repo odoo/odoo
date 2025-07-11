@@ -587,7 +587,7 @@ class TestCrmPls(CrmPlsCommon):
             to have no team assigned to it."""
         Lead = self.env['crm.lead']
         team_id = self.env['crm.team'].create([{'name': 'Team Test'}]).id
-        self.env['crm.stage'].search([('team_id', '=', False)]).write({'team_id': team_id})
+        self.env['crm.stage'].search([('team_ids', '=', False)]).write({'team_ids': [team_id]})
         lead = Lead.create({'name': 'team', 'team_id': team_id, 'probability': 41.23})
         Lead._cron_update_automated_probabilities()
         self.assertEqual(tools.float_compare(lead.probability, 41.23, 2), 0)
@@ -694,16 +694,16 @@ class TestCrmPlsSides(CrmPlsCommon):
             {
                 'name': 'New Stage',
                 'sequence': 1,
-                'team_id': cls.team.id,
+                'team_ids': [cls.team.id],
             }, {
                 'name': 'In Progress Stage',
                 'sequence': 2,
-                'team_id': cls.team.id,
+                'team_ids': [cls.team.id],
             }, {
                 'is_won': True,
                 'name': 'Won Stage',
                 'sequence': 3,
-                'team_id': cls.team.id,
+                'team_ids': [cls.team.id],
             },
         ])
 

@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 from odoo import exceptions, tools
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.addons.mail.tests.common_tracking import MailTrackingDurationMixinCase
+from odoo.addons.mail.tests.common_tracking import MailThreadTrackingDurationMixinCase
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
 
 @tagged('mail_thread', 'mail_track')
-class TestMailTrackingDurationMixin(MailTrackingDurationMixinCase):
+class TestMailThreadTrackingDurationMixin(MailThreadTrackingDurationMixinCase):
 
     @classmethod
     def setUpClass(cls):
@@ -24,6 +25,126 @@ class TestMailTrackingDurationMixin(MailTrackingDurationMixinCase):
 
     def test_queries_batch_mail_tracking_duration(self):
         self._test_queries_batch_duration_tracking()
+
+
+@tagged('mail_thread', 'mail_track')
+class TestMailThreadRottingMixin(MailThreadTrackingDurationMixinCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass('mail.test.rotting.resource.mixin')
+
+    def test_resource_rotting(self):
+        # create dates for the test
+        jan1 = datetime(2025, 1, 1)
+        jan5 = datetime(2025, 1, 5)
+        jan7 = datetime(2025, 1, 7)
+        jan12 = datetime(2025, 1, 12)
+        jan28 = datetime(2025, 1, 28)
+
+        # create resources for the test, created on jan 1
+        with self.mock_datetime_and_now(jan1):
+            [stage1, stage2, stageWon] = self.env['mail.test.rotting.stage.mixin'].create([
+                {
+                    'name': 'stage1',
+                    'day_rot': 3,
+                }, {
+                    'name': 'stage2',
+                    'day_rot': 5,
+                }, {
+                    'name': 'stageWon',
+                    'day_rot': 1,
+                    'no_rot': True,
+                }
+            ])
+
+            [item1, item2, item3, itemDone, itemWon] = self.env['mail.test.rotting.resource.mixin'].create([
+                {
+                    'name': 'item1',
+                    'stage_id': stage1.id,
+                }, {
+                    'name': 'item2',
+                    'stage_id': stage2.id,
+                }, {
+                    'name': 'item3',
+                    'stage_id': stage1.id,
+                }, {
+                    'name': 'itemDone',
+                    'stage_id': stage2.id,
+                    'done': True,
+                }, {
+                    'name': 'itemWonStage',
+                    'stage_id': stageWon.id,
+                },
+            ])
+
+        with self.mock_datetime_and_now(jan5):
+            # need to invalidate on date change to ensure rotting computations
+            self.env.invalidate_all()
+            # on jan 4: it's been four days, so only items in stage1 should be rotting
+            for item in [item1, item3]:
+                self.assertTrue(item.is_rotting)
+            for item in [item2, itemDone, itemWon]:
+                self.assertFalse(item.is_rotting)
+
+            # however editing the name of an item writes to it, making it not rot anymore
+            item3.name = 'item3 edited'
+            self.assertFalse(item3.is_rotting)
+
+        with self.mock_datetime_and_now(jan7):
+            self.env.invalidate_all()
+            # on jan 7: items belonging to stage2 should be rotting, except if their state forbids it
+            self.assertTrue(item2.is_rotting)
+            self.assertFalse(itemDone.is_rotting)
+
+            # it hasn't been long enough for item3 to start rotting again
+            self.assertFalse(item3.is_rotting)
+
+            # Receiving an email should not remove rotting
+            self.assertTrue(item1.is_rotting)
+            item1.message_post(body='Message received', message_type='email')
+            self.assertTrue(item1.is_rotting)
+
+            # However sending an email should remove it
+            item1.message_post(body='Message sent', message_type='email_outgoing')
+            self.assertFalse(item1.is_rotting)
+
+            # Items in stageWon cannot rot
+            self.assertFalse(itemWon.is_rotting)
+            # However if the stage no longer disallows rotting, then all items in the stage may once more rot
+            stageWon.no_rot = False
+            self.assertTrue(itemWon.is_rotting)
+
+            # Disallowing rotting once again should reset it
+            stageWon.no_rot = True
+            self.assertFalse(itemWon.is_rotting)
+
+        with self.mock_datetime_and_now(jan12):
+            self.env.invalidate_all()
+            # Changing the "days to rot" property should have an effect on an item's rotting status
+            self.assertTrue(item3.is_rotting)
+            stage1.day_rot = 40
+            self.assertFalse(item3.is_rotting)
+            stage1.day_rot = 1
+            self.assertTrue(item3.is_rotting)
+
+            # Changing stages is a write and always removes rotting
+            item3.stage_id = stage2
+            self.assertFalse(item3.is_rotting)
+
+            # Setting day_rot at 0 on a stage disables rotting for the stage
+            stage2.no_rot = True
+            self.assertFalse(item2.is_rotting)
+            item3.done = True
+
+        with self.mock_datetime_and_now(jan28):
+            self.env.invalidate_all()
+            # After a significant amount of time has passed:
+            # Items that are not done or won are rotting
+            self.assertTrue(item1.is_rotting)
+            # Items that are not done, won, or in a disabled rotting stage are not rotting
+            for item in [item2, item3, itemDone, itemWon]:
+                self.assertFalse(item.is_rotting)
 
 
 @tagged('mail_thread', 'mail_blacklist')
