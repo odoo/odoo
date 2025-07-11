@@ -1978,7 +1978,7 @@
                                             t-value="product_variant.all_product_tag_ids"
                                         />
                                     </t>
-                                    <form t-if="product._is_add_to_cart_possible()">
+                                    <form t-if="product._is_add_to_cart_possible()" id="product_details_form">
                                         <input
                                             type="hidden"
                                             name="csrf_token"
@@ -2127,7 +2127,7 @@
                                     />
                                 </div>
                                 <div
-                                    t-if="is_fullwidth_content"
+                                    t-if="is_fullwidth_content and product._is_add_to_cart_possible()"
                                     t-attf-class="col-lg-4 offset-lg-1"
                                 >
                                     <div class="o_wsale_product_sticky_col position-sticky">

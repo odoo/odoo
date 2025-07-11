@@ -314,7 +314,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     async _onClickAdd(ev) {
         ev.preventDefault();
         var def = () => {
-            this._updateRootProduct((ev.currentTarget).closest('form'));
+            this._updateRootProduct(document.querySelector('form#product_details_form'));
             const isBuyNow = ev.currentTarget.classList.contains('o_we_buy_now');
             const isConfigured = ev.currentTarget.parentElement.id === 'add_to_cart_wrap';
             const showQuantity = Boolean(ev.currentTarget.dataset.showQuantity);
@@ -570,7 +570,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             // Variants list view
             'input[type="radio"][name="product_id"]:checked',
         ].join(','))?.value);
-        const quantity = parseFloat(form.querySelector('input[name="add_qty"]')?.value);
+        const quantity = parseFloat(document.querySelector('input[name="add_qty"]')?.value);
         const uomId = this._getUoMId(form);
         const isCombo = form.querySelector(
             'input[type="hidden"][name="product_type"]'
