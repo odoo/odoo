@@ -704,11 +704,25 @@ class TestSaleToInvoice(TestSaleCommon):
         sol_prod_deliver.env.add_to_compute(qty_invoiced_field, sol_prod_deliver)
         self.assertEqual(sol_prod_deliver.qty_invoiced, quantity)
 
+<<<<<<< aeda822db05b218fd1271c7666307950b7a98512
         # Rounding to 0.1, should be rounded with UP (ceil) rounding_method
         # Not floor or half up rounding.
         sol_prod_deliver.product_uom_id.rounding *= 10
         sol_prod_deliver.product_uom_id.flush_recordset(['rounding'])
         expected_qty = 5.2
+||||||| 9a66d0676eedde5d3d9bed6518d4dde921cd9d91
+        # Rounding to 0.1, should be rounded with UP (ceil) rounding_method
+        # Not floor or half up rounding.
+        sol_prod_deliver.product_uom.rounding *= 10
+        sol_prod_deliver.product_uom.flush_recordset(['rounding'])
+        expected_qty = 5.2
+=======
+        # If rounding of used uom is different from decimal precision, it's the decimal precision
+        # that is used for 'qty_invoiced'. No rounding is done.
+        sol_prod_deliver.product_uom.rounding *= 10
+        sol_prod_deliver.product_uom.flush_recordset(['rounding'])
+        expected_qty = 5.13
+>>>>>>> a1bd1dd8b183e5a7f0dd837ac9268fc92a0fd970
         qty_invoiced_field = sol_prod_deliver._fields.get('qty_invoiced')
         sol_prod_deliver.env.add_to_compute(qty_invoiced_field, sol_prod_deliver)
         self.assertEqual(sol_prod_deliver.qty_invoiced, expected_qty)

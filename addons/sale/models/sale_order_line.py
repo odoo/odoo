@@ -906,9 +906,21 @@ class SaleOrderLine(models.Model):
             for invoice_line in line._get_invoice_lines():
                 if invoice_line.move_id.state != 'cancel' or invoice_line.move_id.payment_state == 'invoicing_legacy':
                     if invoice_line.move_id.move_type == 'out_invoice':
+<<<<<<< aeda822db05b218fd1271c7666307950b7a98512
                         qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom_id)
+||||||| 9a66d0676eedde5d3d9bed6518d4dde921cd9d91
+                        qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+=======
+                        qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom, round=False)
+>>>>>>> a1bd1dd8b183e5a7f0dd837ac9268fc92a0fd970
                     elif invoice_line.move_id.move_type == 'out_refund':
+<<<<<<< aeda822db05b218fd1271c7666307950b7a98512
                         qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom_id)
+||||||| 9a66d0676eedde5d3d9bed6518d4dde921cd9d91
+                        qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+=======
+                        qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom, round=False)
+>>>>>>> a1bd1dd8b183e5a7f0dd837ac9268fc92a0fd970
             line.qty_invoiced = qty_invoiced
 
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity')
