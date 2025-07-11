@@ -82,8 +82,7 @@ class PortalThreadController(ThreadController):
                     portal_data={"portal_partner": portal_partner, "portal_thread": thread}
                 )
             # Non-employee see only messages with not internal subtype (aka, no internal logs)
-            if not request.env.user._is_internal():
-                domain = Message._get_search_domain_share() & domain
+            domain = Message._get_search_domain_share() & domain
             Message = request.env["mail.message"].sudo()
         res = Message._message_fetch(domain, **(fetch_params or {}))
         messages = res.pop("messages")
