@@ -104,9 +104,9 @@ class AccountMoveSendWizard(models.TransientModel):
         for wizard in self:
             move_data = {
                 wizard.move_id: {
-                    'sending_methods': wizard.sending_methods or {},
+                    'sending_methods': set(wizard.sending_methods or []) or {},
                     'invoice_edi_format': wizard.invoice_edi_format,
-                    'extra_edis': wizard.extra_edis or {},
+                    'extra_edis': set(wizard.extra_edis or []) or {},
                 }
             }
             wizard.alerts = self._get_alerts(wizard.move_id, move_data)
@@ -118,7 +118,7 @@ class AccountMoveSendWizard(models.TransientModel):
 
     def _inverse_sending_methods(self):
         for wizard in self:
-            wizard.sending_method_checkboxes = {method_key: {'checked': True} for method_key in wizard.sending_methods or {}}
+            wizard.sending_method_checkboxes = {method_key: {'checked': True} for method_key in wizard.sending_methods or []}
 
     @api.depends('move_id')
     def _compute_sending_method_checkboxes(self):
@@ -147,7 +147,7 @@ class AccountMoveSendWizard(models.TransientModel):
 
     def _inverse_extra_edis(self):
         for wizard in self:
-            wizard.extra_edi_checkboxes = {method_key: {'checked': True} for method_key in wizard.extra_edis or {}}
+            wizard.extra_edi_checkboxes = {method_key: {'checked': True} for method_key in wizard.extra_edis or []}
 
     @api.depends('move_id')
     def _compute_extra_edi_checkboxes(self):
@@ -161,7 +161,7 @@ class AccountMoveSendWizard(models.TransientModel):
     @api.depends('move_id', 'sending_methods')
     def _compute_invoice_edi_format(self):
         for wizard in self:
-            wizard.invoice_edi_format = self._get_default_invoice_edi_format(wizard.move_id, sending_methods=wizard.sending_methods or {})
+            wizard.invoice_edi_format = self._get_default_invoice_edi_format(wizard.move_id, sending_methods=set(wizard.sending_methods or []) or {})
 
     @api.depends('move_id')
     def _compute_pdf_report_id(self):
@@ -210,7 +210,7 @@ class AccountMoveSendWizard(models.TransientModel):
                     wizard.move_id,
                     wizard.mail_template_id,
                     invoice_edi_format=wizard.invoice_edi_format,
-                    extra_edis=wizard.extra_edis or {},
+                    extra_edis=set(wizard.extra_edis or []) or {},
                     pdf_report=wizard.pdf_report_id,
                 )
                 + manual_attachments_data
@@ -232,7 +232,7 @@ class AccountMoveSendWizard(models.TransientModel):
     @api.model
     def _get_selected_checkboxes(self, json_checkboxes):
         if not json_checkboxes:
-            return {}
+            return []
         return [checkbox_key for checkbox_key, checkbox_vals in json_checkboxes.items() if checkbox_vals['checked']]
 
     # -------------------------------------------------------------------------
@@ -242,9 +242,9 @@ class AccountMoveSendWizard(models.TransientModel):
     def _get_sending_settings(self):
         self.ensure_one()
         send_settings = {
-            'sending_methods': self.sending_methods or [],
+            'sending_methods': set(self.sending_methods or []) or {},
             'invoice_edi_format': self.invoice_edi_format,
-            'extra_edis': self.extra_edis or [],
+            'extra_edis': set(self.extra_edis or []) or {},
             'pdf_report': self.pdf_report_id,
             'author_user_id': self.env.user.id,
             'author_partner_id': self.env.user.partner_id.id,

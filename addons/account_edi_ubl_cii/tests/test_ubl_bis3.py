@@ -95,7 +95,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods={'manual'})
         self._assert_invoice_ubl_file(invoice, 'bis3/test_taxes_rounding_negative_line_tax_included')
 
     def test_single_fixed_tax_price_excluded(self):
@@ -117,7 +117,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods={'manual'})
         self._assert_invoice_ubl_file(invoice, 'bis3/test_single_fixed_tax_price_excluded')
 
     def test_single_fixed_tax_price_included(self):
@@ -139,7 +139,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods={'manual'})
         self._assert_invoice_ubl_file(invoice, 'bis3/test_single_fixed_tax_price_included')
 
     def test_multiple_fixed_taxes_price_excluded(self):
@@ -162,7 +162,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods={'manual'})
         self._assert_invoice_ubl_file(invoice, 'bis3/test_multiple_fixed_taxes_price_excluded')
 
     def test_single_fixed_tax_price_excluded_and_discount(self):
@@ -186,7 +186,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods={'manual'})
         self._assert_invoice_ubl_file(invoice, 'bis3/test_single_fixed_tax_price_excluded_and_discount')
 
     def test_manual_tax_amount_on_invoice(self):
@@ -230,7 +230,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         ]})
         invoice.action_post()
 
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods={'manual'})
         self._assert_invoice_ubl_file(invoice, 'bis3/test_manual_tax_amount_on_invoice')
 
     # -------------------------------------------------------------------------
@@ -259,7 +259,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods={'manual'})
         self._assert_invoice_ubl_file(invoice, 'bis3/test_price_unit_with_more_decimals')
 
     # -------------------------------------------------------------------------
@@ -291,7 +291,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods={'manual'})
         self._assert_invoice_ubl_file(invoice, 'bis3/test_early_pay_discount_different_taxes')
 
     def test_early_pay_discount_with_fixed_tax(self):
@@ -314,7 +314,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods={'manual'})
         self._assert_invoice_ubl_file(invoice, 'bis3/test_early_pay_discount_with_fixed_tax')
 
     def test_early_pay_discount_with_discount_on_lines(self):
@@ -368,5 +368,5 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods={'manual'})
         self._assert_invoice_ubl_file(invoice, 'bis3/test_early_pay_discount_with_discount_on_lines')
