@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="purchase_requisition_alternative_warning_form" model="ir.ui.view">
+        <record id="purchase_alternative_warning_form" model="ir.ui.view">
             <field name="name">Alternative Warning</field>
-            <field name="model">purchase.requisition.alternative.warning</field>
+            <field name="model">purchase.alternative.warning</field>
             <field name="arch" type="xml">
                 <form string="Alternative Warning">
                     <field name="alternative_po_ids" nolabel="1" readonly="1">
                         <list create="0" delete="0" edit="0">
-                            <field name="currency_id" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/> <!-- Invisible fields -->
                             <field name="partner_id" readonly="state in ['cancel', 'purchase']"/>
                             <field name="name" string="Reference"/>
                             <field name="date_planned"/>
