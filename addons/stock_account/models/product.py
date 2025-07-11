@@ -132,7 +132,9 @@ class ProductProduct(models.Model):
         for group in groups:
             product = self.browse(group['product_id'][0])
             value_svl = company_id.currency_id.round(group['value'])
-            avg_cost = value_svl / group['quantity'] if group['quantity'] else 0
+            avg_cost = 0
+            if not float_is_zero(group['quantity'], precision_rounding=product.uom_id.rounding):
+                avg_cost = value_svl / group['quantity']
             product.value_svl = value_svl
             product.quantity_svl = group['quantity']
             product.avg_cost = avg_cost
