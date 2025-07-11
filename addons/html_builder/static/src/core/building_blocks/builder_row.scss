@@ -97,6 +97,17 @@
         content: "";
     }
 
+    &.hb-row-sublevel + &[data-label=" "]:not(.hb-row-sublevel):after {
+        position: absolute;
+        border: $o-we-border-width solid var(--o-hb-row-sublevel-color, #{mix($o-we-bg-lighter, $o-we-fg-light)});
+        border-width: 0 0 $o-we-border-width $o-we-border-width;
+        height: 100%;
+        transform: translate(12px - $o-we-border-width, ($o-hb-row-min-height * -0.5) - $o-we-border-width);
+        pointer-events: none;
+        z-index: 10;
+        content: "";
+    }
+
     // Sublevel specific rules
     @for $_level from 1 through 3 {
         &.hb-row-sublevel-#{$_level} {
