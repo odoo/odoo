@@ -101,8 +101,10 @@ export class LinkPopover extends Component {
             isImage: this.props.isImage,
             showReplaceTitleBanner: this.props.showReplaceTitleBanner,
             showLabel: !this.props.linkElement.childElementCount,
+            showSeoOptions: false,
+            relAttributes: new Set(),
+            openInNewTab: false,
         });
-
         this.customTextColorState = useState({
             selectedColor: computedStyle.color || DEFAULT_CUSTOM_TEXT_COLOR,
             defaultTab: "solid",
@@ -192,6 +194,22 @@ export class LinkPopover extends Component {
         }
     }
 
+    onClickGear() {
+        this.state.showSeoOptions = !this.state.showSeoOptions;
+    }
+
+    PreviousPopup(){
+        this.state.showSeoOptions = false;
+    }
+
+    toggleRelAttr(attr) {
+        if (this.state.relAttributes.has(attr)) {
+            this.state.relAttributes.delete(attr);
+        } else {
+            this.state.relAttributes.add(attr);
+        }
+    }
+    
     onChange() {
         // Apply changes to update the link preview.
         this.props.onChange(
@@ -205,6 +223,7 @@ export class LinkPopover extends Component {
         this.updateDocumentState();
     }
     onClickApply() {
+        const relvalue = [...this.state.relAttributes].join(' ');
         this.state.editing = false;
         this.applyDeducedUrl();
         this.props.onApply(
@@ -213,7 +232,8 @@ export class LinkPopover extends Component {
             this.classes,
             this.customStyles,
             this.state.linkTarget,
-            this.state.attachmentId
+            this.state.attachmentId,
+            relvalue
         );
     }
     applyDeducedUrl() {
@@ -234,6 +254,9 @@ export class LinkPopover extends Component {
         this.state.url = this.props.linkElement.getAttribute("href");
 
         const textContent = cleanZWChars(this.props.linkElement.textContent);
+        const relAttr = this.props.linkElement.rel
+        this.state.relAttributes = new Set(relAttr ? relAttr.split(/\s+/) : []);
+
         const labelEqualsUrl =
             textContent === this.props.linkElement.getAttribute("href") ||
             textContent + "/" === this.props.linkElement.getAttribute("href");
@@ -295,6 +318,7 @@ export class LinkPopover extends Component {
     }
 
     onClickNewWindow(checked) {
+        this.state.openInNewTab = !this.state.openInNewTab 
         this.state.linkTarget = checked ? "_blank" : "";
     }
 
