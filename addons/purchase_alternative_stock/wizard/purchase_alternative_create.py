@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, Command, models
 
 
-class PurchaseRequisitionCreateAlternative(models.TransientModel):
-    _inherit = 'purchase.requisition.create.alternative'
+class PurchaseAlternativeCreate(models.TransientModel):
+    _inherit = 'purchase.alternative.create'
 
     def _get_alternative_values(self):
-        vals = super(PurchaseRequisitionCreateAlternative, self)._get_alternative_values()
+        vals = super()._get_alternative_values()
         for val in vals:
             val.update({
                 'picking_type_id': self.origin_po_id.picking_type_id.id,
