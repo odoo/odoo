@@ -285,6 +285,7 @@
                         <div class="checkbox">
                             <label class='text-muted'><input type="checkbox" id='b2b_wish' value="1" class="mr8"/>Add product to my cart but keep it in my wishlist</label>
                         </div>
+                        <t t-call="website_sale_wishlist.empty_wishlist_message"/>
                         <table class="table table-bordered table-striped table-hover text-center mt16 table-comparator " style="table-layout:auto" id="o_comparelist_table">
                             <body>
                                 <t t-foreach="wishes" t-as="wish">

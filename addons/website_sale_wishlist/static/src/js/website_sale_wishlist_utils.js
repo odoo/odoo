@@ -56,10 +56,24 @@ function updateWishlistNavBar() {
     wishlistQuantity.classList.toggle('d-none', !wishlistProductIds.length);
 }
 
+function updateWishlistView() {
+    const wishlistProductIDs = getWishlistProductIds();
+    const wishlistEmpty = document.querySelector('#empty-wishlist-message');
+
+    if (wishlistProductIDs.length === 0) {
+        wishlistEmpty.classList.remove('d-none');
+        wishlistEmpty.classList.add('d-flex');
+    } else {
+        wishlistEmpty.classList.remove('d-flex');
+        wishlistEmpty.classList.add('d-none');
+    }
+}
+
 export default {
     getWishlistProductIds: getWishlistProductIds,
     setWishlistProductIds: setWishlistProductIds,
     addWishlistProduct: addWishlistProduct,
     removeWishlistProduct: removeWishlistProduct,
     updateWishlistNavBar: updateWishlistNavBar,
+    updateWishlistView: updateWishlistView,
 };
