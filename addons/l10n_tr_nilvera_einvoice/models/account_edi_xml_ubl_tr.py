@@ -182,6 +182,23 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         vals['currency_dp'] = 2
         return vals
 
+    def _get_invoice_period_vals_list(self, invoice):
+        if invoice._l10n_tr_nilvera_einvoice_check_invalid_subscription_dates():
+            raise UserError(_("The invoice(s) need to have the same Start Date and End Date on all their respective Invoice Lines."))
+
+        if invoice.invoice_line_ids._fields.get('deferred_start_date'):
+            # Returns the start and end date of first invoice line since it is required that all lines must have
+            # the same start and end date.
+            line_ids = invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'product' and line.deferred_start_date)
+            if line_ids:
+                return [
+                    {
+                        'start_date': line_ids[0].deferred_start_date,
+                        'end_date': line_ids[0].deferred_end_date,
+                    },
+                ]
+        return super()._get_invoice_period_vals_list(invoice)
+
     def _get_invoice_line_item_vals(self, line, taxes_vals):
         # EXTENDS account.edi.xml.ubl_21
         line_item_vals = super()._get_invoice_line_item_vals(line, taxes_vals)
@@ -218,6 +235,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         invoice_line_vals = super()._get_invoice_line_vals(line, line_id, taxes_vals)
         invoice_line_vals['line_quantity_attrs'] = {'unitCode': line.product_uom_id._get_unece_code()}
         invoice_line_vals['currency_dp'] = 2
+        invoice_line_vals.pop('invoice_period_vals_list', None)
         return invoice_line_vals
 
     def _get_pricing_exchange_rate_vals_list(self, invoice):
