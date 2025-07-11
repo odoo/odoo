@@ -614,3 +614,110 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             so.website_id = False
             so._compute_payment_term_id()
             self.assertFalse(so.payment_term_id, "The website default payment term should not be set on a sale order not coming from the website")
+<<<<<<< d12c1e07727f9b04cd2be2e7dac1ec3af49cb637
+||||||| 75f0204114e05f6bc8ae4dfd395f99b538feb870
+
+    def test_imported_user_with_trailing_name_can_checkout(self):
+        """Ensure that an imported user with trailing spaces in their name can complete checkout without error."""
+
+        imported_user = self.env['res.users'].create({
+            'name': 'Imported User ',  # trailing space
+            'login': 'imported_user',
+            'email': 'imported@example.com',
+        })
+        imported_partner = imported_user.partner_id
+        so = self._create_so(partner_id=imported_partner.id)
+
+        website = self.website.with_user(imported_user).with_context({})
+        with MockRequest(website.env, website=website, sale_order_id=so.id) as req:
+            req.httprequest.method = "POST"
+
+            values = {
+                'name': 'Imported User',  # trimmed input
+                'email': 'imported@example.com',
+                'street': '123 Some Street',
+                'city': 'Cityville',
+                'zip': '12345',
+                'country_id': self.country_id,
+                'phone': '+33123456789',
+                'partner_id': imported_partner.id,
+                'address_type': 'delivery',
+                'use_delivery_as_billing': 'true',
+            }
+            res = self.WebsiteSaleController.shop_address_submit(**values).data
+            self.assertIsNotNone(json.loads(res).get('redirectUrl'), "We should get a 'redirectUrl' in the response")
+=======
+
+    def test_12_recompute_taxes_on_address_change(self):
+        self.env.company.country_id = self.env.ref('base.us')
+        fpos_be = self.env['account.fiscal.position'].create({
+            'name': "Fiscal Position BE",
+            'auto_apply': True,
+            'country_id': self.country_id,
+        })
+        tax_15_incl, tax_0 = self.env['account.tax'].create([
+            {
+                'name': "15% excl",
+                'amount': 15,
+                'price_include_override': 'tax_included',
+                'fiscal_position_ids': fpos_be.ids,
+            },
+            {
+                'name': "0%",
+                'amount': 0,
+                'fiscal_position_ids': fpos_be.ids,
+            },
+        ])
+        tax_0.original_tax_ids = tax_15_incl
+        self.product.taxes_id = [Command.set(tax_15_incl.ids)]
+        self.partner.country_id = self.country_id
+
+        cart = self.empty_cart
+        cart.order_line = [Command.create({'product_id': self.product.id})]
+        amount_untaxed = cart.amount_untaxed
+
+        self.assertEqual(cart.fiscal_position_id, fpos_be)
+        self.assertEqual(cart.order_line.tax_ids, tax_0)
+
+        self.partner.country_id = self.env.company.country_id
+        self.assertNotEqual(cart.fiscal_position_id, fpos_be)
+        self.assertEqual(cart.order_line.tax_ids, tax_15_incl)
+        self.assertEqual(cart.amount_untaxed, amount_untaxed, "Untaxed amount should not change")
+
+        cart.action_confirm()
+        self.partner.country_id = self.country_id
+        self.assertEqual(
+            cart.order_line.tax_ids, tax_15_incl,
+            "Tax should no longer change after order confirmation",
+        )
+
+    def test_imported_user_with_trailing_name_can_checkout(self):
+        """Ensure that an imported user with trailing spaces in their name can complete checkout without error."""
+
+        imported_user = self.env['res.users'].create({
+            'name': 'Imported User ',  # trailing space
+            'login': 'imported_user',
+            'email': 'imported@example.com',
+        })
+        imported_partner = imported_user.partner_id
+        so = self._create_so(partner_id=imported_partner.id)
+
+        website = self.website.with_user(imported_user).with_context({})
+        with MockRequest(website.env, website=website, sale_order_id=so.id) as req:
+            req.httprequest.method = "POST"
+
+            values = {
+                'name': 'Imported User',  # trimmed input
+                'email': 'imported@example.com',
+                'street': '123 Some Street',
+                'city': 'Cityville',
+                'zip': '12345',
+                'country_id': self.country_id,
+                'phone': '+33123456789',
+                'partner_id': imported_partner.id,
+                'address_type': 'delivery',
+                'use_delivery_as_billing': 'true',
+            }
+            res = self.WebsiteSaleController.shop_address_submit(**values).data
+            self.assertIsNotNone(json.loads(res).get('redirectUrl'), "We should get a 'redirectUrl' in the response")
+>>>>>>> b2d0bc028dcd4087cc996e6b5a7e8c72a5b22c62
