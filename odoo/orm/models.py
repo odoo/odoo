@@ -103,8 +103,8 @@ regex_order = re.compile(r'''
     $
 ''', re.IGNORECASE | re.VERBOSE)
 regex_order_part_read_group = re.compile(r"""
-    (?P<term>(?P<field>[a-z0-9_]+)(\.([\w\.]+))?(:(?P<func>[a-z_]+))?)
-    (\s+(?P<direction>desc|asc))?(\s+(?P<nulls>nulls\ first|nulls\ last))?
+\s*(?P<term>(?P<field>[a-z0-9_]+)(\.([\w\.]+))?(:(?P<func>[a-z_]+))?)
+(\s+(?P<direction>desc|asc))?(\s+(?P<nulls>nulls\ first|nulls\ last))?\s*
 """, re.IGNORECASE | re.VERBOSE)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')  # For read_group
 regex_read_group_spec = re.compile(r'(\w+)(\.([\w\.]+))?(?::(\w+))?$')  # For _read_group
@@ -1743,13 +1743,9 @@ class BaseModel(metaclass=MetaModel):
                 SQL.identifier(coalias, 'id'),
             )
             if coquery.where_clause:
-                condition = SQL(
-                    "%s AND %s IN %s",
-                    condition,
-                    SQL.identifier(coalias, 'id'),
-                    coquery.subselect(),
-                )
-            query.add_join('LEFT JOIN', coalias, comodel._table, condition)
+                query.add_join('LEFT JOIN', coalias, coquery.subselect('*'), condition)
+            else:
+                query.add_join('LEFT JOIN', coalias, comodel._table, condition)
             return comodel._read_group_groupby(coalias, f"{seq_fnames}:{granularity}" if granularity else seq_fnames, query)
 
         elif granularity and field.type not in ('datetime', 'date', 'properties'):
