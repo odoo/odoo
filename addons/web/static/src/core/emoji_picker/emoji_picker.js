@@ -481,6 +481,15 @@ export class EmojiPicker extends Component {
         }
     }
 
+    onKeydownSearch(ev) {
+        if (
+            ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(ev.key) &&
+            this.itemsNumber > 0
+        ) {
+            ev.preventDefault();
+        }
+    }
+
     getAllCategories() {
         const res = [...this.categories];
         if (this.recentEmojis.length > 0) {
