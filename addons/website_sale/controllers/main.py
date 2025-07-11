@@ -6,6 +6,8 @@ import json
 
 from datetime import datetime
 
+from lxml import etree, html
+
 from werkzeug import urls
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
@@ -1826,6 +1828,75 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 domain += [('product_id.product_tmpl_id', '=', int(product_template_id))]
             request.env['website.track'].sudo().search(domain).unlink()
         return {}
+
+    @route('/shop/get_categories', type='jsonrpc', auth='public', website=True)
+    def get_shop_categories(
+            self,
+            category_id=None,
+            template_key='website_sale.dynamic_filter_template_product_public_category_default',
+            **custom_template_data,
+        ):
+        """
+        Return a list of public product categories available on the website.
+
+        If `category_id` is provided, returns the children of that category.
+        If no children are found, the category itself is returned.
+        If `category_id` is not provided, top-level categories are returned.
+
+        :param category_id: (optional) ID of the parent category to fetch children for
+        :returns: a list of sting each representing a DOM element to be added to the
+            snippet's grid
+        :rtype: list[string]
+        """
+        if not request.website.has_ecommerce_access():
+            return []
+
+        CategorySudo = request.env['product.public.category'].sudo()
+        domain = CategorySudo._get_available_category_domain(request.website.id)
+        default_image = request.env['product.template']._get_product_placeholder_filename()
+        if not category_id:
+            categories = CategorySudo.search(domain + [('parent_id', '=', False)])
+        elif category_id and custom_template_data.get('show_parent'):
+            parent = CategorySudo.browse(category_id)
+            categories = parent | parent.child_id.filtered_domain(domain)
+        else:
+            categories = CategorySudo.search(domain + [('parent_id', '=', category_id)])
+
+        categories = [{
+            'id': cat.id,
+            'name': cat.name,
+            'cover_image_url': (
+                f'{request.website.get_base_url()}{request.website.image_url(cat, "cover_image")}'
+                if cat.cover_image else f'{request.website.get_base_url()}/{default_image}'
+            ),
+            'is_parent': cat.id == category_id,
+            'shouldSpanTwo': custom_template_data.get('should_parent_span_two'),
+        } for cat in categories]
+        content = self.env['ir.qweb'].with_context(inherit_branding=False)._render(template_key, dict(
+            records=categories,
+            is_sample=False,
+            **custom_template_data,
+        ))
+        return [
+            etree.tostring(el, encoding='unicode', method='html')
+            for el in html.fromstring('<root>%s</root>' % str(content)).getchildren()
+        ]
+
+    @route('/snippets/category/set_image', type='jsonrpc', auth='user')
+    def set_category_image(self, category_id, attachment_id):
+        """
+        Set the cover image of a public product category record to the given attachment.
+
+        :param int category_id: ID of the product public category to update.
+        :param int attachment_id: ID of the attachment containing the image data.
+        :raises NotFound: If the user does not have website editing rights.
+        """
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise NotFound()
+        category = request.env['product.public.category'].browse(category_id).exists()
+        if category:
+            image_data = request.env['ir.attachment'].browse(attachment_id).datas
+            category.cover_image = image_data
 
     @staticmethod
     def _populate_currency_and_pricelist(kwargs):
