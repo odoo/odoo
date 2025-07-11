@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
-class PurchaseRequisitionAlternativeWarning(models.TransientModel):
-    _name = 'purchase.requisition.alternative.warning'
+class PurchaseAlternativeWarning(models.TransientModel):
+    _name = 'purchase.alternative.warning'
     _description = 'Wizard in case PO still has open alternative requests for quotation'
 
     po_ids = fields.Many2many('purchase.order', 'warning_purchase_order_rel', string="POs to Confirm")

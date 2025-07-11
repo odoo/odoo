@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models, Command
 
 
-class PurchaseRequisitionCreateAlternative(models.TransientModel):
-    _name = 'purchase.requisition.create.alternative'
+class PurchaseAlternativeCreate(models.TransientModel):
+    _name = 'purchase.alternative.create'
     _description = 'Wizard to preset values for alternative PO'
 
     origin_po_id = fields.Many2one(
