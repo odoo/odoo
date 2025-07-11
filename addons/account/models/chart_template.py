@@ -876,30 +876,33 @@ class AccountChartTemplate(models.AbstractModel):
 
         # No fields on company
         if not company.parent_id:
-            accounts_data_no_fields = {
-                'account_journal_payment_debit_account_id': {
-                    'name': _("Outstanding Receipts"),
-                    'prefix': bank_prefix,
-                    'code_digits': code_digits,
-                    'account_type': 'asset_current',
-                    'reconcile': True,
-                },
-                'account_journal_payment_credit_account_id': {
-                    'name': _("Outstanding Payments"),
-                    'prefix': bank_prefix,
-                    'code_digits': code_digits,
-                    'account_type': 'asset_current',
-                    'reconcile': True,
-                },
+            self._create_outstanding_accounts(company, bank_prefix, code_digits)
+
+    def _create_outstanding_accounts(self, company, bank_prefix, code_digits):
+        accounts_data_no_fields = {
+            'account_journal_payment_debit_account_id': {
+                'name': _("Outstanding Receipts"),
+                'prefix': bank_prefix,
+                'code_digits': code_digits,
+                'account_type': 'asset_current',
+                'reconcile': True,
+            },
+            'account_journal_payment_credit_account_id': {
+                'name': _("Outstanding Payments"),
+                'prefix': bank_prefix,
+                'code_digits': code_digits,
+                'account_type': 'asset_current',
+                'reconcile': True,
+            },
+        }
+        self.env['account.account']._load_records([
+            {
+                'xml_id': f"account.{company.id}_{xml_id}",
+                'values': values,
+                'noupdate': True,
             }
-            self.env['account.account']._load_records([
-                {
-                    'xml_id': f"account.{company.id}_{xml_id}",
-                    'values': values,
-                    'noupdate': True,
-                }
-                for xml_id, values in accounts_data_no_fields.items()
-            ])
+            for xml_id, values in accounts_data_no_fields.items()
+        ])
 
     @api.model
     def _instantiate_foreign_taxes(self, country, company):
