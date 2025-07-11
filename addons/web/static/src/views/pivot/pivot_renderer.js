@@ -101,11 +101,15 @@ export class PivotRenderer extends Component {
         }
         if (formatType === "monetary") {
             if (cell.currencyId === false) {
-                return false;
+                return {
+                    help: _t("Different currencies cannot be aggregated"),
+                    value: formatter(cell.value, formatOptions),
+                    warning: true,
+                };
             }
             formatOptions.currencyId = cell.currencyId;
         }
-        return formatter(cell.value, formatOptions);
+        return { value: formatter(cell.value, formatOptions) };
     }
     /**
      * Get the formatted variation of a cell.
@@ -155,10 +159,6 @@ export class PivotRenderer extends Component {
      */
     get hideCustomGroupBy() {
         return this.env.searchModel.hideCustomGroupBy || false;
-    }
-
-    get invalidValueTooltip() {
-        return _t("Different currencies cannot be aggregated");
     }
 
     /**

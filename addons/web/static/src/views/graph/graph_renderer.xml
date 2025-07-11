@@ -17,7 +17,7 @@
                         </td>
                         <td class="o_value ps-2 text-end fw-bolder">
                             <small class="smaller">
-                                <t t-esc="tooltipItem.value"/>
+                                <t t-out="tooltipItem.value"/>
                                 <t t-if="mode === 'pie' and tooltipItem.percentage">
                                     (<t t-esc="tooltipItem.percentage" />%)
                                 </t>
@@ -33,7 +33,7 @@
         <div t-att-class="'o_graph_renderer o_renderer h-100 d-flex flex-column border-top ' + props.class" t-ref="root">
             <t t-if="model.currencyState?.currencies.length > 1">
                 <div class="alert alert-info o_graph_alert p-2 m-3 mb-2" role="status">
-                    The graph is hiding data due to mixing several currencies. Select one of them to perform an accurate analysis:
+                    The graph is mixing several currencies. Select one of them to perform an accurate analysis:
                     <t t-foreach="model.currencyState.currencies" t-as="currency" t-key="currency_index">
                         <t t-if="currency_index > 0">
                             -
