@@ -413,6 +413,7 @@ class HolidaysAllocation(models.Model):
         already_accrued = {allocation.id: allocation.already_accrued or (allocation.number_of_days != 0 and allocation.accrual_plan_id.accrued_gain_time == 'start') for allocation in self}
         first_allocation = _("""This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, delete and create a new one.""")
         for allocation in self:
+            expiration_date = False
             level_ids = allocation.accrual_plan_id.level_ids.sorted('sequence')
             if not level_ids:
                 continue
@@ -507,6 +508,8 @@ class HolidaysAllocation(models.Model):
                 if allocation.nextcall == carryover_date:
                     allocation.last_executed_carryover_date = carryover_date
                     if current_level.action_with_unused_accruals in ['lost', 'maximum']:
+                        if current_level != first_level or (nextcall == expiration_date and allocation.number_of_days - leaves_taken == 0):
+                            allocation._add_days_to_allocation(current_level, current_level_maximum_leave, leaves_taken, period_start, period_end)
                         allocated_days_left = allocation.number_of_days - leaves_taken
                         allocation_max_days = 0 # default if unused_accrual are lost
                         if current_level.action_with_unused_accruals == 'maximum':
@@ -587,7 +590,9 @@ class HolidaysAllocation(models.Model):
                         current_level_maximum_leave = current_level.maximum_leave
                     else:
                         current_level_maximum_leave = current_level.maximum_leave / allocation.employee_id._get_hours_per_day(allocation.date_from)
-                if allocation.actual_lastcall in {period_start, allocation.date_from} | set(level_start.keys()):
+                if allocation.actual_lastcall in {period_start, allocation.date_from} | set(level_start.keys())\
+                        or (allocation.actual_lastcall - get_timedelta(current_level.accrual_validity_count, current_level.accrual_validity_type)
+                            in {period_start, allocation.date_from} | set(level_start.keys())):
                     allocation._add_days_to_allocation(current_level, current_level_maximum_leave, leaves_taken, period_start, allocation.nextcall)
                     allocation.already_accrued = True
 
