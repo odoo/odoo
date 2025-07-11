@@ -15,10 +15,35 @@ from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Command, Domain
 from odoo.tools import clean_context, groupby, SQL
 from odoo.tools.misc import OrderedSet
+from odoo.addons.base.models.ir_attachment import condition_values
 from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
+
+MAX_COMODELS_FOR_DOMAIN = 5
+
+
+def exists_in_cache(records, *, hint_field=''):
+    """Like Model.exists(), but checks the cache when possible and avoids a
+    call to `Model.exists()`."""
+    # see test_record_unlinked_orphan_activities
+    # TODO once cache pollution is solved, move this into Model.fetch()
+    try:
+        if hint_field:
+            records.sudo().mapped(hint_field)
+            return records
+        for field in records._fields.values():
+            if (
+                field.store and field.column_type
+                and field.prefetch is True
+                and records._has_field_access(field, 'read')
+            ):
+                records.sudo().mapped(field.name)
+                return records
+    except MissingError:
+        pass
+    return records.exists()
 
 
 def _find_allowed_doc_ids(env, model_ids, operation):
@@ -38,23 +63,7 @@ def _find_allowed_doc_ids(env, model_ids, operation):
     """
     allowed_ids = set()
     for doc_model, doc_dict in model_ids.items():
-        documents = env[doc_model].browse(doc_dict)
-        try:
-            # Check that records really exist;
-            # lengthy way of checking first in cache and avoiding exists() call.
-            # see test_record_unlinked_orphan_activities
-            for field in documents._fields.values():
-                if (
-                    field.store and field.column_type
-                    and field.prefetch is True
-                    and documents._has_field_access(field, 'read')
-                ):
-                    documents.sudo().mapped(field.name)
-                    break
-            else:
-                documents = documents.exists()
-        except MissingError:
-            documents = documents.exists()
+        documents = exists_in_cache(env[doc_model].browse(doc_dict))
         for document_domain, operation_res_ids in documents._mail_get_operation_for_mail_message_operation(operation):
             if not documents:
                 break
@@ -373,65 +382,89 @@ class MailMessage(models.Model):
         ids uid could not see according to our custom rules. Please refer to
         :meth:`_check_access` for more details about those rules.
         """
-        # Rules do not apply to administrator
-        if self.env.su or bypass_access:
+        domain = Domain(domain).optimize(self)
+        if self.env.su or bypass_access or domain.is_false():
             return super()._search(domain, offset, limit, order, bypass_access=True, **kwargs)
         if self.env.context.get('_read_groupby'):
             raise ValueError("Cannot group by mail.message")
 
         # Non-employee see only messages with a subtype and not internal
-        domain = self._get_search_domain_share() & Domain(domain)
+        domain = self._get_search_domain_share() & domain
+        domain = domain.optimize_dynamic(self)
 
-        # make the search query with the default rules
-        query = super()._search(domain, offset, limit, order, **kwargs)
+        # search by ids
+        if condition_values(self, 'id', domain) is not None:
+            query = super()._search(domain, order=order, **kwargs)
+            records = self.browse()._filter_accessible_from_query(query, 'read')
+            if offset > 0:
+                records = records[offset:]
+            if limit is not None:
+                records = records[:limit]
+            return records._as_query(ordered=bool(order))
 
-        # retrieve matching records and determine which ones are truly accessible
-        self.flush_model(['model', 'res_id', 'author_id', 'message_type', 'partner_ids'])
-        self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
+        # searching for all messages or a subset of models
+        res_model_names = condition_values(self, 'model', domain) or ()
+        if not (0 < len(res_model_names) <= MAX_COMODELS_FOR_DOMAIN):
+            query = super()._search(domain, offset, limit, order, **kwargs)
+            records = self.browse()._filter_accessible_from_query(query, 'read')
+            return records._as_query(ordered=bool(order))
 
-        pid = self.env.user.partner_id.id
-        ids = []
-        allowed_ids = set()
-        model_ids = defaultdict(lambda: defaultdict(set))
+        # search by model and res_id
+        model_codomains = Domain.FALSE  # (model = a & res_id in ...) | (model = b & ...)
+        env = self.with_context(active_test=False).env
+        for res_model_name in res_model_names:
+            if res_model_name not in env:
+                continue
+            comodel = env[res_model_name]
+            codomain = Domain('model', '=', comodel._name)
+            comodel_res_ids = condition_values(self, 'res_id', domain.map_conditions(
+                lambda cond: codomain & cond if cond.field_expr == 'model' else cond
+            ))
+            # For each model, build a query with accessible comodel ids.
+            # Start with a false domain and at each step:
+            # 1. domain_operation is the remaining records
+            # 2. update the remaining to remove currently handled records
+            # 3. add to comodel_domain, the records with their access rule
+            # Then: add known ids for simpler query and optimize with sudo
+            # (because the rules are applied with sudo permissions) and search.
+            comodel_domain = Domain.FALSE
+            comodel_domain_remaining = Domain.TRUE
+            for domain_operation, doc_operation in comodel._mail_get_operation_for_mail_message_operation('read'):
+                domain_operation, comodel_domain_remaining = (
+                    comodel_domain_remaining & domain_operation,
+                    comodel_domain_remaining & ~domain_operation,
+                )
+                if not comodel.has_access(doc_operation):
+                    continue
+                if doc_operation == 'read':
+                    comodel_rule = Domain.TRUE  # covered by the search below
+                else:
+                    comodel_rule = self.env['ir.rule']._compute_domain(comodel._name, doc_operation)
+                comodel_domain |= (domain_operation & comodel_rule)
+            if comodel_res_ids is not None:
+                comodel_domain &= Domain('id', 'in', comodel_res_ids)
+            comodel_domain = comodel_domain.optimize_full(comodel.sudo())
+            query = comodel._search(comodel_domain)
+            if query.is_empty():
+                continue
+            if query.where_clause:
+                codomain &= Domain('res_id', 'any!', query)
+            model_codomains |= codomain
 
-        rel_alias = query.make_alias(self._table, 'partner_ids')
-        query.add_join("LEFT JOIN", rel_alias, 'mail_message_res_partner_rel', SQL(
-            "%s = %s AND %s = %s",
-            SQL.identifier(self._table, 'id'),
-            SQL.identifier(rel_alias, 'mail_message_id'),
-            SQL.identifier(rel_alias, 'res_partner_id'),
-            pid,
+        partner = self.env.user.partner_id
+        domain &= Domain.OR((
+            Domain('author_id', '=', partner.id),
+            Domain('create_uid', '=', self.env.uid),
+            # force an IN condition with a list of values
+            Domain('partner_ids', 'any!', partner._as_query()),
+            Domain('notified_partner_ids', 'any!', partner._as_query()),
+            # User_notification notified relevant partners, hence covered by
+            # 'partner_ids' domain part (which is why it is ok to exclude them
+            # complete from records-based domain).
+            model_codomains & Domain('message_type', '!=', 'user_notification'),
         ))
-        notif_alias = query.make_alias(self._table, 'notification_ids')
-        query.add_join("LEFT JOIN", notif_alias, 'mail_notification', SQL(
-            "%s = %s AND %s = %s",
-            SQL.identifier(self._table, 'id'),
-            SQL.identifier(notif_alias, 'mail_message_id'),
-            SQL.identifier(notif_alias, 'res_partner_id'),
-            pid,
-        ))
-        self.env.cr.execute(query.select(
-            SQL.identifier(self._table, 'id'),
-            SQL.identifier(self._table, 'model'),
-            SQL.identifier(self._table, 'res_id'),
-            SQL.identifier(self._table, 'author_id'),
-            SQL.identifier(self._table, 'message_type'),
-            SQL(
-                "COALESCE(%s, %s)",
-                SQL.identifier(rel_alias, 'res_partner_id'),
-                SQL.identifier(notif_alias, 'res_partner_id'),
-            ),
-        ))
-        for id_, model, res_id, author_id, message_type, notified in self.env.cr.fetchall():
-            ids.append(id_)
-            if author_id == pid or notified:
-                allowed_ids.add(id_)
-            elif model and res_id and message_type != 'user_notification':
-                model_ids[model][res_id].add(id_)
 
-        allowed_ids.update(_find_allowed_doc_ids(self.env, model_ids, 'read'))
-        allowed = self.browse(id_ for id_ in ids if id_ in allowed_ids)
-        return allowed._as_query(order)
+        return super()._search(domain, offset, limit, order, **kwargs)
 
     def _get_search_domain_share(self):
         if self.env.user._is_internal():
@@ -471,30 +504,37 @@ class MailMessage(models.Model):
 
         # discard forbidden records, and check remaining ones
         messages = self - result[0] if result else self
-        if messages and (forbidden := messages._get_forbidden_access(operation)):
+
+        query = self.sudo()._search(self._get_search_domain_share() & Domain('id', 'in', messages.ids), active_test=False)
+        accessible_messages = messages._filter_accessible_from_query(query, operation)
+        if messages != accessible_messages:
+            forbidden = messages - accessible_messages
             if result:
                 result = (result[0] + forbidden, result[1])
             else:
                 result = (forbidden, lambda: forbidden._make_access_error(operation))
         return result
 
-    def _get_forbidden_access(self, operation: str) -> Self:
-        """ Return the subset of ``self`` that does not satisfy the specific
-        conditions for messages.
+    def _filter_accessible_from_query(self, query: models.Query, operation: str) -> Self:
+        """ Return the subset of ``self`` that satisfies the specific conditions
+        for messages. Flush current recordset or the model on empty self.
         """
-        if not self:
-            return self
+        assert query._model._name == self._name
+        if query.is_empty():
+            return self.browse()
 
         # Read the value of messages in order to determine their accessibility.
         # The values are put in 'messages_to_check', and entries are popped
         # once we know they are accessible. At the end, the remaining entries
         # are the invalid ones.
-        self.flush_recordset(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids'])
+        if self:
+            self.flush_recordset(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids'])
+        else:
+            self.flush_model(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids'])
         self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
         pid = self.env.user.partner_id.id
 
         # Non internal users see only non-private messages
-        query = self.sudo()._search(self._get_search_domain_share() & Domain('id', 'in', self.ids), active_test=False)
         table = query.table
         if operation in ('read', 'write'):
             id_sql = table.id
@@ -521,10 +561,9 @@ class MailMessage(models.Model):
             values['id']: values
             for values in self.env.cr.dictfetchall()
         }
-        # Not found messages are forbidden
-        forbidden = self - self.browse(messages_to_check)
+        accessible = self.browse(messages_to_check)
         if not messages_to_check:
-            return forbidden
+            return accessible
 
         # Author condition (READ, WRITE, CREATE (private))
         if operation == 'read':
@@ -550,7 +589,7 @@ class MailMessage(models.Model):
             }
 
         if not messages_to_check:
-            return forbidden
+            return accessible
 
         # Recipients condition, for read and write (partner_ids)
         # keep on top, useful for systray notifications
@@ -561,7 +600,7 @@ class MailMessage(models.Model):
                 if not message['notified']
             }
             if not messages_to_check:
-                return forbidden
+                return accessible
 
         # CRUD: Access rights related to the document
         # {document_model_name: {document_id: message_ids}}
@@ -578,7 +617,7 @@ class MailMessage(models.Model):
             messages_to_check.pop(mid)
 
         if not messages_to_check:
-            return forbidden
+            return accessible
 
         # Parent condition, for create (check for received notifications for the created message parent)
         if operation == 'create':
@@ -600,10 +639,9 @@ class MailMessage(models.Model):
                         messages_to_check.pop(mid)
 
             if not messages_to_check:
-                return forbidden
+                return accessible
 
-        forbidden += self.browse(messages_to_check)
-        return forbidden
+        return accessible - self.browse(messages_to_check)
 
     def _make_access_error(self, operation: str) -> AccessError:
         return AccessError(_(
@@ -633,7 +671,8 @@ class MailMessage(models.Model):
             # incorrect due to historically having no reason to allow operations on messages to
             # public user before the introduction of guests. Even with ignoring the rights,
             # check_access_rule and its sub methods are already covering all the cases properly.
-            if not message.sudo(False)._get_forbidden_access(mode):
+            query = message.sudo()._search(self._get_search_domain_share() & Domain('id', 'in', message.ids))
+            if message.sudo(False)._filter_accessible_from_query(query, mode):
                 return message
         else:
             if message.sudo(False).has_access(mode):
