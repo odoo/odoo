@@ -24,7 +24,7 @@
                     <p class="col-6 me-3">
                         <img t-if="o.l10n_sa_qr_code_str"
                             style="display:block;"
-                            t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', quote_plus(o.l10n_sa_qr_code_str), 200, 200)"/>
+                            t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', quote_plus(o.l10n_sa_qr_code_str), 300, 300)"/>
                     </p>
                     <div class="col-6" t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)" groups="account.group_delivery_invoice_address" name="shipping_address_block">
                         <strong>Shipping Address:</strong>
