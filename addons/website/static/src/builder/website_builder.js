@@ -5,6 +5,15 @@ import { DisableSnippetsPlugin } from "@html_builder/core/disable_snippets_plugi
 import { OperationPlugin } from "@html_builder/core/operation_plugin";
 import { SavePlugin } from "@html_builder/core/save_plugin";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
+import { OverlayButtonsPlugin } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
+import { BuilderActionsPlugin } from "@html_builder/core/builder_actions_plugin";
+import { BuilderComponentPlugin } from "@html_builder/core/builder_component_plugin";
+import { DropZonePlugin } from "@html_builder/core/drop_zone_plugin";
+import { DropZoneSelectorPlugin } from "@html_builder/core/dropzone_selector_plugin";
+import { CustomizeTabPlugin } from "@html_builder/core/customize_tab_plugin";
+import { VersionControlPlugin } from "@html_builder/core/version_control_plugin";
+import { CoreBuilderActionPlugin } from "@html_builder/core/core_builder_action_plugin";
+import { BuilderOverlayPlugin } from "@html_builder/core/builder_overlay/builder_overlay_plugin";
 import { VisibilityPlugin } from "@html_builder/core/visibility_plugin";
 import { removePlugins } from "@html_builder/utils/utils";
 import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
@@ -17,6 +26,7 @@ import { SaveTranslationPlugin } from "./plugins/save_translation_plugin";
 import { TranslationPlugin } from "./plugins/translation_plugin";
 import { WebsiteVisibilityPlugin } from "./plugins/website_visibility_plugin";
 import { EditInteractionPlugin } from "./plugins/edit_interaction_plugin";
+import { CustomizeTranslationTabPlugin } from "./translation_components/customize_translation_tab_plugin";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsPlugin,
@@ -31,6 +41,7 @@ const TRANSLATION_PLUGINS = [
     HighlightPlugin,
     OperationPlugin,
     EditInteractionPlugin,
+    CustomizeTranslationTabPlugin,
 ];
 
 export class WebsiteBuilder extends Component {
@@ -59,12 +70,28 @@ export class WebsiteBuilder extends Component {
             "SearchPowerboxPlugin",
             "YoutubePlugin",
             "ImagePlugin",
+            "AlignPlugin",
+            "ListPlugin",
+            "FontPlugin",
+            "FontFamilyPlugin",
         ];
         const pluginsToRemove = this.props.translation
             ? [...mainEditorPluginsToRemove, ...pluginsBlockedInTranslationMode]
             : mainEditorPluginsToRemove;
         const mainEditorPlugins = removePlugins([...MAIN_EDITOR_PLUGINS], pluginsToRemove);
-        const coreBuilderPlugins = this.props.translation ? [] : CORE_BUILDER_PLUGINS;
+        const coreBuilderPlugins = this.props.translation
+            ? [
+                  BuilderActionsPlugin,
+                  BuilderComponentPlugin,
+                  BuilderOverlayPlugin,
+                  OverlayButtonsPlugin,
+                  DropZonePlugin,
+                  DropZoneSelectorPlugin,
+                  CoreBuilderActionPlugin,
+                  CustomizeTabPlugin,
+                  VersionControlPlugin,
+              ]
+            : CORE_BUILDER_PLUGINS;
         const Plugins = [...mainEditorPlugins, ...coreBuilderPlugins, ...(websitePlugins || [])];
         builderProps.Plugins = Plugins;
         builderProps.onEditorLoad = (editor) => {

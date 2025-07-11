@@ -211,6 +211,8 @@ export class WebsiteBuilderClientAction extends Component {
             },
             getThemeTab: () =>
                 odoo.loader.modules.get("@website/builder/plugins/theme/theme_tab").ThemeTab,
+            getCustomizeTranslationTab: () =>
+                odoo.loader.modules.get("@website/builder/translation_components/customize_translation_tab").CustomizeTranslationTab,
         };
         return { translation: this.translation, builderProps };
     }
