@@ -440,6 +440,15 @@ class AccountMoveLine(models.Model):
     # === Misc Information === #
     is_refund = fields.Boolean(compute='_compute_is_refund')
 
+    no_followup = fields.Boolean(
+        string="No Follow-Up",
+        compute='_compute_no_followup',
+        inverse='_inverse_no_followup',
+        store=True,
+        readonly=False,
+        help="Exclude this journal item from follow-up reports."
+    )
+
     _check_credit_debit = models.Constraint(
         "CHECK(display_type IN ('line_section', 'line_note') OR credit * debit=0)",
         'Wrong credit or debit value in accounting entry!',
@@ -1149,6 +1158,21 @@ class AccountMoveLine(models.Model):
                 line.matched_credit_ids.exchange_move_id.line_ids
             )
             line.reconciled_lines_excluding_exchange_diff_ids = all_lines - excluded_ids
+
+    @api.depends('move_id.move_type')
+    def _compute_no_followup(self):
+        for aml in self:
+            aml.no_followup = aml.move_id.is_entry() and not aml.move_id.origin_payment_id
+
+    def _inverse_no_followup(self):
+        # If one line of an invoice gets excluded from or included in the follow up report, we want all
+        # payable/receivable lines of that invoice to do the same.
+        for aml in self:
+            move = aml.move_id
+            if move.is_invoice():
+                move.line_ids.filtered(
+                    lambda line: line.account_type in ('asset_receivable', 'liability_payable'),
+                ).no_followup = aml.no_followup
 
     def _search_payment_date(self, operator, value):
         if operator == 'in':
