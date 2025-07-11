@@ -5,11 +5,12 @@ from dateutil.relativedelta import relativedelta
 from odoo import Command, fields
 from odoo.addons.purchase_stock.tests.common import PurchaseTestCommon
 from odoo.tests import tagged, freeze_time
+from odoo.tests.common import HttpCase
 
 
 @freeze_time("2021-01-14 09:12:15")
 @tagged('post_install', '-at_install')
-class TestPurchaseOrderSuggest(PurchaseTestCommon):
+class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls):
@@ -166,11 +167,11 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
 
         # Create a new PO for the vendor then check suggest wizard estimed price.
         po = self.env['purchase.order'].create({'partner_id': self.partner_1.id})
-        action = po.action_display_suggest()
         context = {
-            **action['context'],
+            'default_purchase_order_id': po.id,
+            'default_warehouse_id': po.picking_type_id.warehouse_id.id,
             'default_product_ids': (self.product_1 | product_2 | product_3).ids,
-            }
+        }
         po_suggest = self.env['purchase.order.suggest'].with_context(context).create({
             'number_of_days': 30,
         })
@@ -272,11 +273,11 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
         self.assertEqual(product_6.with_context(context).outgoing_qty, 0)
 
         po = self.env['purchase.order'].create({'partner_id': self.partner_1.id})
-        action = po.action_display_suggest()
         context = {
-            **action['context'],
+            'default_purchase_order_id': po.id,
+            'default_warehouse_id': po.picking_type_id.warehouse_id.id,
             'default_product_ids': (product_4 | product_5 | product_6).ids,
-            }
+        }
         po_suggest = self.env['purchase.order.suggest'].with_context(context).create({
             'number_of_days': 30,
         })
@@ -391,11 +392,11 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
 
         # Create a new PO for the vendor then check suggest wizard estimed price.
         po = self.env['purchase.order'].create({'partner_id': self.partner_1.id})
-        action = po.action_display_suggest()
         context = {
-            **action['context'],
+            'default_purchase_order_id': po.id,
+            'default_warehouse_id': po.picking_type_id.warehouse_id.id,
             'default_product_ids': consu.ids,
-            }
+        }
         po_suggest = self.env['purchase.order.suggest'].with_context(context).create({
             'number_of_days': 30,
         })
@@ -441,11 +442,11 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
 
         # Create a new PO for the vendor then check suggest wizard estimed price.
         po = self.env['purchase.order'].create({'partner_id': self.partner_1.id})
-        action = po.action_display_suggest()
         context = {
-            **action['context'],
+            'default_purchase_order_id': po.id,
+            'default_warehouse_id': po.picking_type_id.warehouse_id.id,
             'default_product_ids': self.product_1.ids,
-            }
+        }
         po_suggest = self.env['purchase.order.suggest'].with_context(context).create({
             'number_of_days': 30,
         })
@@ -499,11 +500,11 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
 
         # Create a new PO for the vendor then check suggest wizard estimed price.
         po = self.env['purchase.order'].create({'partner_id': self.partner_1.id})
-        action = po.action_display_suggest()
         context = {
-            **action['context'],
+            'default_purchase_order_id': po.id,
+            'default_warehouse_id': po.picking_type_id.warehouse_id.id,
             'default_product_ids': product_ad.ids,
-            }
+        }
         po_suggest = self.env['purchase.order.suggest'].with_context(context).create({
             'number_of_days': 30,
         })
@@ -555,9 +556,9 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
             'partner_id': self.partner_1.id,
             'picking_type_id': main_warehouse.in_type_id.id,
         })
-        action = po_1.action_display_suggest()
         context = {
-            **action['context'],
+            'default_purchase_order_id': po_1.id,
+            'default_warehouse_id': po_1.picking_type_id.warehouse_id.id,
             'default_product_ids': self.product_1.ids,
         }
         po_1_suggest = self.env['purchase.order.suggest'].with_context(context).create({
@@ -584,9 +585,9 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
             'partner_id': self.partner_1.id,
             'picking_type_id': self.warehouse_1.in_type_id.id,
         })
-        action = po_2.action_display_suggest()
         context = {
-            **action['context'],
+            'default_purchase_order_id': po_2.id,
+            'default_warehouse_id': po_2.picking_type_id.warehouse_id.id,
             'default_product_ids': self.product_1.ids,
         }
         po_2_suggest = self.env['purchase.order.suggest'].with_context(context).create({
@@ -652,9 +653,9 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
             'partner_id': self.partner_1.id,
             'picking_type_id': main_warehouse.in_type_id.id,
         })
-        action = po_1.action_display_suggest()
         context = {
-            **action['context'],
+            'default_purchase_order_id': po_1.id,
+            'default_warehouse_id': po_1.picking_type_id.warehouse_id.id,
             'default_product_ids': product_ad.ids,
         }
         po_1_suggest = self.env['purchase.order.suggest'].with_context(context).create({
@@ -683,9 +684,9 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
             'partner_id': self.partner_1.id,
             'picking_type_id': self.warehouse_1.in_type_id.id,
         })
-        action = po_2.action_display_suggest()
         context = {
-            **action['context'],
+            'default_purchase_order_id': po_2.id,
+            'default_warehouse_id': po_2.picking_type_id.warehouse_id.id,
             'default_product_ids': product_ad.ids,
         }
         po_2_suggest = self.env['purchase.order.suggest'].with_context(context).create({
@@ -703,3 +704,24 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
         self.assertRecordValues(po_2.order_line, [
             {'product_id': product_ad.id, 'product_qty': 4},
         ])
+
+    def test_purchase_order_suggest_frontend(self):
+        # Create product, and supplier info
+        product_frontend_test = self.env['product.product'].create([{
+            'name': "product_frontend_test",
+            'is_storable': True,
+        }])
+        self.env['stock.quant']._update_available_quantity(product_frontend_test, self.stock_location, 12)
+        self.env['product.supplierinfo'].create([{
+            'partner_id': self.partner_1.id,
+            'min_qty': 1,
+            'price': 20,
+            'product_id': product_frontend_test.id,
+        }])
+        # Create a move yesterday
+        self._create_and_process_delivery_at_date(
+            [(product_frontend_test, 12)], date=fields.Datetime.now() - relativedelta(days=1)
+        )
+        # Start tour with a monthly demand for our product
+        self.assertEqual(product_frontend_test.monthly_demand, 12)
+        self.start_tour('/odoo/purchase', "purchase_catalog_suggest", login='admin')

@@ -6,6 +6,7 @@ from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.osv import expression
 from odoo.tools import formatLang
+from math import ceil
 
 
 class ProductCategory(models.Model):
@@ -40,6 +41,18 @@ class ProductProduct(models.Model):
 
     purchase_order_line_ids = fields.One2many('purchase.order.line', 'product_id', string="PO Lines") # used to compute quantities
     monthly_demand = fields.Float(compute='_compute_monthly_demand')
+    suggest_quantity = fields.Integer(compute="_compute_suggest_quantity", store=False)
+
+    @api.depends("qty_available", "outgoing_qty", "incoming_qty", "monthly_demand")
+    @api.depends_context("suggest_based_on", "suggest_percent", "suggest_multiplier")
+    def _compute_suggest_quantity(self):
+        for product in self:
+            if self.env.context.get("suggest_based_on") == "actual_demand":
+                qty = ceil(product.outgoing_qty * self.env.context.get("suggest_percent", 0) / 100)
+            else:
+                qty = ceil(product.monthly_demand * self.env.context.get("suggest_multiplier", 1))
+            qty -= max(product.qty_available, 0) + max(product.incoming_qty, 0)
+            product.suggest_quantity = max(qty, 0)
 
     @api.depends_context('monthly_demand_start_date', 'monthly_demand_limit_date', 'warehouse_id')
     def _compute_monthly_demand(self):

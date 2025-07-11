@@ -1,45 +1,158 @@
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ProductCatalogKanbanController } from "@product/product_catalog/kanban_controller";
-import { patch } from "@web/core/utils/patch";
-import { _t } from "@web/core/l10n/translation";
+import { onWillStart, useState, useSubEnv, useEffect } from "@odoo/owl";
+import { rpc } from "@web/core/network/rpc";
+import { useDebounced } from "@web/core/utils/timing";
 
-patch(ProductCatalogKanbanController.prototype, {
-    _defineButtonContent() {
-        super._defineButtonContent(...arguments);
-        this.displaySuggestButton = (
-            this.orderResModel === "purchase.order" && this.orderStateInfo.state === "draft"
-        );
-    },
+export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanbanController {
+    setup() {
+        super.setup();
+        this.state = useState({
+            wizardId: null,
+            basedOnOptions: [],
+            basedOn: "",
+            numberOfDays: 0,
+            currencySymbol: null,
+            percentFactor: 0,
+            multiplier: 0,
+            estimatedPrice: 0.0,
+            showSuggest: 0,
+            warehouse_id: null,
+            suggestToggle: this._loadSuggestToggle(),
+        });
 
-    async openSuggestWizard() {
-        // Display a warning if there is no product.
-        const records = this.model.root.records.filter((rec) => !rec.productCatalogData.isSample);
-        if (records.length === 0) {
-            return this.dialog.add(ConfirmationDialog, {
-                title: _t("No product to buy found"),
-                body: _t("Change the applied filters to receive suggestions about quantities to replenish for desired products."),
+        const debouncedSync = useDebounced(async () => {
+            if (!this.state.wizardId) {
+                return;
+            }
+            const resp = await rpc("/purchase_stock/update_purchase_suggest", {
+                wizard_id: this.state.wizardId,
+                vals: {
+                    based_on: this.state.basedOn,
+                    number_of_days: this.state.numberOfDays,
+                    percent_factor: this.state.percentFactor,
+                },
             });
-        }
-        const args = [[this.orderId], this.model.config.domain];
-        const action = await this.model.orm.call("purchase.order", "action_display_suggest", args);
-        const onClose = (args) => {
-            return args?.refresh && this._adaptSearchFilter();
-        };
-        this.actionService.doAction(action, { onClose });
-    },
+            Object.assign(this.state, resp);
+            await this._reload_grid();
+        }, 300);
 
-    _adaptSearchFilter() {
-        // Add "In the Order" filter in the search bar if it wasn't already there.
-        const { searchModel } = this.env.model.env;
-        const inTheOrderFilter = Object.values(searchModel.searchItems).find(
-            (searchItem) => searchItem.name === "products_in_purchase_order"
+        onWillStart(async () => {
+            const init = await rpc("/purchase_stock/init_purchase_suggest", {
+                po_id: this.orderId,
+                domain: this.model.config.domain,
+            });
+            Object.assign(this.state, init);
+        });
+
+        useEffect(
+            () => {
+                debouncedSync();
+            },
+            () => [
+                this.state.id,
+                this.state.basedOn,
+                this.state.numberOfDays,
+                this.state.percentFactor,
+            ]
         );
-        if (inTheOrderFilter &&
-            searchModel.query.findIndex((queryEl) => queryEl.searchItemId === inTheOrderFilter.id) === -1
-        ) {
-            searchModel.toggleSearchItem(inTheOrderFilter.id);
+
+        const onAddAll = async () => {
+            if (!this.state.wizardId) {
+                return;
+            }
+            await this.model.orm.call("purchase.order.suggest", "action_purchase_order_suggest", [
+                [this.state.wizardId],
+            ]);
+            this.model.root.load(); // Shows the new product in PO on Catalog
+        };
+
+        useSubEnv({
+            purchaseSuggestWizard: this.state,
+            addAllProducts: onAddAll,
+        });
+    }
+
+    async _reload_grid() {
+        Object.assign(this.model.config.context, this._getSuggestedProductsContext());
+        await this.model.root.load({
+            keepSelection: true,
+            reload: true,
+            context: this._getSuggestedProductsContext(),
+        });
+        const recs = [...this.model.root.records];
+        recs.sort((a, b) => (b.data.suggest_quantity || 0) - (a.data.suggest_quantity || 0));
+        this.model.root.records = recs;
+        this.render(true);
+    }
+
+    _getSuggestedProductsContext() {
+        let context = {};
+        if (this.state.basedOn === "actual_demand") {
+            const now = new Date();
+            const toDate = new Date(now.getTime() + this.state.numberOfDays * 24 * 60 * 60 * 1000);
+            context = {
+                from_date: now.toISOString(),
+                to_date: toDate.toISOString(),
+            };
         } else {
-            this.model.load();
+            const [startDate, limitDate] = this._getPeriodOfTime();
+            context = {
+                monthly_demand_start_date: startDate,
+                monthly_demand_limit_date: limitDate,
+            };
+        }
+
+        if (this.state.warehouse_id && !this.state.hide_warehouse) {
+            context.warehouse_id = this.state.warehouse_id.id;
+        }
+
+        return {
+            ...context,
+            suggest_based_on: this.state.basedOn,
+            suggest_percent: this.state.percentFactor,
+            suggest_multiplier: this.state.multiplier,
+        };
+    }
+
+    _getPeriodOfTime() {
+        const now = new Date();
+        const start = new Date(now);
+        const end = new Date(now);
+
+        const offsets = {
+            one_week: (d) => d.setDate(d.getDate() - 7),
+            one_month: (d) => d.setMonth(d.getMonth() - 1),
+            three_months: (d) => d.setMonth(d.getMonth() - 3),
+            one_year: (d) => d.setFullYear(d.getFullYear() - 1),
+        };
+
+        if (offsets[this.state.basedOn]) {
+            offsets[this.state.basedOn](start);
+        } else {
+            start.setFullYear(now.getFullYear() - 1, now.getMonth(), 1);
+            if (this.state.basedOn === "last_year_2") {
+                start.setMonth(start.getMonth() + 1); // Last year, next month
+            }
+            if (this.state.basedOn === "last_year_3") {
+                start.setMonth(start.getMonth() + 2); // Last year, after next month
+            }
+            const span = this.state.basedOn === "last_year_quarter" ? 3 : 1;
+            end.setTime(start.getTime());
+            end.setMonth(end.getMonth() + span);
+        }
+
+        return [start.toISOString().slice(0, 19), end.toISOString().slice(0, 19)];
+    }
+
+    _loadSuggestToggle() {
+        try {
+            const raw = JSON.parse(localStorage.getItem("purchase_stock.suggest_toggle"));
+            if (raw && typeof raw === "object" && "isOn" in raw) {
+                return raw;
+            }
+            return { isOn: Boolean(raw) };
+        } catch {
+            return { isOn: true };
         }
     }
-});
+}

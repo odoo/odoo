@@ -17,11 +17,11 @@ patch(ProductCatalogKanbanRecord.prototype, {
     },
 
     addProduct() {
+        console.log("called 2");
         if (this.productCatalogData.quantity === 0 && this.productCatalogData.min_qty) {
             super.addProduct(this.productCatalogData.min_qty);
         } else {
             super.addProduct(...arguments);
         }
     },
-
 });
