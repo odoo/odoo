@@ -21,10 +21,28 @@ from odoo.exceptions import AccessError, MissingError, ValidationError, UserErro
 from odoo.fields import Domain
 from odoo.http import Stream, root, request
 from odoo.tools import config, consteq, human_size, image, split_every, str2bool, OrderedSet
+from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.mimetypes import guess_mimetype, fix_filename_extension, _olecf_mimetypes
 from odoo.tools.misc import limited_field_access_token
 
 _logger = logging.getLogger(__name__)
+SECURITY_FIELDS = ('res_model', 'res_id', 'create_uid', 'public', 'res_field')
+
+
+def condition_values(model, field_name, domain):
+    """Get the values in the domain for a specific field name.
+
+    Returns the values appearing in the `in` conditions that would be restricted
+    to by the domain.
+    """
+    domain = domain.optimize(model)
+    for condition in domain.map_conditions(
+        lambda cond: cond
+        if cond.field_expr == field_name and cond.operator == 'in'
+        else Domain.TRUE
+    ).optimize(model).iter_conditions():
+        return condition.value
+    return None
 
 
 class IrAttachment(models.Model):
@@ -466,11 +484,11 @@ class IrAttachment(models.Model):
         error_func = None
         forbidden_ids = OrderedSet()
         if res:
-            forbidden_recs, error_func = res
-            if forbidden_recs == self:
-                return self, error_func
-            remaining -= forbidden_recs
-            forbidden_ids.update(forbidden_ids._ids)
+            forbidden, error_func = res
+            if forbidden == self:
+                return res
+            remaining -= forbidden
+            forbidden_ids.update(forbidden._ids)
         elif not self:
             return None
 
@@ -483,7 +501,6 @@ class IrAttachment(models.Model):
         model_ids = defaultdict(set)            # {model_name: set(ids)}
         att_model_ids = []                      # [(att_id, (res_model, res_id))]
         # DLE P173: `test_01_portal_attachment`
-        SECURITY_FIELDS = ('res_model', 'res_id', 'create_uid', 'public', 'res_field')
         remaining = remaining.sudo()
         remaining.fetch(SECURITY_FIELDS)  # fetch only these fields
         for attachment in remaining:
@@ -558,8 +575,6 @@ class IrAttachment(models.Model):
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, *, active_test=True, bypass_access=False):
-        # add res_field=False in domain if not present; the arg[0] trick below
-        # works for domain items and '&'/'|'/'!' operators too
         assert not self._active_name, "active name not supported on ir.attachment"
         disable_binary_fields_attachments = False
         domain = Domain(domain)
@@ -570,70 +585,84 @@ class IrAttachment(models.Model):
             disable_binary_fields_attachments = True
             domain &= Domain('res_field', '=', False)
 
-        if self.env.is_superuser() or bypass_access:
-            # rules do not apply for the superuser
-            return super()._search(domain, offset, limit, order, bypass_access=True)
+        domain = domain.optimize(self)
+        if self.env.su or bypass_access or domain.is_false():
+            return super()._search(domain, offset, limit, order, active_test=active_test, bypass_access=bypass_access)
 
-        # For attachments, the permissions of the document they are attached to
-        # apply, so we must remove attachments for which the user cannot access
-        # the linked document. For the sake of performance, fetch the fields to
-        # determine those permissions within the same SQL query.
-        fnames_to_read = ['id', 'res_model', 'res_id', 'res_field', 'public', 'create_uid']
-        query = super()._search(domain, offset, limit, order)
-        rows = self.env.execute_query(query.select(
-            *[self._field_to_sql(self._table, fname) for fname in fnames_to_read],
-        ))
+        # General access rules
+        # - public == True are always accessible
+        sec_domain = Domain('public', '=', True)
+        # - res_id == False needs to be system user or creator
+        res_ids = condition_values(self, 'res_id', domain)
+        if not res_ids or False in res_ids:
+            if self.env.is_system():
+                sec_domain |= Domain('res_id', '=', False)
+            else:
+                sec_domain |= Domain('res_id', '=', False) & Domain('create_uid', '=', self.env.uid)
 
-        # determine permissions based on linked records
-        all_ids = []
-        allowed_ids = set()
-        model_attachments = defaultdict(lambda: defaultdict(set))   # {res_model: {res_id: set(ids)}}
-        for id_, res_model, res_id, res_field, public, create_uid in rows:
-            all_ids.append(id_)
-            if public:
-                allowed_ids.add(id_)
-                continue
-
-            if res_field and not self.env.is_system():
-                field = self.env[res_model]._fields[res_field]
-                if field.groups and not self.env.user.has_groups(field.groups):
+        # Search by res_model and res_id, filter using permissions from res_model
+        # - res_id != False needs then check access on the linked res_model record
+        # - res_field != False needs to check field access on the res_model
+        res_model_names = condition_values(self, 'res_model', domain)
+        if 0 < len(res_model_names or ()) <= 5:
+            env = self.with_context(active_test=False).env
+            for res_model_name in res_model_names:
+                comodel = env.get(res_model_name)
+                if comodel is None:
                     continue
+                codomain = Domain('res_model', '=', comodel._name)
+                comodel_res_ids = condition_values(self, 'res_id', domain.map_conditions(
+                    lambda cond: codomain & cond if cond.field_expr == 'res_model' else cond
+                ))
+                query = comodel._search(Domain('id', 'in', comodel_res_ids) if comodel_res_ids else Domain.TRUE)
+                if query.is_empty():
+                    continue
+                if query.where_clause:
+                    codomain &= Domain('res_id', 'in', query)
+                if not disable_binary_fields_attachments and not self.env.is_system():
+                    accessible_fields = [
+                        field.name
+                        for field in comodel._fields.values()
+                        if field.type == 'binary' or (field.relational and field.comodel_name == self._name)
+                        if comodel._has_field_access(field, 'read')
+                    ]
+                    accessible_fields.append(False)
+                    codomain &= Domain('res_field', 'in', accessible_fields)
+                sec_domain |= codomain
 
-            if not res_id and (self.env.is_system() or create_uid == self.env.uid):
-                allowed_ids.add(id_)
-                continue
-            if not (res_field and disable_binary_fields_attachments) and res_model and res_id:
-                model_attachments[res_model][res_id].add(id_)
+            return super()._search(domain & sec_domain, offset, limit, order, active_test=active_test)
 
-        # check permissions on records model by model
-        for res_model, targets in model_attachments.items():
-            if res_model not in self.env:
-                allowed_ids.update(id_ for ids in targets.values() for id_ in ids)
-                continue
-            if not self.env[res_model].has_access('read'):
-                continue
-            # filter ids according to what access rules permit
-            ResModel = self.env[res_model].with_context(active_test=False)
-            for res_id in ResModel.search([('id', 'in', list(targets))])._ids:
-                allowed_ids.update(targets[res_id])
-
-        # filter out all_ids by keeping allowed_ids only
-        result = [id_ for id_ in all_ids if id_ in allowed_ids]
-
-        # If the original search reached the limit, it is important the
-        # filtered record set does so too. When a JS view receive a
-        # record set whose length is below the limit, it thinks it
-        # reached the last page. To avoid an infinite recursion due to the
-        # permission checks the sub-call need to be aware of the number of
-        # expected records to retrieve
-        if len(all_ids) == limit and len(result) < self.env.context.get('need', limit):
-            need = self.env.context.get('need', limit) - len(result)
-            more_ids = self.with_context(need=need)._search(
-                domain, offset + len(all_ids), limit, order,
-            )
-            result.extend(list(more_ids)[:limit - len(result)])
-
-        return self.browse(result)._as_query(order)
+        # We do not have a small restriction on res_model. We still need to
+        # support other queries such as: `('id', 'in' ...)`.
+        # Restrict with domain and add all attachments linked to a model.
+        domain &= sec_domain | Domain('res_model', '!=', False)
+        domain = domain.optimize_full(self)
+        ordered = bool(order)
+        if limit is None:
+            records = self.sudo().with_context(active_test=False).search_fetch(
+                domain, SECURITY_FIELDS, order=order).sudo(False)
+            return records._filtered_access('read')[offset:]._as_query(ordered)
+        # Fetch by small batches
+        sub_offset = 0
+        limit += offset
+        result = []
+        if not ordered:
+            # By default, order by model to batch access checks.
+            order = 'res_model nulls first, id'
+        while len(result) < limit:
+            records = self.sudo().with_context(active_test=False).search_fetch(
+                domain,
+                SECURITY_FIELDS,
+                offset=sub_offset,
+                limit=PREFETCH_MAX,
+                order=order,
+            ).sudo(False)
+            result.extend(records._filtered_access('read')._ids)
+            if len(records) < PREFETCH_MAX:
+                # There are no more records
+                break
+            sub_offset += PREFETCH_MAX
+        return self.browse(result[offset:limit])._as_query(ordered)
 
     def write(self, vals):
         self.check_access('write')

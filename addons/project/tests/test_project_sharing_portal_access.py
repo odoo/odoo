@@ -112,7 +112,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
                 if field.type == 'html':
                     value = f'<p>{value}</p>'
                 return value
-            if field.relational:
+            if field.relational and field.comodel_name != 'ir.attachment':
                 value = task.env[field.comodel_name].search([], limit=1).id
                 if field.type != 'many2one':
                     value = [value]

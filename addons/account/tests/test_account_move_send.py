@@ -983,7 +983,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         # The PDF is generated and linked
         self.assertTrue(invoice.invoice_pdf_report_id)
         # Not a proforma
-        self.assertFalse(self.env['ir.attachment'].search([
+        self.assertFalse(self.env['ir.attachment'].sudo().search([
             ('name', '=', invoice._get_invoice_proforma_pdf_report_filename()),
         ]))
 
@@ -1004,7 +1004,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         # The PDF is not generated but a proforma.
         self.assertFalse(invoice.invoice_pdf_report_id)
-        self.assertTrue(self.env['ir.attachment'].search([
+        self.assertTrue(self.env['ir.attachment'].sudo().search([
             ('name', '=', invoice._get_invoice_proforma_pdf_report_filename()),
         ]))
 
