@@ -63,6 +63,7 @@ class PosPaymentMethod(models.Model):
     def _get_adyen_endpoints(self):
         return {
             'terminal_request': 'https://terminal-api-%s.adyen.com/async',
+            'payment_status': 'https://terminal-api-%s.adyen.com/sync',
         }
 
     def _is_write_forbidden(self, fields):
@@ -128,6 +129,16 @@ class PosPaymentMethod(models.Model):
             },
         })
 
+        is_payment_status_data = operation == 'payment_status' and self._is_valid_adyen_request_data(data, {
+            'SaleToPOIRequest': {
+                'MessageHeader': self._get_expected_message_header('TransactionStatus'),
+                'TransactionStatusRequest': {
+                    'ReceiptReprintFlag': True,
+                    'DocumentQualifier': ['CustomerReceipt', 'CashierReceipt'],
+                },
+            },
+        })
+
         is_payment_request_with_acquirer_data = operation == 'terminal_request' and self._is_valid_adyen_request_data(data, self._get_expected_payment_request(True))
 
         if is_payment_request_with_acquirer_data:
@@ -149,7 +160,7 @@ class PosPaymentMethod(models.Model):
 
         is_payment_request_without_acquirer_data = operation == 'terminal_request' and self._is_valid_adyen_request_data(data, self._get_expected_payment_request(False))
 
-        if not is_payment_request_without_acquirer_data and not is_payment_request_with_acquirer_data and not is_adjust_data and not is_cancel_data and not is_capture_data:
+        if not is_payment_request_without_acquirer_data and not is_payment_request_with_acquirer_data and not is_adjust_data and not is_cancel_data and not is_capture_data and not is_payment_status_data:
             raise UserError(_('Invalid Adyen request'))
 
         if is_payment_request_with_acquirer_data or is_payment_request_without_acquirer_data:
