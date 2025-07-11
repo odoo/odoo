@@ -146,7 +146,13 @@ class ProductProduct(models.Model):
             return False
         if not self.filtered_domain(self.env['website']._product_domain()):
             return False
-        return request.website.has_ecommerce_access()
+        return (
+            request.website.has_ecommerce_access()
+            and (
+                not request.website.prevent_zero_price_sale
+                or not self._get_contextual_price()
+            )
+        )
 
     @api.onchange('public_categ_ids')
     def _onchange_public_categ_ids(self):

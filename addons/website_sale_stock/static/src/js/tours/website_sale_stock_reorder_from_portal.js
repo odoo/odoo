@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { clickOnElement } from '@website/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('website_sale_stock_reorder_from_portal', {
         url: '/my/orders',
@@ -10,15 +9,19 @@ registry.category("web_tour.tours").add('website_sale_stock_reorder_from_portal'
             run: "click",
             expectUnloadPage: true,
         },
-        clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
+        {
+            content: "Reorder Again",
+            trigger: '.o_wsale_reorder_button',
+            run: "click",
+            expectUnloadPage: true,
+        },
         {
             content: "Check that there is one out of stock product",
-            trigger: "#o_wsale_reorder_body div.text-warning span:contains('This product is out of stock.')",
-            run: "click",
+            trigger: "div.alert-warning:contains('\"1.0 unavailable_product\" couldn't be added to your cart because it's currently unavailable.')",
         },
         {
             content: "Check that there is one product that does not have enough stock",
-            trigger: "#o_wsale_reorder_body div.text-warning:contains('This product is out of stock.')",
+            trigger: "div.alert-warning:contains('Only \"1.0 partially_available_product\" available and added to your cart.')",
         },
     ]
 });
