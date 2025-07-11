@@ -171,7 +171,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         }
     },
     /**
-     * Returns weither or not the countdown should be displayed for the given
+     * Returns whether or not the countdown should be displayed for the given
      * unit (days, sec..).
      *
      * @private
@@ -217,8 +217,13 @@ const CountdownWidget = publicWidget.Widget.extend({
             for (const val of this.diff) {
                 const canvas = val.canvas.querySelector('canvas');
                 const ctx = canvas.getContext("2d");
-                ctx.canvas.width = this.width;
-                ctx.canvas.height = this.size;
+                canvas.style.width = this.width + 'px';
+                canvas.style.height = this.size + 'px';
+                const ratio = window.devicePixelRatio || 1;
+                canvas.width = this.width * ratio;
+                canvas.height = this.size * ratio;
+                ctx.scale(ratio, ratio);
+
                 this._clearCanvas(ctx);
 
                 $(canvas).toggleClass('d-none', hideCountdown);
@@ -289,7 +294,7 @@ const CountdownWidget = publicWidget.Widget.extend({
      * @private
      * @param {HTMLCanvasElement} canvas
      * @param {string} textNb - text to display in the center of the canvas, in big
-     * @param {string} textUnit - text to display bellow `textNb` in small
+     * @param {string} textUnit - text to display below `textNb` in small
      * @param {boolean} full - if true, the shape will be drawn up to the progressbar
      */
     _drawText: function (canvas, textNb, textUnit, full = false) {
@@ -299,11 +304,11 @@ const CountdownWidget = publicWidget.Widget.extend({
         ctx.fillStyle = this.textColor;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(textNb, canvas.width / 2, canvas.height / 2);
+        ctx.fillText(textNb, parseFloat(canvas.style.width) / 2, parseFloat(canvas.style.height) / 2);
 
         const unitSize = this.size / 12;
         ctx.font = `${unitSize}px Arial`;
-        ctx.fillText(textUnit, canvas.width / 2, canvas.height / 2 + nbSize / 1.5, this.width);
+        ctx.fillText(textUnit, parseFloat(canvas.style.width) / 2, parseFloat(canvas.style.height) / 2 + nbSize / 1.5);
 
         if (this.layout === 'boxes' && this.layoutBackground !== 'none' && this.progressBarStyle === 'none') {
             let barWidth = this.size / (this.progressBarWeight === 'thin' ? 31 : 10);
@@ -361,7 +366,7 @@ const CountdownWidget = publicWidget.Widget.extend({
      * @param {RenderingContext} ctx - Context of the canvas
      * @param {string} nbUnit - how many unit should fill progress bar
      * @param {string} totalUnit - number of unit to do a complete progress bar
-     * @param {boolean} thinLine - if true, the progress bar will be thiner
+     * @param {boolean} thinLine - if true, the progress bar will be thinner
      */
     _drawProgressBar: function (ctx, nbUnit, totalUnit, thinLine) {
         ctx.strokeStyle = this.progressBarColor;
@@ -397,7 +402,7 @@ const CountdownWidget = publicWidget.Widget.extend({
      *
      * @private
      * @param {RenderingContext} ctx - Context of the canvas
-     * @param {boolean} thinLine - if true, the progress bar will be thiner
+     * @param {boolean} thinLine - if true, the progress bar will be thinner
      */
     _drawProgressBarBg: function (ctx, thinLine) {
         ctx.strokeStyle = this.progressBarColor;
