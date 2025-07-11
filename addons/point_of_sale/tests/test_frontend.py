@@ -656,6 +656,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.pos_admin.write({
             'group_ids': [Command.link(self.env.ref('base.group_system').id)],
         })
+        self.main_pos_config.write({
+            'is_margins_costs_accessible_to_every_user': True,
+        })
         self.assertFalse(self.product_a.is_storable)
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CheckProductInformation', login="pos_admin")
