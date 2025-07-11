@@ -908,7 +908,7 @@ export class SelfOrder extends Reactive {
             company: this.company,
             cashier: _t("Self-Order"),
             header: this.config.receipt_header,
-            trackingNumber: order.trackingNumber,
+            trackingNumber: this.config.module_pos_restaurant ? order.tracking_number : "",
             bigTrackingNumber: true,
             pickingService: this.config.self_ordering_service_mode,
             tableTracker: order.table_stand_number,
