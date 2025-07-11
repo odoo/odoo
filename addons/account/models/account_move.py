@@ -2421,9 +2421,6 @@ class AccountMove(models.Model):
                     for command, _id, line_vals in data['line_ids']
                     if command == Command.CREATE
                 ]
-            elif move.move_type == 'entry':
-                if 'partner_id' not in data:
-                    data['partner_id'] = False
         if not self.journal_id.active and 'journal_id' in data_list:
             del default['journal_id']
         return data_list
@@ -2433,6 +2430,8 @@ class AccountMove(models.Model):
         default = dict(default or {})
         if (fields.Date.to_date(default.get('date')) or self.date) <= self.company_id._get_user_fiscal_lock_date():
             default['date'] = self.company_id._get_user_fiscal_lock_date() + timedelta(days=1)
+        if self.move_type == 'entry' and 'move_reverse_cancel' not in self._context:
+            default['partner_id'] = False
         copied_am = super().copy(default)
         message_origin = '' if not copied_am.auto_post_origin_id else \
             (Markup('<br/>') + _('This recurring entry originated from %s', copied_am.auto_post_origin_id._get_html_link()))
