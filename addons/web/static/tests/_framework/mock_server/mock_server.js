@@ -389,7 +389,6 @@ export class MockServer {
         direction: "ltr",
         grouping: [3, 0],
         time_format: "%H:%M:%S",
-        short_time_format: "%H:%M",
         thousands_sep: ",",
         week_start: 7,
     };

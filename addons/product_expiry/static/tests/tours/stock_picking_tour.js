@@ -24,8 +24,8 @@ registry.category("web_tour.tours").add('test_generate_serial_with_expiration', 
             run: () => {
                 const exp_dates = document.querySelectorAll("td.o_field_cell[name=expiration_date]");
                 for (const exp_date of exp_dates) {
-                    if (exp_date.innerText.trim() !== "06/03/2025 00:00") {
-                        throw new Error("Expiration date should be 06/03/2025.");
+                    if (exp_date.innerText.trim() !== "Jun 3, 12:00 AM") {
+                        throw new Error("Expiration date should be Jun 3, 12:00 AM.");
                     }
                 }
             }

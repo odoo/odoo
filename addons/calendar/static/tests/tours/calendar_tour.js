@@ -31,6 +31,11 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
             run: "edit TEST EVENT",
         },
         {
+            trigger: "div[name='start'] button",
+            content: "Open the date picker",
+            run: "click",
+        },
+        {
             trigger: "#start_0",
             content: "Give a date to the new event",
             run: `edit ${todayDate()}`,

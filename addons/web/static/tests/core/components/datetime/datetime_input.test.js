@@ -264,7 +264,7 @@ describe("DateTimeInput (datetime)", () => {
         expect(".o_datetime_input").toHaveCount(1);
         assertDateTimePicker(false);
 
-        expect(".o_datetime_input").toHaveValue("09/01/1997 12:30");
+        expect(".o_datetime_input").toHaveValue("09/01/1997 12:30:01");
 
         await contains(".o_datetime_input").click();
 
@@ -299,7 +299,7 @@ describe("DateTimeInput (datetime)", () => {
             },
         });
 
-        expect(".o_datetime_input").toHaveValue("09/01/1997 12:30");
+        expect(".o_datetime_input").toHaveValue("09/01/1997 12:30:01");
 
         await contains(".o_datetime_input").click();
 
@@ -310,7 +310,7 @@ describe("DateTimeInput (datetime)", () => {
         // Select 15:45
         await editTime("15:45");
 
-        expect(".o_datetime_input").toHaveValue("08/02/1997 15:45");
+        expect(".o_datetime_input").toHaveValue("08/02/1997 15:45:01");
         expect.verifySteps(["1997-02-08 12:30:01", "1997-02-08 15:45:01"]);
     });
 
@@ -358,7 +358,7 @@ describe("DateTimeInput (datetime)", () => {
             },
         });
 
-        expect(".o_datetime_input").toHaveValue("09/01/1997 08:30");
+        expect(".o_datetime_input").toHaveValue("09/01/1997 08:30:00");
 
         await contains(".o_datetime_input").click();
 
@@ -496,7 +496,7 @@ describe("DateTimeInput (datetime)", () => {
         await animationFrame();
 
         expect.verifySteps(["datetime-changed"]);
-        expect(".o_datetime_input").toHaveValue("08/02/1997 15:45");
+        expect(".o_datetime_input").toHaveValue("08/02/1997 15:45:00");
     });
 
     test("Clicking clear button doesn't close datetime picker", async () => {

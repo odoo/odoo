@@ -1,4 +1,9 @@
-import { formatDate as _formatDate, formatDateTime as _formatDateTime } from "@web/core/l10n/dates";
+import {
+    formatDate as _formatDate,
+    formatDateTime as _formatDateTime,
+    toLocaleDateString,
+    toLocaleDateTimeString,
+} from "@web/core/l10n/dates";
 import { localization as l10n } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -54,9 +59,7 @@ export function formatBinary(value) {
 export function formatBoolean(value) {
     return markup`
         <div class="o-checkbox d-inline-block me-2">
-            <input id="boolean_checkbox" type="checkbox" class="form-check-input" disabled ${
-                value ? "checked" : ""
-            }/>
+            <input id="boolean_checkbox" type="checkbox" class="form-check-input" disabled ${value ? "checked" : ""}/>
             <label for="boolean_checkbox" class="form-check-label"/>
         </div>`;
 }
@@ -78,16 +81,26 @@ formatChar.extractOptions = ({ attrs }) => ({
     isPassword: exprToBoolean(attrs.password),
 });
 
-export function formatDate(value, options) {
-    return _formatDate(value, options);
+export function formatDate(value, options = {}) {
+    if (options.dateFormat) {
+        return _formatDate(value, options);
+    } else {
+        return toLocaleDateString(value);
+    }
 }
-formatDate.extractOptions = ({ options }) => ({ condensed: options.condensed });
+formatDate.extractOptions = ({ options }) => ({
+    dateFormat: options.date_format,
+});
 
 export function formatDateTime(value, options = {}) {
-    if (options.showTime === false) {
+    if (options.dateFormat) {
+        if (options.showTime) {
+            return _formatDateTime(value, options);
+        }
         return _formatDate(value, options);
+    } else {
+        return toLocaleDateTimeString(value, options)
     }
-    return _formatDateTime(value, options);
 }
 formatDateTime.extractOptions = ({ attrs, options }) => ({
     ...formatDate.extractOptions({ attrs, options }),
@@ -319,10 +332,7 @@ export function formatMonetary(value, options = {}) {
 
     let currencyId = options.currencyId;
     if (!currencyId && options.data) {
-        const currencyField =
-            options.currencyField ||
-            (options.field && options.field.currency_field) ||
-            "currency_id";
+        const currencyField = options.currencyField || (options.field && options.field.currency_field) || "currency_id";
         const dataValue = options.data[currencyField];
         currencyId = dataValue?.id ?? dataValue;
     }
@@ -377,10 +387,7 @@ function formatProperties(value, field) {
  * @returns {string}
  */
 export function formatReference(value, options) {
-    return formatMany2one(
-        value ? { id: value.resId, display_name: value.displayName } : false,
-        options
-    );
+    return formatMany2one(value ? { id: value.resId, display_name: value.displayName } : false, options);
 }
 
 /**

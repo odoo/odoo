@@ -471,15 +471,15 @@ test(`width computation: date and datetime with fancy formats`, async () => {
         arch: `
             <list>
                 <field name="foo"/>
-                <field name="date"/>
-                <field name="datetime"/>
+                <field name="date" options="{'date_format': true}"/>
+                <field name="datetime" options="{'date_format': true}"/>
             </list>`,
     });
 
     expect(queryAllTexts(".o_data_row:eq(0) .o_data_cell")).toEqual([
         "yop",
         "Wed, 25 January 2017",
-        "Mon, 12 December 2016 11:55",
+        "Mon, 12 December 2016 11:55:05 AM",
     ]);
     expect(getColumnWidths()).toEqual([40, 307, 177, 276]);
 });
@@ -504,8 +504,8 @@ test(`width computation: date and datetime with fancy formats (2)`, async () => 
         arch: `
             <list>
                 <field name="foo"/>
-                <field name="date"/>
-                <field name="datetime" options="{'show_seconds': true}"/>
+                <field name="date" options="{'date_format': true}"/>
+                <field name="datetime" options="{'show_seconds': true, 'date_format': true}"/>
             </list>`,
     });
 

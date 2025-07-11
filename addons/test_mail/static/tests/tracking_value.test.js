@@ -229,7 +229,7 @@ test("rendering of tracked field of type date: from a set date to no date", asyn
     await start();
     registerArchs(archs);
     await openFormView("mail.test.track.all", mailTestTrackAllId1);
-    await click("div[name=date_field] input");
+    await click("div[name=date_field] button");
     await insertText("div[name=date_field] input", "", { replace: true });
     await click(".o_form_button_save");
     await contains(".o-mail-Message-tracking", { text: "12/14/2018None(Date)" });
@@ -263,6 +263,7 @@ test("rendering of tracked field of type datetime: from a set date and time to n
     await start();
     registerArchs(archs);
     await openFormView("mail.test.track.all", mailTestTrackAllId1);
+    await click("div[name=datetime_field] button");
     await insertText("div[name=datetime_field] input", "", { replace: true });
     await click(".o_form_button_save");
     await contains(".o-mail-Message-tracking", { text: "12/14/2018 16:42:28None(Datetime)" });
