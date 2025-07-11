@@ -215,6 +215,16 @@ class PurchaseOrder(models.Model):
             filtered_documents[(parent, responsible)] = rendering_context
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_po, filtered_documents)
 
+    def _get_locations(self, picking_type):
+        self.ensure_one()
+        vendor_loc = self.partner_id.property_stock_supplier
+        customer_loc = self.dest_address_id.property_stock_customer
+        default_src_loc = picking_type.default_location_src_id
+        default_dest_loc = picking_type.default_location_dest_id
+        if picking_type.code == 'incoming':
+            return vendor_loc, customer_loc or default_dest_loc
+        return customer_loc or default_src_loc, vendor_loc
+
     def _get_destination_location(self):
         self.ensure_one()
         if self.dest_address_id:
@@ -228,38 +238,56 @@ class PurchaseOrder(models.Model):
             picking_type = self.env['stock.picking.type'].search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
         return picking_type[:1]
 
-    def _prepare_picking(self):
+    def _prepare_picking(self, is_return=False):
         if not self.group_id:
             self.group_id = self.group_id.create({
                 'name': self.name,
                 'partner_id': self.partner_id.id
             })
-        if not self.partner_id.property_stock_supplier.id:
+        picking_type = self.picking_type_id if not is_return else self.picking_type_id.return_picking_type_id
+        if not picking_type:
+            raise UserError(_("No picking type defined for %s operation.", "return" if is_return else "receipt"))
+        location, location_dest = self._get_locations(picking_type)
+        if not location:
             raise UserError(_("You must set a Vendor Location for this partner %s", self.partner_id.name))
         return {
-            'picking_type_id': self.picking_type_id.id,
+            'picking_type_id': picking_type.id,
             'partner_id': self.partner_id.id,
             'user_id': False,
             'date': self.date_order,
             'origin': self.name,
-            'location_dest_id': self._get_destination_location(),
-            'location_id': self.partner_id.property_stock_supplier.id,
+            'location_dest_id': location_dest.id,
+            'location_id': location.id,
             'company_id': self.company_id.id,
         }
 
+    def _get_stock_moves(self, lines, is_return=False):
+        pickings = self.picking_ids.filtered(
+            lambda p: p.state not in ('done', 'cancel') and p.picking_type_id.code == ('incoming' if not is_return else 'outgoing')
+        )
+        if pickings:
+            return lines._create_stock_moves(pickings[0])
+        picking_vals = self._prepare_picking(is_return=is_return)
+        picking = self.env['stock.picking'].with_user(SUPERUSER_ID).create(picking_vals)
+        return lines._create_stock_moves(picking)
+
     def _create_picking(self):
-        StockPicking = self.env['stock.picking']
         for order in self.filtered(lambda po: po.state in ('purchase', 'done')):
             if any(product.type in ['product', 'consu'] for product in order.order_line.product_id):
                 order = order.with_company(order.company_id)
                 pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-                if not pickings:
-                    res = order._prepare_picking()
-                    picking = StockPicking.with_user(SUPERUSER_ID).create(res)
-                    pickings = picking
-                else:
-                    picking = pickings[0]
-                moves = order.order_line._create_stock_moves(picking)
+                receipt_lines = order.order_line.filtered(
+                    lambda l: l.product_qty >= 0 and l.product_id.type in ['product', 'consu']
+                )
+                return_lines = order.order_line.filtered(
+                    lambda l: l.product_qty < 0 and l.product_id.type in ['product', 'consu']
+                )
+                moves = self.env['stock.move']
+                if receipt_lines:
+                    moves += self._get_stock_moves(receipt_lines)
+                if return_lines:
+                    moves += self._get_stock_moves(return_lines, is_return=True)
+                processed_pickings = moves.mapped('picking_id')
                 moves = moves.filtered(lambda x: x.state not in ('done', 'cancel'))._action_confirm()
                 seq = 0
                 for move in sorted(moves, key=lambda move: move.date):
@@ -269,8 +297,8 @@ class PurchaseOrder(models.Model):
                 # Get following pickings (created by push rules) to confirm them as well.
                 forward_pickings = self.env['stock.picking']._get_impacted_pickings(moves)
                 (pickings | forward_pickings).action_confirm()
-                picking.message_post_with_view('mail.message_origin_link',
-                    values={'self': picking, 'origin': order},
+                processed_pickings.message_post_with_view('mail.message_origin_link',
+                    values={'self': processed_pickings, 'origin': order},
                     subtype_id=self.env.ref('mail.mt_note').id)
         return True
 
@@ -474,11 +502,11 @@ class PurchaseOrderLine(models.Model):
 
                 # If the user increased quantity of existing line or created a new line
                 # Give priority to the pickings related to the line
-                line_pickings = line.move_ids.picking_id.filtered(lambda p: p.state not in ('done', 'cancel') and p.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                line_pickings = line.move_ids.picking_id.filtered(lambda p: p.state not in ('done', 'cancel') and p.location_dest_id.usage in ('internal', 'transit', 'customer') and p.picking_type_id.code == 'incoming')
                 if line_pickings:
                     picking = line_pickings[0]
                 else:
-                    pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                    pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer') and x.picking_type_id.code == 'incoming')
                     picking = pickings and pickings[0] or False
                 if not picking:
                     if not line.product_qty > line.qty_received:
@@ -524,7 +552,7 @@ class PurchaseOrderLine(models.Model):
 
         if not move_dests:
             qty_to_attach = 0
-            qty_to_push = self.product_qty - qty
+            qty_to_push = abs(self.product_qty) - qty
         else:
             move_dests_initial_demand = self.product_id.uom_id._compute_quantity(
                 sum(move_dests.filtered(lambda m: m.state != 'cancel' and not m.location_dest_id.usage == 'supplier').mapped('product_qty')),
@@ -571,10 +599,10 @@ class PurchaseOrderLine(models.Model):
             'product_id': self.product_id.id,
             'date': date_planned,
             'date_deadline': date_planned,
-            'location_id': self.order_id.partner_id.property_stock_supplier.id,
+            'location_id': self.order_id._get_locations(picking.picking_type_id)[0].id,
             'location_dest_id': (self.orderpoint_id and not (self.move_ids | self.move_dest_ids)
                 and (picking.location_dest_id.parent_path in self.orderpoint_id.location_id.parent_path))
-                and self.orderpoint_id.location_id.id or self.order_id._get_destination_location(),
+                and self.orderpoint_id.location_id.id or self.order_id._get_locations(picking.picking_type_id)[1].id,
             'picking_id': picking.id,
             'partner_id': self.order_id.dest_address_id.id,
             'move_dest_ids': [(4, x) for x in self.move_dest_ids.ids],
@@ -658,7 +686,7 @@ class PurchaseOrderLine(models.Model):
         incoming_moves = self.env['stock.move']
 
         for move in self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and self.product_id == r.product_id):
-            if move._is_purchase_return() and (move.to_refund or not move.origin_returned_move_id):
+            if (move._is_purchase_return() and (move.to_refund or not move.origin_returned_move_id)) or (move.picking_type_id.code == 'outgoing'):
                 outgoing_moves |= move
             elif move.location_dest_id.usage != "supplier":
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
