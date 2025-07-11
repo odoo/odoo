@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_payment.SupportedPaymentMethodsOption">
+        <BuilderRow label.translate="Limit">
+            <BuilderNumberInput
+                min="1"
+                step="1"
+                unit="'icons'"
+                applyWithUnit="false"
+                action="'supportedPaymentMethodsLimit'"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Height">
+            <!-- The `image` field on payment methods is max 64px tall. -->
+            <BuilderRange
+                min="16"
+                max="64"
+                step="1"
+                unit="'px'"
+                displayRangeValue="true"
+                action="'supportedPaymentMethodsHeight'"
+            />
+        </BuilderRow>
+    </t>
+
+</templates>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="s_supported_payment_methods" name="Supported Payment Methods">
+        <div class="s_supported_payment_methods o_not_editable" data-limit="6" data-height="30px"/>
+    </template>
+
+    <record id="s_supported_payment_methods_OOO_xml" model="ir.asset">
+        <field name="name">Supported Payment Methods 000 XML</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">/website_payment/static/src/snippets/s_supported_payment_methods/000.xml</field>
+    </record>
+
+    <record id="s_supported_payment_methods_OOO_edit_xml" model="ir.asset">
+        <field name="name">Supported Payment Methods 000 XML (edit)</field>
+        <field name="bundle">website.assets_edit_frontend</field>
+        <field name="path">/website_payment/static/src/snippets/s_supported_payment_methods/000.edit.xml</field>
+    </record>
+
+</odoo>
