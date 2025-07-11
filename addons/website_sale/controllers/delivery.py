@@ -71,6 +71,7 @@ class Delivery(WebsiteSale):
         return {
             'success': True,
             'is_free_delivery': not bool(order.amount_delivery),
+            'compute_price_after_delivery': order.carrier_id.invoice_policy == 'real',
             'amount_delivery': Monetary.value_to_html(
                 order.amount_delivery, {'display_currency': currency}
             ),
@@ -110,6 +111,7 @@ class Delivery(WebsiteSale):
                 rate['price'], {'display_currency': order_sudo.currency_id}
             )
             rate['is_free_delivery'] = not bool(rate['price'])
+            rate['compute_price_after_delivery'] = delivery_method.invoice_policy == 'real'
         else:
             rate['amount_delivery'] = Monetary.value_to_html(
                 0.0, {'display_currency': order_sudo.currency_id}
