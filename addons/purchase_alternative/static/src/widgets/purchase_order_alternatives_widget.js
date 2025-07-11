@@ -10,7 +10,7 @@ export class FieldMany2ManyAltPOsRenderer extends ListRenderer {
   }
 }
 
-FieldMany2ManyAltPOsRenderer.recordRowTemplate = "purchase_requisition.AltPOsListRenderer.RecordRow";
+FieldMany2ManyAltPOsRenderer.recordRowTemplate = "purchase_alternative.AltPOsListRenderer.RecordRow";
 
 export class FieldMany2ManyAltPOs extends X2ManyField {
     static components = {
