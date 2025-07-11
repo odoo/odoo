@@ -1,8 +1,9 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, beforeEach } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryAllTexts } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
-import { getDragHelper, waitForEndOfOperation } from "../website_helpers";
+import { getDragHelper, waitForEndOfOperation } from "../helpers";
+import { mockWebsiteService } from "../utils";
 
 describe.current.tags("desktop");
 
@@ -21,6 +22,10 @@ const dropzoneSelectors = [
         dropNear: "p",
     },
 ];
+
+beforeEach(() => {
+    mockWebsiteService();
+});
 
 test("Display inner content snippet", async () => {
     await setupHTMLBuilder("<div><p>Text</p></div>", {
