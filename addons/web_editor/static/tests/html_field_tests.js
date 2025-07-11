@@ -597,6 +597,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                 <p>
                     <img
                         class="img img-fluid o_we_custom_image o_we_image_cropped${isModified ? ' o_modified_image_to_save' : ''}"
+                        data-attachment-id="${imageRecord.id}"
                         data-original-id="${imageRecord.id}"
                         data-original-src="${imageRecord.image_src}"
                         data-mimetype="image/png"

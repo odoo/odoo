@@ -8,7 +8,7 @@ defineWebsiteModels();
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
-const testImg = `<img data-original-id="1" data-mimetype="image/png" src='/base/static/img/logo_white.png'>`;
+const testImg = `<img data-attachment-id="1" data-original-id="1" data-mimetype="image/png" src='/base/static/img/logo_white.png'>`;
 
 const styleContent = `
 .o_animate {
@@ -228,7 +228,7 @@ test("animation=onHover should not be visible when the image is a device shape",
 test("animation=onHover should not be visible when the image has a wrong mimetype", async () => {
     await setupWebsiteBuilder(`
         <div class="test-options-target">
-            <img data-original-id="1" data-mimetype="foo/bar" src='${base64Img}'>
+            <img data-attachment-id="1" data-original-id="1" data-mimetype="foo/bar" src='${base64Img}'>
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
@@ -239,7 +239,7 @@ test("animation=onHover should not be visible when the image has a wrong mimetyp
 test("animation=onHover should not be visible when the image has a cors protected image", async () => {
     await setupWebsiteBuilder(`
         <div class="test-options-target">
-            <img data-original-id="1" src='/web/image/0-redirect/foo.jpg'>
+            <img data-attachment-id="1" data-original-id="1" src='/web/image/0-redirect/foo.jpg'>
         </div>
     `);
     onRpc(

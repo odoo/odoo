@@ -7,7 +7,7 @@ function onRpcReal(route) {
 
 export const testImg = `
     <img src='/web/image/website.s_text_image_default_image'
-        data-original-id="1"
+        data-attachment-id="1" data-original-id="1"
         data-original-src="/website/static/src/img/snippets_demo/s_text_image.webp"
         data-mimetype-before-conversion="image/webp"
         >
