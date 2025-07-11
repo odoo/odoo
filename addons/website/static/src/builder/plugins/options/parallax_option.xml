@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.ParallaxOption">
-    <BuilderRow t-if="isActiveItem('toggle_bg_image_id') and !isActiveItem('toggle_bg_video_id') and !this.state.InDialog" label.translate="Scroll Effect" level="2" preview="false">
+    <BuilderRow t-if="isActiveItem('toggle_bg_image_id') and !isActiveItem('toggle_bg_video_id')" label.translate="Scroll Effect" level="2" preview="false">
         <BuilderSelect action="'setParallaxType'">
             <BuilderSelectItem actionValue="'none'">None</BuilderSelectItem>
             <BuilderSelectItem actionValue="'fixed'">Fixed</BuilderSelectItem>
