@@ -15,10 +15,13 @@ class SpacingOptionPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
     };
 
+    /**
+     * @param {import("@html_editor/core/history_plugin").HistoryMutationRecord} record
+     */
     isMutationRecordSavable(record) {
         // Do not consider the grid preview in the history.
         if (record.type === "childList") {
-            const node = record.addedNodes[0] || record.removedNodes[0];
+            const node = (record.addedTrees[0] || record.removedTrees[0]).node;
             if (node.matches && node.matches(".o_we_grid_preview") && isBlock(node)) {
                 return false;
             }

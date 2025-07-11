@@ -50,12 +50,13 @@ export class HighlightPlugin extends Plugin {
             }
         },
         /**
-         * @param {MutationRecord} mutationRecord
+         * @param {import("@html_editor/core/history_plugin").HistoryMutationRecord} mutationRecord
          */
         savable_mutation_record_predicates: (mutationRecord) =>
-            ![...mutationRecord.addedNodes, ...mutationRecord.removedNodes].some((node) =>
-                closestElement(node, ".o_text_highlight_svg")
-            ),
+            mutationRecord.type !== "childList" ||
+            ![...mutationRecord.addedTrees, ...mutationRecord.removedTrees]
+                .map((tree) => tree.node)
+                .some((node) => closestElement(node, ".o_text_highlight_svg")),
         normalize_handlers: (root) => {
             // Remove highlight SVGs when the text is removed.
             for (const svg of root.querySelectorAll(".o_text_highlight_svg")) {
