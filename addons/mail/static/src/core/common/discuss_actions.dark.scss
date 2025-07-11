@@ -1,0 +1,8 @@
+.o-mail-DiscussActions {
+    --mail-DiscussSidebarChannelActions-activeBgColor: #{$gray-300};
+    --mail-DiscussSidebarChannelActions-activeColor: #{white};
+
+    button {    
+        @include mail-DiscussActions-buttonMixin; // refresh with dark colors
+    }
+}

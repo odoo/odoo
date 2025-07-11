@@ -8,6 +8,7 @@ import {
     useEffect,
     useRef,
     useState,
+    useSubEnv,
     xml,
 } from "@odoo/owl";
 
@@ -635,4 +636,8 @@ export function useLongPress(refName, { action, predicate = () => true } = {}) {
     );
     useLazyExternalListener(() => ref.el, "touchend", reset);
     useLazyExternalListener(() => ref.el, "touchcancel", reset);
+}
+
+export function useThreadViewer() {
+    useSubEnv({ useThreadViewer: useState({ composerHeight: 0 }) });
 }

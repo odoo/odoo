@@ -6,7 +6,7 @@ import { Thread } from "@mail/core/common/thread";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { DiscussSidebar } from "@mail/core/public_web/discuss_sidebar";
-import { useMessageScrolling } from "@mail/utils/common/hooks";
+import { useMessageScrolling, useThreadViewer } from "@mail/utils/common/hooks";
 
 import { Component, useRef, useState, useExternalListener, useEffect, useSubEnv } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -45,6 +45,7 @@ export class Discuss extends Component {
         this.orm = useService("orm");
         this.effect = useService("effect");
         this.ui = useService("ui");
+        useThreadViewer();
         useSubEnv({
             inDiscussApp: true,
             messageHighlight: this.messageHighlight,

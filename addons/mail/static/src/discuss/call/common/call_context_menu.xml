@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="discuss.CallContextMenu">
-        <div class="o-discuss-CallContextMenu d-flex flex-column p-3 rounded">
+        <div class="o-discuss-CallContextMenu d-flex flex-column p-3 o-mail-DiscussMenu-bgColor rounded-4 shadow-sm">
             <div class="text-center pb-2 fw-bolder" t-out="props.rtcSession.name"/>
             <div t-if="!isSelf" class="d-flex flex-row gap-2 align-items-center">
                 <i class="fa fa-fw fa-lg opacity-75" t-attf-class="{{state.rangeVolume > 0 ? 'fa-volume-up' : 'fa-volume-off'}}"/>
