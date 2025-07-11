@@ -124,6 +124,7 @@ import { toggleClass } from "@html_editor/utils/dom";
  * @property { HistoryPlugin['resetFromSteps'] } resetFromSteps
  * @property { HistoryPlugin['serializeSelection'] } serializeSelection
  * @property { HistoryPlugin['stageSelection'] } stageSelection
+ * @property { HistoryPlugin['stageFocus'] } stageFocus
  * @property { HistoryPlugin['undo'] } undo
  * @property { HistoryPlugin['getIsPreviewing'] } getIsPreviewing
  * @property { HistoryPlugin['setStepExtra'] } setStepExtra
@@ -152,6 +153,7 @@ export class HistoryPlugin extends Plugin {
         "resetFromSteps",
         "serializeSelection",
         "stageSelection",
+        "stageFocus",
         "undo",
         "getIsPreviewing",
         "setStepExtra",
@@ -192,9 +194,9 @@ export class HistoryPlugin extends Plugin {
             ],
         }),
         shortcuts: [
-            { hotkey: "control+z", commandId: "historyUndo" },
-            { hotkey: "control+y", commandId: "historyRedo" },
-            { hotkey: "control+shift+z", commandId: "historyRedo" },
+            { hotkey: "control+z", commandId: "historyUndo", allowInProtected: true },
+            { hotkey: "control+y", commandId: "historyRedo", allowInProtected: true },
+            { hotkey: "control+shift+z", commandId: "historyRedo", allowInProtected: true },
         ],
         start_edition_handlers: () => {
             this.enableObserver();
@@ -216,8 +218,10 @@ export class HistoryPlugin extends Plugin {
         this._onKeyupResetContenteditableNodes = [];
         this.addDomListener(this.document, "beforeinput", this._onDocumentBeforeInput.bind(this));
         this.addDomListener(this.document, "input", this._onDocumentInput.bind(this));
-        this.addDomListener(this.editable, "pointerup", () => {
-            this.stageSelection();
+        this.addGlobalDomListener("pointerup", (ev) => {
+            if (this.editable.contains(ev.target)) {
+                this.stageSelection();
+            }
         });
         this.observer = new MutationObserver(this.handleNewRecords.bind(this));
         this.enableObserverCallbacks = new Set();
@@ -606,6 +610,7 @@ export class HistoryPlugin extends Plugin {
      * when reverting the step.
      */
     stageSelection() {
+        this.stageFocus();
         const selection = this.dependencies.selection.getEditableSelection();
         if (this.getIsCurrentStepModified()) {
             console.warn(
@@ -614,6 +619,15 @@ export class HistoryPlugin extends Plugin {
             return;
         }
         this.currentStep.selection = this.serializeSelection(selection);
+    }
+    stageFocus() {
+        let activeElement = this.document.activeElement;
+        if (activeElement.contains(this.editable)) {
+            activeElement = this.editable;
+        }
+        if (this.editable.contains(activeElement)) {
+            this.currentStep.activeElementId = this.nodeToIdMap.get(activeElement);
+        }
     }
     /**
      * @param { HistoryMutationRecord[] } records
@@ -824,6 +838,9 @@ export class HistoryPlugin extends Plugin {
 
         currentStep.previousStepId = this.steps.at(-1)?.id;
 
+        currentStep.selectionAfter = this.serializeSelection(
+            this.dependencies.selection.getEditableSelection()
+        );
         this.steps.push(currentStep);
         // @todo @phoenix add this in the linkzws plugin.
         // this._setLinkZws();
@@ -876,6 +893,9 @@ export class HistoryPlugin extends Plugin {
             this.stepsStates.set(revertedStep.id, "consumed");
             this.revertMutations(revertedStep.mutations, { forNewStep: true });
             this.setSerializedSelection(revertedStep.selection);
+            this.setSerializedFocus(revertedStep.activeElementId);
+            this.stageFocus();
+            this.currentStep.selection = revertedStep.selectionAfter;
             this.addStep({ stepState: "undo", extraStepInfos: revertedStep.extraStepInfos });
             // Consider the last position of the history as an undo.
         }
@@ -899,6 +919,9 @@ export class HistoryPlugin extends Plugin {
             this.stepsStates.set(revertedStep.id, "consumed");
             this.revertMutations(revertedStep.mutations, { forNewStep: true });
             this.setSerializedSelection(revertedStep.selection);
+            this.setSerializedFocus(revertedStep.activeElementId);
+            this.stageFocus();
+            this.currentStep.selection = revertedStep.selectionAfter;
             this.addStep({ stepState: "redo", extraStepInfos: revertedStep.extraStepInfos });
         }
         this.dispatchTo("post_redo_handlers", revertedStep);
@@ -927,6 +950,15 @@ export class HistoryPlugin extends Plugin {
         // @todo @phoenix add this in the selection or table plugin.
         // // If a table must be selected, ensure it's in the same tick.
         // this._handleSelectionInTable();
+    }
+    /**
+     * @param { string } activeElementId
+     */
+    setSerializedFocus(activeElementId) {
+        const elementToFocus = activeElementId && this.idToNodeMap.get(activeElementId);
+        if (elementToFocus !== this.document.activeElement) {
+            elementToFocus?.focus();
+        }
     }
     /**
      * Get the step index in the history to undo.

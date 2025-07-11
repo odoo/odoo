@@ -1,4 +1,4 @@
-import { Plugin } from "../plugin";
+import { Plugin, isValidTargetForDomListener } from "../plugin";
 
 /**
  * @typedef {Object} Shortcut
@@ -37,20 +37,24 @@ export class ShortCutPlugin extends Plugin {
                 () => {
                     command.run(shortcut.commandParams);
                 },
-                { isAvailable: command.isAvailable }
+                {
+                    isAvailable: command.isAvailable,
+                    allowInProtected: !!shortcut.allowInProtected,
+                }
             );
         }
     }
 
-    addShortcut(hotkey, action, { isAvailable }) {
+    addShortcut(hotkey, action, { isAvailable, allowInProtected }) {
         this.services.hotkey.add(hotkey, action, {
             area: () => this.editable,
             bypassEditableProtection: true,
             allowRepeat: true,
-            isAvailable: () =>
-                isAvailable
-                    ? isAvailable(this.dependencies.selection.getEditableSelection())
-                    : true,
+            isAvailable: (target) =>
+                allowInProtected ||
+                ((!isAvailable ||
+                    isAvailable(this.dependencies.selection.getEditableSelection())) &&
+                    isValidTargetForDomListener(target)),
         });
     }
 }

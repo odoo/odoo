@@ -208,7 +208,7 @@ export class SelectionPlugin extends Plugin {
 
     setup() {
         this.resetSelection();
-        this.addDomListener(this.document, "selectionchange", () => {
+        this.addGlobalDomListener("selectionchange", (ev) => {
             this.updateActiveSelection();
             const selection = this.document.getSelection();
             if (this.isSelectionInEditable(selection)) {
@@ -450,6 +450,7 @@ export class SelectionPlugin extends Plugin {
         const documentSelection =
             selection?.anchorNode && selection?.focusNode
                 ? Object.freeze({
+                      isCollapsed: selection.isCollapsed,
                       anchorNode: selection.anchorNode,
                       anchorOffset: selection.anchorOffset,
                       focusNode: selection.focusNode,
@@ -565,6 +566,7 @@ export class SelectionPlugin extends Plugin {
         if (!this.validateSelection({ anchorNode, anchorOffset, focusNode, focusOffset })) {
             return null;
         }
+        const restore = this.preserveTextareaSelections();
         const isCollapsed = anchorNode === focusNode && anchorOffset === focusOffset;
         [focusNode, focusOffset] = normalizeSelfClosingElement(focusNode, focusOffset, "right");
         [anchorNode, anchorOffset] = isCollapsed
@@ -609,8 +611,29 @@ export class SelectionPlugin extends Plugin {
                 });
             }
         }
+        restore();
 
         return this.activeSelection;
+    }
+
+    preserveTextareaSelections() {
+        const selections = [...this.editable.querySelectorAll("textarea")].map((textarea) => ({
+            textarea,
+            start: textarea.selectionStart,
+            end: textarea.selectionEnd,
+            direction: textarea.selectionDirection,
+        }));
+        return () => {
+            for (const { textarea, start, end, direction } of selections) {
+                if (
+                    textarea.selectionStart !== start ||
+                    textarea.selectionEnd !== end ||
+                    textarea.direction !== textarea.selectionDirection
+                ) {
+                    textarea.setSelectionRange(start, end, direction);
+                }
+            }
+        };
     }
 
     /**
@@ -813,6 +836,13 @@ export class SelectionPlugin extends Plugin {
         }
         const isSelectionOnEditableRoot = (s) => s.isCollapsed && s.anchorNode === this.editable;
         if (!isSelectionOnEditableRoot(editableSelection)) {
+            return false;
+        }
+        if (
+            this.getResource("bypass_fix_selection_on_editable_root_predicates").some((fn) =>
+                fn(selectionData)
+            )
+        ) {
             return false;
         }
         if (this.delegateTo("fix_selection_on_editable_root_overrides", editableSelection)) {
