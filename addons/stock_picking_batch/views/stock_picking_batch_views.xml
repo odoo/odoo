@@ -273,8 +273,15 @@
         </field>
     </record>
 
+    <record id="stock_picking_batch_server_action" model="ir.actions.server">
+        <field name="name">Batch Transfer</field>
+        <field name="model_id" ref="model_stock_picking_batch"/>
+        <field name="state">code</field>
+        <field name="code">action = model._get_picking_batch_action()</field>
+    </record>
+
     <menuitem id="menu_stock_jobs" name="Jobs" parent="stock.menu_stock_warehouse_mgmt" sequence="2"/>
-    <menuitem action="stock_picking_batch_action" id="stock_picking_batch_menu" parent="menu_stock_jobs" sequence="30"/>
+    <menuitem action="stock_picking_batch_server_action" id="stock_picking_batch_menu" parent="menu_stock_jobs" sequence="30"/>
 
     <record id="view_picking_internal_search_inherit_stock_picking_batch" model="ir.ui.view">
         <field name="name">stock.picking.search</field>
