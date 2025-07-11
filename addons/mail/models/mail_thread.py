@@ -2183,7 +2183,7 @@ class MailThread(models.AbstractModel):
                      subtype_xmlid=None, subtype_id=False,
                      partner_ids=None, incoming_email_to=False, incoming_email_cc=False,
                      attachments=None, attachment_ids=None, body_is_html=False,
-                     **kwargs):
+                     pinned_at=None, **kwargs):
         """ Post a new message in an existing thread, returning the new mail.message.
 
         :param str|Markup body: body of the message, str content will be escaped, Markup
@@ -2214,6 +2214,9 @@ class MailThread(models.AbstractModel):
             composer will be attached to the related document.
         :param bool body_is_html: indicates body should be threated as HTML even if str
             to be used only for RPC calls
+        :param datetime pinned_at: optional datetime to pin the message at, if not set
+            the message will not be pinned. If set, the message will be pinned at the given
+            datetime.
 
         Extra keyword arguments will be used either
           * as default column values for the new mail.message record if they match
@@ -2321,6 +2324,8 @@ class MailThread(models.AbstractModel):
             'incoming_email_to': incoming_email_to,
             'incoming_email_cc': incoming_email_cc,
         })
+        if pinned_at:
+            msg_values['pinned_at'] = pinned_at
         # add default-like values afterwards, to avoid useless queries
         if 'record_alias_domain_id' not in msg_values:
             msg_values['record_alias_domain_id'] = self.sudo()._mail_get_alias_domains(default_company=self.env.company)[self.id].id
@@ -4893,6 +4898,10 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _get_allowed_access_params(self):
+        return set()
+
+    @api.model
+    def _get_allowed_context_params(self):
         return set()
 
     @api.model

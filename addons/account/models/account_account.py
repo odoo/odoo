@@ -5,6 +5,8 @@ import itertools
 import re
 import json
 
+from markupsafe import Markup
+
 from odoo import api, fields, models, _, Command
 from odoo.fields import Domain
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
@@ -1508,6 +1510,25 @@ class AccountAccount(models.Model):
         new_accounts._message_log_batch(bodies={a.id: msg_body for a in new_accounts})
 
         return new_accounts
+
+    def _get_message_create_valid_field_names(self):
+        valid_field_names = super()._get_message_create_valid_field_names()
+        if self.has_access(self._mail_post_access):
+            valid_field_names.add('pinned_at')
+        return valid_field_names
+
+    def _get_allowed_context_params(self):
+        params = super()._get_allowed_context_params()
+        if self.has_access(self._mail_post_access):
+            params.add('default_pinned_at')
+        return params
+
+    def message_post(self, *, body='', subject=None, message_type='notification', email_from=None, author_id=None, parent_id=False, subtype_xmlid=None, subtype_id=False, partner_ids=None, attachments=None, attachment_ids=None, body_is_html=False, pinned_at=None, **kwargs):
+        if self.has_access(self._mail_post_access):
+            pinned_at = self.env.context.get('default_pinned_at')
+            body = (Markup("<em>") + pinned_at.split(' ')[0] + Markup('</em><br/>') + body) if pinned_at else body
+
+        return super().message_post(body=body, subject=subject, message_type=message_type, email_from=email_from, author_id=author_id, parent_id=parent_id, subtype_xmlid=subtype_xmlid, subtype_id=subtype_id, partner_ids=partner_ids, attachments=attachments, attachment_ids=attachment_ids, body_is_html=body_is_html, pinned_at=pinned_at, **kwargs)
 
 
 class AccountGroup(models.Model):
