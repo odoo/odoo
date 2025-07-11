@@ -62,14 +62,15 @@ QUnit.module("Analytic", (hooks) => {
                         color: { string: "Color", type: "integer" },
                         all_account_count: { type: "integer" },
                         parent_id: { type: "many2one", relation: "plan" },
+                        column_name: { type: "char" },
                     },
                     records: [
-                        { id: 1, name: "Internal", applicability: "optional", all_account_count: 2 },
-                        { id: 2, name: "Departments", applicability: "mandatory", all_account_count: 3 },
-                        { id: 3, name: "Projects", applicability: "optional" },
-                        { id: 4, name: "Hidden", applicability: "unavailable", all_account_count: 1 },
-                        { id: 5, name: "Country", applicability: "optional", all_account_count: 3 },
-                        { id: 6, name: "City", applicability: "optional", all_account_count: 2, parent_id: 5 },
+                        { id: 1, name: "Internal", applicability: "optional", all_account_count: 2, column_name: 'x_plan1_id' },
+                        { id: 2, name: "Departments", applicability: "mandatory", all_account_count: 3, column_name: 'x_plan2_id' },
+                        { id: 3, name: "Projects", applicability: "optional", column_name: 'account_id' },
+                        { id: 4, name: "Hidden", applicability: "unavailable", all_account_count: 1, column_name: 'x_plan4_id' },
+                        { id: 5, name: "Country", applicability: "optional", all_account_count: 3, column_name: 'x_plan5_id' },
+                        { id: 6, name: "City", applicability: "optional", all_account_count: 2, parent_id: 5, column_name: 'x_plan5_id' },
                     ],
                 },
                 aml: {
@@ -97,7 +98,7 @@ QUnit.module("Analytic", (hooks) => {
                 },
                 move: {
                     fields: {
-                        line_ids: { string: "Move Lines", type: "one2many", relation: "aml", relation_field: "move_line_id" },
+                        line_ids: { string: "Move Lines", type: "one2many", relation: "aml", relation_field: "move_id" },
                     },
                     records: [
                         { id: 1, display_name: "INV0001", line_ids: [1, 2]},
@@ -159,7 +160,7 @@ QUnit.module("Analytic", (hooks) => {
         let field = target.querySelector('.o_field_analytic_distribution');
         await click(field, ".o_input_dropdown");
         assert.containsN(target, ".analytic_distribution_popup", 1, "popup should be visible");
-        
+
         let popup = target.querySelector('.analytic_distribution_popup');
         let planTable = popup.querySelectorAll('table')[0];
 
@@ -176,7 +177,7 @@ QUnit.module("Analytic", (hooks) => {
         await click(planTable, "tr:first-of-type .o_field_percentage input");
         let input = document.activeElement;
         await editInput(input, null, "19.7001");
-        
+
         // mandatory plan is red
         assert.containsOnce(planTable, 'th:contains("Departments") .text-danger:contains("50%")', "Mandatory plan has invalid status");
 
@@ -262,7 +263,7 @@ QUnit.module("Analytic", (hooks) => {
         await addRow(planTable)
         await selectDropdownItem(planTable.querySelector("tr[name='line_2']"), "x_plan5_id", "Search More...");
         assert.containsN(target, ".modal-dialog .o_list_renderer", 1, "select create list dialog is visible");
-        
+
         await click(target, ".modal-dialog .modal-title");
         await click(target, ".modal-dialog .o_data_row:nth-of-type(4) .o_data_cell:first-of-type");
         assert.containsNone(target, ".modal-dialog .o_list_renderer", "select create list dialog is closed");
