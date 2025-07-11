@@ -104,7 +104,9 @@ export class VideoSelector extends Component {
             if (this.props.media) {
                 const src = this.props.media.dataset.oeExpression || this.props.media.dataset.src || (this.props.media.tagName === 'IFRAME' && this.props.media.getAttribute('src')) || '';
                 if (src) {
-                    this.state.urlInput = "https:" + src;
+                    if (!src.startsWith("http:") && !src.startsWith("https:")) {
+                        this.state.urlInput = "https:" + src;
+                    }
                     await this.updateVideo();
 
                     this.state.options = this.state.options.map((option) => {
