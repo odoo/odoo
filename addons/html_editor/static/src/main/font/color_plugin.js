@@ -25,7 +25,7 @@ import { _t } from "@web/core/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
 
 const RGBA_OPACITY = 0.6;
-const HEX_OPACITY = "99";
+export const HEX_OPACITY = "99";
 
 /**
  * @typedef { Object } ColorShared
@@ -206,13 +206,15 @@ export class ColorPlugin extends Plugin {
      * @param {boolean} [previewMode=false] true - apply color in preview mode
      */
     _applyColor(color, mode, previewMode = false) {
-        if (this.delegateTo("color_apply_overrides", color, mode, previewMode)) {
-            return;
-        }
         const activeTab = document
             .querySelector(".o_font_color_selector button.active")
             ?.innerHTML.trim();
-        if (mode === "backgroundColor" && activeTab === "Solid" && color.startsWith("#")) {
+        const applyTransparency =
+            mode === "backgroundColor" && activeTab === "Solid" && color.startsWith("#");
+        if (this.delegateTo("color_apply_overrides", color, mode, previewMode, applyTransparency)) {
+            return;
+        }
+        if (applyTransparency) {
             // Apply default transparency to selected solid tab colors in background
             // mode to make text highlighting more usable between light and dark modes.
             color += HEX_OPACITY;
