@@ -525,3 +525,7 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('test_book_and_release_table', login="pos_user")
         order = self.env['pos.order'].search([], limit=1, order='id desc')
         self.assertEqual(order.state, "cancel", "The order should be in cancel state after releasing the table")
+
+    def test_table_order_state_update_cross_device(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_table_order_state_update_cross_device', login="pos_user")

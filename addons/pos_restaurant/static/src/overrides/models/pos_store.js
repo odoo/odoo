@@ -170,6 +170,7 @@ patch(PosStore.prototype, {
             this.addPendingOrder([order.id]);
             if (!this.get_order().uiState.booked) {
                 this.get_order().setBooked(true);
+                await this.syncAllOrders({ orders: [order] });
             }
         }
         return super.addLineToCurrentOrder(vals, opts, configure);
@@ -214,7 +215,9 @@ patch(PosStore.prototype, {
                 currentOrder.update({ table_id: table });
                 this.selectedOrderUuid = currentOrder.uuid;
             } else {
-                this.add_new_order();
+                const order = this.add_new_order();
+                order.setBooked(true);
+                this.syncAllOrders({ orders: [order] });
             }
         }
     },
