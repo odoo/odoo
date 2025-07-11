@@ -1,17 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hmac
-import logging
 import pprint
 
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment.logging import get_payment_logger
 
-_logger = logging.getLogger(__name__)
+
+_logger = get_payment_logger(__name__)
 
 
 class AsiaPayController(http.Controller):
@@ -37,18 +37,13 @@ class AsiaPayController(http.Controller):
         :rtype: str
         """
         _logger.info("Notification received from AsiaPay with data:\n%s", pprint.pformat(data))
-        try:
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
+            'asiapay', data
+        )
+        if tx_sudo:
             # Check the integrity of the notification data.
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                'asiapay', data
-            )
             self._verify_notification_signature(data, tx_sudo)
-
-            # Handle the notification data.
             tx_sudo._handle_notification_data('asiapay', data)
-        except ValidationError:  # Acknowledge the notification to avoid getting spammed.
-            _logger.exception("Unable to handle the notification data; skipping to acknowledge.")
-
         return 'OK'  # Acknowledge the notification.
 
     @staticmethod

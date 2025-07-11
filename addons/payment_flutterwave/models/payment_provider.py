@@ -1,20 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import pprint
-
-import requests
 from werkzeug.urls import url_join
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_flutterwave import const
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentProvider(models.Model):
@@ -78,47 +74,29 @@ class PaymentProvider(models.Model):
             )
         return supported_currencies
 
-    def _flutterwave_make_request(self, endpoint, payload=None, method='POST'):
-        """ Make a request to Flutterwave API at the specified endpoint.
+    def _build_request_url(self, endpoint, **kwargs):
+        if self.code != 'flutterwave':
+            return super()._build_request_url(endpoint, **kwargs)
+        return url_join('https://api.flutterwave.com/v3/', endpoint)
 
-        Note: self.ensure_one()
+    def _build_request_headers(self, *args, **kwargs):
+        if self.code != 'flutterwave':
+            return super()._build_request_headers(*args, **kwargs)
+        return {'Authorization': f'Bearer {self.flutterwave_secret_key}'}
 
-        :param str endpoint: The endpoint to be reached by the request.
-        :param dict payload: The payload of the request.
-        :param str method: The HTTP method of the request.
-        :return The JSON-formatted content of the response.
-        :rtype: dict
-        :raise ValidationError: If an HTTP error occurs.
-        """
-        self.ensure_one()
+    def _parse_response_error(self, response):
+        if self.code != 'flutterwave':
+            return super()._parse_response_error(response)
+        return response.json().get('message', '')
 
-        url = url_join('https://api.flutterwave.com/v3/', endpoint)
-        headers = {'Authorization': f'Bearer {self.flutterwave_secret_key}'}
-        try:
-            if method == 'GET':
-                response = requests.get(url, params=payload, headers=headers, timeout=10)
-            else:
-                response = requests.post(url, json=payload, headers=headers, timeout=10)
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload),
-                )
-                raise ValidationError("Flutterwave: " + _(
-                    "The communication with the API failed. Flutterwave gave us the following "
-                    "information: '%s'", response.json().get('message', '')
-                ))
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError(
-                "Flutterwave: " + _("Could not establish the connection to the API.")
-            )
-        return response.json()
+    def _parse_response_content(self, response, **kwargs):
+        if self.code != 'flutterwave':
+            return super()._parse_response_content(response, **kwargs)
+        return response.json()['data']
 
     def _get_default_payment_method_codes(self):
         """ Override of `payment` to return the default payment method codes. """
-        default_codes = super()._get_default_payment_method_codes()
+        self.ensure_one()
         if self.code != 'flutterwave':
-            return default_codes
+            return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES

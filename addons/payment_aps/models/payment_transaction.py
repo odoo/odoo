@@ -1,19 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-
 from werkzeug import urls
 
 from odoo import _, api, models
-from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_aps import utils as aps_utils
 from odoo.addons.payment_aps.const import PAYMENT_STATUS_MAPPING
 from odoo.addons.payment_aps.controllers.main import APSController
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentTransaction(models.Model):
@@ -49,9 +47,8 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific processing values.
         :rtype: dict
         """
-        res = super()._get_specific_rendering_values(processing_values)
         if self.provider_code != 'aps':
-            return res
+            return super()._get_specific_rendering_values(processing_values)
 
         converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency_id)
         base_url = self.provider_id.get_base_url()
@@ -77,49 +74,26 @@ class PaymentTransaction(models.Model):
         })
         return rendering_values
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of `payment` to find the transaction based on APS data.
+    def _get_ref_from_payment_data(self, provider_code, payment_data):
+        if provider_code != 'aps':
+            return super()._get_ref_from_payment_data(provider_code, payment_data)
+        return payment_data.get('merchant_reference')
 
-        :param str provider_code: The code of the provider that handled the transaction.
-        :param dict notification_data: The notification data sent by the provider.
-        :return: The transaction if found.
-        :rtype: recordset of `payment.transaction`
-        :raise ValidationError: If inconsistent data are received.
-        :raise ValidationError: If the data match no transaction.
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'aps' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('merchant_reference')
-        if not reference:
-            raise ValidationError(
-                "APS: " + _("Received data with missing reference %(ref)s.", ref=reference)
-            )
-
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'aps')])
-        if not tx:
-            raise ValidationError(
-                "APS: " + _("No transaction found matching reference %s.", reference)
-            )
-
-        return tx
-
-    def _compare_notification_data(self, notification_data):
+    def _compare_payment_data(self, payment_data):
         """ Override of `payment` to compare the transaction based on APS data.
 
-        :param dict notification_data: The notification data sent by the provider.
+        :param dict payment_data: The payment data sent by the provider.
         :return: None
         :raise ValidationError: If the transaction's amount and currency don't match the
             notification data.
         """
         if self.provider_code != 'aps':
-            return super()._compare_notification_data(notification_data)
+            return super()._compare_payment_data(payment_data)
 
         amount = payment_utils.to_major_currency_units(
-            float(notification_data.get('amount', 0)), self.currency_id
+            float(payment_data.get('amount', 0)), self.currency_id
         )
-        currency_code = notification_data.get('currency')
+        currency_code = payment_data.get('currency')
         self._validate_amount_and_currency(amount, currency_code)
 
     def _process_notification_data(self, notification_data):
@@ -129,11 +103,9 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
-        :raise ValidationError: If inconsistent data are received.
         """
-        super()._process_notification_data(notification_data)
         if self.provider_code != 'aps':
-            return
+            return super()._process_notification_data(notification_data)
 
         # Update the provider reference.
         self.provider_reference = notification_data.get('fort_id')
@@ -146,8 +118,8 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         status = notification_data.get('status')
         if not status:
-            raise ValidationError("APS: " + _("Received data with missing payment state."))
-        if status in PAYMENT_STATUS_MAPPING['pending']:
+            self._set_error(_("Received data with missing payment state."))
+        elif status in PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
         elif status in PAYMENT_STATUS_MAPPING['done']:
             self._set_done()

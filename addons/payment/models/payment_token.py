@@ -35,14 +35,14 @@ class PaymentToken(models.Model):
     )
     active = fields.Boolean(string="Active", default=True)
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS === #
 
     @api.depends('payment_details', 'create_date')
     def _compute_display_name(self):
         for token in self:
             token.display_name = token._build_display_name()
 
-    #=== CRUD METHODS ===#
+    # === CRUD METHODS === #
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -113,7 +113,7 @@ class PaymentToken(models.Model):
         """
         return
 
-    #=== BUSINESS METHODS ===#
+    # === BUSINESS METHODS === #
 
     def _get_available_tokens(self, providers_ids, partner_id, is_validation=False, **kwargs):
         """ Return the available tokens linked to the given providers and partner.

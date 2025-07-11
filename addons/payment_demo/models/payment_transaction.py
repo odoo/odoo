@@ -67,92 +67,55 @@ class PaymentTransaction(models.Model):
 
         :return: None
         """
-        super()._send_payment_request()
         if self.provider_code != 'demo':
-            return
-
-        if not self.token_id:
-            raise UserError("Demo: " + _("The transaction is not linked to a token."))
+            return super()._send_payment_request()
 
         simulated_state = self.token_id.demo_simulated_state
         notification_data = {'reference': self.reference, 'simulated_state': simulated_state}
         self._handle_notification_data('demo', notification_data)
 
-    def _send_refund_request(self, amount_to_refund=None):
+    def _send_refund_request(self):
         """ Override of payment to simulate a refund.
 
         Note: self.ensure_one()
 
         :param dict kwargs: The keyword arguments.
-        :return: The refund transaction created to process the refund request.
-        :rtype: recordset of `payment.transaction`
         """
-        refund_tx = super()._send_refund_request(amount_to_refund=amount_to_refund)
         if self.provider_code != 'demo':
-            return refund_tx
+            return super()._send_refund_request()
 
-        notification_data = {'reference': refund_tx.reference, 'simulated_state': 'done'}
-        refund_tx._handle_notification_data('demo', notification_data)
+        notification_data = {'reference': self.reference, 'simulated_state': 'done'}
+        self._handle_notification_data('demo', notification_data)
 
-        return refund_tx
-
-    def _send_capture_request(self, amount_to_capture=None):
+    def _send_capture_request(self):
         """ Override of `payment` to simulate a capture request. """
-        child_capture_tx = super()._send_capture_request(amount_to_capture=amount_to_capture)
         if self.provider_code != 'demo':
-            return child_capture_tx
+            return super()._send_capture_request()
 
-        tx = child_capture_tx or self
         notification_data = {
-            'reference': tx.reference,
+            'reference': self.reference,
             'simulated_state': 'done',
             'manual_capture': True,  # Distinguish manual captures from regular one-step captures.
         }
-        tx._handle_notification_data('demo', notification_data)
+        self._handle_notification_data('demo', notification_data)
 
-        return child_capture_tx
-
-    def _send_void_request(self, amount_to_void=None):
+    def _send_void_request(self):
         """ Override of `payment` to simulate a void request. """
-        child_void_tx = super()._send_void_request(amount_to_void=amount_to_void)
         if self.provider_code != 'demo':
-            return child_void_tx
+            return super()._send_void_request()
 
-        tx = child_void_tx or self
-        notification_data = {'reference': tx.reference, 'simulated_state': 'cancel'}
-        tx._handle_notification_data('demo', notification_data)
+        notification_data = {'reference': self.reference, 'simulated_state': 'cancel'}
+        self._handle_notification_data('demo', notification_data)
 
-        return child_void_tx
-
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of payment to find the transaction based on dummy data.
-
-        :param str provider_code: The code of the provider that handled the transaction
-        :param dict notification_data: The dummy notification data
-        :return: The transaction if found
-        :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if the data match no transaction
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'demo' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('reference')
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'demo')])
-        if not tx:
-            raise ValidationError(
-                "Demo: " + _("No transaction found matching reference %s.", reference)
-            )
-        return tx
-
-    def _compare_notification_data(self, notification_data):
+    def _compare_payment_data(self, payment_data):
         """ Override of `payment` to skip the transaction comparison for dummy flows.
 
-        :param dict notification_data: The dummy notification data.
+        :param dict payment_data: The dummy payment data.
         :return: None
         """
         if self.provider_code != 'demo':
-            return super()._compare_notification_data(notification_data)
+            super()._compare_payment_data(payment_data)
+            return
 
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on dummy data.
@@ -163,9 +126,8 @@ class PaymentTransaction(models.Model):
         :return: None
         :raise: ValidationError if inconsistent data were received
         """
-        super()._process_notification_data(notification_data)
         if self.provider_code != 'demo':
-            return
+            return super()._process_notification_data(notification_data)
 
         # Update the provider reference.
         self.provider_reference = f'demo-{self.reference}'

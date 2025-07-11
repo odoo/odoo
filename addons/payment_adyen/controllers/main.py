@@ -4,7 +4,6 @@ import base64
 import binascii
 import hashlib
 import hmac
-import logging
 import pprint
 
 from werkzeug import urls
@@ -16,10 +15,11 @@ from odoo.http import request
 from odoo.tools import py_to_js_locale
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_adyen import utils as adyen_utils
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class AdyenController(http.Controller):
@@ -56,10 +56,7 @@ class AdyenController(http.Controller):
             'shopperReference': shopper_reference,
             'channel': 'Web',
         }
-        response_content = provider_sudo._adyen_make_request(
-            endpoint='/paymentMethods', payload=data, method='POST'
-        )
-        _logger.info("paymentMethods request response:\n%s", pprint.pformat(response_content))
+        response_content = provider_sudo._send_api_request('POST', '/paymentMethods', json=data)
         response_content['country_code'] = partner_country_code
         return response_content
 
@@ -139,14 +136,9 @@ class AdyenController(http.Controller):
         idempotency_key = payment_utils.generate_idempotency_key(
             tx_sudo, scope='payment_request_controller'
         )
-        response_content = provider_sudo._adyen_make_request(
-            endpoint='/payments', payload=data, method='POST', idempotency_key=idempotency_key
-        )
 
-        # Handle the payment request response
-        _logger.info(
-            "payment request response for transaction with reference %s:\n%s",
-            reference, pprint.pformat(response_content)
+        response_content = provider_sudo._send_api_request(
+            'POST', '/payments', json=data, idempotency_key=idempotency_key
         )
         tx_sudo._handle_notification_data(
             'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
@@ -168,15 +160,11 @@ class AdyenController(http.Controller):
         """
         # Make the payment details request to Adyen
         provider_sudo = request.env['payment.provider'].browse(provider_id).sudo()
-        response_content = provider_sudo._adyen_make_request(
-            endpoint='/payments/details', payload=payment_details, method='POST'
+        response_content = provider_sudo._send_api_request(
+            'POST', '/payments/details', json=payment_details
         )
 
         # Handle the payment details request response
-        _logger.info(
-            "payment details request response for transaction with reference %s:\n%s",
-            reference, pprint.pformat(response_content)
-        )
         request.env['payment.transaction'].sudo()._handle_notification_data(
             'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
         )
@@ -199,12 +187,14 @@ class AdyenController(http.Controller):
                           the request to allow matching the transaction when redirected here.
         """
         # Retrieve the transaction based on the reference included in the return url
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'adyen', data
         )
+        if not tx_sudo:
+            return request.redirect('/payment/status')
 
         # Overwrite the operation to force the flow to 'redirect'. This is necessary because even
-        # thought Adyen is implemented as a direct payment provider, it will redirect the user out
+        # though Adyen is implemented as a direct payment provider, it will redirect the user out
         # of Odoo in some cases. For instance, when a 3DS1 authentication is required, or for
         # special payment methods that are not handled by the drop-in (e.g. Sofort).
         tx_sudo.operation = 'online_redirect'
@@ -214,6 +204,7 @@ class AdyenController(http.Controller):
             "handling redirection from Adyen for transaction with reference %s with data:\n%s",
             tx_sudo.reference, pprint.pformat(data)
         )
+
         self.adyen_payment_details(
             tx_sudo.provider_id.id,
             data['merchantReference'],
@@ -244,16 +235,11 @@ class AdyenController(http.Controller):
             _logger.info(
                 "notification received from Adyen with data:\n%s", pprint.pformat(notification_data)
             )
-            try:
-                # Check the integrity of the notification
-                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                    'adyen', notification_data
-                )
-            except ValidationError:
-                # Warn rather than log the traceback to avoid noise when a POS payment notification
-                # is received and the corresponding `payment.transaction` record is not found.
-                _logger.warning("unable to find the transaction; skipping to acknowledge")
-            else:
+            # Check the integrity of the notification
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
+                'adyen', notification_data
+            )
+            if tx_sudo:
                 self._verify_notification_signature(notification_data, tx_sudo)
 
                 # Check whether the event of the notification succeeded and reshape the notification
@@ -271,14 +257,7 @@ class AdyenController(http.Controller):
                     notification_data['resultCode'] = 'Error'
                 else:
                     continue  # Don't handle unsupported event codes and failed events
-                try:
-                    # Handle the notification data as if they were feedback of a S2S payment request
-                    tx_sudo._handle_notification_data('adyen', notification_data)
-                except ValidationError:  # Acknowledge the notification to avoid getting spammed
-                    _logger.exception(
-                        "unable to handle the notification data;skipping to acknowledge"
-                    )
-
+                tx_sudo._handle_notification_data('adyen', notification_data)
         return request.make_json_response('[accepted]')  # Acknowledge the notification
 
     @staticmethod

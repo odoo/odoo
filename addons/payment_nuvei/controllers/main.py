@@ -1,19 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 import pprint
 
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import consteq
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.logging import get_payment_logger
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class NuveiController(http.Controller):
@@ -34,13 +33,15 @@ class NuveiController(http.Controller):
             _logger.warning("Nuvei errored on transaction with reference: %s", tx_ref)
 
         tx_data = data or {'invoice_id': tx_ref}
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'nuvei', tx_data
         )
-        self._verify_notification_signature(tx_sudo, data, error_access_token=error_access_token)
-
-        # Handle the notification data if there is any.
-        tx_sudo._handle_notification_data('nuvei', data)
+        if tx_sudo:
+            self._verify_notification_signature(
+                tx_sudo, data, error_access_token=error_access_token
+            )
+            # Handle the notification data if there is any.
+            tx_sudo._handle_notification_data('nuvei', data)
         return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
@@ -54,17 +55,14 @@ class NuveiController(http.Controller):
         :rtype: str
         """
         _logger.info("Notification received from Nuvei with data:\n%s", pprint.pformat(data))
-        try:
-            # Check the integrity of the notification.
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                'nuvei', data
-            )
+        # Check the integrity of the notification.
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
+            'nuvei', data
+        )
+        if tx_sudo:
             self._verify_notification_signature(tx_sudo, data)
-
-            # Handle the notification data.
-            tx_sudo._handle_notification_data('nuvei', data)
-        except ValidationError:  # Acknowledge the notification to avoid getting spammed.
-            _logger.exception("Unable to handle the notification data; skipping to acknowledge.")
+        # Handle the notification data.
+        tx_sudo._handle_notification_data('nuvei', data)
 
         return 'OK'  # Acknowledge the notification.
 

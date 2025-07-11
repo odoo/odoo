@@ -1,17 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 import pprint
 
 from odoo import _, models
-from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_authorize import const
 from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentTransaction(models.Model):
@@ -26,9 +25,8 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific processing values
         :rtype: dict
         """
-        res = super()._get_specific_processing_values(processing_values)
         if self.provider_code != 'authorize':
-            return res
+            return super()._get_specific_processing_values(processing_values)
 
         return {
             'access_token': payment_utils.generate_access_token(
@@ -60,12 +58,8 @@ class PaymentTransaction(models.Model):
         :return: None
         :raise: UserError if the transaction is not linked to a token
         """
-        super()._send_payment_request()
         if self.provider_code != 'authorize':
-            return
-
-        if not self.token_id.authorize_profile:
-            raise UserError("Authorize.Net: " + _("The transaction is not linked to a token."))
+            return super()._send_payment_request()
 
         authorize_API = AuthorizeAPI(self.provider_id)
         if self.provider_id.capture_manually:
@@ -82,29 +76,27 @@ class PaymentTransaction(models.Model):
             )
         self._handle_notification_data('authorize', {'response': res_content})
 
-    def _send_refund_request(self, amount_to_refund=None):
+    def _send_refund_request(self):
         """ Override of payment to send a refund request to Authorize.
 
-        Note: self.ensure_one()
-
         :param float amount_to_refund: The amount to refund
-        :return: The refund transaction created to process the refund request.
-        :rtype: recordset of `payment.transaction`
+        :rtype: None
         """
-        self.ensure_one()
 
         if self.provider_code != 'authorize':
-            return super()._send_refund_request(amount_to_refund=amount_to_refund)
+            return super()._send_refund_request()
 
         authorize_api = AuthorizeAPI(self.provider_id)
-        tx_details = authorize_api.get_transaction_details(self.provider_reference)
+        tx_details = authorize_api.get_transaction_details(
+            self.source_transaction_id.provider_reference
+        )
         if 'err_code' in tx_details:  # Could not retrieve the transaction details.
-            raise ValidationError("Authorize.Net: " + _(
+            self._set_error(_(
                 "Could not retrieve the transaction details. (error code: %(error_code)s; error_details: %(error_message)s)",
                 error_code=tx_details['err_code'], error_message=tx_details.get('err_msg'),
             ))
+            return
 
-        refund_tx = self.env['payment.transaction']
         tx_status = tx_details.get('transaction', {}).get('transactionStatus')
         if tx_status in const.TRANSACTION_STATUS_MAPPING['voided']:
             # The payment has been voided from Authorize.net side before we could refund it.
@@ -112,8 +104,7 @@ class PaymentTransaction(models.Model):
         elif tx_status in const.TRANSACTION_STATUS_MAPPING['refunded']:
             # The payment has been refunded from Authorize.net side before we could refund it. We
             # create a refund tx on Odoo to reflect the move of the funds.
-            refund_tx = super()._send_refund_request(amount_to_refund=amount_to_refund)
-            refund_tx._set_done()
+            self._set_done()
             # Immediately post-process the transaction as the post-processing will not be
             # triggered by a customer browsing the transaction from the portal.
             self.env.ref('payment.cron_post_process_payment_tx')._trigger()
@@ -121,51 +112,48 @@ class PaymentTransaction(models.Model):
             if tx_status in const.TRANSACTION_STATUS_MAPPING['authorized']:
                 # The payment has not been settled on Authorize.net yet. It must be voided rather
                 # than refunded. Since the funds have not moved yet, we don't create a refund tx.
-                res_content = authorize_api.void(self.provider_reference)
-                tx_to_process = self
+                res_content = authorize_api.void(self.source_transaction_id.provider_reference)
             else:
                 # The payment has been settled on Authorize.net side. We can refund it.
-                refund_tx = super()._send_refund_request(amount_to_refund=amount_to_refund)
-                rounded_amount = round(amount_to_refund, self.currency_id.decimal_places)
+                rounded_amount = round(self.amount, self.currency_id.decimal_places)
                 res_content = authorize_api.refund(
                     self.provider_reference, rounded_amount, tx_details
                 )
-                tx_to_process = refund_tx
             _logger.info(
                 "refund request response for transaction with reference %s:\n%s",
                 self.reference, pprint.pformat(res_content)
             )
-            data = {'reference': tx_to_process.reference, 'response': res_content}
-            tx_to_process._handle_notification_data('authorize', data)
+            data = {'reference': self.reference, 'response': res_content}
+            self._handle_notification_data('authorize', data)
         else:
-            raise ValidationError("Authorize.net: " + _(
-                "The transaction is not in a status to be refunded. (status: %(status)s, details: %(message)s)",
+            err_msg = _(
+                "The transaction is not in a status to be refunded."
+                " (status: %(status)s, details: %(message)s)",
                 status=tx_status, message=tx_details.get('messages', {}).get('message'),
-            ))
-        return refund_tx
+            )
+            _logger.warning(err_msg)
+            self._set_error(err_msg)
 
-    def _send_capture_request(self, amount_to_capture=None):
+    def _send_capture_request(self):
         """ Override of `payment` to send a capture request to Authorize. """
-        child_capture_tx = super()._send_capture_request(amount_to_capture=amount_to_capture)
         if self.provider_code != 'authorize':
-            return child_capture_tx
+            return super()._send_capture_request()
 
         authorize_API = AuthorizeAPI(self.provider_id)
         rounded_amount = round(self.amount, self.currency_id.decimal_places)
-        res_content = authorize_API.capture(self.provider_reference, rounded_amount)
+        res_content = authorize_API.capture(
+            self.source_transaction_id.provider_reference, rounded_amount
+        )
         _logger.info(
             "capture request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(res_content)
         )
         self._handle_notification_data('authorize', {'response': res_content})
 
-        return child_capture_tx
-
-    def _send_void_request(self, amount_to_void=None):
+    def _send_void_request(self):
         """ Override of payment to send a void request to Authorize. """
-        child_void_tx = super()._send_void_request(amount_to_void=amount_to_void)
         if self.provider_code != 'authorize':
-            return child_void_tx
+            return super()._send_void_request()
 
         authorize_API = AuthorizeAPI(self.provider_id)
         res_content = authorize_API.void(self.provider_reference)
@@ -174,28 +162,6 @@ class PaymentTransaction(models.Model):
             self.reference, pprint.pformat(res_content)
         )
         self._handle_notification_data('authorize', {'response': res_content})
-
-        return child_void_tx
-
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Find the transaction based on Authorize.net data.
-
-        :param str provider_code: The code of the provider that handled the transaction
-        :param dict notification_data: The notification data sent by the provider
-        :return: The transaction if found
-        :rtype: recordset of `payment.transaction`
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'authorize' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('reference')
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'authorize')])
-        if not tx:
-            raise ValidationError(
-                "Authorize.Net: " + _("No transaction found matching reference %s.", reference)
-            )
-        return tx
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to compare the transaction based on Authorize data.
@@ -224,9 +190,8 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider
         :return: None
         """
-        super()._process_notification_data(notification_data)
         if self.provider_code != 'authorize':
-            return
+            return super()._process_notification_data(notification_data)
 
         response_content = notification_data.get('response')
 
@@ -253,7 +218,7 @@ class PaymentTransaction(models.Model):
                 if self.tokenize and not self.token_id:
                     self._authorize_tokenize()
                 if self.operation == 'validation':
-                    self._send_void_request()  # In last step because it processes the response.
+                    self._void()  # In last step because it processes the response.
             elif status_type == 'void':
                 if self.operation == 'validation':  # Validation txs are authorized and then voided
                     self._set_done()  # If the refund went through, the validation tx is confirmed

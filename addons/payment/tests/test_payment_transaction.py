@@ -12,6 +12,22 @@ from odoo.addons.payment.tests.common import PaymentCommon
 @tagged('-at_install', 'post_install')
 class TestPaymentTransaction(PaymentCommon):
 
+    def test_capture_request_creates_capture_tx(self):
+        self.provider.capture_manually = True
+        self.provider.support_manual_capture = 'partial'
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        child_tx = source_tx._capture()
+        self.assertTrue(child_tx)
+        self.assertNotEqual(child_tx, source_tx)
+
+    def test_void_request_creates_void_tx(self):
+        self.provider.capture_manually = True
+        self.provider.support_manual_capture = 'partial'
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        child_tx = source_tx._void()
+        self.assertTrue(child_tx)
+        self.assertNotEqual(child_tx, source_tx)
+
     def test_capture_allowed_for_authorized_users(self):
         """ Test that users who have access to a transaction can capture it. """
         if not self.env.ref('account.group_account_invoice', raise_if_not_found=False):
@@ -169,11 +185,11 @@ class TestPaymentTransaction(PaymentCommon):
             msg="The partner of the partial capture should be that of the source transaction.",
         )
 
-    def test_compare_notification_data_throws(self):
-        """ Test that `_compare_notification_data` throws if not overridden by the provider. """
+    def test_compare_payment_data_throws(self):
+        """ Test that `_compare_payment_data` throws if not overridden by the provider. """
         tx = self._create_transaction('redirect')
         with self.assertRaises(NotImplementedError):
-            tx._compare_notification_data({})
+            tx._compare_payment_data({})
 
     def test_capturing_child_tx_triggers_source_tx_state_update(self):
         self.provider.support_manual_capture = 'partial'
@@ -254,16 +270,3 @@ class TestPaymentTransaction(PaymentCommon):
 
         tx._set_done()
         self.assertFalse(tx.is_post_processed)
-
-    def test_log_processing_values(self):
-        PaymentTransaction = self.env.registry['payment.transaction']
-        tx = self._create_transaction('redirect', state='done', reference='TX-12345')
-        secret_keys = {'provider_id': None}.keys()
-        with (
-            patch.object(PaymentTransaction, '_get_specific_secret_keys', lambda tx: secret_keys),
-            self.assertLogs('odoo.addons.payment.models.payment_transaction') as cm,
-        ):
-            values = tx._get_processing_values()
-            self.assertRegex(cm.output[0], r".reference.: .TX-12345.", "Values should be logged")
-            self.assertNotRegex(cm.output[0], r"provider_id", "Secret keys should be hidden")
-            self.assertEqual(values['provider_id'], tx.provider_id.id)

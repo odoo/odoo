@@ -19,10 +19,10 @@ class TestRefundFlows(StripeCommon, PaymentHttpCommon):
         transaction. """
         source_tx = self._create_transaction('redirect', state='done')
         with patch(
-            'odoo.addons.payment_stripe.models.payment_provider.PaymentProvider'
-            '._stripe_make_request', return_value=self.refund_object
+            'odoo.addons.payment.models.payment_provider.PaymentProvider'
+            '._send_api_request', return_value=self.refund_object
         ):
-            source_tx._send_refund_request()
+            source_tx._refund()
         refund_tx = self.env['payment.transaction'].search(
             [('source_transaction_id', '=', source_tx.id)]
         )

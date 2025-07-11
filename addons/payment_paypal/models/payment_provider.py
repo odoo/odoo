@@ -1,21 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import logging
-import pprint
 from datetime import timedelta
 
-import requests
 from werkzeug import urls
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError, ValidationError
 
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paypal import const
 from odoo.addons.payment_paypal.controllers.main import PaypalController
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentProvider(models.Model):
@@ -64,56 +62,45 @@ class PaymentProvider(models.Model):
             'url': urls.url_join(base_url, PaypalController._webhook_url),
             'event_types': [{'name': event_type} for event_type in const.HANDLED_WEBHOOK_EVENTS]
         }
-        webhook_data = self._paypal_make_request('/v1/notifications/webhooks', json_payload=data)
+        webhook_data = self._send_api_request('POST', '/v1/notifications/webhooks', json=data)
         self.paypal_webhook_id = webhook_data.get('id')
 
     #=== BUSINESS METHODS ===#
 
-    def _paypal_make_request(
-        self, endpoint, data=None, json_payload=None, auth=None, is_refresh_token_request=False,
-        idempotency_key=None,
+    def _build_request_url(self, endpoint, **kwargs):
+        if self.code != 'paypal':
+            return super()._build_request_url(endpoint, **kwargs)
+        return self._paypal_get_api_url() + endpoint
+
+    def _build_request_headers(
+        self, *args, idempotency_key=None, is_refresh_token_request=False, **kwargs
     ):
-        """ Make a request to Paypal API at the specified endpoint.
+        if self.code != 'paypal':
+            return super()._build_request_headers(
+                *args,
+                idempotency_key=idempotency_key,
+                is_refresh_token_request=is_refresh_token_request,
+                **kwargs,
+            )
 
-        Note: self.ensure_one()
-
-        :param str endpoint: The endpoint to be reached by the request.
-        :param dict data: The string payload of the request.
-        :param dict json_payload: The JSON-formatted payload of the request.
-        :param tuple auth: The authentication data.
-        :param bool is_refresh_token_request: Whether the request is for refreshing the access
-                                              token.
-        :param str idempotency_key: The idempotency key to pass in the request.
-        :return: The JSON-formatted content of the response.
-        :rtype: dict
-        :raise ValidationError: If an HTTP error occurs.
-        """
-        url = self._paypal_get_api_url() + endpoint
-        headers = {'Content-Type': 'application/json'}  # PayPal always wants JSON content-type.
+        headers = {}
         if idempotency_key:
             headers['PayPal-Request-Id'] = idempotency_key
         if not is_refresh_token_request:
             headers['Authorization'] = f'Bearer {self._paypal_fetch_access_token()}'
-        try:
-            response = requests.post(
-                url, headers=headers, data=data, json=json_payload, auth=auth, timeout=10
+        return headers
+
+    def _parse_response_error(self, response):
+        if self.code != 'paypal':
+            return super()._parse_response_error(response)
+        return response.json().get('message', '')
+
+    def _build_request_auth(self, *, is_refresh_token_request=False, **kwargs):
+        if self.code != 'paypal' or not is_refresh_token_request:
+            return super()._build_request_auth(
+                is_refresh_token_request=is_refresh_token_request, **kwargs
             )
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                payload = data or json_payload
-                # PayPal errors https://developer.paypal.com/api/rest/reference/orders/v2/errors/
-                _logger.exception(
-                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload)
-                )
-                msg = response.json().get('message', '')
-                raise ValidationError(
-                    "PayPal: " + _("The communication with the API failed. Details: %s", msg)
-                )
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError("PayPal: " + _("Could not establish the connection to the API."))
-        return response.json()
+        return self.paypal_client_id, self.paypal_client_secret
 
     def _paypal_fetch_access_token(self):
         """ Generate a new access token if it's expired, otherwise return the existing access token.
@@ -123,10 +110,10 @@ class PaymentProvider(models.Model):
         :raise ValidationError: If the access token can not be fetched.
         """
         if fields.Datetime.now() > self.paypal_access_token_expiry - timedelta(minutes=5):
-            response_content = self._paypal_make_request(
+            response_content = self._send_api_request(
+                'POST',
                 '/v1/oauth2/token',
                 data={'grant_type': 'client_credentials'},
-                auth=(self.paypal_client_id, self.paypal_client_secret),
                 is_refresh_token_request=True,
             )
             access_token = response_content['access_token']
@@ -168,9 +155,9 @@ class PaymentProvider(models.Model):
 
     def _get_default_payment_method_codes(self):
         """ Override of `payment` to return the default payment method codes. """
-        default_codes = super()._get_default_payment_method_codes()
+        self.ensure_one()
         if self.code != 'paypal':
-            return default_codes
+            return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
     def _paypal_get_inline_form_values(self, currency=None):

@@ -2,7 +2,6 @@
 
 import hashlib
 import hmac
-import logging
 import pprint
 from datetime import datetime
 
@@ -14,10 +13,11 @@ from odoo.http import request
 from odoo.tools import file_open, mute_logger
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_stripe import utils as stripe_utils
-from odoo.addons.payment_stripe.const import HANDLED_WEBHOOK_EVENTS
+from odoo.addons.payment_stripe.const import HANDLED_WEBHOOK_EVENTS, SENSITIVE_KEYS
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__, SENSITIVE_KEYS)
 
 
 class StripeController(http.Controller):
@@ -37,33 +37,30 @@ class StripeController(http.Controller):
                           `_get_specific_processing_values`.
         """
         # Retrieve the transaction based on the reference included in the return url.
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'stripe', data
         )
+        endpoint = (
+            f'payment_intents/{data.get("payment_intent")}'  # Fetch the PaymentIntent
+            if tx_sudo.operation != 'validation'
+            else f'setup_intents/{data.get("setup_intent")}'  # Fetch the SetupIntent
+        )
 
-        if tx_sudo.operation != 'validation':
-            # Fetch the PaymentIntent and PaymentMethod objects from Stripe.
-            payment_intent = tx_sudo.provider_id._stripe_make_request(
-                f'payment_intents/{data.get("payment_intent")}',
-                payload={'expand[]': 'payment_method'},  # Expand all required objects.
-                method='GET',
+        try:
+            response_content = tx_sudo._send_api_request(
+                'GET',
+                endpoint,
+                data={'expand[]': 'payment_method'},  # Expand all required objects.
             )
-            secret_keys = tx_sudo._get_specific_secret_keys()
-            logged_intent = {k: v for k, v in payment_intent.items() if k not in secret_keys}
-            _logger.info("Received payment_intents response:\n%s", pprint.pformat(logged_intent))
-            self._include_payment_intent_in_notification_data(payment_intent, data)
+        except ValidationError:
+            _logger.error("Failed to process the return from Stripe.")
         else:
-            # Fetch the SetupIntent and PaymentMethod objects from Stripe.
-            setup_intent = tx_sudo.provider_id._stripe_make_request(
-                f'setup_intents/{data.get("setup_intent")}',
-                payload={'expand[]': 'payment_method'},  # Expand all required objects.
-                method='GET',
-            )
-            _logger.info("Received setup_intents response:\n%s", pprint.pformat(setup_intent))
-            self._include_setup_intent_in_notification_data(setup_intent, data)
-
-        # Handle the notification data crafted with Stripe API's objects.
-        tx_sudo._handle_notification_data('stripe', data)
+            if tx_sudo.operation != 'validation':
+                self._include_payment_intent_in_notification_data(response_content, data)
+            else:
+                self._include_setup_intent_in_notification_data(response_content, data)
+            # Handle the notification data crafted with Stripe API's objects.
+            tx_sudo._handle_notification_data('stripe', data)
 
         # Redirect the user to the status page.
         with mute_logger('werkzeug'):  # avoid logging secret URL params
@@ -88,7 +85,7 @@ class StripeController(http.Controller):
                     'event_type': event['type'],
                     'object_id': stripe_object['id'],
                 }
-                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
                     'stripe', data
                 )
                 self._verify_notification_signature(tx_sudo)
@@ -96,21 +93,15 @@ class StripeController(http.Controller):
                 # Handle the notification data.
                 if event['type'].startswith('payment_intent'):  # Payment operation.
                     if tx_sudo.tokenize:
-                        payment_method = tx_sudo.provider_id._stripe_make_request(
-                            f'payment_methods/{stripe_object["payment_method"]}', method='GET'
-                        )
-                        _logger.info(
-                            "Received payment_methods response:\n%s", pprint.pformat(payment_method)
+                        payment_method = tx_sudo._send_api_request(
+                            'GET', f'payment_methods/{stripe_object["payment_method"]}'
                         )
                         stripe_object['payment_method'] = payment_method
                     self._include_payment_intent_in_notification_data(stripe_object, data)
                 elif event['type'].startswith('setup_intent'):  # Validation operation.
                     # Fetch the missing PaymentMethod object.
-                    payment_method = tx_sudo.provider_id._stripe_make_request(
-                        f'payment_methods/{stripe_object["payment_method"]}', method='GET'
-                    )
-                    _logger.info(
-                        "Received payment_methods response:\n%s", pprint.pformat(payment_method)
+                    payment_method = tx_sudo._send_api_request(
+                        'GET', f'payment_methods/{stripe_object["payment_method"]}'
                     )
                     stripe_object['payment_method'] = payment_method
                     self._include_setup_intent_in_notification_data(stripe_object, data)
@@ -125,8 +116,8 @@ class StripeController(http.Controller):
                             'starting_after': refunds[-1]['id'],
                             'limit': 100,
                         }
-                        additional_refunds = tx_sudo.provider_id._stripe_make_request(
-                            'refunds', payload=payload, method='GET'
+                        additional_refunds = tx_sudo._send_api_request(
+                            'GET', 'refunds', data=payload
                         )
                         refunds += additional_refunds['data']
                         has_more = additional_refunds['has_more']

@@ -5,6 +5,8 @@ from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__, default_lang='en_US')
 
+# The keys that are sensitive and should not be logged.
+SENSITIVE_KEYS = set()
 
 # According to https://en.wikipedia.org/wiki/ISO_4217#Minor_unit_fractions
 CURRENCY_MINOR_UNITS = {

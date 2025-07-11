@@ -2,7 +2,6 @@
 
 import hmac
 import json
-import logging
 import pprint
 
 from werkzeug.exceptions import Forbidden
@@ -11,8 +10,10 @@ from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment.logging import get_payment_logger
 
-_logger = logging.getLogger(__name__)
+
+_logger = get_payment_logger(__name__)
 
 
 class FlutterwaveController(http.Controller):
@@ -57,19 +58,17 @@ class FlutterwaveController(http.Controller):
         _logger.info("Notification received from Flutterwave with data:\n%s", pprint.pformat(data))
 
         if data['event'] == 'charge.completed':
-            try:
-                # Check the origin of the notification.
-                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                    'flutterwave', data['data']
-                )
+            notification_data = data['data']
+            # Check the origin of the notification.
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
+                'flutterwave', notification_data
+            )
+            if tx_sudo:
                 signature = request.httprequest.headers.get('verif-hash')
                 self._verify_notification_signature(signature, tx_sudo)
 
-                # Handle the notification data.
-                notification_data = data['data']
-                tx_sudo._handle_notification_data('flutterwave', notification_data)
-            except ValidationError:  # Acknowledge the notification to avoid getting spammed.
-                _logger.exception("Unable to handle the notification data; skipping to acknowledge")
+            # Handle the notification data.
+            tx_sudo._handle_notification_data('flutterwave', notification_data)
         return request.make_json_response('')
 
     @staticmethod
@@ -100,11 +99,17 @@ class FlutterwaveController(http.Controller):
         :param dict data: The notification data.
         :return: None
         """
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'flutterwave', data
         )
-        # Verify the notification data.
-        verified_data = tx_sudo.provider_id._flutterwave_make_request(
-            'transactions/verify_by_reference', payload={'tx_ref': tx_sudo.reference}, method='GET',
-        )['data']
-        tx_sudo._handle_notification_data('flutterwave', verified_data)
+        if not tx_sudo:
+            return
+        try:
+            # Verify the notification data.
+            verified_data = tx_sudo._send_api_request(
+                'GET', 'transactions/verify_by_reference', params={'tx_ref': tx_sudo.reference},
+            )
+        except ValidationError:
+            _logger.error("Unable to verify the notification data")
+        else:
+            tx_sudo._handle_notification_data('flutterwave', verified_data)

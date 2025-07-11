@@ -1,19 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 from urllib.parse import urlencode
 from uuid import uuid4
 
 from odoo import _, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tools import float_round
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_nuvei import const
 from odoo.addons.payment_nuvei.controllers.main import NuveiController
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentTransaction(models.Model):
@@ -29,9 +29,8 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific rendering values.
         :rtype: dict
         """
-        res = super()._get_specific_rendering_values(processing_values)
         if self.provider_code != 'nuvei':
-            return res
+            return super()._get_specific_rendering_values(processing_values)
 
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         if self.payment_method_code in const.FULL_NAME_METHODS and not (first_name and last_name):
@@ -105,33 +104,10 @@ class PaymentTransaction(models.Model):
         }
         return rendering_values
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of `payment` to find the transaction based on Nuvei data.
-
-        :param str provider_code: The code of the provider that handled the transaction.
-        :param dict notification_data: The notification data sent by the provider.
-        :return: The transaction if found.
-        :rtype: payment.transaction
-        :raise ValidationError: If inconsistent data are received.
-        :raise ValidationError: If the data match no transaction.
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'nuvei' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('invoice_id')
-        if not reference:
-            raise ValidationError(
-                "Nuvei: " + _("Received data with missing reference.")
-            )
-
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'nuvei')])
-        if not tx:
-            raise ValidationError(
-                "Nuvei: " + _("No transaction found matching reference %(ref)s.", ref=reference)
-            )
-
-        return tx
+    def _get_ref_from_payment_data(self, provider_code, payment_data):
+        if provider_code != 'nuvei':
+            return super()._get_ref_from_payment_data(provider_code, payment_data)
+        return payment_data.get('invoice_id')
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to compare the transaction based on Nuvei data.
@@ -155,11 +131,9 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
-        :raise ValidationError: If inconsistent data are received.
         """
-        super()._process_notification_data(notification_data)
         if self.provider_code != 'nuvei':
-            return
+            return super()._process_notification_data(notification_data)
 
         if not notification_data:
             self._set_canceled(state_message=_("The customer left the payment page."))
@@ -178,7 +152,8 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         status = notification_data.get('Status') or notification_data.get('ppp_status')
         if not status:
-            raise ValidationError("Nuvei: " + _("Received data with missing payment state."))
+            self._set_error(_("Received data with missing payment state."))
+            return
         status = status.lower()
         if status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()

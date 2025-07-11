@@ -1,8 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import pprint
-
 from werkzeug import urls
 
 from odoo import _, models
@@ -10,11 +7,12 @@ from odoo.exceptions import ValidationError
 from odoo.tools import float_round
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_xendit import const
 from odoo.addons.payment_xendit.controllers.main import XenditController
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentTransaction(models.Model):
@@ -29,9 +27,8 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific processing values
         :rtype: dict
         """
-        res = super()._get_specific_processing_values(processing_values)
         if self.provider_code != 'xendit':
-            return res
+            return super()._get_specific_processing_values(processing_values)
 
         return {
             'rounded_amount': self._get_rounded_amount(),
@@ -52,9 +49,11 @@ class PaymentTransaction(models.Model):
 
         # Initiate the payment and retrieve the invoice data.
         payload = self._xendit_prepare_invoice_request_payload()
-        _logger.info("Sending invoice request for link creation:\n%s", pprint.pformat(payload))
-        invoice_data = self.provider_id._xendit_make_request('v2/invoices', payload=payload)
-        _logger.info("Received invoice request response:\n%s", pprint.pformat(invoice_data))
+        try:
+            invoice_data = self._send_api_request('POST', 'v2/invoices', json=payload)
+        except ValidationError as error:
+            self._set_error(str(error))
+            return {}
 
         # Extract the payment link URL and embed it in the redirect form.
         rendering_values = {
@@ -119,12 +118,8 @@ class PaymentTransaction(models.Model):
         :return: None
         :raise UserError: If the transaction is not linked to a token.
         """
-        super()._send_payment_request()
         if self.provider_code != 'xendit':
-            return
-
-        if not self.token_id:
-            raise ValidationError("Xendit: " + _("The transaction is not linked to a token."))
+            return super()._send_payment_request()
 
         self._xendit_create_charge(self.token_id.provider_ref)
 
@@ -140,10 +135,14 @@ class PaymentTransaction(models.Model):
             'amount': self._get_rounded_amount(),
             'currency': self.currency_id.name,
         }
-        charge_notification_data = self.provider_id._xendit_make_request(
-            'credit_card_charges', payload=payload
-        )
-        self._handle_notification_data('xendit', charge_notification_data)
+        try:
+            charge_notification_data = self._send_api_request(
+                'POST', 'credit_card_charges', json=payload
+            )
+        except ValidationError as error:
+            self._set_error(str(error))
+        else:
+            self._handle_notification_data('xendit', charge_notification_data)
 
     def _get_rounded_amount(self):
         decimal_places = const.CURRENCY_DECIMALS.get(
@@ -151,30 +150,10 @@ class PaymentTransaction(models.Model):
         )
         return float_round(self.amount, decimal_places, rounding_method='DOWN')
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of `payment` to find the transaction based on the notification data.
-
-        :param str provider_code: The code of the provider that handled the transaction.
-        :param dict notification_data: The notification data sent by the provider.
-        :return: The transaction if found.
-        :rtype: payment.transaction
-        :raise ValidationError: If inconsistent data were received.
-        :raise ValidationError: If the data match no transaction.
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'xendit' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('external_id')
-        if not reference:
-            raise ValidationError("Xendit: " + _("Received data with missing reference."))
-
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'xendit')])
-        if not tx:
-            raise ValidationError(
-                "Xendit: " + _("No transaction found matching reference %s.", reference)
-            )
-        return tx
+    def _get_ref_from_payment_data(self, provider_code, payment_data):
+        if provider_code != 'xendit':
+            return super()._get_ref_from_payment_data(provider_code, payment_data)
+        return payment_data.get('external_id')
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to compare the transaction based on Xendit data.
@@ -200,13 +179,11 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
-        :raise ValidationError: If inconsistent data were received.
         """
         self.ensure_one()
 
-        super()._process_notification_data(notification_data)
         if self.provider_code != 'xendit':
-            return
+            return super()._process_notification_data(notification_data)
 
         # Update the provider reference.
         self.provider_reference = notification_data.get('id')

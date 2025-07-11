@@ -2,10 +2,10 @@
 
 import urllib.parse
 
-import werkzeug
+from werkzeug.exceptions import BadRequest, Forbidden, NotFound
 
 from odoo import _, http
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError
 from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
@@ -64,7 +64,7 @@ class PaymentPortal(portal.CustomerPortal):
         :param dict kwargs: Optional data passed to helper methods.
         :return: The rendered payment form.
         :rtype: str
-        :raise werkzeug.exceptions.NotFound: If the access token is invalid.
+        :raise NotFound: If the access token is invalid.
         """
         # Cast numeric parameters as int or float and void them if their str value is malformed
         currency_id, partner_id, company_id = tuple(map(
@@ -75,7 +75,7 @@ class PaymentPortal(portal.CustomerPortal):
         # Raise an HTTP 404 if a partner is provided with an invalid access token
         if partner_id:
             if not payment_utils.check_access_token(access_token, partner_id, amount, currency_id):
-                raise werkzeug.exceptions.NotFound()  # Don't leak information about ids.
+                raise NotFound()  # Don't leak information about ids.
 
         user_sudo = request.env.user
         logged_in = not user_sudo._is_public()
@@ -106,7 +106,7 @@ class PaymentPortal(portal.CustomerPortal):
         # Make sure that the currency exists and is active
         currency = request.env['res.currency'].browse(currency_id).exists()
         if not currency or not currency.active:
-            raise werkzeug.exceptions.NotFound()  # The currency must exist and be active.
+            raise NotFound()  # The currency must exist and be active.
 
         availability_report = {}
         # Select all the payment methods and tokens that match the payment context.
@@ -268,12 +268,12 @@ class PaymentPortal(portal.CustomerPortal):
         :param dict kwargs: Locally unused data passed to `_create_transaction`
         :return: The mandatory values for the processing of the transaction
         :rtype: dict
-        :raise: ValidationError if the access token is invalid
+        :raise Forbidden: If the access token is invalid.
         """
         # Check the access token against the transaction values
         amount = amount and float(amount)  # Cast as float in case the JS stripped the '.0'
         if not payment_utils.check_access_token(access_token, partner_id, amount, currency_id):
-            raise ValidationError(_("The access token is invalid."))
+            raise Forbidden()
 
         self._validate_transaction_kwargs(kwargs, additional_allowed_keys=('reference_prefix',))
         tx_sudo = self._create_transaction(
@@ -307,11 +307,11 @@ class PaymentPortal(portal.CustomerPortal):
                             `_compute_reference`.
         :return: The sudoed transaction that was created.
         :rtype: payment.transaction
-        :raise UserError: If the flow is invalid.
         """
-        # Prepare create values
+        # Prepare the create values.
+        provider_sudo = request.env['payment.provider'].sudo().browse(provider_id)
+        tokenize = False
         if flow in ['redirect', 'direct']:  # Direct payment or payment with redirection
-            provider_sudo = request.env['payment.provider'].sudo().browse(provider_id)
             payment_method_sudo = request.env['payment.method'].sudo().browse(payment_method_id)
             token_id = None
             tokenize = bool(
@@ -331,13 +331,7 @@ class PaymentPortal(portal.CustomerPortal):
             if partner_sudo.commercial_partner_id != token_sudo.partner_id.commercial_partner_id:
                 raise AccessError(_("You do not have access to this payment token."))
 
-            provider_sudo = token_sudo.provider_id
             payment_method_id = token_sudo.payment_method_id.id
-            tokenize = False
-        else:
-            raise ValidationError(
-                _("The payment should either be direct, with redirection, or made by a token.")
-            )
 
         reference = request.env['payment.transaction']._compute_reference(
             provider_sudo.code,
@@ -368,9 +362,9 @@ class PaymentPortal(portal.CustomerPortal):
         })  # In sudo mode to allow writing on callback fields
 
         if flow == 'token':
-            tx_sudo._send_payment_request()  # Payments by token process transactions immediately
+            tx_sudo._charge_with_token()  # Token payments are charged immediately.
         else:
-            tx_sudo._log_sent_message()
+            tx_sudo._log_sent_message()  # Direct/Redirect payments go through the payment form.
 
         # Monitor the transaction to make it available in the portal.
         PaymentPostProcessing.monitor_transaction(tx_sudo)
@@ -404,7 +398,7 @@ class PaymentPortal(portal.CustomerPortal):
         :param str tx_id: The transaction to confirm, as a `payment.transaction` id
         :param str access_token: The access token used to verify the user
         :param dict kwargs: Optional data. This parameter is not used here
-        :raise: werkzeug.exceptions.NotFound if the access token is invalid
+        :raise NotFound: If the access token is invalid.
         """
         tx_id = self._cast_as_int(tx_id)
         if tx_id:
@@ -414,7 +408,7 @@ class PaymentPortal(portal.CustomerPortal):
             if not payment_utils.check_access_token(
                 access_token, tx_sudo.partner_id.id, tx_sudo.amount, tx_sudo.currency_id.id
             ):
-                raise werkzeug.exceptions.NotFound()  # Don't leak information about ids.
+                raise NotFound()  # Don't leak information about ids.
 
             # Display the payment confirmation page to the user
             return request.render('payment.confirm', qcontext={'tx': tx_sudo})
@@ -496,7 +490,7 @@ class PaymentPortal(portal.CustomerPortal):
         :param dict kwargs: The transaction route's kwargs to verify.
         :param tuple additional_allowed_keys: The keys of kwargs that are contextually allowed.
         :return: None
-        :raise ValidationError: If some kwargs keys are rejected.
+        :raise BadRequest: If some kwargs keys are rejected.
         """
         whitelist = {
             'provider_id',
@@ -512,6 +506,6 @@ class PaymentPortal(portal.CustomerPortal):
         whitelist.update(additional_allowed_keys)
         rejected_keys = set(kwargs.keys()) - whitelist
         if rejected_keys:
-            raise ValidationError(
+            raise BadRequest(
                 _("The following kwargs are not whitelisted: %s", ', '.join(rejected_keys))
             )

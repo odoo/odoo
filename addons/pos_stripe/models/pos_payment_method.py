@@ -50,7 +50,7 @@ class PosPaymentMethod(models.Model):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
             raise AccessError(_("Do not have access to fetch token from Stripe"))
         
-        return self.sudo()._get_stripe_payment_provider()._stripe_make_request('terminal/connection_tokens')
+        return self.sudo()._get_stripe_payment_provider()._send_api_request('POST', 'terminal/connection_tokens')
 
     def _stripe_calculate_amount(self, amount):
         currency = self.journal_id.currency_id or self.company_id.currency_id
@@ -78,7 +78,7 @@ class PosPaymentMethod(models.Model):
         elif currency.name == 'CAD' and self.company_id.country_code == 'CA':
             params.append(("payment_method_types[]", "interac_present"))
 
-        return self.sudo()._get_stripe_payment_provider()._stripe_make_request('payment_intents', params)
+        return self.sudo()._get_stripe_payment_provider()._send_api_request('POST', 'payment_intents', data=params)
 
     @api.model
     def stripe_capture_payment(self, paymentIntentId, amount=None):
@@ -100,7 +100,7 @@ class PosPaymentMethod(models.Model):
                 "amount_to_capture": self._stripe_calculate_amount(amount),
             }
 
-        return self.sudo()._get_stripe_payment_provider()._stripe_make_request(endpoint, data)
+        return self.sudo()._get_stripe_payment_provider()._send_api_request('POST', endpoint, data=data)
 
     def action_stripe_key(self):
         res_id = self._get_stripe_payment_provider().id

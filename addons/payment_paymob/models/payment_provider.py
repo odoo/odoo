@@ -1,20 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import logging
-import pprint
 from datetime import timedelta
-
-import requests
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paymob import const
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentProvider(models.Model):
@@ -82,8 +79,8 @@ class PaymentProvider(models.Model):
             'is_standalone': 'false',
             'is_live': self.state == 'enabled',
         }
-        paymob_gateways_data = self._paymob_make_request(
-            '/api/ecommerce/integrations', payload=params, method='GET'
+        paymob_gateways_data = self._send_api_request(
+            'GET', '/api/ecommerce/integrations', params=params
         )['results']
         matched_gateways_data = self._match_paymob_payment_methods(paymob_gateways_data)
 
@@ -160,63 +157,38 @@ class PaymentProvider(models.Model):
                 payment_method_code = 'installments_eg'
             environment = 'live' if self.state == 'enabled' else 'test'
             payload = {'integration_name': f'{payment_method_code.replace("_", "")}{environment}'}
-            self._paymob_make_request(
-                f'/api/ecommerce/integrations/{gateway_data["id"]}', method='PUT', payload=payload
+            self._send_api_request(
+                'PUT', f'/api/ecommerce/integrations/{gateway_data["id"]}', json=payload
             )
 
     # === BUSINESS METHODS === #
 
-    def _paymob_make_request(
-        self, endpoint, payload=None, method='POST', is_refresh_token_request=False,
-        is_client_request=False,
+    def _build_request_url(self, endpoint, **kwargs):
+        if self.code != 'paymob':
+            return super()._build_request_url(endpoint, **kwargs)
+        return f'{self._paymob_get_api_url()}{endpoint}'
+
+    def _build_request_headers(
+        self, *args, is_refresh_token_request=False, is_client_request=False, **kwargs
     ):
-        """ Make a request to Paymob API at the specified endpoint.
-
-        Note: self.ensure_one()
-
-        :param str endpoint: The endpoint to be reached by the request.
-        :param dict payload: The payload of the request.
-        :param str method: The method of the request.
-        :param bool is_refresh_token_request: Whether the request is for refreshing the access
-                                              token.
-        :param bool is_client_request: Whether the request is a client request or a backend request.
-                                       It will depend what auth will be sent the access token
-                                       generated from the api_key or the secret_key.
-        :return: The JSON-formatted content of the response.
-        :rtype: dict
-        :raise ValidationError: If an HTTP error occurs.
-        """
-        url = f'{self._paymob_get_api_url()}{endpoint}'
+        if self.code != 'paymob':
+            return super()._build_request_headers(*args, **kwargs)
         auth = ''
         if not is_refresh_token_request and is_client_request:
             auth = self.paymob_secret_key
         elif not is_refresh_token_request:
             auth = self._paymob_fetch_access_token()
-        headers = {'Authorization': f'Bearer {auth}'}
-        try:
-            if method in ['POST', 'PUT']:
-                response = requests.request(method, url, headers=headers, json=payload, timeout=10)
-            else:
-                response = requests.get(url, headers=headers, params=payload, timeout=10)
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                # Paymob errors: https://developers.paymob.com/egypt/error-codes
-                _logger.exception(
-                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload)
-                )
-                msg = response.text
-                error_msg = _("The communication with the API failed. Details: %(msg)s", msg=msg)
-                if "This field may not be blank" in msg:
-                    missing_fields = ", ".join(json.loads(msg).get('billing_data', {}).keys())
-                    error_msg = _(
-                        "The following fields must be filled: %(fields)s", fields=missing_fields
-                    )
-                raise ValidationError(error_msg)
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError(_("Could not establish the connection to the API."))
-        return response.json()
+        return {'Authorization': f'Bearer {auth}'}
+
+    def _parse_response_error(self, response):
+        if self.code != 'paymob':
+            return super()._parse_response_error(response)
+        msg = response.text
+        # Paymob errors: https://developers.paymob.com/egypt/error-codes
+        if "This field may not be blank" in msg:
+            missing_fields = ", ".join(json.loads(msg).get('billing_data', {}).keys())
+            return _("The following fields must be filled: %(fields)s", fields=missing_fields)
+        return msg
 
     # === BUSINESS METHODS - GETTERS === #
 
@@ -243,9 +215,10 @@ class PaymentProvider(models.Model):
         :raise ValidationError: If the access token can not be fetched.
         """
         if not self.paymob_access_token or fields.Datetime.now() > self.paymob_access_token_expiry:
-            response_content = self._paymob_make_request(
+            response_content = self._send_api_request(
+                'POST',
                 '/api/auth/tokens',
-                payload={'api_key': self.paymob_api_key},
+                json={'api_key': self.paymob_api_key},
                 is_refresh_token_request=True,
             )
             access_token = response_content['token']
@@ -259,7 +232,7 @@ class PaymentProvider(models.Model):
 
     def _get_default_payment_method_codes(self):
         """ Override of `payment` to return the default payment method codes. """
-        default_codes = super()._get_default_payment_method_codes()
+        self.ensure_one()
         if self.code != 'paymob':
-            return default_codes
+            return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES

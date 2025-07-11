@@ -3,19 +3,18 @@
 import hashlib
 import hmac
 import json
-import logging
 import pprint
 
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paymob import const
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymobController(http.Controller):
@@ -29,11 +28,12 @@ class PaymobController(http.Controller):
         :param dict data: The notification data.
         """
         _logger.info("Handling redirection from Paymob with data:\n%s", pprint.pformat(data))
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'paymob', data
         )
-        self._verify_notification_signature(data, tx_sudo)
-        tx_sudo._handle_notification_data('paymob', data)
+        if tx_sudo:
+            self._verify_notification_signature(data, tx_sudo)
+            tx_sudo._handle_notification_data('paymob', data)
         return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
@@ -48,15 +48,13 @@ class PaymobController(http.Controller):
         _logger.info(
             "Notification received from Paymob with data:\n%s", pprint.pformat(notification_data)
         )
-        try:
-            normalized_data = self._normalize_response(notification_data, data.get('hmac'))
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                'paymob', normalized_data
-            )
+        normalized_data = self._normalize_response(notification_data, data.get('hmac'))
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
+            'paymob', normalized_data
+        )
+        if tx_sudo:
             self._verify_notification_signature(data, tx_sudo)
             tx_sudo._handle_notification_data('paymob', normalized_data)
-        except ValidationError:  # Acknowledge the notification to avoid getting spammed.
-            _logger.exception("Unable to handle the notification data.")
         return ''  # Acknowledge the notification
 
     @staticmethod

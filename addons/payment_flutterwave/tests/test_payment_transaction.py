@@ -15,8 +15,8 @@ class TestPaymentTransaction(FlutterwaveCommon):
         """ Test that the rendered values are conform to the transaction fields. """
         tx = self._create_transaction(flow='redirect')
         with patch(
-            'odoo.addons.payment_flutterwave.models.payment_provider.PaymentProvider'
-            '._flutterwave_make_request', return_value={'data': {'link': 'https://dummy.com'}}
+            'odoo.addons.payment.models.payment_provider.PaymentProvider'
+            '._send_api_request', return_value={'link': 'https://dummy.com'}
         ):
             rendering_values = tx._get_specific_rendering_values(None)
         self.assertDictEqual(rendering_values, {'api_url': 'https://dummy.com'})

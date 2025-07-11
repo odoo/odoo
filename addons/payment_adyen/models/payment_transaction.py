@@ -1,18 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import pprint
-
 from odoo import _, models
-from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_amount
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_adyen import const
 from odoo.addons.payment_adyen import utils as adyen_utils
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentTransaction(models.Model):
@@ -29,9 +26,8 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific processing values
         :rtype: dict
         """
-        res = super()._get_specific_processing_values(processing_values)
         if self.provider_code != 'adyen':
-            return res
+            return super()._get_specific_processing_values(processing_values)
 
         converted_amount = payment_utils.to_minor_currency_units(
             self.amount, self.currency_id, const.CURRENCY_DECIMALS.get(self.currency_id.name)
@@ -54,13 +50,8 @@ class PaymentTransaction(models.Model):
         :return: None
         :raise: UserError if the transaction is not linked to a token
         """
-        super()._send_payment_request()
         if self.provider_code != 'adyen':
-            return
-
-        # Prepare the payment request to Adyen
-        if not self.token_id:
-            raise UserError("Adyen: " + _("The transaction is not linked to a token."))
+            return super()._send_payment_request()
 
         converted_amount = payment_utils.to_minor_currency_units(
             self.amount, self.currency_id, const.CURRENCY_DECIMALS.get(self.currency_id.name)
@@ -96,86 +87,28 @@ class PaymentTransaction(models.Model):
             data.update(captureDelayHours=0)
 
         # Make the payment request to Adyen
-        try:
-            response_content = self.provider_id._adyen_make_request(
-                endpoint='/payments',
-                payload=data,
-                method='POST',
-                idempotency_key=payment_utils.generate_idempotency_key(
-                    self, scope='payment_request_token'
-                )
+        response_content = self._send_api_request(
+            'POST',
+            '/payments',
+            json=data,
+            idempotency_key=payment_utils.generate_idempotency_key(
+                self, scope='payment_request_token'
             )
-        except ValidationError as e:
-            if self.operation == 'offline':
-                self._set_error(str(e))  # Log the error message on linked documents' chatter.
-                return  # There is nothing to process.
-            else:
-                raise e
-
-        # Handle the payment request response
-        _logger.info(
-            "payment request response for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(response_content)
         )
         self._handle_notification_data('adyen', response_content)
 
-    def _send_refund_request(self, amount_to_refund=None):
+    def _send_refund_request(self):
         """ Override of payment to send a refund request to Adyen.
-
         Note: self.ensure_one()
-
-        :param float amount_to_refund: The amount to refund
-        :return: The refund transaction created to process the refund request.
-        :rtype: recordset of `payment.transaction`
         """
-        refund_tx = super()._send_refund_request(amount_to_refund=amount_to_refund)
         if self.provider_code != 'adyen':
-            return refund_tx
+            super()._send_refund_request()
 
         # Make the refund request to Adyen
         converted_amount = payment_utils.to_minor_currency_units(
-            -refund_tx.amount,  # The amount is negative for refund transactions
-            refund_tx.currency_id,
-            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(refund_tx.currency_id.name)
-        )
-        data = {
-            'merchantAccount': self.provider_id.adyen_merchant_account,
-            'amount': {
-                'value': converted_amount,
-                'currency': refund_tx.currency_id.name,
-            },
-            'reference': refund_tx.reference,
-        }
-        response_content = refund_tx.provider_id._adyen_make_request(
-            endpoint='/payments/{}/refunds',
-            endpoint_param=self.provider_reference,
-            payload=data,
-            method='POST'
-        )
-        _logger.info(
-            "refund request response for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(response_content)
-        )
-
-        # Handle the refund request response
-        psp_reference = response_content.get('pspReference')
-        status = response_content.get('status')
-        if psp_reference and status == 'received':
-            # The PSP reference associated with this /refunds request is different from the psp
-            # reference associated with the original payment request.
-            refund_tx.provider_reference = psp_reference
-
-        return refund_tx
-
-    def _send_capture_request(self, amount_to_capture=None):
-        """ Override of `payment` to send a capture request to Adyen. """
-        capture_child_tx = super()._send_capture_request(amount_to_capture=amount_to_capture)
-        if self.provider_code != 'adyen':
-            return capture_child_tx
-
-        amount_to_capture = amount_to_capture or self.amount
-        converted_amount = payment_utils.to_minor_currency_units(
-            amount_to_capture, self.currency_id, const.CURRENCY_DECIMALS.get(self.currency_id.name)
+            -self.amount,  # The amount is negative for refund transactions
+            self.currency_id,
+            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name)
         )
         data = {
             'merchantAccount': self.provider_id.adyen_merchant_account,
@@ -185,17 +118,49 @@ class PaymentTransaction(models.Model):
             },
             'reference': self.reference,
         }
-        response_content = self.provider_id._adyen_make_request(
-            endpoint='/payments/{}/captures',
-            endpoint_param=self.provider_reference,
-            payload=data,
-            method='POST',
+
+        response_content = self._send_api_request(
+            'POST',
+            '/payments/{}/refunds',
+            json=data,
+            endpoint_param=self.source_transaction_id.provider_reference,
         )
-        _logger.info("capture request response:\n%s", pprint.pformat(response_content))
+
+        # Handle the refund request response
+        psp_reference = response_content.get('pspReference')
+        status = response_content.get('status')
+        if psp_reference and status == 'received':
+            # The PSP reference associated with this /refunds request is different from the psp
+            # reference associated with the original payment request.
+            self.provider_reference = psp_reference
+
+    def _send_capture_request(self):
+        """ Override of `payment` to send a capture request to Adyen. """
+        if self.provider_code != 'adyen':
+            return super()._send_capture_request()
+
+        converted_amount = payment_utils.to_minor_currency_units(
+            self.amount, self.currency_id, const.CURRENCY_DECIMALS.get(self.currency_id.name)
+        )
+        data = {
+            'merchantAccount': self.provider_id.adyen_merchant_account,
+            'amount': {
+                'value': converted_amount,
+                'currency': self.currency_id.name,
+            },
+            'reference': self.reference,
+        }
+
+        response_content = self._send_api_request(
+            'POST',
+            '/payments/{}/captures',
+            json=data,
+            endpoint_param=self.provider_reference,
+        )
 
         # Handle the capture request response
         status = response_content.get('status')
-        formatted_amount = format_amount(self.env, amount_to_capture, self.currency_id)
+        formatted_amount = format_amount(self.env, self.amount, self.currency_id)
         if status == 'received':
             self._log_message_on_linked_documents(_(
                 "The capture request of %(amount)s for the transaction with reference %(ref)s has "
@@ -203,30 +168,25 @@ class PaymentTransaction(models.Model):
                 amount=formatted_amount, ref=self.reference, provider_name=self.provider_id.name
             ))
 
-        if capture_child_tx:
-            # The PSP reference associated with this capture request is different from the PSP
-            # reference associated with the original payment request.
-            capture_child_tx.provider_reference = response_content.get('pspReference')
+        # The PSP reference associated with this capture request is different from the PSP
+        # reference associated with the original payment request.
+        self.provider_reference = response_content.get('pspReference')
 
-        return capture_child_tx
-
-    def _send_void_request(self, amount_to_void=None):
+    def _send_void_request(self):
         """ Override of `payment` to send a void request to Adyen. """
-        child_void_tx = super()._send_void_request(amount_to_void=amount_to_void)
         if self.provider_code != 'adyen':
-            return child_void_tx
+            return super()._send_void_request()
 
         data = {
             'merchantAccount': self.provider_id.adyen_merchant_account,
             'reference': self.reference,
         }
-        response_content = self.provider_id._adyen_make_request(
-            endpoint='/payments/{}/cancels',
+        response_content = self._send_api_request(
+            'POST',
+            '/payments/{}/cancels',
+            json=data,
             endpoint_param=self.provider_reference,
-            payload=data,
-            method='POST',
         )
-        _logger.info("void request response:\n%s", pprint.pformat(response_content))
 
         # Handle the void request response
         status = response_content.get('status')
@@ -236,30 +196,26 @@ class PaymentTransaction(models.Model):
                 reference=self.reference, provider=self.provider_id.name,
             ))
 
-        if child_void_tx:
-            # The PSP reference associated with this void request is different from the PSP
-            # reference associated with the original payment request.
-            child_void_tx.provider_reference = response_content.get('pspReference')
+        # The PSP reference associated with this void request is different from the PSP
+        # reference associated with the original payment request.
+        self.provider_reference = response_content.get('pspReference')
 
-        return child_void_tx
-
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
+    def _get_tx_from_payment_data(self, provider_code, notification_data):
         """ Override of payment to find the transaction based on Adyen data.
 
         :param str provider_code: The code of the provider that handled the transaction
         :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if inconsistent data were received
-        :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'adyen' or len(tx) == 1:
-            return tx
+        if provider_code != 'adyen':
+            return super()._get_tx_from_payment_data(provider_code, notification_data)
 
+        tx = self
         reference = notification_data.get('merchantReference')
         if not reference:
-            raise ValidationError("Adyen: " + _("Received data with missing merchant reference"))
+            _logger.warning("Received data with missing reference.")
+            return tx
 
         event_code = notification_data.get('eventCode', 'AUTHORISATION')  # Fallback on auth if S2S.
         provider_reference = notification_data.get('pspReference')
@@ -330,11 +286,8 @@ class PaymentTransaction(models.Model):
                     )
                 else:  # The refund was initiated for an unknown source transaction
                     pass  # Don't do anything with the refund notification
-
         if not tx:
-            raise ValidationError(
-                "Adyen: " + _("No transaction found matching reference %s.", reference)
-            )
+            _logger.warning("No transaction found matching reference %s.", reference)
         return tx
 
     def _adyen_create_child_tx_from_notification_data(
@@ -347,14 +300,12 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider
         :return: The newly created child transaction.
         :rtype: payment.transaction
-        :raise ValidationError: If inconsistent data were received.
         """
         provider_reference = notification_data.get('pspReference')
         amount = notification_data.get('amount', {}).get('value')
         if not provider_reference or amount is None:  # amount == 0 if success == False
-            raise ValidationError(
-                "Adyen: " + _("Received data for child transaction with missing transaction values")
-            )
+            _logger.warning("Received data for child transaction with missing transaction values.")
+            return self.env['payment.transaction']
 
         converted_amount = payment_utils.to_major_currency_units(
             amount,
@@ -378,7 +329,7 @@ class PaymentTransaction(models.Model):
 
         # If the transaction is pending, the amount and currency aren't available yet, so we skip
         # the comparison.
-        if notification_data.get('resultCode') in const.RESULT_CODES_MAPPING['pending']:
+        if notification_data.get('resultCode') not in const.RESULT_CODES_MAPPING['done']:
             return
 
         amount_data = notification_data.get('amount', {})
@@ -399,9 +350,8 @@ class PaymentTransaction(models.Model):
         :return: None
         :raise: ValidationError if inconsistent data were received
         """
-        super()._process_notification_data(notification_data)
         if self.provider_code != 'adyen':
-            return
+            return super()._process_notification_data(notification_data)
 
         # Extract or assume the event code. If none is provided, the feedback data originate from a
         # direct payment request whose feedback data share the same payload as an 'AUTHORISATION'
@@ -433,8 +383,8 @@ class PaymentTransaction(models.Model):
         payment_state = notification_data.get('resultCode')
         refusal_reason = notification_data.get('refusalReason') or notification_data.get('reason')
         if not payment_state:
-            raise ValidationError("Adyen: " + _("Received data with missing payment state."))
-        if payment_state in const.RESULT_CODES_MAPPING['pending']:
+            self._set_error(_("Received data with missing payment state."))
+        elif payment_state in const.RESULT_CODES_MAPPING['pending']:
             self._set_pending()
         elif payment_state in const.RESULT_CODES_MAPPING['done']:
             additional_data = notification_data.get('additionalData', {})

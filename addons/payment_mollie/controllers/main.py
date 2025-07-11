@@ -1,14 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 import pprint
 
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment.logging import get_payment_logger
 
-_logger = logging.getLogger(__name__)
+
+_logger = get_payment_logger(__name__)
 
 
 class MollieController(http.Controller):
@@ -47,10 +48,7 @@ class MollieController(http.Controller):
         :rtype: str
         """
         _logger.info("notification received from Mollie with data:\n%s", pprint.pformat(data))
-        try:
-            self._verify_and_handle_notification_data(data)
-        except ValidationError:  # Acknowledge the notification to avoid getting spammed
-            _logger.exception("unable to handle the notification data; skipping to acknowledge")
+        self._verify_and_handle_notification_data(data)
         return ''  # Acknowledge the notification
 
     @staticmethod
@@ -60,11 +58,17 @@ class MollieController(http.Controller):
         :param dict data: The notification data.
         :return: None
         """
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_payment_data(
             'mollie', data
         )
-        # Verify the notification data.
-        verified_data = tx_sudo.provider_id._mollie_make_request(
-            f'/payments/{tx_sudo.provider_reference}', method="GET"
-        )
-        tx_sudo._handle_notification_data('mollie', verified_data)
+        if not tx_sudo:
+            return
+        try:
+            # Verify the notification data.
+            verified_data = tx_sudo._send_api_request(
+                'GET', f'/payments/{tx_sudo.provider_reference}'
+            )
+        except ValidationError:
+            _logger.error("Unable to handle the notification data")
+        else:
+            tx_sudo._handle_notification_data('mollie', verified_data)

@@ -11,7 +11,7 @@ class PaymentTransaction(models.Model):
     pos_order_id = fields.Many2one('pos.order', string='POS Order', help='The Point of Sale order linked to the payment transaction', readonly=True)
 
     @api.model
-    def _compute_reference_prefix(self, provider_code, separator, **values):
+    def _compute_reference_prefix(self, separator, **values):
         """ Override of payment to compute the reference prefix based on POS-specific values.
 
         :return: The computed reference prefix if POS order id is found, the one of `super` otherwise
@@ -22,7 +22,7 @@ class PaymentTransaction(models.Model):
             pos_order = self.env['pos.order'].sudo().browse(pos_order_id).exists()
             if pos_order:
                 return pos_order.pos_reference
-        return super()._compute_reference_prefix(provider_code, separator, **values)
+        return super()._compute_reference_prefix(separator, **values)
 
     def _post_process(self):
         """ Override of payment to process POS online payments automatically. """
