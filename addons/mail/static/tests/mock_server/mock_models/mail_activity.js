@@ -44,7 +44,7 @@ export class MailActivity extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _to_store(ids, store) {
+    _to_store(store, fields) {
         /** @type {import("mock_models").MailActivityType} */
         const MailActivityType = this.env["mail.activity.type"];
         /** @type {import("mock_models").MailTemplate} */
@@ -53,24 +53,16 @@ export class MailActivity extends models.ServerModel {
         const ResPartner = this.env["res.partner"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
+        store._add_record_fields(
+            this,
+            fields.filter((f) => !["activity_type_id"].includes(f))
+        );
 
-        for (const activity of this.browse(ids)) {
-            const [data] = this._read_format(activity.id, [
-                "activity_category",
-                "activity_type_id",
-                "can_write",
-                "chaining_type",
-                "create_date",
-                "create_uid",
-                "date_deadline",
-                "date_done",
-                "note",
-                "res_id",
-                "res_model",
-                "state",
-                "summary",
-            ]);
-            data.note = ["markup", data.note];
+        for (const activity of this) {
+            const [data] = this._read_format(
+                activity.id,
+                ["activity_type_id", "summary"].filter((f) => fields.includes(f))
+            );
             // simulate computes
             const activityType = data.activity_type_id
                 ? MailActivityType.find((r) => r.id === data.activity_type_id[0])
@@ -89,14 +81,34 @@ export class MailActivity extends models.ServerModel {
             if (data.summary) {
                 data.display_name = data.summary;
             }
-            data["attachment_ids"] = mailDataHelpers.Store.many(
-                this.env["ir.attachment"].browse(activity.attachment_ids),
-                makeKwArgs({ fields: ["name"] })
-            );
             const [user] = ResUsers.browse(activity.user_id);
             data.persona = mailDataHelpers.Store.one(ResPartner.browse(user.partner_id));
-            store.add(this.browse(activity.id), data);
+            store._add_record_fields(this.browse(activity.id), data);
         }
+    }
+
+    get _to_store_defaults() {
+        return [
+            "activity_category",
+            "activity_type_id",
+            mailDataHelpers.Store.many(
+                "attachment_ids",
+                makeKwArgs({
+                    fields: ["name"],
+                })
+            ),
+            "can_write",
+            "chaining_type",
+            "create_date",
+            "create_uid",
+            "date_deadline",
+            "date_done",
+            mailDataHelpers.Store.attr("note", (activity) => ["markup", activity.note]),
+            "res_id",
+            "res_model",
+            "state",
+            "summary",
+        ];
     }
 
     /**

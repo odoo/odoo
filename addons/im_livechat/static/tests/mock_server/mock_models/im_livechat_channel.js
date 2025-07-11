@@ -93,22 +93,19 @@ export class LivechatChannel extends models.ServerModel {
         );
     }
 
-    _to_store(ids, store, fields) {
-        const kwargs = getKwArgs(arguments, "ids", "store", "fields");
+    _to_store(store, fields) {
+        const kwargs = getKwArgs(arguments, "store", "fields");
         fields = kwargs.fields;
-        if (!fields) {
-            fields = [];
-        }
-        for (const livechatChannel of this.browse(ids)) {
-            const [res] = this._read_format(
-                livechatChannel.id,
-                fields.filter((field) => field !== "are_you_inside"),
-                false
-            );
+        store._add_record_fields(
+            this,
+            fields.filter((field) => field !== "are_you_inside")
+        );
+        for (const livechatChannel of this) {
             if (fields.includes("are_you_inside")) {
-                res.are_you_inside = livechatChannel.user_ids.includes(this.env.user.id);
+                store._add_record_fields(this.browse(livechatChannel.id), {
+                    are_you_inside: livechatChannel.user_ids.includes(this.env.user.id),
+                });
             }
-            store.add(this.browse(livechatChannel.id), res);
         }
     }
 }

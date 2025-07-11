@@ -69,72 +69,80 @@ export class DiscussChannelMember extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _to_store(ids, store, fields, extra_fields) {
-        const kwargs = getKwArgs(arguments, "ids", "store", "fields", "extra_fields");
-        ids = kwargs.ids;
+    _to_store(store, fields) {
+        const kwargs = getKwArgs(arguments, "store", "fields");
         fields = kwargs.fields;
-        extra_fields = kwargs.extra_fields;
-
-        if (!fields) {
-            fields = {
-                channel: [],
-                create_date: true,
-                fetched_message_id: true,
-                persona: null,
-                seen_message_id: true,
-                last_interest_dt: true,
-                last_seen_dt: true,
-                new_message_separator: true,
-            };
-        }
-        if (extra_fields) {
-            fields = { ...fields, ...extra_fields };
-        }
-
-        /** @type {import("mock_models").MailGuest} */
-        const MailGuest = this.env["mail.guest"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-
-        for (const member of this.browse(ids)) {
-            const [data] = this._read_format(
-                member.id,
-                Object.keys(fields).filter(
-                    (field) => !["channel", "message_unread_counter", "persona"].includes(field)
-                ),
-                false
-            );
-            if ("channel" in fields) {
+        store._add_record_fields(
+            this,
+            fields.filter(
+                (field) => !["message_unread_counter", "persona", "channel"].includes(field)
+            )
+        );
+        for (const member of this) {
+            const data = {};
+            if (fields.includes("message_unread_counter")) {
+                data.message_unread_counter = this._compute_message_unread_counter([member.id]);
+                data.message_unread_counter_bus_id = this.env["bus.bus"].lastBusNotificationId;
+            }
+            if (fields.includes("channel")) {
                 data.channel_id = mailDataHelpers.Store.one(
                     this.env["discuss.channel"].browse(member.channel_id),
                     makeKwArgs({ as_thread: true, only_id: true })
                 );
             }
-            if ("persona" in fields) {
-                if (member.partner_id) {
-                    data.partner_id = mailDataHelpers.Store.one(
-                        ResPartner.browse(member.partner_id),
-                        makeKwArgs({
-                            fields: this._get_store_partner_fields([member.id], fields["persona"]),
-                        })
-                    );
-                }
-                if (member.guest_id) {
-                    data.guest_id = mailDataHelpers.Store.one(
-                        MailGuest.browse(member.guest_id),
-                        makeKwArgs({ fields: fields["persona"] })
-                    );
-                }
+            if (fields.includes("persona")) {
+                store._add_record_fields(this.browse(member.id), this._to_store_persona());
             }
-            if ("message_unread_counter" in fields) {
-                data.message_unread_counter = this._compute_message_unread_counter([member.id]);
-                data.message_unread_counter_bus_id = this.env["bus.bus"].lastBusNotificationId;
+
+            if (Object.keys(data).length) {
+                store._add_record_fields(this.browse(member.id), data);
             }
-            store.add(this.browse(member.id), data);
         }
     }
 
-    _get_store_partner_fields(ids, fields) {
+    _to_store_persona(fields) {
+        return [
+            mailDataHelpers.Store.attr(
+                "partner_id",
+                (m) =>
+                    mailDataHelpers.Store.one(
+                        this.env["res.partner"].browse(m.partner_id),
+                        makeKwArgs({
+                            fields: this._get_store_partner_fields(fields),
+                        })
+                    ),
+                makeKwArgs({
+                    predicate: (m) =>
+                        m.partner_id !== null && m.partner_id !== undefined && m.partner_id,
+                })
+            ),
+            mailDataHelpers.Store.attr(
+                "guest_id",
+                (m) =>
+                    mailDataHelpers.Store.one(
+                        this.env["mail.guest"].browse(m.guest_id),
+                        makeKwArgs({ fields })
+                    ),
+                makeKwArgs({
+                    predicate: (m) => m.guest_id !== null && m.guest_id !== undefined && m.guest_id,
+                })
+            ),
+        ];
+    }
+
+    get _to_store_defaults() {
+        return [
+            mailDataHelpers.Store.one("channel_id", makeKwArgs({ as_thread: true, only_id: true })),
+            "create_date",
+            "fetched_message_id",
+            "seen_message_id",
+            "last_interest_dt",
+            "last_seen_dt",
+            "new_message_separator",
+        ].concat(this._to_store_persona());
+    }
+
+    _get_store_partner_fields(fields) {
         return fields;
     }
 
@@ -208,9 +216,14 @@ export class DiscussChannelMember extends models.ServerModel {
                 "mail.record/insert",
                 new mailDataHelpers.Store(
                     DiscussChannelMember.browse(member.id),
-                    makeKwArgs({
-                        fields: { channel: [], persona: ["name"], seen_message_id: true },
-                    })
+                    [
+                        mailDataHelpers.Store.one(
+                            "channel_id",
+                            makeKwArgs({ as_thread: true, only_id: true })
+                        ),
+
+                        "seen_message_id",
+                    ].concat(this._to_store_persona())
                 ).get_result()
             );
         }
@@ -244,14 +257,15 @@ export class DiscussChannelMember extends models.ServerModel {
             "mail.record/insert",
             new mailDataHelpers.Store(
                 DiscussChannelMember.browse(member.id),
-                makeKwArgs({
-                    fields: {
-                        channel: [],
-                        persona: ["name"],
-                        message_unread_counter: true,
-                        new_message_separator: true,
-                    },
-                })
+                [
+                    mailDataHelpers.Store.one(
+                        "channel_id",
+                        makeKwArgs({ as_thread: true, only_id: true })
+                    ),
+
+                    "message_unread_counter",
+                    "new_message_separator",
+                ].concat(this._to_store_persona())
             )
                 .add("discuss.channel.member", { id: member.id })
                 .get_result()

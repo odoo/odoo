@@ -210,8 +210,9 @@ patch(mailDataHelpers, {
     _process_request_for_internal_user(store, name, params) {
         super._process_request_for_internal_user(...arguments);
         if (name === "im_livechat.channel") {
+            const LivechatChannel = this.env["im_livechat.channel"];
             store.add(
-                this.env["im_livechat.channel"].search([]),
+                LivechatChannel.browse(LivechatChannel.search([])),
                 makeKwArgs({ fields: ["are_you_inside", "name"] })
             );
         }
