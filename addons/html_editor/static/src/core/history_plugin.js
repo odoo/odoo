@@ -827,7 +827,9 @@ export class HistoryPlugin extends Plugin {
         this.steps.push(currentStep);
         // @todo @phoenix add this in the linkzws plugin.
         // this._setLinkZws();
-        this.dispatchTo("before_add_step_handlers");
+        this.dispatchTo("before_add_step_handlers", {
+            stepCommonAncestor,
+        });
         if (extraStepInfos) {
             currentStep.extraStepInfos = extraStepInfos;
         }

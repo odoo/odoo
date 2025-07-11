@@ -668,14 +668,14 @@ describe("with selection collapsed", () => {
         await testEditor({
             styleContent: ":root { font: 14px Roboto }",
             contentBefore: unformat(`
-                <ol style="padding-inline-start: 58px;">
+                <ol style="padding-inline-start: 60px;">
                     <li style="font-size: 56px;">abc</li>
                     <li style="font-size: 56px;">def[]</li>
                 </ol>
             `),
             stepFunction: keydownTab,
             contentAfter: unformat(`
-                <ol style="padding-inline-start: 58px;">
+                <ol style="padding-inline-start: 60px;">
                     <li style="font-size: 56px;"><p>abc</p>
                         <ol style="padding-inline-start: 59px;">
                             <li style="font-size: 56px;">def[]</li>
