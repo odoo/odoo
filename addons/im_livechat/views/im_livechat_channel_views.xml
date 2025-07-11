@@ -18,11 +18,39 @@
             </field>
         </record>
 
+        <record id="im_livechat_channel_config_action" model="ir.actions.act_window">
+            <field name="name">Live Chat Channels</field>
+            <field name="res_model">im_livechat.channel</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Define a new website live chat channel
+              </p><p>
+                You can create channels for each website on which you want
+                to integrate the website live chat widget, allowing your website
+                visitors to talk in real time with your operators.
+              </p>
+            </field>
+        </record>
+
+        <record id="im_livechat_channel_view_tree" model="ir.ui.view">
+            <field name="name">im_livechat.channel.list</field>
+            <field name="model">im_livechat.channel</field>
+            <field name="arch" type="xml">
+                <list string="Live Chat Channels" sample="1">
+                    <field name="name" string="Name"/>
+                    <field name="user_ids" string="Operators" widget="many2many_tags"/>
+                    <field name="nbr_channel" string="Sessions"/>
+                    <field name="rating_percentage_satisfaction" string="Rating" widget="progressbar"/>
+                </list>
+            </field>
+        </record>
+
         <record id="im_livechat_channel_view_kanban" model="ir.ui.view">
             <field name="name">im_livechat.channel.kanban</field>
             <field name="model">im_livechat.channel</field>
             <field name="arch" type="xml">
-                <kanban js_class="im_livechat.livechat_channel_kanban" action="im_livechat.discuss_channel_action_from_livechat_channel" type="action">
+                <kanban sample="1" js_class="im_livechat.livechat_channel_kanban" action="im_livechat.discuss_channel_action_from_livechat_channel" type="action">
                     <field name="are_you_inside"/>
                     <field name="rating_count"/>
                     <templates>
@@ -190,7 +218,8 @@
             <field name="model">im_livechat.channel</field>
             <field name="arch" type="xml">
                 <search string="LiveChat Channel Search">
-                    <field name="name" string="Channel"/>
+                    <field name="name" string="Name"/>
+                    <field name="user_ids" string="Operators"/>
                 </search>
             </field>
         </record>
@@ -295,6 +324,14 @@
             parent="menu_livechat_root"
             groups="base.group_no_one"
             sequence="75"/>
+
+        <menuitem
+            id="livechat_channels_config"
+            name="Live Chat Channels"
+            parent="livechat_config"
+            action="im_livechat_channel_config_action"
+            groups="im_livechat_group_manager"
+            sequence="10"/>
 
         <menuitem
             id="canned_responses"
