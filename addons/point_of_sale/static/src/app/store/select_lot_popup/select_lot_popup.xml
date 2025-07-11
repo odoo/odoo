@@ -3,8 +3,10 @@
     <t t-name="point_of_sale.EditListPopup">
         <Dialog title="props.title">
             <t t-set-slot="header">
-                <h4 class="modal-title title" t-esc="props.title" />
-                <span class="sub-title" t-esc="props.name"/>
+                <div class="d-flex text-truncate">
+                    <h4 class="modal-title title me-2" t-esc="props.title" />
+                    <span class="sub-title text-truncate my-auto" t-esc="props.name"/>
+                </div>
             </t>
             <div t-ref="root">
                 <div class="edit-list-inputs" t-ref="edit-list-inputs" t-on-scroll="onScroll">
