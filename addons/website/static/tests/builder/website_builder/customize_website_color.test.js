@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred, tick } from "@odoo/hoot-dom";
+import { animationFrame, Deferred } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
@@ -7,7 +7,6 @@ import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_
 defineWebsiteModels();
 
 test("BuilderColorPicker with action “customizeWebsiteColor” is correctly displayed", async () => {
-
     class WebEditorAssets extends models.Model {
         _name = "web_editor.assets";
         make_scss_customization(location, changes) {
@@ -16,9 +15,10 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     }
     defineModels([WebEditorAssets]);
 
-    const def = new Deferred();
+    let def = new Deferred();
     onRpc("/website/theme_customize_bundle_reload", async (request) => {
         expect.step("asset reload");
+        def.resolve();
         return "";
     });
     addOption({
@@ -42,28 +42,28 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
         loadIframeBundles: true,
     });
     await contains(":iframe .test-options-target").click();
-    def.resolve();
     await animationFrame();
     expect(".o-tab-content > .o_customize_tab").toHaveCount(1);
 
     expect.step("set preset");
     await contains("button.o_we_color_preview").click();
     await contains("button[data-color='o_cc4'").click();
-    await tick(); // customizeWebsiteColors
-    await tick(); // reloadBundles
+    // Should wait for 2 ticks (debounced): customizeWebsiteColors, reloadBundles
+    await def;
     expect.verifySteps([
         "set preset",
         '/website/static/src/scss/options/colors/user_color_palette.scss {"test":4}',
         "asset reload",
     ]);
 
+    def = new Deferred();
     // Setting solid color does not impact preset
     expect.step("set solid color");
     await contains("button.o_we_color_preview").click();
     await contains("button.custom-tab").click();
     await contains("button[data-color='400']").click();
-    await tick(); // customizeWebsiteColors
-    await tick(); // reloadBundles
+    // Should wait for 2 ticks (debounced): customizeWebsiteColors, reloadBundles
+    await def;
     expect.verifySteps([
         "set solid color",
         '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"#CED4DA"}',
@@ -71,26 +71,27 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
         "asset reload",
     ]);
 
+    def = new Deferred();
     // Setting preset does not impact solid color
     expect.step("set preset on solid color");
     await contains("button.o_we_color_preview").click();
     await contains("button[data-color='o_cc3'").click();
-    await tick(); // customizeWebsiteColors
-    await tick(); // reloadBundles
+    // Should wait for 2 ticks (debounced): customizeWebsiteColors, reloadBundles
+    await def;
     expect.verifySteps([
         "set preset on solid color",
         '/website/static/src/scss/options/colors/user_color_palette.scss {"test":3}',
         "asset reload",
     ]);
 
+    def = new Deferred();
     // Setting gradient does not impact preset
     expect.step("set gradient");
     await contains("button.o_we_color_preview").click();
     await contains("button.gradient-tab").click();
     await contains("button.o_gradient_color_button").click();
-    await tick(); // customizeWebsiteColors
-    await tick(); // customizeWebsiteVariables
-    await tick(); // reloadBundles
+    // Should wait for 3 ticks (debounced): customizeWebsiteColors, customizeWebsiteVariables, reloadBundles
+    await def;
     expect.verifySteps([
         "set gradient",
         '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"NULL"}',
@@ -98,25 +99,26 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
         "asset reload",
     ]);
 
+    def = new Deferred();
     // Setting preset does not impact gradient
     expect.step("set preset on gradient");
     await contains("button.o_we_color_preview").click();
     await contains("button[data-color='o_cc4'").click();
-    await tick(); // customizeWebsiteColors
-    await tick(); // reloadBundles
+    // Should wait for 2 ticks (debounced): customizeWebsiteColors, reloadBundles
+    await def;
     expect.verifySteps([
         "set preset on gradient",
         '/website/static/src/scss/options/colors/user_color_palette.scss {"test":4}',
         "asset reload",
     ]);
 
+    def = new Deferred();
     // Clear clears everything
     expect.step("reset");
     await contains("button.o_we_color_preview").click();
     await contains(".o_font_color_selector .fa-trash").click();
-    await tick(); // customizeWebsiteColors
-    await tick(); // customizeWebsiteVariables
-    await tick(); // reloadBundles
+    // Should wait for 3 ticks (debounced): customizeWebsiteColors, customizeWebsiteVariables, reloadBundles
+    await def;
     expect.verifySteps([
         "reset",
         '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"NULL","test":"NULL"}',
