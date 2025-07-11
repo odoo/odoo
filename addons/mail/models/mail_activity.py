@@ -103,6 +103,7 @@ class MailActivity(models.Model):
     # access
     can_write = fields.Boolean(compute='_compute_can_write') # used to hide buttons if the current user has no access
     active = fields.Boolean(default=True)
+    company_id = fields.Many2one('res.company', compute='_compute_company_id', store=True)
 
     # if model: valid res_id
     _check_res_id_is_set_if_model = models.Constraint(
@@ -176,6 +177,19 @@ class MailActivity(models.Model):
         valid_records = self._filtered_access('write')
         for record in self:
             record.can_write = record in valid_records
+
+    @api.depends('res_model', 'res_id')
+    def _compute_company_id(self):
+        # can't we prefetch these?
+        for activity in self:
+            if activity.res_id and activity.res_model in self.env:
+                resource = self.env[activity.res_model].browse(activity.res_id)
+                if 'company_id' in resource:
+                    activity.company_id = resource.company_id
+                else:
+                    activity.company_id = False
+            else:
+                activity.company_id = False
 
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
