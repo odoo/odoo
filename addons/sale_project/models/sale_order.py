@@ -56,6 +56,7 @@ class SaleOrder(models.Model):
             ('order_id', 'in', self.ids),
             ('order_id.state', 'not in', ['draft', 'sent']),
         ], aggregates=['order_id:array_agg'])[0][0]
+        # TODO- ('product_id.type', '=', 'service') domain removed in this task-4755568
         for order in self:
             order.show_project_button = order.id in show_button_ids and order.project_count
             order.show_task_button = order.show_project_button or order.tasks_count
@@ -122,6 +123,7 @@ class SaleOrder(models.Model):
             projects_per_so[project.sale_order_id.id] |= project
         for order in self:
             projects = order.order_line.mapped('product_id.project_id')
+            projects |= order.project_id
             projects |= order.order_line.mapped('project_id')
             projects |= projects_per_so[order.id or order._origin.id]
             if not is_project_manager:
