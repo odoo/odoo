@@ -256,7 +256,10 @@ patch(Chatter.prototype, {
     },
 
     get childSubEnv() {
-        const res = Object.assign(super.childSubEnv, { messageHighlight: this.messageHighlight });
+        const res = Object.assign(super.childSubEnv, {
+            messageHighlight: this.messageHighlight,
+            toggleComposer: this.toggleComposer.bind(this),
+        });
         res.inChatter.aside = this.props.isChatterAside;
         return res;
     },

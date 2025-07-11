@@ -47,16 +47,41 @@ messageActionsRegistry
         sequence: 10,
     })
     .add("reply-to", {
-        condition: (component) => component.props.message.canReplyTo(component.props.thread),
+        condition: (component) =>
+            component.props.message.canReplyTo(component.props.thread) ||
+            (component.env.inChatter && component.props.message.isNote),
         icon: "fa fa-reply",
         title: _t("Reply"),
         onClick: (component) => {
             const message = toRaw(component.props.message);
             const thread = toRaw(component.props.thread);
+            const authorPersona = message.author;
+            const composer = thread.composer;
+            let currentText = composer.text || "";
+            const mentionText =
+                authorPersona?.id !== component.store.self.id ? `@${authorPersona?.name} ` : "";
             if (message.eq(thread.composer.replyToMessage)) {
                 thread.composer.replyToMessage = undefined;
+                if (currentText.startsWith(mentionText)) {
+                    composer.text = currentText.slice(mentionText.length);
+                }
+                if (!composer.text) {
+                    component.env.toggleComposer?.("note");
+                }
             } else {
                 thread.composer.replyToMessage = message;
+                if (authorPersona) {
+                    composer.mentionedPartners.push(authorPersona);
+                }
+                if (component.env.inChatter && !currentText.includes(mentionText)) {
+                    currentText = mentionText + currentText;
+                }
+                composer.text = currentText;
+                composer.selection.start = currentText.length;
+                composer.selection.end = currentText.length;
+                if (component.env.inChatter && component.env.inChatter.composerType !== "note") {
+                    component.env.toggleComposer?.("note");
+                }
             }
         },
         sequence: (component) =>
