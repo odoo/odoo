@@ -417,6 +417,13 @@ class ThreadedServer(CommonServer):
             raise KeyboardInterrupt()
 
     def process_limit(self):
+        # Clean-up threads that are no longer alive
+        # e.g. threads that exceeded their real time,
+        # but which finished before the server could restart.
+        for thread in list(self.limits_reached_threads):
+            if not thread.is_alive():
+                self.limits_reached_threads.remove(thread)
+
         memory = memory_info(psutil.Process(os.getpid()))
         if config['limit_memory_soft'] and memory > config['limit_memory_soft']:
             _logger.warning('Server memory limit (%s) reached.', memory)
@@ -438,12 +445,6 @@ class ThreadedServer(CommonServer):
                             'Thread %s virtual real time limit (%d/%ds) reached.',
                             thread, thread_execution_time, thread_limit_time_real)
                         self.limits_reached_threads.add(thread)
-        # Clean-up threads that are no longer alive
-        # e.g. threads that exceeded their real time,
-        # but which finished before the server could restart.
-        for thread in list(self.limits_reached_threads):
-            if not thread.is_alive():
-                self.limits_reached_threads.remove(thread)
         if self.limits_reached_threads:
             self.limit_reached_time = self.limit_reached_time or time.time()
         else:
