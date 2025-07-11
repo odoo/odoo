@@ -42,6 +42,8 @@ class PosPayment(models.Model):
     account_move_id = fields.Many2one('account.move', index='btree_not_null')
     uuid = fields.Char(string='Uuid', readonly=True, copy=False)
 
+    _sql_constraints = [('uuid_unique', 'unique (uuid)', "A payment with this uuid already exists")]
+
     @api.model
     def _load_pos_data_domain(self, data):
         return [('pos_order_id', 'in', [order['id'] for order in data['pos.order']['data']])]

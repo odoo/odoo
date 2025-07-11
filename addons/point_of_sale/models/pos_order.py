@@ -336,6 +336,8 @@ class PosOrder(models.Model):
     order_edit_tracking = fields.Boolean(related="config_id.order_edit_tracking", readonly=True)
     available_payment_method_ids = fields.Many2many('pos.payment.method', related='config_id.payment_method_ids', string='Available Payment Methods', readonly=True, store=False)
 
+    _sql_constraints = [('uuid_unique', 'unique (uuid)', "An order with this uuid already exists")]
+
     def _search_tracking_number(self, operator, value):
         #search is made over the pos_reference field
         #The pos_reference field is like 'Order 00001-001-0001'
@@ -1344,6 +1346,8 @@ class PosOrderLine(models.Model):
 
     combo_item_id = fields.Many2one('product.combo.item', string='Combo Item')
     is_edited = fields.Boolean('Edited', default=False)
+
+    _sql_constraints = [('uuid_unique', 'unique (uuid)', "An order line with this uuid already exists")]
 
     @api.model
     def _load_pos_data_domain(self, data):
