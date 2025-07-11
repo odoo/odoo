@@ -373,7 +373,9 @@ class MailActivityMixin(models.AbstractModel):
                     'Invalid activity type model %s used on %s (tried with xml id %s)',
                     activity_type.res_model, self._name, act_type_xmlid or '',
                 )
-            activity_type = self._default_activity_type()
+            # TODO master: reset invalid model to default type, keep it for stable as not harmful
+            if not activity_type:
+                activity_type = self._default_activity_type()
 
         model_id = self.env['ir.model']._get(self._name).id
         create_vals_list = []
