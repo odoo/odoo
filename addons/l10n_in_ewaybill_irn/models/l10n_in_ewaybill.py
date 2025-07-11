@@ -78,8 +78,11 @@ class L10nInEwaybill(models.Model):
     def _generate_ewaybill_by_irn(self):
         self.ensure_one()
         self._lock_ewaybill()
+        generate_json = self._ewaybill_generate_irn_json()
+        # Storing JSON data for each request sent
+        self._create_json_attachment(generate_json)
         try:
-            response = self._ewaybill_generate_by_irn(self._ewaybill_generate_irn_json())
+            response = self._ewaybill_generate_by_irn(generate_json)
         except EWayBillError as error:
             self._handle_error(error)
             return False

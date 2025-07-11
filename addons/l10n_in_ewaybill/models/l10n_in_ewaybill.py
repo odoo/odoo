@@ -479,12 +479,26 @@ class L10nInEwaybill(models.Model):
             attachment_ids=attachment.ids
         )
 
+    def _create_json_attachment(self, json_data):
+        self.ensure_one()
+        json_name = f"ewaybill_{self.document_number.replace('/', '_')}.json"
+        self.env['ir.attachment'].create({
+            'name': json_name,
+            'raw': json.dumps(json_data).encode(),
+            'res_model': self._name,
+            'res_id': self.id,
+            'mimetype': 'application/json',
+            'company_id': self.company_id.id,
+        })
+
     def _ewaybill_cancel(self):
         cancel_json = {
             'ewbNo': int(self.name),
             'cancelRsnCode': int(self.cancel_reason),
             'cancelRmrk': self.cancel_remarks,
         }
+        # Storing JSON data for each cancellation request sent
+        self._create_json_attachment(cancel_json)
         ewb_api = EWayBillApi(self.company_id)
         self._lock_ewaybill()
         try:
@@ -503,10 +517,13 @@ class L10nInEwaybill(models.Model):
 
     def _generate_ewaybill(self):
         self.ensure_one()
+        generate_json = self._ewaybill_generate_direct_json()
+        # Storing JSON data for each request sent
+        self._create_json_attachment(generate_json)
         ewb_api = EWayBillApi(self.company_id)
         self._lock_ewaybill()
         try:
-            response = ewb_api._ewaybill_generate(self._ewaybill_generate_direct_json())
+            response = ewb_api._ewaybill_generate(generate_json)
         except EWayBillError as error:
             self._handle_error(error)
             return False

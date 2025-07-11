@@ -186,6 +186,19 @@ class AccountMove(models.Model):
             message.append(_("- Street2: must be 3–100 characters."))
         return message
 
+    @api.model
+    def _create_json_attachment(self, json_data):
+        self.ensure_one()
+        json_name = f"{self.name.replace('/', '_')}.json"
+        self.env['ir.attachment'].create({
+            'name': json_name,
+            'raw': json.dumps(json_data).encode(),
+            'res_model': self._name,
+            'res_id': self.id,
+            'mimetype': 'application/json',
+            'company_id': self.company_id.id,
+        })
+
     def _l10n_in_edi_send_invoice(self):
         self.ensure_one()
         if self.l10n_in_edi_error:
@@ -198,6 +211,8 @@ class AccountMove(models.Model):
                 return partner_validation
         self._l10n_in_lock_invoice()
         generate_json = self._l10n_in_edi_generate_invoice_json()
+        # Storing request data as JSON attachment
+        self._create_json_attachment(generate_json)
         response = self._l10n_in_edi_connect_to_server(
             url_end_point='generate',
             json_payload=generate_json
@@ -281,6 +296,8 @@ class AccountMove(models.Model):
             "CnlRsn": self.l10n_in_edi_cancel_reason,
             "CnlRem": self.l10n_in_edi_cancel_remarks,
         }
+        # Storing cancel request data in JSON attachment
+        self._create_json_attachment(cancel_json)
         response = self._l10n_in_edi_connect_to_server(url_end_point='cancel', json_payload=cancel_json)
         # Creating a lambda function so it fetches the odoobot id only when needed
         _get_odoobot_id = (
