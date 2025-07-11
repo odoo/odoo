@@ -359,6 +359,35 @@ class TestPermissions(TransactionCaseWithUserDemo):
             ('res_field', '=', 'image_128')
         ])
         self.assertTrue(attachment.datas)
+        with self.assertQueries([
+            # security SQL contains public check or accessible field with
+            # res_id IN accessible corecords for a given res_model
+            """
+            SELECT "ir_attachment"."id"
+            FROM "ir_attachment"
+            WHERE ("ir_attachment"."res_field" IN %s AND "ir_attachment"."res_id" IN %s AND "ir_attachment"."res_model" IN %s AND (
+                "ir_attachment"."public" IS TRUE
+                OR (
+                    ("ir_attachment"."res_field" IN %s OR "ir_attachment"."res_field" IS NULL)
+                    AND "ir_attachment"."res_id" IN (
+                        SELECT "res_partner"."id"
+                        FROM "res_partner"
+                        WHERE "res_partner"."id" IN %s AND (
+                            ("res_partner"."company_id" IN %s OR "res_partner"."company_id" IS NULL)
+                            OR "res_partner"."partner_share" IS NOT TRUE
+                        )
+                    )
+                    AND "ir_attachment"."res_model" IN %s
+                )
+            ))
+            ORDER BY "ir_attachment"."id" DESC
+            """
+        ]):
+            self.env['ir.attachment'].search([
+                ('res_model', '=', 'res.partner'),
+                ('res_id', '=', main_partner.id),
+                ('res_field', '=', 'image_128')
+            ])
 
         # Patch the field `res.partner.image_128` to make it unreadable by the demo user
         self.patch(self.env.registry['res.partner']._fields['image_128'], 'groups', 'base.group_system')
