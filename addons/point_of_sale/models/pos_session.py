@@ -3,6 +3,7 @@ from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby, starmap
 from markupsafe import Markup
+import logging
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -10,6 +11,8 @@ from odoo.tools import float_is_zero, float_compare, plaintext2html, split_every
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.service.common import exp_version
 from odoo.osv.expression import AND
+
+_logger = logging.getLogger(__name__)
 
 
 class PosSession(models.Model):
@@ -179,8 +182,9 @@ class PosSession(models.Model):
 
             try:
                 response[model] = self.env[model].with_context(config_id=self.config_id.id)._post_read_pos_data(self.env[model]._load_pos_data(response))
-            except AccessError:
+            except AccessError as e:
                 response[model] = []
+                _logger.info("Could not load model %s due to AccessError: %s", model, e)
 
         return response
 
