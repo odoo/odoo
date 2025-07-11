@@ -28,9 +28,7 @@ class TestCommonTimesheet(TransactionCase):
             'phone': '42',
         })
 
-        cls.analytic_plan = cls.env['account.analytic.plan'].create({
-            'name': 'Timesheet Plan Test',
-        })
+        cls.analytic_plan, _other_plans = cls.env['account.analytic.plan']._get_all_plans()
         cls.analytic_account = cls.env['account.analytic.account'].create({
             'name': 'Analytic Account for Test Customer',
             'partner_id': cls.partner.id,
@@ -827,3 +825,27 @@ class TestTimesheet(TestCommonTimesheet):
             field_name: analytic_account.id
         })
         self.assertEqual(line[field_name].id, analytic_account.id, f"The value of {field_name} shouldn't get overwritten by the project's account")
+
+    def test_split_analytic_dynamic_update(self):
+        fname = self.analytic_plan._column_name()
+        self.empl_employee.hourly_cost = 10.0
+        another_account = self.env['account.analytic.account'].create({
+            'name': 'Another Analytic Account',
+            'partner_id': self.partner.id,
+            'plan_id': self.analytic_plan.id,
+            'code': 'TEST2',
+        })
+
+        line = self.env['account.analytic.line'].create({
+            'name': 'Timesheet',
+            'unit_amount': 1,
+            'project_id': self.project_customer.id,
+            fname: self.analytic_account.id,
+            'employee_id': self.empl_employee.id,
+        })
+        self.assertEqual(line.amount, -10)
+        line.analytic_distribution = {
+            f"{self.analytic_account.id}": 50,
+            f"{another_account.id}": 50,
+        }
+        self.assertEqual(line.amount, -5)  # the line is split in 2
