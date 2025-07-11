@@ -51,7 +51,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
             if applicants:
                 wizard.applicant_without_email = "%s\n%s" % (
                     _("You can't select Send email option.\nThe email will not be sent to the following applicant(s) as they don't have an email address:"),
-                    ", ".join([i.partner_name or i.display_name for i in applicants])
+                    ", ".join([i.partner_name or i.display_name for i in applicants if i.partner_name or i.display_name])
                 )
             else:
                 wizard.applicant_without_email = False
