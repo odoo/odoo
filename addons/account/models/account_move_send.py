@@ -62,7 +62,11 @@ class AccountMoveSend(models.AbstractModel):
         Either takes the provided custom_settings, or the default value.
         """
         def get_setting(key, from_cron=False, default_value=None):
-            return custom_settings.get(key) if key in custom_settings else move.sending_data.get(key) if from_cron else default_value
+            if key in custom_settings:
+                return custom_settings[key]
+            if from_cron or (move.sending_data and key in move.sending_data):
+                return move.sending_data.get(key)
+            return default_value
 
         vals = {
             'sending_methods': get_setting('sending_methods', default_value=self._get_default_sending_methods(move)) or {},
@@ -336,6 +340,13 @@ class AccountMoveSend(models.AbstractModel):
     # -------------------------------------------------------------------------
     # SENDING METHODS
     # -------------------------------------------------------------------------
+
+    @api.model
+    def _is_edi_asynchronous(self, edi_key):
+        """ Returns True if the EDI key is asynchronous.
+        By default, we consider that EDI key are always synchronous.
+        """
+        return False
 
     @api.model
     def _is_applicable_to_company(self, method, company):
@@ -734,6 +745,21 @@ class AccountMoveSend(models.AbstractModel):
             }
             for move in moves
         }
+        if not from_cron:
+            for move, settings in moves_data.copy().items():
+                if any(self._is_edi_asynchronous(edi_code) for edi_code in settings.get('extra_edis', [])):
+                    # To be handled by the cron job.
+                    move.sending_data = {
+                        'sending_methods': settings.get('sending_methods') and list(settings['sending_methods']),
+                        'extra_edis': settings.get('extra_edis') and list(settings['extra_edis']),
+                        'author_partner_id': settings.get('author_partner_id'),
+                        'author_user_id': settings.get('author_user_id'),
+                    }
+                    moves_data.pop(move)
+            self.env.ref('account.ir_cron_account_move_send')._trigger()
+            if not moves_data:
+                # No moves to process, return empty attachments.
+                return self.env['ir.attachment']
 
         # Generate all invoice documents (PDF and electronic documents if relevant).
         self._generate_invoice_documents(moves_data, allow_fallback_pdf=allow_fallback_pdf)
