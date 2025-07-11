@@ -753,14 +753,25 @@ class Environment(Mapping):
 
     def _recompute_all(self):
         """ Process all pending computations. """
-        for field in list(self.fields_to_compute()):
-            self[field.model_name]._recompute_field(field)
+        # loop because a field's computation may trigger new computations
+        while True:
+            # fields to compute on real records (we can ignore new records)
+            fields_ = [field for field, ids in self.all.tocompute.items() if any(ids)]
+            if not fields_:
+                break
+            for field in fields_:
+                self[field.model_name]._recompute_field(field)
 
     def flush_all(self):
         """ Flush all pending computations and updates to the database. """
-        self._recompute_all()
-        for model_name in OrderedSet(field.model_name for field in self.cache.get_dirty_fields()):
-            self[model_name].flush_model()
+        # loop because flushing may trigger new computations and/or updates
+        while True:
+            self._recompute_all()
+            model_names = OrderedSet(field.model_name for field in self.cache.get_dirty_fields())
+            if not model_names:
+                break
+            for model_name in model_names:
+                self[model_name].flush_model()
 
     def is_protected(self, field, record):
         """ Return whether `record` is protected against invalidation or
