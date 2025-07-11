@@ -671,6 +671,7 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
     steps: () =>
         [
             Chrome.startPoS(),
+            Chrome.freezeDateTime(1749965940000), // June 15, 2025
             Dialog.confirm("Open Register"),
             FloorScreen.clickNewOrder(),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
@@ -685,8 +686,17 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
             Chrome.clickOrders(),
             TicketScreen.nthRowContains(1, "John"),
             TicketScreen.nthRowContains(1, "Takeaway", false),
+            TicketScreen.nthRowNotContains(1, "06/15/2025", false),
             TicketScreen.nthRowContains(2, "002"),
             TicketScreen.nthRowContains(2, "Eat in", false),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.selectPreset("Eat in", "Takeaway"),
+            Chrome.selectPresetDateButton("06/16/2025"),
+            Chrome.selectPresetTimingSlotHour("11:00"),
+            Chrome.clickOrders(),
+            TicketScreen.nthRowContains(3, "06/16/2025", false),
         ].flat(),
 });
 
