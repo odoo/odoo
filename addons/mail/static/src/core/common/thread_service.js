@@ -114,6 +114,7 @@ export class ThreadService {
             this.rpc("/discuss/channel/set_last_seen_message", {
                 channel_id: thread.id,
                 last_message_id: newestPersistentMessage.id,
+                allow_older: true,
             }).catch((e) => {
                 if (e.code !== 404) {
                     throw e;
