@@ -22,6 +22,8 @@ export class DiscussChannel extends models.ServerModel {
     _inherit = ["mail.thread"];
     _mail_post_access = "read";
 
+    name = fields.Char({ store: true, readonly: false, compute: "_compute_name" });
+    auto_recompute_name = fields.Boolean({ default: false });
     author_id = fields.Many2one({
         relation: "res.partner",
         default: () => serverState.partnerId,
@@ -187,6 +189,29 @@ export class DiscussChannel extends models.ServerModel {
 
         const [channel] = this.browse(ids);
         this.write([channel.id], { description });
+    }
+
+    _compute_name() {
+        for (const channel of this) {
+            if (channel.auto_recompute_name) {
+                const members = this.env["discuss.channel.member"].search_read(
+                    [["channel_id", "=", channel.id]],
+                    {
+                        fields: ["partner_id", "guest_id"],
+                        limit: 6,
+                    }
+                );
+                const memberNames = members.map(
+                    (member) => member.partner_id?.[1] || member.guest_id?.[1]
+                );
+                console.log(`_compute_name for channel ${channel.id} with members`, members);
+                const newName =
+                    memberNames.slice(0, 5).join(", ") + (memberNames.length > 5 ? "..." : "");
+                if (channel.name !== newName) {
+                    this.write([channel.id], { name: newName });
+                }
+            }
+        }
     }
 
     /**
@@ -432,7 +457,7 @@ export class DiscussChannel extends models.ServerModel {
                     })
                 );
             }
-            if (channel.channel_type !== "channel") {
+            if (!["channel", "group"].includes(channel.channel_type)) {
                 const otherMembers = members.filter(
                     (member) => member.id !== memberOfCurrentUser?.id
                 );
@@ -504,7 +529,7 @@ export class DiscussChannel extends models.ServerModel {
         name = kwargs.name || "";
 
         const [channel] = this.browse(ids);
-        this.write([channel.id], { name });
+        this.write([channel.id], { name, auto_recompute_name: !name });
     }
 
     /**
@@ -563,6 +588,7 @@ export class DiscussChannel extends models.ServerModel {
                 Command.create({ partner_id: partner.id })
             ),
             name,
+            auto_recompute_name: !name,
         });
         this._broadcast(
             [id],

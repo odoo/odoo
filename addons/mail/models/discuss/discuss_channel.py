@@ -44,7 +44,12 @@ class DiscussChannel(models.Model):
         return ''.join(choice('abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ23456789') for _i in range(10))
 
     # description
-    name = fields.Char('Name', required=True)
+    name = fields.Char(
+        "Name", required=True, compute="_compute_name", store=True, readonly=False
+    )
+    auto_recompute_name = fields.Boolean(
+        help="If True, the name of the channel will be recomputed automatically when the channel members change.",
+    )
     active = fields.Boolean(default=True, help="Set active to false to hide the channel without removing it.")
     channel_type = fields.Selection([
         ('chat', 'Chat'),
@@ -160,6 +165,19 @@ class DiscussChannel(models.Model):
             raise ValidationError(_("For %(channels)s, channel_type should be 'channel' to have the group-based authorization or group auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
 
     # COMPUTE / INVERSE
+
+    @api.depends("channel_member_ids", "auto_recompute_name")
+    def _compute_name(self):
+        for channel in self.filtered(lambda c: c.auto_recompute_name):
+            new_name = ", ".join(
+                channel.channel_member_ids.mapped(
+                    lambda m: m.partner_id.name if m.partner_id else m.guest_id.name,
+                )[:5],
+            )
+            if channel.member_count > 5:
+                new_name += "..."
+            if channel.name != new_name:
+                channel.write({"name": new_name})
 
     @api.depends("channel_type", "is_member", "group_public_id")
     @api.depends_context("uid")
@@ -1030,7 +1048,7 @@ class DiscussChannel(models.Model):
         # Avoid sending potentially a lot of members for big channels: exclude chat and other small
         # channels from this optimization because they are assumed to be smaller and it's important
         # to know the member list for them.
-        channels_with_all_members = self.filtered(lambda channel: channel.channel_type != "channel")
+        channels_with_all_members = self.filtered(lambda channel: channel.channel_type not in ("channel", "group"))
         all_members = (
             self.self_member_id
             | self.invited_member_ids
@@ -1269,7 +1287,7 @@ class DiscussChannel(models.Model):
 
     def channel_rename(self, name):
         self.ensure_one()
-        self.write({'name': name})
+        self.write({"name": name, "auto_recompute_name": not name})
 
     def channel_change_description(self, description):
         self.ensure_one()
@@ -1318,6 +1336,7 @@ class DiscussChannel(models.Model):
             'channel_type': 'group',
             'default_display_mode': default_display_mode,
             'name': name,
+            'auto_recompute_name': not name,
         })
         channel._broadcast(channel.channel_member_ids.partner_id.ids)
         return channel

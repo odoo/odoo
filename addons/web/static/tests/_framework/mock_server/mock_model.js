@@ -3585,7 +3585,7 @@ export class Model extends Array {
                         record[fieldName][property.name] = value;
                     }
                 }
-            } else if (!isComputed(field)) {
+            } else if (!isComputed(field) || !field.readonly) {
                 record[fieldName] = value;
             }
             i++;

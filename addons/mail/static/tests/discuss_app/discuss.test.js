@@ -1294,6 +1294,7 @@ test("out-of-focus notif on needaction message in group chat contributes only on
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "group",
+        auto_recompute_name: true,
     });
     listenStoreFetch("init_messaging");
     await start();
@@ -1315,7 +1316,7 @@ test("out-of-focus notif on needaction message in group chat contributes only on
     );
     await contains(".o-mail-DiscussSidebar-item:has(.badge:contains(1))", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebar-item:has(.badge:contains(1))", {
-        text: "Mitchell Admin and Dumbledore",
+        text: "Mitchell Admin, Dumbledore",
     });
     expect(titleService.current).toBe("(1) Inbox");
 });
@@ -1527,6 +1528,7 @@ test("'Invite People' button should be displayed in the topbar of groups", async
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "group",
+        auto_recompute_name: true,
     });
     await start();
     await openDiscuss(channelId);
