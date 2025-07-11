@@ -232,6 +232,73 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         self.assertEqual(attachment.name[-12:], "ubl_bis3.xml")
         self._assert_imported_invoice_from_etree(refund, attachment)
 
+    def test_export_refund_with_early_discount(self):
+        early_discount_term = self.env['account.payment.term'].create({
+            'name': "early_payment_term",
+            'note': "10% discount if paid before 10 days",
+            'company_id': self.company_data['company'].id,
+            'discount_percentage': 10,
+            'discount_days': 10,
+            'early_discount': True,
+        })
+
+        refund = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_refund',
+            invoice_payment_term_id=early_discount_term.id,
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 2.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                    'price_unit': 990.0,
+                    'discount': 10.0,
+                    'tax_ids': [(6, 0, self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_b.id,
+                    'quantity': 10.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'price_unit': 100.0,
+                    'tax_ids': [(6, 0, self.tax_12.ids)],
+                },
+                {
+                    'product_id': self.product_b.id,
+                    'quantity': -1.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'price_unit': 100.0,
+                    'tax_ids': [(6, 0, self.tax_12.ids)],
+                },
+            ],
+        )
+        attachment = self._assert_invoice_attachment(
+            refund.ubl_cii_xml_id,
+            xpaths=f'''
+                <xpath expr="./*[local-name()='ID']" position="replace">
+                    <ID>___ignore___</ID>
+                </xpath>
+                <xpath expr="./*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace">
+                    <PaymentID>___ignore___</PaymentID>
+                </xpath>
+                <xpath expr=".//*[local-name()='CreditNoteLine'][1]/*[local-name()='ID']" position="replace">
+                    <ID>___ignore___</ID>
+                </xpath>
+                <xpath expr=".//*[local-name()='CreditNoteLine'][2]/*[local-name()='ID']" position="replace">
+                    <ID>___ignore___</ID>
+                </xpath>
+                <xpath expr=".//*[local-name()='CreditNoteLine'][3]/*[local-name()='ID']" position="replace">
+                    <ID>___ignore___</ID>
+                </xpath>
+                <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
+                    <attribute name="mimeCode">application/pdf</attribute>
+                    <attribute name="filename">{refund.invoice_pdf_report_id.name}</attribute>
+                </xpath>
+            ''',
+            expected_file_path='from_odoo/bis3_out_refund_early_discount.xml',
+        )
+        self.assertEqual(attachment.name[-12:], "ubl_bis3.xml")
+
     def test_export_import_cash_rounding(self):
         cash_rounding_line = self.env['account.cash.rounding'].create({
             'name': '1.0 Line',
