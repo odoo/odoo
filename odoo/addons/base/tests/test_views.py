@@ -31,6 +31,7 @@ class ViewXMLID(common.TransactionCase):
         self.assertTrue(view.model_data_id)
         self.assertEqual(view.model_data_id.complete_name, 'base.view_company_form')
 
+
 class ViewCase(TransactionCaseWithUserDemo):
     def setUp(self):
         super(ViewCase, self).setUp()
@@ -169,6 +170,7 @@ class TestNodeLocator(common.TransactionCase):
             E.foo(attr='1', version='3'),
         )
         self.assertIsNone(node)
+
 
 class TestViewInheritance(ViewCase):
     def arch_for(self, name, view_type='form', parent=None):
@@ -959,11 +961,6 @@ class TestApplyInheritanceMoveSpecs(ViewCase):
                 E.div(E.xpath(E.p("Content2", {'class': 'new_p'}), expr="//p", position="move"), {'class': 'wrapper'}),
             )
         )
-
-
-class TestApplyInheritedArchs(ViewCase):
-    """ Applies a sequence of modificator archs to a base view
-    """
 
 
 class TestNoModel(ViewCase):
@@ -1792,6 +1789,7 @@ class TestTemplating(ViewCase):
         )
 
 
+@tagged('post_install', '-at_install')
 class TestViews(ViewCase):
 
     def test_nonexistent_attribute_removal(self):
@@ -3555,6 +3553,95 @@ Forbidden attribute used in arch (t-attf-data-tooltip-template)."""
 Forbidden use of `__comp__` in arch."""
         )
 
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_check_primary_when_update_siblins_inherited_tree(self):
+        # P: primary, E: extension
+        #
+        #         P1
+        #       /    \
+        #     E1      E2
+        #    /  \    /  \
+        #   E3  E4  P2  E5
+        #
+        # If we update the E4, we should check the P1 and P2 views
+        View = self.env['ir.ui.view']
+        p1 = View.create({
+            'name': 'test_view_p1',
+            'type': 'qweb',
+            'key': 'website.test_view_p1',
+            'arch_db': '''<div><p1/></div>'''
+        })
+        View.create({
+            'name': 'test_view_e1',
+            'mode': 'extension',
+            'inherit_id': p1.id,
+            'arch_db': '<div position="inside"><e1/></div>',
+            'key': 'website.test_view_e1',
+        })
+        e2 = View.create({
+            'name': 'test_view_e2',
+            'mode': 'extension',
+            'inherit_id': p1.id,
+            'arch_db': '<div position="inside"><e2/></div>',
+            'key': 'website.test_view_e2',
+        })
+        View.create({
+            'name': 'test_view_e3',
+            'mode': 'extension',
+            'inherit_id': p1.id,
+            'arch_db': '<div position="inside"><e3/></div>',
+            'key': 'website.test_view_e3',
+        })
+        e4 = View.create({
+            'name': 'test_view_e4',
+            'mode': 'extension',
+            'inherit_id': p1.id,
+            'arch_db': '<div position="inside"><e4/></div>',
+            'key': 'website.test_view_e4',
+        })
+        p2 = View.create({
+            'name': 'test_view_p2',
+            'mode': 'primary',
+            'inherit_id': e2.id,
+            'arch_db': '<e4 position="replace"><p2/></e4>',
+            'key': 'website.test_view_p2',
+            'active': False,
+        })
+        View.create({
+            'name': 'test_view_e5',
+            'mode': 'extension',
+            'inherit_id': p1.id,
+            'arch_db': '<div position="inside"><e5/></div>',
+            'key': 'website.test_view_e5',
+        })
+
+        self.assertEqual(self.env['ir.qweb']._render(p1.id), '<div><p1></p1><e1></e1><e2></e2><e3></e3><e4></e4><e5></e5></div>')
+        e4.active = False
+        self.assertEqual(self.env['ir.qweb']._render(p1.id), '<div><p1></p1><e1></e1><e2></e2><e3></e3><e5></e5></div>')
+
+        with self.assertRaises(ValidationError) as catcher:
+            p2.active = True
+        self.assertIn("Element '<e4>' cannot be located in parent view", str(catcher.exception.args[0]))
+
+        e4.active = True
+        p2.active = True
+        self.assertEqual(self.env['ir.qweb']._render(p1.id), '<div><p1></p1><e1></e1><e2></e2><e3></e3><e4></e4><e5></e5></div>')
+        self.assertEqual(self.env['ir.qweb']._render(p2.id), '<div><p1></p1><e1></e1><e2></e2><e3></e3><p2></p2><e5></e5></div>')
+
+        with self.assertRaises(ValidationError) as catcher:
+            e4.active = False
+        self.assertIn("Element '<e4>' cannot be located in parent view", str(catcher.exception.args[0]))
+
+        with self.assertRaises(ValidationError) as catcher:
+            View.create({
+                'name': 'test_view_e6',
+                'mode': 'extension',
+                'inherit_id': e2.id,
+                'arch_db': '<e4 position="replace"><e6/></e4>',
+                'key': 'website.test_view_e6',
+            })
+        self.assertIn("Element '<e4>' cannot be located in parent view", str(catcher.exception.args[0]))
+
 
 @tagged('post_install', '-at_install')
 class TestDebugger(common.TransactionCase):
@@ -3726,6 +3813,7 @@ class TestViewTranslations(common.TransactionCase):
 
         with self.assertRaises(ValidationError):
             view.write({'mode': 'extension'})
+
 
 class ViewModeField(ViewCase):
     """
@@ -4531,6 +4619,7 @@ class TestValidationTools(common.BaseCase):
             view_validation.get_expression_field_names("set(field).intersection([1, 2])"),
             {'field'},
         )
+
 
 class TestAccessRights(TransactionCaseWithUserDemo):
 
