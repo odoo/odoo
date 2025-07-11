@@ -130,3 +130,11 @@ export function cancelOrder() {
         },
     ];
 }
+
+export function acceptUnavailableProductDialog(label) {
+    return {
+        content: `Confirm the 'Oops...' unavailable product popup with button '${label}'`,
+        trigger: `.modal-dialog:has(.modal-title:contains('Oops')) .btn.btn-primary:contains("${label}")`,
+        run: "click",
+    };
+}
