@@ -277,6 +277,10 @@ class MailGroup(models.Model):
         """Add the method to make the mail gateway flow work with this model."""
         return
 
+    @api.model
+    def _get_allowed_access_params(self):
+        return self.env["mail.thread"]._get_allowed_access_params()
+
     def message_post(self, body='', subject=None, email_from=None, author_id=None, **kwargs):
         """ Custom posting process. This model does not inherit from ``mail.thread``
         but uses the mail gateway so few methods should be defined.
