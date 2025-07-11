@@ -10,6 +10,7 @@ import {
     clickSave,
     contains,
     defineModels,
+    editSelectMenu,
     fieldInput,
     fields,
     models,
@@ -474,7 +475,7 @@ test("many2many kanban: conditional create/delete actions", async () => {
     await contains(".modal .modal-footer .o_form_button_cancel:eq(0)").click();
 
     // set color to black
-    await contains('div[name="color"] select').select('"black"');
+    await editSelectMenu(".o_field_widget[name='color'] input", { value: "Black" });
     expect(".o-kanban-button-new").toHaveCount(1, {
         message: '"Add" button should still be available even after color field changed',
     });
@@ -925,7 +926,7 @@ test("many2many list: conditional create/delete actions", async () => {
     await contains(".modal .modal-footer .o_form_button_cancel:eq(0)").click();
 
     // set color to black -> create and delete actions are no longer available
-    await contains('div[name="color"] select').select('"black"');
+    await editSelectMenu(".o_field_widget[name='color'] input", { value: "Black" });
 
     // add a line and remove icon should still be there as they don't create/delete records,
     // but rather add/remove links
@@ -968,7 +969,7 @@ test("many2many field with link/unlink options (list)", async () => {
     await contains(".modal .modal-footer .o_form_button_cancel:eq(0)").click();
 
     // set color to black -> link and unlink actions are no longer available
-    await contains('div[name="color"] select').select('"black"');
+    await editSelectMenu(".o_field_widget[name='color'] input", { value: "Black" });
 
     expect(".o_field_x2many_list_row_add").toHaveCount(0);
     expect(".o_list_record_remove").toHaveCount(0);
@@ -1006,7 +1007,7 @@ test('many2many field with link/unlink options (list, create="0")', async () => 
     await contains(".modal .modal-footer .o_form_button_cancel:eq(0)").click();
 
     // set color to black -> link and unlink actions are no longer available
-    await contains('div[name="color"] select').select('"black"');
+    await editSelectMenu(".o_field_widget[name='color'] input", { value: "Black" });
 
     expect(".o_field_x2many_list_row_add").toHaveCount(0);
     expect(".o_list_record_remove").toHaveCount(0);
@@ -1048,7 +1049,7 @@ test("many2many field with link option (kanban)", async () => {
     await contains(".modal .modal-footer .o_form_button_cancel:eq(0)").click();
 
     // set color to black -> link and unlink actions are no longer available
-    await contains('div[name="color"] select').select('"black"');
+    await editSelectMenu(".o_field_widget[name='color'] input", { value: "Black" });
 
     expect(".o-kanban-button-new").toHaveCount(0);
 });
@@ -1088,7 +1089,7 @@ test('many2many field with link option (kanban, create="0")', async () => {
     await contains(".modal .modal-footer .o_form_button_cancel:eq(0)").click();
 
     // set color to black -> link and unlink actions are no longer available
-    await contains('div[name="color"] select').select('"black"');
+    await editSelectMenu(".o_field_widget[name='color'] input", { value: "Black" });
 
     expect(".o-kanban-button-new").toHaveCount(0);
 });

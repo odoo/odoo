@@ -57,7 +57,6 @@ test("many2many: find tag, select tag, unselect tag", async () => {
     expect("table tr").toHaveCount(1);
 
     await contains(".btn.o-dropdown").click();
-    await contains("input[placeholder]").click();
     await delay(300); // debounce
     await animationFrame();
     expect("span.o-dropdown-item").toHaveCount(2);

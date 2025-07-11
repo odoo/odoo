@@ -120,7 +120,7 @@ var addArticleToSection = function (sectionName, pageName, backend) {
     run: "click",
 }, {
     content: 'eLearning: select Practice tag',
-    trigger: prefix + 'div.o_select_menu_item_label:contains("Practice")',
+    trigger: prefix + 'div.o_select_menu_item:contains("Practice")',
     run: "click",
 }, {
 	content: 'eLearning: fill article completion time',
@@ -276,7 +276,7 @@ var addExistingCourseTag = function (backend = false) {
         ...clickOnAddTagDropdown(prefix),
 {
     content: 'eLearning: select advanced tag',
-    trigger: prefix + 'div.o_select_menu_item_label:contains("Advanced")',
+    trigger: prefix + '.o_select_menu_item:contains("Advanced")',
     run: "click",
 }, {
     content: 'eLearning: add existing course tag',
@@ -306,7 +306,7 @@ var addNewCourseTag = function (courseTagName, backend) {
     run: "click",
 }, {
 	content: 'eLearning: select Tags tag group',
-    trigger: prefix + 'div.o_select_menu_item_label:contains("Tags")',
+    trigger: prefix + '.o_select_menu_item:contains("Tags")',
     run: "click",
 }, {
     content: 'eLearning: add new course tag',

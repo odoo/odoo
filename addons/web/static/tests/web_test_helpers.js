@@ -148,6 +148,7 @@ export {
     mountViewInDialog,
     parseViewProps,
     selectFieldDropdownItem,
+    editSelectMenu,
 } from "./_framework/view_test_helpers";
 export { mountWebClient, useTestClientAction } from "./_framework/webclient_test_helpers";
 

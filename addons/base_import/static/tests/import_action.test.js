@@ -1077,13 +1077,10 @@ describe("Import view", () => {
             { message: "The third row should be the relational field" }
         );
 
-        expect("tr:nth-child(3) .o_select_menu_toggler_slot span").toHaveText(
-            "Many2Many / External ID",
-            {
-                message:
-                    "The relational field should be selected by default and the name should be the full path.",
-            }
-        );
+        expect("tr:nth-child(3) .o_select_menu_toggler").toHaveText("Many2Many / External ID", {
+            message:
+                "The relational field should be selected by default and the name should be the full path.",
+        });
 
         await contains(".o_control_panel_main_buttons button:first-child").click();
         expect.verifySteps(["execute_import"]);
@@ -1230,10 +1227,9 @@ describe("Import view", () => {
             { message: "The third row should be the relational field" }
         );
 
-        expect("tr:nth-child(3) .o_select_menu_toggler_slot span").toHaveText(
-            "Many2Many / External ID",
-            { message: "The relational field is properly mapped" }
-        );
+        expect("tr:nth-child(3) .o_select_menu_toggler").toHaveText("Many2Many / External ID", {
+            message: "The relational field is properly mapped",
+        });
 
         expect("tr:nth-child(3) .o_import_report.alert").toHaveCount(1, {
             message: "The relational field should have error messages on his row",
