@@ -13,6 +13,7 @@ from . import test_sale_order
 from . import test_sale_process
 from . import test_sitemap
 from . import test_website_editor
+from . import test_website_sale_access
 from . import test_website_sale_add_to_cart_snippet
 from . import test_website_sale_cart
 from . import test_website_sale_checkout_steps
