@@ -12,30 +12,30 @@ import { expectElementCount } from "../_helpers/ui_expectations";
 
 test("should pad a link with ZWNBSPs and add visual indication", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="#/">b</a>c</p>',
-        contentBeforeEdit: '<p>a\ufeff<a href="#/">\ufeffb\ufeff</a>\ufeffc</p>',
+        contentBefore: '<p>a<a href="http://test.test/">b</a>c</p>',
+        contentBeforeEdit: '<p>a\ufeff<a href="http://test.test/">\ufeffb\ufeff</a>\ufeffc</p>',
         stepFunction: async (editor) => {
             setSelection({ anchorNode: editor.editable.querySelector("a"), anchorOffset: 1 });
             await tick();
         },
         contentAfterEdit:
-            '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeff[]b\ufeff</a>\ufeffc</p>',
-        contentAfter: '<p>a<a href="#/">[]b</a>c</p>',
+            '<p>a\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff[]b\ufeff</a>\ufeffc</p>',
+        contentAfter: '<p>a<a href="http://test.test/">[]b</a>c</p>',
     });
 });
 
 test("should pad a link with ZWNBSPs and add visual indication (2)", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="#/"><span class="a">b</span></a></p>',
+        contentBefore: '<p>a<a href="http://test.test/"><span class="a">b</span></a></p>',
         contentBeforeEdit:
-            '<p>a\ufeff<a href="#/">\ufeff<span class="a">b</span>\ufeff</a>\ufeff</p>',
+            '<p>a\ufeff<a href="http://test.test/">\ufeff<span class="a">b</span>\ufeff</a>\ufeff</p>',
         stepFunction: async (editor) => {
             setSelection({ anchorNode: editor.editable.querySelector("a span"), anchorOffset: 0 });
             await tick();
         },
         contentAfterEdit:
-            '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeff<span class="a">[]b</span>\ufeff</a>\ufeff</p>',
-        contentAfter: '<p>a<a href="#/"><span class="a">[]b</span></a></p>',
+            '<p>a\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff<span class="a">[]b</span>\ufeff</a>\ufeff</p>',
+        contentAfter: '<p>a<a href="http://test.test/"><span class="a">[]b</span></a></p>',
     });
 });
 
