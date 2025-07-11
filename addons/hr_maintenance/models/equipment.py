@@ -11,21 +11,19 @@ class MaintenanceEquipment(models.Model):
     department_id = fields.Many2one('hr.department', compute='_compute_equipment_assign',
         store=True, readonly=False, string='Assigned Department', tracking=True)
     equipment_assign_to = fields.Selection(
-        [('department', 'Department'), ('employee', 'Employee'), ('other', 'Other')],
-        string='Used By',
-        required=True,
-        default='employee')
-    owner_user_id = fields.Many2one(compute='_compute_owner', store=True)
+        selection_add=[('department', 'Department'), ('employee', 'Employee'), ('other', 'Other')], default='employee')
     assign_date = fields.Date(compute='_compute_equipment_assign', store=True, readonly=False, copy=True)
 
     @api.depends('employee_id', 'department_id', 'equipment_assign_to')
     def _compute_owner(self):
+        super()._compute_owner()
         for equipment in self:
-            equipment.owner_user_id = self.env.user.id
             if equipment.equipment_assign_to == 'employee':
-                equipment.owner_user_id = equipment.employee_id.user_id.id
+                equipment.owner_user_id = equipment.employee_id.user_id.id if equipment.employee_id.user_id else self.env.user.id
             elif equipment.equipment_assign_to == 'department':
-                equipment.owner_user_id = equipment.department_id.manager_id.user_id.id
+                equipment.owner_user_id = equipment.department_id.manager_id.user_id.id if equipment.department_id.manager_id.user_id else self.env.user.id
+            elif equipment.equipment_assign_to == 'other':
+                equipment.owner_user_id = self.env.user.id
 
     @api.depends('equipment_assign_to')
     def _compute_equipment_assign(self):
@@ -33,9 +31,13 @@ class MaintenanceEquipment(models.Model):
             if equipment.equipment_assign_to == 'employee':
                 equipment.department_id = False
                 equipment.employee_id = equipment.employee_id
+                if 'vehicle_id' in equipment._fields:
+                    equipment.vehicle_id = False
             elif equipment.equipment_assign_to == 'department':
                 equipment.employee_id = False
                 equipment.department_id = equipment.department_id
+                if 'vehicle_id' in equipment._fields:
+                    equipment.vehicle_id = False
             else:
                 equipment.department_id = equipment.department_id
                 equipment.employee_id = equipment.employee_id
