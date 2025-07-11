@@ -12,6 +12,9 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done"/>
                 </header>
             </xpath>
+            <xpath expr="//button[@name='action_show_details']" position="attributes">
+                <attribute name="context">{'show_picking_display_name': True}</attribute>
+            </xpath>
         </field>
     </record>
 
