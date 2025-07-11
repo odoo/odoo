@@ -125,7 +125,7 @@ class IotBoxOwlHomePage(http.Controller):
         })
 
     @route.iot_route('/iot_drivers/data', type="http", cors='*')
-    def get_homepage_data(self):
+    def get_homepage_data(self, more=False):
         network_interfaces = []
         if platform.system() == 'Linux':
             ssid = wifi.get_current() or wifi.get_access_point_ssid()
@@ -158,28 +158,36 @@ class IotBoxOwlHomePage(http.Controller):
             for device_type, devices in groupby(sorted(devices, key=device_type_key), device_type_key)
         }
 
-        six_terminal = helpers.get_conf('six_payment_terminal') or 'Not Configured'
-        network_qr_codes = wifi.generate_network_qr_codes() if platform.system() == 'Linux' else {}
         odoo_server_url = helpers.get_odoo_server_url() or ''
 
-        return json.dumps({
-            'db_uuid': helpers.get_conf('db_uuid'),
-            'enterprise_code': helpers.get_conf('enterprise_code'),
+        base_data = {
             'hostname': helpers.get_hostname(),
             'ip': helpers.get_ip(),
-            'identifier': helpers.get_identifier(),
             'devices': grouped_devices,
             'server_status': odoo_server_url,
             'pairing_code': connection_manager.pairing_code,
             'new_database_url': connection_manager.new_database_url,
             'pairing_code_expired': connection_manager.pairing_code_expired and not odoo_server_url,
-            'six_terminal': six_terminal,
             'is_access_point_up': platform.system() == 'Linux' and wifi.is_access_point(),
             'network_interfaces': network_interfaces,
-            'version': helpers.get_version(),
             'system': platform.system(),
-            'certificate_end_date': certificate.get_certificate_end_date(),
             'wifi_ssid': helpers.get_conf('wifi_ssid'),
+        }
+
+        if not more:
+            return json.dumps(base_data)
+
+        six_terminal = helpers.get_conf('six_payment_terminal') or 'Not Configured'
+        network_qr_codes = wifi.generate_network_qr_codes() if platform.system() == 'Linux' else {}
+
+        return json.dumps({
+            **base_data,
+            'db_uuid': helpers.get_conf('db_uuid'),
+            'enterprise_code': helpers.get_conf('enterprise_code'),
+            'identifier': helpers.get_identifier(),
+            'six_terminal': six_terminal,
+            'version': helpers.get_version(),
+            'certificate_end_date': certificate.get_certificate_end_date(),
             'qr_code_wifi': network_qr_codes.get('qr_wifi'),
             'qr_code_url': network_qr_codes.get('qr_url'),
         })

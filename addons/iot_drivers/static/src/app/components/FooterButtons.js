@@ -33,10 +33,10 @@ export class FooterButtons extends Component {
         <a t-if="store.isLinux and !store.base.is_access_point_up" class="btn btn-primary btn-sm" t-att-href="'http://' + this.store.base.ip + ':631'" target="_blank">
             Printer Server
         </a>
-        <RemoteDebugDialog t-if="this.store.advanced and this.store.isLinux" />
-        <CredentialDialog t-if="this.store.advanced" />
-        <HandlerDialog t-if="this.store.advanced" />
-        <a t-if="this.store.advanced" class="btn btn-primary btn-sm" t-att-href="this.url + '/logs'" target="_blank">View Logs</a>
+        <RemoteDebugDialog t-if="store.dev and this.store.isLinux" />
+        <CredentialDialog t-if="store.dev" />
+        <HandlerDialog t-if="store.dev" />
+        <a t-if="store.dev" class="btn btn-primary btn-sm" t-att-href="this.url + '/logs'" target="_blank">View Logs</a>
     </div>
   `;
 }

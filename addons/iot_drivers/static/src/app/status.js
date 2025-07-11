@@ -17,7 +17,7 @@ class StatusPage extends Component {
 
     async loadInitialData() {
         try {
-            const response = await fetch("/iot_drivers/data");
+            const response = await fetch("/iot_drivers/data?more=True");
             this.state.data = await response.json();
             this.state.loading = false;
         } catch {
