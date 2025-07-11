@@ -450,6 +450,7 @@ export class SelectionPlugin extends Plugin {
         const documentSelection =
             selection?.anchorNode && selection?.focusNode
                 ? Object.freeze({
+                      isCollapsed: selection.isCollapsed,
                       anchorNode: selection.anchorNode,
                       anchorOffset: selection.anchorOffset,
                       focusNode: selection.focusNode,
@@ -835,6 +836,13 @@ export class SelectionPlugin extends Plugin {
         }
         const isSelectionOnEditableRoot = (s) => s.isCollapsed && s.anchorNode === this.editable;
         if (!isSelectionOnEditableRoot(editableSelection)) {
+            return false;
+        }
+        if (
+            this.getResource("bypass_fix_selection_on_editable_root_predicates").some((fn) =>
+                fn(selectionData)
+            )
+        ) {
             return false;
         }
         if (this.delegateTo("fix_selection_on_editable_root_overrides", editableSelection)) {
