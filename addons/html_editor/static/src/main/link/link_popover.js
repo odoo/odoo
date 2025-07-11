@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, useState, onMounted, useRef, useEffect, useExternalListener } from "@odoo/owl";
+import { Component, useState, useRef, useEffect, useExternalListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { cleanZWChars, deduceURLfromText } from "./utils";
@@ -171,11 +171,9 @@ export class LinkPopover extends Component {
             },
             () => [this.inputRef.el]
         );
-        onMounted(() => {
-            if (!this.state.editing) {
-                this.loadAsyncLinkPreview();
-            }
-        });
+        if (!this.state.editing) {
+            this.loadAsyncLinkPreview();
+        }
         const onPointerDown = (ev) => {
             if (!this.state.url) {
                 this.props.onDiscard();
