@@ -376,8 +376,16 @@ class HrJob(models.Model):
         }
         return action
 
+    def has_recruitment_scenario_data(self):
+        return bool(self.env.ref('hr_recruitment.scenario_applicant_macm_enrique_cv', raise_if_not_found=False))
+
     @api.model
     def _action_load_recruitment_scenario(self):
+        if self.has_recruitment_scenario_data():
+            return {
+            "type": "ir.actions.client",
+            "tag": "reload",
+        }
 
         convert_file(
             self.sudo().env,
