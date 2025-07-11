@@ -20,10 +20,6 @@ class OnboardingController(http.Controller):
         :param str menu_id: The menu from which the user started the onboarding step, as an
                             `ir.ui.menu` id
         """
-        stripe_provider = request.env['payment.provider'].browse(int(provider_id))
-        request.env['onboarding.onboarding.step'].with_company(
-            stripe_provider.company_id
-        ).action_validate_step_payment_provider()
         url = f"/odoo/action-payment_stripe.action_payment_provider_onboarding/{provider_id}?menu_id={menu_id}"
         return request.redirect(url)
 
