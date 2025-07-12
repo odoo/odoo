@@ -7,7 +7,10 @@ import { SavePlugin } from "@html_builder/core/save_plugin";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { VisibilityPlugin } from "@html_builder/core/visibility_plugin";
 import { removePlugins } from "@html_builder/utils/utils";
-import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
+import {
+    MAIN_PLUGINS as MAIN_EDITOR_PLUGINS,
+    NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS,
+} from "@html_editor/plugin_sets";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
@@ -63,7 +66,10 @@ export class WebsiteBuilder extends Component {
         const pluginsToRemove = this.props.translation
             ? [...mainEditorPluginsToRemove, ...pluginsBlockedInTranslationMode]
             : mainEditorPluginsToRemove;
-        const mainEditorPlugins = removePlugins([...MAIN_EDITOR_PLUGINS], pluginsToRemove);
+        const mainEditorPlugins = removePlugins(
+            [...MAIN_EDITOR_PLUGINS, ...NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS],
+            pluginsToRemove
+        );
         const coreBuilderPlugins = this.props.translation ? [] : CORE_BUILDER_PLUGINS;
         const Plugins = [...mainEditorPlugins, ...coreBuilderPlugins, ...(websitePlugins || [])];
         builderProps.Plugins = Plugins;
