@@ -1142,11 +1142,7 @@ class One2many(_RelationalMulti):
 
         comodel = model.env[self.comodel_name].sudo()
         inverse_field = comodel._fields[self.inverse_name]
-        if inverse_field.store:
-            subselect = coquery.subselect(
-                comodel._field_to_sql(coquery.table, inverse_field.name, coquery)
-            )
-        else:
+        if not inverse_field.store:
             # determine ids1 in model related to ids2
             # TODO should we support this in the future?
             recs = comodel.browse(coquery).with_context(prefetch_fields=False)
@@ -1156,12 +1152,21 @@ class One2many(_RelationalMulti):
                 # int values, map them
                 inverses = model.browse(inverse_field.__get__(rec) for rec in recs)
             subselect = inverses._as_query(ordered=False).subselect()
+            return SQL(
+                "%s%s%s",
+                SQL.identifier(alias, 'id'),
+                SQL_OPERATORS['in' if exists else 'not in'],
+                subselect,
+            )
 
+        subselect = coquery.subselect(
+            SQL("%s AS __inverse", comodel._field_to_sql(coquery.table, inverse_field.name, coquery))
+        )
         return SQL(
-            "%s%s%s",
-            SQL.identifier(alias, 'id'),
-            SQL_OPERATORS['in' if exists else 'not in'],
+            "%sEXISTS(SELECT FROM %s WHERE __inverse = %s)",
+            SQL() if exists else SQL("NOT "),
             subselect,
+            SQL.identifier(alias, 'id'),
         )
 
 
