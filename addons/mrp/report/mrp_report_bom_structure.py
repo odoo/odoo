@@ -19,7 +19,9 @@ class ReportBomStructure(models.AbstractModel):
 
     @api.model
     def get_warehouses(self):
-        return self.env['stock.warehouse'].search_read([('company_id', 'in', self.env.companies.ids)], fields=['id', 'name'])
+        return self.env['stock.warehouse'].with_context(active_test=False).search_read([
+                ('company_id', 'in', self.env.companies.ids)
+            ], fields=['id', 'name'])
 
     @api.model
     def _compute_current_production_capacity(self, bom_data):
