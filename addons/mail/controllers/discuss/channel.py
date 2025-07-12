@@ -6,7 +6,8 @@ from odoo import http
 from odoo.http import request
 from odoo.tools.misc import OrderedSet
 from odoo.addons.mail.controllers.webclient import WebclientController
-from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
+from odoo.addons.mail.tools.discuss import Store, add_guest_to_context
+from odoo.exceptions import AccessError
 
 
 class DiscussChannelWebclientController(WebclientController):
@@ -212,3 +213,52 @@ class ChannelController(http.Controller):
             domain.append(("name", "ilike", search_term))
         sub_channels = request.env["discuss.channel"].search(domain, order="id desc", limit=limit)
         return Store(sub_channels).add(sub_channels._get_last_messages()).get_result()
+
+    @http.route("/discuss/channel/remove_channel_member", methods=["POST"], type="jsonrpc", auth="public")
+    def discuss_channel_remove_channel_member(self, member_id):
+        channel_member = request.env["discuss.channel.member"].search(
+            [
+                ("id", "=", member_id),
+            ]
+        )
+        if not channel_member:
+            raise NotFound()
+        channel = channel_member.channel_id
+        store = Store().delete(channel_member)
+        channel_member.unlink()
+        self.env["bus.bus"]._sendone(channel, "mail.record/insert", store.add(channel, fields=["member_count"]).get_result())
+
+    @http.route("/discuss/channel/set_channel_member_role", methods=["POST"], type="jsonrpc", auth="public")
+    def discuss_channel_set_channel_member_role(self, member_id, channel_role):
+        channel_member = request.env["discuss.channel.member"].search(
+            [
+                ("id", "=", member_id),
+            ]
+        )
+        if not channel_member:
+            raise NotFound()
+        channel = channel_member.channel_id
+        if not channel.is_self_channel_owner:
+            raise AccessError(self.env._("Only the channel owner or admin can modify member roles."))
+        if channel_role not in [False, "admin"]:
+            raise AccessError(self.env._("Only promoting to admin is allowed."))
+        # sudo: discuss.channel.member - writing channel role of a member is considered allowed
+        channel_member.sudo().write({"channel_role": channel_role})
+        self.env["bus.bus"]._sendone(channel_member.channel_id, "mail.record/insert", Store(channel_member, [Store.Attr("channel_role", sudo=True)]).get_result())
+
+    @http.route("/discuss/channel/transfer_channel_ownership", methods=["POST"], type="jsonrpc", auth="public")
+    def discuss_channel_transfer_channel_ownership(self, member_id):
+        channel_member = request.env["discuss.channel.member"].search(
+            [
+                ("id", "=", member_id),
+            ]
+        )
+        if not channel_member:
+            raise NotFound()
+        channel = channel_member.channel_id
+        if not channel.is_self_channel_owner:
+            raise AccessError(self.env._("You are not the owner of this channel."))
+        channel.self_member_id.sudo().write({"channel_role": None})
+        channel.self_member_id.flush_recordset()  # flush before assigning the new owner so that it does not violate the one-owner constraint
+        channel_member.sudo().write({"channel_role": "owner"})
+        self.env["bus.bus"]._sendone(channel, "mail.record/insert", Store(channel_member + channel.self_member_id, [Store.Attr("channel_role", sudo=True)]).get_result())
