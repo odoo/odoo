@@ -21,6 +21,7 @@ import urllib3.util
 from threading import Thread, Lock
 import time
 import zipfile
+from werkzeug.exceptions import Locked
 
 from odoo import http, release, service
 from odoo.tools.func import reset_cached_properties
@@ -62,15 +63,26 @@ def toggleable(function):
 
     @wraps(function)
     def devtools_wrapper(*args, **kwargs):
-        if function.__name__ == 'action':
+        if args and args[0].__class__.__name__ == 'DriverController' and get_conf('longpolling', section='devtools'):
+            _logger.warning("Refusing call to %s: longpolling is disabled by devtools", fname)
+            raise Locked("Longpolling disabled by devtools")  # raise to make the http request fail
+        elif function.__name__ == 'action':
             action = args[1].get('action', 'default')  # first argument is self (containing Driver instance), second is 'data'
             disabled_actions = (get_conf('actions', section='devtools') or '').split(',')
             if action in disabled_actions or '*' in disabled_actions:
                 _logger.warning("Ignoring call to %s: '%s' action is disabled by devtools", fname, action)
-                return
+                return None
         elif get_conf('general', section='devtools'):
+<<<<<<< 9b2206b73b4dcae944ea26c206f7414b4abe6858:addons/iot_drivers/tools/helpers.py
             _logger.warning("Ignoring call to %s: method is disabled by devtools", fname)
             return
+||||||| 0f22beea3499e8aaf28ee016b1886810e85f5274:addons/hw_drivers/tools/helpers.py
+            _logger.warning(f"Ignoring call to {fname}: method is disabled by devtools")
+            return
+=======
+            _logger.warning(f"Ignoring call to {fname}: method is disabled by devtools")
+            return None
+>>>>>>> 35e9ae28f997daca2209baf51de293a1f1fb56c9:addons/hw_drivers/tools/helpers.py
 
         return function(*args, **kwargs)
     return devtools_wrapper

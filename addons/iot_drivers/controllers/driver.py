@@ -22,7 +22,14 @@ DEVICE_TYPES = [
 
 
 class DriverController(http.Controller):
+<<<<<<< 9b2206b73b4dcae944ea26c206f7414b4abe6858:addons/iot_drivers/controllers/driver.py
     @route.iot_route('/iot_drivers/action', type='jsonrpc', cors='*', csrf=False, sign=True)
+||||||| 0f22beea3499e8aaf28ee016b1886810e85f5274:addons/hw_drivers/controllers/driver.py
+    @route.iot_route('/hw_drivers/action', type='jsonrpc', cors='*', csrf=False, sign=True)
+=======
+    @helpers.toggleable
+    @route.iot_route('/hw_drivers/action', type='jsonrpc', cors='*', csrf=False, sign=True)
+>>>>>>> 35e9ae28f997daca2209baf51de293a1f1fb56c9:addons/hw_drivers/controllers/driver.py
     def action(self, session_id, device_identifier, data):
         """This route is called when we want to make an action with device (take picture, printing,...)
         We specify in data from which session_id that action is called
@@ -53,7 +60,14 @@ class DriverController(http.Controller):
         """
         helpers.get_certificate_status()
 
+<<<<<<< 9b2206b73b4dcae944ea26c206f7414b4abe6858:addons/iot_drivers/controllers/driver.py
     @route.iot_route('/iot_drivers/event', type='jsonrpc', cors='*', csrf=False, sign=True)
+||||||| 0f22beea3499e8aaf28ee016b1886810e85f5274:addons/hw_drivers/controllers/driver.py
+    @route.iot_route('/hw_drivers/event', type='jsonrpc', cors='*', csrf=False, sign=True)
+=======
+    @helpers.toggleable
+    @route.iot_route('/hw_drivers/event', type='jsonrpc', cors='*', csrf=False, sign=True)
+>>>>>>> 35e9ae28f997daca2209baf51de293a1f1fb56c9:addons/hw_drivers/controllers/driver.py
     def event(self, listener):
         """
         listener is a dict in witch there are a sessions_id and a dict of device_identifier to listen
