@@ -126,6 +126,7 @@ class Binary(http.Controller):
                     bundle_name, rtl, asset_type, autoprefix = rw_env['ir.asset']._parse_bundle_name(filename, debug_assets)
                     css = asset_type == 'css'
                     js = asset_type == 'js'
+                    xml = asset_type == 'xml'
                     bundle = rw_env['ir.qweb']._get_asset_bundle(
                         bundle_name,
                         css=css,
@@ -142,6 +143,8 @@ class Binary(http.Controller):
                         attachment = env['ir.attachment'].sudo().browse(bundle.css().id)
                     elif js and bundle.javascripts:
                         attachment = env['ir.attachment'].sudo().browse(bundle.js().id)
+                    elif xml and bundle.templates:
+                        attachment = env['ir.attachment'].sudo().browse(bundle.xml().id)
                 except ValueError as e:
                     _logger.warning("Parsing asset bundle %s has failed: %s", filename, e)
                     raise request.not_found() from e
