@@ -72,13 +72,13 @@ class TestMailMail(MailCommon):
             ],
         })
 
-        def _patched_filter_attachment(self, *args, **kwargs):
+        def _patched_check_access(self, *args, **kwargs):
             if self.env.su:
-                return self
+                return None
             inaccessible = self.filtered(lambda att: att.name in ('file 2', 'file 4'))
             if inaccessible:
-                return self - inaccessible
-            return self
+                return inaccessible, lambda: AccessError(self.env._("No access"))
+            return None
 
         mail.invalidate_recordset()
 
@@ -87,7 +87,7 @@ class TestMailMail(MailCommon):
             'datas': 'c2VjcmV0',
         })
 
-        with patch.object(self.env.registry['ir.attachment'], '_filter_attachment_access', _patched_filter_attachment):
+        with patch.object(self.env.registry['ir.attachment'], '_check_access', _patched_check_access):
             # Sanity check
             self.assertEqual(mail.restricted_attachment_count, 2)
             self.assertEqual(len(mail.unrestricted_attachment_ids), 2)

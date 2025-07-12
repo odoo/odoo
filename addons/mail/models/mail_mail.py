@@ -110,13 +110,13 @@ class MailMail(models.Model):
         and the number of attachments we do not have access to.
         """
         for mail_sudo, mail in zip(self.sudo(), self):
-            mail.unrestricted_attachment_ids = mail_sudo.attachment_ids.sudo(False)._filter_attachment_access()
+            mail.unrestricted_attachment_ids = mail_sudo.attachment_ids.sudo(False)._filtered_access('read')
             mail.restricted_attachment_count = len(mail_sudo.attachment_ids) - len(mail.unrestricted_attachment_ids)
 
     def _inverse_unrestricted_attachment_ids(self):
         """We can only remove the attachments we have access to."""
         for mail_sudo, mail in zip(self.sudo(), self):
-            restricted_attaments = mail_sudo.attachment_ids - mail_sudo.attachment_ids.sudo(False)._filter_attachment_access()
+            restricted_attaments = mail_sudo.attachment_ids - mail_sudo.attachment_ids.sudo(False)._filtered_access('read')
             mail_sudo.attachment_ids = restricted_attaments | mail.unrestricted_attachment_ids
 
     def _search_body_content(self, operator, value):
@@ -140,7 +140,7 @@ class MailMail(models.Model):
             if values.get('attachment_ids'):
                 new_mails_w_attach += mail
         if new_mails_w_attach:
-            new_mails_w_attach.mapped('attachment_ids').check(mode='read')
+            new_mails_w_attach.attachment_ids.check_access('read')
 
         return new_mails
 
@@ -150,8 +150,7 @@ class MailMail(models.Model):
             vals['scheduled_date'] = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
         res = super(MailMail, self).write(vals)
         if vals.get('attachment_ids'):
-            for mail in self:
-                mail.attachment_ids.check(mode='read')
+            self.attachment_ids.check_access('read')
         return res
 
     def unlink(self):

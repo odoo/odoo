@@ -2,7 +2,7 @@
 
 import contextlib
 
-from odoo import _, models, SUPERUSER_ID
+from odoo import _, models
 from odoo.exceptions import AccessError, UserError
 from odoo.tools.misc import limited_field_access_token, verify_limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
@@ -24,15 +24,13 @@ class IrAttachment(models.Model):
             raise UserError(_("An access token must be provided for each attachment."))
 
         def is_owned(attachment, token):
-            if not attachment.with_user(SUPERUSER_ID).exists():
+            if not attachment.exists():
                 return False
-            try:
-                attachment.sudo(False).check("write")
+            if attachment.sudo(False).has_access("write"):
                 return True
-            except AccessError:
-                return token and verify_limited_field_access_token(
-                    attachment, "id", token, scope="attachment_ownership"
-                )
+            return token and verify_limited_field_access_token(
+                attachment, "id", token, scope="attachment_ownership"
+            )
 
         return all(is_owned(att, tok) for att, tok in zip(self, attachment_tokens, strict=True))
 

@@ -2001,6 +2001,7 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
         doc = self.env['ir.attachment'].create({
             'name': 'test',
             'type': 'url',
+            'public': True,
         })
 
         expected = """
