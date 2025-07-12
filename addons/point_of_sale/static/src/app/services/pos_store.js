@@ -967,7 +967,7 @@ export class PosStore extends WithLazyGetterTrap {
                     decimalAccuracy,
                     this.getProductPrice(values.product_id)
                 );
-                const weight = await makeAwaitable(this.env.services.dialog, ScaleScreen);
+                const weight = await this.weighProduct();
                 if (weight) {
                     values.qty = weight;
                 } else if (weight !== null) {
@@ -2500,6 +2500,7 @@ export class PosStore extends WithLazyGetterTrap {
             return `${pm.name} (${fmtAmount})`;
         }
     }
+<<<<<<< 775c11ef9273f483577b86bb0786bfa712380367
     getDate(date) {
         const todayTs = DateTime.now().startOf("day").ts;
         if (date.toLocal().startOf("day").ts === todayTs) {
@@ -2511,6 +2512,13 @@ export class PosStore extends WithLazyGetterTrap {
     getTime(date) {
         return date.toFormat("hh:mm");
     }
+||||||| c36e70f22c6672204274152b50fae31b2510c411
+=======
+
+    weighProduct() {
+        return makeAwaitable(this.env.services.dialog, ScaleScreen);
+    }
+>>>>>>> 49221f8bfb0337d4c19294612b0b073e7b08d790
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
