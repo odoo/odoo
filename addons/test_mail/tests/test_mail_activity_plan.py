@@ -295,3 +295,23 @@ class TestActivitySchedule(ActivityScheduleCase):
                 ValidationError, msg='When selecting responsible "other", you must specify a responsible.'):
             template.responsible_type = 'other'
         template.write({'responsible_type': 'other', 'responsible_id': self.user_admin})
+
+    @users('employee')
+    def test_mail_activity_access_rights(self):
+        """ Ensure user can create activity without res.partner creation rights. """
+        activity_model = self.env['mail.activity'].with_user(self.env.user)
+        contact = self.partner_employee.with_user(self.env.user)
+
+        # Remove contact creation rights
+        group_contact_creation = self.env.ref('base.group_partner_manager')
+        self.env.user.write({'groups_id': [(3, group_contact_creation.id)]})
+
+        self.assertTrue(activity_model.check_access_rights('create'))
+        self.assertFalse(contact.check_access_rights('create', raise_exception=False))
+
+        activity = activity_model.create({
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': contact.id,
+            'activity_type_id': self.env.ref('mail.mail_activity_data_call').id,
+        })
+        self.assertEqual(activity.res_id, contact.id)
