@@ -95,7 +95,7 @@
                                 <field name="company_id" invisible="1"/>
                                 <field name="name"/>
                                 <field name="bom_id" invisible="context.get('bom_id_invisible', False)" domain="[]" readonly="context.get('default_bom_id', False)"/>
-                                <field name="workcenter_id" context="{'default_company_id': company_id}"/>
+                                <field name="workcenter_id"/>
                                 <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
                                 <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
                                 <field name="allow_operation_dependencies" invisible="1"/>

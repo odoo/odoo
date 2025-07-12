@@ -424,7 +424,8 @@ export class Message extends Record {
             !this.is_transient &&
                 this.thread &&
                 this.store.self.type === "partner" &&
-                this.store.self.isInternalUser
+                this.store.self.isInternalUser &&
+                this.persistent
         );
     }
 

@@ -128,8 +128,8 @@ msgid ""
 " When different than 0, inventory count date for products stored at this "
 "location will be automatically set at the defined frequency."
 msgstr ""
-" 0'dan farklı olması durumunda, bu konumda bulunan ürünler için envanter "
-"sayım tarihi otomatik olarak tanımlanan sıklıkta belirlenecektir."
+" 0'dan farklı olduğunda bu konumda depolanan ürünlerin envanter sayım "
+"tarihi, tanımlanan sıklıkta otomatik olarak ayarlanacaktır."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_count
@@ -779,8 +779,8 @@ msgid ""
 "quantity and now, the difference of quantity is not consistent "
 "anymore.</strong>"
 msgstr ""
-"<strong>Miktardaki ilk güncelleme ve şu an arasında gerçekleşen bazı stok "
-"hareketlerinden dolayı, miktardaki fark artık tutarlı değildir.</strong>"
+"<strong>Miktarın ilk güncellemesinden bu yana yapılan bazı stok hareketleri "
+"nedeniyle miktar farkı artık tutarlı değildir.</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1200,8 +1200,8 @@ msgid ""
 "Annual inventory month for products not in a location with a cyclic "
 "inventory date. Set to no month if no automatic annual inventory."
 msgstr ""
-"Düzenli envanter tarihi olmayan konumdaki ürünler için yıllık envanter ayı. "
-"Otomatik yıllık envanter yoksa ay yoku seçiniz."
+"Döngüsel envanter tarihi olmayan konumlardaki ürünler için yıllık envanter "
+"ayı. Otomatik yıllık envanter yoksa, ay ayarını “hayır” olarak belirleyin."
 
 #. module: stock
 #. odoo-python
@@ -2548,8 +2548,8 @@ msgid ""
 "Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.\n"
 "        If greater than the last day of a month, then the last day of the month will be selected instead."
 msgstr ""
-"Yıllık envanterin oluşacağı ayın günü. Eğer sıfır veya negatif olursa, yerine ayın ilk günü seçilecektir.\n"
-"        Eğer ayın son gününden büyükse, o zaman da yerine ayın son günü seçilecektir."
+"Ayın, yıllık envanterin yapılması gereken günü. Sıfır veya negatif olması durumunda, bunun yerine ayın ilk günü seçilecektir.\n"
+"        Ayın son gününden büyükse, bunun yerine ayın son günü seçilecektir."
 
 #. module: stock
 #. odoo-javascript
@@ -4429,7 +4429,7 @@ msgstr "Envanter Tarihi"
 #: model:ir.model.fields,field_description:stock.field_stock_quant__cyclic_inventory_frequency
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Inventory Frequency"
-msgstr ""
+msgstr "Envanter Sıklığı"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
@@ -4471,7 +4471,7 @@ msgstr "Stok Miktar Seti"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__inventory_adjustment_name
 msgid "Inventory Reason"
-msgstr ""
+msgstr "Envanter Nedeni"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_route
@@ -4647,8 +4647,8 @@ msgid ""
 "Keep the <strong>Difference</strong> (the Counted Quantity will be updated "
 "to reflect the same difference as when you counted)"
 msgstr ""
-"<strong>Farkı</strong> Koruyun  (Sayılan Miltar saydığınızdaki farkı "
-"yansıyacak şekilde güncellenecektir.)"
+"<strong>Farkı koruyun</strong> (sayılan miktar, saydığınız zamanki farkı "
+"yansıtacak şekilde güncellenecektir)"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_print_labels
@@ -4698,7 +4698,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__last_inventory_date
 msgid "Last Inventory"
-msgstr ""
+msgstr "Son Envanter"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__write_uid
@@ -5563,7 +5563,7 @@ msgstr "Sonraki Aktivitie Türü"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__next_inventory_date
 msgid "Next Expected"
-msgstr ""
+msgstr "Sonraki Beklenen"
 
 #. module: stock
 #. odoo-python
@@ -5850,7 +5850,7 @@ msgstr "Stok Miktarı"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "On hand Quantity"
-msgstr ""
+msgstr "Elde bulunan miktar"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__available_quantity
@@ -7489,7 +7489,7 @@ msgstr "İlişkili Stok Hareketleri"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Relocate"
-msgstr ""
+msgstr "Yer değiştirme"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -8311,7 +8311,7 @@ msgstr "Ayarlar"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "Shelf A"
-msgstr ""
+msgstr "Raf A"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posy
@@ -9533,8 +9533,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
 msgstr ""
-"Bu stok konumu varsayılanın yerine envanter işlemi yaparken oluşturulan stok"
-" hareketlerinin kaynak konumu olarak kullanılacaktır."
+"Bu stok konumu, stok sayımı yaparken oluşturulan stok hareketlerinin kaynak "
+"konumu olarak varsayılan konum yerine kullanılacaktır."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__responsible_id
@@ -11208,8 +11208,8 @@ msgid ""
 "You tried to create a record that already exists. The existing record was "
 "modified instead."
 msgstr ""
-"Halihazırda var olan bir kayıt oluşturmaya çalıştınız. Bunun yerine mevcut "
-"kayıt değiştirildi."
+"Zaten var olan bir kayıt oluşturmaya çalıştınız. Bunun yerine mevcut kayıt "
+"değiştirildi."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish

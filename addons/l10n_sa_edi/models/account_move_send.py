@@ -1,4 +1,4 @@
-from odoo import api, models, _
+from odoo import _, api, models
 
 
 class AccountMoveSend(models.AbstractModel):

@@ -3,9 +3,9 @@
 # 	* account_check_printing
 # 
 # Translators:
-# Fernanda Alvarez, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Wil Odoo, 2025
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 msgid "%(journal)s: Check Number Sequence"
-msgstr "%(journal)s: secuencia de números de cheque "
+msgstr "%(journal)s: Secuencia de números de cheque"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -43,8 +43,8 @@ msgid ""
 "Adjust the margins of generated checks to make it fit your printer's "
 "settings."
 msgstr ""
-"Ajuste los márgenes de los cheques generados para que se adapten a la "
-"configuración de su impresora."
+"Ajusta los márgenes de los cheques generados para adaptarlos a la "
+"configuración de tu impresora."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -111,7 +111,7 @@ msgstr "Los números de cheque solo pueden incluir dígitos"
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr "Seleccione esta opción si sus cheques preimpresos no están numerados."
+msgstr "Selecciona esta opción si tus cheques preimpresos no están numerados."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -241,7 +241,7 @@ msgstr "Talón de cheque de varias páginas"
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__next_check_number
 msgid "Next Check Number"
-msgstr "Próximo número de cheque"
+msgstr "Número para el siguiente cheque"
 
 #. module: account_check_printing
 #. odoo-python
@@ -278,15 +278,14 @@ msgid ""
 "and not have already been reconciled"
 msgstr ""
 "Los pagos a imprimir como cheques deben tener la opción \"Cheque\" "
-"seleccionada como método de pago y no haber sido conciliados con "
-"anterioridad."
+"seleccionada como método de pago y no deben estar conciliados."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "Please enter the number of the first pre-printed check that you are about to"
 " print on."
-msgstr "Introduzca el número del primer cheque preimpreso que va a imprimir."
+msgstr "Escribe el número del primer cheque preimpreso que imprimirás."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -335,8 +334,8 @@ msgid ""
 "Select the format corresponding to the check paper you will be printing your checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
-"Seleccione el formato correspondiente al papel en el que imprimirá sus cheques.\n"
-"Para desactivar la función de impresión, seleccione \"Ninguno\"."
+"Selecciona el formato correspondiente al papel en el que imprimirás tus cheques.\n"
+"Elige \"Ninguno\" para desactivar la función de impresión."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -360,8 +359,8 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
-"Ocurrió un error con el diseño del cheque. Seleccione otro diseño en los "
-"ajustes de Facturación o Contabilidad e inténtelo de nuevo."
+"Ocurrió un error con el diseño del cheque. Elige otro diseño en los ajustes "
+"de Facturación o Contabilidad e inténtalo otra vez."
 
 #. module: account_check_printing
 #. odoo-python
@@ -380,8 +379,8 @@ msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
 msgstr ""
-"El número del último cheque fue %s. Para evitar que el banco lo rechace, "
-"solo puede utilizar un número mayor."
+"El número del último cheque fue %s. Solo puedes utilizar un número mayor "
+"para evitar que el banco lo rechace."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
@@ -390,9 +389,10 @@ msgid ""
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
 msgstr ""
-"El diario seleccionado está configurado para imprimir números de cheque. Si "
-"su cheque preimpreso ya tiene números o si la numeración actual es "
-"incorrecta puede cambiarla en la página de configuración del diario."
+"El diario seleccionado está configurado para imprimir el número de los "
+"cheques. En la página de configuración del diario puedes cambiar la "
+"numeración si tus cheques preimpresos ya tienen número o si la numeración "
+"actual es incorrecta."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -401,7 +401,7 @@ msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
 msgstr ""
-"Esta opción le permite imprimir los detalles del cheque (talón) en varias "
+"Esta opción te permite imprimir los detalles del cheque (talón) en varias "
 "páginas si no caben en una sola."
 
 #. module: account_check_printing
@@ -411,8 +411,8 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
-"Esta opción le permite imprimir la etiqueta de fecha en el cheque según la CPA.\n"
-"Desactívela si su cheque preimpreso incluye la etiqueta de fecha."
+"Esta opción te permite imprimir la etiqueta de fecha en el cheque según la CPA.\n"
+"Desactívala si tu cheque preimpreso incluye la etiqueta de fecha."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -438,5 +438,5 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
-"Debe elegir un diseño de cheque. Vaya a los ajustes de Facturación o "
-"Contabilidad, busque \"Diseño de cheques\" y seleccione uno."
+"Debes elegir un diseño de cheque. Ve a los ajustes de Facturación o "
+"Contabilidad, busca \"Diseño de cheques\" y selecciona uno."
