@@ -29,7 +29,7 @@ class ProcurementGroup(models.Model):
     def _get_rule_domain(self, location, values):
         domain = super()._get_rule_domain(location, values)
         if 'sale_line_id' in values and values.get('company_id'):
-            domain = expression.AND([domain, [('company_id', '=', values['company_id'].id)]])
+            domain = expression.AND([domain, [('company_id', 'child_of', values['company_id'].id)]])
         return domain
 
 class StockPicking(models.Model):

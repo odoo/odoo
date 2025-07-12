@@ -21,6 +21,7 @@ class Location(models.Model):
     _rec_name = 'complete_name'
     _rec_names_search = ['complete_name', 'barcode']
     _check_company_auto = True
+    _check_company_domain = models.check_company_domain_child_of
 
     @api.model
     def default_get(self, fields):
