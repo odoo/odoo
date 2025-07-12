@@ -375,13 +375,26 @@ class StockMove(models.Model):
 
     def _get_in_svl_vals(self, forced_quantity):
         svl_vals_list = []
+        lines_with_cumulativive_cost_share_list = []
+        if 'purchase_line_id' in self:
+            for purchase_line in self.purchase_line_id:
+                product = purchase_line.product_id
+                bom = self.env['mrp.bom'].sudo()._bom_find(product, company_id=purchase_line.company_id.id, bom_type='phantom')[product]
+                lines = bom.sudo().explode(product, 1, picking_type=bom.picking_type_id)[1]
+                lines_with_cumulativive_cost_share_list.extend(lines)
         for move in self:
+            cumulative_cost_share = False
+            if move.bom_line_id and lines_with_cumulativive_cost_share_list:
+                current_bom = lines_with_cumulativive_cost_share_list[0][0]
+                if 'cumulative_cost_share' in current_bom._context:
+                    cumulative_cost_share = current_bom._context['cumulative_cost_share']
+                lines_with_cumulativive_cost_share_list = lines_with_cumulativive_cost_share_list[1:]
             move = move.with_company(move.company_id)
             valued_move_lines = move._get_in_move_lines()
             valued_quantity = sum(valued_move_lines.mapped("quantity_product_uom"))
             unit_cost = move.product_id.standard_price
             if move.product_id.cost_method != 'standard':
-                unit_cost = abs(move._get_price_unit())  # May be negative (i.e. decrease an out move).
+                unit_cost = abs(move.with_context(cumulative_cost_share=cumulative_cost_share)._get_price_unit())  # May be negative (i.e. decrease an out move).
             svl_vals = move.product_id._prepare_in_svl_vals(forced_quantity or valued_quantity, unit_cost)
             svl_vals.update(move._prepare_common_svl_vals())
             if forced_quantity:

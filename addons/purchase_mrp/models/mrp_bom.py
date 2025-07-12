@@ -35,5 +35,6 @@ class MrpBomLine(models.Model):
         if self.cost_share:
             return self.cost_share / 100
         bom = self.bom_id
+        total_bom_cost_share = sum(bom.bom_line_ids.filtered(lambda bl: bl.cost_share).mapped('cost_share')) / 100
         bom_lines_without_cost_share = bom.bom_line_ids.filtered(lambda bl: not bl.cost_share)
-        return 1 / len(bom_lines_without_cost_share)
+        return (1 - total_bom_cost_share) / len(bom_lines_without_cost_share)
