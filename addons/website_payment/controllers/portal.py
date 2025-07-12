@@ -11,7 +11,7 @@ from odoo.addons.payment.controllers import portal as payment_portal
 
 
 class PaymentPortal(payment_portal.PaymentPortal):
-    @http.route('/donation/pay', type='http', methods=['GET', 'POST'], auth='public', website=True, sitemap=False)
+    @http.route('/donation/pay', type='http', methods=['GET', 'POST'], auth='public', website=True, sitemap=False, list_as_editable_page=True)
     def donation_pay(self, **kwargs):
         """ Behaves like PaymentPortal.payment_pay but for donation
 

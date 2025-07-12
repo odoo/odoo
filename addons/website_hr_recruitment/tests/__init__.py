@@ -1,1 +1,2 @@
 from . import test_website_hr_recruitment
+from . import test_website_hr_recruitment_technical_page
