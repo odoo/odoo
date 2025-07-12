@@ -272,6 +272,13 @@ class TestMailComposerUI(MailCommon, HttpCase):
             'name': 'Test template',
             'partner_to': '{{ object.id }}',
         })
+        self.env['mail.template'].create({
+            'auto_delete': True,
+            'lang': '{{ object.lang }}',
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'name': "Test template for admin",
+            'user_id': self.env.ref('base.user_admin').id,
+        })
         self.user_employee.write({
             'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
         })
