@@ -561,6 +561,7 @@ export class DomPlugin extends Plugin {
                 !descendants(block).some((descendant) => targetedBlocks.includes(descendant)) &&
                 block.isContentEditable
         );
+        const newEls = [];
         for (const block of deepestTargetedBlocks) {
             if (
                 isParagraphRelatedElement(block) ||
@@ -586,6 +587,7 @@ export class DomPlugin extends Plugin {
                 if (block.nodeName === "LI") {
                     this.delegateTo("set_tag_overrides", block, newEl);
                 }
+                newEls.push(newEl);
             } else {
                 // eg do not change a <div> into a h1: insert the h1
                 // into it instead.
@@ -595,6 +597,7 @@ export class DomPlugin extends Plugin {
             }
         }
         cursors.restore();
+        this.dispatchTo("update_content_edited_nodes", newEls);
         this.dependencies.history.addStep();
     }
 
