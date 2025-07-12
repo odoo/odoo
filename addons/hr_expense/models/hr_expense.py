@@ -309,7 +309,7 @@ class HrExpense(models.Model):
             or self.env.su
         )
         is_team_approver = self.env.user.has_group('hr_expense.group_hr_expense_team_approver')
-        is_all_approver = self.env.user.has_group('hr_expense.group_hr_expense_user')
+        is_all_approver = self.env.user.has_groups('hr_expense.group_hr_expense_user', 'account.group_account_user')
 
         expenses_employee_ids_under_user_ones = set()
         if is_team_approver:
