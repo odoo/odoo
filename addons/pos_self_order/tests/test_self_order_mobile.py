@@ -77,3 +77,6 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         # Cancel in each
         self.start_tour(self_route, "self_order_mobile_each_cancel")
+
+        self_route_table = self.pos_config._get_self_order_route(table_id=floor.table_ids[0].id)
+        self.start_tour(self_route_table, "self_mobile_auto_table_selection_takeaway_in")
