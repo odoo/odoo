@@ -114,6 +114,60 @@ class Website(models.Model):
 
     shop_gap = fields.Char(string="Grid-gap on the shop", default="16px", required=False)
 
+    shop_opt_products_design_class = fields.Char(
+        string="Shop Design Class",
+        default='o_wsale_layout_catalog o_wsale_design_thumbs',
+        help="CSS class for shop cards design"
+    )
+
+    shop_opt_products_roundness_class = fields.Char(
+        string="Shop Roundness Class",
+        default='o_wsale_products_opt_rounded_2',
+        help="CSS class for shop cards roundness"
+    )
+
+    shop_opt_products_thumb_ratio_class = fields.Char(
+        string="Shop Thumbnail Ratio Class",
+        default='',
+        help="CSS class for shop cards thumbnails ratio"
+    )
+
+    shop_opt_products_hover_effect_class = fields.Char(
+        string="Shop Hover Effect Class",
+        default='',
+        help="CSS class for product hover effects on shop page"
+    )
+
+    shop_opt_products_text_align_class = fields.Char(
+        string="Shop Text Align Class",
+        default='',
+        help="CSS class for product text alignment on shop page"
+    )
+
+    shop_opt_products_name_color_class = fields.Char(
+        string="Shop Products Name Color Class",
+        default='o_wsale_products_opt_name_color_regular',
+        help="CSS class for product name color"
+    )
+
+    shop_opt_products_img_secondary_class = fields.Char(
+        string="Shop Images Secondary Image behavior",
+        default='o_wsale_products_opt_img_secondary_show',
+        help="CSS class for the secondary product image on shop page"
+    )
+
+    shop_opt_products_img_hover_class = fields.Char(
+        string="Shop Images Hover Effect Class",
+        default='o_wsale_products_opt_img_hover_zoom_out_light',
+        help="CSS class for product image hover effects on shop page"
+    )
+
+    shop_opt_products_colors_class = fields.Char(
+        string="Shop Products Color Combination Class",
+        default='',
+        help="CSS class for product color-combinations on shop page"
+    )
+
     shop_default_sort = fields.Selection(
         selection='_get_product_sort_mapping', required=True, default='website_sequence asc')
 

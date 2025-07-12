@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+
+<t t-name="website_sale.ProductsDesignPanelPresets">
+    <BuilderSelect action="'composite'">
+        <t
+            t-set="resetColors"
+            t-value="'!o_wsale_products_cc !o_wsale_products_cc2 !o_wsale_products_cc3 !o_wsale_products_cc4 !o_wsale_products_cc5 '"
+        />
+        <t
+            t-set="resetRoundness"
+            t-value="'!o_wsale_products_opt_rounded_0 !o_wsale_products_opt_rounded_1 !o_wsale_products_opt_rounded_2 !o_wsale_products_opt_rounded_3 !o_wsale_products_opt_rounded_4 !o_wsale_products_opt_rounded_5 '"
+        />
+        <t
+            t-set="resetRatioAndFill"
+            t-value="'!o_wsale_context_thumb_16_9 !o_wsale_context_thumb_4_3 !o_wsale_context_thumb_6_5 !o_wsale_context_thumb_4_5 !o_wsale_context_thumb_2_3 o_wsale_context_thumb_cover '"
+        />
+        <t
+            t-set="resetImgHover"
+            t-value="'!o_wsale_products_opt_img_hover_zoom_in !o_wsale_products_opt_img_hover_zoom_in_light !o_wsale_products_opt_img_hover_zoom_out !o_wsale_products_opt_img_hover_zoom_out_light !o_wsale_products_opt_img_hover_zoom_out_light !o_wsale_products_opt_img_hover_shadow '"
+        />
+        <t
+            t-set="resetAllDesign"
+            t-value="resetColors + resetRoundness + resetRatioAndFill + resetImgHover + '!o_wsale_products_opt_text_align_center'"
+        />
+
+        <t
+            t-set="resetActions"
+            t-value="'!o_wsale_products_opt_actions_onhover'"
+        />
+
+        <t t-set="thumbnailsLabel">Thumbnails</t>
+        <t t-set="chipsLabel">Chips</t>
+        <t t-set="cardsLabel">Cards</t>
+        <t t-set="gridLabel">Grid</t>
+        <t t-set="showcaseLabel">Showcase</t>
+
+        <t t-set="catalogStyles" t-value="[
+            {
+                id: 'wsale_design_thumbs_catalog',
+                type: 'catalog',
+                label: thumbnailsLabel,
+                className: 'o_wsale_layout_catalog o_wsale_design_thumbs',
+                img: '/website_sale/static/src/img/products_entries_design/style_catalog_thumb.svg',
+                suggestedClasses: resetAllDesign + ' o_wsale_products_opt_rounded_2 o_wsale_products_opt_actions_onhover',
+                gap: 16,
+            },
+            {
+                id: 'wsale_design_chips_catalog',
+                type: 'catalog',
+                label: chipsLabel,
+                className: 'o_wsale_layout_catalog o_wsale_design_chips',
+                img: '/website_sale/static/src/img/products_entries_design/style_catalog_chips.svg',
+                suggestedClasses: resetAllDesign + ' o_wsale_products_opt_rounded_4',
+                gap: 16,
+            },
+            {
+                id: 'wsale_design_cards_catalog',
+                type: 'catalog',
+                label: cardsLabel,
+                className: 'o_wsale_layout_catalog o_wsale_design_cards',
+                img: '/website_sale/static/src/img/products_entries_design/style_catalog_cards.svg',
+                suggestedClasses: resetAllDesign + ' o_wsale_products_opt_rounded_2',
+                gap: 16,
+            },
+            {
+                id: 'wsale_design_grid_catalog',
+                type: 'catalog',
+                label: gridLabel,
+                className: 'o_wsale_layout_catalog o_wsale_design_grid',
+                img: '/website_sale/static/src/img/products_entries_design/style_catalog_grid.svg',
+                suggestedClasses: resetAllDesign,
+                gap: 0,
+            },
+            {
+                id: 'wsale_design_thumbs_list',
+                type: 'list',
+                label: thumbnailsLabel,
+                className: 'o_wsale_layout_list o_wsale_design_thumbs',
+                img: '/website_sale/static/src/img/products_entries_design/style_list_thumbs.svg',
+                suggestedClasses: resetAllDesign + resetActions + ' o_wsale_products_opt_rounded_2 !o_wsale_products_opt_actions_onhover',
+                gap: 16,
+            },
+            {
+                id: 'wsale_design_cards_list',
+                type: 'list',
+                label: cardsLabel,
+                className: 'o_wsale_layout_list o_wsale_design_cards',
+                img: '/website_sale/static/src/img/products_entries_design/style_list_cards.svg',
+                suggestedClasses: resetAllDesign + resetActions + ' o_wsale_products_opt_rounded_2',
+                gap: 8,
+            },
+            {
+                id: 'wsale_design_grid_list',
+                type: 'list',
+                label: gridLabel,
+                className: 'o_wsale_layout_list o_wsale_design_grid',
+                img: '/website_sale/static/src/img/products_entries_design/style_list_grid.svg',
+                suggestedClasses: resetAllDesign + resetActions,
+                gap: 0,
+            },
+            {
+                id: 'wsale_design_showcase_list',
+                label: showcaseLabel,
+                type: 'list',
+                className: 'o_wsale_layout_list o_wsale_design_showcase',
+                img: '/website_sale/static/src/img/products_entries_design/style_list_showcase.svg',
+                suggestedClasses: resetAllDesign + resetActions + ' o_wsale_context_thumb_16_9 o_wsale_products_cc o_wsale_products_cc5 o_wsale_products_opt_name_color_regular ',
+                gap: 0,
+            },
+        ]"/>
+
+        <t t-foreach="catalogStyles" t-as="style" t-key="style_index">
+            <BuilderSelectItem
+                    t-if="style.type == 'catalog' || style.type == 'list' &amp;&amp; props.isShop"
+                    id="style.id"
+                    action="'composite'"
+                    actionParam="[
+                        {
+                            action: 'classActionWithSave',
+                            actionParam: {
+                                className: style.className,
+                                saveField: props.isShop ? 'shop_opt_products_design_class' : null,
+                                suggestedClasses: style.suggestedClasses,
+                            }
+                        },
+                        {action: 'setGap', actionValue: style.gap + 'px'}
+                    ]">
+
+                    <div t-if="style.img &amp;&amp; showImages" style="max-width: 160px;" class="py-1">
+                        <div class="d-flex align-items-center lh-base" style="font-size: 0.8em">
+                            <i class="oi me-2" t-att-class="style.type == 'catalog' ? 'oi-apps' : 'oi-view-list' "/>
+                            <span t-out="style.label"/>
+                        </div>
+                        <Img src="style.img" class="'mw-100'"/>
+                    </div>
+                    <div t-else="" class="d-flex align-items-center ps-1">
+                        <i class="oi me-2" t-att-class="style.type == 'catalog' ? 'oi-apps' : 'oi-view-list' "/>
+                        <t t-out="style.label"/>
+                    </div>
+            </BuilderSelectItem>
+        </t>
+    </BuilderSelect>
+</t>
+
+<t t-name="website_sale.ProductsDesignPanel">
+    <BuilderRow label="props.label">
+        <t t-call="website_sale.ProductsDesignPanelPresets">
+            <t t-set="showImages" t-value="false"/>
+        </t>
+
+        <button class="btn o-hb-btn btn-primary o-wsale-btn-overlay flex-grow-0" t-on-click="openDesignOverlay">
+            <i class="fa fa-paint-brush" role="presentation"/>
+        </button>
+    </BuilderRow>
+
+    <div
+        t-if="state.overlayVisible"
+        class="o_wsale_editor_overlay position-absolute top-0 start-0 w-100 h-100"
+        t-on-click="onBackdropClick"
+        tabindex="-1"
+        aria-label="Products Design"
+    >
+
+        <div class="o_wsale_design_panel pb-3">
+            <div
+                class="options-container-header d-flex align-items-center justify-content-between mb-2"
+            >
+                <div class="options-container-label d-flex flex-grow-1 align-items-center p-2">
+                    <div
+                        class="me-2 opacity-75 opacity-100-hover"
+                        t-on-click="closeDesignOverlay"
+                        aria-label="Close"
+                        role="button">
+                        <i class="oi oi-chevron-left" role="presentation"/>
+                    </div>
+                    <t t-out="props.label"/>
+                </div>
+            </div>
+
+            <t t-call="website_sale.ProductsDesignPanelContent">
+                <t t-set="isShop" t-value="props.isShop"/>
+            </t>
+        </div>
+    </div>
+</t>
+
+<t t-name="website_sale.ProductsDesignPanelContent">
+    <!-- Presets with images -->
+    <BuilderRow
+        label.translate="Presets"
+        tooltip.translate="Choose one pre-meade preset and customise it as you wish"
+    >
+        <t t-call="website_sale.ProductsDesignPanelPresets">
+            <t t-set="label">Presets</t>
+            <t t-set="showImages" t-value="true"/>
+        </t>
+    </BuilderRow>
+
+    <div class="o_wsale_design_panel_section_title ps-2 pt-2 pb-1 fw-bold">General</div>
+    <hr class="mx-2 mt-0 mb-2"/>
+
+    <!-- Designs Map -->
+    <t
+        t-set="anyCatalog"
+        t-value="this.isActiveItem('wsale_design_thumbs_catalog') || this.isActiveItem('wsale_design_cards_catalog') || this.isActiveItem('wsale_design_chips_catalog') || this.isActiveItem('wsale_design_grid_catalog')"
+    />
+    <t
+        t-set="anyThumb"
+        t-value="this.isActiveItem('wsale_design_thumbs_catalog') || this.isActiveItem('wsale_design_thumbs_list')"
+    />
+    <t
+        t-set="anyCard"
+        t-value="this.isActiveItem('wsale_design_cards_catalog') || this.isActiveItem('wsale_design_cards_list')"
+    />
+    <t
+        t-set="catalogThumb"
+        t-value="this.isActiveItem('wsale_design_thumbs_catalog')"
+    />
+    <t
+        t-set="catalogChips"
+        t-value="this.isActiveItem('wsale_design_chips_catalog')"
+    />
+
+    <BuilderRow
+        label.translate="Hover Effect"
+        t-if="anyThumb || anyCard || catalogThumb || catalogChips"
+        >
+        <BuilderSelect>
+            <BuilderSelectItem
+                action="'classActionWithSave'"
+                actionParam="{
+                    className: '',
+                    saveField: 'shop_opt_products_hover_effect_class',
+                }">
+                None
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                t-if="anyThumb"
+                action="'classActionWithSave'"
+                actionParam="{
+                    className: 'o_wsale_products_opt_hover_background',
+                    saveField: 'shop_opt_products_hover_effect_class',
+                }">
+                Background
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                t-if="anyThumb"
+                action="'classActionWithSave'"
+                actionParam="{
+                    className: 'o_wsale_products_opt_hover_background o_wsale_products_opt_hover_background_zoom',
+                    saveField: 'shop_opt_products_hover_effect_class',
+                }">
+                Background Zoom
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                t-if="anyCard || catalogChips"
+                action="'classActionWithSave'"
+                actionParam="{
+                    className: 'o_wsale_products_opt_hover_shadow_out',
+                    saveField: 'shop_opt_products_hover_effect_class',
+                }">
+                Shadow-Out
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                t-if="anyCard || catalogChips"
+                action="'classActionWithSave'"
+                actionParam="{
+                    className: 'o_wsale_products_opt_hover_shadow_in',
+                    saveField: 'shop_opt_products_hover_effect_class',
+                }">
+                Shadow-In
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                t-if="anyCard || catalogChips"
+                action="'classActionWithSave'"
+                actionParam="{
+                    className: 'o_wsale_products_opt_hover_border_primary',
+                    saveField: 'shop_opt_products_hover_effect_class',
+                }">
+                Border-Primary
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Gap" t-if="!this.isActiveItem('wsale_design_grid_list')">
+        <BuilderRange
+            action="'setGap'"
+            min="0"
+            max="28"
+            unit="'px'"
+            displayRangeValue="true"
+        />
+    </BuilderRow>
+
+    <BuilderRow
+        label.translate="Roundness"
+        t-if="!this.isActiveItem('wsale_design_grid_catalog') &amp;&amp; !this.isActiveItem('wsale_design_grid_list')"
+    >
+        <BuilderRange
+            max="5"
+            action="'classActionWithSave'"
+            actionParam="{
+                className: ['o_wsale_products_opt_rounded_0','o_wsale_products_opt_rounded_1','o_wsale_products_opt_rounded_2','o_wsale_products_opt_rounded_3','o_wsale_products_opt_rounded_4','o_wsale_products_opt_rounded_5'],
+                saveField: 'shop_opt_products_roundness_class',
+            }"
+        />
+    </BuilderRow>
+
+    <BuilderRow
+        label.translate="Colors"
+        tooltip.translate="Color combinations are defined in the Theme Tab"
+    >
+        <BuilderSelect t-if="!anyThumb">
+            <BuilderSelectItem
+                action="'classActionWithSave'"
+                actionParam="{
+                    className: '',
+                    saveField: 'shop_opt_products_colors_class',
+                }"
+            >
+                Theme Preset n&#176;1 (default)
+            </BuilderSelectItem>
+            <t t-foreach="[2, 3, 4, 5]" t-as="colorIndex" t-key="colorIndex_index">
+                <BuilderSelectItem
+                    action="'classActionWithSave'"
+                    actionParam="{
+                        className: 'o_wsale_products_cc o_wsale_products_cc' + colorIndex,
+                        saveField: 'shop_opt_products_colors_class',
+                    }"
+                >
+                    Theme Preset n&#176;<t t-out="colorIndex"/>
+                </BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <div class="o_wsale_design_panel_section_title ps-2 pt-3 pb-1 fw-bold">Text</div>
+    <hr class="mx-2 mt-0 mb-2"/>
+
+    <BuilderRow t-if="anyCatalog" label.translate="Alignment">
+        <BuilderButtonGroup  action="'classActionWithSave'">
+            <BuilderButton
+                actionParam="{
+                    className: '',
+                    saveField: 'shop_opt_products_text_align_class',
+                }"
+            >
+                Regular
+            </BuilderButton>
+            <BuilderButton
+                actionParam="{
+                    className: 'o_wsale_products_opt_text_align_center',
+                    saveField: 'shop_opt_products_text_align_class',
+                }"
+            >
+                Center
+            </BuilderButton>
+        </BuilderButtonGroup>
+    </BuilderRow>
+
+    <BuilderRow
+        label.translate="Title color"
+        tooltip.translate="Use auto values or force the link-color defined in the Theme Tab"
+    >
+        <BuilderSelect>
+            <BuilderSelectItem
+                action="'classActionWithSave'"
+                actionParam="{
+                    className: '',
+                    saveField: 'shop_opt_products_name_color_class',
+                }"
+            >
+                Link Color
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                action="'classActionWithSave'"
+                actionParam="{
+                    className: 'o_wsale_products_opt_name_color_regular',
+                    saveField: 'shop_opt_products_name_color_class',
+                }"
+            >
+                Default Color
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Description">
+        <BuilderCheckbox
+            action="'templateConfig'"
+            actionParam="{
+                views: ['website_sale.products_description', 'website_sale.products_description_class'],
+                templateClass: 'o_wsale_products_opt_has_description'
+            }"
+        />
+    </BuilderRow>
+
+    <div class="o_wsale_design_panel_section_title ps-2 pt-3 pb-1 fw-bold">Images</div>
+    <hr class="mx-2 mt-0 mb-2"/>
+
+    <BuilderRow label.translate="Images Size">
+        <BuilderSelect action="'classActionWithSave'">
+            <t t-set="imgRatios" t-value="[
+                {
+                    label: 'WideScreen (16/9)',
+                    className: 'o_wsale_context_thumb_16_9',
+                },
+                {
+                    label: 'Landscape (4/3)',
+                    className: 'o_wsale_context_thumb_4_3',
+                },
+                {
+                    label: 'Horizontal (6/5)',
+                    className: 'o_wsale_context_thumb_6_5',
+                },
+                {
+                    label: 'Default (1/1)',
+                    className: '',
+                },
+                {
+                    label: 'Portrait (4/5)',
+                    className: 'o_wsale_context_thumb_4_5',
+                },
+                {
+                    label: 'Vertical (2/3)',
+                    className: 'o_wsale_context_thumb_2_3',
+                },
+            ]"/>
+            <t t-foreach="imgRatios" t-as="imgRatio" t-key="imgRatio_index">
+                <BuilderSelectItem
+                    classAction="imgRatio.className"
+                    actionParam="{
+                        className: imgRatio.className,
+                        saveField: 'shop_opt_products_thumb_ratio_class',
+                    }">
+                    <t t-out="imgRatio.label"/>
+                </BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+        <t t-set-slot="collapse">
+            <BuilderRow label.translate="Auto-crop" level="1">
+                <BuilderCheckbox
+                    action="'templateConfig'"
+                    actionParam="{
+                        views: ['website_sale.products_thumb_cover'],
+                        templateClass: 'o_wsale_context_thumb_cover'
+                    }"
+                />
+            </BuilderRow>
+        </t>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Hover Effect">
+        <BuilderSelect action="'classActionWithSave'">
+            <BuilderSelectItem
+                id="'wsale_products_opt_img_hover_none'"
+                actionParam="{
+                    className: '',
+                    saveField: 'shop_opt_products_img_hover_class',
+                }">
+                None
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{
+                    className: 'o_wsale_products_opt_img_hover_zoom_in',
+                    saveField: 'shop_opt_products_img_hover_class',
+                }">
+                Zoom-In
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{
+                    className: 'o_wsale_products_opt_img_hover_zoom_in_light',
+                    saveField: 'shop_opt_products_img_hover_class',
+                }">
+                Zoom-In Light
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{
+                    className: 'o_wsale_products_opt_img_hover_zoom_out',
+                    saveField: 'shop_opt_products_img_hover_class',
+                }">
+                Zoom-Out
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{
+                    className: 'o_wsale_products_opt_img_hover_zoom_out_light',
+                    saveField: 'shop_opt_products_img_hover_class',
+                }">
+                Zoom-Out Light
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                t-if="this.isActiveItem('wsale_design_thumbs_catalog')"
+                actionParam="{
+                    className: 'o_wsale_products_opt_img_hover_shadow',
+                    saveField: 'shop_opt_products_img_hover_class',
+                }">
+                Image Shadow
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow
+        t-if="props.isShop"
+        label.translate="Secondary Image"
+        tooltip.translate="To see the effect needs two images (at least) defined in the Product Page"
+    >
+        <BuilderCheckbox
+            id="'wsale_products_opt_img_secondary_show'"
+            action="'classActionWithSave'"
+            actionParam="{
+                className: 'o_wsale_products_opt_img_secondary_show',
+                saveField: 'shop_opt_products_img_secondary_class',
+            }"
+        />
+    </BuilderRow>
+
+    <div class="o_wsale_design_panel_section_title ps-2 pt-3 pb-1 fw-bold">Actions</div>
+    <hr class="mx-2 mt-0 mb-2"/>
+
+    <BuilderRow
+        label.translate="Actions"
+        tooltip.translate="Ratings (stars) needs comments to be enabled in the Product Page"
+    >
+        <BuilderButton
+            title.translate="Add to Cart"
+            icon="'fa-shopping-cart'"
+            action="'templateConfig'"
+            actionParam="{
+                views: ['website_sale.products_add_to_cart', 'website_sale.products_add_to_cart_class'],
+                templateClass: 'o_wsale_products_opt_has_cta'
+            }"
+            id="'button_add_to_cart_opt'"
+        />
+        <BuilderButton
+            title.translate="Show Rating"
+            icon="'fa-star'"
+            action="'templateConfig'"
+            actionParam="{
+                views: ['website_sale.products_rating', 'website_sale.products_rating_class'],
+                templateClass: 'o_wsale_products_opt_has_rating'
+            }"
+        />
+        <div class="flex-basis-100"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Show">
+        <BuilderSelect>
+            <BuilderSelectItem
+                action="'templateConfig'"
+                actionParam="{
+                    views: [],
+                    templateClass: '',
+                }"
+            >
+                Always
+            </BuilderSelectItem>
+
+            <!-- Corner case: We need this option to be visible even when not-allowed in order to
+                 properly toggle it off -->
+            <div t-att-class="anyCatalog ? 'd-contents' : 'pe-none opacity-25'">
+                <BuilderSelectItem
+                    action="'templateConfig'"
+                    actionParam="{
+                        views: ['website_sale.products_opt_actions_hover'],
+                        templateClass: 'o_wsale_products_opt_actions_onhover',
+                    }"
+                >
+                    On Hover
+                </BuilderSelectItem>
+            </div>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+</templates>

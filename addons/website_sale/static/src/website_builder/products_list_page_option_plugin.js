@@ -22,10 +22,8 @@ class ProductsListPageOptionPlugin extends Plugin {
         builder_actions: {
             SetPpgAction,
             SetPprAction,
-            SetDefaultGapAction,
-            SetGapAction,
             SetDefaultSortAction,
-        }
+        },
     };
 }
 
@@ -60,27 +58,6 @@ export class SetPprAction extends BuilderAction {
         return rpc("/shop/config/website", { shop_ppr: ppr });
     }
 }
-export class SetGapAction extends BuilderAction {
-    static id = "setGap";
-    setup() {
-        this.reload = {};
-    }
-    apply({ value }) {
-        return rpc("/shop/config/website", { shop_gap: value });
-    }
-}
-
-export class SetDefaultGapAction extends BuilderAction {
-    static id = "setDefaultGap";
-    setup() {
-        this.reload = {};
-    }
-    apply({ editingElement, value }) {
-        editingElement.style.setProperty("--o-wsale-products-grid-gap", value + "px");
-        return rpc("/shop/config/website", { shop_gap: value });
-    }
-}
-
 export class SetDefaultSortAction extends BuilderAction {
     static id = "setDefaultSort";
     setup() {
