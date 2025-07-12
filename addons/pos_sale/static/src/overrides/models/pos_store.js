@@ -144,13 +144,13 @@ patch(PosStore.prototype, {
                 }
             }
 
-            line.has_valued_move_ids = await this.data.call(
+            converted_line.has_valued_move_ids = await this.data.call(
                 "sale.order.line",
                 "has_valued_move_ids",
-                [line.id]
+                [converted_line.id]
             );
-            newLine.setQuantityFromSOL(line);
-            newLine.set_unit_price(line.price_unit);
+            newLine.setQuantityFromSOL(converted_line);
+            newLine.set_unit_price(converted_line.price_unit);
             newLine.set_discount(line.discount);
 
             const product_unit = line.product_id.uom_id;
