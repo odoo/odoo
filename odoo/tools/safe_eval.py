@@ -19,6 +19,7 @@ import functools
 import logging
 import sys
 import types
+import typing
 from opcode import opmap, opname
 from types import CodeType
 
@@ -29,7 +30,7 @@ import odoo.exceptions
 
 unsafe_eval = eval
 
-__all__ = ['test_expr', 'safe_eval', 'const_eval']
+__all__ = ['const_eval', 'safe_eval']
 
 # The time module is usually already provided in the safe_eval environment
 # but some code, e.g. datetime.datetime.now() (Windows/Python 2.5.2, bug
@@ -240,28 +241,24 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
             assert_valid_codeobj(allowed_codes, const, 'lambda')
 
 
-def test_expr(expr, allowed_codes, mode="eval", filename=None):
-    """test_expr(expression, allowed_codes[, mode[, filename]]) -> code_object
-
-    Test that the expression contains only the allowed opcodes.
-    If the expression is valid and contains only allowed codes,
-    return the compiled code object.
-    Otherwise raise a ValueError, a Syntax Error or TypeError accordingly.
-
-    :param filename: optional pseudo-filename for the compiled expression,
-                 displayed for example in traceback frames
-    :type filename: string
+def compile_codeobj(expr: str, /, filename: str = '<unknown>', mode: typing.Literal['eval', 'exec'] = 'eval'):
     """
+        :param str filename: optional pseudo-filename for the compiled expression,
+                             displayed for example in traceback frames
+        :param str mode: 'eval' if single expression
+                         'exec' if sequence of statements
+        :return: compiled code object
+        :rtype: types.CodeType
+    """
+    assert mode in ('eval', 'exec')
     try:
         if mode == 'eval':
-            # eval() does not like leading/trailing whitespace
-            expr = expr.strip()
-        code_obj = compile(expr, filename or "", mode)
+            expr = expr.strip()  # eval() does not like leading/trailing whitespace
+        code_obj = compile(expr, filename or '', mode)
     except (SyntaxError, TypeError, ValueError):
         raise
     except Exception as e:
         raise ValueError('%r while compiling\n%r' % (e, expr))
-    assert_valid_codeobj(allowed_codes, code_obj, expr)
     return code_obj
 
 
@@ -283,7 +280,8 @@ def const_eval(expr):
     ...
     ValueError: opcode BINARY_ADD not allowed
     """
-    c = test_expr(expr, _CONST_OPCODES)
+    c = compile_codeobj(expr)
+    assert_valid_codeobj(_CONST_OPCODES, c, expr)
     return unsafe_eval(c)
 
 def expr_eval(expr):
@@ -304,7 +302,8 @@ def expr_eval(expr):
     ...
     ValueError: opcode LOAD_NAME not allowed
     """
-    c = test_expr(expr, _EXPR_OPCODES)
+    c = compile_codeobj(expr)
+    assert_valid_codeobj(_EXPR_OPCODES, c, expr)
     return unsafe_eval(c)
 
 _BUILTINS = {
@@ -391,7 +390,8 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
 
     globals_dict = dict(context or {}, __builtins__=dict(_BUILTINS))
 
-    c = test_expr(expr, _SAFE_OPCODES, mode=mode, filename=filename)
+    c = compile_codeobj(expr, filename=filename, mode=mode)
+    assert_valid_codeobj(_SAFE_OPCODES, c, expr)
     try:
         # empty locals dict makes the eval behave like top-level code
         return unsafe_eval(c, globals_dict, None)
@@ -410,7 +410,8 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
 
 def test_python_expr(expr, mode="eval"):
     try:
-        test_expr(expr, _SAFE_OPCODES, mode=mode)
+        c = compile_codeobj(expr, mode=mode)
+        assert_valid_codeobj(_SAFE_OPCODES, c, expr)
     except (SyntaxError, TypeError, ValueError) as err:
         if len(err.args) >= 2 and len(err.args[1]) >= 4:
             error = {
