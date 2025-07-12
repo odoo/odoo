@@ -853,6 +853,7 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
         await this._super(...arguments);
         this._updateChatterComposerPosition();
         extraMenuUpdateCallbacks.push(this._updateChatterComposerPosition.bind(this));
+        this.el.querySelector('.o_product_page_reviews_title').classList.add('collapsed');
     },
     /**
      * @override
