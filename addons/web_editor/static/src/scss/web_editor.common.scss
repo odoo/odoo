@@ -871,6 +871,51 @@ section, .oe_img_bg, [data-oe-shape-data] {
     .fa {
         display: inherit;
     }
+
+    %text-highlight {
+        background-size: 100% 0.1em;
+        background-repeat: repeat-x;
+        background-image: inherit !important;
+        text-decoration-color: transparent !important;
+        // On text using `-webkit-text-fill-color: transparent`, browsers may fall back
+        // to a default text color (e.g., black) during selection.
+        // Setting color to be transparent ensures the text decoration remains hidden,
+        // so only the background image simulating the decoration is visible.
+        color: transparent;
+        caret-color: black;
+    }
+
+    * {
+        // We set `background-size` to 0px to be sure it is hidden because the purpose here
+        // is to pass `background-image` and `text-decoration-color` to be inherited for children
+        // and hide the background for the rest.
+        background-size: 0px;
+        background-image: inherit !important;
+        text-decoration-color: transparent !important;
+    }
+    
+    s:not(font[style*="-webkit-text-fill-color"] s) {
+        @extend %text-highlight;
+        background-position: 0 50%;
+    }
+    
+    font[style*="-webkit-text-fill-color"] s {
+        text-decoration-color: unset !important;
+    }
+    
+    u:not(font[style*="-webkit-text-fill-color"] u) {
+        @extend %text-highlight;
+        background-position: 0 95%;
+    }
+    
+    font[style*="-webkit-text-fill-color"] u {
+        text-decoration-color: unset !important;
+    }
+
+    &:has(span) {
+        height: fit-content !important;
+        display: inline-block;
+    }
 }
 
 /* QWEB */
