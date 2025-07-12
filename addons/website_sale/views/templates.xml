@@ -1887,9 +1887,9 @@
                     <div class="d-flex flex-wrap align-items-center">
                         <div class="d-flex align-items-center flex-grow-1 mb-4 m-lg-0">
                             <ol class="o_wsale_breadcrumb breadcrumb m-0 p-0">
-                                <li class="o_not_editable breadcrumb-item d-none d-lg-inline-block">
+                                <li class="breadcrumb-item d-none d-lg-inline-block">
                                     <a t-att-href="keep(shop_path)">
-                                        <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/>All Products
+                                        <t t-call="website_sale.all_products_link_name"/>
                                     </a>
                                 </li>
                                 <li
@@ -1904,9 +1904,9 @@
                                         <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/><t t-out="category.name"/>
                                     </a>
                                 </li>
-                                <li t-else="" class="o_not_editable breadcrumb-item d-lg-none">
-                                    <a class="py-2 py-lg-0" t-att-href="keep(shop_path)">
-                                        <i class="oi oi-chevron-left me-1" role="presentation"/>All Products
+                                <li t-else="" class="breadcrumb-item d-lg-none">
+                                    <a t-att-href="keep(shop_path)">
+                                        <t t-call="website_sale.all_products_link_name"/>
                                     </a>
                                 </li>
                                 <li class="breadcrumb-item d-none d-lg-inline-block active">
@@ -2279,6 +2279,10 @@
         <xpath expr="//a[contains(@t-attf-class, 'o_wsale_product_search_mobile_btn')]" position="attributes">
             <attribute name="t-attf-class" add="d-md-none" remove="d-none" separator=" "/>
         </xpath>
+    </template>
+
+    <template id="all_products_link_name" name="All Products name">
+        <span placeholder="All products">All products</span>
     </template>
 
     <template id="product_accordion" name="Accordion On Product Page">
