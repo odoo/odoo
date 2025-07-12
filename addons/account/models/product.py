@@ -272,40 +272,42 @@ class ProductProduct(models.Model):
     # EDI
     # -------------------------------------------------------------------------
 
-    def _retrieve_product(self, name=None, default_code=None, barcode=None, company=None, extra_domain=None):
+    def _retrieve_product(self, company=None, extra_domain=None, **product_vals):
         '''Search all products and find one that matches one of the parameters.
+
+        :param company:         The company of the product.
+        :param extra_domain:    Any extra domain to add to the search.
+        :param product_vals:    Values the product should match.
+        :returns:               A product or an empty recordset if not found.
+        '''
+        domains = self._get_product_domain_search_order(**product_vals)
+        company = company or self.env.company
+        for _priority, domain in domains:
+            for company_domain in (
+                [*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)],
+                [('company_id', '=', False)],
+            ):
+                if product := self.env['product.product'].search(
+                    Domain.AND([domain, company_domain, extra_domain or Domain.TRUE]), limit=1,
+                ):
+                    return product
+        return self.env['product.product']
+
+    def _get_product_domain_search_order(self, **vals):
+        """Gives the order of search for a product given the parameters.
 
         :param name:            The name of the product.
         :param default_code:    The default_code of the product.
         :param barcode:         The barcode of the product.
-        :param company:         The company of the product.
-        :param extra_domain:    Any extra domain to add to the search.
-        :returns:               A product or an empty recordset if not found.
-        '''
-        if name and '\n' in name:
-            # cut Sales Description from the name
-            name = name.split('\n')[0]
-        domains = []
-        if barcode:
-            domains.append(Domain('barcode', '=', barcode))
-        if default_code:
-            domains.append(Domain('default_code', '=', default_code))
-        if name:
-            domains += [Domain('name', '=', name), Domain('name', 'ilike', name)]
-
-        company = company or self.env.company
-        for company_domain in (
-            [*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)],
-            [('company_id', '=', False)],
-        ):
-            products = self.env['product.product'].search(
-                Domain.AND([
-                    Domain.OR(domains),
-                    company_domain,
-                    extra_domain or Domain.TRUE,
-                ]),
-            )
-            for domain in domains:
-                if products_by_domain := products.filtered_domain(domain):
-                    return products_by_domain[0]
-        return self.env['product.product']
+        :returns:               An ordered list of product domains and their associated priority.
+        :rtype: list[tuple[int, Domain]]
+        """
+        sorted_domains = []
+        if barcode := vals.get('barcode'):
+            sorted_domains.append((5, Domain('barcode', '=', barcode)))
+        if default_code := vals.get('default_code'):
+            sorted_domains.append((10, Domain('default_code', '=', default_code)))
+        if name := vals.get('name'):
+            name = name.split('\n', 1)[0]  # Cut sales description from the name
+            sorted_domains += [(15, Domain('name', '=', name)), (20, Domain('name', 'ilike', name))]
+        return sorted_domains

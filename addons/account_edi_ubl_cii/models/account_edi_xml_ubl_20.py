@@ -855,7 +855,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             'cbc:Description': {'_text': product.description_sale},
             'cbc:Name': {'_text': product.name},
             'cac:StandardItemIdentification': {
-                'cbc:ID': {'_text': product.barcode},
+                'cbc:ID': {'_text': product.barcode, 'schemeID': "0160"},  # schemeID=GTIN
             },
             'cac:AdditionalItemProperty': [
                 {
@@ -1094,11 +1094,14 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
                 './cac:Item/cbc:Description',
                 './cac:Item/cbc:Name',
             ],
-            'product': {
-                'default_code': './cac:Item/cac:SellersItemIdentification/cbc:ID',
-                'name': './cac:Item/cbc:Name',
-                'barcode': './cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID="0160"]',
-            },
+            'product': self._get_product_xpaths(),
+        }
+
+    def _get_product_xpaths(self):
+        return {
+            'default_code': './cac:Item/cac:SellersItemIdentification/cbc:ID',
+            'name': './cac:Item/cbc:Name',
+            'barcode': './cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID="0160"]',
         }
 
     def _correct_invoice_tax_amount(self, tree, invoice):
