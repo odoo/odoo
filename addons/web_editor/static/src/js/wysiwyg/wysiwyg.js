@@ -31,6 +31,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
 import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { resizeImageWithResampling } from "@web/core/utils/image_resize";
 import { ConflictDialog } from "./conflict_dialog";
 import { getOrCreateLink } from "./widgets/link";
 import { shouldUnlink } from '@web_editor/js/wysiwyg/widgets/link_tools';
@@ -3683,14 +3684,7 @@ export class Wysiwyg extends Component {
             const originalSize = Math.max(image.width, image.height);
             const smallerSizes = [1024, 512, 256, 128].filter(size => size < originalSize);
             for (const size of [originalSize, ...smallerSizes]) {
-                const ratio = size / originalSize;
-                const canvas = document.createElement('canvas');
-                canvas.width = image.width * ratio;
-                canvas.height = image.height * ratio;
-                const ctx = canvas.getContext('2d');
-                ctx.fillStyle = 'rgb(255, 255, 255)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+                const canvas = resizeImageWithResampling(image, size, originalSize);
                 altData[size] = {
                     'image/jpeg': canvas.toDataURL('image/jpeg', 0.75).split(',')[1],
                 };
