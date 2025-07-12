@@ -739,7 +739,7 @@ class MailMessage(models.Model):
         else:
             attachments_tocheck = messages.attachment_ids  # fallback on read if any unknown command
         if attachments_tocheck:
-            attachments_tocheck.check('read')
+            attachments_tocheck.check_access('read')
 
         for message, values, tracking_values_cmd in zip(messages, vals_list, tracking_values_list):
             if tracking_values_cmd:
@@ -778,8 +778,7 @@ class MailMessage(models.Model):
             self._invalidate_documents()
         res = super().write(vals)
         if vals.get('attachment_ids'):
-            for mail in self:
-                mail.attachment_ids.check(mode='read')
+            self.attachment_ids.check_access('read')
         if 'notification_ids' in vals or record_changed:
             self._invalidate_documents()
         return res
