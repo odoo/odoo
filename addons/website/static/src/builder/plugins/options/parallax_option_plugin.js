@@ -25,10 +25,10 @@ class WebsiteParallaxPlugin extends Plugin {
         const isParallax = value !== "none";
         editingElement.classList.toggle("parallax", isParallax);
         editingElement.classList.toggle("s_parallax_is_fixed", value === "fixed");
-        editingElement.classList.toggle(
-            "s_parallax_no_overflow_hidden",
-            value === "none" || value === "fixed"
-        );
+        // Kept for compatibility. The "s_parallax_no_overflow_hidden" class may
+        // still appear when "s_parallax_bg" hasn’t yet been wrapped in
+        // "s_parallax_bg_wrap".
+        editingElement.classList.remove("s_parallax_no_overflow_hidden");
         const typeValues = {
             none: 0,
             fixed: 1,
@@ -46,17 +46,30 @@ class WebsiteParallaxPlugin extends Plugin {
         } else {
             delete editingElement.dataset.parallaxType;
         }
-        let parallaxEl = editingElement.querySelector(".s_parallax_bg");
+
+        let parallaxBgEl = editingElement.querySelector(".s_parallax_bg");
+        const parallaxBgWrapEl = editingElement.querySelector(".s_parallax_bg_wrap");
         if (isParallax) {
-            if (!parallaxEl) {
-                parallaxEl = document.createElement("span");
-                parallaxEl.classList.add("s_parallax_bg");
-                editingElement.prepend(parallaxEl);
-                this.dependencies.backgroundImageOption.changeEditingEl(editingElement, parallaxEl);
+            if (!parallaxBgEl) {
+                parallaxBgEl = document.createElement("span");
+                parallaxBgEl.classList.add("s_parallax_bg");
+                this.dependencies.backgroundImageOption.changeEditingEl(editingElement, parallaxBgEl);
             }
-        } else if (parallaxEl) {
-            this.dependencies.backgroundImageOption.changeEditingEl(parallaxEl, editingElement);
-            parallaxEl.remove();
+            // For compatibility, check if not "parallaxBgWrapEl" separately.
+            // "parallaxBgEl" may exist without "parallaxBgWrapEl".
+            if (!parallaxBgWrapEl) {
+                const newWrapEl = document.createElement("span");
+                newWrapEl.classList.add("s_parallax_bg_wrap");
+                newWrapEl.appendChild(parallaxBgEl);
+                editingElement.prepend(newWrapEl);
+            }
+        } else if (parallaxBgEl) {
+            this.dependencies.backgroundImageOption.changeEditingEl(parallaxBgEl, editingElement);
+            if (parallaxBgWrapEl) {
+                parallaxBgWrapEl.remove();
+            } else {
+                parallaxBgEl.remove(); // Kept for compatibility.
+            }
         }
     }
     onBgImageHide(rootEl) {

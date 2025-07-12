@@ -16,7 +16,9 @@ const getTemplate = function (options = {}) {
     return `
         <section style="height: ${height}px; background-color: #CCCCFF;"></section>
         <section class="parallax" data-scroll-background-ratio="${speed}" style="min-height: 100px; z-index: -1000;">
-            <div class="s_parallax_bg" style="background-color: #CCFFCC; height: 500px; overflow: hidden;"></div>
+            <span class="s_parallax_bg_wrap">
+                <div class="s_parallax_bg" style="background-color: #CCFFCC; height: 500px; overflow: hidden;"></div>
+            </span>
         </section>
         <section style="height: ${height}px; background-color: #FFCCCC;"></section>
     `;
