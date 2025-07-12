@@ -375,6 +375,48 @@ class Partner(models.Model):
                 name = f"{self.commercial_company_name or self.sudo().parent_id.name}, {name}"
         return name.strip()
 
+
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+
+    @api.constrains('phone', 'mobile', 'email', 'website')
+    def _validate_contact_fields(self):
+        """Validate partner contact fields."""
+        for partner in self:
+            if partner.phone and not re.match(r'^[+\d][\d\s().-]{5,}$', partner.phone.strip()):
+                raise ValidationError(_(
+                    "Invalid phone format. Use numbers and + - () . only. "
+                    "Minimum 6 characters. Example: +1 (555) 123-4567"
+                ))
+
+            if partner.mobile and not re.match(r'^[+\d][\d\s().-]{5,}$', partner.mobile.strip()):
+                raise ValidationError(_(
+                    "Invalid mobile format. Use numbers and + - () . only. "
+                    "Minimum 6 characters. Example: +1 (555) 123-4567"
+                ))
+
+            if partner.email and not re.match(r'^[^@\s]+@[^@\s]+\.[^@\s]+$', partner.email.strip()):
+                raise ValidationError(_(
+                    "Invalid email format. Must contain '@' and domain. "
+                    "Example: valid@example.com"
+                ))
+
+            if partner.website:
+                ws = partner.website.strip()
+                if not re.match(r'^https?://\w+', ws):
+                    raise ValidationError(_(
+                        "Website must start with http:// or https://. "
+                        "Example: https://www.example.com"
+                    ))
+                domain = ws.split('//')[-1].split('/')[0]
+                if '.' not in domain:
+                    raise ValidationError(_(
+                        "Website must contain a domain extension. "
+                        "Example: https://www.example.com"
+                    ))
+
+
+
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name', 'commercial_company_name')
     def _compute_complete_name(self):
         for partner in self:
