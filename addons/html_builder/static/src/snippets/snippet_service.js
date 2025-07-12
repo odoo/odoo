@@ -16,6 +16,7 @@ export class SnippetModel extends Reactive {
         this.snippetsName = snippetsName;
         this.context = context;
         this.loadProm = null;
+        this.beforeReload = null;
 
         this.snippetsByCategory = {
             snippet_groups: [],
@@ -55,6 +56,10 @@ export class SnippetModel extends Reactive {
 
     get snippetCustomInnerContents() {
         return this.snippetsByCategory.snippet_custom_content;
+    }
+
+    get snippetContentCategories() {
+        return Object.entries(this.contentCategories);
     }
 
     isCustomInnerContent(customSnippetName) {
@@ -165,7 +170,15 @@ export class SnippetModel extends Reactive {
 
     computeSnippetTemplates(snippetsDocument) {
         const snippetsBody = snippetsDocument.body;
-        this.snippetsByCategory = {};
+        const categories = new Set([
+            "snippet_groups",
+            "snippet_custom",
+            "snippet_structure",
+            "snippet_content",
+            "snippet_custom_content",
+        ]);
+        this.snippetsByCategory = Object.fromEntries([...categories].map((c) => [c, []]));
+        this.contentCategories = {};
         for (const snippetCategory of snippetsBody.querySelectorAll("snippets")) {
             const snippets = [];
             for (const snippetEl of snippetCategory.children) {
@@ -206,8 +219,18 @@ export class SnippetModel extends Reactive {
                         snippet.groupName = "custom";
                         snippet.isCustom = true;
                         break;
+                    case "snippet_content":
+                    case "snippet_custom_content":
+                        break;
+                    default:
+                        snippet.contentCategory = snippetCategory.id;
+                        this.contentCategories[snippetCategory.id] =
+                            snippetCategory.getAttribute("string");
                 }
                 snippets.push(snippet);
+            }
+            if (!categories.has(snippetCategory.id)) {
+                this.contentCategories[snippetCategory.id] = snippetCategory.getAttribute("string");
             }
             this.snippetsByCategory[snippetCategory.id] = snippets;
         }

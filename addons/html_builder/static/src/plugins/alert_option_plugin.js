@@ -15,6 +15,7 @@ class AlertOptionPlugin extends Plugin {
             withSequence(before(WIDTH), {
                 template: "html_builder.AlertOption",
                 selector: ".s_alert",
+                name: "alertTypeOption",
             }),
         ],
         so_content_addition_selector: [".s_alert"],
@@ -48,4 +49,4 @@ export class AlertIconAction extends BuilderAction {
         return iconEl.classList.contains(className);
     }
 }
-registry.category("website-plugins").add(AlertOptionPlugin.id, AlertOptionPlugin);
+registry.category("builder-plugins").add(AlertOptionPlugin.id, AlertOptionPlugin);

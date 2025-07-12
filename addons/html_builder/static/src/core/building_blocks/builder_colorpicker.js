@@ -108,6 +108,7 @@ export class BuilderColorPicker extends Component {
         getUsedCustomColors: { type: Function, optional: true },
         selectedTab: { type: String, optional: true },
         defaultColor: { type: String, optional: true },
+        colorPrefix: { type: String, optional: true },
     };
     static defaultProps = {
         getUsedCustomColors: () => [],
@@ -133,7 +134,7 @@ export class BuilderColorPicker extends Component {
                 applyColorPreview: onPreview,
                 applyColorResetPreview: onPreviewRevert,
                 getUsedCustomColors: this.props.getUsedCustomColors,
-                colorPrefix: "color-prefix-",
+                colorPrefix: this.props.colorPrefix || "color-prefix-",
                 showRgbaField: true,
                 noTransparency: this.props.noTransparency,
                 enabledTabs: this.props.enabledTabs,

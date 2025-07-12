@@ -3,29 +3,52 @@ import { registry } from "@web/core/registry";
 import { getCSSRules, toInline } from "./convert_inline";
 import { ColumnPlugin } from "@html_editor/main/column_plugin";
 
-const cssRulesByElement = new WeakMap();
+const cssRulesByDocument = new WeakMap();
 
 export class HtmlMailField extends HtmlField {
+    setup() {
+        super.setup();
+        this.alwaysComputeInlineEditorContent = true;
+    }
+
     /**
-     * @param {WeakMap} cssRulesByElement
-     * @param {Editor} editor
-     * @param {HTMLElement} el
+     * @param {HTMLElement} el element to be processed
+     * @param {Document} styleDocument source document for the style
      */
-    static async getInlinedEditorContent(cssRulesByElement, editor, el) {
-        if (!cssRulesByElement.has(editor.editable)) {
-            cssRulesByElement.set(editor.editable, getCSSRules(editor.document));
+    // TODO EGGMAIL: rename this as it returns an ELEMENT not html
+    static async getInlineHTML(el, styleDocument) {
+        if (!cssRulesByDocument.has(styleDocument)) {
+            cssRulesByDocument.set(styleDocument, getCSSRules(styleDocument));
         }
-        const cssRules = cssRulesByElement.get(editor.editable);
-        // Insert the cloned element inside an DOM so we can get its computed style.
-        editor.editable.after(el);
-        el.classList.remove("odoo-editor-editable");
+        const cssRules = cssRulesByDocument.get(styleDocument);
         await toInline(el, cssRules);
-        el.remove();
+        return el;
     }
 
     async getEditorContent() {
-        const el = await super.getEditorContent();
-        await HtmlMailField.getInlinedEditorContent(cssRulesByElement, this.editor, el);
+        if (this.alwaysComputeInlineEditorContent) {
+            return this.getInlineEditorContent();
+        }
+        return super.getEditorContent();
+    }
+
+    /**
+     * Temporarily insert the cloned element inside the DOM so we can get its computed style.
+     * @param {HTMLElement} el
+     */
+    insertForInlineProcessing(el) {
+        const editable = this.editor.editable;
+        editable.after(el);
+    }
+
+    async getInlineEditorContent() {
+        let el = await super.getEditorContent();
+        el.classList.remove("odoo-editor-editable");
+        const editable = this.editor.editable;
+        const editableDocument = editable.ownerDocument;
+        this.insertForInlineProcessing(el);
+        el = await HtmlMailField.getInlineHTML(el, editableDocument);
+        el.remove();
         return el;
     }
 

@@ -1,4 +1,4 @@
-import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent, useDomState, useGetItemValue } from "@html_builder/core/utils";
 
 export class BorderConfigurator extends BaseOptionComponent {
     static template = "html_builder.BorderConfiguratorOption";
@@ -17,10 +17,16 @@ export class BorderConfigurator extends BaseOptionComponent {
 
     setup() {
         super.setup();
+        this.getItemValue = useGetItemValue();
         this.state = useDomState((editingElement) => ({
             hasBorder: this.hasBorder(editingElement),
         }));
     }
+
+    get showBorderRadiusOption() {
+        return this.props.withRoundCorner && this.state.hasBorder;
+    }
+
     getStyleActionParam(param) {
         return `border-${this.props.direction ? this.props.direction + "-" : ""}${param}`;
     }

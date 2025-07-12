@@ -9,9 +9,13 @@
                 <button type="button"  t-on-click="() => this.redo()" class="o-hb-btn btn fa fa-repeat" t-att-disabled="!state.canRedo"/>
             </div>
             <div class="d-flex gap-1">
-                <button t-on-click="onMobilePreviewClick" type="button" class="o-hb-btn btn d-flex align-items-center" t-att-class="{active: props.isMobile}" data-action="mobile" title="Mobile Preview" accesskey="v" style="--btn-font-size: 20px"><span class="fa fa-mobile" role="img"/></button>
-                <button type="button"  t-on-click="discard" class="o-hb-btn btn" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
-                <button type="button" t-on-click="save" class="o-hb-btn btn btn-success px-3" data-action="save" accesskey="s">Save</button>
+                <button t-on-click="onMobilePreviewClick" type="button" class="o-hb-btn btn d-flex align-items-center" t-att-class="{ active: props.isMobile }" data-action="mobile" title="Mobile Preview" accesskey="m" style="--btn-font-size: 20px"><span class="fa fa-mobile" role="img"/></button>
+                <button t-if="props.toggleCodeView" t-on-click="props.toggleCodeView"
+                    class="o-hb-btn btn d-flex align-items-center" title="Code View" accesskey="d"><i class="fa fa-code"/></button>
+                <button t-if="props.toggleFullscreen" t-on-click="props.toggleFullscreen"
+                    class="o-hb-btn btn d-flex align-items-center" title="Fullscreen" accesskey="f">FS</button>
+                <button t-if="props.closeEditor" type="button"  t-on-click="discard" class="o-hb-btn btn" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
+                <button t-if="props.closeEditor" type="button" t-on-click="save" class="o-hb-btn btn btn-success px-3" data-action="save" accesskey="s">Save</button>
             </div>
         </div>
         <div class="o-snippets-tabs position-relative grid px-2 my-2" style="--columns: 3; --gap: 0.25rem">
@@ -29,12 +33,12 @@
                 <i class="oi oi-settings-adjust me-1" role="img"/>Edit
             </button>
             <button data-name="theme" data-hotkey="2" t-if="ThemeTab" class="o-hb-btn position-relative btn" t-att-class="{'active cursor-default': state.activeTab === 'theme'}" t-on-click="() => this.onTabClick('theme')" t-att-disabled="displayOnlyCustomizeTab">
-                <i class="fa fa-cog me-1" role="img"/>Theme
+                <i class="fa fa-cog me-1" role="img"/><t t-out="ThemeTab.displayName"/>
             </button>
         </div>
         <div class="o-tab-content overflow-y-auto overflow-x-hidden flex-grow-1">
             <t t-if="state.activeTab === 'blocks'">
-                <BlockTab snippetsName="props.snippetsName" />
+                <BlockTab snippetsName="props.snippetsName" getExternalScrollableAncestor="props.getExternalScrollableAncestor"/>
             </t>
             <t t-if="state.activeTab === 'customize'">
                 <t t-if="!!props.config.customizeTab" t-call="{{props.config.customizeTab}}"/>

@@ -25,7 +25,6 @@ import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
  * @property { boolean } [allowInlineAtRoot]
  * @property { string } [baseContainer]
  * @property { PluginConstructor[] } [Plugins]
- * @property { boolean } [disableFloatingToolbar]
  * @property { string[] } [classList]
  * @property { Object } [localOverlayContainers]
  * @property { Object } [embeddedComponentInfo]
@@ -231,7 +230,9 @@ export class Editor {
 
     getElContent() {
         const el = this.editable.cloneNode(true);
+        this.document.body.append(el);
         this.resources["clean_for_save_handlers"].forEach((cb) => cb({ root: el }));
+        el.remove();
         return el;
     }
 

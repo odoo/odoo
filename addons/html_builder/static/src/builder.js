@@ -6,6 +6,7 @@ import {
     onWillDestroy,
     onWillStart,
     onWillUpdateProps,
+    status,
     useRef,
     useState,
     useSubEnv,
@@ -31,7 +32,7 @@ export class Builder extends Component {
     static template = "html_builder.Builder";
     static components = { BlockTab, CustomizeTab, InvisibleElementsPanel };
     static props = {
-        closeEditor: { type: Function },
+        closeEditor: { type: Function, optional: true },
         reloadEditor: { type: Function, optional: true },
         onEditorLoad: { type: Function, optional: true },
         installSnippetModule: { type: Function, optional: true },
@@ -43,6 +44,10 @@ export class Builder extends Component {
         Plugins: { type: Array, optional: true },
         config: { type: Object, optional: true },
         getThemeTab: { type: Function, optional: true },
+        editableSelector: { type: String },
+        toggleFullscreen: { type: Function, optional: true },
+        toggleCodeView: { type: Function, optional: true },
+        getExternalScrollableAncestor: { type: Function, optional: true },
     };
     static defaultProps = {
         onEditorLoad: () => {},
@@ -83,6 +88,9 @@ export class Builder extends Component {
                     if (!isPreviewing) {
                         this.state.canUndo = this.editor.shared.history.canUndo();
                         this.state.canRedo = this.editor.shared.history.canRedo();
+                        if (this.props.config.onChange) {
+                            this.props.config.onChange();
+                        }
                         this.updateInvisibleEls();
                         this.editorBus.trigger("UPDATE_EDITING_ELEMENT");
                         this.triggerDomUpdated();
@@ -95,10 +103,10 @@ export class Builder extends Component {
                     });
                 },
                 closeEditor: async () => {
-                    await this.props.closeEditor();
+                    await this.props.closeEditor?.();
                 },
                 installSnippetModule: async (snippet) =>
-                    this.props.installSnippetModule(snippet, this.save.bind(this)),
+                    this.props.installSnippetModule?.(snippet, this.save.bind(this)),
                 resources: {
                     trigger_dom_updated: () => {
                         this.triggerDomUpdated();
@@ -150,7 +158,12 @@ export class Builder extends Component {
             // instantiating the sub components that potentially need the
             // editor.
             const iframeEl = await this.props.iframeLoaded;
-            this.editableEl = iframeEl.contentDocument.body.querySelector("#wrapwrap");
+            if (status(this) === "destroyed") {
+                return;
+            }
+            this.editableEl = iframeEl.contentDocument.body.querySelector(
+                this.props.editableSelector
+            );
             setEditableWindow(iframeEl.contentWindow);
             setEditableDocument(iframeEl.contentDocument);
 
@@ -177,7 +190,7 @@ export class Builder extends Component {
         // });
         onWillDestroy(() => {
             this.editor.destroy();
-            this.editableEl.removeEventListener("dragstart", this.onDragStart);
+            this.editableEl?.removeEventListener("dragstart", this.onDragStart);
             // actionService.setActionMode("current");
         });
 
@@ -236,6 +249,9 @@ export class Builder extends Component {
     }
 
     async save() {
+        if (!this.props.closeEditor) {
+            return;
+        }
         this.editor.shared.operation.next(this._save.bind(this), { withLoadingEffect: false });
     }
 
@@ -281,6 +297,9 @@ export class Builder extends Component {
     }
 
     onBeforeUnload(event) {
+        if (!this.props.closeEditor) {
+            return;
+        }
         if (!this.isSaving && this.state.canUndo) {
             event.preventDefault();
             event.returnValue = "Unsaved changes";
@@ -288,6 +307,9 @@ export class Builder extends Component {
     }
 
     async onBeforeLeave() {
+        if (!this.props.closeEditor) {
+            return true;
+        }
         if (this.state.canUndo && !this.editor.shared.savePlugin.isAlreadySaved()) {
             let continueProcess = true;
             await new Promise((resolve) => {

@@ -1,0 +1,49 @@
+<templates>
+    <t t-name="mass_mailing_egg.MassMailingIframe">
+        <div class="o_mass_mailing_iframe_wrapper bg-200"
+            t-att-class="{'o_mass_mailing_fullscreen': state.showFullscreen}"
+            t-attf-class="#{props.extraClass}">
+            <div class="d-flex w-100 h-100">
+                <div class="flex-grow-1" t-att-class="{'align-self-center': this.state.isMobile}">
+                    <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
+                    <div t-att-class="{ 'o_is_mobile': this.state.isMobile, 'h-100': !this.state.isMobile }">
+                        <iframe t-att-scrolling="this.state.isMobile ? '' : 'no'" t-att-class="{ 'd-none': props.showThemeSelector or props.showCodeView }"
+                            t-ref="iframeRef" t-on-blur="onBlur"/>
+                    </div>
+                </div>
+                <div t-if="!props.readonly and props.themeOptions.withBuilder and !props.showThemeSelector"
+                    t-att-class="{ 'd-none': props.showCodeView }">
+                    <div class="position-sticky o_mass_mailing_egg-builder_sidebar border-start border-dark o_builder_sidebar_open" t-ref="sidebarRef">
+                        <LazyComponent t-if="state.ready" Component="'mass_mailing_egg.MassMailingBuilder'"
+                            props="() => ({ builderProps: this.getBuilderProps() })"
+                            bundle="'mass_mailing_egg.assets_builder'"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="mass_mailing_egg.IframeHead">
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    </t>
+    <t t-name="mass_mailing_egg.IframeBody">
+        <div class="o_mass_mailing_value" t-att-class="{
+            'note-editable': !props.readonly,
+            'o_readonly': props.readonly,
+        }">
+            <t t-if="props.readonly">
+                <t t-out="props.config.value"/>
+            </t>
+        </div>
+        <div class="o_mass_mailing_processing_container" style="
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            width: max-content;
+            height: max-content;
+            visibility: hidden;
+            pointer-events: none;
+        "/>
+    </t>
+</templates>

@@ -121,5 +121,5 @@ export class BackgroundPositionOverlayAction extends BuilderAction {
 }
 
 registry
-    .category("website-plugins")
+    .category("builder-plugins")
     .add(BackgroundPositionOptionPlugin.id, BackgroundPositionOptionPlugin);

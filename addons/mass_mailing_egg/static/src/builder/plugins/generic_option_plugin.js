@@ -1,0 +1,32 @@
+import { after, before, LAYOUT_COLUMN, WIDTH } from "@html_builder/utils/option_sequence";
+import { Plugin } from "@html_editor/plugin";
+import { registry } from "@web/core/registry";
+import { withSequence } from "@html_editor/utils/resource";
+import { LayoutColumnOption } from "@html_builder/plugins/layout_column_option";
+
+class GenericBlockOptionPlugin extends Plugin {
+    static id = "GenericBlockOption";
+    resources = {
+        mark_color_level_selector_params: [{ selector: ".o_mail_snippet_general" }],
+        builder_options: [
+            withSequence(before(WIDTH), {
+                OptionComponent: LayoutColumnOption,
+                selector: ".o_mail_snippet_general",
+                applyTo: "* > *:has(> .row:not(.s_nb_column_fixed)), * > .s_allow_columns"
+            }),
+            withSequence(after(LAYOUT_COLUMN),{
+                template: "mass_mailing.HeightOption",
+                selector: ".o_mail_snippet_general",
+                exclude: ".o_mail_snippet_general .row > div *"
+            }),
+        ],
+        so_content_addition_selector: [
+            ".s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight"
+        ]
+    };
+}
+// TODO: as in master, the position of a background image does not work
+// correctly.
+registry
+    .category("mass_mailing-plugins")
+    .add(GenericBlockOptionPlugin.id, GenericBlockOptionPlugin);

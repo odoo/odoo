@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillDestroy, useRef, useState, useSubEnv } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, useRef, useSubEnv } from "@odoo/owl";
 import { Editor } from "./editor";
 import { Toolbar } from "./main/toolbar/toolbar";
 import { useChildRef, useSpellCheck } from "@web/core/utils/hooks";
@@ -30,7 +30,6 @@ export class Wysiwyg extends Component {
         class: { type: String, optional: true },
         contentClass: { type: String, optional: true }, // on editable element
         style: { type: String, optional: true },
-        toolbar: { type: Boolean, optional: true },
         iframe: { type: Boolean, optional: true },
         copyCss: { type: Boolean, optional: true },
         onLoad: { type: Function, optional: true },
@@ -44,9 +43,6 @@ export class Wysiwyg extends Component {
     };
 
     setup() {
-        this.state = useState({
-            showToolbar: false,
-        });
         this.overlayRef = useChildRef();
         useSubEnv({
             localOverlayContainerKey: uniqueId("wysiwyg"),
@@ -61,9 +57,6 @@ export class Wysiwyg extends Component {
         });
 
         onMounted(() => {
-            // now that component is mounted, editor is attached to el, and
-            // plugins are started, so we can allow the toolbar to be displayed
-            this.state.showToolbar = true;
             /** @type { any } **/
             const el = contentRef.el;
 
@@ -107,17 +100,10 @@ export class Wysiwyg extends Component {
     getEditorConfig() {
         return {
             ...this.props.config,
-            // TODO ABD TODO @phoenix: check if there is too much info in the wysiwyg env.
-            // i.e.: env has X because of parent component,
-            // embedded component descendant sometimes uses X from env which is set conditionally:
-            // -> it will override the one one from the parent => OK.
-            // -> it will not => the embedded component still has X in env because of its ancestors => Issue.
-            embeddedComponentInfo: { app: this.__owl__.app, env: this.env },
             localOverlayContainers: {
                 key: this.env.localOverlayContainerKey,
                 ref: this.overlayRef,
             },
-            disableFloatingToolbar: this.props.toolbar,
         };
     }
 }

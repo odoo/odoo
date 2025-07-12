@@ -1,0 +1,26 @@
+<templates>
+    <t t-name="mass_mailing_egg.HtmlField">
+        <div t-if="displayTransition.shouldMount" t-att-class="displayTransition.class">
+            <t t-if="state.showThemeSelector">
+                <ThemeSelector config="getThemeSelectorConfig()"/>
+            </t>
+            <t t-if="state.showCodeView">
+                <div class="d-flex">
+                    <textarea name="codeView" t-ref="codeView" class="o_codeview" t-att-value="this.value"
+                        t-on-change="onChange" t-on-input="onTextareaInput"/>
+                    <div t-if="state.showCodeView" t-ref="codeViewButtonRef"
+                        class="btn-group o_mass_mailing_code_view" t-on-click="toggleCodeView">
+                        <button class="o_codeview_btn btn btn-primary">
+                            <i class="fa fa-code" />
+                        </button>
+                    </div>
+                </div>
+            </t>
+            <MassMailingIframe t-key="state.key"
+                config="this.getConfig()" themeOptions="state.themeOptions" readonly="isIframeReadonly"
+                onEditorLoad.bind="onEditorLoad" onIframeLoad.bind="onIframeLoad" iframeRef="iframeRef"
+                showThemeSelector="state.showThemeSelector" showCodeView="state.showCodeView"
+                onBlur.bind="onBlur" t-props="this.getMassMailingIframeProps()"/>
+        </div>
+    </t>
+</templates>

@@ -45,11 +45,13 @@ class ImageToolOptionPlugin extends Plugin {
                 OptionComponent: ImageToolOption,
                 selector: "img",
                 exclude: "[data-oe-type='image'] > img",
+                name: "imageToolOption",
             }),
             withSequence(ALIGNMENT_STYLE_PADDING, {
                 template: "html_builder.ImageAndFaOption",
                 selector: "span.fa, i.fa, img",
                 exclude: "[data-oe-type='image'] > img, [data-oe-xpath]",
+                name: "imageAndFaOption",
             }),
         ],
         builder_actions: {
@@ -300,7 +302,7 @@ export class AltAction extends BuilderAction {
     }
 }
 
-registry.category("website-plugins").add(ImageToolOptionPlugin.id, ImageToolOptionPlugin);
+registry.category("builder-plugins").add(ImageToolOptionPlugin.id, ImageToolOptionPlugin);
 
 /**
  * @param {String} mimetype

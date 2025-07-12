@@ -7,7 +7,6 @@ import { BuilderUrlPicker } from "@html_builder/core/building_blocks/builder_url
 export class WebsiteUrlPicker extends BuilderUrlPicker {
     setup() {
         super.setup();
-
         useEffect(
             (inputEl) => {
                 if (!inputEl) {
@@ -33,8 +32,8 @@ export class WebsiteUrlPicker extends BuilderUrlPicker {
     }
 }
 
-class UrlPickerPlugin extends Plugin {
-    static id = "urlPickerPlugin";
+class WebsiteUrlPickerPlugin extends Plugin {
+    static id = "websiteUrlPickerPlugin";
 
     resources = {
         builder_components: {
@@ -43,4 +42,4 @@ class UrlPickerPlugin extends Plugin {
     };
 }
 
-registry.category("website-plugins").add(UrlPickerPlugin.id, UrlPickerPlugin);
+registry.category("website-plugins").add(WebsiteUrlPickerPlugin.id, WebsiteUrlPickerPlugin);

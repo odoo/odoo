@@ -27,10 +27,10 @@ export class CustomizeTab extends Component {
     }
 
     getCurrentOptionsContainers() {
-        const currentOptionsContainers = this.props.currentOptionsContainers;
-        if (!currentOptionsContainers.length) {
-            return this.env.editor.shared["builderOptions"].getPageContainers();
-        }
+        const currentOptionsContainers =
+            this.props.currentOptionsContainers ||
+            this.env.editor.shared["builderOptions"].getPageContainers();
+        this.state.hasContent = currentOptionsContainers.length > 0;
         return currentOptionsContainers;
     }
 }

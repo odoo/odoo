@@ -33,4 +33,4 @@ class ColorStylePlugin extends Plugin {
     }
 }
 
-registry.category("website-plugins").add(ColorStylePlugin.id, ColorStylePlugin);
+registry.category("builder-plugins").add(ColorStylePlugin.id, ColorStylePlugin);

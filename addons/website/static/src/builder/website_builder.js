@@ -45,7 +45,10 @@ export class WebsiteBuilder extends Component {
         const builderProps = Object.assign({}, this.props.builderProps);
         const websitePlugins = this.props.translation
             ? TRANSLATION_PLUGINS
-            : registry.category("website-plugins").getAll();
+            : [
+                  ...registry.category("builder-plugins").getAll(),
+                  ...registry.category("website-plugins").getAll(),
+              ];
         const mainEditorPluginsToRemove = [
             "PowerButtonsPlugin",
             "DoubleClickImagePreviewPlugin",

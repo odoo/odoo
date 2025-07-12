@@ -189,7 +189,7 @@ export class HtmlField extends Component {
 
     async commitChanges({ urgent } = {}) {
         if (urgent) {
-            this._commitChanges({ urgent });
+            return this._commitChanges({ urgent });
         } else {
             return this.mutex.exec(() => this._commitChanges({ urgent }));
         }
@@ -212,8 +212,7 @@ export class HtmlField extends Component {
         await this.commitChanges();
         this.state.showCodeView = !this.state.showCodeView;
         if (!this.state.showCodeView && this.editor) {
-            this.editor.editable.innerHTML = this.value;
-            this.editor.shared.history.addStep();
+            this.state.key++;
         }
     }
 
@@ -228,7 +227,7 @@ export class HtmlField extends Component {
                 ...(this.props.embeddedComponents ? EMBEDDED_COMPONENT_PLUGINS : []),
             ],
             classList: this.classList,
-            onChange: this.onChange.bind(this),
+            onChange: () => this.onChange(),
             collaboration: this.props.isCollaborative && {
                 busService: this.busService,
                 ormService: this.ormService,
@@ -241,7 +240,7 @@ export class HtmlField extends Component {
                 peerId: this.generateId(),
             },
             dropImageAsAttachment: true, // @todo @phoenix always true ?
-            dynamicPlaceholder: this.dynamicPlaceholder,
+            dynamicPlaceholder: this.props.dynamicPlaceholder,
             dynamicPlaceholderResModel:
                 this.props.record.data[this.props.dynamicPlaceholderModelReferenceField || "model"],
             direction: localization.direction || "ltr",
@@ -258,8 +257,8 @@ export class HtmlField extends Component {
         }
 
         if (this.props.embeddedComponents) {
-            // TODO @engagement: fill this array with default/base components
             config.resources.embedded_components = [...MAIN_EMBEDDINGS];
+            config.embeddedComponentInfo = { app: this.__owl__.app, env: this.env };
         }
 
         const { sanitize_tags, sanitize } = this.props.record.fields[this.props.name];

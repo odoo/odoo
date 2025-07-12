@@ -194,6 +194,7 @@ export class WebsiteBuilderClientAction extends Component {
         });
         const builderProps = {
             closeEditor: this.reloadIframeAndCloseEditor.bind(this),
+            editableSelector: "#wrapwrap",
             reloadEditor: this.reloadEditor.bind(this),
             snippetsName: this.snippetsTemplate,
             toggleMobile: this.toggleMobile.bind(this),
@@ -211,8 +212,13 @@ export class WebsiteBuilderClientAction extends Component {
                 },
                 customizeTab: this.translation ? "website.CustomizeTranslationTab" : "",
             },
-            getThemeTab: () =>
-                odoo.loader.modules.get("@website/builder/plugins/theme/theme_tab").ThemeTab,
+            getThemeTab: Object.assign(() => {
+                const ThemeTab = odoo.loader.modules.get(
+                    "@website/builder/plugins/theme/theme_tab"
+                ).ThemeTab;
+                ThemeTab.displayName = _t("Theme");
+                return ThemeTab;
+            }),
         };
         return { translation: this.translation, builderProps };
     }
