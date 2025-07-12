@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_inherited_whatsapp" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.whatsapp</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_post']" position="after">
+                <button name="action_send_invoice_whatsapp"
+                        type="object"
+                        string="Send by WhatsApp"
+                        class="btn-primary"
+                        attrs="{'invisible': [('state', '!=', 'posted')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
