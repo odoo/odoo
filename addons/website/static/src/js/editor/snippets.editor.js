@@ -509,9 +509,24 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
             selectedTextEl.classList.add(...optionClassList);
             let $snippet = null;
             try {
+                const extendRange = (element) => {
+                    const elementRange = document.createRange();
+                    elementRange.selectNodeContents(element);
+                    // Don't reduce the range if it already contains the
+                    // targeted element.
+                    if (
+                        range.compareBoundaryPoints(Range.START_TO_START, elementRange) > 0 ||
+                        range.compareBoundaryPoints(Range.END_TO_END, elementRange) < 0
+                    ) {
+                        range.setStartBefore(element);
+                        range.setEndAfter(element);
+                    }
+                };
                 const commonAncestor = range.commonAncestorContainer;
                 const ancestorElement =
                     commonAncestor.nodeType === 1 ? commonAncestor : commonAncestor.parentElement;
+                const highlightParentEl =
+                    ancestorElement.parentElement.closest(".o_text_highlight");
                 const backgroundColorParentEl = ancestorElement.closest(
                     'font[style*="background-color"], font[style*="background-image"], font[class^="bg-"]'
                 );
@@ -519,8 +534,10 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
                     // As long as we handle the same text content, we extend the
                     // existing range to the `<font/>` boundaries to keep the
                     // background color applied correctly.
-                    range.setStartBefore(backgroundColorParentEl);
-                    range.setEndAfter(backgroundColorParentEl);
+                    extendRange(backgroundColorParentEl);
+                }
+                if (highlightParentEl?.textContent.includes(commonAncestor.textContent)) {
+                    extendRange(highlightParentEl);
                 }
                 range.surroundContents(selectedTextEl);
                 $snippet = $(selectedTextEl);
