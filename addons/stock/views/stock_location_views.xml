@@ -23,15 +23,16 @@
                         <button string="Products"
                                 class="oe_stat_button" icon="fa-th-list"
                                 type="action" name="stock.act_product_location_open"/>
-                        <button string="Current Stock"
-                                class="oe_stat_button"
-                                icon="fa-cubes" name="%(stock_quant_action)d" type="action"/>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <label for="name"/>
-                    <h1><field name="name" placeholder="e.g. Spare Stock"/></h1>
-                    <label for="location_id"/>
-                    <h2><field name="location_id" placeholder="e.g. Physical Locations" options="{'no_create': True}"/></h2>
+                    <div class="oe_location_header">
+                        <div>
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="e.g. Shelf 1"/></h1>
+                            <label for="location_id"/>
+                            <h2><field name="location_id" placeholder="e.g. Aisle 1" options="{'no_create': True}"/></h2>
+                        </div>
+                    </div>
 
                     <group>
                         <group string="Additional Information" name="additional_info">
@@ -39,7 +40,6 @@
                             <field name="usage"/>
                             <field name="storage_category_id" invisible="usage != 'internal'" groups="stock.group_stock_multi_locations"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
-                            <field name="scrap_location" invisible="usage not in ('inventory', 'internal')"/>
                             <field name="replenish_location" invisible="usage != 'internal'"/>
                         </group>
                         <group string="Cyclic Counting" invisible="usage not in ('internal', 'transit') or not company_id">
@@ -51,11 +51,10 @@
                             <field name="last_inventory_date"/>
                             <field name="next_inventory_date" invisible="not active"/>
                         </group>
-                        <group string="Logistics">
-                            <field name="removal_strategy_id" widget="radio" options="{'no_create': True}" invisible="usage in ('supplier', 'customer', 'inventory', 'production') or scrap_location or usage == 'transit' and not company_id"/>
+                        <group string="Logistics" invisible="usage in ('supplier', 'customer', 'inventory', 'production') or usage == 'transit' and not company_id">
+                            <field name="removal_strategy_id" widget="radio" options="{'no_create': True}"/>
                         </group>
                     </group>
-                    <field name="comment" placeholder="External note..."/>
                 </sheet>
             </form>
         </field>
@@ -107,7 +106,7 @@
                 <field name="active" column_invisible="True"/>
                 <field name="complete_name" string="Location"/>
                 <field name="usage"/>
-                <field name="is_empty" invisible="usage not in ['internal', 'transit']"/>
+                <field name="is_empty" optional="hide" invisible="usage not in ['internal', 'transit']"/>
                 <field name="storage_category_id" readonly="usage != 'internal'" groups="stock.group_stock_multi_locations"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </list>

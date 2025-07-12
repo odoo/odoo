@@ -16,7 +16,6 @@ class StockLocation(models.Model):
     _parent_name = "location_id"
     _parent_store = True
     _order = 'complete_name, id'
-    _rec_name = 'complete_name'
     _rec_names_search = ['complete_name', 'barcode']
     _check_company_auto = True
 
@@ -31,13 +30,13 @@ class StockLocation(models.Model):
     complete_name = fields.Char("Full Location Name", compute='_compute_complete_name', recursive=True, store=True)
     active = fields.Boolean('Active', default=True, help="By unchecking the active field, you may hide a location without deleting it.")
     usage = fields.Selection([
-        ('supplier', 'Vendor Location'),
-        ('view', 'View'),
-        ('internal', 'Internal Location'),
-        ('customer', 'Customer Location'),
+        ('supplier', 'Vendor'),
+        ('view', 'Virtual'),
+        ('internal', 'Internal'),
+        ('customer', 'Customer'),
         ('inventory', 'Inventory Loss'),
         ('production', 'Production'),
-        ('transit', 'Transit Location')], string='Location Type',
+        ('transit', 'Transit')], string='Location Type',
         default='internal', index=True, required=True,
         help="* Vendor Location: Virtual location representing the source location for products coming from your vendors"
              "\n* View: Virtual location used to create a hierarchical structures for your warehouse, aggregating its child locations ; can't directly contain products"
@@ -57,15 +56,13 @@ class StockLocation(models.Model):
         recursive=True,
         help='This location (if it\'s internal) and all its descendants filtered by type=Internal.'
     )
-    comment = fields.Html('Additional Information')
     parent_path = fields.Char(index=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company, index=True,
         help='Let this field empty if this location is shared between companies')
-    scrap_location = fields.Boolean('Is a Scrap Location?', default=False, help='Check this box to allow using this location to put scrapped/damaged goods.')
-    replenish_location = fields.Boolean('Replenish Location', copy=False, compute="_compute_replenish_location", readonly=False, store=True,
-                                        help='Activate this function to get all quantities to replenish at this particular location')
+    replenish_location = fields.Boolean('Replenishments', copy=False, compute="_compute_replenish_location", readonly=False, store=True,
+                                        help='Trigger replenishment suggestions for this location when required')
     removal_strategy_id = fields.Many2one(
         'product.removal', 'Removal Strategy',
         help="Defines the default method used for suggesting the exact location (shelf) "
@@ -101,6 +98,21 @@ class StockLocation(models.Model):
         'check(cyclic_inventory_frequency >= 0)',
         'The inventory frequency (days) for a location must be non-negative',
     )
+
+    @api.depends('name', 'location_id.complete_name', 'usage')
+    @api.depends_context('formatted_display_name')
+    def _compute_display_name(self):
+        for location in self:
+            if location.env.context.get('formatted_display_name'):
+                if location.location_id and location.usage != 'view':
+                    location.display_name = f"--{location.location_id.complete_name}/--**{location.name}**"
+                else:
+                    location.display_name = f"**{location.name}**"
+            else:
+                if location.location_id and location.usage != 'view':
+                    location.display_name = f"{location.location_id.complete_name}/{location.name}"
+                else:
+                    location.display_name = location.name
 
     @api.depends('outgoing_move_line_ids.quantity_product_uom', 'incoming_move_line_ids.quantity_product_uom',
                  'outgoing_move_line_ids.state', 'incoming_move_line_ids.state',
@@ -168,11 +180,6 @@ class StockLocation(models.Model):
         for loc in self:
             loc.child_internal_location_ids = self.search([('id', 'child_of', loc.id), ('usage', '=', 'internal')])
 
-    @api.onchange('usage')
-    def _onchange_usage(self):
-        if self.usage not in ('internal', 'inventory'):
-            self.scrap_location = False
-
     @api.depends('usage')
     def _compute_replenish_location(self):
         for loc in self:
@@ -188,10 +195,10 @@ class StockLocation(models.Model):
                 if replenish_wh_location:
                     raise ValidationError(_('Another parent/sub replenish location %s exists, if you wish to change it, uncheck it first', replenish_wh_location.name))
 
-    @api.constrains('scrap_location')
+    @api.constrains('usage')
     def _check_scrap_location(self):
         for record in self:
-            if record.scrap_location and self.env['stock.picking.type'].search_count([('code', '=', 'mrp_operation'), ('default_location_dest_id', '=', record.id)], limit=1):
+            if record.usage == 'inventory' and self.env['stock.picking.type'].search_count([('code', '=', 'mrp_operation'), ('default_location_dest_id', '=', record.id)], limit=1):
                 raise ValidationError(_("You cannot set a location as a scrap location when it is assigned as a destination location for a manufacturing type operation."))
 
     @api.ondelete(at_uninstall=False)
@@ -211,7 +218,11 @@ class StockLocation(models.Model):
                 having=[('quantity:sum', '>', 0)]
             )
         ]
-        return [('id', 'not in', location_ids)]
+        view_location_ids_to_excluded = self.env['stock.location'].search([
+            ('usage', '=', 'view'),
+            ('warehouse_id', '=', False)
+        ]).ids
+        return [('id', 'not in', location_ids + view_location_ids_to_excluded)]
 
     def write(self, values):
         if 'company_id' in values:
@@ -221,10 +232,8 @@ class StockLocation(models.Model):
         if 'usage' in values and values['usage'] == 'view':
             if self.mapped('quant_ids'):
                 raise UserError(_("This location's usage cannot be changed to view as it contains products."))
-        if 'usage' in values or 'scrap_location' in values:
-            modified_locations = self.filtered(
-                lambda l: any(l[f] != values[f] if f in values else False
-                              for f in {'usage', 'scrap_location'}))
+        if 'usage' in values:
+            modified_locations = self.filtered(lambda l: l.usage != values['usage'])
             reserved_quantities = self.env['stock.quant'].search_count([
                 ('location_id', 'in', modified_locations.ids),
                 ('quantity', '>', 0),
@@ -401,7 +410,7 @@ class StockLocation(models.Model):
 
     def should_bypass_reservation(self):
         self.ensure_one()
-        return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location
+        return self.usage in ('supplier', 'customer', 'inventory', 'production')
 
     def _check_access_putaway(self):
         return self

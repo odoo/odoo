@@ -35,7 +35,7 @@ class StockWarehouse(models.Model):
 
     def _update_dropship_subcontract_rules(self):
         '''update (archive/unarchive) any warehouse subcontracting location dropship rules'''
-        subcontracting_locations = self._get_subcontracting_locations()
+        subcontracting_locations = self._get_subcontracting_location()
         route_id = self._find_or_create_global_route('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping',
                                            _('Dropship Subcontractor on Order'))
         warehouses_dropship = self.filtered(lambda w: w.subcontracting_dropshipping_to_resupply and w.active)

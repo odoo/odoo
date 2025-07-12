@@ -74,7 +74,7 @@ class StockPickingType(models.Model):
     @api.constrains('default_location_dest_id')
     def _check_default_location(self):
         for record in self:
-            if record.code == 'mrp_operation' and record.default_location_dest_id.scrap_location:
+            if record.code == 'mrp_operation' and record.default_location_dest_id.usage == 'inventory':
                 raise ValidationError(_("You cannot set a scrap location as the destination location for a manufacturing type operation."))
 
     def _get_mo_count(self):

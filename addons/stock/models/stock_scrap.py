@@ -43,7 +43,7 @@ class StockScrap(models.Model):
     scrap_location_id = fields.Many2one(
         'stock.location', 'Scrap Location',
         compute='_compute_scrap_location_id', store=True, required=True, precompute=True,
-        domain="[('scrap_location', '=', True)]", check_company=True, readonly=False)
+        domain="[('usage', '=', 'inventory')]", check_company=True, readonly=False)
     scrap_qty = fields.Float(
         'Quantity', required=True, digits='Product Unit',
         compute='_compute_scrap_qty', default=1.0, readonly=False, store=True)
@@ -88,7 +88,7 @@ class StockScrap(models.Model):
     @api.depends('company_id')
     def _compute_scrap_location_id(self):
         groups = self.env['stock.location']._read_group(
-            [('company_id', 'in', self.company_id.ids), ('scrap_location', '=', True)], ['company_id'], ['id:min'])
+            [('company_id', 'in', self.company_id.ids), ('usage', '=', 'inventory')], ['company_id'], ['id:min'])
         locations_per_company = {
             company.id: stock_warehouse_id
             for company, stock_warehouse_id in groups
@@ -132,7 +132,6 @@ class StockScrap(models.Model):
             'state': 'draft',
             'product_uom_qty': self.scrap_qty,
             'location_id': self.location_id.id,
-            'scrapped': True,
             'scrap_id': self.id,
             'location_dest_id': self.scrap_location_id.id,
             'move_line_ids': [(0, 0, {

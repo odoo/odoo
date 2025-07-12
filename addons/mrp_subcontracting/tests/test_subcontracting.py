@@ -148,17 +148,13 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         # Tick "resupply subconractor on order"
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         (self.comp1 + self.comp2).write({'route_ids': [(4, resupply_sub_on_order_route.id, None)]})
-        # Create a different subcontract location & check rules replication
-        reference_location_rules_count = self.env['stock.rule'].search_count(['|', ('location_src_id', '=', self.env.company.subcontracting_location_id.id), ('location_dest_id', '=', self.env.company.subcontracting_location_id.id)])
+        # Create a different subcontract location
         partner_subcontract_location = self.env['stock.location'].create({
             'name': 'Specific partner location',
-            'location_id': self.env.ref('stock.stock_location_locations_partner').id,
+            'location_id': self.env.company.subcontracting_location_id.id,
             'usage': 'internal',
             'company_id': self.env.company.id,
-            'is_subcontracting_location': True,
         })
-        custom_location_rules_count = self.env['stock.rule'].search_count(['|', ('location_src_id', '=', partner_subcontract_location.id), ('location_dest_id', '=', partner_subcontract_location.id)])
-        self.assertEqual(reference_location_rules_count, custom_location_rules_count)
         self.subcontractor_partner1.property_stock_subcontractor = partner_subcontract_location.id
         # Add a manufacturing lead time to check that the resupply delivery is correctly planned 2 days
         # before the subcontracting receipt
@@ -215,8 +211,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         avail_qty_comp1_in_global_location = self.env['stock.quant']._get_available_quantity(self.comp1, self.env.company.subcontracting_location_id, allow_negative=True)
         avail_qty_comp2_in_global_location = self.env['stock.quant']._get_available_quantity(self.comp2, self.env.company.subcontracting_location_id, allow_negative=True)
-        self.assertEqual(avail_qty_comp1_in_global_location, 0.0)
-        self.assertEqual(avail_qty_comp2_in_global_location, 0.0)
+        self.assertEqual(avail_qty_comp1_in_global_location, -1)
+        self.assertEqual(avail_qty_comp2_in_global_location, -1)
 
     def test_flow_3(self):
         """ Tick "Resupply Subcontractor on Order" and "MTO" on the components and trigger the
@@ -876,33 +872,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         check_quants(product=finished, stock_qty=6, sub_qty=0, prod_qty=-6)
         check_quants(product=component, stock_qty=0, sub_qty=-6, prod_qty=6)
 
-    def test_subcontracting_rules_replication(self):
-        """ Test activate/archive subcontracting location rules."""
-        reference_location_rules = self.env['stock.rule'].search(['|', ('location_src_id', '=', self.env.company.subcontracting_location_id.id), ('location_dest_id', '=', self.env.company.subcontracting_location_id.id)])
-        warehouse_related_rules = reference_location_rules.filtered(lambda r: r.warehouse_id)
-        company_rules = reference_location_rules - warehouse_related_rules
-        # Create a custom subcontracting location
-        custom_subcontracting_location = self.env['stock.location'].create({
-            'name': 'Custom Subcontracting Location',
-            'location_id': self.env.ref('stock.stock_location_locations').id,
-            'usage': 'internal',
-            'company_id': self.env.company.id,
-            'is_subcontracting_location': True,
-        })
-        custom_location_rules_count = self.env['stock.rule'].search_count(['|', ('location_src_id', '=', custom_subcontracting_location.id), ('location_dest_id', '=', custom_subcontracting_location.id)])
-        self.assertEqual(len(reference_location_rules), custom_location_rules_count)
-        # Add a new warehouse
-        warehouse = self.env['stock.warehouse'].create({
-            'name': 'Additional Warehouse',
-            'code': 'ADD'
-        })
-        company_subcontracting_locations_rules_count = self.env['stock.rule'].search_count(['&', ('company_id', '=', warehouse.company_id.id), '|', ('location_src_id.is_subcontracting_location', '=', True), ('location_dest_id.is_subcontracting_location', '=', True)])
-        self.assertEqual(len(warehouse_related_rules) * 4 + len(company_rules) * 2, company_subcontracting_locations_rules_count)
-        # Custom location no longer a subcontracting one
-        custom_subcontracting_location.is_subcontracting_location = False
-        custom_location_rules_count = self.env['stock.rule'].search_count(['|', ('location_src_id', '=', custom_subcontracting_location.id), ('location_dest_id', '=', custom_subcontracting_location.id)])
-        self.assertEqual(custom_location_rules_count, 0)
-
     def test_subcontracting_date_warning(self):
         with Form(self.env['stock.picking']) as picking_form:
             picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
@@ -1113,38 +1082,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             {'qty_producing': 1.0, 'product_qty': 1.0, 'state': 'cancel'},
             {'qty_producing': 10.0, 'product_qty': 10.0, 'state': 'to_close'},
         ])
-
-    def test_change_partner_subcontracting_location(self):
-        """On creating a subcontrating picking, the destination location of the picking is equal to
-        the subcontracting location of the contact if specified. Otherwise, it will be equal to the
-        default warehouse subcontracting location.
-        """
-        custom_subcontract_location = self.env['stock.location'].create({
-            'name': 'custom partner location',
-            'location_id': self.env.ref('stock.stock_location_locations_partner').id,
-            'usage': 'internal',
-            'company_id': self.env.company.id,
-            'is_subcontracting_location': True,
-        })
-        subcontractor = self.env['res.partner'].create({'name': 'subcontractor'})
-
-        def create_picking(subcontractor):
-            picking_form = Form(self.env['stock.picking'])
-            picking_form.picking_type_id = self.warehouse.subcontracting_resupply_type_id
-            picking_form.partner_id = subcontractor
-            with picking_form.move_ids_without_package.new() as move:
-                move.product_id = self.comp1
-                move.product_uom_qty = 1.0
-            picking = picking_form.save()
-            picking.action_confirm()
-            return picking
-
-        picking_with_default_location = create_picking(subcontractor)
-        self.assertEqual(picking_with_default_location.location_dest_id, self.warehouse.subcontracting_resupply_type_id.default_location_dest_id)
-
-        subcontractor.property_stock_subcontractor = custom_subcontract_location.id
-        picking_with_custom_location = create_picking(subcontractor)
-        self.assertEqual(picking_with_custom_location.location_dest_id, custom_subcontract_location)
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):

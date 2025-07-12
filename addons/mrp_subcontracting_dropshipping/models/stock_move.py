@@ -10,7 +10,7 @@ class StockMove(models.Model):
     def _prepare_procurement_values(self):
         vals = super()._prepare_procurement_values()
         partner = self.group_id.partner_id
-        if not vals.get('partner_id') and partner and self.location_id.is_subcontracting_location:
+        if not vals.get('partner_id') and partner and self.location_id == self.env.company.subcontracting_location_id:
             vals['partner_id'] = partner.id
         return vals
 
