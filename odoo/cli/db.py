@@ -123,14 +123,24 @@ class Db(Command):
         dump = subs.add_parser(
             "dump", help="Create a dump with filestore.",
             description="Creates a dump file. The dump is always in zip format "
-                        "(with filestore), to get a no-filestore format use "
-                        "pg_dump directly.")
+                        "(with filestore), to get pg_dump format, use "
+                        "dump_format argument.")
         dump.set_defaults(func=self.dump)
         dump.add_argument('database', help="database to dump")
         dump.add_argument(
             'dump_path', nargs='?', default='-',
             help="if provided, database is dumped to specified path, otherwise "
                  "or if `-`, dumped to stdout",
+        )
+        dump.add_argument(
+            '--format', dest='dump_format', choices=('zip', 'dump'), default='zip',
+            help="if provided, database is dumped used the specified format, "
+                "otherwise defaults to `zip`.\n"
+                "Supported formats are `zip`, `dump` (pg_dump format) ",
+        )
+        dump.add_argument(
+            '--no-filestore', action='store_const', dest='filestore', default=True, const=False,
+            help="if passed, zip database is dumped without filestore (default: false)"
         )
 
         # DUPLICATE -----------------------------
@@ -226,7 +236,7 @@ class Db(Command):
             dump_db(args.database, sys.stdout.buffer)
         else:
             with open(args.dump_path, 'wb') as f:
-                dump_db(args.database, f)
+                dump_db(args.database, f, args.dump_format, args.filestore)
 
     def duplicate(self, args):
         self._check_target(args.target, delete_if_exists=args.force)

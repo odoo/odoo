@@ -27,6 +27,18 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+   document.getElementById('backup_format').addEventListener("change", function (ev) {
+            ev.preventDefault();
+            const no_filestore_flag = document.getElementById("filestore_div");
+            if (no_filestore_flag) {
+                if (ev.target.value != "zip") {
+                    no_filestore_flag.classList.add("d-none");
+                } else {
+                    no_filestore_flag.classList.remove("d-none");
+                }
+            }
+    });
+
     // close modal on submit
     const modals = document.querySelectorAll(".modal");
     for (const modalEl of modals) {
