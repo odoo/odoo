@@ -105,19 +105,26 @@ export class LinkPopover extends Component {
             showLabel: !this.props.linkElement.childElementCount,
         });
 
+        const getSelectedElement = () => this.props.linkElement;
         this.customTextColorState = useState({
             selectedColor: computedStyle.color || DEFAULT_CUSTOM_TEXT_COLOR,
             defaultTab: "solid",
+            getSelectedElement,
+            mode: "color",
         });
         this.customTextResetPreviewColor = this.customTextColorState.selectedColor;
         this.customFillColorState = useState({
             selectedColor: computedStyle.backgroundColor || DEFAULT_CUSTOM_FILL_COLOR,
             defaultTab: "solid",
+            getSelectedElement,
+            mode: "background-color",
         });
         this.customFillResetPreviewColor = this.customFillColorState.selectedColor;
         this.customBorderColorState = useState({
             selectedColor: computedStyle.borderColor || DEFAULT_CUSTOM_TEXT_COLOR,
             defaultTab: "solid",
+            getSelectedElement,
+            mode: "border-color",
         });
         this.customBorderResetPreviewColor = this.customBorderColorState.selectedColor;
 

@@ -1,7 +1,7 @@
 import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
+import { applyOpacityToGradient, isCSSColor, isColorGradient } from "@web/core/utils/colors";
 import { cookie } from "@web/core/browser/cookie";
 import { GradientPicker } from "./gradient_picker/gradient_picker";
 import { POSITION_BUS } from "../position/position_hook";
@@ -29,6 +29,10 @@ const DEFAULT_GRADIENT_COLORS = [
     "linear-gradient(135deg, rgb(255, 222, 202) 0%, rgb(202, 115, 69) 100%)",
 ];
 
+const DEFAULT_GRAYSCALES = {
+    solid: ["black", "900", "800", "600", "400", "200", "100", "white"],
+};
+
 export const DEFAULT_THEME_COLOR_VARS = [
     "o-color-1",
     "o-color-2",
@@ -46,7 +50,9 @@ export class ColorPicker extends Component {
             shape: {
                 selectedColor: String,
                 selectedColorCombination: { type: String, optional: true },
+                getSelectedElement: { type: Function, optional: true },
                 defaultTab: String,
+                mode: { type: String, optional: true },
             },
         },
         getUsedCustomColors: Function,
@@ -56,19 +62,26 @@ export class ColorPicker extends Component {
         enabledTabs: { type: Array, optional: true },
         colorPrefix: { type: String },
         showRgbaField: { type: Boolean, optional: true },
+        defaultGradientOpacity: { type: Number, optional: true },
+        grayscales: { type: Object, optional: true },
         noTransparency: { type: Boolean, optional: true },
         close: { type: Function, optional: true },
         className: { type: String, optional: true },
     };
     static defaultProps = {
         close: () => {},
+        defaultGradientOpacity: 1,
         enabledTabs: ["solid", "gradient", "custom"],
         showRgbaField: false,
     };
-
+    applyOpacityToGradient = applyOpacityToGradient;
     setup() {
         this.DEFAULT_COLORS = DEFAULT_COLORS;
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
+        this.grayscales = Object.assign({}, DEFAULT_GRAYSCALES);
+        this.grayscales = Object.assign(this.grayscales, this.props.grayscales);
+        this.DEFAULT_THEME_COLOR_VARS = DEFAULT_THEME_COLOR_VARS;
+        this.defaultColorSet = this.getDefaultColorSet();
         this.root = useRef("root");
 
         this.defaultColor = this.props.state.selectedColor;
@@ -199,6 +212,49 @@ export class ColorPicker extends Component {
         }
     }
 
+    getDefaultColorSet() {
+        if (!this.props.state.getSelectedElement || !this.props.state.mode) {
+            return;
+        }
+        const editingEl = this.props.state.getSelectedElement();
+        let defaultColors = this.props.enabledTabs.includes("solid")
+            ? this.DEFAULT_THEME_COLOR_VARS
+            : [];
+        for (const grayscale of Object.values(this.grayscales)) {
+            defaultColors = defaultColors.concat(grayscale);
+        }
+
+        const extractColorFromClasses = (el, prefix, defaultColors) => {
+            if (!el) {
+                return false;
+            }
+            for (const className of el.classList) {
+                const match = className.match(new RegExp(`^${prefix}-(.+)$`));
+                if (match && defaultColors.includes(match[1])) {
+                    return match[1];
+                }
+            }
+            return false;
+        };
+        switch (this.props.state.mode) {
+            case "color":
+                return extractColorFromClasses(editingEl, "text", defaultColors);
+            case "background-color":
+            case "backgroundColor":
+                return extractColorFromClasses(editingEl, "bg", defaultColors);
+            case "selectFilterColor": {
+                const filterEl = editingEl.querySelector(".o_we_bg_filter");
+                return extractColorFromClasses(filterEl, "bg", defaultColors);
+            }
+            default: {
+                const color = editingEl.dataset[this.props.state.mode];
+                return defaultColors.includes(color) ||
+                    defaultColors.includes(this.props.state.mode)
+                    ? color
+                    : false;
+            }
+        }
+    }
     toggleGradientPicker() {
         this.state.showGradientPicker = !this.state.showGradientPicker;
     }

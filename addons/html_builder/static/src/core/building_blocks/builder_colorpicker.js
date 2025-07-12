@@ -45,11 +45,13 @@ export function useColorPickerBuilderComponent() {
         const { actionId, actionParam } = actionWithGetValue;
         const actionValue = getAction(actionId).getValue({ editingElement, params: actionParam });
         return {
+            mode: actionParam.mainParam || actionId,
             selectedColor: actionValue || comp.props.defaultColor,
             selectedColorCombination: comp.env.editor.shared.color.getColorCombination(
                 editingElement,
                 actionParam
             ),
+            getSelectedElement: () => editingElement,
         };
     }
     function getColor(colorValue) {
@@ -103,11 +105,13 @@ export class BuilderColorPicker extends Component {
         ...basicContainerBuilderComponentProps,
         noTransparency: { type: Boolean, optional: true },
         enabledTabs: { type: Array, optional: true },
+        grayscales: { type: Object, optional: true },
         unit: { type: String, optional: true },
         title: { type: String, optional: true },
         getUsedCustomColors: { type: Function, optional: true },
         selectedTab: { type: String, optional: true },
         defaultColor: { type: String, optional: true },
+        defaultGradientOpacity: { type: Number, optional: true },
     };
     static defaultProps = {
         getUsedCustomColors: () => [],
@@ -137,6 +141,8 @@ export class BuilderColorPicker extends Component {
                 showRgbaField: true,
                 noTransparency: this.props.noTransparency,
                 enabledTabs: this.props.enabledTabs,
+                grayscales: this.props.grayscales,
+                defaultGradientOpacity: this.props.defaultGradientOpacity,
                 className: "o-hb-colorpicker",
             },
             {
