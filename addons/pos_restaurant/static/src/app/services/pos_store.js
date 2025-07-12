@@ -95,9 +95,8 @@ patch(PosStore.prototype, {
         }
         return super.defaultScreen;
     },
-
-    createNewOrder(data) {
-        const order = super.createNewOrder(data);
+    createNewOrder() {
+        const order = super.createNewOrder(...arguments);
 
         if (order.table_id) {
             order.setCustomerCount(order.table_id.seats);
