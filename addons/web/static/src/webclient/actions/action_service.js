@@ -813,6 +813,14 @@ export function makeActionManager(env, router = _router) {
         if (action.target !== "new" && "newStack" in options) {
             controllerStack = options.newStack;
         }
+        // If the action that triggered _updateUI is an embedded action, we want to 
+        // replace the last element of controllerStack before adding the new controller
+        // but only if the last element is the parent action of this current action.
+        const actionContext = action.context;
+        const prevAction = controllerStack.at(-1)?.action;
+        if (actionContext && prevAction && actionContext.from_embedded_action && actionContext.parent_action_id === prevAction.id) {
+            options.stackPosition = "replaceCurrentAction";
+        }
         const index = _computeStackIndex(options);
         const nextStack = [...controllerStack.slice(0, index), controller];
         // Compute breadcrumbs
