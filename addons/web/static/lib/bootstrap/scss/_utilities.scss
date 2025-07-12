@@ -709,7 +709,7 @@ $utilities: map-merge(
     // scss-docs-end utils-interaction
     // scss-docs-start utils-border-radius
     "rounded": (
-      property: border-radius,
+      property: --box-border-radius,
       class: rounded,
       values: (
         null: var(--#{$prefix}border-radius),
@@ -724,7 +724,7 @@ $utilities: map-merge(
       )
     ),
     "rounded-top": (
-      property: border-top-left-radius border-top-right-radius,
+      property: --box-border-top-left-radius --box-border-top-right-radius,
       class: rounded-top,
       values: (
         null: var(--#{$prefix}border-radius),
@@ -739,7 +739,7 @@ $utilities: map-merge(
       )
     ),
     "rounded-end": (
-      property: border-top-right-radius border-bottom-right-radius,
+      property: --box-border-top-right-radius --box-border-bottom-right-radius,
       class: rounded-end,
       values: (
         null: var(--#{$prefix}border-radius),
@@ -754,7 +754,7 @@ $utilities: map-merge(
       )
     ),
     "rounded-bottom": (
-      property: border-bottom-right-radius border-bottom-left-radius,
+      property: --box-border-bottom-right-radius --box-border-bottom-left-radius,
       class: rounded-bottom,
       values: (
         null: var(--#{$prefix}border-radius),
@@ -769,7 +769,7 @@ $utilities: map-merge(
       )
     ),
     "rounded-start": (
-      property: border-bottom-left-radius border-top-left-radius,
+      property: --box-border-bottom-left-radius --box-border-top-left-radius,
       class: rounded-start,
       values: (
         null: var(--#{$prefix}border-radius),

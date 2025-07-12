@@ -1,40 +1,26 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { applyNeededCss } from "@html_builder/utils/utils_css";
+import { withSequence } from "@html_editor/utils/resource";
+import { CSS_SHORTHANDS } from "@html_builder/utils/utils_css";
 
 class BorderRadiusStylePlugin extends Plugin {
     static id = "borderRadiusStyle";
     resources = {
-        builder_style_actions: this.getStyleActions(),
-        step_added_handlers: () => {
-            this.document.querySelectorAll(".o_grid_item").forEach((gridEl) => {
-                this.calculateAndSetRadius(gridEl);
-            });
-        },
+        apply_custom_css_style: withSequence(20, this.applyRadiusStyle.bind(this)),
     };
 
-    getStyleActions() {
-        return {
-            "border-radius": {
-                getValue: (el, styleName) => window.getComputedStyle(el)[styleName],
-                apply: (el, styleValue) => {
-                    applyNeededCss(el, "border-radius", styleValue);
-                    this.calculateAndSetRadius(el);
-                },
-            },
-        };
-    }
-
-    calculateAndSetRadius(parentElement) {
-        const backgroundEls = parentElement.querySelectorAll(":scope > [class*='_bg']");
-        backgroundEls.forEach((backgroundEl) => {
-            backgroundEl.style.borderRadius =
-                Math.max(
-                    0,
-                    (parseInt(parentElement.style.borderRadius) || 0) -
-                        (parseInt(parentElement.style.borderWidth) || 0)
-                ) + "px";
-        });
+    // border-radius calculation using --box-border-radius variables is
+    // done at class level using .rounded, so eventual border-radius styles
+    // must be removed beacuse they would otherwise take precedence
+    applyRadiusStyle({ editingElement, params, value }) {
+        if (
+            params.mainParam === "--box-border-radius" ||
+            CSS_SHORTHANDS["--box-border-radius"].includes(params.mainParam)
+        ) {
+            editingElement.style.setProperty("border-radius", "");
+        }
+        return false;
     }
 }
+
 registry.category("website-plugins").add(BorderRadiusStylePlugin.id, BorderRadiusStylePlugin);

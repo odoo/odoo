@@ -759,6 +759,40 @@ pre {
     overflow: hidden;
     background-repeat: no-repeat;
     pointer-events: none;
+    // For border with all 4 edges of equal value the max function is useless,
+    // but in case the border is uneven it approximates the correct roundness
+    // --box-border-XXX-radius/width : editor Round Corners/Border input
+    // --box-border-radius : rounded-XXX classes
+    // --border-radius : theme
+    border-radius: 
+        calc(var(--box-border-top-left-radius, var(--box-border-radius, var(--border-radius))) - max(var(--box-border-top-width, 0px), var(--box-border-left-width, 0px)))
+        calc(var(--box-border-top-right-radius, var(--box-border-radius, var(--border-radius))) - max(var(--box-border-top-width, 0px), var(--box-border-right-width, 0px)))
+        calc(var(--box-border-bottom-right-radius, var(--box-border-radius, var(--border-radius))) - max(var(--box-border-bottom-width, 0px), var(--box-border-right-width, 0px)))
+        calc(var(--box-border-bottom-left-radius, var(--box-border-radius, var(--border-radius))) - max(var(--box-border-bottom-width, 0px), var(--box-border-left-width, 0px)))
+}
+
+.border {
+    border-width:
+        var(--box-border-top-width, var(--box-border-width, var(--border-width)))
+        var(--box-border-right-width, var(--box-border-width, var(--border-width)))
+        var(--box-border-bottom-width, var(--box-border-width, var(--border-width)))
+        var(--box-border-left-width, var(--box-border-width, var(--border-width))) !important;
+}
+
+.rounded {
+    border-radius:
+        var(--box-border-top-left-radius, var(--box-border-radius, var(--border-radius)))
+        var(--box-border-top-right-radius, var(--box-border-radius, var(--border-radius)))
+        var(--box-border-bottom-right-radius, var(--box-border-radius, var(--border-radius)))
+        var(--box-border-bottom-left-radius, var(--box-border-radius, var(--border-radius))) !important;
+}
+
+.rounded-1, .rounded-2, .rounded-3, .rounded-4, .rounded-5, .rounded-circle, .rounded-pill,
+.rounded-top-1, .rounded-top-2, .rounded-top-3, .rounded-top-4, .rounded-top-5, .rounded-top-circle, .rounded-top-pill,
+.rounded-end-1, .rounded-end-2, .rounded-end-3, .rounded-end-4, .rounded-end-5, .rounded-end-circle, .rounded-end-pill,
+.rounded-bottom-1, .rounded-bottom-2, .rounded-bottom-3, .rounded-bottom-4, .rounded-bottom-5, .rounded-bottom-circle, .rounded-bottom-pill,
+.rounded-start-1, .rounded-start-2, .rounded-start-3, .rounded-start-4, .rounded-start-5, .rounded-start-circle, .rounded-start-pill {
+    @extend .rounded;
 }
 
 section, .oe_img_bg, [data-oe-shape-data] {

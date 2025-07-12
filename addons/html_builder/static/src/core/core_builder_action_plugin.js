@@ -223,10 +223,17 @@ export class StyleAction extends BuilderAction {
             return `${color} ${values}${inset ? " inset" : ""}`;
         } else if (
             styleName === "border-width" ||
-            CSS_SHORTHANDS["border-width"].includes(styleName)
+            styleName === "--box-border-width" ||
+            CSS_SHORTHANDS["border-width"].includes(styleName) ||
+            styleName === "border-radius" ||
+            styleName === "--box-border-radius" ||
+            CSS_SHORTHANDS["border-radius"].includes(styleName)
         ) {
             let value = getStyleValue(el, styleName);
-            if (value.endsWith("px")) {
+            if (
+                value.endsWith("px") &&
+                (styleName === "border-width" || styleName === "--box-border-width")
+            ) {
                 value = value
                     .split(/\s+/g)
                     .map(
@@ -237,7 +244,7 @@ export class StyleAction extends BuilderAction {
                     )
                     .join(" ");
             }
-            return value;
+            return value || "0px";
         } else if (styleName === "row-gap" || styleName === "column-gap") {
             return parseInt(getStyleValue(el, styleName)) || 0;
         } else if (styleName === "width") {
