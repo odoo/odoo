@@ -295,6 +295,25 @@ class TestReorderingRule(TransactionCase):
                 'product_max_qty': 1,
             })
 
+    def test_reordering_rule_replenishement_uom(self):
+        """Test that a reordering rule with a replenishement UoM
+         create the purchase order using this UoM."""
+        pack_of_10 = self.env['uom.uom'].create({
+            'name': 'pack of 10',
+            'relative_factor': 10.0,
+            'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
+        })
+        order_point = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product_01.id,
+            'product_min_qty': 10,
+            'product_max_qty': 10,
+            'replenishment_uom_id': pack_of_10.id,
+        })
+        order_point.action_replenish()
+        po = self.env['purchase.order.line'].search([('product_id', '=', self.product_01.id)], limit=1)
+        self.assertEqual(po.product_uom_id.id, pack_of_10.id)
+        self.assertEqual(po.product_uom_qty, 10)
+
     def test_reordering_rule_triggered_two_times(self):
         """
         A product P wth RR 0-0-1.
