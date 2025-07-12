@@ -31,8 +31,8 @@ export class SearchBar extends Interaction {
         this.menuEl = null;
         this.searchType = this.inputEl.dataset.searchType;
         const orderByEl = this.el.querySelector(".o_search_order_by");
-        const form = orderByEl.closest("form");
-        this.order = orderByEl.value;
+        const form = this.el.closest("form");
+        this.order = orderByEl?.value;
         this.limit = parseInt(this.inputEl.dataset.limit) || 5;
         this.wasEmpty = !this.inputEl.value;
         this.linkHasFocus = false;
