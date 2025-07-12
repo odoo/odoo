@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import pytz
 
 from odoo import _, api, models, modules
+from datetime import date, datetime
 
 
 class Users(models.Model):
@@ -24,16 +26,23 @@ class Users(models.Model):
         # 2. creating groups for todo and task seperately
         query = """SELECT BOOL(t.project_id) as is_task, count(*), act.res_model, act.res_id,
                        CASE
-                           WHEN CURRENT_DATE - act.date_deadline::date = 0 THEN 'today'
-                           WHEN CURRENT_DATE - act.date_deadline::date > 0 THEN 'overdue'
-                           WHEN CURRENT_DATE - act.date_deadline::date < 0 THEN 'planned'
+                           WHEN %(date)s - act.date_deadline::date = 0 THEN 'today'
+                           WHEN %(date)s - act.date_deadline::date > 0 THEN 'overdue'
+                           WHEN %(date)s - act.date_deadline::date < 0 THEN 'planned'
                         END AS states
                      FROM mail_activity AS act
                      JOIN project_task AS t ON act.res_id = t.id
                     WHERE act.res_model = 'project.task' AND act.user_id = %(user_id)s AND act.active in (TRUE, %(active)s)
                  GROUP BY is_task, states, act.res_model, act.res_id
                 """
+        tz = self.env.user.sudo().tz
+        if tz:
+            today_utc = pytz.utc.localize(datetime.utcnow())
+            today_tz = today_utc.astimezone(pytz.timezone(tz))
+            today = date(year=today_tz.year, month=today_tz.month, day=today_tz.day)
+
         self.env.cr.execute(query, {
+            'date': str(today) if tz else 'CURRENT_DATE',
             'user_id': self.env.uid,
             'active': self._context.get('active_test', True),
         })
