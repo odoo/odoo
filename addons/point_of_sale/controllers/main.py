@@ -4,8 +4,8 @@ import logging
 import json
 
 from odoo import http, _
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv.expression import AND
 from odoo.tools import format_amount, file_open
 from odoo.addons.account.controllers.portal import PortalAccount
 from datetime import timedelta, datetime
@@ -61,7 +61,7 @@ class PosController(PortalAccount):
                 ('rescue', '=', False)
                 ]
         if config_id and request.env['pos.config'].sudo().browse(int(config_id)).exists():
-            domain = AND([domain,[('config_id', '=', int(config_id))]])
+            domain = Domain.AND([domain, [('config_id', '=', int(config_id))]])
             pos_config = request.env['pos.config'].sudo().browse(int(config_id))
         pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
 

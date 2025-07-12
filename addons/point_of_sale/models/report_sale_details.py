@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import timedelta
 
 import pytz
 
 from odoo import api, fields, models, _
-from odoo.osv.expression import AND
+from odoo.fields import Domain
 from odoo.tools import SQL
 
 
@@ -35,20 +34,18 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         return date_start, date_stop
 
     def _get_domain(self, date_start=False, date_stop=False, config_ids=False, session_ids=False):
-        domain = [('state', 'in', ['paid', 'done'])]
+        domain = Domain('state', 'in', ['paid', 'done'])
 
         if (session_ids):
-            domain = AND([domain, [('session_id', 'in', session_ids)]])
+            domain &= Domain('session_id', 'in', session_ids)
         else:
             date_start, date_stop = self._get_date_start_and_date_stop(date_start, date_stop)
 
-            domain = AND([domain,
-                [('date_order', '>=', fields.Datetime.to_string(date_start)),
-                ('date_order', '<=', fields.Datetime.to_string(date_stop))]
-            ])
+            domain &= Domain('date_order', '>=', fields.Datetime.to_string(date_start))
+            domain &= Domain('date_order', '<=', fields.Datetime.to_string(date_stop))
 
             if config_ids:
-                domain = AND([domain, [('config_id', 'in', config_ids)]])
+                domain &= Domain('config_id', 'in', config_ids)
 
         return domain
 

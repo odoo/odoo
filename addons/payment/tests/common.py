@@ -6,8 +6,7 @@ from unittest.mock import patch
 
 from lxml import objectify
 
-from odoo.fields import Command
-from odoo.osv.expression import AND
+from odoo.fields import Command, Domain
 from odoo.tools.misc import hmac as hmac_tool
 
 from odoo.addons.base.tests.common import BaseCommon
@@ -128,7 +127,7 @@ class PaymentCommon(BaseCommon):
         provider_domain = cls._get_provider_domain(code, **kwargs)
 
         provider = cls.env['payment.provider'].sudo().search(
-            AND([provider_domain, [('company_id', '=', company.id)]]), limit=1
+            Domain.AND([provider_domain, [('company_id', '=', company.id)]]), limit=1
         )
         if not provider:
             _logger.error("No payment.provider found for code %s in company %s", code, company.name)

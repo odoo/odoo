@@ -159,7 +159,7 @@ def normalize_domain(domain):
        have been made explicit. One property of normalized domain expressions is that they
        can be easily combined together as if they were single domain components.
     """
-    # TODO deprecate use Domain()
+    warnings.warn("Since 19.0, use odoo.fields.Domain", DeprecationWarning)
     if isinstance(domain, orm_domains.Domain):
         # already normalized
         return list(domain)
@@ -228,14 +228,13 @@ def combine(operator, unit, zero, domains):
 
 def AND(domains):
     """AND([D1,D2,...]) returns a domain representing D1 and D2 and ... """
-    # TODO deprecate and use Domain.AND(domains)
-    # (note: used in migrations)
+    warnings.warn("Since 19.0, use odoo.fields.Domain", DeprecationWarning)
     return combine(AND_OPERATOR, [TRUE_LEAF], [FALSE_LEAF], domains)
 
 
 def OR(domains):
     """OR([D1,D2,...]) returns a domain representing D1 or D2 or ... """
-    # TODO deprecate and use Domain.OR(domains)
+    warnings.warn("Since 19.0, use odoo.fields.Domain", DeprecationWarning)
     return combine(OR_OPERATOR, [FALSE_LEAF], [TRUE_LEAF], domains)
 
 

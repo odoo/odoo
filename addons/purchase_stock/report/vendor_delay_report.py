@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, tools
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import SQL
 
 
@@ -67,5 +66,5 @@ GROUP  BY m.id
 
     def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
         if 'on_time_rate:sum' in aggregates:
-            having = expression.AND([having, [('qty_total:sum', '>', '0')]])
+            having = Domain.AND([having, [('qty_total:sum', '>', '0')]])
         return super()._read_group(domain, groupby, aggregates, having, offset, limit, order)

@@ -8,9 +8,8 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.fields import Command
+from odoo.fields import Command, Domain
 from odoo.http import request
-from odoo.osv import expression
 from odoo.tools import float_is_zero
 
 from odoo.addons.website_sale.models.website import (
@@ -117,17 +116,18 @@ class SaleOrder(models.Model):
         if operator != 'in':
             return NotImplemented
         website_ids = self.env['website'].search_read(fields=['id', 'cart_abandoned_delay', 'partner_id'])
-        deadlines = [[
-            '&', '&',
-            ('website_id', '=', website_id['id']),
-            ('date_order', '<=', fields.Datetime.to_string(fields.Datetime.now() - relativedelta(hours=website_id['cart_abandoned_delay'] or 1.0))),
-            ('partner_id', '!=', website_id['partner_id'][0])
-        ] for website_id in website_ids]
-        return [
-            ('state', '=', 'draft'),
-            ('order_line', '!=', False),
-            *expression.OR(deadlines),
-        ]
+        return Domain.AND((
+            Domain('state', '=', 'draft'),
+            Domain('order_line', '!=', False),
+            Domain.OR(
+                [
+                    ('website_id', '=', website_id['id']),
+                    ('date_order', '<=', fields.Datetime.to_string(fields.Datetime.now() - relativedelta(hours=website_id['cart_abandoned_delay'] or 1.0))),
+                    ('partner_id', '!=', website_id['partner_id'][0]),
+                ]
+                for website_id in website_ids
+            ),
+        ))
 
     def _compute_user_id(self):
         """Do not assign self.env.user as salesman for e-commerce orders.
