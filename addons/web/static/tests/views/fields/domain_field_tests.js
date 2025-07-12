@@ -715,6 +715,70 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "domain field: refresh button is disabled when domain is invalid",
+        async function (assert) {
+            patchWithCleanup(odoo, { debug: true });
+
+            serverData.models.partner.fields.bar.type = "char";
+            serverData.models.partner.records[0].bar = "product";
+            serverData.models.partner.records[0].foo = "[]";
+
+            serverData.views = {
+                "partner,false,form": `
+                    <form>
+                        <field name="bar"/>
+                        <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                    </form>`,
+                "partner,false,search": `<search />`,
+            };
+
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "test",
+                    res_id: 1,
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                },
+            };
+
+            const webClient = await createWebClient({
+                serverData,
+                mockRPC(route, { method, args }) {
+                    if (route === "/web/domain/validate") {
+                        return false;
+                    }
+                },
+            });
+            await doAction(webClient, 1);
+
+            await click(target, ".o_refresh_count");
+
+            assert.strictEqual(
+                target.querySelector(".o_domain_show_selection_button").textContent.trim(),
+                "2 record(s)",
+                "The domain selection shows correct record count for a valid domain"
+            );
+            assert.notOk(
+                target.querySelector(".o_refresh_count").classList.contains("disabled"),
+                "The refresh button should not be disabled initially"
+            );
+            assert.strictEqual(target.querySelector(dsHelpers.SELECTORS.debugArea).value, "[]");
+
+            await editInput(target, dsHelpers.SELECTORS.debugArea, "[['invalid_field', '=', ]]");
+
+            await click(target, ".o_refresh_count");
+
+            assert.strictEqual(target.querySelector(dsHelpers.SELECTORS.debugArea).value, "[['invalid_field', '=', ]]");
+            assert.ok(
+                target.querySelector(".o_refresh_count").classList.contains("disabled"),
+                "The refresh button should be disabled for an invalid domain"
+            );
+        }
+    );
+
     QUnit.test("domain field: does not wait for the count to render", async function (assert) {
         serverData.models.partner.records[0].foo = "[]";
         serverData.models.partner.fields.bar.type = "char";
