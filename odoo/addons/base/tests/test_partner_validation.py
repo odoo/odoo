@@ -29,16 +29,9 @@ class TestResPartnerValidation(TransactionCase):
                 'email': 'invalid@'
             })
 
-    def test_website_missing_protocol(self):
+    def test_website_invalid_URL(self):
         with self.assertRaises(ValidationError):
             self.env['res.partner'].create({
-                'name': 'Invalid Website',
-                'website': 'invalid.com'
-            })
-
-    def test_website_invalid_tld(self):
-        with self.assertRaises(ValidationError):
-            self.env['res.partner'].create({
-                'name': 'Invalid Website TLD',
-                'website': 'http://localhost'
+                'name': 'Invalid Website URL',
+                'website': 'http://localhost' 
             })

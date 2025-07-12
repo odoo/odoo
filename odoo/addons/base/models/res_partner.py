@@ -381,7 +381,6 @@ class ResPartner(models.Model):
 
     @api.constrains('phone', 'mobile', 'email', 'website')
     def _validate_contact_fields(self):
-        """Validate partner contact fields."""
         for partner in self:
             if partner.phone and not re.match(r'^[+\d][\d\s().-]{5,}$', partner.phone.strip()):
                 raise ValidationError(_(
@@ -397,25 +396,20 @@ class ResPartner(models.Model):
 
             if partner.email and not re.match(r'^[^@\s]+@[^@\s]+\.[^@\s]+$', partner.email.strip()):
                 raise ValidationError(_(
-                    "Invalid email format. Must contain '@' and domain. "
+                    "Invalid email format. Must contain '@' and a domain. "
                     "Example: valid@example.com"
                 ))
-
+            
             if partner.website:
                 ws = partner.website.strip()
-                if not re.match(r'^https?://\w+', ws):
+                pattern = r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$'
+                if not re.match(pattern, ws):
                     raise ValidationError(_(
-                        "Website must start with http:// or https://. "
+                        "Invalid website format.\n"
+                        "Must start with http:// or https:// and contain a valid domain.\n"
                         "Example: https://www.example.com"
                     ))
-                domain = ws.split('//')[-1].split('/')[0]
-                if '.' not in domain:
-                    raise ValidationError(_(
-                        "Website must contain a domain extension. "
-                        "Example: https://www.example.com"
-                    ))
-
-
+            
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name', 'commercial_company_name')
     def _compute_complete_name(self):
