@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, timedelta
 import logging
@@ -162,17 +161,17 @@ class IrSequence(models.Model):
         _drop_sequences(self.env.cr, ["ir_sequence_%03d" % x.id for x in self])
         return super(IrSequence, self).unlink()
 
-    def write(self, values):
-        new_implementation = values.get('implementation')
+    def write(self, vals):
+        new_implementation = vals.get('implementation')
         for seq in self:
             # 4 cases: we test the previous impl. against the new one.
-            i = values.get('number_increment', seq.number_increment)
-            n = values.get('number_next', seq.number_next)
+            i = vals.get('number_increment', seq.number_increment)
+            n = vals.get('number_next', seq.number_next)
             if seq.implementation == 'standard':
                 if new_implementation in ('standard', None):
                     # Implementation has NOT changed.
                     # Only change sequence if really requested.
-                    if values.get('number_next'):
+                    if vals.get('number_next'):
                         _alter_sequence(self.env.cr, "ir_sequence_%03d" % seq.id, number_next=n)
                     if seq.number_increment != i:
                         _alter_sequence(self.env.cr, "ir_sequence_%03d" % seq.id, number_increment=i)
@@ -188,9 +187,9 @@ class IrSequence(models.Model):
                     _create_sequence(self.env.cr, "ir_sequence_%03d" % seq.id, i, n)
                     for sub_seq in seq.date_range_ids:
                         _create_sequence(self.env.cr, "ir_sequence_%03d_%03d" % (seq.id, sub_seq.id), i, n)
-        res = super(IrSequence, self).write(values)
+        res = super().write(vals)
         # DLE P179
-        self.flush_model(values.keys())
+        self.flush_model(vals.keys())
         return res
 
     def _next_do(self):
@@ -354,10 +353,10 @@ class IrSequenceDate_Range(models.Model):
         _drop_sequences(self.env.cr, ["ir_sequence_%03d_%03d" % (x.sequence_id.id, x.id) for x in self])
         return super().unlink()
 
-    def write(self, values):
-        if values.get('number_next'):
+    def write(self, vals):
+        if vals.get('number_next'):
             seq_to_alter = self.filtered(lambda seq: seq.sequence_id.implementation == 'standard')
-            seq_to_alter._alter_sequence(number_next=values.get('number_next'))
+            seq_to_alter._alter_sequence(number_next=vals.get('number_next'))
         # DLE P179: `test_in_invoice_line_onchange_sequence_number_1`
         # _update_nogap do a select to get the next sequence number_next
         # When changing (writing) the number next of a sequence, the number next must be flushed before doing the select.
@@ -366,6 +365,6 @@ class IrSequenceDate_Range(models.Model):
         #  - Changing the number next of a sequence is really really rare,
         #  - But selecting the number next happens a lot,
         # Therefore, if I chose to put the flush just above the select, it would check the flush most of the time for no reason.
-        res = super().write(values)
-        self.flush_model(values.keys())
+        res = super().write(vals)
+        self.flush_model(vals.keys())
         return res

@@ -1184,7 +1184,8 @@ class SaleOrderLine(models.Model):
             if 'price_unit' in vals and 'technical_price_unit' not in vals:
                 vals['technical_price_unit'] = vals['price_unit']
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError(_("You cannot change the type of a sale order line. Instead you should delete the current line and create a new line of the proper type."))
 

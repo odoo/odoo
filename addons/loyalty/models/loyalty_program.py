@@ -14,14 +14,14 @@ class LoyaltyProgram(models.Model):
     _rec_name = 'name'
 
     @api.model
-    def default_get(self, fields_list):
-        defaults = super().default_get(fields_list)
+    def default_get(self, fields):
+        defaults = super().default_get(fields)
         program_type = defaults.get('program_type')
         if program_type:
             program_default_values = self._program_type_default_values()
             if program_type in program_default_values:
                 default_values = program_default_values[program_type]
-                defaults.update({k: v for k, v in default_values.items() if k in fields_list})
+                defaults.update({k: v for k, v in default_values.items() if k in fields})
         return defaults
 
     name = fields.Char(string="Program Name", translate=True, required=True)

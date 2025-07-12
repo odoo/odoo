@@ -27,8 +27,6 @@ MODULES_TO_IGNORE = {
     'pos_blackbox_be',  # TODO cannot update to sanitize without certification
 }
 METHODS_TO_IGNORE = {
-    # Not yet sanitized...
-    'write', 'default_get',
     # base
     'action_timer_stop',
     '_get_eval_context',

@@ -13,6 +13,7 @@ class HrExpenseSplit(models.TransientModel):
     _description = 'Expense Split'
     _check_company_auto = True
 
+    @api.model
     def default_get(self, fields):
         result = super().default_get(fields)
         if 'expense_id' in result:

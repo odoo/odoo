@@ -112,12 +112,12 @@ class IrCron(models.Model):
         return super().create(vals_list)
 
     @api.model
-    def default_get(self, fields_list):
+    def default_get(self, fields):
         # only 'code' state is supported for cron job so set it as default
         model = self
         if not model.env.context.get('default_state'):
             model = model.with_context(default_state='code')
-        return super(IrCron, model).default_get(fields_list)
+        return super(IrCron, model).default_get(fields)
 
     def method_direct_trigger(self):
         """Run the CRON job in the current (HTTP) thread.

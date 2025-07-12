@@ -2131,15 +2131,15 @@ class IrModelAccess(models.Model):
                     ima.get("perm_create"),
                     ima.get("perm_unlink")]):
                 _logger.warning("Rule %s has no group, this is a deprecated feature. Every access-granting rule should specify a group.", ima['name'])
-        return super(IrModelAccess, self).create(vals_list)
+        return super().create(vals_list)
 
-    def write(self, values):
+    def write(self, vals):
         self.call_cache_clearing_methods()
-        return super(IrModelAccess, self).write(values)
+        return super().write(vals)
 
     def unlink(self):
         self.call_cache_clearing_methods()
-        return super(IrModelAccess, self).unlink()
+        return super().unlink()
 
 
 class IrModelData(models.Model):
@@ -2251,10 +2251,10 @@ class IrModelData(models.Model):
             self.env.registry.clear_cache('groups')
         return res
 
-    def write(self, values):
+    def write(self, vals):
         self.env.registry.clear_cache()  # _xmlid_lookup
-        res = super().write(values)
-        if values.get('model') == 'res.groups':
+        res = super().write(vals)
+        if vals.get('model') == 'res.groups':
             self.env.registry.clear_cache('groups')
         return res
 
@@ -2263,7 +2263,7 @@ class IrModelData(models.Model):
         self.env.registry.clear_cache()  # _xmlid_lookup
         if self and any(data.model == 'res.groups' for data in self.exists()):
             self.env.registry.clear_cache('groups')
-        return super(IrModelData, self).unlink()
+        return super().unlink()
 
     def _lookup_xmlids(self, xml_ids, model):
         """ Look up the given XML ids of the given model. """

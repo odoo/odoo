@@ -348,15 +348,16 @@ class ResPartnerBank(models.Model):
             account.partner_id._message_log(body=msg)
         return super().unlink()
 
-    def default_get(self, fields_list):
-        if 'acc_number' not in fields_list:
-            return super().default_get(fields_list)
+    @api.model
+    def default_get(self, fields):
+        if 'acc_number' not in fields:
+            return super().default_get(fields)
 
         # When create & edit, `name` could be used to pass (in the context) the
         # value input by the user. However, we want to set the default value of
         # `acc_number` variable instead.
         default_acc_number = self.env.context.get('default_acc_number', False) or self.env.context.get('default_name', False)
-        return super(ResPartnerBank, self.with_context(default_acc_number=default_acc_number)).default_get(fields_list)
+        return super(ResPartnerBank, self.with_context(default_acc_number=default_acc_number)).default_get(fields)
 
     @api.depends('allow_out_payment', 'acc_number', 'bank_id')
     @api.depends_context('display_account_trust')

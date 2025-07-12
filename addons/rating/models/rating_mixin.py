@@ -94,15 +94,15 @@ class RatingMixin(models.AbstractModel):
             grade_count = sum(grade_repartition.values())
             record.rating_percentage_satisfaction = grade_repartition['great'] * 100 / grade_count if grade_count else -1
 
-    def write(self, values):
+    def write(self, vals):
         """ If the rated ressource name is modified, we should update the rating res_name too.
             If the rated ressource parent is changed we should update the parent_res_id too"""
-        result = super().write(values)
+        result = super().write(vals)
         for record in self.sudo():  # ratings may be inaccessible
-            if record._rec_name in values:  # set the res_name of ratings to be recomputed
+            if record._rec_name in vals:  # set the res_name of ratings to be recomputed
                 res_name_field = self.env['rating.rating']._fields['res_name']
                 self.env.add_to_compute(res_name_field, record.rating_ids)
-            if record._rating_get_parent_field_name() in values:
+            if record._rating_get_parent_field_name() in vals:
                 record.rating_ids.write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
 
         return result

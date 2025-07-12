@@ -12,9 +12,9 @@ class LoyaltyRule(models.Model):
     _description = "Loyalty Rule"
 
     @api.model
-    def default_get(self, fields_list):
+    def default_get(self, fields):
         # Try to copy the values of the program types default's
-        result = super().default_get(fields_list)
+        result = super().default_get(fields)
         if 'program_type' in self.env.context:
             program_type = self.env.context['program_type']
             program_default_values = self.env['loyalty.program']._program_type_default_values()
@@ -22,7 +22,7 @@ class LoyaltyRule(models.Model):
                 len(program_default_values[program_type]['rule_ids']) == 2 and\
                 isinstance(program_default_values[program_type]['rule_ids'][1][2], dict):
                 result.update({
-                    k: v for k, v in program_default_values[program_type]['rule_ids'][1][2].items() if k in fields_list
+                    k: v for k, v in program_default_values[program_type]['rule_ids'][1][2].items() if k in fields
                 })
         return result
 

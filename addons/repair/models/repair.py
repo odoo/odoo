@@ -365,12 +365,12 @@ class RepairOrder(models.Model):
             }
 
     @api.model
-    def default_get(self, fields_list):
+    def default_get(self, fields):
         # Adds the picking_id if it comes from a return. Avoids having a default_picking_id pollute the context for further move creation.
-        res = super().default_get(fields_list)
-        if 'picking_id' not in res and 'picking_id' in fields_list and 'default_repair_picking_id' in self.env.context:
+        res = super().default_get(fields)
+        if 'picking_id' not in res and 'picking_id' in fields and 'default_repair_picking_id' in self.env.context:
             res['picking_id'] = self.env.context.get('default_repair_picking_id')
-        if 'lot_id' not in res and 'lot_id' in fields_list and 'default_repair_lot_id' in self.env.context:
+        if 'lot_id' not in res and 'lot_id' in fields and 'default_repair_lot_id' in self.env.context:
             res['lot_id'] = self.env.context.get('default_repair_lot_id')
         return res
 

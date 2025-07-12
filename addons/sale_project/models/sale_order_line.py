@@ -23,6 +23,7 @@ class SaleOrderLine(models.Model):
             ('company_id', 'in', [False, self.env.company.id]),
         ]
 
+    @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
         if self.env.context.get('form_view_ref') == 'sale_project.sale_order_line_view_form_editable':
@@ -143,12 +144,12 @@ class SaleOrderLine(models.Model):
                     project.reinvoiced_sale_order_id = service_line.order_id
         return lines
 
-    def write(self, values):
-        result = super().write(values)
+    def write(self, vals):
+        result = super().write(vals)
         # changing the ordered quantity should change the allocated hours on the
         # task, whatever the SO state. It will be blocked by the super in case
         # of a locked sale order.
-        if 'product_uom_qty' in values and not self.env.context.get('no_update_allocated_hours', False):
+        if 'product_uom_qty' in vals and not self.env.context.get('no_update_allocated_hours', False):
             for line in self:
                 if line.task_id and line.product_id.type == 'service':
                     allocated_hours = line._convert_qty_company_hours(line.task_id.company_id or self.env.user.company_id)

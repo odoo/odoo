@@ -767,8 +767,8 @@ class ResPartner(models.Model):
             res.env.remove_to_compute(self._fields['vies_valid'], res)
         return res
 
-    def write(self, values):
-        res = super().write(values)
+    def write(self, vals):
+        res = super().write(vals)
         if self.env.context.get('import_file'):
             self.env.remove_to_compute(self._fields['vies_valid'], self)
         return res

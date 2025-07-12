@@ -131,8 +131,8 @@ class ProjectSaleLineEmployeeMap(models.Model):
         maps._update_project_timesheet()
         return maps
 
-    def write(self, values):
-        res = super().write(values)
+    def write(self, vals):
+        res = super().write(vals)
         self._update_project_timesheet()
         return res
 

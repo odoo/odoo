@@ -186,7 +186,8 @@ class LunchSupplier(models.Model):
         suppliers._sync_cron()
         return suppliers
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         for topping in values.get('topping_ids_2', []):
             topping_values = topping[2] if len(topping) > 2 else False
             if topping_values:

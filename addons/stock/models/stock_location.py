@@ -213,7 +213,8 @@ class StockLocation(models.Model):
         ]
         return [('id', 'not in', location_ids)]
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         if 'company_id' in values:
             for location in self:
                 if location.company_id.id != values['company_id']:

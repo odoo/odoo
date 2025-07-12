@@ -233,17 +233,17 @@ class WebsitePublishedMixin(models.AbstractModel):
 
     @api.model_create_multi
     def create(self, vals_list):
-        records = super(WebsitePublishedMixin, self).create(vals_list)
+        records = super().create(vals_list)
         if any(record.is_published and not record.can_publish for record in records):
             raise AccessError(self._get_can_publish_error_message())
 
         return records
 
-    def write(self, values):
-        if 'is_published' in values and any(not record.can_publish for record in self):
+    def write(self, vals):
+        if 'is_published' in vals and any(not record.can_publish for record in self):
             raise AccessError(self._get_can_publish_error_message())
 
-        return super(WebsitePublishedMixin, self).write(values)
+        return super().write(vals)
 
     def create_and_get_website_url(self, **kwargs):
         return self.create(kwargs).website_url

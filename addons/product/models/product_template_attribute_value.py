@@ -87,7 +87,8 @@ class ProductTemplateAttributeValue(models.Model):
             raise UserError(_("You cannot update related variants from the values. Please update related values from the variants."))
         return super().create(vals_list)
 
-    def write(self, values):
+    def write(self, vals):
+        values = vals
         if 'ptav_product_variant_ids' in values:
             # Force write on this relation from `product.product` to properly
             # trigger `_compute_combination_indices`.
