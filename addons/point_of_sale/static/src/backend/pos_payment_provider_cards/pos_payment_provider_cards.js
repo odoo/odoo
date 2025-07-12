@@ -80,7 +80,6 @@ const providers = [
     ["six_iot", "pos_iot_six", "SIX"],
     ["adyen", "pos_adyen", "Adyen"],
     ["mercado_pago", "pos_mercado_pago", "Mercado Pago"],
-    ["paytm", "pos_paytm", "PayTM"],
     ["razorpay", "pos_razorpay", "Razorpay"],
     ["stripe", "pos_stripe", "Stripe"],
     ["viva_com", "pos_viva_com", "Viva.com"],
