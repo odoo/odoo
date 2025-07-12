@@ -1129,3 +1129,66 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             # Discounted amount:
             {'amount_currency': 762.2},
         ])
+
+    def test_analytic_distribution_for_early_payment_statement(self):
+        """
+        Test that the analytic is applied for statement with early discount
+        """
+        early_payment_term = self.env['account.payment.term'].create({
+            'name': "early_payment_term",
+            'company_id': self.company_data['company'].id,
+            'early_pay_discount_computation': 'included',
+            'early_discount': True,
+            'discount_percentage': 2,
+            'discount_days': 7,
+            'line_ids': [
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 100.0,
+                    'nb_days': 30,
+                }),
+            ],
+        })
+
+        analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'existential plan',
+        })
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'positive_account',
+            'plan_id': analytic_plan.id,
+        })
+
+        cash_discount_account = self.company_data['company'].account_journal_early_pay_discount_loss_account_id
+        self.env['account.analytic.distribution.model'].create({
+            'account_prefix': cash_discount_account.code,
+            'analytic_distribution': {analytic_account.id: 100.0},
+        })
+
+        invoice = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'invoice_payment_term_id': early_payment_term.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'line',
+                'price_unit': 100.0,
+            })]
+        }])
+        invoice.action_post()
+
+        statement = self.env['account.bank.statement.line'].create({
+            'date': '2017-01-01',
+            'payment_ref': invoice.payment_reference,
+            'partner_id': self.partner_b.id,
+            'amount': 98.0,
+            'journal_id': self.company_data['default_journal_bank'].id,
+        })
+
+        wizard = self.env['bank.rec.widget'].with_context(default_st_line_id=statement.id).new({})
+        receivable_line = invoice.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_receivable')
+        wizard._action_add_new_amls(receivable_line)
+        wizard._action_validate()
+
+        early_payment_line = statement.line_ids.filtered(lambda p: p.balance == 2.0)
+        self.assertTrue(early_payment_line.analytic_distribution)

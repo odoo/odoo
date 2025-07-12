@@ -3391,6 +3391,15 @@ class AccountMove(models.Model):
             'base_lines': defaultdict(lambda: {}),
         }
 
+        arguments = frozendict({
+            'account_prefix': cash_discount_account.code,
+            'company_id': product_lines.company_id.id,
+            'partner_id': product_lines.partner_id.id,
+            'partner_category_id': product_lines.partner_id.category_id.ids,
+        })
+
+        early_payment_analytic = self.env['account.analytic.distribution.model']._get_distribution(arguments)
+
         bases_details = {}
         payment_term_line = self.line_ids.filtered(lambda x: x.display_type == 'payment_term')
         discount_percentage = payment_term_line.move_id.invoice_payment_term_id.discount_percentage
@@ -3419,7 +3428,7 @@ class AccountMove(models.Model):
                     'partner_id': base_line['partner'].id,
                     'currency_id': base_line['currency'].id,
                     'account_id': cash_discount_account.id,
-                    'analytic_distribution': base_line['analytic_distribution'],
+                    'analytic_distribution': base_line['analytic_distribution'] or early_payment_analytic,
                 }
                 base_detail = resulting_delta_base_details.setdefault(frozendict(grouping_dict), {
                     'balance': 0.0,
@@ -3512,6 +3521,7 @@ class AccountMove(models.Model):
                 'currency_id': payment_term_line.currency_id.id,
                 'amount_currency': term_amount_currency,
                 'balance': term_balance,
+                'analytic_distribution': early_payment_analytic,
             }
 
         return res
