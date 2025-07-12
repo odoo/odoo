@@ -189,6 +189,99 @@ class L10nHuEdiTestFlowsMocked(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
                 send_and_print.action_send_and_print()
                 self.assertRecordValues(new_invoice, [{'l10n_hu_edi_state': 'confirmed', 'l10n_hu_invoice_chain_index': 2}])
 
+    def test_case_1_invoice_payment_storno(self):
+        inv = self.create_invoice_simple(amount=1000)
+        inv.action_post()
+        operation = self.get_operation_type(inv)
+        self.assertEqual(operation, 'CREATE')
+        self.register_payment(inv, 1000)
+        self.create_reversal(inv, is_modify=True)
+        operation = self.get_operation_type(inv.reversal_move_id)
+        self.assertEqual(operation, 'STORNO')
+
+    def test_case_2_modify_then_storno(self):
+        inv = self.create_invoice_simple(amount=1000)
+        inv.action_post()
+        operation = self.get_operation_type(inv)
+        self.assertEqual(operation, 'CREATE')
+        mod1 = self.create_reversal(inv, amount=100)
+        mod1.action_post()
+        operation = self.get_operation_type(mod1)
+        self.assertEqual(operation, 'MODIFY')
+        storno = self.create_reversal(inv, amount=900)
+        storno.action_post()
+        operation = self.get_operation_type(storno)
+        self.assertEqual(operation, 'STORNO')
+
+    def test_case_3_multiple_modifications_then_storno(self):
+        inv = self.create_invoice_simple(amount=1000)
+        inv.action_post()
+        operation = self.get_operation_type(inv)
+        self.assertEqual(operation, 'CREATE')
+        mod1 = self.create_reversal(inv, amount=100)
+        mod1.action_post()
+        operation = self.get_operation_type(mod1)
+        self.assertEqual(operation, 'MODIFY')
+        mod2 = self.create_reversal(inv, amount=100)
+        mod2.action_post()
+        operation = self.get_operation_type(mod2)
+        self.assertEqual(operation, 'MODIFY')
+        storno = self.create_reversal(inv, amount=800)
+        storno.action_post()
+        operation = self.get_operation_type(storno)
+        self.assertEqual(operation, 'STORNO')
+
+    def test_case_4_modification_payment_then_storno(self):
+        inv = self.create_invoice_simple(amount=1000)
+        inv.action_post()
+        operation = self.get_operation_type(inv)
+        self.assertEqual(operation, 'CREATE')
+        mod1 = self.create_reversal(inv, amount=100)
+        mod1.action_post()
+        operation = self.get_operation_type(mod1)
+        self.assertEqual(operation, 'MODIFY')
+        self.register_payment(inv, 900)
+        self.create_reversal(inv, is_modify=True)
+        mod2 = inv.reversal_move_id
+        mod2.button_draft()
+        mod2.invoice_line_ids[0].write({
+            'price_unit': 900,
+        })
+        mod2.action_post()
+        inv.js_assign_outstanding_line(mod1.line_ids.filtered(lambda l: l.debit == 0).id)
+        operation = self.get_operation_type(mod2)
+        self.assertEqual(operation, 'STORNO')
+
+    def test_case_5_debit_note_then_storno(self):
+        inv = self.create_invoice_simple(amount=1000)
+        inv.action_post()
+        operation = self.get_operation_type(inv)
+        self.assertEqual(operation, 'CREATE')
+        dn = self.create_debit_note(inv, amount=100)
+        dn.action_post()
+        operation = self.get_operation_type(dn)
+        self.assertEqual(operation, 'MODIFY')
+        storno = self.create_reversal(inv, amount=1100)
+        storno.action_post()
+        storno.js_assign_outstanding_line(dn.line_ids.filtered(lambda l: l.credit == 0).id)
+        operation = self.get_operation_type(storno)
+        self.assertEqual(operation, 'STORNO')
+
+    # === Helpers === #
+
+    @staticmethod
+    def get_operation_type(invoice):
+        base_invoice = invoice._l10n_hu_get_chain_base()
+        modification_invoices = (invoice._l10n_hu_get_chain_invoices() - base_invoice)
+
+        all_notes_residual_zero = all(note.amount_residual == 0 for note in modification_invoices)
+
+        if invoice == base_invoice:
+            return 'CREATE'
+        if base_invoice.amount_residual == 0 and all_notes_residual_zero:
+            return 'STORNO'
+        return 'MODIFY'
+
     # === Helpers === #
 
     @contextlib.contextmanager
