@@ -1,4 +1,6 @@
 import base64
+import pytz
+from datetime import date, datetime
 
 from odoo import _, api, fields, models, exceptions
 
@@ -394,4 +396,10 @@ class CardCampaign(models.Model):
                 except (AttributeError, KeyError):
                     # for generic image, or if field incorrect, return name of field
                     result[el] = self[path_field]
+                # force dates to their relevant timezone as that's what is usually wanted
+                if (
+                    isinstance(result[el], (date, datetime))
+                    and (tz := record._mail_get_timezone_with_default(default_tz=None))
+                ):
+                    result[el] = pytz.utc.localize(result[el]).astimezone(pytz.timezone(tz)).replace(tzinfo=None)
         return result
