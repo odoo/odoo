@@ -7,9 +7,11 @@ import hashlib
 import inspect
 import json
 import logging
+import random
 import re
 import requests
 import threading
+import time
 import uuid
 
 from datetime import datetime
@@ -27,6 +29,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.modules.module import get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN
+from odoo.service.model import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
 from odoo.tools import SQL, Query, sql as sqltools
 from odoo.tools.translate import _, xml_translate
 
@@ -718,7 +721,25 @@ class Website(models.Model):
                     arch_string = etree.fromstring(view_id.arch_db)
                     el = arch_string.xpath("//t[@t-set='configurator_footer_links']")[0]
                     el.attrib['t-value'] = json.dumps(footer_links)
-                    view_id.with_context(website_id=website.id).write({'arch_db': etree.tostring(arch_string)})
+                    for tryno in range(1, 6):  # Retry up to 5 times
+                        try:
+                            view_id.with_context(website_id=website.id).write({'arch_db': etree.tostring(arch_string)})
+                            break
+                        except PG_CONCURRENCY_EXCEPTIONS_TO_RETRY:
+                            tryleft = 5 - tryno
+                            if not tryleft:
+                                logger.error("Max retries reached for footer_id '%s'.", footer_id)
+                                break
+
+                            retry_delay = random.uniform(0.0, 2 ** tryno)
+                            logger.warning(
+                                "Serialization failure while processing footer_id '%s' (attempt %s). Retries left: %s. Retrying in %s seconds.",
+                                footer_id, tryno, tryleft, retry_delay,
+                                exc_info=True
+                            )
+
+                            self.env.cr.rollback()
+                            time.sleep(retry_delay)
             except Exception as e:
                 # The xml view could have been modified in the backend, we don't
                 # want the xpath error to break the configurator feature
