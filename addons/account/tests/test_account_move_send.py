@@ -5,7 +5,7 @@ import json
 from datetime import date
 from unittest.mock import patch
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
@@ -1134,3 +1134,24 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue(pdf_report)
         invoice.invoice_pdf_report_id.unlink()
         self.assertTrue(invoice.is_move_sent)
+
+    def test_pdf_checksum_changes_after_partial_payment(self):
+
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+
+        initial_wizard = self.create_send_and_print(invoice)
+        initial_wizard.action_send_and_print()
+        checksum_before_payment = invoice.invoice_pdf_report_id['checksum']
+
+        payment_register = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'amount': 100.0,
+            'payment_date': fields.Date.today(),
+            'journal_id': self.company_data['default_journal_bank'].id,
+        })
+        payment_register.action_create_payments()
+
+        post_payment_wizard = self.create_send_and_print(invoice)
+        post_payment_wizard.action_send_and_print()
+        checksum_after_payment = invoice.invoice_pdf_report_id['checksum']
+
+        self.assertNotEqual(checksum_before_payment, checksum_after_payment, "Invoice PDF should change after a partial payment is registered")

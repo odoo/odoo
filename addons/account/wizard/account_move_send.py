@@ -793,6 +793,15 @@ class AccountMoveSend(models.TransientModel):
                 },
             }
 
+        for move in self.move_ids:
+            payments = move._get_reconciled_payments()
+            latest_payment = max((p.create_date for p in payments), default=None)
+            pdf_created = move.invoice_pdf_report_id.create_date if move.invoice_pdf_report_id else None
+
+            if latest_payment and (not pdf_created or latest_payment >= pdf_created):
+                move.invoice_pdf_report_file = False
+                move.invoice_pdf_report_id = False
+
         return self._process_send_and_print(
             self.move_ids.sudo(),
             wizard=self,
