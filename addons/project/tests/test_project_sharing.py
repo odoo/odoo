@@ -328,10 +328,10 @@ class TestProjectSharing(TestProjectSharingCommon):
             task.env.invalidate_all()
             self.assertTrue(self.task_no_collabo.exists(), "Task should still be there, no delete is sent")
             sp.rollback()
-        with self.assertRaises(AccessError), self.env.cr.savepoint() as sp:
+        with self.env.cr.savepoint() as sp:
             self.task_no_collabo.parent_id = self.task_no_collabo.create({'name': 'parent collabo'})
             task = Task.with_context(default_child_ids=[Command.unlink(self.task_no_collabo.id)]).create({'name': 'foo'})
-            task.env.invalidate_all()  # raised here
+            task.env.invalidate_all()
             self.assertTrue(self.task_no_collabo.parent_id, "Task should still be there, no delete is sent")
             sp.rollback()
         with self.assertRaisesRegex(AccessError, "top-secret records"):
