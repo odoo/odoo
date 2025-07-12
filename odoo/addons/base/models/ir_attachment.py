@@ -10,6 +10,7 @@ import os
 import psycopg2
 import re
 import uuid
+import warnings
 import werkzeug
 
 from collections import defaultdict
@@ -18,7 +19,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, MissingError, ValidationError, UserError
 from odoo.fields import Domain
 from odoo.http import Stream, root, request
-from odoo.tools import config, consteq, human_size, image, split_every, str2bool
+from odoo.tools import config, consteq, human_size, image, split_every, str2bool, OrderedSet
 from odoo.tools.mimetypes import guess_mimetype, fix_filename_extension
 from odoo.tools.misc import limited_field_access_token
 
@@ -440,88 +441,113 @@ class IrAttachment(models.Model):
     @api.model
     def check(self, mode, values=None):
         """ Restricts the access to an ir.attachment, according to referred mode """
+        warnings.warn("Since 19.0, use check_access", DeprecationWarning, stacklevel=2)
         # Always require an internal user (aka, employee) to access to a attachment
         if not (self.env.is_admin() or self.env.user._is_internal()):
             raise AccessError(_("Sorry, you are not allowed to access this document."))
-        # Filter returns the same instance if we have access to all documents
-        if self is not self._filter_attachment_access(mode, values):
+        self.check_access(mode)
+        if values and any(self._check_comodel_access({values.get('res_model'): {values.get('res_id')}})):
             raise AccessError(_("Sorry, you are not allowed to access this document."))
 
-    def _filter_attachment_access(self, mode='read', values=None):
-        """Filter the given attachment to return only the records the current user have access to.
-        Return ``self`` if the user has access to all records and values.
+    def _check_access(self, operation):
+        """Check access for attachments.
 
-        :return: <ir.attachment> the current user have access to
+        Rules:
+        - `public` is always accessible for reading.
+        - If we have `res_model and res_id`, the attachment is accessible if the
+          referenced model is accessible.
+        - If we don't have a referenced record, the attachment is accessible to
+          the administrator and the creator of the attachment.
+        - If `res_field != False` and the user is not an administrator, we check
+          the access on the field.
         """
-        if self.env.su:
-            return self
-        Attachments = self.browse()
-        if not Attachments.has_access(mode):
-            return Attachments
-        if mode in ('create', 'unlink'):
+        res = super()._check_access(operation)
+        remaining = self
+        error_func = None
+        forbidden_ids = OrderedSet()
+        if res:
+            forbidden_recs, error_func = res
+            if forbidden_recs == self:
+                return self, error_func
+            remaining -= forbidden_recs
+            forbidden_ids.update(forbidden_ids._ids)
+        elif not self:
+            return None
+
+        if operation in ('create', 'unlink'):
             # check write operation instead of unlinking and creating for
             # related models and field access
-            mode = 'write'
-        att_accessible_ids = set()
-
-        # additional value to check
-        values = values or {}
-        additional_res = (values.get('res_model'), values.get('res_id'))
-        if not all(additional_res):
-            additional_res = None
+            operation = 'write'
 
         # collect the records to check (by model)
         model_ids = defaultdict(set)            # {model_name: set(ids)}
         att_model_ids = []                      # [(att_id, (res_model, res_id))]
-        if self:
-            # DLE P173: `test_01_portal_attachment`
-            self.env['ir.attachment'].flush_model(['res_model', 'res_id', 'create_uid', 'public', 'res_field'])
-            self.env.cr.execute('SELECT id, res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s', [tuple(self.ids)])
-            for att_id, res_model, res_id, create_uid, public, res_field in self.env.cr.fetchall():
-                if public and mode == 'read':
-                    att_accessible_ids.add(att_id)
+        # DLE P173: `test_01_portal_attachment`
+        remaining.flush_recordset(['res_model', 'res_id', 'create_uid', 'public', 'res_field'])
+        self.env.cr.execute('SELECT id, res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s', [tuple(remaining.ids)])
+        for att_id, res_model, res_id, create_uid, public, res_field in self.env.cr.fetchall():
+            if public and operation == 'read':
+                continue
+            if not self.env.is_system():
+                if not res_id and create_uid != self.env.uid:
+                    forbidden_ids.add(att_id)
                     continue
-                if not self.env.is_system():
-                    if not res_id and create_uid != self.env.uid:
+                if res_field:
+                    field = self.env[res_model]._fields[res_field]
+                    if not self._has_field_access(field, operation):
+                        forbidden_ids.add(att_id)
                         continue
-                    if res_field:
-                        field = self.env[res_model]._fields[res_field]
-                        if not self._has_field_access(field, mode):
-                            continue
-                if res_model and res_id:
-                    model_ids[res_model].add(res_id)
-                    att_model_ids.append((att_id, (res_model, res_id)))
-                else:
-                    att_accessible_ids.add(att_id)
-        if additional_res:
-            model_ids[additional_res[0]].add(additional_res[1])
+            if res_model and res_id:
+                model_ids[res_model].add(res_id)
+                att_model_ids.append((att_id, (res_model, res_id)))
+        forbidden_res_model_id = set(self._check_comodel_access(model_ids, operation))
+        forbidden_ids.update(att_id for att_id, res in att_model_ids if res in forbidden_res_model_id)
 
+        if forbidden_ids:
+            forbidden = self.browse(forbidden_ids)
+            if error_func is None:
+                def error_func():
+                    return AccessError(self.env._(
+                        "Sorry, you are not allowed to access this document. "
+                        "Please contact your system administrator.\n\n"
+                        "(Operation: %(operation)s)\n\n"
+                        "Records: %(records)s, User: %(user)s",
+                        operation=operation,
+                        records=forbidden[:6],
+                        user=self.env.uid,
+                    ))
+            return forbidden, error_func
+        return None
+
+    def _check_comodel_access(self, model_and_ids: dict[str, set[int]], operation: str):
         # check access rights on the records
-        accessible_model_ids = set()
-        for res_model, res_ids in model_ids.items():
+        if self.env.su:
+            return
+        for res_model, res_ids in model_and_ids.items():
+            res_ids = OrderedSet(filter(None, res_ids))
+            if not res_model or not res_ids:
+                # nothing to check
+                continue
             # ignore attachments that are not attached to a resource anymore
             # when checking access rights (resource was deleted but attachment
             # was not)
             if res_model not in self.env:
+                for res_id in res_ids:
+                    yield res_model, res_id
                 continue
             records = self.env[res_model].browse(res_ids)
             if res_model == 'res.users' and len(records) == 1 and self.env.uid == records.id:
                 # by default a user cannot write on itself, despite the list of writeable fields
                 # e.g. in the case of a user inserting an image into his image signature
                 # we need to bypass this check which would needlessly throw us away
-                accessible_model_ids.add((res_model, records.id))
                 continue
             try:
-                records = records._filtered_access(mode)
+                records = records._filtered_access(operation)
             except MissingError:
-                records = records.exists()._filtered_access(mode)
-            accessible_model_ids.update((res_model, id_) for id_ in records._ids)
-        att_accessible_ids.update(att_id for att_id, res in att_model_ids if res in accessible_model_ids)
-
-        if len(att_accessible_ids) == len(self) and (not additional_res or additional_res in accessible_model_ids):
-            # all is accessible
-            return self
-        return Attachments.browse(id_ for id_ in self._ids if id_ in att_accessible_ids)
+                records = records.exists()._filtered_access(operation)
+            res_ids.difference_update(records._ids)
+            for res_id in res_ids:
+                yield res_model, res_id
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, *, active_test=True, bypass_access=False):
@@ -603,13 +629,20 @@ class IrAttachment(models.Model):
         return self.browse(result)._as_query(order)
 
     def write(self, vals):
-        self.check('write', values=vals)
+        self.check_access('write')
+        if (
+            ('res_model' in vals or 'res_id' in vals)
+            and any(self._check_comodel_access(
+                {vals.get('res_model', self[:1].res_model): {vals.get('res_id', self[:1].res_id)}}, 'write'
+            ))
+        ):
+            raise AccessError(_("Sorry, you are not allowed to access this document."))
         # remove computed field depending of datas
         for field in ('file_size', 'checksum', 'store_fname'):
             vals.pop(field, False)
         if 'mimetype' in vals or 'datas' in vals or 'raw' in vals:
             vals = self._check_contents(vals)
-        res = super(IrAttachment, self).write(vals)
+        res = super().write(vals)
         if 'url' in vals or 'type' in vals:
             self._check_serving_attachments()
         return res
@@ -624,16 +657,12 @@ class IrAttachment(models.Model):
         return vals_list
 
     def unlink(self):
-        if not self:
-            return True
-        self.check('unlink')
-
         # First delete in the database, *then* in the filesystem if the
         # database allowed it. Helps avoid errors when concurrent transactions
         # are deleting the same file, and some of the transactions are
         # rolled back by PostgreSQL (due to concurrent updates detection).
-        to_delete = set(attach.store_fname for attach in self if attach.store_fname)
-        res = super(IrAttachment, self).unlink()
+        to_delete = OrderedSet(attach.store_fname for attach in self if attach.store_fname)
+        res = super().unlink()
         for file_path in to_delete:
             self._file_delete(file_path)
 
@@ -670,9 +699,11 @@ class IrAttachment(models.Model):
             record_tuple_set.add(record_tuple)
 
         # don't use possible contextual recordset for check, see commit for details
-        Attachments = self.browse()
+        model_and_ids = defaultdict(set)
         for res_model, res_id in record_tuple_set:
-            Attachments.check('create', values={'res_model':res_model, 'res_id':res_id})
+            model_and_ids[res_model].add(res_id)
+        if any(self._check_comodel_access(model_and_ids, 'write')):
+            raise AccessError(_("Sorry, you are not allowed to access this document."))
         records = super().create(vals_list)
         records._check_serving_attachments()
         return records
@@ -846,6 +877,6 @@ class IrAttachment(models.Model):
         if self.env.user._is_portal():
             # Check the read access on the record linked to the attachment
             # eg: Allow to download an attachment on a task from /my/tasks/task_id
-            self.check("read")
+            self.check_access('read')
             return True
         return super()._can_return_content(field_name, access_token)
