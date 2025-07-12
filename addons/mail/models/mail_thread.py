@@ -2010,7 +2010,7 @@ class MailThread(models.AbstractModel):
         if self and len(self) != len(records_emails):
             raise ValueError('Invoke with either self maching records_emails, either on a void recordset.')
         # when invoked through MailThread, ids may come from records_emails (not recommended tool usage)
-        res_ids = self.ids or [record.id for record in records_emails]
+        res_ids = self.ids or [record._origin.id for record in records_emails]
         found_results = dict.fromkeys(res_ids, self.env['res.partner'])
         # email_key is email_normalized, unless email is wrong and cannot be normalized
         # in which case the raw input is used instead, to distinguish various wrong
@@ -2034,7 +2034,7 @@ class MailThread(models.AbstractModel):
             for mail in mails:
                 mail_normalized = email_normalize(mail, strict=False)
                 email_key = mail_normalized or mail
-                emails_key_res_ids[email_key].append(record.id)
+                emails_key_res_ids[email_key].append(record)
                 if record_company and email_key:  # False is not interesting anyway
                     emails_key_company_id[email_key] = record_company.id
                 emails_all.append(mail)
@@ -2081,7 +2081,7 @@ class MailThread(models.AbstractModel):
             mail_key = email_normalize(mail, strict=False) or mail
             for res_id in emails_key_res_ids[mail_key]:
                 # use an "OR" to avoid duplicates in returned recordset
-                found_results[res_id] |= partner
+                found_results[res_id._origin.id] |= partner
         return found_results
 
     def _mail_find_user_for_gateway(self, email_value, alias=None):
