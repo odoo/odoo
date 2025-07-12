@@ -24,7 +24,7 @@ class LayoutOptionPlugin extends Plugin {
             withSequence(LAYOUT_GRID, {
                 OptionComponent: LayoutGridOption,
                 selector:
-                    "section.s_masonry_block, section.s_quadrant, section.s_image_frame, section.s_card_offset, section.s_contact_info, section.s_framed_intro",
+                    "section.s_masonry_block, section.s_quadrant, section.s_image_frame, section.s_card_offset, section.s_contact_info, section.s_framed_intro, section.s_banner_categories",
                 applyTo: ":scope > *:has(> .row)",
             }),
         ],
