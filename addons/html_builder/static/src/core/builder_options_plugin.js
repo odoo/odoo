@@ -93,7 +93,9 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     onClick(ev) {
-        this.updateContainers(ev.target);
+        this.dependencies.operation.next(() => {
+            this.updateContainers(ev.target);
+        });
     }
 
     getReloadSelector(editingElement) {
