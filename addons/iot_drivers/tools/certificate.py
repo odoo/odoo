@@ -99,7 +99,17 @@ def download_odoo_certificate():
 
     certificate = result['x509_pem']
     private_key = result['private_key_pem']
+<<<<<<< 848086ba2ce6b828d9727d72b158500439a239ac:addons/iot_drivers/tools/certificate.py
     if IS_RPI:
+||||||| cd06b9c2f50fda6a56a430e3d604e0e4e63ceb88:addons/hw_drivers/tools/certificate.py
+    if platform.system() == 'Linux':
+=======
+    if not certificate or not private_key:  # ensure not empty strings
+        _logger.error("The certificate received from odoo.com is not valid.")
+        return None
+
+    if platform.system() == 'Linux':
+>>>>>>> c6af823ad9444c943333a6689cd398c1705175aa:addons/hw_drivers/tools/certificate.py
         with writable():
             Path('/etc/ssl/certs/nginx-cert.crt').write_text(certificate, encoding='utf-8')
             Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(certificate, encoding='utf-8')
