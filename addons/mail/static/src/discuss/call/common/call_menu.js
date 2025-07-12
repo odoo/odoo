@@ -2,7 +2,7 @@ import { Component } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { callActionsRegistry, useCallActions } from "./call_actions";
+import { useCallActions } from "@mail/utils/common/hooks";
 
 export class CallMenu extends Component {
     static props = [];
@@ -16,7 +16,8 @@ export class CallMenu extends Component {
 
     get icon() {
         return (
-            callActionsRegistry.get(this.rtc.lastSelfCallAction, undefined)?.icon ?? "fa-microphone"
+            registry.category("discuss.call/actions").get(this.rtc.lastSelfCallAction, undefined)
+                ?.icon ?? "fa-microphone"
         );
     }
 }

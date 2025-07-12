@@ -15,7 +15,6 @@ import { debounce } from "@web/core/utils/timing";
 import { loadBundle, loadJS } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { url } from "@web/core/utils/urls";
-import { callActionsRegistry } from "./call_actions";
 
 let sequence = 1;
 const getSequence = () => sequence++;
@@ -320,7 +319,8 @@ export class Rtc extends Record {
 
     callActions = fields.Attr([], {
         compute() {
-            return callActionsRegistry
+            return registry
+                .category("discuss.call/actions")
                 .getEntries()
                 .filter(([key, action]) => action.condition({ rtc: this }))
                 .map(([key, action]) => [key, action.isActive({ rtc: this }), action.isTracked]);
@@ -676,11 +676,9 @@ export class Rtc extends Record {
      * @param {import("models").Thread} channel
      * @param {Object} [initialState={}]
      * @param {boolean} [initialState.audio]
-     * @param {{ exit: () => {} }} [initialState.fullscreen] if set, the call view is using fullscreen.
-     *   Providing fullscreen object allows to exit on call leave.
      * @param {boolean} [initialState.camera]
      */
-    async toggleCall(channel, { audio = true, fullscreen, camera } = {}) {
+    async toggleCall(channel, { audio = true, camera } = {}) {
         if (channel.id === this._remotelyHostedChannelId) {
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.LEAVE });
             this.clear();
@@ -696,7 +694,6 @@ export class Rtc extends Record {
         }
         const isActiveCall = channel.eq(this.state.channel);
         if (this.state.channel) {
-            fullscreen?.exit();
             await this.leaveCall(this.state.channel);
         }
         if (!isActiveCall) {
@@ -1533,6 +1530,7 @@ export class Rtc extends Record {
                 session.isTalking = false;
             }
         }
+        this.fullscreen.exit("call");
         this._remotelyHostedSessionId = undefined;
         this._remotelyHostedChannelId = undefined;
         browser.clearTimeout(this._crossTabTimeoutId);
@@ -2158,6 +2156,7 @@ export const rtcService = {
         "discuss.p2p",
         "discuss.pip_service",
         "discuss.ptt_extension",
+        "mail.fullscreen",
         "mail.sound_effects",
         "mail.store",
         "multi_tab",
@@ -2183,6 +2182,7 @@ export const rtcService = {
                 changes: { isPipMode },
             });
         });
+        rtc.fullscreen = services["mail.fullscreen"];
         rtc.p2pService = services["discuss.p2p"];
         rtc.p2pService.acceptOffer = async (id, sequence) => {
             const session = await store["discuss.channel.rtc.session"].getWhenReady(Number(id));

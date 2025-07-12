@@ -1,7 +1,8 @@
-import { useComponent, useState } from "@odoo/owl";
 import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Call } from "@mail/discuss/call/common/call";
+import { CALL_FULLSCREEN } from "@mail/discuss/call/common/const";
 
 export const callActionsRegistry = registry.category("discuss.call/actions");
 
@@ -92,17 +93,20 @@ callActionsRegistry
         sequence: 60,
     })
     .add("fullscreen", {
-        condition: (component) => component.props?.fullscreen && !component.rtc?.state.isPipMode,
+        condition: (component) => component.fullscreen,
         name: (component) =>
-            component.props.fullscreen.isActive ? _t("Exit Fullscreen") : _t("Enter Full Screen"),
-        isActive: (component) => component.props.fullscreen.isActive,
+            component.fullscreen.id === CALL_FULLSCREEN
+                ? _t("Exit Fullscreen")
+                : _t("Enter Full Screen"),
+        isActive: (component) => component.fullscreen.id === CALL_FULLSCREEN,
         inactiveIcon: "fa-arrows-alt",
         icon: "fa-compress",
         select: (component) => {
-            if (component.props.fullscreen.isActive) {
-                component.props.fullscreen.exit();
+            if (component.fullscreen.id === CALL_FULLSCREEN) {
+                component.fullscreen.exit();
             } else {
-                component.props.fullscreen.enter();
+                component.rtc.closePip();
+                component.fullscreen.enter(Call, { id: CALL_FULLSCREEN });
             }
         },
         sequence: 70,
@@ -129,57 +133,3 @@ callActionsRegistry
         },
         sequence: 80,
     });
-
-function transformAction(component, id, action) {
-    return {
-        id,
-        /** Condition to display this action */
-        get condition() {
-            return action.condition(component);
-        },
-        get available() {
-            return action.available?.(component) ?? true;
-        },
-        /** Name of this action, displayed to the user */
-        get name() {
-            return typeof action.name === "function" ? action.name(component) : action.name;
-        },
-        get hotkey() {
-            return typeof action.hotkey === "function" ? action.hotkey(component) : action.hotkey;
-        },
-        get isActive() {
-            return action.isActive(component);
-        },
-        inactiveIcon: action.inactiveIcon,
-        /** Icon for the button of this action */
-        get icon() {
-            return typeof action.icon === "function" ? action.icon(component) : action.icon;
-        },
-        activeClass: action.activeClass,
-        /**  Action to execute when this action is selected */
-        select() {
-            action.select(component);
-        },
-        /** Determines the order of this action (smaller first) */
-        get sequence() {
-            return typeof action.sequence === "function"
-                ? action.sequence(component)
-                : action.sequence;
-        },
-    };
-}
-
-export function useCallActions() {
-    const component = useComponent();
-    const state = useState({ actions: [] });
-    state.actions = callActionsRegistry
-        .getEntries()
-        .map(([id, action]) => transformAction(component, id, action));
-    return {
-        get actions() {
-            return state.actions
-                .filter((action) => action.condition)
-                .sort((a1, a2) => a1.sequence - a2.sequence);
-        },
-    };
-}
