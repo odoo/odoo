@@ -600,6 +600,8 @@ class Partner(models.Model):
     def update_address(self, vals):
         addr_vals = {key: vals[key] for key in self._address_fields() if key in vals}
         if addr_vals:
+            addr_vals['partner_latitude'] = vals.get('partner_latitude', False)
+            addr_vals['partner_longitude'] = vals.get('partner_longitude', False)
             return super(Partner, self).write(addr_vals)
 
     @api.model
@@ -671,6 +673,8 @@ class Partner(models.Model):
             # 1b. Address fields: sync if parent or use_parent changed *and* both are now set
             if self.parent_id and self.type == 'contact':
                 onchange_vals = self.onchange_parent_id().get('value', {})
+                onchange_vals['partner_latitude'] = self.parent_id.partner_latitude
+                onchange_vals['partner_longitude'] = self.parent_id.partner_longitude
                 self.update_address(onchange_vals)
 
         # 2. To DOWNSTREAM: sync children
@@ -769,6 +773,8 @@ class Partner(models.Model):
         for partner in self:
             if any(u._is_internal() for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access_rights('write')
+            if (partner.partner_latitude or partner.partner_longitude or 0.0) != 0.0 and any(field in vals for field in partner._address_fields()):
+                partner.update_address(vals)
             partner._fields_sync(vals)
         return result
 
