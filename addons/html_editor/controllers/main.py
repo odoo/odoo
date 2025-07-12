@@ -1,4 +1,5 @@
 import contextlib
+import logging
 import re
 import uuid
 from base64 import b64decode
@@ -20,6 +21,7 @@ from lxml import html
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
+_logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
 
@@ -252,11 +254,15 @@ class HTML_Editor(http.Controller):
             # This approach is beneficial when the URL doesn't conclude with an
             # image extension. By verifying the MIME type, the code ensures that
             # only supported image types are incorporated into the data.
-            response = requests.head(url, timeout=10)
-            if response.status_code == 200:
-                mime_type = response.headers.get('content-type')
-                if mime_type in SUPPORTED_IMAGE_MIMETYPES:
-                    attachment_data['mimetype'] = mime_type
+            try:
+                response = requests.head(url, timeout=10)
+                if response.status_code == 200:
+                    mime_type = response.headers.get('content-type')
+                    if mime_type in SUPPORTED_IMAGE_MIMETYPES:
+                        attachment_data['mimetype'] = mime_type
+            except requests.exceptions.RequestException as e:
+                _logger.warning("Failed to retrieve URL metadata: %s", e)
+                raise UserError(_("Failed to retrieve URL data. Please check the URL and try again later."))
         else:
             raise UserError(_("You need to specify either data or url to create an attachment."))
 
