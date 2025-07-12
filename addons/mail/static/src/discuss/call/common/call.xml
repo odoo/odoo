@@ -11,6 +11,7 @@
             'position-relative rounded-2 o-mx-0_5 o-mt-0_5 p-1': !state.isFullscreen and !props.isPip,
         }">
             <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin" t-on-mouseleave="onMouseleaveMain">
+                <BlurPerformanceWarning/>
                 <div
                     class="o-discuss-Call-mainCards d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
                     t-att-class="{'mt-1': minimized}"

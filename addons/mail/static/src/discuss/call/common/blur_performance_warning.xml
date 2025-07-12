@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="discuss.BlurPerformanceWarning">
+        <t t-if="state.showWarning">
+            <t t-if="!env.inChatWindow">
+                <div class="o-discuss-BlurWarningBanner position-absolute top-0 start-0 w-100 z-2 d-flex align-items-center justify-content-between p-2 rounded bg-warning-subtle" title="Background Blur Performance Warning">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-exclamation-triangle me-2"/>
+                        <span>
+                            <strong t-out="warningMessage.title"/>: 
+                            <t t-out="warningMessage.body"/>
+                        </span>
+                    </div>
+                    <div class="cursor-pointer ms-2" t-on-click="onClickClose" title="Dismiss warning">
+                        <i class="fa fa-close"/>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <CallPopover class="'position-absolute top-0 start-0 z-2'" contentClass="'o-discuss-BlurWarningBanner'">
+                    <div class="o-discuss-BlurWarningBanner-button btn bg-warning-subtle p-1 rounded-circle" title="Background Blur Performance Warning">
+                        <i class="fa fa-exclamation-triangle fa-fw"/>
+                    </div>
+                    <t t-set-slot="content">
+                        <div class="position-relative p-3 shadow rounded bg-warning-subtle text-dark" style="min-width: 275px;">
+                            <div class="position-absolute top-0 end-0 m-2 cursor-pointer" t-on-click="onClickClose" title="Dismiss warning">
+                                <i class="fa fa-close"/>
+                            </div>
+                            <div>
+                                <strong t-out="warningMessage.title"/>:<br/>
+                                <t t-out="warningMessage.body"/>
+                            </div>
+                        </div>
+                    </t>
+                </CallPopover>
+            </t>
+        </t>
+    </t>
+</templates>
