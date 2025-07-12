@@ -290,3 +290,60 @@ class TestItEdiReverseCharge(TestItEdi):
             rc_tax = line.tax_ids[0]
             self.assertEqual(rc_tax.amount, 22.0)
             self.assertTrue('+vj12' in rc_tax.invoice_repartition_line_ids[0].tag_ids.mapped("name"))
+
+    def test_credit_note_tax_lines_imposta(self):
+        self.company = self.env.company
+        self.company.country_id = self.env.ref('base.it')
+        self.partner = self.env['res.partner'].create({
+            'name': 'Italian Vendor',
+            'country_id': self.env.ref('base.it').id,
+        })
+        self.product = self.env['product.product'].create({
+            'name': 'Service B',
+            'type': 'service',
+        })
+        self.tax = self.env['account.tax'].create({
+            'name': '4% Purchase Tax',
+            'amount': 4.0,
+            'type_tax_use': 'purchase',
+            'company_id': self.company.id,
+            'amount_type': 'percent',
+            'invoice_repartition_line_ids': self.repartition_lines(
+                self.RepartitionLine(100, 'base', ('+03', )),
+                self.RepartitionLine(100, 'tax', ('+5v', ))),
+            'refund_repartition_line_ids': self.repartition_lines(
+                self.RepartitionLine(100, 'base', ('-03', '-vj3')),
+                self.RepartitionLine(100, 'tax', ('-5v', )))
+        })
+
+        bill = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner.id,
+            'invoice_date': '2022-03-24',
+            'date': '2022-04-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': "Taxed service",
+                    'product_id': self.product.id,
+                    'price_unit': 1000.00,
+                    'quantity': 1.0,
+                    'tax_ids': [Command.set(self.tax.ids)],
+                }),
+            ]
+        })
+        bill.action_post()
+
+        reversal = self.env['account.move.reversal'].create({
+            'move_ids': [(6, 0, [bill.id])],
+            'reason': 'Reversal test',
+            'date': '2022-04-02',
+            'journal_id': bill.journal_id.id,
+        })
+        credit_note_data = reversal.reverse_moves()
+        credit_note = self.env['account.move'].browse(credit_note_data['res_id'])
+
+        edi_values = credit_note._l10n_it_edi_get_values()
+
+        tax_lines = edi_values['tax_lines']
+
+        self.assertEqual(tax_lines[0]['imposta'], -40)

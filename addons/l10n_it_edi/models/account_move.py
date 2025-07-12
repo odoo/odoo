@@ -394,6 +394,8 @@ class AccountMove(models.Model):
             if float_is_zero(rounding, precision_digits=8):
                 rounding = None
 
+            if self.move_type in ('in_refund', 'out_refund') and values['base_amount'] < 0 and values['tax_amount'] > 0:
+                values['tax_amount'] = -values['tax_amount']
             tax_lines.append({
                 'aliquota_iva': grouping_key['tax_amount_field'],
                 'natura': grouping_key['l10n_it_exempt_reason'],
