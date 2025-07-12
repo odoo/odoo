@@ -1,7 +1,7 @@
 import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
-import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { getOuterHtml } from "@web/core/utils/html";
 import { BackgroundPositionOverlay } from "./background_position_overlay";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
@@ -97,7 +97,7 @@ export class BackgroundPositionOverlayAction extends BuilderAction {
             overlay.open({
                 target: editingElement,
                 props: {
-                    outerHtmlEditingElement: markup(this.safeCloneOuterHTML(copyEl)),
+                    outerHtmlEditingElement: this.safeCloneOuterHTML(copyEl),
                     editingElement: editingElement,
                     mockEditingElOnImg: imgEl,
                     applyPosition: applyPosition,
@@ -111,7 +111,7 @@ export class BackgroundPositionOverlayAction extends BuilderAction {
         const copyEl = document.createElement(el.tagName);
         copyEl.style.cssText = el.style.cssText;
         copyEl.className = el.className;
-        return copyEl.outerHTML;
+        return getOuterHtml(copyEl);
     }
     apply({ editingElement, loadResult: bgPosition }) {
         if (bgPosition) {

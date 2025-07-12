@@ -6,6 +6,8 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     createDocumentFragmentFromContent,
     createElementWithContent,
+    getInnerHtml,
+    getOuterHtml,
     highlightText,
     htmlFormatList,
     htmlJoin,
@@ -38,6 +40,51 @@ test("createElementWithContent escapes text", () => {
 test("createElementWithContent keeps html markup", () => {
     const res = createElementWithContent("div", markup`<p>test</p>`);
     expect(res.outerHTML).toBe("<div><p>test</p></div>");
+});
+
+test("getInnerHtml escapes text and attributes", () => {
+    const div = document.createElement("div");
+    div.textContent = 'class="test" <i>abc</i>';
+    const span = document.createElement("span");
+    span.setAttribute("title", "<b>test</b>");
+    span.setAttribute("data-test", '" hack="failed');
+    div.appendChild(span);
+    const res = getInnerHtml(div);
+    expect(res.toString()).toBe(
+        'class=&quot;test&quot; &lt;i&gt;abc&lt;/i&gt;<span title="&lt;b&gt;test&lt;/b&gt;" data-test="&quot; hack=&quot;failed"></span>'
+    );
+    // ensure nothing is lost during conversion, the original node can be re-created
+    expect(createElementWithContent("dummy", res).innerHTML).toBe(div.innerHTML);
+});
+
+test("getOuterHtml escapes text and attributes", () => {
+    const div = document.createElement("div");
+    div.textContent = 'class="test" <i>abc</i>';
+    const span = document.createElement("span");
+    span.setAttribute("title", "<b>test</b>");
+    span.setAttribute("data-test", '" hack="failed');
+    div.appendChild(span);
+    const res = getOuterHtml(div);
+    expect(res.toString()).toBe(
+        '<div>class=&quot;test&quot; &lt;i&gt;abc&lt;/i&gt;<span title="&lt;b&gt;test&lt;/b&gt;" data-test="&quot; hack=&quot;failed"></span></div>'
+    );
+    // ensure nothing is lost during conversion, the original node can be re-created
+    expect(createElementWithContent("dummy", res).innerHTML).toBe(div.outerHTML);
+});
+
+test("getInnerHtml ignores text nodes", () => {
+    const res = getInnerHtml(document.createTextNode("<span>test</span>"));
+    expect(res.toString()).toBe("");
+});
+
+test("getOuterHtml escapes text nodes", () => {
+    const res = getOuterHtml(document.createTextNode("<span>test</span>"));
+    expect(res.toString()).toBe("&lt;span&gt;test&lt;/span&gt;");
+});
+
+test("getOuterHtml ignores comment nodes", () => {
+    const res = getOuterHtml(document.createComment("<span>test</span>"));
+    expect(res.toString()).toBe("");
 });
 
 test("highlightText", () => {

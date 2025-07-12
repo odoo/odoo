@@ -29,6 +29,64 @@ export function createElementWithContent(elementName, content) {
     return element;
 }
 
+function isVoidElement(tag) {
+    return document.createElement(tag).outerHTML.length === tag.length + 2;
+}
+
+/**
+ * @param {Node} node
+ * @param {boolean} [innerOnly=false]
+ * @return {string|ReturnType<markup>}
+ */
+function escapeNode(node, innerOnly = false) {
+    if (!node || node.nodeType === Node.COMMENT_NODE) {
+        return "";
+    }
+    if (node.nodeType === Node.TEXT_NODE) {
+        return innerOnly ? "" : htmlEscape(node.textContent);
+    }
+    const children = htmlJoin(Array.from(node.childNodes).map((node) => escapeNode(node)));
+    if (innerOnly) {
+        return children;
+    }
+    const tag = node.tagName.toLowerCase();
+    const attributeList = Array.from(node.attributes);
+    if (attributeList.length === 0) {
+        if (isVoidElement(tag)) {
+            return markup`<${tag}>`;
+        }
+        return markup`<${tag}>${children}</${tag}>`;
+    }
+    const attributes = htmlJoin(
+        attributeList.map((attr) => markup`${attr.name}="${attr.value}"`),
+        " "
+    );
+    if (isVoidElement(tag)) {
+        return markup`<${tag} ${attributes}>`;
+    }
+    return markup`<${tag} ${attributes}>${children}</${tag}>`;
+}
+
+/**
+ * Safely gets innerHTML of the given Element.
+ *
+ * @param {Element} element
+ * @returns {ReturnType<markup>}
+ */
+export function getInnerHtml(element) {
+    return escapeNode(element, true);
+}
+
+/**
+ * Safely gets outerHTML of the given Element.
+ *
+ * @param {Element} element
+ * @returns {ReturnType<markup>}
+ */
+export function getOuterHtml(element) {
+    return escapeNode(element);
+}
+
 /**
  * Returns a markuped version of the input text where
  * the query is highlighted using the input classes

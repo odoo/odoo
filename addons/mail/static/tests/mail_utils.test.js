@@ -64,7 +64,7 @@ test("addLink: utility function and special entities", () => {
         ],
         [
             markup`<p>https://example.com/"hello"&gt;</p>`,
-            '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/">https://example.com/</a>"hello"&gt;</p>',
+            '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/">https://example.com/</a>&quot;hello&quot;&gt;</p>',
         ],
         // & and ' linkified since they are in URL regex
         [
@@ -73,9 +73,9 @@ test("addLink: utility function and special entities", () => {
         ],
         [
             markup`<p>https://example.com/'yeah'</p>`,
-            '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/\'yeah\'">https://example.com/\'yeah\'</a></p>',
+            '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/&#x27;yeah&#x27;">https://example.com/&#x27;yeah&#x27;</a></p>',
         ],
-        [markup`<p>:'(</p>`, "<p>:'(</p>"],
+        [markup`<p>:'(</p>`, "<p>:&#x27;(</p>"],
         [markup`:'(`, ":&#x27;("],
         ["<p>:'(</p>", "&lt;p&gt;:&#x27;(&lt;/p&gt;"],
         [":'(", ":&#x27;("],

@@ -29,7 +29,7 @@ import {
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { createElementWithContent, htmlJoin } from "@web/core/utils/html";
+import { createElementWithContent, getOuterHtml, htmlJoin } from "@web/core/utils/html";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { isEmail } from "@web/core/utils/strings";
 import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
@@ -557,7 +557,7 @@ export class Composer extends Component {
                 document.createElement("br"),
                 ...createElementWithContent("div", signature).childNodes
             );
-            signature = markup(divElement.outerHTML);
+            signature = getOuterHtml(divElement);
         }
         default_body = this.formatDefaultBodyForFullComposer(
             default_body,
