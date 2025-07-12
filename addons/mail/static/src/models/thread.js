@@ -484,7 +484,10 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            const values = { canPostOnReadonly, hasWriteAccess, mainAttachment, hasReadAccess };
+            const values = { canPostOnReadonly, hasWriteAccess, hasReadAccess };
+            if (mainAttachment && !this._pendingMainAttachment) {
+                values.mainAttachment = mainAttachment;
+            }
             if (activitiesData) {
                 Object.assign(values, {
                     activities: activitiesData.map(activityData =>
@@ -902,12 +905,19 @@ registerModel({
          * @param {Attachment} attachment
          */
         async setMainAttachment(attachment) {
-            this.update({ mainAttachment: attachment });
-            await this.messaging.rpc({
-                model: 'ir.attachment',
-                method: 'register_as_main_attachment',
-                args: [[this.mainAttachment.id]],
+            this.update({
+                mainAttachment: attachment,
+                _pendingMainAttachment: true,
             });
+            try {
+                await this.messaging.rpc({
+                    model: 'ir.attachment',
+                    method: 'register_as_main_attachment',
+                    args: [[attachment.id]],
+                });
+            } finally {
+                this.update({ _pendingMainAttachment: false });
+            }
         },
         /**
          * Unfollow current partner from this thread.
@@ -1608,6 +1618,9 @@ registerModel({
             inverse: 'thread',
         }),
         mainAttachment: one('Attachment'),
+        _pendingMainAttachment: attr({
+            default: false,
+        }),
         /**
          * Determines the last mentioned channels of the last composer related
          * to this thread. Useful to sync the composer when re-creating it.
