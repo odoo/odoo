@@ -45,9 +45,20 @@ patch(PosOrder.prototype, {
         /* Generate the qr code for Saudi e-invoicing. Specs are available at the following link at page 23
 https://zatca.gov.sa/ar/E-Invoicing/SystemsDevelopers/Documents/20210528_ZATCA_Electronic_Invoice_Security_Features_Implementation_Standards_vShared.pdf
 */
+        date_isostring = new Date(date_isostring + "Z");
+        const ksa_timestamp = new Intl.DateTimeFormat("en-US", {
+            hour12: false,
+            timeZone: "Asia/Riyadh",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+        }).format(date_isostring);
         const seller_name_enc = this._compute_qr_code_field(1, name);
         const company_vat_enc = this._compute_qr_code_field(2, vat);
-        const timestamp_enc = this._compute_qr_code_field(3, date_isostring);
+        const timestamp_enc = this._compute_qr_code_field(3, ksa_timestamp);
         const invoice_total_enc = this._compute_qr_code_field(4, amount_total.toString());
         const total_vat_enc = this._compute_qr_code_field(5, amount_tax.toString());
 
