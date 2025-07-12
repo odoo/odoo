@@ -232,33 +232,19 @@ pre {
     max-height: 100vh;
 }
 
-.tooltip {
-    position: relative;
-    display: inline-block;
-}
-
-.tooltip .tooltiptext {
-    position: absolute;
-    visibility: hidden;
-    bottom: 120%;
-    left: -50%;
-    width: auto;
+.o-doc-dynamic-tooltip {
+    position: fixed;
+    z-index: 1000;
     min-width: 10rem;
     max-width: 25rem;
-    z-index: 1;
     background-color: var(--background);
     color: var(--text);
     padding: .3rem .5rem;
     border-radius: 6px;
     text-align: center;
-    transition: opacity 0.25s;
-    opacity: 0;
     box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.3);
-}
-
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
 }
 
 .btn {
