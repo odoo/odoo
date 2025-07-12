@@ -377,7 +377,7 @@ class TestSqlLint(TestPylintChecks):
 
             # apply rules
             dashboard_graph_model = self._graph_get_model()
-            GraphModel = self.env[dashboard_graph_model] 
+            GraphModel = self.env[dashboard_graph_model]
             graph_table = self._graph_get_table(GraphModel)
             extra_conditions = self._extra_sql_conditions()
             where_query = GraphModel._search([])
@@ -393,7 +393,7 @@ class TestSqlLint(TestPylintChecks):
                 'date_column': self._graph_date_column(),
                 'start_date': "%s",
                 'end_date': "%s",
-                'extra_conditions': extra_conditions 
+                'extra_conditions': extra_conditions
             }
 
             self.env.cr.execute(query, [self.id, start_date, end_date] + where_clause_params) #@

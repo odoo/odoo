@@ -261,6 +261,7 @@
                     type="object"
                     data-hotkey="shift+g"
                     class="oe_highlight"
+                    groups='account.group_account_user'
                     invisible="not authorized_transaction_ids"/>
                 <button
                     string="Void Transaction"
@@ -268,6 +269,7 @@
                     type="object"
                     data-hotkey="shift+v"
                     confirm="Are you sure you want to void the authorized transaction? This action can't be undone."
+                    groups='account.group_account_user'
                     invisible="not authorized_transaction_ids"/>
                 <button
                     string="Create Invoice"

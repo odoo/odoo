@@ -26,7 +26,12 @@ class ResPartner(models.Model):
     # tracked field used for chatter logging purposes
     # we need this to be readable inline as tracking messages use inline HTML nodes
     contact_address_inline = fields.Char(compute='_compute_contact_address_inline', string='Inlined Complete Address', tracking=True)
-    starred_message_ids = fields.Many2many('mail.message', 'mail_message_res_partner_starred_rel')
+    starred_message_ids = fields.Many2many(
+        'mail.message',
+        compute='_compute_starred_message_ids',
+        inverse='_inverse_starred_message_ids',
+    )
+    _starred_message_ids = fields.Many2many('mail.message', 'mail_message_res_partner_starred_rel', groups=fields.NO_ACCESS, copy=False)
     # sudo: res.partner - can access presence of accessible partner
     im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
     offline_since = fields.Datetime("Offline since", compute="_compute_im_status", compute_sudo=True)
@@ -82,7 +87,16 @@ class ResPartner(models.Model):
     # ------------------------------------------------------------
 
     def _mail_get_partners(self, introspect_fields=False):
-        return dict((partner.id, partner) for partner in self)
+        return {partner.id: partner for partner in self}
+
+    @api.depends('_starred_message_ids')
+    def _compute_starred_message_ids(self):
+        for record in self:
+            record.starred_message_ids = record.sudo()._starred_message_ids._filtered_access('read')
+
+    def _inverse_starred_message_ids(self):
+        for record in self:
+            record.sudo()._starred_message_ids = record.starred_message_ids._filtered_access('read')
 
     # ------------------------------------------------------------
     # ORM

@@ -19,9 +19,11 @@ class SaleOrder(models.Model):
         string="Available Quotation Documents",
         comodel_name='quotation.document',
         compute='_compute_available_quotation_document_ids',
+        groups='sales_team.group_sale_salesman',
     )
     is_pdf_quote_builder_available = fields.Boolean(
         compute='_compute_is_pdf_quote_builder_available',
+        groups='sales_team.group_sale_salesman',
     )
     quotation_document_ids = fields.Many2many(
         string="Headers/Footers",
@@ -29,6 +31,7 @@ class SaleOrder(models.Model):
         default=_default_quotation_document_ids,
         readonly=False,
         check_company=True,
+        groups='sales_team.group_sale_salesman',
     )
     customizable_pdf_form_fields = fields.Json(
         string="Customizable PDF Form Fields",

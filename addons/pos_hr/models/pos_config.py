@@ -19,7 +19,19 @@ class PosConfig(models.Model):
         if 'advanced_employee_ids' not in vals:
             vals['advanced_employee_ids'] = []
         vals['advanced_employee_ids'] += [(4, emp_id) for emp_id in self._get_group_pos_manager().user_ids.employee_id.ids]
-        return super().write(vals)
+
+        # write employees in sudo, because we have no access to these corecords
+        sudo_vals = {
+            field_name: value
+            for field_name in ('minimal_employee_ids', 'basic_employee_ids', 'advanced_employee_ids')
+            if not self.env.su
+            if (value := vals.pop(field_name, ()))
+        }
+
+        res = super().write(vals)
+        if sudo_vals:
+            super(PosConfig, self.sudo()).write(sudo_vals)
+        return res
 
     @api.onchange('minimal_employee_ids')
     def _onchange_minimal_employee_ids(self):

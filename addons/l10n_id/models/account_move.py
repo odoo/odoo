@@ -5,7 +5,7 @@ from odoo import fields, models, _
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    l10n_id_qris_transaction_ids = fields.Many2many('l10n_id.qris.transaction')
+    l10n_id_qris_transaction_ids = fields.Many2many('l10n_id.qris.transaction', groups='account.group_account_invoice')
 
     def _generate_qr_code(self, silent_errors=False):
         """

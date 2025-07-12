@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, models
-from odoo.tools import float_compare, float_is_zero
+from odoo.tools import OrderedSet
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -14,15 +13,15 @@ class StockMoveLine(models.Model):
     # -------------------------------------------------------------------------
     @api.model_create_multi
     def create(self, vals_list):
-        analytic_move_to_recompute = set()
-        move_lines = super(StockMoveLine, self).create(vals_list)
+        analytic_move_to_recompute = OrderedSet()
+        move_lines = super().create(vals_list)
         for move_line in move_lines:
             move = move_line.move_id
             analytic_move_to_recompute.add(move.id)
             move_line._update_svl_quantity(move_line.quantity)
         if analytic_move_to_recompute:
             self.env['stock.move'].browse(
-                analytic_move_to_recompute)._account_analytic_entry_move()
+                analytic_move_to_recompute).sudo()._account_analytic_entry_move()
         return move_lines
 
     def write(self, vals):

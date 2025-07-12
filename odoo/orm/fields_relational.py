@@ -7,7 +7,7 @@ from collections import defaultdict
 from collections.abc import Reversible
 from operator import attrgetter
 
-from odoo.exceptions import MissingError, UserError
+from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.tools import SQL, OrderedSet, Query, sql, unique
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel, unquote
@@ -36,7 +36,7 @@ class _Relational(Field[BaseModel]):
     comodel_name: str
     domain: DomainType = []         # domain for searching values
     context: ContextType = {}       # context for searching values
-    auto_join: bool = False         # whether joins are generated upon search
+    auto_join: bool = False         # whether access rights are bypassed on the comodel
     check_company: bool = False
 
     def __get__(self, records: BaseModel, owner=None):
@@ -211,8 +211,8 @@ class Many2one(_Relational):
     :param str ondelete: what to do when the referred record is deleted;
         possible values are: ``'set null'``, ``'restrict'``, ``'cascade'``
 
-    :param bool auto_join: whether JOINs are generated upon search through that
-        field (default: ``False``)
+    :param bool auto_join: whether access rights are bypassed on the comodel
+        (default: ``False``)
 
     :param bool delegate: set it to ``True`` to make fields of the target model
         accessible from the current model (corresponds to ``_inherits``)
@@ -777,7 +777,7 @@ class _RelationalMulti(_Relational):
                     )
                 #  in (False) => not any (Domain.TRUE)
                 #  not in (False) => any (Domain.TRUE)
-                value = comodel._search(Domain.TRUE)
+                value = comodel._search(Domain.TRUE, bypass_access=self.auto_join)
                 exists = not exists
             else:
                 value = comodel.browse(value)._as_query(ordered=False)
@@ -920,7 +920,10 @@ class One2many(_RelationalMulti):
         field_names = [inverse]
         if comodel._active_name:
             field_names.append(comodel._active_name)
-        lines = comodel.search_fetch(domain, field_names)
+        try:
+            lines = comodel.search_fetch(domain, field_names)
+        except AccessError as e:
+            raise AccessError(records.env._("Failed to read field %s", self) + '\n' + str(e)) from e
 
         # group lines by inverse field (without prefetching other fields)
         get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
@@ -1217,8 +1220,6 @@ class Many2many(_RelationalMulti):
     def __init__(self, comodel_name: str | Sentinel = SENTINEL, relation: str | Sentinel = SENTINEL,
                  column1: str | Sentinel = SENTINEL, column2: str | Sentinel = SENTINEL,
                  string: str | Sentinel = SENTINEL, **kwargs):
-        if 'auto_join' in kwargs:
-            raise NotImplementedError("auto_join is not supported on Many2many fields")
         super().__init__(
             comodel_name=comodel_name,
             relation=relation,
@@ -1338,9 +1339,10 @@ class Many2many(_RelationalMulti):
 
         # make the query for the lines
         domain = self.get_comodel_domain(records)
-        query = comodel._search(domain, bypass_access=True)
-        comodel._apply_ir_rules(query, 'read')
-        query.order = comodel._order_to_sql(comodel._order, query)
+        try:
+            query = comodel._search(domain, order=comodel._order)
+        except AccessError as e:
+            raise AccessError(records.env._("Failed to read field %s", self) + '\n' + str(e)) from e
 
         # join with many2many relation table
         sql_id1 = SQL.identifier(self.relation, self.column1)
@@ -1439,6 +1441,19 @@ class Many2many(_RelationalMulti):
                 # delete lines in batch
                 comodel.browse(to_delete).unlink()
                 relation_delete(to_delete)
+
+        # check comodel access of added records
+        # we check the su flag of the environment of records, because su may be
+        # disabled on the comodel
+        if not model.env.su:
+            try:
+                comodel.browse(
+                    co_id
+                    for rec_id, new_co_ids in new_relation.items()
+                    for co_id in new_co_ids - old_relation[rec_id]
+                ).check_access('read')
+            except AccessError as e:
+                raise AccessError(model.env._("Failed to write field %s", self) + "\n" + str(e))
 
         # update the cache of self
         for record in records:
@@ -1639,7 +1654,6 @@ class Many2many(_RelationalMulti):
             ])
 
     def _condition_to_sql_relational(self, model: BaseModel, alias: str, exists: bool, coquery: Query, query: Query) -> SQL:
-        assert not self.auto_join, f"auto_join not implemented for many2many fields ({self})"
         if coquery.is_empty():
             return SQL("FALSE") if exists else SQL("TRUE")
         rel_table, rel_id1, rel_id2 = self.relation, self.column1, self.column2
