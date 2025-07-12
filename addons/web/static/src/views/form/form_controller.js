@@ -445,23 +445,26 @@ export class FormController extends Component {
 
     async onPagerUpdate({ offset, resIds }) {
         const dirty = await this.model.root.isDirty();
-        try {
-            if (dirty) {
-                await this.model.root.save({
-                    onError: this.onSaveError.bind(this),
-                    nextId: resIds[offset],
-                });
-            } else {
-                await this.model.load({ resId: resIds[offset] });
+        
+        await executeButtonCallback(this.ui.activeElement, async () => {
+            try {
+                if (dirty) {
+                    await this.model.root.save({
+                        onError: this.onSaveError.bind(this),
+                        nextId: resIds[offset],
+                    });
+                } else {
+                    await this.model.load({ resId: resIds[offset] });
+                }
+            } catch (e) {
+                if (e instanceof FetchRecordError) {
+                    this.model.load({
+                        resIds: this.model.config.resIds.filter((id) => !e.resIds.includes(id)),
+                    });
+                }
+                throw e;
             }
-        } catch (e) {
-            if (e instanceof FetchRecordError) {
-                this.model.load({
-                    resIds: this.model.config.resIds.filter((id) => !e.resIds.includes(id)),
-                });
-            }
-            throw e;
-        }
+        });
     }
 
     beforeVisibilityChange() {
@@ -471,12 +474,31 @@ export class FormController extends Component {
     }
 
     async beforeLeave() {
+        
         if (this.model.root.dirty) {
-            return this.save({
+            const saved = await this.save({
                 reload: false,
                 onError: this.onSaveError.bind(this),
             });
+
+            if (!saved) {
+                const confirmed = await this.confirmDiscardDialog({
+                    title: _t("Leave Page"),
+                    body: _t("You have unsaved changes. Are you sure you want to discard them and leave this page?"),
+                });
+
+                if (!confirmed) {
+                    return false;
+                }
+
+                await this.model.root.discard();
+                if (this.props.onDiscard) {
+                    this.props.onDiscard(this.model.root);
+                }
+            }
         }
+
+        return true;
     }
 
     async beforeUnload(ev) {
@@ -630,13 +652,29 @@ export class FormController extends Component {
     async create() {
         const dirty = await this.model.root.isDirty();
         const onError = this.onSaveError.bind(this);
-        const canProceed = !dirty || (await this.model.root.save({ onError }));
-        // FIXME: disable/enable not done in onPagerUpdate
-        if (canProceed) {
-            await executeButtonCallback(this.ui.activeElement, () =>
-                this.model.load({ resId: false })
-            );
+        
+        let canProceed = !dirty || (await this.model.root.save({ onError }));
+
+        if (!canProceed) {
+            
+            const confirmed = await this.confirmDiscardDialog({
+                title: _t("Create New Record"),
+                body: _t("You have unsaved changes. Do you want to discard them and create a new record?"),
+            });
+
+            if (!confirmed) { 
+                return;
+            }
+
+            await this.model.root.discard();
+            this.props.onDiscard?.(this.model.root);
+
         }
+        
+        await executeButtonCallback(this.ui.activeElement, () =>
+            this.model.load({ resId: false })
+        );
+
     }
 
     async save(params) {
@@ -669,6 +707,19 @@ export class FormController extends Component {
         if (this.model.root.isNew || this.env.inDialog) {
             this.env.config.historyBack();
         }
+    }
+
+    async confirmDiscardDialog({ title, body, confirmLabel = "Discard", cancelLabel = "Stay" }) {
+        return new Promise((resolve) => {
+            this.dialogService.add(ConfirmationDialog, {
+                title: _t(title),
+                body: _t(body),
+                confirmLabel: _t(confirmLabel),
+                cancelLabel: _t(cancelLabel),
+                confirm: () => resolve(true),
+                cancel: () => resolve(false),
+            });
+        });
     }
 
     get className() {
