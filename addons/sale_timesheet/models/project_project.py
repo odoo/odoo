@@ -371,7 +371,6 @@ class ProjectProject(models.Model):
             'billable_milestones': self.env._('Timesheets (Billed on Milestones)'),
             'billable_manual': self.env._('Timesheets (Billed Manually)'),
             'non_billable': self.env._('Timesheets (Non-Billable)'),
-            'timesheet_revenues': self.env._('Timesheets revenues'),
             'other_costs': self.env._('Materials'),
         }
 
@@ -383,7 +382,6 @@ class ProjectProject(models.Model):
             'billable_milestones': 3,
             'billable_manual': 4,
             'non_billable': 5,
-            'timesheet_revenues': 6,
             'other_costs': 12,
         }
 
