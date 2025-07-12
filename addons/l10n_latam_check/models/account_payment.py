@@ -59,7 +59,6 @@ class AccountPayment(models.Model):
         if msgs:
             raise ValidationError('* %s' % '\n* '.join(msgs))
         super().action_post()
-        self._l10n_latam_check_split_move()
 
     def _get_latam_checks(self):
         self.ensure_one()
@@ -129,68 +128,6 @@ class AccountPayment(models.Model):
         self._get_reconciled_checks_error()
         super().action_draft()
 
-    def _l10n_latam_check_split_move(self):
-        for payment in self.filtered(lambda x: x.payment_method_code == 'own_checks' and x.payment_type == 'outbound'):
-            if len(payment.l10n_latam_new_check_ids) == 1:
-                liquidity_line = payment._seek_for_lines()[0]
-                payment.l10n_latam_new_check_ids.outstanding_line_id = liquidity_line.id
-                continue
-
-            vals = {
-                'journal_id': payment.journal_id.id,
-                'move_type': 'entry',
-                'line_ids': [],
-            }
-            payment_liquidity_line = payment._seek_for_lines()[0]
-
-            # One line per check
-            checks_total = sum(payment.l10n_latam_new_check_ids.mapped('amount'))
-            liquidity_balance_total = 0.0
-            liquidity_balance = 0.0
-            for check in payment.l10n_latam_new_check_ids:
-                liquidity_amount_currency = -check.amount
-
-                if check == payment.l10n_latam_new_check_ids[-1]:
-                    liquidity_balance = payment.currency_id.round(payment_liquidity_line.balance - liquidity_balance)
-                else:
-                    liquidity_balance = payment.currency_id.round(payment_liquidity_line.balance * check.amount / checks_total)
-                    liquidity_balance_total += liquidity_balance
-
-                vals['line_ids'].append(
-                    Command.create({
-                        'name': _(
-                            'Check %(check_number)s - %(suffix)s',
-                            check_number=check.name,
-                            suffix=''.join([item[1] for item in payment._get_aml_default_display_name_list()])),
-                        'date_maturity': check.payment_date,
-                        'amount_currency': liquidity_amount_currency,
-                        'currency_id': check.currency_id.id,
-                        'debit': max(0.0, liquidity_balance),
-                        'credit': -min(liquidity_balance, 0.0),
-                        'partner_id': payment_liquidity_line.partner_id.id,
-                        'account_id': payment_liquidity_line.account_id.id,
-                        'l10n_latam_check_ids': [Command.link(check.id)]
-                    }),
-                )
-
-            # Cancel payment line
-            vals['line_ids'].append(
-                Command.create({
-                    'name': payment_liquidity_line.name,
-                    'date_maturity': payment_liquidity_line.date_maturity,
-                    'amount_currency': -payment_liquidity_line.amount_currency,
-                    'currency_id': payment_liquidity_line.currency_id.id,
-                    'debit': -payment_liquidity_line.debit,
-                    'credit': -payment_liquidity_line.credit,
-                    'partner_id': payment_liquidity_line.partner_id.id,
-                    'account_id': payment_liquidity_line.account_id.id,
-                }),
-            )
-            move_id = self.env['account.move'].create(vals)
-            move_id.action_post()
-            split_move_counterpart_line = move_id.line_ids.filtered(lambda x: x.amount_currency == -payment_liquidity_line.amount_currency)
-            (split_move_counterpart_line + payment_liquidity_line).reconcile()
-
     def _l10n_latam_check_unlink_split_move(self):
         self.ensure_one()
         for check in self.l10n_latam_new_check_ids:
@@ -245,14 +182,40 @@ class AccountPayment(models.Model):
         res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals, force_balance=force_balance)
 
         # if only one check we don't create the split line, we add same data on liquidity line
-        if self.payment_method_code == 'own_checks' and self.payment_type == 'outbound' and len(self.l10n_latam_new_check_ids) == 1:
-            res[0].update({
-                'name': _(
-                    'Check %(check_number)s - %(suffix)s',
-                    check_number=self.l10n_latam_new_check_ids.name,
-                    suffix=''.join([item[1] for item in self._get_aml_default_display_name_list()])),
-                'date_maturity': self.l10n_latam_new_check_ids.payment_date,
-            })
+        if self.payment_method_code == 'own_checks' and self.payment_type == 'outbound':
+            del res[0]
+            for check_id in self.l10n_latam_new_check_ids:
+                if self.payment_type == 'inbound':
+                    # Receive money.
+                    liquidity_amount_currency = check_id.amount
+                elif self.payment_type == 'outbound':
+                    # Send money.
+                    liquidity_amount_currency = -check_id.amount
+                else:
+                    liquidity_amount_currency = 0.0
+
+                liquidity_balance = self.currency_id._convert(
+                    liquidity_amount_currency,
+                    self.company_id.currency_id,
+                    self.company_id,
+                    self
+                )
+
+                res.insert(0, {
+                            'name': _(
+                                'Check %(check_number)s - %(suffix)s',
+                                check_number=check_id.name,
+                                suffix=''.join([item[1] for item in self._get_aml_default_display_name_list()])),
+                            'date_maturity': check_id.payment_date,
+                            'amount_currency': liquidity_amount_currency,
+                            'currency_id':   check_id.currency_id.id,
+                            'debit': liquidity_balance if liquidity_balance > 0.0 else 0.0,
+                            'credit': -liquidity_balance if liquidity_balance < 0.0 else 0.0,
+                            'partner_id': self.partner_id.id,
+                            'account_id': self.outstanding_account_id.id,
+                            'l10n_latam_check_ids': [Command.link(check_id.id)],
+                })
+
         # we dont check the payment method code because when deposited on bank/cash journals pay method is manual but we still change the label
         # we dont want this names on the own checks because it doesn't add value, already each split/check line will have it name
         elif (self.l10n_latam_new_check_ids or self.l10n_latam_move_check_ids) and self.payment_method_code != 'own_checks':
