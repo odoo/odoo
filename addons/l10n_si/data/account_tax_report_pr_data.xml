@@ -16,6 +16,7 @@
         <field name="line_ids">
             <record id="tax_report_pr_value_taxes_purchases_base" model="account.report.line">
                 <field name="name">Value of taxed purchases - base</field>
+                <field name="name@sl">Vrednost obdavčenih nakupov - osnova</field>
                 <field name="expression_ids">
                     <record id="tax_report_pr_value_taxes_purchases_base_formula" model="account.report.expression">
                         <field name="label">balance</field>
@@ -120,6 +121,7 @@
             </record>
             <record id="tax_report_pr_value_exempt_purchases_base" model="account.report.line">
                 <field name="name">Value of exempt purchases - base</field>
+                <field name="name@sl">Vrednost oproščenih nakupov - osnova</field>
                 <field name="expression_ids">
                     <record id="tax_report_pr_value_exempt_purchases_base_formula" model="account.report.expression">
                         <field name="label">balance</field>
@@ -168,6 +170,7 @@
             </record>
             <record id="tax_report_pr_non_deductible_vat" model="account.report.line">
                 <field name="name">Non-deductible VAT</field>
+                <field name="name@sl">DDV, ki ga ni mogoče odbiti</field>
                 <field name="expression_ids">
                     <record id="tax_report_pr_non_deductible_vat_formula" model="account.report.expression">
                         <field name="label">balance</field>
@@ -214,6 +217,7 @@
             </record>
             <record id="tax_report_pr_deductible_vat" model="account.report.line">
                 <field name="name">Deductible VAT</field>
+                <field name="name@sl">DDV, ki ga je mogoče odbiti</field>
                 <field name="expression_ids">
                     <record id="tax_report_pr_deductible_vat_formula" model="account.report.expression">
                         <field name="label">balance</field>
