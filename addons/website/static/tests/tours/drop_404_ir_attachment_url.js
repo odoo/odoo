@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import wTourUtils from '@website/js/tours/tour_utils';
+import wUtils from '@website/js/utils';
 
 wTourUtils.registerWebsitePreviewTour('drop_404_ir_attachment_url', {
     test: true,
@@ -18,11 +19,10 @@ wTourUtils.registerWebsitePreviewTour('drop_404_ir_attachment_url', {
         content: 'Once the image UI appears, check the image has no size (404)',
         trigger: 'iframe .s_404_snippet img',
         extra_trigger: '.snippet-option-ReplaceMedia',
-        run: function () {
+        run: async function () {
             const imgEl = this.$anchor[0];
-            if (!imgEl.complete
-                    || imgEl.naturalWidth !== 0
-                    || imgEl.naturalHeight !== 0) {
+            await wUtils.onceAllImagesLoaded(this.$anchor);
+            if (imgEl.naturalWidth !== 0 || imgEl.naturalHeight !== 0) {
                 console.error('This is supposed to be a 404 image');
             }
         },
@@ -32,11 +32,10 @@ wTourUtils.registerWebsitePreviewTour('drop_404_ir_attachment_url', {
     {
         content: 'Once the shape is applied, check the image has now a size (placeholder image)',
         trigger: 'iframe .s_404_snippet img[src^="data:"]',
-        run: function () {
+        run: async function () {
             const imgEl = this.$anchor[0];
-            if (!imgEl.complete
-                    || imgEl.naturalWidth === 0
-                    || imgEl.naturalHeight === 0) {
+            await wUtils.onceAllImagesLoaded(this.$anchor);
+            if (imgEl.naturalWidth === 0 || imgEl.naturalHeight === 0) {
                 console.error('Even though the original image was a 404, the option should have been applied on the placeholder image');
             }
         },
