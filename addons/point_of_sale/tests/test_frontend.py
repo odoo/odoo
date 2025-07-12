@@ -1548,6 +1548,30 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'ProductComboChangePricelist', login="pos_user")
 
+    def test_product_combo_extra_dont_change_price(self):
+        """
+        Verify than when we change the preset, it does not change the price if the
+        pricelist is the does not require it to.
+        """
+        setup_product_combo_items(self)
+        self.desk_accessories_combo.qty_max = 4
+        self.desk_accessories_combo.qty_free = 2
+        self.preset_eat_in = self.env['pos.preset'].create({
+            'name': 'Eat in',
+        })
+        self.preset_takeaway = self.env['pos.preset'].create({
+            'name': 'Takeaway',
+        })
+        self.main_pos_config.write({
+            'use_presets': True,
+            'default_preset_id': self.preset_eat_in.id,
+            'available_preset_ids': [(6, 0, [self.preset_takeaway.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_product_combo_extra_dont_change_price', login="pos_user")
+        # Chosing the same product as free and extra
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_product_combo_extra_dont_change_price_2', login="pos_user")
+
     def test_cash_rounding_payment(self):
         """Verify than an error popup is shown if the payment value is more precise than the rounding method"""
         rounding_method = self.env['account.cash.rounding'].create({

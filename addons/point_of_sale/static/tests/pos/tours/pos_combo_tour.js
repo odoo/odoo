@@ -218,3 +218,43 @@ registry.category("web_tour.tours").add("ProductComboChangePricelist", {
             ProductScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_product_combo_extra_dont_change_price", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 3"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("62.46"),
+            ProductScreen.selectPreset("Eat in", "Takeaway"),
+            { ...ProductScreen.back(), isActive: ["mobile"] },
+            ProductScreen.totalAmountIs("62.46"),
+            ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_product_combo_extra_dont_change_price_2", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("69.43"),
+            ProductScreen.selectPreset("Eat in", "Takeaway"),
+            { ...ProductScreen.back(), isActive: ["mobile"] },
+            ProductScreen.totalAmountIs("69.43"),
+            ProductScreen.isShown(),
+        ].flat(),
+});
