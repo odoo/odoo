@@ -3728,7 +3728,7 @@ class Properties(Field):
 
     def _compute(self, records):
         """Add the default properties value when the container is changed."""
-        for record in records:
+        for record in records.sudo():
             record[self.name] = self._add_default_values(
                 record.env,
                 {self.name: record[self.name], self.definition_record: record[self.definition_record]},
