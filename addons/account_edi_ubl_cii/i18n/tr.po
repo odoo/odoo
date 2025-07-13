@@ -522,7 +522,7 @@ msgstr "Hesap Hareketi Yollandı"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Articles 226 items 11 to 15 Directive 2006/112/EN"
-msgstr ""
+msgstr "2006/112/EN sayılı Direktifin 226. maddesi, 11–15 numaralı bentler"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -530,6 +530,7 @@ msgstr ""
 #, python-format
 msgid "At least one of the following fields %s is required on %s."
 msgstr ""
+"%s kaydında aşağıdaki alanlardan en az birinin doldurulması gereklidir: %s ."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_id
@@ -582,7 +583,7 @@ msgstr ""
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_common
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
-msgstr ""
+msgstr "EDI belgeleri için ortak işlevler: veri oluşturma, kısıtlar vb."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_company
@@ -621,6 +622,8 @@ msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and"
 " activate the currency?"
 msgstr ""
+"Para birimi alınamadı: %s. Çoklu para birimi özelliğini etkinleştirip ilgili"
+" para birimini aktif ettiniz mi?"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -628,7 +631,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Could not retrieve the tax: %s %% for line '%s'."
-msgstr ""
+msgstr " '%s' satırı için %s %% oranındaki vergi alınamadı."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -663,21 +666,21 @@ msgstr "EN 16931"
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line shall have one and only one tax."
-msgstr ""
+msgstr "Her fatura satırında yalnızca bir adet vergi bulunmalıdır."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line should have a product or a label."
-msgstr ""
+msgstr "Her fatura satırında bir ürün veya bir açıklama olmalıdır."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
-msgstr ""
+msgstr "Her fatura satırında en az bir vergi bulunmalıdır."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
@@ -694,7 +697,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid "Errors occurred while creating the EDI document (format: %s):"
-msgstr ""
+msgstr "EDI belgesi oluşturulurken hatalar oluştu (format: %s):"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -722,13 +725,15 @@ msgid ""
 "For intracommunity supply, the actual delivery date or the invoicing period "
 "should be included."
 msgstr ""
+"Topluluk içi teslimatlar için fiili teslimat tarihi veya fatura dönemi "
+"belirtilmelidir."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "For intracommunity supply, the delivery address should be included."
-msgstr ""
+msgstr "Topluluk içi teslimatlarda teslimat adresi belirtilmelidir."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__ubl_cii_format
@@ -741,7 +746,7 @@ msgstr "Biçim"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Format used to import the invoice: %s"
-msgstr ""
+msgstr "Fatura içe aktarmada kullanılan format: %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_company__invoice_is_ubl_cii
@@ -909,20 +914,22 @@ msgid ""
 "The VAT number of the supplier does not seem to be valid. It should be of "
 "the form: NO179728982MVA."
 msgstr ""
+"Tedarikçinin KDV numarası geçerli görünmüyor. Şu formatta olmalıdır: "
+"NO179728982MVA."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The VAT of the %s should be prefixed with its country code."
-msgstr ""
+msgstr "%s KDV numarasının başında ülke kodu bulunmalıdır."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The country is required for the %s."
-msgstr ""
+msgstr "%s için ülke bilgisi gereklidir."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -938,14 +945,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The element %s is required on %s."
-msgstr ""
+msgstr "%s alanında %s öğesi gereklidir."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The field %s is required on %s."
-msgstr ""
+msgstr "%s üzerinde %s alanı gereklidir."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -953,7 +960,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
-msgstr ""
+msgstr "Alıcı bankada 'Temizlenmiş Hesap Numarası' alanı zorunludur."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -974,6 +981,8 @@ msgid ""
 "The invoice has been converted into a credit note and the quantities have "
 "been reverted."
 msgstr ""
+"Fatura iade faturası (alacak dekontu) olarak çevrildi ve miktarlar tersine "
+"çevrildi."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1013,6 +1022,8 @@ msgid ""
 "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
 "known as 'Endpoint ID'."
 msgstr ""
+"BIS Billing 3.0 ve türevleri tarafından kullanılan, 'Endpoint ID' olarak da "
+"bilinen benzersiz tanımlayıcı."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1022,6 +1033,8 @@ msgid ""
 "When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on "
 "each invoice line should be greater than 0."
 msgstr ""
+"Kanarya Adaları Dolaylı Genel Vergisi (IGIC) uygulandığında, her fatura "
+"satırında vergi oranı %0'dan büyük olmalıdır."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__xrechnung
