@@ -182,6 +182,7 @@ msgstr "'Φύλλο Καταμέτρησης'"
 msgid ""
 "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
+"'Δελτίο Αποστολής - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -1058,6 +1059,9 @@ msgid ""
 "Annual inventory month for products not in a location with a cyclic "
 "inventory date. Set to no month if no automatic annual inventory."
 msgstr ""
+"Μήνας ετήσιας απογραφής για προϊόντα που δεν βρίσκονται σε τοποθεσία με "
+"κυκλική ημερομηνία απογραφής. Επέλεξε κανένας μήνας αν δεν υπάρχει αυτόματη "
+"ετήσια απογραφή."
 
 #. module: stock
 #. odoo-python
@@ -1067,6 +1071,8 @@ msgid ""
 "Another parent/sub replenish location %s exists, if you wish to change it, "
 "uncheck it first"
 msgstr ""
+"Υπάρχει ήδη άλλη τοποθεσία ανεφοδιασμού γονέα/υποτοποθεσίας %s , αν θέλεις "
+"να την αλλάξεις, αποεπίλεξέ την πρώτα."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -1118,6 +1124,8 @@ msgid ""
 "Apply specific route for the replenishment instead of product's default "
 "routes."
 msgstr ""
+"Εφαρμογή συγκεκριμένης διαδρομής για τον ανεφοδιασμό αντί για τις "
+"προεπιλεγμένες διαδρομές του προϊόντος."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__4
@@ -1876,6 +1884,8 @@ msgid ""
 "Consider product forecast these many days in the future upon product replenishment, set to 0 for just-in-time.\n"
 "The value depends on the type of the route (Buy or Manufacture)"
 msgstr ""
+"Λάβετε υπόψη την προβλεπόμενη ζήτηση του προϊόντος για τόσες ημέρες στο μέλλον κατά τον ανεφοδιασμό του προϊόντος, oρίστε 0 για παραγγελία την τελευταία στιγμή.\n"
+"Η τιμή εξαρτάται από τον τύπο της διαδρομής (Αγορά ή Παραγωγή)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_owner
@@ -2053,6 +2063,8 @@ msgid ""
 "Create new putaway rules to dispatch automatically specific products to "
 "their appropriate destination location upon receptions."
 msgstr ""
+"Δημιουργήστε νέους κανόνες τοποθέτησης ώστε να αποστέλλονται αυτόματα "
+"συγκεκριμένα προϊόντα στην κατάλληλη τοποθεσία προορισμού κατά την παραλαβή."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_stock_view
@@ -2344,12 +2356,14 @@ msgstr "Ημερομηνία στην οποία πρέπει να γίνει η
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
 msgid "Date at which the transfer has been processed or cancelled."
-msgstr ""
+msgstr "Ημερομηνία κατά την οποία η μεταφορά εκτελέστηκε ή ακυρώθηκε."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
 msgid "Date for next planned inventory based on cyclic schedule."
 msgstr ""
+"Ημερομηνία της επόμενης προγραμματισμένης απογραφής βάσει κυκλικού "
+"προγράμματος."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_done
@@ -2639,6 +2653,8 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
+"Χρόνος παράδοσης σε ημέρες. Είναι ο αριθμός των ημερών που υποσχόμαστε στον "
+"πελάτη, μεταξύ της επιβεβαίωσης της παραγγελίας πώλησης και της παράδοσης."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__delivery_count
@@ -2686,6 +2702,9 @@ msgid ""
 "of the product in this packaging: whether it will be bought, manufactured, "
 "replenished on order, etc."
 msgstr ""
+"Ανάλογα με τα εγκατεστημένα ενότητες (modules), αυτό θα σας επιτρέψει να "
+"ορίσετε τη διαδρομή του προϊόντος σε αυτή τη συσκευασία: αν θα αγοραστεί, "
+"παραχθεί, αναπληρωθεί κατά παραγγελία, κ.λπ."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -2964,7 +2983,7 @@ msgstr "Κουτί Μιας Χρήσης"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "Do you confirm you want to scrap"
-msgstr ""
+msgstr "Επιβεβαιώνετε ότι θέλετε να απορρίψετε"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2987,12 +3006,12 @@ msgstr "Ολοκληρωμένη"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 msgid "Done By"
-msgstr ""
+msgstr "Ολοκληρώθηκε Από"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_quantity
 msgid "Done Packaging Quantity"
-msgstr ""
+msgstr "Ολοκληρωμένη Ποσότητα Συσκευασίας"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__draft
@@ -3019,26 +3038,29 @@ msgid ""
 "Due to receipts scheduled in the future, you might end up with "
 "excessive stock . Check the Forecasted Report  before reordering"
 msgstr ""
+"Λόγω προγραμματισμένων παραλαβών στο μέλλον, ενδέχεται να καταλήξετε με "
+"υπερβολικό απόθεμα . Ελέγξτε την Αναφορά Πρόβλεψης  πριν δημιουργήσετε νέα "
+"παραγγελία"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
 msgid "Duplicated SN Warning"
-msgstr ""
+msgstr "Προειδοποίηση για διπλό σειριακό αριθμό"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__sn_duplicated
 msgid "Duplicated Serial Number"
-msgstr ""
+msgstr "Υπάρχει ήδη αυτός ο σειριακός αριθμός"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__dymo
 msgid "Dymo"
-msgstr ""
+msgstr "Dymo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr ""
+msgstr "Διασύνδεση με Easypost"
 
 #. module: stock
 #. odoo-python
@@ -3055,6 +3077,8 @@ msgid ""
 "Editing quantities in an Inventory Adjustment location is forbidden,those "
 "locations are used as counterpart when correcting the quantities."
 msgstr ""
+"Η επεξεργασία ποσοτήτων σε τοποθεσία Απογραφής είναι απαγορευμένη, αυτές οι "
+"τοποθεσίες χρησιμοποιούνται ως αντιστοιχία κατά τη διόρθωση ποσοτήτων."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3091,6 +3115,11 @@ msgid ""
 " inventory adjustments, batch picking, moving lots or pallets, low inventory"
 " checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
+"Απολαύστε μια ταχύτατη εμπειρία με την εφαρμογή barcode του Odoo. Είναι "
+"εξαιρετικά γρήγορη και λειτουργεί ακόμη και χωρίς σταθερή σύνδεση στο "
+"διαδίκτυο. Υποστηρίζει όλες τις ροές: απογραφές, συλλογή παρτίδων, "
+"μετακινήσεις παρτίδων ή παλετών, ελέγχους χαμηλού αποθέματος κ.λπ. Μεταβείτε"
+" στο μενού \"Εφαρμογές\" για να ενεργοποιήσετε το barcode."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -3118,7 +3147,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Exception(s) occurred on the picking"
-msgstr ""
+msgstr "Παρουσιάστηκαν εξαιρέσεις στη μεταφορά"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -3137,7 +3166,7 @@ msgstr ""
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #, python-format
 msgid "Exp"
-msgstr ""
+msgstr "Exp"
 
 #. module: stock
 #. odoo-python
@@ -3157,7 +3186,7 @@ msgstr "Αναμένεται"
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
 msgid "Expected Delivery:"
-msgstr ""
+msgstr "Αναμενόμενη Παράδοση:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_product_expiry
@@ -3177,7 +3206,7 @@ msgstr "FIFO, LIFO..."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__priority
 msgid "Favorite"
-msgstr ""
+msgstr "Αγαπημένη"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__2
@@ -3188,12 +3217,12 @@ msgstr "Φεβρουάριος"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "FedEx Connector"
-msgstr ""
+msgstr "Διασύνδεση με FedEx"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
 msgid "Filtered Location"
-msgstr ""
+msgstr "Φιλτραρισμένη Τοποθεσία"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -3260,12 +3289,12 @@ msgstr "Πρόβλεψη"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__forecast_availability
 msgid "Forecast Availability"
-msgstr ""
+msgstr "Πρόβλεψη Διαθεσιμότητας"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Forecast Description"
-msgstr ""
+msgstr "Περιγραφή Πρόβλεψης"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3310,24 +3339,24 @@ msgstr "Προβλεπόμενες"
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Forecasted Date"
-msgstr ""
+msgstr "Ημερομηνία Πρόβλεψης"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__out
 msgid "Forecasted Deliveries"
-msgstr ""
+msgstr "Προβλεπόμενες Παραδόσεις"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__forecast_expected_date
 msgid "Forecasted Expected date"
-msgstr ""
+msgstr "Προβλεπόμενη Αναμενόμενη Ημερομηνία"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Forecasted Inventory"
-msgstr ""
+msgstr "Προβλεπόμενο Απόθεμα"
 
 #. module: stock
 #. odoo-python
@@ -3343,7 +3372,7 @@ msgstr "Προβλεπόμενη Ποσότητα"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__in
 msgid "Forecasted Receipts"
-msgstr ""
+msgstr "Προβλεπόμενες Παραλαβές"
 
 #. module: stock
 #. odoo-javascript
@@ -3353,24 +3382,24 @@ msgstr ""
 #: model:ir.actions.client,name:stock.stock_forecasted_product_template_action
 #, python-format
 msgid "Forecasted Report"
-msgstr ""
+msgstr "Αναφορά Πρόβλεψης"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__forecast
 msgid "Forecasted Stock"
-msgstr ""
+msgstr "Προβλεπόμενο Απόθεμα"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__forecast_weight
 msgid "Forecasted Weight"
-msgstr ""
+msgstr "Προβλεπόμενο Βάρος"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Forecasted with Pending"
-msgstr ""
+msgstr "Προβλεπόμενο Απόθεμα που Εκκρεμεί"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__print_format
@@ -3381,26 +3410,26 @@ msgstr "Διαμόρφωση"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__free_qty
 msgid "Free Qty"
-msgstr ""
+msgstr "Ελεύθερη Ποσότητα"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Free Stock"
-msgstr ""
+msgstr "Ελεύεθρο Απόθεμα"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Free Stock in Transit"
-msgstr ""
+msgstr "Ελεύθερο Απόθεμα σε Μεταφορά"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
 msgid "Free To Use Quantity "
-msgstr ""
+msgstr "Ποσότητα Προς Χρήση"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -3423,12 +3452,12 @@ msgstr "Από"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__owner_id
 msgid "From Owner"
-msgstr ""
+msgstr "Από τον Ιδιοκτήτη"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__complete_name
 msgid "Full Location Name"
-msgstr ""
+msgstr "Πλήρες Όνομα Τοποθεσίας"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -3513,7 +3542,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__sequence
 msgid "Gives the sequence of this line when displaying the warehouses."
-msgstr ""
+msgstr "Καθορίζει τη σειρά αυτής της γραμμής κατά την προβολή των αποθηκών."
 
 #. module: stock
 #. odoo-python
@@ -3554,6 +3583,8 @@ msgstr ""
 #, python-format
 msgid "HTML reports cannot be auto-printed, skipping report: %s"
 msgstr ""
+"Οι αναφορές HTML δεν μπορούν να εκτυπωθούν αυτόματα, παράλειψη της αναφοράς:"
+" %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -3570,33 +3601,33 @@ msgstr "Έχει Μήνυμα"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_exist
 msgid "Has Pack Operations"
-msgstr ""
+msgstr "Έχει λειτουργίες συσκευασίας"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_packages
 msgid "Has Packages"
-msgstr ""
+msgstr "Έχει Πακέτα"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_scrap_move
 msgid "Has Scrap Moves"
-msgstr ""
+msgstr "Έχει κινήσεις απόρριψης"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_tracking
 msgid "Has Tracking"
-msgstr ""
+msgstr "Έχει ιχνηλασιμότητα"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_has_variants
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_has_variants
 msgid "Has variants"
-msgstr ""
+msgstr "Έχει Παραλλαγές"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Having Category"
-msgstr ""
+msgstr "Έχει Κατηγορία"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__height
@@ -3612,7 +3643,7 @@ msgstr "Ύψος (Ζ)"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_height
 msgid "Height must be positive"
-msgstr ""
+msgstr "Το ύψος πρέπει να είναι θετικό"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__snoozed_until
@@ -3627,7 +3658,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__hide_reservation_method
 msgid "Hide Reservation Method"
-msgstr ""
+msgstr "Απόκρυψη Μεθόδου Δέσμευσης"
 
 #. module: stock
 #. odoo-python
