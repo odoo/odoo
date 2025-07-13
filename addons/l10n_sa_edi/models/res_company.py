@@ -24,12 +24,6 @@ class ResCompany(models.Model):
     l10n_sa_additional_identification_number = fields.Char(
         related='partner_id.l10n_sa_additional_identification_number', readonly=False)
 
-    def _get_company_root_delegated_field_names(self):
-        return super()._get_company_root_delegated_field_names() + [
-            'l10n_sa_api_mode',
-            'l10n_sa_private_key_id',
-        ]
-
     def write(self, vals):
         for company in self:
             if 'l10n_sa_api_mode' in vals:
