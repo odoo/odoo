@@ -169,7 +169,7 @@ msgstr "Analyselinjer"
 #. module: analytic
 #: model:ir.model,name:analytic.model_analytic_mixin
 msgid "Analytic Mixin"
-msgstr ""
+msgstr "Omkostningsberegning-Mixin"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__analytic_plan_id
@@ -262,7 +262,7 @@ msgstr "Analytisk konto oversigt"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
 msgid "Children Plans Count"
-msgstr ""
+msgstr "Antal underplaner"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_ids
@@ -272,7 +272,7 @@ msgstr "Underordnede"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
 msgid "Click to add a new analytic account plan."
-msgstr ""
+msgstr "Klik for at oprette en ny omkostningsstedsplan."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__color
@@ -376,7 +376,7 @@ msgstr "Debet"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__default_applicability
 msgid "Default Applicability"
-msgstr ""
+msgstr "Standardanvendelse"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__name
@@ -641,7 +641,7 @@ msgstr "Kontakt"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_category_id
 msgid "Partner Category"
-msgstr ""
+msgstr "Partnerkategori"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__plan_id
@@ -684,7 +684,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__root_plan_id
 msgid "Root Plan"
-msgstr ""
+msgstr "Rodplan"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -712,6 +712,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"Vælg en virksomhed, der skal anvende det omkostningsfordeling (Når du f.eks."
+" opretter en kundefaktura eller salgsordre og vælger en virksomhed fra denne"
+" kategori, vil det pågældende omkostningssted automatisk blive anvendt)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -720,6 +723,10 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
+"Vælg en partnerkategori, der skal anvende det omkostningsfordeling (Når du "
+"f.eks. opretter en kundefaktura eller salgsordre og vælger denne partner fra"
+" denne kategori, vil det pågældende omkostningssted automatisk blive "
+"anvendt)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -728,6 +735,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"Vælg en partner, der skal anvende det omkostningsfordeling (Når du f.eks. "
+"opretter en kundefaktura eller salgsordre og vælger denne partner fra denne "
+"kategori, vil det pågældende omkostningssted automatisk blive anvendt)"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
@@ -737,7 +747,7 @@ msgstr ""
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "Subplans"
-msgstr ""
+msgstr "Underplaner"
 
 #. module: analytic
 #. odoo-python
@@ -798,6 +808,9 @@ msgid ""
 "You defined a distribution with analytic account(s) belonging to a specific "
 "company but a model shared between companies or with a different company"
 msgstr ""
+"Du har fastlagt en fordelingsmodel med omkostningssteder knyttet til én "
+"virksomhed, men fordelingsnøglen bruges til fordeling på tværs af "
+"virksomheder eller deles med en anden virksomhed."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
