@@ -125,6 +125,7 @@ class HrAttendance(models.Model):
             ('employee_id', 'in', self.employee_id.ids),
             ('date', '>=', date_min),
             ('date', '<=', date_max),
+            ('adjustment', '=', False),
         ])
 
         for ot in overtimes:
