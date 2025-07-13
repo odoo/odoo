@@ -503,8 +503,8 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
             },
             'cac:TaxTotal': self._get_prepayment_line_tax_total_node({**vals, 'aggregated_tax_details': aggregated_tax_details}),
             'cac:Item': {
-                'cbc:Description': {'_text': "Down payment"},
-                'cbc:Name': {'_text': "Down payment"},
+                'cbc:Description': {'_text': "Down Payment"},
+                'cbc:Name': {'_text': "Down Payment"},
                 'cac:ClassifiedTaxCategory': [
                     self._get_tax_category_node({**vals, 'grouping_key': grouping_key})
                     for grouping_key in aggregated_tax_details

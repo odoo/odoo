@@ -6,6 +6,7 @@ from odoo.tools import float_repr
 from datetime import datetime
 from base64 import b64decode, b64encode
 from lxml import etree
+from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
@@ -284,6 +285,11 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         return self.l10n_sa_edi_chain_head_id._get_records_action(name=_("Chain Head"))
+
+    def action_post(self):
+        if self.filtered(lambda move: move.country_code == "SA" and move.move_type in ('out_invoice', 'out_refund') and move.company_id != move.journal_id.company_id):
+            raise UserError(_("Please make sure that the invoice company matches the journal company on all invoices you wish to confirm"))
+        return super().action_post()
 
 
 class AccountMoveLine(models.Model):
