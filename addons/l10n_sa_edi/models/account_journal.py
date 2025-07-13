@@ -218,6 +218,7 @@ class AccountJournal(models.Model):
             'name': 'CCSID Certificate',
             'content': b64decode(CCSID_data['binarySecurityToken']),
             'private_key_id': self.company_id.sudo().l10n_sa_private_key_id.id,
+            'company_id': self.company_id.id,
         }).id
         self.sudo().write({
             'l10n_sa_compliance_csid_json': json.dumps(CCSID_data),
@@ -541,7 +542,7 @@ class AccountJournal(models.Model):
                                                 headers={
                                                     **self._l10n_sa_api_headers(),
                                                     **request_data.get('header')
-                                                }, timeout=(30, 30))
+                                                }, timeout=30)
             request_response.raise_for_status()
         except (ValueError, HTTPError) as ex:
             # The 400 case means that it is rejected by ZATCA, but we need to update the hash as done for accepted.
