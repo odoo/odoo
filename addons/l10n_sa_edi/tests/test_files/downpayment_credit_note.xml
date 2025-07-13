@@ -5,10 +5,10 @@
   <cbc:UUID>ea8e1ab4-6b4e-4cb2-8efc-f8e229622774</cbc:UUID>
   <cbc:IssueDate>2022-09-05</cbc:IssueDate>
   <cbc:IssueTime>08:20:02</cbc:IssueTime>
-  <cbc:InvoiceTypeCode name="0100100">381</cbc:InvoiceTypeCode>
+  <cbc:InvoiceTypeCode name="0100000">381</cbc:InvoiceTypeCode>
   <cbc:DocumentCurrencyCode>SAR</cbc:DocumentCurrencyCode>
   <cbc:TaxCurrencyCode>SAR</cbc:TaxCurrencyCode>
-  <cbc:BuyerReference>Azure Interior</cbc:BuyerReference>
+  <cbc:BuyerReference>Saudi Aramco</cbc:BuyerReference>
   <cac:BillingReference>
     <cac:InvoiceDocumentReference>
       <cbc:ID>INV/2022/00001</cbc:ID>
@@ -40,7 +40,7 @@
         <cbc:CityName>&#1575;&#1604;&#1605;&#1583;&#1610;&#1606;&#1577; &#1575;&#1604;&#1605;&#1606;&#1608;&#1585;&#1577;</cbc:CityName>
         <cbc:PostalZone>42317</cbc:PostalZone>
         <cbc:CountrySubentity>Riyadh</cbc:CountrySubentity>
-        <cbc:CountrySubentityCode>RYA</cbc:CountrySubentityCode>
+        <cbc:CountrySubentityCode>RUH</cbc:CountrySubentityCode>
         <cac:Country>
           <cbc:IdentificationCode>SA</cbc:IdentificationCode>
           <cbc:Name>Saudi Arabia</cbc:Name>
@@ -57,7 +57,7 @@
           <cbc:CityName>&#1575;&#1604;&#1605;&#1583;&#1610;&#1606;&#1577; &#1575;&#1604;&#1605;&#1606;&#1608;&#1585;&#1577;</cbc:CityName>
           <cbc:PostalZone>42317</cbc:PostalZone>
           <cbc:CountrySubentity>Riyadh</cbc:CountrySubentity>
-          <cbc:CountrySubentityCode>RYA</cbc:CountrySubentityCode>
+          <cbc:CountrySubentityCode>RUH</cbc:CountrySubentityCode>
           <cac:Country>
             <cbc:IdentificationCode>SA</cbc:IdentificationCode>
             <cbc:Name>Saudi Arabia</cbc:Name>
@@ -78,7 +78,7 @@
           <cbc:CityName>&#1575;&#1604;&#1605;&#1583;&#1610;&#1606;&#1577; &#1575;&#1604;&#1605;&#1606;&#1608;&#1585;&#1577;</cbc:CityName>
           <cbc:PostalZone>42317</cbc:PostalZone>
           <cbc:CountrySubentity>Riyadh</cbc:CountrySubentity>
-          <cbc:CountrySubentityCode>RYA</cbc:CountrySubentityCode>
+          <cbc:CountrySubentityCode>RUH</cbc:CountrySubentityCode>
           <cac:Country>
             <cbc:IdentificationCode>SA</cbc:IdentificationCode>
             <cbc:Name>Saudi Arabia</cbc:Name>
@@ -96,47 +96,69 @@
   <cac:AccountingCustomerParty>
     <cac:Party>
       <cac:PartyIdentification>
-        <cbc:ID schemeID="CRN">US12345677</cbc:ID>
+        <cbc:ID schemeID="CRN">353535353535353</cbc:ID>
       </cac:PartyIdentification>
       <cac:PartyName>
-        <cbc:Name>Chichi Lboukla</cbc:Name>
+        <cbc:Name>Saud Ahmed</cbc:Name>
       </cac:PartyName>
       <cac:PostalAddress>
-        <cbc:StreetName>4557 De Silva St</cbc:StreetName>
+        <cbc:StreetName>4557 King Salman St</cbc:StreetName>
         <cbc:BuildingNumber>12300</cbc:BuildingNumber>
         <cbc:PlotIdentification>2323</cbc:PlotIdentification>
         <cbc:CitySubdivisionName>Neighbor!</cbc:CitySubdivisionName>
-        <cbc:CityName>Fremont</cbc:CityName>
+        <cbc:CityName>Riyadh</cbc:CityName>
         <cbc:PostalZone>94538</cbc:PostalZone>
-        <cbc:CountrySubentity>California</cbc:CountrySubentity>
-        <cbc:CountrySubentityCode>CA</cbc:CountrySubentityCode>
+        <cbc:CountrySubentity>Riyadh</cbc:CountrySubentity>
+        <cbc:CountrySubentityCode>RUH</cbc:CountrySubentityCode>
         <cac:Country>
-          <cbc:IdentificationCode>US</cbc:IdentificationCode>
-          <cbc:Name>United States</cbc:Name>
+          <cbc:IdentificationCode>SA</cbc:IdentificationCode>
+          <cbc:Name>Saudi Arabia</cbc:Name>
         </cac:Country>
       </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+          <cbc:RegistrationName>Saud Ahmed</cbc:RegistrationName>
+          <cbc:CompanyID>311111111111113</cbc:CompanyID>
+          <cac:RegistrationAddress>
+              <cbc:StreetName>4557 King Salman St</cbc:StreetName>
+              <cbc:BuildingNumber>12300</cbc:BuildingNumber>
+              <cbc:PlotIdentification>2323</cbc:PlotIdentification>
+              <cbc:CitySubdivisionName>Neighbor!</cbc:CitySubdivisionName>
+              <cbc:CityName>Riyadh</cbc:CityName>
+              <cbc:PostalZone>94538</cbc:PostalZone>
+              <cbc:CountrySubentity>Riyadh</cbc:CountrySubentity>
+              <cbc:CountrySubentityCode>RUH</cbc:CountrySubentityCode>
+              <cac:Country>
+                  <cbc:IdentificationCode>SA</cbc:IdentificationCode>
+                  <cbc:Name>Saudi Arabia</cbc:Name>
+              </cac:Country>
+          </cac:RegistrationAddress>
+          <cac:TaxScheme>
+              <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+      </cac:PartyTaxScheme>
       <cac:PartyLegalEntity>
-        <cbc:RegistrationName>Chichi Lboukla</cbc:RegistrationName>
+        <cbc:RegistrationName>Saud Ahmed</cbc:RegistrationName>
+        <cbc:CompanyID>311111111111113</cbc:CompanyID>
         <cac:RegistrationAddress>
-          <cbc:StreetName>4557 De Silva St</cbc:StreetName>
+          <cbc:StreetName>4557 King Salman St</cbc:StreetName>
           <cbc:BuildingNumber>12300</cbc:BuildingNumber>
           <cbc:PlotIdentification>2323</cbc:PlotIdentification>
           <cbc:CitySubdivisionName>Neighbor!</cbc:CitySubdivisionName>
-          <cbc:CityName>Fremont</cbc:CityName>
+          <cbc:CityName>Riyadh</cbc:CityName>
           <cbc:PostalZone>94538</cbc:PostalZone>
-          <cbc:CountrySubentity>California</cbc:CountrySubentity>
-          <cbc:CountrySubentityCode>CA</cbc:CountrySubentityCode>
+          <cbc:CountrySubentity>Riyadh</cbc:CountrySubentity>
+          <cbc:CountrySubentityCode>RUH</cbc:CountrySubentityCode>
           <cac:Country>
-            <cbc:IdentificationCode>US</cbc:IdentificationCode>
-            <cbc:Name>United States</cbc:Name>
+            <cbc:IdentificationCode>SA</cbc:IdentificationCode>
+            <cbc:Name>Saudi Arabia</cbc:Name>
           </cac:Country>
         </cac:RegistrationAddress>
       </cac:PartyLegalEntity>
       <cac:Contact>
         <cbc:ID>350</cbc:ID>
-        <cbc:Name>Chichi Lboukla</cbc:Name>
-        <cbc:Telephone>+18709310505</cbc:Telephone>
-        <cbc:ElectronicMail>azure.Interior24@example.com</cbc:ElectronicMail>
+        <cbc:Name>Saud Ahmed</cbc:Name>
+        <cbc:Telephone>+966556666666</cbc:Telephone>
+        <cbc:ElectronicMail>saudi.aramco@example.com</cbc:ElectronicMail>
       </cac:Contact>
     </cac:Party>
   </cac:AccountingCustomerParty>
