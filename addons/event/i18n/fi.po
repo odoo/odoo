@@ -3,8 +3,8 @@
 # 	* event
 # 
 # Translators:
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Wil Odoo, 2025
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Jessica Jakara, 2025
 # 
 msgid ""
@@ -36,7 +36,7 @@ msgstr "# Lähetetty"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(event_name)s (%(count)s seats remaining)"
-msgstr "%(event_name)s (%(count)s paikkoja jäljellä)"
+msgstr "%(event_name)s (%(count)s paikkaa jäljellä)"
 
 #. module: event
 #. odoo-python
@@ -54,7 +54,7 @@ msgstr "%(event_name)s - Rekisteröinti #%(registration_id)s"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "%(event_name)s - Registration for %(attendee_name)s"
-msgstr "%(event_name)s - Rekisteröinti %(attendee_name)s"
+msgstr "%(event_name)s - Rekisteröinti: %(attendee_name)s"
 
 #. module: event
 #. odoo-python
@@ -195,8 +195,8 @@ msgid ""
 "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
 "new developers."
 msgstr ""
-"<b>Tekniset huoneet</b> – yksi edistyneille Odoo-kehittäjille ja yksi "
-"uusille kehittäjille."
+"<b>Tekniset huoneet</b> – yksi edistyneille Odoo-kehittäjille, yksi uusille "
+"kehittäjille."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -205,8 +205,8 @@ msgid ""
 "experts!</b><br> We propose 3 different training sessions, 2 days each."
 msgstr ""
 "<b>Design-messuja edeltää kahden päivän koulutusjakso "
-"asiantuntijoille!</b><br> Tarjoamme kolme erilaista koulutusta, kukin kaksi "
-"päivää."
+"asiantuntijoille!</b><br> Tarjoamme kolme erilaista koulutusta, joista "
+"molemmat kestävät kaksi päivää."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -228,11 +228,11 @@ msgid ""
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
 msgstr ""
-"<b>Koko tilaisuus on kaikille avoin!</b> <br>Pyydämme kolmen päivän kuluista"
-" (kahvitauot, tarjoilut, juomat sekä yllätyskonsertti ja bileet) "
-"osallistumismaksuaa 49,50€. <br> Niille, jotka eivät halua osallistua, on "
-"tarjolla maksuton lippu. Ilmaislipulla tarjoilu ja pääsy iltatapahtumiin "
-"eivät sisälly hintaan."
+"<b>Koko tilaisuus on kaikille avoin!</b> <br>Pyydämme osallistumismaksua "
+"49,50€, joka kattaa koko kolmen päivän kulut (kahvitauot, tarjoilut, juomat "
+"sekä yllätyskonsertti ja bileet). <br> Niille, jotka eivät halua osallistua "
+"rahallisesti, on tarjolla maksuton lippu. Ilmaislippu ei sisällä tarjoilua "
+"ja pääsyä iltatapahtumiin."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -246,7 +246,7 @@ msgid ""
 "                                            <span class=\"me-1\">from</span>"
 msgstr ""
 "<br/>\n"
-"                                            <span class=\"me-1\">osoitteesta</span>"
+"                                            <span class=\"me-1\">alkaen</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -255,7 +255,7 @@ msgid ""
 "                                            <span class=\"me-1\">to</span>"
 msgstr ""
 "<br/>\n"
-"                                            <span class=\"me-1\">osoitteeseen</span>"
+"                                            <span class=\"me-1\">päättyen</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -264,7 +264,7 @@ msgid ""
 "                                        <span class=\"text-muted\">Air your tracks online through a Youtube integration</span>"
 msgstr ""
 "<br/>\n"
-"                                        <span class=\"text-muted\">Näytä esityksiäsi suorana verkossa YouTube-integraation kautta</span>"
+"                                        <span class=\"text-muted\">Lähetä ohjelmanumerosi suorana verkoon YouTube-integraation avulla</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -273,7 +273,7 @@ msgid ""
 "                                        <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
 "<br/>\n"
-"                                        <span class=\"text-muted\">Jaa kysely osallistujille, kun esitys on päättynyt</span>"
+"                                        <span class=\"text-muted\">Jaa kysely osallistujille, kun ohjelmanumero on päättynyt</span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -286,8 +286,8 @@ msgid ""
 msgstr ""
 "<em>Jos haluat pitää esityksen, lähetä ehdotuksesi aiheesta mahdollisimman "
 "pian hyväksyttäväksi Famke Jenssensille osoitteeseen ngh@yourcompany.om. "
-"Esitysten tulee olla esimerkiksi yhteisön moduulin esitys, tapaustutkimus, "
-"metodologiapalaute, tekninen jne. Kaikkien esityksien tulee olla "
+"Esitysten tulee olla esimerkiksi esitelmä yhteisömoduulista, tapaustutkimus,"
+" metodologiapalaute, tekninen jne. Kaikkien esityksien tulee olla "
 "englanninkielisiä.</em>"
 
 #. module: event
@@ -1765,7 +1765,7 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_type_ticket__description
 msgid ""
 "A description of the ticket that you want to communicate to your customers."
-msgstr "Pääsylipun kuvaus, jonka haluat kommunikoida asiakkaillesi."
+msgstr "Kuvaus lipusta, jonka haluat välittää asiakkaillesi."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
@@ -1793,12 +1793,12 @@ msgstr "Aktiivinen"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_ids
 msgid "Activities"
-msgstr "Toimenpiteet"
+msgstr "Toiminnot"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_2
 msgid "Activity"
-msgstr "Toimenpide"
+msgstr "Toiminto"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_exception_decoration
@@ -1810,13 +1810,13 @@ msgstr "Poikkeustoimenpiteen tyyli"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_state
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_state
 msgid "Activity State"
-msgstr "Toimenpiteen tila"
+msgstr "Toiminnon tila"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_type_icon
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Toimenpiteen ikoni"
+msgstr "Toimintotyypin kuvake"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -1829,14 +1829,14 @@ msgid ""
 "Add a navigation menu to your event web pages with schedule, tracks, a track"
 " proposal form, etc."
 msgstr ""
-"Lisää navigointivalikko tapahtuman verkkosivuille aikataululla, esityksillä,"
-" esitysehdotuslomakkeella jne."
+"Lisää tapahtuman verkkosivulle aikataululla navigointivalikko, joka sisältää"
+" aikataulun, ohjelmanumerot, lomakkeen lähettää oma esitysehdotus jne."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Add some internal notes (to do lists, contact info, ...)"
-msgstr "Lisää sisäisiä huomautuksia (tehtävälista, yhteystiedot, jne.)"
+msgstr "Lisää sisäisiä muistiinpanoja (tehtävälista, yhteystiedot, jne.)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_search
@@ -1851,7 +1851,7 @@ msgstr "Ylläpitäjä"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_exhibitor
 msgid "Advanced Sponsors"
-msgstr "Anteliaat sponsorit"
+msgstr "Edistyneet sponsorit"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_sub
@@ -1882,8 +1882,7 @@ msgid ""
 "All the communication emails sent to attendees will be translated in this "
 "language."
 msgstr ""
-"Kaikki osallistujille lähetettävät viestintäsähköpostit käännetään tälle "
-"kielelle."
+"Kaikki osallistujille lähetettävät sähköpostit käännetään tälle kielelle."
 
 #. module: event
 #: model:event.event,name:event.event_6
@@ -1897,7 +1896,7 @@ msgid ""
 "        Special discount codes will be handed out during the various streams, make sure to be there on time."
 msgstr ""
 "Tällä kertaa siirrymme täysin VERKKOON! Tapaa meidät live-lähetyksissämme mukavasti kotonasi.<br>\n"
-"         Erikoisalennuskoodeja jaetaan eri streamien aikana, varmista, että olet paikalla ajoissa."
+"         Erikoisalennuskoodeja jaetaan eri suoratoisto-ohjelmien aikana, joten varmista, että olet paikalla ajoissa."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
@@ -1951,8 +1950,8 @@ msgid ""
 "Around one hundred ballons will simultaneously take flight and turn the sky "
 "into a beautiful canvas of colours."
 msgstr ""
-"Noin sata ilmapalloa nousee samanaikaisesti lentoon ja muuttaa taivaan "
-"kauniiksi värikangasmaisemiksi."
+"Noin sata ilmapalloa nousee samanaikaisesti ilmaan ja muuttaa taivaan "
+"kauniiksi värikangasmaisemaksi."
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -1974,11 +1973,11 @@ msgid ""
 "founded TinyERP. This was the first phase of OpenERP which would later "
 "became Odoo, the most installed open-source business software worldwide."
 msgstr ""
-"Vain 13-vuotias Mattti Meikäläinen alkoi jo kehittää ensimmäisiä "
+"Vain 13-vuotias Mattti Meikäläinen alkoi kehittää ensimmäisiä "
 "liiketoimintasovelluksiaan asiakkaille. Maa- ja vesirakentamisen maisterin "
-"tutkinnon jälkeen hän perusti TinyERP:n. Tämä oli OpenERP:n ensimmäinen "
-"vaihe, josta myöhemmin tuli Odoo, maailmanlaajuisesti asennetuin avoimen "
-"lähdekoodin yritysohjelmisto."
+"tutkinnon suorittamisen jälkeen hän perusti TinyERP:n. Tämä oli OpenERP:n "
+"ensimmäinen vaihe, josta myöhemmin tuli Odoo, maailmanlaajuisesti asennetuin"
+" avoimen lähdekoodin yritysohjelmisto."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
@@ -1996,7 +1995,7 @@ msgstr "Läsnäolo"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Attended"
-msgstr "Osallistuttu"
+msgstr "Osallistui"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_closed
@@ -2029,7 +2028,7 @@ msgstr "Osallistujan nimi"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_answer_choice_ids
 msgid "Attendee Selection Answers"
-msgstr "Osallistujien valinta vastaukset"
+msgstr "Osallistujien valitsemat vastaukset"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
@@ -2064,33 +2063,33 @@ msgstr "Saatavilla olevat paikat"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge
 msgid "Badge"
-msgstr "Nimilappu"
+msgstr "Kulkulupa"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x82
 msgid "Badge (96x82mm)"
-msgstr "Nimilappu (96x82mm)"
+msgstr "Kulkulupa (96x82mm)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
 msgid "Badge Background"
-msgstr "Nimilapun tausta"
+msgstr "Kulkuluvan tausta"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_format
 msgid "Badge Dimension"
-msgstr "Nimilapun ulottuvuus"
+msgstr "Kulkuluvan ulottuvuus"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_badge
 msgid "Badge Example"
-msgstr "Nimilapun esimerkki"
+msgstr "Kulkuluvan esimerkki"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/controllers/main.py:0
 msgid "Badges"
-msgstr "Ansiomerkit"
+msgstr "Kulkuluvat"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -2110,12 +2109,12 @@ msgstr "Viivakoodi"
 #. module: event
 #: model:ir.actions.client,name:event.event_barcode_action_main_view
 msgid "Barcode Interface"
-msgstr "Viivakoodi-liittymä"
+msgstr "Viivakoodien käyttöliittymä"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Barcode Nomenclature"
-msgstr "Viivakoodi nimistö"
+msgstr "Viivakoodien nimikkeistö"
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_barcode_event_uniq
@@ -2152,8 +2151,8 @@ msgid ""
 "Bloem brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
-"Bloem tuo rehellisyyttä ja vakavuutta puuteollisuuteen auttaessaan "
-"asiakkaita puiden, kukkien ja sienien käsittelyssä."
+"Bloem tuo rehellisyyttä ja asennetta puuteollisuuteen auttaen asiakkaita "
+"puiden, kukkien ja sienien käsittelyssä."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
@@ -2178,7 +2177,7 @@ msgid ""
 "Bring your outdoor field hockey season to the next level by taking the field"
 " at this 9th annual Field Hockey tournament."
 msgstr ""
-"Vie ulkoilmakiekkokautesi seuraavalle tasolle ottamalla osaa tähän 9. "
+"Vie ulkoilmakiekkokautesi seuraavalle tasolle osallistumalla tähän 9. "
 "vuotuiseen kenttäkiekkoturnaukseen."
 
 #. module: event
@@ -2212,7 +2211,7 @@ msgstr "Peruttu"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Cancelled registration"
-msgstr "Peruutettu rekisteröinti"
+msgstr "Peruuta ilmoittautuminen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__category_id
@@ -2239,8 +2238,8 @@ msgid ""
 "Choose a template to auto-fill tickets, communications, descriptions and "
 "other fields."
 msgstr ""
-"Valitse malli lippujen, viestien, kuvausten ja muiden kenttien automaattista"
-" täyttämistä varten."
+"Valitse mallipohja lippujen, viestien, kuvausten ja muiden kenttien "
+"automaattista täyttämistä varten."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
@@ -2256,7 +2255,7 @@ msgstr "Väri-indeksi"
 #: model_terms:ir.actions.act_window,help:event.action_event_registration_report
 msgid "Come back once you have registrations to overview answers."
 msgstr ""
-"Palaa takaisin, kun tapahtumaan on rekisteröintejä ja voit tarkastella "
+"Palaa takaisin, kun rekisteröintejä on vastaanotettu ja voit tarkastella "
 "vastauksia."
 
 #. module: event
@@ -2284,7 +2283,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
 msgid "Communication related to event registrations"
-msgstr "Tähän tapahtumailmoittautumiseen liittyvä viestintä"
+msgstr "Tämän tapahtuman ilmoittautumiseen liittyvä viestintä"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2340,18 +2339,18 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
 msgid "Config Settings"
-msgstr "Asetukset"
+msgstr "Kokoonpanoasetukset"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
 msgid "Configuration"
-msgstr "Asetukset"
+msgstr "Kokoonpano"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
-msgstr "Vahvistaa läsnäolo?"
+msgstr "Vahvista osallistuminen?"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -2382,7 +2381,7 @@ msgstr "Luo tapahtuma"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
 msgid "Create an Event Stage"
-msgstr "Luo tapahtuman tila"
+msgstr "Luo tapahtuman vaihe"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
@@ -2456,7 +2455,7 @@ msgstr "Päivämäärä"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_date_range
 msgid "Date Range"
-msgstr "Aikaväli"
+msgstr "Päivämääräväli"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__days
@@ -2473,8 +2472,8 @@ msgid ""
 "as unlimited."
 msgstr ""
 "Määritä saatavilla olevien lippujen määrä. Jos sinulla on liian monta "
-"ilmoittautumista, et voi enää myydä lippuja. Aseta 0 jättämään tämä sääntö "
-"rajoittamattomaksi."
+"ilmoittautumista, et voi enää myydä lippuja. Aseta 0, jos haluat ohittaa "
+"tämän rajoittamattoman säännön."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__description
@@ -2486,7 +2485,7 @@ msgstr "Kuvaus"
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Design Fair Los Angeles"
-msgstr "Los Angelesin design-messut"
+msgstr "Designmessut, Los Angeles"
 
 #. module: event
 #: model:event.event,subtitle:event.event_4
@@ -2564,8 +2563,8 @@ msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
 msgstr ""
-"Tämän konferenssin aikana, tiimimme antaa sinulle seikkaperäisen "
-"kokonaiskuvan yritysohjelmistoista. Tulet tietämään kaikki hyödyt sen "
+"Tämän konferenssin aikana tiimimme antaa sinulle yksityiskohtaisen "
+"kokonaiskuvan yritysohjelmistoista. Saat kaikki tiedot ja hyödyt sen "
 "käytössä."
 
 #. module: event
@@ -2595,7 +2594,7 @@ msgstr "Ota viivakoodin skannaus käyttöön"
 #. module: event
 #: model:ir.model.fields,help:event.field_res_config_settings__use_event_barcode
 msgid "Enable or Disable Event Barcode functionality."
-msgstr "Ota tapahtumaviivakooditoiminto käyttöön tai poista se käytöstä."
+msgstr "Ota tapahtuman viivakooditoiminto käyttöön tai poista se käytöstä."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end
@@ -2605,7 +2604,7 @@ msgstr "Päättymispäivä"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end_located
 msgid "End Date Located"
-msgstr "Päättymispäivä"
+msgstr "Päättymispäivän kohta"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__pipe_end
@@ -2620,7 +2619,7 @@ msgstr "Päättynyt"
 #. module: event
 #: model:event.event,subtitle:event.event_2
 msgid "Enhance your architectural business and improve professional skills."
-msgstr "Paranna arkkitehtitoimintaasi ja ammattitaitoa."
+msgstr "Paranna arkkitehtuurista yritystoimintaasi ja ammattitaitoa."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__error
@@ -2646,7 +2645,7 @@ msgstr "Tapahtuma"
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr "Tapahtuman automatisoitu postitus"
+msgstr "Tapahtuman automatisoitu viestintä"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__event_type_id
@@ -2655,7 +2654,7 @@ msgstr "Tapahtuman automatisoitu postitus"
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_tree
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Event Category"
-msgstr "Tapahtumaryhmä"
+msgstr "Tapahtumakategoria"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_form
@@ -2691,7 +2690,7 @@ msgstr "Tapahtuman sähköpostiajastukset"
 #. odoo-javascript
 #: code:addons/event/static/src/template_reference_field/field_event_mail_template_reference.js:0
 msgid "Event Mail Template Reference"
-msgstr "Tapahtuman sähköpostin mallin viite"
+msgstr "Tapahtuman sähköpostimallin viite"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_activity
@@ -2702,7 +2701,7 @@ msgstr "Tapahtuman nimi"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_calendar
 msgid "Event Organization"
-msgstr "Tapahtuman organisaatio"
+msgstr "Tapahtuman järjestäminen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_organizer_id
@@ -2717,7 +2716,7 @@ msgstr "Tapahtuman kysymys"
 #. module: event
 #: model:ir.model,name:event.model_event_question_answer
 msgid "Event Question Answer"
-msgstr "Tapahtuman kysymyksen vastaus"
+msgstr "Tapahtuman kysymys ja vastaus"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -2741,7 +2740,7 @@ msgstr "Tapahtuman ilmoittautumiset"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
 msgid "Event Responsible"
-msgstr "Tapahtuman vastuullinen"
+msgstr "Tapahtuman vastuuhenkilö"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -2775,7 +2774,7 @@ msgstr "Tapahtuman tunnisteen kategoria"
 #: model:ir.ui.menu,name:event.menu_event_category
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_tree
 msgid "Event Tags Categories"
-msgstr "Tapahtuman tunnisteiden kategoriat"
+msgstr "Tapahtuma, tunnisteet ja kategoriat"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -2789,12 +2788,12 @@ msgstr "Tapahtuman mallipohja"
 #: model:ir.model,name:event.model_event_type_ticket
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_form_from_type
 msgid "Event Template Ticket"
-msgstr "Tapahtuman pääsylipun mallipohja"
+msgstr "Tapahtuman lipujen mallipohja"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
 msgid "Event Template Tickets"
-msgstr "Tapahtuman pääsylippujen mallipohjat"
+msgstr "Tapahtuman lippujen mallipohja"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
@@ -2812,7 +2811,7 @@ msgid ""
 msgstr ""
 "Tapahtumamallit yhdistävät kokoonpanot, joita käytät usein ja perustuvat\n"
 "                 yleensä järjestämiesi tapahtumien tyyppiin (esim. \"työpaja\",\n"
-"                 \"Roadshow\", \"Online Webinar\" jne)."
+"                 \"Roadshow\", \"verkkowebinaari\" jne)."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -2848,12 +2847,12 @@ msgstr "Tapahtuman lippu"
 #. module: event
 #: model:ir.actions.server,name:event.event_mail_scheduler_ir_actions_server
 msgid "Event: Mail Scheduler"
-msgstr "Tapahtuma: sähköpostien ajastus"
+msgstr "Tapahtuma: Sähköpostien ajastus"
 
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
 msgid "Event: Registration Badge"
-msgstr "Tapahtuma: Ilmoittautumisen nimilappu"
+msgstr "Tapahtuma: Ilmoittautumislapuke"
 
 #. module: event
 #: model:mail.template,name:event.event_subscription
@@ -2905,8 +2904,8 @@ msgid ""
 "Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc...\n"
 "            This event is also an opportunity to showcase our partners' case studies, methodology or developments. Be there and see directly from the source the features of the new version!"
 msgstr ""
-"Joka vuosi kutsumme yhteisömme, yhteistyökumppanimme ja loppukäyttäjämme tapaamaan meitä! Tämä on ihanteellinen tapahtuma kokoontua ja esitellä uusia ominaisuuksia, tulevien versioiden tiekartta, ohjelmiston saavutuksia, työpajoja, koulutustilaisuuksia jne...\n"
-"             Tapahtuma on myös tilaisuus esitellä kumppaneidemme tapaustutkimuksia, metodologiaa tai kehitystä. Ole paikalla ja katso suoraan lähteestä uuden version ominaisuudet!"
+"Joka vuosi kutsumme yhteisömme, yhteistyökumppanimme ja loppukäyttäjämme tapaamaan meitä! Tämä on ihanteellinen tapahtuma kokoontua yhteen ja esitellä uusia ominaisuuksia, tulevien versioiden toteutussuunnitelmia, ohjelmiston saavutuksia, työpajoja, koulutustilaisuuksia jne...\n"
+"             Tapahtuma on myös tilaisuus esitellä kumppaneidemme tapaustutkimuksia, metodologiaa tai kehitystä. Ole paikalla ja kuule suoraan luojilta uuden version ominaisuudet!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2929,7 +2928,7 @@ msgstr "Näyttely"
 #. module: event
 #: model:event.event,subtitle:event.event_3
 msgid "Experience live music, local food and beverages."
-msgstr "Koe elävää musiikkia, paikallista ruokaa ja juomia."
+msgstr "Koe live-musiikki, paikallinen ruoka ja juoma."
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
@@ -2938,7 +2937,7 @@ msgid ""
 "end date has passed."
 msgstr ""
 "Päättyneet tapahtumat. Odoo siirtää ne automaattisesti tähän vaiheeseen, kun"
-" niiden päättymispäivä on kulunut."
+" niiden päättymispäivä on menneisyydessä."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
@@ -2961,7 +2960,7 @@ msgstr "Seuraajat (kumppanit)"
 #: model:ir.model.fields,help:event.field_event_event__activity_type_icon
 #: model:ir.model.fields,help:event.field_event_registration__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome -ikoni esim.. fa-tasks"
+msgstr "Font awesome -kuvake, esim. fa-tasks"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2985,7 +2984,7 @@ msgstr ""
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
 msgid "For only 10, you gain access to catering. Yum yum."
-msgstr "Vain 10:llä saat pääsyn ateriapalveluihin. Nami-nami."
+msgstr "Vain 10:llä saat pääsyn ateriapalveluihin. Nami nami."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3017,8 +3016,8 @@ msgid ""
 "From this dashboard you can report, analyze and detect trends regarding your"
 " event registrations."
 msgstr ""
-"Tästä kojelaudasta voit raportoida, analysoida ja havaita tapahtumien "
-"rekisteröintejä koskevia suuntauksia."
+"Tältä koontinäytöltä voit raportoida, analysoida ja havaita tapahtumien "
+"rekisteröinteihin liittyviä trendejä."
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_full_page_ticket
@@ -3033,7 +3032,7 @@ msgstr "Esimerkki koko sivun lipusta"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Functional flow of the main applications;"
-msgstr "Oleellisimpien ohjelmistojen toimintalogiikan;"
+msgstr "Keskeisimpien sovellusten toimintalogiikka;"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -3054,7 +3053,7 @@ msgstr "Yleiset kysymykset"
 #. module: event
 #: model:event.event,subtitle:event.event_0
 msgid "Get Inspired • Stay Connected • Have Fun"
-msgstr "Inspiroidu - Pysy yhteydessä - Pidä hauskaa"
+msgstr "Inspiroidu • Lähesty uusia tuttavuuksia • Pidä hauskaa"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_state
@@ -3089,7 +3088,7 @@ msgstr "Suuri kuumailmapallokisa Renon kaupungissa"
 #. module: event
 #: model_terms:web_tour.tour,rainbow_man_message:event.event_tour
 msgid "Great! Now all you have to do is wait for your attendees to show up!"
-msgstr "Loistavaa! Nyt tarvitsee enää odottaa osallistujia!"
+msgstr "Loistavaa! Nyt vain enää odotetaan osallistujia!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_done
@@ -3134,7 +3133,7 @@ msgstr "Käytyään kurssin, osallistujat kykenevät:"
 #. module: event
 #: model_terms:event.event,description:event.event_3
 msgid "Here it is, the 12th edition of our Live Musical Festival!"
-msgstr "Tässä se on, 12. painos meidän Live Musical Festivalistamme!"
+msgstr "Tässä se on: 12. painos meidän Live Musical Festivaalistamme!"
 
 #. module: event
 #: model:event.event,name:event.event_5
@@ -3192,7 +3191,7 @@ msgstr "Miten taitat (4)"
 #: model:ir.model.fields,field_description:event.field_res_config_settings__id
 #: model:ir.model.fields,field_description:event.field_res_partner__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_exception_icon
@@ -3219,8 +3218,9 @@ msgid ""
 "propagated to every attendees.If not it will be asked for every attendee of "
 "a reservation."
 msgstr ""
-"Jos arvo on tosi, tämä kysymys kysytään vain kerran ja sen arvo annetaan "
-"kaikille osallistujille, jos ei, sitä kysytään jokaiselta osallistujalta."
+"Jos arvo on tosi, tämä kysymys kysytään vain kerran ja sen arvoa sovelletaan"
+" kaikille osallistujille, jos ei, sitä kysytään jokaiselta osallistujalta "
+"varauksen yhteydessä."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction
@@ -3253,7 +3253,7 @@ msgid ""
 "If you don't know anything about Hockey, this is a great introduction to this wonderful sport as you will will be able to see some training process and also have some time\n"
 "                to chat with experienced players and trainers once the tournament is over!"
 msgstr ""
-"Jos et tiedä mitään jääkiekosta, tämä on loistava johdatus tähän ihanaan urheiluun. Voit nähdä harjoitusprosessin ja sinulla on myös jonkin verran aikaa\n"
+"Jos et tiedä mitään jääkiekosta, tämä on loistava johdatus tähän ihanaan urheilulajiin. Voit nähdä treenien prosessin ja sinulla on myös jonkin verran aikaa\n"
 "                keskustella kokeneiden pelaajien ja valmentajien kanssa turnauksen päätyttyä!"
 
 #. module: event
@@ -3277,7 +3277,7 @@ msgstr "Tärkeää tietoa lipuista"
 #: model:event.stage,legend_normal:event.event_stage_new
 #: model:ir.model.fields.selection,name:event.selection__event_event__kanban_state__normal
 msgid "In Progress"
-msgstr "Käynnissä"
+msgstr "Kesken"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
@@ -3308,7 +3308,7 @@ msgstr "Aikaväli"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Introduction, CRM, Sales Management"
-msgstr "Tutustuminen, CRM, myynninhallinta"
+msgstr "Tutustuminen, CRM, Myynninhallinta"
 
 #. module: event
 #. odoo-python
@@ -3330,7 +3330,7 @@ msgstr "On saatavilla"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
 msgid "Is Expired"
-msgstr "Vanhentunut"
+msgstr "On vanhentunut"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_finished
@@ -3363,12 +3363,12 @@ msgstr "Se epäonnistio virheestä: %(error)s."
 #: model:ir.model.fields,help:event.field_event_type__seats_max
 msgid "It will select this default maximum value when you choose this event"
 msgstr ""
-"Valitsee oletuksena käytettävän maksimimäärän kun tämä tapahtuma valitaan"
+"Valitsee oletuksena käytettävän maksimimäärän, kun tämä tapahtuma valitaan"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John DOE"
-msgstr "Matti Meikäläinen"
+msgstr "Matti MEIKÄLÄINEN"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
@@ -3395,27 +3395,27 @@ msgstr "Liity tähän 3 päivän tapahtumaan"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr "Kanbanin Estetty-tilan selitysteksti"
+msgstr "Kanban, Estetty-tilan selitysteksti"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr "Kanbanin Käynnissä-tilan selitysteksti"
+msgstr "Kanban, Käynnissä-tilan selitysteksti"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__kanban_state
 msgid "Kanban State"
-msgstr "Kanban-tila"
+msgstr "Tila Kanbanissa"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__kanban_state_label
 msgid "Kanban State Label"
-msgstr "Kanban-tilan otsikko"
+msgstr "Tilan otsikko Kanbanissa"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_done
 msgid "Kanban Valid Explanation"
-msgstr "Kanbanin Valmis-tilan selitysteksti"
+msgstr "Voimassa-tilan selitysteksti Kanbanissa"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3521,7 +3521,7 @@ msgstr "Live-tila"
 #. module: event
 #: model:event.event,name:event.event_3
 msgid "Live Music Festival"
-msgstr "Elävän musiikin festivaali"
+msgstr "Live-musiikin festivaali"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__notification_type__mail
@@ -3555,7 +3555,7 @@ msgstr "Sähköpostin ajastimet"
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr "Postin ajoitus tapahtuman kategorialle"
+msgstr "Sähköpostin ajastus tapahtumakategoriassa"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
@@ -3565,7 +3565,7 @@ msgstr "Sähköposti lähetetty"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage & publish a schedule with tracks"
-msgstr "Hallitse ja julkaise aikataulua esitysten kanssa"
+msgstr "Hallitse ja julkaise ohjelmisto ja ohjelmanumerot"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -3586,7 +3586,7 @@ msgstr "Marc Demo"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Mark as Attending"
-msgstr "Merkkaa osallistuvaksi"
+msgstr "Merkitse osallistuvaksi"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -3603,12 +3603,12 @@ msgstr "Enimmäismäärä"
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_max
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_max
 msgid "Maximum Attendees"
-msgstr "Osallistujia max"
+msgstr "Osallistujien enimmäismäärä"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__seats_max
 msgid "Maximum Registrations"
-msgstr "Ilmoittautumisia enintään"
+msgstr "Ilmoittautumisten enimmäismäärä"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
@@ -3704,7 +3704,7 @@ msgstr "Ei vastauksia vielä!"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
 msgid "No Attendees expected yet!"
-msgstr "Ei vielä odotettavia osallistujia!"
+msgstr "Osallistujia ei odoteta vielä!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
@@ -3712,7 +3712,7 @@ msgstr "Ei vielä odotettavia osallistujia!"
 #: model_terms:ir.actions.act_window,help:event.event_registration_action_kanban
 #: model_terms:ir.actions.act_window,help:event.event_registration_action_stats_from_event
 msgid "No Attendees yet!"
-msgstr "Ei vielä osanottajia!"
+msgstr "Ei vielä osallistujia!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
@@ -3736,7 +3736,7 @@ msgstr "Muistiinpanot"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
 msgid "Nothing Scheduled yet!"
-msgstr "Mitään ei ole vielä aikataulutettu!"
+msgstr "Mitään ei ole vielä suunniteltu!"
 
 #. module: event
 #. odoo-javascript
@@ -3843,7 +3843,8 @@ msgstr "Online, jos ei ole asetettu"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr ""
-"Avaa päivämäärän valitsin.<br/>Valitse tapahtumalle alku- ja loppupäivä."
+"Avaa päivämäärän valitsin.<br/>Valitse tapahtumalle alkamis- ja "
+"päättymispäivä."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3877,8 +3878,8 @@ msgid ""
 "Our newest collection will be revealed online! Interact with us on our live "
 "streams!"
 msgstr ""
-"Uusin mallistomme paljastetaan verkossa! Ole kanssamme vuorovaikutuksessa "
-"suorissa lähetyksissämme!"
+"Uusin mallistomme julkistetaan verkossa! Ole yhteydessä kanssamme suorissa "
+"lähetyksissämme!"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_blocked
@@ -3886,7 +3887,7 @@ msgstr ""
 msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection."
-msgstr "Yliaja näytetty oletusarvo estetyllä tilalla kanban-valinnassa."
+msgstr "Ohita näytetty estetty-tilan oletusarvo kanban-valinnassa."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_done
@@ -3894,7 +3895,7 @@ msgstr "Yliaja näytetty oletusarvo estetyllä tilalla kanban-valinnassa."
 msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection."
-msgstr "Yliaja näytetty oletusarvo valmiilla tilalla kanban-valinnassa."
+msgstr "Ohita näytetty valmis-tilan oletusarvo kanban-valinnassa."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_normal
@@ -3902,7 +3903,7 @@ msgstr "Yliaja näytetty oletusarvo valmiilla tilalla kanban-valinnassa."
 msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection."
-msgstr "Yliaja näytetty oletusarvo tavallisella tilalla kanban-valinnassa."
+msgstr "Ohita näytetty tavallinen-tilan oletusarvo kanban-valinnassa."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -3931,13 +3932,14 @@ msgstr "Puhelinnumero"
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid ""
 "Please come <b>at least</b> 30 minutes before the beginning of the event."
-msgstr "Tule paikalle <b>vähintään</b> 30 minuuttia ennen tapahtuman alkua."
+msgstr ""
+"Saavuthan paikalle <b>vähintään</b> 30 minuuttia ennen tapahtuman alkua."
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/res_config_settings.py:0
 msgid "Please enter a valid base64 secret"
-msgstr "Kirjoita kelvollinen base64-salaisuus"
+msgstr "Kirjoita kelvollinen base64-salaus"
 
 #. module: event
 #. odoo-javascript
@@ -3948,7 +3950,7 @@ msgstr "Skannaa uudelleen!"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
-msgstr "Kassapääte (POS), raporttien kustomintiin tutustuminen."
+msgstr "Kassapääte (POS), Johdanto raportin räätälöintiin."
 
 #. module: event
 #. odoo-javascript
@@ -3965,7 +3967,7 @@ msgstr "Ohjelma"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Project management, Human resources, Contract management."
-msgstr "Projektien hallinta, henkilöstöhallinto, sopimusten hallinta"
+msgstr "Projektien hallinta, Henkilöstöhallinto, Sopimusten hallinta"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_properties
@@ -3975,7 +3977,7 @@ msgstr "Ominaisuudet"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
-msgstr "Ostot, myyntien ja ostojen hallinta, kirjanpito."
+msgstr "Ostot, Myyntien ja ostojen hallinta, Kirjanpito."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
@@ -3997,7 +3999,7 @@ msgstr "Kysymys"
 #: model:ir.model.fields,field_description:event.field_event_question__question_type
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__question_type
 msgid "Question Type"
-msgstr "Kysymyksen tyyppi"
+msgstr "Kysymystyyppi"
 
 #. module: event
 #. odoo-python
@@ -4017,13 +4019,13 @@ msgstr "Kysymykset"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
 msgid "Quiz on Tracks"
-msgstr "Tentti esitykselle"
+msgstr "Tietovisa ohjelmanumeroista"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__rating_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__rating_ids
 msgid "Ratings"
-msgstr "Arviointi"
+msgstr "Arvioinnit"
 
 #. module: event
 #. odoo-python
@@ -4040,13 +4042,12 @@ msgstr "Valmis seuraavaan vaiheeseen"
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Ready to <b>organize events</b> in a few minutes? Let's get started!"
-msgstr ""
-"Oletko valmis <b>järjestämään tapahtumia</b> vain hetkessä? Aloitetaan!"
+msgstr "Oletko valmis <b>järjestämään tapahtumia</b> minuuteissa? Aloitetaan!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
 msgid "Red Kanban Label"
-msgstr "Punainen kanban otsikko"
+msgstr "Punainen Kanban-otsikko"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__open
@@ -4054,7 +4055,7 @@ msgstr "Punainen kanban otsikko"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registered"
-msgstr "Rekisteröitynyt"
+msgstr "Ilmoittautunut"
 
 #. module: event
 #. odoo-python
@@ -4092,12 +4093,12 @@ msgstr "Ilmoittautuminen päättyy"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration ID"
-msgstr "Ilmoittautumisen ID"
+msgstr "Ilmoittautumistunnus"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr "Ilmoittautumisen sähköpostiajastus"
+msgstr "Ilmoittautumissähköpostien ajastus"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
@@ -4107,7 +4108,7 @@ msgstr "Ilmoittautumissähköpostit"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__registration_properties_definition
 msgid "Registration Properties"
-msgstr "Rekisteröinnin ominaisuudet"
+msgstr "Ilmoittautumisen ominaisuudet"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
@@ -4156,7 +4157,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
 msgid "Registrations started"
-msgstr "Ilmoittautumiset alkaneet"
+msgstr "Ilmoittautuminen alkoi"
 
 #. module: event
 #. odoo-python
@@ -4200,7 +4201,7 @@ msgstr "Rue de la Paix 123"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__running
 msgid "Running"
-msgstr "Käynnissä olevat"
+msgstr "Käynnissä"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_sms_error
@@ -4212,17 +4213,17 @@ msgstr "Tekstiviestin toimitusvirhe"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
-msgstr "Skannaa tai napauta"
+msgstr "Skannaa tai napsauta"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
-msgstr "Aikataulu ja esitykset"
+msgstr "Aikataulu & Ohjelmisto"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
 msgid "Schedule Date"
-msgstr "Ajoituksen päiväys"
+msgstr "Suunniteltu päivämäärä"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -4257,7 +4258,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Secret"
-msgstr "Salausavain"
+msgstr "Salainen avain"
 
 #. module: event
 #. odoo-javascript
@@ -4955,7 +4956,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
-msgstr "Käytä <b>murupolkua</b> mennäksesi takaisin kanban-yleisnäkymään."
+msgstr "Käytä <b>linkkipolkua</b> palataksesi kanbanin yleisnäkymään."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
@@ -4979,7 +4980,7 @@ msgstr "VIP"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Value should be True or False (not %s)"
-msgstr "Arvon on oltava True tai False (ei %s)"
+msgstr "Arvon on oltava Tosi tai Epätosi (ei %s)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
@@ -5030,7 +5031,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__website_message_ids
 msgid "Website Messages"
-msgstr "Verkkosivun ilmoitukset"
+msgstr "Verkkosivun viestit"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__website_message_ids
@@ -5078,7 +5079,7 @@ msgstr "Onko näitä lippuja mahdollista myydä"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__is_sold_out
 msgid "Whether seats are not available for this ticket."
-msgstr "Onko paikkoja ei ole saatavilla tähän lippuun."
+msgstr "Sisältyvätkö paikat tähän lippuun vai eivät."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
@@ -5153,24 +5154,24 @@ msgstr "esim. \"Azure Interior\""
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. \"Do you have any diet restrictions?\""
-msgstr "esimerkiksi: \"Onko sinulla ruokavalion rajoituksia?\""
+msgstr "esimerkiksi: \"Onko sinulla ruokavalioon liittyviä rajoituksia?\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "e.g. \"Promoting\""
-msgstr "esim. \"Promoting\""
+msgstr "esim. \"Mainonta\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. Conference for Architects"
-msgstr "esim. Arkkitehtikonferenssi"
+msgstr "esim. Konferenssi arkkitehdeille"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. How to get to your event, door closing time, ..."
-msgstr "esim. miten tapahtumaan pääsee, ovien sulkemisaika, ...."
+msgstr "esim. Miten saapumisohjeet, milloin ovet suljetaan, ...."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -5246,8 +5247,8 @@ msgid ""
 "registrations have started if the current datetime is after the earliest "
 "starting date of tickets."
 msgstr ""
-"rekisteröinnit ovat alkaneet, jos nykyinen päivämäärä on aikaisimman "
-"lippujen alkamispäivän jälkeen."
+"Ilmoittautuminen on alkanut, jos nykyinen päivämäärä on aikaisimman lippujen"
+" alkamispäivän jälkeen."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event

@@ -785,12 +785,12 @@ msgstr "Määrä"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid "Return Label Accessible from Customer Portal"
-msgstr "Palautusetiketti saatavilla asiakasportaalista"
+msgstr "Palautustarra on saatavilla asiakasportaalista"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
 msgid "Sale Base Price"
-msgstr "Myyntipohjan hinta"
+msgstr "Myynnin perushinta"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_price
@@ -827,7 +827,7 @@ msgstr "Palvelutuote"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
-msgstr "Aseta True, jos valtakirjasi on sertifioitu tuotantoon."
+msgstr "Aseta tosi, jos sinulla on valtuutukset tuotantoon."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
@@ -851,8 +851,9 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
-"Lähetysvakuutus on palvelu, joka voi korvata lähettäjille, joiden paketti on"
-" kadonnut, varastettu ja/tai vahingoittunut kuljetuksen aikana."
+"Tavarankuljetusvakuutus on palvelu, jonka avulla lähettäjät voivat saada "
+"rahansa takaisin, jos paketti katoaa, varastetaan ja/tai vahingoittuu "
+"kuljetuksen aikana."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -861,7 +862,7 @@ msgid ""
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
 "Toimitustavan tiedot on sisällytettävä myyntitilausten ja niiden "
-"vahvistussähköpostien alaosaan. Esim. ohjeet asiakkaille noudatettavaksi."
+"vahvistussähköpostien alaosaan. Esim. ohjeet asiakkaille."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -877,7 +878,7 @@ msgstr "Osavaltiot/Maakunnat"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
 msgid "Supports Shipping Insurance"
-msgstr "Tukee toimitusvakuutusta"
+msgstr "Tukee tavarankuljetusvakuutusta"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
@@ -891,8 +892,8 @@ msgid ""
 "The method is NOT available if at least one product of the order has one of "
 "these tags."
 msgstr ""
-"Menetelmä EI ole käytettävissä, jos vähintään yhdellä tilauksen tuotteella "
-"on jokin näistä tunnisteista."
+"Tapa EI ole käytettävissä, jos vähintään yhdellä tilauksen tuotteella on "
+"jokin näistä tunnisteista."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
@@ -900,24 +901,24 @@ msgid ""
 "The method is available only if at least one product of the order has one of"
 " these tags."
 msgstr ""
-"Menetelmä on käytettävissä vain, jos vähintään yhdellä tilauksen tuotteella "
-"on jokin näistä tunnisteista."
+"Tapa on käytettävissä vain, jos vähintään yhdellä tilauksen tuotteella on "
+"jokin näistä tunnisteista."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
-msgstr "Asiakas voi ladata palautusetiketin asiakasportaalista."
+msgstr "Asiakas voi ladata palautustarran asiakasportaalista."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "The return label is automatically generated at the delivery."
-msgstr "Palautusetiketti luodaan automaattisesti toimituksen yhteydessä."
+msgstr "Palautustarra luodaan automaattisesti toimituksen yhteydessä."
 
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
 msgid "The shipping insurance must be a percentage between 0 and 100."
-msgstr "Toimitusvakuutuksen on oltava prosenttiluku 0 ja 100 välillä."
+msgstr "Tavarankuljetusvakuutuksen on oltava prosenttiluku 0 ja 100 välillä."
 
 #. module: delivery
 #. odoo-python
@@ -938,9 +939,9 @@ msgid ""
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
-"Näiden menetelmien avulla toimitushinta voidaan laskea automaattisesti\n"
-"            asetustenne mukaisesti; myyntitilauksessa (perustuen myyntitilauksen\n"
-"            tarjouksen perusteella) tai laskun perusteella (toimitustilausten perusteella)."
+"Nämä toimitustavat sallivat toimituksen hinnan laskemisen automaattisesti\n"
+"            asetusten mukaisesti; myyntitilauksessa (tarjouksen \n"
+"            perusteella) tai laskulla (toimitustilausten perusteella)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
@@ -954,7 +955,7 @@ msgid ""
 "package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
 msgstr ""
 "Tämä vaihtoehto lisää portaaliin linkin, jonka avulla asiakas voi seurata "
-"pakettiaan helposti. Käytä URL-osoitteessasi paikanhaltijana "
+"pakettiaan helposti. Käytä URL-osoitteessasi paikanvaraajana "
 "<shipmenttrackingnumber>."
 
 #. module: delivery
@@ -993,7 +994,7 @@ msgstr "Käytetään myyntitilauksissa."
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable
 msgid "Variable"
-msgstr "Vaihteleva"
+msgstr "Muuttuja"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable_factor
@@ -1031,7 +1032,7 @@ msgstr "Painon mittayksikön nimi"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "Mittayksikön paino"
+msgstr "Painon mittayksikön merkintä"
 
 #. module: delivery
 #. odoo-python
@@ -1076,7 +1077,7 @@ msgstr "Postinumeron etuliitteet"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
-msgstr "esim. Posti"
+msgstr "esim. UPS Express"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
