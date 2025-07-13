@@ -530,7 +530,7 @@ class AccountJournal(models.Model):
                                                 headers={
                                                     **self._l10n_sa_api_headers(),
                                                     **request_data.get('header')
-                                                }, timeout=(30, 30))
+                                                }, timeout=30)
             request_response.raise_for_status()
         except (ValueError, HTTPError) as ex:
             # The 400 case means that it is rejected by ZATCA, but we need to update the hash as done for accepted.
