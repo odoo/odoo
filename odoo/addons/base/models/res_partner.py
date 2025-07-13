@@ -374,43 +374,7 @@ class Partner(models.Model):
             if not self.is_company:
                 name = f"{self.commercial_company_name or self.sudo().parent_id.name}, {name}"
         return name.strip()
-
-
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
-
-    @api.constrains('phone', 'mobile', 'email', 'website')
-    def _validate_contact_fields(self):
-        for partner in self:
-            if partner.phone and not re.match(r'^[+\d][\d\s().-]{5,}$', partner.phone.strip()):
-                raise ValidationError(_(
-                    "Invalid phone format. Use numbers and + - () . only. "
-                    "Minimum 6 characters. Example: +1 (555) 123-4567"
-                ))
-
-            if partner.mobile and not re.match(r'^[+\d][\d\s().-]{5,}$', partner.mobile.strip()):
-                raise ValidationError(_(
-                    "Invalid mobile format. Use numbers and + - () . only. "
-                    "Minimum 6 characters. Example: +1 (555) 123-4567"
-                ))
-
-            if partner.email and not re.match(r'^[^@\s]+@[^@\s]+\.[^@\s]+$', partner.email.strip()):
-                raise ValidationError(_(
-                    "Invalid email format. Must contain '@' and a domain. "
-                    "Example: valid@example.com"
-                ))
-            
-            if partner.website:
-                ws = partner.website.strip()
-                pattern = r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$'
-                if not re.match(pattern, ws):
-                    raise ValidationError(_(
-                        "Invalid website format.\n"
-                        "Must start with http:// or https:// and contain a valid domain.\n"
-                        "Example: https://www.example.com"
-                    ))
-            
-
+                
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name', 'commercial_company_name')
     def _compute_complete_name(self):
         for partner in self:
@@ -1156,3 +1120,64 @@ class ResPartnerIndustry(models.Model):
     name = fields.Char('Name', translate=True)
     full_name = fields.Char('Full Name', translate=True)
     active = fields.Boolean('Active', default=True)
+
+
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+
+    @api.constrains('phone', 'mobile', 'email', 'website')
+    def _validate_contact_fields(self):
+        for partner in self:
+            if partner.phone:
+                phone = partner.phone.strip()
+                if not re.match(r'^\+?[\d\s().-]*\d$', phone):
+                    raise ValidationError(_(
+                        "Invalid phone number format.\n"
+                        "Use numbers, spaces, parentheses, or '+' prefix.\n"
+                        "Example: +1 (555) 1234567 or 5551234567"
+                    ))
+                if len(re.sub(r'[^\d]', '', phone)) < 6:
+                    raise ValidationError(_(
+                        "Phone number too short.\n"
+                        "Must contain at least 6 digits.\n"
+                        "Example: 5551234567"
+                    ))
+
+            if partner.mobile:
+                mobile = partner.mobile.strip()
+                if not re.match(r'^\+?[\d\s().-]*\d$', mobile):
+                    raise ValidationError(_(
+                        "Invalid mobile number format.\n"
+                        "Use numbers, spaces, parentheses, or '+' prefix.\n"
+                        "Example: +44 7911 123456"
+                    ))
+                if len(re.sub(r'[^\d]', '', mobile)) < 6:
+                    raise ValidationError(_(
+                        "Mobile number too short.\n"
+                        "Must contain at least 6 digits.\n"
+                        "Example: 7911123456"
+                    ))
+
+            if partner.email:
+                email = partner.email.strip()
+                if not re.match(r'^[^@\s]+@[^@\s]+\.[^@\s]+$', email):
+                    raise ValidationError(_(
+                        "Invalid email address format.\n"
+                        "Must contain '@' and a domain name.\n"
+                        "Example: name@example.com"
+                    ))
+
+            if partner.website:
+                ws = partner.website.strip()
+                if not re.match(
+                    r'^(https?:\/\/)?'     
+                    r'(www\.)?'             
+                    r'([a-zA-Z0-9-]+\.)+'   
+                    r'[a-zA-Z]{2,}'         
+                    r'(\/[^\s]*)?$', 
+                    ws
+                ):
+                    raise ValidationError(_(
+                        "Invalid website format. Please use a valid URL like: "
+                        "example.com or https://www.example.com"
+                    ))
