@@ -3,9 +3,9 @@
 # 	* project
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # Manon Rondou, 2025
 # Wil Odoo, 2025
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,6 +100,8 @@ msgid ""
 "%(warning_messages)s\n"
 "Are you sure you want to continue?"
 msgstr ""
+"%(warning_messages)s\n"
+"Weet je zeker dat je wilt doorgaan?"
 
 #. module: project
 #. odoo-python
@@ -511,7 +513,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 msgid "<span>Progress</span>"
-msgstr ""
+msgstr "<span>Vooruitgang</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -521,7 +523,7 @@ msgstr "<span>Rapportages</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 msgid "<span>Status</span>"
-msgstr ""
+msgstr "<span>Status</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -973,7 +975,7 @@ msgstr "Wijs een verantwoordelijke toe aan je taak"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign at project creation"
-msgstr ""
+msgstr "Toewijzen bij het maken van een project"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -1131,6 +1133,8 @@ msgid ""
 "Before we can bid farewell to these accounts, you need to tidy up the "
 "projects linked to them by removing their existing tasks!"
 msgstr ""
+"Voordat we afscheid kunnen nemen van deze accounts, moet je de projecten die"
+" eraan gekoppeld zijn opruimen door hun bestaande taken te verwijderen!"
 
 #. module: project
 #. odoo-javascript
@@ -1474,7 +1478,7 @@ msgstr "Maak een project aan"
 #. odoo-python
 #: code:addons/project/wizard/project_template_create_wizard.py:0
 msgid "Create a Project from Template %s"
-msgstr ""
+msgstr "Maak een project van een sjabloon %s"
 
 #. module: project
 #: model:ir.model,website_form_label:project.model_project_task
@@ -1948,7 +1952,7 @@ msgstr "Concept"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_list_to_plan/project_task_calendar_list_to_plan.xml:0
 msgid "Drag Tasks to Schedule"
-msgstr ""
+msgstr "Taken naar planning slepen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -3102,12 +3106,12 @@ msgstr "Geen mijlpalen gevonden. Maak er één aan!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_roles_action
 msgid "No project role found. Let's create one!"
-msgstr ""
+msgstr "Geen projectrol gevonden. Laten we er een maken!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_templates_action
 msgid "No project templates found. Let's create one!"
-msgstr ""
+msgstr "Geen projectsjablonen gevonden. Laten we er een maken!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3591,14 +3595,14 @@ msgstr "Projectbeoordelingsstatus"
 #: model:ir.model,name:project.model_project_role
 #: model:ir.model.fields,field_description:project.field_project_template_role_to_users_map__role_id
 msgid "Project Role"
-msgstr ""
+msgstr "Projectrol"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_roles_action
 #: model:ir.model.fields,field_description:project.field_project_task__role_ids
 #: model:ir.ui.menu,name:project.project_menu_config_project_roles
 msgid "Project Roles"
-msgstr ""
+msgstr "Projectrollen"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action
@@ -3661,7 +3665,7 @@ msgstr "Projecttaken"
 #. module: project
 #: model:ir.model,name:project.model_project_template_create_wizard
 msgid "Project Template create Wizard"
-msgstr ""
+msgstr "Wizard projectsjabloon maken"
 
 #. module: project
 #. odoo-javascript
@@ -3691,13 +3695,13 @@ msgstr "Project zichtbaarheid"
 #. odoo-javascript
 #: code:addons/project/static/src/actions/client_actions.js:0
 msgid "Project converted to template."
-msgstr ""
+msgstr "Project geconverteerd naar sjabloon."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Project created from template %(name)s."
-msgstr ""
+msgstr "Project gemaakt van sjabloon %(name)s."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3707,7 +3711,7 @@ msgstr "Omschrijving van het project..."
 #. module: project
 #: model:ir.model,name:project.model_project_template_role_to_users_map
 msgid "Project role to users mapping"
-msgstr ""
+msgstr "Projectrol naar gebruikers in kaart brengen"
 
 #. module: project
 #. odoo-python
@@ -4099,12 +4103,12 @@ msgstr "Omzet"
 #. odoo-javascript
 #: code:addons/project/static/src/actions/client_actions.js:0
 msgid "Revert to Project"
-msgstr ""
+msgstr "Terugkeren naar project"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__role_to_users_ids
 msgid "Role To Users"
-msgstr ""
+msgstr "Rol naar gebruikers"
 
 #. module: project
 #. odoo-javascript
@@ -4143,6 +4147,8 @@ msgid ""
 "Save time by using project templates with pre-filled details.<br>\n"
 "                    Standardize workflows and ensure consistency across projects."
 msgstr ""
+"Bespaar tijd door projectsjablonen te gebruiken met vooraf ingevulde details.<br>\n"
+"                    Standaardiseer workflows en zorg voor consistentie tussen projecten."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_task_templates_action
@@ -4328,7 +4334,7 @@ msgstr "Taak delen"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.xml:0
 msgid "Show Sub-Tasks"
-msgstr ""
+msgstr "Subtaken weergeven"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4346,13 +4352,13 @@ msgstr "Afgesloten taken weergeven"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.js:0
 msgid "Show sub-tasks"
-msgstr ""
+msgstr "Subtaken weergeven"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.js:0
 msgid "Show sub-tasks & top menu"
-msgstr ""
+msgstr "Subtaken & bovenste menu tonen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4816,6 +4822,7 @@ msgstr "Taak wordt herhaald"
 #: code:addons/project/models/project_task.py:0
 msgid "Tasks in a project template cannot be converted into regular tasks."
 msgstr ""
+"Taken in een projectsjabloon kunnen niet worden omgezet in gewone taken."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_milestone_action_view_tasks
@@ -4833,7 +4840,7 @@ msgstr "Sjabloon"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Template converted back to regular project."
-msgstr ""
+msgstr "Sjabloon terug geconverteerd naar gewoon project."
 
 #. module: project
 #. odoo-python
@@ -4845,7 +4852,7 @@ msgstr "Sjabloon teruggezet naar gewone taak"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Template created from %s."
-msgstr ""
+msgstr "Sjabloon gemaakt van %s."
 
 #. module: project
 #. odoo-javascript
@@ -5101,6 +5108,8 @@ msgid ""
 "This project is currently a template. Would you like to convert it back into"
 " a regular project?"
 msgstr ""
+"Dit project is momenteel een sjabloon. Wil je het terugzetten in een gewoon "
+"project?"
 
 #. module: project
 #. odoo-python
@@ -5148,6 +5157,8 @@ msgid ""
 "This task is currently a template. Would you like to convert it back into a "
 "regular task?"
 msgstr ""
+"Deze taak is momenteel een sjabloon. Wil je het terugzetten in een gewone "
+"taak?"
 
 #. module: project
 #. odoo-javascript
@@ -5286,7 +5297,7 @@ msgstr "Activiteiten van vandaag"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.xml:0
 msgid "Top Menu"
-msgstr ""
+msgstr "Topmenu"
 
 #. module: project
 #. odoo-javascript
@@ -5871,7 +5882,7 @@ msgstr "knop."
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_list
 msgid "e.g. Developer"
-msgstr ""
+msgstr "bijvoorbeeld ontwikkelaar"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form

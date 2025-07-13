@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-04 14:39+0000\n"
 "PO-Revision-Date: 2025-07-01 13:07+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,16 +60,16 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "                    Hola <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
-"                    <!-- Cuerpo de orden en tránsito -->\n"
+"                    <!-- Cuerpo del mensaje sobre orden en reparto -->\n"
 "                    <t t-if=\"ctx.get('tracking_data')\">\n"
-"                        Nos alegra informarle que su orden ya está en tránsito.\n"
+"                        Nos alegra informarte que tu orden va hacia tu dirección.\n"
 "                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
 "                            <t t-set=\"tracking_url\" t-value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
-"                            Su número de rastreo es <a t-attf-href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                            Tu número de rastreo es <a t-attf-href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
 "                            <br/><br/>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            Sus números de rastreo son:\n"
+"                            Tus números de rastreo son:\n"
 "                            <ul>\n"
 "                                <li t-foreach=\"ctx['tracking_data']\" t-as=\"tracking_url\">\n"
 "                                    <a t-attf-href=\"{{tracking_url}}\" t-out=\"ctx['tracking_data'][tracking_url]\"/>\n"
@@ -76,9 +77,9 @@ msgstr ""
 "                            </ul>\n"
 "                        </t>\n"
 "                    </t>\n"
-"                    <!-- Cuerpo de orden entregada -->\n"
+"                    <!-- Cuerpo del mensaje sobre entrega de la orden -->\n"
 "                    <t t-if=\"ctx.get('order_delivered')\">\n"
-"                        Nos alegra informarle que su orden ya se entregó.\n"
+"                        Nos alegra informarte que entregamos tu orden.\n"
 "                        <br/><br/>\n"
 "                    </t>\n"
 "                    Gracias,\n"
@@ -123,7 +124,7 @@ msgstr "Contacto"
 #. odoo-python
 #: code:addons/sale_gelato/utils.py:0
 msgid "Could not establish the connection to the Gelato API."
-msgstr "No fue posible establecer la conexión con el API de Gelato."
+msgstr "No fue posible establecer la conexión con la API de Gelato."
 
 #. module: sale_gelato
 #. odoo-python
@@ -160,7 +161,7 @@ msgstr "Clave del API de Gelato"
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_image_ids
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_image_ids
 msgid "Gelato Print Images"
-msgstr "Imágenes para impresión Gelato"
+msgstr "Imágenes para impresión de Gelato"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_product_uid
@@ -187,7 +188,7 @@ msgstr "Referencia de plantilla de Gelato"
 #: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_webhook_secret
 #: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_webhook_secret
 msgid "Gelato Webhook Secret"
-msgstr "Secreto del Webhook de Gelato"
+msgstr "Secreto del webhook de Gelato"
 
 #. module: sale_gelato
 #. odoo-python
@@ -202,12 +203,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_gelato/controlers/main.py:0
 msgid "Gelato has returned order %(reference)s."
-msgstr "Gelato regresó la orden %(reference)s."
+msgstr "Gelato devolvió la orden %(reference)s."
 
 #. module: sale_gelato
 #: model:mail.template,name:sale_gelato.order_status_update
 msgid "Gelato: Order status update"
-msgstr "Gelato: actualización del estado de la orden"
+msgstr "Gelato: Actualización del estado de la orden"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_document__is_gelato
@@ -229,7 +230,8 @@ msgstr "Imágenes para impresión faltantes"
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Missing product variants and images have been successfully created."
-msgstr "Se pudieron crear las variantes e imágenes de producto que faltaban."
+msgstr ""
+"Las variantes e imágenes de producto que faltaban se crearon con éxito."
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
@@ -241,8 +243,8 @@ msgstr "Imágenes para impresión"
 #: code:addons/sale_gelato/models/product_document.py:0
 msgid "Print images must be set on products before they can be ordered."
 msgstr ""
-"Las imágenes para impresión deben configurarse en productos antes de que "
-"puedan ordenarse."
+"Las imágenes de impresión deben estar configuradas en los productos antes de"
+" que puedan ordenarse."
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_product_template
@@ -322,13 +324,13 @@ msgstr "Sincronizar para obtener variantes desde Gelato"
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Template Reference"
-msgstr "Plantilla de referencia"
+msgstr "Referencia de la plantilla"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/delivery_carrier.py:0
 msgid "The delivery method is not available for this order."
-msgstr "El método de envío no está disponible para esta orden."
+msgstr "El método de entrega no está disponible para esta orden."
 
 #. module: sale_gelato
 #. odoo-python
@@ -340,7 +342,7 @@ msgstr "Faltan los siguientes campos de dirección: %s"
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid "The order has been successfully passed on Gelato."
-msgstr "Esta orden se transfirió de forma exitosa a Gelato."
+msgstr "Esta orden se transfirió con éxito a Gelato."
 
 #. module: sale_gelato
 #. odoo-python
@@ -362,8 +364,7 @@ msgstr "Secreto del webhook"
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid ""
 "You cannot mix Gelato products with non-Gelato products in the same order."
-msgstr ""
-"Una misma orden no puede tener productos de Gelato y que no son de Gelato."
+msgstr "Una orden no puede incluir productos de Gelato y de otro tipo."
 
 #. module: sale_gelato
 #: model:mail.template,subject:sale_gelato.order_status_update

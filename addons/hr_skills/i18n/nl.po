@@ -241,13 +241,13 @@ msgstr "Certificering"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_certification_report_view_list
 msgid "Certification Level"
-msgstr ""
+msgstr "Certificeringsniveau"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_certification_report_view_list
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_certification_report_view_search
 msgid "Certification Type"
-msgstr ""
+msgstr "Type certificering"
 
 #. module: hr_skills
 #: model:hr.skill.type,name:hr_skills.hr_skill_type_certifications
@@ -402,7 +402,7 @@ msgstr "Huidig"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__current_employee_skill_ids
 #: model:ir.model.fields,field_description:hr_skills.field_res_users__current_employee_skill_ids
 msgid "Current Employee Skill"
-msgstr ""
+msgstr "Huidige werknemer"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_certification_report_view_list
@@ -478,7 +478,7 @@ msgstr "Davis, Sanchez and Miller"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/formatted_date/formatted_date.js:0
 msgid "Day Format"
-msgstr ""
+msgstr "Formaat dag"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_decision_making
@@ -617,7 +617,7 @@ msgstr "Werknemer"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_certification_report
 msgid "Employee Certification Report"
-msgstr ""
+msgstr "Werknemer Certificering Rapport"
 
 #. module: hr_skills
 #: model:ir.actions.report,name:hr_skills.action_report_employee_cv
@@ -692,7 +692,7 @@ msgstr "Ervaring"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_certification_report_view_search
 msgid "Expired Certification"
-msgstr ""
+msgstr "Verlopen certificering"
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_jep_cole_ltd
@@ -1148,7 +1148,7 @@ msgstr "Niveaus"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_individual_skill_mixin__levels_count
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__levels_count
 msgid "Levels Count"
-msgstr ""
+msgstr "Niveaus Tellen"
 
 #. module: hr_skills
 #: model:hr.resume.line,name:hr_skills.employee_resume_fme_lewis_group
@@ -1283,7 +1283,7 @@ msgstr "Mobiele app ontwikkeling"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/formatted_date/formatted_date.js:0
 msgid "Month Format"
-msgstr ""
+msgstr "Maand Formaat"
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_jog_douglas_thompson_and_conner
@@ -1345,7 +1345,7 @@ msgstr "Norton-Silva"
 #: model:ir.model.fields,help:hr_skills.field_hr_individual_skill_mixin__levels_count
 #: model:ir.model.fields,help:hr_skills.field_hr_skill_type__levels_count
 msgid "Number of levels linked to this skill type"
-msgstr ""
+msgstr "Aantal niveaus gekoppeld aan dit vaardigheidstype"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_type_certifications_odoo
@@ -1684,7 +1684,7 @@ msgstr "Wetenschappelijk schrijver"
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_type_certifications_scrum_master
 msgid "Scrum Master"
-msgstr ""
+msgstr "Scrum Master"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
@@ -1803,12 +1803,12 @@ msgstr "Vaardigheidssoorten"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_individual_skill_mixin
 msgid "Skill level"
-msgstr ""
+msgstr "Niveau"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_skill
 msgid "Skill level for employee"
-msgstr ""
+msgstr "Vaardigheidsniveau voor werknemer"
 
 #. module: hr_skills
 #. odoo-javascript
@@ -1837,7 +1837,7 @@ msgstr "Vaardigheidsgeschiedenis"
 #: model:ir.actions.act_window,name:hr_skills.hr_employee_skill_report_action
 #: model:ir.ui.menu,name:hr_skills.hr_employee_skill_inventory_report_menu
 msgid "Skills Inventory"
-msgstr ""
+msgstr "Vaardigheden Inventarisatie"
 
 #. module: hr_skills
 #. odoo-javascript
@@ -1954,7 +1954,7 @@ msgstr "Telugu"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_view_form
 msgid "The end date must be after the start date."
-msgstr ""
+msgstr "De einddatum moet na de begindatum liggen."
 
 #. module: hr_skills
 #. odoo-python
@@ -1963,6 +1963,8 @@ msgid ""
 "The following skills can't be created as they overlap or exactly match existing skills:\n"
 "%(collisions)s"
 msgstr ""
+"De volgende vaardigheden kunnen niet worden aangemaakt omdat ze overlappen of precies overeenkomen met bestaande vaardigheden:\n"
+"%(collisions)s"
 
 #. module: hr_skills
 #. odoo-python
@@ -1971,6 +1973,8 @@ msgid ""
 "The following skills have their valid stop date prior to their valid start "
 "date:\n"
 msgstr ""
+"De volgende vaardigheden hebben hun geldige stopdatum vóór hun geldige "
+"begindatum:\n"
 
 #. module: hr_skills
 #. odoo-python
@@ -1986,6 +1990,7 @@ msgstr ""
 #: code:addons/hr_skills/models/hr_individual_skill_mixin.py:0
 msgid "The skill %(name)s and skill type %(type)s don't match"
 msgstr ""
+"De vaardigheid %(name)s en het vaardigheidstype %(type)s komen niet overeen"
 
 #. module: hr_skills
 #. odoo-python
@@ -2023,6 +2028,8 @@ msgid ""
 "This report will give you an overview of the certification per Employee.\n"
 "                Create them in configuration and add them on the Employee."
 msgstr ""
+"Dit rapport geeft je een overzicht van de certificeringen per Werknemer.\n"
+"                Maak ze aan in de configuratie en voeg ze toe aan de Werknemer."
 
 #. module: hr_skills
 #: model_terms:ir.actions.act_window,help:hr_skills.hr_employee_skill_report_action
@@ -2118,7 +2125,7 @@ msgstr "Université Libre de Bruxelles - Polytechnique"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.js:0
 msgid "Update Skills"
-msgstr ""
+msgstr "Vaardigheden"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_urdu
@@ -2133,7 +2140,7 @@ msgstr "Gebruiker"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_view_search
 msgid "Valid certification"
-msgstr ""
+msgstr "Geldige certificering"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_view_form
@@ -2221,7 +2228,7 @@ msgstr "Wycheproof P-12 College"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/formatted_date/formatted_date.js:0
 msgid "Year Format"
-msgstr ""
+msgstr "Jaar Formaat"
 
 #. module: hr_skills
 #. odoo-javascript
@@ -2251,12 +2258,12 @@ msgstr "bijv. Odoo Inc."
 #: model:ir.model.fields,help:hr_skills.field_hr_individual_skill_mixin__is_certification
 #: model:ir.model.fields,help:hr_skills.field_hr_skill_type__is_certification
 msgid "if checked the skill type become a certification type"
-msgstr ""
+msgstr "indien aangevinkt wordt het vaardigheidstype een certificeringstype"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_view_form
 msgid "indefinite"
-msgstr ""
+msgstr "onbepaald"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_sidepanel
@@ -2267,4 +2274,4 @@ msgstr "www.demo.com"
 #. odoo-python
 #: code:addons/hr_skills/models/hr_individual_skill_mixin.py:0
 msgid "• %(skill_name)s from %(valid_from)s to %(valid_to)s"
-msgstr ""
+msgstr "- %(skill_name)s van %(valid_from)s naar %(valid_to)s"
