@@ -4,15 +4,15 @@ import { withSequence } from "@html_editor/utils/resource";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-class BentoBannerOptionPlugin extends Plugin {
-    static id = "bentoBannerOption";
+class BentoBorderOptionPlugin extends Plugin {
+    static id = "BentoBorderOption";
     resources = {
         builder_options: [
             withSequence(after(WEBSITE_BACKGROUND_OPTIONS), {
-                template: "html_builder.BentoBannerOption",
+                template: "html_builder.BentoBorderOption",
                 selector: ".s_bento_banner section[data-name='Card']",
             }),
         ],
     };
 }
-registry.category("website-plugins").add(BentoBannerOptionPlugin.id, BentoBannerOptionPlugin);
+registry.category("website-plugins").add(BentoBorderOptionPlugin.id, BentoBorderOptionPlugin);
