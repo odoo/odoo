@@ -318,6 +318,7 @@ export class Runner {
          * @type {Record<Exclude<SearchFilter, "filter">, Record<string, number>>}
          */
         includeSpecs: {
+            job: {},
             suite: {},
             tag: {},
             test: {},
@@ -423,6 +424,11 @@ export class Runner {
                 }
             }
             this._hasIncludeFilter += this.queryInclude.length;
+        }
+
+        // Jobs (suites or tests)
+        if (this.config.job?.length) {
+            this._include(this.state.includeSpecs.job, this.config.job, INCLUDE_LEVEL.url);
         }
 
         // Suites
@@ -1143,7 +1149,7 @@ export class Runner {
             }
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
-                `failed ${failed} tests (${passed} passed, total time: ${this.totalTime})`
+                `Failed ${failed} tests (${passed} passed, total time: ${this.totalTime})`
             );
             // Do not use logger to not apply the [HOOT] prefix and allow the CI
             // to stop the test run browser.
@@ -1151,11 +1157,11 @@ export class Runner {
         } else {
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
-                `passed ${passed} tests (${assertions} assertions, total time: ${this.totalTime})`
+                `Passed ${passed} tests (${assertions} assertions, total time: ${this.totalTime})`
             );
             // This statement acts as a success code for the server to know when
             // all suites have passed.
-            logger.logRun("test suite succeeded");
+            logger.logRun("Test suite succeeded");
         }
 
         return false;
@@ -1874,24 +1880,45 @@ export class Runner {
      * @param {Partial<Record<keyof includeSpecs, Map<string, Job>>>} valuesMaps
      */
     _simplifyIncludeSpecs(includeSpecs, valuesMaps) {
+        const valuesMapsEntries = $entries(valuesMaps);
         let hasChanged = false;
-        const ignored = [];
-        const removed = [];
-        for (const [configKey, valuesMap] of $entries(valuesMaps)) {
+        if (includeSpecs.job) {
+            for (const [id, includeLevel] of $entries(includeSpecs.job)) {
+                const configKeys = valuesMapsEntries.filter(([, map]) => map.has(id));
+                if (configKeys.length < 1) {
+                    logger.warn(
+                        `Test runner did not find job with ID "${id}": it has been removed from the URL`
+                    );
+                } else if (configKeys.length > 1) {
+                    throw new HootError(
+                        `Hash collision: found ${configKeys.length} jobs with same ID "${id}"; attention to the hash system needed.`
+                    );
+                }
+                const [configKey] = configKeys[0];
+                this._include(includeSpecs[configKey], [id], includeLevel, true);
+                this._include(includeSpecs.job, [id], 0, true);
+                hasChanged = true;
+            }
+        }
+        for (const [configKey, valuesMap] of valuesMapsEntries) {
             const specs = includeSpecs[configKey];
             let remaining = $keys(specs);
             while (remaining.length) {
                 const id = remaining.shift();
-                if (specs[id] !== INCLUDE_LEVEL.url) {
+                if ($abs(specs[id]) !== INCLUDE_LEVEL.url) {
                     continue;
                 }
                 const item = valuesMap.get(id);
                 if (!item) {
                     const applied = this._include(specs, [id], 0, true);
                     if (applied) {
-                        removed.push(`\n- ${configKey} "${id}"`);
+                        logger.warn(
+                            `Test runner did not find ${configKey} with ID "${id}": it has been removed from the URL`
+                        );
                     } else {
-                        ignored.push(`\n- ${configKey} "${id}"`);
+                        logger.warn(
+                            `Test runner did not find ${configKey} with ID "${id}": it has been ignored from the current run`
+                        );
                     }
                     hasChanged = true;
                 }
@@ -1911,15 +1938,6 @@ export class Runner {
                     hasChanged = true;
                 }
             }
-        }
-        if (removed.length) {
-            logger.warn(
-                `The following IDs were not found and and have been removed from URL filters:`,
-                ...removed
-            );
-        }
-        if (ignored.length) {
-            logger.warn(`The following IDs were not found and and have been ignored:`, ...ignored);
         }
         return hasChanged;
     }
