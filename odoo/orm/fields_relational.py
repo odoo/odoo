@@ -124,7 +124,7 @@ class _Relational(Field[M], typing.Generic[M]):
                 _logger.warning(env._(
                     "Couldn't generate a company-dependent domain for field %s. "
                     "The model doesn't have a 'company_id' or 'company_ids' field, and isn't company-dependent either.",
-                    f'{self.model_name}.{self.name}'
+                    self.model_name + '.' + self.name,
                 ))
                 return domain
             company_domain = env[self.comodel_name]._check_company_domain(companies=unquote(cids))
