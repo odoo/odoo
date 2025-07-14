@@ -1,18 +1,19 @@
 import { CrmColumnProgress } from "./crm_column_progress";
-import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
-import { KanbanHeader } from "@web/views/kanban/kanban_header";
+import { RottingKanbanRecord } from "@mail/js/rotting_mixin/rotting_kanban_record";
+import { RottingKanbanHeader } from "@mail/js/rotting_mixin/rotting_kanban_header";
+import { RottingKanbanRenderer } from "@mail/js/rotting_mixin/rotting_kanban_renderer";
 
-class CrmKanbanHeader extends KanbanHeader {
-    static template = "crm.CrmKanbanHeader";
+class CrmKanbanHeader extends RottingKanbanHeader {
     static components = {
-        ...KanbanHeader.components,
+        ...RottingKanbanHeader.components,
         ColumnProgress: CrmColumnProgress,
     };
 }
 
-export class CrmKanbanRenderer extends KanbanRenderer {
+export class CrmKanbanRenderer extends RottingKanbanRenderer {
     static components = {
-        ...KanbanRenderer.components,
+        ...RottingKanbanRenderer.components,
         KanbanHeader: CrmKanbanHeader,
+        KanbanRecord: RottingKanbanRecord,
     };
 }

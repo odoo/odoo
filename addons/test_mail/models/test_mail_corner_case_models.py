@@ -173,7 +173,7 @@ class MailTestTrackDurationMixin(models.Model):
     _description = 'Fake model to test the mixin mail.tracking.duration.mixin'
     _name = "mail.test.track.duration.mixin"
     _track_duration_field = 'customer_id'
-    _inherit = ['mail.thread', 'mail.tracking.duration.mixin']
+    _inherit = ['mail.tracking.duration.mixin']
 
     name = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=True)

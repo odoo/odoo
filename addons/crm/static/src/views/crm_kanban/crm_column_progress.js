@@ -1,14 +1,10 @@
 import { onWillStart } from "@odoo/owl";
 import { user } from "@web/core/user";
-import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { session } from "@web/session";
 import { getCurrency } from "@web/core/currency";
+import { RottingColumnProgress } from "@mail/js/rotting_mixin/rotting_column_progress";
 
-export class CrmColumnProgress extends ColumnProgress {
-    static props = {
-        ...ColumnProgress.props,
-        progressBarState: { type: Object },
-    };
+export class CrmColumnProgress extends RottingColumnProgress {
     static template = "crm.ColumnProgress";
     setup() {
         super.setup();

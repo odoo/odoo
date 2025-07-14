@@ -1,12 +1,15 @@
 from collections import defaultdict
+from datetime import timedelta
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 from odoo.tools import SQL
 
 
 class MailTrackingDurationMixin(models.AbstractModel):
     _name = 'mail.tracking.duration.mixin'
     _description = "Mixin to compute the time a record has spent in each value a many2one field can take"
+    _inherit = ['mail.thread']
 
     duration_tracking = fields.Json(
         string="Status time", compute="_compute_duration_tracking",
@@ -110,3 +113,135 @@ class MailTrackingDurationMixin(models.AbstractModel):
             previous_date = tracking['create_date']
 
         return json
+
+    """
+    Rotting logic
+
+    The rotting feature enables resources to mark themselves as stale if enough time has passed since they were last updated
+    by an user.
+    To enable this behavior, the following must be done:
+    - The model pointed to by _track_duration_field must have a "rotting_threshold_days" integer field, representing the
+    number of days before the resource is considered stale:
+        on the model pointed to by _track_duraton_field:
+            rotting_threshold_days = fields.Integer('Days to rot', default=0)
+
+    - The following methods need to be overriden:
+      - _get_rotting_depends_fields() must be overriden to include the rotting_threshold_days field, as well as
+        any field that should affect the ability of a resource to rot (for example: a field that would mark a task as done):
+            def _get_rotting_depends_fields(self):
+                return super()._get_rotting_depends_fields() + ['won_status', 'type']
+
+      - _get_rotting_domain() must be overriden to include conditions that must be met so that the field can be considered rotting:
+            def _get_rotting_domain(self):
+                return super()._get_rotting_domain() + [
+                    ('won_status', '=', 'pending'),
+                    ('type', '=', 'opportunity')
+                ]
+
+        Note that the fields present in _get_rotting_domain() are the same as the ones present in _get_rotting_depends_fields()
+
+    - The is_rotting, rotting_days fields need to be added to the relevant views
+        (as well as the "rotting_threshold_days" field on the tracked model).
+        You may want to use the rotting_form, rotting_kanban and rotting_badge_list field widgets to display
+        the fields visually on form and kanban view
+        (please note- these widgets need both rotting_days and is_rotting fields on the view to function).
+
+    If the rotting_threshold_days field is not defined on the tracked module,
+    or if the value of rotting_threshold_days is 0,
+    then the resource will never rot.
+    """
+
+    rotting_days = fields.Integer('Days Rotting', help='Day count since this resource was last updated',
+        compute='_compute_rotting', store=False)
+    is_rotting = fields.Boolean('Rotting', compute='_compute_rotting', search='_search_is_rotting')
+    rotting_date = fields.Date('Rotting Since', help='Date at which the resource starts rotting',
+        compute="_compute_rotting_date", store=True, readonly=False)
+
+    # To override in inheriting models
+    def _get_rotting_depends_fields(self):
+        return []
+
+    # To override in inheriting models
+    def _get_rotting_domain(self):
+        return [
+            ('rotting_date', '<=', fields.Datetime.today()),
+            ('rotting_date', '!=', False),
+            (f'{self._track_duration_field}.rotting_threshold_days', '!=', 0),
+        ]
+
+    def _is_rotting_enabled(self):
+        return hasattr(self, '_track_duration_field') and 'rotting_threshold_days' in self[self._track_duration_field] and (
+                not self  # api.model call
+                or any(stage.rotting_threshold_days for stage in self[self._track_duration_field])
+            )
+
+    @api.depends(lambda self: ['write_date'] + self._get_rotting_depends_fields())
+    def _compute_rotting_date(self):
+        """
+        We purposefully do not update the rotting date if rotting_threshold_days is changed.
+        This is done to avoid having to update a large amount of records at once.
+        Records will be naturally updated once they get any kind of activity.
+        """
+        if not self._is_rotting_enabled():
+            self.rotting_date = False
+            return
+
+        # As we want the rotting date to update even for records that aren't rotting yet,
+        # we remove tuples referencing 'rotting_date' from the domain
+        domain = [tup for tup in self._get_rotting_domain() if tup[0] != 'rotting_date']
+        rotting_self = self.filtered_domain(domain)
+
+        (self - rotting_self).rotting_date = False
+        stages = rotting_self[self._track_duration_field]
+        stages = rotting_self.mapped(self._track_duration_field)
+        for stage in stages:
+            stage_resources = rotting_self.filtered(lambda r: r[self._track_duration_field] == stage)
+            for resource in stage_resources:
+                resource.rotting_date = (resource.write_date or fields.Datetime.now()) + timedelta(days=stage.rotting_threshold_days)
+
+    def _message_post_after_hook(self, message, msg_values):
+        # todo todelete review note:
+        # As per specs, resources' rotting date should be refreshed once an activity gets marked as done.
+        # Originally this was ensured by checking for the 'notification' message_type, however this might lead
+        # to inaccurate results when other flows get involved, as 'notification' is the default message type for
+        # message_post() and message_post_with_source()
+        # As the XMLID subtype for done activities ('mail.mt_activities') isn't passed on to msg_values, I figured it was
+        # appropriate to check for presence of 'mail_activity_type_id' in msg_values. Does that make sense?
+
+        if msg_values['message_type'] in ['email_outgoing', 'comment'] or msg_values.get('mail_activity_type_id', False):
+            # If rotting_threshold_days field has not been set, the rotting feature is not enabled for this model.
+
+            # sudo to read rotting_threshold_days even if the user doesn't normally have access to the tracked model's fields
+            self_sudo = self.sudo()
+            if self_sudo._is_rotting_enabled():
+                self_sudo = self_sudo.filtered_domain(self_sudo._get_rotting_domain())
+                rotting_threshold_days = self_sudo[self._track_duration_field].rotting_threshold_days if self_sudo else 0
+                if rotting_threshold_days > 0:
+                    self.rotting_date = fields.Datetime.now() + timedelta(days=rotting_threshold_days)
+        return super()._message_post_after_hook(message, msg_values)
+
+    @api.depends(lambda self: ['rotting_date'] + self._get_rotting_depends_fields())
+    def _compute_rotting(self):
+        rotting_records = self.filtered_domain(self._get_rotting_domain() if self._is_rotting_enabled() else fields.Domain.FALSE)
+        rotting_records.is_rotting = True
+        for record in rotting_records:
+            record.rotting_days = (fields.Datetime.now().date() - record.rotting_date).days + record[self._track_duration_field].rotting_threshold_days
+        (self - rotting_records).is_rotting = False
+        (self - rotting_records).rotting_days = 0
+
+    def _search_is_rotting(self, operator, value):
+        """
+        :param operator
+        :param value
+        :return domain
+
+        Override this search method to complete the search domain for is_rotting field
+        """
+        if operator not in ['in', 'not in']:
+            raise UserError(_('Operation not supported'))
+
+        rotting_domain = self._get_rotting_domain() if self._is_rotting_enabled() else [fields.Domain.FALSE]
+        if operator == 'in':
+            return rotting_domain
+        domain = fields.Domain.AND([[tuple] for tuple in rotting_domain])
+        return ['!', domain]
