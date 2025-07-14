@@ -4,6 +4,9 @@
         <img t-attf-src="/web/image?model=res.company&amp;id={{order.company.id}}&amp;field=logo" alt="Logo" class="pos-receipt-logo"/>
         <br/>
         <div class="d-flex flex-column align-items-center">
+            <!-- TODO-manv: should we display the `big` tracking number only for self/kiosk receipts? (if it contains 'K' or 'S' prefix?) cause for
+            the moment it display a huge tracking number for all restaurant receipts if you have self order enabled   -->
+            <h1 class="tracking-number text-center" style="font-size: 100px" t-if="order.tracking_number and order.config.self_ordering_mode !== 'nothing'" t-esc="order.tracking_number" />
             <div class="pos-receipt-contact">
                 <!-- contact address -->
                 <div t-if="order.company?.name" t-esc="order.company.name" />
@@ -28,6 +31,9 @@
                     </span>
                     </t>
                 </div>
+            </div>
+            <div t-if="order.tracking_number and order.config.self_ordering_mode === 'nothing' and order.config.module_pos_restaurant">
+                <span class="tracking-number fs-1" t-esc="order.tracking_number" />
             </div>
         </div>
         <br />

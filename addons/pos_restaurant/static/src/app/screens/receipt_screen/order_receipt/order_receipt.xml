@@ -38,14 +38,6 @@
         <xpath expr="//div[hasclass('cashier')]" position="after">
             <t t-if="order.table_id" t-esc="tableName"/>
         </xpath>
-        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="before">
-            <h1 class="tracking-number text-center" style="font-size: 100px" t-if="order.tracking_number and order.config.self_ordering_mode !== 'nothing'" t-esc="order.tracking_number" />
-        </xpath>
-        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
-            <div t-if="order.tracking_number and order.config.self_ordering_mode === 'nothing'">
-                <span class="tracking-number fs-1" t-esc="order.tracking_number" />
-            </div>
-        </xpath>
     </t>
 
 </templates>
