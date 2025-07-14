@@ -301,7 +301,7 @@ export class FormatPlugin extends Plugin {
             // with a class that is not indicated as splittable.
             const isClassListSplittable = (classList) =>
                 [...classList].every((className) =>
-                    this.getResource("format_splittable_class").some((cb) => cb(className))
+                    this.getResource("format_class_predicates").some((cb) => cb(className))
                 );
 
             while (
