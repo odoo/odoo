@@ -204,14 +204,18 @@ actual arch.
 
     invalid_locators = fields.Json(compute='_compute_invalid_locators')
 
-    _qweb_key_uniq = models.UniqueIndex(
-        "(key) WHERE type = 'qweb'",
-        "QWeb view must be unique. The key is used for rendering and t-call.",
-    )
     _qweb_key_required = models.Constraint(
         "CHECK(key IS NOT NULL OR type != 'qweb')",
         "The key is used for rendering and t-call.",
     )
+
+    @api.constrains('key', 'type')
+    def _check_qweb_key_uniq(self):
+        qweb_views = self.filtered(lambda v: v.type == 'qweb')
+        if qweb_views:
+            duplicated = set(self.search([('id', 'not in', qweb_views.ids), ('key', 'in', qweb_views.mapped('key'))]).mapped('key'))
+            if duplicated:
+                raise ValidationError(_("QWeb view key must be unique. The key is used for rendering and t-call. (Duplicated: %s)", duplicated))
 
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
     @api.depends_context('read_arch_from_file', 'lang', 'edit_translations', 'check_translations')

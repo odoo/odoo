@@ -39,6 +39,11 @@ class IrUiView(models.Model):
         "Specific QWeb view per website must be unique and the generic view must be unique. Information from specific views is used whether they are active or not.",
     )
 
+    def _check_qweb_key_uniq(self):
+        # The base constains is replaced by an SQL constraint.
+        # We cannot make a SQL constraint in base because it would require modifying an invariant.
+        pass
+
     @api.depends('visibility_password')
     def _get_pwd(self):
         for r in self:
@@ -164,7 +169,7 @@ class IrUiView(models.Model):
                     key = inherit_child.key
                     inherit_child.key = f'{key}_to_remove'
                     inherit_child.flush_recordset()
-                    child = inherit_child.copy({'inherit_id': website_specific_view.id,'key': key})
+                    child = inherit_child.copy({'inherit_id': website_specific_view.id, 'key': key})
                     inherit_child.inherit_children_ids.write({'inherit_id': child.id})
                     inherit_child.unlink()
                 else:
