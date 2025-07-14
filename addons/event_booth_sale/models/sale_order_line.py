@@ -43,7 +43,7 @@ class SaleOrderLine(models.Model):
             } for booth in selected_booths - existing_booths])
 
     def _search_event_booth_pending_ids(self, operator, value):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         return [('event_booth_registration_ids.event_booth_id', operator, value)]
 

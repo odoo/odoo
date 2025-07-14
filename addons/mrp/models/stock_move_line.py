@@ -20,7 +20,7 @@ class StockMoveLine(models.Model):
         return super(StockMoveLine, self - line_to_remove)._compute_picking_type_id()
 
     def _search_picking_type_id(self, operator, value):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         domain = super()._search_picking_type_id(operator, value)
         return (Domain('production_id', '=', False) & domain) | Domain('production_id.picking_type_id', operator, value)
