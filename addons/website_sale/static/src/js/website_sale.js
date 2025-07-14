@@ -26,7 +26,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'click .o_wsale_filmstrip_wrapper' : '_onClickHandler',
         'submit': '_onClickConfirmOrder',
         'input .o_wsale_attribute_search_bar': '_searchAttributeValues',
-        'click .o_wsale_variant_pills_shop': '_onClickPillsAttribute',
         'click .o_wsale_view_more_btn': '_onToggleViewMoreLabel',
     }),
 
@@ -372,19 +371,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             const labelText = item.querySelector('.form-check-label').textContent.toLowerCase();
             item.style.display = labelText.includes(searchValue) ? '' : 'none'
         });
-    },
-    /**
-     * Highlight selected pill
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickPillsAttribute(ev) {
-        if (ev.target.tagName === "LABEL" || ev.target.tagName === "INPUT") {
-            return;
-        }
-        const checkbox = ev.target.closest('.o_wsale_variant_pills_shop').querySelector("input");
-        checkbox.click();
     },
     /**
      * Toggle the button text between "View More" and "View Less"

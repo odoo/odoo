@@ -1071,23 +1071,20 @@
 
     <template id="website_sale.filter_pills_attributes" name="Pills attributes in Filter">
         <t t-foreach="a.value_ids" t-as="v">
-            <div
-                t-attf-class="o_wsale_variant_pills_shop form-check btn btn-primary mb-1 {{'active' if v.id in attrib_set else ''}}"
-            >
-                <input
-                    type="checkbox"
-                    name="attribute_value"
-                    class="form-check-input"
-                    t-att-id="'%s-%s' % (a.id,v.id)"
-                    t-att-value="'%s-%s' % (a.id,v.id)"
-                    t-att-checked="v.id in attrib_set"
-                />
-                <label
-                    class="form-check-label fw-normal"
-                    t-att-for="'%s-%s' % (a.id,v.id)"
-                    t-field="v.name"
-                />
-            </div>
+            <input
+                type="checkbox"
+                name="attribute_value"
+                class="btn-check"
+                t-att-id="'%s-%s' % (a.id,v.id)"
+                t-att-value="'%s-%s' % (a.id,v.id)"
+                t-att-checked="v.id in attrib_set"
+                autocomplete="off"
+            />
+            <label
+                t-attf-class="btn border {{'active bg-primary-subtle border-primary text-primary-emphasis' if v.id in attrib_set else ''}}"
+                t-att-for="'%s-%s' % (a.id,v.id)"
+                t-field="v.name"
+            />
         </t>
     </template>
 
@@ -1160,7 +1157,7 @@
                                 </div>
                                 <div
                                     t-elif="a.display_type == 'pills'"
-                                    t-attf-class="btn-group-toggle {{'my-2' if isMobile else 'mb-3'}}"
+                                    t-attf-class="d-flex flex-wrap gap-2 {{'my-2' if isMobile else 'mb-3'}}"
                                     data-bs-toggle="buttons"
                                 >
                                     <t t-call="website_sale.filter_pills_attributes"/>

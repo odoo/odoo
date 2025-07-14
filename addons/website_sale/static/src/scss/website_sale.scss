@@ -1683,28 +1683,3 @@ a.no-decoration {
 body.modal-open:has(.js_sale.o_wsale_product_page) {
     overflow: hidden;
 }
-
-.o_wsale_variant_pills_shop {
-    padding: $spacer/2 $spacer;
-    border: none;
-    cursor: pointer;
-
-    &.btn.active {
-        background-color: map-get($theme-colors, 'primary');
-    }
-    &:not(.active) {
-        color: map-get($grays, '600');
-        background-color: map-get($grays, '200');
-    }
-    &:hover{
-        background-color: map-get($theme-colors, 'primary');
-        color: white;
-    }
-
-    input {
-        -moz-appearance: none;
-        -webkit-appearance: none;
-        appearance: none;
-        opacity: 0;
-    }
-}
