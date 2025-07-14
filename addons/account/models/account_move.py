@@ -5695,8 +5695,28 @@ class AccountMove(models.Model):
                 },
             ]
 
+<<<<<<< 6153bbac7ea7f61b77c1d899e164623b17ca996b
         domain = [('sending_data', '!=', False)]
         to_process = self.search(domain, limit=job_count).try_lock_for_update()
+||||||| aa72462bd8672fe8a2109daa0fc60abeb3814090
+        limit = job_count + 1
+        to_process = self.env['account.move'].search(
+            [('sending_data', '!=', False)],
+            limit=limit,
+        )
+        need_retrigger = len(to_process) > job_count
+=======
+        limit = job_count + 1
+        to_process = self.env['account.move'].search(
+            [('sending_data', '!=', False)],
+            limit=limit,
+        )
+        total_to_process = self.env['account.move'].search_count(
+            [('sending_data', '!=', False)],
+        )
+
+        need_retrigger = len(to_process) > job_count
+>>>>>>> 0745a3949decca5700190e911c3856f8cf05bf1d
         if not to_process:
             return
 
@@ -5708,6 +5728,8 @@ class AccountMove(models.Model):
             to_process,
             from_cron=True,
         )
+        self.env['ir.cron']._notify_progress(done=len(to_process),
+                                             remaining=total_to_process - len(to_process))
 
         for partner_id, partner_moves in moves_by_partner.items():
             partner = self.env['res.partner'].browse(partner_id)
