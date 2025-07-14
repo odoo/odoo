@@ -1,3 +1,5 @@
+/* global posmodel */
+
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
@@ -850,5 +852,33 @@ registry.category("web_tour.tours").add("test_preset_timing_retail", {
             TicketScreen.nthRowContains(1, "Delivery", false),
             TicketScreen.nthRowContains(2, "002"),
             TicketScreen.nthRowContains(2, "Dine in", false),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_delete_line", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            {
+                content: "replace disallowLineQuantityChange to be true",
+                trigger: "body",
+                run: () => {
+                    posmodel.disallowLineQuantityChange = () => true;
+                },
+            },
+            inLeftSide([
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "1"),
+                Numpad.click("⌫"),
+                {
+                    content: "Click 0",
+                    trigger: ".modal " + Numpad.buttonTriger("0"),
+                    run: "click",
+                },
+                ...Chrome.confirmPopup(),
+            ]),
+            ProductScreen.orderIsEmpty(),
+            Chrome.endTour(),
         ].flat(),
 });
