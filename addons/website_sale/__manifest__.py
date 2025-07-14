@@ -63,6 +63,8 @@
         'views/snippets/s_dynamic_snippet_categories.xml',
         'views/snippets/s_dynamic_snippet_products_preview_data.xml',
         'views/snippets/s_dynamic_snippet_category_preview_data.xml',
+        'views/snippets/s_categories_inline.xml',
+        'views/snippets/s_categories_inline_preview_data.xml',
         'views/snippets/s_mega_menu/big_icons_subtitles.xml',
         'views/snippets/s_mega_menu/cards.xml',
         'views/snippets/s_mega_menu/image_menu.xml',
@@ -91,6 +93,8 @@
             'website_sale/static/src/scss/website_sale_delivery.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.xml',
+            'website_sale/static/src/snippets/s_categories_inline/000.scss',
+            'website_sale/static/src/snippets/s_categories_inline/000.xml',
             'website/static/lib/multirange/multirange_custom.scss',
             'sale/static/src/scss/sale_portal.scss',
 

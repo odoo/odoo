@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="s_categories_inline" name="Categories">
+        <div class="s_categories_inline o_not_editable o_prevent_link_editor" data-layout="list" data-alignment="left" data-label="inside" data-format="grid" data-shadow="true" style="--o-we-sale-img-size: 100px;" contenteditable="false">
+            <div class="s_categories_inline_wrap d-contents">
+                <div class="dynamic_snippet_template o_not_editable rounded-5 gap-3" style="--columns: 3;" contenteditable="false">
+                    <t t-call="website_sale.s_categories_inline_preview_data"/>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

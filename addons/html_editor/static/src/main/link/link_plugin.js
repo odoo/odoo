@@ -244,6 +244,7 @@ export class LinkPlugin extends Plugin {
             ".dropdown-item",
             "[data-oe-model]",
             ":has(>[data-oe-model])",
+            ".o_prevent_link_editor a"
         ],
 
         /** Handlers */

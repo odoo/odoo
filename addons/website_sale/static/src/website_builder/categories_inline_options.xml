@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sale.CategoriesInlineOption">
+        <BuilderRow label.translate="Layout">
+            <BuilderSelect dataAttributeAction="'layout'">
+                <BuilderSelectItem dataAttributeActionValue="'list'" label.translate="List" id="'layout_list_opt'">
+                    List
+                </BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'nav'" label.translate="Navigation" id="'layout_nav_opt'">
+                    Navigation
+                </BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'listgroup'" label.translate="Grouped list" id="'layout_listgroup_opt'">
+                    Grouped list
+                </BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'thumbnails'" label.translate="Thumbnails" id="'layout_thumbnails_opt'">
+                    Thumbnails
+                </BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Borderless" level="1" t-if="isActiveItem('layout_listgroup_opt') and !isActiveItem('direction_horizontal_opt')">
+            <BuilderCheckbox dataAttributeAction="'borderless'" dataAttributeActionValue="true"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Format" t-if="isActiveItem('layout_thumbnails_opt')" level="1">
+            <BuilderButtonGroup dataAttributeAction="'format'">
+                <BuilderButton dataAttributeActionValue="'grid'" id="'format_grid_opt'">Grid</BuilderButton>
+                <BuilderButton dataAttributeActionValue="'column'" id="'format_column_opt'">Column</BuilderButton>
+            </BuilderButtonGroup>
+        </BuilderRow>
+        <BuilderRow label.translate="Alignment" t-if="!isActiveItem('format_grid_opt')" level="'1'">
+            <BuilderButtonGroup dataAttributeAction="'alignment'">
+                <BuilderButton dataAttributeActionValue="'left'" icon="'fa-align-left'" title.translate="Left"/>
+                <BuilderButton dataAttributeActionValue="'center'" icon="'fa-align-center'" title.translate="Center"/>
+                <BuilderButton dataAttributeActionValue="'right'" icon="'fa-align-right'" title.translate="Right"/>
+            </BuilderButtonGroup>
+        </BuilderRow>
+        <BuilderRow label.translate="Separator" t-if="isActiveItem('layout_nav_opt')" level="'1'">
+            <BuilderButtonGroup>
+                <BuilderButton styleAction="''" styleActionValue="''" classAction="''" label.translate="None"/>
+                <BuilderButton classAction="'o_has_separator'" styleAction="'--o-we-sale-separator'" styleActionValue="'&quot;-&quot;'" label.translate="-"/>
+                <BuilderButton classAction="'o_has_separator'" styleAction="'--o-we-sale-separator'" styleActionValue="'&quot;|&quot;'" label.translate="|"/>
+                <BuilderButton classAction="'o_has_separator'" styleAction="'--o-we-sale-separator'" styleActionValue="'&quot;•&quot;'" label.translate="•"/>
+            </BuilderButtonGroup>
+            <!-- <BuilderSelect>
+                <BuilderSelectItem styleAction="''" styleActionValue="''" classAction="''" label.translate="None">
+                    None
+                </BuilderSelectItem>
+                <BuilderSelectItem classAction="'o_has_separator'" styleAction="'o-we-sale-separator'" styleActionValue="'&quot;-&quot;'" label.translate="-">
+                    -
+                </BuilderSelectItem>
+                <BuilderSelectItem classAction="'o_has_separator'" styleAction="'o-we-sale-separator'" styleActionValue="'&quot;/&quot;'" label.translate="|">
+                    |
+                </BuilderSelectItem>
+                <BuilderSelectItem classAction="'o_has_separator'" styleAction="'o-we-sale-separator'" styleActionValue="'&quot;•&quot;'" label.translate="•">
+                    •
+                </BuilderSelectItem>
+            </BuilderSelect> -->
+        </BuilderRow>
+        <BuilderRow label.translate="Columns" level="1" t-if="isActiveItem('format_grid_opt') and !state.isMobileView" applyTo="'.dynamic_snippet_template'">
+            <BuilderRange
+                styleAction="'--columns'"
+                min="1"
+                max="12"
+                displayRangeValue="true"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Gap" level="1" t-if="isActiveItem('layout_thumbnails_opt')" applyTo="'.dynamic_snippet_template'">
+            <BuilderRange action="'setClassRange'" actionParam="['gap-0','gap-1','gap-2','gap-3','gap-4','gap-5']" max="5"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Roundness" level="1" t-if="isActiveItem('layout_thumbnails_opt')" applyTo="'.dynamic_snippet_template'">
+            <BuilderRange action="'setClassRange'" actionParam="['rounded-0','rounded-1','rounded-2','rounded-3','rounded-4','rounded-5', 'rounded-pill']" max="6"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Image Size" level="1" t-if="isActiveItem('format_column_opt')">
+            <BuilderRange
+                styleAction="'--o-we-sale-img-size'"
+                min="40"
+                max="400"
+                unit="'px'"
+                displayRangeValue="true"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Image Shadow" level="1" t-if="isActiveItem('layout_thumbnails_opt')">
+            <BuilderCheckbox dataAttributeAction="'shadow'" dataAttributeActionValue="true"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Label" t-if="isActiveItem('layout_thumbnails_opt')" level="1">
+            <BuilderButtonGroup dataAttributeAction="'label'">
+                <BuilderButton dataAttributeActionValue="'inside'">Inside</BuilderButton>
+                <BuilderButton dataAttributeActionValue="'outside'">Outside</BuilderButton>
+            </BuilderButtonGroup>
+        </BuilderRow>
+        <BuilderRow label.translate="Direction" t-if="isActiveItem('layout_listgroup_opt')" level="'1'">
+            <BuilderSelect dataAttributeAction="'horizontal'">
+                <BuilderSelectItem dataAttributeActionValue="false" label.translate="Vertical">
+                    Vertical
+                </BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="true" label.translate="Horizontal" id="'direction_horizontal_opt'">
+                    Horizontal
+                </BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Filters">
+            <BuilderSelect dataAttributeAction="'filterId'">
+                <BuilderSelectItem
+                    dataAttributeActionValue=""
+                    label.translate="All Categories"
+                >
+                    All Categories
+                </BuilderSelectItem>
+                <t t-foreach="this.dynamicOptionParams.dynamicFilters" t-as="category" t-key="category.id">
+                    <BuilderSelectItem
+                        dataAttributeActionValue="`${category.id}`"
+                        label="category.name"
+                        t-out="category.name"
+                    />
+                </t>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow
+            t-if="this.dynamicOptionParams.domState.filterId" label.translate="Parent Category" dataAttributeAction="'showParent'"
+        >
+            <BuilderCheckbox
+                dataAttributeActionValue="'true'"
+                preview="false"
+            />
+        </BuilderRow>
+    </t>
+    <t t-name="website_sale.CategoriesInlineStyleOption">
+        <BuilderRow label.translate="Edge Spacing" applyTo="'.dynamic_snippet_template'">
+            <BuilderRange action="'setClassRange'" actionParam="['p-0','p-1','p-2','p-3','p-4','p-5']" max="5"/>
+        </BuilderRow>
+    </t>
+</templates>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="s_categories_inline_template_list" inherit_id="website_sale.dynamic_filter_template_product_public_category_default" primary="True">
+        <xpath expr="." position="replace">
+            <ul class="s_categories_inline_inner list-unstyled m-0">
+                <t t-foreach="records" t-as="category">
+                    <li>
+                        <a t-attf-href="/shop/category/{{category['id']}}" t-att-title="category['name']" t-out="category['name']"/>
+                    </li>
+                </t>
+            </ul>
+        </xpath>
+    </template>
+
+    <template id="s_categories_inline_template_nav" inherit_id="website_sale.dynamic_filter_template_product_public_category_default" primary="True">
+        <xpath expr="." position="replace">
+            <ul class="s_categories_inline_inner nav">
+                <t t-foreach="records" t-as="category">
+                    <li class="nav-item d-flex align-items-center">
+                        <a t-attf-href="/shop/category/{{category['id']}}" t-att-title="category['name']" t-out="category['name']" class="nav-link"/>
+                    </li>
+                </t>
+            </ul>
+        </xpath>
+    </template>
+
+    <template id="s_categories_inline_template_listgroup" inherit_id="website_sale.dynamic_filter_template_product_public_category_default" primary="True">
+        <xpath expr="." position="replace">
+            <div class="s_categories_inline_inner list-group">
+                <t t-foreach="records" t-as="category">
+                    <a t-attf-href="/shop/category/{{category['id']}}" t-att-title="category['name']" t-out="category['name']" class="list-group-item list-group-item-action"/>
+                </t>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="s_categories_inline_template_thumbnails" inherit_id="website_sale.dynamic_filter_template_product_public_category_default" primary="True">
+        <xpath expr="." position="replace">
+            <div class="s_categories_inline_inner grid o_not_editable" contenteditable="false">
+                <t t-foreach="records" t-as="category">
+                    <a t-attf-href="/shop/category/{{category['id']}}" class="s_categories_inline_item position-relative d-block opacity-trigger-hover text-truncate" t-att-title="category['name']">
+                        <img
+                            loading="lazy"
+                            t-attf-src="/web/image/product.public.category/{{category['id']}}/image_1920"
+                            t-att-alt="category['name']"
+                            class="s_categories_inline_item_img w-100 mx-auto o_not_editable pe-none"
+                        />
+                        <span class="o_we_bg_filter bg-black-50 opacity-0 opacity-100-hover transition-base"/>
+                        <span t-out="category['name']" class="s_categories_inline_thumbnails_label position-absolute start-50 top-50 translate-middle mb-0 text-white w-100 px-2 text-center opacity-0 opacity-100-hover transition-base o_not_editable"/>
+                    </a>
+                </t>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
