@@ -245,8 +245,22 @@ export class AddSnippetDialog extends Component {
                 // the tours here.
                 snippetPreviewWrapEl.dataset.snippetId = snippet.data.oeSnippetKey;
                 snippetPreviewWrapEl.dataset.snippetKey = snippet.key;
-                if (snippet.label) {
-                    snippetPreviewWrapEl.dataset.label = snippet.label;
+                // Check if any element in the snippet has the "parallax" class
+                // to show the "Parallax" label. This must be done this way
+                // because a theme or custom snippet may add or remove parallax
+                // elements. Note that if a label is already set, we do not
+                // change it.
+                // TODO In master, remove the "|| snippetLabel === 'Parallax'"
+                // part from the condition, as the label="Parallax" will be
+                // removed from the snippet definition.
+                let snippetLabel = snippet.label;
+                if (!snippetLabel || snippetLabel === "Parallax") {
+                    const hasParallax = snippet.baseBody.matches(".parallax")
+                        || !!snippet.baseBody.querySelector(".parallax");
+                    snippetLabel = hasParallax ? _t("Parallax") : "";
+                }
+                if (snippetLabel) {
+                    snippetPreviewWrapEl.dataset.label = snippetLabel;
                 }
                 snippetPreviewWrapEl.appendChild(clonedSnippetEl);
                 this.__onSnippetPreviewClick = this._onSnippetPreviewClick.bind(this);
