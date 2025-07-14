@@ -2431,6 +2431,11 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_paid_order_with_archived_product_loads', login="pos_user")
 
+    def test_delete_line(self):
+        """ Test that deleting a line in the POS through the popup works correctly. """
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_delete_line')
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
