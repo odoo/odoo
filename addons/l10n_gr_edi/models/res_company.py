@@ -52,7 +52,7 @@ class ResCompany(models.Model):
                 response.raise_for_status()
                 root = etree.fromstring(response.content)
             except (RequestException, ValueError) as err:
-                _logger.error("Something when wrong when fetching MyDATA bill: %s", err)
+                _logger.warning("Something went wrong when fetching MyDATA bill: %s", err)
                 continue
 
             for invoice_element in root.xpath('//*[local-name()="invoice"]'):
