@@ -21,3 +21,22 @@ class TestUIPortal(TestPortal):
             "star_message_tour",
             login=self.user_employee.login,
         )
+
+    def test_load_more(self):
+        self.env["mail.message"].create(
+            [
+                {
+                    "author_id": self.user_employee.partner_id.id,
+                    "body": f"Test Message {i + 1}",
+                    "model": self.record_portal._name,
+                    "res_id": self.record_portal.id,
+                    "subtype_id": self.ref("mail.mt_comment"),
+                }
+                for i in range(30)
+            ]
+        )
+        self.start_tour(
+            f"/my/test_portal_records/{self.record_portal.id}",
+            "load_more_tour",
+            login=self.user_employee.login,
+        )
