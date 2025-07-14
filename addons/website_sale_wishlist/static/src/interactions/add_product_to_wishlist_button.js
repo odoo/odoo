@@ -18,7 +18,7 @@ export class AddProductToWishlistButton extends Interaction {
     async addProduct(ev) {
         const el = ev.currentTarget;
         let productId = parseInt(el.dataset.productProductId);
-        const form = el.closest('form');
+        const form = wSaleUtils.getClosestProductForm(el);
         if (!productId) {
             productId = await this.waitFor(rpc('/sale/create_product_variant', {
                 product_template_id: parseInt(el.dataset.productTemplateId),

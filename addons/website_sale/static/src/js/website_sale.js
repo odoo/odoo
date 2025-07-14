@@ -4,6 +4,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import "@website/libs/zoomodoo/zoomodoo";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
+import wSaleUtils from '@website_sale/js/website_sale_utils';
 
 export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     selector: '.oe_website_sale',
@@ -290,7 +291,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     async _onClickAdd(ev) {
         ev.preventDefault();
         var def = () => {
-            this._updateRootProduct((ev.currentTarget).closest('form'));
+            const form = wSaleUtils.getClosestProductForm(ev.currentTarget);
+            this._updateRootProduct(form);
             const isBuyNow = ev.currentTarget.classList.contains('o_we_buy_now');
             const isConfigured = ev.currentTarget.parentElement.id === 'add_to_cart_wrap';
             const showQuantity = Boolean(ev.currentTarget.dataset.showQuantity);
@@ -371,7 +373,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @returns {void}
      */
     _onChangeAddQuantity: function (ev) {
-        const $parent = $(ev.currentTarget).closest('form');
+        const $parent = $(wSaleUtils.getClosestProductForm($(ev.currentTarget)[0]));
         if ($parent.length > 0) {
             this.triggerVariantChange($parent);
         }
@@ -387,7 +389,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             if (productGrid) {
                 productGrid.classList.add("opacity-50");
             }
-            const form = ev.currentTarget.closest('form');
+            const form = wSaleUtils.getClosestProductForm(ev.currentTarget);
             const filters = form.querySelectorAll('input:checked, select');
             const attributeValues = new Map();
             const tags = new Set();
@@ -534,7 +536,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         const productId = parseInt(
             form.querySelector('input[type="hidden"][name="product_id"]')?.value
         );
-        const quantity = parseFloat(form.querySelector('input[name="add_qty"]')?.value);
+        const productEl = form.closest('.js_product') ?? form;
+        const quantity = parseFloat(productEl.querySelector('input[name="add_qty"]')?.value);
         const uomId = this._getUoMId(form);
         const isCombo = form.querySelector(
             'input[type="hidden"][name="product_type"]'
