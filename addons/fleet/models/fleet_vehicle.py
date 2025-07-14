@@ -387,12 +387,12 @@ class FleetVehicle(models.Model):
             self.search([
                 ('driver_id', 'in', to_update_drivers_cars),
                 ('vehicle_type', '=', 'car'),
-            ]).plan_to_change_car = True
+            ]).plan_to_change_car = False
         if to_update_drivers_bikes:
             self.search([
                 ('driver_id', 'in', to_update_drivers_bikes),
                 ('vehicle_type', '=', 'bike'),
-            ]).plan_to_change_bike = True
+            ]).plan_to_change_bike = False
         return vehicles
 
     def write(self, vals):
