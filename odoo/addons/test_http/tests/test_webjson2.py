@@ -8,7 +8,7 @@ from odoo.tests import Like, get_db_name, mute_logger, new_test_user, tagged
 from odoo.tools.misc import submap
 
 from .test_common import TestHttpBase
-from odoo.addons.test_http.controllers.controllers import CT_JSON
+from odoo.addons.test_http.controllers import CT_JSON
 
 SEC_FETCH_HEADERS = {
     'Sec-Fetch-Dest': 'document',
