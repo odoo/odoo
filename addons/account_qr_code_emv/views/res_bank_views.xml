@@ -6,14 +6,14 @@
         <field name="model">res.partner.bank</field>
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
-            <sheet position="inside">
+            <xpath expr="//sheet/group[@name='note']" position="before">
                 <field name="display_qr_setting" invisible="1" />
                 <group string="EMV QR Configuration" invisible="not display_qr_setting">
                     <field name="proxy_type"/>
                     <field name="proxy_value"/>
                     <field name="include_reference"/>
                 </group>
-            </sheet>
+            </xpath>
         </field>
     </record>
 
