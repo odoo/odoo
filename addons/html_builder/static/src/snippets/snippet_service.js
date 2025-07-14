@@ -195,7 +195,7 @@ export class SnippetModel extends Reactive {
                     thumbnailSrc: snippetEl.dataset.oeThumbnail,
                     imagePreviewSrc: snippetEl.dataset.oImagePreview,
                     isCustom: false,
-                    label: snippetEl.dataset.oLabel,
+                    label: this.getSnippetLabel(snippetEl),
                     isDisabled: false,
                     forbidSanitize: false,
                     gridColumnSpan: 0,
@@ -429,6 +429,16 @@ export class SnippetModel extends Reactive {
                 { onClose: () => resolve(false) }
             );
         });
+    }
+
+    /**
+     * Gets the label of the snippet.
+     *
+     * @param {HTMLElement} snippetEl
+     * @returns {String}
+     */
+    getSnippetLabel(snippetEl) {
+        return snippetEl.dataset.oLabel;
     }
 }
 
