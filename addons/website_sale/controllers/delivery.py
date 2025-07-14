@@ -286,3 +286,24 @@ class Delivery(WebsiteSale):
                 else:
                     rate['price'] = taxes['total_included']
         return rate
+
+    @route('/website_sale/get_delivery_available_days', type='jsonrpc', auth='public', website=True)
+    def get_delivery_available_days(self, dm_id, **kwargs):
+        """ Fetch the available days for delivery for a given delivery method.
+
+        :param str dm_id: The delivery method to set, as a `delivery.carrier` id.
+        :return: The available days for delivery for the selected delivery method.
+        :rtype: list
+        """
+        delivery_method_sudo = request.env['delivery.carrier'].sudo().browse(int(dm_id)).exists()
+        return delivery_method_sudo._get_available_days()
+
+    @route('/website_sale/set_delivery_date', type='jsonrpc', auth='public', website=True)
+    def website_sale_set_delivery_date(self, delivery_date, **kwargs):
+        """ Fetch the order from the request and set the delivery date on the current order.
+
+        :param str delivery_date: The selected delivery date.
+        :return: None
+        """
+        order_sudo = request.cart
+        order_sudo.commitment_date = delivery_date

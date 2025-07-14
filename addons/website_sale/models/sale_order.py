@@ -832,6 +832,12 @@ class SaleOrder(models.Model):
         if rate.get('success'):
             self.set_delivery_line(delivery_method, rate['price'])
 
+        if delivery_method.has_estimated_delivery:
+            self.commitment_date = delivery_method._get_available_days()[0]
+        else:
+            # reset `commitment_date` if it doesn't have an estimated delivery date set
+            self.commitment_date = None
+
     def _get_delivery_methods(self):
         # searching on website_published will also search for available website (_search method on computed field)
         return self.env['delivery.carrier'].sudo().search([
