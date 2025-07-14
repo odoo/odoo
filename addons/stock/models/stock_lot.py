@@ -247,7 +247,7 @@ class StockLot(models.Model):
         partner_ids field within the form view since it uses different logic that isn't efficient
         enough for this search due to it being usable within the list view.
         """
-        if Domain.is_negative_operator(operator) or not isinstance(value, (Iterable)):
+        if operator in Domain.NEGATIVE_OPERATORS or not isinstance(value, (Iterable)):
             return NotImplemented
         is_no_partner = operator == 'in' and list(value) == [False]
         domain = Domain([

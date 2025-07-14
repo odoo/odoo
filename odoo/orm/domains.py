@@ -61,7 +61,7 @@ import warnings
 from datetime import date, datetime, time, timedelta, timezone
 
 from odoo.exceptions import UserError
-from odoo.tools import SQL, OrderedSet, Query, classproperty, partition, str2bool
+from odoo.tools import SQL, OrderedSet, Query, classproperty, frozendict, partition, str2bool
 
 from .identifiers import NewId
 from .utils import COLLECTION_TYPES, parse_field_expr
@@ -273,9 +273,7 @@ class Domain:
     def FALSE(cls) -> Domain:
         return _FALSE_DOMAIN
 
-    @staticmethod
-    def is_negative_operator(operator: str) -> bool:
-        return operator in NEGATIVE_CONDITION_OPERATORS
+    NEGATIVE_OPERATORS = NEGATIVE_CONDITION_OPERATORS
 
     @staticmethod
     def custom(

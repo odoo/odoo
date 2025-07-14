@@ -99,7 +99,7 @@ class MailThreadPhone(models.AbstractModel):
         sql_operator = {'=like': 'LIKE', '=ilike': 'ILIKE'}.get(operator, operator)
 
         if value.startswith('+') or value.startswith('00'):
-            if Domain.is_negative_operator(operator):
+            if operator in Domain.NEGATIVE_OPERATORS:
                 # searching on +32485112233 should also finds 0032485112233 (and vice versa)
                 # we therefore remove it from input value and search for both of them in db
                 where_str = ' AND '.join(
@@ -128,7 +128,7 @@ class MailThreadPhone(models.AbstractModel):
                 query, (PHONE_REGEX_PATTERN, '00' + term, PHONE_REGEX_PATTERN, '+' + term) * len(phone_fields)
             )
         else:
-            if Domain.is_negative_operator(operator):
+            if operator in Domain.NEGATIVE_OPERATORS:
                 where_str = ' AND '.join(
                     f"(model.{phone_field} IS NULL OR REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s)"
                     for phone_field in phone_fields

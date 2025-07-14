@@ -27,7 +27,7 @@ class MailMessage(models.Model):
             message.rating_value = message.rating_id.rating if message.rating_id else 0.0
 
     def _search_rating_value(self, operator, operand):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         ratings = self.env['rating.rating'].sudo()._search([
             ('rating', operator, operand),

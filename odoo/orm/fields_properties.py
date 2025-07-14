@@ -764,7 +764,7 @@ class Properties(Field):
                 "%s%s%s",
                 unaccent(sql_left), sql_operator, unaccent(sql_right),
             )
-            if Domain.is_negative_operator(operator):
+            if operator in Domain.NEGATIVE_OPERATORS:
                 sql = SQL("(%s OR %s IS NULL)", sql, sql_left)
             return sql
 
