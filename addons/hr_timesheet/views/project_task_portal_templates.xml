@@ -7,7 +7,7 @@
         </xpath>
         <xpath expr="//div[@id='task-nav']" position="before">
             <div t-if="timesheets and allow_timesheets and show_portal_timesheets" class="d-grid flex-grow-1" id='nav-report'>
-                <a class="btn btn-light o_print_btn o_project_timesheet_print d-block" t-att-href="task.get_portal_url(report_type='pdf')" href="#" title="View Details" role="button" target="_blank"><i class="fa fa-print"/> View Details</a>
+                <a class="btn btn-light o_print_btn o_project_timesheet_print d-block" t-att-href="task.get_portal_url(report_type='pdf')" title="View Details" role="button" target="_blank"><i class="fa fa-print"/> View Details</a>
             </div>
         </xpath>
         <xpath expr="//li[@id='nav-header']" position="after">
