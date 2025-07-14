@@ -164,7 +164,7 @@ registry.category("web_tour.tours").add("test_change_on_rights_reflected_directl
             Chrome.clickMenuOption("Backend", { expectUnloadPage: true }),
             BackendUtils.editShopConfiguration("Shop"),
             {
-                trigger: ".o_tag:contains('Pos Employee1') .o_delete",
+                trigger: ".o_tag:contains('Pos Employee1') .o_delete:not(:visible)",
                 run: "click",
             },
             BackendUtils.saveConfiguration(),

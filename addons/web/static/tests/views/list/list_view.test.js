@@ -11408,7 +11408,7 @@ test(`multi edition: many2many field required field`, async () => {
     expect(".o_data_row_selected").toHaveCount(4);
 
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(1)`).click();
-    await contains(`.o_field_widget[name=m2m] .o_tag:contains(Value 1) .o_delete`).click();
+    await contains(`.o_field_widget[name=m2m] .o_tag:contains(Value 1) .o_delete`, { visible: false }).click();
     expect(`.o_dialog`).toHaveCount(1);
     expect(`.modal-body`).toHaveText(`Among the 4 selected records, 3 are valid for this update.
 Are you sure you want to update 3 records?
@@ -11479,7 +11479,7 @@ test(`multi edition: many2many field required field (edited field is invalid)`, 
     expect(`.o_data_row:eq(3) .o_data_cell:eq(1) .o_tag`).toHaveCount(1);
 
     await contains(`.o_data_row:eq(3) .o_data_cell:eq(1)`).click(); // edit last row
-    await contains(`.o_field_widget[name=m2m] .o_tag:contains(Value 1) .o_delete`).click();
+    await contains(`.o_field_widget[name=m2m] .o_tag:contains(Value 1) .o_delete`, { visible: false }).click();
     expect(`.o_data_row:eq(3) .o_data_cell:eq(1) .o_tag`).toHaveCount(1); // still there
     expect(`.o_dialog`).toHaveCount(1);
     expect(`.modal-body`).toHaveText(`Among the 4 selected records, 3 are valid for this update.
@@ -12203,7 +12203,7 @@ test(`editable list view: m2m tags in grouped list`, async () => {
 
     await contains(`thead .o_list_record_selector input`).click();
     await contains(`.o_data_row .o_field_many2many_tags`).click();
-    await contains(`.o_selected_row .o_field_many2many_tags .o_delete`).click();
+    await contains(`.o_selected_row .o_field_many2many_tags .o_delete`, { visible: false }).click();
     await contains(`.modal .btn-primary`).click();
     expect(queryAllTexts(`td.o_many2many_tags_cell`)).toEqual(["Value 2", "Value 2\nValue 3", ""]);
 });
@@ -17100,7 +17100,7 @@ test(`Properties: tags`, async () => {
     expect(`.o_field_cell.o_property_tags_cell`).toHaveCount(3);
 
     await contains(`.o_field_cell.o_property_tags_cell`).click();
-    await contains(`.o_field_cell.o_property_tags_cell .o_delete`).click();
+    await contains(`.o_field_cell.o_property_tags_cell .o_delete`, { visible: false }).click();
     expectedValue = ["c"];
     await contains(`.o_list_button_save`).click();
     expect(`.o_field_cell.o_property_tags_cell:eq(0)`).toHaveText("C");

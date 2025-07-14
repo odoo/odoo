@@ -170,32 +170,3 @@ test("Limiting the visible tags displays a counter", async () => {
     expect(".o_tag").toHaveCount(6);
     expect(".rounded").toHaveCount(0);
 });
-
-test("Tags with img have a backdrop only if they can be deleted", async () => {
-    class Parent extends Component {
-        static props = ["*"];
-        static components = { TagsList };
-        static template = xml`<TagsList tags="tags" />`;
-        setup() {
-            this.tags = [
-                {
-                    id: "tag1",
-                    text: "Earth",
-                    img: "fake/url",
-                },
-                {
-                    colorIndex: 1,
-                    id: "tag2",
-                    text: "Wind",
-                    img: "fake/url",
-                    onDelete: () => {},
-                },
-            ];
-        }
-    }
-
-    await mountWithCleanup(Parent);
-    expect(".o_tag").toHaveCount(2);
-    expect(".o_tag:nth-of-type(1) .o_avatar_backdrop").toHaveCount(0);
-    expect(".o_tag:nth-of-type(2) .o_avatar_backdrop").toHaveCount(1);
-});

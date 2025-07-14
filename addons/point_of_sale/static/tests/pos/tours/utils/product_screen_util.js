@@ -888,6 +888,13 @@ export function createProductFromFrontend(name, barcode, list_price, category) {
     return [
         ...productInputSteps(name, barcode, list_price),
         {
+            isActive: ["desktop"],
+            content: "Remove default tax 15%.",
+            trigger: 'div[name="taxes_id"] .o_delete:not(:visible)',
+            run: "click",
+        },
+        {
+            isActive: ["mobile"],
             content: "Remove default tax 15%.",
             trigger: 'div[name="taxes_id"] .o_delete',
             run: "click",

@@ -182,7 +182,7 @@ test("Can set a relation filter value", async function () {
             message: "value is set",
         }
     );
-    await contains(".o_tag .o_delete").click();
+    await contains(".o_tag .o_delete", { visible: false }).click();
     await contains(".btn-primary").click();
     expect(model.getters.getGlobalFilterValue("42")).toBe(undefined);
 });
@@ -199,7 +199,7 @@ test("Can remove a default relation filter value", async function () {
     });
     await mountFilterValuesList(env, { model });
     expect(".o_tag").toHaveCount(1);
-    await contains(".o_tag .o_delete").click();
+    await contains(".o_tag .o_delete", { visible: false }).click();
     expect(".o_tag").toHaveCount(0);
     await contains(".btn-primary").click();
     expect(model.getters.getGlobalFilterValue("42")).toBe(undefined);
@@ -288,7 +288,7 @@ test("Can clear a filter value removing the values manually", async function () 
     });
     await mountFilterValuesList(env, { model });
     expect(".o-filter-values .o-filter-item .o_tag").toHaveCount(1);
-    await contains(".o-filter-values .o-filter-item .o_tag .o_delete").click();
+    await contains(".o-filter-values .o-filter-item .o_tag .o_delete", { visible: false }).click();
     expect(".o-filter-values .o-filter-item .o_tag").toHaveCount(0);
     await contains(".btn-primary").click();
     expect(model.getters.getGlobalFilterValue("42")).toBe(undefined, {
@@ -326,7 +326,7 @@ test("clearing a filter value preserves the operator", async function () {
     await contains(".o-filter-values select").select("starts with");
 
     // remove the only value
-    await contains(".o-filter-values .o-filter-item .o_tag .o_delete").click();
+    await contains(".o-filter-values .o-filter-item .o_tag .o_delete", { visible: false }).click();
     expect(".o-filter-values .o-filter-item .o_tag").toHaveCount(0);
     expect(".o-filter-values select").toHaveValue("starts with");
 

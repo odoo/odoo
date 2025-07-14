@@ -2,6 +2,10 @@
     font-size: var(--Tag-font-size, #{$font-size-sm});
     max-width: var(--Tag-max-width, 100%);
 
+    &.o_badge {
+        min-width: 2.5rem;
+    }
+
     @for $size from 1 through length($o-colors) {
         &.o_tag_color_#{$size - 1} {
             $-bg: adjust-color(nth($o-colors, $size), $lightness: 25%, $saturation: 15%);
@@ -11,6 +15,29 @@
                 @include o-print-color($-bg, background-color, bg-opacity);
                 @include o-print-color($-color, color, text-opacity);
             }
+        }
+    }
+
+    @include media-breakpoint-up(md) {
+        .o_delete {
+            background-color: var(--background-color);
+            display: none;
+            height: 100%;
+            padding-right: 0.4rem;
+            position: absolute;
+            right: 0;
+
+            i:hover {
+                font-weight: bold;
+            }
+        }
+
+        &.o_avatar .o_delete {
+            --background-color: white;
+        }
+
+        &:hover .o_delete {
+            display: flex;
         }
     }
 }

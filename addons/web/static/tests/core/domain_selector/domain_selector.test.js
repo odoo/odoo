@@ -479,7 +479,7 @@ test("multi selection", async () => {
     expect(queryAllTexts(SELECTORS.tag)).toEqual(["a", "b", "c"]);
     expect(`${SELECTORS.valueEditor} select`).toHaveCount(1);
 
-    await contains(`${SELECTORS.valueEditor} .o_tag .o_delete`).click();
+    await contains(`${SELECTORS.valueEditor} .o_tag .o_delete`, { visible: false }).click();
     expect(comp.domain).toBe(`[("state", "in", ["b", "c"])]`);
 
     await selectValue("abc");
@@ -1249,7 +1249,7 @@ test("Edit the value for field char and an operator in", async () => {
     expect(queryAllTexts(SELECTORS.tag)).toEqual([`"a"`, `"b"`, `uid`, `"c"`]);
     expect.verifySteps([`[("foo", "in", ["a", "b", uid, "c"])]`]);
 
-    await contains(".o_tag .o_delete:eq(2)").click();
+    await contains(".o_tag:eq(2) .o_delete", { visible: false }).click();
     expect(queryAllTexts(SELECTORS.tag)).toEqual([`a`, `b`, `c`]);
     expect.verifySteps([`[("foo", "in", ["a", "b", "c"])]`]);
 
@@ -1676,7 +1676,7 @@ test("many2one field and operator in/not in (edit)", async () => {
     expect(getCurrentValue()).toBe("xphone xpad");
     expect.verifySteps([`[("product_id", "not in", [37, 41])]`]);
 
-    await contains(".o_tag .o_delete").click();
+    await contains(".o_tag .o_delete", { visible: false }).click();
     expect(getCurrentOperator()).toBe(label("not in", "many2one"));
     expect(getCurrentValue()).toBe("xpad");
     expect.verifySteps([`[("product_id", "not in", [41])]`]);
@@ -1832,7 +1832,7 @@ test("many2many field: operator =/!=/in/not in (edit)", async () => {
     expect(getCurrentValue()).toBe("xphone xpad");
     expect.verifySteps([`[("product_ids", "not in", [37, 41])]`]);
 
-    await contains(".o_tag .o_delete").click();
+    await contains(".o_tag .o_delete", { visible: false }).click();
     expect(getCurrentValue()).toBe("xpad");
     expect.verifySteps([`[("product_ids", "not in", [41])]`]);
 });

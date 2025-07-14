@@ -5257,7 +5257,7 @@ test("Save record, no changes but dirty (add and remove tag)", async () => {
     expect(`.o_field_widget[name=type_ids] .o_tag`).toHaveCount(1);
 
     // remove tag
-    await contains(`.o_field_widget[name=type_ids] .o_tag .o_delete`).click();
+    await contains(`.o_field_widget[name=type_ids] .o_tag .o_delete`, { visible: false }).click();
     expect(`.o_field_widget[name=type_ids] .o_tag`).toHaveCount(0);
     expect.verifySteps(["web_read", "web_read"]);
 
@@ -5296,7 +5296,7 @@ test("switching to another record from a dirty record but wo changes (add and re
     expect(`.o_field_widget[name=type_ids] .o_tag`).toHaveCount(1);
 
     // remove tag
-    await contains(`.o_field_widget[name=type_ids] .o_tag .o_delete`).click();
+    await contains(`.o_field_widget[name=type_ids] .o_tag .o_delete`, { visible: false }).click();
     expect(`.o_field_widget[name=type_ids] .o_tag`).toHaveCount(0);
     expect.verifySteps(["web_read", "web_read"]);
 

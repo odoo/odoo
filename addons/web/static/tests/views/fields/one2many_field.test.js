@@ -5929,7 +5929,7 @@ test("many2one and many2many in one2many", async () => {
     ]);
 
     // remove a tag
-    await contains(".o_selected_row .o_field_many2many_tags .badge .o_delete:eq(1)").click();
+    await contains(".o_selected_row .o_field_many2many_tags .badge .o_delete:eq(1)", { visible: false }).click();
 
     expect(queryAllTexts(".o_selected_row .o_field_many2many_tags .badge")).toEqual([
         "second record",
