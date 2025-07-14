@@ -1163,7 +1163,7 @@ class One2many(_RelationalMulti):
             SQL("%s AS __inverse", comodel._field_to_sql(coquery.table, inverse_field.name, coquery))
         )
         return SQL(
-            "%sEXISTS(SELECT FROM %s WHERE __inverse = %s)",
+            "%sEXISTS(SELECT FROM %s AS __sub WHERE __inverse = %s)",
             SQL() if exists else SQL("NOT "),
             subselect,
             SQL.identifier(alias, 'id'),
