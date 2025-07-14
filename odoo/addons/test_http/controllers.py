@@ -61,12 +61,7 @@ class TestHttp(http.Controller):
     def wsgi_environ(self):
         environ = {
             key: val for key, val in request.httprequest.environ.items()
-            if (key.startswith('HTTP_')  # headers
-             or key.startswith('REMOTE_')
-             or key.startswith('REQUEST_')
-             or key.startswith('SERVER_')
-             or key.startswith('werkzeug.proxy_fix.')
-             or key in WSGI_SAFE_KEYS)
+            if (key.startswith(('HTTP_', 'REMOTE_', 'REQUEST_', 'SERVER_', 'werkzeug.proxy_fix.')) or key in WSGI_SAFE_KEYS)
         }
 
         return request.make_response(
@@ -225,7 +220,7 @@ class TestHttp(http.Controller):
 
     @http.route("/test_http/upload_file", methods=["POST"], type="http", auth="none", csrf=False)
     def upload_file_retry(self, ufile):
-        global should_fail  # pylint: disable=W0603
+        global should_fail  # pylint: disable=W0603  # noqa: PLW0603
         if should_fail is None:
             raise ValueError("should_fail should be set.")
 

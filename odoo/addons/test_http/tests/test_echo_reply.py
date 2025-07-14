@@ -7,7 +7,7 @@ from http import HTTPStatus
 from odoo.http import Request, root, SESSION_ROTATION_INTERVAL
 from odoo.tests import Like, new_test_user, tagged
 from odoo.tools import mute_logger
-from odoo.addons.test_http.controllers.controllers import CT_JSON
+from odoo.addons.test_http.controllers import CT_JSON
 
 from .test_common import TestHttpBase
 
