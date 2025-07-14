@@ -73,32 +73,16 @@ export class BasePrinter {
      * if it failed to connect to the IoT box.
      */
     getActionError() {
-        if (window.isSecureContext) {
-            // We assume if we get a network error over HTTPS that it is a certificate issue.
-            return {
-                successful: false,
-                canRetry: false,
-                message: {
-                    title: _t("Connection to IoT Box failed"),
-                    body: _t(
-                        "Your database is not registered.\n" +
-                            "Buy a subscription, or register your subscription code, then retry.\n\n" +
-                            "You can still download the receipt and print it manually."
-                    ),
-                },
-            };
-        } else {
-            return {
-                successful: false,
-                canRetry: true,
-                message: {
-                    title: _t("Connection to IoT Box failed"),
-                    body: _t(
-                        "Please ensure the IoT box is turned on and connected to the network before retrying."
-                    ),
-                },
-            };
-        }
+        return {
+            successful: false,
+            canRetry: true,
+            message: {
+                title: _t("Connection to IoT Box failed"),
+                body: _t(
+                    "Please ensure the IoT box is turned on and connected to the network before retrying."
+                ),
+            },
+        };
     }
 
     /**
