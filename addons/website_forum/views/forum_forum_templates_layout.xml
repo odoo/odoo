@@ -275,7 +275,7 @@
         </div>
     </div>
     <div t-if="uid" class="o_wforum_sidebar_section mt-4 mb-2">
-        <a t-attf-href="/forum/user/#{ uid }?forum_id=#{ forum.id if forum else '' }&amp;forum_origin=#{ request.httprequest.path }"
+        <a t-attf-href="/profile/user/#{ uid }?forum_id=#{ forum.id if forum else '' }"
             class="btn w-100 py-1 text-start d-flex align-items-center" data-bs-toggle="tooltip" data-trigger="hover"
             title="My profile">
             <img class="o_wforum_avatar rounded-circle object-fit-cover" t-att-src="request.website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
@@ -306,12 +306,12 @@
             </a>
         </t>
         <!-- People -->
-        <a t-attf-class="nav-link my-1 py-1 text-reset" t-attf-href="/profile/users?forum_origin=#{request.httprequest.path}">
+        <a t-attf-class="nav-link my-1 py-1 text-reset" t-attf-href="/profile/users">
             <i class="fa fa-users fa-fw opacity-50"/> People
         </a>
 
         <!-- Badges -->
-        <a t-attf-class="nav-link my-1 py-1 text-reset" t-attf-href="/profile/ranks_badges?forum_origin=#{request.httprequest.path}">
+        <a t-attf-class="nav-link my-1 py-1 text-reset" t-attf-href="/profile/ranks_badges">
             <i class="fa fa-shield fa-fw opacity-50"/> Badges
         </a>
     </div>
