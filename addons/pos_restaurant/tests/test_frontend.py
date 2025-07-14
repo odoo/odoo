@@ -570,3 +570,7 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.write({'iface_tipproduct': True, 'tip_product_id': self.tip.id})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_tip_after_payment')
+
+    def test_lines_deleted_from_first_try(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_lines_deleted_from_first_try')

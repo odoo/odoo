@@ -48,4 +48,15 @@ patch(OrderSummary.prototype, {
             currentOrder.lines.length === 0
         );
     },
+    _setValue(val) {
+        if (
+            this.currentOrder.getSelectedOrderline() &&
+            this.pos.numpadMode === "quantity" &&
+            val === "remove" &&
+            typeof this.currentOrder.id === "number"
+        ) {
+            this.pos.addPendingOrder([this.currentOrder.id]);
+        }
+        return super._setValue(val);
+    },
 });
