@@ -302,6 +302,9 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         super().__init__(methodName)
         self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
         self.addTypeEqualityFunc(html.HtmlElement, self.assertTreesEqual)
+        if methodName != 'runTest':
+            self.test_tags = self.test_tags | set(self.get_method_additional_tags(getattr(self, methodName)))
+
 
     @classmethod
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
@@ -580,6 +583,9 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
 
             The second form is convenient when used with :func:`users`.
         """
+        if not 'is_query_count' in self.test_tags:
+            # change into warning in master
+            self._logger.info('assertQueryCount is used but the test is not tagged `is_query_count`')
         if self.warm:
             # mock random in order to avoid random bus gc
             with patch('random.random', lambda: 1):
@@ -807,6 +813,15 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
             raise BadRequest(
                 'Request ignored during test as it does not contain the required cookie.'
             )
+
+    def get_method_additional_tags(self, test_method):
+        """Guess if the test_methods is a query_count and adds an `is_query_count` tag on the test
+        """
+        additional_tags = []
+        method_source = inspect.getsource(test_method) if test_method else ''
+        if 'self.assertQueryCount' in method_source:
+            additional_tags.append('is_query_count')
+        return additional_tags
 
 class Like:
     """
@@ -2229,6 +2244,9 @@ class HttpCase(TransactionCase):
         """Wrapper for `browser_js` to start the given `tour_name` with the
         optional delay between steps `step_delay`. Other arguments from
         `browser_js` can be passed as keyword arguments."""
+        if not 'is_tour' in self.test_tags:
+            # change it into warning in master
+            self._logger.info('start_tour was called from a test not tagged `is_tour`')
         options = {
             'stepDelay': step_delay or 0,
             'keepWatchBrowser': kwargs.get('watch', False),
@@ -2256,6 +2274,16 @@ class HttpCase(TransactionCase):
             _profiler.sub_profilers.append(_route_profiler)
             return _route_profiler
         return profiler.Nested(_profiler, patch('odoo.http.Request._get_profiler_context_manager', route_profiler))
+
+    def get_method_additional_tags(self, test_method):
+        """
+        guess if the test_methods is a tour and adds an `is_tour` tag on the test
+        """
+        additional_tags = super().get_method_additional_tags(test_method)
+        method_source = inspect.getsource(test_method)
+        if 'self.start_tour' in method_source:
+            additional_tags.append('is_tour')
+        return additional_tags
 
     def make_jsonrpc_request(self, route, params=None, headers=None):
         """Make a JSON-RPC request to the server.

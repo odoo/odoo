@@ -23,7 +23,7 @@ def test_get_data(self, template_code):
     return {
         'template_data': {
             'code_digits': 6,
-            'currency_id': 'base.EUR',
+            'currency_id': self.env.ref('base.EUR').id,
             'property_account_income_categ_id': 'test_account_income_template',
             'property_account_expense_categ_id': 'test_account_expense_template',
             'property_account_receivable_id': 'test_account_receivable_template',

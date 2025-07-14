@@ -11,12 +11,21 @@
                 <div class="col-8">
                     <div style="margin:5px;">
                         <ul style="list-style: none">
-                            <li>MyDATA Mark <t t-out="mydata_values['mydata_mark']"/></li>
-                            <li t-if="mydata_values.get('mydata_cls_mark')">MyDATA Expense Classification Mark <t t-out="mydata_values['mydata_cls_mark']"/></li>
+                            <li>myDATA Mark <t t-out="mydata_values['mydata_mark']"/></li>
+                            <li t-if="mydata_values.get('mydata_cls_mark')">myDATA Expense Classification Mark <t t-out="mydata_values['mydata_cls_mark']"/></li>
                         </ul>
                     </div>
                 </div>
             </div>
+        </xpath>
+    </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_gr_edi.report_invoice_document'"
+               t-call="l10n_gr_edi.report_invoice_document"
+               t-lang="lang"/>
         </xpath>
     </template>
 

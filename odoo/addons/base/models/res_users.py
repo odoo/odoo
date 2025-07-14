@@ -2317,6 +2317,12 @@ class APIKeysUser(models.Model):
                 'mfa': 'default',
             }
 
+        if not user_agent_env.get('interactive', True) and self.env.user._rpc_api_keys_only():
+            _logger.info(
+                "Invalid API key or password-based authentication attempted for a non-interactive (API) "
+                "context that requires API key authentication only."
+            )
+
         raise AccessDenied()
 
     @check_identity
