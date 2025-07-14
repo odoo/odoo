@@ -199,10 +199,6 @@ def init_logger():
     warnings.simplefilter('default', category=DeprecationWarning)
     # https://github.com/urllib3/urllib3/issues/2680
     warnings.filterwarnings('ignore', r'^\'urllib3.contrib.pyopenssl\' module is deprecated.+', category=DeprecationWarning)
-    if bs4 := sys.modules.get('bs4'):
-        # avoid loading bs4 module during initialization; this filter is also
-        # monkeypatched if the import is done afterwards
-        warnings.filterwarnings('ignore', category=bs4.XMLParsedAsHTMLWarning)
     # ignore a bunch of warnings we can't really fix ourselves
     for module in [
         'babel.util', # deprecated parser module, no release yet
