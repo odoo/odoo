@@ -34,7 +34,7 @@
                             <t t-foreach="row.subGroupMeasurements" t-as="cell" t-key="'row_cell_' + cell_index">
                                 <td class="o_pivot_cell_value bg-100" t-att-class="{
                                         o_empty: cell.value === undefined,
-                                        'cursor-pointer': cell.value !== undefined,
+                                        'cursor-pointer': cell.value !== undefined and !model.metaData.disableLinking,
                                         'fw-bold': cell.isBold,
                                     }" t-custom-click.synthetic="(ev, isMiddleClick) => this.onOpenView(cell, isMiddleClick)"
                                     t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
