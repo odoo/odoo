@@ -73,6 +73,7 @@ patch(ControlButtons.prototype, {
             if (line) {
                 tobeRemoved?.delete();
             }
+            this.pos.numpadMode = "price";
         }
     },
 });
