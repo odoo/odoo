@@ -263,7 +263,12 @@ class Meeting(models.Model):
             event.current_attendee = current_attendee and current_attendee[0]
 
     def _search_current_attendee(self, operator, value):
-        return [("id", operator, value)]
+        return [
+            ('attendee_ids', 'any', [
+                ('partner_id', '=', self.env.user.partner_id.id),
+                ('id', operator, value)
+            ])
+        ]
 
     @api.depends('attendee_ids', 'attendee_ids.state', 'partner_ids')
     def _compute_attendees_count(self):
