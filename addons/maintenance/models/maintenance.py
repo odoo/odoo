@@ -129,7 +129,8 @@ class MaintenanceEquipment(models.Model):
 
     name = fields.Char('Equipment Name', required=True, translate=True)
     active = fields.Boolean(default=True)
-    owner_user_id = fields.Many2one('res.users', string='Owner', tracking=True, index='btree_not_null')
+    owner_user_id = fields.Many2one('res.users', string='Owner', compute='_compute_owner', store=True, readonly=False,
+                                    tracking=True, index='btree_not_null')
     category_id = fields.Many2one('maintenance.equipment.category', string='Equipment Category',
                                   tracking=True, group_expand='_read_group_category_ids', index='btree_not_null')
     partner_id = fields.Many2one('res.partner', string='Vendor', check_company=True)
@@ -144,6 +145,7 @@ class MaintenanceEquipment(models.Model):
     scrap_date = fields.Date('Scrap Date')
     maintenance_ids = fields.One2many('maintenance.request', 'equipment_id')
     equipment_properties = fields.Properties('Properties', definition='category_id.equipment_properties_definition', copy=True)
+    equipment_assign_to = fields.Selection(selection=[], string='Used By')
 
     @api.onchange('category_id')
     def _onchange_category_id(self):
@@ -176,6 +178,10 @@ class MaintenanceEquipment(models.Model):
         search_domain = self.env['ir.rule']._compute_domain(categories._name)
         category_ids = categories.sudo()._search(search_domain, order=categories._order)
         return categories.browse(category_ids)
+
+    def _compute_owner(self):
+        for equipment in self:
+            equipment.owner_user_id = equipment.owner_user_id
 
 
 class MaintenanceRequest(models.Model):
