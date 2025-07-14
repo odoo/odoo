@@ -17,4 +17,7 @@ patch(PosOrderline.prototype, {
             )
         );
     },
+    get isDiscountLine() {
+        return this.product_id.id === this.config.discount_product_id?.id;
+    },
 });
