@@ -450,7 +450,15 @@ test("Export dialog: compatible and export type options", async () => {
         { tag: "xls", label: "Excel" },
         { tag: "wow", label: "WOW" },
     ]);
-    onRpc("/web/export/get_fields", () => fetchedFields.root);
+    let checkpoint;
+    const def = new Deferred();
+    onRpc("/web/export/get_fields", async () => {
+        if (checkpoint) {
+            await def;
+        }
+        checkpoint = true;
+        return fetchedFields.root;
+    });
 
     await mountView({
         type: "list",
@@ -465,7 +473,11 @@ test("Export dialog: compatible and export type options", async () => {
     expect(".o_export_format div:nth-of-type(3)").toHaveText("WOW");
     await check(".o_export_format div:nth-of-type(3) input");
     await animationFrame();
+    expect(".o_export_tree_item").toHaveCount(3);
     await contains(".o_import_compat input").click();
+    expect(".o_export_tree_item").toHaveCount(3);
+    def.resolve();
+    await animationFrame();
     await contains(".o_select_button").click();
     // download file has been called with the correct url
     expect.verifySteps(["/web/export/wow"]);
