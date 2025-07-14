@@ -5,14 +5,15 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
-class EventPageOption extends Plugin {
+export const eventPageSelector = "main:has(.o_wevent_event)";
+
+export class EventPageOption extends Plugin {
     static id = "eventPageOption";
-    evenPageSelector = "main:has(.o_wevent_event)";
     resources = {
         builder_options: [
             withSequence(EVENT_PAGE, {
                 template: "website_event.EventPageOption",
-                selector: this.evenPageSelector,
+                selector: eventPageSelector,
                 editableOnly: false,
                 title: _t("Event Page"),
                 groups: ["website.group_website_designer"],
@@ -56,7 +57,7 @@ export class DisplaySubMenuAction extends BuilderAction {
     }
 
     getEventObjectId() {
-        const isEventPage = this.editable.querySelector(this.evenPageSelector);
+        const isEventPage = this.editable.querySelector(eventPageSelector);
         if (!isEventPage) {
             return 0;
         }
@@ -70,7 +71,7 @@ export class DisplaySubMenuAction extends BuilderAction {
 
     async apply() {
         await this.toggleWebsiteMenu("true");
-        return { reloadUrl: this.plugin.eventData["website_url"] };
+        return { reloadUrl: this.eventData["website_url"] };
     }
 
     async clean() {
