@@ -105,7 +105,7 @@ test("Use the sidebar 'save snippet' buttons", async () => {
     };
     const innerContentDesc = {
         name: "Button",
-        content: `<a data-snippet="s_button" class="btn o_snippet_drop_in_only" href="#">Button</a></div>`,
+        content: `<a data-snippet="s_button" class="btn o_snippet_drop_in_only" href="/contactus">Button</a></div>`,
     };
     const snippets = {
         snippet_groups: [

@@ -29,7 +29,7 @@ test("Drag & drop a 'Button' snippet in a <div> should put it inside a <p>", asy
     await drop(getDragHelper());
     await waitForEndOfOperation();
     expect(contentEl).toHaveInnerHTML(
-        `<div><p>\ufeff<a class="btn btn-primary" href="#">\ufeffButton\ufeff</a>\ufeff</p><p>Text</p></div>`
+        `<div><p>\ufeff<a class="btn btn-primary" href="/contactus">\ufeffButton\ufeff</a>\ufeff</p><p>Text</p></div>`
     );
     expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
 });
@@ -58,7 +58,7 @@ test("Drag & drop a 'Button' snippet should align the button style with the butt
     await drop(getDragHelper());
     await waitForEndOfOperation();
     expect(contentEl).toHaveInnerHTML(
-        `<a href="http://test.com" class="btn btn-fill-secondary mb-2" style="line-height: 50px;"> ButtonStyled </a> <a class="btn mb-2 btn-fill-secondary" href="#"> Button </a>`
+        `<a href="http://test.com" class="btn btn-fill-secondary mb-2" style="line-height: 50px;"> ButtonStyled </a> <a class="btn mb-2 btn-fill-secondary" href="/contactus"> Button </a>`
     );
     expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
 });
@@ -97,7 +97,7 @@ test("Drag & drop a 'Button' snippet over a dropzone should preview it correctly
     expect(contentEl).toHaveInnerHTML(
         `<a href="http://test.com" class="btn btn-fill-secondary"> ButtonStyled </a>
          <p style="padding-bottom: 50px;"><a href="http://test.com" class="btn btn-fill-secondary"> ButtonStyled in a p </a></p>
-         <p><a class="btn btn-primary" href="#"> Button </a></p>`
+         <p><a class="btn btn-primary" href="/contactus"> Button </a></p>`
     );
     expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
 });
