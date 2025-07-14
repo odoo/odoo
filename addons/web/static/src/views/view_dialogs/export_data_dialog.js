@@ -104,10 +104,10 @@ export class ExportDataDialog extends Component {
         this.expandedFields = {};
         this.availableFormats = [];
         this.templates = [];
+        this.isCompatible = false;
 
         this.state = useState({
             exportList: [],
-            isCompatible: false,
             isEditingTemplate: false,
             search: [],
             selectedFormat: 0,
@@ -216,11 +216,11 @@ export class ExportDataDialog extends Component {
      * Load fields to display and (re)set the list of available fields
      */
     async fetchFields() {
-        this.state.search = [];
         this.knownFields = {};
         this.expandedFields = {};
         await this.loadFields();
         await this.setDefaultExportList();
+        this.state.search = [];
         if (this.searchRef.el) {
             this.searchRef.el.value = "";
         }
@@ -272,7 +272,7 @@ export class ExportDataDialog extends Component {
         if (preventLoad) {
             return;
         }
-        const fields = await this.props.getExportedFields(this.state.isCompatible, parentParams);
+        const fields = await this.props.getExportedFields(this.isCompatible, parentParams);
         for (const field of fields) {
             field.parent = parentField;
             if (!this.knownFields[field.id]) {
@@ -351,7 +351,7 @@ export class ExportDataDialog extends Component {
         this.state.disabled = true;
         await this.props.download(
             this.state.exportList,
-            this.state.isCompatible,
+            this.isCompatible,
             this.availableFormats[this.state.selectedFormat].tag
         );
         this.state.disabled = false;
@@ -395,7 +395,7 @@ export class ExportDataDialog extends Component {
     }
 
     onToggleCompatibleExport(value) {
-        this.state.isCompatible = value;
+        this.isCompatible = value;
         this.fetchFields();
     }
 
