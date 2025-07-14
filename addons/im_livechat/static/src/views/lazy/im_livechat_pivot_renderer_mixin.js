@@ -5,7 +5,7 @@ export const LivechatPivotRendererMixin = (model) =>
         async openView(domain) {
             const action = this.env.services.orm.call(
                 model,
-                "action_open_discuss_channel_list_view",
+                "action_open_discuss_channel_view",
                 [],
                 { domain }
             );
