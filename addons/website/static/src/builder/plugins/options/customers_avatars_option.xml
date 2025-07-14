@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CustomersAvatarsOption">
+    <!-- Apply global avatars options to ".o_avatar". !-->
+    <BuilderRow label.translate="Size">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'o_avatar_small'">Small</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_avatar_medium'">Default</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_avatar_large'">Large</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Order">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Last on top</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_first_on_top'">First on top</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Alignment">
+        <BuilderButtonGroup>
+            <BuilderButton className="'fa fa-fw fa-align-left'" title.translate="Left" classAction="'justify-content-start'"/>
+            <BuilderButton className="'fa fa-fw fa-align-center'" title.translate="Center" classAction="'justify-content-center'"/>
+            <BuilderButton className="'fa fa-fw fa-align-right'" title.translate="Right" classAction="'flex-row-reverse text-end'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Show Label"
+        tooltip.translate="Display a label next to the avatars">
+        <BuilderCheckbox
+            applyTo="'.s_customers_avatars_label'"
+            classAction="'d-block'"
+        />
+    </BuilderRow>
+
+    <BuilderRow label.translate="Show Count"
+        tooltip.translate="Display additional count next to avatars">
+        <BuilderCheckbox
+            id="'show_count_opt'"
+            action="'avatarCount'"
+            actionParam="'showCount'"
+        />
+    </BuilderRow>
+    
+    <BuilderRow label.translate="Count Value" level="1"
+        t-if="this.isActiveItem('show_count_opt')">
+        <BuilderTextInput
+            action="'avatarCount'"
+            actionParam="'countValue'"
+            placeholder.translate="e.g. 10+"
+            default="'10+'"
+        />
+    </BuilderRow>
+
+    <BuilderContext applyTo="'.o_avatar, .o_avatar_count'">
+        <BorderConfigurator withRoundCorner="false" label.translate="Border"/>
+        <BuilderRow label.translate="Roundness" tooltip.translate="Applies to all avatars and count" level="1">
+            <BuilderRange
+                action="'composite'"
+                actionParam="[
+                    {action: 'setClassRange', actionParam: ['rounded-0','rounded-1','rounded-2','rounded-3','rounded-4','rounded-5']},
+                    {action: 'avatarCount', actionParam: 'copyStyling'}
+                ]"
+                max="5"
+                displayRangeValue="false"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>
