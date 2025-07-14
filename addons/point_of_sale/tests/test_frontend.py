@@ -1992,6 +1992,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_barcode_search_attributes_preset', login="pos_user")
 
+    def test_free_text_custom_attribute_on_receipt(self):
+        """ Test that free text (custom) attribute values are correctly shown on the PoS receipt screen. """
+        configurable_product = self.env['product.product'].search([('name', '=', 'Configurable Chair'), ('available_in_pos', '=', 'True')], limit=1)
+        configurable_product.attribute_line_ids[:2].unlink()
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_free_text_custom_attribute_on_receipt', login="pos_admin")
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'
