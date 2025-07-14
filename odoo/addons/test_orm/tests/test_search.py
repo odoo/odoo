@@ -48,13 +48,13 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_orm_multi"."id"
             FROM "test_orm_multi"
-            WHERE ("test_orm_multi"."partner" NOT IN (
+            WHERE ("test_orm_multi"."partner" IS NULL OR NOT EXISTS(SELECT FROM (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
                 WHERE ("res_partner"."name" LIKE %s
                     AND "res_partner"."phone" LIKE %s
                 )
-            ) OR "test_orm_multi"."partner" IS NULL)
+            ) AS __sub WHERE __sub.id = "test_orm_multi"."partner"))
             ORDER BY "test_orm_multi"."id"
         """]):
             self.env['test_orm.multi'].search([
@@ -67,13 +67,13 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_orm_multi"."id"
             FROM "test_orm_multi"
-            WHERE ("test_orm_multi"."partner" NOT IN (
+            WHERE ("test_orm_multi"."partner" IS NULL OR NOT EXISTS(SELECT FROM(
                 SELECT "res_partner"."id"
                 FROM "res_partner"
                 WHERE ("res_partner"."name" LIKE %s
                     OR "res_partner"."phone" LIKE %s
                 )
-            ) OR "test_orm_multi"."partner" IS NULL)
+            ) AS __sub WHERE __sub.id = "test_orm_multi"."partner"))
             ORDER BY "test_orm_multi"."id"
         """]):
             self.env['test_orm.multi'].search([
@@ -110,10 +110,10 @@ class TestSubqueries(TransactionCase):
                 ON ("test_orm_multi"."partner" = "test_orm_multi__partner"."id")
             WHERE (
                 "test_orm_multi"."partner" IS NULL OR
-                ((
-                    "test_orm_multi__partner"."name" LIKE %s
-                    OR "test_orm_multi__partner"."phone" LIKE %s
-                )) IS NOT TRUE
+                (
+                    ("test_orm_multi__partner"."name" NOT LIKE %s OR "test_orm_multi__partner"."name" IS NULL)
+                    AND ("test_orm_multi__partner"."phone" NOT LIKE %s OR "test_orm_multi__partner"."phone" IS NULL)
+                )
             )
             ORDER BY "test_orm_multi"."id"
         """]):
@@ -158,19 +158,19 @@ class TestSubqueries(TransactionCase):
                         OR "res_partner"."name" LIKE %s
                     )
                 )
-                AND ({many2one} NOT IN (
+                AND ({many2one} IS NULL OR NOT EXISTS(SELECT FROM (
                     {subselect}
                     WHERE "res_partner"."website" LIKE %s
-                ) OR {many2one} IS NULL)
+                ) AS __sub WHERE __sub.id = {many2one}))
                 AND (
                     {many2one} IN (
                         {subselect}
                         WHERE "res_partner"."function" LIKE %s
                     )
-                    OR ({many2one} NOT IN (
+                    OR ({many2one} IS NULL OR NOT EXISTS(SELECT FROM (
                         {subselect}
                         WHERE "res_partner"."phone" LIKE %s
-                    ) OR {many2one} IS NULL)
+                    ) AS __sub WHERE __sub.id = {many2one}))
                 )
             )
             ORDER BY "test_orm_multi"."id"
@@ -1017,13 +1017,11 @@ class TestSearchRelated(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_orm_related"."id"
             FROM "test_orm_related"
-            WHERE (
-                "test_orm_related"."foo_id" NOT IN (
+            WHERE ("test_orm_related"."foo_id" IS NULL OR NOT EXISTS(SELECT FROM(
                     SELECT "test_orm_related_foo"."id"
                     FROM "test_orm_related_foo"
                     WHERE "test_orm_related_foo"."name" IN %s
-                ) OR "test_orm_related"."foo_id" IS NULL
-            )
+                ) AS __sub WHERE __sub.id = "test_orm_related"."foo_id"))
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_name', '!=', 'a')])
@@ -1070,13 +1068,11 @@ class TestSearchRelated(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_orm_related"."id"
             FROM "test_orm_related"
-            WHERE (
-                "test_orm_related"."foo_id" NOT IN (
+            WHERE ("test_orm_related"."foo_id" IS NULL OR NOT EXISTS(SELECT FROM (
                     SELECT "test_orm_related_foo"."id"
                     FROM "test_orm_related_foo"
                     WHERE "test_orm_related_foo"."name" IN %s
-                ) OR "test_orm_related"."foo_id" IS NULL
-            )
+                ) AS __sub WHERE __sub.id = "test_orm_related"."foo_id"))
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_name', 'not in', ['a', 'b'])])
@@ -1118,7 +1114,7 @@ class TestSearchRelated(TransactionCase):
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             WHERE (
                 "test_orm_related"."foo_id" IS NULL
-                OR ("test_orm_related__foo_id"."name" IN %s) IS NOT TRUE
+                OR ("test_orm_related__foo_id"."name" NOT IN %s OR "test_orm_related__foo_id"."name" IS NULL)
             )
             ORDER BY "test_orm_related"."id"
         """]):

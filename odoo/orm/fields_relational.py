@@ -459,58 +459,61 @@ class Many2one(_Relational):
             # for other operators than 'any', just generate condition based on column type
             return super().condition_to_sql(field_expr, operator, value, model, alias, query)
 
-        fname = field_expr
-        comodel = model.env[self.comodel_name]
-        sql_field = model._field_to_sql(alias, fname, query)
+        sql_field = model._field_to_sql(alias, field_expr, query)
         can_be_null = self not in model.env.registry.not_null_fields
+        positive = operator in ('any', 'any!')
+        bypass_access = operator in ('any!', 'not any!') or self.auto_join
 
-        if not isinstance(value, Domain):
-            # value is SQL or Query
-            if isinstance(value, Query):
-                subselect = value.subselect()
-            elif isinstance(value, SQL):
-                subselect = SQL("(%s)", value)
-            else:
-                raise TypeError(f"condition_to_sql() 'any' operator accepts Domain, SQL or Query, got {value}")
+        # we bypass access checks, use a LEFT JOIN
+        if bypass_access and isinstance(value, Domain):
+            comodel, coalias = self.join(model, alias, query)
+            if not positive:
+                value = (~value).optimize(comodel)
+            sql = value._to_sql(comodel, coalias, query)
+            if self.company_dependent:
+                sql = self._condition_to_sql_company(sql, field_expr, operator, value, model, alias, query)
+            if can_be_null:
+                if positive:
+                    sql = SQL("(%s IS NOT NULL AND %s)", sql_field, sql)
+                else:
+                    sql = SQL("(%s IS NULL OR %s)", sql_field, sql)
+            return sql
+
+        # convert Domain into a Query
+        if isinstance(value, Domain):
+            comodel = model.env[self.comodel_name]
+            value = comodel._search(value, active_test=False, bypass_access=bypass_access)
+
+        exists_clause = False
+        if isinstance(value, Query):
+            # Use NOT EXISTS only for a Query that has no bound results.
+            # This leaves most queries as before because performance changes are
+            # negligable.
+            exists_clause = value._ids is None and not positive
+            subselect = value.subselect()
+        elif isinstance(value, SQL):
+            subselect = SQL("(%s)", value)
+        else:
+            raise TypeError(f"condition_to_sql() 'any' operator accepts Domain, SQL or Query, got {value}")
+        if exists_clause:
+            sql = SQL(
+                "%sEXISTS(SELECT FROM %s AS __sub WHERE __sub.id = %s)",
+                SQL() if positive else SQL("NOT "),
+                subselect,
+                sql_field,
+            )
+        else:
             sql = SQL(
                 "%s%s%s",
                 sql_field,
-                SQL(" IN ") if operator in ('any', 'any!') else SQL(" NOT IN "),
+                SQL(" IN ") if positive else SQL(" NOT IN "),
                 subselect,
             )
-            if can_be_null and operator in ('not any', 'not any!'):
-                sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
-            if self.company_dependent:
-                sql = self._condition_to_sql_company(sql, field_expr, operator, value, model, alias, query)
-            return sql
-
-        # value is a Domain
-
-        if self.auto_join or operator in ('any!', 'not any!'):
-            comodel, coalias = self.join(model, alias, query)
-
-            sql = value._to_sql(comodel, coalias, query)
-            if operator in ('any', 'any!'):
-                if can_be_null:
-                    return SQL("(%s IS NOT NULL AND %s)", sql_field, sql)
-                else:
-                    return sql
-            else:
-                if can_be_null:
-                    return SQL("(%s IS NULL OR (%s) IS NOT TRUE)", sql_field, sql)
-                else:
-                    return SQL("(%s) IS NOT TRUE", sql)
-
-        # execute search and generate condition with a SQL query
-        if (
-            comodel.env.context.get('active_test', True)
-            and comodel._active_name
-            and not any(condition.field_expr == comodel._active_name for condition in value.iter_conditions())
-        ):
-            # active_test=False only of the first leaf
-            value &= Domain(comodel._active_name, 'in', [True, False])
-        domain_query = comodel._search(value)
-        return self.condition_to_sql(fname, operator, domain_query, model, alias, query)
+        if can_be_null and not positive:
+            sql = SQL("(%s IS NULL OR %s)", sql_field, sql)
+        if self.company_dependent:
+            sql = self._condition_to_sql_company(sql, field_expr, operator, value, model, alias, query)
+        return sql
 
     def join(self, model: BaseModel, alias: str, query: Query) -> tuple[BaseModel, str]:
         """ Add a LEFT JOIN to ``query`` by following field ``self``,
