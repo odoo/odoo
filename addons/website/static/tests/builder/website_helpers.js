@@ -113,11 +113,12 @@ export async function setupWebsiteBuilder(
     const iframeLoaded = new Promise((resolve) => {
         resolveIframeLoaded = (el) => {
             const iframe = el;
+            const styleEl = iframe.contentDocument.createElement("style");
+            styleEl.textContent = /*css*/ `* { transition: none !important; } `;
             if (styleContent) {
-                const style = iframe.contentDocument.createElement("style");
-                style.innerHTML = styleContent;
-                iframe.contentDocument.head.appendChild(style);
+                styleEl.textContent += styleContent;
             }
+            iframe.contentDocument.head.appendChild(styleEl);
             iframe.contentDocument.documentElement.setAttribute(
                 "data-main-object",
                 "website.page(4,)"
