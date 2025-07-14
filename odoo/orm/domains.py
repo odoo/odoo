@@ -122,6 +122,7 @@ The non-standard operators can be reduced to standard operators by using the
 optimization function. See the respective optimization functions for the
 details.
 """
+INTERNAL_CONDITION_OPERATORS = frozenset(('any!', 'not any!'))
 
 NEGATIVE_CONDITION_OPERATORS = {
     'not any': 'any',
@@ -247,7 +248,7 @@ class Domain:
                         # process subdomains when processing internal operators
                         if item[1] in ('any', 'any!', 'not any', 'not any!') and isinstance(item[2], (list, tuple)):
                             item = (item[0], item[1], Domain(item[2], internal=True))
-                    elif item[1] in ('any!', 'not any!'):
+                    elif item[1] in INTERNAL_CONDITION_OPERATORS:
                         # internal operators are not accepted
                         raise ValueError(f"Domain() invalid item in domain: {item!r}")
                     stack.append(Domain(*item))
