@@ -577,6 +577,7 @@ test('pivot view with disable_linking="True"', async () => {
 
     expect("table").not.toHaveClass("o_enable_linking");
     expect(".o_pivot_cell_value").toHaveCount(1);
+    expect(".o_pivot_cell_value").not.toHaveClass("cursor-pointer");
     await contains(".o_pivot_cell_value").click(); // should not trigger a do_action
 });
 
