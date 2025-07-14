@@ -293,7 +293,7 @@ export class FontPlugin extends Plugin {
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         before_insert_processors: this.handleInsertWithinPre.bind(this),
 
-        format_splittable_class: (className) =>
+        format_class_predicates: (className) =>
             [...FONT_SIZE_CLASSES, "o_default_font_size"].includes(className),
     };
 
