@@ -180,7 +180,7 @@ export class SnippetModel extends Reactive {
                     thumbnailSrc: escape(snippetEl.dataset.oeThumbnail),
                     imagePreviewSrc: snippetEl.dataset.oImagePreview,
                     isCustom: false,
-                    label: snippetEl.dataset.oLabel,
+                    label: this.getSnippetLabel(snippetEl),
                     isDisabled: false,
                     forbidSanitize: false,
                 };
@@ -410,6 +410,30 @@ export class SnippetModel extends Reactive {
                 { onClose: () => resolve(false) }
             );
         });
+    }
+
+    /**
+     * Gets the label of the snippet.
+     *
+     * @param {HTMLElement} snippetEl
+     * @returns {String}
+     */
+    getSnippetLabel(snippetEl) {
+        const label = snippetEl.dataset.oLabel;
+        // Check if any element in the snippet has the "parallax" class to show
+        // the "Parallax" label. This must be done this way because a theme or
+        // custom snippet may add or remove parallax elements. Note that if a
+        // label is already set, we do not change it.
+        // TODO In master, remove the "|| label === 'Parallax'" part from the
+        // condition, as the label="Parallax" will be removed from the snippet
+        // definition.
+        if (!label || label === "Parallax") {
+            const contentEl = snippetEl.children[0];
+            const hasParallax = contentEl.matches(".parallax")
+                || !!contentEl.querySelector(".parallax");
+            return hasParallax ? _t("Parallax") : "";
+        }
+        return label;
     }
 }
 
