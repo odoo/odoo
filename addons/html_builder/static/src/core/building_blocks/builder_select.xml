@@ -12,7 +12,7 @@
                     <t t-slot="fixedButton"/>
                 </button>
                 <t t-set-slot="content">
-                    <div t-att-class="props.dropdownContainerClass" data-prevent-closing-overlay="true" style="max-height: 50vh;">
+                    <div t-att-class="props.dropdownContainerClass" data-prevent-closing-overlay="true" t-att-style="'max-height: calc(50dvh - ' + heightOfButton() + 'px);'">
                         <t t-slot="default" />
                     </div>
                 </t>
