@@ -483,16 +483,19 @@ class IrAttachment(models.Model):
         model_ids = defaultdict(set)            # {model_name: set(ids)}
         att_model_ids = []                      # [(att_id, (res_model, res_id))]
         # DLE P173: `test_01_portal_attachment`
-        remaining.flush_recordset(['res_model', 'res_id', 'create_uid', 'public', 'res_field'])
-        self.env.cr.execute('SELECT id, res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s', [tuple(remaining.ids)])
-        for att_id, res_model, res_id, create_uid, public, res_field in self.env.cr.fetchall():
-            if public and operation == 'read':
+        SECURITY_FIELDS = ('res_model', 'res_id', 'create_uid', 'public', 'res_field')
+        remaining = remaining.sudo()
+        remaining.fetch(SECURITY_FIELDS)  # fetch only these fields
+        for attachment in remaining:
+            if attachment.public and operation == 'read':
                 continue
+            att_id = attachment.id
+            res_model, res_id = attachment.res_model, attachment.res_id
             if not self.env.is_system():
-                if not res_id and create_uid != self.env.uid:
+                if not res_id and attachment.create_uid.id != self.env.uid:
                     forbidden_ids.add(att_id)
                     continue
-                if res_field:
+                if res_field := attachment.res_field:
                     try:
                         field = self.env[res_model]._fields[res_field]
                     except KeyError:
@@ -509,6 +512,7 @@ class IrAttachment(models.Model):
 
         if forbidden_ids:
             forbidden = self.browse(forbidden_ids)
+            forbidden.invalidate_recordset(SECURITY_FIELDS)  # avoid cache pollution
             if error_func is None:
                 def error_func():
                     return AccessError(self.env._(
