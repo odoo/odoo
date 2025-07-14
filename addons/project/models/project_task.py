@@ -1344,6 +1344,50 @@ class ProjectTask(models.Model):
                )
         return result
 
+    @api.model
+    def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
+        # Support ordering on my_activity_date_deadline (non-stored field)
+        if not order or 'my_activity_date_deadline' not in order:
+            return super().search_fetch(domain, field_names, offset, limit, order)
+
+        order_items = [item.strip().lower() for item in (order or self._order).split(',')]
+        activity_asc = any('my_activity_date_deadline asc' in item for item in order_items)
+
+        my_task_activities = self.env['mail.activity']._read_group(
+            [('res_model', '=', self._name), ('user_id', '=', self.env.uid)],
+            ['res_id'],
+            ['date_deadline:min'],
+            order='date_deadline:min ASC, res_id',
+        )
+        my_task_mapping = dict(my_task_activities)
+        my_task_ids = list(my_task_mapping.keys())
+
+        if not my_task_ids:
+            return super().search_fetch(domain, field_names, offset, limit, order.replace('my_activity_date_deadline', ''))
+
+        my_task_order = ', '.join(item for item in order_items if 'my_activity_date_deadline' not in item)
+        my_task_domain = expression.AND([[('id', 'in', my_task_ids)], domain])
+        search_res = super().search_fetch(my_task_domain, field_names, order=my_task_order)
+        my_task_ids_ordered = sorted(
+            search_res.ids,
+            key=lambda task_id: my_task_mapping[task_id],
+            reverse=not activity_asc
+        )
+        my_task_ids_keep = my_task_ids_ordered[offset:(offset + limit)] if limit else my_task_ids_ordered[offset:]
+        num_kept = len(my_task_ids_keep)
+
+        if limit and num_kept >= limit:
+            return self.browse(my_task_ids_keep)
+
+        remaining_limit = (limit - num_kept) if limit else None
+        remaining_offset = 0
+        other_tasks_domain = expression.AND([[('id', 'not in', my_task_ids)], domain])
+        other_tasks_res = super().search_fetch(
+            other_tasks_domain, field_names, remaining_offset, remaining_limit, my_task_order
+        )
+
+        return self.browse(my_task_ids_keep) + other_tasks_res
+
     def unlink(self):
         # Add subtasks to batch of tasks to delete
         self |= self._get_all_subtasks()
