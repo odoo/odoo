@@ -43,6 +43,13 @@ patch(PosStore.prototype, {
             [this.data.records["pos.order"]]
         );
     },
+    async afterProcessServerData() {
+        // Remove reward lines that have no reward anymore (could happen if the program got archived)
+        this.models["pos.order.line"]
+            .filter((order) => order.is_reward_line && !order.reward_id)
+            .map((line) => line.delete());
+        await super.afterProcessServerData(...arguments);
+    },
     async updateOrder(order) {
         // Read value to trigger effect
         order?.lines?.length;
