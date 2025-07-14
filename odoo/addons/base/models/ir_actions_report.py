@@ -191,7 +191,7 @@ class IrActionsReport(models.Model):
             action.model_id = self.env['ir.model']._get(action.model).id
 
     def _search_model_id(self, operator, value):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         models = self.env['ir.model']
         if isinstance(value, str):

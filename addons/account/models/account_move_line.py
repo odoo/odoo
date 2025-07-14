@@ -1248,7 +1248,7 @@ class AccountMoveLine(models.Model):
         if operator == 'in':
             # recursive call with operator '='
             return Domain.OR(self._search_payment_date('=', v) for v in value)
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         if operator == '=':
             operator = '<='
