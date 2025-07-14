@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 import requests
 from requests import RequestException
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 
 SINVOICE_API_URL = 'https://api-vinvoice.viettel.vn/services/einvoiceapplication/api/'
@@ -686,16 +686,24 @@ class AccountMove(models.Model):
             'discount': 3,
         }
         for line in self.invoice_line_ids.filtered(lambda ln: ln.display_type == 'product'):
+            # For line with tax with price_include=True, we need to compute the price_unit because sinvoice only support price_unit without tax
+            if line.quantity and line.discount != 100:
+                price_subtotal_before_discount = line.price_subtotal / (1 - (line.discount / 100))
+                price_unit = price_subtotal_before_discount / line.quantity
+            else:
+                price_unit = line.price_unit
             # For credit notes amount, we send negative values (reduces the amount of the original invoice)
             sign = 1 if self.move_type == 'out_invoice' else -1
             item_information = {
                 'itemCode': line.product_id.code,
                 'itemName': line.product_id.name,
                 'unitName': line.product_uom_id.name,
-                'unitPrice': line.price_unit * sign,
+                'unitPrice': float(tools.float_repr(tools.float_round(price_unit, precision_digits=6) * sign, precision_digits=6))
+                if line.tax_ids and line.tax_ids[0].price_include else line.price_unit * sign,
                 'quantity': line.quantity,
                 # This amount should be without discount applied.
-                'itemTotalAmountWithoutTax': line.currency_id.round(line.price_unit * line.quantity) * sign,
+                'itemTotalAmountWithoutTax': float(tools.float_repr(tools.float_round(price_unit * line.quantity, precision_digits=6) * sign, precision_digits=6))
+                if line.tax_ids and line.tax_ids[0].price_include else line.currency_id.round(line.price_unit * line.quantity) * sign,
                 # In Vietnam a line will always have only one tax.
                 # Values are either: -2 (no tax), -1 (not declaring/paying taxes), 0,5,8,10 (the tax %)
                 # Most use cases will be -2 or a tax percentage, so we limit the support to these.

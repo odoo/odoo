@@ -155,6 +155,78 @@ class TestVNEDI(AccountTestInvoicingCommon):
         )
 
     @freeze_time('2024-01-01')
+    def test_json_data_generation_tax_price_include(self):
+        """ Test the data dict generated in case tax is set as price include to ensure consistency with the data we set in the system. """
+        self.tax_sale_a.price_include = True
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            products=self.product_a,
+            taxes=self.tax_sale_a,
+            post=True,
+        )
+        self.assertDictEqual(
+            invoice._l10n_vn_edi_generate_invoice_json(),
+            {
+                'generalInvoiceInfo': {
+                    'transactionUuid': mock.ANY,  # Random, not important.
+                    'invoiceType': '1',
+                    'templateCode': '1/001',
+                    'invoiceSeries': 'K24TUT',
+                    'invoiceIssuedDate': 1704067200000,
+                    'currencyCode': 'VND',
+                    'adjustmentType': '1',
+                    'paymentStatus': False,
+                    'cusGetInvoiceRight': True,
+                    'validation': 1,
+                },
+                'buyerInfo': {
+                    'buyerName': 'partner_a',
+                    'buyerLegalName': 'partner_a',
+                    'buyerTaxCode': '0100109106-505',
+                    'buyerAddressLine': '121 Hang Bac Street',
+                    'buyerPhoneNumber': '38257670',
+                    'buyerEmail': 'partner_a@gmail.com',
+                    'buyerDistrictName': 'Hà Nội',
+                    'buyerCityName': 'Hoan Kiem District',
+                    'buyerCountryCode': 'VN',
+                    'buyerNotGetInvoice': 0,
+                },
+                'sellerInfo': {
+                    'sellerLegalName': 'company_1_data',
+                    'sellerTaxCode': '0100109106-506',
+                    'sellerAddressLine': '3 Alley 45 Phan Dinh Phung, Quan Thanh Ward',
+                    'sellerPhoneNumber': '62661275',
+                    'sellerEmail': 'test_company@gmail.com',
+                    'sellerDistrictName': 'Hà Nội',
+                    'sellerCountryCode': 'VN',
+                    'sellerWebsite': 'http://test_company.com',
+                },
+                'payments': [{'paymentMethodName': 'TM/CK'}],
+                'itemInfo': [{
+                    'itemCode': 'BN/1035',
+                    'itemName': 'product_a',
+                    'unitName': 'Units',
+                    'unitPrice': 909.000000,
+                    'quantity': 1.0,
+                    'itemTotalAmountWithoutTax': 909.000000,
+                    'taxPercentage': 10.0,
+                    'taxAmount': 91.0,
+                    'discount': 0.0,
+                    'itemTotalAmountAfterDiscount': 909.0,
+                    'itemTotalAmountWithTax': 1000.0,
+                    'selection': 1,
+                }],
+                'taxBreakdowns': [{
+                    'taxPercentage': 10.0,
+                    'taxableAmount': 909.0,
+                    'taxAmount': 91.0,
+                    'taxableAmountPos': True,
+                    'taxAmountPos': True
+                }]
+            }
+        )
+
+    @freeze_time('2024-01-01')
     def test_adjustment_invoice(self):
         """
         Create an invoice, then create an adjustment invoice from it. Ensure that when generating the data dict,
