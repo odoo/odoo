@@ -1,23 +1,9 @@
-import { expect, test, beforeEach } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryAllValues, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains, mockService } from "@web/../tests/web_test_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
 import { addBuilderOption, setupHTMLBuilder, addBuilderPlugin } from "./helpers";
 import { ShadowOptionPlugin } from "@html_builder/plugins/shadow_option_plugin";
-
-beforeEach(() => {
-    mockService("website", () => ({
-        currentWebsite: {
-            id: 1,
-            metadata: {
-                lang: "en_US",
-            },
-            default_lang_id: {
-                code: "en_US",
-            },
-        },
-    }));
-});
 
 test("edit box-shadow with ShadowOption", async () => {
     addBuilderOption({
