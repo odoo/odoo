@@ -1731,6 +1731,13 @@ def _operator_parent_of_domain(comodel: BaseModel, parent):
     return parent_ids
 
 
+@operator_optimization(['any', 'not any'], level=OptimizationLevel.FULL)
+def _optimize_any_with_rights(condition, model):
+    if model.env.su or condition._field(model).bypass_search_access:
+        return DomainCondition(condition.field_expr, condition.operator + '!', condition.value)
+    return condition
+
+
 # --------------------------------------------------
 # Optimizations: nary
 # --------------------------------------------------
