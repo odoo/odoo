@@ -17,7 +17,6 @@ class ActivityScheduleCase(MailCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        # prepare activities
         cls.activity_type_todo = cls.env.ref('mail.mail_activity_data_todo')
         cls.activity_type_todo.delay_count = 4
         cls.activity_type_call = cls.env.ref('mail.mail_activity_data_call')
@@ -31,6 +30,42 @@ class ActivityScheduleCase(MailCommon):
         """ Get the last activities on the record in id asc order. """
         return self.reverse_record_set(self.env['mail.activity'].search(
             [('res_model', '=', on_record._name), ('res_id', '=', on_record.id)], order='id desc', limit=limit))
+
+    def test_activity_type_filter_excludes_done_even_if_keep_done_true(self):
+        Partner = self.env['res.partner']
+        MailActivity = self.env['mail.activity']
+
+        partner = Partner.create({'name': 'Keep Done Filter Test'})
+        todo_type = self.activity_type_todo
+
+        todo_type.keep_done = True
+
+        MailActivity.create({
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': partner.id,
+            'activity_type_id': todo_type.id,
+            'user_id': self.env.uid,
+            'active': False,
+        })
+
+        results = Partner.search([('activity_type_id', '=', todo_type.id)])
+        self.assertNotIn(
+            partner, results,
+            "Record with only DONE activities (even with keep_done=True) should not appear in activity_type_id search"
+        )
+
+        MailActivity.create({
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': partner.id,
+            'activity_type_id': todo_type.id,
+            'user_id': self.env.uid,
+        })
+
+        results = Partner.search([('activity_type_id', '=', todo_type.id)])
+        self.assertIn(
+            partner, results,
+            "Record with an active activity should appear in activity_type_id search"
+        )
 
     # ------------------------------------------------------------
     # ACTIVITIES MOCK
