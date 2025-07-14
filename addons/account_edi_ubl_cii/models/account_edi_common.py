@@ -96,6 +96,19 @@ EAS_MAPPING = {
     'SM': {'9951': 'vat'},
     'TR': {'9952': 'vat'},
     'VA': {'9953': 'vat'},
+    # DOM-TOM
+    'BL': {'0009': 'siret', '9957': 'vat', '0002': None},  # Saint Barthélemy
+    'GF': {'0009': 'siret', '9957': 'vat', '0002': None},  # French Guiana
+    'GP': {'0009': 'siret', '9957': 'vat', '0002': None},  # Guadeloupe
+    'MF': {'0009': 'siret', '9957': 'vat', '0002': None},  # Saint Martin
+    'MQ': {'0009': 'siret', '9957': 'vat', '0002': None},  # Martinique
+    'NC': {'0009': 'siret', '9957': 'vat', '0002': None},  # New Caledonia
+    'PF': {'0009': 'siret', '9957': 'vat', '0002': None},  # French Polynesia
+    'PM': {'0009': 'siret', '9957': 'vat', '0002': None},  # Saint Pierre and Miquelon
+    'RE': {'0009': 'siret', '9957': 'vat', '0002': None},  # Réunion
+    'TF': {'0009': 'siret', '9957': 'vat', '0002': None},  # French Southern and Antarctic Lands
+    'WF': {'0009': 'siret', '9957': 'vat', '0002': None},  # Wallis and Futuna
+    'YT': {'0009': 'siret', '9957': 'vat', '0002': None},  # Mayotte
 }
 
 # -------------------------------------------------------------------------
