@@ -63,7 +63,6 @@ class TestHttpJsonError(TestHttpBase):
             set(self.jsonrpc_error_structure['error']['data']),
         )
 
-
     @mute_logger('odoo.http')
     def test_errorjson0_value_error(self):
         res = self.db_url_open('/test_http/json_value_error',

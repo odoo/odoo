@@ -9,7 +9,7 @@ from odoo.tools.misc import mute_logger
 @tagged('-at_install', 'post_install')
 class TestError(common.HttpCase):
     def setUp(self):
-        super(TestError, self).setUp()
+        super().setUp()
         uid = self.ref("base.user_admin")
         self.rpc = partial(self.xmlrpc_object.execute, common.get_db_name(), uid, "admin")
 
