@@ -44,7 +44,7 @@
                                 <div name="next_serial_count" class="o_field_widget o_field_integer">
                                     <input inputmode="numeric" t-ref="nextSerialCount" class="o_input" id="next_serial_count_0" type="text"/>
                                 </div>
-                                <span t-if="props.move.data.has_tracking === 'lot'" t-esc="props.move.data.product_uom.display_name"/>
+                                <span t-if="props.move.data.has_tracking === 'lot' &amp;&amp; displayUOM" t-esc="props.move.data.product_uom.display_name"/>
                             </div>
                         </div>
                         <div t-if="props.move.data.has_tracking === 'lot'" class="row mb-2">
@@ -55,7 +55,7 @@
                                 <div name="total_received" class="o_field_widget o_field_integer">
                                     <input inputmode="numeric" t-ref="totalReceived" class="o_input" id="total_received_0" type="text"/>
                                 </div>
-                                <span t-esc="props.move.data.product_uom.display_name"/>
+                                <span t-if="displayUOM" t-esc="props.move.data.product_uom.display_name"/>
                             </div>
                         </div>
                         <div class="row">

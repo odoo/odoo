@@ -5,8 +5,9 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { parseInteger  } from "@web/views/fields/parsers";
 import { getId } from "@web/model/relational_model/utils";
-import { Component, useRef, onMounted } from "@odoo/owl";
+import { Component, useRef, onMounted, onWillStart } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
+import { user } from "@web/core/user";
 
 export class GenerateDialog extends Component {
     static template = "stock.generate_serial_dialog";
@@ -32,6 +33,9 @@ export class GenerateDialog extends Component {
         this.keepLines = useRef('keepLines');
         this.lots = useRef('lots');
         this.orm = useService("orm");
+        onWillStart(async () => {
+            this.displayUOM = await user.hasGroup("uom.group_uom");
+        });
         onMounted(() => {
             if (this.props.mode === 'generate') {
                 this.nextSerialCount.el.value = this.props.move.data.product_uom_qty || 2;
