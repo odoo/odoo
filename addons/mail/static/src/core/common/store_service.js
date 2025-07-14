@@ -65,6 +65,7 @@ patch(storeInsertFns, {
 export class Store extends BaseStore {
     static FETCH_DATA_DEBOUNCE_DELAY = 1;
     static OTHER_LONG_TYPING = 60000;
+    static IM_STATUS_DEBOUNCE_DELAY = 1000;
 
     FETCH_LIMIT = 30;
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
