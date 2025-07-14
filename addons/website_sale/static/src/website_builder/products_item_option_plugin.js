@@ -18,12 +18,11 @@ class ProductsItemOptionPlugin extends Plugin {
         "setRibbonObject",
         "addRibbon",
         "getRibbons",
-        "_deleteRibbon",
-        "_setRibbon"
+        "deleteRibbon",
+        "setRibbon",
     ];
     itemSize = reactive({ x: 1, y: 1 });
     count = reactive({ value: 0 });
-
 
     resources = {
         builder_options: [
@@ -103,7 +102,7 @@ class ProductsItemOptionPlugin extends Plugin {
         );
     }
 
-    _setRibbon(editingElement, ribbon, save = true) {
+    setRibbon(editingElement, ribbon, save = true) {
         const ribbonId = ribbon.id;
         const editableBody = editingElement.ownerDocument.body;
         editingElement.dataset.ribbonId = ribbonId;
@@ -252,7 +251,7 @@ class ProductsItemOptionPlugin extends Plugin {
      * Deletes a ribbon.
      *
      */
-    _deleteRibbon(editingElement) {
+    deleteRibbon(editingElement) {
         const ribbonId = parseInt(editingElement.dataset.ribbonId);
         if (this.ribbonsObject[ribbonId]) {
             this.deletedRibbonClasses += `${
@@ -313,13 +312,13 @@ class ProductsItemOptionPlugin extends Plugin {
     getRibbons() {
         return this.ribbons;
     }
-
 }
 
 export class SetItemSizeAction extends BuilderAction {
     static id = "setItemSize";
     static dependencies = ["productsItemOptionPlugin"];
     setup() {
+        this.productItemPlugin = this.dependencies.productsItemOptionPlugin;
         this.reload = {};
     }
     isApplied({ editingElement, value: [i, j] }) {
@@ -327,7 +326,7 @@ export class SetItemSizeAction extends BuilderAction {
             parseInt(editingElement.dataset.rowspan || 1) - 1 === i &&
             parseInt(editingElement.dataset.colspan || 1) - 1 === j
         ) {
-            this.dependencies.productsItemOptionPlugin.setItemSize(j + 1, i + 1);
+            this.productItemPlugin.setItemSize(j + 1, i + 1);
             return true;
         }
         return false;
@@ -336,13 +335,15 @@ export class SetItemSizeAction extends BuilderAction {
         const x = j + 1;
         const y = i + 1;
 
-        this.dependencies.productsItemOptionPlugin.setProductTemplateID(parseInt(
-            editingElement
-                .querySelector('[data-oe-model="product.template"]')
-                .getAttribute("data-oe-id")
-        ));
+        this.productItemPlugin.setProductTemplateID(
+            parseInt(
+                editingElement
+                    .querySelector('[data-oe-model="product.template"]')
+                    .getAttribute("data-oe-id")
+            )
+        );
         return rpc("/shop/config/product", {
-            product_id: this.dependencies.productsItemOptionPlugin.getProductTemplateID(),
+            product_id: this.productItemPlugin.getProductTemplateID(),
             x: x,
             y: y,
         });
@@ -352,16 +353,19 @@ export class ChangeSequenceAction extends BuilderAction {
     static id = "changeSequence";
     static dependencies = ["productsItemOptionPlugin"];
     setup() {
+        this.productItemPlugin = this.dependencies.productsItemOptionPlugin;
         this.reload = {};
     }
     apply({ editingElement, value }) {
-        this.dependencies.productsItemOptionPlugin.setProductTemplateID(parseInt(
-            editingElement
-                .querySelector('[data-oe-model="product.template"]')
-                .getAttribute("data-oe-id")
-        ));
+        this.productItemPlugin.setProductTemplateID(
+            parseInt(
+                editingElement
+                    .querySelector('[data-oe-model="product.template"]')
+                    .getAttribute("data-oe-id")
+            )
+        );
         return rpc("/shop/config/product", {
-            product_id: this.dependencies.productsItemOptionPlugin.getProductTemplateID(),
+            product_id: this.productItemPlugin.getProductTemplateID(),
             sequence: value,
         });
     }
@@ -369,22 +373,27 @@ export class ChangeSequenceAction extends BuilderAction {
 export class SetRibbonAction extends BuilderAction {
     static id = "setRibbon";
     static dependencies = ["productsItemOptionPlugin"];
+    setup() {
+        this.productItemPlugin = this.dependencies.productsItemOptionPlugin;
+    }
     isApplied({ editingElement, value }) {
         return (parseInt(editingElement.dataset.ribbonId) || "") === value;
     }
     apply({ isPreviewing, editingElement, value }) {
-        this.dependencies.productsItemOptionPlugin.setProductTemplateID(parseInt(
-            editingElement
-                .querySelector('[data-oe-model="product.template"]')
-                .getAttribute("data-oe-id")
-        ));
+        this.productItemPlugin.setProductTemplateID(
+            parseInt(
+                editingElement
+                    .querySelector('[data-oe-model="product.template"]')
+                    .getAttribute("data-oe-id")
+            )
+        );
         const ribbonId = value;
-        this.dependencies.productsItemOptionPlugin.addProductTemplatesRibbons({
-            templateId: this.dependencies.productsItemOptionPlugin.getProductTemplateID(),
+        this.productItemPlugin.addProductTemplatesRibbons({
+            templateId: this.productItemPlugin.getProductTemplateID(),
             ribbonId: ribbonId,
         });
 
-        const ribbon = this.dependencies.productsItemOptionPlugin.getRibbonsObject()[ribbonId] || {
+        const ribbon = this.productItemPlugin.getRibbonsObject()[ribbonId] || {
             id: "",
             name: "",
             bg_color: "",
@@ -392,21 +401,26 @@ export class SetRibbonAction extends BuilderAction {
             position: "left",
         };
 
-        return this.dependencies.productsItemOptionPlugin._setRibbon(editingElement, ribbon, !isPreviewing);
+        return this.productItemPlugin.setRibbon(editingElement, ribbon, !isPreviewing);
     }
 }
 export class CreateRibbonAction extends BuilderAction {
     static id = "createRibbon";
     static dependencies = ["productsItemOptionPlugin"];
+    setup() {
+        this.productItemPlugin = this.dependencies.productsItemOptionPlugin;
+    }
     apply({ editingElement }) {
-        this.dependencies.productsItemOptionPlugin.setProductTemplateID(parseInt(
-            editingElement
-                .querySelector('[data-oe-model="product.template"]')
-                .getAttribute("data-oe-id")
-        ));
+        this.productItemPlugin.setProductTemplateID(
+            parseInt(
+                editingElement
+                    .querySelector('[data-oe-model="product.template"]')
+                    .getAttribute("data-oe-id")
+            )
+        );
         const ribbonId = Date.now();
-        this.dependencies.productsItemOptionPlugin.addProductTemplatesRibbons({
-            templateId: this.dependencies.productsItemOptionPlugin.getProductTemplateID(),
+        this.productItemPlugin.addProductTemplatesRibbons({
+            templateId: this.productItemPlugin.getProductTemplateID(),
             ribbonId: ribbonId,
         });
         const ribbon = reactive({
@@ -416,16 +430,16 @@ export class CreateRibbonAction extends BuilderAction {
             text_color: "purple",
             position: "left",
         });
-        this.dependencies.productsItemOptionPlugin.addRibbon(ribbon);
-        this.dependencies.productsItemOptionPlugin.setRibbonObject(ribbonId, ribbon);
-        return this.dependencies.productsItemOptionPlugin._setRibbon(editingElement, ribbon);
+        this.productItemPlugin.addRibbon(ribbon);
+        this.productItemPlugin.setRibbonObject(ribbonId, ribbon);
+        return this.productItemPlugin.setRibbon(editingElement, ribbon);
     }
 }
 export class ModifyRibbonAction extends BuilderAction {
     static id = "modifyRibbon";
     static dependencies = ["productsItemOptionPlugin"];
     setup() {
-        this.piop = this.dependencies.productsItemOptionPlugin
+        this.productItemPlugin = this.dependencies.productsItemOptionPlugin;
     }
     getValue({ editingElement, params }) {
         const field = params.mainParam;
@@ -434,7 +448,7 @@ export class ModifyRibbonAction extends BuilderAction {
             return;
         }
 
-        return this.dependencies.productsItemOptionPlugin.getRibbonsObject()[ribbonId][field];
+        return this.productItemPlugin.getRibbonsObject()[ribbonId][field];
     }
     isApplied({ editingElement, params, value }) {
         const field = params.mainParam;
@@ -442,28 +456,31 @@ export class ModifyRibbonAction extends BuilderAction {
         if (!ribbonId) {
             return;
         }
-        if (!this.dependencies.productsItemOptionPlugin.getRibbonsObject()[ribbonId]) {
-            ribbonId = Object.keys(this.dependencies.productsItemOptionPlugin.getRibbonsObject()).find(
-                (key) => this.dependencies.productsItemOptionPlugin.getRibbonsObject()[key].id === ribbonId
+        if (!this.productItemPlugin.getRibbonsObject()[ribbonId]) {
+            ribbonId = Object.keys(this.productItemPlugin.getRibbonsObject()).find(
+                (key) => this.productItemPlugin.getRibbonsObject()[key].id === ribbonId
             );
             editingElement.dataset.ribbonId = ribbonId;
         }
-        return this.dependencies.productsItemOptionPlugin.getRibbonsObject()[ribbonId][field] === value;
+        return this.productItemPlugin.getRibbonsObject()[ribbonId][field] === value;
     }
     apply({ isPreviewing, editingElement, params, value }) {
         const setting = params.mainParam;
         const ribbonId = parseInt(editingElement.dataset.ribbonId);
-        this.dependencies.productsItemOptionPlugin.getRibbonsObject()[ribbonId][setting] = value;
+        this.productItemPlugin.getRibbonsObject()[ribbonId][setting] = value;
 
-        const ribbon = this.dependencies.productsItemOptionPlugin.getRibbons().find((ribbon) => ribbon.id == ribbonId);
+        const ribbon = this.productItemPlugin.getRibbons().find((ribbon) => ribbon.id == ribbonId);
         ribbon[setting] = value;
 
-        return this.plugin._setRibbon(editingElement, ribbon, !isPreviewing);
+        return this.productItemPlugin.setRibbon(editingElement, ribbon, !isPreviewing);
     }
 }
 export class DeleteRibbonAction extends BuilderAction {
     static id = "deleteRibbon";
     static dependencies = ["productsItemOptionPlugin"];
+    setup() {
+        this.productItemPlugin = this.dependencies.productsItemOptionPlugin;
+    }
     async apply({ editingElement }) {
         const save = await new Promise((resolve) => {
             this.services.dialog.add(ConfirmationDialog, {
@@ -475,7 +492,7 @@ export class DeleteRibbonAction extends BuilderAction {
         if (!save) {
             return;
         }
-        return this.dependencies.productsItemOptionPlugin._deleteRibbon(editingElement);
+        return this.productItemPlugin.deleteRibbon(editingElement);
     }
 }
 
