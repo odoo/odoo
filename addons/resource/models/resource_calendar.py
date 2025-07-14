@@ -456,21 +456,22 @@ class ResourceCalendar(models.Model):
                     max_hours_per_day = resource.calendar_id.hours_per_day
 
                     intervals = []
-                    current_monday = start_date - timedelta(days=start_date.weekday())
+                    current_start_day = start_date
 
-                    while current_monday <= end_date:
-                        current_sunday = current_monday + timedelta(days=6)
+                    while current_start_day <= end_date:
+                        current_end_of_week = current_start_day + timedelta(days=6)
 
-                        week_start = max(current_monday, start_date)
-                        week_end = min(current_sunday, end_date)
+                        week_start = max(current_start_day, start_date)
+                        week_end = min(current_end_of_week, end_date)
 
-                        if current_monday < start_date:
-                            prior_days = (start_date - current_monday).days
+                        if current_start_day < start_date:
+                            prior_days = (start_date - current_start_day).days
                             prior_hours = min(full_time_required_hours, max_hours_per_day * prior_days)
                         else:
                             prior_hours = 0
 
                         remaining_hours = max(0, full_time_required_hours - prior_hours)
+                        remaining_hours = min(remaining_hours, (end_dt - start_dt).total_seconds() / 3600)
 
                         current_day = week_start
                         while current_day <= week_end:
@@ -492,7 +493,7 @@ class ResourceCalendar(models.Model):
 
                             current_day += timedelta(days=1)
 
-                        current_monday += timedelta(days=7)
+                        current_start_day += timedelta(days=7)
 
                     result_per_resource_id[resource.id] = Intervals(intervals, keep_distinct=True)
                 elif resource in per_resource_result:
