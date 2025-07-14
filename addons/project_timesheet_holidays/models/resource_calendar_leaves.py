@@ -17,7 +17,9 @@ class ResourceCalendarLeaves(models.Model):
         calendars = leaves_with_calendar.calendar_id
         leaves_wo_calendar = self - leaves_with_calendar
         if leaves_wo_calendar:
-            calendars += self.env['resource.calendar'].search([('company_id', 'in', leaves_wo_calendar.company_id.ids)])
+            calendars += self.env['resource.calendar'].search([
+                ('company_id', 'in', leaves_wo_calendar.company_id.ids + [False]),
+            ])
         return calendars
 
     def _work_time_per_day(self, resource_calendars=False):
@@ -68,7 +70,7 @@ class ResourceCalendarLeaves(models.Model):
         )
         for company, leaves, resources, date_from_min, date_to_max in comp_leaves_read_group:
             for calendar_id in resource_calendars.ids:
-                if calendars_dict[calendar_id].company_id != company:
+                if (calendar_company := calendars_dict[calendar_id].company_id) and calendar_company != company:
                     continue  # only consider global leaves of the same company as the calendar
                 calendar_data = cal_attendance_intervals_dict.get(calendar_id)
                 if calendar_data is None:
