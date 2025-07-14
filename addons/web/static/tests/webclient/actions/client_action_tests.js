@@ -97,6 +97,33 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["web_search_read"]);
     });
 
+    QUnit.test("soft_reload a form view", async (assert) => {
+        const mockRPC = async function (route, { args }) {
+            if (route === "/web/dataset/call_kw/partner/web_read") {
+                assert.step(`read ${args[0][0]}`);
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, {
+            name: "Partners",
+            res_model: "partner",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+            type: "ir.actions.act_window",
+        });
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await click(target, ".o_form_view .o_pager_next");
+        assert.verifySteps([
+            "read 1",
+            "read 2",
+        ])
+        await doAction(webClient, "soft_reload");
+        assert.verifySteps(["read 2"]);
+    });
+
     QUnit.test("soft_reload when there is no controller", async (assert) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, "soft_reload");

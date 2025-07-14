@@ -256,6 +256,19 @@ class AccountMove(models.Model):
 
         return msg, error_codes
 
+    def _l10n_tr_nilvera_einvoice_check_invalid_subscription_dates(self):
+        if 'deferred_start_date' not in self.invoice_line_ids._fields:
+            return False
+
+        # Ensure that either no lines have the start and end dates or all lines have the same start and end dates.
+        lines_to_check = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+        if not (subscription_lines := lines_to_check.filtered('deferred_start_date')):
+            return False
+
+        return len(subscription_lines) != len(lines_to_check) or len(set(subscription_lines.mapped(
+            lambda aml: (aml.deferred_start_date, aml.deferred_end_date))
+        )) > 1
+
     # -------------------------------------------------------------------------
     # CRONS
     # -------------------------------------------------------------------------

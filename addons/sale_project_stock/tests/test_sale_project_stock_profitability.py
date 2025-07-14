@@ -2,8 +2,10 @@
 
 from odoo import Command, fields
 from odoo.addons.sale_project.tests.test_project_profitability import TestProjectProfitabilityCommon
+from odoo.tests.common import tagged
 
 
+@tagged("post_install", "-at_install")
 class TestSaleProjectStockProfitability(TestProjectProfitabilityCommon):
     @classmethod
     def setUpClass(cls):
