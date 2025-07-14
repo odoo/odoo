@@ -39,7 +39,7 @@ class TestImportFiles(TransactionCase):
                 "import_skip_records": [],
                 "import_set_empty_fields": [],
                 "fallback_values": {},
-                "name_create_enabled_fields": {},
+                "name_create_enabled_fields": {"stage_id": True},
                 "encoding": "",
                 "separator": "",
                 "quoting": '"',
