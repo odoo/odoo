@@ -222,7 +222,10 @@ class IrCron(models.Model):
         if not jobs:
             raise BadModuleState()
 
-        oldest = min(job['nextcall'] for job in jobs)
+        # use the max(job['nextcall'], job['write_date']) to avoid the cron
+        # reset_module_state for an ongoing module installation process
+        # right after installing a module with an old 'nextcall' cron in data
+        oldest = min(max(job['nextcall'], job['write_date'] or job['nextcall']) for job in jobs)
         if datetime.now() - oldest < MAX_FAIL_TIME:
             raise BadModuleState()
 
