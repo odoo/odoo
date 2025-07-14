@@ -483,23 +483,23 @@ class IrAttachment(models.Model):
         model_ids = defaultdict(set)            # {model_name: set(ids)}
         att_model_ids = []                      # [(att_id, (res_model, res_id))]
         # DLE P173: `test_01_portal_attachment`
-        remaining.flush_recordset(['res_model', 'res_id', 'create_uid', 'public', 'res_field'])
-        self.env.cr.execute('SELECT id, res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s', [tuple(remaining.ids)])
-        for att_id, res_model, res_id, create_uid, public, res_field in self.env.cr.fetchall():
-            if public and operation == 'read':
+        prefetch_fields = ('res_model', 'res_id', 'create_uid', 'public', 'res_field')
+        for attachment in remaining.sudo().with_context(prefetch_fields=prefetch_fields):
+            if attachment.public and operation == 'read':
                 continue
+            res_model, res_id, res_field = attachment.res_model, attachment.res_id, attachment.res_field
             if not self.env.is_system():
-                if not res_id and create_uid != self.env.uid:
-                    forbidden_ids.add(att_id)
+                if not res_id and attachment.create_uid.id != self.env.uid:
+                    forbidden_ids.add(attachment.id)
                     continue
                 if res_field:
                     field = self.env[res_model]._fields[res_field]
                     if not self._has_field_access(field, operation):
-                        forbidden_ids.add(att_id)
+                        forbidden_ids.add(attachment.id)
                         continue
             if res_model and res_id:
                 model_ids[res_model].add(res_id)
-                att_model_ids.append((att_id, (res_model, res_id)))
+                att_model_ids.append((attachment.id, (res_model, res_id)))
         forbidden_res_model_id = set(self._check_comodel_access(model_ids, operation))
         forbidden_ids.update(att_id for att_id, res in att_model_ids if res in forbidden_res_model_id)
 
