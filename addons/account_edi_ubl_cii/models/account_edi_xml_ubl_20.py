@@ -872,7 +872,10 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             'cbc:Description': {'_text': product.description_sale},
             'cbc:Name': {'_text': product.name},
             'cac:StandardItemIdentification': {
-                'cbc:ID': {'_text': product.barcode},
+                'cbc:ID': {
+                    '_text': product.barcode,
+                    'schemeID': '0160',  # GTIN
+                } if product.barcode else None,
             },
             'cac:AdditionalItemProperty': [
                 {
