@@ -376,3 +376,8 @@ class CalendarEvent(models.Model):
         if self.user_id and self.user_id.sudo().google_calendar_token:
             return self.user_id
         return self.env.user
+
+    def _is_google_insertion_blocked(self, sender_user):
+        self.ensure_one()
+        has_different_owner = self.user_id and self.user_id != sender_user
+        return has_different_owner
