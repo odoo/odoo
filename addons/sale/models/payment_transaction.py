@@ -132,9 +132,9 @@ class PaymentTransaction(models.Model):
                 send_invoice_cron._trigger()
             else:
                 # Must be called after the super() call to make sure the invoice are correctly posted.
-                self._send_invoice()
+                self._send_invoice(force_process_later=True)
 
-    def _send_invoice(self):
+    def _send_invoice(self, force_process_later=False):
         template_id = int(self.env['ir.config_parameter'].sudo().get_param(
             'sale.default_invoice_email_template',
             default=0
@@ -153,7 +153,7 @@ class PaymentTransaction(models.Model):
                 lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
             )
             invoice_to_send.is_move_sent = True # Mark invoice as sent
-            invoice_to_send.with_user(SUPERUSER_ID)._generate_pdf_and_send_invoice(template)
+            invoice_to_send.with_user(SUPERUSER_ID)._generate_pdf_and_send_invoice(template, force_process_later=force_process_later)
 
     def _cron_send_invoice(self):
         """

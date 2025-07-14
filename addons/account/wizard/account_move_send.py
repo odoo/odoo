@@ -763,7 +763,7 @@ class AccountMoveSend(models.TransientModel):
 
         return {'type': 'ir.actions.act_window_close'}
 
-    def action_send_and_print(self, force_synchronous=False, allow_fallback_pdf=False, **kwargs):
+    def action_send_and_print(self, force_synchronous=False, force_process_later=False, allow_fallback_pdf=False, **kwargs):
         """ Create the documents and send them to the end customers.
         If we are sending multiple invoices and not downloading them we will process the moves asynchronously.
         :param force_synchronous:   Flag indicating if the method should be done synchronously.
@@ -776,7 +776,7 @@ class AccountMoveSend(models.TransientModel):
             raise UserError(_('Please select a mail template to send multiple invoices.'))
 
         force_synchronous = force_synchronous or self.checkbox_download
-        process_later = self.mode == 'invoice_multi' and not force_synchronous
+        process_later = force_process_later or (self.mode == 'invoice_multi' and not force_synchronous)
         if process_later:
             # Set sending information on moves
             for move in self.move_ids:
