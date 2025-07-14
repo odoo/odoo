@@ -47,6 +47,18 @@ function animateClone($cart, $elem, offsetTop, offsetLeft) {
 }
 
 /**
+ * Returns the closest product form to a given element if exists.
+ * Required for product pages with full-width or no images where the "Add to cart" button can be 
+ * outside of the form.
+ *
+ * @param { HTMLElement } element - Reference to an HTML element in the DOM.
+ * @returns { HTMLFormElement|undefined }
+ */
+function getClosestProductForm(element){
+    return element.closest('form') ?? element.closest('.js_product')?.querySelector('form');
+}
+
+/**
  * Updates both navbar cart
  * @param {Object} data
  */
@@ -104,6 +116,7 @@ function showWarning(message) {
 
 export default {
     animateClone: animateClone,
+    getClosestProductForm: getClosestProductForm,
     updateCartNavBar: updateCartNavBar,
     showWarning: showWarning,
 };
