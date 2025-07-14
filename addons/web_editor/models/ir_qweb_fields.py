@@ -94,6 +94,16 @@ class IrQweb(models.AbstractModel):
         snippet_group = el.attrib.pop('snippet-group', None)
         group = el.attrib.pop('group', None)
         label = el.attrib.pop('label', None)
+        # Check if there is a parallax on the background of the snippet to show
+        # the "parallax" label or not. This must be done this way because the
+        # parallax can be removed by a theme or in a custom snippet.
+        # TODO In master, remove the "or label == 'Parallax'" part from the
+        # condition.
+        if (not snippet_group and not label) or label == 'Parallax':
+            view_el = etree.fromstring(view.arch_db)
+            parallax_bg_el = view_el.xpath("./span[hasclass('s_parallax_bg')] | ./section/span[hasclass('s_parallax_bg')]")
+            label = _("Parallax") if parallax_bg_el else None
+
         div = Markup('<div name="%s" data-oe-type="snippet" data-o-image-preview="%s" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-snippet-key="%s" data-oe-keywords="%s" %s %s %s %s>') % (
             name,
             escape_silent(image_preview),
