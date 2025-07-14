@@ -26,6 +26,12 @@ class ResPartnerBank(models.Model):
                 raise ValidationError(_("The Mobile Number must be in the format 0812345678 for account number %s.", bank.acc_number))
 
     @api.depends('country_code')
+    def _compute_country_proxy_keys(self):
+        bank_th = self.filtered(lambda b: b.country_code == 'TH')
+        bank_th.country_proxy_keys = 'ewallet_id,merchant_tax_id,mobile'
+        super(ResPartnerBank, self - bank_th)._compute_country_proxy_keys()
+
+    @api.depends('country_code')
     def _compute_display_qr_setting(self):
         bank_th = self.filtered(lambda b: b.country_code == 'TH')
         bank_th.display_qr_setting = True

@@ -27,6 +27,12 @@ class ResPartnerBank(models.Model):
                 raise ValidationError(_("Invalid Email! Please enter a valid email address for account number %s.", bank.acc_number))
 
     @api.depends('country_code')
+    def _compute_country_proxy_keys(self):
+        bank_hk = self.filtered(lambda b: b.country_code == 'HK')
+        bank_hk.country_proxy_keys = 'id,mobile,email'
+        super(ResPartnerBank, self - bank_hk)._compute_country_proxy_keys()
+
+    @api.depends('country_code')
     def _compute_display_qr_setting(self):
         bank_hk = self.filtered(lambda b: b.country_code == 'HK')
         bank_hk.display_qr_setting = True

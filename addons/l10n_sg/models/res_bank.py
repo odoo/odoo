@@ -17,6 +17,12 @@ class ResPartnerBank(models.Model):
                 raise ValidationError(_("The PayNow Type must be either Mobile or UEN to generate a PayNow QR code for account number %s.", bank.acc_number))
 
     @api.depends('country_code')
+    def _compute_country_proxy_keys(self):
+        bank_sg = self.filtered(lambda b: b.country_code == 'SG')
+        bank_sg.country_proxy_keys = 'mobile,uen'
+        super(ResPartnerBank, self - bank_sg)._compute_country_proxy_keys()
+
+    @api.depends('country_code')
     def _compute_display_qr_setting(self):
         bank_sg = self.filtered(lambda b: b.country_code == 'SG')
         bank_sg.display_qr_setting = True
