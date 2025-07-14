@@ -61,6 +61,12 @@ class ResPartnerBank(models.Model):
                     )
                 )
 
+    @api.depends('country_code')
+    def _compute_country_proxy_keys(self):
+        bank_br = self.filtered(lambda b: b.country_code == 'BR')
+        bank_br.country_proxy_keys = 'email,mobile,br_cpf_cnpj,br_random'
+        super(ResPartnerBank, self - bank_br)._compute_country_proxy_keys()
+
     @api.depends("country_code")
     def _compute_display_qr_setting(self):
         """Override."""

@@ -9,7 +9,8 @@
             <sheet position="inside">
                 <field name="display_qr_setting" invisible="1" />
                 <group string="EMV QR Configuration" invisible="not display_qr_setting">
-                    <field name="proxy_type"/>
+                    <field name="country_proxy_keys" invisible="1"/>
+                    <field name="proxy_type" widget="dynamic_selection" options="{'available_field': 'country_proxy_keys'}"/>
                     <field name="proxy_value"/>
                     <field name="include_reference"/>
                 </group>
