@@ -45,7 +45,7 @@ class PrinterDriver(PrinterDriverBase):
         if device.get('usb_product'):
             def usb_matcher(usb_device):
                 return (
-                    usb_device.manufacturer.lower() == device['usb_manufacturer'] and
+                    usb_device.manufacturer and usb_device.manufacturer.lower() == device['usb_manufacturer'] and
                     usb_device.product == device['usb_product'] and
                     usb_device.serial_number == device['usb_serial_number']
                 )
