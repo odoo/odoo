@@ -1,19 +1,18 @@
 import sys
 import traceback
 import xmlrpc.client
-from datetime import date, datetime
 from collections import defaultdict
+from datetime import date, datetime
+
 from markupsafe import Markup
 
 import odoo.exceptions
-from odoo.http import Controller, route, dispatch_rpc, request, Response
-from odoo.fields import Date, Datetime, Command
+from odoo.fields import Command, Date, Datetime
+from odoo.http import Controller, Response, dispatch_rpc, request, route
 from odoo.tools import lazy
 from odoo.tools.misc import frozendict
 
-# ==========================================================
-# XML-RPC helpers
-# ==========================================================
+from . import _check_request
 
 # XML-RPC fault codes. Some care must be taken when changing these: the
 # constants are also defined client-side and must remain in sync.
@@ -122,12 +121,7 @@ def dumps(params: list | tuple | xmlrpc.client.Fault) -> str:
 # ==========================================================
 
 
-def _check_request():
-    if request.db:
-        request.env.cr.close()
-
-
-class RPC(Controller):
+class XMLRPC(Controller):
     """Handle RPC connections."""
 
     def _xmlrpc(self, service):
@@ -169,9 +163,3 @@ class RPC(Controller):
             )
             raise
         return Response(response=response, mimetype='text/xml')
-
-    @route('/jsonrpc', type='jsonrpc', auth="none", save_session=False)
-    def jsonrpc(self, service, method, args):
-        """ Method used by client APIs to contact OpenERP. """
-        _check_request()
-        return dispatch_rpc(service, method, args)
