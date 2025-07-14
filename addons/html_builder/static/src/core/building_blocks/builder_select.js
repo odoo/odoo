@@ -48,13 +48,13 @@ export class BuilderSelect extends Component {
 
         this.dropdown = useDropdownState();
 
-        const buttonRef = useRef("button");
+        this.buttonRef = useRef("button");
         let currentLabel;
         const updateCurrentLabel = () => {
             if (!this.props.slots.fixedButton) {
                 const newHtml = currentLabel || _t("None");
-                if (buttonRef.el && buttonRef.el.innerHTML !== newHtml) {
-                    setElementContent(buttonRef.el, newHtml);
+                if (this.buttonRef.el && this.buttonRef.el.innerHTML !== newHtml) {
+                    setElementContent(this.buttonRef.el, newHtml);
                 }
             }
         };
@@ -70,5 +70,9 @@ export class BuilderSelect extends Component {
                 this.dropdown.close();
             },
         });
+    }
+
+    heightOfButton() {
+        return this.buttonRef.el.getBoundingClientRect().height;
     }
 }
