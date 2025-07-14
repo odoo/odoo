@@ -423,7 +423,7 @@ export class PaymentScreen extends Component {
                     switchScreen = this.currentOrder.uuid === this.pos.selectedOrderUuid;
                     nextPage = this.pos.defaultPage;
                     if (switchScreen) {
-                        this.selectNextOrder();
+                        this.pos.selectNextOrder();
                     }
                 }
             }
@@ -433,6 +433,7 @@ export class PaymentScreen extends Component {
             this.pos.navigate(nextPage.page, nextPage.params);
         }
     }
+    // TODO: deprecated. Remove it in master (saas-18.5).
     selectNextOrder() {
         if (this.currentOrder.originalSplittedOrder) {
             this.pos.selectedOrderUuid = this.currentOrder.uiState.splittedOrderUuid;

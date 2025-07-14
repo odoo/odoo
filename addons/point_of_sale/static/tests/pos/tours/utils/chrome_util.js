@@ -1,3 +1,5 @@
+/* global posmodel */
+
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 import { waitFor } from "@odoo/hoot-dom";
@@ -86,6 +88,23 @@ export function fillTextArea(target, value) {
 }
 export function createFloatingOrder() {
     return { trigger: ".pos-leftheader .list-plus-btn", run: "click" };
+}
+
+export function ongoingOrdersCount(expectedCount) {
+    return {
+        content: `Stored order count should be ${expectedCount}`,
+        trigger: "body",
+        run: () => {
+            const actualCount = posmodel.data.models["pos.order"].filter(
+                (o) => !o.finalized
+            ).length;
+            if (actualCount !== expectedCount) {
+                throw new Error(
+                    `Expected stored order count to be ${expectedCount}, but got ${actualCount}`
+                );
+            }
+        },
+    };
 }
 
 function _hasFloatingOrder(name, yes) {

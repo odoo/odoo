@@ -2483,6 +2483,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_delete_line')
 
+    def test_draft_orders_creation_with_auto_receipt(self):
+        """Test only one draft order is created when auto receipt is enabled."""
+        self.main_pos_config.write({
+            "iface_print_auto": True,
+            "other_devices": True,
+            "epson_printer_ip": "127.0.0.1:8069/receipt_receiver",
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_draft_orders_creation_with_auto_receipt')
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
