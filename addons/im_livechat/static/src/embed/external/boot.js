@@ -1,4 +1,5 @@
 import { makeRoot, makeShadow } from "@im_livechat/embed/common/boot_helpers";
+import { canLoadLivechat } from "@im_livechat/embed/common/misc";
 
 import { mount, whenReady } from "@odoo/owl";
 
@@ -10,7 +11,7 @@ import { makeEnv, startServices } from "@web/env";
 import { session } from "@web/session";
 
 (async function boot() {
-    if (!session.livechatData.can_load_livechat) {
+    if (!canLoadLivechat()) {
         return;
     }
     session.origin = session.livechatData.serverUrl;

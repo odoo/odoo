@@ -6,6 +6,7 @@ import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
+import { canLoadLivechat } from "@im_livechat/embed/common/misc";
 
 export const RATING = Object.freeze({
     GOOD: 5,
@@ -147,7 +148,7 @@ export const livechatService = {
     dependencies: ["mail.store", "notification"],
     start(env, services) {
         const livechat = reactive(new LivechatService(env, services));
-        if (session.livechatData?.can_load_livechat) {
+        if (canLoadLivechat()) {
             livechat.initialize();
         }
         return livechat;
