@@ -1,7 +1,7 @@
 import { after } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { rgbToHex } from "@web/core/utils/colors";
+import { rgbaToHex } from "@web/core/utils/colors";
 import { withSequence } from "@html_editor/utils/resource";
 import { FOOTER_COPYRIGHT } from "./footer_option_plugin";
 import { HEADER_SCROLL_EFFECT } from "./header_option_plugin";
@@ -64,7 +64,7 @@ class WebsitePageConfigOptionPlugin extends Plugin {
     getColorValue(attribute, classPrefix) {
         const headerEl = this.document.querySelector("#wrapwrap > header");
         const matchingClass = [...headerEl.classList].find((cls) => cls.startsWith(classPrefix));
-        return matchingClass || rgbToHex(headerEl.style.getPropertyValue(attribute));
+        return matchingClass || rgbaToHex(headerEl.style.getPropertyValue(attribute));
     }
 
     setDirty() {
