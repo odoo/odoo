@@ -475,8 +475,9 @@ export class CustomizeBodyBgTypeAction extends BuilderAction {
                 "body-image": "",
             });
         } else {
-            imageSrc = historyImageSrc || (await getAction("replaceBgImage").load({ el }));
-            if (imageSrc) {
+            const imageEl = historyImageSrc || (await getAction("replaceBgImage").load({ el }));
+            if (imageEl) {
+                imageSrc = imageEl.src;
                 await this.dependencies.customizeWebsite.customizeWebsiteVariables({
                     "body-image-type": `'${value}'`,
                     "body-image": `'${imageSrc}'`,
