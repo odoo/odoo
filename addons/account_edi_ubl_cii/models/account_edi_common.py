@@ -98,6 +98,71 @@ EAS_MAPPING = {
     'VA': {'9953': 'vat'},
 }
 
+# -------------------------------------------------------------------------
+# MAPPING FOR TAX EXEMPTION
+# -------------------------------------------------------------------------
+TAX_EXEMPTION_MAPPING = {
+    'VATEX-EU-79-C': 'Exempt based on article 79, point c of Council Directive 2006/112/EC',
+    'VATEX-EU-132': 'Exempt based on article 132 of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1A': 'Exempt based on article 132, section 1 (a) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1B': 'Exempt based on article 132, section 1 (b) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1C': 'Exempt based on article 132, section 1 (c) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1D': 'Exempt based on article 132, section 1 (d) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1E': 'Exempt based on article 132, section 1 (e) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1F': 'Exempt based on article 132, section 1 (f) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1G': 'Exempt based on article 132, section 1 (g) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1H': 'Exempt based on article 132, section 1 (h) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1I': 'Exempt based on article 132, section 1 (i) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1J': 'Exempt based on article 132, section 1 (j) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1K': 'Exempt based on article 132, section 1 (k) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1L': 'Exempt based on article 132, section 1 (l) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1M': 'Exempt based on article 132, section 1 (m) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1N': 'Exempt based on article 132, section 1 (n) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1O': 'Exempt based on article 132, section 1 (o) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1P': 'Exempt based on article 132, section 1 (p) of Council Directive 2006/112/EC',
+    'VATEX-EU-132-1Q': 'Exempt based on article 132, section 1 (q) of Council Directive 2006/112/EC',
+    'VATEX-EU-143': 'Exempt based on article 143 of Council Directive 2006/112/EC',
+    'VATEX-EU-143-1A': 'Exempt based on article 143, section 1 (a) of Council Directive 2006/112/EC',
+    'VATEX-EU-143-1B': 'Exempt based on article 143, section 1 (b) of Council Directive 2006/112/EC',
+    'VATEX-EU-143-1C': 'Exempt based on article 143, section 1 (c) of Council Directive 2006/112/EC',
+    'VATEX-EU-143-1D': 'Exempt based on article 143, section 1 (d) of Council Directive 2006/112/EC',
+    'VATEX-EU-143-1E': 'Exempt based on article 143, section 1 (e) of Council Directive 2006/112/EC',
+    'VATEX-EU-143-1F': 'Exempt based on article 143, section 1 (f) of Council Directive 2006/112/EC',
+    'VATEX-EU-143-1FA': 'Exempt based on article 143, section 1 (fa) of Council Directive 2006/112/EC',
+    'VATEX-EU-143-1G': 'Exempt based on article 143, section 1 (g) of Council Directive 2006/112/EC',
+    'VATEX-EU-143-1H': 'Exempt based on article 143, section 1 (h) of Council Directive 2006/112/EC',
+    'VATEX-EU-143-1I': 'Exempt based on article 143, section 1 (i) of Council Directive 2006/112/EC',
+    'VATEX-EU-143-1J': 'Exempt based on article 143, section 1 (j) of Council Directive 2006/112/EC',
+    'VATEX-EU-143-1K': 'Exempt based on article 143, section 1 (k) of Council Directive 2006/112/EC',
+    'VATEX-EU-143-1L': 'Exempt based on article 143, section 1 (l) of Council Directive 2006/112/EC',
+    'VATEX-EU-148': 'Exempt based on article 148 of Council Directive 2006/112/EC',
+    'VATEX-EU-148-A': 'Exempt based on article 148, section (a) of Council Directive 2006/112/EC',
+    'VATEX-EU-148-B': 'Exempt based on article 148, section (b) of Council Directive 2006/112/EC',
+    'VATEX-EU-148-C': 'Exempt based on article 148, section (c) of Council Directive 2006/112/EC',
+    'VATEX-EU-148-D': 'Exempt based on article 148, section (d) of Council Directive 2006/112/EC',
+    'VATEX-EU-148-E': 'Exempt based on article 148, section (e) of Council Directive 2006/112/EC',
+    'VATEX-EU-148-F': 'Exempt based on article 148, section (f) of Council Directive 2006/112/EC',
+    'VATEX-EU-148-G': 'Exempt based on article 148, section (g) of Council Directive 2006/112/EC',
+    'VATEX-EU-151': 'Exempt based on article 151 of Council Directive 2006/112/EC',
+    'VATEX-EU-151-1A': 'Exempt based on article 151, section 1 (a) of Council Directive 2006/112/EC',
+    'VATEX-EU-151-1AA': 'Exempt based on article 151, section 1 (aa) of Council Directive 2006/112/EC',
+    'VATEX-EU-151-1B': 'Exempt based on article 151, section 1 (b) of Council Directive 2006/112/EC',
+    'VATEX-EU-151-1C': 'Exempt based on article 151, section 1 (c) of Council Directive 2006/112/EC',
+    'VATEX-EU-151-1D': 'Exempt based on article 151, section 1 (d) of Council Directive 2006/112/EC',
+    'VATEX-EU-151-1E': 'Exempt based on article 151, section 1 (e) of Council Directive 2006/112/EC',
+    'VATEX-EU-309': 'Exempt based on article 309 of Council Directive 2006/112/EC',
+    'VATEX-EU-AE': 'Reverse charge',
+    'VATEX-EU-D': 'Intra-Community acquisition from second hand means of transport',
+    'VATEX-EU-F': 'Intra-Community acquisition of second hand goods',
+    'VATEX-EU-G': 'Export outside the EU',
+    'VATEX-EU-I': 'Intra-Community acquisition of works of art',
+    'VATEX-EU-IC': 'Intra-Community supply',
+    'VATEX-EU-O': 'Not subject to VAT',
+    'VATEX-EU-J': 'Intra-Community acquisition of collectors items and antiques',
+    'VATEX-FR-FRANCHISE': 'France domestic VAT franchise in base',
+    'VATEX-FR-CNWVAT': 'France domestic Credit Notes without VAT, due to supplier forfeit of VAT for discount',
+}
+
 
 class AccountEdiCommon(models.AbstractModel):
     _name = 'account.edi.common'
@@ -152,9 +217,9 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _get_tax_category_code(self, customer, supplier, tax):
         """
-        Predict the tax category code of a tax applied on a given base line.
-        These are reasonable defaults, but may not always be correct. For a per-tax configuration of
-        tax category code, install the `account_edi_ubl_cii_tax_extension` module.
+        Predicts the tax category code for a tax applied to a given base line.
+        If the tax has a defined category code, it is returned.
+        Otherwise, a reasonable default is provided, though it may not always be accurate.
 
         Source: doc of Peppol (but the CEF norm is also used by factur-x, yet not detailed)
         https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/cac-TaxSubtotal/cac-TaxCategory/cbc-TaxExemptionReasonCode/
@@ -166,6 +231,9 @@ class AccountEdiCommon(models.AbstractModel):
 
         if not tax:
             return 'E'
+
+        if tax.ubl_cii_tax_category_code:
+            return tax.ubl_cii_tax_category_code
 
         if customer.country_id.code == 'ES' and customer.zip:
             if customer.zip[:2] in ('35', '38'):  # Canary
@@ -197,13 +265,19 @@ class AccountEdiCommon(models.AbstractModel):
             return 'E'
 
     def _get_tax_exemption_reason(self, customer, supplier, tax):
-        """ These are the default tax exemption reasons given for each tax category code.
-            For a per-tax configuration of tax exemption reasons, see the
-            `account_edi_ubl_cii_tax_extension` module.
+        """ Returns the reason and code from the tax if available.
+            If not, it falls back to the default tax exemption reason defined for the respective tax category code.
 
             Note: In Peppol, taxes should be grouped by tax category code but *not* by
             exemption reason, see https://docs.peppol.eu/poacc/billing/3.0/bis/#_calculation_of_vat
         """
+
+        if tax and (code := tax.ubl_cii_tax_exemption_reason_code):
+            return {
+                'tax_exemption_reason_code': code,
+                'tax_exemption_reason': TAX_EXEMPTION_MAPPING.get(code),
+            }
+
         tax_category_code = self._get_tax_category_code(customer, supplier, tax)
         tax_exemption_reason = tax_exemption_reason_code = None
 
