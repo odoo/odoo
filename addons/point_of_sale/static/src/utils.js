@@ -42,7 +42,7 @@ export function constructFullProductName(line) {
                         cus.custom_product_template_attribute_value_id?.id == parseInt(value.id)
                 );
                 if (customValue) {
-                    attributeString += `${value.attribute_id.name}: ${value.name}: ${customValue.custom_value}, `;
+                    attributeString += `${value.name}: ${customValue.custom_value}, `;
                 }
             } else {
                 attributeString += `${value.name}, `;
