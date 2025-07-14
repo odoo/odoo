@@ -1608,3 +1608,66 @@ class StockQuantRemovalStrategy(TransactionCase):
             ('package_id', '=', package.id),
             ('location_id', '=', self.stock_location.id),
         ]))
+
+    def test_quant_cache_for_packages(self):
+        """
+        Create and assign a delivery for different packages.
+        Create an internal transfer to move on of the package in a sublocation.
+        Check that the delivery is still reserved in the proper locations.
+        """
+        products = self.env['product.product'].create([
+            {'name': 'Good product', 'is_storable': True},
+            {'name': 'Great product', 'is_storable': True},
+            {'name': 'Super product', 'is_storable': True},
+        ])
+        products.categ_id.removal_strategy_id = self.env['product.removal']
+        packages = self.env['stock.quant.package'].create([
+            {'name': 'Pack 001'},
+            {'name': 'Pack 002'},
+        ])
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)])
+        # Pack the first 2 prodcuts in Pack 001 and the last in Pack 002
+        self.env['stock.quant']._update_available_quantity(products[0], warehouse.lot_stock_id, 1.0, package_id=packages[0])
+        self.env['stock.quant']._update_available_quantity(products[1], warehouse.lot_stock_id, 1.0, package_id=packages[0])
+        self.env['stock.quant']._update_available_quantity(products[2], warehouse.lot_stock_id, 1.0, package_id=packages[1])
+        sublocation = self.env['stock.location'].create({
+            'name': 'sublocation',
+            'location_id': warehouse.lot_stock_id.id,
+        })
+        delivery, internal_transfer = self.env['stock.picking'].create([
+            {
+                'name': 'Delivery',
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+                'picking_type_id': warehouse.out_type_id.id,
+                'move_ids': [
+                    Command.create({
+                        'location_id': warehouse.lot_stock_id.id,
+                        'location_dest_id': self.ref('stock.stock_location_customers'),
+                        'product_id': product.id,
+                        'product_uom_qty': 1,
+                    }) for product in products
+                ]
+            },
+            {
+                'name': 'Internal transfer',
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': sublocation.id,
+                'picking_type_id': warehouse.int_type_id.id,
+            },
+        ])
+        delivery.action_confirm()
+        # Make an internal transfer to move Pack 001 in a sublocation
+        warehouse.int_type_id.show_entire_packs = True
+        with Form(internal_transfer) as picking_form:
+            with picking_form.package_level_ids.new() as package_level:
+                package_level.package_id = packages[0]
+        internal_transfer.action_confirm()
+        internal_transfer.package_level_ids.is_done = True
+        internal_transfer.button_validate()
+        quants = self.env['stock.quant'].search([('product_id', 'in', products.ids)])
+        self.assertRecordValues(quants, [
+            {'product_id': products[2].id, 'location_id':  warehouse.lot_stock_id.id, 'package_id': packages[1].id, 'quantity': 1.0, 'reserved_quantity': 1.0},
+            {'product_id': products[0].id, 'location_id':  sublocation.id, 'package_id': packages[0].id, 'quantity': 1.0, 'reserved_quantity': 1.0},
+            {'product_id': products[1].id, 'location_id':  sublocation.id, 'package_id': packages[0].id, 'quantity': 1.0, 'reserved_quantity': 1.0},
+        ])
