@@ -8,7 +8,7 @@
             <xpath expr="//field[@name='allow_out_payment']" position="after">
                 <field name="employee_id" invisible="not employee_id" widget="many2one_avatar_employee"/>
             </xpath>
-            <xpath expr="//page[@name='internal_notes']" position="before">
+            <xpath expr="//page" position="before">
                 <page string="Bank Information" invisible="not bank_id">
                     <group>
                         <field name="bank_name" string="Bank Name"/>
