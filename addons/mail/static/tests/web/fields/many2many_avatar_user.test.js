@@ -299,6 +299,7 @@ test("avatar card preview", async () => {
     });
     onRpc("res.users", "read", (params) => {
         expect(params.args[1]).toEqual([
+            "active",
             "name",
             "email",
             "phone",
