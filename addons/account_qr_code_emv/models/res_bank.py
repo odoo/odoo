@@ -13,6 +13,7 @@ class ResPartnerBank(models.Model):
     display_qr_setting = fields.Boolean(compute='_compute_display_qr_setting')
     include_reference = fields.Boolean(string="Include Reference", help="Include the reference in the QR code.")
     proxy_type = fields.Selection([('none', 'None')], string="Proxy Type", default='none')
+    country_proxy_keys = fields.Char(compute='_compute_country_proxy_keys')
     proxy_value = fields.Char(string="Proxy Value")
 
     @api.model
@@ -25,6 +26,10 @@ class ResPartnerBank(models.Model):
     @api.model
     def _remove_accents(self, string):
         return remove_accents(string).replace('đ', 'd').replace('Đ', 'D')
+
+    @api.depends('country_code')
+    def _compute_country_proxy_keys(self):
+        self.country_proxy_keys = ""
 
     @api.depends('country_code')
     def _compute_display_qr_setting(self):

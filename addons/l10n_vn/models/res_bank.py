@@ -22,6 +22,12 @@ class ResPartnerBank(models.Model):
                 raise ValidationError(_("The QR Code Type must be either Merchant ID, ATM Card Number or Bank Account to generate a Vietnam Bank QR code for account number %s.", bank.acc_number))
 
     @api.depends('country_code')
+    def _compute_country_proxy_keys(self):
+        bank_vn = self.filtered(lambda b: b.country_code == 'VN')
+        bank_vn.country_proxy_keys = 'merchant_id,payment_service,atm_card,bank_acc'
+        super(ResPartnerBank, self - bank_vn)._compute_country_proxy_keys()
+
+    @api.depends('country_code')
     def _compute_display_qr_setting(self):
         bank_vn = self.filtered(lambda b: b.country_code == 'VN')
         bank_vn.display_qr_setting = True
