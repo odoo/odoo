@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    
+
     <record id="delivery_carrier_form" model="ir.ui.view">
         <field name="name">In-store Delivery Carrier Form</field>
         <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
@@ -36,6 +36,12 @@
             <p name="country_warning" position="attributes">
                 <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
             </p>
+            <label for="has_estimated_delivery" position="attributes">
+                <attribute name="invisible" add="delivery_type != 'in_store'" separator=" and "/>
+            </label>
+            <div name="estimated_delivery_fields" position="attributes">
+                <attribute name="invisible" add="delivery_type != 'in_store'" separator=" and "/>
+            </div>
             <page name="pricing" position="before">
                 <page string="Stores" name="warehouses" invisible="delivery_type != 'in_store'">
                     <field name="warehouse_ids">

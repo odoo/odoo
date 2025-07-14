@@ -51,7 +51,7 @@
             t-set="is_pickup_needed"
             t-value="delivery_type in dm.fields_get() and dm[delivery_type]"
         />
-        <div class="d-flex justify-content-between gap-3">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
             <div class="form-check flex-grow-1 cursor-pointer">
                 <!-- === Radio button === -->
                 <input
@@ -74,10 +74,56 @@
                     <span name="o_delivery_method_name" t-field="dm.name"/>
                 </label>
             </div>
-            <!-- === Delivery price badge === -->
-            <span class="o_wsale_delivery_price_badge text-muted fw-bold text-end" name="price">
-                <small class="fw-normal">Select to compute delivery rate</small>
-            </span>
+            <div class="o_delivery_info_container flex-grow-1 flex-md-grow-0 d-flex justify-content-between align-items-center col-lg-5">
+                <!-- === Delivery estimated date === -->
+                <t t-if="dm.has_estimated_delivery">
+                    <t t-set="tooltip_title" t-value="'Estimated Delivery'"/>
+                    <div
+                        class="o_wsale_delivery_date_badge input-group w-75"
+                        t-if="dm.estimated_delivery_min_days == dm.estimated_delivery_max_days"
+                    >
+                        <input
+                            type="text"
+                            id="display_delivery_date"
+                            name="estimated_delivery"
+                            class="form-control"
+                            t-att-value="dm._get_first_available_delivery_date()"
+                            disabled="1"
+                            t-att-title="tooltip_title"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            data-bs-delay="0"
+                        />
+                    </div>
+                    <div
+                        t-else=""
+                        class="o_website_sale_delivery_date_picker input-group o_daterange_picker w-75"
+                        t-att-data-delivery-available-days="json.dumps(dm._get_available_days())"
+                    >
+                        <input
+                            t-attf-id="o_estimated_delivery_date_{{dm.id}}"
+                            type="text"
+                            name="estimated_delivery"
+                            class="o_website_sale_daterange_picker_input form-control"
+                        />
+                        <label
+                            t-attf-for="o_estimated_delivery_date_{{dm.id}}"
+                            class="input-group-text input-group-text-subtle d-flex align-items-center"
+                            t-att-title="tooltip_title"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            data-bs-delay="0"
+                        >
+                            <i class="fa fa-edit" role="img"/>
+                        </label>
+                    </div>
+                </t>
+                <!-- === Delivery price badge === -->
+                <span class="o_wsale_delivery_price_badge text-muted fw-bold text-end" name="price">
+                    <small class="fw-normal">Select to compute delivery rate</small>
+                </span>
+            </div>
+
         </div>
         <!-- === Pick up location === -->
         <div

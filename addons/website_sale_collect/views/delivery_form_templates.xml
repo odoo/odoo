@@ -106,6 +106,13 @@
                 />
             </t>
         </t>
+        <t t-set="tooltip_title" position="attributes">
+            <attribute
+                name="t-value"
+                add="if dm.delivery_type != 'in_store' else 'Pickup Date'"
+                separator=" "
+            />
+        </t>
         <span name="o_delivery_method_name" position="before">
             <i
                 t-if="request.website.sudo().in_store_dm_id"
