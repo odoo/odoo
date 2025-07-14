@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "test_search_panel",
     'description': "Tests for the search panel python methods",
