@@ -145,7 +145,7 @@
          data-bs-placement="top">
         <t t-set="user_profile_url" t-value="False"/>
         <t t-if="'forum_id' in object and (object.create_uid.id == request.session.uid or object.create_uid.sudo().website_published)">
-            <t t-set="user_profile_url" t-valuef="/forum/user/#{ object.create_uid.id }?forum_id=#{ object.forum_id.id }&amp;forum_origin=#{ request.httprequest.path }"/>
+            <t t-set="user_profile_url" t-valuef="/profile/user/#{ object.create_uid.id }?forum_id=#{ object.forum_id.id }"/>
         </t>
         <a t-if="show_image" t-att-href="user_profile_url or '#'" t-attf-class="o_wforum_author_pic position-relative #{ 'pe-none' if not user_profile_url else '' }">
             <img t-attf-class="o_wforum_avatar rounded-circle object-fit-cover #{'me-2' if show_name or show_date or show_karma else '' } #{_image_classes}" t-att-src="website.image_url(object.create_uid, 'avatar_128', '60x60')" alt="Avatar"/>

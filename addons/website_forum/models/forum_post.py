@@ -840,7 +840,7 @@ class ForumPost(models.Model):
             res["text"] = self.plain_content or self.name
             res["answerCount"] = self.child_count
         if self.create_uid.sudo().website_published:
-            res["author"]["url"] = self.env['ir.http']._url_for(f"/forum/user/{ self.create_uid.sudo().id }")
+            res["author"]["url"] = self.env['ir.http']._url_for(f"/profile/user/{ self.create_uid.sudo().id }")
         return res
 
     def go_to_website(self):

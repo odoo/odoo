@@ -405,7 +405,7 @@ class WebsiteForum(WebsiteProfile):
         user = request.env.user
         if not user.email or not tools.single_email_re.match(user.email):
             return request.redirect(
-                f'/forum/user/{request.session.uid}?forum_id={forum.id}&forum_origin={request.httprequest.path}')
+                f'/profile/user/{request.session.uid}?forum_id={forum.id}')
         values = self._prepare_user_values(forum=forum, searches={}, new_question=True)
         return request.render("website_forum.new_question", values)
 
@@ -660,11 +660,6 @@ class WebsiteForum(WebsiteProfile):
 
     # Profile
     # -----------------------------------
-
-    @http.route(['/forum/user/<int:user_id>'], type='http', auth="public", website=True)
-    def view_user_forum_profile(self, user_id, forum_id='', forum_origin='/forum', **post):
-        forum_origin_query = f'?forum_origin={forum_origin}&forum_id={forum_id}' if forum_id else ''
-        return request.redirect(f'/profile/user/{user_id}{forum_origin_query}')
 
     def _prepare_user_profile_values(self, user, **post):
         values = super(WebsiteForum, self)._prepare_user_profile_values(user, **post)

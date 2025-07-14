@@ -150,7 +150,7 @@
                             <div t-if="user.rank_id" class="d-flex align-items-center">
                                 <small class="fw-bold me-2">Current rank:</small>
                                 <img t-att-src="website.image_url(user.rank_id, 'image_128')" width="16" height="16" alt="" class="object-fit-cover me-1"/>
-                                <a t-attf-href="/profile/ranks_badges?url_origin=#{request.httprequest.path}&amp;name_origin=#{user.name}" t-field="user.rank_id"/>
+                                <a t-attf-href="/profile/ranks_badges" t-field="user.rank_id"/>
                             </div>
                             <button class="btn btn-sm d-md-none bg-white border" type="button" data-bs-toggle="collapse" data-bs-target="#o_wprofile_sidebar_collapse" aria-expanded="false" aria-controls="o_wprofile_sidebar_collapse">More info</button>
                         </div>
@@ -292,18 +292,18 @@
         </div>
          <div class="mb-3" t-elif="request.env.user == user">
             Badges are your collection of achievements. Wear them proudly! <br />
-            <a t-if="not user.badge_ids and badge_category" t-attf-href="/profile/ranks_badges?badge_category=#{badge_category}&amp;url_origin=#{request.httprequest.path}&amp;name_origin=#{user.name}"
+            <a t-if="not user.badge_ids and badge_category" t-attf-href="/profile/ranks_badges?badge_category=#{badge_category}"
             class="btn-link"><i class="fa fa-arrow-right"/> Get Badges</a>
-            <a t-else="" t-attf-href="/profile/ranks_badges?url_origin=#{request.httprequest.path}&amp;name_origin=#{user.name}"
+            <a t-else="" t-attf-href="/profile/ranks_badges"
             class="btn-link"><i class="fa fa-arrow-right"/> Get Badges</a>
         </div>
         <div t-else="" class="mb-3 d-inline-block">
             <p class="text-muted">No badges yet!</p>
         </div>
         <div t-if="request.env.user.id != user.id" class="text-end d-inline-block pull-right">
-            <a t-if="not user.badge_ids and badge_category" t-attf-href="/profile/ranks_badges?badge_category=#{badge_category}&amp;url_origin=#{request.httprequest.path}&amp;name_origin=#{user.name}"
+            <a t-if="not user.badge_ids and badge_category" t-attf-href="/profile/ranks_badges?badge_category=#{badge_category}"
             class="btn-link btn-sm"><i class="oi oi-arrow-right"/> All Badges</a>
-            <a t-else="" t-attf-href="/profile/ranks_badges?url_origin=#{request.httprequest.path}&amp;name_origin=#{user.name}"
+            <a t-else="" t-attf-href="/profile/ranks_badges"
             class="btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Badges</a>
         </div>
     </template>
@@ -312,10 +312,10 @@
     <template id="rank_badge_main" name="Ranks Page">
         <t t-call="website.layout">
             <div class="container mb32 mt48">
-                <nav t-if="request.params.get('url_origin') and request.params.get('name_origin')" aria-label="breadcrumb">
+                <nav t-if="url_from" aria-label="breadcrumb">
                     <ol class="breadcrumb p-0 bg-white">
                         <li class="breadcrumb-item">
-                            <a t-att-href="(request.website.domain or '') + '/' + request.params.get('url_origin').lstrip('/')" t-out="request.params.get('name_origin')"/>
+                            <a t-att-href="url_from" t-out="url_from_label"/>
                         </li>
                         <li class="breadcrumb-item">Badges</li>
                     </ol>
