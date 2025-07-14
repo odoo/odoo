@@ -645,8 +645,8 @@ export class Thread extends Component {
             this.props.thread.isLoaded &&
             !this.props.thread.isTransient &&
             !this.props.thread.hasLoadingFailed &&
-            !this.messageHighlight.initiated &&
-            !this.messageHighlight.highlightedMessageId
+            !this.messageHighlight?.initiated &&
+            !this.messageHighlight?.highlightedMessageId
         );
     }
 
