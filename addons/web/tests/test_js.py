@@ -117,8 +117,8 @@ class HOOTCommon(odoo.tests.HttpCase):
             h = self._generate_hash(f)
             if sign == '-':
                 h = f'-{h}'
-            # Since we don't know if the descriptor we have is a test or a suite, we need to provide the hash both for test and suite
-            filter += f'&test={h}&suite={h}'
+            # Since we don't know if the descriptor we have is a test or a suite, we need to provide the hash for a generic "job"
+            filter += f'&job={h}'
         return filter
 
     def test_generate_hoot_hash(self):
@@ -129,15 +129,15 @@ class HOOTCommon(odoo.tests.HttpCase):
     def test_get_hoot_filter(self):
         self._test_params = []
         self.assertEqual(self.get_hoot_filters(), '')
-        expected = '&test=e39ce9ba&suite=e39ce9ba&test=-69a6561d&suite=-69a6561d'
+        expected = '&job=e39ce9ba&job=-69a6561d'
         self._test_params = [('+', '@web/core,-@web/core/autocomplete')]
         self.assertEqual(self.get_hoot_filters(), expected)
         self._test_params = [('+', '@web/core'), ('-', '@web/core/autocomplete')]
         self.assertEqual(self.get_hoot_filters(), expected)
         self._test_params = [('+', '-@web/core/autocomplete,-@web/core/autocomplete2')]
-        self.assertEqual(self.get_hoot_filters(), '&test=-69a6561d&suite=-69a6561d&test=-cb246db5&suite=-cb246db5')
+        self.assertEqual(self.get_hoot_filters(), '&job=-69a6561d&job=-cb246db5')
         self._test_params = [('-', '-@web/core/autocomplete,-@web/core/autocomplete2')]
-        self.assertEqual(self.get_hoot_filters(), '&test=69a6561d&suite=69a6561d&test=cb246db5&suite=cb246db5')
+        self.assertEqual(self.get_hoot_filters(), '&job=69a6561d&job=cb246db5')
 
 @odoo.tests.tagged('post_install', '-at_install')
 class WebSuite(QunitCommon, HOOTCommon):
