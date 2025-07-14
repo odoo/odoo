@@ -134,14 +134,15 @@ export class Macro {
             return;
         }
         try {
-            const currentStep = this.steps[this.currentIndex];
+            const step = this.steps[this.currentIndex];
             const executeStep = async () => {
-                const trigger = await waitForTrigger(currentStep.trigger);
-                await this.onStep(currentStep, trigger, this.currentIndex);
-                return await performAction(trigger, currentStep.action);
+                const trigger = await waitForTrigger(step.trigger);
+                const result = await performAction(trigger, step.action);
+                await this.onStep({ step, trigger, index: this.currentIndex });
+                return result;
             };
             const launchTimer = async () => {
-                const timeout_delay = currentStep.timeout || this.timeout || 10000;
+                const timeout_delay = step.timeout || this.timeout || 10000;
                 await delay(timeout_delay);
                 throw new MacroError(
                     "Timeout",
@@ -169,7 +170,8 @@ export class Macro {
         }
         this.isComplete = true;
         if (error) {
-            this.onError(error, this.steps[this.currentIndex], this.currentIndex);
+            const step = this.steps[this.currentIndex];
+            this.onError({ error, step, index: this.currentIndex });
         } else if (this.currentIndex === this.steps.length) {
             this.onComplete();
         }
