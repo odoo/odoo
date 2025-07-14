@@ -44,7 +44,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             .with_context(default_journal_id=journal.id) \
             ._create_document_from_attachment(attachment.id)
 
-    def test_import_product(self):
+    def test_export_import_product(self):
         products = self.env['product.product'].create([{
             'name': 'XYZ',
             'default_code': '1234',
@@ -101,40 +101,58 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         company.email = 'company@site.ext'
         company.phone = '+33499999999'
         company.zip = '78440'
-
-        company.partner_id.with_company(company).invoice_edi_format = 'facturx'
         company.partner_id.bank_ids = [Command.create({
             'acc_number': '999999',
             'partner_id': company.partner_id.id,
             'acc_holder_name': 'The Chosen One'
         })]
 
-        invoice = self.env['account.move'].create({
-            'company_id': company.id,
-            'partner_id': company.partner_id.id,
-            'move_type': 'out_invoice',
-            'journal_id': self.company_data_2['default_journal_sale'].id,
-            'invoice_line_ids': [Command.create(vals) for vals in line_vals],
-        })
-        invoice.action_post()
+        for ubl_cii_format in ['facturx', 'ubl_bis3']:
+            with self.subTest(sub_test_name=f"format: {ubl_cii_format}"):
+                company.partner_id.with_company(company).invoice_edi_format = ubl_cii_format
 
-        print_wiz = self.env['account.move.send.wizard'].create({
-            'move_id': invoice.id,
-            'sending_methods': ['manual'],
-        })
-        self.assertEqual(print_wiz.invoice_edi_format, 'facturx')
-        print_wiz.action_send_and_print()
+                invoice = self.env['account.move'].create({
+                    'company_id': company.id,
+                    'partner_id': company.partner_id.id,
+                    'move_type': 'out_invoice',
+                    'journal_id': self.company_data_2['default_journal_sale'].id,
+                    'invoice_line_ids': [Command.create(vals) for vals in line_vals],
+                })
+                invoice.action_post()
 
-        facturx_attachment = invoice.ubl_cii_xml_id
-        xml_tree = etree.fromstring(facturx_attachment.raw)
+                print_wiz = self.env['account.move.send.wizard'].create({
+                    'move_id': invoice.id,
+                    'sending_methods': ['manual'],
+                })
+                self.assertEqual(print_wiz.invoice_edi_format, ubl_cii_format)
+                print_wiz.action_send_and_print()
 
-        # Testing the case where a product on the invoice has a UoM with a different category than the one in the DB
-        wrong_uom_line = xml_tree.findall('./{*}SupplyChainTradeTransaction/{*}IncludedSupplyChainTradeLineItem')[1]
-        wrong_uom_line.find('./{*}SpecifiedLineTradeDelivery/{*}BilledQuantity').attrib['unitCode'] = 'HUR'
+                attachment = invoice.ubl_cii_xml_id
+                xml_tree = etree.fromstring(attachment.raw)
 
-        facturx_attachment.raw = etree.tostring(xml_tree)
-        new_invoice = invoice.journal_id._create_document_from_attachment(facturx_attachment.ids)
-        self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
+                if ubl_cii_format == 'facturx':
+                    # Testing the case where a product on the invoice has a UoM with a different category than the one in the DB
+                    wrong_uom_line = xml_tree.findall('./{*}SupplyChainTradeTransaction/{*}IncludedSupplyChainTradeLineItem')[1]
+                    wrong_uom_line.find('./{*}SpecifiedLineTradeDelivery/{*}BilledQuantity').attrib['unitCode'] = 'HUR'
+                    last_line_product = xml_tree.find('./{*}SupplyChainTradeTransaction/{*}IncludedSupplyChainTradeLineItem[8]/{*}SpecifiedTradeProduct')
+                    self.assertEqual(last_line_product.find('./{*}GlobalID').text, '00002')
+                    self.assertEqual(last_line_product.find('./{*}SellerAssignedID').text, '1111')
+                    self.assertEqual(last_line_product.find('./{*}Name').text, 'YYY')
+                elif ubl_cii_format == 'ubl_bis3':
+                    last_line_product = xml_tree.find('./{*}InvoiceLine[8]/{*}Item')
+                    barcode_node = last_line_product.find('./{*}StandardItemIdentification/{*}ID')
+                    self.assertEqual(barcode_node.text, '00002')
+                    self.assertEqual(barcode_node.attrib['schemeID'], '0160')
+                    self.assertEqual(last_line_product.find('./{*}SellersItemIdentification/{*}ID').text, '1111')
+                    self.assertEqual(last_line_product.find('./{*}Name').text, 'YYY')
+
+                attachment.raw = etree.tostring(xml_tree)
+                new_invoice = invoice.journal_id._create_document_from_attachment(attachment.ids)
+                self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
+
+    def test_export_import_product_new(self):
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+        self.test_export_import_product()
 
     def test_import_tax_prediction(self):
         """ We are going to create 2 tax and import the e-invoice twice.
