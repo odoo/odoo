@@ -56,10 +56,22 @@ function updateWishlistNavBar() {
     wishlistQuantity.classList.toggle('d-none', !wishlistProductIds.length);
 }
 
+/**
+ * Update the disabled/enabled state of an element.
+ *
+ * @param {Element} el The element to disable/enable.
+ * @param {boolean} isDisabled Whether the element should be disabled.
+ */
+function updateDisabled(el, isDisabled) {
+    el.disabled = isDisabled;
+    el.classList.toggle('disabled', isDisabled);
+}
+
 export default {
     getWishlistProductIds: getWishlistProductIds,
     setWishlistProductIds: setWishlistProductIds,
     addWishlistProduct: addWishlistProduct,
     removeWishlistProduct: removeWishlistProduct,
     updateWishlistNavBar: updateWishlistNavBar,
+    updateDisabled: updateDisabled,
 };
