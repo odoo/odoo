@@ -5826,6 +5826,10 @@ class AccountMove(models.Model):
             [('sending_data', '!=', False)],
             limit=limit,
         )
+        total_to_process = self.env['account.move'].search_count(
+            [('sending_data', '!=', False)],
+        )
+
         need_retrigger = len(to_process) > job_count
         if not to_process:
             return
@@ -5842,6 +5846,8 @@ class AccountMove(models.Model):
             to_process,
             from_cron=True,
         )
+        self.env['ir.cron']._notify_progress(done=len(to_process),
+                                             remaining=total_to_process - len(to_process))
 
         for partner_id, partner_moves in moves_by_partner.items():
             partner = self.env['res.partner'].browse(partner_id)
