@@ -3,8 +3,8 @@ import { Domain } from "@web/core/domain";
 
 export const ProjectTaskModelMixin = (T) => class ProjectTaskModelMixin extends T {
     _processSearchDomain(domain) {
-        const showTaskActions = !this.env.searchModel.globalContext.my_tasks;
-        const showSubtasks = !showTaskActions || JSON.parse(browser.localStorage.getItem("showSubtasks"));
+        const { my_tasks, subtask_action } = this.env.searchModel.globalContext;
+        const showSubtasks = my_tasks || subtask_action || JSON.parse(browser.localStorage.getItem("showSubtasks"));
         if (!showSubtasks) {
             return Domain.and([
                 domain,
