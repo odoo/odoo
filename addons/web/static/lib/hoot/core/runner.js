@@ -398,7 +398,7 @@ export class Runner {
             );
         });
 
-        [this._pushTest, this._pushPendingTest] = batch((test) => this.state.done.add(test), 10);
+        [this._pushTest, this._pushPendingTest] = batch((test) => this.state.done.add(test));
         [this.expect, this.expectHooks] = makeExpect({
             get headless() {
                 return reactiveConfig.headless;
