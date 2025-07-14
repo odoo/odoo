@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
-import odoo.tests
 import json
 
-SEARCH_PANEL_ERROR = {'error_msg': "Too many items to display.", }
+import odoo.tests
+
+SEARCH_PANEL_ERROR = {'error_msg': "Too many items to display."}
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -26,26 +26,26 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
     def test_many2one(self):
 
         folders = self.GroupByModel.create([
-            {'name': 'Folder 1', },
-            {'name': 'Folder 2', },
+            {'name': 'Folder 1'},
+            {'name': 'Folder 2'},
         ])
 
         f1_id, f2_id = folders.ids
 
         tags = self.TargetModel.create([
             {'name': 'Tag 1', 'folder_id': f2_id,
-                'color': 'Red', 'status': 'cool', },
-            {'name': 'Tag 2', 'folder_id': f1_id, 'status': 'cool', },
-            {'name': 'Tag 3', 'color': 'Green', 'status': 'cool', },
+                'color': 'Red', 'status': 'cool'},
+            {'name': 'Tag 2', 'folder_id': f1_id, 'status': 'cool'},
+            {'name': 'Tag 3', 'color': 'Green', 'status': 'cool'},
         ])
 
         t1_id, t2_id, t3_id = tags.ids
 
         records = self.SourceModel.create([
-            {'name': 'Rec 1', 'tag_id': t1_id, },
-            {'name': 'Rec 2', 'tag_id': t1_id, },
-            {'name': 'Rec 3', 'tag_id': t2_id, },
-            {'name': 'Rec 4', },
+            {'name': 'Rec 1', 'tag_id': t1_id},
+            {'name': 'Rec 2', 'tag_id': t1_id},
+            {'name': 'Rec 3', 'tag_id': t2_id},
+            {'name': 'Rec 4'},
         ])
 
         r1_id, r2_id, _, _ = records.ids
@@ -55,18 +55,18 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             'tag_id',
             enable_counters=True,
             expand=True,
-            group_by='folder_id'
+            group_by='folder_id',
         )
         self.assertEqual(
             result['values'],
             [
                 {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id,
-                    'group_id': f2_id, 'group_name': 'Folder 2', },
+                    'group_id': f2_id, 'group_name': 'Folder 2'},
                 {'__count': 1, 'display_name': 'Tag 2', 'id': t2_id,
-                    'group_id': f1_id, 'group_name': 'Folder 1', },
+                    'group_id': f1_id, 'group_name': 'Folder 1'},
                 {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id,
-                    'group_id': False, 'group_name': 'Not Set', },
-            ]
+                    'group_id': False, 'group_name': 'Not Set'},
+            ],
         )
 
         # counters, expand, and group_by (selection case)
@@ -74,18 +74,18 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             'tag_id',
             enable_counters=True,
             expand=True,
-            group_by='status'
+            group_by='status',
         )
         self.assertEqual(
             result['values'],
             [
                 {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id,
-                    'group_id': 'cool', 'group_name': 'Cool', },
+                    'group_id': 'cool', 'group_name': 'Cool'},
                 {'__count': 1, 'display_name': 'Tag 2', 'id': t2_id,
-                    'group_id': 'cool', 'group_name': 'Cool', },
+                    'group_id': 'cool', 'group_name': 'Cool'},
                 {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id,
-                    'group_id': 'cool', 'group_name': 'Cool', },
-            ]
+                    'group_id': 'cool', 'group_name': 'Cool'},
+            ],
         )
 
         # counters, expand, and group_by (other cases)
@@ -93,18 +93,18 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             'tag_id',
             enable_counters=True,
             expand=True,
-            group_by='color'
+            group_by='color',
         )
         self.assertEqual(
             result['values'],
             [
                 {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id,
-                    'group_id': 'Red', 'group_name': 'Red', },
+                    'group_id': 'Red', 'group_name': 'Red'},
                 {'__count': 1, 'display_name': 'Tag 2', 'id': t2_id,
-                    'group_id': False, 'group_name': 'Not Set', },
+                    'group_id': False, 'group_name': 'Not Set'},
                 {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id,
-                    'group_id': 'Green', 'group_name': 'Green', },
-            ]
+                    'group_id': 'Green', 'group_name': 'Green'},
+            ],
         )
 
         # counters, expand, and no group_by
@@ -116,10 +116,10 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id, },
-                {'__count': 1, 'display_name': 'Tag 2', 'id': t2_id, },
-                {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id, },
-            ]
+                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id},
+                {'__count': 1, 'display_name': 'Tag 2', 'id': t2_id},
+                {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id},
+            ],
         )
 
         # counters, expand, no group_by, and search domain
@@ -132,9 +132,9 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id, },
-                {'__count': 0, 'display_name': 'Tag 2', 'id': t2_id, },
-                {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id, },
+                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id},
+                {'__count': 0, 'display_name': 'Tag 2', 'id': t2_id},
+                {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id},
             ],
         )
 
@@ -145,7 +145,7 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             expand=True,
             limit=2,
         )
-        self.assertEqual(result, SEARCH_PANEL_ERROR, )
+        self.assertEqual(result, SEARCH_PANEL_ERROR)
 
         # no counters, expand, and group_by (many2one case)
         result = self.SourceModel.search_panel_select_multi_range(
@@ -157,12 +157,12 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             result['values'],
             [
                 {'display_name': 'Tag 1', 'id': t1_id,
-                    'group_id': f2_id, 'group_name': 'Folder 2', },
+                    'group_id': f2_id, 'group_name': 'Folder 2'},
                 {'display_name': 'Tag 2', 'id': t2_id,
-                    'group_id': f1_id, 'group_name': 'Folder 1', },
+                    'group_id': f1_id, 'group_name': 'Folder 1'},
                 {'display_name': 'Tag 3', 'id': t3_id,
-                    'group_id': False, 'group_name': 'Not Set', },
-            ]
+                    'group_id': False, 'group_name': 'Not Set'},
+            ],
         )
 
         # no counters, expand, and no group_by
@@ -173,9 +173,9 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'display_name': 'Tag 1', 'id': t1_id, },
-                {'display_name': 'Tag 2', 'id': t2_id, },
-                {'display_name': 'Tag 3', 'id': t3_id, },
+                {'display_name': 'Tag 1', 'id': t1_id},
+                {'display_name': 'Tag 2', 'id': t2_id},
+                {'display_name': 'Tag 3', 'id': t3_id},
             ],
         )
 
@@ -188,10 +188,10 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'display_name': 'Tag 1', 'id': t1_id, },
-                {'display_name': 'Tag 2', 'id': t2_id, },
-                {'display_name': 'Tag 3', 'id': t3_id, },
-            ]
+                {'display_name': 'Tag 1', 'id': t1_id},
+                {'display_name': 'Tag 2', 'id': t2_id},
+                {'display_name': 'Tag 3', 'id': t3_id},
+            ],
         )
 
         # counters, no expand, and group_by (many2one case)
@@ -204,10 +204,10 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             result['values'],
             [
                 {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id,
-                    'group_id': f2_id, 'group_name': 'Folder 2', },
+                    'group_id': f2_id, 'group_name': 'Folder 2'},
                 {'__count': 1, 'display_name': 'Tag 2', 'id': t2_id,
-                    'group_id': f1_id, 'group_name': 'Folder 1', },
-            ]
+                    'group_id': f1_id, 'group_name': 'Folder 1'},
+            ],
         )
 
         # counters, no expand, no group_by, and search_domain
@@ -219,8 +219,8 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id, },
-            ]
+                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id},
+            ],
         )
 
         # counters, no expand, no group_by, and limit
@@ -229,7 +229,7 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             enable_counters=True,
             limit=2,
         )
-        self.assertEqual(result, SEARCH_PANEL_ERROR, )
+        self.assertEqual(result, SEARCH_PANEL_ERROR)
 
         # no counters, no expand, group_by (many2one case), and search domain
         result = self.SourceModel.search_panel_select_multi_range(
@@ -240,10 +240,10 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             result['values'],
             [
                 {'display_name': 'Tag 1', 'id': t1_id,
-                    'group_id': f2_id, 'group_name': 'Folder 2', },
+                    'group_id': f2_id, 'group_name': 'Folder 2'},
                 {'display_name': 'Tag 2', 'id': t2_id,
-                    'group_id': f1_id, 'group_name': 'Folder 1', },
-            ]
+                    'group_id': f1_id, 'group_name': 'Folder 1'},
+            ],
         )
 
         # no counters, no expand, no group_by, and search domain
@@ -254,8 +254,8 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'display_name': 'Tag 1', 'id': t1_id, },
-            ]
+                {'display_name': 'Tag 1', 'id': t1_id},
+            ],
         )
 
         # no counters, no expand, no group_by, and comodel domain
@@ -266,8 +266,8 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'display_name': 'Tag 2', 'id': t2_id, },
-            ]
+                {'display_name': 'Tag 2', 'id': t2_id},
+            ],
         )
 
     # Many2many
@@ -282,26 +282,26 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
     def test_many2many(self):
 
         folders = self.GroupByModel.create([
-            {'name': 'Folder 1', },
-            {'name': 'Folder 2', },
+            {'name': 'Folder 1'},
+            {'name': 'Folder 2'},
         ])
 
         f1_id, f2_id = folders.ids
 
         tags = self.TargetModel.create([
             {'name': 'Tag 1', 'folder_id': f2_id,
-                'color': 'Red', 'status': 'cool', },
-            {'name': 'Tag 2', 'folder_id': f1_id, 'status': 'cool', },
-            {'name': 'Tag 3', 'color': 'Green', 'status': 'cool', },
+                'color': 'Red', 'status': 'cool'},
+            {'name': 'Tag 2', 'folder_id': f1_id, 'status': 'cool'},
+            {'name': 'Tag 3', 'color': 'Green', 'status': 'cool'},
         ])
 
         t1_id, t2_id, t3_id = tags.ids
 
         records = self.SourceModel.create([
-            {'name': 'Rec 1', 'tag_ids': [t1_id, t2_id, t3_id], },
-            {'name': 'Rec 2', 'tag_ids': [t1_id], },
-            {'name': 'Rec 3', 'tag_ids': [t2_id, t3_id], },
-            {'name': 'Rec 4', },
+            {'name': 'Rec 1', 'tag_ids': [t1_id, t2_id, t3_id]},
+            {'name': 'Rec 2', 'tag_ids': [t1_id]},
+            {'name': 'Rec 3', 'tag_ids': [t2_id, t3_id]},
+            {'name': 'Rec 4'},
         ])
 
         r1_id, r2_id, _, _ = records.ids
@@ -311,18 +311,18 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             'tag_ids',
             enable_counters=True,
             expand=True,
-            group_by='folder_id'
+            group_by='folder_id',
         )
         self.assertEqual(
             result['values'],
             [
                 {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id,
-                    'group_id': f2_id, 'group_name': 'Folder 2', },
+                    'group_id': f2_id, 'group_name': 'Folder 2'},
                 {'__count': 2, 'display_name': 'Tag 2', 'id': t2_id,
-                    'group_id': f1_id, 'group_name': 'Folder 1', },
+                    'group_id': f1_id, 'group_name': 'Folder 1'},
                 {'__count': 2, 'display_name': 'Tag 3', 'id': t3_id,
-                    'group_id': False, 'group_name': 'Not Set', },
-            ]
+                    'group_id': False, 'group_name': 'Not Set'},
+            ],
         )
 
         # counters, expand, and group_by (selection case)
@@ -330,18 +330,18 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             'tag_ids',
             enable_counters=True,
             expand=True,
-            group_by='status'
+            group_by='status',
         )
         self.assertEqual(
             result['values'],
             [
                 {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id,
-                    'group_id': 'cool', 'group_name': 'Cool', },
+                    'group_id': 'cool', 'group_name': 'Cool'},
                 {'__count': 2, 'display_name': 'Tag 2', 'id': t2_id,
-                    'group_id': 'cool', 'group_name': 'Cool', },
+                    'group_id': 'cool', 'group_name': 'Cool'},
                 {'__count': 2, 'display_name': 'Tag 3', 'id': t3_id,
-                    'group_id': 'cool', 'group_name': 'Cool', },
-            ]
+                    'group_id': 'cool', 'group_name': 'Cool'},
+            ],
         )
 
         # counters, expand, and group_by (other cases)
@@ -349,18 +349,18 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             'tag_ids',
             enable_counters=True,
             expand=True,
-            group_by='color'
+            group_by='color',
         )
         self.assertEqual(
             result['values'],
             [
                 {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id,
-                    'group_id': 'Red', 'group_name': 'Red', },
+                    'group_id': 'Red', 'group_name': 'Red'},
                 {'__count': 2, 'display_name': 'Tag 2', 'id': t2_id,
-                    'group_id': False, 'group_name': 'Not Set', },
+                    'group_id': False, 'group_name': 'Not Set'},
                 {'__count': 2, 'display_name': 'Tag 3', 'id': t3_id,
-                    'group_id': 'Green', 'group_name': 'Green', },
-            ]
+                    'group_id': 'Green', 'group_name': 'Green'},
+            ],
         )
 
         # counters, expand, group_by (many2one case), and group_domain
@@ -370,21 +370,21 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             expand=True,
             group_by='folder_id',
             group_domain={
-                json.dumps(f1_id): [('tag_ids', 'in', [t1_id]), ],
-                json.dumps(f2_id): [('tag_ids', 'in', [t2_id]), ],
-                json.dumps(False): [('tag_ids', 'in', [t1_id]), ('tag_ids', 'in', [t2_id]), ],
-            }
+                json.dumps(f1_id): [('tag_ids', 'in', [t1_id])],
+                json.dumps(f2_id): [('tag_ids', 'in', [t2_id])],
+                json.dumps(False): [('tag_ids', 'in', [t1_id]), ('tag_ids', 'in', [t2_id])],
+            },
         )
         self.assertEqual(
             result['values'],
             [
                 {'__count': 1, 'display_name': 'Tag 1', 'id': t1_id,
-                    'group_id': f2_id, 'group_name': 'Folder 2', },
+                    'group_id': f2_id, 'group_name': 'Folder 2'},
                 {'__count': 1, 'display_name': 'Tag 2', 'id': t2_id,
-                    'group_id': f1_id, 'group_name': 'Folder 1', },
+                    'group_id': f1_id, 'group_name': 'Folder 1'},
                 {'__count': 1, 'display_name': 'Tag 3', 'id': t3_id,
-                    'group_id': False, 'group_name': 'Not Set', },
-            ]
+                    'group_id': False, 'group_name': 'Not Set'},
+            ],
         )
 
         # counters, expand, group_by (other cases), and group_domain
@@ -394,20 +394,20 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             expand=True,
             group_by='color',
             group_domain={
-                json.dumps(False): [('tag_ids', 'in', [t1_id]), ],
-                json.dumps('Green'): [('tag_ids', 'in', [t1_id]), ],
-            }
+                json.dumps(False): [('tag_ids', 'in', [t1_id])],
+                json.dumps('Green'): [('tag_ids', 'in', [t1_id])],
+            },
         )
         self.assertEqual(
             result['values'],
             [
                 {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id,
-                    'group_id': 'Red', 'group_name': 'Red', },
+                    'group_id': 'Red', 'group_name': 'Red'},
                 {'__count': 1, 'display_name': 'Tag 2', 'id': t2_id,
-                    'group_id': False, 'group_name': 'Not Set', },
+                    'group_id': False, 'group_name': 'Not Set'},
                 {'__count': 1, 'display_name': 'Tag 3', 'id': t3_id,
-                    'group_id': 'Green', 'group_name': 'Green', },
-            ]
+                    'group_id': 'Green', 'group_name': 'Green'},
+            ],
         )
 
         # counters, expand, and no group_by
@@ -419,10 +419,10 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id, },
-                {'__count': 2, 'display_name': 'Tag 2', 'id': t2_id, },
-                {'__count': 2, 'display_name': 'Tag 3', 'id': t3_id, },
-            ]
+                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id},
+                {'__count': 2, 'display_name': 'Tag 2', 'id': t2_id},
+                {'__count': 2, 'display_name': 'Tag 3', 'id': t3_id},
+            ],
         )
 
         # counters, expand, no group_by, and search domain
@@ -435,9 +435,9 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id, },
-                {'__count': 1, 'display_name': 'Tag 2', 'id': t2_id, },
-                {'__count': 1, 'display_name': 'Tag 3', 'id': t3_id, },
+                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id},
+                {'__count': 1, 'display_name': 'Tag 2', 'id': t2_id},
+                {'__count': 1, 'display_name': 'Tag 3', 'id': t3_id},
             ],
         )
 
@@ -451,12 +451,12 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             result['values'],
             [
                 {'display_name': 'Tag 1', 'id': t1_id,
-                    'group_id': f2_id, 'group_name': 'Folder 2', },
+                    'group_id': f2_id, 'group_name': 'Folder 2'},
                 {'display_name': 'Tag 2', 'id': t2_id,
-                    'group_id': f1_id, 'group_name': 'Folder 1', },
+                    'group_id': f1_id, 'group_name': 'Folder 1'},
                 {'display_name': 'Tag 3', 'id': t3_id,
-                    'group_id': False, 'group_name': 'Not Set', },
-            ]
+                    'group_id': False, 'group_name': 'Not Set'},
+            ],
         )
 
         # no counters, expand, and no group_by
@@ -467,9 +467,9 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'display_name': 'Tag 1', 'id': t1_id, },
-                {'display_name': 'Tag 2', 'id': t2_id, },
-                {'display_name': 'Tag 3', 'id': t3_id, },
+                {'display_name': 'Tag 1', 'id': t1_id},
+                {'display_name': 'Tag 2', 'id': t2_id},
+                {'display_name': 'Tag 3', 'id': t3_id},
             ],
         )
 
@@ -482,10 +482,10 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'display_name': 'Tag 1', 'id': t1_id, },
-                {'display_name': 'Tag 2', 'id': t2_id, },
-                {'display_name': 'Tag 3', 'id': t3_id, },
-            ]
+                {'display_name': 'Tag 1', 'id': t1_id},
+                {'display_name': 'Tag 2', 'id': t2_id},
+                {'display_name': 'Tag 3', 'id': t3_id},
+            ],
         )
 
         # counters, no expand, group_by (many2one case), and search_domain
@@ -499,8 +499,8 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             result['values'],
             [
                 {'__count': 1, 'display_name': 'Tag 1', 'id': t1_id,
-                    'group_id': f2_id, 'group_name': 'Folder 2', },
-            ]
+                    'group_id': f2_id, 'group_name': 'Folder 2'},
+            ],
         )
 
         # counters, no expand, no group_by, and search_domain
@@ -512,8 +512,8 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'__count': 1, 'display_name': 'Tag 1', 'id': t1_id, },
-            ]
+                {'__count': 1, 'display_name': 'Tag 1', 'id': t1_id},
+            ],
         )
 
         # counters, no expand, no group_by, and category_domain
@@ -525,12 +525,11 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'__count': 1, 'display_name': 'Tag 1', 'id': t1_id, },
-                {'__count': 0, 'display_name': 'Tag 2', 'id': t2_id, },
-                {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id, },
-            ]
+                {'__count': 1, 'display_name': 'Tag 1', 'id': t1_id},
+                {'__count': 0, 'display_name': 'Tag 2', 'id': t2_id},
+                {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id},
+            ],
         )
-
 
         # no counters, no expand, group_by (many2one case), and search_domain
         result = self.SourceModel.search_panel_select_multi_range(
@@ -542,8 +541,8 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             result['values'],
             [
                 {'display_name': 'Tag 1', 'id': t1_id,
-                    'group_id': f2_id, 'group_name': 'Folder 2', },
-            ]
+                    'group_id': f2_id, 'group_name': 'Folder 2'},
+            ],
         )
 
         # no counters, no expand, no group_by, and search_domain
@@ -554,8 +553,8 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'display_name': 'Tag 1', 'id': t1_id, },
-            ]
+                {'display_name': 'Tag 1', 'id': t1_id},
+            ],
         )
 
         # no counters, no expand, no group_by, no search_domain, and limit
@@ -587,7 +586,7 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             result['values'],
             [
                 {'display_name': 'Tag 3', 'id': t3_id},
-            ]
+            ],
         )
 
     # Selection case
@@ -600,15 +599,15 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'display_name': 'A', 'id': 'a', },
-                {'display_name': 'B', 'id': 'b', },
-            ]
+                {'display_name': 'A', 'id': 'a'},
+                {'display_name': 'B', 'id': 'b'},
+            ],
         )
 
     def test_selection(self):
         records = self.SourceModel.create([
-            {'name': 'Rec 1', 'state': 'a', },
-            {'name': 'Rec 2', 'state': 'a', },
+            {'name': 'Rec 1', 'state': 'a'},
+            {'name': 'Rec 2', 'state': 'a'},
         ])
 
         r1_id, _ = records.ids
@@ -623,9 +622,9 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'display_name': 'A', 'id': 'a', '__count': 2, },
-                {'display_name': 'B', 'id': 'b', '__count': 0, },
-            ]
+                {'display_name': 'A', 'id': 'a', '__count': 2},
+                {'display_name': 'B', 'id': 'b', '__count': 0},
+            ],
         )
 
         # counters, expand, and no group_by
@@ -637,9 +636,9 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'display_name': 'A', 'id': 'a', '__count': 2, },
-                {'display_name': 'B', 'id': 'b', '__count': 0, },
-            ]
+                {'display_name': 'A', 'id': 'a', '__count': 2},
+                {'display_name': 'B', 'id': 'b', '__count': 0},
+            ],
         )
 
         # counters, expand, and search domain
@@ -652,9 +651,9 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'display_name': 'A', 'id': 'a', '__count': 1, },
-                {'display_name': 'B', 'id': 'b', '__count': 0, },
-            ]
+                {'display_name': 'A', 'id': 'a', '__count': 1},
+                {'display_name': 'B', 'id': 'b', '__count': 0},
+            ],
         )
 
         # no counters and expand
@@ -665,9 +664,9 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'display_name': 'A', 'id': 'a', },
-                {'display_name': 'B', 'id': 'b', },
-            ]
+                {'display_name': 'A', 'id': 'a'},
+                {'display_name': 'B', 'id': 'b'},
+            ],
         )
 
         # no counters, expand, and search domain
@@ -679,9 +678,9 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'display_name': 'A', 'id': 'a', },
-                {'display_name': 'B', 'id': 'b', },
-            ]
+                {'display_name': 'A', 'id': 'a'},
+                {'display_name': 'B', 'id': 'b'},
+            ],
         )
 
         # counters and no expand
@@ -692,8 +691,8 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'__count': 2, 'display_name': 'A', 'id': 'a', },
-            ]
+                {'__count': 2, 'display_name': 'A', 'id': 'a'},
+            ],
         )
 
         # no counters and no expand
@@ -703,6 +702,6 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         self.assertEqual(
             result['values'],
             [
-                {'display_name': 'A', 'id': 'a', },
-            ]
+                {'display_name': 'A', 'id': 'a'},
+            ],
         )
