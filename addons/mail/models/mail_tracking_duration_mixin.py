@@ -1,16 +1,27 @@
 from collections import defaultdict
+from datetime import timedelta
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.tools import SQL
 
 
 class MailTrackingDurationMixin(models.AbstractModel):
     _name = 'mail.tracking.duration.mixin'
     _description = "Mixin to compute the time a record has spent in each value a many2one field can take"
+    _inherit = ['mail.thread']
 
     duration_tracking = fields.Json(
         string="Status time", compute="_compute_duration_tracking",
         help="JSON that maps ids from a many2one field to seconds spent")
+
+    # The rotting feature enables resources to mark themselves as stale if enough time has passed
+    # since their stage was last updated.
+    # Consult _is_rotting_feature_enabled() documentation for configuration instructions
+    rotting_days = fields.Integer('Days Rotting', help='Day count since this resource was last updated',
+        compute='_compute_rotting')
+    is_rotting = fields.Boolean('Rotting', compute='_compute_rotting', search='_search_is_rotting')
 
     def _compute_duration_tracking(self):
         """
@@ -110,3 +121,127 @@ class MailTrackingDurationMixin(models.AbstractModel):
             previous_date = tracking['create_date']
 
         return json
+
+    def _is_rotting_feature_enabled(self):
+        """
+        To enable the rotting behavior, the following must be present:
+
+        * Stage-like model (linked by '_track_duration_field') must have a 'rotting_threshold_days' integer field
+            modeling the number of days before a record rots
+
+        * Model inheriting from duration mixin must have a 'date_last_stage_update' field tracking the last stage change
+
+
+        Also consider overriding _get_rotting_depends_fields() and _get_rotting_domain().
+
+        Certain views have access to widgets to display rotting status:
+            'rotting' for kanbans, 'rotting_statusbar_duration' for forms, 'badge_rotting' for lists.
+
+        :return: bool: whether the rotting feature has been configured for this model
+        """
+        return 'rotting_threshold_days' in self[self._track_duration_field] and 'date_last_stage_update' in self and (
+            not self  # api.model call
+            or any(stage.rotting_threshold_days for stage in self[self._track_duration_field])
+        )
+
+    def _get_rotting_depends_fields(self):
+        """
+        fields added to this method through override should likely also be returned by _get_rotting_domain() override
+
+        :return: the array of fields that can affect the ability of a resource to rot
+        """
+        if hasattr(self, '_track_duration_field') and 'rotting_threshold_days' in self[self._track_duration_field]:
+            return ['date_last_stage_update', f'{self._track_duration_field}.rotting_threshold_days']
+        return []
+
+    def _get_rotting_domain(self):
+        """
+        fields added to this method through override should likely also be returned by _get_rotting_depends_fields() override
+
+        :return: domain: conditions that must be met so that the field can be considered rotting
+        """
+        return Domain(f'{self._track_duration_field}.rotting_threshold_days', '!=', 0)
+
+    @api.depends(lambda self: self._get_rotting_depends_fields())
+    def _compute_rotting(self):
+        """
+        A resource is rotting if its stage has not been updated in a number of days depending on its
+        stage's rotting_threshold_days value, assuming it matches _get_rotting_domain() conditions.
+
+        If the rotting_threshold_days field is not defined on the tracked module,
+        or if the value of rotting_threshold_days is 0,
+        then the resource will never rot.
+        """
+        if not self._is_rotting_feature_enabled():
+            self.is_rotting = False
+            self.rotting_days = 0
+            return
+        now = self.env.cr.now()
+        rot_enabled = self.filtered_domain(self._get_rotting_domain())
+        others = self - rot_enabled
+        for stage, records in rot_enabled.grouped(self._track_duration_field).items():
+            rotting = records.filtered(lambda record: record.date_last_stage_update + timedelta(days=stage.rotting_threshold_days) < now)
+            for record in rotting:
+                record.is_rotting = True
+                record.rotting_days = (now - record.date_last_stage_update).days
+            others += records - rotting
+        others.is_rotting = False
+        others.rotting_days = 0
+
+    def _search_is_rotting(self, operator, value):
+        if operator not in ['in', 'not in']:
+            raise ValueError(self.env._('For performance reasons, use "=" operators on rotting fields.'))
+        if not self._is_rotting_feature_enabled():
+            raise UserError(self.env._('Model configuration does not support the rotting feature'))
+        model_depends = [fname for fname in self._get_rotting_depends_fields() if '.' not in fname]
+        self.flush_model(model_depends)  # flush fields to make sure DB is up to date
+        self.env[self[self._track_duration_field]._name].flush_model(['rotting_threshold_days'])
+        base_query = self._search(self._get_rotting_domain())
+
+        # Our query needs to JOIN the stage field's table.
+        # This JOIN needs to use the same alias as the base query to avoid non-matching alias issues
+        # Note that query objects do not make their alias table available trivially,
+        # but the alias can be inferred by consulting the _joins attribute and compare it to the result of make_alias()
+        stage_table_alias_name = base_query.make_alias(self._table, self._track_duration_field)
+
+        # We only need to add a JOIN if the stage table is not already present in the query's _joins attribute.
+        from_add_join = ''
+        if not base_query._joins or not stage_table_alias_name in base_query._joins:
+            from_add_join = """
+                INNER JOIN %(stage_table)s AS %(stage_table_alias_name)s
+                    ON %(stage_table_alias_name)s.id = %(table)s.%(stage_table_alias_name)s
+            """
+
+        # Items with a date_last_stage_update inferior to that number of months will not be returned by the search function.
+        max_rotting_months = int(self.env['ir.config_parameter'].sudo().get_param('crm.lead.rot.max.months', default=12))
+
+        query = """
+            WITH perishables AS (
+                SELECT  %(table)s.id AS id,
+                        (
+                            %(table)s.date_last_stage_update + %(stage_table_alias_name)s.rotting_threshold_days * interval '1 day'
+                        ) AS date_rot
+                FROM %(from_clause)s
+                    %(from_add_join)s
+                WHERE
+                    %(table)s.date_last_stage_update > %(today)s - INTERVAL '%(max_rotting_months)s months'
+                    AND %(where_clause)s
+            )
+            SELECT id
+            FROM perishables
+            WHERE %(today)s >= date_rot
+
+        """
+        self.env.cr.execute(SQL(query,
+            from_add_join=SQL(from_add_join),
+            table=SQL.identifier(self._table),
+            stage_table=SQL.identifier(self[self._track_duration_field]._table),
+            stage_table_alias_name=SQL.identifier(stage_table_alias_name),
+            stage_field=SQL.identifier(self._track_duration_field),
+            today=self.env.cr.now(),
+            where_clause=base_query.where_clause,
+            from_clause=base_query.from_clause,
+            max_rotting_months=max_rotting_months,
+        ))
+        rows = self.env.cr.dictfetchall()
+        return [('id', operator, [r['id'] for r in rows])]
