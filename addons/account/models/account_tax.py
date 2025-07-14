@@ -3505,6 +3505,7 @@ class AccountTaxRepartitionLine(models.Model):
     factor_percent = fields.Float(
         string="%",
         default=100,
+        digits=(16, 12),
         required=True,
         help="Factor to apply on the account move lines generated from this distribution line, in percents",
     )
