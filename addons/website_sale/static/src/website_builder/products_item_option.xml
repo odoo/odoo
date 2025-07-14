@@ -9,7 +9,7 @@
                             <tr>
                                 <t t-foreach="[...Array(this.maxWidth).keys()]" t-as="j" t-key="j">
                                     <td t-on-mouseover="()=>this._onTableCellMouseOver(i, j)" t-on-click="()=>this._onTableCellMouseClick(i, j)">
-                                        <BuilderButton preview="false" actionValue="[i, j]" />
+                                        <BuilderButton preview="false" actionValue="[i, j]" className="'border-0'" />
                                     </td>
                                 </t>
                             </tr>
@@ -43,7 +43,7 @@
                 </t>
             </BuilderSelect>
             <BuilderButton title.translate="Edit" className="'fa fa-edit'" t-if="!this.isActiveItem('no_ribbon_opt')" t-on-click="()=>state.ribbonEditMode = !state.ribbonEditMode"/>
-            <BuilderButton action="'createRibbon'" preview="false" title.translate="Create" className="'fa fa-plus text-success'" style="'background-color: transparent !important;'" t-if="!state.ribbonEditMode" t-on-click="()=>state.ribbonEditMode = true" />
+            <BuilderButton action="'createRibbon'" preview="false" title.translate="Create" className="'fa fa-plus text-success border-0'" style="'background-color: transparent !important;'" t-if="!state.ribbonEditMode" t-on-click="()=>state.ribbonEditMode = true" />
         </BuilderRow>
 
         <t t-if="state.ribbonEditMode">
@@ -52,10 +52,10 @@
                     <BuilderTextInput actionParam="'name'" />
                 </BuilderRow>
                 <BuilderRow label.translate="Background" level="1">
-                    <BuilderColorPicker actionParam="'bg_color'" />
+                    <BuilderColorPicker actionParam="'bg_color'" enabledTabs="['solid', 'custom']" />
                 </BuilderRow>
                 <BuilderRow label.translate="Text" level="1">
-                    <BuilderColorPicker actionParam="'text_color'" />
+                    <BuilderColorPicker actionParam="'text_color'" enabledTabs="['solid', 'custom']" />
                 </BuilderRow>
                 <BuilderRow label.translate="Position" level="1">
                     <BuilderSelect actionParam="'position'">
