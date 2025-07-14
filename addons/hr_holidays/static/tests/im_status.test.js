@@ -1,6 +1,6 @@
 import { describe, test } from "@odoo/hoot";
 
-import { Persona } from "@mail/core/common/persona_model";
+import { Store } from "@mail/core/common/store_service";
 import { startServer, start, openDiscuss, contains } from "@mail/../tests/mail_test_helpers";
 
 import { serverState, patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -14,7 +14,7 @@ test("change icon on change partner im_status for leave variants", async () => {
     pyEnv["res.partner"].write([serverState.partnerId], { im_status: "online" });
     pyEnv["res.users"].write([serverState.userId], { leave_date_to: "2023-01-01" });
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
-    patchWithCleanup(Persona, { IM_STATUS_DEBOUNCE_DELAY: 0 });
+    patchWithCleanup(Store, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Discuss-header .o-mail-ImStatus .fa-plane[title='On Leave (Online)']");

@@ -2,6 +2,7 @@ import { AND, fields, Record } from "@mail/core/common/record";
 import { imageUrl } from "@web/core/utils/urls";
 import { rpc } from "@web/core/network/rpc";
 import { debounce } from "@web/core/utils/timing";
+import { Store } from "@mail/core/common/store_service";
 
 const TRANSPARENT_AVATAR =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAQAAABpN6lAAAAAqElEQVR42u3QMQEAAAwCoNm/9GJ4CBHIjYsAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBDQ9+KgAIHd5IbMAAAAAElFTkSuQmCC";
@@ -23,11 +24,10 @@ export class Persona extends Record {
         const record = super.new(...arguments);
         record.debouncedSetImStatus = debounce(
             (newStatus) => record.updateImStatus(newStatus),
-            this.IM_STATUS_DEBOUNCE_DELAY
+            Store.IM_STATUS_DEBOUNCE_DELAY
         );
         return record;
     }
-    static IM_STATUS_DEBOUNCE_DELAY = 1000;
 
     /** @type {string} */
     avatar_128_access_token;
