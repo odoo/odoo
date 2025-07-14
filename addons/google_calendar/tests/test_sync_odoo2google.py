@@ -892,6 +892,60 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         }, timeout=3)
 
     @patch_api
+    @patch.object(ResUsers, '_sync_request')
+    def test_skip_google_sync_for_non_synchronized_users_new_events(self, mock_sync_request):
+        """
+        Skip the synchro of new events by attendees when the organizer is not synchronized with Google.
+        Otherwise, the event ownership will be lost to the attendee and it could generate duplicates in
+        Odoo, as well cause problems in the future the synchronization of that event for the original owner.
+        """
+        with self.mock_datetime_and_now("2023-01-10"):
+            # Stop the synchronization for the organizer and leave the attendee synchronized.
+            # Then, create an event with the organizer and attendee. Assert that it was not inserted.
+            self.organizer_user.google_synchronization_stopped = True
+            self.attendee_user.google_synchronization_stopped = False
+            record = self.env['calendar.event'].with_user(self.organizer_user).create({
+                'name': "Event",
+                'start': datetime(2023, 1, 15, 8, 0),
+                'stop': datetime(2023, 1, 15, 18, 0),
+                'need_sync': True,
+                'partner_ids': [(4, self.organizer_user.partner_id.id), (4, self.attendee_user.partner_id.id)]
+            })
+            self.assertGoogleEventNotInserted()
+
+            # Define mock return values for the '_sync_request' method.
+            mock_sync_request.return_value = {
+                'events': GoogleEvent([]),
+                'default_reminders': (),
+                'full_sync': False,
+            }
+
+            # Synchronize the attendee, and ensure that the event was not inserted after it.
+            self.attendee_user.with_user(self.attendee_user).sudo()._sync_google_calendar(self.google_service)
+            self.assertGoogleAPINotCalled()
+
+            # Now, we synchronize the organizer and make sure the event got inserted by him.
+            self.organizer_user.with_user(self.organizer_user).restart_google_synchronization()
+            self.organizer_user.with_user(self.organizer_user).sudo()._sync_google_calendar(self.google_service)
+            self.assertGoogleEventInserted({
+                'id': False,
+                'start': {'dateTime': '2023-01-15T08:00:00+00:00', 'date': None},
+                'end': {'dateTime': '2023-01-15T18:00:00+00:00', 'date': None},
+                'summary': 'Event',
+                'description': '',
+                'location': '',
+                'guestsCanModify': True,
+                'transparency': 'opaque',
+                'reminders': {'overrides': [], 'useDefault': False},
+                'organizer': {'email': self.organizer_user.email, 'self': True},
+                'attendees': [
+                                {'email': self.attendee_user.email, 'responseStatus': 'needsAction'},
+                                {'email': self.organizer_user.email, 'responseStatus': 'accepted'}
+                            ],
+                'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: record.id}},
+            })
+
+    @patch_api
     def test_event_duplication_allday_google_calendar(self):
         event = self.env['calendar.event'].with_user(self.organizer_user).create({
             'name': "Event",
