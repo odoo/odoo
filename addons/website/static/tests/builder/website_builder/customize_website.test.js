@@ -1,9 +1,16 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    onRpc,
+    models,
+    defineModels,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
+import { CustomizeBodyBgTypeAction } from "@website/builder/plugins/customize_website_plugin";
 
 defineWebsiteModels();
 
@@ -412,4 +419,58 @@ test("No rpc call if “previewableWebsiteConfig” action is undone", async () 
     undo(editor);
     await contains(".o-snippets-top-actions [data-action='save']").click();
     expect.verifySteps([]); // No call to `theme_customize_data` nor to `save`
+});
+
+test("theme background image is properly set", async () => {
+    const base64Image =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA" +
+        "A".repeat(1000);
+
+    // Using historyImageSrc to avoid mocking the gallery dialog
+    patchWithCleanup(CustomizeBodyBgTypeAction.prototype, {
+        async load(editingElement) {
+            editingElement.historyImageSrc = { src: base64Image };
+            super.load(editingElement);
+        },
+        apply(params) {
+            params.loadResult = {
+                imageSrc: base64Image,
+                oldImageSrc: "",
+                oldValue: "'image'",
+            };
+            super.apply(params);
+        },
+    });
+
+    class WebEditorAssets extends models.Model {
+        _name = "web_editor.assets";
+        make_scss_customization(location, changes) {
+            expect(
+                changes["body-image"].includes(base64Image) &&
+                    changes["body-image-type"].includes("image")
+            ).toBe(true);
+            expect.step("scss_customization");
+        }
+    }
+    defineModels([WebEditorAssets]);
+
+    onRpc("/website/theme_customize_bundle_reload", async (request) => {
+        expect.step("bundle_reload");
+        return { success: true };
+    });
+
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
+        loadIframeBundles: true,
+    });
+
+    await contains("[data-name='theme']").click();
+    await animationFrame();
+    expect(
+        ".o_theme_tab button[data-action-id='customizeBodyBgType'][data-action-value='image']"
+    ).toHaveCount(1);
+    await contains(
+        ".o_theme_tab button[data-action-id='customizeBodyBgType'][data-action-value='image']"
+    ).click();
+    await animationFrame();
+    await expect.verifySteps(["scss_customization", "bundle_reload"]);
 });
