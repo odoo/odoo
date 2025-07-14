@@ -532,3 +532,17 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
         with self.assertRaises(UserError):
             timesheet.unlink()
+
+    def test_timesheet_generation_on_public_holiday_creation_with_global_working_schedule(self):
+        """ Test that public holidays are included in the global working schedule (company should be False)
+            when a global time off is created.
+        """
+        self.part_time_calendar.company_id = False
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2021, 1, 4, 0, 0, 0),
+            'date_to': datetime(2021, 1, 4, 23, 59, 59),
+        })
+        timesheet_count = self.env['account.analytic.line'].search_count([('employee_id', '=', self.part_time_employee.id)])
+        self.assertEqual(timesheet_count, 1, "A timesheet should have been generated for the employee with a global working "
+                                              "schedule when a new public holiday is created")
