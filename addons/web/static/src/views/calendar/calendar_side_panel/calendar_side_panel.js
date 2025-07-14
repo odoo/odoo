@@ -112,9 +112,12 @@ export class CalendarSidePanel extends Component {
                 onRootLoaded: this.onMultiCreateRootLoaded.bind(this),
             },
         };
+        if (this.props.model.data.multiCreate.values) {
+            this.multiCreateRecordProps.values = this.props.model.data.multiCreate.values;
+        }
     }
 
     onMultiCreateRootLoaded(record) {
-        this.props.model.data.multiCreateRecord = record;
+        this.props.model.data.multiCreate.record = record;
     }
 }

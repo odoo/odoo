@@ -112,7 +112,7 @@ export class CalendarController extends Component {
             resModel: this.props.resModel,
             domain: this.props.domain,
             fields: this.props.fields,
-            date: this.props.state?.date,
+            state: this.props.state,
         };
     }
 

@@ -17,8 +17,10 @@ import { makeContext } from "@web/core/context";
 import { groupBy } from "@web/core/utils/arrays";
 import { Cache } from "@web/core/utils/cache";
 import { formatFloat } from "@web/core/utils/numbers";
+import { omit } from "@web/core/utils/objects";
 import { useDebounced } from "@web/core/utils/timing";
 import { computeAggregatedValue } from "@web/views/utils";
+import { toRaw } from "@odoo/owl";
 
 export class CalendarModel extends Model {
     static DEBOUNCED_LOAD_DELAY = 600;
@@ -34,7 +36,8 @@ export class CalendarModel extends Model {
         const fieldNodes = params.popoverFieldNodes;
         const { activeFields, fields } = extractFieldsFromArchInfo({ fieldNodes }, params.fields);
         this.meta = {
-            ...params,
+            ...omit(params, "state"),
+            date: params.state?.meta.date || null,
             activeFields,
             fields,
             firstDayOfWeek: (localization.weekStart || 0) % 7,
@@ -50,14 +53,18 @@ export class CalendarModel extends Model {
             range: null,
             records: {},
             unusualDays: [],
-            multiCreateRecord: null,
-            multiCreateTimeRange: {
-                start: new Time(
-                    this.getItemFromStorage("multiCreateTimeStart", { hour: 12, minute: 0 })
-                ),
-                end: new Time(
-                    this.getItemFromStorage("multiCreateTimeEnd", { hour: 13, minute: 0 })
-                ),
+            multiCreate: {
+                record: null,
+                timeRange: {
+                    start: new Time(
+                        this.getItemFromStorage("multiCreateTimeStart", { hour: 12, minute: 0 })
+                    ),
+                    end: new Time(
+                        this.getItemFromStorage("multiCreateTimeEnd", { hour: 13, minute: 0 })
+                    ),
+                },
+                values: null,
+                ...params.state?.multiCreate,
             },
         };
 
@@ -120,7 +127,27 @@ export class CalendarModel extends Model {
         return this.meta.eventLimit;
     }
     get exportedState() {
-        return this.meta;
+        const state = {
+            meta: this.meta,
+        };
+        if (this.hasMultiCreate && this.data.multiCreate.record) {
+            const multiCreateFormRecord = toRaw(this.data.multiCreate.record);
+            const values = Object.assign({}, multiCreateFormRecord.data);
+            for (const [fieldName, data] of Object.entries(multiCreateFormRecord.data)) {
+                if (
+                    ["one2many", "many2many"].includes(multiCreateFormRecord.fields[fieldName].type)
+                ) {
+                    values[fieldName] = data.records.map((record) =>
+                        Object.assign({ id: record.resId }, record.data)
+                    );
+                }
+            }
+            state.multiCreate = {
+                values,
+                timeRange: this.data.multiCreate.timeRange,
+            };
+        }
+        return state;
     }
     get fieldMapping() {
         return this.meta.fieldMapping;
@@ -244,7 +271,7 @@ export class CalendarModel extends Model {
      */
     async multiCreateRecords(dates) {
         // Check required attribute of fields in form view
-        const isValid = await this.data.multiCreateRecord.checkValidity({
+        const isValid = await this.data.multiCreate.record.checkValidity({
             displayNotification: true,
         });
         if (!isValid) {
@@ -252,8 +279,8 @@ export class CalendarModel extends Model {
         }
 
         const records = [];
-        const values = await this.data.multiCreateRecord.getChanges();
-        const timeRange = this.data.multiCreateTimeRange;
+        const values = await this.data.multiCreate.record.getChanges();
+        const timeRange = this.data.multiCreate.timeRange;
 
         if (this.showMultiCreateTimeRange) {
             if (!timeRange.start || !timeRange.end) {
@@ -1027,7 +1054,7 @@ export class CalendarModel extends Model {
         if (timeRange.end) {
             this.setItemInStorage("multiCreateTimeEnd", timeRange.end);
         }
-        Object.assign(this.data.multiCreateTimeRange, timeRange);
+        Object.assign(this.data.multiCreate.timeRange, timeRange);
     }
 
     generateLocalStorageKey(key) {
