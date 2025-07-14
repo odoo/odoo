@@ -33,7 +33,7 @@
             <div class="row w-100">
                 <div class="o_left_panel col-12 col-md-6 h-100 d-flex flex-column flex-nowrap">
                     <div class="o_import_compat">
-                        <CheckBox className="'o_import_compat'" id="'o-update-data'" value="state.isCompatible" onChange.bind="onToggleCompatibleExport">
+                        <CheckBox className="'o_import_compat'" id="'o-update-data'" value="isCompatible" onChange.bind="onToggleCompatibleExport">
                             I want to update data (import-compatible export)
                         </CheckBox>
                     </div>
@@ -42,7 +42,7 @@
                     <div class="o_left_field_panel h-100 overflow-auto border">
                         <div class="o_field_tree_structure">
                             <t t-if="fieldsAvailable">
-                                <t t-foreach="rootFields" t-as="field" t-key="field.id + '_' + state.search.length + '_' + state.isCompatible">
+                                <t t-foreach="rootFields" t-as="field" t-key="field.id + '_' + state.search.length + '_' + isCompatible">
                                     <ExportDataItem
                                         exportList="state.exportList"
                                         field="field"
