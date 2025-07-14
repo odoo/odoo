@@ -1566,12 +1566,27 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         errors = []
 
-        if order._has_deliverable_products() and not order._get_delivery_methods():
-            errors.append((
-                _("Sorry, we are unable to ship your order."),
-                _("No delivery method is available for your current order and shipping address."
-                  " Please contact us for more information."),
-            ))
+        if order._has_deliverable_products():
+            if not order._get_delivery_methods():
+                errors.append((
+                    _("Sorry, we are unable to ship your order."),
+                    _("No delivery method is available for your current order and shipping address."
+                    " Please contact us for more information."),
+                ))
+            dm_id = order.carrier_id
+            commitment_date = order.commitment_date
+            if (
+                dm_id.enable_delivery_estimate
+                and commitment_date
+                and commitment_date.date().isoformat() not in dm_id._get_estimate_delivery_days()
+            ):
+                errors.append((
+                    _("Sorry, we are unable to ship your order."),
+                    _(
+                        "The selected delivery date is no longer available."
+                        " Please pick another delivery date."
+                    ),
+                ))
         return errors
 
     @route('/shop/payment', type='http', auth='public', website=True, sitemap=False, list_as_website_content=_lt("Shop Payment"))

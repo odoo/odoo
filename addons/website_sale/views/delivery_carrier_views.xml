@@ -6,14 +6,56 @@
         <field name="model">delivery.carrier</field>
         <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
         <field name="arch" type="xml">
-            <field name="company_id" position="after">
-                <field
-                    name="website_id"
-                    placeholder="All websites"
-                    groups="website.group_multi_website"
-                    options="{'no_open': True, 'no_create_edit': True}"
-                />
-            </field>
+            <page name="description" position="after">
+                <page string="eCommerce" name="ecommerce">
+                    <group>
+                        <field
+                            name="website_id"
+                            placeholder="All websites"
+                            groups="website.group_multi_website"
+                            options="{'no_open': True, 'no_create_edit': True}"
+                        />
+                        <field
+                            name="enable_delivery_estimate"
+                            invisible="delivery_type not in ['fixed', 'base_on_rule']"
+                        />
+                    </group>
+                    <div
+                        name="estimated_delivery_fields"
+                        invisible="not enable_delivery_estimate"
+                        class="ms-4"
+                    >
+                        <div>
+                            <label for="delivery_estimate_lead_days" string="In" class="me-2"/>
+                            <field
+                                name="delivery_estimate_lead_days"
+                                style="text-align: center; width:2% !important;"
+                            />
+                            working days
+                        </div>
+                        <div>
+                            <label
+                                for="delivery_estimate_range_days"
+                                string="Allow selection up to"
+                                class="me-2"
+                            />
+                            <field
+                                name="delivery_estimate_range_days"
+                                style="text-align: center; width:2% !important;"
+                            />
+                            working days
+                        </div>
+                        <div>
+                            <label for="delivery_calendar_id" string="Based on" class="me-2"/>
+                            <field
+                                name="delivery_calendar_id"
+                                string="Based on"
+                                required="enable_delivery_estimate"
+                            />
+                        </div>
+                    </div>
+                </page>
+            </page>
             <field name="carrier_description" position="before">
                 <field name="website_description"  placeholder="Description displayed on the eCommerce and on online quotations."/>
             </field>
