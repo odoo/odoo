@@ -1419,15 +1419,13 @@ class DiscussChannel(models.Model):
             )
         else:
             if members := self.channel_member_ids.filtered(lambda m: not m.is_self):
+                member_names = html_escape(format_list(self.env, [f"%(member_{member.id})s" for member in members])) % {
+                    f"member_{member.id}": member._get_html_link(for_persona=True)
+                    for member in members
+                }
                 msg = _(
                     "You are in a private conversation with %(member_names)s.",
-                    member_names=html_escape(
-                        format_list(self.env, [f"%(member_{member.id})s" for member in members])
-                    )
-                    % {
-                        f"member_{member.id}": member._get_html_link(for_persona=True)
-                        for member in members
-                    },
+                    member_names=member_names,
                 )
             else:
                 msg = _("You are alone in a private conversation.")
@@ -1462,13 +1460,13 @@ class DiscussChannel(models.Model):
                 list_params.append(_("more"))
             else:
                 list_params.append(_("you"))
+            member_names = html_escape(format_list(self.env, list_params)) % {
+                f"member_{member.id}": member._get_html_link(for_persona=True)
+                for member in members
+            }
             msg = _(
                 "Users in this channel: %(members)s.",
-                members=html_escape(format_list(self.env, list_params))
-                % {
-                    f"member_{member.id}": member._get_html_link(for_persona=True)
-                    for member in members
-                },
+                members=member_names,
             )
         else:
             msg = _("You are alone in this channel.")
