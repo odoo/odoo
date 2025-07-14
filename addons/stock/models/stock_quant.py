@@ -1608,7 +1608,7 @@ class StockQuantPackage(models.Model):
                 package.valid_sscc = check_barcode_encoding(package.name, 'sscc')
 
     def _search_owner(self, operator, value):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         return Domain('quant_ids.owner_id', operator, value)
 

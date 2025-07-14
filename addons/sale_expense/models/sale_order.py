@@ -24,7 +24,7 @@ class SaleOrder(models.Model):
             and self.env.user.has_group('sales_team.group_sale_salesman')
             and not self.env.user.has_group('sales_team.group_sale_salesman_all_leads')
         ):
-            if Domain.is_negative_operator(operator):
+            if operator in Domain.NEGATIVE_OPERATORS:
                 return NotImplemented
             domain = super()._search_display_name(operator, value)
             company_domain = Domain('state', '=', 'sale') & ('company_id', 'in', self.env.companies.ids)

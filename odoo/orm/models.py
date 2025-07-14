@@ -61,7 +61,7 @@ from odoo.tools.translate import _, LazyTranslate
 
 from . import decorators as api
 from .commands import Command
-from .domains import Domain, NEGATIVE_CONDITION_OPERATORS
+from .domains import Domain
 from .fields import Field, determine
 from .fields_misc import Id
 from .fields_temporal import Date, Datetime
@@ -1456,8 +1456,8 @@ class BaseModel(metaclass=MetaModel):
         if operator.endswith('like') and not value and '=' not in operator:
             # optimize out the default criterion of ``like ''`` that matches everything
             # return all when operator is positive
-            return Domain.FALSE if operator in NEGATIVE_CONDITION_OPERATORS else Domain.TRUE
-        aggregator = Domain.AND if operator in NEGATIVE_CONDITION_OPERATORS else Domain.OR
+            return Domain.FALSE if operator in Domain.NEGATIVE_OPERATORS else Domain.TRUE
+        aggregator = Domain.AND if operator in Domain.NEGATIVE_OPERATORS else Domain.OR
         domains = []
         for field_name in search_fnames:
             # field_name may be a sequence of field names (partner_id.name)

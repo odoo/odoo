@@ -125,7 +125,7 @@ class ResGroups(models.Model):
                 group.full_name = group1.name
 
     def _search_full_name(self, operator, operand):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
 
         lst = True

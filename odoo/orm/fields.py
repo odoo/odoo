@@ -21,7 +21,7 @@ from odoo.tools import Query, SQL, sql
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, ReadonlyDict, Sentinel, unique
 
-from .domains import NEGATIVE_CONDITION_OPERATORS, Domain
+from .domains import Domain
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, SUPERUSER_ID, expand_ids
 
 if typing.TYPE_CHECKING:
@@ -748,9 +748,9 @@ class Field(typing.Generic[T]):
         else:
             value_is_null = value is False or value is None or value == falsy_value
         can_be_null = (  # (..., '=', False) or (..., 'not in', [truthy vals])
-            (operator not in NEGATIVE_CONDITION_OPERATORS) == value_is_null
+            (operator not in Domain.NEGATIVE_OPERATORS) == value_is_null
         )
-        if operator in NEGATIVE_CONDITION_OPERATORS and not value_is_null:
+        if operator in Domain.NEGATIVE_OPERATORS and not value_is_null:
             # we have a condition like 'not in' ['a']
             # let's call back with a positive operator
             return NotImplemented
@@ -1316,7 +1316,7 @@ class Field(typing.Generic[T]):
                 sql_value = model.env.registry.unaccent(sql_value)
 
             sql = SQL("%s%s%s", sql_left, SQL_OPERATORS[operator], sql_value)
-            if operator in NEGATIVE_CONDITION_OPERATORS and can_be_null:
+            if operator in Domain.NEGATIVE_OPERATORS and can_be_null:
                 sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
             return sql
 
@@ -1383,7 +1383,7 @@ class Field(typing.Generic[T]):
         raise ValueError(f"Expression not supported on {self}: {field_expr!r}")
 
     def filter_function(self, records: M, field_expr: str, operator: str, value) -> Callable[[M], M]:
-        assert operator not in NEGATIVE_CONDITION_OPERATORS, "only positive operators are implemented"
+        assert operator not in Domain.NEGATIVE_OPERATORS, "only positive operators are implemented"
         getter = self.expression_getter(field_expr)
         # assert not isinstance(value, (SQL, Query))
 

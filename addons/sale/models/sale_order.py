@@ -555,7 +555,7 @@ class SaleOrder(models.Model):
             order.invoice_count = len(invoices)
 
     def _search_invoice_ids(self, operator, value):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         if operator == 'in' and value:
             falsy_domain = []

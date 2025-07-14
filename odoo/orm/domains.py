@@ -57,6 +57,7 @@ import itertools
 import logging
 import operator
 import pytz
+import types
 import typing
 import warnings
 from datetime import date, datetime, time, timedelta, timezone
@@ -275,9 +276,7 @@ class Domain:
     def FALSE(cls) -> Domain:
         return _FALSE_DOMAIN
 
-    @staticmethod
-    def is_negative_operator(operator: str) -> bool:
-        return operator in NEGATIVE_CONDITION_OPERATORS
+    NEGATIVE_OPERATORS = types.MappingProxyType(NEGATIVE_CONDITION_OPERATORS)
 
     @staticmethod
     def custom(

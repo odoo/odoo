@@ -434,7 +434,7 @@ class ProjectTask(models.Model):
 
     @api.model
     def _search_personal_stage_id(self, operator, value):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         field_name = 'display_name' if any(isinstance(v, str) for v in value) or value == '' else 'id'  # noqa: PLC1901
         domain = Domain(field_name, operator, value) & Domain('user_id', '=', self.env.uid)

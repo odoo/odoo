@@ -72,7 +72,7 @@ class FleetVehicleModel(models.Model):
 
     @api.model
     def _search_display_name(self, operator, value):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         return ['|', ('name', operator, value), ('brand_id.name', operator, value)]
 

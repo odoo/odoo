@@ -67,7 +67,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _search_tasks_ids(self, operator, value):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         task_domain = [
             ('display_name' if isinstance(value, str) else 'id', operator, value),

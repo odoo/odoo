@@ -1055,7 +1055,7 @@ class StockPicking(models.Model):
 
     @api.model
     def _search_delay_alert_date(self, operator, value):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         return [('move_ids.delay_alert_date', operator, value)]
 

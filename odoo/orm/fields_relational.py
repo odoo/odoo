@@ -485,10 +485,10 @@ class Many2one(_Relational):
             #   `LEFT JOIN ... ON field = id WHERE z <> y`
             # There are some exceptions: we filter on 'id'.
             left_join = sum(
-                (-1 if Domain.is_negative_operator(cond.operator) else 1)
+                (-1 if cond.operator in Domain.NEGATIVE_OPERATORS else 1)
                 for cond in value.iter_conditions()
             ) < 0 or any(
-                cond.field_expr == 'id' and not Domain.is_negative_operator(cond.operator)
+                cond.field_expr == 'id' and cond.operator not in Domain.NEGATIVE_OPERATORS
                 for cond in value.iter_conditions()
             )
 

@@ -580,7 +580,7 @@ class ProductTemplate(models.Model):
         domain = super()._search_display_name(operator, value)
         if self.env.context.get('search_product_product', bool(value)):
             variant_domain = Domain('product_variant_ids', operator, value)
-            if Domain.is_negative_operator(operator):
+            if operator in Domain.NEGATIVE_OPERATORS:
                 domain &= variant_domain
             else:
                 domain |= variant_domain

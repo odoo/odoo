@@ -349,7 +349,7 @@ class ProductProduct(models.Model):
             ).sorted('sequence')
 
     def _search_all_product_tag_ids(self, operator, operand):
-        if Domain.is_negative_operator(operator):
+        if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         return ['|', ('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
 
@@ -604,7 +604,7 @@ class ProductProduct(models.Model):
 
     @api.model
     def _search_display_name(self, operator, value):
-        is_positive = not Domain.is_negative_operator(operator)
+        is_positive = not operator in Domain.NEGATIVE_OPERATORS
         combine = Domain.OR if is_positive else Domain.AND
         domains = [
             [('name', operator, value)],
@@ -633,7 +633,7 @@ class ProductProduct(models.Model):
             return super().name_search(name, domain, operator, limit)
         # search progressively by the most specific attributes
         positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
-        is_positive = not Domain.is_negative_operator(operator)
+        is_positive = not operator in Domain.NEGATIVE_OPERATORS
         products = self.browse()
         domain = Domain(domain or Domain.TRUE)
         if operator in positive_operators:

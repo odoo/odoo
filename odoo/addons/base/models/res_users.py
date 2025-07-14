@@ -661,7 +661,7 @@ class ResUsers(models.Model):
         domain = Domain(domain or Domain.TRUE)
         # first search only by login, then the normal search
         if (
-            name and not Domain.is_negative_operator(operator)
+            name and not operator in Domain.NEGATIVE_OPERATORS
             and (user := self.search_fetch(Domain('login', '=', name) & domain, ['display_name']))
         ):
             return [(user.id, user.display_name)]
