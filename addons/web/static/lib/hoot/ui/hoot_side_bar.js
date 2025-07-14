@@ -357,7 +357,7 @@ export class HootSideBar extends Component {
             }
             case "Enter": {
                 ev.preventDefault();
-                actualLocation.href = createUrlFromId({ suite: suite.id });
+                actualLocation.href = createUrlFromId({ id: suite.id });
             }
         }
     }

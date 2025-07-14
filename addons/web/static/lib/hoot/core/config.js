@@ -228,23 +228,10 @@ export const FILTER_SCHEMA = {
     /**
      * IDs of the suites OR tests to run exclusively. The ID of a job is generated
      * deterministically based on its full name.
-     *
-     * This is to be used instead of 'suite' or 'test' if the nature of the given
-     * ID is not known in advance.
      * @default []
      */
-    job: {
-        aliases: ["jobs"],
-        default: [],
-        parse: parseStringArray([]),
-    },
-    /**
-     * IDs of the suites to run exclusively. The ID of a suite is generated deterministically
-     * based on its full name.
-     * @default []
-     */
-    suite: {
-        aliases: ["suites"],
+    id: {
+        aliases: ["ids"],
         default: [],
         parse: parseStringArray([]),
     },
@@ -254,16 +241,6 @@ export const FILTER_SCHEMA = {
      */
     tag: {
         aliases: ["tags"],
-        default: [],
-        parse: parseStringArray([]),
-    },
-    /**
-     * IDs of the tests to run exclusively. The ID of a test is generated deterministically
-     * based on its full name.
-     * @default []
-     */
-    test: {
-        aliases: ["tests"],
         default: [],
         parse: parseStringArray([]),
     },

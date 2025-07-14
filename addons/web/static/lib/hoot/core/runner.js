@@ -315,13 +315,11 @@ export class Runner {
          *  - +1/-1: included/excluded by URL
          *  - +2/-2: included/excluded by explicit test tag (readonly)
          *  - +3/-3: included/excluded by preset (readonly)
-         * @type {Record<Exclude<SearchFilter, "filter">, Record<string, number>>}
+         * @type {Record<"id" | "tag", Record<string, number>>}
          */
         includeSpecs: {
-            job: {},
-            suite: {},
+            id: {},
             tag: {},
-            test: {},
         },
         /** @type {"ready" | "running" | "done"} */
         status: "ready",
@@ -427,23 +425,13 @@ export class Runner {
         }
 
         // Jobs (suites or tests)
-        if (this.config.job?.length) {
-            this._include(this.state.includeSpecs.job, this.config.job, INCLUDE_LEVEL.url);
-        }
-
-        // Suites
-        if (this.config.suite?.length) {
-            this._include(this.state.includeSpecs.suite, this.config.suite, INCLUDE_LEVEL.url);
+        if (this.config.id?.length) {
+            this._include(this.state.includeSpecs.id, this.config.id, INCLUDE_LEVEL.url);
         }
 
         // Tags
         if (this.config.tag?.length) {
             this._include(this.state.includeSpecs.tag, this.config.tag, INCLUDE_LEVEL.url);
-        }
-
-        // Tests
-        if (this.config.test?.length) {
-            this._include(this.state.includeSpecs.test, this.config.test, INCLUDE_LEVEL.url);
         }
 
         if (this.config.networkDelay) {
@@ -830,36 +818,27 @@ export class Runner {
     }
 
     /**
-     * @param {Partial<Record<SearchFilter, Iterable<string>>>} ids
+     * @param {Partial<Record<SearchFilter, Iterable<string>>>} specs
      */
-    simplifyUrlIds(ids) {
-        if (!ids) {
+    simplifyUrlIds(specs) {
+        if (!specs) {
             return {};
         }
-        const specs = {
-            suite: {},
-            tag: {},
-            test: {},
-        };
+        const ids = {};
         let items = 0;
-        for (const key in specs) {
-            if (ids[key]) {
-                for (const id of ensureArray(ids[key])) {
-                    items++;
-                    specs[key][id] = INCLUDE_LEVEL.url;
-                }
+        if (specs.id) {
+            for (const id of ensureArray(specs.id)) {
+                items++;
+                ids[id] = INCLUDE_LEVEL.url;
             }
         }
         if (items > 1) {
-            this._simplifyIncludeSpecs(specs, {
-                test: this.tests,
-                suite: this.suites,
-            });
+            this._simplifyIncludeSpecs(ids);
         }
-        for (const key in specs) {
-            specs[key] = $keys(specs[key]);
-        }
-        return specs;
+        return {
+            ...specs,
+            id: $keys(ids),
+        };
     }
 
     /**
@@ -1138,7 +1117,7 @@ export class Runner {
         if (failed > 0) {
             const errorMessage = ["Some tests failed: see above for details"];
             if (this.config.headless) {
-                const ids = this.simplifyUrlIds({ test: this.state.failedIds });
+                const ids = this.simplifyUrlIds({ id: this.state.failedIds });
                 const link = createUrlFromId(ids, { debug: true });
                 // Tweak parameters to make debugging easier
                 link.searchParams.set("debug", "assets");
@@ -1336,11 +1315,7 @@ export class Runner {
                             )}. This is not suitable for CI`
                         );
                     }
-                    this._include(
-                        this.state.includeSpecs[job instanceof Suite ? "suite" : "test"],
-                        [job.id],
-                        INCLUDE_LEVEL.tag
-                    );
+                    this._include(this.state.includeSpecs.id, [job.id], INCLUDE_LEVEL.tag);
                     ignoreSkip = true;
                     break;
                 case Tag.SKIP:
@@ -1436,9 +1411,7 @@ export class Runner {
      * @param {Job} job
      */
     _getExplicitIncludeStatus(job) {
-        const includeSpec =
-            job instanceof Suite ? this.state.includeSpecs.suite : this.state.includeSpecs.test;
-        const explicitInclude = includeSpec[job.id] || 0;
+        const explicitInclude = this.state.includeSpecs.id[job.id] || 0;
         return [explicitInclude > 0, explicitInclude < 0];
     }
 
@@ -1453,11 +1426,12 @@ export class Runner {
         const shouldInclude = !!includeLevel;
         let applied = 0;
         for (const id of ids) {
+            let idLevel = includeLevel;
             let nId = normalize(id.toLowerCase());
             if (nId.startsWith(EXCLUDE_PREFIX)) {
                 nId = nId.slice(EXCLUDE_PREFIX.length);
-                if (includeLevel > 0) {
-                    includeLevel *= -1;
+                if (idLevel > 0) {
+                    idLevel *= -1;
                 }
             }
             const previousValue = values[nId] || 0;
@@ -1466,16 +1440,16 @@ export class Runner {
                 applied++;
             }
             if (shouldInclude) {
-                if (previousValue === includeLevel) {
+                if (previousValue === idLevel) {
                     continue;
                 }
-                values[nId] = includeLevel;
+                values[nId] = idLevel;
                 if (noIncrement) {
                     continue;
                 }
-                if (previousValue <= 0 && includeLevel > 0) {
+                if (previousValue <= 0 && idLevel > 0) {
                     this._hasIncludeFilter++;
-                } else if (previousValue > 0 && includeLevel <= 0) {
+                } else if (previousValue > 0 && idLevel <= 0) {
                     this._hasIncludeFilter--;
                 }
                 if (!wasRemovable && isRemovable) {
@@ -1660,11 +1634,7 @@ export class Runner {
         }
 
         // Cleanup invalid IDs and tags from URL
-        const hasChanged = this._simplifyIncludeSpecs(this.state.includeSpecs, {
-            test: this.tests,
-            suite: this.suites,
-            tag: this.tags,
-        });
+        const hasChanged = this._simplifyIncludeSpecs(this.state.includeSpecs.id);
         if (hasChanged) {
             this._updateConfigFromSpecs();
         }
@@ -1876,67 +1846,42 @@ export class Runner {
     }
 
     /**
-     * @param {Runner["state"]["includeSpecs"]} includeSpecs
-     * @param {Partial<Record<keyof includeSpecs, Map<string, Job>>>} valuesMaps
+     * @param {Runner["state"]["includeSpecs"]["id"]} idSpecs
      */
-    _simplifyIncludeSpecs(includeSpecs, valuesMaps) {
-        const valuesMapsEntries = $entries(valuesMaps);
+    _simplifyIncludeSpecs(idSpecs) {
         let hasChanged = false;
-        if (includeSpecs.job) {
-            for (const [id, includeLevel] of $entries(includeSpecs.job)) {
-                const configKeys = valuesMapsEntries.filter(([, map]) => map.has(id));
-                if (configKeys.length < 1) {
+        let remaining = $keys(idSpecs);
+        while (remaining.length) {
+            const id = remaining.shift();
+            if ($abs(idSpecs[id]) !== INCLUDE_LEVEL.url) {
+                continue;
+            }
+            const item = this.suites.get(id) || this.tests.get(id);
+            if (!item) {
+                const applied = this._include(idSpecs, [id], 0);
+                if (applied) {
                     logger.warn(
                         `Test runner did not find job with ID "${id}": it has been removed from the URL`
                     );
-                } else if (configKeys.length > 1) {
-                    throw new HootError(
-                        `Hash collision: found ${configKeys.length} jobs with same ID "${id}"; attention to the hash system needed.`
+                } else {
+                    logger.warn(
+                        `Test runner did not find job with ID "${id}": it has been ignored from the current run`
                     );
                 }
-                const [configKey] = configKeys[0];
-                this._include(includeSpecs[configKey], [id], includeLevel, true);
-                this._include(includeSpecs.job, [id], 0, true);
                 hasChanged = true;
             }
-        }
-        for (const [configKey, valuesMap] of valuesMapsEntries) {
-            const specs = includeSpecs[configKey];
-            let remaining = $keys(specs);
-            while (remaining.length) {
-                const id = remaining.shift();
-                if ($abs(specs[id]) !== INCLUDE_LEVEL.url) {
-                    continue;
-                }
-                const item = valuesMap.get(id);
-                if (!item) {
-                    const applied = this._include(specs, [id], 0, true);
-                    if (applied) {
-                        logger.warn(
-                            `Test runner did not find ${configKey} with ID "${id}": it has been removed from the URL`
-                        );
-                    } else {
-                        logger.warn(
-                            `Test runner did not find ${configKey} with ID "${id}": it has been ignored from the current run`
-                        );
-                    }
-                    hasChanged = true;
-                }
-                if (!item?.parent || item.parent.jobs.length < 1) {
-                    // No parent or no need to simplify
-                    continue;
-                }
-                const siblingIds = item.parent.jobs.map((job) => job.id);
-                if (
-                    siblingIds.every(
-                        (siblingId) => siblingId === id || remaining.includes(siblingId)
-                    )
-                ) {
-                    remaining = remaining.filter((id) => !siblingIds.includes(id));
-                    this._include(includeSpecs.suite, [item.parent.id], INCLUDE_LEVEL.url, true);
-                    this._include(specs, siblingIds, 0, true);
-                    hasChanged = true;
-                }
+            if (!item?.parent || item.parent.jobs.length < 1) {
+                // No parent or no need to simplify
+                continue;
+            }
+            const siblingIds = item.parent.jobs.map((job) => job.id);
+            if (
+                siblingIds.every((siblingId) => siblingId === id || remaining.includes(siblingId))
+            ) {
+                remaining = remaining.filter((id) => !siblingIds.includes(id));
+                this._include(idSpecs, [item.parent.id], INCLUDE_LEVEL.url, true);
+                this._include(idSpecs, siblingIds, 0, true);
+                hasChanged = true;
             }
         }
         return hasChanged;

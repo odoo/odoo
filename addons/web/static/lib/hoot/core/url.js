@@ -89,22 +89,19 @@ export function createUrlFromId(specs, options) {
     for (const [type, id] of $entries(specs)) {
         const ids = ensureArray(id);
         switch (type) {
-            case "suite": {
+            case "id": {
                 if (options?.ignore) {
                     for (const id of ids) {
                         const exludedId = EXCLUDE_PREFIX + id;
-                        if (
-                            nextParams.suite.has(exludedId) ||
-                            urlParams.suite?.includes(exludedId)
-                        ) {
-                            nextParams.suite.delete(exludedId);
+                        if (nextParams.id.has(exludedId) || urlParams.id?.includes(exludedId)) {
+                            nextParams.id.delete(exludedId);
                         } else {
-                            nextParams.suite.add(exludedId);
+                            nextParams.id.add(exludedId);
                         }
                     }
                 } else {
                     for (const id of ids) {
-                        nextParams.suite.add(id);
+                        nextParams.id.add(id);
                     }
                 }
                 break;
@@ -122,23 +119,6 @@ export function createUrlFromId(specs, options) {
                 } else {
                     for (const id of ids) {
                         nextParams.tag.add(id);
-                    }
-                }
-                break;
-            }
-            case "test": {
-                if (options?.ignore) {
-                    for (const id of ids) {
-                        const exludedId = EXCLUDE_PREFIX + id;
-                        if (urlParams.test?.includes(exludedId)) {
-                            nextParams.test.delete(exludedId);
-                        } else {
-                            nextParams.test.add(exludedId);
-                        }
-                    }
-                } else {
-                    for (const id of ids) {
-                        nextParams.test.add(id);
                     }
                 }
                 break;
