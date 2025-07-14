@@ -180,6 +180,10 @@ class AccountPaymentRegister(models.TransientModel):
         if len(lines.move_id) == 1:
             move = lines.move_id
             label = move.payment_reference or move.ref or move.name
+        elif any(move_type in ['out_refund', 'in_invoice', 'in_receipt'] for move_type in lines.move_id.mapped('move_type')):
+            # received payments references should use moves references
+            labels = {line.name or line.move_id.ref or line.move_id.name or '' for line in lines}
+            return ' '.join(sorted(labels))
         else:
             label = self.company_id.get_next_batch_payment_communication()
         return label
