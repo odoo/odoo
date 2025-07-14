@@ -78,7 +78,10 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         if ($el.hasClass('o_add_wishlist_dyn')) {
             productID = parseInt($el.closest('.js_product').find('.product_id:checked').val());;
         }
-        var $form = $el.closest('form');
+        let $form = $el.closest('form');
+        if ($form.length === 0) {
+            $form = $el.closest('.js_product').find('form');
+        }
         var templateId = $form.find('.product_template_id').val();
         // when adding from /shop instead of the product page, need another selector
         if (!templateId) {
@@ -86,7 +89,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         }
         $el.prop("disabled", true).addClass('disabled');
         var productReady = this.selectOrCreateProduct(
-            $el.closest('form'),
+            $form,
             productID,
             templateId,
         );
@@ -102,7 +105,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
                     self.wishlistProductIDs.push(productId);
                     sessionStorage.setItem('website_sale_wishlist_product_ids', JSON.stringify(self.wishlistProductIDs));
                     self._updateWishlistView();
-                    wSaleUtils.animateClone($navButton, $el.closest('form'), 25, 40);
+                    wSaleUtils.animateClone($navButton, $form, 25, 40);
                     // It might happen that `onChangeVariant` is called at the same time as this function.
                     // In this case we need to set the button to disabled again.
                     // Do this only if the productID is still the same.
