@@ -383,7 +383,31 @@ class MailActivityMixin(models.AbstractModel):
                 activity_type = self._default_activity_type()
         else:
             activity_type_id = act_values.get('activity_type_id', False)
+<<<<<<< cec375b37293d5b62665320178a4e2be32e422cb
             activity_type = self.env['mail.activity.type'].browse(activity_type_id) if activity_type_id else self.env['mail.activity.type']
+||||||| a82ab4ad035911bdb480733c3a3f5506defdf289
+        activity_type = self.env['mail.activity.type'].browse(activity_type_id)
+        invalid_model = activity_type.res_model and activity_type.res_model != self._name
+        if not activity_type or invalid_model:
+            if invalid_model:
+                _logger.warning(
+                    'Invalid activity type model %s used on %s (tried with xml id %s)',
+                    activity_type.res_model, self._name, act_type_xmlid or '',
+                )
+            activity_type = self._default_activity_type()
+=======
+        activity_type = self.env['mail.activity.type'].browse(activity_type_id)
+        invalid_model = activity_type.res_model and activity_type.res_model != self._name
+        if not activity_type or invalid_model:
+            if invalid_model:
+                _logger.warning(
+                    'Invalid activity type model %s used on %s (tried with xml id %s)',
+                    activity_type.res_model, self._name, act_type_xmlid or '',
+                )
+            # TODO master: reset invalid model to default type, keep it for stable as not harmful
+            if not activity_type:
+                activity_type = self._default_activity_type()
+>>>>>>> 06f4e4273f2fe0bcebcbbd98b18a569ce4e1cb68
 
         model_id = self.env['ir.model']._get(self._name).id
         create_vals_list = []
