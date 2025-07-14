@@ -10,7 +10,6 @@ class TestUblBis3(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
         cls.env.company.tax_calculation_rounding_method = 'round_globally'
         cls.partner_a.invoice_edi_format = 'ubl_bis3'
 
