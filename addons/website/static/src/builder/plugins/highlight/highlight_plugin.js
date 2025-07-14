@@ -63,7 +63,7 @@ export class HighlightPlugin extends Plugin {
                 }
             }
         },
-        format_splittable_class: (className) => className.startsWith("o_text_highlight"),
+        format_class_predicates: (className) => className.startsWith("o_text_highlight"),
         selectionchange_handlers: this.updateSelectedHighlight.bind(this),
         collapsed_selection_toolbar_predicate: (selectionData) =>
             !!closestElement(selectionData.editableSelection.anchorNode, ".o_text_highlight"),
