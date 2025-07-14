@@ -366,6 +366,10 @@ class Cursor(BaseCursor):
         self.connection.set_isolation_level(ISOLATION_LEVEL_REPEATABLE_READ)
         self.connection.set_session(readonly=pool.readonly)
 
+        if self.dbname != 'postgres' and os.getenv('ODOO_FAKETIME_TEST_MODE'):
+            self.execute("SET search_path = public, pg_catalog;")
+            self.commit()  # ensure that the search_path remains after a rollback
+
     def __build_dict(self, row: tuple) -> dict[str, typing.Any]:
         description = self._obj.description
         assert description, "Query does not have results"
