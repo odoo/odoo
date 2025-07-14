@@ -367,6 +367,48 @@ class TestActivityMixin(TestActivityCommon):
             self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
             self.assertEqual(len(self.test_record.message_ids), 2)
 
+    def test_mixin_my_activities_display(self):
+        """ Test that the 'my_activities_only' context key correctly forces activity
+        display fields (summary, user, state) to show the current user's next
+        activity, rather than the overall most urgent one.
+        """
+
+        user_me = self.user_employee
+        user_other = self.user_admin
+        test_record = self.env['mail.test.activity'].create({'name': 'Test Contextual Record'})
+
+        activity_other = test_record.activity_schedule(
+            'test_mail.mail_act_test_todo',
+            summary='Overdue Task Other',
+            date_deadline=date.today() - relativedelta(days=1),
+            user_id=user_other.id
+        )
+        activity_me = test_record.activity_schedule(
+            'mail.mail_activity_data_call',
+            summary='Planned Task Me',
+            date_deadline=date.today() + relativedelta(days=1),
+            user_id=user_me.id
+        )
+
+        fresh_record = self.env['mail.test.activity'].browse(test_record.id)
+        self.assertEqual(fresh_record.activity_summary, 'Overdue Task Other')
+        self.assertEqual(fresh_record.activity_user_id, user_other)
+        self.assertEqual(fresh_record.activity_state, 'overdue')
+        self.assertEqual(fresh_record.activity_date_deadline, activity_other.date_deadline)
+
+        record_in_my_context = test_record.with_user(user_me).with_context(my_activities_only=True)
+
+        # Explicitly trigger the computes on the correctly-contextualized recordset
+        record_in_my_context._compute_activity_state()
+        record_in_my_context._compute_activity_user_id()
+        record_in_my_context._compute_activity_date_deadline()
+        record_in_my_context._compute_activity_summary_and_type()
+
+        self.assertEqual(record_in_my_context.activity_summary, 'Planned Task Me')
+        self.assertEqual(record_in_my_context.activity_user_id, user_me)
+        self.assertEqual(record_in_my_context.activity_state, 'planned')
+        self.assertEqual(record_in_my_context.activity_date_deadline, activity_me.date_deadline)
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_archive(self):
         rec = self.test_record.with_user(self.user_employee)

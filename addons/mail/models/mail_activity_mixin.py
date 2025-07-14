@@ -62,12 +62,14 @@ class MailActivityMixin(models.AbstractModel):
              'Today: Activity date is today\nPlanned: Future activities.')
     activity_user_id = fields.Many2one(
         'res.users', 'Responsible User',
-        related='activity_ids.user_id', readonly=False,
+        compute='_compute_activity_user_id', readonly=True,
         search='_search_activity_user_id',
         groups="base.group_user")
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Next Activity Type',
-        related='activity_ids.activity_type_id', readonly=False,
+        compute='_compute_activity_summary_and_type',
+        compute_sudo=False,
+        readonly=True, store=False,
         search='_search_activity_type_id',
         groups="base.group_user")
     activity_type_icon = fields.Char('Activity Type Icon', related='activity_ids.icon')
@@ -82,7 +84,9 @@ class MailActivityMixin(models.AbstractModel):
         compute_sudo=False, readonly=True, groups="base.group_user")
     activity_summary = fields.Char(
         'Next Activity Summary',
-        related='activity_ids.summary', readonly=False,
+        compute='_compute_activity_summary_and_type',
+        compute_sudo=False,
+        readonly=True, store=False,
         search='_search_activity_summary',
         groups="base.group_user",)
     activity_exception_decoration = fields.Selection([
@@ -114,10 +118,28 @@ class MailActivityMixin(models.AbstractModel):
     def _search_activity_exception_decoration(self, operator, operand):
         return [('activity_ids.activity_type_id.decoration_type', operator, operand)]
 
+    def _get_activities_to_display(self):
+        """
+        Helper method to get activities to display based on the context.
+        If 'my_activities_only' is in the context, it returns only the activities
+        of the current user. Otherwise, it returns all activities.
+        """
+        self.ensure_one()
+        if self.env.context.get('my_activities_only'):
+            return self.activity_ids.filtered(lambda act: act.user_id == self.env.user)
+        return self.activity_ids
+
+    @api.depends('activity_ids.user_id')
+    def _compute_activity_user_id(self):
+        for record in self:
+            activities = record._get_activities_to_display()
+            record.activity_user_id = activities[0].user_id if activities else False
+
     @api.depends('activity_ids.state')
     def _compute_activity_state(self):
         for record in self:
-            states = record.activity_ids.mapped('state')
+            activities = record._get_activities_to_display()
+            states = activities.mapped('state')
             if 'overdue' in states:
                 record.activity_state = 'overdue'
             elif 'today' in states:
@@ -192,10 +214,23 @@ class MailActivityMixin(models.AbstractModel):
         )
         return [('id', 'not in' if reverse_search else 'in', [r[0] for r in self._cr.fetchall()])]
 
+    @api.depends('activity_ids.summary', 'activity_ids.activity_type_id')
+    def _compute_activity_summary_and_type(self):
+        for record in self:
+            activities = record._get_activities_to_display()
+            if activities:
+                first_activity = fields.first(activities)
+                record.activity_summary = first_activity.summary
+                record.activity_type_id = first_activity.activity_type_id
+            else:
+                record.activity_summary = False
+                record.activity_type_id = False
+
     @api.depends('activity_ids.date_deadline')
     def _compute_activity_date_deadline(self):
         for record in self:
-            record.activity_date_deadline = fields.first(record.activity_ids).date_deadline
+            activities = record._get_activities_to_display()
+            record.activity_date_deadline = fields.first(activities).date_deadline
 
     def _search_activity_date_deadline(self, operator, operand):
         if operator == '=' and not operand:
