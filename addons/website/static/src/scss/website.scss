@@ -169,7 +169,7 @@ $-seen-urls: ();
 }
 
 @mixin body-image-bg-style() {
-    background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
+    background-image: url("#{str-slice(o-website-value('body-image'), 1)}");
     background-position: center;
     background-attachment: fixed;
     @if o-website-value('body-image-type') == 'pattern' {
