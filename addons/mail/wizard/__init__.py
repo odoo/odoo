@@ -10,3 +10,4 @@ from . import mail_activity_schedule_summary
 from . import mail_template_preview
 from . import mail_template_reset
 from . import mail_followers_edit
+from .discuss import discuss_channel_owner_edit

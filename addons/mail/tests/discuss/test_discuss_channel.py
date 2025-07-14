@@ -11,7 +11,7 @@ from odoo.addons.mail.models.discuss.discuss_channel import channel_avatar, grou
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, RedirectWarning
 from odoo.tests import HttpCase, tagged, users
 from odoo.tools import html_escape, mute_logger
 
@@ -163,6 +163,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "create_date": fields.Datetime.to_string(member.create_date),
                                     "fetched_message_id": False,
                                     "id": member.id,
+                                    "channel_role": False,
                                     "last_seen_dt": False,
                                     "partner_id": {"id": self.test_partner.id, "type": "partner"},
                                     "seen_message_id": False,
@@ -208,6 +209,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "create_date": fields.Datetime.to_string(member.create_date),
                                     "fetched_message_id": False,
                                     "id": member.id,
+                                    "channel_role": False,
                                     "last_seen_dt": False,
                                     "partner_id": {"id": self.test_partner.id, "type": "partner"},
                                     "seen_message_id": False,
@@ -500,6 +502,18 @@ class TestChannelInternals(MailCommon, HttpCase):
             'group_public_id': self.env.ref('base.group_user').id,
             'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
         })
+        with self.assertRaises(RedirectWarning) as exc_info:
+            self.test_channel.with_context(self._test_context).write({
+                'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
+            })
+        # simulate the action of the transferring ownership
+        action = exc_info.exception.args[1]
+        action_model = action['res_model']
+        action_id = action['views'][0][0]
+        record = self.env[action_model].browse(action_id)
+        record.write({'channel_id': self.test_channel.id, 'channel_owner_candidate_id': self.user_employee.id})
+        record.transfer_owner()
+        # proceed unlink since user is no more channel owner
         self.test_channel.with_context(self._test_context).write({
             'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
         })
@@ -526,20 +540,54 @@ class TestChannelInternals(MailCommon, HttpCase):
     @mute_logger('odoo.models.unlink')
     def test_channel_private_unfollow(self):
         """ Test that a partner can leave (unfollow) a channel/group/chat. """
+        partner_mario = self.env['res.partner'].create({
+            'name': 'Mario',
+            'email': 'mario',
+        })
+        self.env['res.users'].sudo().create({
+            'login': 'mario',
+            'partner_id': partner_mario.id,
+            'group_ids': [Command.set(self.env.ref('base.group_user').ids)],
+        })
         group_restricted_channel = self.env['discuss.channel']._create_channel(name='Channel for Groups', group_id=self.env.ref('base.group_user').id)
         public_channel = self.env['discuss.channel']._create_channel(name='Channel for Everyone', group_id=None)
         private_group = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids, name="Group")
         chat_user_current = self.env['discuss.channel']._get_or_create_chat(self.env.user.partner_id.ids)
-        self.assertEqual(len(group_restricted_channel.channel_member_ids), 1)
-        self.assertEqual(len(public_channel.channel_member_ids), 1)
+        group_restricted_channel._add_members(partners=partner_mario)
+        public_channel._add_members(partners=partner_mario)
+        self.assertEqual(len(group_restricted_channel.channel_member_ids), 2)
+        self.assertEqual(len(public_channel.channel_member_ids), 2)
         self.assertEqual(len(private_group.sudo().channel_member_ids), 1)
         self.assertEqual(len(chat_user_current.sudo().channel_member_ids), 1)
+
+        with self.assertRaises(RedirectWarning) as exc_info:
+            group_restricted_channel.action_unfollow()
+        # simulate the action of the transferring ownership
+        action = exc_info.exception.args[1]
+        action_model = action['res_model']
+        action_id = action['views'][0][0]
+        record = self.env[action_model].browse(action_id)
+        record.sudo().write({'channel_id': group_restricted_channel.id, 'channel_owner_candidate_id': partner_mario.id})
+        record.transfer_owner()
+        # proceed unlink since user is no more channel owner
         group_restricted_channel.action_unfollow()
+        self.assertEqual(len(group_restricted_channel.channel_member_ids), 1)
+
+        with self.assertRaises(RedirectWarning) as exc_info:
+            public_channel.action_unfollow()
+        # simulate the action of the transferring ownership
+        action = exc_info.exception.args[1]
+        action_model = action['res_model']
+        action_id = action['views'][0][0]
+        record = self.env[action_model].browse(action_id)
+        record.sudo().write({'channel_id': public_channel.id, 'channel_owner_candidate_id': partner_mario.id})
+        record.transfer_owner()
+        # proceed unlink since user is no more channel owner
         public_channel.action_unfollow()
+        self.assertEqual(len(public_channel.channel_member_ids), 1)
+
         private_group.action_unfollow()
         chat_user_current.action_unfollow()
-        self.assertEqual(len(group_restricted_channel.channel_member_ids), 0)
-        self.assertEqual(len(public_channel.channel_member_ids), 0)
         # sudo: discuss.channel - reading members of non-accessible channel for testing purposes
         self.assertEqual(len(private_group.sudo().channel_member_ids), 0)
         # sudo: discuss.channel - reading members of non-accessible channel for testing purposes
@@ -789,7 +837,18 @@ class TestChannelInternals(MailCommon, HttpCase):
         data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["init_messaging"]})
         self.assertEqual(data["Store"]["starred"]["counter"], 2)
 
+        with self.assertRaises(RedirectWarning) as exc_info:
+            test_group.write({'channel_partner_ids': False})
+        # simulate the action of the transferring ownership
+        action = exc_info.exception.args[1]
+        action_model = action['res_model']
+        action_id = action['views'][0][0]
+        record = self.env[action_model].browse(action_id)
+        record.write({'channel_id': test_group.id, 'channel_owner_candidate_id': self.user_employee.id})
+        record.transfer_owner()
+        # proceed unlink since user is no more channel owner
         test_group.write({'channel_partner_ids': False})
+
         data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["init_messaging"]})
         self.assertEqual(data["Store"]["starred"]["counter"], 1)
 
