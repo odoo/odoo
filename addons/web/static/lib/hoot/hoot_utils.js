@@ -573,21 +573,6 @@ let fuzzyScoreMap = null;
 //-----------------------------------------------------------------------------
 
 /**
- * @template P
- * @param {((...args: P[]) => any)[]} callbacks
- * @param {"pop" | "shift"} method
- * @param {...P} args
- */
-export function consumeCallbackList(callbacks, method, ...args) {
-    while (callbacks.length) {
-        if (method === "shift") {
-            callbacks.shift()(...args);
-        } else {
-            callbacks.pop()(...args);
-        }
-    }
-}
-/**
  * @param {string} text
  */
 export async function copy(text) {
@@ -758,32 +743,25 @@ export function deepCopy(value) {
 /**
  * @template {(...args: any[]) => any} T
  * @param {T} fn
- * @param {number} [interval]
  */
-export function batch(fn, interval) {
-    /** @type {(() => ReturnType<T>)[]} */
+export function batch(fn) {
+    /** @type {Parameters<T>[]} */
     const currentBatch = [];
-    let timeoutId = 0;
 
     /** @type {T} */
     function batched(...args) {
-        currentBatch.push(() => fn(...args));
-        if (timeoutId) {
-            return;
-        }
-        timeoutId = setTimeout(() => {
-            timeoutId = 0;
-            flush();
-        }, interval);
+        currentBatch.push(args);
+        throttledFlush();
     }
 
     function flush() {
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-            timeoutId = 0;
+        for (const args of currentBatch) {
+            fn(...args);
         }
-        consumeCallbackList(currentBatch, "shift");
+        currentBatch.length = 0;
     }
+
+    const throttledFlush = throttle(flush);
 
     return [batched, flush];
 }
@@ -1460,14 +1438,19 @@ export function stringToNumber(string) {
  * @returns {T}
  */
 export function throttle(fn) {
-    let canRun = true;
+    function unlock() {
+        locked = false;
+    }
+
+    let locked = false;
+
     return function throttled(...args) {
-        if (!canRun) {
+        if (locked) {
             return;
         }
-        canRun = false;
-        requestAnimationFrame(() => (canRun = true));
-        return fn(...args);
+        locked = true;
+        requestAnimationFrame(unlock);
+        fn(...args);
     };
 }
 
