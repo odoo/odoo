@@ -772,6 +772,22 @@ class TestDomainOptimize(TransactionCase):
             self.number_domain,
         )
 
+    def test_sudo_optimize(self):
+        model = self.env['test_orm.discussion'].with_user(self.env.ref('base.public_user'))
+        self.assertEqual(
+            Domain('moderator', 'any', Domain('login', 'like', 'one')).optimize_full(model),
+            Domain('moderator', 'any', Domain('login', 'like', 'one')),
+        )
+        self.assertEqual(
+            Domain('moderator', 'any', Domain('login', 'like', 'one')).optimize_full(model.sudo()),
+            Domain('moderator', 'any!', Domain('login', 'like', 'one')),
+        )
+        query = model.moderator._search(Domain.TRUE)
+        self.assertEqual(
+            Domain('moderator', 'any', query).optimize(model),
+            Domain('moderator', 'any!', query),
+        )
+
     def test_nary_build(self):
         self.assertEqual(
             ~(self.number_domain & self.number_domain),
