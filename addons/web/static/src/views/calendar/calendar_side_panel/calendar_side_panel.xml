@@ -14,14 +14,14 @@
                     <div t-if="state.isReady and props.mode === MODES.add" class="o_form_view o_xxs_form_view gap-2 mt-2">
                         <div t-if="props.model.showMultiCreateTimeRange" class="d-flex align-items-baseline gap-2">
                             <TimePicker
-                                value="this.props.model.data.multiCreateTimeRange.start"
+                                value="this.props.model.data.multiCreate.timeRange.start"
                                 onChange="(time) => this.props.setMultiCreateTimeRange({start: time})"
                                 onInvalid="() => this.props.setMultiCreateTimeRange({start: null})"
                                 showSeconds="false"
                             />
                             <i class="fa fa-arrow-right"/>
                             <TimePicker
-                                value="this.props.model.data.multiCreateTimeRange.end"
+                                value="this.props.model.data.multiCreate.timeRange.end"
                                 onChange="(time) => this.props.setMultiCreateTimeRange({end: time})"
                                 onInvalid="() => this.props.setMultiCreateTimeRange({end: null})"
                                 showSeconds="false"

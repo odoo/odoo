@@ -13,6 +13,7 @@ class StandaloneRelationalModel extends RelationalModel {
             const config = this._getNextConfig(this.config, params);
             this.root = this._createRoot(config, data);
             this.config = config;
+            this.hooks.onRootLoaded(this.root);
             return Promise.resolve();
         }
         return super.load(params);
