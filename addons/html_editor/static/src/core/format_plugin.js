@@ -485,7 +485,11 @@ export class FormatPlugin extends Plugin {
         if (this.getResource("unremovable_node_predicates").some((p) => p(element))) {
             return;
         }
-        if (element.classList.length) {
+        if (
+            ![...element.classList].every((c) =>
+                this.getResource("format_class_predicates").some((p) => p(c))
+            )
+        ) {
             // Original comment from web_editor:
             // We only remove the empty element if it has no class, to ensure we
             // don't break visual styles (in that case, its ZWS was kept to
