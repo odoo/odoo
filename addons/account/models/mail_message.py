@@ -3,26 +3,30 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
+
+def _subselect_domain(model, field_name, domain):
+    query = model._search(Domain(field_name, '!=', False) & domain, active_test=False, bypass_access=True)
+    return Domain('id', 'in', query.subselect(model._field_to_sql(query.table, field_name, query)))
+
+
 bypass_token = object()
 DOMAINS = {
     'res.company':
-        lambda rec, operator, value: [('id', 'in', rec.env['account.move.line']._search([
-            ('company_id.restrictive_audit_trail', operator, value),
-        ], active_test=False, bypass_access=True).subselect('company_id'))],
+        lambda rec, operator, value: _subselect_domain(rec.env['account.move.line'], 'company_id',
+            Domain('company_id.restrictive_audit_trail', operator, value)
+        ),
     'account.move':
         lambda rec, operator, value: [('company_id.restrictive_audit_trail', operator, value)],
     'account.account':
         lambda rec, operator, value: [('used', operator, value), ('company_ids.restrictive_audit_trail', operator, value)],
     'account.tax':
-        lambda rec, operator, value: [('id', 'in', rec.env['account.move.line']._search([
-            ('tax_line_id', '!=', False),
-            ('company_id.restrictive_audit_trail', operator, value),
-        ], active_test=False, bypass_access=True).subselect('tax_line_id'))],
+        lambda rec, operator, value: _subselect_domain(rec.env['account.move.line'], 'tax_line_id',
+            Domain('company_id.restrictive_audit_trail', operator, value),
+        ),
     'res.partner':
-        lambda rec, operator, value: [('id', 'in', rec.env['account.move.line']._search([
-            ('partner_id', '!=', False),
-            ('company_id.restrictive_audit_trail', operator, value),
-        ], active_test=False, bypass_access=True).subselect('partner_id'))],
+        lambda rec, operator, value: _subselect_domain(rec.env['account.move.line'], 'partner_id',
+            Domain('company_id.restrictive_audit_trail', operator, value),
+        ),
     }
 
 
