@@ -35,7 +35,9 @@ import {
 
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
+import { rpc } from "@web/core/network/rpc";
 import { pick } from "@web/core/utils/objects";
+import { PersistentCache } from "@web/core/utils/persistent_cache";
 import { redirect } from "@web/core/utils/urls";
 import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
 import { WebClient } from "@web/webclient/webclient";
@@ -2250,4 +2252,47 @@ test("swipe settings on larger screen sizes has no effect", async () => {
     expect(".selected").toHaveAttribute("data-key", "crm", {
         message: "current setting should be crm",
     });
+});
+
+test("Don't cache settings data", async () => {
+    const cache = new PersistentCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            path: "settings",
+            res_model: "res.config.settings",
+            views: [[false, "form"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+        <form string="Settings" js_class="base_settings">
+            <app string="Not CRM" name="not_crm">
+                <block>
+                    <setting help="this is bar">
+                        <field name="bar"/>
+                    </setting>
+                </block>
+            </app>
+        </form>
+    `;
+
+    await mountWebClient();
+    rpc.setCache(cache);
+    await getService("action").doAction(1);
+
+    await animationFrame();
+    expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual(["Bar"]);
+
+    // The view is cached
+    expect(Object.keys(cache.ramCache.ram.get_views)[0].includes("res.config.settings")).toBe(true);
+    // The onChange is not cached
+    expect(
+        Object.keys(cache.ramCache.ram.onchange || {})?.[0]?.includes("res.config.settings")
+    ).toBe(undefined);
 });
