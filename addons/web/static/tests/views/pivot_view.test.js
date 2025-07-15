@@ -3637,22 +3637,22 @@ test("group by properties in pivot view", async () => {
     expect(columns[2]).toHaveText("bbb");
 });
 
-test("avoid duplicates in formatted_read_grouping_sets parameter 'groupby'", async () => {
+test("avoid duplicates grouping_sets in formatted_read_grouping_sets", async () => {
     onRpc("formatted_read_grouping_sets", ({ kwargs }) => {
-        expect.step(kwargs.grouping_sets[0]);
-        expect.step(kwargs.grouping_sets[1]);
+        expect(kwargs.grouping_sets).toEqual([[], ["bar"], ["bar", "date:month"], ["date:month"]]);
     });
     await mountView({
         type: "pivot",
         resModel: "partner",
         arch: `
 				<pivot sample="1">
-					<field name="date" type="row"/>
+					<field name="date" type="row" interval="month"/>
+					<field name="bar" type="row"/>
+					<field name="bar" type="col"/>
 					<field name="date" type="col" interval="month"/>
 				</pivot>
 			`,
     });
-    expect.verifySteps([[], ["date:month"]]);
 });
 
 test("Close header dropdown when a simple groupby is selected", async function (assert) {
