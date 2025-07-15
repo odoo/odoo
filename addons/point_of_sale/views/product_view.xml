@@ -192,6 +192,9 @@
         <field name="model">product.template</field>
         <field name="arch" type="xml">
             <form>
+                <div class="alert alert-warning mb-0" invisible="not context.get('taxes_readonly', False)" role="alert">
+                    Taxes are read-only because this product is already in the cart.
+                </div>
                 <sheet>
                     <field name="image_1920" widget="image" class="oe_avatar" nolabel="1" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
                     <group name="name">
@@ -206,7 +209,7 @@
                                     options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             <label for="taxes_id"/>
                             <div name="tax_info" class="o_row">
-                                <field name="taxes_id" widget="many2many_tags"
+                                <field name="taxes_id" widget="many2many_tags" readonly="context.get('taxes_readonly', False)"
                                     context="{'search_default_sale': 1}"
                                     options="{'create': false, 'create_edit': false}"/>
                                 <field name="tax_string"/>
