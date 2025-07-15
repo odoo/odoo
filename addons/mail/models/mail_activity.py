@@ -10,9 +10,11 @@ from dateutil.relativedelta import MO, relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, MissingError
+from odoo.fields import Domain
 from odoo.tools import is_html_empty
 from odoo.tools.misc import clean_context, get_lang, groupby
 from odoo.addons.mail.tools.discuss import Store
+from .mail_message import condition_values
 
 _logger = logging.getLogger(__name__)
 SECURITY_FIELDS = ('res_model', 'res_id', 'user_id')
@@ -399,9 +401,42 @@ class MailActivity(models.Model):
 
         The method is inspired by what has been done on mail.message. """
 
+        domain = Domain(domain).optimize(self)
         # Rules do not apply to administrator
-        if self.env.is_superuser() or bypass_access:
-            return super()._search(domain, offset, limit, order, bypass_access=True, **kwargs)
+        if self.env.su or bypass_access or domain.is_false():
+            return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
+
+        res_model_names = condition_values(self, 'res_model', domain) or ()
+        if 0 < len(res_model_names) <= 5:
+            # search by model and res_id
+            sec_domain = Domain('user_id', '=', self.env.uid)
+            env = self.with_context(active_test=False).env
+            for res_model_name in res_model_names:
+                if res_model_name not in env:
+                    continue
+                comodel = env[res_model_name]
+                codomain = Domain('res_model', '=', comodel._name)
+                comodel_res_ids = condition_values(self, 'res_id', domain.map_conditions(
+                    lambda cond: codomain & cond if cond.field_expr == 'res_model' else cond
+                ))
+                comodel_domain = Domain('id', 'in', comodel_res_ids) if comodel_res_ids else Domain.TRUE
+                operation = getattr(comodel, '_mail_post_access', 'read')
+                if operation == 'read':
+                    query = comodel._search(comodel_domain)
+                elif comodel.has_access(operation):
+                    comodel = comodel.sudo()
+                    comodel_domain &= self.env['ir.rule']._compute_domain(comodel._name, operation)
+                    comodel_domain = comodel_domain.optimize_full(comodel)
+                    query = comodel._search(comodel_domain)
+                else:
+                    continue
+                if query.is_empty():
+                    continue
+                if query.where_clause:
+                    codomain &= Domain('res_id', 'in', query)
+                sec_domain |= codomain
+
+            return super()._search(domain & sec_domain, offset, limit, order, **kwargs)
 
         # retrieve activities and filter using their security rules
         query = super()._search(domain, offset, limit, order, **kwargs)
