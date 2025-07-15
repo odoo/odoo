@@ -1,7 +1,8 @@
 # The officially supported versions of the following packages are their
 # python3-* equivalent distributed in Ubuntu 22.04 and Debian 11
 Babel==2.9.1 ; python_version < '3.11'  # min version = 2.6.0 (Focal with security backports)
-Babel==2.10.3 ; python_version >= '3.11'
+Babel==2.10.3 ; python_version >= '3.11' and python_version < '3.13'
+Babel==2.17.0 ; python_version >= '3.13'
 chardet==4.0.0 ; python_version < '3.11'  # (Jammy)
 chardet==5.2.0 ; python_version >= '3.11'
 cryptography==3.4.8; python_version < '3.12'  # incompatibility between pyopenssl 19.0.0 and cryptography>=37.0.0
@@ -12,14 +13,17 @@ docutils==0.17 ; python_version < '3.11'  # (Jammy)
 docutils==0.20.1 ; python_version >= '3.11'
 ebaysdk==2.1.5
 freezegun==1.1.0 ; python_version < '3.11'  # (Jammy)
-freezegun==1.2.1 ; python_version >= '3.11'
+freezegun==1.2.1 ; python_version >= '3.11' and python_version < '3.13'
+freezegun==1.5.1 ; python_version >= '3.13'
 geoip2==2.9.0
 gevent==21.8.0 ; sys_platform != 'win32' and python_version == '3.10'  # (Jammy)
 gevent==22.10.2; sys_platform != 'win32' and python_version > '3.10' and python_version < '3.12'
-gevent==24.2.1 ; sys_platform != 'win32' and python_version >= '3.12'  # (Noble)
+gevent==24.2.1 ; sys_platform != 'win32' and python_version >= '3.12' and python_version < '3.13'  # (Noble)
+gevent==24.11.1 ; sys_platform != 'win32' and python_version >= '3.13'  # (Trixie)
 greenlet==1.1.2 ; sys_platform != 'win32' and python_version == '3.10'  # (Jammy)
 greenlet==2.0.2 ; sys_platform != 'win32' and python_version > '3.10' and python_version < '3.12'
-greenlet==3.0.3 ; sys_platform != 'win32' and python_version >= '3.12'  # (Noble)
+greenlet==3.0.3 ; sys_platform != 'win32' and python_version >= '3.12' and python_version < '3.13' # (Noble)
+greenlet==3.1.1 ; sys_platform != 'win32' and python_version >= '3.13'  # (Trixie)
 idna==2.10 ; python_version < '3.12'  # requests 2.25.1 depends on idna<3 and >=2.5
 idna==3.6 ; python_version >= '3.12'
 Jinja2==3.0.3 ; python_version <= '3.10'
@@ -39,14 +43,16 @@ ofxparse==0.21
 passlib==1.7.4 # min version = 1.7.2 (Focal with security backports)
 Pillow==9.0.1 ; python_version <= '3.10'
 Pillow==9.4.0 ; python_version > '3.10' and python_version < '3.12'
-Pillow==10.2.0 ; python_version >= '3.12'  # (Noble) Mostly to have a wheel package
+Pillow==10.2.0 ; python_version >= '3.12' and python_version < '3.13'  # (Noble) Mostly to have a wheel package
+Pillow==11.1.0 ; python_version >= '3.13'  # (Noble) Mostly to have a wheel package
 polib==1.1.1
 psutil==5.9.0 ; python_version <= '3.10' 
 psutil==5.9.4 ; python_version > '3.10' and python_version < '3.12' 
 psutil==5.9.8 ; python_version >= '3.12' # (Noble) Mostly to have a wheel package
 psycopg2==2.9.2 ; python_version == '3.10' # (Jammy)
 psycopg2==2.9.5 ; python_version == '3.11'
-psycopg2==2.9.9 ; python_version >= '3.12' # (Noble) Mostly to have a wheel package
+psycopg2==2.9.9 ; python_version >= '3.12' and python_version < '3.13' # (Noble)
+psycopg2==2.9.10 ; python_version >= '3.13' # (Trixie)
 pydot==1.4.2
 pyopenssl==21.0.0 ; python_version < '3.12'
 pyopenssl==24.1.0 ; python_version >= '3.12' # (Noble) min 23.2.0, pinned for compatibility with cryptography==42.0.8 and security patches
@@ -84,4 +90,5 @@ XlsxWriter==3.0.2 ; python_version < '3.12'  # (jammy)
 XlsxWriter==3.1.9 ; python_version >= '3.12'
 xlwt==1.3.0
 zeep==4.1.0 ; python_version < '3.11'  # (jammy)
-zeep==4.2.1 ; python_version >= '3.11'
+zeep==4.2.1 ; python_version >= '3.11' and python_version < '3.13'
+zeep==4.3.1 ; python_version >= '3.13'
