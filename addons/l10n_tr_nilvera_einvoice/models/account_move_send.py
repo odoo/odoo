@@ -122,6 +122,37 @@ class AccountMoveSend(models.AbstractModel):
                 ),
             }
 
+        # Alert if partner is missing Tax office name on reference field
+        if tr_einvoice_partners_missing_ref := moves.partner_id.filtered(
+            lambda p: p.l10n_tr_nilvera_customer_status == "einvoice" and not p.ref
+        ):
+            alerts["critical_partner_missing_reference_field"] = {
+                "message": _(
+                    "The following E-Invoice partner(s) must have the reference field set to the tax office name."
+                ),
+                "action_text": _("View Partner(s)"),
+                "action": tr_einvoice_partners_missing_ref._get_records_action(
+                    name=_("Check reference on Partner(s)")
+                ),
+                "level": "danger",
+            }
+
+        # Alert if company is missing Tax office name on reference field
+        if (
+            tr_companies_missing_required_fields
+            := tr_nilvera_moves.company_id.partner_id.filtered(lambda p: not p.ref)
+        ):
+            alerts["tr_companies_missing_reference_field"] = {
+                "level": "danger",
+                "message": _(
+                    "The following company(s) must have the reference field set to the tax office name."
+                ),
+                "action_text": _("View Company(s)"),
+                "action": tr_companies_missing_required_fields._get_records_action(
+                    name=_("Check reference on Company(s)")
+                ),
+            }
+
         return alerts
 
     # -------------------------------------------------------------------------
