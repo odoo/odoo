@@ -229,12 +229,13 @@ export class ChannelInvitation extends Component {
             this.props.close?.();
             return;
         }
-        let channelId = this.props.channel.id;
         if (this.props.channel?.channel_type === "chat") {
+            const hadActiveCall = this.props.channel.rtc_session_ids.length > 0;
             const partnerIds = this.selectedPartners.map((partner) => partner.id);
             if (this.props.channel.correspondent?.partner_id) {
                 partnerIds.unshift(this.props.channel.correspondent.partner_id.id);
             }
+            let group = null;
             if (this.state.selectedEmails.length) {
                 const users_to = [
                     ...new Set([
@@ -246,14 +247,19 @@ export class ChannelInvitation extends Component {
                             .filter(Boolean),
                     ]),
                 ];
-                const group = await this.store.createGroupChat({ users_to });
-                channelId = group.id;
+                group = await this.store.createGroupChat({ users_to });
             } else {
-                await this.store.startChat(partnerIds);
+                group = await this.store.startChat(partnerIds);
+            }
+            if (hadActiveCall) {
+                this.env.services["discuss.rtc"].toggleCall(group, {
+                    camera: this.store.rtc.selfSession?.is_camera_on,
+                    audio: !this.store.rtc.selfSession?.isMute,
+                });
             }
         } else if (this.selectedPartners.length || this.state.selectedEmails.length) {
             await this.store.fetchStoreData("/discuss/channel/add_members", {
-                channel_id: channelId,
+                channel_id: this.props.channel.id,
                 partner_ids: this.selectedPartners.map((partner) => partner.id),
                 emails: this.state.selectedEmails,
                 invite_to_rtc_call: this.rtc.localChannel?.eq(this.props.channel),
