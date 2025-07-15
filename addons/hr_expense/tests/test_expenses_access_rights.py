@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import HttpCase, tagged, new_test_user
 
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
@@ -27,6 +27,25 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
                 'quantity': 1,
                 'price_unit': 1,
             })
+
+        expense = self.env['hr.expense'].with_user(self.expense_user_employee).create({
+            'name': 'expense_1',
+            'date': '2016-01-01',
+            'product_id': self.product_a.id,
+            'quantity': 10.0,
+            'employee_id': self.expense_employee.id,
+        })
+
+        # The expense employee shouldn't be able to bypass the submit state.
+        with self.assertRaises(UserError):
+            expense.with_user(self.expense_user_employee).state = 'approved'
+
+        expense.with_user(self.expense_user_employee).action_submit()
+        self.assertEqual(expense.state, 'submitted')
+
+        # Employee can also revert from the submitted state to a draft state
+        expense.with_user(self.expense_user_employee).action_reset()
+        self.assertEqual(expense.state, 'draft')
 
     def test_expense_access_rights_user(self):
         # The expense base user (without other rights) is able to create and read sheet
