@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
-import unittest
 
 import odoo.tests
 
@@ -101,8 +100,6 @@ class TestConfigurator(TestConfiguratorCommon):
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestConfiguratorTranslation(TestConfiguratorCommon):
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_01_configurator_translation(self):
         parseltongue = self.env['res.lang'].create({
             'name': 'Parseltongue',
