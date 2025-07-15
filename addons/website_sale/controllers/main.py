@@ -18,12 +18,13 @@ from odoo.tools import SQL, clean_context, float_round, groupby, lazy, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import _
 
+from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.web_editor.tools import get_video_thumbnail
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_sale.const import SHOP_PATH
-from odoo.addons.website_sale.controllers.checkout import Checkout
+from odoo.addons.website_sale.controllers.checkout_validation import CheckoutValidation
 from odoo.addons.website_sale.models.website import (
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
     PRICELIST_SESSION_CACHE_KEY,
@@ -128,7 +129,7 @@ class TableCompute:
         return rows
 
 
-class WebsiteSale(Checkout):
+class WebsiteSale(payment_portal.PaymentPortal, CheckoutValidation):
     _express_checkout_route = '/shop/express_checkout'
     _express_checkout_delivery_route = '/shop/express/shipping_address_change'
 
@@ -967,7 +968,7 @@ class WebsiteSale(Checkout):
         order_sudo = request.cart
         request.session['sale_last_order_id'] = order_sudo.id
 
-        if redirection := self._check_cart(order_sudo):
+        if redirection := self._check_checkout_step_access():
             return redirection
 
         checkout_page_values = self._prepare_checkout_page_values(order_sudo, **query_params)
@@ -1039,7 +1040,7 @@ class WebsiteSale(Checkout):
         use_delivery_as_billing = str2bool(use_delivery_as_billing or 'false')
 
         order_sudo = request.cart
-        if redirection := self._check_cart(order_sudo):
+        if redirection := self._check_checkout_step_access():
             return redirection
 
         # Retrieve the partner whose address to update, if any, and its address type.
@@ -1141,7 +1142,7 @@ class WebsiteSale(Checkout):
         :rtype: str
         """
         order_sudo = request.cart
-        if redirection := self._check_cart(order_sudo):
+        if redirection := self._check_checkout_step_access():
             return json.dumps({'redirectUrl': redirection.location})
 
         # Retrieve the partner whose address to update, if any, and its address type.
@@ -1450,7 +1451,7 @@ class WebsiteSale(Checkout):
     def shop_confirm_order(self, **post):
         order_sudo = request.cart
 
-        if redirection := self._check_cart(order_sudo):
+        if redirection := self._check_checkout_step_access():
             return redirection
 
         order_sudo._recompute_taxes()
@@ -1472,7 +1473,7 @@ class WebsiteSale(Checkout):
 
         # check that cart is valid
         order_sudo = request.cart
-        redirection = self._check_cart(order_sudo)
+        redirection = self._check_checkout_step_access()
         open_editor = request.params.get('open_editor') == 'true'
         # Do not redirect if it is to edit
         # (the information is transmitted via the "open_editor" parameter in the url)
@@ -1527,7 +1528,7 @@ class WebsiteSale(Checkout):
         """
         order_sudo = request.cart
 
-        if redirection := self._check_cart(order_sudo):
+        if redirection := self._check_checkout_step_access():
             return redirection
 
         render_values = self._get_shop_payment_values(order_sudo, **post)
@@ -1621,13 +1622,26 @@ class WebsiteSale(Checkout):
     # === CHECK METHODS === #
 
     def _check_checkout_step(self, step_href, order_sudo):
-        if step_href == '/shop/cart' and (redirection := self._check_address(order_sudo)):
+        if step_href == '/shop/cart' and (redirection := self._check_addresses(order_sudo)):
             return redirection
-        elif step_href == '/shop/checkout' and (redirection := self._check_checkout_ready(order_sudo)):
+        if step_href == '/shop/checkout' and (redirection := self._check_checkout_ready(order_sudo)):
             return redirection
         return super()._check_checkout_step(step_href, order_sudo)
 
-    def _check_address(self, order_sudo):
+    def _check_addresses(self, order_sudo):
+        """ Check whether the cart's addresses are complete and valid.
+
+        The addresses are complete and valid if:
+
+        - at least one address has been added;
+        - the delivery address is complete;
+        - the billing address is complete.
+
+        :param sale.order order_sudo: The cart whose addresses to check.
+        None if the cart is valid; otherwise, a redirection to the appropriate page.
+        :return: None if the cart's addresses are complete and valid; otherwise, a redirection to
+                 the appropriate page.
+        """
         # Check that an address has been added.
         if order_sudo._is_anonymous_cart():
             return request.redirect('/shop/address')
