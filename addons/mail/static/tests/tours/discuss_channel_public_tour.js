@@ -113,7 +113,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             trigger: ".o-mail-Message[data-persistent]:contains(cheese)",
-            run: "hover && click .o-mail-Message [title='Add a Reaction']",
+            run: "hover && click .o-mail-Message:contains(cheese) [title='Add a Reaction']",
         },
         {
             trigger: ".o-mail-QuickReactionMenu",
@@ -148,7 +148,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             content: "Click on more menu",
             trigger: ".o-mail-Message[data-persistent]:contains(cheese)",
-            run: "hover && click .o-mail-Message [title='Expand']",
+            run: "hover && click .o-mail-Message:contains(cheese) [title='Expand']",
         },
         {
             content: "Click on edit",
