@@ -1,5 +1,6 @@
 from odoo.fields import Domain
 from odoo.tests import common
+from odoo.tools.translate import FIELD_TRANSLATE
 
 from odoo.addons.base.models.ir_model import field_xmlid, model_xmlid, selection_xmlid
 
@@ -195,7 +196,7 @@ class TestReflection(common.TransactionCase):
                         self.assertEqual(ir_field.readonly, bool(field.readonly))
                         self.assertEqual(ir_field.required, bool(field.required))
                         self.assertEqual(ir_field.selectable, bool(field.search or field.store))
-                        self.assertEqual(ir_field.translate, bool(field.translate))
+                        self.assertEqual(FIELD_TRANSLATE.get(ir_field.translate or None, True), field.translate)
                         if field.relational:
                             self.assertEqual(ir_field.relation, field.comodel_name)
                         if field.type == 'one2many' and field.store:
