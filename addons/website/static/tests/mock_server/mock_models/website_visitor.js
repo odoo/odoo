@@ -2,12 +2,23 @@ import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { fields, makeKwArgs, models } from "@web/../tests/web_test_helpers";
 
+export class WebsiteTrack extends models.ServerModel {
+    _name = "website.track";
+    _description = "Visited Pages";
+    _order = "visit_datetime desc";
+
+    visitor_id = fields.Many2one({ relation: "website.visitor" });
+
+    page_id = fields.Many2one({ relation: "website.page" });
+    url = fields.Char("Url");
+    visit_datetime = fields.Datetime("Visit DateTime");
+}
+
 export class WebsiteVisitor extends models.ServerModel {
     _name = "website.visitor";
 
     country_id = fields.Many2one({ relation: "res.country", string: "Country" }); // FIXME: somehow not fetched properly
     display_name = fields.Char({ compute: "_compute_display_name" });
-    history = fields.Char();
     lang_id = fields.Many2one({ relation: "res.lang", string: "Language" }); // FIXME: somehow not fetched properly
     partner_id = fields.Many2one({ relation: "res.partner", string: "Contact" }); // FIXME: somehow not fetched properly
     website_id = fields.Many2one({ relation: "website", string: "Website" });
@@ -34,7 +45,6 @@ export class WebsiteVisitor extends models.ServerModel {
         for (const visitor of this) {
             const [data] = this._read_format(visitor.id, ["display_name"]);
             data.country_id = mailDataHelpers.Store.one(ResCountry.browse(visitor.country_id));
-            data.history = visitor.history;
             data.lang_id = mailDataHelpers.Store.one(ResLang.browse(visitor.lang_id));
             data.partner_id = mailDataHelpers.Store.one(
                 ResPartner.browse(visitor.partner_id),

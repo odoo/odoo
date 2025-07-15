@@ -40,14 +40,26 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             'visit_datetime': self.base_datetime - datetime.timedelta(minutes=20),
         }])
 
-        handmade_history = "%s (21:10) → %s (21:20) → %s (21:30)" % (
-            self.env.ref('website.homepage_page').name,
-            self.env.ref('website.contactus_page').name,
-            self.env.ref('website.homepage_page').name,
-        )
-        history = self.visitor._get_visitor_history()
+        handmade_history = [
+            (
+                self.env.ref("website.homepage_page").name,
+                (self.base_datetime - datetime.timedelta(minutes=20)).strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
+            ),
+            (
+                self.env.ref("website.contactus_page").name,
+                (self.base_datetime - datetime.timedelta(minutes=10)).strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
+            ),
+            (
+                self.env.ref("website.homepage_page").name,
+                self.base_datetime.strftime("%Y-%m-%d %H:%M:%S"),
+            ),
+        ]
 
-        self.assertEqual(history, handmade_history)
+        self.assertEqual(self.visitor._get_visitor_history(), handmade_history)
 
     def test_livechat_username(self):
         # Open a new live chat
@@ -287,7 +299,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     {
                         "country_id": self.env["ir.model.data"]._xmlid_to_res_id("base.be"),
                         "display_name": f"Website Visitor #{self.visitor.id}",
-                        "history": "",
+                        "page_visit_history": [],
                         "id": self.visitor.id,
                         "lang_id": self.env.ref("base.lang_en").id,
                         "partner_id": False,
