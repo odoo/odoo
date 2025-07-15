@@ -1,5 +1,9 @@
-from odoo.exceptions import UserError
+from datetime import date
+
 from odoo import Command
+from odoo.exceptions import UserError
+from odoo.tests import freeze_time
+
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 
 
@@ -10,6 +14,8 @@ class TestProjectTemplates(TestProjectCommon):
         cls.project_template = cls.env["project.project"].create({
             "name": "Project Template",
             "is_template": True,
+            "date_start": date(2025, 6, 1),
+            "date": date(2025, 6, 11),
         })
         cls.task_inside_template = cls.env["project.task"].create({
             "name": "Task in Project Template",
@@ -168,3 +174,43 @@ class TestProjectTemplates(TestProjectCommon):
             self.user_projectuser + self.user_projectmanager + user1 + user2,
             'Task 7 should be assigned to the users mapped to `role2` and `role3`, plus the users who were already assigned to the task.'
         )
+
+    @freeze_time("2025-06-15")
+    def test_create_from_template_no_dates(self):
+        today = date.today()
+
+        new_project = self.project_template.action_create_from_template({
+            "name": "New Project",
+            "is_template": False,
+        })
+
+        expected_delta = self.project_template.date - self.project_template.date_start
+        self.assertEqual(new_project.date_start, today, "Start date should default to today")
+        self.assertEqual(new_project.date, today + expected_delta, "End date should be start + template delta")
+
+    def test_create_from_template_start_only(self):
+        new_start = date(2025, 7, 1)
+
+        new_project = self.project_template.action_create_from_template({
+            "name": "New Project",
+            "is_template": False,
+            "date_start": new_start,
+        })
+
+        expected_delta = self.project_template.date - self.project_template.date_start
+        self.assertEqual(new_project.date_start, new_start, "Start date should be the one provided")
+        self.assertEqual(new_project.date, new_start + expected_delta, "End date should be start + template delta")
+
+    def test_create_from_template_with_dates(self):
+        new_start = date(2025, 7, 1)
+        new_end = date(2025, 7, 15)
+
+        new_project = self.project_template.action_create_from_template({
+            "name": "New Project",
+            "is_template": False,
+            "date_start": new_start,
+            "date": new_end,
+        })
+
+        self.assertEqual(new_project.date_start, new_start, "Start date should be the one provided")
+        self.assertEqual(new_project.date, new_end, "End date should be the one provided")

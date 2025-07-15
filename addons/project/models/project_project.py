@@ -1383,6 +1383,13 @@ class ProjectProject(models.Model):
     def action_create_from_template(self, values=None, role_to_users_mapping=None):
         self.ensure_one()
         values = values or {}
+
+        if self.date_start and self.date:
+            if not values.get("date_start"):
+                values["date_start"] = fields.Date.today()
+            if not values.get("date"):
+                values["date"] = values["date_start"] + (self.date - self.date_start)
+
         default = {
             key.removeprefix('default_'): value
             for key, value in self.env.context.items()
