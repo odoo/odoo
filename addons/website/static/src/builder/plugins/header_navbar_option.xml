@@ -42,36 +42,33 @@
         <BuilderFontFamilyPicker action="'customizeWebsiteVariable'" actionParam="'navbar-font'" valueParamName="'actionValue'"/>
     </BuilderRow>
     <BuilderRow label.translate="Format">
-        <BuilderButtonGroup>
-            <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'header-font-size'" unit="'px'" saveUnit="'rem'"/>
-            <BuilderColorPicker action="'customizeWebsiteVariable'" actionParam="'header-text-color'"
-                enabledTabs="['solid', 'custom']"
-            />
-            <BuilderSelect action="'websiteConfig'" t-if="!hasSomeViews(['website.template_header_sales_three', 'website.template_header_vertical'])" id="'header_alignment_opt'">
-                <BuilderSelectItem
-                    actionParam="{
-                        views: [],
-                    }"
-                >
-                <i class="fa fa-align-left fa-fw"></i>
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    t-if="!hasSomeViews(['website.template_header_hamburger'])"
-                    actionParam="{
-                        views: ['website.template_header_mobile_align_center', 'website.template_header_hamburger_mobile_align_center', 'website.template_header_default_align_center', 'website.template_header_boxed_align_center', 'website.template_header_stretch_align_center', 'website.template_header_search_align_center', 'website.template_header_sales_one_align_center', 'website.template_header_sales_two_align_center', 'website.template_header_sales_four_align_center', 'website.template_header_sidebar_align_center'],
-                    }"
-                >
-                <i class="fa fa-align-center fa-fw"></i>
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    actionParam="{
-                        views: ['website.template_header_mobile_align_right', 'website.template_header_hamburger_mobile_align_right', 'website.template_header_default_align_right', 'website.template_header_boxed_align_right', 'website.template_header_stretch_align_right', 'website.template_header_search_align_right', 'website.template_header_sales_one_align_right', 'website.template_header_sales_two_align_right', 'website.template_header_sales_four_align_right', 'website.template_header_sidebar_align_right'],
-                    }"
-                >
-                <i class="fa fa-align-right fa-fw"></i>
-                </BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderButtonGroup>
+        <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'header-font-size'" unit="'px'" saveUnit="'rem'"/>
+        <BuilderColorPicker action="'customizeWebsiteVariable'" actionParam="'header-text-color'"
+            enabledTabs="['solid', 'custom']"
+        />
+        <BuilderSelect action="'websiteConfig'" t-if="!hasSomeViews(['website.template_header_sales_three', 'website.template_header_vertical'])" id="'header_alignment_opt'">
+            <BuilderSelectItem
+                actionParam="{
+                    views: [],
+                }"
+            >
+            <span><i class="fa fa-align-left fa-fw"></i></span>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{
+                    views: ['website.template_header_mobile_align_center', 'website.template_header_hamburger_mobile_align_center', 'website.template_header_default_align_center', 'website.template_header_boxed_align_center', 'website.template_header_stretch_align_center', 'website.template_header_search_align_center', 'website.template_header_sales_one_align_center', 'website.template_header_sales_two_align_center', 'website.template_header_sales_four_align_center', 'website.template_header_sidebar_align_center'],
+                }"
+            >
+            <span><i class="fa fa-align-center fa-fw"></i></span>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{
+                    views: ['website.template_header_mobile_align_right', 'website.template_header_hamburger_mobile_align_right', 'website.template_header_default_align_right', 'website.template_header_boxed_align_right', 'website.template_header_stretch_align_right', 'website.template_header_search_align_right', 'website.template_header_sales_one_align_right', 'website.template_header_sales_two_align_right', 'website.template_header_sales_four_align_right', 'website.template_header_sidebar_align_right'],
+                }"
+            >
+            <span><i class="fa fa-align-right fa-fw"></i></span>
+            </BuilderSelectItem>
+        </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Link Style" t-if="!hasSomeViews(['website.template_header_hamburger', 'website.template_header_stretch', 'website.template_header_sidebar'])">
         <BuilderSelect action="'websiteConfig'">
