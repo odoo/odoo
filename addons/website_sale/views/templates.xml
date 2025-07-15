@@ -3744,6 +3744,7 @@
                 t-value="True if show_mobile_cart_summary is None else show_mobile_cart_summary"
             />
             <t t-set="body_classname" t-value="'o_website_sale_checkout'"/>
+            <t t-set="amount_total" t-value="website_sale_order._get_amount_to_pay().get('amount_total')"/>
             <div id="wrap" class="d-flex flex-column flex-grow-1">
                 <div class="oe_website_sale o_website_sale_checkout_container container d-flex flex-column flex-grow-1 py-lg-2">
                     <div t-attf-class="row #{not show_wizard_checkout and 'mt32'} mb32">
@@ -3805,7 +3806,7 @@
                                 <span
                                     id="amount_total_summary"
                                     class="monetary_field ms-auto"
-                                    t-field="website_sale_order.amount_total"
+                                    t-out="amount_total"
                                     t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'
                                 />
                                 <span
@@ -3980,7 +3981,7 @@
 
             <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
             <div
-                t-if="tx_sudo.state in ['pending', 'done'] or not order.amount_total"
+                t-if="tx_sudo.state in ['pending', 'done'] or not amount_total"
                 class="d-flex justify-content-between align-items-center"
             >
                 <h3>Thank you for your order.</h3>
@@ -4032,6 +4033,7 @@
             - _cart_total_classes: CSS classes to append on the root div of the total template;
                                    default `None`.
         -->
+        <t t-set="amounts" t-value="website_sale_order._get_amount_to_pay()"/>
         <div
             t-if="website_sale_order and website_sale_order.website_order_line"
             t-attf-class="o_cart_total #{_cart_total_classes}"
@@ -4067,7 +4069,7 @@
                         Subtotal
                     </td>
                     <td class="text-end border-0 pb-2 pe-0 pt-0">
-                        <span t-field="website_sale_order.amount_untaxed"
+                        <span t-out="amounts.get('amount_untaxed')"
                               class="monetary_field"
                               style="white-space: nowrap;"
                               t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
@@ -4076,7 +4078,7 @@
                 <tr name="o_order_total_taxes">
                     <td colspan="2" class="text-muted border-0 p-0 pe-3 pb-2">Taxes</td>
                     <td class="text-end border-0 p-0 ps-3 pb-2">
-                        <span t-field="website_sale_order.amount_tax"
+                        <span t-out="amounts.get('amount_tax')"
                               class="monetary_field"
                               style="white-space: nowrap;"
                               t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
@@ -4085,7 +4087,7 @@
                 <tr name="o_order_total" class="border-top">
                     <td colspan="2" class="border-0 ps-0 pt-2"><strong>Total</strong></td>
                     <td class="text-end border-0 px-0 pt-2">
-                        <strong t-field="website_sale_order.amount_total"
+                        <strong t-out="amounts.get('amount_total')"
                                 class="monetary_field text-end p-0"
                                 t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                     </td>
@@ -4128,8 +4130,8 @@
                 t-if="tx_sudo"
                 t-attf-class="alert px-3 pb-0 pt-3 #{
                     (tx_sudo.state == 'pending' and 'alert-info') or
-                    (tx_sudo.state == 'done' and order.amount_total == tx_sudo.amount and 'alert-success') or
-                    (tx_sudo.state == 'done' and order.amount_total != tx_sudo.amount and 'alert-warning') or
+                    (tx_sudo.state == 'done' and amount_total == tx_sudo.amount and 'alert-success') or
+                    (tx_sudo.state == 'done' and amount_total != tx_sudo.amount and 'alert-warning') or
                     (tx_sudo.state == 'authorized' and 'alert-success') or
                     'alert-danger'}"
                 role="alert"
@@ -4152,7 +4154,7 @@
                     <t t-if="tx_sudo.state == 'done'">
                         <span t-if='tx_sudo.provider_id.sudo().done_msg' t-out="tx_sudo.provider_id.sudo().done_msg"/>
                     </t>
-                    <t t-if="tx_sudo.state == 'done' and order.amount_total != tx_sudo.amount">
+                    <t t-if="tx_sudo.state == 'done' and amount_total != tx_sudo.amount">
                         <span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.
                         Please contact the responsible of the shop for more information.</span>
                     </t>
@@ -4172,7 +4174,7 @@
                         <b>Communication: </b><span t-out='order.reference'/>
                     </div>
                     <div t-if="tx_sudo.provider_id.sudo().qr_code">
-                        <t t-set="qr_code" t-value="tx_sudo.company_id.partner_id.bank_ids[:1].build_qr_code_base64(order.amount_total,tx_sudo.reference, None, tx_sudo.currency_id, tx_sudo.partner_id)"/>
+                        <t t-set="qr_code" t-value="tx_sudo.company_id.partner_id.bank_ids[:1].build_qr_code_base64(amount_total, tx_sudo.reference, None, tx_sudo.currency_id, tx_sudo.partner_id)"/>
                         <div class="mt-2" t-if="qr_code">
                             <h3>Or scan me with your banking app.</h3>
                             <img class="border border-dark rounded" t-att-src="qr_code"/>

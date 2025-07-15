@@ -2025,6 +2025,22 @@ class SaleOrder(models.Model):
             'extra_tax_data': extra_tax_data,
         }
 
+    def _get_amount_to_pay(self):
+        """ Return the amount that needs to be paid for the order, including the untaxed
+        amount, tax, and total amount of the sale order. Overriden in other modules.
+
+        Note: self and self.ensure_one()
+
+        :return: dict with 'amount_untaxed', 'amount_tax', and 'amount_total'.
+        :rtype: dict
+        """
+        self and self.ensure_one()
+        return {
+            'amount_untaxed': self.amount_untaxed,
+            'amount_tax': self.amount_tax,
+            'amount_total': self.amount_total,
+        }
+
     def _get_prepayment_required_amount(self):
         """ Return the minimum amount needed to automatically confirm the quotation.
 
@@ -2038,7 +2054,7 @@ class SaleOrder(models.Model):
         if not self.require_payment:
             return 0
         else:
-            return self.currency_id.round(self.amount_total * self.prepayment_percent)
+            return self.currency_id.round(self._get_amount_to_pay()['amount_total'] * self.prepayment_percent)
 
     def _is_confirmation_amount_reached(self):
         """ Return whether `self.amount_paid` is higher than the prepayment required amount.

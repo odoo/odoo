@@ -127,10 +127,11 @@
                 <!-- Uses backend_url provided in rendering values -->
                 <t t-call="portal.portal_back_in_edit_mode"/>
             </t>
+            <t t-set="amount_total" t-value="sale_order._get_amount_to_pay().get('amount_total')"/>
 
             <div
                 class="row o_portal_sale_sidebar"
-                t-att-data-order-amount-total="sale_order.amount_total"
+                t-att-data-order-amount-total="amount_total"
             >
                 <!-- Sidebar -->
                 <t t-call="portal.portal_record_sidebar">
@@ -149,11 +150,13 @@
                                 (<t t-out="sale_order.prepayment_percent * 100"/>%)
                             </h2>
                         </t>
-                        <h2 t-else="" t-field="sale_order.amount_total" class="mb-0 text-break"/>
+                        <t t-else="">
+                            <h2 t-field="sale_order.amount_total" class="mb-0 text-break"/>
+                        </t>
                     </t>
                     <t t-set="entries">
                         <div
-                            t-if="0 &lt; sale_order.amount_paid &lt; sale_order.amount_total
+                            t-if="0 &lt; sale_order.amount_paid &lt; amount_total
                                   and sale_order.state != 'cancel'"
                             class="alert alert-success mt-3"
                             role="alert"
@@ -186,7 +189,7 @@
                                     t-elif="sale_order._has_to_be_paid()
                                             or (
                                                 payment_amount
-                                                and sale_order.amount_paid &lt; sale_order.amount_total
+                                                and sale_order.amount_paid &lt; amount_total
                                                 and sale_order.state != 'cancel'
                                             )"
                                     id="o_sale_portal_paynow"
@@ -528,7 +531,7 @@
             <button name="o_sale_portal_amount_prepayment_button" class="btn btn-light active">
                 Down payment <br/>
                 <span
-                    t-if="not payment_amount or payment_amount == sale_order.amount_total"
+                    t-if="not payment_amount or payment_amount == amount_total"
                     t-out="prepayment_amount"
                     t-options="{
                         'widget': 'monetary',
@@ -549,7 +552,7 @@
             <button name="o_sale_portal_amount_total_button" class="btn btn-light">
                 Full amount <br/>
                 <span
-                    t-out="sale_order.amount_total"
+                    t-out="amount_total"
                     t-options="{
                         'widget': 'monetary',
                         'display_currency': sale_order.currency_id,

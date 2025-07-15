@@ -231,16 +231,17 @@ class CustomerPortal(payment_portal.PaymentPortal):
         logged_in = not request.env.user._is_public()
         partner_sudo = request.env.user.partner_id if logged_in else order_sudo.partner_id
         currency = order_sudo.currency_id
+        amount_total = order_sudo._get_amount_to_pay()['amount_total']
 
         if is_down_payment:
-            if payment_amount and payment_amount < order_sudo.amount_total:
+            if payment_amount and payment_amount < amount_total:
                 amount = payment_amount
             else:
                 amount = order_sudo._get_prepayment_required_amount()
         elif order_sudo.state == 'sale':
-            amount = payment_amount or order_sudo.amount_total
+            amount = payment_amount or amount_total
         else:
-            amount = order_sudo.amount_total
+            amount = amount_total
 
         availability_report = {}
         # Select all the payment methods and tokens that match the payment context.

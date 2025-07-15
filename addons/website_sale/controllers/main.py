@@ -1620,6 +1620,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return {
             'order': order,
             'website_sale_order': order,
+            'amount_total': order.amount_total,
             'order_tracking_info': self.order_2_return_dict(order),
         }
 
