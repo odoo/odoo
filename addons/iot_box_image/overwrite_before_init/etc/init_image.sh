@@ -73,6 +73,9 @@ odoo_dev() {
   sudo -u odoo git remote add dev https://github.com/odoo-dev/odoo.git
   sudo -u odoo git fetch dev \$1 --depth=1 --prune
   sudo -u odoo git reset --hard FETCH_HEAD
+  sudo -u odoo git branch -m \$1
+  sudo chroot /root_bypass_ramdisks /bin/bash -c \"export DEBIAN_FRONTEND=noninteractive && xargs apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install < /home/pi/odoo/addons/iot_box_image/configuration/packages.txt\"
+  sudo -u odoo pip3 install -r /home/pi/odoo/addons/iot_box_image/configuration/requirements.txt --break-system-package
   cd \$pwd
 }
 
@@ -87,6 +90,9 @@ odoo_origin() {
   sudo -u odoo git remote set-url origin https://github.com/odoo/odoo.git  # ensure odoo repository
   sudo -u odoo git fetch origin \$1 --depth=1 --prune
   sudo -u odoo git reset --hard FETCH_HEAD
+  sudo -u odoo git branch -m \$1
+  sudo chroot /root_bypass_ramdisks /bin/bash -c \"export DEBIAN_FRONTEND=noninteractive && xargs apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install < /home/pi/odoo/addons/iot_box_image/configuration/packages.txt\"
+  sudo -u odoo pip3 install -r /home/pi/odoo/addons/iot_box_image/configuration/requirements.txt --break-system-package
   cd \$pwd
 }
 
