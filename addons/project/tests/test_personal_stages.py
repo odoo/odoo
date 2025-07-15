@@ -2,7 +2,7 @@
 
 from odoo import Command
 from odoo.exceptions import UserError
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, tagged, new_test_user
 
 from .test_project_base import TestProjectCommon
 
@@ -92,28 +92,6 @@ class TestPersonalStages(TestProjectCommon):
             'read_group should not have returned more tasks than the user is assigned to.')
         self.assertEqual(1, total_stage_0)
         self.assertEqual(1, total_stage_1)
-
-    def test_default_personal_stage(self):
-        user_without_stage, user_with_stages = self.env['res.users'].create([{
-            'login': 'test_no_stage',
-            'name': "Test User without stage",
-        }, {
-            'login': 'test_stages',
-            'name': "Test User with stages",
-        }])
-        personal_stage = self.env['project.task.type'].create({
-            'name': 'personal stage',
-            'user_id': user_with_stages.id,
-        })
-        ProjectTaskTypeSudo = self.env['project.task.type'].sudo()
-        # ensure that a user without personal stage is getting the default stages
-        self.task_1.with_user(user_without_stage)._ensure_personal_stages()
-        stages = ProjectTaskTypeSudo.search([('user_id', '=', user_without_stage.id)])
-        self.assertEqual(len(stages), 7, "As this user had no personal stage, the default ones should have been created for him")
-        # ensure that the user's personal stages are not changing if the user already had some
-        self.task_1.with_user(user_with_stages)._ensure_personal_stages()
-        stages = ProjectTaskTypeSudo.search([('user_id', '=', user_with_stages.id)])
-        self.assertEqual(stages, personal_stage, "As this user already had a personal stage, none should be added")
 
     def test_delete_personal_stage(self):
         """
@@ -377,6 +355,36 @@ class TestPersonalStages(TestProjectCommon):
         empty_stages.sudo().unlink()
         self.assertFalse(self.env['project.task.type'].search_count([('id', 'in', empty_stages.ids)]),
                          "All stages, wether they are personal or not, should be able to be deleted in batch")
+
+    def test_new_personal_stages_created_for_new_internal_user(self):
+        internal_user = new_test_user(
+            self.env,
+            login="internal_user",
+            groups="base.group_user",
+        )
+        self.assertEqual(7, self.env["project.task.type"].search_count([("user_id", "=", internal_user.id)]), "Personal stages seems to have a wrong count")
+
+    def test_new_personal_stages_created_for_when_user_becomes_internal(self):
+        portal_user = new_test_user(
+            self.env,
+            login="portal_user",
+            groups="base.group_portal",
+        )
+        self.assertEqual(0, self.env["project.task.type"].search_count([("user_id", "=", portal_user.id)]), "Portal users should never have personal stages when created")
+        public_user = new_test_user(
+            self.env,
+            login="public_user",
+            groups="base.group_public",
+        )
+        self.assertEqual(0, self.env["project.task.type"].search_count([("user_id", "=", public_user.id)]), "Public users should never have personal stages when created")
+        # Converting portal user to internal user
+        portal_user.group_ids -= self.env.ref("base.group_portal")
+        portal_user.group_ids += self.env.ref("base.group_user")
+        self.assertEqual(7, self.env["project.task.type"].search_count([("user_id", "=", portal_user.id)]), "Portal users after becoming internal user should have 7 personal stages")
+        # Converting public user to internal user
+        public_user.group_ids -= self.env.ref("base.group_public")
+        public_user.group_ids += self.env.ref("base.group_user")
+        self.assertEqual(7, self.env["project.task.type"].search_count([("user_id", "=", public_user.id)]), "Public users after becoming internal user should have 7 personal stages")
 
 @tagged('-at_install', 'post_install')
 class TestPersonalStageTour(HttpCase, TestProjectCommon):
