@@ -296,16 +296,50 @@ export class PosOrderline extends Base {
 
         // just like in sale.order changing the qty will recompute the unit price
         if (!keep_price && this.price_type === "original") {
+<<<<<<< 4aff082f551101f98684c6d397c7aeae6b9d44ef
             const productTemplate = this.product_id.product_tmpl_id;
             this.setUnitPrice(
                 productTemplate.getPrice(
+||||||| 8f50b9bbfce15e9f43517c4be4a1af75ee2abf8c
+            this.set_unit_price(
+                this.product_id.get_price(
+=======
+            if (this.isLotTracked()) {
+                const related_lines = [];
+                const price = this.product_id.get_price(
+>>>>>>> 55c917a8b79d42a79c10bad2abf0d79bca6e4fe7
                     this.order_id.pricelist_id,
+<<<<<<< 4aff082f551101f98684c6d397c7aeae6b9d44ef
                     this.getQuantity(),
                     this.getPriceExtra(),
                     false,
                     this.product_id
                 )
             );
+||||||| 8f50b9bbfce15e9f43517c4be4a1af75ee2abf8c
+                    this.get_quantity(),
+                    this.get_price_extra()
+                )
+            );
+=======
+                    this.get_quantity(),
+                    this.get_price_extra(),
+                    false,
+                    false,
+                    this,
+                    related_lines
+                );
+                related_lines.forEach((line) => line.set_unit_price(price));
+            } else {
+                this.set_unit_price(
+                    this.product_id.get_price(
+                        this.order_id.pricelist_id,
+                        this.get_quantity(),
+                        this.get_price_extra()
+                    )
+                );
+            }
+>>>>>>> 55c917a8b79d42a79c10bad2abf0d79bca6e4fe7
         }
 
         this.setDirty();

@@ -1078,6 +1078,56 @@ export class PosStore extends WithLazyGetterTrap {
                 false,
                 values.product_id
             );
+<<<<<<< 4aff082f551101f98684c6d397c7aeae6b9d44ef:addons/point_of_sale/static/src/app/services/pos_store.js
+||||||| 8f50b9bbfce15e9f43517c4be4a1af75ee2abf8c:addons/point_of_sale/static/src/app/store/pos_store.js
+
+            values.price_unit = price;
+        }
+
+        const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
+        line.setOptions(options);
+        this.selectOrderLine(order, line);
+        if (configure) {
+            this.numberBuffer.reset();
+        }
+        const selectedOrderline = order.get_selected_orderline();
+        if (options.draftPackLotLines && configure) {
+            selectedOrderline.setPackLotLines({
+                ...options.draftPackLotLines,
+                setQuantity: options.quantity === undefined,
+            });
+=======
+
+            values.price_unit = price;
+        }
+
+        const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
+
+        if (values.product_id.tracking === "lot") {
+            const related_lines = [];
+            const price = values.product_id.get_price(
+                order.pricelist_id,
+                values.qty,
+                values.price_extra,
+                false,
+                false,
+                line,
+                related_lines
+            );
+            related_lines.forEach((line) => line.set_unit_price(price));
+        }
+        line.setOptions(options);
+        this.selectOrderLine(order, line);
+        if (configure) {
+            this.numberBuffer.reset();
+        }
+        const selectedOrderline = order.get_selected_orderline();
+        if (options.draftPackLotLines && configure) {
+            selectedOrderline.setPackLotLines({
+                ...options.draftPackLotLines,
+                setQuantity: options.quantity === undefined,
+            });
+>>>>>>> 55c917a8b79d42a79c10bad2abf0d79bca6e4fe7:addons/point_of_sale/static/src/app/store/pos_store.js
         }
     }
 
