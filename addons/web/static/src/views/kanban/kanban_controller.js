@@ -423,10 +423,12 @@ export class KanbanController extends Component {
         } else if (onCreate && onCreate !== "quick_create") {
             const options = {
                 additionalContext: root.context,
-                onClose: async () => {
-                    await root.load();
-                    this.model.useSampleModel = false;
-                    this.render(true); // FIXME WOWL reactivity
+                onClose: async ({ noReload } = {}) => {
+                    if (!noReload) {
+                        await root.load();
+                        this.model.useSampleModel = false;
+                        this.render(true); // FIXME WOWL reactivity
+                    }
                 },
             };
             await this.actionService.doAction(onCreate, options);
