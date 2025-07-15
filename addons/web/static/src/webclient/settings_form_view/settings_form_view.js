@@ -36,6 +36,8 @@ class SettingRecord extends formView.Model.Record {
 }
 
 class SettingModel extends formView.Model {
+    static withCache = false;
+
     setup(params) {
         super.setup(...arguments);
         this._headerFields = params.headerFields;
