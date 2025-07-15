@@ -20,9 +20,9 @@ export class CalendarRenderer extends Component {
         editRecord: Function,
         deleteRecord: Function,
         setDate: Function,
-        sidePanelMode: String,
-        multiCreateRecords: Function,
-        multiDeleteRecords: Function,
+        callbackRecorder: Object,
+        onSquareSelection: Function,
+        cleanSquareSelection: Function,
     };
     get concreteRenderer() {
         return this.constructor.components[this.props.model.scale];
