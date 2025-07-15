@@ -79,6 +79,13 @@ TRANSLATED_ATTRS = {
 
 TRANSLATED_ATTRS.update({f't-attf-{attr}' for attr in TRANSLATED_ATTRS})
 
+# {column value of "ir_model_fields"."translate": orm field.translate}
+FIELD_TRANSLATE = {
+    None: False,
+    'standard': True,
+}
+
+
 def is_translatable_attrib(key):
     return key in TRANSLATED_ATTRS or key.endswith('.translate')
 
@@ -386,6 +393,9 @@ xml_translate.is_text = is_text
 html_translate.is_text = is_text
 
 xml_translate.term_adapter = xml_term_adapter
+
+FIELD_TRANSLATE['html_translate'] = html_translate
+FIELD_TRANSLATE['xml_translate'] = xml_translate
 
 
 def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> str:
