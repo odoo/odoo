@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.MultiCreatePopover">
+        <div class="o_multi_create_popover">
+            <div class="popover-body o_form_view">
+                <div t-if="this.multiCreateData.timeRange" class="d-flex align-items-baseline gap-2">
+                    <TimePicker
+                        value="this.multiCreateData.timeRange.start"
+                        onChange="(time) => this.setMultiCreateTimeRange({start: time})"
+                        onInvalid="() => this.setMultiCreateTimeRange({start: null})"
+                        showSeconds="false"
+                    />
+                    <i class="fa fa-arrow-right"/>
+                    <TimePicker
+                        value="this.multiCreateData.timeRange.end"
+                        onChange="(time) => this.setMultiCreateTimeRange({end: time})"
+                        onInvalid="() => this.setMultiCreateTimeRange({end: null})"
+                        showSeconds="false"
+                    />
+                </div>
+                <Record t-props="multiCreateRecordProps" t-slot-scope="data">
+                    <FormRenderer record="data.record" archInfo="multiCreateArchInfo" class="'p-0'"/>
+                </Record>
+            </div>
+            <div class="popover-footer p-3 pt-0 d-flex gap-1">
+                <button class="btn btn-sm btn-primary" t-on-click="() => this.onAdd()">Add</button>
+                <button class="btn btn-sm btn-secondary" t-on-click="() => this.props.close()">Discard</button>
+            </div>
+        </div>
+    </t>
+
+</templates>

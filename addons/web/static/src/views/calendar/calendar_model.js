@@ -5,7 +5,6 @@ import {
     deserializeDateTime,
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
-import { Time } from "@web/core/l10n/time";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
@@ -17,10 +16,10 @@ import { makeContext } from "@web/core/context";
 import { groupBy } from "@web/core/utils/arrays";
 import { Cache } from "@web/core/utils/cache";
 import { formatFloat } from "@web/core/utils/numbers";
-import { omit } from "@web/core/utils/objects";
 import { useDebounced } from "@web/core/utils/timing";
 import { computeAggregatedValue } from "@web/views/utils";
-import { toRaw } from "@odoo/owl";
+
+const { DateTime } = luxon;
 
 export class CalendarModel extends Model {
     static DEBOUNCED_LOAD_DELAY = 600;
@@ -36,8 +35,7 @@ export class CalendarModel extends Model {
         const fieldNodes = params.popoverFieldNodes;
         const { activeFields, fields } = extractFieldsFromArchInfo({ fieldNodes }, params.fields);
         this.meta = {
-            ...omit(params, "state"),
-            date: params.state?.meta.date || null,
+            ...params,
             activeFields,
             fields,
             firstDayOfWeek: (localization.weekStart || 0) % 7,
@@ -53,19 +51,6 @@ export class CalendarModel extends Model {
             range: null,
             records: {},
             unusualDays: [],
-            multiCreate: {
-                record: null,
-                timeRange: {
-                    start: new Time(
-                        this.getItemFromStorage("multiCreateTimeStart", { hour: 12, minute: 0 })
-                    ),
-                    end: new Time(
-                        this.getItemFromStorage("multiCreateTimeEnd", { hour: 13, minute: 0 })
-                    ),
-                },
-                values: null,
-                ...params.state?.multiCreate,
-            },
         };
 
         const debouncedLoadDelay = this.constructor.DEBOUNCED_LOAD_DELAY;
@@ -82,7 +67,7 @@ export class CalendarModel extends Model {
             this.meta.date =
                 params.context && params.context.initial_date
                     ? deserializeDateTime(params.context.initial_date).startOf("day")
-                    : luxon.DateTime.local().startOf("day");
+                    : DateTime.local().startOf("day");
         }
         // Prevent picking a scale that is not supported by the view
         if (!this.meta.scales.includes(this.meta.scale)) {
@@ -127,27 +112,7 @@ export class CalendarModel extends Model {
         return this.meta.eventLimit;
     }
     get exportedState() {
-        const state = {
-            meta: this.meta,
-        };
-        if (this.hasMultiCreate && this.data.multiCreate.record) {
-            const multiCreateFormRecord = toRaw(this.data.multiCreate.record);
-            const values = Object.assign({}, multiCreateFormRecord.data);
-            for (const [fieldName, data] of Object.entries(multiCreateFormRecord.data)) {
-                if (
-                    ["one2many", "many2many"].includes(multiCreateFormRecord.fields[fieldName].type)
-                ) {
-                    values[fieldName] = data.records.map((record) =>
-                        Object.assign({ id: record.resId }, record.data)
-                    );
-                }
-            }
-            state.multiCreate = {
-                values,
-                timeRange: this.data.multiCreate.timeRange,
-            };
-        }
-        return state;
+        return { date: this.meta.date };
     }
     get fieldMapping() {
         return this.meta.fieldMapping;
@@ -266,41 +231,14 @@ export class CalendarModel extends Model {
      * Optionally time range can be specified to set the start and end time.
      * Also, if there is a filter section, the first filter section will be chosen as additional value for the record.
      *
+     * @param {Object} multiCreateData
      * @param {DateTime[]} dates array of Date
      * @returns {Promise<*>}
      */
-    async multiCreateRecords(dates) {
-        // Check required attribute of fields in form view
-        const isValid = await this.data.multiCreate.record.checkValidity({
-            displayNotification: true,
-        });
-        if (!isValid) {
-            return;
-        }
-
+    async multiCreateRecords(multiCreateData, dates) {
         const records = [];
-        const values = await this.data.multiCreate.record.getChanges();
-        const timeRange = this.data.multiCreate.timeRange;
-
-        if (this.showMultiCreateTimeRange) {
-            if (!timeRange.start || !timeRange.end) {
-                this.notification.add(_t("Invalid time range"), {
-                    title: "User Error",
-                    type: "warning",
-                });
-                return;
-            }
-            if (
-                luxon.DateTime.fromObject(timeRange.start.toObject()) >
-                luxon.DateTime.fromObject(timeRange.end.toObject())
-            ) {
-                this.notification.add(_t("Start time should be before end time"), {
-                    title: "User Error",
-                    type: "warning",
-                });
-                return;
-            }
-        }
+        const values = await multiCreateData.record.getChanges();
+        const timeRange = multiCreateData.timeRange;
 
         // we deliberately only use the values of the first filter section, to avoid combinatorial explosion
         const [section] = this.filterSections;
@@ -1045,32 +983,5 @@ export class CalendarModel extends Model {
             colorIndex,
             hasAvatar: !!value,
         };
-    }
-
-    setMultiCreateTimeRange(timeRange) {
-        if (timeRange.start) {
-            this.setItemInStorage("multiCreateTimeStart", timeRange.start);
-        }
-        if (timeRange.end) {
-            this.setItemInStorage("multiCreateTimeEnd", timeRange.end);
-        }
-        Object.assign(this.data.multiCreate.timeRange, timeRange);
-    }
-
-    generateLocalStorageKey(key) {
-        return `calendar_${this.resModel}_${key}`;
-    }
-
-    getItemFromStorage(key, defaultValue) {
-        const item = browser.localStorage.getItem(this.generateLocalStorageKey(key));
-        try {
-            return item ? JSON.parse(item) : defaultValue;
-        } catch {
-            return defaultValue;
-        }
-    }
-
-    setItemInStorage(key, value) {
-        browser.localStorage.setItem(this.generateLocalStorageKey(key), JSON.stringify(value));
     }
 }
