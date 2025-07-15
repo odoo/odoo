@@ -69,7 +69,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
 
     def test_read_purchase_order(self):
         """ Check that a purchase user can read all purchase order and 'in' invoices"""
-        purchase_user_2 = self.purchase_user.copy({
+        purchase_user_2 = self.purchase_user.sudo().copy({
             'name': 'Purchase user 2',
             'login': 'purchaseUser2',
             'email': 'pu2@odoo.com',

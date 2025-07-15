@@ -48,12 +48,12 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             company_ids=[Command.set(cls.env.companies.ids)],
         )
 
-        cls.expense_employee = cls.env['hr.employee'].create({
+        cls.expense_employee = cls.env['hr.employee'].sudo().create({
             'name': 'expense_employee',
             'user_id': cls.expense_user_employee.id,
             'expense_manager_id': cls.expense_user_manager.id,
             'work_contact_id': cls.expense_user_employee.partner_id.id,
-        })
+        }).sudo(False)
 
         # Allow the current accounting user to access the expenses.
         cls.env.user.group_ids |= group_expense_manager

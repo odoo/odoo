@@ -13,11 +13,11 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
     def test_expense_access_rights(self):
         """ The expense employee can't be able to create an expense for someone else. """
 
-        expense_employee_2 = self.env['hr.employee'].create({
+        expense_employee_2 = self.env['hr.employee'].sudo().create({
             'name': 'expense_employee_2',
             'user_id': self.env.user.id,
             'work_contact_id': self.env.user.partner_id.id,
-        })
+        }).sudo(False)
 
         with self.assertRaises(AccessError):
             self.env['hr.expense'].with_user(self.expense_user_employee).create({
@@ -32,13 +32,13 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
         # The expense base user (without other rights) is able to create and read sheet
 
         user = new_test_user(self.env, login='test-expense', groups='base.group_user')
-        expense_employee = self.env['hr.employee'].create({
+        expense_employee = self.env['hr.employee'].sudo().create({
             'name': 'expense_employee_base_user',
             'user_id': user.id,
             'work_contact_id': user.partner_id.id,
             'expense_manager_id': self.expense_user_manager.id,
             'address_id': user.partner_id.id,
-        })
+        }).sudo(False)
 
         expense = self.env['hr.expense'].with_user(user).create({
             'name': 'First Expense for employee',

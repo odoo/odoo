@@ -31,7 +31,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
         # Create a new company with the foreign currency.
         foreign_company = self.company_data_2['company']
         foreign_company.currency_id = self.foreign_currency
-        foreign_employee = self.env['hr.employee'].create({
+        foreign_employee = self.env['hr.employee'].sudo().create({
             'name': 'Foreign employee',
             'company_id': foreign_company.id,
             'expense_manager_id': self.expense_user_manager.id,
