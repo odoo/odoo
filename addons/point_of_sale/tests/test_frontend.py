@@ -348,6 +348,11 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 'applied_on': '0_product_variant',
                 'min_quantity': 2,
                 'product_id': env.ref('point_of_sale.product_product_consumable').id,
+            }), (0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 1,
+                'min_quantity': 5,
+                'product_tmpl_id': cls.monitor_stand.product_tmpl_id.id,
             })],
         })
 
@@ -585,6 +590,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
         self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
         self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
+
+    def test_03_pos_with_lots(self):
+
+        # open a session, the /pos/ui controller will redirect to it
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        self.monitor_stand.tracking = 'lot'
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_03_pos_with_lots', login="pos_user")
 
     def test_04_product_configurator(self):
         # Making one attribute inactive to verify that it doesn't show
