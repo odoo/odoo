@@ -955,6 +955,22 @@ class Meeting(models.Model):
             '&', ('privacy', '=', False), ('user_id.res_users_settings_id', 'in', public_calendars_settings)
         ]
 
+    def _is_event_over(self):
+        """Check if the event is over. This method is used to check if the event
+        should trigger invitations with Google Calendar.
+        :return: True if the event is over, False otherwise
+        """
+        self.ensure_one()
+        now = fields.Datetime.now()
+        today = fields.Date.today()
+
+        # For all-day events
+        if self.allday:
+            return self.stop_date and self.stop_date < today
+
+        # For timed events
+        return self.stop and self.stop < now
+
     # ------------------------------------------------------------
     # ACTIONS
     # ------------------------------------------------------------
