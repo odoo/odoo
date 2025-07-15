@@ -274,6 +274,7 @@
     <record id="project_task_action_todo" model="ir.actions.act_window">
         <field name="name">To-dos</field>
         <field name="res_model">project.task</field>
+        <field name="path">to-do</field>
         <field name="domain">[('user_ids', 'in', [uid]), ('project_id', '=', False), ('parent_id', '=', False)]</field>
         <field name="view_mode">kanban,form,list,calendar,activity</field>
         <field name="search_view_id" ref="project_task_view_todo_search"/>
@@ -321,17 +322,6 @@
         <field name="view_mode">activity</field>
         <field name="view_id" ref="project_task_view_todo_activity"/>
         <field name="act_window_id" ref="project_task_action_todo"/>
-    </record>
-
-    <!-- Todo pre-loading action -->
-    <record id="project_task_preload_action_todo" model="ir.actions.server">
-        <field name="name">menu load To-dos</field>
-        <field name="path">to-do</field>
-        <field name="model_id" ref="project.model_project_task"/>
-        <field name="state">code</field>
-        <field name="code">
-            model._ensure_onboarding_todo(); action = env["ir.actions.actions"]._for_xml_id("project_todo.project_task_action_todo")
-        </field>
     </record>
 
     <!-- Conversion actions-->
