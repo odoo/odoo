@@ -47,7 +47,7 @@ class ReportPosOrder(models.Model):
                 SELECT
                     pol.id AS pos_order_line_id,
                     pm.pos_order_id as pos_order_id,
-                    (array_agg(pm.payment_method_id))[1] AS payment_method_id
+                    (array_agg(pm.payment_method_id ORDER BY pm.id ASC))[1] AS payment_method_id
                 FROM pos_order_line pol
                 LEFT JOIN pos_order po ON (po.id = pol.order_id)
                 LEFT JOIN pos_payment pm ON (pm.pos_order_id=po.id)
