@@ -41,7 +41,7 @@ export class CustomColorPicker extends Component {
         this.colorComponents = {};
         this.uniqueId = uniqueId("colorpicker");
         this.selectedHexValue = "";
-        if (!this.props.selectedColor || this.props.selectedColor === "#00000000") {
+        if (!this.props.selectedColor) {
             this.props.selectedColor = this.props.defaultColor;
         }
         this.debouncedOnChangeInputs = debounce(this.onChangeInputs.bind(this), 10, true);
@@ -222,6 +222,15 @@ export class CustomColorPicker extends Component {
      * @param {integer} l
      */
     _updateHsl(h, s, l) {
+        // Remove full darkness/brightness and non-saturation in case hue is changed
+        if (0.1 < Math.abs(h - this.colorComponents.hue)) {
+            if (l < 0.1 || 99.9 < l) {
+                l = 50;
+            }
+            if (s < 0.1) {
+                s = 100;
+            }
+        }
         // Remove full transparency in case some lightness is added
         let a = this.colorComponents.opacity;
         if (a < 0.1 && l > 0.1) {
