@@ -1658,15 +1658,6 @@ class ProjectTask(models.Model):
             res.update(super(ProjectTask, leftover)._notify_get_reply_to(default=default, author_id=author_id))
         return res
 
-    def _ensure_personal_stages(self):
-        user = self.env.user
-        ProjectTaskTypeSudo = self.env['project.task.type'].sudo()
-        # In the case no stages have been found, we create the default stages for the user
-        if not ProjectTaskTypeSudo.search_count([('user_id', '=', user.id)], limit=1):
-            ProjectTaskTypeSudo.with_context(lang=user.lang, default_project_id=False).create(
-                self.with_context(lang=user.lang)._get_default_personal_stage_create_vals(user.id)
-            )
-
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         # remove default author when going through the mail gateway. Indeed we
