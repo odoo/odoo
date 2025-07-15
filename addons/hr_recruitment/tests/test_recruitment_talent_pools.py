@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from odoo.addons.mail.tests.common import MailCase
 from odoo.fields import Domain
 from odoo.tests import Form, tagged, TransactionCase
 
 
 @tagged("recruitment")
-class TestRecruitmentTalentPool(TransactionCase):
+class TestRecruitmentTalentPool(TransactionCase, MailCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -25,6 +25,11 @@ class TestRecruitmentTalentPool(TransactionCase):
                 {"name": "Job 3"},
             ]
         )
+        cls.mail_template = cls.env['mail.template'].create({
+            'name': 'Test stage template',
+            'model_id': cls.env['ir.model']._get_id('hr.applicant'),
+            'subject': 'Job application test',
+        })
 
     def test_add_applicant_to_one_talent_pool(self):
         """
@@ -169,6 +174,13 @@ class TestRecruitmentTalentPool(TransactionCase):
         pool_wizard.applicant_ids = self.t_applicant_1
         talent_pool_applicant = pool_wizard.save()._add_applicants_to_pool()
 
+        recuritment_stage = self.env["hr.recruitment.stage"].create({
+            "name": "Recruitment Stage",
+            "job_ids": self.t_job_2.ids,
+            "template_id": self.mail_template.id,
+            "sequence": 0,
+        })
+
         self.assertEqual(
             len(talent_pool_applicant), 1, "Exactly one 'talent' should be created when adding an applicant to a pool"
         )
@@ -178,6 +190,7 @@ class TestRecruitmentTalentPool(TransactionCase):
         )
         job_wizard.job_ids = self.t_job_2
         job_2_applicant = job_wizard.save()._add_applicants_to_job()
+        self.flush_tracking()
 
         all_applications = self.env["hr.applicant"].search(Domain("partner_name", "=", "Test Applicant 1"))
         self.assertEqual(
@@ -193,6 +206,11 @@ class TestRecruitmentTalentPool(TransactionCase):
         self.assertNotEqual(
             job_2_applicant, talent_pool_applicant, "Job_2_applicant and the talent should not be the same record"
         )
+
+        # Make sure that the stage was populated correctly during creation not in compute,
+        # If it was passed in creation the record will have the mail linked to the stage
+        self.assertEqual(job_2_applicant.stage_id, recuritment_stage)
+        self.assertEqual(job_2_applicant.message_ids[0].subject, self.mail_template.subject)
 
     def test_add_talent_to_multiple_jobs(self):
         """
