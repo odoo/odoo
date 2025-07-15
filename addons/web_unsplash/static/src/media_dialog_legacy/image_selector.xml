@@ -4,11 +4,11 @@
     <xpath expr="//t[@t-if]" position="after">
         <t t-elif="record.mediaType == 'unsplashRecord'">
             <AutoResizeImage src="record.url"
-                author="record.user.name"
-                authorLink="record.user.links.html"
-                name="record.user.name"
-                title="record.user.name"
-                altDescription="record.alt_description"
+                author="record.photographer"
+                authorLink="record.photographer_url"
+                name="record.photographer"
+                title="record.photographer"
+                altDescription="record.alt"
                 selected="this.selectedRecordIds.includes(record.id)"
                 onImageClick="() => this.onClickRecord(record)"
                 minRowHeight="MIN_ROW_HEIGHT"

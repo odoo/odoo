@@ -121,8 +121,9 @@ patch(ImageSelector.prototype, {
             // Ignore duplicates.
             const existingIds = this.state.unsplashRecords.map(existing => existing.id);
             const newImages = images.filter(record => !existingIds.includes(record.id));
+
             const records = newImages.map(record => {
-                const url = new URL(record.urls.regular);
+                const url = new URL(record.src.large);
                 // In small windows, row height could get quite a bit larger than the min, so we keep some leeway.
                 url.searchParams.set('h', 2 * this.MIN_ROW_HEIGHT);
                 url.searchParams.delete('w');
