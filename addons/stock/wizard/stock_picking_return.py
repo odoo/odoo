@@ -12,16 +12,22 @@ class StockReturnPickingLine(models.TransientModel):
     product_id = fields.Many2one('product.product', string="Product", required=True)
     move_quantity = fields.Float(related="move_id.quantity", string="Move Quantity")
     quantity = fields.Float("Quantity", digits='Product Unit', default=1, required=True)
-    uom_id = fields.Many2one('uom.uom', string='Unit', related='product_id.uom_id')
+    uom_id = fields.Many2one('uom.uom', string='Unit', compute='_compute_uom_id')
     wizard_id = fields.Many2one('stock.return.picking', string="Wizard")
     move_id = fields.Many2one('stock.move', "Move")
+
+    @api.depends('move_id.product_uom', 'product_id.uom_id')
+    def _compute_uom_id(self):
+        """ Compute the UoM based on the move's product UoM or the product's default UoM. """
+        for line in self:
+            line.uom_id = line.move_id.product_uom or line.product_id.uom_id
 
     def _prepare_move_default_values(self, new_picking):
         picking = new_picking or self.wizard_id.picking_id
         vals = {
             'product_id': self.product_id.id,
             'product_uom_qty': self.quantity,
-            'product_uom': self.product_id.uom_id.id,
+            'product_uom': self.uom_id.id,
             'picking_id': picking.id,
             'state': 'draft',
             'date': fields.Datetime.now(),
@@ -124,7 +130,6 @@ class StockReturnPicking(models.TransientModel):
             'product_id': stock_move.product_id.id,
             'quantity': 0,
             'move_id': stock_move.id,
-            'uom_id': stock_move.product_id.uom_id.id,
         }
 
     def _prepare_picking_default_values(self):
@@ -213,7 +218,7 @@ class StockReturnPicking(models.TransientModel):
                 if not move.origin_returned_move_id or move.origin_returned_move_id != stock_move:
                     continue
                 quantity -= move.quantity
-            quantity = stock_move.product_id.uom_id.round(quantity)
+            quantity = stock_move.product_uom.round(quantity)
             return_move.quantity = quantity
         return self.action_create_returns()
 

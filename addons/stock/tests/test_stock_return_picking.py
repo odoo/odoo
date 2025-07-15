@@ -4,6 +4,7 @@ from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
 
+
 class TestReturnPicking(TestStockCommon):
 
     def test_stock_return_picking_line_creation(self):
@@ -42,13 +43,13 @@ class TestReturnPicking(TestStockCommon):
         # Check return line of uom_unit move
         return_line = ReturnPickingLineObj.search([('move_id', '=', move_1.id), ('wizard_id.picking_id', '=', picking_out.id)], limit=1)
         self.assertEqual(return_line.product_id.id, self.productA.id, 'Return line should have exact same product as outgoing move')
-        self.assertEqual(return_line.uom_id.id, self.uom_unit.id, 'Return line should have exact same uom as product uom')
+        self.assertEqual(return_line.uom_id.id, move_1.product_uom.id, 'Return line should have exact same uom as move uom')
         self.assertEqual(return_line.quantity, 0, 'Return line should have 0 quantity')
         return_line.quantity = 2
         # Check return line of uom_dozen move
         return_line = ReturnPickingLineObj.search([('move_id', '=', move_2.id), ('wizard_id.picking_id', '=', picking_out.id)], limit=1)
         self.assertEqual(return_line.product_id.id, self.productA.id, 'Return line should have exact same product as outgoing move')
-        self.assertEqual(return_line.uom_id.id, self.uom_unit.id, 'Return line should have exact same uom as product uom')
+        self.assertEqual(return_line.uom_id.id, move_2.product_uom.id, 'Return line should have exact same uom as move uom')
         self.assertEqual(return_line.quantity, 0, 'Return line should have 0 quantity')
         return_line.quantity = 1
 
@@ -224,3 +225,44 @@ class TestReturnPicking(TestStockCommon):
         self.assertEqual(exchange_picking.return_count, 0)
         self.assertEqual(exchange_picking.picking_type_id, self.picking_type_in)
         self.assertEqual(len(exchange_picking.move_line_ids), 1)
+
+    def test_return_picking_with_different_uom(self):
+        """
+        Ensure that the return picking uses the same UoM as the original stock move.
+
+        - A product has 'kg' as its default UoM.
+        - A stock move is created using 'g' as the UoM with a quantity of 1000 g.
+        - A return is initiated for this move.
+
+        Expected behavior:
+        - The return picking move should use 'g' as the UoM (same as the original move),
+          not the product's default UoM ('kg').
+        """
+        receipt = self.PickingObj.create({
+            'partner_id': self.partner.id,
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.kgB.id,
+                'product_uom_qty': 1000,
+                'product_uom': self.uom_gram.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+            })],
+        })
+        receipt.action_confirm()
+        self.assertEqual(receipt.state, 'assigned')
+        receipt.button_validate()
+        # create a return picking
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=receipt.ids, active_id=receipt.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.quantity = 1000.0
+        stock_return_picking_action = stock_return_picking.action_create_returns()
+        return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        self.assertEqual(return_picking.move_ids.product_uom.id, self.uom_gram.id)
+        self.assertEqual(return_picking.move_ids.product_uom_qty, 1000.0)
+        return_picking.button_validate()
+        self.assertEqual(return_picking.state, 'done')
