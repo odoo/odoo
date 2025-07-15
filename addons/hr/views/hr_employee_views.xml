@@ -14,7 +14,7 @@
                         <field name="department_id" icon="fa-users" enable_counters="1"/>
                     </searchpanel>
                     <field name="parent_id" string="Manager" domain="[('company_id', 'in', allowed_company_ids)]"/>
-                    <field name="contract_date_start"/>
+                    <field name="contract_date_start" groups="hr.group_hr_manager"/>
                     <field name="job_id"/>
                     <field name="coach_id" domain="[('company_id', 'in', allowed_company_ids)]"/>
                     <field name="category_ids" groups="hr.group_hr_user"/>
@@ -46,7 +46,8 @@
                                 '|',
                                     ('contract_date_end', '=', False),
                                     ('contract_date_end', '>=', context_today().strftime('%Y-%m-%d'))
-                            ]"/>
+                            ]"
+                            groups="hr.group_hr_manager"/>
                     <filter string="Out of Contract" name="out_of_contract"
                             domain="[
                                 '|',
@@ -56,10 +57,11 @@
                                         '&amp;',
                                             ('contract_date_end', '!=', False),
                                             ('contract_date_end', '&lt;', context_today().strftime('%Y-%m-%d'))
-                            ]"/>
+                             ]"
+                            groups="hr.group_hr_manager"/>
                     <separator />
-                    <filter string="Contract Start Date" name="contract_date_start" date="contract_date_start"/>
-                    <filter string="Contract End Date" name="contract_date_end" date="contract_date_end"/>
+                    <filter string="Contract Start Date" name="contract_date_start" date="contract_date_start" groups="hr.group_hr_manager"/>
+                    <filter string="Contract End Date" name="contract_date_end" date="contract_date_end" groups="hr.group_hr_manager"/>
                     <separator />
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
@@ -69,7 +71,7 @@
                         <filter name="group_employee_type" string="Employee Type" domain="[]" context="{'group_by': 'employee_type'}"/>
                         <separator name="main_groupby_separator"/>
                         <filter name="group_birthday" domain="[]" context="{'group_by': 'birthday'}"/>
-                        <filter name="group_start" string="Start Date" domain="[]" context="{'group_by': 'contract_date_start'}"/>
+                        <filter name="group_start" string="Start Date" domain="[]" context="{'group_by': 'contract_date_start'}" groups="hr.group_hr_manager"/>
                         <separator name="secondary_groupby_separator"/>
                         <separator name="managers_groupby_separator"/>
                         <filter name="group_category_ids" string="Tags" domain="[]" context="{'group_by': 'category_ids'}"/>
