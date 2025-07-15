@@ -290,14 +290,13 @@ class MailActivityMixin(models.AbstractModel):
         activities. Otherwise they stay in the systray and concerning archived
         records it makes no sense. """
         records = self.filtered(self._active_name)
-        res = super(MailActivityMixin, records).action_archive()
         if records:
-            # use a sudo to bypass every access rights; all activities should be removed
+            # use a sudo to bypass every access rights; all activities existing before archival should be removed
             self.env['mail.activity'].sudo().search([
                 ('res_model', '=', self._name),
                 ('res_id', 'in', records.ids)
             ]).unlink()
-        return res
+        return super(MailActivityMixin, records).action_archive()
 
     def activity_send_mail(self, template_id):
         """ Automatically send an email based on the given mail.template, given
