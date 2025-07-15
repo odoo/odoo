@@ -30,7 +30,7 @@
                 <field name="name" string="Number"/>
                 <field name="date_order" widget="date"/>
                 <field name="partner_id"/>
-                <field name="currency_id" column_invisible="True"/> <!-- TODO: to be removed in master -->
+                <field name="currency_id" column_invisible="True"/>
                 <field name="state"
                        decoration-success="state == 'sale'"
                        decoration-info="state == 'draft'"
@@ -65,7 +65,7 @@
                 </div>
             </xpath>
             <xpath expr="//label[@for='fiscal_position_id']" position="before">
-                <field name="l10n_it_edi_doi_use" invisible="True"/> <!-- TODO: to be removed in master -->
+                <field name="l10n_it_edi_doi_use" invisible="True"/>
                 <field name="l10n_it_edi_doi_id"
                        invisible="not l10n_it_edi_doi_use"
                        options='{"no_quick_create": True}'

@@ -10,7 +10,7 @@
             <header position="inside">
                 <button name="l10n_gr_edi_try_send_expense_classification"
                         type="object"
-                        string="Send Expense Classifications to MyDATA"
+                        string="Send Expense Classifications to myDATA"
                         invisible="not l10n_gr_edi_enable_send_expense_classification"/>
             </header>
 
@@ -23,6 +23,7 @@
             <xpath expr="//group[@id='header_right_group']" position="inside">
                 <field name="l10n_gr_edi_available_inv_type" invisible="1"/>
                 <field name="l10n_gr_edi_inv_type"
+                       string="Invoice Type"
                        widget="dynamic_selection"
                        options="{'available_field': 'l10n_gr_edi_available_inv_type'}"
                        invisible="not l10n_gr_edi_enable_view_mydata"
@@ -36,7 +37,7 @@
                        invisible="not (l10n_gr_edi_enable_view_mydata and l10n_gr_edi_need_payment_method)"
                        required="l10n_gr_edi_need_payment_method"
                        readonly="state != 'draft'"/>
-                <!--The MyDATA Mark field will have the following behaviors:
+                <!--The myDATA Mark field will have the following behaviors:
                     * only appear in greece invoices/bills
                     * always visible on bills, and only visible on invoices when filled
                     * editable only on draft bills -->
@@ -81,10 +82,10 @@
                        readonly="not l10n_gr_edi_need_exemption_category"/>
             </xpath>
 
-            <!-- MyDATA Documents Tab -->
+            <!-- myDATA Documents Tab -->
             <xpath expr="//page[@id='other_tab_entry']" position="after">
                 <page id="l10n_gr_edi_documents"
-                      string="MyDATA"
+                      string="myDATA"
                       invisible="not l10n_gr_edi_document_ids">
                     <field name="l10n_gr_edi_document_ids">
                         <list create="false" delete="false" edit="false" no_open="1"
@@ -148,20 +149,20 @@
                 <field name="l10n_gr_edi_state"/>
             </xpath>
             <xpath expr="//filter[@name='to_check']" position="after">
-                <filter string="To send to MyDATA" name="l10n_gr_edi_state_false"
+                <filter string="To send to myDATA" name="l10n_gr_edi_state_false"
                         domain="[('l10n_gr_edi_state', 'in', (False, 'bill_fetched'))]"/>
-                <filter string="Sent to MyDATA" name="l10n_gr_edi_state_sent"
+                <filter string="Sent to myDATA" name="l10n_gr_edi_state_sent"
                         domain="[('l10n_gr_edi_state', '=', 'invoice_sent')]"/>
             </xpath>
             <xpath expr="//group" position="inside">
-                <filter string="MyDATA Status" name="l10n_gr_edi_state_group"
+                <filter string="myDATA Status" name="l10n_gr_edi_state_group"
                         domain="" context="{'group_by':'l10n_gr_edi_state'}"/>
             </xpath>
         </field>
     </record>
 
     <record id="l10n_gr_edi_action_try_send_batch" model="ir.actions.server">
-        <field name="name">Send to MyDATA</field>
+        <field name="name">Send to myDATA</field>
         <field name="model_id" ref="account.model_account_move"/>
         <field name="binding_model_id" ref="account.model_account_move"/>
         <field name="binding_view_types">list</field>

@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <field name="l10n_latam_use_documents" position="after">
                 <field name="l10n_ar_is_pos" invisible="country_code != 'AR' or not l10n_latam_use_documents or type not in ['sale', 'purchase']"/>
-                <field name="company_partner" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="company_partner" invisible="1"/>
                 <field name="l10n_ar_afip_pos_system" invisible="not l10n_ar_is_pos" required="l10n_ar_is_pos"/>
                 <field name="l10n_ar_afip_pos_number" invisible="not l10n_ar_is_pos" required="l10n_ar_is_pos"/>
                 <field name="l10n_ar_afip_pos_partner_id" invisible="not l10n_ar_is_pos" required="l10n_ar_is_pos"/>

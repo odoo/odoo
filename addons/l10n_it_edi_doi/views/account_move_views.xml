@@ -27,12 +27,12 @@
         <field name="model">account.move</field>
         <field name="arch" type="xml">
             <list string="Invoices" sample="1" decoration-info="state == 'draft'" expand="context.get('expand', False)">
-                <field name="made_sequence_gap" column_invisible="True"/> <!-- TODO: to be removed in master -->
+                <field name="made_sequence_gap" column_invisible="True"/>
                 <field name="name" decoration-bf="1" decoration-danger="made_sequence_gap"/>
                 <field name="invoice_partner_display_name" string="Customer"/>
                 <field name="invoice_date" string="Invoice Date"/>
                 <field name="date" string="Accounting Date" optional="hidden"/>
-                <field name="currency_id" column_invisible="True"/> <!-- TODO: to be removed in master -->
+                <field name="currency_id" column_invisible="True"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
                 <field name="l10n_it_edi_doi_amount" decoration-bf="1" sum="Total" string="Tax excluded"/>
             </list>
@@ -63,7 +63,7 @@
                 </div>
             </xpath>
             <xpath expr="//field[@name='fiscal_position_id']" position="before">
-                <field name="l10n_it_edi_doi_use" invisible="True"/> <!-- TODO: to be removed in master -->
+                <field name="l10n_it_edi_doi_use" invisible="True"/>
                 <field name="l10n_it_edi_doi_id"
                        invisible="not l10n_it_edi_doi_use"
                        readonly="state != 'draft'"

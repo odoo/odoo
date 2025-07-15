@@ -6,8 +6,8 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
             <group name="container_row_2" position="inside">
-                <field name="l10n_my_tin_validation_state" invisible="1"/> <!-- TODO: to be removed in master -->
-                <field name="l10n_my_edi_display_tin_warning" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="l10n_my_tin_validation_state" invisible="1"/>
+                <field name="l10n_my_edi_display_tin_warning" invisible="1"/>
                 <!-- Foreigner with a tax number registered in Malaysia could be customer of an e-invoice. -->
                 <group name="l10n_my_edi" string="MyInvois Information" invisible="'MY' not in fiscal_country_codes">
                     <group colspan="2">

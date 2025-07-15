@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//app[@name='account']/block" position="after">
                 <block title="ETA E-Invoicing Settings" name="egyption_eta_edi" invisible="country_code != 'EG'">
-                    <field name="country_code" invisible="1"/> <!-- TODO: to be removed in master -->
+                    <field name="country_code" invisible="1"/>
                     <setting string="ETA API Integration" help="Enter your API credentials to enable ETA E-Invoicing." company_dependent="1">
                         <div class="content-group">
                             <div class="row mt16">

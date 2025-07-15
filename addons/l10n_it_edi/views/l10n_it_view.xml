@@ -117,8 +117,8 @@
                             data-hotkey="y"/>
                 </xpath>
                 <xpath expr="//sheet" position="before">
-                    <field name="l10n_it_edi_is_self_invoice" invisible="1"/> <!-- TODO: to be removed in master -->
-                    <field name="l10n_it_edi_attachment_id" invisible="1"/> <!-- TODO: to be removed in master -->
+                    <field name="l10n_it_edi_is_self_invoice" invisible="1"/>
+                    <field name="l10n_it_edi_attachment_id" invisible="1"/>
                     <div class="alert alert-warning" role="alert"
                         invisible="not l10n_it_edi_header 
                                    or state == 'draft'
@@ -148,7 +148,7 @@
                                 <field name="l10n_it_stamp_duty" readonly="state != 'draft'"/>
                                 <field name="l10n_it_ddt_id" readonly="state != 'draft'" invisible="move_type not in ('out_invoice', 'out_refund')"/>
                             </group>
-                            <field name="l10n_it_partner_pa" invisible="1"/> <!-- TODO: to be removed in master -->
+                            <field name="l10n_it_partner_pa" invisible="1"/>
                             <group invisible="not l10n_it_partner_pa">
                                 <field name="l10n_it_origin_document_type" readonly="state != 'draft'"/>
                                 <field name="l10n_it_origin_document_name" readonly="state != 'draft'"/>

@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.view_res_bank_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='bic']" position="after">
-                <field name="fiscal_country_codes" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="fiscal_country_codes" invisible="1"/>
                 <field name="l10n_mx_edi_code" invisible="'MX' not in fiscal_country_codes"/>
             </xpath>
         </field>
@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='bank_id']" position="after">
-                <field name="fiscal_country_codes" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="fiscal_country_codes" invisible="1"/>
                 <field name="l10n_mx_edi_clabe" colspan="2" invisible="'MX' not in fiscal_country_codes"/>
             </xpath>
         </field>

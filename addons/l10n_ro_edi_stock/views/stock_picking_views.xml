@@ -6,9 +6,9 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="after">
-                <field name="l10n_ro_edi_stock_enable_send" invisible="1"/> <!-- TODO: to be removed in master -->
-                <field name="l10n_ro_edi_stock_enable_fetch" invisible="1"/> <!-- TODO: to be removed in master -->
-                <field name="l10n_ro_edi_stock_enable_amend" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="l10n_ro_edi_stock_enable_send" invisible="1"/>
+                <field name="l10n_ro_edi_stock_enable_fetch" invisible="1"/>
+                <field name="l10n_ro_edi_stock_enable_amend" invisible="1"/>
 
                 <button name="action_l10n_ro_edi_stock_send_etransport"
                         string="Send eTransport"
@@ -24,7 +24,7 @@
             </xpath>
 
             <xpath expr="//field[@name='owner_id']" position="after">
-                <field name="l10n_ro_edi_stock_state" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="l10n_ro_edi_stock_state" invisible="1"/>
 
                 <field name="l10n_ro_edi_stock_state"
                        invisible="not l10n_ro_edi_stock_enable or state != 'done' or not l10n_ro_edi_stock_state"
@@ -32,12 +32,12 @@
             </xpath>
 
             <xpath expr="//page[@name='note']" position="after">
-                <field name="l10n_ro_edi_stock_enable" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="l10n_ro_edi_stock_enable" invisible="1"/>
 
                 <page name="etransport" string="eTransport" invisible="not l10n_ro_edi_stock_enable">
-                    <field name="l10n_ro_edi_stock_available_operation_scopes" invisible="1"/> <!-- TODO: to be removed in master -->
-                    <field name="l10n_ro_edi_stock_state" invisible="1"/> <!-- TODO: to be removed in master -->
-                    <field name="l10n_ro_edi_stock_fields_readonly" invisible="1"/> <!-- TODO: to be removed in master -->
+                    <field name="l10n_ro_edi_stock_available_operation_scopes" invisible="1"/>
+                    <field name="l10n_ro_edi_stock_state" invisible="1"/>
+                    <field name="l10n_ro_edi_stock_fields_readonly" invisible="1"/>
 
                     <group>
                         <group string="General">
@@ -56,7 +56,7 @@
                         </group>
 
                         <group string="Start Location">
-                            <field name="l10n_ro_edi_stock_available_start_loc_types" invisible="1"/> <!-- TODO: to be removed in master -->
+                            <field name="l10n_ro_edi_stock_available_start_loc_types" invisible="1"/>
                             <field name="l10n_ro_edi_stock_start_loc_type"
                                    widget="dynamic_selection"
                                    options="{'available_field': 'l10n_ro_edi_stock_available_start_loc_types'}"
@@ -67,7 +67,7 @@
                         </group>
 
                         <group string="End Location">
-                            <field name="l10n_ro_edi_stock_available_end_loc_types" invisible="1"/> <!-- TODO: to be removed in master -->
+                            <field name="l10n_ro_edi_stock_available_end_loc_types" invisible="1"/>
                             <field name="l10n_ro_edi_stock_end_loc_type"
                                    widget="dynamic_selection"
                                    options="{'available_field': 'l10n_ro_edi_stock_available_end_loc_types'}"
@@ -88,8 +88,8 @@
                               decoration-danger="state == 'stock_sending_failed'"
                               decoration-warning="state == 'stock_sent'"
                               decoration-success="state == 'stock_validated'">
-                            <field name="message" column_invisible="1"/> <!-- TODO: to be removed in master -->
-                            <field name="attachment_id" column_invisible="1"/> <!-- TODO: to be removed in master -->
+                            <field name="message" column_invisible="1"/>
+                            <field name="attachment_id" column_invisible="1"/>
                             <field name="datetime"/>
                             <field name="state" string="Status" widget="l10n_ro_edi_stock_document_state"/>
                             <field name="l10n_ro_edi_stock_uit" string="UIT"/>

@@ -6,6 +6,7 @@ from odoo import fields, Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tools import file_open
+from odoo.tools.safe_eval import datetime
 
 
 @tagged('post_install', '-at_install')
@@ -30,6 +31,12 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'uom_id': cls.uom_units.id,
             'standard_price': 80.0,
         })
+
+        cls.namespaces = {
+            'rsm': "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
+            'ram': "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+            'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+        }
 
     def import_attachment(self, attachment, journal=None):
         journal = journal or self.company_data["default_journal_purchase"]
@@ -262,11 +269,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'name': 'test_invoice.xml',
         })
         xml_tree = etree.fromstring(xml_attachment.raw)
-        actual_delivery_date = xml_tree.find('.//ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString', {
-            'rsm': "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
-            'ram': "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
-            'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
-        })
+        actual_delivery_date = xml_tree.find('.//ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString', self.namespaces)
         self.assertEqual(actual_delivery_date.text, '20241231')
 
     def test_billing_date_in_cii_xml(self):
@@ -285,18 +288,84 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'name': 'test_invoice.xml',
         })
         xml_tree = etree.fromstring(xml_attachment.raw)
-        start_date = xml_tree.find('.//ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', {
-            'rsm': "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
-            'ram': "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
-            'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
-        })
-        end_date = xml_tree.find('.//ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', {
-            'rsm': "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
-            'ram': "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
-            'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
-        })
+        start_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', self.namespaces)
+        end_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
         self.assertEqual(start_date.text, '20241201')
         self.assertEqual(end_date.text, '20241231')
+
+    def test_export_import_billing_dates(self):
+        if self.env.ref('base.module_account_accountant').state != 'installed':
+            self.skipTest("payment_custom module is not installed")
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_date': "2024-12-01",
+            'invoice_date_due': "2024-12-31",
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'deferred_start_date': "2024-11-19",
+                    'deferred_end_date': "2024-12-11",
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'deferred_end_date': "2024-12-26",
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'deferred_start_date': "2024-11-29",
+                    'deferred_end_date': "2024-12-15",
+                }),
+            ],
+        })
+        invoice.action_post()
+
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
+            'name': 'test_invoice.xml',
+        })
+        xml_tree = etree.fromstring(xml_attachment.raw)
+
+        line_start_dates = xml_tree.findall('.//ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', self.namespaces)
+        self.assertEqual([date.text for date in line_start_dates], ['20241119', '20241201', '20241129'])
+
+        line_end_dates = xml_tree.findall('.//ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
+        self.assertEqual([value.text for value in line_end_dates], ['20241211', '20241226', '20241215'])
+
+        global_start_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', self.namespaces)
+        self.assertEqual(global_start_date.text, '20241119')
+
+        global_end_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
+        self.assertEqual(global_end_date.text, '20241226')
+
+        line_vals = [
+            {
+                'product_id': self.product_a.id,
+                'deferred_start_date': datetime.date(2024, 11, 19),
+                'deferred_end_date': datetime.date(2024, 12, 11),
+            },
+            {
+                'product_id': self.product_a.id,
+                'deferred_start_date': datetime.date(2024, 12, 1),
+                'deferred_end_date': datetime.date(2024, 12, 26),
+            },
+            {
+                'product_id': self.product_a.id,
+                'deferred_start_date': False,
+                'deferred_end_date': False,
+            },
+            {
+                'product_id': self.product_a.id,
+                'deferred_start_date': datetime.date(2024, 11, 29),
+                'deferred_end_date': datetime.date(2024, 12, 15),
+            },
+        ]
+        new_invoice = invoice.journal_id._create_document_from_attachment(xml_attachment.ids)
+        self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
 
     def test_import_partner_fields(self):
         """ We are going to import the e-invoice and check partner is correctly imported."""

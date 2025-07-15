@@ -5,16 +5,16 @@
 # Translators:
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2024
 # Andrzej Gerasimuk, 2025
-# Wil Odoo, 2025
 # Marta Wacławek, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:36+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Marta Wacławek, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -554,6 +554,11 @@ msgstr "Dekoracja wyjątku aktywności"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_state
 msgid "Activity State"
 msgstr "Stan aktywności"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Typ aktywności"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_icon
@@ -2103,7 +2108,7 @@ msgstr "Jest obserwatorem"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_name_custom
 msgid "Is Name Custom"
-msgstr ""
+msgstr "Nazwa niestandardowa"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_officer
@@ -2312,7 +2317,7 @@ msgstr "Maksymalnie"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_allowed_negative
 msgid "Maximum Excess Amount"
-msgstr ""
+msgstr "Maksymalna ilość nadwyżki"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
@@ -2416,7 +2421,7 @@ msgstr "Poranek"
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_allocation_generate_multi_wizard
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_generate_multi_wizard
 msgid "Multiple Requests"
-msgstr ""
+msgstr "Wiele próśb"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__my_activity_date_deadline
@@ -2594,6 +2599,8 @@ msgid ""
 "Non-visible allocations can still be selected when taking a leave, but will "
 "simply not be displayed on the leave dashboard."
 msgstr ""
+"Niewidoczne przypisana mogą wciąż być wybrane podczas brania urlopu, ale "
+"zwyczajnie nie będą wyświetlana na konsoli urlopów."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2765,7 +2772,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a manager can modify a canceled leave."
-msgstr ""
+msgstr "Tylko menadżer może modyfikować anulowany urlop."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2820,7 +2827,7 @@ msgstr "Urlopy rodzicielskie"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
 msgid "Pending Requests"
-msgstr ""
+msgstr "Oczekujące wnioski"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_mandatory_day_view_search
@@ -2880,6 +2887,8 @@ msgid ""
 "Public holidays should be counted in the leave duration when applying for "
 "leaves"
 msgstr ""
+"Przy składaniu wniosku o urlop święta państwowe powinny być liczone w czas "
+"trwania ulropu."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3153,6 +3162,10 @@ msgid ""
 "            #     - Approved by Time Off Officer: The employee's request need to be manually approved\n"
 "            #       by the Time Off Officer, Employee's Approver or both."
 msgstr ""
+"Wybierz poziom zatwierdzenia wymagany w przypadku wnioskowania przez pracownika\n"
+"            #      - Walidacja nie jest wymagana: Wniosek pracownika jest zatwierdzany automatycznie.\n"
+"            #      - Zatwierdzone przez specjalistę ds. czasu wolnego: Wniosek pracownika musi zostać ręcznie \n"
+"            #      - zatwierdzony przez specjalistę ds. czasu wolnego, osobę zatwierdzającą lub oboje."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3410,6 +3423,8 @@ msgid ""
 "The allocation requirement of a time off type cannot be changed once leaves "
 "of that type have been taken. You should create a new time off type instead."
 msgstr ""
+"Wymóg przydzielenia typu urlopu nie może zostać zmieniony, jeśli urlopy tego"
+" typu już zostały wzięte. Zamiast tego powinieneś stworzyć nowy typ urlopu."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__color
@@ -3472,6 +3487,8 @@ msgid ""
 "The maximum excess amount should be greater than 0. If you want to set 0, "
 "disable the negative cap instead."
 msgstr ""
+"Maksymalna kwota nadwyżki powinna być większa niż 0. Jeśli chcesz ustawić "
+"wartość 0, wyłącz limit ujemny."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__expiring_carryover_days
@@ -3479,6 +3496,8 @@ msgid ""
 "The number of carried over days that will expire on "
 "carried_over_days_expiration_date"
 msgstr ""
+"Liczba przeniesionych dni, których ważność wygaśnie z dniem "
+"carried_over_days_expiration_date"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3514,6 +3533,9 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
+"Status jest 'Do zatwierdzenia', kiedy zostaje stworzony wniosek o przydzielenie.\n"
+"Status jest 'Odrzucony', kiedy wniosek o przydzielenie zostanie odrzucony przez menadżera.\n"
+"Statu jest 'Zaakceptowany', kiedy wniosek o przydzielenie zostanie zaakceptowany przez menadżera."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__state
@@ -3607,11 +3629,15 @@ msgid ""
 "This area is automatically filled by the user who validates the allocation "
 "with second level (If time off type need second validation)"
 msgstr ""
+"To pole jest automatycznie wypełniane przez użytkownika, który zatwierdza "
+"przydział na drugim poziomie (jeśli typ urlopu wymaga drugiego "
+"zatwierdzenia)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "This field defines the unit of time after which the accrual ends."
 msgstr ""
+"To pole określa jednostkę czasu, po upływie której naliczanie kończy się."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -3633,7 +3659,7 @@ msgstr "Ta modyfikacja nie jest dozwolona w obecnym stanie."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "This time off cannot be cancelled."
-msgstr ""
+msgstr "Ten urlop nie może zostać anulowany."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -4228,6 +4254,8 @@ msgid ""
 "When the field is checked the balance of an allocation using this accrual "
 "plan will never exceed the specified amount."
 msgstr ""
+"Gdy pole jest zaznaczone, saldo przydziału korzystającego z tego planu "
+"naliczania nigdy nie przekroczy określonej kwoty."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time_yearly
@@ -4235,6 +4263,8 @@ msgid ""
 "When the field is checked the total amount accrued each year will be capped "
 "at the specified amount"
 msgstr ""
+"Gdy pole jest zaznaczone, całkowita kwota naliczona w każdym roku zostanie "
+"ograniczona do określonej kwoty."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
@@ -4296,14 +4326,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You are not allowed to request time off on a Mandatory Day"
-msgstr ""
+msgstr "Nie możesz wnioskować o urlop w dniu obowiązkowym."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
 msgid ""
 "You can define a period of time where the days carried over will be "
 "available"
-msgstr ""
+msgstr "Możesz zdefiniować okres, w którym przeniesione dni będą dostępne."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
@@ -4316,8 +4346,8 @@ msgstr "Nie można rozpocząć naliczania w przeszłości."
 msgid ""
 "You can select the period you need to take off, from start date to end date"
 msgstr ""
-"Możesz wybrać okres, który chcesz odliczyć, od daty początkowej do daty "
-"końcowej"
+"Możesz wybrać okres, w którym potrzebujesz urlopu, od daty początkowej do "
+"daty końcowej"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4368,6 +4398,8 @@ msgid ""
 "You cannot have a cap on yearly accrued time without setting a maximum "
 "amount."
 msgstr ""
+"Nie można wprowadzić limitu rocznego czasu naliczonego bez ustawienia "
+"maksymalnej wartości."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4378,6 +4410,10 @@ msgid ""
 "public holidays, meaning that the balance of those employees would be "
 "affected by this change."
 msgstr ""
+"Nie można modyfikować ustawienia \"Święta państwowe wliczone\", ponieważ co "
+"najmniej jeden                        urlop tego typu pokrywa się ze "
+"świętami państwowymi, co oznacza, że zmiana ta wpłynęłaby na saldo urlopów "
+"tych pracowników."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4489,7 +4525,7 @@ msgstr "Twoje dni wolne"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 msgid "Your time off has been cancelled."
-msgstr ""
+msgstr "Twój urlop został anulowany."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4581,7 +4617,7 @@ msgstr "dni)"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "e.g. Extra recuperation, Company unavailability, ..."
-msgstr ""
+msgstr "np. Dodatkowa rekonwalescencja, niedostępność firmy..."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form

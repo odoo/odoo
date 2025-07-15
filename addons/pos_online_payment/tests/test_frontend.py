@@ -17,7 +17,7 @@ from odoo.exceptions import UserError
 import odoo.tests
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@odoo.tests.tagged('post_install', '-at_install', 'is_tour')
 class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
 
     def _get_url(self):
