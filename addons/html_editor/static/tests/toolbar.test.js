@@ -1110,3 +1110,36 @@ describe("toolbar open and close on user interaction", () => {
         });
     });
 });
+
+describe.tags("desktop");
+describe("toolbar visibility on contenteditable false elements", () => {
+    test("should not open toolbar when selected element is contenteditble false", async () => {
+        await setupEditor('<div contenteditable="false"><p>a[bc<strong>def</strong>gh]i</p></div>');
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(0);
+    });
+
+    test("should open the toolbar when the selected t-out is contenteditable false", async () => {
+        await setupEditor(
+            '<div contenteditable="true"><t t-out="" contenteditable="false">[abc]</t></div>'
+        );
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(1);
+    });
+
+    test("should open the toolbar when the selected t-field is contenteditable false", async () => {
+        await setupEditor(
+            '<div contenteditable="true"><t t-field="" contenteditable="false">[abc]</t></div>'
+        );
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(1);
+    });
+
+    test("should open the toolbar when the selected t-esc is contenteditable=false", async () => {
+        await setupEditor(
+            '<div contenteditable="true"><t t-esc="" contenteditable="false">[abc]</t></div>'
+        );
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(1);
+    });
+});
