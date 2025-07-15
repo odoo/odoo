@@ -2483,18 +2483,17 @@ export class PosStore extends WithLazyGetterTrap {
         return this.sortByWordIndex(Array.from(new Set([...exactMatches, ...matches])), words);
     }
 
-    getPaymentMethodDisplayText(pm, order) {
+    getPaymentMethodFmtAmount(pm, order) {
         const { cash_rounding, only_round_cash_method } = this.config;
         const amount = order.getDefaultAmountDueToPayIn(pm);
-        const fmtAmount = this.env.utils.formatCurrency(amount, false);
+        const fmtAmount = this.env.utils.formatCurrency(amount, true);
         if (
-            !this.currency.isPositive(amount) ||
-            !cash_rounding ||
-            (only_round_cash_method && pm.type !== "cash")
+            this.currency.isPositive(amount) &&
+            cash_rounding &&
+            !only_round_cash_method &&
+            pm.type === "cash"
         ) {
-            return pm.name;
-        } else {
-            return `${pm.name} (${fmtAmount})`;
+            return fmtAmount;
         }
     }
     getDate(date) {
