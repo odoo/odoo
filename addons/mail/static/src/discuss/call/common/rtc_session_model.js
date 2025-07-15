@@ -178,7 +178,7 @@ export class RtcSession extends Record {
     }
 
     get isMute() {
-        return this.is_muted || this.is_deaf;
+        return this.is_deaf || this.is_muted;
     }
 
     get mainVideoStream() {

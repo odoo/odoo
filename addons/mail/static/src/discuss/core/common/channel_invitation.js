@@ -195,15 +195,23 @@ export class ChannelInvitation extends Component {
         let channelId = this.props.channel.id;
         const invitePromises = [];
         if (this.props.channel?.channel_type === "chat") {
+            const hadActiveCall = this.props.channel.rtc_session_ids.length > 0;
             const partnerIds = this.selectedPartners.map((partner) => partner.id);
             if (this.props.channel.correspondent?.partner_id) {
                 partnerIds.unshift(this.props.channel.correspondent.partner_id.id);
             }
+            let group = null;
             if (this.state.selectedEmails.length) {
-                const group = await this.store.createGroupChat({ partners_to: partnerIds });
+                group = await this.store.createGroupChat({ partners_to: partnerIds });
                 channelId = group.id;
             } else {
-                await this.store.startChat(partnerIds);
+                group = await this.store.startChat(partnerIds);
+            }
+            if (hadActiveCall) {
+                this.env.services["discuss.rtc"].toggleCall(group, {
+                    camera: this.store.rtc.selfSession?.is_camera_on,
+                    audio: !this.store.rtc.selfSession?.isMute,
+                });
             }
         } else if (this.selectedPartners.length) {
             invitePromises.push(

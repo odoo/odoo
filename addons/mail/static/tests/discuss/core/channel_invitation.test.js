@@ -4,10 +4,12 @@ import {
     defineMailModels,
     insertText,
     mockPermissionsPrompt,
+    onRpcBefore,
     openDiscuss,
     setupChatHub,
     start,
     startServer,
+    mockGetMedia,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
@@ -258,4 +260,50 @@ test("Active dialog retains focus over invite input", async () => {
     await animationFrame();
     await contains(".o-discuss-ChannelInvitation");
     await contains("button:focus", { text: "Use Camera" });
+});
+
+test("Create group chat transfers active call to new group chat", async () => {
+    mockGetMedia();
+    let waitForLeaveCall = Promise.resolve();
+    onRpcBefore("/mail/rtc/channel/join_call", async () => {
+        await waitForLeaveCall;
+    });
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "TestPartner1" },
+        { name: "TestPartner2" },
+    ]);
+    pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-DiscussContent-header button[title='Start Video Call']");
+    await contains(".o-discuss-CallParticipantCard");
+    await contains(
+        ".o-discuss-CallActionList .o-mail-ActionList-button.btn-success .fa-video-camera"
+    );
+    await contains(".o-discuss-CallActionList .o-mail-ActionList-button .fa-microphone");
+
+    await click(".o-mail-DiscussContent-header button[title='Invite People']");
+    await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
+    const { promise, resolve } = Promise.withResolvers();
+    waitForLeaveCall = promise;
+    await click("button[title='Create Group Chat']:enabled");
+    await contains(".o-discuss-CallParticipantCard", { count: 0 }); // call should be left in old chat
+    resolve();
+
+    await contains(".o-mail-DiscussContent-threadName", {
+        value: "Mitchell Admin, TestPartner1, and TestPartner2",
+    });
+    await contains(".o-discuss-CallParticipantCard");
+    await contains(
+        ".o-discuss-CallActionList .o-mail-ActionList-button.btn-success .fa-video-camera"
+    );
+    await contains(".o-discuss-CallActionList .o-mail-ActionList-button .fa-microphone");
 });
