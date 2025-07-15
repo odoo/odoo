@@ -961,7 +961,7 @@ export class TablePlugin extends Plugin {
                 this._isTripleClickInTable = true;
             }
         }
-        if (isPointerInsideCell) {
+        if (isPointerInsideCell && ev.detail === 1) {
             this.editable.addEventListener("mousemove", this.onMousemove);
             const currentSelection = this.dependencies.selection.getEditableSelection();
             // disable dragging on table
