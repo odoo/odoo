@@ -144,20 +144,20 @@ export class CartService {
                     ...rest
                 }
             );
-            const selectedComboItems = combos
+            const preselectedComboItems = combos
                  .map(combo => new ProductCombo(combo))
-                 .map(combo => combo.selectedComboItem)
+                 .map(combo => combo.preselectedComboItem)
                  .filter(Boolean);
-            // If the combo product is already fully configured (i.e. a combo item has been selected
-            // for each combo choice), then it can be added to the cart without opening the combo
-            // configurator.
-            if (selectedComboItems.length === combos.length) {
+            // If the combo product is already fully configured (i.e. a combo item has been
+            // preselected for each combo choice), then it can be added to the cart without
+            // opening the combo configurator.
+            if (preselectedComboItems.length === combos.length) {
                 return this._makeRequest({
                     productTemplateId: productTemplateId,
                     productId: productId,
                     quantity: remainingData.quantity,
                     uomId: uomId,
-                    linked_products: selectedComboItems.map(
+                    linked_products: preselectedComboItems.map(
                         (comboItem) => this._serializeComboItem(
                             comboItem, productTemplateId, remainingData.quantity
                         )
@@ -332,6 +332,7 @@ export class CartService {
                 soDate: serializeDateTime(DateTime.now()),
                 edit: false,
                 isFrontend: true,
+                selectedComboItems: [],  // optional products for combo aren't supported on ecommerce for now.
                 options,
                 ...additionalData,
                 save: async (mainProduct, optionalProducts, options) => {

@@ -2785,7 +2785,7 @@
                                 <t t-call="website_sale.cart_line_description_following_lines"/>
                                 <ul t-if="is_combo" class="list-group">
                                     <t
-                                        t-foreach="line.linked_line_ids"
+                                        t-foreach="line.linked_line_ids.filtered('combo_item_id')"
                                         t-as="combo_item_line"
                                     >
                                         <t t-call="website_sale.cart_combo_item_line"/>
