@@ -23,7 +23,6 @@ test("Rendering of visitor banner", async () => {
     const website_id = pyEnv["website"].create({ name: "General website" });
     const visitorId = pyEnv["website.visitor"].create({
         country_id,
-        history: "Home → Contact",
         lang_id,
         website_id,
     });
@@ -63,7 +62,6 @@ test("Livechat with non-logged visitor should show visitor banner", async () => 
     const visitorId = pyEnv["website.visitor"].create({
         country_id,
         display_name: "Visitor #11",
-        history: "Home → Contact",
         lang_id,
         website_id,
     });
@@ -91,7 +89,6 @@ test("Livechat with logged visitor should show visitor banner", async () => {
     const visitorId = pyEnv["website.visitor"].create({
         country_id,
         display_name: "Visitor #11",
-        history: "Home → Contact",
         lang_id,
         partner_id,
         website_id,

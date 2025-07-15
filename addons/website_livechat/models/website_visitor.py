@@ -118,22 +118,19 @@ class WebsiteVisitor(models.Model):
         return visitor_id, upsert
 
     def _field_store_repr(self, field_name):
-        if field_name == "history":
+        if field_name == "page_visit_history":
             # sudo: website.track - reading the history of accessible visitor is acceptable
-            return [Store.Attr("history", lambda visitor: visitor.sudo()._get_visitor_history())]
+            return [
+                Store.Attr("page_visit_history", lambda visitor: visitor.sudo()._get_visitor_history()),
+            ]
         return [field_name]
 
     def _get_visitor_history(self):
-        """
-        Prepare history string to render it in the visitor info div on discuss livechat channel view.
-        :param visitor: website.visitor of the channel
-        :return: arrow separated string containing navigation history information
-        """
         self.ensure_one()
         recent_history = self.env["website.track"].search(
             [("page_id", "!=", False), ("visitor_id", "=", self.id)], limit=3
         )
-        return " → ".join(
-            f"{visit.page_id.name} ({visit.visit_datetime.strftime('%H:%M')})"
+        return [
+            (visit.page_id.name, fields.Datetime.to_string(visit.visit_datetime))
             for visit in reversed(recent_history)
-        )
+        ]
