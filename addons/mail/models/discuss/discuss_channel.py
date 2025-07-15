@@ -486,7 +486,7 @@ class DiscussChannel(models.Model):
         if not member:
             custom_store.bus_send()
             return
-        if post_leave_message:
+        if self.channel_type != "channel" and post_leave_message:
             notification = Markup('<div class="o_mail_notification" data-oe-type="channel-left">%s</div>') % _(
                 "left the channel"
             )
@@ -565,7 +565,7 @@ class DiscussChannel(models.Model):
                 if not member.is_self and not self.env.user._is_public():
                     payload["invited_by_user_id"] = self.env.user.id
                 member._bus_send("discuss.channel/joined", payload)
-                if post_joined_message:
+                if channel.channel_type != "channel" and post_joined_message:
                     notification = (
                         _("joined the channel")
                         if member.is_self
