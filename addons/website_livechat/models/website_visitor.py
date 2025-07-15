@@ -126,8 +126,23 @@ class WebsiteVisitor(models.Model):
     def _field_store_repr(self, field_name):
         if field_name == "history":
             # sudo: website.track - reading the history of accessible visitor is acceptable
-            return [Store.Attr("history", lambda visitor: visitor.sudo()._get_visitor_history())]
+            return [
+                Store.Attr("history", lambda visitor: visitor.sudo()._get_visitor_history()),
+                Store.Attr(
+                    "history_data", lambda visitor: visitor.sudo()._get_visitor_history_data()
+                ),
+            ]
         return [field_name]
+
+    def _get_visitor_history_data(self):
+        self.ensure_one()
+        recent_history = self.env["website.track"].search(
+            [("page_id", "!=", False), ("visitor_id", "=", self.id)], limit=3
+        )
+        return [
+            (visit.page_id.name, fields.Datetime.to_string(visit.visit_datetime))
+            for visit in reversed(recent_history)
+        ]
 
     def _get_visitor_history(self):
         """
@@ -136,10 +151,7 @@ class WebsiteVisitor(models.Model):
         :return: arrow separated string containing navigation history information
         """
         self.ensure_one()
-        recent_history = self.env["website.track"].search(
-            [("page_id", "!=", False), ("visitor_id", "=", self.id)], limit=3
-        )
         return " → ".join(
-            f"{visit.page_id.name} ({visit.visit_datetime.strftime('%H:%M')})"
-            for visit in reversed(recent_history)
+            f"{label} ({fields.Datetime.from_string(date).strftime('%H:%M')})"
+            for label, date in self._get_visitor_history_data()
         )
