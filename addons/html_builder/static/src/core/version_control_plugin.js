@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 
 export class VersionControlPlugin extends Plugin {
     static id = "versionControl";
-    static dependencies = ["builderOptions"];
+    static dependencies = ["builderOptions", "snippets"];
     accessPerOutdatedEl = new WeakMap();
     static shared = ["hasAccessToOutdatedEl", "giveAccessToOutdatedEl", "replaceWithNewVersion"];
 
@@ -14,7 +14,7 @@ export class VersionControlPlugin extends Plugin {
             return this.accessPerOutdatedEl.get(el);
         }
         const snippetKey = el.dataset.snippet;
-        const snippet = this.config.snippetModel.getOriginalSnippet(snippetKey);
+        const snippet = this.dependencies.snippets.getOriginalSnippet(snippetKey);
         let isUpToDate = true;
         if (snippet) {
             const {
@@ -34,7 +34,7 @@ export class VersionControlPlugin extends Plugin {
     }
     replaceWithNewVersion(el) {
         const snippetKey = el.dataset.snippet;
-        const snippet = this.config.snippetModel.getOriginalSnippet(snippetKey);
+        const snippet = this.dependencies.snippets.getOriginalSnippet(snippetKey);
         const cloneEl = snippet.content.cloneNode(true);
         el.replaceWith(cloneEl);
         this.dependencies["builderOptions"].updateContainers(cloneEl);

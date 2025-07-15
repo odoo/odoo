@@ -5,7 +5,6 @@ import { getScrollingElement } from "@web/core/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
 import { closest } from "@web/core/utils/ui";
 import { useDragAndDrop } from "@html_editor/utils/drag_and_drop";
-import { useSnippets } from "@html_builder/snippets/snippet_service";
 import { getCSSVariableValue } from "@html_builder/utils/utils_css";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import { Snippet } from "./snippet";
@@ -14,15 +13,12 @@ import { CustomInnerSnippet } from "./custom_inner_snippet";
 export class BlockTab extends Component {
     static template = "html_builder.BlockTab";
     static components = { Snippet, CustomInnerSnippet };
-    static props = {
-        snippetsName: String,
-    };
 
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
         this.popover = useService("popover");
-        this.snippetModel = useSnippets(this.props.snippetsName);
+        this.snippetModel = useState(this.shared.snippets.getSnippetModel());
         this.blockTabRef = useRef("block-tab");
         // Needed to avoid race condition in tours.
         this.state = useState({ ongoingInsertion: false });
@@ -62,7 +58,7 @@ export class BlockTab extends Component {
                 const baseSectionEl = snippet.content.cloneNode(true);
                 this.state.ongoingInsertion = true;
                 await new Promise((resolve) => {
-                    this.snippetModel.openSnippetDialog(
+                    this.shared.snippets.openSnippetDialog(
                         snippet,
                         {
                             onSelect: (snippet) => {
@@ -130,7 +126,7 @@ export class BlockTab extends Component {
         // Exclude the snippets that are not allowed to be dropped at the
         // current position.
         const hookParentEl = hookEl.parentElement;
-        this.snippetModel.snippetStructures.forEach((snippet) => {
+        this.shared.snippets.getSnippetStructures().forEach((snippet) => {
             const { selectorChildren } = this.shared.dropzone.getSelectors(snippet.content);
             snippet.isExcluded = ![...selectorChildren].some((el) => el === hookParentEl);
         });
@@ -138,7 +134,7 @@ export class BlockTab extends Component {
         // Open the snippet dialog.
         let selectedSnippetEl;
         await new Promise((resolve) => {
-            this.snippetModel.openSnippetDialog(
+            this.shared.snippets.openSnippetDialog(
                 snippet,
                 {
                     onSelect: (snippet) => {
@@ -150,9 +146,9 @@ export class BlockTab extends Component {
                         if (!selectedSnippetEl) {
                             hookEl.remove();
                         }
-                        this.snippetModel.snippetStructures.forEach(
-                            (snippet) => delete snippet.isExcluded
-                        );
+                        this.shared.snippets
+                            .getSnippetStructures()
+                            .forEach((snippet) => delete snippet.isExcluded);
                         resolve();
                     },
                 },
@@ -262,7 +258,7 @@ export class BlockTab extends Component {
 
                 const category = element.closest(".o_snippets_container").id;
                 const id = element.dataset.id;
-                snippet = this.snippetModel.getSnippet(category, id);
+                snippet = this.shared.snippets.getSnippet(category, id);
                 snippetEl = snippet.content.cloneNode(true);
                 isSnippetGroup = category === "snippet_groups";
 

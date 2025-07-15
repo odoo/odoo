@@ -3,7 +3,6 @@ import { loadBundle, loadCSS } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
 import { localization } from "@web/core/l10n/localization";
-import { SnippetViewer } from "./snippet_viewer";
 
 export class AddSnippetDialog extends Component {
     static template = "html_builder.AddSnippetDialog";
@@ -54,7 +53,7 @@ export class AddSnippetDialog extends Component {
             iframeDocument.body.parentElement.classList.add("o_add_snippets_preview");
             iframeDocument.body.style.setProperty("direction", localization.direction);
 
-            root = this.__owl__.app.createRoot(SnippetViewer, {
+            root = this.__owl__.app.createRoot(this.props.snippetModel.snippetViewer, {
                 props: this.snippetViewerProps,
             });
             root.mount(iframeDocument.body);

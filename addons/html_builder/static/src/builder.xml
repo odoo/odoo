@@ -34,11 +34,11 @@
         </div>
         <div class="o-tab-content overflow-y-auto overflow-x-hidden flex-grow-1">
             <t t-if="state.activeTab === 'blocks'">
-                <BlockTab snippetsName="props.snippetsName" />
+                <BlockTab />
             </t>
             <t t-if="state.activeTab === 'customize'">
                 <t t-if="!!props.config.customizeTab" t-call="{{props.config.customizeTab}}"/>
-                <CustomizeTab t-else="" currentOptionsContainers="state.currentOptionsContainers" snippetModel="snippetModel"/>
+                <CustomizeTab t-else="" currentOptionsContainers="state.currentOptionsContainers"/>
             </t>
             <t t-if="state.activeTab === 'theme'">
                 <t t-component="ThemeTab"/>

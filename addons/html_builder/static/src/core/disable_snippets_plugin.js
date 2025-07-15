@@ -4,7 +4,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class DisableSnippetsPlugin extends Plugin {
     static id = "disableSnippets";
-    static dependencies = ["setup_editor_plugin", "dropzone", "dropzone_selector"];
+    static dependencies = ["setup_editor_plugin", "dropzone", "dropzone_selector", "snippets"];
     static shared = ["disableUndroppableSnippets"];
     resources = {
         after_remove_handlers: this.disableUndroppableSnippets.bind(this),
@@ -14,7 +14,6 @@ export class DisableSnippetsPlugin extends Plugin {
     };
 
     setup() {
-        this.snippetModel = this.config.snippetModel;
         this._disableSnippets = this.disableUndroppableSnippets.bind(this);
 
         // TODO only for website ?
@@ -50,7 +49,7 @@ export class DisableSnippetsPlugin extends Plugin {
             let forbidSanitize = false;
             // Check if the snippet is sanitized/contains such snippets.
             for (const el of [snippetEl, ...snippetEl.querySelectorAll("[data-snippet")]) {
-                const snippet = this.snippetModel.getOriginalSnippet(el.dataset.snippet);
+                const snippet = this.dependencies.snippets.getOriginalSnippet(el.dataset.snippet);
                 if (snippet && snippet.forbidSanitize) {
                     forbidSanitize = snippet.forbidSanitize;
                     if (forbidSanitize === true) {
@@ -65,6 +64,7 @@ export class DisableSnippetsPlugin extends Plugin {
             }
         };
         const canDrop = (snippet) => {
+            // debugger;
             const snippetEl = snippet.content;
             return !!dropAreasBySelector.find(
                 ({ selector, exclude, dropAreaEls }) =>
@@ -75,9 +75,9 @@ export class DisableSnippetsPlugin extends Plugin {
         };
 
         // Disable the snippets that cannot be dropped.
-        const snippetGroups = this.snippetModel.snippetsByCategory["snippet_groups"];
+        const snippetGroups = this.dependencies.snippets.getSnippetsByCategory()["snippet_groups"];
         let areGroupsDisabled = false;
-        if (!canDrop(snippetGroups[0])) {
+        if (snippetGroups.length && !canDrop(snippetGroups[0])) {
             snippetGroups.forEach((snippetGroup) => (snippetGroup.isDisabled = true));
             areGroupsDisabled = true;
         }
@@ -87,8 +87,11 @@ export class DisableSnippetsPlugin extends Plugin {
         if (areGroupsDisabled) {
             ignoredCategories.push(...["snippet_structure", "snippet_custom"]);
         }
-        for (const category in omit(this.snippetModel.snippetsByCategory, ...ignoredCategories)) {
-            snippets.push(...this.snippetModel.snippetsByCategory[category]);
+        for (const category in omit(
+            this.dependencies.snippets.getSnippetsByCategory(),
+            ...ignoredCategories
+        )) {
+            snippets.push(...this.dependencies.snippets.getSnippetsByCategory()[category]);
         }
         snippets.forEach((snippet) => {
             snippet.isDisabled = !canDrop(snippet);
@@ -103,7 +106,8 @@ export class DisableSnippetsPlugin extends Plugin {
                             snippet.groupName === snippetGroup.groupName && !snippet.isDisabled
                     );
                 } else {
-                    const customSnippets = this.snippetModel.snippetsByCategory["snippet_custom"];
+                    const customSnippets =
+                        this.dependencies.snippets.getSnippetsByCategory()["snippet_custom"];
                     snippetGroup.isDisabled = !customSnippets.find(
                         (snippet) => !snippet.isDisabled
                     );

@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class DropZonePlugin extends Plugin {
     static id = "dropzone";
-    static dependencies = ["history", "setup_editor_plugin"];
+    static dependencies = ["history", "setup_editor_plugin", "snippets"];
     static shared = [
         "activateDropzones",
         "removeDropzones",
@@ -15,7 +15,6 @@ export class DropZonePlugin extends Plugin {
     ];
 
     setup() {
-        this.snippetModel = this.config.snippetModel;
         this.dropzoneSelectors = this.getResource("dropzone_selector");
         this.iframe = this.document.defaultView.frameElement;
     }
@@ -122,7 +121,7 @@ export class DropZonePlugin extends Plugin {
         let forbidSanitize = false;
         // Check if the element is sanitized or if it contains such elements.
         for (const el of [snippetEl, ...snippetEl.querySelectorAll("[data-snippet")]) {
-            const snippet = this.snippetModel.getOriginalSnippet(el.dataset.snippet);
+            const snippet = this.dependencies.snippets.getOriginalSnippet(el.dataset.snippet);
             if (snippet && snippet.forbidSanitize) {
                 forbidSanitize = snippet.forbidSanitize;
                 if (forbidSanitize === true) {

@@ -8,7 +8,7 @@ export class CustomizeTab extends Component {
     static components = { CustomizeComponent, OptionsContainer };
     static props = {
         currentOptionsContainers: { type: Array, optional: true },
-        snippetModel: { type: Object },
+        actionable: { type: Boolean },
     };
     static defaultProps = {
         currentOptionsContainers: [],

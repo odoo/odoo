@@ -21,6 +21,7 @@ import { RemovePlugin } from "./remove_plugin";
 import { SavePlugin } from "./save_plugin";
 import { SaveSnippetPlugin } from "./save_snippet_plugin";
 import { SetupEditorPlugin } from "./setup_editor_plugin";
+import { SnippetsPlugin } from "./snippets_plugin";
 import { VersionControlPlugin } from "./version_control_plugin";
 import { VisibilityPlugin } from "./visibility_plugin";
 
@@ -50,4 +51,5 @@ export const CORE_PLUGINS = [
     CompositeActionPlugin,
     CustomizeTabPlugin,
     VersionControlPlugin,
+    SnippetsPlugin,
 ];
