@@ -79,9 +79,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
         };
 
         onCloseWizardModal(async () => {
-            const selectedPartnerIds = this.props.record.data.partner_ids.records.map(
-                (partner) => partner.resId
-            );
+            const selectedPartnerIds = this.props.record.data.partner_ids.currentIds;
             const selectedPartners = await this.orm.searchRead(
                 "res.partner",
                 [["id", "in", selectedPartnerIds]],

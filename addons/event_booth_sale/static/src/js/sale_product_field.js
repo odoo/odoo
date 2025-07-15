@@ -42,10 +42,8 @@ patch(SaleOrderLineProductField.prototype, {
                 actionContext.default_event_booth_category_id = recordData.event_booth_category_id.id;
             }
             if (recordData.event_booth_pending_ids) {
-                actionContext.default_event_booth_ids = recordData.event_booth_pending_ids.records.map(
-                    record => {
-                        return [4, record.resId];
-                    }
+                actionContext.default_event_booth_ids = recordData.event_booth_pending_ids.currentIds.map(
+                    (resId) => [4, resId]
                 );
             }
         }
