@@ -14,6 +14,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         if not self.env["ir.module.module"].search([("name", "=", "mrp"), ("state", "=", "installed")]):
             self.skipTest("mrp module is required for this test")
 
+        self.env.user.group_ids |= self.env.ref('mrp.group_mrp_user')
         self.kit = self.env['product.product'].create({
             'name': 'Pizza Chicken',
             'available_in_pos': True,
@@ -28,14 +29,14 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'uom_id': self.env.ref('uom.product_uom_gram').id,
             'lst_price': 10.0,
         })
-        self.location = self.env['stock.location'].create({
+        self.location = self.env['stock.location'].sudo().create({
             'name': 'Test location',
             'usage': 'internal',
-        })
+        }).sudo(False)
 
         self.env['stock.quant']._update_available_quantity(self.component_a, self.location, 100000)
 
-        bom_product_form = Form(self.env['mrp.bom'])
+        bom_product_form = Form(self.env['mrp.bom'].sudo())
         if self.env.user._has_group('product.group_product_variant'):
             bom_product_form.product_id = self.kit
         bom_product_form.product_tmpl_id = self.kit.product_tmpl_id
@@ -215,16 +216,15 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         #create 2 stock location Shelf 1 and Shelf 2
         self.warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        self.shelf_1 = self.env['stock.location'].create({
+        self.shelf_1, self.shelf_2 = self.env['stock.location'].sudo().create([{
             'name': 'Shelf 1',
             'usage': 'internal',
             'location_id': self.warehouse.lot_stock_id.id,
-        })
-        self.shelf_2 = self.env['stock.location'].create({
+        }, {
             'name': 'Shelf 2',
             'usage': 'internal',
             'location_id': self.warehouse.lot_stock_id.id,
-        })
+        }]).sudo(False)
 
         quants = self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product.id,
@@ -272,7 +272,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         #get the warehouse
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse.delivery_steps = 'pick_pack_ship'
+        warehouse.sudo().delivery_steps = 'pick_pack_ship'
 
         product_a = self.env['product.product'].create({
             'name': 'Product A',
