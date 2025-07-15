@@ -294,15 +294,24 @@ export function parseEmail(text) {
     if (!text) {
         return;
     }
-    let result = text.match(/^"?([^"]*?)"? <([^" ]*@[^" @]*)>/);
-    if (result) {
-        const name = (result[1] || "").trim().replace(/(^"|"$)/g, "");
-        return [name, (result[2] || "").trim()];
+
+    const ltIndex = text.indexOf("<");
+    const gtIndex = text.indexOf(">");
+    if (ltIndex > 0 && gtIndex > ltIndex + 1) {
+        const namePart = text.substring(0, ltIndex).trim().replace(/^"|"$/g, "");
+        const emailPart = text.substring(ltIndex + 1, gtIndex).trim();
+        const atIndex = emailPart.indexOf("@");
+        if (atIndex > 0 && atIndex < emailPart.length - 1) {
+            return [namePart, emailPart];
+        }
     }
-    result = text.match(/(.*@.*)/);
-    if (result) {
-        return [String(result[1] || "").trim(), String(result[1] || "").trim()];
+
+    const atIndex = text.indexOf("@");
+    if (atIndex > 0 && atIndex < text.length - 1) {
+        const email = text.trim();
+        return [email, email];
     }
+
     return [text, false];
 }
 
