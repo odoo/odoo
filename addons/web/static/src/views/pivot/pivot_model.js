@@ -998,7 +998,7 @@ export class PivotModel extends Model {
             measureSpecs,
             kwargs
         );
-        return groupInfo.map((info, index) => ({ ...info, subGroups: result[index] }));
+        return groupInfo.map((info) => ({ ...info, subGroups: result[info.subGroupIndex] }));
     }
 
     /**
@@ -1659,21 +1659,25 @@ export class PivotModel extends Model {
                 }
                 const resModel = config.metaData.resModel;
                 const kwargs = { context: this.searchParams.context };
-                const mapping = {};
                 const groupingSets = [];
                 const groupInfo = [];
                 divisors.forEach((divisor) => {
                     const groupBy = this._getGroupBySpecs(divisor[0], divisor[1]);
-                    const key = JSON.stringify(groupBy);
-                    if (!mapping[key]) {
+                    const key = JSON.stringify(groupBy.toSorted());
+                    let index = groupingSets.findIndex(
+                        (value) => JSON.stringify(value.toSorted()) === key
+                    );
+                    if (index === -1) {
+                        index = groupingSets.length;
                         groupingSets.push(groupBy);
-                        groupInfo.push({
-                            group: subGroup,
-                            rowGroupBy: divisor[0],
-                            colGroupBy: divisor[1],
-                            originIndex,
-                        });
                     }
+                    groupInfo.push({
+                        group: subGroup,
+                        rowGroupBy: divisor[0],
+                        colGroupBy: divisor[1],
+                        subGroupIndex: index,
+                        originIndex,
+                    });
                 });
 
                 const params = {
@@ -1681,7 +1685,6 @@ export class PivotModel extends Model {
                     groupDomain,
                     measureSpecs,
                     kwargs,
-                    mapping,
                     groupingSets,
                 };
                 acc.push(this._getGroupsSubdivision(params, groupInfo));
