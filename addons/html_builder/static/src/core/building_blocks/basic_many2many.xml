@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BasicMany2Many">
-    <div class="d-flex flex-column gap-1">
-        <table>
+    <div class="d-flex flex-column">
+        <table class="o-hb-m2m-table">
             <tr t-foreach="props.selection" t-as="entry" t-key="entry.id">
                 <td>
                     <input type="text" class="o-hb-input-base" disabled="" t-att-data-name="entry.display_name" t-att-value="entry.display_name"/>
