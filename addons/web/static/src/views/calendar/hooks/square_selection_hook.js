@@ -1,153 +1,151 @@
 import { useComponent, useEffect, useRef } from "@odoo/owl";
-import { SIDE_PANEL_MODES } from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
+import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
+import { shallowEqual } from "@web/core/utils/objects";
+import { closest } from "@web/core/utils/ui";
+import { useCallbackRecorder } from "@web/search/action_hook";
 
-/**
- * Add a square selection into FullCalendar
- */
+const CELL_SELECTOR = `.fc-day:not(.fc-col-header-cell)`;
+const ROW_SELECTOR = `tr[role="row"]`;
+const EVENT_CONTAINER_SELECTOR = ".fc-daygrid-event-harness";
+const IGNORE_SELECTOR = [".fc-event", ".fc-more-cell", ".fc-more-popover"].join(",");
+
+function getClosestCell(ctx) {
+    const { pointer, ref } = ctx;
+    return closest(ref.el.querySelectorAll(CELL_SELECTOR), pointer);
+}
+
+function getElementIndex(element) {
+    return [].indexOf.call(element?.parentNode.children || [], element);
+}
+
+function getCoordinates(cell) {
+    const colIndex = getElementIndex(cell);
+    const rowIndex = getElementIndex(cell.closest(ROW_SELECTOR));
+    return { colIndex, rowIndex };
+}
+
+function getBlockBounds({ initCoord, coord }) {
+    const [startColIndex, endColIndex] = [initCoord.colIndex, coord.colIndex].sort();
+    const [startRowIndex, endRowIndex] = [initCoord.rowIndex, coord.rowIndex].sort();
+    return { startColIndex, endColIndex, startRowIndex, endRowIndex };
+}
+
+function getResult(ctx) {
+    const { current, ref } = ctx;
+    const { startColIndex, endColIndex, startRowIndex, endRowIndex } = getBlockBounds(current);
+    const selectorParts = [];
+    for (let x = startColIndex; x <= endColIndex; x++) {
+        for (let y = startRowIndex; y <= endRowIndex; y++) {
+            selectorParts.push(
+                `tbody tr[role="row"]:nth-child(${y + 1}) > .fc-day:nth-child(${x + 1})`
+            );
+        }
+    }
+    const selector = selectorParts.join(",");
+    return { selectedCells: [...ref.el.querySelectorAll(selector)] };
+}
+
+// @ts-ignore
+const useBlockSelection = makeDraggableHook({
+    name: "useBlockSelection",
+    acceptedParams: {},
+    onComputeParams({ ctx }) {
+        ctx.followCursor = false;
+    },
+    onWillStartDrag({ addClass, ctx }) {
+        const { current, ref } = ctx;
+        addClass(ref.el, "pe-auto");
+        const cell = getClosestCell(ctx);
+        addClass(cell, "pe-auto");
+        const coord = getCoordinates(cell);
+        current.initCoord = coord;
+        current.coord = coord;
+        return getResult(ctx);
+    },
+    onDragStart({ ctx }) {
+        return getResult(ctx);
+    },
+    onDrag({ ctx }) {
+        const { current } = ctx;
+        const cell = getClosestCell(ctx);
+        const coord = getCoordinates(cell);
+        if (shallowEqual(current.coord, coord)) {
+            return;
+        }
+        current.coord = coord;
+        return getResult(ctx);
+    },
+    onDrop({ ctx }) {
+        return getResult(ctx);
+    },
+});
+
 export function useSquareSelection() {
     const component = useComponent();
-    const calendarRef = useRef("fullCalendar");
-    const state = {};
+    const ref = useRef("fullCalendar");
+    const highlightClass = "o-highlight";
+
+    const removeHighlight = () => {
+        ref.el.querySelectorAll(`.${highlightClass}`).forEach((node) => {
+            node.classList.remove(highlightClass);
+        });
+    };
+    const highlight = ({ selectedCells }) => {
+        removeHighlight();
+        selectedCells.forEach((node) => {
+            node.classList.add(highlightClass);
+        });
+    };
+
+    useCallbackRecorder(component.props.callbackRecorder, removeHighlight);
+    const selectState = useBlockSelection({
+        enable: () => component.props.model.hasMultiCreate,
+        ignore: EVENT_CONTAINER_SELECTOR,
+        elements: CELL_SELECTOR,
+        ref,
+        edgeScrolling: { speed: 40, threshold: 150 },
+        onWillStartDrag: removeHighlight,
+        onDragStart: highlight,
+        onDrag: highlight,
+        onDrop: ({ selectedCells }) => {
+            highlight({ selectedCells });
+            component.props.onSquareSelection(selectedCells);
+        },
+    });
+
+    const onClick = (ev) => {
+        if (selectState.dragging) {
+            return;
+        }
+        const ignoreElement = ev.target.closest(IGNORE_SELECTOR);
+        if (ignoreElement) {
+            return;
+        }
+        const eventContainer = ev.target.closest(EVENT_CONTAINER_SELECTOR);
+        if (eventContainer) {
+            return;
+        }
+        const cell = ev.target.closest(CELL_SELECTOR);
+        if (!cell) {
+            return;
+        }
+        const coord = getCoordinates(cell);
+        const current = { initCoord: coord, coord };
+        const { selectedCells } = getResult({ current, ref });
+        highlight({ selectedCells });
+        component.props.onSquareSelection(selectedCells);
+    };
 
     useEffect(
-        (el, mode) => {
-            if (mode !== SIDE_PANEL_MODES.filter) {
-                component.fc.api.setOption("editable", false);
-                component.fc.api.setOption("selectable", false);
-                component.fc.api.setOption("dateClick", () => {});
-            } else {
-                const options = component.options;
-                component.fc.api.setOption("editable", options.editable);
-                component.fc.api.setOption("selectable", options.selectable);
-                component.fc.api.setOption("dateClick", options.dateClick.bind(component));
+        (el, hasMultiCreate) => {
+            if (!hasMultiCreate) {
+                return;
             }
-
-            clearState();
-
-            if (mode !== SIDE_PANEL_MODES.filter) {
-                window.addEventListener("pointerdown", pointerDown);
-                window.addEventListener("pointermove", pointerMove);
-                window.addEventListener("pointerup", pointerUp);
-                window.addEventListener("pointercancel", pointerCancel);
-                return () => {
-                    window.removeEventListener("pointerdown", pointerDown);
-                    window.removeEventListener("pointermove", pointerMove);
-                    window.removeEventListener("pointerup", pointerUp);
-                    window.removeEventListener("pointercancel", pointerCancel);
-                };
-            }
+            el && el.addEventListener("click", onClick);
+            return () => {
+                el && el.removeEventListener("click", onClick);
+            };
         },
-        () => [calendarRef.el, component.props.sidePanelMode]
+        () => [ref.el, component.props.model.hasMultiCreate]
     );
-
-    function getElementIndex(element) {
-        return [].indexOf.call(element?.parentNode.children || [], element);
-    }
-
-    function clearState() {
-        state.startCol = -1;
-        state.endCol = -1;
-        state.startRow = -1;
-        state.endRow = -1;
-
-        state.currentSelectionElement = [];
-    }
-
-    function getSelectedElement() {
-        const elementsToSelect = [];
-        const [startX, endX] = [state.startCol, state.endCol].sort();
-        const [startY, endY] = [state.startRow, state.endRow].sort();
-
-        for (let x = startX; x <= endX; x++) {
-            for (let y = startY; y <= endY; y++) {
-                elementsToSelect.push(
-                    `tbody tr[role="row"]:nth-child(${y + 1}) > .fc-day:nth-child(${x + 1})`
-                );
-            }
-        }
-
-        if (elementsToSelect.length) {
-            return calendarRef.el.querySelectorAll(elementsToSelect.join(","));
-        } else {
-            return [];
-        }
-    }
-
-    function drawHighlight() {
-        const highlight = "o-highlight";
-
-        calendarRef.el.querySelectorAll(`.${highlight}`).forEach((node) => {
-            node.classList.remove(highlight);
-        });
-
-        state.currentSelectionElement.forEach((node) => {
-            node.classList.add(highlight);
-        });
-    }
-
-    function pointerDown(ev) {
-        const avoidElement = ev.target.closest(".fc-event, .fc-more-cell, .fc-more-popover");
-        const targetElement = ev.target.closest(".fc-day:not(.fc-col-header-cell)");
-        if (avoidElement || !targetElement) {
-            return;
-        }
-        document.activeElement?.blur(); // Force blur on activeElement to force update value
-        const rowSelector = 'tr[role="row"]';
-        state.startCol = state.endCol = getElementIndex(targetElement);
-        state.startRow = state.endRow = getElementIndex(targetElement.closest(rowSelector));
-        state.currentSelectionElement = [targetElement];
-        drawHighlight();
-    }
-
-    function pointerMove(ev) {
-        const targetElement = ev.target.closest(".fc-day:not(.fc-col-header-cell)");
-        if (!targetElement || state.startCol < 0 || state.startRow < 0) {
-            return;
-        }
-        const rowSelector = 'tr[role="row"]';
-        state.endCol = getElementIndex(targetElement);
-        state.endRow = getElementIndex(targetElement.closest(rowSelector));
-        state.currentSelectionElement = getSelectedElement();
-        drawHighlight();
-    }
-
-    async function pointerUp(ev) {
-        const targetElement = ev.target.closest(".fc-day:not(.fc-col-header-cell)");
-        if (!targetElement) {
-            clearState();
-            drawHighlight();
-            return;
-        }
-        if (state.currentSelectionElement.length > 0) {
-            await onSquareSelection(state.currentSelectionElement);
-        }
-        clearState();
-        drawHighlight();
-    }
-
-    function pointerCancel(ev) {
-        clearState();
-        drawHighlight();
-    }
-
-    async function onSquareSelection(currentSelectionElement) {
-        if (component.props.sidePanelMode === SIDE_PANEL_MODES.add) {
-            const dates = [];
-            for (const element of currentSelectionElement) {
-                const date = luxon.DateTime.fromISO(element.dataset.date);
-                if (!date.invalid) {
-                    dates.push(date);
-                }
-            }
-            await component.props.multiCreateRecords(dates);
-        } else if (component.props.sidePanelMode === SIDE_PANEL_MODES.delete) {
-            const ids = [];
-            for (const element of currentSelectionElement) {
-                for (const event of [...element.querySelectorAll(".fc-event")]) {
-                    ids.push(parseInt(event.dataset.eventId, 10));
-                }
-            }
-            await component.props.multiDeleteRecords(ids);
-        }
-    }
 }

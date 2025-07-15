@@ -8,7 +8,7 @@ export class TimesheetCalendarModel extends TimesheetCalendarMyTimesheetsModel {
         this.notification = services.notification;
     }
 
-    multiCreateRecords(dates) {
+    multiCreateRecords(multiCreateData, dates) {
         const [section] = this.filterSections;
         if (section.filters.filter((filter) => filter.active).length === 0) {
             this.notification.add(_t("Choose an employee to create their timesheet."), {
@@ -16,6 +16,6 @@ export class TimesheetCalendarModel extends TimesheetCalendarMyTimesheetsModel {
             });
             return;
         }
-        super.multiCreateRecords(dates);
+        super.multiCreateRecords(multiCreateData, dates);
     }
 }
