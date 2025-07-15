@@ -29,10 +29,10 @@ class HrVersion(models.Model):
         Working Schedule: Work entries will be generated from the working hours below.
         Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)
         Planning: Work entries will be generated from the employee's planning. (requires Planning app)
-    ''', groups="hr.group_hr_user")
+    ''', groups="hr.group_hr_manager")
     work_entry_source_calendar_invalid = fields.Boolean(
         compute='_compute_work_entry_source_calendar_invalid',
-        groups="hr.group_hr_user",
+        groups="hr.group_hr_manager",
     )
 
     @api.depends('work_entry_source', 'resource_calendar_id')
