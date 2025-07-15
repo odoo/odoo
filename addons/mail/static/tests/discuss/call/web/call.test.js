@@ -45,7 +45,7 @@ test("no auto-call on joining group chat", async () => {
     await click("li", { text: "Mario" });
     await click("li", { text: "Luigi" });
     await click("button", { text: "Create Group Chat" });
-    await contains(".o-mail-DiscussSidebar-item:contains('Mario, and Luigi')");
+    await contains(".o-mail-DiscussSidebar-item:contains('Mario, Luigi')");
     await contains(".o-mail-Message", { count: 0 });
     await contains(".o-discuss-Call", { count: 0 });
 });
