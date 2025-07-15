@@ -355,9 +355,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
      * @return {Number[]} The sale order line's PTAV ids.
      */
     _getVariantPtavIds(saleOrderLine) {
-        return saleOrderLine.product_template_attribute_value_ids.records.map(
-            record => record.resId
-        );
+        return saleOrderLine.product_template_attribute_value_ids.currentIds;
     }
 
     /**
@@ -367,9 +365,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
      * @return {Number[]} The sale order line's `no_variant` PTAV ids.
      */
     _getNoVariantPtavIds(saleOrderLine) {
-        return saleOrderLine.product_no_variant_attribute_value_ids.records.map(
-            record => record.resId
-        );
+        return saleOrderLine.product_no_variant_attribute_value_ids.currentIds;
     }
 
     /**

@@ -611,15 +611,16 @@ export class Record extends DataPoint {
      */
     _createStaticListDatapoint(data, fieldName, { orderBys } = {}) {
         const { related, limit, defaultOrderBy } = this.activeFields[fieldName];
+        const relatedActiveFields = (related && related.activeFields) || {};
         const config = {
             resModel: this.fields[fieldName].relation,
-            activeFields: (related && related.activeFields) || {},
+            activeFields: relatedActiveFields,
             fields: (related && related.fields) || {},
             relationField: this.fields[fieldName].relation_field || false,
             offset: 0,
             resIds: data.map((r) => r.id),
             orderBy: orderBys?.[fieldName] || defaultOrderBy || [],
-            limit: limit || Number.MAX_SAFE_INTEGER,
+            limit: limit || (Object.keys(relatedActiveFields).length ? Number.MAX_SAFE_INTEGER : 1),
             context: {}, // will be set afterwards, see "_updateContext" in "_setEvalContext"
         };
         const options = {
