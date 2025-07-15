@@ -1,8 +1,9 @@
 import { test, expect } from "@odoo/hoot";
-import { press, click, animationFrame } from "@odoo/hoot-dom";
+import { press, click, animationFrame, queryOne } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ColorPicker, DEFAULT_COLORS } from "@web/core/color_picker/color_picker";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
+import { convertRgbToHsl } from "@web/core/utils/colors";
 
 test("basic rendering", async () => {
     await mountWithCleanup(ColorPicker, {
@@ -157,4 +158,77 @@ test("custom color picker change color on click in hue slider", async () => {
     expect("input.o_hex_input").toHaveValue("#FF0000");
     await click(".o_color_slider");
     expect("input.o_hex_input").not.toHaveValue("#FF0000");
+});
+
+function getRgbaInput() {
+    return [
+        parseInt(queryOne("input.o_red_input").value),
+        parseInt(queryOne("input.o_green_input").value),
+        parseInt(queryOne("input.o_blue_input").value),
+        parseInt(queryOne("input.o_opacity_input").value),
+    ];
+}
+
+test("custom color picker keeps transparent selected color", async () => {
+    await mountWithCleanup(CustomColorPicker, { props: { selectedColor: "#00000000" } });
+    expect(getRgbaInput()).toEqual([0, 0, 0, 0]);
+});
+
+test("custom color picker change from transparent and black to solid color on hue click", async () => {
+    await mountWithCleanup(CustomColorPicker, { props: { selectedColor: "#00000000" } });
+    {
+        const [r, g, b, a] = getRgbaInput();
+        const hsl = convertRgbToHsl(r, g, b);
+        expect(a).toBe(0);
+        expect(hsl).toEqual({ hue: 0, saturation: 0, lightness: 0 });
+    }
+    await click(".o_color_slider");
+    {
+        const [r, g, b, a] = getRgbaInput();
+        const hsl = convertRgbToHsl(r, g, b);
+        expect(a).toBe(100);
+        expect(hsl.hue).not.toBe(0);
+        expect(hsl.saturation).toBe(100);
+        expect(hsl.lightness).toBe(50);
+    }
+});
+
+test("custom color picker change from white to solid color on hue click", async () => {
+    await mountWithCleanup(CustomColorPicker, { props: { selectedColor: "#ffffff40" } });
+    {
+        const [r, g, b, a] = getRgbaInput();
+        const hsl = convertRgbToHsl(r, g, b);
+        expect(a).toBe(25);
+        expect(hsl).toEqual({ hue: 0, saturation: 0, lightness: 100 });
+    }
+    await click(".o_color_slider");
+    {
+        const [r, g, b, a] = getRgbaInput();
+        const hsl = convertRgbToHsl(r, g, b);
+        expect(a).toBe(25);
+        expect(hsl.hue).not.toBe(0);
+        expect(hsl.saturation).toBe(100);
+        expect(hsl.lightness).toBe(50);
+    }
+});
+
+test("custom color picker change from grey to solid color on hue click", async () => {
+    await mountWithCleanup(CustomColorPicker, { props: { selectedColor: "#40404040" } });
+    {
+        const [r, g, b, a] = getRgbaInput();
+        const hsl = convertRgbToHsl(r, g, b);
+        expect(a).toBe(25);
+        expect(hsl.hue).toBe(0);
+        expect(hsl.saturation).toBe(0);
+        expect(Math.round(hsl.lightness)).toBe(25);
+    }
+    await click(".o_color_slider");
+    {
+        const [r, g, b, a] = getRgbaInput();
+        const hsl = convertRgbToHsl(r, g, b);
+        expect(a).toBe(25);
+        expect(hsl.hue).not.toBe(0);
+        expect(hsl.saturation).toBe(100);
+        expect(Math.round(hsl.lightness)).toBe(25);
+    }
 });
