@@ -172,6 +172,11 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         if (this.props.editableElements) {
             return this.props.editableElements();
         }
+        for (const coverPartEl of $wrapwrap[0].querySelectorAll(".o_record_cover_component")) {
+            // Exclude cover properties from the o_dirty system, they are
+            // handled by _saveCoverProperties.
+            coverPartEl.dataset.oeReadonly = 1;
+        }
         return $wrapwrap.find('[data-oe-model]')
             .not('.o_not_editable')
             .filter(function () {
