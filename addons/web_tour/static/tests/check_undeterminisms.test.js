@@ -85,7 +85,7 @@ afterEach(() => {
 });
 
 test("element is no longer visible", async () => {
-    macro.onStep = (step, el, index) => {
+    macro.onStep = ({ index }) => {
         if (index == 2) {
             setTimeout(() => {
                 queryFirst(".container").classList.add("d-none");
@@ -104,7 +104,7 @@ ${expectedError}`,
 });
 
 test("change text", async () => {
-    macro.onStep = (step, el, index) => {
+    macro.onStep = ({ index }) => {
         if (index == 2) {
             setTimeout(() => {
                 queryFirst(".button1").textContent = "Text has changed :)";
@@ -131,7 +131,7 @@ Initial element has changed:
 });
 
 test("change attributes", async () => {
-    macro.onStep = (step, el, index) => {
+    macro.onStep = ({ index }) => {
         if (index == 2) {
             setTimeout(() => {
                 const button1 = queryFirst(".button1");
@@ -168,7 +168,7 @@ ${expectedError}`,
 });
 
 test("add child node", async () => {
-    macro.onStep = (step, el, index) => {
+    macro.onStep = ({ index }) => {
         if (index == 4) {
             setTimeout(() => {
                 const addElement = document.createElement("div");
@@ -205,7 +205,7 @@ ${expectedError}`,
 });
 
 test.skip("snapshot is the same but has mutated", async () => {
-    macro.onStep = async (step, el, index) => {
+    macro.onStep = async ({ index }) => {
         if (index === 2) {
             setTimeout(() => {
                 const button1 = queryFirst(".button1");
