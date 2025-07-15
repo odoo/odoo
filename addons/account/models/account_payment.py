@@ -514,7 +514,7 @@ class AccountPayment(models.Model):
                 pay.available_partner_bank_ids = pay.partner_id.bank_ids\
                         .filtered(lambda x: x.company_id.id in (False, pay.company_id.id))._origin
 
-    @api.depends('available_partner_bank_ids', 'journal_id')
+    @api.depends('available_partner_bank_ids', 'journal_id', 'partner_id', 'partner_id.bank_ids')
     def _compute_partner_bank_id(self):
         ''' The default partner_bank_id will be the first available on the partner. '''
         for pay in self:
