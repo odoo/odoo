@@ -23,6 +23,7 @@ class TestUBLTR(AccountTestInvoicingCommon):
             'country_id': cls.env.ref('base.tr').id,
             'email': 'info@company.trexample.com',
             'phone': '+90 501 234 56 78',
+            'ref': 'Ulus',
             'bank_ids': [(0, 0, {'acc_number': 'TR0123456789'})],
         })
 
@@ -38,6 +39,7 @@ class TestUBLTR(AccountTestInvoicingCommon):
             'phone': '+90 509 876 54 32',
             'bank_ids': [(0, 0, {'acc_number': 'TR9876543210'})],
             'invoice_edi_format': 'ubl_tr',
+            'ref': 'Ulus',
             'l10n_tr_nilvera_customer_status': 'einvoice',  # Pretend that the customer status has been checked
         })
 
@@ -81,9 +83,6 @@ class TestUBLTR(AccountTestInvoicingCommon):
 
     def test_xml_invoice_einvoice(self):
         with freeze_time('2025-03-05'):
-            # Adding a ref field to the partner because this field has an influence on <BuyerReference> and
-            # <PartyIdentification> tags in UBL but we have special code to not take it into account for UBL TR 1.2
-            self.partner_1.ref = '1234567890'
             generated_xml = self._generate_invoice_xml()
 
         with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_einvoice.xml', 'rb') as expected_xml_file:
