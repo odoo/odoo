@@ -174,12 +174,28 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         # The API expects the iso3166-2 code for the state, in the same way as it expects the iso3166 code for the countries.
         # In Odoo, we mostly use these (although there is no standard format) so we'll try to use what Odoo gives us.
         # For malaysia, the codes were updated..
-        subentity_code = partner.state_id.code or ''
+
+        subentity_code = ''
         country = partner.country_id
 
-        # The API does not expect the country code inside the state code, only the number part.
-        if f'{country.code}-' in subentity_code:
-            subentity_code = subentity_code.split('-')[1]
+        if partner.state_id:
+            if (
+                partner._l10n_my_edi_get_tin_for_myinvois() == 'EI00000000010'
+                and partner.l10n_my_identification_number == 'NA'
+            ):
+                # Special case for consolidated entities (e.g., general public).
+                # When TIN is 'EI00000000010' and Identification Number is 'NA', MyInvois requires
+                # the CountrySubentityCode to be fixed as '17' regardless of the actual state.
+                subentity_code = '17'
+            elif country.code != 'MY':
+                # For non-Malaysian partners return the state name instead of state code
+                subentity_code = partner.state_id.name
+            else:
+                # Get the subentity code for the partner, based on its state.
+                subentity_code = partner.state_id.code
+
+            # Strip 'MY-' prefix if present as we only need number part
+            subentity_code = subentity_code.split('-')[1] if 'MY-' in subentity_code else subentity_code
 
         return {
             'cbc:CityName': {'_text': partner.city},
