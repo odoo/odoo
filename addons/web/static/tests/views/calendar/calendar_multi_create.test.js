@@ -780,3 +780,25 @@ test("multi_create: test required attribute in form", async () => {
     await animationFrame();
     expect.verifySteps(["Test required_2019-03-04", "Test required_2019-03-04"]);
 });
+
+test.tags("desktop");
+test("multi_create: display sidebar even if session_storage says no", async () => {
+    patchWithCleanup(sessionStorage, {
+        getItem(key) {
+            if (key === "calendar.showSideBar") {
+                expect.step("read calendar.showSideBar");
+                return false;
+            }
+        },
+    });
+
+    await mountView({
+        type: "calendar",
+        resModel: "event",
+        arch: `<calendar date_start="date_start" scales="month" multi_create_view="multi_create_form" aggregate="id:count"/>`,
+    });
+
+    expect(".o_calendar_sidebar").toHaveCount(1);
+    expect(".o_calendar_sidebar .btn-group .btn").toHaveCount(3);
+    expect.verifySteps(["read calendar.showSideBar"]);
+});
