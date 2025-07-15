@@ -529,6 +529,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
         # if not assigned -> should filter out
         self.env.invalidate_all()
+        self.env.transaction.clear_access_cache()
         self.test_activities_removed.write({'user_id': self.user_admin.id})
         test_with_removed = self.env['mail.activity'].search([
             ('id', 'in', self.test_activities.ids),
