@@ -545,6 +545,10 @@ class SaleOrder(models.Model):
         if not product:
             raise UserError(_("The given combination does not exist therefore it cannot be added to cart."))
 
+        if linked_line_id and linked_line_id not in self.order_line.ids:
+            # Make sure the provided parent line belongs to the current order.
+            raise UserError(_("Invalid request parameters."))
+
         values = {
             'product_id': product.id,
             'product_uom_qty': quantity,
