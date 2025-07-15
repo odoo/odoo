@@ -465,14 +465,28 @@ export class PosOrder extends Base {
         const lines_to_recompute = this.getLinesToCompute();
 
         for (const line of lines_to_recompute) {
-            const newPrice = line.product_id.getPrice(
-                pricelist,
-                line.getQuantity(),
-                line.getPriceExtra(),
-                false,
-                line.product_id
-            );
-            line.setUnitPrice(newPrice);
+            if (line.isLotTracked()) {
+                const related_lines = [];
+                const price = line.product_id.product_tmpl_id.getPrice(
+                    pricelist,
+                    line.getQuantity(),
+                    line.getPriceExtra(),
+                    false,
+                    line.product_id,
+                    line,
+                    related_lines
+                );
+                related_lines.forEach((line) => line.setUnitPrice(price));
+            } else {
+                const newPrice = line.product_id.product_tmpl_id.getPrice(
+                    pricelist,
+                    line.getQuantity(),
+                    line.getPriceExtra(),
+                    false,
+                    line.product_id
+                );
+                line.setUnitPrice(newPrice);
+            }
         }
 
         const attributes_prices = {};

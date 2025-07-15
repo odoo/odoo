@@ -894,6 +894,21 @@ export class PosStore extends WithLazyGetterTrap {
         // Merge orderline if needed
         this.tryMergeOrderline(order, line, merge, selectedOrderline);
 
+        if (values.product_id.tracking === "lot") {
+            const productTemplate = values.product_id.product_tmpl_id;
+            const related_lines = [];
+            const price = productTemplate.getPrice(
+                order.pricelist_id,
+                values.qty,
+                values.price_extra,
+                false,
+                values.product_id,
+                line,
+                related_lines
+            );
+            related_lines.forEach((line) => line.setUnitPrice(price));
+        }
+
         if (configure) {
             this.numberBuffer.reset();
         }
