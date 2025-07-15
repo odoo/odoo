@@ -167,8 +167,10 @@ class PosOrder(models.Model):
         line_by_uuid = {line.uuid: line for line in  self.lines.filtered_domain([("uuid", "in", [line['uuid'] for line in lines])])}
 
         for line in lines:
-            if line.get('combo_parent_id'):
-                line_by_uuid[line['uuid']].combo_parent_id = line_by_uuid[uuid_by_cid[line['combo_parent_id']]]
+            if not line.get('combo_parent_id'):
+                continue
+            idx = line['combo_parent_id'] if isinstance(line['combo_parent_id'], str) else uuid_by_cid[line['combo_parent_id']]
+            line_by_uuid[line['uuid']].combo_parent_id = line_by_uuid[idx].id
 
     def _process_saved_order(self, draft):
         self.ensure_one()
