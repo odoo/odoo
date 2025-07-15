@@ -934,14 +934,14 @@ describe("serialization", () => {
 
         // Serialized node should not have textNode as child, even though it
         // current has it as child (otherwise it would duplicate it on unserialization)
-        let { nodeId, children } = mutations[0].node;
+        let { nodeId, children } = mutations[0].serializedNode;
         expect(idToNode(nodeId)).toBe(strong);
         expect(children.length).toBe(0);
 
         // 2nd and 3rd mutations: textNode is moved into strong
-        ({ nodeId } = mutations[1].node);
+        ({ nodeId } = mutations[1].serializedNode);
         expect(idToNode(nodeId)).toBe(textNode);
-        ({ nodeId } = mutations[2].node);
+        ({ nodeId } = mutations[2].serializedNode);
         expect(idToNode(nodeId)).toBe(textNode);
     });
 
@@ -976,29 +976,29 @@ describe("serialization", () => {
 
         // Serialized node A should not have children, even though it currently
         // has B and D as children.
-        let { nodeId, children } = mutations[0].node;
+        let { nodeId, children } = mutations[0].serializedNode;
         expect(idToNode(nodeId)).toBe(a);
         expect(children.length).toBe(0);
 
         // Serialized node B should have C as child, even though it currently
         // has no children
-        ({ nodeId, children } = mutations[1].node);
+        ({ nodeId, children } = mutations[1].serializedNode);
         expect(idToNode(nodeId)).toBe(b);
         expect(children.length).toBe(1);
         expect(idToNode(children[0].nodeId)).toBe(c);
 
         // Serialized node D should not have children, even though it currently
         // has C as child.
-        ({ nodeId, children } = mutations[2].node);
+        ({ nodeId, children } = mutations[2].serializedNode);
         expect(idToNode(nodeId)).toBe(d);
         expect(children.length).toBe(0);
 
         // Serialized node C should have no children
-        ({ nodeId, children } = mutations[3].node);
+        ({ nodeId, children } = mutations[3].serializedNode);
         expect(idToNode(nodeId)).toBe(c);
         expect(children.length).toBe(0);
 
-        ({ nodeId, children } = mutations[4].node);
+        ({ nodeId, children } = mutations[4].serializedNode);
         expect(idToNode(nodeId)).toBe(c);
         expect(children.length).toBe(0);
     });
