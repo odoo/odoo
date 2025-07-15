@@ -1,4 +1,16 @@
+@mixin sublevel-line($_level-left: 0) {
+    position: absolute;
+    border: $o-we-border-width solid var(--o-hb-row-sublevel-color, #{mix($o-we-bg-lighter, $o-we-fg-light)});
+    border-width: 0 0 $o-we-border-width $o-we-border-width;
+    height: 100%;
+    pointer-events: none;
+    transform: translate($_level-left - $o-we-border-width, ($o-hb-row-min-height * -0.5) - $o-we-border-width);
+    content: "";
+}
+
 .hb-row {
+    $_z-index: 4;
+
     .popover & {
         --o-hb-row-bg-color: var(--o-hb-row-bg-color-popover, --popover-bg);
         --o-hb-row-active-bg-color: var(--o-hb-row-active-bg-color-popover, #{mix($o-we-color-accent, $o-we-fg-lighter, 20%)});
@@ -27,7 +39,7 @@
     .hb-row-label {
         min-width: 0;
         flex: 0 0 44%;
-        z-index: 4;
+        z-index: $_z-index;
         position: relative;
         background-color: var(--o-hb-row-bg-color, #{$o-we-bg-lighter});
         padding: $o-hb-row-spacing 0 $o-hb-row-spacing $o-hb-row-padding-left;
@@ -41,13 +53,13 @@
         width: 56%;
         align-items: center;
         gap: var(--hb-row-content-gap);
-        z-index: 4; // Make sure outlines / shadows are not trimmed.
+        z-index: $_z-index; // Make sure outlines / shadows are not trimmed.
     }
 
     .o_hb_collapse_toggler {
         position: absolute;
         padding-left: $o-hb-row-spacing;
-        z-index: 5;
+        z-index: $_z-index + 1;
         font-size: 0.8em;
         color: inherit;
 
@@ -88,23 +100,18 @@
 
     // ==== Sublevels
     &.hb-row-sublevel:after {
-        position: absolute;
-        border: $o-we-border-width solid var(--o-hb-row-sublevel-color, #{mix($o-we-bg-lighter, $o-we-fg-light)});
-        border-width: 0 0 $o-we-border-width $o-we-border-width;
-        height: 100%;
-        transform: translate(-$o-we-border-width, ($o-hb-row-min-height * -0.5) - $o-we-border-width);
-        pointer-events: none;
-        content: "";
+        @include sublevel-line;
     }
 
     // Sublevel specific rules
     @for $_level from 1 through 3 {
-        &.hb-row-sublevel-#{$_level} {
-            $_level-padding: $o-hb-row-padding-left + ($o-hb-row-indent-left * $_level);
-            $_level-width: $o-hb-row-spacing + $o-we-border-width;
+        $_level-padding: $o-hb-row-padding-left + ($o-hb-row-indent-left * $_level);
+        $_level-width: $o-hb-row-spacing + $o-we-border-width;
+        $_level-left: $_level-padding - $_level-width - $o-we-border-width;
 
+        &.hb-row-sublevel-#{$_level} {
             .hb-row-label, &:after {
-                z-index: 4 - $_level;
+                z-index: $_z-index - $_level;
             }
 
             .hb-row-label {
@@ -113,8 +120,13 @@
 
             &:after {
                 width: $_level-width;
-                left: $_level-padding - $_level-width - $o-we-border-width;
+                left: $_level-left;
             }
+        }
+
+        &[data-label=" "]:not(.hb-row-sublevel):has(+ .hb-row-sublevel-#{$_level}):after {
+            @include sublevel-line($_level-left);
+            z-index: $_z-index - $_level;
         }
     }
 }
