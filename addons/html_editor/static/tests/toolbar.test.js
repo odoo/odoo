@@ -544,15 +544,18 @@ test("toolbar open on single selected cell in table", async () => {
     const mouseDownPositionY = targetTd.getBoundingClientRect().top + 10;
     const mouseMoveDiff = 40;
     manuallyDispatchProgrammaticEvent(targetTd, "mousedown", {
+        detail: 1,
         clientX: mouseDownPositionX,
         clientY: mouseDownPositionY,
     });
     // Simulate mousemove horizontally for 40px.
     manuallyDispatchProgrammaticEvent(targetTd, "mousemove", {
+        detail: 1,
         clientX: mouseDownPositionX + mouseMoveDiff,
         clientY: mouseDownPositionY,
     });
     manuallyDispatchProgrammaticEvent(targetTd, "mouseup", {
+        detail: 1,
         clientX: mouseDownPositionX + mouseMoveDiff,
         clientY: mouseDownPositionY,
     });
@@ -591,6 +594,7 @@ test("should select table single cell when entire content is selected via mouse 
     // Simulate mousedown at the top of the first paragraph.
     const rectStart = firstP.getBoundingClientRect();
     manuallyDispatchProgrammaticEvent(firstP, "mousedown", {
+        detail: 1,
         clientX: rectStart.left,
         clientY: rectStart.top,
     });
@@ -612,14 +616,17 @@ test("should select table single cell when entire content is selected via mouse 
 
     // Simulate mousemove and mouseup events to complete the selection.
     manuallyDispatchProgrammaticEvent(lastP, "mousemove", {
+        detail: 1,
         clientX: rect.right,
         clientY: rect.top,
     });
     manuallyDispatchProgrammaticEvent(lastP, "mousemove", {
+        detail: 1,
         clientX: rect.right + 5,
         clientY: rect.top,
     });
     manuallyDispatchProgrammaticEvent(lastP, "mouseup", {
+        detail: 1,
         clientX: rect.right + 5,
         clientY: rect.top,
     });
