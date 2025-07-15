@@ -140,7 +140,7 @@ class MailTemplate(models.Model):
         if operator != 'in':
             return NotImplemented
 
-        templates_with_xmlid = self.env['ir.model.data']._search([
+        templates_with_xmlid = self.env['ir.model.data'].sudo()._search([
             ('model', '=', 'mail.template'),
             ('module', '!=', '__export__')
         ]).subselect('res_id')
