@@ -62,7 +62,7 @@ class EventMail(models.Model):
         help='Slot-based communication')
     mail_done = fields.Boolean("Sent", copy=False, readonly=True)
     mail_state = fields.Selection(
-        [('running', 'Running'), ('scheduled', 'Scheduled'), ('sent', 'Sent'), ('error', 'Error')],
+        [('running', 'Running'), ('scheduled', 'Scheduled'), ('sent', 'Sent'), ('error', 'Error'), ('cancelled', 'Cancelled')],
         string='Global communication Status', compute='_compute_mail_state')
     mail_count_done = fields.Integer('# Sent', copy=False, readonly=True)
     notification_type = fields.Selection([('mail', 'Mail')], string='Send', compute='_compute_notification_type')
@@ -84,12 +84,15 @@ class EventMail(models.Model):
         if next_schedule and (cron := self.env.ref('event.event_mail_scheduler', raise_if_not_found=False)):
             cron._trigger(next_schedule)
 
-    @api.depends('error_datetime', 'interval_type', 'mail_done')
+    @api.depends('error_datetime', 'interval_type', 'mail_done', 'event_id')
     def _compute_mail_state(self):
         for scheduler in self:
             # issue detected
             if scheduler.error_datetime:
                 scheduler.mail_state = 'error'
+            # event cancelled
+            elif not scheduler.mail_done and scheduler.event_id.kanban_state == 'cancel':
+                scheduler.mail_state = 'cancelled'
             # registrations based
             elif scheduler.interval_type == 'after_sub':
                 scheduler.mail_state = 'running'
@@ -471,6 +474,8 @@ class EventMail(models.Model):
         schedulers = self.search([
             # skip archived events
             ('event_id.active', '=', True),
+            # skip if event is cancelled
+            ('event_id.kanban_state', '!=', 'cancel'),
             # scheduled
             ('scheduled_date', '<=', fields.Datetime.now()),
             # event-based: todo / attendee-based: running until event is not done
