@@ -5,6 +5,8 @@ from unittest import skip
 from odoo.tests import Form, tagged
 
 from odoo import Command
+from odoo.tools.float_utils import float_round
+
 from odoo.addons.base.tests.common import BaseCommon
 
 
@@ -162,7 +164,10 @@ class TestSaleMrpKitBom(BaseCommon):
                 # - Components:
                 # * 1 x Component A (Price: $ 8, QTY: 10, UOM: Meter)
                 # * 1 x Component B (Price: $ 5, QTY: 2, UOM: Dozen)
-            # sale price of Kit A = (8 * 10) + (5 * 2 * 12) = $ 200
+            # sale price of Kit A = $ 1 + 15%tax = $ 1.15
+            # sale price of Component A = 1.15 * ((8 / 13) / 10) = $ 0.070769231
+            # sale price of Component B = 1.15 * ((5 / 13) / 2 * 12) = $ 0.018429487
+            # sale price of Component A + Component B = $ 0.070769231 * 10 + $ 0.018429487 * 24 = $ 1.14999998
         """
         if "sale_price" not in self.env["stock.move.line"]._fields:
             self.skipTest("This test only runs with both sale_mrp and stock_delivery installed")
@@ -219,10 +224,14 @@ class TestSaleMrpKitBom(BaseCommon):
                 })],
             'warehouse_id': self.warehouse.id,
         })
+        # Since the sale price is not explicitly set in the sale order, it defaults to 1
+        self.assertEqual(so.order_line.price_reduce_taxinc, 1.15, "The sale unit price of the kit should be 1.15")
         so.action_confirm()
         so.picking_ids._action_done()
         move_lines = so.picking_ids.move_ids.move_line_ids
-        self.assertEqual(move_lines.mapped("sale_price"), [80, 120], 'wrong shipping value')
+        # Round the sale prices to two decimal places before asserting
+        rounded_sale_prices = [float_round(price, 2) for price in move_lines.mapped("sale_price")]
+        self.assertEqual(rounded_sale_prices, [0.71, 0.44], 'wrong shipping value')
 
     def test_qty_delivered_with_bom(self):
         """Check the quantity delivered, when a bom line has a non integer quantity"""
