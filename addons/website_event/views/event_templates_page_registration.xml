@@ -185,8 +185,12 @@
         Registration failed! Suspicious activity detected by Google reCaptcha.
     </div>
     <t t-if="not event.event_registrations_open">
+        <!-- Cancelled -->
+        <div t-if="event.kanban_state == 'cancel'" class="alert alert-danger mb-3 small text-center" role="status">
+            <b>Cancelled</b>
+        </div>
         <!-- Delayed registration time -->
-        <div t-if="not event.event_registrations_started and not event.event_registrations_sold_out" class="alert alert-info mb-3 small" role="status">
+        <div t-elif="not event.event_registrations_started and not event.event_registrations_sold_out" class="alert alert-info mb-3 small" role="status">
             Registrations will open on
             <b t-out="event.start_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'MMMM dd, y'}"/>, at
             <b t-out="event.start_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'h:mm a'}"/>

@@ -94,16 +94,15 @@ class EventEvent(models.Model):
     # properties
     registration_properties_definition = fields.PropertiesDefinition('Registration Properties')
     # Kanban fields
-    kanban_state = fields.Selection([('normal', 'In Progress'), ('done', 'Done'), ('blocked', 'Blocked')], default='normal', copy=False)
-    kanban_state_label = fields.Char(
-        string='Kanban State Label', compute='_compute_kanban_state_label',
-        store=True, tracking=True)
+    kanban_state = fields.Selection([
+        ('normal', 'In Progress'),
+        ('done', 'Ready for Next Stage'),
+        ('blocked', 'Blocked'),
+        ('cancel', 'Cancelled')
+    ], default='normal', copy=False, compute='_compute_kanban_state', readonly=False, store=True, tracking=True)
     stage_id = fields.Many2one(
         'event.stage', ondelete='restrict', default=_get_default_stage_id,
         group_expand='_read_group_expand_full', tracking=True, copy=False)
-    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True)
-    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True)
-    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True)
     # Seats and computation
     seats_max = fields.Integer(
         string='Maximum Attendees',
@@ -142,7 +141,7 @@ class EventEvent(models.Model):
     event_registrations_open = fields.Boolean(
         'Registration open', compute='_compute_event_registrations_open', compute_sudo=True,
         help="Registrations are open if:\n"
-        "- the event is not ended\n"
+        "- the event is not ended or not cancelled\n"
         "- there are seats available on event\n"
         "- the tickets are sellable (if ticketing is used)")
     event_registrations_sold_out = fields.Boolean(
@@ -249,16 +248,6 @@ class EventEvent(models.Model):
                 'event_type_id': False,
             })
 
-    @api.depends('stage_id', 'kanban_state')
-    def _compute_kanban_state_label(self):
-        for event in self:
-            if event.kanban_state == 'normal':
-                event.kanban_state_label = event.stage_id.legend_normal
-            elif event.kanban_state == 'blocked':
-                event.kanban_state_label = event.stage_id.legend_blocked
-            else:
-                event.kanban_state_label = event.stage_id.legend_done
-
     @api.depends('event_slot_count', 'is_multi_slots', 'seats_max', 'registration_ids.state', 'registration_ids.active')
     def _compute_seats(self):
         """ Determine available, reserved, used and taken seats. """
@@ -309,6 +298,7 @@ class EventEvent(models.Model):
     def _compute_event_registrations_open(self):
         """ Compute whether people may take registrations for this event
 
+          * for cancelled events, registrations are not open;
           * event.date_end -> if event is done, registrations are not open anymore;
           * event.start_sale_datetime -> lowest start date of tickets (if any; start_sale_datetime
             is False if no ticket are defined, see _compute_start_sale_date);
@@ -319,7 +309,8 @@ class EventEvent(models.Model):
             event = event._set_tz_context()
             current_datetime = fields.Datetime.context_timestamp(event, fields.Datetime.now())
             date_end_tz = event.date_end.astimezone(pytz.timezone(event.date_tz or 'UTC')) if event.date_end else False
-            event.event_registrations_open = event.event_registrations_started and \
+            event.event_registrations_open = event.kanban_state != 'cancel' and \
+                event.event_registrations_started and \
                 (date_end_tz >= current_datetime if date_end_tz else True) and \
                 (not event.seats_limited or not event.seats_max or event.seats_available) and \
                 (
@@ -560,6 +551,12 @@ class EventEvent(models.Model):
             if event.event_type_id and not is_html_empty(event.event_type_id.note):
                 event.note = event.event_type_id.note
 
+    @api.depends('stage_id')
+    def _compute_kanban_state(self):
+        for task in self:
+            if task.kanban_state != 'cancel':
+                task.kanban_state = 'normal'
+
     @api.depends('event_type_id')
     def _compute_ticket_instructions(self):
         for event in self:
@@ -641,12 +638,6 @@ class EventEvent(models.Model):
                                     "the event will be sold out and the extra registrations will remain."),
                     }
                 }
-
-    def write(self, vals):
-        if 'stage_id' in vals and 'kanban_state' not in vals:
-            # reset kanban state when changing stage
-            vals['kanban_state'] = 'normal'
-        return super().write(vals)
 
     @api.depends('event_registrations_sold_out', 'seats_limited', 'seats_max', 'seats_available')
     @api.depends_context('name_with_seats_availability')
