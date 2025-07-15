@@ -617,7 +617,9 @@ class Challenge(models.Model):
                 lines = challenge._get_serialized_challenge_lines(user, restrict_goals=subset_goals)
                 if not lines:
                     continue
-
+                # Avoid error if 'full_suffix' is missing in the line
+                for line in lines:
+                    line.setdefault('full_suffix', '')
                 body_html = challenge.report_template_id.with_user(user).with_context(challenge_lines=lines)._render_field('body_html', challenge.ids)[challenge.id]
 
                 # notify message only to users, do not post on the challenge
