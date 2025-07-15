@@ -421,6 +421,20 @@ class MailMessage(models.Model):
             forbidden_doc_ids = set()
             try:
                 operation_result = records._check_access(record_operation)
+                # Check that records really exist;
+                # lengthy way of checking first in cache and avoiding exists() call.
+                # see test_record_unlinked_orphan_activities
+                for field in records._fields.values():
+                    if (
+                        field.store and field.column_type
+                        and field.prefetch is True
+                        and records._has_field_access(field, 'read')
+                    ):
+                        records.mapped(field.name)
+                        break
+                else:
+                    if records.exists() != records:
+                        raise MissingError(self.env._("Missing records"))  # noqa: TRY301
             except MissingError:
                 existing = records.exists()
                 forbidden_doc_ids = set((records - existing).ids)
