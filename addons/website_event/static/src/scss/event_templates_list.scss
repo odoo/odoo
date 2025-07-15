@@ -46,6 +46,18 @@
             padding: ($spacer * .5) $card-spacer-x;
             transform: translateY(-50%);
         }
+        .o_wevent_badge_event_list {
+            @include o-position-absolute($top: 0, $left: 0);
+            @include border-end-radius(0);
+            padding: ($spacer * .5) $card-spacer-x;
+            transform: translateX(-100%);
+
+            @include media-breakpoint-down(sm) {
+                margin-top: 1rem;
+                border-radius: 10rem;
+                transform: none;
+            }
+        }
     }
     .o_wevent_sidebar_title {
         margin: 0 0 ($spacer * 1.5) 0;
