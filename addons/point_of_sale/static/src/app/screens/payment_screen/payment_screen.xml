@@ -156,12 +156,13 @@
             <div class="paymentmethods gap-1 gap-lg-2" t-att-class="{ 'd-grid p-1 gap-1 overflow-y-auto rounded-3 bg-200': ui.isSmall, 'd-flex flex-column gap-lg-2': !ui.isSmall }">
                 <t t-foreach="payment_methods_from_config" t-as="paymentMethod" t-key="paymentMethod.id">
                     <div t-if="!(this.pos.cashier._role === 'minimal' and paymentMethod.type === 'pay_later')" class="button paymentmethod btn btn-secondary btn-lg lh-lg flex-fill"
-                        t-att-class="{'opacity-50': this.pos.paymentTerminalInProgress and paymentMethod.use_payment_terminal}"
+                        t-att-class="{'opacity-50': this.pos.paymentTerminalInProgress and paymentMethod.use_payment_terminal, 'd-flex justify-content-between align-items-center': true}"
                         t-on-click="() => this.addNewPaymentLine(paymentMethod)">
                         <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">
                             <img class="payment-method-icon" t-att-src="paymentMethodImage(paymentMethod.id)" />
-                            <span class="payment-name" t-esc="pos.getPaymentMethodDisplayText(paymentMethod, currentOrder)" />
+                            <span class="payment-name" t-esc="paymentMethod.name" />
                         </div>
+                        <span class="text-muted" t-esc="pos.getPaymentMethodFmtAmount(paymentMethod, currentOrder)"/>
                     </div>
                 </t>
             </div>
