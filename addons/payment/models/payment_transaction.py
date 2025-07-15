@@ -350,6 +350,18 @@ class PaymentTransaction(models.Model):
             },
         }
 
+    def action_post_process(self):
+        """Trigger the post-processing of the transactions.
+
+        :return: A client action to soft-reload the view.
+        :rtype: dict
+        """
+        self._post_process()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'soft_reload',
+        }
+
     # === BUSINESS METHODS - PRE-PROCESSING === #
 
     @api.model
