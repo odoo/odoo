@@ -23,7 +23,7 @@
         </div>
         <div class="o_pos_landing_footer position-absolute bottom-0 end-0 d-flex w-100 ">
             <div class="container o_self_container py-3">
-                <div  class="row justify-content-center g-2 g-md-3">
+                <div t-if="!router.isBlocked" class="row justify-content-center g-2 g-md-3">
                     <t t-if="showMyOrderBtn()">
                         <div class="col-12 col-md-6 col-lg-6 col-kiosk-p-12">
                             <a type="button"
@@ -49,6 +49,13 @@
                             </a>
                         </div>
                     </t>
+                </div>
+                <div t-else="" class="row justify-content-center g-2 g-md-3">
+                    <div class="col-12 col-md-6 col-lg-6 col-kiosk-p-12">
+                        <div class="alert alert-danger text-center">
+                            An order is currently in progress. Please complete or cancel your existing order before starting a new one.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

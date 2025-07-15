@@ -1,8 +1,13 @@
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+import { useQrcodePayment } from "@pos_self_order/overrides/utils/qrcode_payment_mixin";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 patch(TicketScreen.prototype, {
+    setup() {
+        super.setup(...arguments);
+        useQrcodePayment();
+    },
     getStatus(order) {
         if (!(order.pos_reference || "").includes("Self")) {
             return super.getStatus(order);

@@ -63,5 +63,9 @@ export class selfOrderIndex extends Component {
     get selfIsReady() {
         return this.selfOrder.models["product.product"].length > 0;
     }
+
+    routerGuard(router) {
+        return !(this.selfOrder.currentOrder?.is_dynamic_qr_order && router.getTableIdentifier());
+    }
 }
 whenReady(() => mountComponent(selfOrderIndex, document.body));

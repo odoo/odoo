@@ -35,6 +35,7 @@ class PosOrder(models.Model):
     _inherit = "pos.order"
 
     table_stand_number = fields.Char(string="Table Stand Number")
+    is_dynamic_qr_order = fields.Boolean(string="Dynamic QR Code Order", default=False)
 
     @api.model
     def _load_pos_self_data_domain(self, data, config):

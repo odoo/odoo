@@ -7,8 +7,8 @@ from odoo.http import request
 
 class PosSelfKiosk(http.Controller):
     @http.route(["/pos-self/<config_id>", "/pos-self/<config_id>/<path:subpath>"], auth="public", website=True, sitemap=True)
-    def start_self_ordering(self, config_id=None, access_token=None, table_identifier=None, subpath=None):
-        pos_config, _, config_access_token = self._verify_entry_access(config_id, access_token, table_identifier)
+    def start_self_ordering(self, config_id=None, access_token=None, table_identifier=None, order_uuid=None, subpath=None):
+        pos_config, _, config_access_token = self._verify_entry_access(config_id, access_token, table_identifier, order_uuid)
         return request.render(
                 'pos_self_order.index',
                 {
@@ -27,18 +27,18 @@ class PosSelfKiosk(http.Controller):
             )
 
     @http.route("/pos-self/data/<config_id>", type='jsonrpc', auth='public', website=True)
-    def get_self_ordering_data(self, config_id=None, access_token=None, table_identifier=None):
-        pos_config, _, _ = self._verify_entry_access(config_id, access_token, table_identifier)
+    def get_self_ordering_data(self, config_id=None, access_token=None, table_identifier=None, order_uuid=None):
+        pos_config, _, _ = self._verify_entry_access(config_id, access_token, table_identifier, order_uuid)
         data = pos_config.load_self_data()
         return data
 
     @http.route("/pos-self/relations/<config_id>", type='jsonrpc', auth='public')
-    def get_self_ordering_relations(self, config_id=None, access_token=None, table_identifier=None):
-        pos_config, _, _ = self._verify_entry_access(config_id, access_token, table_identifier)
+    def get_self_ordering_relations(self, config_id=None, access_token=None, table_identifier=None, order_uuid=None):
+        pos_config, _, _ = self._verify_entry_access(config_id, access_token, table_identifier, order_uuid)
         data = pos_config.load_data_params()
         return data
 
-    def _verify_entry_access(self, config_id=None, access_token=None, table_identifier=None):
+    def _verify_entry_access(self, config_id=None, access_token=None, table_identifier=None, order_uuid=None):
         table_sudo = False
 
         if not config_id or not config_id.isnumeric():
@@ -71,6 +71,17 @@ class PosSelfKiosk(http.Controller):
                 .sudo()
                 .search([("identifier", "=", table_identifier), ("active", "=", True)], limit=1)
             )
+            order_sudo = order_uuid and (
+                request.env["pos.order"]
+                .sudo()
+                .search([("uuid", "=", order_uuid)], limit=1)
+            )
+            if order_sudo:
+                if order_sudo.state != 'draft':
+                    raise werkzeug.exceptions.NotFound()
+                if order_sudo.table_id:
+                    table_sudo = order_sudo.table_id
+
             if table_sudo and table_sudo.parent_id:
                 table_sudo = table_sudo.parent_id
         elif pos_config.self_ordering_mode == 'kiosk':

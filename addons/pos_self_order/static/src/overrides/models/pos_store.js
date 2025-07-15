@@ -1,4 +1,5 @@
 import { PosStore } from "@point_of_sale/app/services/pos_store";
+import { TableQrTicket } from "@pos_self_order/overrides/screens/product_screen/table_qr_ticket/table_qr_ticket";
 import { patch } from "@web/core/utils/patch";
 
 patch(PosStore.prototype, {
@@ -15,5 +16,16 @@ patch(PosStore.prototype, {
         }
 
         return await super.getServerOrders(...arguments);
+    },
+    async printTableQr() {
+        const order = this.getOrder();
+        order.is_dynamic_qr_order = true;
+        this.addPendingOrder([order.id]);
+        this.syncAllOrders({ orders: [order] });
+        await this.printer.print(TableQrTicket, { order }, this.printOptions);
+    },
+    async _onBeforeDeleteOrder(order) {
+        this.addPendingOrder([order.id], true);
+        return await super._onBeforeDeleteOrder(order);
     },
 });

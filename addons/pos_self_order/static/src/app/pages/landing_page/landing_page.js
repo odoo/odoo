@@ -8,7 +8,12 @@ import { session } from "@web/session";
 
 export class LandingPage extends Component {
     static template = "pos_self_order.LandingPage";
-    static props = {};
+    static props = {
+        isBlocked: {
+            type: Boolean,
+            optional: true,
+        },
+    };
 
     setup() {
         this.selfOrder = useSelfOrder();
@@ -102,8 +107,9 @@ export class LandingPage extends Component {
 
     start() {
         if (
-            this.draftOrder.length > 0 &&
-            this.selfOrder.config.self_ordering_pay_after === "each"
+            (this.draftOrder.length > 0 &&
+                this.selfOrder.config.self_ordering_pay_after === "each") ||
+            this.router.isBlocked
         ) {
             return;
         }
