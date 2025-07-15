@@ -12,11 +12,11 @@ patch(SaleOrderLineProductField.prototype, {
         return this.matrixConfigurator.open(this.props.record, edit);
     },
 
-    async _openProductConfigurator(edit=false) {
+    async _openProductConfigurator(edit=false, selectedComboItems=[]) {
         if (edit && this.props.record.data.product_add_mode == 'matrix') {
             this._openGridConfigurator(true);
         } else {
-            return super._openProductConfigurator(edit);
+            return super._openProductConfigurator(...arguments);
         }
     },
 });

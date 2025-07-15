@@ -41,11 +41,13 @@ class TestWebsiteSaleStockSaleOrderLine(HttpCase, WebsiteSaleStockCommon):
                 'product_id': product_a.id,
                 'product_uom_qty': 3,
                 'linked_line_id': combo_product_line.id,
+                'combo_item_id': combo_a.combo_item_ids[0].id,
             }, {
                 'order_id': self.cart.id,
                 'product_id': product_b.id,
                 'product_uom_qty': 3,
                 'linked_line_id': combo_product_line.id,
+                'combo_item_id': combo_b.combo_item_ids[0].id,
             },
         ])
 

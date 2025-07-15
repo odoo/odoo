@@ -5,10 +5,48 @@
             title="props.display_name"
             contentClass="'sale-combo-configurator-dialog'"
         >
-            <div t-foreach="props.combos" t-as="combo" t-key="combo.id">
+            <div t-if="unconfigurableCombos.length" class="mb-4">
+                <span class="d-inline-block mb-3 h4">
+                    Included
+                </span>
+                <div class="container">
+                    <div
+                        t-foreach="unconfigurableCombos"
+                        t-as="combo"
+                        t-key="combo.id"
+                        class="row mb-3"
+                    >
+                        <t t-set="product" t-value="combo.combo_items[0].product"/>
+                        <div class="col-2 p-0">
+                            <img
+                                t-attf-src="/web/image/product.product/{{product.id}}/image_256"
+                                alt="Product Image"
+                                role="img"
+                                class="img-thumbnail rounded"
+                            />
+                        </div>
+                        <div
+                            name="preselected_product_name"
+                            class="col d-flex justify-content-center text-break flex-column"
+                        >
+                            <span
+                                name="preselected_product_title"
+                                t-out="product.display_name"
+                                class="h5"
+                            />
+                            <div
+                                t-if="product.description"
+                                t-out="product.description"
+                                class="text-muted small text-truncate"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div t-foreach="configurableCombos" t-as="combo" t-key="combo.id">
                 <span
                     name="sale_combo_configurator_title"
-                    class="d-inline-block mt-4 mb-3 h4"
+                    t-attf-class="d-inline-block mb-3 h4 {{combo_index !== 0? 'mt-4' : ''}}"
                     t-out="combo.name"
                 />
                 <div class="combo-item-grid d-flex d-md-grid gap-4 pb-2 pb-md-0 overflow-x-auto">
@@ -18,6 +56,7 @@
                             extraPrice="comboItem.extra_price"
                             onClick="() => this.selectComboItem(combo.id, comboItem)"
                             isSelected="state.selectedComboItems.get(combo.id)?.id === comboItem.id"
+                            isConfigurable="comboItem.is_configurable"
                         />
                     </t>
                 </div>
