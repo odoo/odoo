@@ -37,7 +37,10 @@ export class ChannelInvitation extends Component {
             searchResultCount: 0,
             searchStr: "",
         });
-        this.debouncedFetchPartnersToInvite = useDebounced(this.fetchPartnersToInvite.bind(this), 250);
+        this.debouncedFetchPartnersToInvite = useDebounced(
+            this.fetchPartnersToInvite.bind(this),
+            250
+        );
         onWillStart(() => {
             if (this.store.self.type === "partner") {
                 this.fetchPartnersToInvite();
@@ -159,11 +162,18 @@ export class ChannelInvitation extends Component {
 
     async onClickInvite() {
         if (this.props.thread.channel_type === "chat") {
+            const activeRtcSession = this.props.thread.rtc_session_ids?.[0];
             const partnerIds = this.selectedPartners.map((partner) => partner.id);
             if (this.props.thread.correspondent) {
                 partnerIds.unshift(this.props.thread.correspondent.persona.id);
             }
-            await this.store.startChat(partnerIds);
+            const newThread = await this.store.startChat(partnerIds);
+            if (activeRtcSession) {
+                this.env.services["discuss.rtc"].toggleCall(newThread, {
+                    camera: activeRtcSession.is_camera_on,
+                    audio: activeRtcSession.isMute,
+                });
+            }
         } else {
             await this.orm.call("discuss.channel", "add_members", [[this.props.thread.id]], {
                 partner_ids: this.selectedPartners.map((partner) => partner.id),
