@@ -215,6 +215,77 @@
             <field name="privacy_visibility">portal</field>
         </record>
 
+        <!-- Project Template -->
+        <record id="project_template_1" model="project.project">
+            <field name="name">Product Launch Campaign</field>
+            <field name="is_template" eval="True"/>
+            <field name="date_start">2025-06-01 09:00:00</field>
+            <field name="date">2025-06-30 18:00:00</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="type_ids" eval="[
+                Command.link(ref('project_stage_0')),
+                Command.link(ref('project_stage_1')),
+                Command.link(ref('project_stage_2')),
+                Command.link(ref('project_stage_3'))
+            ]"/>
+        </record>
+
+        <record id="project_template_1_task_1" model="project.task">
+            <field name="name">Market Analysis</field>
+            <field name="project_id" ref="project_template_1"/>
+        </record>
+
+        <record id="project_template_1_task_2" model="project.task">
+            <field name="name">Define Target Audience</field>
+            <field name="project_id" ref="project_template_1"/>
+            <field name="depend_on_ids" eval="[Command.link(ref('project_template_1_task_1'))]"/>
+        </record>
+
+        <record id="project_template_1_task_3" model="project.task">
+            <field name="name">Write Press Release</field>
+            <field name="project_id" ref="project_template_1"/>
+            <field name="depend_on_ids" eval="[Command.link(ref('project_template_1_task_2'))]"/>
+        </record>
+
+        <record id="project_template_1_task_4" model="project.task">
+            <field name="name">Design Visual Assets</field>
+            <field name="project_id" ref="project_template_1"/>
+            <field name="depend_on_ids" eval="[Command.link(ref('project_template_1_task_2'))]"/>
+        </record>
+
+        <record id="project_template_1_task_5" model="project.task">
+            <field name="name">Publish Landing Page</field>
+            <field name="project_id" ref="project_template_1"/>
+            <field name="depend_on_ids" eval="[Command.link(ref('project_template_1_task_4'))]"/>
+        </record>
+
+        <record id="project_template_1_task_6" model="project.task">
+            <field name="name">Send Press Kit</field>
+            <field name="project_id" ref="project_template_1"/>
+            <field name="depend_on_ids" eval="[Command.link(ref('project_template_1_task_3'))]"/>
+        </record>
+
+        <record id="project_template_1_task_7" model="project.task">
+            <field name="name">Social Media Follow-up</field>
+            <field name="project_id" ref="project_template_1"/>
+            <field name="depend_on_ids" eval="[Command.link(ref('project_template_1_task_6'))]"/>
+        </record>
+
+        <record id="project_template_1_task_8" model="project.task">
+            <field name="name">Collect Customer Feedback</field>
+            <field name="project_id" ref="project_template_1"/>
+            <field name="depend_on_ids" eval="[Command.link(ref('project_template_1_task_5'))]"/>
+        </record>
+
+        <record id="project_template_1_task_9" model="project.task">
+            <field name="name">Campaign Performance Review</field>
+            <field name="project_id" ref="project_template_1"/>
+            <field name="depend_on_ids" eval="[
+                Command.link(ref('project_template_1_task_7')),
+                Command.link(ref('project_template_1_task_8'))
+            ]"/>
+        </record>
+
         <!-- Personal Stages: Mitchell Admin-->
         <record id="project_personal_stage_admin_0" model="project.task.type">
             <field name="sequence">1</field>

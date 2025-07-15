@@ -14,7 +14,8 @@
                 </div>
                 <group>
                     <group>
-                        <field name="date_start" string="Planned Date" widget="daterange" options='{"end_date_field": "date", "always_range": "1"}'/>
+                        <field name="date" required="not template_has_dates and date_start" invisible="1"/>
+                        <field name="date_start" required="not template_has_dates and date" string="Planned Date" widget="daterange" options='{"end_date_field": "date", "always_range": "1"}'/>
                         <label for="alias_name" string="Create tasks by sending an email to" class="pe-2"/>
                         <div class="d-inline-flex">
                             <field name="alias_name" placeholder="e.g. office-party"/>@ <field name="alias_domain_id" placeholder="e.g. mycompany.com" options="{'no_create': True, 'no_open': True}"/>

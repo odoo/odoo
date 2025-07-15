@@ -18,7 +18,13 @@ class ProjectTemplateCreateWizard(models.TransientModel):
     alias_name = fields.Char(string="Alias Name")
     alias_domain_id = fields.Many2one("mail.alias.domain", string="Alias Domain")
     template_id = fields.Many2one("project.project", default=lambda self: self.env.context.get('template_id'))
+    template_has_dates = fields.Boolean(compute="_compute_template_has_dates")
     role_to_users_ids = fields.One2many('project.template.role.to.users.map', 'wizard_id', default=_default_role_to_users_ids)
+
+    @api.depends("template_id")
+    def _compute_template_has_dates(self):
+        for wizard in self:
+            wizard.template_has_dates = wizard.template_id.date_start and wizard.template_id.date
 
     def _get_template_whitelist_fields(self):
         """
