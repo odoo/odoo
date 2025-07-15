@@ -288,7 +288,7 @@ export class Product extends PosModel {
     // product.pricelist.item records are loaded with a search_read
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
-    get_price(pricelist, quantity, price_extra = 0, recurring = false) {
+    get_price(pricelist, quantity, price_extra = 0, recurring = false, original_line = false, related_lines = []) {
         const date = DateTime.now();
 
         // In case of nested pricelists, it is necessary that all pricelists are made available in
@@ -311,8 +311,14 @@ export class Product extends PosModel {
                   this.isPricelistItemUsable(item, date)
               );
 
-        let price = this.lst_price + (price_extra || 0);
+        if(original_line && original_line.is_lot_tracked()) {
+            related_lines.push(...original_line.order.orderlines.filter((line) => line.product.id === this.id));
+            quantity = related_lines.reduce((sum, line) => { return sum + line.get_quantity() }, 0);
+        }
+
         const rule = rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
+
+        let price = this.lst_price + (price_extra || 0);
         if (!rule) {
             return price;
         }
@@ -675,13 +681,28 @@ export class Orderline extends PosModel {
 
         // just like in sale.order changing the quantity will recompute the unit price
         if (!keep_price && this.price_type === "original") {
-            this.set_unit_price(
-                this.product.get_price(
+            if (this.is_lot_tracked()) {
+                let related_lines = [];
+                const price = this.product.get_price(
                     this.order.pricelist,
                     this.get_quantity(),
-                    this.get_price_extra()
-                )
-            );
+                    this.get_price_extra(),
+                    false,
+                    this,
+                    related_lines,
+                );
+                related_lines.forEach((line) => line.set_unit_price(price));
+            }
+            else {
+                this.set_unit_price(
+                    this.product.get_price(
+                        this.order.pricelist,
+                        this.get_quantity(),
+                        this.get_price_extra(),
+                        false,
+                    )
+                );
+            }
             this.order.fix_tax_included_price(this);
         }
         return true;
@@ -774,6 +795,14 @@ export class Orderline extends PosModel {
     is_selected() {
         return this.selected;
     }
+
+    is_lot_tracked() {
+        return (
+            this.product.tracking === "lot" &&
+            (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
+        );
+    }
+
     // when we add an new orderline we want to merge it with the last line to see reduce the number of items
     // in the orderline. This returns true if it makes sense to merge the two
     can_be_merged_with(orderline) {
@@ -813,10 +842,7 @@ export class Orderline extends PosModel {
                 price - order_line_price - orderline.get_price_extra(),
                 this.pos.currency.decimal_places
             ) &&
-            !(
-                this.product.tracking === "lot" &&
-                (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
-            ) &&
+            !this.is_lot_tracked() &&
             this.full_product_name === orderline.full_product_name &&
             orderline.get_customer_note() === this.get_customer_note() &&
             !this.refunded_orderline_id &&
@@ -2080,9 +2106,28 @@ export class Order extends PosModel {
                 line.price_type === "original" && !(line.comboLines?.length || line.comboParent)
         );
         lines_to_recompute.forEach((line) => {
-            line.set_unit_price(
-                line.product.get_price(self.pricelist, line.get_quantity(), line.get_price_extra())
-            );
+            if (line.is_lot_tracked()) {
+                let related_lines = [];
+                const price = line.product.get_price(
+                    self.pricelist,
+                    line.get_quantity(),
+                    line.get_price_extra(),
+                    false,
+                    line,
+                    related_lines,
+                );
+                related_lines.forEach((line) => line.set_unit_price(price));
+            }
+            else {
+                line.set_unit_price(
+                    line.product.get_price(
+                        self.pricelist,
+                        line.get_quantity(),
+                        line.get_price_extra(),
+                        false,
+                    )
+                );
+            }
             self.fix_tax_included_price(line);
         });
         const combo_parent_lines = orderlines.filter(
@@ -2189,6 +2234,19 @@ export class Order extends PosModel {
 
         this.set_orderline_options(line, options);
         line.set_full_product_name();
+
+        if (line.is_lot_tracked()) {
+            let related_lines = [];
+            const price = line.product.get_price(
+                line.order.pricelist,
+                line.get_quantity(),
+                line.get_price_extra(),
+                false,
+                line,
+                related_lines,
+            );
+            related_lines.forEach((line) => line.set_unit_price(price));
+        }
         var to_merge_orderline;
         for (var i = 0; i < this.orderlines.length; i++) {
             if (this.orderlines.at(i).can_be_merged_with(line) && options.merge !== false) {
