@@ -16,6 +16,7 @@ export class SoundEffects {
             "mic-on": { defaultVolume: 0.2, path: "/mail/static/src/audio/mic-on" },
             "ptt-press": { defaultVolume: 0.1, path: "/mail/static/src/audio/ptt-press" },
             "ptt-release": { defaultVolume: 0.1, path: "/mail/static/src/audio/ptt-release" },
+            "raise-hand": { defaultVolume: 0.1, path: "/mail/static/src/audio/raise-hand" },
             "call-invitation": {
                 defaultVolume: 0.5,
                 path: "/mail/static/src/audio/call-invitation",
