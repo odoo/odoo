@@ -679,7 +679,7 @@ class AccountMoveLine(models.Model):
                 operator = {'any': 'in', 'not any': 'not in'}[operator]
 
             if isinstance(value, (Query, SQL)):
-                query_value = value.select('id') if isinstance(value, Query) else value
+                query_value = value.select() if isinstance(value, Query) else value
                 value = [row[0] for row in self.env.execute_query(query_value)]
             else:  # isinstance(value, Domain) is True
                 # sudo reason: ignore ir.rules, `account_id` is with `bypass_search_access=True`
