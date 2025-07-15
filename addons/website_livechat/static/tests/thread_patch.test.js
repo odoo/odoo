@@ -21,9 +21,13 @@ test("Rendering of visitor banner", async () => {
     const country_id = pyEnv["res.country"].create({ code: "BE" });
     const lang_id = pyEnv["res.lang"].create({ name: "English" });
     const website_id = pyEnv["website"].create({ name: "General website" });
+    const visitor_history = [
+        ["Home", "2025-07-16 10:00:20"],
+        ["Contact", "2025-07-16 10:20:20"],
+    ];
     const visitorId = pyEnv["website.visitor"].create({
         country_id,
-        history: "Home → Contact",
+        history_data: JSON.stringify(visitor_history),
         lang_id,
         website_id,
     });
@@ -64,7 +68,10 @@ test("Livechat with non-logged visitor should show visitor banner", async () => 
     const visitorId = pyEnv["website.visitor"].create({
         country_id,
         display_name: "Visitor #11",
-        history: "Home → Contact",
+        history_data: JSON.stringify([
+            ["Home", "2025-07-16 10:00:20"],
+            ["Contact", "2025-07-16 10:20:20"],
+        ]),
         lang_id,
         website_id,
     });
@@ -93,7 +100,10 @@ test("Livechat with logged visitor should show visitor banner", async () => {
     const visitorId = pyEnv["website.visitor"].create({
         country_id,
         display_name: "Visitor #11",
-        history: "Home → Contact",
+        history_data: JSON.stringify([
+            ["Home", "2025-07-16 10:00:20"],
+            ["Contact", "2025-07-16 10:20:20"],
+        ]),
         lang_id,
         partner_id,
         website_id,
