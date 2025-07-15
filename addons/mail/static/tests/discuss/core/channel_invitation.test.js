@@ -4,11 +4,13 @@ import {
     contains as mailContains,
     defineMailModels,
     insertText,
+    onRpcBefore,
     openDiscuss,
     setupChatHub,
     start,
     startServer,
     MENU_ACTIVE_IDS,
+    mockGetMedia,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
@@ -326,4 +328,49 @@ test("invite email from chat invites it to the new group chat", async () => {
     await click("button:text('Create Group Chat'):enabled");
     await waitFor(".o-discuss-ChannelMember:has(:text('john@test.com')):count(1)");
     await waitFor(".o-discuss-ChannelMember:has(:text('Invitation Pending')):count(1)");
+});
+
+test("Create group chat transfers active call to new group chat", async () => {
+    mockGetMedia();
+    let waitForLeaveCall = Promise.resolve();
+    onRpcBefore("/mail/rtc/channel/join_call", async () => {
+        await waitForLeaveCall;
+    });
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "TestPartner1" },
+        { name: "TestPartner2" },
+    ]);
+    pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussContent-header button[title='Start Call']").click();
+    await waitFor(".o-discuss-CallParticipantCard:count(1)");
+    await contains(".o-discuss-CallActionList button[title='Turn camera on']").click();
+    await waitFor(".o-discuss-CallActionList button[title='Turn camera off']:count(1)");
+    await waitFor(".o-discuss-CallActionList button[title='Mute']:count(1)");
+
+    await contains(".o-mail-DiscussContent-header button[title='Invite People']").click();
+    await contains(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" }).click();
+    const { promise, resolve } = Promise.withResolvers();
+    waitForLeaveCall = promise;
+    await contains(
+        ".o-discuss-ChannelInvitation-invitationBox button:text('Create Group Chat'):enabled"
+    ).click();
+    await waitForNone(".o-discuss-CallParticipantCard"); // call should be left in old chat
+    resolve();
+
+    await waitFor(".o-mail-DiscussContent-threadName", {
+        value: "Mitchell Admin, TestPartner1, and TestPartner2",
+    });
+    await waitFor(".o-discuss-CallParticipantCard:count(1)");
+    await waitFor(".o-discuss-CallActionList button[title='Turn camera off']:count(1)");
+    await waitFor(".o-discuss-CallActionList button[title='Mute']:count(1)");
 });
