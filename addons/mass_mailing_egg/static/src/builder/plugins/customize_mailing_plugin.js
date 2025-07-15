@@ -109,11 +109,11 @@ export class CustomizeMailingPlugin extends Plugin {
             if (currentValue === "" && defaultValue !== "") {
                 varRule.style.setProperty(variable, defaultValue);
             }
-            this.refreshMailingVariableSelector(variable);
+            this.refreshMailingVariableSelector(variable, true);
         }
     }
 
-    refreshMailingVariableSelector(variable) {
+    refreshMailingVariableSelector(variable, isSetup = false) {
         const options = CUSTOMIZE_MAILING_VARIABLES[variable];
         const currentValue = this.getVariableValue(variable);
         let value = "";
@@ -124,9 +124,35 @@ export class CustomizeMailingPlugin extends Plugin {
             const rule = this.getRule(selector);
             for (const property of options.properties) {
                 const important = PRIORITY_STYLES[selector]?.has(property) ? "important" : "";
-                rule.style.setProperty(property, value, important);
+                if (isSetup && rule.style.getPropertyValue(property)) {
+                    this.setVariable(variable, rule.style.getPropertyValue(property))
+                } else {
+                    rule.style.setProperty(property, value, important);
+                }
             }
         }
+    }
+
+    getVariableName(selector, property) {
+        let prefix = "text";
+        if (selector.includes("h1")) {
+            prefix = "h1";
+        } else if (selector.includes("h2")) {
+            prefix = "h2";
+        } else if (selector.includes("h3")) {
+            prefix = "h3";
+        } else if (/((\bp\b)|(\bp > \*)|(\bli\b)|(\bli > \*))/.test(selector)) {
+            prefix = "text";
+        } else if (/(a\..*\.btn\-.*\-?primary)/.test(selector)) {
+            prefix = "btn-primary";
+        } else if (/(a\..*\.btn\-.*\-?secondary)/.test(selector)) {
+            prefix = "btn-secondary";
+        } else if (/((a:not\(\.btn\))|(a\.btn\.btn\-link))/.test(selector)) {
+            prefix = "link";
+        } else if (/hr/.test(selector)) {
+            prefix = "separator"
+        }
+        return `--${prefix}-${property}`;
     }
 
     parseDesignElement(styleEl) {
@@ -208,6 +234,8 @@ export class CustomizeMailingPlugin extends Plugin {
                 ruleStyle.getPropertyValue(property),
                 ruleStyle.getPropertyPriority(property)
             );
+            const variable = this.getVariableName(selector, property)
+            this.getRule(this.cssPrefix).style.setProperty(variable, ruleStyle.getPropertyValue(property));
         }
     }
 }
