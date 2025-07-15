@@ -604,7 +604,7 @@ class TestExpenses(TestExpenseCommon):
         with freeze_time(self.frozen_today):
             expense_sheet.action_approve_expense_sheets()
             expense_sheet.action_sheet_move_create()
-        self.assertEqual(expense_sheet.accounting_date, self.frozen_today)
+        self.assertEqual(expense_sheet.accounting_date, self.frozen_today.date())
 
     def test_corner_case_defaults_values_from_product(self):
         """ As soon as you set a product, the expense name, uom, taxes and account are set according to the product. """
