@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussSidebarCallParticipants.participant" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-DiscussSidebarCallParticipants-participant')]" position="attributes">
+            <attribute name="t-attf-class">{{ session.persona.main_user_id ? 'o-active cursor-pointer rounded-4' : '' }}</attribute>
+            <attribute name="t-on-click">(ev) => this.onClickParticipant(ev, session)</attribute>
+        </xpath>
+    </t>
+</templates>
