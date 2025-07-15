@@ -519,6 +519,16 @@ test("start call when accepting from push notification", async () => {
     await contains(`.o-discuss-CallParticipantCard[title='${serverState.partnerName}']`);
 });
 
+test("Clicking sidebar call participant opens avatar card", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click(".o-mail-DiscussSidebarCallParticipants-participant", { text: "Mitchell Admin" });
+    await contains(".o_avatar_card .o_card_user_infos", { text: "Mitchell Admin" });
+});
+
 test("Use saved volume settings", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
