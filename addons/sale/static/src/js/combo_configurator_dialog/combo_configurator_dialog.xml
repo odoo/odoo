@@ -10,34 +10,37 @@
                     Included
                 </span>
                 <div class="container">
-                    <t t-foreach="unconfigurableCombos" t-as="combo" t-key="combo.id">
+                    <div
+                        t-foreach="unconfigurableCombos"
+                        t-as="combo"
+                        t-key="combo.id"
+                        class="row mb-3"
+                    >
                         <t t-set="product" t-value="combo.combo_items[0].product"/>
-                        <div class="row mb-3">
-                            <div class="col-2 p-0">
-                                <img
-                                    t-attf-src="/web/image/product.product/{{product.id}}/image_256"
-                                    alt="Product Image"
-                                    role="img"
-                                    class="img-thumbnail rounded"
-                                />
-                            </div>
-                            <div
-                                name="preselected_product_name"
-                                class="col d-flex justify-content-center text-break flex-column"
-                            >
-                                <span
-                                    name="preselected_product_title"
-                                    t-out="product.display_name"
-                                    class="h5"
-                                />
-                                <div
-                                    t-if="product.description"
-                                    t-out="product.description"
-                                    class="text-muted small text-truncate"
-                                />
-                            </div>
+                        <div class="col-2 p-0">
+                            <img
+                                t-attf-src="/web/image/product.product/{{product.id}}/image_256"
+                                alt="Product Image"
+                                role="img"
+                                class="img-thumbnail rounded"
+                            />
                         </div>
-                    </t>
+                        <div
+                            name="preselected_product_name"
+                            class="col d-flex justify-content-center text-break flex-column"
+                        >
+                            <span
+                                name="preselected_product_title"
+                                t-out="product.display_name"
+                                class="h5"
+                            />
+                            <div
+                                t-if="product.description"
+                                t-out="product.description"
+                                class="text-muted small text-truncate"
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
             <div t-foreach="configurableCombos" t-as="combo" t-key="combo.id">

@@ -17,13 +17,12 @@
                     class="text-muted small text-truncate"
                 />
                 <div t-if="this.props.selectedComboItems" class="text-muted small">
-                    <t
+                    <div
                         t-foreach="this.props.selectedComboItems"
                         t-as="comboItem"
                         t-key="comboItem_index"
-                    >
-                        <div t-out="comboItem.name"/>
-                    </t>
+                        t-out="comboItem.name"
+                    />
                 </div>
             </div>
             <t t-foreach="this.props.attribute_lines" t-as="ptal" t-key="ptal.id">
