@@ -108,6 +108,7 @@ class ReturnsScanWizard(models.TransientModel):
             raise ValidationError(_("No product lines found in the wizard."))
 
         product_lines = []
+        stock_quant_obj = self.env['stock.quant']
         for line in self.line_ids:
             line.remaining_qty = line.qty if line.scanned else 0
             qty_to_send = line.remaining_qty
@@ -133,12 +134,18 @@ class ReturnsScanWizard(models.TransientModel):
                 "grade_reason": line.grade_reason_id.description if line.grade_reason_id else "",
                 "scanned": bool(line.scanned),
             })
-            # move_lines = self.picking_id.move_ids_without_package.filtered(
-            #     lambda m: m.product_id == line.product_id)
-            moves = self.picking_id.move_ids_without_package.filtered(lambda m: m.product_id == line.product_id)
-            for move in moves:
-                # move.remaining_qty = line.remaining_qty
-                move.quantity = line.remaining_qty
+            if line.scanned and line.qty:
+                stock_quant_obj._update_available_quantity(
+                    product_id=line.product_id,
+                    location_id=self.picking_id.location_dest_id,
+                    quantity=line.qty,
+                )
+            move = self.picking_id.move_ids_without_package.filtered(
+                lambda m: m.product_id.id == line.product_id.id and m.line_number == line.line_number
+            )
+            for m in move:
+                m.remaining_qty = 0 if line.scanned else line.qty
+                m.quantity = line.qty if line.scanned else 0
         schedule_date = self.picking_id.scheduled_date.strftime("%d-%m-%Y") if self.picking_id.scheduled_date else "N/A"
         current_date = date.today().strftime("%d-%m-%Y")
 
@@ -218,12 +225,11 @@ class ReturnsScanWizardLine(models.TransientModel):
     )
     remaining_qty = fields.Float(string="Remaining Qty", readonly=True)
     scanned = fields.Boolean(string="Scanned", default=False)
+    line_number = fields.Integer(string='Return Line Number')
 
-    @api.onchange('scanned', 'qty')
+    @api.onchange('scanned', 'sellable_non_sellable')
     def _onchange_scanned_or_qty(self):
-        print("\n\nn\ onchange hdfhewuifheuhfjfnbjednfe")
         for line in self:
-            print("\n\n\n line===",line,line.remaining_qty,line.scanned)
             line.remaining_qty = 0 if line.scanned else line.qty
 
     @api.onchange('product_grade')

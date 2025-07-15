@@ -1,7 +1,9 @@
-from odoo import models, api
+from odoo import models, api, fields
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
+
+    line_number = fields.Integer(string='Return Line Number', index=True)
 
     @api.model
     def create(self, vals):
@@ -69,7 +71,8 @@ class StockPicking(models.Model):
                 'qty': move.product_uom_qty,
                 'product_grade': move.product_grade,
                 'summary': move.summary,
-            }) for move in self.move_ids],
+                'line_number': move.line_number,
+            }) for move in self.move_ids_without_package],
         })
         return {
             'name': 'Returns Scan Wizard',
