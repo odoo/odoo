@@ -2,6 +2,9 @@ import { withSequence } from "@html_editor/utils/resource";
 import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { ColorSelector } from "../font/color_selector";
+import { HEX_OPACITY } from "../font/color_plugin";
+import { nodeSize } from "@html_editor/utils/position";
+import { isZWS } from "@html_editor/utils/dom_info";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
@@ -43,14 +46,7 @@ export class IconPlugin extends Plugin {
         toolbar_namespaces: [
             {
                 id: "icon",
-                isApplied: (traversedNodes) =>
-                    traversedNodes.every(
-                        (node) =>
-                            // All nodes should be icons, its ZWS child or its ancestors
-                            node.classList?.contains("fa") ||
-                            node.parentElement.classList.contains("fa") ||
-                            (node.querySelector?.(".fa") && node.isContentEditable !== false)
-                    ),
+                isApplied: this.isIconSelected.bind(this),
             },
         ],
         toolbar_groups: [
@@ -121,12 +117,44 @@ export class IconPlugin extends Plugin {
                 isActive: () => this.hasSpinIcon(),
             },
         ],
+        /** Handlers */
+        selectionchange_handlers: this.normalizeIconSelection.bind(this),
+        /** Overrides */
         color_apply_overrides: this.applyIconColor.bind(this),
     };
 
     getSelectedIcon() {
         const selectedNodes = this.dependencies.selection.getSelectedNodes();
         return selectedNodes.find((node) => node.classList?.contains?.("fa"));
+    }
+
+    isIconSelected(traversedNodes = this.dependencies.selection.getTraversedNodes()) {
+        return (
+            traversedNodes.length &&
+            traversedNodes.every(
+                (node) =>
+                    // All nodes should be icons, its ZWS child or its ancestors
+                    node.classList?.contains("fa") ||
+                    node.parentElement.classList.contains("fa") ||
+                    (node.querySelector?.(".fa") && node.isContentEditable !== false)
+            )
+        );
+    }
+
+    normalizeIconSelection() {
+        const { anchorNode, focusNode } = this.document.getSelection();
+        if (this.isIconSelected() && (isZWS(anchorNode) || isZWS(focusNode))) {
+            const selectedIcon = this.getSelectedIcon();
+            this.dependencies.selection.setSelection(
+                {
+                    anchorNode: selectedIcon,
+                    anchorOffset: 0,
+                    focusNode: selectedIcon,
+                    focusOffset: nodeSize(selectedIcon),
+                },
+                { normalize: false }
+            );
+        }
     }
 
     resizeIcon({ size }) {
@@ -151,6 +179,7 @@ export class IconPlugin extends Plugin {
             return;
         }
         selectedIcon.classList.toggle("fa-spin");
+        this.dependencies.history.addStep();
     }
 
     hasIconSize(size) {
@@ -174,12 +203,16 @@ export class IconPlugin extends Plugin {
         return selectedIcon.classList.contains("fa-spin");
     }
 
-    applyIconColor(color, mode) {
+    applyIconColor(color, mode, previewMode, applyTransparency) {
         const selectedIcon = this.getSelectedIcon();
         if (!selectedIcon) {
             return;
         }
+        if (applyTransparency) {
+            // Apply default transparency to selected solid tab colors in background
+            // mode to make text highlighting more usable between light and dark modes.
+            color += HEX_OPACITY;
+        }
         this.dependencies.color.colorElement(selectedIcon, color, mode);
-        return true;
     }
 }

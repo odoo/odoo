@@ -510,3 +510,15 @@ test("should apply gradient text color on selected text", async () => {
             '<div style="background-image:none"><p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ab<strong>cd</strong>ef]</font></p></div>',
     });
 });
+
+test("should be able to apply color on icon along with text", async () => {
+    await testEditor({
+        contentBefore:
+            '<p>a[bc\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeffde]f</p>',
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfterEdit:
+            '<p>a<font style="color: rgb(255, 0, 0);">[bc</font>\ufeff<span class="fa fa-glass" contenteditable="false" style="color: rgb(255, 0, 0);">\u200b</span>\ufeff<font style="color: rgb(255, 0, 0);">de]</font>f</p>',
+        contentAfter:
+            '<p>a<font style="color: rgb(255, 0, 0);">[bc</font><span class="fa fa-glass" style="color: rgb(255, 0, 0);"></span><font style="color: rgb(255, 0, 0);">de]</font>f</p>',
+    });
+});
