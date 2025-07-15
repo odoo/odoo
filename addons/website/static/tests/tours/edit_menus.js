@@ -203,7 +203,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on Edit Link",
-            trigger: ".o-we-linkpopover a.o_we_edit_link",
+            trigger: ".o-we-linkpopover button.o_we_edit_link",
             run: "click",
         },
         {

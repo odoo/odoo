@@ -10,10 +10,10 @@
         </div>
         <div t-if="!state.folded" class="o_embedded_toc_content">
             <t t-foreach="this.state.toc.headings" t-as="heading" t-key="heading_index">
-                <a href="#" contenteditable="false"
+                <button contenteditable="false"
                     t-out="heading.name"
                     t-on-click.prevent="() => this.onTocLinkClick(heading)"
-                    t-attf-class="o_no_link_popover py-1 pe-1 d-block text-reset o_embedded_toc_link #{'o_embedded_toc_link_depth_' + heading.depth}"/>
+                    t-attf-class="o_no_link_popover py-1 pe-1 d-block text-reset w-100 btn btn-link text-start fw-normal o_embedded_toc_link #{'o_embedded_toc_link_depth_' + heading.depth}"/>
             </t>
         </div>
     </div>

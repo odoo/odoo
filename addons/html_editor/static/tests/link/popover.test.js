@@ -1337,8 +1337,8 @@ describe("link preview", () => {
         await click(".o-we-command-name:first");
         await contains(".o-we-linkpopover input.o_we_href_input_link").fill("http://odoo.com/");
         await animationFrame();
-        expect("button.o_we_replace_title_btn").toHaveCount(1);
-        expect("a.o_we_replace_title_btn").toHaveCount(0);
+        expect("button.o_we_replace_title_btn.btn-primary").toHaveCount(1);
+        expect("button.o_we_replace_title_btn.text-dark").toHaveCount(0);
         const pNode = document.querySelector("p");
         setSelection({
             anchorNode: pNode,
@@ -1352,8 +1352,8 @@ describe("link preview", () => {
         });
         await waitFor(".o_we_replace_title_btn");
         await expectElementCount(".o-we-linkpopover", 1);
-        expect("a.o_we_replace_title_btn").toHaveCount(1);
-        expect("button.o_we_replace_title_btn").toHaveCount(0);
+        expect("button.o_we_replace_title_btn.text-dark").toHaveCount(1);
+        expect("button.o_we_replace_title_btn.btn-primary").toHaveCount(0);
     });
 });
 

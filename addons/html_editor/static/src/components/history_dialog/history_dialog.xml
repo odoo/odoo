@@ -8,30 +8,28 @@
             <div class="d-flex flex-column h-100 overflow-hidden">
                 <ul class="nav nav-tabs d-md-none flex-shrink-0" role="tablist">
                     <li class="nav-item flex-grow-1">
-                        <a
-                            href="#"
+                        <button
                             id="tab-revisions"
-                            class="nav-link position-relative text-center fw-bold"
+                            class="nav-link position-relative text-center fw-bold w-100"
                             t-att-class="{'active': state.mobileActiveTab === 'revisions'}"
                             t-on-click.prevent="() => this.setMobileTab('revisions')"
                             role="tab"
                             aria-controls="revisions-panel"
                             t-att-aria-selected="state.mobileActiveTab === 'revisions' ? 'true' : 'false'">
                             <i class="fa fa-list me-1" role="img" aria-hidden="true"/>Revisions
-                        </a>
+                        </button>
                     </li>
                     <li class="nav-item flex-grow-1">
-                        <a
-                            href="#"
+                        <button
                             id="tab-preview"
-                            class="nav-link position-relative text-center fw-bold"
+                            class="nav-link position-relative text-center fw-bold w-100"
                             t-att-class="{'active': state.mobileActiveTab === 'content'}"
                             t-on-click.prevent="() => this.setMobileTab('content')"
                             role="tab"
                             aria-controls="content-panel"
                             t-att-aria-selected="state.mobileActiveTab === 'content' ? 'true' : 'false'">
                             <i class="fa fa-eye me-1" role="img" aria-hidden="true"/>Preview
-                        </a>
+                        </button>
                     </li>
                 </ul>
 
