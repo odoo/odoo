@@ -338,6 +338,15 @@ class ResCompany(models.Model):
         return res
 
     def write(self, values):
+        if 'parent_id' in values:
+            raise UserError(self.env._("The company hierarchy cannot be changed."))
+
+        if values.get('currency_id'):
+            currency = self.env['res.currency'].browse(values['currency_id'])
+            if not currency.active:
+                currency.write({'active': True})
+
+        res = super().write(values)
         invalidation_fields = self.cache_invalidation_fields()
         asset_invalidation_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
 
@@ -353,16 +362,6 @@ class ResCompany(models.Model):
             # this is used in the content of an asset (see asset_styles_company_report)
             # and thus needs to invalidate the assets cache when this is changed
             self.env.registry.clear_cache('assets')  # not 100% it is useful a test is missing if it is the case
-
-        if 'parent_id' in values:
-            raise UserError(self.env._("The company hierarchy cannot be changed."))
-
-        if values.get('currency_id'):
-            currency = self.env['res.currency'].browse(values['currency_id'])
-            if not currency.active:
-                currency.write({'active': True})
-
-        res = super().write(values)
 
         # Archiving a company should also archive all of its branches
         if values.get('active') is False:
