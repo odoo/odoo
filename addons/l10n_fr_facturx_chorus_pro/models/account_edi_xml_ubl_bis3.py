@@ -1,7 +1,9 @@
 from odoo import models, _
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 
 
 CHORUS_PRO_PEPPOL_ID = "0009:11000201100044"
+FR_SCHEME_IDS = {v: k for k, v in EAS_MAPPING['FR'].items()}
 
 
 class AccountEdiXmlUbl_Bis3(models.AbstractModel):
@@ -35,12 +37,12 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 if partner.company_registry and partner.country_code == 'FR':
                     vals['vals'][f'accounting_{role}_party_vals']['party_vals']['party_identification_vals'] = [{
                         'id': partner.company_registry,
-                        'id_attrs': {'schemeName': 1},
+                        'id_attrs': {'schemeID': FR_SCHEME_IDS['company_registry']},
                     }]
                 else:
                     vals['vals'][f'accounting_{role}_party_vals']['party_vals']['party_identification_vals'] = [{
                         'id': partner.vat,
-                        'id_attrs': {'schemeName': 2},
+                        'id_attrs': {'schemeID': FR_SCHEME_IDS['vat']},
                     }]
         return vals
 
@@ -95,8 +97,8 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                         if partner.company_registry and partner.country_code == 'FR'
                         else partner.vat
                     ),
-                    'schemeName': (
-                        '1' if partner.company_registry and partner.country_code == 'FR' else '2'
+                    'schemeID': (
+                        FR_SCHEME_IDS['company_registry'] if partner.company_registry and partner.country_code == 'FR' else FR_SCHEME_IDS['vat']
                     ),
                 }
             }
