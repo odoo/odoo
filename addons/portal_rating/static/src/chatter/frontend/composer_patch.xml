@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Composer" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o-mail-Composer-coreMain')]" position="before">
-            <div t-if="env.displayRating and !message" class="o-mail-Composer-starCard d-flex">
-                <div class="o-mail-Composer-stars enabled" t-on-mouseleave="() => portalState.starValue = portalState.ratingValue">
+            <div t-if="env.displayRating and !message" class="o-mail-Composer-starCard d-flex mb-3 px-2">
+                <div class="o-mail-Composer-stars enabled cursor-pointer" t-on-mouseleave="() => portalState.starValue = portalState.ratingValue">
                     <t t-set="index" t-value="0" />
                     <t t-foreach="Array(portalState.starValue)" t-as="num" t-key="num_index">
                         <i class="fa fa-star" role="img" aria-label="Full star" t-att-index="index" t-on-mousemove="onMoveStar" t-on-click="onClickStar"/>

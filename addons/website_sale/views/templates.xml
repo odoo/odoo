@@ -2595,13 +2595,13 @@
     <!-- Product options: OpenChatter -->
     <template id="product_comment" inherit_id="website_sale.product" active="False" name="Discussion and Rating" priority="15">
         <xpath expr="//div[@t-field='product.website_description']" position="after">
-            <div class="o_shop_discussion_rating" data-anchor='true'>
-                <section id="o_product_page_reviews" class="container pt32 pb32" data-anchor='true'>
-                    <a class="o_product_page_reviews_title d-flex justify-content-between text-decoration-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#o_product_page_reviews_content" aria-expanded="false" aria-controls="o_product_page_reviews_content">
-                        <h3 class="mb32">Customer Reviews</h3>
-                        <i class="fa align-self-start"/>
+            <div class="o_shop_discussion_rating border-top" data-anchor='true'>
+                <section id="o_product_page_reviews" class="container pt48 pb48" data-anchor='true'>
+                    <a class="o_product_page_reviews_title d-flex justify-content-between text-reset text-decoration-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#o_product_page_reviews_content" aria-expanded="false" aria-controls="o_product_page_reviews_content">
+                        <h2 class="fs-4 mb-0">Customer Reviews</h2>
+                        <i class="fa align-self-center"/>
                     </a>
-                    <div id="o_product_page_reviews_content" class="collapse">
+                    <div id="o_product_page_reviews_content" class="collapse mt-3">
                         <t t-call="portal.message_thread">
                             <t t-set="object" t-value="product"/>
                             <t t-set="display_rating" t-value="True"/>

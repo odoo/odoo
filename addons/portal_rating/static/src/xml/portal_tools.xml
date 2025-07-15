@@ -68,12 +68,12 @@
     </t>
 
     <t t-name="portal_rating.rating_star_input">
-        <div class="o-mail-Composer-starCard" t-if="widget.options['display_rating']">
+        <div class="o-mail-Composer-starCard mb-2" t-if="widget.options['display_rating']">
             <t t-set="val_integer" t-value="Math.floor(default_rating)"/>
             <t t-set="val_decimal" t-value="default_rating - val_integer"/>
             <t t-set="empty_star" t-value="5 - (val_integer+Math.ceil(val_decimal))"/>
 
-            <div class="o-mail-Composer-stars enabled">
+            <div class="o-mail-Composer-stars enabled cursor-pointer">
                 <t t-foreach="Array(val_integer)" t-as="num" t-key="num_index">
                     <i class="fa fa-star" role="img" aria-label="Full star"></i>
                 </t>
