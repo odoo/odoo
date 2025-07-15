@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.BackgroundPositionOverlay">
-    <div class="o_we_background_position_overlay" t-ref="backgroundOverlay">
+    <div class="o_we_background_position_overlay position-fixed" t-ref="backgroundOverlay">
         <div class="o_we_overlay_content position-absolute" t-ref="overlayContent">
             <div class="o_overlay_background" t-on-mousedown.prevent="onDragBackgroundStart"
                 t-ref="parentBgDragger"

@@ -66,7 +66,10 @@ export class SetBackgroundSizeAction extends BuilderAction {
 
 export class BackgroundPositionOverlayAction extends BuilderAction {
     static id = "backgroundPositionOverlay";
-    static dependencies = ["overlayButtons", "overlay"];
+    static dependencies = ["overlayButtons"];
+    setup() {
+        this.withLoadingEffect = false;
+    }
     async load({ editingElement }) {
         let imgEl;
         await new Promise((resolve) => {
@@ -81,30 +84,26 @@ export class BackgroundPositionOverlayAction extends BuilderAction {
         return new Promise((resolve) => {
             this.dependencies.overlayButtons.hideOverlayButtonsUi();
             let appliedBgPosition = "";
-            const onRemove = () => {
-                this.dependencies.overlayButtons.showOverlayButtonsUi();
-                resolve(appliedBgPosition);
-            };
-            const overlay = this.dependencies.overlay.createOverlay(
+            const remove = this.services.overlay.add(
                 BackgroundPositionOverlay,
-                { positionOptions: { position: "over-fit", flip: false } },
-                { onRemove: onRemove }
-            );
-            const applyPosition = (bgPosition) => {
-                appliedBgPosition = bgPosition;
-                overlay.close();
-            };
-            overlay.open({
-                target: editingElement,
-                props: {
+                {
                     outerHtmlEditingElement: markup(this.safeCloneOuterHTML(copyEl)),
                     editingElement: editingElement,
                     mockEditingElOnImg: imgEl,
-                    applyPosition: applyPosition,
-                    discardPosition: () => overlay.close(),
+                    applyPosition: (bgPosition) => {
+                        appliedBgPosition = bgPosition;
+                        remove();
+                    },
+                    discardPosition: () => remove(),
                     editable: this.editable,
                 },
-            });
+                {
+                    onRemove: () => {
+                        this.dependencies.overlayButtons.showOverlayButtonsUi();
+                        resolve(appliedBgPosition);
+                    },
+                }
+            );
         });
     }
     safeCloneOuterHTML(el) {
