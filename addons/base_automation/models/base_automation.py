@@ -650,10 +650,11 @@ class BaseAutomation(models.Model):
             except LockError:
                 return
             automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
+            interval_number, interval_type = self._get_cron_interval(automations)
             cron.write({
                 'active': bool(automations),
-                'interval_type': 'minutes',
-                'interval_number': self._get_cron_interval(automations),
+                'interval_type': interval_type,
+                'interval_number': interval_number,
             })
 
     def _update_registry(self):
@@ -695,7 +696,7 @@ class BaseAutomation(models.Model):
         return eval_context
 
     def _get_cron_interval(self, automations=None):
-        """ Return the expected time interval used by the cron, in minutes. """
+        """Return the expected time interval used by the cron, in minutes or hours."""
         def get_delay(rec):
             return abs(rec.trg_date_range) * DATE_RANGE_FACTOR[rec.trg_date_range_type]
 
@@ -704,7 +705,12 @@ class BaseAutomation(models.Model):
 
         # Minimum 1 minute, maximum 4 hours, 10% tolerance, ignore automations with no delay
         delays = [d for d in automations.mapped(get_delay) if d]
-        return min(max(1, min(delays) // 10), 4 * 60) if delays else 4 * 60
+        interval = min(max(1, min(delays) // 10), 4 * 60) if delays else 4 * 60
+        interval_type = 'minutes'
+        if interval % 60 == 0:
+            interval //= 60
+            interval_type = 'hours'
+        return interval, interval_type
 
     def _filter_pre(self, records, feedback=False):
         """ Filter the records that satisfy the precondition of automation ``self``. """

@@ -224,8 +224,8 @@ class TestAutomation(TransactionCaseWithUserDemo):
         automation1.active = False
         self.assertRecordValues(cron, [{
             'active': False,
-            'interval_type': 'minutes',
-            'interval_number': 240,  # same as 4 hours
+            'interval_type': 'hours',
+            'interval_number': 4,
         }])
 
         # Enable automation1 and automation2
