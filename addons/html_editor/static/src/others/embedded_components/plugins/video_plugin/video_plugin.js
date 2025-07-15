@@ -1,73 +1,47 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
-import { VideoSelectorDialog } from "@html_editor/others/embedded_components/plugins/video_plugin/video_selector_dialog/video_selector_dialog";
-import { renderToElement } from "@web/core/utils/render";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { EmbeddedVideoSelector } from "./video_selector_dialog/embedded_video_selector";
 
 export class VideoPlugin extends Plugin {
     static id = "video";
-    static dependencies = ["embeddedComponents", "dom", "selection", "link", "history"];
-    resources = {
-        user_commands: [
-            {
-                id: "openVideoSelectorDialog",
-                title: _t("Video Link"),
-                description: _t("Insert a Video"),
-                icon: "fa-play",
-                run: () => {
-                    this.openVideoSelectorDialog((media) => {
-                        this.insertVideo(media);
-                    });
-                },
-                isAvailable: isHtmlContentSupported,
-            },
-        ],
-        powerbox_items: [
-            {
-                categoryId: "navigation",
-                commandId: "openVideoSelectorDialog",
-            },
-        ],
+    static dependencies = ["embeddedComponents", "media"];
+    static defaultConfig = {
+        allowEmbeddedVideo: true,
     };
-
-    /**
-     * Inserts a video in the editor
-     * @param {Object} media
-     */
-    insertVideo(media) {
-        const videoBlock = renderToElement("html_editor.EmbeddedVideoBlueprint", {
-            embeddedProps: JSON.stringify({
-                videoId: media.videoId,
-                platform: media.platform,
-                params: media.params || {},
-            }),
-        });
-        this.dependencies.dom.insert(videoBlock);
-        this.dependencies.history.addStep();
-    }
-
-    /**
-     * Inserts a dialog allowing the user to insert a video
-     * @param {function} save
-     */
-    openVideoSelectorDialog(save) {
-        const selection = this.dependencies.selection.getEditableSelection();
-        let restoreSelection = () => {
-            this.dependencies.selection.setSelection(selection);
-        };
-        this.services.dialog.add(
-            VideoSelectorDialog,
-            {
-                save: (media) => {
-                    save(media);
-                    restoreSelection = () => {};
-                },
+    // Only include the embedded video selector tab in the media dialog if it
+    // doesn't already have the video tab.
+    shouldIncludeEmbeddedVideoSelector =
+        !this.config.allowMediaDialogVideo && this.config.allowEmbeddedVideo;
+    resources = {
+        ...(this.shouldIncludeEmbeddedVideoSelector && {
+            media_dialog_extra_tabs: {
+                id: "VIDEO",
+                title: _t("Videos"),
+                Component: EmbeddedVideoSelector,
+                sequence: 30,
             },
-            {
-                onClose: () => {
-                    restoreSelection();
+            powerbox_items: {
+                categoryId: "media",
+                commandId: "openMediaDialogVideo",
+            },
+        }),
+        // Add a dedicated video powerbox item if inserting videos is available
+        ...((this.config.allowMediaDialogVideo || this.config.allowEmbeddedVideo) && {
+            user_commands: [
+                {
+                    id: "openMediaDialogVideo",
+                    title: _t("Video"),
+                    description: _t("Insert a Video"),
+                    icon: "fa-play",
+                    run: () => this.dependencies.media.openMediaDialog({ activeTab: "VIDEO" }),
+                    isAvailable: isHtmlContentSupported,
                 },
-            }
-        );
-    }
+            ],
+            powerbox_items: {
+                categoryId: "media",
+                commandId: "openMediaDialogVideo",
+            },
+        }),
+    };
 }

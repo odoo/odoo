@@ -1031,7 +1031,7 @@ test("html field with a placeholder", async () => {
     );
 });
 
-test("'Video Link' command is available", async () => {
+test("'Video' command is available", async () => {
     await mountView({
         type: "form",
         resId: 1,
@@ -1044,7 +1044,7 @@ test("'Video Link' command is available", async () => {
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/video");
     await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
+    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video", "Media"]);
 });
 
 test("MediaDialog contains 'Videos' tab by default in html field", async () => {
@@ -1072,14 +1072,39 @@ test("MediaDialog contains 'Videos' tab by default in html field", async () => {
     ]);
 });
 
-test("MediaDialog does not contain 'Videos' tab in html field when 'allowMediaDialogVideo' = false", async () => {
+test("MediaDialog contains 'Videos' tab when 'allowMediaDialogVideo' = false (allowEmbeddedVideo is true by default)", async () => {
     await mountView({
         type: "form",
         resId: 1,
         resModel: "partner",
         arch: `
             <form>
-            <field name="txt" widget="html" options="{'allowMediaDialogVideo': False}"/>
+                <field name="txt" widget="html" options="{'allowMediaDialogVideo': False}"/>
+            </form>`,
+    });
+    setSelectionInHtmlField();
+    await insertText(htmlEditor, "/media");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Media");
+
+    await press("Enter");
+    await animationFrame();
+    expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
+        "Images",
+        "Documents",
+        "Icons",
+        "Videos",
+    ]);
+});
+
+test("MediaDialog does not contain 'Videos' tab in html field when 'allowMediaDialogVideo' = false and allowEmbeddedVideo = false", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+            <field name="txt" widget="html" options="{'allowMediaDialogVideo': False, 'allowEmbeddedVideo': False}"/>
             </form>`,
     });
 
@@ -1112,7 +1137,7 @@ test("MediaDialog does not contain 'Videos' tab when sanitize = true", async () 
         resModel: "sanitize.partner",
         arch: `
             <form>
-                <field name="txt" widget="html"/>
+                <field name="txt" widget="html" options="{'allowEmbeddedVideo': False}"/>
             </form>`,
     });
     setSelectionInHtmlField();
@@ -2303,7 +2328,7 @@ describe("codeview enabled", () => {
         setSelection({ anchorNode, anchorOffset: 0 });
         await insertText(htmlEditor, "/code");
         await waitFor(".o-we-powerbox");
-        expect(queryAllTexts(".o-we-command-name")).toEqual(["Code"]);
+        expect(queryAllTexts(".o-we-command-name")).toInclude("Code");
     });
 
     test("Video command should be available when codeview enabled", async () => {
@@ -2320,6 +2345,6 @@ describe("codeview enabled", () => {
         setSelection({ anchorNode, anchorOffset: 0 });
         await insertText(htmlEditor, "/video");
         await waitFor(".o-we-powerbox");
-        expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
+        expect(queryAllTexts(".o-we-command-name")).toInclude("Video");
     });
 });

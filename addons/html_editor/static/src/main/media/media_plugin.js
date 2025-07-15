@@ -25,6 +25,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 /**
  * @typedef { Object } MediaShared
  * @property { MediaPlugin['savePendingImages'] } savePendingImages
+ * @property { MediaPlugin['openMediaDialog'] } openMediaDialog
  */
 
 export class MediaPlugin extends Plugin {
@@ -48,7 +49,7 @@ export class MediaPlugin extends Plugin {
             {
                 id: "insertMedia",
                 title: _t("Media"),
-                description: _t("Insert image or icon"),
+                description: this.getMediaCommandDescription(),
                 keywords: [_t("Image"), _t("Icon")],
                 icon: "fa-file-image-o",
                 run: this.openMediaDialog.bind(this),
@@ -376,5 +377,10 @@ export class MediaPlugin extends Plugin {
         if (isCollapsed && closestElement(anchorNode, isIconElement)) {
             this.dependencies.selection.selectAroundNonEditable();
         }
+    }
+
+    getMediaCommandDescription() {
+        const hasVideo = this.config.allowMediaDialogVideo || this.config.allowEmbeddedVideo;
+        return hasVideo ? _t("Insert image, icon or video") : _t("Insert image or icon");
     }
 }

@@ -341,6 +341,9 @@ export const htmlField = {
         if ("allowMediaDocuments" in options) {
             editorConfig.allowMediaDocuments = Boolean(options.allowMediaDocuments);
         }
+        if ("allowEmbeddedVideo" in options) {
+            editorConfig.allowEmbeddedVideo = Boolean(options.allowEmbeddedVideo);
+        }
         if ("allowFile" in options) {
             editorConfig.allowFile = Boolean(options.allowFile);
         }
