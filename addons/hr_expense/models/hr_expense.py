@@ -1470,18 +1470,18 @@ class HrExpense(models.Model):
         self.ensure_one()
         approver_group = 'hr_expense.group_hr_expense_team_approver'
 
-        employee = self.employee_id
+        employee = self.employee_id.sudo()
         expense_manager = employee.expense_manager_id - employee.user_id
         if expense_manager:
-            return expense_manager
+            return expense_manager.sudo(False)
 
         department_manager = employee.department_id.manager_id.user_id - employee.user_id
         if department_manager and department_manager.has_groups(approver_group):
-            return department_manager
+            return department_manager.sudo(False)
 
         employee_team_leader = employee.parent_id.user_id
         if employee_team_leader:
-            return employee_team_leader
+            return employee_team_leader.sudo(False)
 
         return self.env['res.users']
 
