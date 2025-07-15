@@ -77,6 +77,7 @@ if [ ! -d $CLONE_DIR ]; then
     echo "addons/web
 addons/hw_*
 addons/iot_base
+addons/iot_drivers
 addons/iot_box_image/configuration
 addons/point_of_sale/tools/posbox/configuration
 odoo/
