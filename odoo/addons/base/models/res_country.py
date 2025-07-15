@@ -3,6 +3,8 @@
 
 import re
 import logging
+import string
+
 from odoo import api, fields, models, tools
 from odoo.osv import expression
 from odoo.exceptions import UserError
@@ -85,19 +87,30 @@ class Country(models.Model):
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
-        result = []
+        # for ['=', '!=', 'in', 'not in'] operators, we will be more flexible when searching
         domain = args or []
-        # first search by code
-        if operator not in expression.NEGATIVE_TERM_OPERATORS and name and len(name) == 2:
-            countries = self.search_fetch(expression.AND([domain, [('code', operator, name)]]), ['display_name'], limit=limit)
-            result.extend((country.id, country.display_name) for country in countries.sudo())
-            domain = expression.AND([domain, [('id', 'not in', countries.ids)]])
-            if limit is not None:
-                limit -= len(countries)
-                if limit <= 0:
-                    return result
-        # normal search
-        result.extend(super().name_search(name, domain, operator, limit))
+        if operator in ('=', '!=', 'in', 'not in'):
+            if isinstance(name, str):
+                name = [name]
+            codes, names = set(), set()
+            for n in name:
+                if isinstance(n, str):
+                    if len(n) == 2:
+                        codes.add(n.upper())
+                    else:
+                        names.add(string.capwords(n))
+                        names.add(n)
+                else:
+                    names.add(n)
+            concat_op = expression.OR if operator in ('in', '=') else expression.AND
+            search_domain = [('name', 'in', tuple(names))]
+            if codes:
+                search_domain = concat_op([search_domain, [('code', 'in', tuple(codes))]])
+            countries = self.search_fetch(search_domain + domain, ['display_name'], limit=limit)
+            result = [(country.id, country.display_name) for country in countries.sudo()]
+        else:
+            result = super().name_search(name, domain, operator, limit)
+
         return result
 
     @api.model
