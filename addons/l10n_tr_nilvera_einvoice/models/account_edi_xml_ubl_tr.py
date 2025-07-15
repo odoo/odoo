@@ -159,12 +159,9 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
                 'cbc:CompanyID': {'_text': commercial_partner.vat},
                 'cac:TaxScheme': {
-                    'cbc:ID': {
+                    'cbc:Name': {
                         '_text': (
-                            'NOT_EU_VAT' if commercial_partner.country_id
-                            and commercial_partner.vat
-                            and not commercial_partner.vat[:2].isalpha()
-                            else 'VAT'
+                            commercial_partner.ref
                         )
                     }
                 }
