@@ -183,7 +183,11 @@ class TestPDFQuoteBuilder(BaseUsersCommon, SaleManagementCommon):
         so_form.sale_order_template_id = so_tmpl_2
         so_form.save()
 
-        self.assertNotEqual(self.sale_order.quotation_document_ids, self.header)
+        self.assertIn(self.header, self.sale_order.available_product_document_ids)
+        so_form.record.quotation_document_ids[0].unlink()
+        so_form.save()
+        self.assertNotIn(self.header, self.sale_order.available_product_document_ids)
+        self.assertEqual(len(self.sale_order.quotation_document_ids), 0)
 
     def test_onchange_product_removes_previously_selected_documents(self):
         """ Check that changing a line that has a selected document unselect said document. """
