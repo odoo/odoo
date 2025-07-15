@@ -178,7 +178,15 @@ export class ProductTemplate extends Base {
     // product.pricelist.item records are loaded with a search_read
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
-    getPrice(pricelist, quantity, price_extra = 0, recurring = false, variant = false) {
+    getPrice(
+        pricelist,
+        quantity,
+        price_extra = 0,
+        recurring = false,
+        variant = false,
+        original_line = false,
+        related_lines = []
+    ) {
         // In case of nested pricelists, it is necessary that all pricelists are made available in
         // the POS. Display a basic alert to the user in the case where there is a pricelist item
         // but we can't load the base pricelist to get the price when calling this method again.
@@ -197,6 +205,16 @@ export class ProductTemplate extends Base {
         const standardPrice = variant ? variant.standard_price : this.standard_price;
         const basePrice = variant ? variant.lst_price : this.list_price;
         let price = basePrice + (price_extra || 0);
+
+        if (original_line && original_line.isLotTracked()) {
+            related_lines.push(
+                ...original_line.order_id.lines.filter(
+                    (line) => line.product_id.product_tmpl_id.id == this.id
+                )
+            );
+            quantity = related_lines.reduce((sum, line) => sum + line.getQuantity(), 0);
+        }
+
         let rules = [];
         if (pricelist) {
             if (product) {

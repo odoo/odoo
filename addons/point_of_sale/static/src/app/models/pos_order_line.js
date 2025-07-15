@@ -297,15 +297,29 @@ export class PosOrderline extends Base {
         // just like in sale.order changing the qty will recompute the unit price
         if (!keep_price && this.price_type === "original") {
             const productTemplate = this.product_id.product_tmpl_id;
-            this.setUnitPrice(
-                productTemplate.getPrice(
+            if (this.isLotTracked()) {
+                const related_lines = [];
+                const price = productTemplate.getPrice(
                     this.order_id.pricelist_id,
                     this.getQuantity(),
                     this.getPriceExtra(),
                     false,
-                    this.product_id
-                )
-            );
+                    this.product_id,
+                    this,
+                    related_lines
+                );
+                related_lines.forEach((line) => line.setUnitPrice(price));
+            } else {
+                this.setUnitPrice(
+                    productTemplate.getPrice(
+                        this.order_id.pricelist_id,
+                        this.getQuantity(),
+                        this.getPriceExtra(),
+                        false,
+                        this.product_id
+                    )
+                );
+            }
         }
 
         this.setDirty();

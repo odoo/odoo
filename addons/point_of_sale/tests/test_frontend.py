@@ -397,6 +397,12 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 'applied_on': '0_product_variant',
                 'min_quantity': 1,
                 'product_id': cls.wall_shelf.product_variant_id.id,
+            }), (0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 1,
+                'applied_on': '0_product_variant',
+                'min_quantity': 5,
+                'product_id': cls.monitor_stand.product_variant_id.id,
             })],
         })
 
@@ -654,6 +660,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(last_order.lines[0].price_subtotal_incl, 30.0)
         # Check if session name contains config name as prefix
         self.assertEqual(self.main_pos_config.name in last_order.session_id.name, True)
+
+    def test_03_pos_with_lots(self):
+
+        # open a session, the /pos/ui controller will redirect to it
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        self.monitor_stand.tracking = 'lot'
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_03_pos_with_lots', login="pos_user")
 
     def test_04_product_configurator(self):
         # Making one attribute inactive to verify that it doesn't show
