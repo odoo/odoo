@@ -1,16 +1,13 @@
-# -*- coding: utf-8 -*-
 """
 Mimetypes-related utilities
-
-# TODO: reexport stdlib mimetypes?
 """
 import collections
 import functools
-import io
 import logging
 import mimetypes
 import re
-import zipfile
+
+from . import zipstream
 
 __all__ = ['guess_mimetype']
 
@@ -18,61 +15,36 @@ _logger = logging.getLogger(__name__)
 
 # We define our own guess_mimetype implementation and if magic is available we
 # use it instead.
+def guess_ziptype(data):  # noqa: E302
+    try:
+        header, compressed_content = zipstream.get_first_file(data)
+    except ValueError:
+        if data.startswith((b'PK\1\2', b'PK\3\4')):
+            return 'application/zip'
+        raise
+    _logger.debug("first file of zip: %s", header)
 
-# discriminants for zip-based file formats
-_ooxml_dirs = {
-    'word/': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'pt/': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    'xl/': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-}
-def _check_ooxml(data):
-    with io.BytesIO(data) as f, zipfile.ZipFile(f) as z:
-        filenames = z.namelist()
-        # OOXML documents should have a [Content_Types].xml file for early
-        # check that we're interested in this thing at all
-        if '[Content_Types].xml' not in filenames:
-            return False
+    # Open Office
+    if (
+        header.filename == b'mimetype'
+        and header.compression == zipstream.CompressionMethod.NO_COMPRESSION
+        and compressed_content.startswith(b'application/vnd.oasis.opendocument.')
+    ):
+        return compressed_content.decode()
 
-        # then there is a directory whose name denotes the type of the file:
-        # word, pt (powerpoint) or xl (excel)
-        for dirname, mime in _ooxml_dirs.items():
-            if any(entry.startswith(dirname) for entry in filenames):
-                return mime
+    # Microsoft Office
+    content = b''
+    if header.filename == b'_rels/.rels':
+        content = zipstream.decompress_file(header, compressed_content)
+    if header.filename.startswith(b'pt/') or b'Target="pt/' in content:
+        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    if header.filename.startswith(b'word/') or b'Target="word/' in content:
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    if header.filename.startswith(b'xl/') or b'Target="xl/' in content:
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
-        return False
+    return 'application/zip'
 
-
-# checks that a string looks kinda sorta like a mimetype
-_mime_validator = re.compile(r"""
-    [\w-]+ # type-name
-    / # subtype separator
-    [\w-]+ # registration facet or subtype
-    (?:\.[\w-]+)* # optional faceted name
-    (?:\+[\w-]+)? # optional structured syntax specifier
-""", re.VERBOSE)
-def _check_open_container_format(data):
-    # Open Document Format for Office Applications (OpenDocument) Version 1.2
-    #
-    # Part 3: Packages
-    # 3 Packages
-    # 3.3 MIME Media Type
-    with io.BytesIO(data) as f, zipfile.ZipFile(f) as z:
-        # If a MIME media type for a document exists, then an OpenDocument
-        # package should contain a file with name "mimetype".
-        if 'mimetype' not in z.namelist():
-            return False
-
-        # The content of this file shall be the ASCII encoded MIME media type
-        # associated with the document.
-        marcel = z.read('mimetype').decode('ascii')
-        # check that it's not too long (RFC6838 § 4.2 restricts type and
-        # subtype to 127 characters each + separator, strongly recommends
-        # limiting them to 64 but does not require it) and that it looks a lot
-        # like a valid mime type
-        if len(marcel) < 256 and _mime_validator.match(marcel):
-            return marcel
-
-        return False
 
 _xls_pattern = re.compile(b"""
     \x09\x08\x10\x00\x00\x06\x05\x00
@@ -140,7 +112,9 @@ _mime_mappings = (
         _check_olecf
     ]),
     # zip, but will include jar, odt, ods, odp, docx, xlsx, pptx, apk
-    _Entry('application/zip', [b'PK\x03\x04'], [_check_ooxml, _check_open_container_format]),
+    _Entry('application/zip', [b'PK\x03\x04'], [
+        guess_ziptype,
+    ]),
 )
 def _odoo_guess_mimetype(bin_data, default='application/octet-stream'):
     """ Attempts to guess the mime type of the provided binary data, similar

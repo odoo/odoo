@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # ruff: noqa: F401
 
-from . import constants
+from . import constants, zipstream
 from .parse_version import parse_version
 from .cache import ormcache, ormcache_context
 from .config import config
