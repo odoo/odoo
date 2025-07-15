@@ -91,9 +91,9 @@ class Country(models.Model):
             ids = list(self._search([('code', 'ilike', name)] + domain, limit=limit, order=order))
         elif operator in ('=', '!=', 'in', 'not in'):
             if isinstance(name, str):
-                name = name.capitalize()
+                name = name.title()
             else:  # iterable
-                name = [n.capitalize() if n else n for n in name]
+                name = [n.title() if n else n for n in name]
 
         search_domain = [('name', operator, name)]
         if ids:
