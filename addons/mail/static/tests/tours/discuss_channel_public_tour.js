@@ -92,7 +92,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         { trigger: ".o-mail-Composer-input", run: "click" }, // focus
         {
             content: "Send message",
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-mail-Composer:has(button[title='Send']:enabled) .o-mail-Composer-input",
             run: "press Enter",
         },
         {
