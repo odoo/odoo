@@ -9,16 +9,15 @@
                     t-on-mouseleave="() => this.onOptionMouseLeave()"
                     t-on-click="(ev) => this.searchWorldwide(ev)"
                 >
-                    <a
+                    <button
                         t-attf-id="{{props.id or 'autocomplete'}}_{{source_index}}_{{option_index}}"
                         role="option"
-                        href="#"
                         class="dropdown-item ui-menu-item-wrapper text-truncate text-info"
                         t-att-class="{ 'ui-state-active': isActiveSourceOption([source_index, option_index]) }"
                         t-att-aria-selected="isActiveSourceOption([source_index, option_index]) ? 'true' : 'false'"
                     >
                         Search Worldwide 🌎
-                    </a>
+                    </button>
                 </li>
             </t>
         </xpath>
