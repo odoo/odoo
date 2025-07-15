@@ -288,7 +288,7 @@ export class Product extends PosModel {
     // product.pricelist.item records are loaded with a search_read
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
-    get_price(pricelist, quantity, price_extra = 0, recurring = false) {
+    get_price(pricelist, quantity, price_extra = 0, recurring = false, original_line = false) {
         const date = DateTime.now();
 
         // In case of nested pricelists, it is necessary that all pricelists are made available in
@@ -311,9 +311,24 @@ export class Product extends PosModel {
                   this.isPricelistItemUsable(item, date)
               );
 
+        const lines_to_update = [];
+        // In case the product is lot tracked, we search other line to see which line are similar to compute the real quantity
+        // to get the right unit price
+        if (original_line && original_line.is_lot_tracked()) {
+            original_line.order.orderlines.forEach((line) => {
+                if (line !== original_line && original_line.can_be_merged_with(line, true)) {
+                    quantity += line.get_quantity();
+                    lines_to_update.push(line);
+                }
+            });
+        }
+
         let price = this.lst_price + (price_extra || 0);
         const rule = rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
         if (!rule) {
+            lines_to_update.forEach((line) => {
+                line.set_unit_price(price);
+            });
             return price;
         }
 
@@ -349,6 +364,9 @@ export class Product extends PosModel {
             }
         }
 
+        lines_to_update.forEach((line) => {
+            line.set_unit_price(price);
+        });
         // This return value has to be rounded with round_di before
         // being used further. Note that this cannot happen here,
         // because it would cause inconsistencies with the backend for
@@ -679,7 +697,9 @@ export class Orderline extends PosModel {
                 this.product.get_price(
                     this.order.pricelist,
                     this.get_quantity(),
-                    this.get_price_extra()
+                    this.get_price_extra(),
+                    false,
+                    this
                 )
             );
             this.order.fix_tax_included_price(this);
@@ -774,17 +794,25 @@ export class Orderline extends PosModel {
     is_selected() {
         return this.selected;
     }
+
+    is_lot_tracked() {
+        return (
+            this.product.tracking === "lot" &&
+            (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
+        );
+    }
+
     // when we add an new orderline we want to merge it with the last line to see reduce the number of items
     // in the orderline. This returns true if it makes sense to merge the two
-    can_be_merged_with(orderline) {
+    can_be_merged_with(orderline, ignore_lot = false) {
         var price = parseFloat(
             round_di(this.price || 0, this.pos.dp["Product Price"]).toFixed(
                 this.pos.dp["Product Price"]
             )
         );
-        var order_line_price = orderline
-            .get_product()
-            .get_price(orderline.order.pricelist, this.get_quantity());
+        var order_line_price = ignore_lot
+            ? orderline.price
+            : orderline.get_product().get_price(orderline.order.pricelist, this.get_quantity());
         order_line_price = round_di(
             orderline.compute_fixed_price(order_line_price),
             this.pos.currency.decimal_places
@@ -813,10 +841,7 @@ export class Orderline extends PosModel {
                 price - order_line_price - orderline.get_price_extra(),
                 this.pos.currency.decimal_places
             ) &&
-            !(
-                this.product.tracking === "lot" &&
-                (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
-            ) &&
+            (ignore_lot || !this.is_lot_tracked()) &&
             this.full_product_name === orderline.full_product_name &&
             orderline.get_customer_note() === this.get_customer_note() &&
             !this.refunded_orderline_id &&
@@ -2081,7 +2106,13 @@ export class Order extends PosModel {
         );
         lines_to_recompute.forEach((line) => {
             line.set_unit_price(
-                line.product.get_price(self.pricelist, line.get_quantity(), line.get_price_extra())
+                line.product.get_price(
+                    self.pricelist,
+                    line.get_quantity(),
+                    line.get_price_extra(),
+                    false,
+                    line
+                )
             );
             self.fix_tax_included_price(line);
         });
@@ -2189,6 +2220,17 @@ export class Order extends PosModel {
 
         this.set_orderline_options(line, options);
         line.set_full_product_name();
+        if (line.is_lot_tracked()) {
+            line.set_unit_price(
+                line.product.get_price(
+                    this.pricelist_id,
+                    line.get_quantity(),
+                    line.get_price_extra(),
+                    false,
+                    line
+                )
+            );
+        }
         var to_merge_orderline;
         for (var i = 0; i < this.orderlines.length; i++) {
             if (this.orderlines.at(i).can_be_merged_with(line) && options.merge !== false) {
