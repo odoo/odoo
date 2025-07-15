@@ -3786,7 +3786,7 @@ class MailThread(models.AbstractModel):
         msg_vals = msg_vals or {}
         author_id = msg_vals['author_id'] if 'author_id' in msg_vals else message.author_id.id
         model = msg_vals['model'] if 'model' in msg_vals else message.model
-        title = msg_vals['record_name'] if 'record_name' in msg_vals else message.model
+        title = msg_vals['record_name'] if 'record_name' in msg_vals else message.record_name
         res_id = msg_vals['res_id'] if 'res_id' in msg_vals else message.res_id
         body = msg_vals['body'] if 'body' in msg_vals else message.body
 
