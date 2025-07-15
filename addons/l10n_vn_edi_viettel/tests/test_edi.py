@@ -38,7 +38,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
         cls.partner_a.write({
             'street': '121 Hang Bac Street',
             'state_id': cls.env.ref('base.state_vn_VN-HN').id,
-            'city': 'Hoan Kiem District',
+            'city': 'Hà Nội',
             'country_id': cls.env.ref('base.vn').id,
             'vat': '0100109106-505',
             'phone': '3825 7670',
@@ -116,8 +116,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
                     'buyerAddressLine': '121 Hang Bac Street',
                     'buyerPhoneNumber': '38257670',
                     'buyerEmail': 'partner_a@gmail.com',
-                    'buyerDistrictName': 'Hà Nội',
-                    'buyerCityName': 'Hoan Kiem District',
+                    'buyerCityName': 'Hà Nội',
                     'buyerCountryCode': 'VN',
                     'buyerNotGetInvoice': 0,
                 },
