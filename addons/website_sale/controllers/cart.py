@@ -278,9 +278,9 @@ class Cart(PaymentPortal):
 
         values['cart_quantity'] = order_sudo.cart_quantity
         values['cart_ready'] = order_sudo._is_cart_ready()
-        values['amount'] = order_sudo.amount_total
+        values['amount'] = order_sudo._get_amount_need_pay()['amount_total']
         values['minor_amount'] = payment_utils.to_minor_currency_units(
-            order_sudo.amount_total, order_sudo.currency_id
+            order_sudo._get_amount_need_pay()['amount_total'], order_sudo.currency_id
         )
         values['website_sale.cart_lines'] = request.env['ir.ui.view']._render_template(
             'website_sale.cart_lines', {
