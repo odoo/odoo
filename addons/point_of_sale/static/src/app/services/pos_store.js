@@ -1647,7 +1647,8 @@ export class PosStore extends WithLazyGetterTrap {
             const paymentLine = order.payment_ids.find(
                 (paymentLine) =>
                     paymentLine.payment_method_id.use_payment_terminal === terminalName &&
-                    !paymentLine.isDone()
+                    !paymentLine.isDone() &&
+                    paymentLine.getPaymentStatus() !== "retry"
             );
             if (paymentLine) {
                 return paymentLine;
