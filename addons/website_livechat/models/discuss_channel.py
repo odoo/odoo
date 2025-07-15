@@ -33,7 +33,7 @@ class DiscussChannel(models.Model):
                 [
                     Store.One("country_id", ["code"]),
                     "display_name",
-                    "history",
+                    "page_visit_history",
                     Store.One("lang_id", ["name"]),
                     Store.One("partner_id", [Store.One("country_id", ["code"])]),
                     Store.One("website_id", ["name"]),
