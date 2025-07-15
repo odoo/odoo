@@ -1472,7 +1472,8 @@ export class PosStore extends Reactive {
             const paymentLine = order.payment_ids.find(
                 (paymentLine) =>
                     paymentLine.payment_method_id.use_payment_terminal === terminalName &&
-                    !paymentLine.is_done()
+                    !paymentLine.is_done() &&
+                    paymentLine.get_payment_status() !== "retry"
             );
             if (paymentLine) {
                 return paymentLine;
