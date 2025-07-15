@@ -4,6 +4,7 @@ import {
     contains as mailContains,
     defineMailModels,
     insertText,
+    mockGetMedia,
     openDiscuss,
     setupChatHub,
     start,
@@ -326,4 +327,195 @@ test("invite email from chat invites it to the new group chat", async () => {
     await click("button:text('Create Group Chat'):enabled");
     await waitFor(".o-discuss-ChannelMember:has(:text('john@test.com')):count(1)");
     await waitFor(".o-discuss-ChannelMember:has(:text('Invitation Pending')):count(1)");
+});
+
+test("Create group chat transfers active call to new group chat", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "TestPartner1" },
+        { name: "TestPartner2" },
+    ]);
+    pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussContent-header button[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-CallParticipantCard:count(1)");
+    await contains(".o-discuss-CallActionList button[title='Turn camera on']:count(1)").click();
+    await waitFor(".o-discuss-CallActionList button[title='Turn camera off']:count(1)");
+    await waitFor(".o-discuss-CallActionList button[title='Mute']:count(1)");
+    await contains(".o-discuss-CallActionList button[title='Voice Settings']:count(1)").click();
+    await contains(".o-discuss-QuickVoiceSettings button:text('Deafen'):count(1)").click();
+    await waitFor(".o-discuss-CallActionList button[title='Undeafen']:count(1)");
+
+    await contains(".o-mail-DiscussContent-header button[title='Invite People']:count(1)").click();
+    await contains(".o-discuss-ChannelInvitation-selectable:text('TestPartner2'):count(1)").click();
+    await contains(
+        ".o-discuss-ChannelInvitation-invitationBox button:text('Create Group Chat'):enabled:count(1)"
+    ).click();
+    await waitFor(
+        ".o-mail-DiscussContent-threadName:value('Mitchell Admin, TestPartner1, and TestPartner2'):count(1)"
+    );
+    await waitFor(".o-discuss-CallParticipantCard:count(1)");
+    await waitFor(".o-discuss-CallActionList button[title='Turn camera off']:count(1)");
+    // undeafening must give the microphone back, as it would have in the old call
+    await contains(".o-discuss-CallActionList button[title='Undeafen']:count(1)").click();
+    await waitFor(".o-discuss-CallActionList button[title='Mute']:count(1)");
+
+    await openDiscuss(channelId);
+    // only shown once the old chat's call is empty
+    await waitFor(".o-mail-DiscussContent-header button[title='Start Call']:count(1)");
+});
+
+test("Create group chat does not transfer call when in another channel's call", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "TestPartner1" },
+        { name: "TestPartner2" },
+    ]);
+    pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
+    const generalId = pyEnv["discuss.channel"].create({ name: "General" });
+    const chatId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+        ],
+        channel_type: "chat",
+    });
+    const [memberId_1] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", chatId],
+        ["partner_id", "=", partnerId_1],
+    ]);
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: memberId_1,
+        channel_id: chatId,
+    });
+    await start();
+    await openDiscuss(generalId);
+    await contains(".o-mail-DiscussContent-header button[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-CallParticipantCard:count(1)");
+
+    await openDiscuss(chatId);
+    await waitFor(".o-mail-DiscussContent-header button[title='Join the Call']:count(1)");
+    await contains(".o-mail-DiscussContent-header button[title='Invite People']:count(1)").click();
+    await contains(".o-discuss-ChannelInvitation-selectable:text('TestPartner2'):count(1)").click();
+    await contains(
+        ".o-discuss-ChannelInvitation-invitationBox button:text('Create Group Chat'):enabled:count(1)"
+    ).click();
+    await waitFor(
+        ".o-mail-DiscussContent-threadName:value('Mitchell Admin, TestPartner1, and TestPartner2'):count(1)"
+    );
+    await waitFor(".o-mail-DiscussContent-header button[title='Start Call']:count(1)");
+
+    await openDiscuss(generalId);
+    await waitFor(".o-discuss-CallParticipantCard:count(1)");
+});
+
+test("Create group chat joins the call of the chat when not in a call", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "TestPartner1" },
+        { name: "TestPartner2" },
+    ]);
+    pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
+    const chatId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+        ],
+        channel_type: "chat",
+    });
+    const [memberId_1] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", chatId],
+        ["partner_id", "=", partnerId_1],
+    ]);
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: memberId_1,
+        channel_id: chatId,
+    });
+    await start();
+    await openDiscuss(chatId);
+    await waitFor(".o-mail-DiscussContent-header button[title='Join the Call']:count(1)");
+    await contains(".o-mail-DiscussContent-header button[title='Invite People']:count(1)").click();
+    await contains(".o-discuss-ChannelInvitation-selectable:text('TestPartner2'):count(1)").click();
+    await contains(
+        ".o-discuss-ChannelInvitation-invitationBox button:text('Create Group Chat'):enabled:count(1)"
+    ).click();
+    await waitFor(
+        ".o-mail-DiscussContent-threadName:value('Mitchell Admin, TestPartner1, and TestPartner2'):count(1)"
+    );
+    await waitFor(".o-discuss-CallParticipantCard:count(1)");
+});
+
+test("Create group chat from the meeting view stays in the meeting view", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "TestPartner1" },
+        { name: "TestPartner2" },
+    ]);
+    pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(
+        ".o-mail-DiscussContent-header button[title='Start Video Call']:count(1)"
+    ).click();
+    await contains(".o-mail-Meeting button[title='More']:count(1)").click();
+    await contains(".o-mail-ActionList-button[name='invite-people']:count(1)").click();
+    await contains(".o-discuss-ChannelInvitation-selectable:text('TestPartner2'):count(1)").click();
+    await contains(
+        ".o-discuss-ChannelInvitation-invitationBox button:text('Create Group Chat'):enabled:count(1)"
+    ).click();
+    await waitFor(
+        ".o-mail-DiscussContent-threadName:value('Mitchell Admin, TestPartner1, and TestPartner2'):count(1)"
+    );
+    await waitFor(".o-mail-Meeting .o-discuss-CallParticipantCard:count(1)");
+});
+
+test("Go to conversation from self chat transfers active call to the existing chat", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const [selfChatId] = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+            channel_type: "chat",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "chat",
+        },
+    ]);
+    await start();
+    await openDiscuss(selfChatId);
+    await contains(".o-mail-DiscussContent-header button[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-CallParticipantCard:count(1)");
+
+    await contains(".o-mail-DiscussContent-header button[title='Invite People']:count(1)").click();
+    await contains(".o-discuss-ChannelInvitation-selectable:text('TestPartner'):count(1)").click();
+    await contains(
+        ".o-discuss-ChannelInvitation-invitationBox button:text('Go to conversation'):enabled:count(1)"
+    ).click();
+    await waitFor(".o-mail-DiscussContent-threadName:value('TestPartner'):count(1)");
+    await waitFor(".o-discuss-CallParticipantCard:count(1)");
 });
