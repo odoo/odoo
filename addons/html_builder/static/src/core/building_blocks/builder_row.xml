@@ -28,7 +28,7 @@
             <t t-if="props.label">
                 <div
                     class="hb-row-label d-flex align-items-center"
-                    t-att-class="{'hb-row-label-actionable': props.slots.collapse}"
+                    t-att-class="{'hb-row-label-actionable': props.slots.collapse, 'bg-transparent': !props.label.trim()}"
                     t-att-data-tooltip="state.tooltip"
                     t-on-click="toggleCollapseContent"
                     >
