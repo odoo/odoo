@@ -1709,7 +1709,7 @@
             </t>
         </xpath>
         <xpath expr="//div[contains(@t-attf-class, 'accordion-item')]//h6" position="replace">
-            <h6 t-if="not isMobile" class="accordion-header">
+            <div t-if="not isMobile" class="accordion-header h6 mb-0">
                 <button
                     t-attf-class="accordion-button px-0 bg-transparent shadow-none
                         {{'collapsed' if visible_attributes &gt;= 4 else ''}}"
@@ -1721,7 +1721,7 @@
                 >
                     <b t-field="a.name"/>
                 </button>
-            </h6>
+            </div>
         </xpath>
         <xpath expr="//div[contains(@t-attf-id, 'o_products_attributes_')]" position="attributes">
             <attribute
@@ -1741,7 +1741,7 @@
         >
             <t t-if="is_sidebar_collapsible">
                 <div class="accordion-item">
-                    <h6 class="accordion-header">
+                    <div class="accordion-header h6 mb-0">
                         <button
                             class="accordion-button px-0 bg-transparent shadow-none"
                             type="button"
@@ -1752,7 +1752,7 @@
                         >
                             <b>Price Range</b>
                         </button>
-                    </h6>
+                    </div>
                     <div
                         id="o_wsale_price_range_option_inner"
                         class="accordion-collapse collapse show"
@@ -1794,7 +1794,7 @@
 
     <template id="filter_products_tags" name="Filter by Tags" active="True">
         <div t-if="all_tags" class="accordion-item">
-            <h6 class="accordion-header">
+            <div class="accordion-header h6 mb-0">
                 <button class="accordion-button px-0 bg-transparent shadow-none"
                         type="button"
                         data-bs-toggle="collapse"
@@ -1803,7 +1803,7 @@
                         t-attf-aria-controls="o_wsale_tags_option_inner">
                     <b>Tags</b>
                 </button>
-            </h6>
+            </div>
             <div id="o_wsale_tags_option_inner" class="accordion-collapse collapse show">
                 <div class="flex-column mb-3">
                     <t t-call="website_sale.filter_products_tags_list">
