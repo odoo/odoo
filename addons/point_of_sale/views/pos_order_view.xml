@@ -151,7 +151,7 @@
                     </page>
                     <page string="Payments" name="payments">
                         <field name="payment_ids" colspan="4" nolabel="1" readonly="account_move or state == 'done' or nb_print > 0">
-                            <list string="Payments" create="1" editable="bottom">
+                            <list string="Payments" create="1" editable="bottom" open_form_view="True">
                                 <field name="currency_id" column_invisible="True" />
                                 <field name="payment_date"/>
                                 <field name="payment_method_id" domain="[('id', 'in', parent.available_payment_method_ids)]" />
