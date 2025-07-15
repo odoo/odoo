@@ -3,7 +3,7 @@
 
 import json
 
-from odoo import _, api, fields, models, modules
+from odoo import _, api, fields, models, modules, SUPERUSER_ID
 
 
 class ResUsers(models.Model):
@@ -79,3 +79,29 @@ class ResUsers(models.Model):
         activity_groups.extend(list(user_activities.values()))
 
         return activity_groups
+
+    def _onboard_users_into_project(self, users):
+        res = super()._onboard_users_into_project(users)
+        if res:
+            res._generate_onboarding_todo()
+
+    def _generate_onboarding_todo(self):
+        create_vals = []
+        for user in self:
+            self_lang = self.with_context(lang=user.lang or self.env.user.lang)
+            body = self_lang.env["ir.qweb"]._render(
+                "project_todo.todo_user_onboarding",
+                {"object": user},
+                minimal_qcontext=True,
+                raise_if_not_found=False
+            )
+            if not body:
+                continue
+            title = self_lang.env._("Welcome %s!", user.name)
+            create_vals.append({
+                "user_ids": user.ids,
+                "description": body,
+                "name": title,
+            })
+        if create_vals:
+            self.env["project.task"].with_user(SUPERUSER_ID).with_context(mail_auto_subscribe_no_notify=True).create(create_vals)

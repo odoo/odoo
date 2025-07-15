@@ -1116,16 +1116,6 @@
             <field name="view_id" ref="view_task_all_calendar"/>
         </record>
 
-        <record id="action_server_view_my_task" model="ir.actions.server">
-            <field name="name">menu view My Tasks</field>
-            <field name="model_id" ref="project.model_project_task"/>
-            <field name="state">code</field>
-            <field name="path">my-tasks</field>
-            <field name="code">
-                model._ensure_personal_stages(); action = env["ir.actions.actions"]._for_xml_id("project.action_view_my_task")
-            </field>
-        </record>
-
         <record id="action_server_convert_to_subtask" model="ir.actions.server">
             <field name="name">Convert to Task/Sub-Task</field>
             <field name="model_id" ref="project.model_project_task"/>
