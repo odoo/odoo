@@ -377,8 +377,8 @@ def load_modules(
 
         if update_module and tools.sql.table_exists(cr, 'ir_model_fields'):
             # determine the fields which are currently translated in the database
-            cr.execute("SELECT model || '.' || name FROM ir_model_fields WHERE translate IS TRUE")
-            registry._database_translated_fields = {row[0] for row in cr.fetchall()}
+            cr.execute("SELECT model || '.' || name, translate FROM ir_model_fields WHERE translate IS NOT NULL")
+            registry._database_translated_fields = dict(cr.fetchall())
 
             # determine the fields which are currently company dependent in the database
             if odoo.tools.sql.column_exists(cr, 'ir_model_fields', 'company_dependent'):
@@ -455,7 +455,7 @@ def load_modules(
         if update_module:
             # set up the registry without the patch for translated fields
             database_translated_fields = registry._database_translated_fields
-            registry._database_translated_fields = set()
+            registry._database_translated_fields = {}
             registry._setup_models__(cr, [])  # incremental setup
             # determine which translated fields should no longer be translated,
             # and make their model fix the database schema

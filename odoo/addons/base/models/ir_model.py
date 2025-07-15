@@ -17,7 +17,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import frozendict, reset_cached_properties, split_every, sql, unique, OrderedSet, SQL
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
-from odoo.tools.translate import _, LazyTranslate
+from odoo.tools.translate import FIELD_TRANSLATE, LazyTranslate, _
 
 _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
@@ -533,7 +533,11 @@ class IrModelFields(models.Model):
     required = fields.Boolean()
     readonly = fields.Boolean()
     index = fields.Boolean(string='Indexed')
-    translate = fields.Boolean(string='Translatable', help="Whether values for this field can be translated (enables the translation mechanism for that field)")
+    translate = fields.Selection([
+        ('standard', 'Translate as a whole'),
+        ('html_translate', 'Translate HTML terms'),
+        ('xml_translate', 'Translate XML terms'),
+    ], string='Translatable', help="Whether values for this field can be translated (enables the translation mechanism for that field)")
     company_dependent = fields.Boolean(string='Company Dependent', help="Whether values for this field is company dependent", readonly=True)
     size = fields.Integer()
     state = fields.Selection([('manual', 'Custom Field'), ('base', 'Base Field')], string='Type', default='manual', required=True, readonly=True, index=True)
@@ -993,6 +997,9 @@ class IrModelFields(models.Model):
     def create(self, vals_list):
         IrModel = self.env['ir.model']
         for vals in vals_list:
+            if vals.get('translate') and not isinstance(vals['translate'], str):
+                _logger.warning("Deprecated since Odoo 19, ir.model.fields.translate becomes Selection, the value should be a string")
+                vals['translate'] = 'html_translate' if vals.get('ttype') == 'html' else 'standard'
             if 'model_id' in vals:
                 vals['model'] = IrModel.browse(vals['model_id']).model
 
@@ -1073,6 +1080,10 @@ class IrModelFields(models.Model):
             if column_name in vals:
                 del vals[column_name]
 
+        if vals.get('translate') and not isinstance(vals['translate'], str):
+            _logger.warning("Deprecated since Odoo 19, ir.model.fields.translate becomes Selection, the value should be a string")
+            vals['translate'] = 'html_translate' if vals.get('ttype') == 'html' else 'standard'
+
         res = super(IrModelFields, self).write(vals)
 
         self.env.flush_all()
@@ -1119,6 +1130,7 @@ class IrModelFields(models.Model):
 
     def _reflect_field_params(self, field, model_id):
         """ Return the values to write to the database for the given field. """
+        translate = next(k for k, v in FIELD_TRANSLATE.items() if v == field.translate)
         return {
             'model_id': model_id,
             'model': field.model_name,
@@ -1137,7 +1149,7 @@ class IrModelFields(models.Model):
             'required': bool(field.required),
             'selectable': bool(field.search or field.store),
             'size': getattr(field, 'size', None),
-            'translate': bool(field.translate),
+            'translate': translate,
             'company_dependent': bool(field.company_dependent),
             'relation_field': field.inverse_name if field.type == 'one2many' else None,
             'relation_table': field.relation if field.type == 'many2many' else None,
@@ -1252,7 +1264,10 @@ class IrModelFields(models.Model):
             'company_dependent': bool(field_data['company_dependent']),
         }
         if field_data['ttype'] in ('char', 'text', 'html'):
-            attrs['translate'] = bool(field_data['translate'])
+            attrs['translate'] = FIELD_TRANSLATE.get(
+                field_data['translate'],
+                True
+            )
             if field_data['ttype'] == 'char':
                 attrs['size'] = field_data['size'] or None
             elif field_data['ttype'] == 'html':
