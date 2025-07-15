@@ -18,6 +18,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.user.group_ids |= cls.env.ref('purchase.group_purchase_user')
         cls.company_data_2 = cls.setup_other_company()
 
     def _create_invoice_for_po(self, purchase_order):

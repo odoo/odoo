@@ -794,7 +794,7 @@ class TestExpenses(TestExpenseCommon):
     def test_expense_multi_company(self):
         main_company = self.company_data['company']
         other_company = self.company_data_2['company']
-        self.expense_employee.company_id = other_company
+        self.expense_employee.sudo().company_id = other_company
 
         # The expense employee is able to create an expense for company_2.
         # product_a needs a standard_price in company_2

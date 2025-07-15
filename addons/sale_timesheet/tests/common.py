@@ -10,6 +10,7 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.user.group_ids |= cls.env.ref('hr.group_hr_user')
         cls.company_data_2 = cls.setup_other_company()
 
         cls.user_employee_company_B = mail_new_test_user(
@@ -43,32 +44,28 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             groups='project.group_project_manager,hr_timesheet.group_hr_timesheet_user',
         )
 
-        cls.employee_user = cls.env['hr.employee'].create({
-            'name': 'Employee User',
-            'hourly_cost': 15,
-        })
-        cls.employee_manager = cls.env['hr.employee'].create({
-            'name': 'Employee Manager',
-            'hourly_cost': 45,
-        })
-
-        cls.employee_company_B = cls.env['hr.employee'].create({
-            'name': 'Gregor Clegane',
-            'user_id': cls.user_employee_company_B.id,
-            'hourly_cost': 15,
-        })
-
-        cls.manager_company_B = cls.env['hr.employee'].create({
-            'name': 'Cersei Lannister',
-            'user_id': cls.user_manager_company_B.id,
-            'hourly_cost': 45,
-        })
-        
-        cls.employee_without_sales_access = cls.env['hr.employee'].create({
-            'name': 'Tyrion Lannister',
-            'user_id': cls.user_employee_without_sales_access.id,
-            'hourly_cost': 25,
-        })
+        cls.employee_user, cls.employee_manager, \
+        cls.employee_company_B, cls.manager_company_B, \
+        cls.employee_without_sales_access = \
+            cls.env['hr.employee'].create([{
+                'name': 'Employee User',
+                'hourly_cost': 15,
+            }, {
+                'name': 'Employee Manager',
+                'hourly_cost': 45,
+            }, {
+                'name': 'Gregor Clegane',
+                'user_id': cls.user_employee_company_B.id,
+                'hourly_cost': 15,
+            }, {
+                'name': 'Cersei Lannister',
+                'user_id': cls.user_manager_company_B.id,
+                'hourly_cost': 45,
+            }, {
+                'name': 'Tyrion Lannister',
+                'user_id': cls.user_employee_without_sales_access.id,
+                'hourly_cost': 25,
+            }])
 
         # Account and project
         cls.analytic_account_sale.name = 'Project for selling timesheet - AA'
