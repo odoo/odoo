@@ -294,7 +294,7 @@ export function parseEmail(text) {
     if (!text) {
         return;
     }
-    let result = text.match(/"?(.*?)"? <(.*@.*)>/);
+    let result = text.match(/^"?([^"]*?)"? <([^" ]*@[^" @]*)>/);
     if (result) {
         const name = (result[1] || "").trim().replace(/(^"|"$)/g, "");
         return [name, (result[2] || "").trim()];
