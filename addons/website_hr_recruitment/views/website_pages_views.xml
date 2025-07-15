@@ -25,6 +25,17 @@
 
             <field name="website_id" groups="website.group_multi_website"/>
         </xpath>
+
+        <!--
+        TODO a bit fragile and ugly (why would you add some "groups" for this
+        specific view only?). This is the functional desire to be able to access
+        this website view as a lambda internal user. This should be reviewed in
+        master. This was mostly made to avoid runbot "errors".
+        See WEBSITE_RECORDS_VIEWS_ACCESS_RIGHTS.
+        -->
+        <xpath expr="//field[@name='application_count']" position="attributes">
+            <attribute name="groups">hr_recruitment.group_hr_recruitment_interviewer,hr_recruitment.group_hr_recruitment_user</attribute>
+        </xpath>
     </field>
 </record>
 
@@ -50,6 +61,26 @@
             </div>
         </xpath>
         <xpath expr="//div[hasclass('o_link_trackers')]" position="replace"/>
+
+        <!--
+        TODO a bit fragile and ugly (why would you add some "groups" for this
+        specific view only?). This is the functional desire to be able to access
+        this website view as a lambda internal user. This should be reviewed in
+        master. This was mostly made to avoid runbot "errors".
+        See WEBSITE_RECORDS_VIEWS_ACCESS_RIGHTS.
+        -->
+        <xpath expr="//field[@name='application_count']" position="attributes">
+            <attribute name="groups">hr_recruitment.group_hr_recruitment_interviewer,hr_recruitment.group_hr_recruitment_user</attribute>
+        </xpath>
+        <xpath expr="//field[@name='new_application_count']" position="attributes">
+            <attribute name="groups">hr_recruitment.group_hr_recruitment_interviewer,hr_recruitment.group_hr_recruitment_user</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('col-7')]/button" position="attributes">
+            <attribute name="groups">hr_recruitment.group_hr_recruitment_interviewer,hr_recruitment.group_hr_recruitment_user</attribute>
+        </xpath>
+        <xpath expr="//ul[hasclass('o_job_activities')]/li[2]" position="attributes">
+            <attribute name="groups">hr_recruitment.group_hr_recruitment_interviewer,hr_recruitment.group_hr_recruitment_user</attribute>
+        </xpath>
     </field>
 </record>
 

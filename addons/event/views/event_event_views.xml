@@ -303,7 +303,16 @@
                 <group expand="0" string="Group By">
                     <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
                     <filter string="Template" name="event_type_id" context="{'group_by': 'event_type_id'}"/>
-                    <filter string="Stage" name="stage_id" context="{'group_by': 'stage_id'}"/>
+                    <!--
+                    TODO the "groups" attribute is not directly useful here: the
+                    whole event app is supposed to be hidden for those lambda
+                    non-"event users". However, this view is also used in the
+                    website builder, where we do want normal website users to
+                    access events views. This should be reviewed in master.
+                    This was mostly made to avoid runbot "errors".
+                    See WEBSITE_RECORDS_VIEWS_ACCESS_RIGHTS.
+                    -->
+                    <filter string="Stage" name="stage_id" context="{'group_by': 'stage_id'}" groups="event.group_event_registration_desk"/>
                     <filter string="Start Date" name="date_begin" domain="[]" context="{'group_by': 'date_begin'}"/>
                 </group>
             </search>
