@@ -56,7 +56,6 @@ export class TourAutomatic {
                 },
                 {
                     trigger: step.trigger ? () => step.findTrigger() : null,
-                    expectUnloadPage: step.expectUnloadPage,
                     timeout:
                         step.pause && this.debugMode
                             ? 9999999
@@ -123,7 +122,7 @@ export class TourAutomatic {
         this.macro = new Macro({
             name: this.name,
             steps: macroSteps,
-            onError: (error) => {
+            onError: ({ error }) => {
                 if (error.type === "Timeout") {
                     this.throwError(...this.currentStep.describeWhyIFailed, error.message);
                 } else {
