@@ -45,6 +45,19 @@ export class WebsiteSystrayItem extends Component {
     get hasEditableRecordInBackend() {
         return (
             this.website.currentWebsite && this.website.currentWebsite.metadata.editableInBackend
+            // TODO the functional desire is to have read access on all
+            // "website" models for all internal users, but there are many
+            // fields preventing that... to review in master (should views just
+            // be smarter? should they be more basic in the website app?). This
+            // disables the form view access feature for some models that are
+            // known to lead to access rights lock. At least, list views are
+            // accessible at the moment.
+            // See WEBSITE_RECORDS_VIEWS_ACCESS_RIGHTS.
+            && (
+                !this.website.currentWebsite.metadata.mainObject
+                || !['event.event', 'hr.job'].includes(this.website.currentWebsite.metadata.mainObject.model)
+                || this.website.currentWebsite.metadata.canPublish
+            )
         );
     }
 
