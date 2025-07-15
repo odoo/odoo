@@ -278,6 +278,8 @@ class GoogleCalendarSync(models.AbstractModel):
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
                 try:
+                    send_updates = not self._is_event_over()
+                    google_service.google_service = google_service.google_service.with_context(send_updates=send_updates)
                     google_service.patch(google_id, values, token=token, timeout=timeout)
                 except HTTPError as e:
                     if e.response.status_code in (400, 403):
@@ -307,7 +309,7 @@ class GoogleCalendarSync(models.AbstractModel):
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
                 try:
-                    send_updates = self.env.context.get('send_updates', True)
+                    send_updates = self.env.context.get('send_updates', True) and not self._is_event_over()
                     google_service.google_service = google_service.google_service.with_context(send_updates=send_updates)
                     google_values = google_service.insert(values, token=token, timeout=timeout, need_video_call=self._need_video_call())
                     self.with_context(dont_notify=True).write(self._get_post_sync_values(values, google_values))
