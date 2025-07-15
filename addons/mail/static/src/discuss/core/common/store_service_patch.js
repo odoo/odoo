@@ -112,17 +112,21 @@ const storeServicePatch = {
             ),
         });
     },
-    /** @param {number[]} partnerIds */
+    /**
+     * @param {number[]} partnerIds
+     * @returns {Promise<import("models").DiscussChannel>}
+     */
     async startChat(partnerIds) {
         const partners_to = [...new Set([this.self.id, ...partnerIds])];
+        let chat;
         if (partners_to.length === 1) {
-            const chat = await this.joinChat(partners_to[0], true);
+            chat = await this.joinChat(partners_to[0], true);
             chat.open({ focus: true, bypassCompact: true });
         } else if (partners_to.length === 2) {
             const correspondentId = partners_to.find(
                 (partnerId) => partnerId !== this.store.self_user?.partner_id?.id
             );
-            const chat = await this.joinChat(correspondentId, true);
+            chat = await this.joinChat(correspondentId, true);
             chat.open({ focus: true, bypassCompact: true });
         } else {
             const users_to = [
@@ -133,8 +137,9 @@ const storeServicePatch = {
                         .filter(Boolean),
                 ]),
             ];
-            await this.createGroupChat({ users_to });
+            chat = await this.createGroupChat({ users_to });
         }
+        return chat;
     },
 };
 
