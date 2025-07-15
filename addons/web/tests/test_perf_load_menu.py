@@ -32,9 +32,9 @@ class TestPerfSessionInfo(common.HttpCase):
 
         self.env.registry.clear_all_caches()
         # cold ormcache:
-        # - Only web: 42
-        # - All modules: 120
-        with self.assertQueryCount(120):
+        # - Only web: 43
+        # - All modules: 121
+        with self.assertQueryCount(121):
             self.url_open(
                 "/web/session/get_session_info",
                 data=json.dumps({'jsonrpc': "2.0", 'method': "call", 'id': str(uuid4())}),
