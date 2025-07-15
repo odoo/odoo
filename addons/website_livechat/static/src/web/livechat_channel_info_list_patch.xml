@@ -3,13 +3,13 @@
     <t t-name="website_livechat.LivechatChannelInfoList" t-inherit="im_livechat.LivechatChannelInfoList" t-inherit-mode="extension">
         <xpath expr="//t[@t-name='extra_infos']" position="inside">
             <t t-set="visitor" t-value="props.thread.livechat_visitor_id"/>
-            <div t-if="visitor?.history" class="d-flex flex-column bg-inherit gap-1">
+            <div t-if="visitor?.pageVisitHistoryText" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3">Recent page views</h6>
                 <div t-if="visitor.website_id">
                     <i class="me-1 fa fa-globe" aria-label="Website"/>
                     <span t-esc="visitor.website_id.name"/>
                 </div>
-                <span t-esc="visitor.history"/>
+                <span t-esc="visitor.pageVisitHistoryText"/>
             </div>
             <div t-if="!props.thread.livechat_end_dt and recentConversations.length" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3">Recent conversations</h6>

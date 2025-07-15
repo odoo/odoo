@@ -7,7 +7,7 @@ export class WebsiteVisitor extends models.ServerModel {
 
     country_id = fields.Many2one({ relation: "res.country", string: "Country" }); // FIXME: somehow not fetched properly
     display_name = fields.Char({ compute: "_compute_display_name" });
-    history = fields.Char();
+    page_visit_history = fields.Char();
     lang_id = fields.Many2one({ relation: "res.lang", string: "Language" }); // FIXME: somehow not fetched properly
     partner_id = fields.Many2one({ relation: "res.partner", string: "Contact" }); // FIXME: somehow not fetched properly
     website_id = fields.Many2one({ relation: "website", string: "Website" });
@@ -34,7 +34,7 @@ export class WebsiteVisitor extends models.ServerModel {
         for (const visitor of this) {
             const [data] = this._read_format(visitor.id, ["display_name"]);
             data.country_id = mailDataHelpers.Store.one(ResCountry.browse(visitor.country_id));
-            data.history = visitor.history;
+            data.page_visit_history = JSON.parse(visitor.page_visit_history || "[]");
             data.lang_id = mailDataHelpers.Store.one(ResLang.browse(visitor.lang_id));
             data.partner_id = mailDataHelpers.Store.one(
                 ResPartner.browse(visitor.partner_id),
