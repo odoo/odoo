@@ -278,8 +278,11 @@ class AccountJournal(models.Model):
         """
         CCSID_data = self._l10n_sa_api_get_compliance_CSID(otp)
         if CCSID_data.get('errors') or CCSID_data.get('error'):
-            raise UserError(_("Could not obtain Compliance CSID: %s",
-                              CCSID_data['errors'][0]['message'] if CCSID_data.get('errors') else CCSID_data['error']))
+            if CCSID_data.get('errors'):
+                error_message = CCSID_data['errors'][0]['message'] if 'message' in CCSID_data['errors'][0] else CCSID_data['errors'][0]
+            else:
+                error_message = CCSID_data['error']
+            raise UserError(_("Could not obtain Compliance CSID: %s", error_message))
         self.sudo().write({
             'l10n_sa_compliance_csid_json': json.dumps(CCSID_data),
             'l10n_sa_production_csid_json': False,
