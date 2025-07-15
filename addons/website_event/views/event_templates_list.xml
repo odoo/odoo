@@ -309,8 +309,9 @@
     <div t-if="event_ids and original_search" class="col-12 alert alert-warning mt8">
         No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="searches['search']"/>'.
     </div>
-    <!-- List -->
+    <!-- View -->
     <div t-foreach="event_ids" t-as="event" t-attf-class=" #{opt_event_size}">
+        <t t-set="event_tag_ids" t-value="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)"/>
         <a t-cache="(event, event.is_participating) if not editable and event.website_published else None" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" class="text-decoration-none text-reset " t-att-data-publish="event.website_published and 'on' or 'off'">
             <article t-attf-class="h-100 #{opt_events_list_cards and 'card'}" itemscope="itemscope" itemtype="http://schema.org/Event">
                 <div t-attf-class="h-100 #{opt_events_list_columns and 'd-flex flex-wrap flex-column' or 'row mx-0'}">
@@ -338,7 +339,10 @@
                                 </div>
                                 <!-- Not open -->
                                 <span t-if="not event.event_registrations_open and (not opt_events_list_cards or not opt_events_list_columns)" class="position-absolute bottom-0 px-3 py-2 w-100 text-bg-light">
-                                    <t t-if="not event.event_registrations_started">
+                                    <t t-if="event.kanban_state == 'cancel'">
+                                        Cancelled
+                                    </t>
+                                    <t t-elif="not event.event_registrations_started">
                                         Registrations not yet open
                                     </t>
                                     <t t-elif="event.event_registrations_sold_out">
@@ -359,40 +363,78 @@
                             </t>
                         </div>
                     </header>
-                    
+
                     <!-- Body -->
-                    <main t-attf-class="card-body position-relative d-flex flex-column justify-content-between gap-2 #{opt_events_list_columns and 'col-12 py-3' or 'col-8 col-lg-9 px-4'} #{not opt_events_list_cards and opt_events_list_columns and 'bg-transparent px-0'} #{not opt_events_list_cards and not opt_events_list_columns and 'bg-transparent py-0'}">
+                    <main t-attf-class="card-body position-relative d-flex justify-content-between gap-2 #{opt_events_list_columns and 'flex-column col-12 py-3' or 'justify-content-between align-items-center col-8 col-lg-9 px-4'} #{not opt_events_list_cards and opt_events_list_columns and 'bg-transparent px-0'} #{not opt_events_list_cards and not opt_events_list_columns and 'bg-transparent py-0'}">
+                        <!-- Event Details -->
                         <div id="event_details">
-                            <div class="d-flex flex-wrap gap-1 small">
-                                <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)" t-as="tag">
-                                    <span t-if="tag.color"
-                                        t-attf-class="badge #{'o_color_%s' % tag.color if tag.color else 'text-bg-light'}">
+                            <!-- Tags (Grid View) -->
+                            <div t-if="opt_events_list_columns" class="d-flex flex-wrap gap-1 small">
+                                <t t-foreach="event_tag_ids" t-as="tag">
+                                    <span t-if="tag.color" t-attf-class="badge #{'o_color_%s' % tag.color}">
                                         <t t-out="tag.name"/>
                                     </span>
                                 </t>
                             </div>
                             <!-- Title -->
-                            <h5 t-attf-class="card-title my-2 #{(not event.website_published) and 'text-danger'}">
+                            <h5 t-attf-class="card-title my-2 #{not event.website_published and 'text-danger'} #{not opt_events_list_columns and not event.event_registrations_open and 'text-muted'}">
                                 <span t-field="event.name" itemprop="name"/>
                             </h5>
-                            <!-- Start Date & Time -->
-                            <!-- TODO remove t-out one in master -->
-                            <small t-if="False" class="o_not_editable opacity-75" itemprop="description" t-out="event.subtitle">
-                            </small>
-                            <small class="opacity-75" itemprop="description" t-field="event.subtitle"/>
+                            <div t-if="not opt_events_list_columns" class="d-inline-flex flex-wrap gap-3">
+                                <!-- Location (List View) -->
+                                <div class="d-flex align-items-center">
+                                    <i class="fa fa-map-marker me-2 text-muted" title="Location"/>
+                                    <small class="o_not_editable fw-bold text-muted" itemprop="location"
+                                        t-out="event.address_id"
+                                        t-options="{'widget': 'contact', 'fields': ['city', 'country_id'], 'null_text': 'Online event', 'no_marker': 'true'}"/>
+                                </div>
+                                <!-- Tags (List View) -->
+                                <div class="d-flex flex-wrap gap-1 small">
+                                    <t t-foreach="event_tag_ids" t-as="tag">
+                                        <span t-if="tag.color" t-attf-class="badge d-flex align-items-center #{'o_color_%s' % tag.color}">
+                                            <t t-out="tag.name"/>
+                                        </span>
+                                    </t>
+                                </div>
+                            </div>
+                            <!-- Subtitle (Grid View) -->
+                            <small t-if="opt_events_list_columns" class="opacity-75" itemprop="description" t-field="event.subtitle"/>
                         </div>
-                        <!-- Location -->
-                        <small class="o_not_editable fw-bold" itemprop="location" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city', 'country_id'], 'null_text': 'Online event'}"/>
+                        <!-- Location (Grid View) -->
+                        <small t-if="opt_events_list_columns" class="o_not_editable fw-bold" itemprop="location" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city', 'country_id'], 'null_text': 'Online event'}"/>
+                        <!-- CTA (List View) -->
+                        <div t-if="not opt_events_list_columns" t-attf-class="d-none #{opt_index_sidebar and 'd-xl-block' or 'd-lg-block'}">
+                            <div class="d-flex flex-column gap-1 align-items-end text-center">
+                                <t t-if="not event.event_registrations_open">
+                                    <small class="text-muted fw-bold w-100">
+                                        <t t-if="event.kanban_state == 'cancel'">Cancelled</t>
+                                        <t t-elif="not event.event_registrations_started and not event.event_registrations_sold_out">Registrations not open</t>
+                                        <t t-elif="event.event_registrations_sold_out">Sold Out</t>
+                                        <t t-else="">Registrations Closed</t>
+                                    </small>
+                                    <button type="button" class="btn btn-light mt-auto">
+                                        Event Info <i class="fa fa-chevron-right"/>
+                                    </button>
+                                </t>
+                                <t t-else="">
+                                    <button type="button" class="btn btn-primary mt-auto">
+                                        Get Tickets <i class="fa fa-chevron-right"/>
+                                    </button>
+                                </t>
+                            </div>
+                        </div>
                     </main>
-                    
-                    <!-- Footer -->
+                    <!-- Footer (Grid View) -->
                     <footer t-if="not event.event_registrations_open and opt_events_list_columns and opt_events_list_cards"
                         t-att-class="'small align-self-end w-100 %s %s' % (
                             opt_events_list_cards and 'card-footer' or (not opt_events_list_columns and 'py-2 mt-2') or 'py-2',
                             opt_events_list_cards and 'border-top' or 'px-2',
                         )">
                         <span t-if="not event.event_registrations_open">
-                            <t t-if="not event.event_registrations_started">
+                            <t t-if="event.kanban_state == 'cancel'">
+                                Cancelled
+                            </t>
+                            <t t-elif="not event.event_registrations_started">
                                 Registrations not yet open
                             </t>
                             <t t-elif="event.event_registrations_sold_out">
@@ -418,8 +460,8 @@
 <template id="opt_events_list_cards" inherit_id="website_event.events_list" active="True" name="'Cards' Design"/>
 
 <template id="opt_events_list_categories" inherit_id="website_event.events_list" active="False" name="Show Templates">
-    <xpath expr="//main/div[@id='event_details']" position="after">
-        <span t-if="event.event_type_id" t-attf-href="/event?type=#{event.event_type_id.id}" t-attf-class="badge text-bg-secondary o_wevent_badge #{opt_events_list_columns and 'o_wevent_badge_event' or 'position-absolute bottom-0 end-0 end-sm-0 start-sm-0'} #{not opt_events_list_columns and opt_events_list_cards and 'me-sm-3 mb-sm-3'}" t-field="event.event_type_id"/>
+    <xpath expr="//main/div[@id='event_details']" position="inside">
+        <span t-if="event.event_type_id" t-attf-href="/event?type=#{event.event_type_id.id}" t-attf-class="badge text-bg-secondary o_wevent_badge #{opt_events_list_columns and 'o_wevent_badge_event' or 'o_wevent_badge_event_list'} #{not opt_events_list_columns and opt_events_list_cards and 'me-sm-3 mb-sm-3'}" t-field="event.event_type_id"/>
     </xpath>
 </template>
 

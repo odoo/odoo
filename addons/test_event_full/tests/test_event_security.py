@@ -55,7 +55,7 @@ class TestEventSecurity(TestEventFullCommon):
     def test_event_access_event_registration(self):
         # Event: read ok
         event = self.test_event.with_user(self.env.user)
-        event.read(['name', 'user_id', 'kanban_state_label'])
+        event.read(['name', 'user_id', 'kanban_state'])
 
         # Event: read only
         with self.assertRaises(AccessError):
@@ -77,7 +77,7 @@ class TestEventSecurity(TestEventFullCommon):
     def test_event_access_event_user(self):
         # Event
         event = self.test_event.with_user(self.env.user)
-        event.read(['name', 'user_id', 'kanban_state_label'])
+        event.read(['name', 'user_id', 'kanban_state'])
         event.write({'name': 'New name'})
         self.env['event.event'].create({
             'name': 'Event',
