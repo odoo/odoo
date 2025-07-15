@@ -520,16 +520,12 @@ class MailActivity(models.Model):
         next_activities_values = []
 
         # Search for all attachments linked to the activities we are about to archive. This way, we
-        # can link them to the message posted and prevent their disparition.
-        attachments = self.env['ir.attachment'].search_read([
+        # can link them to the message posted and prevent their disparition. The move is done in
+        # sudo to avoid losing inaccessible attachments.
+        activity_attachments = self.env['ir.attachment'].sudo().search_fetch([
             ('res_model', '=', self._name),
             ('res_id', 'in', self.ids),
-        ], ['id', 'res_id'])
-
-        activity_attachments = defaultdict(list)
-        for attachment in attachments:
-            activity_id = attachment['res_id']
-            activity_attachments[activity_id].append(attachment['id'])
+        ], ['res_id']).grouped('res_id')
 
         for model, activity_data in self.filtered('res_model')._classify_by_model().items():
             # Allow user without access to the record to "mark as done" activities assigned to them. At the end of the
@@ -554,21 +550,18 @@ class MailActivity(models.Model):
                     mail_activity_type_id=activity.activity_type_id.id,
                     subtype_xmlid='mail.mt_activities',
                 )
-                attachment_ids = (attachment_ids or []) + activity_attachments.get(activity.id, [])
                 if attachment_ids:
                     activity.attachment_ids = attachment_ids
 
                 # Moving the attachments in the message
                 # TODO: Fix void res_id on attachment when you create an activity with an image
                 # directly, see route /web_editor/attachment/add
-                if activity_attachments[activity.id]:
-                    message_attachments = self.env['ir.attachment'].browse(activity_attachments[activity.id])
-                    if message_attachments:
-                        message_attachments.write({
-                            'res_id': activity_message.id,
-                            'res_model': activity_message._name,
-                        })
-                        activity_message.attachment_ids = message_attachments
+                if message_attachments := activity_attachments.get(activity.id):
+                    message_attachments.write({
+                        'res_id': activity_message.id,
+                        'res_model': activity_message._name,
+                    })
+                    activity_message.attachment_ids = message_attachments
                 messages += activity_message
 
         next_activities = self.env['mail.activity']
