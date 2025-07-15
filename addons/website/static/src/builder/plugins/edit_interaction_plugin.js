@@ -18,11 +18,21 @@ export class EditInteractionPlugin extends Plugin {
             // The clonedEl is implicitly started because it is a newly
             // inserted content.
         },
+        // Resource definitions:
+        skip_refresh_on_snippet_save: [
+            // List of snippet selectors for which interaction refresh should be
+            // disabled on save. This is mainly because the interaction clears
+            // the content before it can be cloned and saved.
+        ],
         on_will_save_snippet_handlers: ({ snippetEl }) => {
-            this.stopInteractions(snippetEl);
+            if (!snippetEl.matches(this.getResource("skip_refresh_on_snippet_save").join(", "))) {
+                this.stopInteractions(snippetEl);
+            }
         },
         on_saved_snippet_handlers: ({ snippetEl }) => {
-            this.restartInteractions(snippetEl);
+            if (!snippetEl.matches(this.getResource("skip_refresh_on_snippet_save").join(", "))) {
+                this.restartInteractions(snippetEl);
+            }
         },
     };
 

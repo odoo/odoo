@@ -35,6 +35,7 @@ class DynamicSnippetOptionPlugin extends Plugin {
             CustomizeTemplateAction,
         },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        skip_refresh_on_snippet_save: [this.selector],
     };
     setup() {
         this.dynamicFiltersCache = new Cache(this._fetchDynamicFilters, JSON.stringify);
