@@ -1,13 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+import freezegun
+
 from datetime import datetime, timedelta
 
 from odoo import fields, Command
 from odoo.tests import Form, new_test_user
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-
-import freezegun
-import base64
 
 
 class TestCalendar(SavepointCaseWithUserDemo):
