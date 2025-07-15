@@ -54,14 +54,15 @@
                                 <t t-esc="dayHeader" />
                             </t>
                         </h5>
+                        <MultiSelectionButtons reactive="this.multiSelectionButtonsReactive" />
                     </div>
-                    <div t-if="hasSideBar and !model.hasMultiCreate and !env.isSmall" class="o_sidebar_toggler d-flex d-print-none align-items-center border-bottom pe-3">
+                    <div t-if="hasSideBar and !env.isSmall" class="o_sidebar_toggler d-flex d-print-none align-items-center border-bottom pe-3">
                         <button class="btn btn-light oi oi-panel-right collapsed ms-2 lh-base" t-on-click="toggleSideBar"/>
                     </div>
                     <MobileFilterPanel t-if="env.isSmall and hasSideBar" t-props="mobileFilterPanelProps" />
                     <div class="o_calendar_wrapper d-flex overflow-hidden">
                         <t t-if="showCalendar" t-component="props.Renderer" t-props="rendererProps"/>
-                        <CalendarSidePanel t-if="(hasSideBar or model.hasMultiCreate) and showSideBar" t-props="sidePanelProps"/>
+                        <CalendarSidePanel t-if="hasSideBar and showSideBar" t-props="sidePanelProps"/>
                     </div>
                 </div>
             </Layout>

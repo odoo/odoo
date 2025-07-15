@@ -11,14 +11,16 @@ import {
 } from "./calendar_test_helpers";
 
 import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
-import { SIDE_PANEL_MODES } from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
+import { CallbackRecorder } from "@web/search/action_hook";
 
 const FAKE_PROPS = {
     model: FAKE_MODEL,
     createRecord() {},
     deleteRecord() {},
     editRecord() {},
-    sidePanelMode: SIDE_PANEL_MODES.filter,
+    callbackRecorder: new CallbackRecorder(),
+    onSquareSelection() {},
+    cleanSquareSelection() {},
 };
 
 async function start(props = {}, target) {

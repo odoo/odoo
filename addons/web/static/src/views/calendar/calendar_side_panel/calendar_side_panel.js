@@ -1,50 +1,14 @@
-import { Component, onWillStart, useState } from "@odoo/owl";
-import { FormRenderer } from "@web/views/form/form_renderer";
+import { Component } from "@odoo/owl";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
-import { TimePicker } from "@web/core/time_picker/time_picker";
 import { CalendarFilterSection } from "@web/views/calendar/calendar_filter_section/calendar_filter_section";
-import { Record } from "@web/model/record";
-import { useService } from "@web/core/utils/hooks";
-import { FormArchParser } from "@web/views/form/form_arch_parser";
-import { parseXML } from "@web/core/utils/xml";
-import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-
-export const SIDE_PANEL_MODES = {
-    filter: "FILTER",
-    add: "ADD",
-    delete: "DELETE",
-};
 
 export class CalendarSidePanel extends Component {
     static components = {
-        FormRenderer,
         DatePicker: DateTimePicker,
-        TimePicker,
         FilterSection: CalendarFilterSection,
-        Record,
     };
     static template = "web.CalendarSidePanel";
-    static props = ["model", "mode", "setMode", "context?", "setMultiCreateTimeRange"];
-    static defaultProps = {
-        context: {},
-    };
-
-    setup() {
-        this.viewService = useService("view");
-
-        this.MODES = SIDE_PANEL_MODES;
-        this.state = useState({
-            isReady: !this.props.model.hasMultiCreate,
-        });
-
-        if (this.props.model.hasMultiCreate) {
-            onWillStart(() => {
-                this.loadMultiCreateView().then(() => {
-                    this.state.isReady = true;
-                });
-            });
-        }
-    }
+    static props = ["model"];
 
     get datePickerProps() {
         return {
@@ -87,37 +51,5 @@ export class CalendarSidePanel extends Component {
 
     get showDatePicker() {
         return this.props.model.showDatePicker && !this.env.isSmall;
-    }
-
-    async loadMultiCreateView() {
-        const { fields, relatedModels, views } = await this.viewService.loadViews({
-            context: {
-                ...this.props.context,
-                form_view_ref: this.props.model.meta.multiCreateView,
-            },
-            resModel: this.props.model.resModel,
-            views: [[false, "form"]],
-        });
-        const parser = new FormArchParser();
-        const arch = views.form.arch;
-        const resModel = this.props.model.resModel;
-        this.multiCreateArchInfo = parser.parse(parseXML(arch), relatedModels, resModel);
-        const { activeFields } = extractFieldsFromArchInfo(this.multiCreateArchInfo, fields);
-        this.multiCreateRecordProps = {
-            resModel,
-            fields,
-            activeFields,
-            context: this.props.context,
-            hooks: {
-                onRootLoaded: this.onMultiCreateRootLoaded.bind(this),
-            },
-        };
-        if (this.props.model.data.multiCreate.values) {
-            this.multiCreateRecordProps.values = this.props.model.data.multiCreate.values;
-        }
-    }
-
-    onMultiCreateRootLoaded(record) {
-        this.props.model.data.multiCreate.record = record;
     }
 }

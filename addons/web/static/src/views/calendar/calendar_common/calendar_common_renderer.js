@@ -59,9 +59,9 @@ export class CalendarCommonRenderer extends Component {
         editRecord: Function,
         deleteRecord: Function,
         setDate: { type: Function, optional: true },
-        sidePanelMode: String,
-        multiCreateRecords: { type: Function, optional: true },
-        multiDeleteRecords: { type: Function, optional: true },
+        callbackRecorder: Object,
+        onSquareSelection: Function,
+        cleanSquareSelection: Function,
     };
 
     setup() {
@@ -95,7 +95,9 @@ export class CalendarCommonRenderer extends Component {
             dayHeaderFormat: this.env.isSmall
                 ? SHORT_SCALE_TO_HEADER_FORMAT[this.props.model.scale]
                 : SCALE_TO_HEADER_FORMAT[this.props.model.scale],
-            dateClick: this.onDateClick,
+            // we must handle clicks differently in multicreate mode:
+            // fc is blocked by safePrevent in onPointerDown (draggable_hook_builder.js)
+            dateClick: this.props.model.hasMultiCreate ? () => {} : this.onDateClick,
             dayCellClassNames: this.getDayCellClassNames,
             initialDate: this.props.model.date.toISO(),
             initialView: SCALE_TO_FC_VIEW[this.props.model.scale],
@@ -132,7 +134,7 @@ export class CalendarCommonRenderer extends Component {
             selectAllow: this.isSelectionAllowed,
             selectMinDistance: 5, // needed to not trigger select when click
             selectMirror: true,
-            selectable: this.props.model.canCreate,
+            selectable: !this.props.model.hasMultiCreate && this.props.model.canCreate,
             showNonCurrentDates: this.props.model.monthOverflow,
             slotLabelFormat: is24HourFormat() ? HOUR_FORMATS[24] : HOUR_FORMATS[12],
             snapDuration: { minutes: 15 },
@@ -375,11 +377,13 @@ export class CalendarCommonRenderer extends Component {
         this.unhighlightEvent(info.event, "o_cw_custom_highlight");
     }
     onEventDragStart(info) {
+        this.props.cleanSquareSelection();
         info.el.classList.add(info.view.type);
         this.fc.api.unselect();
         this.highlightEvent(info.event, "o_cw_custom_highlight");
     }
     onEventResizeStart(info) {
+        this.props.cleanSquareSelection();
         this.fc.api.unselect();
         this.highlightEvent(info.event, "o_cw_custom_highlight");
     }

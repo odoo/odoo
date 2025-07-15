@@ -1,6 +1,12 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, edit, queryAllTexts } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
+import {
+    advanceTime,
+    animationFrame,
+    disableAnimations,
+    mockTimeZone,
+    runAllTimers,
+} from "@odoo/hoot-mock";
 import {
     contains,
     defineModels,
@@ -195,7 +201,20 @@ preloadBundle("web.fullcalendar_lib");
 
 beforeEach(() => {
     mockTimeZone("Europe/Brussels");
+    disableAnimations();
 });
+
+// Utils function
+
+async function multiCreateClickAddButton() {
+    await click(".o_multi_selection_buttons .btn:contains(Add)");
+    await animationFrame();
+}
+
+async function multiCreatePopoverClickAddButton() {
+    await click(".o_multi_create_popover .popover-footer .btn:contains(Add)");
+    await animationFrame();
+}
 
 test.tags("desktop");
 test("multi_create: render and basic creation (simple use case)", async () => {
@@ -218,15 +237,9 @@ test("multi_create: render and basic creation (simple use case)", async () => {
     expect(".fc .fc-event").toHaveCount(5, {
         message: "All events of this month should be visible",
     });
-    expect(".o_calendar_sidebar .btn-group .btn").toHaveCount(3, {
-        message: "Multi create should be enabled",
-    });
     expect(".o_calendar_filter_item").toHaveCount(0, {
         message: "No filters should be visible",
     });
-
-    await click(".o_calendar_sidebar_container .o_form_view [name='name'] input");
-    await edit("Time off");
 
     const { drop, moveTo } = await contains(".fc-day[data-date='2019-03-04']").drag();
     await moveTo(".fc-day[data-date='2019-03-14']");
@@ -234,6 +247,16 @@ test("multi_create: render and basic creation (simple use case)", async () => {
     expect(".fc-day.o-highlight").toHaveCount(8);
     await drop();
     await animationFrame();
+
+    expect(".o_selection_box").toHaveText("4\nselected");
+
+    await multiCreateClickAddButton();
+    expect(".o_multi_create_popover").toHaveCount(1);
+    await click(".o_multi_create_popover .o_form_view [name='name'] input");
+    await edit("Time off");
+    await multiCreatePopoverClickAddButton();
+
+    expect(".o_multi_create_popover").toHaveCount(0);
     expect.verifySteps([
         "Time off_2019-03-04",
         "Time off_2019-03-05",
@@ -273,21 +296,6 @@ test("multi_create: render and basic functionalities (complex with filters use c
     });
 
     expect(".fc .fc-event").toHaveCount(4, { message: "events should be filter" });
-    expect(".o_calendar_sidebar .btn-group .btn").toHaveCount(3, {
-        message: "multi create should be enabled",
-    });
-
-    expect(".o_calendar_sidebar .btn-group .btn.active").toHaveAttribute("data-tooltip", "New", {
-        message: "multi create mode should be the default",
-    });
-    expect(".o_calendar_sidebar_container .o_form_view").toBeVisible();
-    expect(".o_calendar_sidebar_container .o_form_view [name='name'] input").toHaveValue("Sick", {
-        message: "should have a default value from the context",
-    });
-    await click(".o_calendar_sidebar_container .o_form_view [name='name'] input");
-    await edit("Time off");
-    await contains(".o_calendar_sidebar_container .o_form_view [name='type'] input").click();
-    await contains(".o-autocomplete--dropdown-item:contains('Event Type 3')").click();
 
     const { drop, moveTo } = await contains(".fc-day[data-date='2019-03-04']").drag();
     await moveTo(".fc-day[data-date='2019-03-14']");
@@ -295,6 +303,19 @@ test("multi_create: render and basic functionalities (complex with filters use c
     expect(".fc-day.o-highlight").toHaveCount(8);
     await drop();
     await animationFrame();
+
+    await multiCreateClickAddButton();
+
+    expect(".o_multi_create_popover .o_form_view").toBeVisible();
+    expect(".o_multi_create_popover .o_form_view [name='name'] input").toHaveValue("Sick", {
+        message: "should have a default value from the context",
+    });
+    await click(".o_multi_create_popover .o_form_view [name='name'] input");
+    await edit("Time off");
+    await contains(".o_multi_create_popover .o_form_view [name='type'] input").click();
+    await contains(".o-autocomplete--dropdown-item:contains('Event Type 3')").click();
+    await multiCreatePopoverClickAddButton();
+
     expect.verifySteps([
         "1_2019-03-04",
         "3_2019-03-04",
@@ -365,14 +386,17 @@ test("multi_create: basic creation (datetime field)", async () => {
     });
 
     expect(".fc .fc-event").toHaveCount(3, { message: "events should be filter" });
-    expect(".o_calendar_sidebar .btn-group .btn").toHaveCount(3, {
-        message: "multi create should be enabled",
-    });
 
-    expect(".o_calendar_sidebar .btn-group .btn.active").toHaveAttribute("data-tooltip", "New", {
-        message: "multi create mode should be the default",
-    });
-    expect(".o_calendar_sidebar_container .o_time_picker_input").toHaveCount(2);
+    const { drop, moveTo } = await contains(".fc-day[data-date='2019-03-04']").drag();
+    await moveTo(".fc-day[data-date='2019-03-14']");
+    await animationFrame();
+    expect(".fc-day.o-highlight").toHaveCount(8);
+    await drop();
+    await animationFrame();
+
+    await multiCreateClickAddButton();
+
+    expect(".o_multi_create_popover .o_time_picker_input").toHaveCount(2);
 
     await click(".o_time_picker_input:eq(0)");
     await animationFrame();
@@ -386,21 +410,17 @@ test("multi_create: basic creation (datetime field)", async () => {
     await click(".o_time_picker_option:contains(11:30)");
     await animationFrame();
 
-    expect(".o_calendar_sidebar_container .o_form_view").toBeVisible();
-    expect(".o_calendar_sidebar_container .o_form_view [name='name'] input").toHaveValue("Sick", {
+    expect(".o_multi_create_popover .o_form_view").toBeVisible();
+    expect(".o_multi_create_popover .o_form_view [name='name'] input").toHaveValue("Sick", {
         message: "should have a default value from the context",
     });
-    await click(".o_calendar_sidebar_container .o_form_view [name='name'] input");
+    await click(".o_multi_create_popover .o_form_view [name='name'] input");
     await edit("Time off");
-    await contains(".o_calendar_sidebar_container .o_form_view [name='type'] input").click();
+    await contains(".o_multi_create_popover .o_form_view [name='type'] input").click();
     await contains(".o-autocomplete--dropdown-item:contains('Event Type 3')").click();
 
-    const { drop, moveTo } = await contains(".fc-day[data-date='2019-03-04']").drag();
-    await moveTo(".fc-day[data-date='2019-03-14']");
-    await animationFrame();
-    expect(".fc-day.o-highlight").toHaveCount(8);
-    await drop();
-    await animationFrame();
+    await multiCreatePopoverClickAddButton();
+
     expect.verifySteps([
         "1_2019-03-04 07:00:00_2019-03-04 10:30:00",
         "3_2019-03-04 07:00:00_2019-03-04 10:30:00",
@@ -483,16 +503,22 @@ test("multi_create: input validation (datetime field)", async () => {
         `,
     });
 
-    // No time range
-    await click(".o_time_picker_input:eq(1)");
-    await edit("", { confirm: "enter" });
-    let { drop } = await contains(".fc-day[data-date='2019-03-04']").drag();
+    const { drop } = await contains(".fc-day[data-date='2019-03-04']").drag();
     await animationFrame();
     await drop();
     await animationFrame();
 
+    await multiCreateClickAddButton();
+
+    // No time range
+    await click(".o_time_picker_input:eq(1)");
+    await edit("", { confirm: "enter" });
+
+    await multiCreatePopoverClickAddButton();
+
     expect.verifySteps(["Invalid time range"]);
 
+    await multiCreateClickAddButton();
     // Start time before end time
     await click(".o_time_picker_input:eq(0)");
     await animationFrame();
@@ -504,10 +530,7 @@ test("multi_create: input validation (datetime field)", async () => {
     await click(".o_time_picker_option:contains(8:00)");
     await animationFrame();
 
-    ({ drop } = await contains(".fc-day[data-date='2019-03-04']").drag());
-    await animationFrame();
-    await drop();
-    await animationFrame();
+    await multiCreatePopoverClickAddButton();
 
     expect.verifySteps(["Start time should be before end time"]);
 
@@ -517,10 +540,7 @@ test("multi_create: input validation (datetime field)", async () => {
     await click(".o_time_picker_option:contains(12:00)");
     await animationFrame();
 
-    ({ drop } = await contains(".fc-day[data-date='2019-03-04']").drag());
-    await animationFrame();
-    await drop();
-    await animationFrame();
+    await multiCreatePopoverClickAddButton();
 
     expect.verifySteps([
         "1_2019-03-04 10:30:00_2019-03-04 11:00:00",
@@ -528,6 +548,8 @@ test("multi_create: input validation (datetime field)", async () => {
     ]);
 });
 
+// Test skipped has the state is push only when we add at least one record
+// The state should be always accessible also before creating a record
 test.tags("desktop");
 test("multi_create: use state to keep values of inputs", async () => {
     onRpc("event.type", "get_formview_action", ({ args, model }) => ({
@@ -546,6 +568,13 @@ test("multi_create: use state to keep values of inputs", async () => {
         views: [["calendar_state", "calendar"]],
     });
 
+    let { drop } = await contains(".fc-day[data-date='2019-03-04']").drag();
+    await animationFrame();
+    await drop();
+    await animationFrame();
+
+    await multiCreateClickAddButton();
+
     await click(".o_time_picker_input:eq(0)");
     await animationFrame();
     await click(".o_time_picker_option:contains(1:30)");
@@ -556,60 +585,39 @@ test("multi_create: use state to keep values of inputs", async () => {
     await click(".o_time_picker_option:contains(8:00)");
     await animationFrame();
 
-    await click(".o_calendar_sidebar_container .o_form_view [name='name'] input");
+    await click(".o_multi_create_popover .o_form_view [name='name'] input");
     await animationFrame();
     await edit("Test state");
 
-    await contains(".o_calendar_sidebar_container .o_form_view [name='type'] input").click();
+    await contains(".o_multi_create_popover .o_form_view [name='type'] input").click();
     await contains(".o-autocomplete--dropdown-item:contains('Event Type 3')").click();
 
-    await contains(".o_calendar_sidebar_container .o_form_view [name='user_ids'] input").click();
+    await contains(".o_multi_create_popover .o_form_view [name='user_ids'] input").click();
     await contains(".o-autocomplete--dropdown-item:contains('user 1')").click();
-    await contains(".o_calendar_sidebar_container .o_form_view [name='user_ids'] input").click();
+    await contains(".o_multi_create_popover .o_form_view [name='user_ids'] input").click();
     await contains(".o-autocomplete--dropdown-item:contains('user 3')").click();
 
     // Navigate to the many2one record
     await click(".o_form_view [name='type'] .o_external_button");
+    await animationFrame();
     await animationFrame();
 
     // Go back to the calendar view
     await click(".breadcrumb-item");
     await animationFrame();
 
+    ({ drop } = await contains(".fc-day[data-date='2019-03-04']").drag());
+    await animationFrame();
+    await drop();
+    await animationFrame();
+
+    await multiCreateClickAddButton();
+
     expect(".o_time_picker_input:eq(0)").toHaveValue("1:30");
     expect(".o_time_picker_input:eq(1)").toHaveValue("8:00");
     expect(".o_form_view [name='name'] input").toHaveValue("Test state");
     expect(".o_form_view [name='type'] input").toHaveValue("Event Type 3");
     expect(queryAllTexts(".o_form_view [name='user_ids'] .o_tag")).toEqual(["user 1", "user 3"]);
-});
-
-test.tags("desktop");
-test("multi_create: filter mode (normal calendar)", async () => {
-    await mountView({
-        resModel: "event",
-        type: "calendar",
-        context: { default_name: "Sick" },
-    });
-
-    await click(".o_calendar_sidebar .btn-group .btn[data-tooltip='Filter']");
-    await animationFrame();
-    expect(".o_calendar_sidebar .btn-group .btn.active").toHaveAttribute("data-tooltip", "Filter", {
-        message: "filter mode (normal) should be active",
-    });
-
-    await click(".fc-event[data-event-id='2']");
-    await runAllTimers();
-    await animationFrame();
-    await expect(".o_popover").toHaveCount(1);
-
-    await click(".o_calendar_header"); // Hide the popover
-    await animationFrame();
-
-    const drag3 = await contains(".fc-day[data-date='2019-02-26']").drag();
-    await drag3.drop(".fc-day[data-date='2019-04-03']");
-    await animationFrame();
-    expect(".modal").toHaveCount(1);
-    expect(".modal input[name='title']").toHaveValue("Sick");
 });
 
 test.tags("desktop");
@@ -624,16 +632,6 @@ test("multi_create: delete", async () => {
         context: { default_name: "Sick" },
     });
 
-    await click(".o_calendar_sidebar .btn-group .btn .fa-trash");
-    await animationFrame();
-    expect(".o_calendar_sidebar .btn-group .btn.active i").toHaveClass(
-        ["fa-trash", "text-danger"],
-        {
-            message: "multi delete mode should be active and have red icon",
-        }
-    );
-    expect(".o_calendar_sidebar_container .o_form_view").toHaveCount(0);
-
     await click(".fc-event[data-event-id='2']");
     await runAllTimers();
     await animationFrame();
@@ -645,6 +643,10 @@ test("multi_create: delete", async () => {
     const { drop } = await contains(".fc-day[data-date='2019-02-26']").drag();
     await drop(".fc-day[data-date='2019-04-03']");
     await animationFrame();
+
+    await click(".o_multi_selection_buttons .btn .fa-trash");
+    await animationFrame();
+
     expect.verifySteps([[2, 3, 5]]);
     expect(".fc .fc-event").toHaveCount(1, { message: "selected events should be deleted" });
 
@@ -662,11 +664,15 @@ test("multi_create: test onChange on form with no blur (input text)", async () =
         context: { default_name: "Sick" },
     });
 
-    await click(".o_calendar_sidebar_container .o_form_view [name='name'] input");
-    await edit("Test onChange");
-
     await click(".fc-day[data-date='2019-03-04']");
     await animationFrame();
+
+    await multiCreateClickAddButton();
+
+    await click(".o_multi_create_popover .o_form_view [name='name'] input");
+    await edit("Test onChange");
+
+    await multiCreatePopoverClickAddButton();
 
     await click(".fc-event[data-event-id='12']");
     await runAllTimers();
@@ -707,7 +713,14 @@ test("multi_create: test onChange on TimePicker with no blur (input text)", asyn
         `,
     });
 
-    await click(".o_calendar_sidebar_container .o_form_view [name='name'] input");
+    const { drop } = await contains(".fc-day[data-date='2019-03-04']").drag();
+    await animationFrame();
+    await drop();
+    await animationFrame();
+
+    await multiCreateClickAddButton();
+
+    await click(".o_multi_create_popover .o_form_view [name='name'] input");
     await edit("Test onChange");
 
     await click(".o_time_picker_input:eq(0)");
@@ -720,10 +733,7 @@ test("multi_create: test onChange on TimePicker with no blur (input text)", asyn
     await edit("8:00");
     await animationFrame();
 
-    const { drop } = await contains(".fc-day[data-date='2019-03-04']").drag();
-    await animationFrame();
-    await drop();
-    await animationFrame();
+    await multiCreatePopoverClickAddButton();
 
     expect.verifySteps([
         "1_2019-03-04 00:30:00_2019-03-04 07:00:00",
@@ -732,37 +742,18 @@ test("multi_create: test onChange on TimePicker with no blur (input text)", asyn
 });
 
 test.tags("desktop");
-test("multi_create: test popover in all mode", async () => {
+test("multi_create: test popover", async () => {
     await mountView({
         resModel: "event",
         type: "calendar",
     });
 
-    await click(".o_calendar_sidebar .btn-group .btn .fa-trash");
-    await animationFrame();
     expect(".o_popover").toHaveCount(0);
 
     await click(".fc-event[data-event-id='2']");
     await runAllTimers();
     await animationFrame();
-    expect(".o_popover").toHaveCount(1);
 
-    await click(".o_calendar_sidebar .btn-group .btn[data-tooltip='Filter']");
-    await animationFrame();
-    expect(".o_popover").toHaveCount(0);
-
-    await click(".fc-event[data-event-id='2']");
-    await runAllTimers();
-    await animationFrame();
-    expect(".o_popover").toHaveCount(1);
-
-    await click(".o_calendar_sidebar .btn-group .btn[data-tooltip='New']");
-    await animationFrame();
-    expect(".o_popover").toHaveCount(0);
-
-    await click(".fc-event[data-event-id='2']");
-    await runAllTimers();
-    await animationFrame();
     expect(".o_popover").toHaveCount(1);
 });
 
@@ -778,12 +769,6 @@ test("multi_create: avoid trigger add/del event on specific element", async () =
         }));
     }
     Event._records = makeEvents(6);
-
-    onRpc("event", "create", ({ args: [records] }) => {
-        for (const record of records) {
-            expect.step(`${record.name}_${record.date_start}`);
-        }
-    });
 
     await mountView({
         resModel: "event",
@@ -803,17 +788,17 @@ test("multi_create: avoid trigger add/del event on specific element", async () =
     await click(".fc-more-cell a");
     await animationFrame();
     expect(".fc-more-popover").toHaveCount(1);
-    expect.verifySteps([]);
+    expect(".o_multi_selection_buttons").toHaveCount(0);
 
     await click(".fc-popover-title");
     await animationFrame();
     expect(".fc-more-popover").toHaveCount(1);
-    expect.verifySteps([]);
+    expect(".o_multi_selection_buttons").toHaveCount(0);
 
     await click(".fc-popover-close");
     await animationFrame();
     expect(".fc-more-popover").toHaveCount(0);
-    expect.verifySteps([]);
+    expect(".o_multi_selection_buttons").toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -841,38 +826,18 @@ test("multi_create: test required attribute in form", async () => {
     await animationFrame();
     await drop();
     await animationFrame();
-    expect(".o_calendar_sidebar_container .o_form_view [name='name']").toHaveClass(
-        "o_required_modifier"
-    );
+    await multiCreateClickAddButton();
+    await multiCreatePopoverClickAddButton();
+    expect(".o_multi_create_popover .o_form_view [name='name']").toHaveClass("o_required_modifier");
     expect.verifySteps([markup`<ul><li>Name</li></ul>`]);
 
-    await click(".o_calendar_sidebar_container .o_form_view [name='name'] input");
-    await edit("Test required");
     const { drop: dropOk } = await contains(".fc-day[data-date='2019-03-04']").drag();
     await animationFrame();
     await dropOk();
     await animationFrame();
+    await multiCreateClickAddButton();
+    await click(".o_multi_create_popover .o_form_view [name='name'] input");
+    await edit("Test required");
+    await multiCreatePopoverClickAddButton();
     expect.verifySteps(["Test required_2019-03-04", "Test required_2019-03-04"]);
-});
-
-test.tags("desktop");
-test("multi_create: display sidebar even if session_storage says no", async () => {
-    patchWithCleanup(sessionStorage, {
-        getItem(key) {
-            if (key === "calendar.showSideBar") {
-                expect.step("read calendar.showSideBar");
-                return false;
-            }
-        },
-    });
-
-    await mountView({
-        type: "calendar",
-        resModel: "event",
-        arch: `<calendar date_start="date_start" scales="month" multi_create_view="multi_create_form" aggregate="id:count"/>`,
-    });
-
-    expect(".o_calendar_sidebar").toHaveCount(1);
-    expect(".o_calendar_sidebar .btn-group .btn").toHaveCount(3);
-    expect.verifySteps(["read calendar.showSideBar"]);
 });
