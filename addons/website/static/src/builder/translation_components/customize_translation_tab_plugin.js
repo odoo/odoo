@@ -57,35 +57,30 @@ class TranslateToAction extends BuilderAction {
 
     async apply({ editingElement: bodyEl }) {
         const translationState = this.dependencies.customizeTranslationTab.getTranslationState();
-        translationState.isLoading = true;
-        const language = this.services.website.currentWebsite.metadata.lang;
-        const translationChunks = this.generateTranslationChunks(bodyEl);
-        if (translationChunks.length == 0) {
-            this.showNotification(
-                _t("No translatable content found in the current webpage."),
-                "Translation Info",
-                "info"
-            );
+        try {
+            translationState.isLoading = true;
+            const language = this.services.website.currentWebsite.metadata.langName;
+            const translationChunks = this.generateTranslationChunks(bodyEl);
+            if (translationChunks.length === 0) {
+                this.showNotification(
+                    _t("No translatable content found in the current webpage."),
+                    _t("Translation Info"),
+                    "info"
+                );
+                return;
+            }
+            const responses = await this.runTranslationChunks(translationChunks, language);
+            const success = this.applyTranslationsToDOM(translationChunks, responses);
+            if (!success) {
+                this.showNotification(
+                    _t("Translation aborted due to processing errors."),
+                    _t("Translation Error"),
+                    "danger"
+                );
+            }
+        } finally {
             translationState.isLoading = false;
-            return;
         }
-        const responses = await this.runTranslationChunks(translationChunks, language);
-        const isSuccess = this.applyTranslationsToDOM(translationChunks, responses);
-        this.cleanEmptyInlineElements(bodyEl);
-        translationState.isLoading = false;
-        if (!isSuccess) {
-            this.showNotification(
-                _t("Translation aborted due to a failure in processing."),
-                "Translation Error",
-                "danger"
-            );
-        }
-    }
-
-    getTranslatableElements(bodyEl) {
-        return Array.from(
-            bodyEl.querySelectorAll("[data-oe-translation-state='to_translate']")
-        ).filter((el) => !el.closest(".o_not_editable, .o_frontend_to_backend_buttons"));
     }
 
     isSkippableText(text) {
@@ -103,26 +98,35 @@ class TranslateToAction extends BuilderAction {
     }
 
     generateTranslationChunks(container, limit = 2000) {
-        const elements = this.getTranslatableElements(container);
+        const elements = Array.from(
+            container.querySelectorAll("[data-oe-translation-state='to_translate']")
+        ).filter(
+            (el) =>
+                !el.closest(".o_not_editable, .o_frontend_to_backend_buttons") &&
+                !el.classList.contains("o_translatable_attribute")
+        );
         const translationChunks = [];
         let currentChunk = [];
         let currentLength = 0;
         const WRAPPER_LENGTH = '<generatedtext id=""></generatedtext>\n'.length;
         let id = 1;
         for (const el of elements) {
-            const originalText = el.textContent.replace(/[\u200B-\u200D\uFEFF]/g, "").trim();
-            if (!originalText || this.isSkippableText(originalText)) {
-                continue;
+            const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+            while (walker.nextNode()) {
+                const node = walker.currentNode;
+                const text = node.textContent.replace(/[\u200B-\u200D\uFEFF]/g, "").trim();
+                if (!text || this.isSkippableText(text)) {
+                    continue;
+                }
+                const estimatedLength = String(id).length + text.length + WRAPPER_LENGTH;
+                if (currentLength + estimatedLength > limit && currentChunk.length) {
+                    translationChunks.push(currentChunk);
+                    currentChunk = [];
+                    currentLength = 0;
+                }
+                currentChunk.push({ el: node, id: id++, originalText: text });
+                currentLength += estimatedLength;
             }
-            const idLength = String(id).length;
-            const estimatedLength = idLength + originalText.length + WRAPPER_LENGTH;
-            if (currentLength + estimatedLength > limit && currentChunk.length) {
-                translationChunks.push(currentChunk);
-                currentChunk = [];
-                currentLength = 0;
-            }
-            currentChunk.push({ el, id: id++, originalText });
-            currentLength += estimatedLength;
         }
         if (currentChunk.length) {
             translationChunks.push(currentChunk);
@@ -131,7 +135,6 @@ class TranslateToAction extends BuilderAction {
     }
 
     async runTranslationChunks(translationChunks, language) {
-        const allResults = [];
         const systemMessage = {
             role: "system",
             content:
@@ -141,32 +144,42 @@ class TranslateToAction extends BuilderAction {
                 "- Return all blocks translated using the same format.\n" +
                 "- Do not add HTML or comments.",
         };
-        for (const translationChunk of translationChunks) {
-            const prompt = translationChunk
+        const tasks = translationChunks.map((chunk) => async () => {
+            const prompt = chunk
                 .map((t) => `<generatedtext id="${t.id}">${t.originalText}</generatedtext>`)
                 .join("\n");
             const conversation = [
                 systemMessage,
                 { role: "user", content: `Translate the following to ${language}:\n\n${prompt}` },
             ];
-            const response = await rpc(
+            return rpc(
                 "/html_editor/generate_text",
                 {
                     prompt,
                     conversation_history: conversation,
                 },
-                { shadow: true }
+                { silent: true }
             );
-            allResults.push(response);
+        });
+        const concurrencyLimit = 5;
+        const allResults = [];
+        const executing = new Set();
+        for (const task of tasks) {
+            if (executing.size >= concurrencyLimit) {
+                await Promise.race(executing);
+            }
+            const promise = task().finally(() => executing.delete(promise));
+            executing.add(promise);
+            allResults.push(promise);
         }
-        return allResults;
+        return Promise.all(allResults);
     }
 
     applyTranslationsToDOM(translationChunks, responses) {
-        const translationChunkMap = new Map();
-        for (const translationChunk of translationChunks) {
-            for (const task of translationChunk) {
-                translationChunkMap.set(task.id.toString(), task.el);
+        const translationMap = new Map();
+        for (const chunk of translationChunks) {
+            for (const task of chunk) {
+                translationMap.set(task.id.toString(), task.el);
             }
         }
         const regex = /<generatedtext id="(\d+)">([\s\S]*?)<\/generatedtext>/g;
@@ -174,9 +187,13 @@ class TranslateToAction extends BuilderAction {
             let match;
             while ((match = regex.exec(response)) !== null) {
                 const [, id, translated] = match;
-                const el = translationChunkMap.get(id);
-                if (el && translated.trim()) {
-                    this.insertTranslatedTextIntoNode(el, translated.trim());
+                const node = translationMap.get(id);
+                if (node && translated.trim()) {
+                    node.textContent = translated.trim();
+                    const parentEl = node.parentElement?.closest("[data-oe-translation-state]");
+                    if (parentEl) {
+                        parentEl.dataset.oeTranslationState = "translated";
+                    }
                 } else {
                     this.showNotification(_t("Translation failed"), "Translation Error", "danger");
                     return false;
@@ -184,65 +201,6 @@ class TranslateToAction extends BuilderAction {
             }
         }
         return true;
-    }
-
-    insertTranslatedTextIntoNode(el, translatedText) {
-        const textNodes = [];
-        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
-        while (walker.nextNode()) {
-            const node = walker.currentNode;
-            if (node.textContent.trim()) {
-                textNodes.push(node);
-            }
-        }
-        if (!textNodes.length) {
-            el.textContent = translatedText;
-            return;
-        }
-        const targetNode =
-            textNodes.find((node) => !/^[\s\u200B]*$/.test(node.textContent)) ||
-            textNodes[textNodes.length - 1];
-        targetNode.textContent = translatedText;
-        textNodes.forEach((node) => {
-            if (node !== targetNode) {
-                node.textContent = "";
-            }
-        });
-        let parentEl = targetNode.parentNode;
-        while (parentEl && parentEl.dataset.oeTranslationState !== "to_translate") {
-            parentEl = parentEl.parentNode;
-        }
-        if (parentEl) {
-            parentEl.dataset.oeTranslationState = "translated";
-        }
-    }
-
-    cleanEmptyInlineElements(root) {
-        const inlineTags = ["STRONG", "EM", "U", "SPAN", "I", "B", "SMALL"];
-        const mediaTags = ["IMG", "SVG", "PICTURE", "VIDEO"];
-        const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
-        const elementsToRemove = [];
-        while (walker.nextNode()) {
-            const el = walker.currentNode;
-            const isInline = inlineTags.includes(el.tagName);
-            const isEmptyText = el.textContent.trim() === "";
-            const hasNoAttributes = el.attributes.length === 0;
-            // Case 1: Element is empty and has no useful attributes
-            const isFullyEmpty = isInline && isEmptyText && hasNoAttributes;
-            // Case 2: Element has only one child that is also empty
-            const hasOneEmptyChild =
-                isInline &&
-                el.childNodes.length === 1 &&
-                el.firstChild.nodeType === Node.ELEMENT_NODE &&
-                el.firstChild.textContent.trim() === "" &&
-                !mediaTags.includes(el.firstChild.tagName);
-            if (isFullyEmpty || hasOneEmptyChild) {
-                elementsToRemove.push(el);
-            }
-        }
-        for (const el of elementsToRemove) {
-            el.remove();
-        }
     }
 
     showNotification(message, title, type) {

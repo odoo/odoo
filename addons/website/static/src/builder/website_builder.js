@@ -23,6 +23,12 @@ import { BuilderComponentPlugin } from "@html_builder/core/builder_component_plu
 import { BuilderActionsPlugin } from "@html_builder/core/builder_actions_plugin";
 import { CoreBuilderActionPlugin } from "@html_builder/core/core_builder_action_plugin";
 import { CarouselOptionTranslationPlugin } from "./plugins/carousel_option_translation_plugin";
+import { OverlayButtonsPlugin } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
+import { DropZonePlugin } from "@html_builder/core/drop_zone_plugin";
+import { DropZoneSelectorPlugin } from "@html_builder/core/dropzone_selector_plugin";
+import { CustomizeTabPlugin } from "@html_builder/core/customize_tab_plugin";
+import { VersionControlPlugin } from "@html_builder/core/version_control_plugin";
+import { BuilderOverlayPlugin } from "@html_builder/core/builder_overlay/builder_overlay_plugin";
 import { ThemeTab } from "./plugins/theme/theme_tab";
 import { BuilderContentEditablePlugin } from "@html_builder/core/builder_content_editable_plugin";
 import { CustomizeTranslationTab } from "@website/builder/translation_components/customize_translation_tab";
@@ -85,7 +91,17 @@ export class WebsiteBuilder extends Component {
             ? [...builderPluginsToRemove, ...pluginsBlockedInTranslationMode]
             : builderPluginsToRemove;
         const coreBuilderPlugins = removePlugins(
-            this.props.translation ? MAIN_PLUGINS : CORE_PLUGINS,
+            this.props.translation
+                ? [
+                      ...MAIN_PLUGINS,
+                      BuilderOverlayPlugin,
+                      OverlayButtonsPlugin,
+                      DropZonePlugin,
+                      DropZoneSelectorPlugin,
+                      CustomizeTabPlugin,
+                      VersionControlPlugin,
+                  ]
+                : CORE_PLUGINS,
             pluginsToRemove
         );
         const Plugins = [...coreBuilderPlugins, ...(websitePlugins || [])];
