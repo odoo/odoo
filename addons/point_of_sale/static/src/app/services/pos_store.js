@@ -2448,7 +2448,6 @@ export class PosStore extends WithLazyGetterTrap {
         const allProducts = this.models["product.template"].getAll();
         let list = [];
         const isSearchByWord = searchWord !== "";
-        const isSelectedCategory = this.selectedCategory?.id;
 
         if (isSearchByWord) {
             if (!this._searchTriggered) {
@@ -2457,11 +2456,11 @@ export class PosStore extends WithLazyGetterTrap {
             }
             list = this.getProductsBySearchWord(
                 searchWord,
-                isSelectedCategory ? this.selectedCategory.associatedProducts : allProducts
+                this.selectedCategory?.id ? this.selectedCategory.associatedProducts : allProducts
             );
         } else {
             this._searchTriggered = false;
-            if (isSelectedCategory) {
+            if (this.selectedCategory?.id) {
                 list = this.selectedCategory.associatedProducts;
             } else {
                 list = allProducts;
@@ -2494,7 +2493,11 @@ export class PosStore extends WithLazyGetterTrap {
             filteredList.push(p);
         }
 
-        if (!isSearchByWord && !isSelectedCategory && this.areAllProductsSpecial(filteredList)) {
+        if (
+            !isSearchByWord &&
+            !this.selectedCategory?.id &&
+            this.areAllProductsSpecial(filteredList)
+        ) {
             return [];
         }
 
