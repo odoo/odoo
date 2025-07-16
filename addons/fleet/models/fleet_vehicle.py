@@ -411,9 +411,9 @@ class FleetVehicle(models.Model):
                 aggregates=['id:recordset']
             ))
             if 'bike' in vehicle_read_group:
-                vehicle_read_group['bike'].write({'plan_to_change_bike': True})
+                vehicle_read_group['bike'].write({'plan_to_change_bike': False})
             if 'car' in vehicle_read_group:
-                vehicle_read_group['car'].write({'plan_to_change_car': True})
+                vehicle_read_group['car'].write({'plan_to_change_car': False})
         return vehicles
 
     def write(self, vals):
