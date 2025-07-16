@@ -727,6 +727,7 @@ export class SelfOrder extends Reactive {
                 });
                 openOrder.recomputeChanges();
             }
+            this.data.debouncedSynchronizeLocalDataInIndexedDB();
         } catch (error) {
             this.handleErrorNotification(
                 error,
