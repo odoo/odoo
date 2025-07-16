@@ -171,6 +171,10 @@ export class Base extends WithLazyGetterTrap {
         }
     }
 
+    isDirty() {
+        return this.models.commands[this.model.modelName].update.has(this.id);
+    }
+
     setupState(vals) {
         this.uiState = vals;
     }

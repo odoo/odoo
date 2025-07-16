@@ -58,3 +58,13 @@ export function setTab(name) {
         Dialog.confirm(),
     ];
 }
+
+export function releaseTable() {
+    return [
+        {
+            content: "release table",
+            trigger: ".product-screen .leftpane .unbook-table",
+            run: "click",
+        },
+    ];
+}
