@@ -344,13 +344,13 @@ export class StaticList extends DataPoint {
         return this.model.mutex.exec(() => this._sortBy(fieldName));
     }
 
-    async addAndRemove({ add, remove, reload } = {}) {
+    async addAndRemove({ add, remove } = {}) {
         return this.model.mutex.exec(async () => {
             const commands = [
                 ...(add || []).map((id) => [x2ManyCommands.LINK, id]),
                 ...(remove || []).map((id) => [x2ManyCommands.UNLINK, id]),
             ];
-            await this._applyCommands(commands, { canAddOverLimit: true, reload });
+            await this._applyCommands(commands, { canAddOverLimit: true });
             await this._onUpdate();
         });
     }
@@ -454,7 +454,7 @@ export class StaticList extends DataPoint {
         });
     }
 
-    _applyCommands(commands, { canAddOverLimit, reload } = {}) {
+    _applyCommands(commands, { canAddOverLimit } = {}) {
         const { CREATE, UPDATE, DELETE, UNLINK, LINK, SET } = x2ManyCommands;
 
         // For performance reasons, we split commands by record ids, such that we have quick access
@@ -647,18 +647,9 @@ export class StaticList extends DataPoint {
                 this.records.push(this._cache[id]);
             }
         }
-        if (recordsToLoad.length || reload) {
-            const resIds = reload
-                ? this.records.map((r) => r.resId)
-                : recordsToLoad.map((r) => r.resId);
+        if (recordsToLoad.length) {
+            const resIds = recordsToLoad.map((r) => r.resId);
             return this.model._loadRecords({ ...this.config, resIds }).then((recordValues) => {
-                if (reload) {
-                    for (const record of recordValues) {
-                        this._createRecordDatapoint(record);
-                    }
-                    this.records = resIds.map((id) => this._cache[id]);
-                    return;
-                }
                 for (let i = 0; i < recordsToLoad.length; i++) {
                     const record = recordsToLoad[i];
                     record._applyValues(recordValues[i]);
