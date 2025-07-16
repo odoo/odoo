@@ -2,12 +2,12 @@ import { after, beforeEach, describe, expect, getFixture, test } from "@odoo/hoo
 import {
     click,
     edit,
-    manuallyDispatchProgrammaticEvent,
     on,
     queryAllProperties,
     queryAllTexts,
     queryFirst,
     resize,
+    unload,
 } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockSendBeacon, runAllTimers } from "@odoo/hoot-mock";
 import {
@@ -491,32 +491,28 @@ test("resIds should contains only 1 id", async () => {
     serverState.lang = "en_US";
     serverState.multiLang = true;
 
-    onRpc("get_installed", () => {
-        return [
-            ["en_US", "English"],
-            ["fr_BE", "French (Belgium)"],
-        ];
-    });
-    onRpc("get_field_translations", () => {
-        return [
-            [
-                {
-                    lang: "en_US",
-                    source: "My little Foo Value",
-                    value: "My little Foo Value",
-                },
-                {
-                    lang: "fr_BE",
-                    source: "My little Foo Value",
-                    value: "Valeur de mon petit Foo",
-                },
-            ],
+    onRpc("get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+    ]);
+    onRpc("get_field_translations", () => [
+        [
             {
-                translation_type: "char",
-                translation_show_source: true,
+                lang: "en_US",
+                source: "My little Foo Value",
+                value: "My little Foo Value",
             },
-        ];
-    });
+            {
+                lang: "fr_BE",
+                source: "My little Foo Value",
+                value: "Valeur de mon petit Foo",
+            },
+        ],
+        {
+            translation_type: "char",
+            translation_show_source: true,
+        },
+    ]);
     onRpc("execute", ({ args }) => {
         expect(args[0].length).toBe(1);
         return true;
@@ -689,7 +685,7 @@ test("Auto save: don't save on closing tab/browser", async () => {
         message: "checkbox should be checked",
     });
 
-    manuallyDispatchProgrammaticEvent(window, "beforeunload");
+    await unload();
     await animationFrame();
     expect.verifySteps([]);
 });
