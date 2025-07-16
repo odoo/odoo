@@ -16,6 +16,7 @@ export class Many2OneOptionPlugin extends Plugin {
         builder_actions: {
             Many2OneAction,
         },
+        force_not_editable_selector: "[data-oe-field][data-oe-many2one-id]",
     };
 }
 
