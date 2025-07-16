@@ -341,12 +341,12 @@ test("Dragging element with touch event: initiation delay can be overrided", asy
 });
 
 test.tags("desktop");
-test("Elements are confined within their container", async () => {
+test("Elements are confined within their container and keep their initial width and height", async () => {
     class List extends Component {
         static template = xml`
-            <div t-ref="root" class="root">
+            <div t-ref="root" class="root" style="width: 800px; height: 600px;">
                 <ul class="list list-unstyled m-0 d-flex flex-column">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item w-50" />
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item w-50 h-100" />
                 </ul>
             </div>
         `;
@@ -363,6 +363,7 @@ test("Elements are confined within their container", async () => {
     await mountWithCleanup(List);
 
     const containerRect = queryRect(".root");
+    const { width: initialWidth, height: initialHeight } = queryRect(".item:first");
 
     const { moveTo, drop } = await contains(".item:first").drag({
         initialPointerMoveDistance: 0,
@@ -382,6 +383,11 @@ test("Elements are confined within their container", async () => {
     expect(".item:first").toHaveRect({
         x: containerRect.x,
         y: containerRect.y + containerRect.height - queryRect(".item:first").height,
+    });
+
+    expect(".item:first").toHaveRect({
+        width: initialWidth,
+        height: initialHeight,
     });
 
     await moveTo(".item:last-child", {
