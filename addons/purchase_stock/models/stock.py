@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from dateutil import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
@@ -120,7 +121,7 @@ class StockWarehouseOrderpoint(models.Model):
     purchase_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the purchase routes.")
     product_supplier_id = fields.Many2one('res.partner', compute='_compute_product_supplier_id', store=True, string='Product Supplier')
 
-    @api.depends('product_id.purchase_order_line_ids.product_qty', 'product_id.purchase_order_line_ids.state')
+    @api.depends('product_id.purchase_order_line_ids.product_qty', 'product_id.purchase_order_line_ids.state', 'supplier_id', 'supplier_id.product_uom_id', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
     def _compute_qty_to_order_computed(self):
         """ Extend to add more depends values
         TODO: Probably performance costly due to x2many in depends
@@ -218,6 +219,24 @@ class StockWarehouseOrderpoint(models.Model):
         values = super()._prepare_procurement_values(date=date, group=group)
         values['supplierinfo_id'] = self.supplier_id
         return values
+
+    def _get_replenishment_multiple_alternative(self, qty_to_order):
+        self.ensure_one()
+        routes = self.route_id or self.product_id.route_ids
+        if not any(r.action == 'buy' for r in routes.rule_ids):
+            return super()._get_replenishment_multiple_alternative(qty_to_order)
+        planned_date = self._get_orderpoint_procurement_date()
+        global_visibility_days = self.env.context.get('global_visibility_days', self.env['ir.config_parameter'].sudo().get_param('stock.visibility_days', 0))
+        if global_visibility_days:
+            planned_date -= relativedelta.relativedelta(days=int(global_visibility_days))
+        date_deadline = planned_date or fields.Date.today()
+        dates_info = self.product_id._get_dates_info(date_deadline, self.location_id, route_ids=self.route_id)
+        supplier = self.supplier_id or self.product_id.with_company(self.company_id)._select_seller(
+            quantity=qty_to_order,
+            date=max(dates_info['date_order'].date(), fields.Date.today()),
+            uom_id=self.product_uom
+        )
+        return supplier.product_uom_id
 
     def _quantity_in_progress(self):
         res = super()._quantity_in_progress()
