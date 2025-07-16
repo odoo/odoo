@@ -6392,7 +6392,7 @@ msgstr "Įrašai yra ne tos pačios sąskaitos: %s"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Entries can only be created for a single company at a time."
-msgstr ""
+msgstr "Įrašus vienu metu galima kurti tik vienai įmonei."
 
 #. module: account
 #. odoo-python
@@ -6907,12 +6907,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 msgid "Follow, download or pay our invoices"
-msgstr ""
+msgstr "Sekite, atsisiųskite arba apmokėkite sąskaitas faktūras"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 msgid "Follow, download or pay your invoices"
-msgstr ""
+msgstr "Sekite, atsisiųskite arba apmokėkite savo sąskaitas faktūras"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_follower_ids
@@ -6963,6 +6963,8 @@ msgstr "Procentams įveskite koeficientą tarp 0-100."
 #, python-format
 msgid "For this entry to be automatically posted, it required a bill date."
 msgstr ""
+"Kad šis įrašas būtų automatiškai paskelbtas, reikėjo nurodyti tiekėjo "
+"sąskaitos faktūros datą."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_non_accountable_fields_null
@@ -6995,22 +6997,22 @@ msgstr "Užsienio valiuta"
 #. module: account
 #: model:account.account,name:account.1_income_currency_exchange
 msgid "Foreign Exchange Gain"
-msgstr ""
+msgstr "Užsienio valiutos keitimo pelnas"
 
 #. module: account
 #: model:account.account,name:account.1_expense_currency_exchange
 msgid "Foreign Exchange Loss"
-msgstr ""
+msgstr "Užsienio valiutos keitimo nuostolis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
-msgstr ""
+msgstr "Užsieninio mokesčio ID"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Foreign VAT countries"
-msgstr ""
+msgstr "Užsienio PVM šalys"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -7714,7 +7716,7 @@ msgstr "Sąskaitų plano importo šablonas"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Import Template for Journal Items"
-msgstr ""
+msgstr "Žurnalo įrašų importavimo šablonas"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_setup_bill
@@ -9940,6 +9942,8 @@ msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
 msgstr ""
+"Nerasta jokio žurnalo įmonėje %(company_name)s bet kuriam iš šių tipų: "
+"%(journal_types)s"
 
 #. module: account
 #. odoo-python
@@ -9956,6 +9960,7 @@ msgid ""
 "No original purchase document could be found for any of the selected "
 "purchase documents."
 msgstr ""
+"Nepavyko rasti nė vienam pasirinktam pirkimui originalaus pirkimo dokumento."
 
 #. module: account
 #. odoo-python
@@ -10121,7 +10126,7 @@ msgstr "Veiksmų skaičius"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_days
 msgid "Number of days before the early payment proposition expires"
-msgstr ""
+msgstr "Dienų skaičius iki išankstinio mokėjimo pasiūlymo galiojimo pabaigos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__number_entries
@@ -14327,7 +14332,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "The following Journal Entries will be generated"
-msgstr ""
+msgstr "Bus sugeneruoti šie žurnalo įrašai"
 
 #. module: account
 #. odoo-python
@@ -14462,7 +14467,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
-msgstr ""
+msgstr "Įrašo nepavyko paskelbti dėl šios priežasties: %(error_message)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
