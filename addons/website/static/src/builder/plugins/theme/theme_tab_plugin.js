@@ -45,6 +45,7 @@ export class ThemeTabPlugin extends Plugin {
             ChangeColorPaletteAction,
             EditCustomCodeAction,
             ConfigureApiKeyAction,
+            CustomizePageLayout,
         },
         theme_options: [
             withSequence(
@@ -298,6 +299,17 @@ export class ConfigureApiKeyAction extends BuilderAction {
     static dependencies = ["googleMapsOption"];
     apply() {
         this.dependencies.googleMapsOption.configureGMapsAPI("", true);
+    }
+}
+
+export class CustomizePageLayout extends CustomizeWebsiteVariableAction {
+    static id = "customizePageLayout";
+
+    async apply(...args) {
+        await super.apply(...args);
+        // since we do not reload on website variables customization we need to
+        // trigger resize to have navbar layout recomputed when we modify page layout
+        this.window.dispatchEvent(new Event("resize"));
     }
 }
 
