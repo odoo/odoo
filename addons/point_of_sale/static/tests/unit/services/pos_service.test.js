@@ -143,6 +143,7 @@ describe("pos_store.js", () => {
         const pos_categories = store.models["pos.category"].getAll().map((c) => c.id);
         const order = await getFilledOrder(store);
         order.lines[1].setNote('[{"text":"Wait","colorIndex":0}]');
+        order.lines[0].setCustomerNote("Test Orderline Customer Note");
         const orderChange = store.changesToOrder(order, store.config.preparationCategories, false);
 
         const { orderData, changes } = store.generateOrderChange(
@@ -164,6 +165,7 @@ describe("pos_store.js", () => {
             uuid: order.lines[0].uuid,
             name: "TEST",
             basic_name: "TEST",
+            customer_note: "Test Orderline Customer Note",
             product_id: 5,
             attribute_value_names: [],
             quantity: 3,
@@ -178,6 +180,7 @@ describe("pos_store.js", () => {
             uuid: order.lines[1].uuid,
             name: "TEST 2",
             basic_name: "TEST 2",
+            customer_note: "",
             product_id: 6,
             attribute_value_names: [],
             quantity: 2,

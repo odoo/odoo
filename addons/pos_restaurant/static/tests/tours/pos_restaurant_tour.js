@@ -409,12 +409,27 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             ProductScreen.clickDisplayedProduct("Product Test"),
             Chrome.freezeDateTime(1739370000000),
             Dialog.confirm("Add"),
+            // Cutomer Note on orderline
+            ProductScreen.addCustomerNote("Test customer note - orderline"),
             ProductScreen.totalAmountIs("10"),
             checkPreparationTicketData([{ name: "Product Test", qty: 1, attribute: ["Value 1"] }], {
-                visibleInDom: ["14:20", "Value 1", "Guest: 5", "Eat in"],
+                visibleInDom: [
+                    "14:20",
+                    "Value 1",
+                    "Guest: 5",
+                    "Eat in",
+                    "Test customer note - orderline",
+                ],
                 invisibleInDom: ["DUPLICATA!"],
             }),
-
+            ProductScreen.clickOrderButton(),
+            Chrome.closePrintingWarning(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickLine("Product Test"),
+            ProductScreen.addCustomerNote("Updated customer note - orderline"),
+            checkPreparationTicketData([{ name: "Product Test", qty: 1, attribute: ["Value 1"] }], {
+                visibleInDom: ["NOTE UPDATE", "Updated customer note - orderline"],
+            }),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("2"),
             ProductScreen.clickDisplayedProduct("Water"),
