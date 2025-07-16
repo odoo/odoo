@@ -2671,7 +2671,12 @@
     <!-- Encapsulate the content in a `a` tag with a link to the product page. Override this
          template to change or remove the product link. Called in `website_sale.cart_lines`. -->
     <template id="cart_line_product_link" name="Shopping Cart Line Product Link">
-        <a t-if="line._is_sellable()" t-att-href="line.product_id.website_url" name="o_cart_line_product_link">
+        <a
+            t-if="line._is_sellable()"
+            class="text-reset"
+            t-att-href="line.product_id.website_url"
+            name="o_cart_line_product_link"
+        >
             <t t-out="0"/>
         </a>
         <t t-else="" t-out="0"/>
@@ -2743,26 +2748,27 @@
                         <div class="d-flex gap-3">
                             <div class="flex-grow-1 text-wrap w-100">
                                 <div class="d-flex justify-content-between">
-                                    <div class="d-md-flex flex-md-wrap column-gap-md-2 align-items-md-center">
+                                    <div class="d-md-flex flex-md-wrap column-gap-md-1 align-items-md-center">
                                         <t t-call="website_sale.cart_line_product_link">
                                             <h6
                                                 t-out="line._get_line_header()"
-                                                class="mb-0 fw-bold text-wrap small"
+                                                class="text-wrap mb-1"
                                             />
                                         </t>
                                         <t t-set="combination_name" t-value="line._get_combination_name()"/>
+                                        <span t-if="combination_name" class="d-none d-md-inline h6 text-muted mb-1">-</span>
                                         <div
                                             t-if="combination_name or line.product_template_id._has_multiple_uoms()"
                                             class="d-inline-flex flex-wrap column-gap-2 row-gap-1 align-items-center my-1 my-md-0 w-100 w-md-auto"
                                         >
                                             <span
                                                 t-if="combination_name"
-                                                class="h6 text-muted small mb-0"
+                                                class="h6 text-muted mb-1"
                                                 t-out="combination_name"
                                             />
                                             <span
                                                 t-if="line.product_template_id._has_multiple_uoms()"
-                                                class="badge bg-light"
+                                                class="badge bg-light mb-1"
                                                 t-out="line.product_uom_id.name"
                                             />
                                         </div>
@@ -2891,7 +2897,7 @@
 
     <template id="cart_lines_price" name="Shopping Cart Line Price">
         <h6
-            class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-md-end mb-0 small fw-bold"
+            class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-md-end mb-1"
             name="website_sale_cart_line_price"
         >
             <t t-if="line.discount and line._is_sellable() and line._get_displayed_unit_price()">
@@ -3023,9 +3029,9 @@
                     <div class="flex-grow-1">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <a t-att-href="product.website_url">
+                                <a class="text-reset" t-att-href="product.website_url">
                                     <h6
-                                        class="align-top small fw-bold text-wrap"
+                                        class="align-top text-wrap"
                                         t-out="product.with_context(display_default_code=False).display_name"
                                     />
                                 </a>
@@ -3035,7 +3041,7 @@
                                 />
                             </div>
                             <h6
-                                class="d-flex mb-0 small text-end fw-bold"
+                                class="d-flex mb-0 text-end"
                                 name="suggested_product_price_container"
                             >
                                 <t
