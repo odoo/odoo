@@ -43,7 +43,7 @@ describe("collapsed selection", () => {
                 editor.shared.history.addStep();
             },
             contentAfterEdit:
-                '<p><br></p>\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff[]',
+                '<p><br></p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]',
             contentAfter: '<p><br></p><i class="fa fa-pastafarianism"></i>[]',
             config: { allowInlineAtRoot: true },
         });
