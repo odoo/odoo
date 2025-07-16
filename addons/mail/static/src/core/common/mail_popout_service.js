@@ -233,10 +233,9 @@ export const mailPopoutService = {
             };
         }
 
-        return {
-            createManager,
-            ...createManager(),
-        };
+        const service = createManager();
+        service.createManager = createManager;
+        return service;
     },
 };
 
