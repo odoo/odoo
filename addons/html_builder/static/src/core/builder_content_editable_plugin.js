@@ -25,9 +25,7 @@ export class BuilderContentEditablePlugin extends Plugin {
 
     filterContentEditable(contentEditableEls) {
         return contentEditableEls.filter(
-            (el) =>
-                !el.matches("input, [data-oe-readonly], [data-oe-many2one-id]") &&
-                el.closest(".o_editable")
+            (el) => !el.matches("input, [data-oe-readonly]") && el.closest(".o_editable")
         );
     }
 }
