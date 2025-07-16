@@ -38,7 +38,7 @@
             <search string="India Port Code">
                 <field name="name" string="Port" filter_domain="['|',('name', 'ilike', self),('code', 'ilike', self)]"/>
                 <field name="state_id"/>
-                <group string="Group By">
+                <group>
                     <filter string="State" name="state" domain="[]" context="{'group_by': 'state_id'}"/>
                 </group>
             </search>

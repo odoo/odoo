@@ -133,7 +133,7 @@
                     <filter name="my_templates" string="My Templates" domain="[('user_id', '=', uid)]"/>
                     <filter name="base_templates" string="Base Templates" domain="[('template_category', '=', 'base_template')]"/>
                     <filter name="custom_templates" string="Custom Templates" domain="[('template_category', '=', 'custom_template')]"/>
-                    <group string="Group by...">
+                    <group>
                         <filter string="SMTP Server" name="smtpserver" domain="[]" context="{'group_by':'mail_server_id'}"/>
                         <filter string="Model" name="group_by_model_id" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>

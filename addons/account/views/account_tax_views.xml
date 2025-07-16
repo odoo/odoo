@@ -109,7 +109,7 @@
                     <separator/>
                     <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active taxes"/>
                     <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive taxes"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Tax Type" name="taxapp" domain="[]" context="{'group_by':'type_tax_use'}"/>
                         <filter string="Tax Scope" name="taxapp" domain="[]" context="{'group_by':'tax_scope'}"/>
@@ -235,7 +235,7 @@
                 <search string="Search Group">
                     <field name="name"/>
                     <field name="country_id"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Country" name="group_by_country" domain="[]" context="{'group_by': 'country_id'}"/>
                     </group>
                 </search>

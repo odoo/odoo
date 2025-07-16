@@ -182,7 +182,7 @@
                 <filter name="hr_challenges" string="HR Challenges"
                     domain="[('challenge_category', '=', 'hr')]"/>
                 <field name="name"/>
-                <group string="Group By">
+                <group>
                     <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Period" name="period" domain="[]" context="{'group_by':'period'}"/>
                 </group>

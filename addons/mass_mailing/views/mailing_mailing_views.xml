@@ -19,7 +19,7 @@
                         domain="[('ab_testing_enabled', '=', True), ('ab_testing_winner_selection', '=', 'manual'), ('ab_testing_completed', '=', False)]"/>
                     <separator/>
                     <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
                         <filter string="Sent By" name="sent_by" domain="[]" context="{'group_by': 'email_from'}"/>
                         <filter string="Mailing List" name="group_by_contact_list_ids" domain="[]" context="{'group_by': 'contact_list_ids'}"/>

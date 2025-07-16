@@ -10,7 +10,7 @@
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="calendar_id"/>
                 <filter name="filter_date" date="date_from" default_period="year" string="Period"/>
-                <group string="Group By">
+                <group>
                     <filter string="Resource" name="resource" domain="[]" context="{'group_by':'resource_id'}"/>
                     <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <filter string="Date" name="leave_month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Time Off"/>

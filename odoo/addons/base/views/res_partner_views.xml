@@ -329,7 +329,7 @@
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <field name="properties"/>
                     <separator/>
-                    <group name="group_by" string="Group By">
+                    <group name="group_by">
                         <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}" />
                         <filter name="group_company" string="Company" context="{'group_by': 'parent_id'}"/>
                         <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
@@ -532,7 +532,7 @@
                     <field name="display_name" string="Category" />
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Category" name="group_parent_id" context="{'group_by': 'parent_id'}"/>
                         <filter string="Color" name="group_color" context="{'group_by': 'color'}"/>
                     </group>

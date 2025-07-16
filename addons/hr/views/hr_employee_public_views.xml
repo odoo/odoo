@@ -21,7 +21,7 @@
                     <filter name="newly_hired" string="Newly Hired" domain="[('newly_hired', '=', True)]"/>
                     <separator/>
                     <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter name="group_manager" string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter name="group_job" string="Job" domain="[]" context="{'group_by':'job_id'}"/>

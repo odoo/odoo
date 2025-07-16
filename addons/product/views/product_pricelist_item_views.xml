@@ -13,7 +13,7 @@
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <filter string="Active" name="visible" domain="[('pricelist_id.active', '=', True)]"/>
-                <group string="Group By">
+                <group>
                     <filter
                         string="Product"
                         name="groupby_product"

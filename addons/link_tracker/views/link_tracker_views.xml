@@ -12,7 +12,7 @@
                     <field name="campaign_id"/>
                     <field name="medium_id"/>
                     <field name="source_id"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Campaign" name="groupby_campaign_id" context="{'group_by': 'campaign_id'}"/>
                         <filter string="Medium" name="groupby_medium_id" context="{'group_by': 'medium_id'}"/>
                         <filter string="Source" name="groupby_source_id" context="{'group_by': 'source_id'}"/>
@@ -114,7 +114,7 @@
                 <search string="Clicks">
                     <field name="link_id"/>
                     <field name="country_id"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Link" name="groupby_link_id" domain="[]" context="{'group_by': 'link_id'}"/>
                         <filter string="Country" name="groupby_country_id" context="{'group_by': 'country_id'}"/>
                     </group>

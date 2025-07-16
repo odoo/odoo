@@ -109,7 +109,7 @@
                 <filter string="At Customer" name="at_customer" domain="[('quant_ids.location_id.usage','=','customer'), ('quant_ids.quantity', '>', 0)]"/>
                 <filter string="On Hand" name="on_hand" domain="[('product_qty', '>', 0)]"/>
                 <filter string="Creation Date" name="creation_date" date="create_date"/>
-                <group string="Group By">
+                <group>
                     <filter name="group_by_product" string="Product" domain="[]" context="{'group_by': 'product_id'}"/>
                     <filter name="group_by_location" string="Location" domain="[]" context="{'group_by': 'location_id'}" groups="stock.group_stock_multi_locations"/>
                     <filter name="group_by_creation_date" string="Creation date" domain="[]" context="{'group_by': 'create_date'}"/>

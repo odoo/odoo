@@ -681,7 +681,7 @@
                             domain="[('activity_date_deadline', '&gt;', 'today')]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" name="saleschannel" context="{'group_by':'team_id'}"/>
                         <filter name="city" string="City" context="{'group_by': 'city'}"/>
@@ -995,7 +995,7 @@
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
                     <separator/>
-                    <group string="Group By" colspan="16">
+                    <group colspan="16">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" name="saleschannel" context="{'group_by':'team_id'}"/>
                         <filter name="stage" string="Stage" context="{'group_by':'stage_id'}"/>

@@ -67,7 +67,7 @@
                         domain="[('create_date', '&gt;=', 'today -1m')]"/>
                     <filter name="filter_date_last_week" invisible="1" string="Date: Last week"
                         domain="[('create_date', '&gt;=', 'today -1w')]"/>
-                    <group string="Group By...">
+                    <group>
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'session_livechat_channel_id'}"/>
                         <filter name="group_by_agent" string="Agent" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter name="group_by_help_status" domain="[]" context="{'group_by': 'help_status'}"/>
