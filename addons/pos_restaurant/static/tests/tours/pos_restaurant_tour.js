@@ -790,3 +790,106 @@ registry.category("web_tour.tours").add("test_open_default_register_screen_confi
             Chrome.endTour(),
         ].flat(),
 });
+registry.category("web_tour.tours").add("test_transfering_orders", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // Create a floating order with 3 cola
+            FloorScreen.clickNewOrder(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.setTab("Cola"),
+            Chrome.clickPlanButton(),
+
+            // Create a floating order with 3 water
+            FloorScreen.clickNewOrder(),
+            ProductScreen.clickDisplayedProduct("Water"),
+            ProductScreen.clickDisplayedProduct("Water"),
+            ProductScreen.clickDisplayedProduct("Water"),
+            ProductScreen.setTab("Water"),
+            Chrome.clickPlanButton(),
+
+            // Create an order on table 5 with 3 minute maid
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Minute Maid"),
+            ProductScreen.clickDisplayedProduct("Minute Maid"),
+            ProductScreen.clickDisplayedProduct("Minute Maid"),
+            Chrome.clickPlanButton(),
+
+            // Create an order on table 4 with 3 coca-cola
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Chrome.clickPlanButton(),
+
+            // Should have 4 orders
+            Chrome.clickOrders(),
+            TicketScreen.nbOrdersIs(4),
+
+            // Transfer floating order to another floating order
+            TicketScreen.selectOrder("Cola"),
+            TicketScreen.loadSelectedOrder(),
+            ProductScreen.clickControlButton("Transfer"),
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("Water"),
+            ProductScreen.isShown(),
+            ProductScreen.clickLine("Coca-Cola", "3"),
+            ProductScreen.clickLine("Water", "3"),
+            Chrome.clickOrders(),
+            TicketScreen.nbOrdersIs(3),
+
+            // Transfering order from table 5 to table 4
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickLine("Minute Maid", "3"),
+            ProductScreen.clickLine("Coca-Cola", "3"),
+            Chrome.clickOrders(),
+            TicketScreen.nbOrdersIs(2),
+
+            // Transfering order from table to floating order
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickControlButton("Transfer"),
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("Water"),
+            ProductScreen.isShown(),
+            ProductScreen.clickLine("Coca-Cola", "6"),
+            ProductScreen.clickLine("Water", "3"),
+            ProductScreen.clickLine("Minute Maid", "3"),
+            Chrome.clickOrders(),
+            TicketScreen.nbOrdersIs(1),
+
+            // Transfering floating order to empty table
+            TicketScreen.selectOrder("Water"),
+            TicketScreen.loadSelectedOrder(),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickLine("Coca-Cola", "6"),
+            ProductScreen.clickLine("Water", "3"),
+            ProductScreen.clickLine("Minute Maid", "3"),
+            Chrome.clickPlanButton(),
+            FloorScreen.orderCountSyncedInTableIs("5", "1"),
+
+            // Create a new floating order and transfer it to filled table
+            FloorScreen.clickNewOrder(),
+            ProductScreen.clickDisplayedProduct("Water"),
+            ProductScreen.setTab("Water2"),
+            Chrome.clickPlanButton(),
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("Water2"),
+            TicketScreen.loadSelectedOrder(),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickLine("Water", "4"),
+            ProductScreen.clickLine("Coca-Cola", "6"),
+            ProductScreen.clickLine("Minute Maid", "3"),
+            Chrome.clickOrders(),
+            TicketScreen.nbOrdersIs(1),
+        ].flat(),
+});

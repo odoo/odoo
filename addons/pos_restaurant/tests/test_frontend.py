@@ -619,3 +619,9 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.write({'default_screen': 'register'})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_open_default_register_screen_config')
+
+    def test_transfering_orders(self):
+        """
+        We can now transfer order from one table to another and from floating order to another etc.
+        """
+        self.start_pos_tour('test_transfering_orders', login="pos_user")
