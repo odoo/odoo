@@ -71,14 +71,14 @@ export class BuilderNumberInput extends Component {
     formatRawValue(rawValue) {
         return this.convertSpaceSplitValues(rawValue, (value) => {
             const unit = this.props.unit;
-            const saveUnit = this.props.saveUnit;
-            // Remove the unit
-            value = value.match(/[\d.e+-]+/g)[0];
-            if (saveUnit) {
+            const { savedValue, savedUnit } = value.match(
+                /(?<savedValue>[\d.e+-]+)(?<savedUnit>\w*)/
+            ).groups;
+            if (savedUnit) {
                 // Convert value from saveUnit to unit
                 value = convertNumericToUnit(
-                    value,
-                    saveUnit,
+                    savedValue,
+                    savedUnit || this.props.saveUnit,
                     unit,
                     getHtmlStyle(this.env.getEditingElement().ownerDocument)
                 );
