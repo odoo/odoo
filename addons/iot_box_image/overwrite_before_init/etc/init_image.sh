@@ -182,7 +182,10 @@ PKGS_TO_INSTALL="
     nginx-full \
     printer-driver-all \
     python3 \
+    python3-aioice \
     python3-cups \
+    python3-crc32c \
+    python3-cryptography \
     python3-babel \
     python3-dateutil \
     python3-dbus \
@@ -198,12 +201,15 @@ PKGS_TO_INSTALL="
     python3-mako \
     python3-mock \
     python3-netifaces \
+    python3-openssl \
     python3-passlib \
     python3-pil \
     python3-pip \
     python3-psutil \
     python3-psycopg2 \
     python3-pydot \
+    python3-pyee \
+    python3-pylibsrtp \
     python3-pyudev \
     python3-qrcode \
     python3-reportlab \
@@ -261,9 +267,7 @@ PIP_TO_INSTALL="
     PyPDF2==1.26.0 \
     Werkzeug==2.0.2 \
     urllib3==1.26.5 \
-    pyOpenssl==22.0.0 \
     python-escpos==3.1 \
-    cryptography==36.0.2 \
     screeninfo==0.8.1 \
     zeep==4.2.1 \
     num2words==0.5.13 \
