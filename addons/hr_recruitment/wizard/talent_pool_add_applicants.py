@@ -37,8 +37,18 @@ class TalentPoolAddApplicants(models.TransientModel):
                 )
                 talents += applicant
             else:
+                applicant_attachments = self.env['ir.attachment']
+                for attachment in applicant.attachment_ids:
+                    applicant_attachments |= attachment.copy({
+                        'res_id': applicant.id
+                    })
+                applicant_data = applicant.copy_data({
+                    'attachment_ids': [Command.link(applicant_attachment.id)
+                                       for applicant_attachment in applicant_attachments]
+                })[0]
                 talent = applicant.with_context(no_copy_in_partner_name=True).copy(
                     {
+                        **applicant_data,
                         "job_id": False,
                         "talent_pool_ids": self.talent_pool_ids,
                         "categ_ids": applicant.categ_ids + self.categ_ids,
