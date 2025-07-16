@@ -128,11 +128,11 @@ class PaymentToken(models.Model):
                 [('provider_id', 'in', providers_ids), ('partner_id', '=', partner_id)]
             )
         else:
-            # Get all the tokens of the partner and of their commercial partner, regardless of
+            # Get all the tokens of the partner, regardless of
             # whether the providers are available.
             partner = self.env['res.partner'].browse(partner_id)
             return self.env['payment.token'].search(
-                [('partner_id', 'in', [partner.id, partner.commercial_partner_id.id])]
+                [('partner_id', '=', partner.id)]
             )
 
     def _build_display_name(self, *args, max_length=34, should_pad=True, **kwargs):
