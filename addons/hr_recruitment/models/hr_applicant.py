@@ -65,7 +65,7 @@ class HrApplicant(models.Model):
     partner_phone_sanitized = fields.Char(
         string="Sanitized Phone Number", compute='_compute_partner_phone_sanitized', store=True, index='btree_not_null'
     )
-    linkedin_profile = fields.Char('LinkedIn Profile')
+    linkedin_profile = fields.Char('LinkedIn Profile', index='btree_not_null')
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
     color = fields.Integer("Color Index", default=0)
@@ -135,7 +135,7 @@ class HrApplicant(models.Model):
     applicant_notes = fields.Html()
     refuse_date = fields.Datetime('Refuse Date')
     talent_pool_ids = fields.Many2many(comodel_name="hr.talent.pool", string="Talent Pools", groups="base.group_user")
-    pool_applicant_id = fields.Many2one("hr.applicant")
+    pool_applicant_id = fields.Many2one("hr.applicant", index='btree_not_null')
     is_pool_applicant = fields.Boolean(compute="_compute_is_pool")
     is_applicant_in_pool = fields.Boolean(
         compute="_compute_is_applicant_in_pool", search="_search_is_applicant_in_pool"
