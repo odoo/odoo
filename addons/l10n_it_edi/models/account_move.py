@@ -973,7 +973,7 @@ class AccountMove(models.Model):
     def _l10n_it_edi_document_type_mapping(self):
         """ Returns a dictionary with the required features for every TDxx FatturaPA document type """
         return {
-            'TD01': {'move_types': ['out_invoice'],
+            'TD01': {'move_types': ['in_invoice', 'out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
