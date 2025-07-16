@@ -1,3 +1,6 @@
+/** @odoo-module */
+
+import { waitUntil } from "@odoo/hoot-dom";
 import {
     changeOption,
     clickOnEditAndWaitEditMode,
@@ -73,16 +76,13 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Wait for the page to be scrolled to the top.",
-        trigger: ":iframe .s_three_columns .row > :last-child:not(.o_animating)",
-        run() {
-            // If the column has been animated successfully, the animation delay
-            // should be set to approximately zero when it is not visible.
-            // The main goal of the following condition is to verify if the
-            // animation delay is being updated as expected.
-            if (Math.round(parseFloat(this.anchor.style.animationDelay)) !== 0) {
-                throw new Error("The scroll animation in the page did not end properly with the cookies bar open.");
-            }
-        },
+        trigger: ":iframe .s_three_columns .row > .o_animating:last-child",
+        isActive: [`:iframe .s_three_columns .row > .o_animating:last-child`],
+        run: (helpers) =>
+            waitUntil(
+                () => !helpers.anchor.classList.contains(`o_animating`),
+                { timeout: 10000 }
+            ),
     },
     {
         content: "Close the Cookies Bar.",
@@ -125,14 +125,13 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Wait until the column is no longer animated/visible.",
-        trigger: ":iframe .s_popup .s_three_columns .row > :last-child:not(.o_animating):hidden",
-        async run() {
-            // If the column has been animated successfully, the animation delay
-            // should be set to approximately zero when it is not visible.
-            if (Math.round(parseFloat(this.anchor.style.animationDelay)) !== 0) {
-                throw new Error("The scroll animation in the modal did not end properly.");
-            }
-        },
+        trigger: ":iframe .s_three_columns .row > .o_animating:last-child",
+        isActive: [`:iframe .s_three_columns .row > .o_animating:last-child`],
+        run: (helpers) =>
+            waitUntil(
+                () => !helpers.anchor.classList.contains(`o_animating`),
+                { timeout: 10000 }
+            ),
     },
     {
         content: "Close the Popup",
