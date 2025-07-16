@@ -7,6 +7,7 @@ import {
     isMediaElement,
     isProtected,
     isProtecting,
+    paragraphRelatedElementsSelector,
 } from "@html_editor/utils/dom_info";
 import {
     backgroundImageCssToParts,
@@ -78,7 +79,8 @@ export class MediaPlugin extends Plugin {
         clipboard_text_processors: (text) => text.replace(/\u200B/g, ""),
         functional_empty_node_predicates: isMediaElement,
 
-        selectors_for_feff_providers: () => ICON_SELECTOR,
+        selectors_for_feff_providers: () =>
+            `:is(${paragraphRelatedElementsSelector}) :is(${ICON_SELECTOR})`,
         before_save_handlers: this.savePendingImages.bind(this),
     };
 
