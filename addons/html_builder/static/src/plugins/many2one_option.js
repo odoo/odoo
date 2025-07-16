@@ -11,11 +11,12 @@ export class Many2OneOption extends BaseOptionComponent {
         onWillStart(async () => {
             const el = this.env.getEditingElement();
             this.model = el.dataset.oeMany2oneModel;
-            [{ name: this.label }] = await this.orm.searchRead(
+            const searchResult = await this.orm.searchRead(
                 "ir.model",
                 [["model", "=", this.model]],
                 ["name"]
             );
+            this.label = searchResult[0]?.name;
         });
     }
 }
