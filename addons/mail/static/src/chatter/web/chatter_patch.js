@@ -358,7 +358,6 @@ patch(Chatter.prototype, {
     },
 
     onCloseFullComposerCallback(isDiscard) {
-        this.toggleComposer();
         super.onCloseFullComposerCallback();
         if (!isDiscard) {
             this.reloadParentView();
