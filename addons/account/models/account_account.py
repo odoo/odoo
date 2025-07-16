@@ -398,15 +398,39 @@ class AccountAccount(models.Model):
         return [('id', 'in', self.with_company(self.env.company.root_id).sudo()._search([('code_store', operator, value)]))]
 
     def _inverse_code(self):
-        for record, record_root in zip(self, self.with_company(self.env.company.root_id).sudo()):
-            # Need to set record.code with `company = self.env.company`, not `self.env.company.root_id`
-            record_root.code_store = record.code
+        root_id = self.env.company.root_id.id
+        root_id_str = str(root_id)
+        account_ids = [account.id for account in self]
+        codes_by_id = {account.id: account.code for account in self}
 
-        # Changing the code for one company should also change it for all the companies which share the same root_id.
-        # The simplest way of achieving this is invalidating it for all companies here.
-        # We re-compute it right away for the active company, as it is used by constraints while `code` is still protected.
-        self.invalidate_recordset(fnames=['code'], flush=False)
-        self._compute_code()
+        # Fetch all current codes in one query
+        self.env.cr.execute(
+            "SELECT id, code_store->>%s FROM account_account WHERE id IN %s",
+            [root_id_str, tuple(account_ids)]
+        )
+        current_codes = dict(self.env.cr.fetchall())
+
+        # Prepare only the accounts where the code has changed
+        to_update = {acc_id: codes_by_id[acc_id] for acc_id, current_code in current_codes.items() if codes_by_id[acc_id] != current_code}
+
+        if to_update:
+            # Build a CASE statement for batch update
+            case_sql = "CASE id " + " ".join(
+                f"WHEN {acc_id} THEN to_jsonb(%s)" for acc_id in to_update
+            ) + " END"
+            params = [f'{{{root_id}}}'] + list(to_update.values()) + [tuple(to_update.keys())]
+            self.env.cr.execute(
+                f"""
+                UPDATE account_account
+                   SET code_store = jsonb_set(
+                       COALESCE(code_store, '{{}}'::jsonb),
+                       %s,
+                       {case_sql}
+                   )
+                 WHERE id IN %s
+                """,
+                params
+            )
 
     @api.depends_context('company')
     @api.depends('code')
