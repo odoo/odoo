@@ -756,3 +756,10 @@ class StockMove(models.Model):
                         for move in self):
             res = 'assigned'
         return res
+
+    def origin_sml_consigned(self):
+        return bool(
+            self.origin_returned_move_id.move_line_ids.filtered(
+                lambda sml: sml.owner_id
+            )
+        )
