@@ -26,7 +26,6 @@ class ResPartner(models.Model):
     # tracked field used for chatter logging purposes
     # we need this to be readable inline as tracking messages use inline HTML nodes
     contact_address_inline = fields.Char(compute='_compute_contact_address_inline', string='Inlined Complete Address', tracking=True)
-    starred_message_ids = fields.Many2many('mail.message', 'mail_message_res_partner_starred_rel')
     # sudo: res.partner - can access presence of accessible partner
     im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
     offline_since = fields.Datetime("Offline since", compute="_compute_im_status", compute_sudo=True)

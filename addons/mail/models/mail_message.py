@@ -9,7 +9,7 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError
-from odoo.fields import Domain
+from odoo.fields import Command, Domain
 from odoo.tools import clean_context, groupby, SQL
 from odoo.tools.misc import OrderedSet
 from odoo.addons.mail.tools.discuss import Store
@@ -826,9 +826,8 @@ class MailMessage(models.Model):
     @api.model
     def unstar_all(self):
         """ Unstar messages for the current partner. """
-        partner = self.env.user.partner_id
-        starred_messages = self.search([('starred_partner_ids', 'in', partner.id)])
-        partner.starred_message_ids -= starred_messages
+        starred_messages = self.search([("starred_partner_ids", "in", self.env.user.partner_id.id)])
+        starred_messages.starred_partner_ids = [Command.unlink(self.env.user.partner_id.id)]
         self.env.user._bus_send(
             "mail.message/toggle_star", {"message_ids": starred_messages.ids, "starred": False}
         )
@@ -841,11 +840,10 @@ class MailMessage(models.Model):
         # a user should always be able to star a message they can read
         self.check_access('read')
         starred = not self.starred
-        partner = self.env.user.partner_id
         if starred:
-            partner.starred_message_ids |= self
+            self.starred_partner_ids = [Command.link(self.env.user.partner_id.id)]
         else:
-            partner.starred_message_ids -= self
+            self.starred_partner_ids = [Command.unlink(self.env.user.partner_id.id)]
         self.env.user._bus_send(
             "mail.message/toggle_star", {"message_ids": [self.id], "starred": starred}
         )
