@@ -7,7 +7,7 @@ threadActionsRegistry
     .add("livechat-info", {
         component: LivechatChannelInfoList,
         condition(component) {
-            return component.thread?.channel_type === "livechat";
+            return component.thread?.channel?.channel_type === "livechat";
         },
         panelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
         icon: "fa fa-fw fa-info",
@@ -22,7 +22,7 @@ threadActionsRegistry
         component: LivechatChannelInfoList,
         condition(component) {
             return (
-                component.thread?.channel_type === "livechat" && !component.thread.livechat_end_dt
+                component.thread?.channel?.channel_type === "livechat" && !component.thread.livechat_end_dt
             );
         },
         dropdown: {

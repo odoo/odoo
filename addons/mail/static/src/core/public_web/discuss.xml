@@ -8,21 +8,21 @@
         <div t-if="!(ui.isSmall and store.discuss.activeTab !== 'main')" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 overflow-auto o-scrollbar-thin" t-ref="content">
             <div class="o-mail-Discuss-header px-2 d-flex flex-shrink-0 align-items-center border-bottom border-secondary z-1 flex-grow-0" t-ref="header">
                 <t t-if="thread">
-                    <div t-if="['channel', 'group', 'chat'].includes(thread.channel_type)" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center mx-2 my-1 bg-inherit">
-                        <img class="rounded-3 object-fit-cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
-                        <FileUploader t-if="!thread.parent_channel_id and thread.is_editable and thread.channel_type !== 'chat'" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
+                    <div t-if="['channel', 'group', 'chat'].includes(thread.channel?.channel_type)" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center mx-2 my-1 bg-inherit">
+                        <img class="rounded-3 object-fit-cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.channel.avatarUrl" alt="Thread Image"/>
+                        <FileUploader t-if="!thread.parent_channel_id and thread.is_editable and thread.channel?.channel_type !== 'chat'" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
                             <t t-set-slot="toggler">
                                 <a href="#" class="position-absolute z-1 h-100 w-100 rounded-3 start-0 bottom-0" title="Upload Avatar">
                                     <i class="position-absolute top-50 start-50 fa fa-sm fa-pencil text-white"/>
                                 </a>
                             </t>
                         </FileUploader>
-                        <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" className="'o-mail-Discuss-headerImStatus position-absolute'" member="thread.correspondent"/>
+                        <ImStatus t-if="thread.channel?.channel_type === 'chat' and thread.channel?.correspondent" className="'o-mail-Discuss-headerImStatus position-absolute'" member="thread.channel?.correspondent"/>
                     </div>
                     <t t-else="">
                         <ThreadIcon className="'mx-2 align-self-center fs-2 my-2 opacity-75'" size="'large'" thread="thread"/>
                     </t>
-                    <CountryFlag t-if="thread.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-Discuss-headerCountry border shadow-sm'"/>
+                    <CountryFlag t-if="thread.channel?.showCorrespondentCountry" country="thread.channel.correspondentCountry" class="'o-mail-Discuss-headerCountry border shadow-sm'"/>
                     <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
                         <div t-if="thread.parent_channel_id" class="d-flex align-items-center gap-1 ms-1">
                             <span class="fw-bolder cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-esc="thread.parent_channel_id.displayName" t-on-click="() => this.thread.parent_channel_id.open({ focus: true })"/>
@@ -30,7 +30,7 @@
                         </div>
                         <AutoresizeInput
                             className="'o-mail-Discuss-threadName fw-bolder flex-shrink-1 text-dark py-0 fs-4'"
-                            enabled="thread.is_editable or thread.channel_type === 'chat'"
+                            enabled="thread.is_editable or thread.channel?.channel_type === 'chat'"
                             onValidate.bind="renameThread"
                             value="thread.displayName"
                         />

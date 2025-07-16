@@ -85,7 +85,7 @@ export class ChatWindow extends Component {
     }
 
     get showImStatus() {
-        return this.thread?.channel_type === "chat" && this.thread.correspondent;
+        return this.thread?.channel?.channel_type === "chat" && this.thread.channel?.correspondent;
     }
 
     get attClass() {

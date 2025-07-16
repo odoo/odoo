@@ -75,9 +75,9 @@
                 </div>
                 <t t-elif="thread">
                     <Thread autofocus="isMobileOS ? props.chatWindow.autofocus : undefined" isInChatWindow="true" thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" jumpToNewMessage="props.chatWindow.jumpToNewMessage"/>
-                    <div t-if="thread.hasOtherMembersTyping" class="d-flex bg-inherit position-relative">
+                    <div t-if="thread.channel.hasOtherMembersTyping" class="d-flex bg-inherit position-relative">
                         <div class="o-mail-ChatWindow-typing d-flex px-3 position-absolute bottom-0 start-0 w-100 bg-inherit align-items-center">
-                            <Typing channel="thread" size="'medium'"/>
+                            <Typing channel="thread.channel" size="'medium'"/>
                         </div>
                     </div>
                     <Composer composer="thread.composer" autofocus="isMobileOS ? undefined : props.chatWindow.autofocus" mode="'compact'" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType"/>
@@ -99,14 +99,14 @@
         'ms-3': !thread,
         'ps-2': !hasActionsMenu,
     }" name="threadAvatar">
-        <img t-if="thread" class="rounded-3 object-fit-cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
-        <ImStatus t-if="showImStatus" className="'o-mail-ChatWindow-imStatus position-absolute'" member="thread.correspondent" size="'sm'"/>
+        <img t-if="thread" class="rounded-3 object-fit-cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.channel.avatarUrl" alt="Thread Image"/>
+        <ImStatus t-if="showImStatus" className="'o-mail-ChatWindow-imStatus position-absolute'" member="thread.channel.correspondent" size="'sm'"/>
     </div>
     <t t-if="thread?.parent_channel_id">
         <span class="fw-bold small ms-1 p-1 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded fs-6" t-esc="thread.parent_channel_id.displayName" title="Open Channel" t-ref="parentChannel" t-on-click.stop="() => this.thread.parent_channel_id.open({ focus: true })"/>
         <i class="fa fa-chevron-right o-xsmaller ms-1 text-muted opacity-50"/>
     </t>
-    <CountryFlag t-if="thread?.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-ChatWindow-country border shadow-sm'"/>
+    <CountryFlag t-if="thread?.channel?.showCorrespondentCountry" country="thread.channel.correspondentCountry" class="'o-mail-ChatWindow-country border shadow-sm'"/>
     <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent mx-1 my-0 py-1" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{ 'fs-4': ui.isSmall, 'fs-5': !ui.isSmall }"/>
 </t>
 
