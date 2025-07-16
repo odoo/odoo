@@ -263,6 +263,8 @@ class ProductTemplate(models.Model):
                 taxes_by_company[tax.company_id.id].add(tax.id)
 
         different_currency = config_id.currency_id != self.env.company.currency_id
+
+        self._add_archived_combinations(products)
         for product in products:
             if different_currency:
                 product['list_price'] = self.env.company.currency_id._convert(product['list_price'], config_id.currency_id, self.env.company, fields.Date.today())
@@ -273,9 +275,18 @@ class ProductTemplate(models.Model):
             if len(taxes_by_company) > 1 and len(product['taxes_id']) > 1:
                 product['taxes_id'] = filter_taxes_on_company(product['taxes_id'], taxes_by_company)
 
-            product['_archived_combinations'] = []
-            for product_product in self.env['product.product'].with_context(active_test=False).search([('product_tmpl_id', '=', product['id']), ('active', '=', False)]):
-                product['_archived_combinations'].append(product_product.product_template_attribute_value_ids.ids)
+    def _add_archived_combinations(self, products):
+        """ Add archived combinations to the product template data. """
+        product_data = {product['id']: product for product in products}
+        for product_tmpl in self.browse(product_data.keys()):
+            product = product_data[product_tmpl.id]
+            attribute_exclusions = product_tmpl._get_attribute_exclusions()
+            product['_archived_combinations'] = attribute_exclusions['archived_combinations']
+            excluded = {}
+            for ptav_id, ptav_ids in attribute_exclusions['exclusions'].items():
+                for ptav_id2 in set(ptav_ids) - excluded.keys():
+                    excluded[ptav_id] = ptav_id2
+            product['_archived_combinations'].extend(excluded.items())
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_open_session(self):
