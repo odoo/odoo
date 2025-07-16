@@ -42,7 +42,7 @@ export class Deferred extends Promise {
 }
 
 export class Logger {
-    static LOG_TTL = 45 * 60 * 1000; // 45 minutes
+    static LOG_TTL = 24 * 60 * 60 * 1000; // 24 hours
     static gcInterval = null;
     static instances = [];
     _db;
