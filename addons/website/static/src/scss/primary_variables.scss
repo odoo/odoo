@@ -2207,13 +2207,15 @@ $o-font-aliases-to-keys: (
     'navbar': 'navbar-font',
     'buttons': 'buttons-font',
 );
+$o-website-default-headings-font: 'Inter Tight';
 $o-website-values-palettes: (
     (
         // By default, the $o-base-website-values-palette for fonts are "null"
         // but will actually automatically be filled with the first font themes
         // define in $o-theme-font-configs (for the base one). For the default
         // website, we use a combination of Inter Tight for headings and Inter.
-        'headings-font': 'Inter Tight',
+        'default-headings-font': $o-website-default-headings-font,
+        'headings-font': $o-website-default-headings-font,
         'font': 'Inter',
 
         'btn-padding-x': 1rem,
