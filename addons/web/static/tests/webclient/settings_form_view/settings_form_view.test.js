@@ -2,12 +2,12 @@ import { after, beforeEach, expect, getFixture, test } from "@odoo/hoot";
 import {
     click,
     edit,
-    manuallyDispatchProgrammaticEvent,
     on,
     queryAllProperties,
     queryAllTexts,
     queryFirst,
     resize,
+    unload,
 } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockSendBeacon, mockTouch, runAllTimers } from "@odoo/hoot-mock";
 import {
@@ -843,7 +843,7 @@ test("Auto save: don't save on closing tab/browser", async () => {
         message: "checkbox should be checked",
     });
 
-    manuallyDispatchProgrammaticEvent(window, "beforeunload");
+    await unload();
     await animationFrame();
     expect.verifySteps([]);
 });
