@@ -2,6 +2,19 @@ import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { isSyncStatusConnected } from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 
+export function nbOrdersIs(nb) {
+    return [
+        {
+            trigger: `.ticket-screen`,
+            run: () => {
+                const orders = document.querySelectorAll(".ticket-screen .order-row");
+                if (orders.length !== nb) {
+                    throw new Error(`Expected ${nb} orders, but found ${orders.length}`);
+                }
+            },
+        },
+    ];
+}
 export function clickDiscard() {
     return {
         content: "go back",
