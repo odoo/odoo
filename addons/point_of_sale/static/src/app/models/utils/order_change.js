@@ -44,6 +44,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
     for (const orderline of order.getOrderlines()) {
         const product = orderline.getProduct();
         const note = orderline.getNote();
+        const customerNote = orderline.getCustomerNote();
         const lineKey = orderline.uuid;
         const baseProduct = orderline.combo_parent_id
             ? orderline.combo_parent_id.product_id
@@ -62,6 +63,10 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
             const quantityDiff =
                 (oldChanges[relatedKey] ? quantity - oldChanges[relatedKey].quantity : quantity) ||
                 0;
+            const noteChange =
+                oldChanges[relatedKey] &&
+                (oldChanges[relatedKey].note !== note ||
+                    oldChanges[relatedKey].customer_note !== customerNote);
 
             const lineDetails = {
                 uuid: orderline.uuid,
@@ -72,6 +77,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                 attribute_value_names: orderline.attribute_value_ids.map((a) => a.name),
                 quantity: quantityDiff,
                 note: note,
+                customer_note: orderline.customer_note,
                 pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
                 pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
                 display_name: product.display_name,
@@ -83,7 +89,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                 changes[lineKey] = lineDetails;
                 changesCount += quantityDiff;
                 changeAbsCount += Math.abs(quantityDiff);
-                if (oldChanges[relatedKey] && oldChanges[relatedKey].note !== note) {
+                if (noteChange) {
                     lineDetails.quantity = oldChanges[relatedKey].quantity || 0;
                     noteUpdate[lineKey] = lineDetails;
                 }
@@ -94,7 +100,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                     orderline.setHasChange(false);
                 } else {
                     // If only note updated
-                    if (oldChanges[relatedKey] && oldChanges[relatedKey].note !== note) {
+                    if (noteChange) {
                         lineDetails.quantity = orderline.qty;
                         noteUpdate[lineKey] = lineDetails;
                         orderline.setHasChange(true);
@@ -122,6 +128,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                     display_name: lineResume["display_name"],
                     isCombo: lineResume["isCombo"],
                     note: lineResume["note"],
+                    customer_note: lineResume["customer_note"],
                     attribute_value_names: lineResume["attribute_value_names"],
                     group: lineResume["group"],
                     quantity: -quantity,
