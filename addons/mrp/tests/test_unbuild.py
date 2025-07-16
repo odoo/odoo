@@ -1017,3 +1017,25 @@ class TestUnbuild(TestMrpCommon):
 
         component_move_unbuild = unbuild_order.produce_line_ids.filtered(lambda m: m.product_id == self.bom_4.bom_line_ids.product_id)
         self.assertEqual(component_move_unbuild.move_line_ids.location_dest_id, putaway_strategy.location_out_id)
+
+    def test_unbuild_consigned_comp(self):
+        """ Test that after unbuild, consigned quant still have the same owner as before the MO."""
+        consigned_partner = self.env['res.partner'].create({'name': 'consigned partner'})
+        mo, _, _, p1, _ = self.generate_mo(qty_final=1, qty_base_1=7)
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 3)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 4, owner_id=consigned_partner)
+
+        mo.action_assign()
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done', "Production order should be in done state.")
+
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        unbuild_form.save().action_unbuild()
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location), 7)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location, owner_id=consigned_partner), 4)
