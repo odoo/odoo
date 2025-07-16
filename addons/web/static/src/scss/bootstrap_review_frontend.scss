@@ -74,7 +74,7 @@ $o-btn-border-colors: () !default;
 }
 @each $color, $value in $theme-colors {
     $-bg-color: map-get($o-btn-bg-colors, $color) or $value;
-    $-border-color: map-get($o-btn-border-colors, $color) or $-bg-color;
+    $-border-color: increase-contrast(map-get($o-btn-border-colors, $color) or $-bg-color, $body-bg);
     .btn-outline-#{$color} {
         @include button-outline-variant($-border-color);
     }
