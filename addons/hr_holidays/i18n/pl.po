@@ -255,7 +255,7 @@ msgstr ", wraca"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "- Valid for"
-msgstr ""
+msgstr "- Ważne przez"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -581,17 +581,17 @@ msgstr "Należne dny wolne: Aktualizuje liczbę dni wolnych"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity
 msgid "Accrual Validity"
-msgstr ""
+msgstr "Ważność naliczenia"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
 msgid "Accrual Validity Count"
-msgstr ""
+msgstr "Ilość ważnego naliczenia "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "Accrual Validity Type"
-msgstr ""
+msgstr "Typ ważności naliczenia"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accruals_ids
@@ -1308,7 +1308,7 @@ msgstr "Data ważności przeniesionych dni"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Carry Over Validity"
-msgstr ""
+msgstr "Ważność przeniesienia"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
@@ -2693,7 +2693,7 @@ msgstr "Przejście kamienia milowego"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time_yearly
 msgid "Milestone cap"
-msgstr ""
+msgstr "Górna granica kamienia milowego"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_ch_swissdec_military_lt
@@ -3662,7 +3662,7 @@ msgstr "Start"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Start Accruing"
-msgstr ""
+msgstr "Zacznij naliczać"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_from
@@ -3944,7 +3944,7 @@ msgstr "Czas wolny został automatycznie zatwierdzony"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "The time off has been cancelled: %s"
-msgstr ""
+msgstr "Urlop został anulowany: %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -4659,6 +4659,10 @@ msgid ""
 "to zero), All accrued time carried over to the next period; or Carryover "
 "with a maximum)."
 msgstr ""
+"Po upływie czasu przeniesienia, zgodnie z ustawieniami planu, wybierz, co ma"
+" się stać z niewykorzystanym czasem wolnym: Nic (czas zostanie zresetowany "
+"do zera) lub przeniesienie całego naliczonego czasu (czas zostanie "
+"przeniesiony do następnego okresu; lub przeniesienie z ustalonym limitem)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time
@@ -4721,7 +4725,7 @@ msgstr "Rok Miesiąc"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__maximum_leave_yearly
 msgid "Yearly limit to"
-msgstr ""
+msgstr "Roczny limit"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__start_type__year

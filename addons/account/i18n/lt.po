@@ -3149,7 +3149,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Are you sure? This will perform the following operations:\n"
-msgstr ""
+msgstr "Ar tikrai? Šis veiksmas įvykdys šias operacijas:\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7026,7 +7026,7 @@ msgstr "Įrašai yra ne tos pačios sąskaitos: %s"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Entries can only be created for a single company at a time."
-msgstr ""
+msgstr "Įrašus vienu metu galima kurti tik vienai įmonei."
 
 #. module: account
 #. odoo-python
@@ -7559,12 +7559,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 msgid "Follow, download or pay our invoices"
-msgstr ""
+msgstr "Sekite, atsisiųskite arba apmokėkite sąskaitas faktūras"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 msgid "Follow, download or pay your invoices"
-msgstr ""
+msgstr "Sekite, atsisiųskite arba apmokėkite savo sąskaitas faktūras"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_follower_ids
@@ -7607,7 +7607,7 @@ msgstr "Font awesome piktograma, pvz., fa-tasks"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
 msgid "For any other question, write to"
-msgstr ""
+msgstr "Dėl bet kokio kito klausimo rašykite"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
@@ -7625,6 +7625,8 @@ msgstr "Procentams įveskite koeficientą tarp 0-100."
 #: code:addons/account/models/account_move.py:0
 msgid "For this entry to be automatically posted, it required a bill date."
 msgstr ""
+"Kad šis įrašas būtų automatiškai paskelbtas, reikėjo nurodyti tiekėjo "
+"sąskaitos faktūros datą."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_non_accountable_fields_null
@@ -7661,17 +7663,17 @@ msgstr "Užsienio valiuta"
 #. module: account
 #: model:account.account,name:account.1_income_currency_exchange
 msgid "Foreign Exchange Gain"
-msgstr ""
+msgstr "Užsienio valiutos keitimo pelnas"
 
 #. module: account
 #: model:account.account,name:account.1_expense_currency_exchange
 msgid "Foreign Exchange Loss"
-msgstr ""
+msgstr "Užsienio valiutos keitimo nuostolis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
-msgstr ""
+msgstr "Užsieninio mokesčio ID"
 
 #. module: account
 #: model:account.fiscal.position,name:account.1_template_generic_export_fiscal_position
@@ -7681,7 +7683,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Foreign VAT countries"
-msgstr ""
+msgstr "Užsienio PVM šalys"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -7897,7 +7899,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__fiscalyear_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__fiscalyear_lock_date
 msgid "Global Lock Date"
-msgstr ""
+msgstr "Bendra užrakinimo data"
 
 #. module: account
 #. odoo-python
@@ -7996,7 +7998,7 @@ msgstr "Augimo palyginimas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__hard_lock_date
 msgid "Hard Lock Date"
-msgstr ""
+msgstr "Visiško blokavimo data"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
@@ -8501,7 +8503,7 @@ msgstr "Sąskaitų plano importo šablonas"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Import Template for Journal Items"
-msgstr ""
+msgstr "Žurnalo įrašų importavimo šablonas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10695,7 +10697,7 @@ msgstr "Niekada"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Never for this vendor"
-msgstr ""
+msgstr "Niekada šiam tiekėjui"
 
 #. module: account
 #. odoo-python
@@ -10827,6 +10829,8 @@ msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
 msgstr ""
+"Nerasta jokio žurnalo įmonėje %(company_name)s bet kuriam iš šių tipų: "
+"%(journal_types)s"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_moves_email_preview
@@ -10840,6 +10844,7 @@ msgid ""
 "No original purchase document could be found for any of the selected "
 "purchase documents."
 msgstr ""
+"Nepavyko rasti nė vienam pasirinktam pirkimui originalaus pirkimo dokumento."
 
 #. module: account
 #. odoo-python
@@ -10943,6 +10948,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__not_hashable_unlocked_move_ids
 msgid "Not Hashable Unlocked Move"
 msgstr ""
+"Neužrakintas įrašas, kuris negali būti įtrauktas į saugią apskaitos seką"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__not_paid
@@ -11061,7 +11067,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_days
 msgid "Number of days before the early payment proposition expires"
-msgstr ""
+msgstr "Dienų skaičius iki išankstinio mokėjimo pasiūlymo galiojimo pabaigos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error_counter
@@ -12543,12 +12549,12 @@ msgstr "Pirkimas"
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__purchase_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__purchase_lock_date
 msgid "Purchase Lock Date"
-msgstr ""
+msgstr "Pirkimų užrakinimo data"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__purchase_lock_date
 msgid "Purchase Lock date"
-msgstr ""
+msgstr "Pirkimų užrakinimo data"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_purchase_receipts
@@ -13410,7 +13416,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__sale_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__sale_lock_date
 msgid "Sales Lock Date"
-msgstr ""
+msgstr "Pardavimų užrakinimo data"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
@@ -15364,7 +15370,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "The following Journal Entries will be generated"
-msgstr ""
+msgstr "Bus sugeneruoti šie žurnalo įrašai"
 
 #. module: account
 #. odoo-python
@@ -15381,6 +15387,8 @@ msgid ""
 "The following entries are unbalanced:\n"
 "\n"
 msgstr ""
+"Šie įrašai yra nesubalansuoti:\n"
+"\n"
 
 #. module: account
 #. odoo-python
@@ -15496,7 +15504,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
-msgstr ""
+msgstr "Įrašo nepavyko paskelbti dėl šios priežasties: %(error_message)s"
 
 #. module: account
 #. odoo-python

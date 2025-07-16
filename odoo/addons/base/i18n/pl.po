@@ -14246,6 +14246,9 @@ msgid ""
 "                                    <span invisible=\"value_field_to_show != 'html_value'\">rich content</span>\n"
 "                                    <span invisible=\"evaluation_type != 'equation'\">as</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value'\">do</span>\n"
+"                                    <span invisible=\"value_field_to_show != 'html_value'\">bogata treść</span>\n"
+"                                    <span invisible=\"evaluation_type != 'equation'\">jako</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -14271,6 +14274,10 @@ msgid ""
 "                                    to this Python expression:\n"
 "                                </span>"
 msgstr ""
+"<span invisible=\"update_field_id != False or evaluation_type == 'equation'\" class=\"o_actions_server_set_a_value text-muted\">Ustaw wartość...</span>\n"
+"                                <span invisible=\"evaluation_type != 'equation'\">\n"
+"                                    dla tego wyrażenia Python:\n"
+"                                </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -20362,6 +20369,8 @@ msgid ""
 "Calculate and report on your company's Environmental, Social, and Governance"
 " (ESG) impacts."
 msgstr ""
+"Oblicz i zaraportuj wpływ swojej firmy na środowisko, społeczeństwo i "
+"zarządzanie (ESG)."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__calendar
@@ -24055,7 +24064,7 @@ msgstr "Dropshipping"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Duplicate %(model)s: %(record)s"
-msgstr ""
+msgstr "Duplikuj %(model)s: %(record)s"
 
 #. module: base
 #. odoo-python
@@ -24169,7 +24178,7 @@ msgstr "ESG HR"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_esg_hr_contract
 msgid "ESG HR Contract"
-msgstr ""
+msgstr "Umowa ESG HR"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_esg_hr_fleet
@@ -25827,7 +25836,7 @@ msgstr "Wyodrębnij dane ze skanów faktur, aby wypełnić je automatycznie"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_U
 msgid "Extraterritorial"
-msgstr "Eksterytorialny"
+msgstr "Fundacja"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_eyewear_shop
@@ -41944,7 +41953,7 @@ msgstr "Szwajcaria - Lista płac i Księgowość"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll_elm_transmission_account
 msgid "Switzerland - Payroll with Accounting (ELM Transmission)"
-msgstr ""
+msgstr "Szwajcaria - Lista płac i Księgowość (Transmisja ELM)"
 
 #. module: base
 #: model:res.country.group,name:base.ch_and_li
@@ -45428,6 +45437,8 @@ msgid ""
 "Use your employee data to measure important ESG metrics (e.g. employee "
 "commuting, gender parity)."
 msgstr ""
+"Wykorzystaj dane pracowników do zmierzenia ważnych metryk ESG (np. dojazd "
+"pracownika, parytet płci)."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_esg_hr_contract
@@ -45435,6 +45446,8 @@ msgid ""
 "Use your employee's contracts data to measure important ESG metrics (e.g. "
 "pay gap, contract types)."
 msgstr ""
+"Wykorzystaj dane pracowników do zmierzenia ważnych metryk ESG (np. różnica "
+"płac, rodzaje kontraktów)."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation_table
