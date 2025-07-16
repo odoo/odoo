@@ -49,10 +49,8 @@ class ProductTemplate(models.Model):
         return super()._post_read_pos_self_data(data)
 
     def _process_pos_self_ui_products(self, products):
+        self._add_archived_combinations(products)
         for product in products:
-            product['_archived_combinations'] = []
-            for product_product in self.env['product.product'].with_context(active_test=False).search([('product_tmpl_id', '=', product['id']), ('active', '=', False)]):
-                product['_archived_combinations'].append(product_product.product_template_attribute_value_ids.ids)
             product['image_128'] = bool(product['image_128'])
 
     @api.model
