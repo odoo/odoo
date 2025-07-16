@@ -69,15 +69,15 @@ export class CustomColorPicker extends Component {
                 }
             }),
         ].map((w) => w.document);
-        this.throttleOnMouseMove = useThrottleForAnimation((ev) => {
-            this.onMouseMovePicker(ev);
-            this.onMouseMoveSlider(ev);
-            this.onMouseMoveOpacitySlider(ev);
+        this.throttleOnPointerMove = useThrottleForAnimation((ev) => {
+            this.onPointerMovePicker(ev);
+            this.onPointerMoveSlider(ev);
+            this.onPointerMoveOpacitySlider(ev);
         });
 
         for (const doc of documents) {
-            useExternalListener(doc, "mousemove", this.throttleOnMouseMove);
-            useExternalListener(doc, "mouseup", this.onMouseUp.bind(this));
+            useExternalListener(doc, "pointermove", this.throttleOnPointerMove);
+            useExternalListener(doc, "pointerup", this.onPointerUp.bind(this));
         }
         onMounted(async () => {
             const defaultCssColor = this.props.selectedColor
@@ -318,7 +318,7 @@ export class CustomColorPicker extends Component {
         }
         this.selectedHexValue = "";
     }
-    onMouseUp() {
+    onPointerUp() {
         if (this.pickerFlag || this.sliderFlag || this.opacitySliderFlag) {
             this._colorSelected();
         }
@@ -332,18 +332,18 @@ export class CustomColorPicker extends Component {
      * @private
      * @param {Event} ev
      */
-    onMouseDownPicker(ev) {
+    onPointerDownPicker(ev) {
         this.pickerFlag = true;
         ev.preventDefault();
-        this.onMouseMovePicker(ev);
+        this.onPointerMovePicker(ev);
     }
     /**
-     * Updates saturation and lightness values on mouse drag over picker.
+     * Updates saturation and lightness values on pointer drag over picker.
      *
      * @private
      * @param {Event} ev
      */
-    onMouseMovePicker(ev) {
+    onPointerMovePicker(ev) {
         if (!this.pickerFlag) {
             return;
         }
@@ -368,18 +368,18 @@ export class CustomColorPicker extends Component {
      * @private
      * @param {Event} ev
      */
-    onMouseDownSlider(ev) {
+    onPointerDownSlider(ev) {
         this.sliderFlag = true;
         ev.preventDefault();
-        this.onMouseMoveSlider(ev);
+        this.onPointerMoveSlider(ev);
     }
     /**
-     * Updates hue value on mouse drag over slider.
+     * Updates hue value on pointer drag over slider.
      *
      * @private
      * @param {Event} ev
      */
-    onMouseMoveSlider(ev) {
+    onPointerMoveSlider(ev) {
         if (!this.sliderFlag) {
             return;
         }
@@ -398,18 +398,18 @@ export class CustomColorPicker extends Component {
      * @private
      * @param {Event} ev
      */
-    onMouseDownOpacitySlider(ev) {
+    onPointerDownOpacitySlider(ev) {
         this.opacitySliderFlag = true;
         ev.preventDefault();
-        this.onMouseMoveOpacitySlider(ev);
+        this.onPointerMoveOpacitySlider(ev);
     }
     /**
-     * Updates opacity value on mouse drag over opacity slider.
+     * Updates opacity value on pointer drag over opacity slider.
      *
      * @private
      * @param {Event} ev
      */
-    onMouseMoveOpacitySlider(ev) {
+    onPointerMoveOpacitySlider(ev) {
         if (!this.opacitySliderFlag || this.props.noTransparency) {
             return;
         }
