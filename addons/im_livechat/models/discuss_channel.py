@@ -530,6 +530,33 @@ class DiscussChannel(models.Model):
             'error_message': error_message,
         }
 
+    def _add_members(
+        self,
+        *,
+        guests=None,
+        partners=None,
+        users=None,
+        create_member_params=None,
+        invite_to_rtc_call=False,
+        post_joined_message=True,
+        inviting_partner=None,
+    ):
+        all_new_members = super()._add_members(
+            guests=guests,
+            partners=partners,
+            users=users,
+            create_member_params=create_member_params,
+            invite_to_rtc_call=invite_to_rtc_call,
+            post_joined_message=post_joined_message,
+            inviting_partner=inviting_partner,
+        )
+        for channel in all_new_members.channel_id:
+            # sudo: discuss.channel - accessing livechat_status in internal code is acceptable
+            if channel.sudo().livechat_status == "need_help":
+                # sudo: discuss.channel - writing livechat_status when a new operator joins is acceptable
+                channel.sudo().livechat_status = "in_progress"
+        return all_new_members
+
     def _message_post_after_hook(self, message, msg_vals):
         """
         This method is called just before _notify_thread() method which is calling the _to_store()
