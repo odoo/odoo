@@ -234,6 +234,58 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         msg = "There shouldn't be any selected product documents left."
         self.assertFalse(self.sale_order.order_line[0].product_document_ids, msg=msg)
 
+    def test_available_documents_order(self):
+        product_document = self.product_document.copy()
+        product_document.sequence = self.product_document.sequence - 1
+        docs = self.sale_order.order_line[0].available_product_document_ids
+        self.assertEqual(len(docs), 2, "There should be 2 available documents.")
+        self.assertEqual(docs[0], product_document, "The first available document should be the one with the lowest sequence.")
+        self.assertEqual(
+            docs[1], self.product_document, "The second available document should be the one with the highest sequence."
+        )
+
+    def test_available_documents_multiple_products(self):
+        product_doc_copy = self.product_document.copy()
+        product2 = self._create_product(name="Test Product 2")
+        product_template_document2 = self.product_document.copy(
+            {'res_model': 'product.template', 'res_id': product2.product_tmpl_id.id, 'sequence': 1}
+        )
+        product_document2 = self.product_document.copy({'res_model': 'product.product', 'res_id': product2.id, 'sequence': 99})
+        self.sale_order.write(
+            {
+                'order_line': [
+                    Command.create({'product_id': self.product.id}),
+                    Command.create({'product_id': product2.id}),
+                ]
+            }
+        )
+        self.assertEqual(
+            self.sale_order.order_line[0].available_product_document_ids,
+            self.product_document | product_doc_copy,
+        )
+        self.assertFalse(
+            self.sale_order.order_line[1].available_product_document_ids,
+            "The second order line should not have any available product documents.",
+        )
+        self.assertEqual(
+            self.sale_order.order_line[0].available_product_document_ids,
+            self.sale_order.order_line[2].available_product_document_ids,
+            "The first and third order lines should have the same available product documents.",
+        )
+        self.assertEqual(
+            self.sale_order.order_line[3].available_product_document_ids[0].res_model,
+            'product.product',
+            "Alphabetical order of res_model should be respected.",
+        )
+        self.assertEqual(
+            self.sale_order.order_line[3].available_product_document_ids[0],
+            product_document2,
+        )
+        self.assertEqual(
+            self.sale_order.order_line[3].available_product_document_ids[1],
+            product_template_document2,
+        )
+
     def test_quotation_document_upload_no_template(self):
         """Check that uploading quotation documents get assigned the active company."""
         if 'website' not in self.env:
