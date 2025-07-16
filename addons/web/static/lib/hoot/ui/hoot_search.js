@@ -19,6 +19,7 @@ import {
     storageSet,
     stringify,
     title,
+    useHootKey,
     useWindowListener,
 } from "../hoot_utils";
 import { HootTagButton } from "./hoot_tag_button";
@@ -352,7 +353,7 @@ export class HootSearch extends Component {
                         class="hoot-search-icon cursor-pointer p-1"
                         title="Use exact match (Alt + X)"
                         tabindex="0"
-                        t-on-keydown="onRegExpKeyDown"
+                        t-on-keydown="onExactKeyDown"
                     >
                         <input
                             type="checkbox"
@@ -446,6 +447,10 @@ export class HootSearch extends Component {
         });
         this.runnerState = useState(runner.state);
 
+        useHootKey(["Alt", "r"], this.toggleRegExp);
+        useHootKey(["Alt", "x"], this.toggleExact);
+        useHootKey(["Escape"], this.closeDropdown);
+
         useWindowListener(
             "click",
             (ev) => {
@@ -461,6 +466,17 @@ export class HootSearch extends Component {
         );
 
         this.keepSelection = useKeepSelection(this.searchInputRef);
+    }
+
+    /**
+     * @param {KeyboardEvent} ev
+     */
+    closeDropdown(ev) {
+        if (!this.state.showDropdown) {
+            return;
+        }
+        ev.preventDefault();
+        this.state.showDropdown = false;
     }
 
     /**
@@ -614,6 +630,19 @@ export class HootSearch extends Component {
     }
 
     /**
+     * @param {KeyboardEvent} ev
+     */
+    onExactKeyDown(ev) {
+        switch (ev.key) {
+            case "Enter":
+            case " ": {
+                this.toggleExact(ev);
+                break;
+            }
+        }
+    }
+
+    /**
      * @param {SearchFilter} type
      * @param {string} id
      * @param {"exclude" | "include"} value
@@ -646,13 +675,6 @@ export class HootSearch extends Component {
             case "Enter": {
                 return refresh();
             }
-            case "Escape": {
-                if (this.state.showDropdown) {
-                    ev.preventDefault();
-                    this.state.showDropdown = false;
-                }
-                return;
-            }
         }
     }
 
@@ -663,8 +685,7 @@ export class HootSearch extends Component {
         switch (ev.key) {
             case "Enter":
             case " ": {
-                ev.preventDefault();
-                this.toggleRegExp();
+                this.toggleRegExp(ev);
                 break;
             }
         }
@@ -702,18 +723,6 @@ export class HootSearch extends Component {
                 }
                 break;
             }
-            case "r": {
-                if (ev.altKey) {
-                    this.toggleRegExp();
-                }
-                break;
-            }
-            case "x": {
-                if (ev.altKey) {
-                    this.toggleExact();
-                }
-                break;
-            }
         }
 
         if (this.config.fun) {
@@ -746,7 +755,12 @@ export class HootSearch extends Component {
         this.config.debugTest = !this.config.debugTest;
     }
 
-    toggleExact() {
+    /**
+     * @param {Event} ev
+     */
+    toggleExact(ev) {
+        ev.preventDefault();
+
         const currentQuery = this.trimmedQuery;
         let query = currentQuery;
         if (this.hasRegExpFilter(query)) {
@@ -779,7 +793,12 @@ export class HootSearch extends Component {
         }
     }
 
-    toggleRegExp() {
+    /**
+     * @param {Event} ev
+     */
+    toggleRegExp(ev) {
+        ev.preventDefault();
+
         const currentQuery = this.trimmedQuery;
         let query = currentQuery;
         if (this.hasExactFilter(query)) {
