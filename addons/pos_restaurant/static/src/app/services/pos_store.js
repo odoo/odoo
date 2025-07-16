@@ -241,7 +241,7 @@ patch(PosStore.prototype, {
             }
         }
 
-        this.deleteOrders([sourceOrder], [], true);
+        await this.deleteOrders([sourceOrder], [], true);
         this.syncAllOrders({ orders: [destOrder] });
         return destOrder;
     },
@@ -722,24 +722,92 @@ patch(PosStore.prototype, {
             [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
         );
     },
+    getOrderFromElement(el) {
+        const uuid = el.getAttribute("orderUuid");
+        return this.models["pos.order"].getBy("uuid", uuid);
+    },
     startTransferOrder() {
         this.isOrderTransferMode = true;
         const orderUuid = this.getOrder().uuid;
+        const orderName = this.getOrder().getName();
+        const closeNotification = this.notification.add(
+            _t("You are currently transferring the order %s", orderName),
+            {
+                type: "warning",
+                sticky: true,
+                onClose: () => {
+                    this.isOrderTransferMode = false;
+                },
+            }
+        );
+        const transferToItselfNotif = () => {
+            closeNotification?.();
+            this.notification.add(_t("You cannot transfer an order to itself"), {
+                type: "danger",
+            });
+        };
+
         this.getOrder().setBooked(true);
         this.navigate("FloorScreen");
         const onClickWhileTransfer = async (ev) => {
-            if (ev.target.closest(".button-floor")) {
+            if (!this.isOrderTransferMode) {
+                document.removeEventListener("click", onClickWhileTransfer);
                 return;
             }
-            this.isOrderTransferMode = false;
-            const tableElement = ev.target.closest(".table");
-            if (!tableElement) {
-                return;
+
+            // Transferring order to another order from FloorScreen
+            if (this.router.state.current === "FloorScreen") {
+                const tableElement = ev.target.closest(".table");
+                if (!tableElement) {
+                    return;
+                }
+
+                try {
+                    this.ui.block();
+                    this.isOrderTransferMode = false;
+                    const table = this.getTableFromElement(tableElement);
+                    if (table) {
+                        const order = table.getOrder();
+
+                        if (order?.uuid === orderUuid) {
+                            return transferToItselfNotif();
+                        }
+
+                        await this.transferOrder(orderUuid, table);
+                        await this.setTableFromUi(table);
+                        document.removeEventListener("click", onClickWhileTransfer);
+                        closeNotification?.();
+                    }
+                } finally {
+                    this.ui.unblock();
+                }
+            } else if (this.router.state.current === "TicketScreen") {
+                const orderElement = ev.target.closest(".order-row");
+                if (!orderElement) {
+                    return;
+                }
+
+                try {
+                    this.ui.block();
+                    this.isOrderTransferMode = false;
+                    const order = this.getOrderFromElement(orderElement);
+                    if (order) {
+                        if (order.uuid === orderUuid) {
+                            return transferToItselfNotif();
+                        }
+
+                        await this.transferOrder(orderUuid, null, order);
+                        this.setOrder(order);
+                        this.navigate("ProductScreen", {
+                            orderUuid: order.uuid,
+                        });
+                        document.removeEventListener("click", onClickWhileTransfer);
+                        closeNotification?.();
+                    }
+                } finally {
+                    this.ui.unblock();
+                }
             }
-            const table = this.getTableFromElement(tableElement);
-            await this.transferOrder(orderUuid, table);
-            this.setTableFromUi(table);
-            document.removeEventListener("click", onClickWhileTransfer);
         };
         document.addEventListener("click", onClickWhileTransfer);
     },
@@ -756,7 +824,6 @@ patch(PosStore.prototype, {
         if (!this.tableHasOrders(destinationTable)) {
             order.table_id = destinationTable;
             this.setOrder(order);
-            this.syncAllOrders({ orders: [order] });
             return false;
         }
         return true;
@@ -771,6 +838,7 @@ patch(PosStore.prototype, {
 
         if (destinationTable) {
             if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
+                await this.syncAllOrders({ orders: [sourceOrder] });
                 return;
             }
             destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
@@ -784,6 +852,7 @@ patch(PosStore.prototype, {
         const sourceOrder = this.models["pos.order"].getBy("uuid", orderUuid);
 
         if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
+            await this.syncAllOrders({ orders: [sourceOrder] });
             return;
         }
 
