@@ -179,7 +179,20 @@ def _odoo_guess_mimetype(bin_data, default='application/octet-stream'):
 try:
     import magic
     def guess_mimetype(bin_data, default=None):
-        return magic.from_buffer(bin_data[:1024], mime=True)
+        mimetype = magic.from_buffer(bin_data[:1024], mime=True)
+        # application/x-ole-storage is the generic file format that
+        # Microsoft Office was using before 2006, use our own check to
+        # further discriminate the mimetype.
+        if mimetype == 'application/x-ole-storage':
+            try:
+                if msoffice_mimetype := _check_olecf(bin_data):
+                    return msoffice_mimetype
+            except Exception:  # noqa: BLE001
+                _logger.getChild('guess_mimetype').warning(
+                    "Sub-checker '_check_olecf' of type 'application/x-ole-storage' failed",
+                    exc_info=True)
+        return mimetype
+
 except ImportError:
     guess_mimetype = _odoo_guess_mimetype
 
