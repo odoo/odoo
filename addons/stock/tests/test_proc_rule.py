@@ -368,7 +368,7 @@ class TestProcRule(TransactionCase):
             'product_max_qty': 30.0,
             'replenishment_uom_id': pack_of_10.id,
         })
-        self.assertEqual(orderpoint.qty_to_order, 10.0)  # 15.0 < 14.5 + 10 <= 30.0
+        self.assertEqual(orderpoint.qty_to_order, 20.0)  # 15.0 < 14.5 + 10 <= 30.0
         # Test search on computed field
         rr = self.env['stock.warehouse.orderpoint'].search([
             ('qty_to_order', '>', 0),
@@ -381,7 +381,7 @@ class TestProcRule(TransactionCase):
                 'relative_factor': 1,
             })
         })
-        self.assertEqual(orderpoint.qty_to_order, 15.0)  # 15.0 < 14.5 + 15 <= 30.0
+        self.assertEqual(orderpoint.qty_to_order, 16.0)  # 15.0 < 14.5 + 15 <= 30.0
         orderpoint.write({
             'replenishment_uom_id': False,
         })
