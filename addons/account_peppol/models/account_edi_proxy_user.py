@@ -173,6 +173,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             }
         }
         for edi_user in self:
+            edi_user = edi_user.with_company(edi_user.company_id)
             journal = edi_user.company_id.peppol_purchase_journal_id
             if not journal:
                 msg = _('Please set a journal for Peppol invoices on %s before receiving documents.', edi_user.company_id.display_name)
@@ -245,6 +246,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         job_count = self.env.context.get('peppol_crons_job_count') or BATCH_SIZE
         need_retrigger = False
         for edi_user in self:
+            edi_user = edi_user.with_company(edi_user.company_id)
             edi_user_moves = self.env['account.move'].search(
                 [
                     ('peppol_move_state', '=', 'processing'),
@@ -296,6 +298,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
     def _peppol_get_participant_status(self):
         for edi_user in self:
+            edi_user = edi_user.with_company(edi_user.company_id)
             try:
                 proxy_user = edi_user._call_peppol_proxy("/api/peppol/2/participant_status")
             except AccountEdiProxyError as e:

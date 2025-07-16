@@ -9,7 +9,6 @@ from odoo import _, api, fields, models, modules
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
-from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
 
 class PeppolRegistration(models.TransientModel):
@@ -105,10 +104,10 @@ class PeppolRegistration(models.TransientModel):
                 }
             wizard.peppol_warnings = peppol_warnings or False
 
-    @api.depends('company_id', 'edi_user_id')
+    @api.depends('company_id', 'edi_user_id', 'peppol_eas')
     def _compute_edi_mode(self):
         for wizard in self:
-            wizard.edi_mode = wizard.company_id._get_peppol_edi_mode()
+            wizard.edi_mode = wizard.company_id._get_peppol_edi_mode(temporary_eas=wizard.peppol_eas)
 
     @api.depends('peppol_eas', 'peppol_endpoint')
     def _compute_smp_registration_external_provider(self):

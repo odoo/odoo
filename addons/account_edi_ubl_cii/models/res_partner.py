@@ -138,6 +138,7 @@ class ResPartner(models.Model):
             ('EM', "Electronic mail"),
         ]
     )
+    available_peppol_eas = fields.Json(compute='_compute_available_peppol_eas')
 
     @api.constrains('peppol_endpoint')
     def _check_peppol_fields(self):
@@ -253,6 +254,12 @@ class ResPartner(models.Model):
                                 new_eas = eas
                                 break
                     partner.peppol_eas = new_eas
+
+    @api.depends_context('company')
+    @api.depends('company_id')
+    def _compute_available_peppol_eas(self):
+        # TO OVERRIDE
+        self.available_peppol_eas = list(dict(self._fields['peppol_eas'].selection))
 
     def _build_error_peppol_endpoint(self, eas, endpoint):
         """ This function contains all the rules regarding the peppol_endpoint."""
