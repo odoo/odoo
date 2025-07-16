@@ -153,9 +153,9 @@ export async function testEditor(config) {
     if (!compareFunction) {
         compareFunction = (content, expected, phase) => {
             expect(content).toBe(expected, {
-                message: `(testEditor) ${phase} is strictly equal to "${toExplicitString(
+                message: `(testEditor) ${phase} should be strictly equal to ${toExplicitString(
                     expected
-                )}"`,
+                )}`,
             });
         };
     }
