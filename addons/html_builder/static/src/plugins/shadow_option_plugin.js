@@ -61,7 +61,7 @@ export function shadowToString(shadow) {
     }`;
 }
 
-registry.category("website-plugins").add(ShadowOptionPlugin.id, ShadowOptionPlugin);
+registry.category("builder-plugins").add(ShadowOptionPlugin.id, ShadowOptionPlugin);
 
 export class SetShadowModeAction extends BuilderAction {
     static id = "setShadowMode";

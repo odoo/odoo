@@ -104,4 +104,4 @@ export class SetImageQualityAction extends BuilderAction {
     }
 }
 
-registry.category("website-plugins").add(ImageFormatOptionPlugin.id, ImageFormatOptionPlugin);
+registry.category("builder-plugins").add(ImageFormatOptionPlugin.id, ImageFormatOptionPlugin);
