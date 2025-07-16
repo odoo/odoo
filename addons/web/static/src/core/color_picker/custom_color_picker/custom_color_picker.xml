@@ -4,13 +4,13 @@
 <t t-name="web.CustomColorPicker">
     <div class="o_colorpicker_widget" t-ref="el" t-on-click="onClick" t-on-keydown="onKeydown" >
         <div class="d-flex justify-content-between align-items-stretch mb-2">
-            <div t-ref="colorPickerArea" class="o_color_pick_area position-relative w-75" t-att-style="props.noTransparency ? 'width: 89%;' : None" t-on-mousedown="onMouseDownPicker">
+            <div t-ref="colorPickerArea" class="o_color_pick_area position-relative w-75" t-att-style="props.noTransparency ? 'width: 89%;' : None" t-on-pointerdown="onPointerDownPicker">
                 <div t-ref="colorPickerPointer" class="o_picker_pointer rounded-circle p-1 position-absolute" tabindex="-1"/>
             </div>
-            <div t-ref="colorSlider" class="o_color_slider position-relative" t-on-mousedown="onMouseDownSlider">
+            <div t-ref="colorSlider" class="o_color_slider position-relative" t-on-pointerdown="onPointerDownSlider">
                 <div t-ref="colorSliderPointer" class="o_slider_pointer" tabindex="-1"/>
             </div>
-            <div t-ref="opacitySlider" class="o_opacity_slider position-relative" t-if="!props.noTransparency" t-on-mousedown="onMouseDownOpacitySlider">
+            <div t-ref="opacitySlider" class="o_opacity_slider position-relative" t-if="!props.noTransparency" t-on-pointerdown="onPointerDownOpacitySlider">
                 <div t-ref="opacitySliderPointer" class="o_opacity_pointer" tabindex="-1"/>
             </div>
         </div>
