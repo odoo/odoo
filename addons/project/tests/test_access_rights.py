@@ -413,3 +413,35 @@ class TestAccessRightsPrivateTask(TestAccessRights):
     def test_project_user_cannot_unlink_private_task_of_another_user(self):
         with self.assertRaises(AccessError):
             self.private_task.with_user(self.env.user).unlink()
+
+
+class TestAccessRightsInvitedUsers(TestAccessRights):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.project_pigs.privacy_visibility = 'invited_users'
+        cls.project_user = mail_new_test_user(cls.env, 'Project user', groups='project.group_project_user')
+
+    @users('admin')
+    def test_admin_access_invited_project(self):
+        self.assertFalse(self.project_pigs.collaborator_ids)
+        self.assertEqual(self.project_pigs.with_user(self.env.user).name, 'Pigs')
+
+    @users('Project user', 'Internal user', 'Portal user')
+    def test_other_users_access_invited_project(self):
+        with self.assertRaises(AccessError, msg="The user is not a follower of the project, he's not supposed to have access to the project."):
+            self.assertEqual(self.project_pigs.with_user(self.env.user).name, 'Pigs')
+        self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.assertEqual(self.project_pigs.with_user(self.env.user).name, 'Pigs', "The user was set as a follower of the project, he's supposed to have access to the project.")
+
+    @users('admin')
+    def test_admin_access_invited_task(self):
+        self.assertEqual(self.task.with_user(self.env.user).name, 'Make the world a better place')
+
+    @users('Project user', 'Internal user', 'Portal user')
+    def test_other_users_access_invited_task(self):
+        with self.assertRaises(AccessError, msg="The user is not a follower of the project, he's not supposed to have access to the project."):
+            self.assertEqual(self.task.with_user(self.env.user).name, 'Make the world a better place')
+        self.task.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.assertEqual(self.task.with_user(self.env.user).name, 'Make the world a better place', "The user was set as a follower of the project, he's supposed to have access to the project.")
