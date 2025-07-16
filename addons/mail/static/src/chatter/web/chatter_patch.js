@@ -12,8 +12,8 @@ import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzo
 import { RecipientsInput } from "@mail/core/web/recipients_input";
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
-import { Deferred, KeepLast } from "@web/core/utils/concurrency";
-import { onWillStart, status, useEffect } from "@odoo/owl";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { status, useEffect } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -81,28 +81,9 @@ patch(Chatter.prototype, {
         super.setup(...arguments);
         this.orm = useService("orm");
         this.keepLastSuggestedRecipientsUpdate = new KeepLast();
-        let mailImpactingFieldsPromise = new Deferred();
-        onWillStart(async () => {
-            const { partner_fields, primary_email_field } = await rpc(
-                "/mail/thread/recipients/fields",
-                {
-                    thread_model: this.props.threadModel,
-                }
-            );
-            this.mailImpactingFields = {
-                recordFields: partner_fields,
-                emailFields: primary_email_field,
-            };
-            mailImpactingFieldsPromise.resolve();
-        });
-
-        useRecordObserver(async (record) => {
-            if (mailImpactingFieldsPromise) {
-                await mailImpactingFieldsPromise;
-                mailImpactingFieldsPromise = null;
-            }
-            return this.updateRecipients(record);
-        });
+        /** @deprecated equivalent to partner_fields and primary_email_field on thread */
+        this.mailImpactingFields = { recordFields: [], emailFields: [] };
+        useRecordObserver((record) => this.updateRecipients(record));
         this.attachmentPopout = usePopoutAttachment();
         Object.assign(this.state, {
             composerType: false,
@@ -191,6 +172,8 @@ patch(Chatter.prototype, {
         if (!record) {
             return;
         }
+        // Hack: Make the useRecordObserver subscribe to the record changes
+        Object.keys(record.data).forEach((field) => record.data[field]);
         const partnerIds = []; // Ensure that we don't have duplicates
         let email;
         this.mailImpactingFields.recordFields.forEach((field) => {
@@ -285,6 +268,7 @@ patch(Chatter.prototype, {
             ...super.requestList,
             "activities",
             "attachments",
+            "contact_fields",
             "followers",
             "scheduledMessages",
             "suggestedRecipients",
@@ -322,6 +306,20 @@ patch(Chatter.prototype, {
             partner_ids: [this.store.self.id],
         });
         this.onFollowerChanged(thread);
+    },
+    /** @override */
+    async load(thread, requestList) {
+        await super.load(...arguments);
+        if (!thread.id || !this.state.thread?.eq(thread)) {
+            return;
+        }
+        this.mailImpactingFields = {
+            emailFields: this.state.thread.primary_email_field
+                ? [this.state.thread.primary_email_field]
+                : [],
+            recordFields: this.state.thread.partner_fields || [],
+        };
+        this.updateRecipients(this.props.record);
     },
 
     onActivityChanged(thread) {

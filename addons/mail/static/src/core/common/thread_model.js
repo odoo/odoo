@@ -267,6 +267,10 @@ export class Thread extends Record {
             }
         },
     });
+    /** @type {String[]|undefined} */
+    partner_fields;
+    /** @type {String|undefined} */
+    primary_email_field;
     hasLoadingFailed = false;
     canPostOnReadonly;
     /** @type {luxon.DateTime} */

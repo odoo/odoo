@@ -96,11 +96,11 @@ export class Chatter extends Component {
      * @param {import("models").Thread} thread
      * @param {string[]} requestList
      */
-    load(thread, requestList) {
+    async load(thread, requestList) {
         if (!thread.id || !this.state.thread?.eq(thread)) {
             return;
         }
-        thread.fetchThreadData(requestList);
+        await thread.fetchThreadData(requestList);
     }
 
     onCloseFullComposerCallback() {
