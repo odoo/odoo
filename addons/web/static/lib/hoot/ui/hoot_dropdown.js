@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component, useRef, useState, xml } from "@odoo/owl";
-import { useAutofocus, useWindowListener } from "../hoot_utils";
+import { useAutofocus, useHootKey, useWindowListener } from "../hoot_utils";
 
 /**
  * @typedef {{
@@ -61,12 +61,7 @@ export class HootDropdown extends Component {
         });
 
         useAutofocus(this.rootRef);
-        useWindowListener("keydown", (ev) => {
-            if (this.state.open && ev.key === "Escape") {
-                ev.preventDefault();
-                this.state.open = false;
-            }
-        });
+        useHootKey(["Escape"], this.close);
         useWindowListener(
             "click",
             (ev) => {
@@ -79,5 +74,15 @@ export class HootDropdown extends Component {
             },
             { capture: true }
         );
+    }
+
+    /**
+     * @param {KeyboardEvent} ev
+     */
+    close(ev) {
+        if (this.state.open) {
+            ev.preventDefault();
+            this.state.open = false;
+        }
     }
 }
