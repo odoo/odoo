@@ -578,6 +578,35 @@ describe("unit & saveUnit", () => {
         expect.verifySteps(["customAction 51"]);
         expect(":iframe .test-options-target").toHaveInnerHTML("51");
     });
+    test("should handle savedUnit", async () => {
+        addActionOption({
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerText;
+                }
+                apply({ editingElement, value }) {
+                    expect.step(`customAction ${value}`);
+                    editingElement.innerText = value;
+                }
+            },
+        });
+        addOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" unit="'s'" saveUnit="'ms'"/>`,
+        });
+        await setupWebsiteBuilder(`
+                    <div class="test-options-target">5s</div>
+                `);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        await click(".options-container input");
+        const input = queryFirst(".options-container input");
+        expect(input).toHaveValue("5");
+        await fill("7");
+        expect.verifySteps(["customAction 57000ms"]);
+        expect(":iframe .test-options-target").toHaveInnerHTML("57000ms");
+    });
 });
 describe("sanitized values", () => {
     test("don't allow multi values by default", async () => {
