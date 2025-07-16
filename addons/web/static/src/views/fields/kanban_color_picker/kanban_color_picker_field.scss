@@ -1,4 +1,8 @@
 .o_kanban_colorpicker {
+    [class*="col-"]:has(&) {
+        min-width: 150px;
+    }
+
     .o_field_kanban_color_picker:has(> &) {
         width: 100%;
     }
