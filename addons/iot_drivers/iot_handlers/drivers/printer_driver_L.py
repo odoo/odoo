@@ -8,13 +8,10 @@ import logging
 import netifaces as ni
 import time
 
-from odoo import http
 from odoo.addons.iot_drivers.connection_manager import connection_manager
-from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
 from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_L import conn, cups_lock
-from odoo.addons.iot_drivers.main import iot_devices
-from odoo.addons.iot_drivers.tools import helpers, wifi, route
+from odoo.addons.iot_drivers.tools import helpers, wifi
 
 _logger = logging.getLogger(__name__)
 
@@ -240,17 +237,3 @@ class PrinterDriver(PrinterDriverBase):
         except IPPError:
             _logger.exception('IPP error occurred while fetching CUPS jobs')
             self.job_ids.remove(job_id)
-
-
-class PrinterController(http.Controller):
-
-    @route.iot_route('/hw_proxy/default_printer_action', type='jsonrpc', cors='*')
-    def default_printer_action(self, data):
-        printer = next((d for d in iot_devices if iot_devices[d].device_type == 'printer' and iot_devices[d].device_connection == 'direct'), None)
-        if printer:
-            iot_devices[printer].action(data)
-            return True
-        return False
-
-
-proxy_drivers['printer'] = PrinterDriver

@@ -3,13 +3,12 @@ import { EpsonPrinter } from "@pos_epson_printer/app/utils/payment/epson_printer
 import { patch } from "@web/core/utils/patch";
 
 patch(PosStore.prototype, {
-    afterProcessServerData() {
-        var self = this;
-        return super.afterProcessServerData(...arguments).then(function () {
-            if (self.config.other_devices && self.config.epson_printer_ip) {
-                self.hardwareProxy.printer = new EpsonPrinter({ ip: self.config.epson_printer_ip });
-            }
-        });
+    async afterProcessServerData() {
+        await super.afterProcessServerData(...arguments);
+        if (this.config.other_devices && this.config.epson_printer_ip) {
+            this.ePosPrinter = new EpsonPrinter({ ip: this.config.epson_printer_ip });
+            this.printer.setPrinter(this.ePosPrinter); // allows `this.printer.print()` as it sets the printer in "printer" service
+        }
     },
     createPrinter(config) {
         if (config.printer_type === "epson_epos") {
@@ -17,5 +16,9 @@ patch(PosStore.prototype, {
         } else {
             return super.createPrinter(...arguments);
         }
+    },
+    cashMove() {
+        this.ePosPrinter?.openCashbox();
+        return super.cashMove(...arguments);
     },
 });

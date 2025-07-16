@@ -6,13 +6,12 @@ import os
 import requests
 import subprocess
 import time
-import werkzeug
 
 from odoo import http
 from odoo.addons.iot_drivers.browser import Browser, BrowserState
 from odoo.addons.iot_drivers.driver import Driver
 from odoo.addons.iot_drivers.main import iot_devices
-from odoo.addons.iot_drivers.tools import helpers, route
+from odoo.addons.iot_drivers.tools import helpers
 from odoo.addons.iot_drivers.tools.helpers import Orientation
 from odoo.tools.misc import file_path
 
@@ -159,16 +158,3 @@ class DisplayDriver(Driver):
             subprocess.run(['xrandr', '-o', orientation.name.lower()], check=True)
             subprocess.run([file_path('iot_drivers/tools/sync_touchscreen.sh'), str(int(self._x_screen) + 1)], check=False)
         helpers.save_browser_state(orientation=orientation)
-
-
-class DisplayController(http.Controller):
-    @route.iot_route('/hw_proxy/customer_facing_display', type='jsonrpc', cors='*')
-    def customer_facing_display(self):
-        display = self.ensure_display()
-        return display.data.get('customer_display_data', {})
-
-    def ensure_display(self):
-        display: DisplayDriver = DisplayDriver.get_default_display()
-        if not display:
-            raise werkzeug.exceptions.ServiceUnavailable(description="No display connected")
-        return display

@@ -18,9 +18,7 @@ export class PosPrinterService extends PrinterService {
     setup(env, { hardware_proxy, dialog, renderer }) {
         super.setup(...arguments);
         this.renderer = renderer;
-        this.hardware_proxy = hardware_proxy;
         this.dialog = dialog;
-        this.device = hardware_proxy.printer;
     }
     printWeb() {
         try {
@@ -34,7 +32,6 @@ export class PosPrinterService extends PrinterService {
         }
     }
     async printHtml() {
-        this.setPrinter(this.hardware_proxy.printer);
         try {
             return await super.printHtml(...arguments);
         } catch (error) {

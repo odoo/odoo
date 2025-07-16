@@ -5,8 +5,7 @@ import { markRaw, reactive } from "@odoo/owl";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { deduceUrl, random5Chars, uuidv4, Counter } from "@point_of_sale/utils";
-import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
+import { random5Chars, uuidv4, Counter } from "@point_of_sale/utils";
 import { ConnectionAbortedError, ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
@@ -34,7 +33,6 @@ import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
 import { deserializeDateTime, formatDate } from "@web/core/l10n/dates";
-import { openProxyCustomerDisplay } from "@point_of_sale/customer_display/utils";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
@@ -61,7 +59,6 @@ export class PosStore extends WithLazyGetterTrap {
         "alert",
         "pos_router",
         "mail.sound_effects",
-        "iot_longpolling",
     ];
     constructor({ traps, env, deps }) {
         super({ traps });
@@ -86,7 +83,6 @@ export class PosStore extends WithLazyGetterTrap {
             action,
             pos_router,
             alert,
-            iot_longpolling,
         }
     ) {
         this.env = env;
@@ -132,7 +128,6 @@ export class PosStore extends WithLazyGetterTrap {
         };
 
         this.hardwareProxy = hardware_proxy;
-        this.iotLongpolling = iot_longpolling;
         this.selectedOrderUuid = null;
         this.selectedPartner = null;
         this.selectedCategory = null;
@@ -144,15 +139,9 @@ export class PosStore extends WithLazyGetterTrap {
 
         this.orderCounter = new Counter(0);
 
-        // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
-        // the hardware proxy should just be part of the pos service?
-        this.hardwareProxy.pos = this;
         this.syncingOrders = new Set();
         await this.initServerData();
 
-        if (this.config.useProxy) {
-            await this.connectToProxy();
-        }
         this.closeOtherTabs();
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
         this._searchTriggered = false;
@@ -410,16 +399,11 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
 
-        // Create printer with hardware proxy, this will override related model data
+        // TODO: remove? used in t-ifs to check if there are printers
         this.unwatched.printers = [];
         for (const relPrinter of this.models["pos.printer"].getAll()) {
-            const printer = relPrinter.raw;
-            const HWPrinter = this.createPrinter(printer);
-
-            HWPrinter.config = printer;
-            this.unwatched.printers.push(HWPrinter);
+            this.unwatched.printers.push(relPrinter.raw);
         }
-        this.config.iface_printers = !!this.unwatched.printers.length;
 
         this.models["product.pricelist.item"].addEventListener("create", () => {
             const order = this.getOrder();
@@ -433,7 +417,6 @@ export class PosStore extends WithLazyGetterTrap {
         await this.processProductAttributes();
     }
     cashMove() {
-        this.hardwareProxy.openCashbox(_t("Cash in / out"));
         return makeAwaitable(this.dialog, CashMovePopup);
     }
     async closeSession() {
@@ -635,7 +618,6 @@ export class PosStore extends WithLazyGetterTrap {
 
         this.markReady();
         await this.deviceSync.readDataFromServer();
-        openProxyCustomerDisplay(this.getDisplayDeviceIP(), this);
     }
 
     get productListViewMode() {
@@ -1062,10 +1044,6 @@ export class PosStore extends WithLazyGetterTrap {
         return order.getSelectedOrderline();
     }
 
-    createPrinter(config) {
-        const url = deduceUrl(config.proxy_ip || "");
-        return new HWPrinter({ url });
-    }
     async _loadFonts() {
         return new Promise(function (resolve, reject) {
             // Waiting for fonts to be loaded to prevent receipt printing
@@ -1798,7 +1776,7 @@ export class PosStore extends WithLazyGetterTrap {
         return receiptsData;
     }
 
-    async printChanges(order, orderChange, reprint = false, printers = this.unwatched.printers) {
+    async printChanges(order, orderChange, reprint = false, printers = []) {
         const unsuccessfulPrints = [];
         const retryPrinters = new Set();
 
@@ -1892,38 +1870,6 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
 
-    connectToProxy() {
-        return new Promise((resolve, reject) => {
-            this.barcodeReader?.disconnectFromProxy();
-            this.loadingSkipButtonIsShown = true;
-            this.hardwareProxy.autoConnect({ force_ip: this.config.proxy_ip }).then(
-                () => {
-                    if (this.config.iface_scan_via_proxy) {
-                        this.barcodeReader?.connectToProxy();
-                    }
-                    resolve();
-                },
-                (statusText, url) => {
-                    // this should reject so that it can be captured when we wait for pos.ready
-                    // in the chrome component.
-                    // then, if it got really rejected, we can show the error.
-                    if (statusText == "error" && window.location.protocol == "https:") {
-                        // FIXME POSREF this looks like it's dead code.
-                        reject({
-                            title: _t("HTTPS connection to IoT Box failed"),
-                            body: _t(
-                                "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box.",
-                                url
-                            ),
-                            popup: "alert",
-                        });
-                    } else {
-                        resolve();
-                    }
-                }
-            );
-        });
-    }
     editPartnerContext(partner) {
         return {};
     }
@@ -2372,10 +2318,6 @@ export class PosStore extends WithLazyGetterTrap {
 
     redirectToBackend() {
         window.location = "/odoo/action-point_of_sale.action_client_pos_menu";
-    }
-
-    getDisplayDeviceIP() {
-        return this.config.proxy_ip;
     }
 
     getExcludedProductIds() {
