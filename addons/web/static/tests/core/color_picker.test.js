@@ -151,3 +151,10 @@ test("custom color picker sets default color as selected", async () => {
     });
     expect("input.o_hex_input").toHaveValue("#FF0000");
 });
+
+test("custom color picker change color on click in hue slider", async () => {
+    await mountWithCleanup(CustomColorPicker, { props: { selectedColor: "#FF0000" } });
+    expect("input.o_hex_input").toHaveValue("#FF0000");
+    await click(".o_color_slider");
+    expect("input.o_hex_input").not.toHaveValue("#FF0000");
+});
