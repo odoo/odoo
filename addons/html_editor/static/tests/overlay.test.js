@@ -157,6 +157,34 @@ test("Table menu should close on scroll", async () => {
     expect(".o-dropdown--menu").not.toHaveCount();
 });
 
+test.tags("desktop");
+test("Table menu should only show on contenteditable true tables", async () => {
+    await mountView({
+        type: "form",
+        resId: 2,
+        resModel: "test",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+
+    // check that table menu is visible
+    await hover(".odoo-editor-editable td");
+    await waitFor(".o-we-table-menu[data-type='column']");
+    expect(".o-we-table-menu[data-type='column']").toBeVisible();
+
+    // hover away set the table as not editable
+    await hover(".o_control_panel");
+    queryOne("table").setAttribute("contenteditable", "false");
+
+    // chack that table menu is now not visible
+    await hover(".odoo-editor-editable td");
+    await waitForNone(".o-we-table-menu[data-type='column']");
+    expect(".o-we-table-menu[data-type='column']").not.toHaveCount();
+});
+
 test("Toolbar should keep stable while extending down the selection", async () => {
     const top = (el) => el.getBoundingClientRect().top;
     const left = (el) => el.getBoundingClientRect().left;

@@ -105,7 +105,7 @@ export class TableUIPlugin extends Plugin {
             target !== this.activeTd &&
             this.editable.contains(target)
         ) {
-            if (ev.target.isContentEditable) {
+            if (ev.target.isContentEditable && closestElement(target, "table").isContentEditable) {
                 this.setActiveTd(target);
             }
         } else if (this.activeTd) {
