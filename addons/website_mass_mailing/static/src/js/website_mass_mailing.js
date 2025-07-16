@@ -97,13 +97,13 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         // When the website is in edit mode, window.top != window. We don't want turnstile to render during edit mode
         // and mess up the DOM and saving it.
         if (!isSubscriber && this._turnstile && window.top === window) {
-            const el = this._turnstile.addTurnstile('website_mass_mailing_subscribe');
-            if (el) {
-                this._turnstile.addSpinner(subscribeBtnEl);
-                el[0].classList.add('mt-3');
-                el.insertAfter(this.el);
-                this._turnstile.renderTurnstile(el);
+            const turnstileNodes = [...this._turnstile.addTurnstile("website_mass_mailing_subscribe")];
+            this._turnstile.disableSubmit(subscribeBtnEl);
+            for (const node of turnstileNodes) {
+                node.classList.add('mt-3');
+                this.el.after(node);
             }
+            this._turnstile.renderTurnstile(turnstileNodes[0]);
         }
     },
 

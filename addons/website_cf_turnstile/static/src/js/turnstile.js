@@ -28,7 +28,7 @@ export const turnStile = {
         };
         // `this` is bound to the turnstile widget calling the callback
         globalThis.turnstileSuccess = function () {
-            const form = this.wrapper.closest("form");
+            const form = this.wrapper.closest("form") || this.wrapper.parentElement.parentElement;
             const buttons = form.querySelectorAll(".cf_form_disabled");
             for (const button of buttons) {
                 button.classList.remove("disabled", "cf_form_disabled");
