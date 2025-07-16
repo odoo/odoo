@@ -4771,6 +4771,9 @@ class MailThread(models.AbstractModel):
                 res["attachments"] = Store.Many(thread._get_mail_thread_data_attachments())
                 res["areAttachmentsLoaded"] = True
                 res["isLoadingAttachments"] = False
+            if "contact_fields" in request_list:
+                res["primary_email_field"] = thread._mail_get_primary_email_field()
+                res["partner_fields"] = thread._mail_get_partner_fields()
             if "followers" in request_list:
                 res["followersCount"] = self.env["mail.followers"].search_count(
                     [("res_id", "=", thread.id), ("res_model", "=", self._name)]

@@ -52,8 +52,6 @@ test("simple chatter on a record", async () => {
     await contains(".o-mail-Thread");
     await waitForSteps(
         [
-            '/mail/thread/recipients/fields - {"thread_model":"res.partner"}',
-            '/mail/thread/recipients/fields - {"thread_model":"res.partner"}',
             `/mail/data - ${JSON.stringify({
                 fetch_params: [
                     [
@@ -63,6 +61,7 @@ test("simple chatter on a record", async () => {
                             request_list: [
                                 "activities",
                                 "attachments",
+                                "contact_fields",
                                 "followers",
                                 "scheduledMessages",
                                 "suggestedRecipients",
@@ -707,4 +706,43 @@ test("should display the subject even if the record name is false", async () => 
     await start();
     await openFormView("res.fake", fakeId);
     await contains(".o-mail-Message", { text: "Subject: Salutations, voyageurnot empty" });
+});
+
+test("Update message recipients without saving", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].write([serverState.partnerId], { email: "mitchell@odoo.com" });
+    const partnerId = pyEnv["res.partner"].create({
+        name: "John Doe",
+        email: "john@doe.be",
+    });
+    const fakeId = pyEnv["res.fake"].create({
+        name: "John Doe",
+        partner_id: partnerId,
+    });
+    await start();
+    await openFormView("res.fake", fakeId);
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-RecipientsInput .o_tag_badge_text", { text: "John Doe" });
+    await click(".o_field_many2one_selection input");
+    await click(".o-autocomplete--dropdown-item", { text: "Mitchell Admin" });
+    await contains(".o-mail-RecipientsInput .o_tag_badge_text", { text: "Mitchell Admin" });
+});
+
+test("Update primary email in recipient without saving", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].write([serverState.partnerId], { email: "mitchell@odoo.com" });
+    const partnerId = pyEnv["res.partner"].create({
+        name: "John Doe",
+        email: "john@doe.be",
+    });
+    const fakeId = pyEnv["res.fake"].create({
+        name: "Fake record",
+        partner_id: partnerId,
+    });
+    await start();
+    await openFormView("res.fake", fakeId);
+    await click("button", { text: "Send message" });
+    await insertText("div[name='email_cc'] input", "test@test.be");
+    document.querySelector("div[name='email_cc'] input").blur();
+    await contains(".o-mail-RecipientsInput .o_tag_badge_text", { text: "test@test.be" });
 });
