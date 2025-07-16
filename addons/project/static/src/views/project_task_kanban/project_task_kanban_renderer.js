@@ -28,7 +28,7 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
         // This restrict the creation of project stages to the kanban view of a given project
         return (
             super.canCreateGroup() &&
-            ((!!this.props.list.context.default_project_id == this.props.list.isGroupedByStage &&
+            ((!!(this.props.list.context.default_project_id || this.props.list.context.default_project_template_id) == this.props.list.isGroupedByStage &&
                 this.isProjectManager) ||
                 this.props.list.groupByField.name === "personal_stage_type_id")
         );

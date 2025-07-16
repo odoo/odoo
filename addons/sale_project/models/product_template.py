@@ -31,11 +31,10 @@ class ProductTemplate(models.Model):
         },
     )
     project_id = fields.Many2one(
-        'project.project', 'Project', company_dependent=True, copy=True, domain='[("is_template", "=", False)]'
+        'project.project', 'Project', company_dependent=True, copy=True,
     )
     project_template_id = fields.Many2one(
-        'project.project', 'Project Template', company_dependent=True, copy=True,
-        domain='[("is_template", "=", True)]',
+        'project.project.template', 'Project Template', company_dependent=True, copy=True,
     )
     task_template_id = fields.Many2one('project.task.template', 'Task Template',
         domain="[('project_id', '=', project_id)]",

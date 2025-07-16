@@ -214,11 +214,11 @@ class TestSoLineMilestones(TestSaleCommon):
         If a milestone product has a project template with configured milestones, use those instead of creating
         a new milestone and set a quantity equal to the quantity of the SOL divided by the number of milestones.
         """
-        project_template = self.env['project.project'].create({
+        project_template = self.env['project.project.template'].create({
             'name': 'Project Template',
         })
-        self.env['project.milestone'].create([{
-            'project_id': project_template.id,
+        self.env['project.milestone'].sudo().create([{
+            'project_template_id': project_template.id,
             'name': str(i),
         } for i in range(4)])
         self.product_delivery_milestones1.project_template_id = project_template.id
@@ -242,11 +242,11 @@ class TestSoLineMilestones(TestSaleCommon):
         If multiple products use the same project template, which has configured milestones, use the first product
         on those milestones, but generate the other default milestones as normal
         """
-        project_template = self.env['project.project'].create({
+        project_template = self.env['project.project.template'].create({
             'name': 'Project Template',
         })
-        self.env['project.milestone'].create([{
-            'project_id': project_template.id,
+        self.env['project.milestone'].sudo().create([{
+            'project_template_id': project_template.id,
             'name': str(i),
         } for i in range(4)])
         products = self.product_delivery_milestones1 | self.product_delivery_milestones2

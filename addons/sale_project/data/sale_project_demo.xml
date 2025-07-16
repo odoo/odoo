@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
         <!-- Project Template -->
-        <record id="so_template_project" model="project.project">
+        <record id="so_template_project" model="project.project.template">
             <field name="name">Sales Order</field>
             <field name="active">False</field>
             <field name="type_ids" eval="[Command.link(ref('project.project_stage_0')), Command.link(ref('project.project_stage_1')), Command.link(ref('project.project_stage_2'))]"/>

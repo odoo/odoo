@@ -27,6 +27,7 @@ up a management by affair.
         'data/digest_data.xml',
         'views/hr_timesheet_views.xml',
         'views/res_config_settings_views.xml',
+        'views/project_project_template_views.xml',
         'views/project_project_views.xml',
         'views/project_task_tempate_views.xml',
         'views/project_task_views.xml',

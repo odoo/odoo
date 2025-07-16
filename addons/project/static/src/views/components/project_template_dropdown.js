@@ -44,7 +44,7 @@ export class ProjectTemplateDropdown extends Component {
     }
 
     get projectTemplatesDomain() {
-        return [["is_template", "=", true]];
+        return [];
     }
 
     async onWillStart() {
@@ -58,7 +58,7 @@ export class ProjectTemplateDropdown extends Component {
                     }
                 },
             })
-            .searchRead("project.project", this.projectTemplatesDomain, this.readFields);
+            .searchRead("project.project.template", this.projectTemplatesDomain, this.readFields);
     }
 
     contextPreprocess(templateId) {

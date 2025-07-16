@@ -117,7 +117,7 @@ export class ProjectTaskStateSelection extends StateSelectionField {
      * Either the isToggleMode is active on the record OR the task is_private
      */
     get isToggleMode() {
-        return this.props.isToggleMode || !this.props.record.data.project_id;
+        return (this.props.isToggleMode || !this.props.record.data.project_template_id);
     }
 
     isView(viewNames) {
@@ -187,4 +187,25 @@ export const projectTaskStateSelection = {
     },
 }
 
+export class ProjectTaskTemplateStateSelection extends StateSelectionField {
+    get isToggleMode() {
+        return (
+            this.props.isToggleMode ||
+            !(this.props.record.data.project_id || this.props.record.data.project_template_id)
+        );
+    }
+}
+
+export const projectTaskTemplateStateSelection = {
+    ...projectTaskStateSelection,
+    component: ProjectTaskTemplateStateSelection,
+    fieldDependencies: [
+        { name: "project_id", type: "many2one" },
+        { name: "project_template_id", type: "many2one" },
+    ],
+};
+
 registry.category("fields").add("project_task_state_selection", projectTaskStateSelection);
+registry
+    .category("fields")
+    .add("project_task_template_state_selection", projectTaskTemplateStateSelection);

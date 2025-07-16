@@ -25,7 +25,6 @@ class ResCompany(models.Model):
         default=_default_timesheet_encode_uom_id)
     internal_project_id = fields.Many2one(
         "project.project", string="Internal Project",
-        domain=[("is_template", "=", False)],
         help="Default project value for timesheet generated from time off type.",
     )
 

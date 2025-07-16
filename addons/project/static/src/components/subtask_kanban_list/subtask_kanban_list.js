@@ -100,6 +100,7 @@ export class SubtaskKanbanList extends Component {
                 display_name: name,
                 parent_id: this.props.record.resId,
                 project_id: this.props.record.data.project_id.id,
+                project_template_id: this.props.record.data.project_template_id.id,
                 user_ids: this.props.record.data.user_ids.resIds,
                 sequence: nextSequence,
             }]);

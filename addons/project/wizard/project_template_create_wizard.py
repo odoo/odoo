@@ -7,7 +7,7 @@ class ProjectTemplateCreateWizard(models.TransientModel):
 
     def _default_role_to_users_ids(self):
         res = []
-        template = self.env['project.project'].browse(self.env.context.get('template_id'))
+        template = self.env['project.project.template'].browse(self.env.context.get('template_id'))
         if template:
             res = [Command.create({'role_id': role.id}) for role in template.task_template_ids.role_ids]
         return res
@@ -17,8 +17,8 @@ class ProjectTemplateCreateWizard(models.TransientModel):
     date = fields.Date(string='Expiration Date')
     alias_name = fields.Char(string="Alias Name")
     alias_domain_id = fields.Many2one("mail.alias.domain", string="Alias Domain")
-    template_id = fields.Many2one("project.project", default=lambda self: self.env.context.get('template_id'))
     template_has_dates = fields.Boolean(compute="_compute_template_has_dates")
+    template_id = fields.Many2one("project.project.template", default=lambda self: self.env.context.get('template_id'))
     role_to_users_ids = fields.One2many('project.template.role.to.users.map', 'wizard_id', default=_default_role_to_users_ids)
 
     @api.depends("template_id")

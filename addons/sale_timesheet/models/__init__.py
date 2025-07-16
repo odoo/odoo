@@ -7,6 +7,7 @@ from . import hr_employee
 from . import hr_timesheet
 from . import product_product
 from . import product_template
+from . import project_project_template
 from . import project_project
 from . import project_sale_line_employee_map
 from . import project_task

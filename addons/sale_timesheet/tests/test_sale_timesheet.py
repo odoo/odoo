@@ -548,12 +548,15 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
     def test_transfert_project(self):
         """ Transfert task with timesheet to another project. """
+        project = self.env['project.project'].create({
+            'name': 'Project',
+        })
         self.env.user.employee_id = self.env['hr.employee'].create({'user_id': self.env.uid})
         Timesheet = self.env['account.analytic.line']
         Task = self.env['project.task']
         today = Date.context_today(self.env.user)
 
-        task = Task.with_context(default_project_id=self.project_template.id).create({
+        task = Task.with_context(default_project_id=project.id).create({
             'name': 'first task',
             'partner_id': self.partner_b.id,
             'allocated_hours': 10,
@@ -561,14 +564,14 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         })
 
         Timesheet.create({
-            'project_id': self.project_template.id,
+            'project_id': project.id,
             'task_id': task.id,
             'name': 'my first timesheet',
             'unit_amount': 4,
         })
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_global.id)])
-        timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_template.id)])
+        timesheet_count2 = Timesheet.search_count([('project_id', '=', project.id)])
         self.assertEqual(timesheet_count1, 0, "No timesheet in project_global")
         self.assertEqual(timesheet_count2, 1, "One timesheet in project_template")
         self.assertEqual(len(task.timesheet_ids), 1, "The timesheet should be linked to task")
@@ -609,11 +612,11 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         # change project of task, only the timesheet not billed gets its project changed
         task.write({
-            'project_id': self.project_template.id
+            'project_id': project.id
         })
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_global.id)])
-        timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_template.id)])
+        timesheet_count2 = Timesheet.search_count([('project_id', '=', project.id)])
         self.assertEqual(timesheet_count1, 1, "One timesheet in project_global")
         self.assertEqual(timesheet_count2, 1, "One timesheet in project_template")
         self.assertEqual(len(task.timesheet_ids), 2, "The 2 timesheets still should be linked to task")
@@ -926,7 +929,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'partner_shipping_id': self.partner_a.id,
         })
 
-        project_template_1, project_template_2 = self.env['project.project'].create([
+        project_template_1, project_template_2 = self.env['project.project.template'].create([
             {'name': 'Template 1'},
             {'name': 'Template 1'},
         ])
@@ -1017,7 +1020,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
     def test_allocated_hours_copy(self):
         """ This test ensures that the generated project's allocated_hours field is copied from the project template when it is set."""
-        project_template = self.env['project.project'].create({
+        project_template = self.env['project.project.template'].create({
             'name': 'Template',
             'allocated_hours': 65,
         })

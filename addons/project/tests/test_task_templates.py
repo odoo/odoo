@@ -5,17 +5,24 @@ class TestTaskTemplates(TestProjectCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.project_with_templates = cls.env["project.project"].create({
-            "name": "Project with Task Template",
+        cls.project_temp_with_templates = cls.env["project.project.template"].create({
+            "name": "Project Template with Task Template",
         })
         cls.template_task = cls.env["project.task.template"].create({
             "name": "Template",
-            "project_id": cls.project_with_templates.id,
+            "project_template_id": cls.project_temp_with_templates.id,
             "description": "Template description",
+        })
+        cls.project_with_templates = cls.env["project.project"].create({
+            "name": "Project with Task Template",
+        })
+        cls.task_template_in_project = cls.env["project.task.template"].create({
+            "name": "Template",
+            "project_id": cls.project_with_templates.id,
         })
         cls.child_task = cls.env["project.task.template"].create({
             "name": "Child Task",
-            "parent_id": cls.template_task.id,
+            "parent_id": cls.task_template_in_project.id,
             "description": "Child description",
         })
 
@@ -23,7 +30,7 @@ class TestTaskTemplates(TestProjectCommon):
         """
         Creating a task through the action should result in a non template copy, with no partner_id
         """
-        task_id = self.template_task.action_create_from_template()
+        task_id = self.task_template_in_project.action_create_from_template()
         task = self.env["project.task"].browse(task_id)
         self.assertFalse(task.partner_id, "The created task should not have a partner.")
 
@@ -34,7 +41,7 @@ class TestTaskTemplates(TestProjectCommon):
         # With a partner set on the project, new tasks should get the partner too, even if created from a template
         self.project_with_templates.partner_id = self.partner_3
 
-        task_id = self.template_task.action_create_from_template()
+        task_id = self.task_template_in_project.action_create_from_template()
         task = self.env["project.task"].browse(task_id)
         self.assertEqual(task.partner_id, self.partner_3, "The created task should have the same partner as the project.")
         child_task = task.child_ids
@@ -44,14 +51,13 @@ class TestTaskTemplates(TestProjectCommon):
         """
         A copy of a template should be a template
         """
-        copied_template = self.template_task.copy()
+        copied_template = self.task_template_in_project.copy()
         self.assertEqual(len(copied_template.child_ids), 1, "The child of the template should be copied too.")
 
     def test_copy_project_with_templates(self):
         """
         Copying a project should also copy its task templates
         """
-        self.project_with_templates.is_template = True
-        copied_project = self.project_with_templates.copy()
-        task_template = self.env["project.task.template"].search([("project_id", "=", copied_project.id)], order="id asc", limit=1)
+        copied_project = self.project_temp_with_templates.copy()
+        task_template = self.env["project.task.template"].search([("project_template_id", "=", copied_project.id)], order="id asc", limit=1)
         self.assertTrue(task_template, "The copied project should contain a copy of the template.")

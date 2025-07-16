@@ -260,19 +260,21 @@ class TestSaleService(TestCommonSaleTimesheet):
                 Line 5 : Service 5 create project with Template B ===> project created with template B
         """
         # second project template and its associated product
-        project_template2 = self.env['project.project'].create({
+        project_template2 = self.env['project.project.template'].create({
             'name': 'Second Project TEMPLATE for services',
             'allow_timesheets': True,
             'active': False,  # this template is archived
         })
-        Stage = self.env['project.task.type'].with_context(default_project_id=project_template2.id)
+        Stage = self.env['project.task.type']
         stage1_tmpl2 = Stage.create({
             'name': 'Stage 1',
-            'sequence': 1
+            'sequence': 1,
+            'project_template_ids': [(4, project_template2.id)],
         })
         stage2_tmpl2 = Stage.create({
             'name': 'Stage 2',
-            'sequence': 2
+            'sequence': 2,
+            'project_template_ids': [(4, project_template2.id)],
         })
         product_deli_ts_tmpl = self.env['product.product'].create({
             'name': "Service delivered, create project only based on template B",

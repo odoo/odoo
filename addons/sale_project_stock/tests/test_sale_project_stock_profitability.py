@@ -12,9 +12,8 @@ class TestSaleProjectStockProfitability(TestProjectProfitabilityCommon, Valuatio
     def setUpClass(cls):
         super().setUpClass()
 
-        project_template = cls.env['project.project'].create({
+        project_template = cls.env['project.project.template'].create({
             'name': 'sale_project_stock project template',
-            'account_id': cls.analytic_account.id,
         })
         cls.cogs_account = cls.env['account.account'].search([
             ('name', '=', 'Cost of Goods Sold'),

@@ -26,10 +26,15 @@ class ProjectTaskTemplate(models.Model):
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = self._uom_in_days()
 
-    @api.depends('project_id.allow_timesheets')
+    @api.depends('project_id.allow_timesheets', 'project_template_id.allow_timesheets')
     def _compute_allow_timesheets(self):
-        for task in self:
-            task.allow_timesheets = task.project_id.allow_timesheets
+        for task_template in self:
+            if task_template.project_template_id:
+                task_template.allow_timesheets = task_template.project_template_id.allow_timesheets
+            elif task_template.project_id:
+                task_template.allow_timesheets = task_template.project_id.allow_timesheets
+            else:
+                task_template.allow_timesheets = False
 
     def _search_allow_timesheets(self, operator, value):
         query = self.env['project.project'].sudo()._search([

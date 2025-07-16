@@ -203,6 +203,10 @@ class ProjectTask(models.Model):
         'CHECK (NOT (project_id IS NULL AND parent_id IS NOT NULL))',
         'A private task cannot have a parent.',
     )
+    _task_has_either_project_or_template = models.Constraint(
+        'CHECK (project_id IS NULL OR project_template_id IS NULL)',
+        'A task cannot be linked to both a project and a project template.',
+    )
 
     @api.constrains('company_id', 'partner_id')
     def _ensure_company_consistency_with_partner(self):
@@ -1310,36 +1314,40 @@ class ProjectTask(models.Model):
             }
         }
 
-    def _project_task_template_vals(self):
-        defaults = {}
-        if self.recurring_task:
-            defaults = {
-                'repeat_interval': self.repeat_interval,
-                'repeat_unit': self.repeat_unit,
-                'repeat_type': self.repeat_type,
-                'repeat_until': self.repeat_until,
-            }
+    def _project_task_templates_vals(self, defaults={}):
         template_fields = self.env['project.task.template']._fields
-        generated_task = self.with_context(copy_project=True).copy_data(defaults)[0]
+        generated_tasks = self.with_context(copy_project=True).copy_data(defaults)
 
-        def filter_vals(vals):
-            """Recursively filter values by template_fields, including nested child_ids."""
+        def filter_vals(vals, project):
+            """Recursively filter values by template_fields, including nested child_ids and recurring fields."""
             filtered = {}
             for f_name, value in vals.items():
                 if f_name in template_fields:
                     if f_name == "child_ids" and value:
+                        # Recursively clean children
                         filtered_children = []
                         for command, _, child_vals in value:
-                            filtered_children.append((command, 0, filter_vals(child_vals)))
+                            filtered_children.append((command, 0, filter_vals(child_vals, project)))
                         filtered[f_name] = filtered_children
                     else:
                         filtered[f_name] = value
+
+            if project.recurring_task:
+                filtered.update({
+                    "repeat_interval": project.repeat_interval,
+                    "repeat_unit": project.repeat_unit,
+                })
             return filtered
-        return filter_vals(generated_task)
+
+        result = []
+        for task_vals, project in zip(generated_tasks, self):
+            result.append(filter_vals(task_vals, project))
+
+        return result
 
     def action_generate_task_template(self):
         self.ensure_one()
-        task_template_vals = self._project_task_template_vals()
+        task_template_vals = self._project_task_templates_vals()
         task_template = self.env['project.task.template'].create(task_template_vals)
         self.task_template_id = task_template.id
         return {

@@ -16,11 +16,19 @@ class ProjectMilestone(models.Model):
     _order = 'sequence, deadline, is_reached desc, name'
 
     def _get_default_project_id(self):
-        return self.env.context.get('default_project_id') or self.env.context.get('active_id')
+        return self.env.context.get('default_project_id') or (
+        self.env.context.get('active_id') if self.env.context.get('active_model') == 'project.project' else None
+    )
+
+    def _get_default_project_template_id(self):
+        return self.env.context.get('default_project_template_id') or (
+        self.env.context.get('active_id') if self.env.context.get('active_model') == 'project.project.template' else None
+    )
 
     name = fields.Char(required=True)
     sequence = fields.Integer('Sequence', default=10)
-    project_id = fields.Many2one('project.project', required=True, default=_get_default_project_id, domain=[('is_template', '=', False)], index=True, ondelete='cascade')
+    project_id = fields.Many2one('project.project', default=_get_default_project_id, index=True, ondelete='cascade')
+    project_template_id = fields.Many2one('project.project.template', default=_get_default_project_template_id, index=True, ondelete='cascade')
     deadline = fields.Date(tracking=True, copy=False)
     is_reached = fields.Boolean(string="Reached", default=False, copy=False)
     reached_date = fields.Date(compute='_compute_reached_date', store=True, export_string_translation=False)
@@ -121,6 +129,12 @@ class ProjectMilestone(models.Model):
             if old_milestone.project_id.allow_milestones:
                 milestone_mapping[old_milestone.id] = new_milestone.id
         return new_milestones
+
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        if self.env.context.get('template_id'):
+            default['project_template_id'] = False
+        return super().copy_data(default=default)
 
     def _compute_display_name(self):
         super()._compute_display_name()

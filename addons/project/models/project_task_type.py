@@ -16,6 +16,10 @@ class ProjectTaskType(models.Model):
         default_project_id = self.env.context.get('default_project_id')
         return [default_project_id] if default_project_id else None
 
+    def _get_default_project_template_ids(self):
+        default_project_template_id = self.env.context.get('default_project_template_id')
+        return [default_project_template_id] if default_project_template_id else None
+
     def _default_user_id(self):
         return not self.env.context.get('default_project_id', False) and self.env.uid
 
@@ -26,6 +30,8 @@ class ProjectTaskType(models.Model):
         default=lambda self: self._get_default_project_ids(),
         help="Projects in which this stage is present. If you follow a similar workflow in several projects,"
             " you can share this stage among them and get consolidated information this way.")
+    project_template_ids = fields.Many2many('project.project.template', string='Project Templates',
+        default=lambda self: self._get_default_project_template_ids())
     mail_template_id = fields.Many2one(
         'mail.template',
         string='Email Template',

@@ -53,6 +53,12 @@
         <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
+    <record model="ir.rule" id="project_template_comp_rule">
+        <field name="name">Project Template: multi-company</field>
+        <field name="model_id" ref="model_project_project_template"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
     <record model="ir.rule" id="project_project_stage_rule">
         <field name="name">Project Stage: multi-company</field>
         <field name="model_id" ref="model_project_project_stage"/>

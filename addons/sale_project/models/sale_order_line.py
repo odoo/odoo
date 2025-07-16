@@ -194,10 +194,7 @@ class SaleOrderLine(models.Model):
         project_template = self.product_id.project_template_id
         if project_template:
             values['name'] = "%s - %s" % (values['name'], project_template.name)
-            if project_template.is_template:
-                project = project_template.action_create_from_template(values)
-            else:
-                project = project_template.copy(values)
+            project = project_template.action_create_from_template(values)
             project.tasks.write({
                 'sale_line_id': self.id,
                 'partner_id': self.order_id.partner_id.id,

@@ -9,6 +9,7 @@ from . import ir_http
 from . import ir_ui_menu
 from . import res_company
 from . import res_config_settings
+from . import project_project_template
 from . import project_project
 from . import project_task_template
 from . import project_task

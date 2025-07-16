@@ -6,7 +6,7 @@ from odoo import api, fields, models
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
-    project_id = fields.Many2one('project.project', compute='_compute_project_id', domain=[('is_template', '=', False)], readonly=False, store=True)
+    project_id = fields.Many2one('project.project', compute='_compute_project_id', readonly=False, store=True)
 
     @api.depends('bom_id')
     def _compute_project_id(self):

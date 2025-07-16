@@ -48,7 +48,7 @@ class AccountAnalyticLine(models.Model):
         return result
 
     def _domain_project_id(self):
-        domain = Domain([('allow_timesheets', '=', True), ('is_template', '=', False)])
+        domain = Domain([('allow_timesheets', '=', True)])
         if not self.env.user.has_group('hr_timesheet.group_timesheet_manager'):
             domain &= Domain('privacy_visibility', 'in', ['employees', 'portal']) | Domain('message_partner_ids', 'in', [self.env.user.partner_id.id])
         return domain

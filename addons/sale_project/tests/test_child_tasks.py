@@ -263,9 +263,9 @@ class TestNestedTaskUpdate(TransactionCase):
             check that the copied task and subtask are correctly assigned to the copied
             project rather than its template.
         """
-        project_tempalte = self.env['project.project'].create({'name': 'Super Project'})
-        parent = self.env['project.task'].create({'name': 'parent task', 'project_id': project_tempalte.id})
-        child = self.env['project.task'].create({'name': 'child task', 'parent_id': parent.id, 'project_id': project_tempalte.id})
+        project_tempalte = self.env['project.project.template'].create({'name': 'Super Project'})
+        parent = self.env['project.task.template'].create({'name': 'parent task', 'project_template_id': project_tempalte.id})
+        child = self.env['project.task.template'].create({'name': 'child task', 'parent_id': parent.id, 'project_template_id': project_tempalte.id})
         super_product = self.env['product.product'].create({
             'name': 'Super product',
             'type': 'service',
@@ -284,8 +284,7 @@ class TestNestedTaskUpdate(TransactionCase):
             ]
         })
         sale_order.action_confirm()
-        self.assertEqual(project_tempalte.tasks, parent | child)
+        self.assertEqual(project_tempalte.task_template_ids, parent | child)
         super_project = sale_order.order_line.project_id
-        self.assertFalse(super_project.tasks & project_tempalte.tasks)
         self.assertEqual(len(super_project.tasks), 2)
         self.assertEqual(super_project.tasks.parent_id, super_project.tasks.child_ids.parent_id)

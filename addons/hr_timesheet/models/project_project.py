@@ -10,9 +10,7 @@ from odoo.tools.translate import _
 class ProjectProject(models.Model):
     _inherit = "project.project"
 
-    allow_timesheets = fields.Boolean(
-        "Timesheets", compute='_compute_allow_timesheets', store=True, readonly=False,
-        default=True)
+    allow_timesheets = fields.Boolean(compute='_compute_allow_timesheets', store=True)
     account_id = fields.Many2one(
         # note: replaces ['|', ('company_id', '=', False), ('company_id', '=', company_id)]
         domain="""[
@@ -31,7 +29,7 @@ class ProjectProject(models.Model):
     is_internal_project = fields.Boolean(compute='_compute_is_internal_project', search='_search_is_internal_project', export_string_translation=False)
     remaining_hours = fields.Float(compute='_compute_remaining_hours', string='Time Remaining', compute_sudo=True)
     is_project_overtime = fields.Boolean('Project in Overtime', compute='_compute_remaining_hours', search='_search_is_project_overtime', compute_sudo=True, export_string_translation=False)
-    allocated_hours = fields.Float(string='Allocated Time', tracking=True)
+    allocated_hours = fields.Float(tracking=True)
     effective_hours = fields.Float(string='Time Spent', compute='_compute_remaining_hours', compute_sudo=True)
 
     def _compute_encode_uom_in_days(self):
@@ -100,7 +98,7 @@ class ProjectProject(models.Model):
     @api.constrains('allow_timesheets', 'account_id')
     def _check_allow_timesheet(self):
         for project in self:
-            if project.allow_timesheets and not project.account_id and not project.is_template:
+            if project.allow_timesheets and not project.account_id:
                 project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
                 raise ValidationError(_(
                     "To use the timesheets feature, you need an analytic account for your project. Please set one up in the plan '%(plan_name)s' or turn off the timesheets feature.",
@@ -135,12 +133,12 @@ class ProjectProject(models.Model):
         """ Create an analytic account if project allow timesheet and don't provide one
             Note: create it before calling super() to avoid raising the ValidationError from _check_allow_timesheet
         """
-        defaults = self.default_get(['allow_timesheets', 'account_id', 'is_template'])
+        defaults = self.default_get(['allow_timesheets', 'account_id'])
         analytic_accounts_vals = [
             vals for vals in vals_list
             if (
                 vals.get('allow_timesheets', defaults.get('allow_timesheets')) and
-                not vals.get('account_id', defaults.get('account_id')) and not vals.get('is_template', defaults.get('is_template'))
+                not vals.get('account_id', defaults.get('account_id'))
             )
         ]
 
@@ -153,7 +151,7 @@ class ProjectProject(models.Model):
     def write(self, vals):
         # create the AA for project still allowing timesheet
         if vals.get('allow_timesheets') and not vals.get('account_id'):
-            project_wo_account = self.filtered(lambda project: not project.account_id and not project.is_template)
+            project_wo_account = self.filtered(lambda project: not project.account_id)
             if project_wo_account:
                 project_wo_account._create_analytic_account()
         return super().write(vals)
@@ -171,7 +169,7 @@ class ProjectProject(models.Model):
 
     @api.model
     def _init_data_analytic_account(self):
-        self.search([('account_id', '=', False), ('allow_timesheets', '=', True), ('is_template', '=', False)])._create_analytic_account()
+        self.search([('account_id', '=', False), ('allow_timesheets', '=', True)])._create_analytic_account()
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_contains_entries(self):
@@ -283,8 +281,3 @@ class ProjectProject(models.Model):
         action = super().action_view_tasks()
         action['context']['allow_timesheets'] = self.allow_timesheets
         return action
-
-    def _toggle_template_mode(self, is_template):
-        if not is_template and self.allow_timesheets and not self.account_id:
-            self._create_analytic_account()
-        super()._toggle_template_mode(is_template)

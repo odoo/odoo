@@ -10,15 +10,14 @@ class TestProjectTemplates(TestProjectCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.project_template = cls.env["project.project"].create({
+        cls.project_template = cls.env["project.project.template"].create({
             "name": "Project Template",
-            "is_template": True,
             "date_start": date(2025, 6, 1),
             "date": date(2025, 6, 11),
         })
         cls.task_inside_template = cls.env["project.task.template"].create({
             "name": "Task in Project Template",
-            "project_id": cls.project_template.id,
+            "project_template_id": cls.project_template.id,
         })
 
     def test_create_from_template(self):
@@ -27,7 +26,6 @@ class TestProjectTemplates(TestProjectCommon):
         """
         project = self.project_template.action_create_from_template()
         self.assertEqual(project.name, "Project Template", "The project name should be `Project Template`.")
-        self.assertFalse(project.is_template, "The created Project should be a normal project and not a template.")
         self.assertFalse(project.partner_id, "The created Project should not have a customer.")
 
         template_task_count = self.env['project.task.template'].search_count([('project_id', '=', project.id)])
@@ -39,16 +37,7 @@ class TestProjectTemplates(TestProjectCommon):
         """
         copied_template = self.project_template.copy()
         self.assertEqual(copied_template.name, "Project Template (copy)", "The project name should be `Project Template` (copy).")
-        self.assertTrue(copied_template.is_template, "The copy of the template should also be a template.")
-        task_count = self.env['project.task.template'].search_count([('project_id', '=', copied_template.id)])
-        self.assertEqual(task_count, 1, "The child of the template should be copied too.")
-
-    def test_revert_template(self):
-        """
-        A revert of a template should not be a template
-        """
-        self.project_template.action_undo_convert_to_template()
-        self.assertFalse(self.project_template.is_template, "The reverted template should become a normal template.")
+        self.assertEqual(len(copied_template.task_template_ids), 1, "The child of the template should be copied too.")
 
     def test_tasks_dispatching_from_template(self):
         """
@@ -62,9 +51,8 @@ class TestProjectTemplates(TestProjectCommon):
             {'name': 'Tester'},
             {'name': 'Product Owner'},
         ])
-        project_template = self.env['project.project'].create({
+        project_template = self.env['project.project.template'].create({
             'name': 'Project template',
-            'is_template': True,
             'task_template_ids': [
                 Command.create({
                     'name': 'Task 1',
@@ -174,7 +162,6 @@ class TestProjectTemplates(TestProjectCommon):
 
         new_project = self.project_template.action_create_from_template({
             "name": "New Project",
-            "is_template": False,
         })
 
         expected_delta = self.project_template.date - self.project_template.date_start
@@ -186,7 +173,6 @@ class TestProjectTemplates(TestProjectCommon):
 
         new_project = self.project_template.action_create_from_template({
             "name": "New Project",
-            "is_template": False,
             "date_start": new_start,
         })
 
@@ -200,7 +186,6 @@ class TestProjectTemplates(TestProjectCommon):
 
         new_project = self.project_template.action_create_from_template({
             "name": "New Project",
-            "is_template": False,
             "date_start": new_start,
             "date": new_end,
         })
@@ -224,28 +209,33 @@ class TestProjectTemplates(TestProjectCommon):
                                 |
                                 └── Task Template E
         """
-        project_template = self.env["project.project"].create({
+        project_template = self.env["project.project.template"].create({
             "name": "Project Template",
-            "is_template": True,
         })
 
         self.env["project.task.template"].create({
             "name": "Task Template A",
-            "project_id": project_template.id,
+            "project_template_id": project_template.id,
             "child_ids": [
                 Command.create({
                     "name": "Task Template B",
+                    "project_template_id": project_template.id,
                     "child_ids": [
                         Command.create({
-                            "name": "Task Template C"
+                            "name": "Task Template C",
+                            "project_template_id": project_template.id,
                         }),
                         Command.create({
                             "name": "Task Template D",
+                            "project_template_id": project_template.id,
                             "child_ids": [
-                                Command.create({"name": "Task Template E"})
-                            ]
+                                Command.create({
+                                    "name": "Task Template E",
+                                    "project_template_id": project_template.id
+                                }),
+                            ],
                         }),
-                    ]
+                    ],
                 }),
             ],
         })
@@ -273,8 +263,8 @@ class TestProjectTemplates(TestProjectCommon):
                     f"Task '{task.name}' should not have a parent",
                 )
         project_template_data = project.action_create_template_from_project()
-        project_id = project_template_data.get('params')['project_id']
-        project_template = self.env['project.project'].browse(project_id)
+        project_temp_id = project_template_data.get('params')['res_id']
+        project_template = self.env['project.project.template'].browse(project_temp_id)
         self.assertEqual(len(project_template.task_template_ids), len(expected_hierarchy), "Unexpected number of tasks created")
 
         for task_template in project_template.task_template_ids:
@@ -299,14 +289,13 @@ class TestProjectTemplates(TestProjectCommon):
         4. Generate a project from the project template.
         5. Ensure the dependency is preserved in the new project.
         """
-        project_template = self.env["project.project"].create({
+        project_template = self.env["project.project.template"].create({
             "name": "Project Template",
-            "is_template": True,
         })
 
         self.env["project.task.template"].create({
             "name": "Task Template A",
-            "project_id": project_template.id,
+            "project_template_id": project_template.id,
             "depend_on_ids": [Command.set(self.task_2.ids)],
         })
 
@@ -327,13 +316,12 @@ class TestProjectTemplates(TestProjectCommon):
             - Convert the project template into a regular project.
             - Verify tasks in the created project.
         """
-        project_template_recurring = self.env['project.project'].with_context({'mail_create_nolog': True}).create({
+        project_template_recurring = self.env['project.project.template'].with_context({'mail_create_nolog': True}).create({
             "name": 'Project Template Recurring',
-            "is_template": True,
         })
         task_template_recurring = self.env['project.task.template'].create({
             'name': "Recurring Task template",
-            'project_id': project_template_recurring.id,
+            'project_template_id': project_template_recurring.id,
             'recurring_task': True,
             'repeat_interval': 2,
             'repeat_unit': 'week',

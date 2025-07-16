@@ -1,12 +1,17 @@
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { defineModels, fields, models } from "@web/../tests/web_test_helpers";
 
+export class ProjectProjectTemplate extends models.Model {
+    _name = "project.project.template";
+
+    name = fields.Char();
+}
+
 export class ProjectProject extends models.Model {
     _name = "project.project";
 
     name = fields.Char();
     is_favorite = fields.Boolean();
-    is_template = fields.Boolean();
     active = fields.Boolean({ default: true });
     stage_id = fields.Many2one({ relation: "project.project.stage" });
     date = fields.Date({ string: "Expiration Date" });
@@ -163,6 +168,7 @@ export function defineProjectModels() {
 }
 
 export const projectModels = {
+    ProjectProjectTemplate,
     ProjectProject,
     ProjectProjectStage,
     ProjectTask,

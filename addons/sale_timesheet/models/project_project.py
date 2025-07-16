@@ -58,17 +58,6 @@ class ProjectProject(models.Model):
     partner_id = fields.Many2one(
         compute='_compute_partner_id', store=True, readonly=False)
     allocated_hours = fields.Float()
-    billing_type = fields.Selection(
-        compute="_compute_billing_type",
-        selection=[
-            ('not_billable', 'not billable'),
-            ('manually', 'billed manually'),
-        ],
-        default='not_billable',
-        required=True,
-        readonly=False,
-        store=True,
-    )
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
@@ -167,10 +156,6 @@ class ProjectProject(models.Model):
         non_billable_projects = self - billable_projects
         non_billable_projects.sale_order_line_count = 0
         non_billable_projects.sale_order_count = 0
-
-    @api.depends('allow_billable', 'allow_timesheets')
-    def _compute_billing_type(self):
-        self.filtered(lambda project: (not project.allow_billable or not project.allow_timesheets) and project.billing_type == 'manually').billing_type = 'not_billable'
 
     @api.constrains('sale_line_id')
     def _check_sale_line_type(self):
@@ -525,8 +510,3 @@ class ProjectProject(models.Model):
             res.append(self.env._("This project is current linked to timesheet."))
         return res
 
-    def _get_template_default_context_whitelist(self):
-        return [
-            *super()._get_template_default_context_whitelist(),
-            "allow_timesheets",
-        ]

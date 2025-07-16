@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="project_project_template_view_form" model="ir.ui.view">
+        <field name="name">project.project.template.form.inherit</field>
+        <field name="model">project.project.template</field>
+        <field name="inherit_id" ref="sale_project.project_template_view_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='settings']//field[@name='allow_billable']" position="after">
+                <div invisible="not allow_billable or not allow_timesheets" class="text-muted">
+                    Timesheets without a sales order item are reported as
+                    <field name="billing_type" nolabel="1" class="w-auto"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
 
     <record id="project_project_view_form" model="ir.ui.view">
         <field name="name">project.project.form.inherit</field>
@@ -13,7 +26,7 @@
                 <attribute name="context">{'create_for_project_id': id, 'default_project_id': id, 'default_partner_id': partner_id}</attribute>
             </xpath>
             <xpath expr="//page[@name='settings']" position="after">
-                <page name="billing_employee_rate" string="Invoicing" invisible="not allow_billable or not partner_id or is_template">
+                <page name="billing_employee_rate" string="Invoicing" invisible="not allow_billable or not partner_id">
                     <field name="sale_line_employee_ids" mode="list,kanban" context="{'default_sale_line_id': sale_line_id}">
                         <list editable="bottom">
                             <field name="company_id" column_invisible="True"/>

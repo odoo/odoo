@@ -91,3 +91,17 @@ test("project.task (kanban): toggle sub-tasks", async () => {
     await animationFrame();
     expect(".o_kanban_record").toHaveCount(2);
 });
+
+test("stages nocontent helper should be displayed in the task template Kanban", async () => {
+    ProjectTask._records = [];
+
+    await mountView({
+        ...viewParams,
+        context: {
+            default_project_template_id: 1,
+        },
+    });
+
+    expect(".o_kanban_header").toHaveCount(1);
+    expect(".o_kanban_stages_nocontent").toHaveCount(1);
+});

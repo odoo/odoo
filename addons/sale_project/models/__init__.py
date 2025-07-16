@@ -4,6 +4,7 @@ from . import product_product
 from . import product_template
 from . import project_milestone
 from . import project_project
+from . import project_project_template
 from . import project_task_recurrence
 from . import project_task
 from . import project_update

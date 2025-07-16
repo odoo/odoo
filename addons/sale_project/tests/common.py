@@ -30,13 +30,13 @@ class TestSaleProjectCommon(TestSaleCommon):
             'account_id': cls.analytic_account_sale.id,
             'allow_billable': True,
         })
-        cls.project_template = Project.create({
+        cls.project_template = cls.env['project.project.template'].create({
             'name': 'Project TEMPLATE for services',
         })
         cls.project_template_state = cls.env['project.task.type'].create({
             'name': 'Only stage in project template',
             'sequence': 1,
-            'project_ids': [(4, cls.project_template.id)]
+            'project_template_ids': [(4, cls.project_template.id)]
         })
 
         # -- manual (delivered, manual)

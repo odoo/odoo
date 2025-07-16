@@ -39,7 +39,7 @@
                 <field name="allow_billable" column_invisible="True"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="invisible">not allow_billable or is_template</attribute>
+                <attribute name="invisible">not allow_billable</attribute>
             </xpath>
         </field>
     </record>
@@ -53,7 +53,7 @@
                 <field name="display_sales_stat_buttons" invisible="1"/>
                 <field name="allow_billable" invisible="1" />
                 <field name="privacy_visibility" invisible="1" />
-                <button class="oe_stat_button" type="object" name="action_customer_preview" icon="fa-globe icon" invisible="not partner_id or not allow_billable or privacy_visibility not in ['invited_users', 'portal'] or is_template">
+                <button class="oe_stat_button" type="object" name="action_customer_preview" icon="fa-globe icon" invisible="not partner_id or not allow_billable or privacy_visibility not in ['invited_users', 'portal']">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_text">Preview</span>
                     </div>
@@ -63,7 +63,7 @@
                     type="object"
                     name="action_view_sos"
                     icon="fa-dollar"
-                    invisible="not display_sales_stat_buttons or sale_order_count == 0 or is_template"
+                    invisible="not display_sales_stat_buttons or sale_order_count == 0"
                     groups="sales_team.group_sale_salesman_all_leads"
                     context="{
                         'create_for_project_id': id,
@@ -84,7 +84,7 @@
                     type="object"
                     name="action_view_sos"
                     icon="fa-dollar"
-                    invisible="not display_sales_stat_buttons or sale_order_count != 0 or is_template"
+                    invisible="not display_sales_stat_buttons or sale_order_count != 0 "
                     groups="sales_team.group_sale_salesman_all_leads"
                     context="{
                         'create_for_project_id': id,
@@ -106,7 +106,7 @@
                 <field name="has_any_so_with_nothing_to_invoice" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="invisible">not allow_billable or is_template</attribute>
+                <attribute name="invisible">not allow_billable</attribute>
             </xpath>
             <xpath expr="//group[@name='group_time_managment']" position="after">
                  <group name="group_sales_invoicing" string="Sales &amp; Invoicing" col="1" class="row mt16 o_settings_container col-lg-6">
@@ -118,11 +118,11 @@
                 </group>
             </xpath>
             <xpath expr="//page[@name='settings']//field[@name='privacy_visibility']" position="after">
-                <field name="reinvoiced_sale_order_id" invisible="not allow_billable or not partner_id or is_template"  context="{'default_partner_id': partner_id}"/>
-                <label for="sale_line_id" invisible="not allow_billable or not partner_id or is_template"/>
+                <field name="reinvoiced_sale_order_id" invisible="not allow_billable or not partner_id"  context="{'default_partner_id': partner_id}"/>
+                <label for="sale_line_id" invisible="not allow_billable or not partner_id"/>
                 <div 
                     class="o_row" 
-                    invisible="not allow_billable or not partner_id or is_template">
+                    invisible="not allow_billable or not partner_id">
                     <field name="sale_line_id"
                         groups="!sales_team.group_sale_salesman"
                         options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>

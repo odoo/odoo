@@ -36,17 +36,20 @@ class TestSaleProject(TestSaleProjectCommon):
             cls.analytic_plan._column_name(): cls.analytic_account_sale.id,
             'allow_billable': True,
         })
-        cls.project_template = cls.env['project.project'].create({
+        cls.project_template = cls.env['project.project.template'].create({
             'name': 'Project TEMPLATE for services',
+        })
+        cls.project = cls.env['project.project'].create({
+            'name': 'Project for services',
         })
         cls.project_template_state = cls.env['project.task.type'].create({
             'name': 'Only stage in project template',
             'sequence': 1,
-            'project_ids': [(4, cls.project_template.id)]
+            'project_template_ids': [(4, cls.project_template.id)]
         })
         cls.task_template = cls.env['project.task.template'].create({
             'name': 'test task template',
-            'project_id': cls.project_template.id,
+            'project_id': cls.project_global.id,
         })
 
         # Create service products
@@ -799,13 +802,13 @@ class TestSaleProject(TestSaleProjectCommon):
             is confirmed.
         """
         # Create archived Project template with one task
-        self.archived_project_template = self.env['project.project'].create({
+        self.archived_project_template = self.env['project.project.template'].create({
             'name': 'Archived project template',
             'allow_billable': True,
         })
         self.archived_project_template_task = self.env['project.task'].create({
             'name': 'Task 1',
-            'project_id': self.archived_project_template.id,
+            'project_template_id': self.archived_project_template.id,
         })
         self.archived_project_template.active = False
 
@@ -1236,27 +1239,13 @@ class TestSaleProject(TestSaleProjectCommon):
 
     def test_analytics_on_so_confirmation_project_with_accounts(self):
         # Config 2: a project_id on the SO with AAs
-        # Also add an AA to the project template
         plan_name = self.analytic_plan._column_name()
-        self.project_template[plan_name] = self.analytic_account_sale
-        self.product_order_service3.project_template_id = self.project_template
         so = self.env['sale.order'].create({'partner_id': self.partner.id, 'project_id': self.project_global.id})
-        sol_task_in_template_project, sol_new_project = self.env['sale.order.line'].create([
-            {'order_id': so.id, 'product_id': self.product_order_service3.id},
-            {'order_id': so.id, 'product_id': self.product_order_service4.id},
-        ])
+        sol_new_project = self.env['sale.order.line'].create(
+            {'order_id': so.id, 'product_id': self.product_order_service4.id}
+        )
         so.action_confirm()
-        self.assertEqual(len(so.order_line.project_id), 2, "Two projects should be linked to the SO.")
-        self.assertEqual(
-            self.project_global.account_id,
-            sol_task_in_template_project.project_id.account_id,
-            "The main AA of the project of `sol_task_in_template_project` should be the same as the main AA of the project set on the SO."
-        )
-        self.assertEqual(
-            self.project_template[plan_name],
-            sol_task_in_template_project.project_id[plan_name],
-            "The other AA of the project of `sol_task_in_template_project` should be the same as the other AA of its project template."
-        )
+        self.assertEqual(len(so.order_line.project_id), 1, "One projects should be linked to the SO.")
         self.assertEqual(
             self.project_global.account_id,
             sol_new_project.project_id.account_id,
@@ -1450,9 +1439,9 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertFalse(project.sale_line_id, "The project should not be linked to sale order line.")
 
     def test_analytics_on_so_confirmation_with_project_templates(self):
-        project_template_1, project_template_2 = self.env['project.project'].create([
-            {'name': 'Project Template 1', 'is_template': True},
-            {'name': 'Project Template 2', 'is_template': True},
+        project_template_1, project_template_2 = self.env['project.project.template'].create([
+            {'name': 'Project Template 1'},
+            {'name': 'Project Template 2'},
         ])
         product_with_project_template_1, product_with_project_template_2 = self.env['product.product'].create([
             {
@@ -1544,7 +1533,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'name': 'Test product 2',
             'type': 'service',
             'service_tracking': 'task_in_project',
-            'project_template_id': self.project_global.id,
+            'project_template_id': self.project_template.id,
             'task_template_id': self.task_template.id,
             'service_policy': 'ordered_prepaid',
         }])
@@ -1562,7 +1551,7 @@ class TestSaleProject(TestSaleProjectCommon):
         }])
 
         order.action_confirm()
-        self.assertEqual(order.tasks_count, 1, "1 task should be created")
+        self.assertEqual(order.tasks_count, 1, "2 task should be created")
         self.assertEqual((sol1 + sol2).task_id.allocated_hours, 20, "Template task should get 20 hrs")
 
     def test_allocated_hours_computed_from_quantity_when_template_hours_missing(self):
