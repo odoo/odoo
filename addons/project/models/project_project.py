@@ -120,24 +120,26 @@ class ProjectProject(models.Model):
     alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
                                     "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
-            ('followers', 'Invited internal users (private)'),
+            ('followers', 'Invited internal users'),
+            ('invited_users', 'Invited internal and portal users'),
             ('employees', 'All internal users'),
-            ('portal', 'Invited portal users and all internal users (public)'),
+            ('portal', ' All internal users and invited portal users'),
         ],
         string='Visibility', required=True,
         default='portal',
         tracking=True,
-        help="People to whom this project and its tasks will be visible.\n\n"
-            "- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. "
-            "Otherwise, they will only get access to the specific tasks they are following.\n "
-            "A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n\n"
-            "- All internal users: all internal users can access the project and all of its tasks without distinction.\n\n"
-            "- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
-            "When following a project, portal users will only get access to the specific tasks they are following.\n\n"
-            "When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks they are following, but not edit them.\n"
-            "When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n\n"
-            "In any case, an internal user with no project access rights can still access a task, "
-            "provided that they are given the corresponding URL (and that they are part of the followers if the project is private).")
+        help="Project and Task Visibility:\n"
+             "- Invited internal users: Can access only the project or tasks they follow. Assignees automatically get access.\n"
+             "- Invited internal and portal users: Same as above, extended to portal users.\n"
+             "- All internal users: Full access to the project and all its tasks.\n"
+             "- All internal and invited portal users: Internal users get full access. Portal users can access only the project or tasks they follow.\n\n"
+             "Portal Access Levels:\n"
+             "- Read-only: Portal users see tasks via their portal but can’t edit them.\n"
+             "- Edit (limited): Portal users access kanban/list views and can edit limited fields on followed tasks.\n"
+             "- Edit: Same as above, with access to all tasks.\n\n"
+             "Other Rules:\n"
+             "- Internal users can open a task from a direct link, even without project access.\n"
+             "- Project admins have access to private projects, even if not followers.\n")
     privacy_visibility_warning = fields.Char('Privacy Visibility Warning', compute='_compute_privacy_visibility_warning', export_string_translation=False)
     access_instruction_message = fields.Char('Access Instruction Message', compute='_compute_access_instruction_message', export_string_translation=False)
     date_start = fields.Date(string='Start Date', copy=False)
@@ -263,12 +265,6 @@ class ProjectProject(models.Model):
         for project in self:
             project.access_url = f'/my/projects/{project.id}'
 
-    def _compute_access_warning(self):
-        super()._compute_access_warning()
-        for project in self.filtered(lambda x: x.privacy_visibility != 'portal'):
-            project.access_warning = _(
-                "This project is currently restricted to \"Invited internal users\". The project's visibility will be changed to \"invited portal users and all internal users (public)\" in order to make it accessible to the recipients.")
-
     @api.depends('account_id.company_id', 'partner_id.company_id')
     def _compute_company_id(self):
         for project in self:
@@ -376,7 +372,7 @@ class ProjectProject(models.Model):
 
     @api.depends('collaborator_ids', 'privacy_visibility')
     def _compute_collaborator_count(self):
-        project_sharings = self.filtered(lambda project: project.privacy_visibility == 'portal')
+        project_sharings = self.filtered(lambda project: project.privacy_visibility in ['invited_users', 'portal'])
         collaborator_read_group = self.env['project.collaborator']._read_group(
             [('project_id', 'in', project_sharings.ids)],
             ['project_id'],
@@ -391,9 +387,9 @@ class ProjectProject(models.Model):
         for project in self:
             if not project.ids:
                 project.privacy_visibility_warning = ''
-            elif project.privacy_visibility == 'portal' and project._origin.privacy_visibility != 'portal':
+            elif project.privacy_visibility in ['invited_users', 'portal'] and project._origin.privacy_visibility not in ['invited_users', 'portal']:
                 project.privacy_visibility_warning = _('Customers will be added to the followers of their project and tasks.')
-            elif project.privacy_visibility != 'portal' and project._origin.privacy_visibility == 'portal':
+            elif project.privacy_visibility not in ['invited_users', 'portal'] and project._origin.privacy_visibility in ['invited_users', 'portal']:
                 project.privacy_visibility_warning = _('Portal users will be removed from the followers of the project and its tasks.')
             else:
                 project.privacy_visibility_warning = ''
@@ -402,9 +398,11 @@ class ProjectProject(models.Model):
     def _compute_access_instruction_message(self):
         for project in self:
             if project.privacy_visibility == 'portal':
-                project.access_instruction_message = _('To give portal users access to your project, add them as followers. For task access, add them as followers for each task.')
+                project.access_instruction_message = self.env._('To give portal users access to your project, add them as followers. For task access, add them as followers for each task.')
             elif project.privacy_visibility == 'followers':
-                project.access_instruction_message = _('Grant employees access to your project or tasks by adding them as followers. Employees automatically get access to the tasks they are assigned to.')
+                project.access_instruction_message = self.env._('Grant employees access to your project or tasks by adding them as followers. Employees automatically get access to the tasks they are assigned to.')
+            elif project.privacy_visibility == 'invited_users':
+                project.access_instruction_message = self.env._("Grant users access by adding them as followers — either to the project or individual tasks. Internal users automatically gain access to tasks they are assigned to.")
             else:
                 project.access_instruction_message = ''
 
@@ -628,7 +626,7 @@ class ProjectProject(models.Model):
     def write(self, vals):
         if vals.get('access_token'):
             self.ensure_one()  # We are not supposed to add a single access token to multiple project
-            if self.privacy_visibility != 'portal':
+            if self.privacy_visibility not in ['invited_users', 'portal']:
                 vals['access_token'] = ''
 
         # Here we modify the project's stage according to the selected company (selecting the first
@@ -815,7 +813,7 @@ class ProjectProject(models.Model):
             return groups
 
         self.ensure_one()
-        portal_privacy = self.privacy_visibility == 'portal'
+        portal_privacy = self.privacy_visibility in ['invited_users', 'portal']
         for group_name, _group_method, group_data in groups:
             if group_name in ['portal', 'portal_customer'] and not portal_privacy:
                 group_data['has_button_access'] = False
@@ -1184,11 +1182,11 @@ class ProjectProject(models.Model):
         for project in self:
             if project.privacy_visibility == new_visibility:
                 continue
-            if new_visibility == 'portal':
+            if new_visibility in ['invited_users', 'portal']:
                 project.message_subscribe(partner_ids=project.partner_id.ids)
                 for task in project.task_ids.filtered('partner_id'):
                     task.message_subscribe(partner_ids=task.partner_id.ids)
-            elif project.privacy_visibility == 'portal':
+            elif project.privacy_visibility in ['invited_users', 'portal']:
                 portal_users = project.message_partner_ids.user_ids.filtered('share')
                 project.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
                 project.tasks._unsubscribe_portal_users()
@@ -1201,7 +1199,7 @@ class ProjectProject(models.Model):
     # ---------------------------------------------------
     def _check_project_sharing_access(self):
         self.ensure_one()
-        if self.privacy_visibility != 'portal':
+        if self.privacy_visibility not in ['invited_users', 'portal']:
             return False
         if self.env.user._is_portal():
             return self.env['project.collaborator'].search([('project_id', '=', self.sudo().id), ('partner_id', '=', self.env.user.partner_id.id)])

@@ -36,7 +36,7 @@
                     <field name="company_id" invisible="1"/>
                     <header>
                         <button name="action_open_share_project_wizard" string="Share Project" type="object" class="oe_highlight" groups="project.group_project_manager"
-                        invisible="privacy_visibility != 'portal' or is_template" context="{'default_access_mode': 'read'}" data-hotkey="r"/>
+                        invisible="privacy_visibility in ['followers', 'employees'] or is_template" context="{'default_access_mode': 'read'}" data-hotkey="r"/>
                         <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" groups="project.group_project_stages" domain="[('company_id', 'in', (company_id, False))]"/>
                     </header>
                 <sheet string="Project">
@@ -424,7 +424,7 @@
                                     </div>
                                     <div role="menuitem" class="col-6" groups="project.group_project_manager">
 
-                                        <a t-if="record.privacy_visibility.raw_value == 'portal' and !record.is_template.raw_value" class="dropdown-item" role="menuitem" name="action_open_share_project_wizard" type="object">Share Project</a>
+                                        <a t-if="['portal', 'invited_users'].includes(record.privacy_visibility.raw_value) and !record.is_template.raw_value" class="dropdown-item" role="menuitem" name="action_open_share_project_wizard" type="object">Share Project</a>
 
                                         <a class="dropdown-item" role="menuitem" name="copy" type="object">Duplicate</a>
                                         <a class="dropdown-item" role="menuitem" type="open">Settings</a>
