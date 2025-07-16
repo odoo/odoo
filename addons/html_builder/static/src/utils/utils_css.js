@@ -438,7 +438,9 @@ export function setBuilderCSSVariables(htmlStyle) {
         styles.push(`--hb-cp-${style}: ${value};`);
     }
     builderStylesheet.replaceSync(`html { ${styles.join(" ")} }`);
-    window.top.document.adoptedStyleSheets = [builderStylesheet];
+    if (!window.top.document.adoptedStyleSheets.find((style) => style === builderStylesheet)) {
+        window.top.document.adoptedStyleSheets.push(builderStylesheet);
+    }
 }
 
 export function parseBoxShadow(value) {
