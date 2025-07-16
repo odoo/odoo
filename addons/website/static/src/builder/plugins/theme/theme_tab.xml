@@ -39,8 +39,7 @@
             <BuilderColorPicker t-if="!this.isActiveItem('layout_full_opt')"
                 enabledTabs="['solid', 'custom']"
                 action="'customizeWebsiteColor'"
-                actionParam="'body'"
-            />
+                actionParam="'body'"/>
             <BuilderButtonGroup action="'customizeBodyBgType'">
                 <BuilderButton title.translate="Image" actionValue="'image'" className="'fa fa-fw fa-camera'"/>
                 <BuilderButton title.translate="Pattern" actionValue="'pattern'" className="'fa fa-fw fa-th'"/>
@@ -74,178 +73,6 @@
     </BuilderContext>
 </t>
 
-<t t-name="website.ThemeHeadingsOption">
-    <BuilderContext preview="false">
-        <t t-set="heading_label">Heading</t>
-        <t t-set="display_label">Display</t>
-        <!-- We don't use `display-font-sizes.5` and `display-font-sizes.6` -->
-        <t t-set="used_display_font_sizes" t-value="[1, 2, 3, 4]"/>
-        <BuilderRow label.translate="Font Size" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput title.translate="Heading 1" actionParam="'h1-font-size'" unit="'px'" saveUnit="'rem'"/>
-            <t t-set-slot="collapse">
-                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'h' + depth + '-font-size'" unit="'px'" saveUnit="'rem'"/>
-                    </BuilderRow>
-                </t>
-                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'display-' + depth + '-font-size'" unit="'px'" saveUnit="'rem'"/>
-                    </BuilderRow>
-                </t>
-            </t>
-        </BuilderRow>
-        <BuilderRow label.translate="Font Family" tooltip.translate="Heading 1" action="'customizeWebsiteVariable'">
-            <BuilderFontFamilyPicker actionParam="'headings-font'" valueParamName="'actionValue'"/>
-            <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
-                title.translate="Reset to Paragraph Font Family"
-                action="'removeFont'"
-                actionParam="{ variable: 'headings-font', tbd: 'set-headings-font' }"
-            />
-            <t t-set-slot="collapse">
-                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderFontFamilyPicker actionParam="'h' + depth + '-font'" valueParamName="'actionValue'"/>
-                        <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
-                            title.translate="Reset to Headings Font Family"
-                            action="'removeFont'"
-                            actionParam="{ variable: 'h' + depth + '-font', tbd: 'set-h' + depth + '-font' }"
-                        />
-                    </BuilderRow>
-                </t>
-                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <BuilderFontFamilyPicker actionParam="'display-' + depth + '-font'" valueParamName="'actionValue'"/>
-                        <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
-                            title.translate="Reset to Headings Font Family"
-                            action="'removeFont'"
-                            actionParam="{ variable: 'display-' + depth + '-font', tbd: 'set-display-' + depth + '-font' }"
-                        />
-                    </BuilderRow>
-                </t>
-            </t>
-        </BuilderRow>
-        <BuilderRow label.translate="Line Height" action="'customizeWebsiteVariable'">
-            <!-- "× ": \u00D7\u2000 -->
-            <BuilderNumberInput title.translate="Heading 1" actionParam="'headings-line-height'" unit="'✕'" saveUnit="''"/>
-            <t t-set-slot="collapse">
-                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'h' + depth + '-line-height'" unit="'✕'" saveUnit="''"/>
-                    </BuilderRow>
-                </t>
-                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'display-' + depth + '-line-height'" unit="'✕'" saveUnit="''"/>
-                    </BuilderRow>
-                </t>
-            </t>
-        </BuilderRow>
-        <BuilderRow label.translate="Margins" tooltip.translate="Heading 1" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput title.translate="Top" actionParam="'headings-margin-top'" unit="'px'" saveUnit="'px'"/>
-            <BuilderNumberInput title.translate="Bottom" actionParam="'headings-margin-bottom'" unit="'px'" saveUnit="'px'"/>
-            <t t-set-slot="collapse">
-                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput title.translate="Top" actionParam="'h' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
-                        <BuilderNumberInput title.translate="Bottom" actionParam="'h' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
-                    </BuilderRow>
-                </t>
-                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <BuilderNumberInput title.translate="Top" actionParam="'display-' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
-                        <BuilderNumberInput title.translate="Bottom" actionParam="'display-' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
-                    </BuilderRow>
-                </t>
-            </t>
-        </BuilderRow>
-    </BuilderContext>
-</t>
-
-<t t-name="website.ThemeButtonOption">
-    <BuilderContext preview="false">
-        <BuilderRow label.translate="Primary Style">
-            <BuilderSelect action="'customizeButtonStyle'" actionParam="'primary'">
-                <BuilderSelectItem actionValue="'fill'">Fill</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'outline'" id="'btn_primary_outline_opt'">Outline</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'flat'">Flat</BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
-        <BuilderRow t-if="isActiveItem('btn_primary_outline_opt')"
-            level="1" label.translate="Border Width"
-            action="'customizeWebsiteVariable'"
-        >
-            <BuilderNumberInput actionParam="'btn-primary-outline-border-width'" unit="'px'" saveUnit="'rem'"/>
-        </BuilderRow>
-        <BuilderRow label.translate="Secondary Style">
-            <BuilderSelect action="'customizeButtonStyle'" actionParam="'secondary'">
-                <BuilderSelectItem actionValue="'fill'">Fill</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'outline'" id="'btn_secondary_outline_opt'">Outline</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'flat'">Flat</BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
-        <BuilderRow t-if="isActiveItem('btn_secondary_outline_opt')"
-            level="1" label.translate="Border Width"
-            action="'customizeWebsiteVariable'"
-        >
-            <BuilderNumberInput actionParam="'btn-secondary-outline-border-width'" unit="'px'" saveUnit="'rem'"/>
-        </BuilderRow>
-        <BuilderRow label.translate="Font Family" action="'customizeWebsiteVariable'">
-            <BuilderFontFamilyPicker actionParam="'buttons-font'" valueParamName="'actionValue'"/>
-            <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
-                title.translate="Reset to Paragraph Font Family"
-                action="'removeFont'"
-                actionParam="{ variable: 'buttons-font', tbd: 'set-buttons-font' }"
-            />
-        </BuilderRow>
-        <BuilderRow label.translate="Padding" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput title.translate="Y" actionParam="'btn-padding-y'" unit="'px'" saveUnit="'rem'"/>
-            <BuilderNumberInput title.translate="X" actionParam="'btn-padding-x'" unit="'px'" saveUnit="'rem'"/>
-            <t t-set-slot="collapse">
-                <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput title.translate="Y" actionParam="'btn-padding-y-sm'" unit="'px'" saveUnit="'rem'"/>
-                    <BuilderNumberInput title.translate="X" actionParam="'btn-padding-x-sm'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Large" level="1">
-                    <BuilderNumberInput title.translate="Y" actionParam="'btn-padding-y-lg'" unit="'px'" saveUnit="'rem'"/>
-                    <BuilderNumberInput title.translate="X" actionParam="'btn-padding-x-lg'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-            </t>
-        </BuilderRow>
-        <BuilderRow label.translate="Font Size" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput actionParam="'btn-font-size'" unit="'px'" saveUnit="'rem'"/>
-            <t t-set-slot="collapse">
-                <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput actionParam="'btn-font-size-sm'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Large" level="1">
-                    <BuilderNumberInput actionParam="'btn-font-size-lg'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-            </t>
-        </BuilderRow>
-        <BuilderRow label.translate="Round Corners" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput actionParam="'btn-border-radius'" unit="'px'" saveUnit="'rem'"/>
-            <t t-set-slot="collapse">
-                <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput actionParam="'btn-border-radius-sm'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Large" level="1">
-                    <BuilderNumberInput actionParam="'btn-border-radius-lg'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-            </t>
-        </BuilderRow>
-        <BuilderRow label.translate="On Click Effect">
-            <BuilderSelect action="'websiteConfig'">
-                <!-- TODO implicit removal of assets -->
-                <BuilderSelectItem actionParam="{vars: {'btn-ripple': 'false'}, assets: []}">None</BuilderSelectItem>
-                <BuilderSelectItem
-                    actionParam="{vars: {'btn-ripple': 'true'}, assets: ['website.ripple_effect_scss', 'website.ripple_effect_js']}"
-                >Ripple</BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
-    </BuilderContext>
-</t>
-
 <t t-name="website.ThemeLinkOption">
     <BuilderContext preview="false">
         <BuilderRow label.translate="Link Style">
@@ -260,7 +87,7 @@
 
 <t t-name="website.ThemeInputOption">
     <BuilderContext preview="false">
-                <BuilderRow label.translate="Padding" action="'customizeWebsiteVariable'">
+        <BuilderRow label.translate="Padding" action="'customizeWebsiteVariable'">
             <BuilderNumberInput title.translate="Y" actionParam="'input-padding-y'" unit="'px'" saveUnit="'rem'"/>
             <BuilderNumberInput title.translate="X" actionParam="'input-padding-x'" unit="'px'" saveUnit="'rem'"/>
             <t t-set-slot="collapse">

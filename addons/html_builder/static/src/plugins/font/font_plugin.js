@@ -110,7 +110,7 @@ export class BuilderFontPlugin extends Plugin {
                 styleFontFamily = "var(--o-system-fonts)";
             }
 
-            let type = "cloud";
+            let type = isSystemFonts ? "system" : "cloud";
             let indexForType = fontNb - themeFontsNb;
             if (fontNb >= localFontsOffset) {
                 if (fontNb < uploadedFontsOffset) {

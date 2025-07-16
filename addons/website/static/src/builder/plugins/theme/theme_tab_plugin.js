@@ -1,8 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { withSequence } from "@html_editor/utils/resource";
-import { ThemeColorsOption } from "./theme_colors_option";
 import { ThemeAdvancedOption } from "./theme_advanced_option";
+import { ThemeButtonOption } from "./theme_button_option";
+import { ThemeColorsOption } from "./theme_colors_option";
+import { ThemeHeadingsOption } from "./theme_headings_option";
 import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -70,13 +72,13 @@ export class ThemeTabPlugin extends Plugin {
             withSequence(
                 OPTION_POSITIONS.HEADINGS,
                 this.getThemeOptionBlock("theme-headings", _t("Headings"), {
-                    template: "website.ThemeHeadingsOption",
+                    OptionComponent: ThemeHeadingsOption,
                 })
             ),
             withSequence(
                 OPTION_POSITIONS.BUTTON,
                 this.getThemeOptionBlock("theme-button", _t("Button"), {
-                    template: "website.ThemeButtonOption",
+                    OptionComponent: ThemeButtonOption,
                 })
             ),
             withSequence(
