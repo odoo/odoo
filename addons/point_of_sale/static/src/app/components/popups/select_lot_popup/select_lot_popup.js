@@ -101,7 +101,8 @@ export class SelectLotPopup extends Component {
                 itemValue !== "" &&
                 !this.props.isLotNameUsed(itemValue) &&
                 (this.props.customInput ||
-                    this.props.options.map((o) => o.name).includes(itemValue))
+                    this.props.options.map((o) => o.name).includes(itemValue) ||
+                    this.props.array.some((i) => i.text === itemValue))
             );
         });
         const filteredValues = this.props.uniqueValues
