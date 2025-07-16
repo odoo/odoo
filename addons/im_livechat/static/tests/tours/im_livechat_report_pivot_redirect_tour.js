@@ -3,21 +3,8 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("im_livechat_report_pivot_redirect_tour", {
     steps: () => [
         {
-            content: "open command palette",
-            trigger: "body:has(.o_action_manager)",
-            run: "click && press ctrl+k",
-        },
-        {
-            trigger: ".o_command_palette_search input",
-            run: "fill /Reporting",
-        },
-        {
-            trigger: ".o_command:contains(Agents)",
-            run: "click",
-        },
-        {
-            content: "click on a cell that has a single related record",
-            trigger: ".o_pivot table tbody tr:eq(2) td:eq(0)",
+            content: "Click on a cell with a single related record",
+            trigger: `.o_pivot table tbody tr:has(th:contains(operator_1)) td:eq(0)`,
             run: "click",
         },
         { trigger: ".o-mail-Discuss" },
@@ -27,8 +14,8 @@ registry.category("web_tour.tours").add("im_livechat_report_pivot_redirect_tour"
             run: "click",
         },
         {
-            content: "click on a cell that has more than one related record",
-            trigger: ".o_pivot table tbody tr:eq(0) td:eq(0)",
+            content: "Click on a cell with multiple related records",
+            trigger: `.o_pivot table tbody tr:has(th:contains(operator_2)) td:eq(0)`,
             run: "click",
         },
         { trigger: ".o_list_view" },
