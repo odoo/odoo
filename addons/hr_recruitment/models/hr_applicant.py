@@ -24,6 +24,7 @@ class HrApplicant(models.Model):
     _name = 'hr.applicant'
     _description = "Applicant"
     _order = "priority desc, id desc"
+    _order = "sequence"
     _inherit = ['mail.thread.cc',
                'mail.thread.main.attachment',
                'mail.thread.blacklist',
@@ -36,7 +37,6 @@ class HrApplicant(models.Model):
     _mailing_enabled = True
     _primary_email = 'email_from'
     _track_duration_field = 'stage_id'
-    _order = "sequence"
 
     sequence = fields.Integer(string='Sequence', index=True, default=10)
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.", index=True)
@@ -1073,7 +1073,11 @@ class HrApplicant(models.Model):
             'res_model': 'applicant.get.refuse.reason',
             'view_mode': 'form',
             'target': 'new',
-            'context': {'default_applicant_ids': self.ids, 'active_test': False},
+            'context': {
+                'default_applicant_ids': self.ids,
+                'active_test': False,
+                'hide_mail_template_management_options': True,
+            },
             'views': [[False, 'form']]
         }
 
