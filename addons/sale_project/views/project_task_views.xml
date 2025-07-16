@@ -53,7 +53,7 @@
                 <field name="display_sales_stat_buttons" invisible="1"/>
                 <field name="allow_billable" invisible="1" />
                 <field name="privacy_visibility" invisible="1" />
-                <button class="oe_stat_button" type="object" name="action_customer_preview" icon="fa-globe icon" invisible="not partner_id or not allow_billable or privacy_visibility != 'portal' or is_template">
+                <button class="oe_stat_button" type="object" name="action_customer_preview" icon="fa-globe icon" invisible="not partner_id or not allow_billable or privacy_visibility not in ['invited_users', 'portal'] or is_template">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_text">Preview</span>
                     </div>

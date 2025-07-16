@@ -582,7 +582,7 @@
 
         <record id="portal_share_action" model="ir.actions.act_window">
             <field name="name">Share Task</field>
-            <field name="res_model">portal.share</field>
+            <field name="res_model">task.share.wizard</field>
             <field name="view_mode">form</field>
             <field name="context">{'dialog_size': 'medium'}</field>
             <field name="target">new</field>
@@ -664,7 +664,7 @@
                     <templates>
                         <t t-name="menu" t-if="!selection_mode" groups="base.group_user">
                             <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
-                            <a name="%(portal.portal_share_action)d" role="menuitem" type="action" class="dropdown-item" context="{'dialog_size': 'medium'}">Share Task</a>
+                            <a name="%(project.portal_share_action)d" role="menuitem" type="action" class="dropdown-item">Share Task</a>
                             <a class="dropdown-item" role="menuitem" type="object" name="copy">Duplicate</a>
                             <div role="separator" class="dropdown-divider"></div>
                             <field name="color" widget="kanban_color_picker"/>

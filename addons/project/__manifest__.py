@@ -54,6 +54,7 @@
         'data/project_data.xml',
         'data/project_tour.xml',
         'wizard/project_task_type_delete_views.xml',
+        'wizard/project_task_share_wizard_views.xml',
         'wizard/project_project_stage_delete_views.xml',
         'wizard/project_template_create_wizard.xml',
         'views/project_menus.xml',
