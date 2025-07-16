@@ -616,3 +616,9 @@ class TestFrontend(TestFrontendCommon):
         Tests that when a customer is set, it will be saved and not be reset even if this is the only thing that changed in the order
         """
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_customer_alone_saved', login="pos_user")
+
+    def test_transfering_orders(self):
+        """
+        We can now transfer order from one table to another and from floating order to another etc.
+        """
+        self.start_pos_tour('test_transfering_orders', login="pos_user")
