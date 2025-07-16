@@ -2140,10 +2140,7 @@ class AccountMoveLine(models.Model):
                 and company_currency.compare_amounts(partial_credit_amount, partial_debit_amount_range[2]) <= 0
                 and company_currency.compare_amounts(partial_credit_amount, partial_debit_amount_range[0]) >= 0
             ):
-                if debit_fully_matched:
-                    partial_amount = remaining_debit_amount
-                else:
-                    partial_amount = -remaining_credit_amount
+                partial_amount = min(remaining_debit_amount, -remaining_credit_amount)
                 partial_debit_amount = partial_amount
                 partial_credit_amount = partial_amount
 
