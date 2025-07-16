@@ -134,18 +134,23 @@ class ReturnsScanWizard(models.TransientModel):
                 "grade_reason": line.grade_reason_id.description if line.grade_reason_id else "",
                 "scanned": bool(line.scanned),
             })
+            move = self.picking_id.move_ids_without_package.filtered(
+                lambda m: m.product_id.id == line.product_id.id and m.line_number == line.line_number
+            )
+            for m in move:
+                # Set the qty as scanned qty, but do NOT unlink or remove
+                m.quantity = qty_to_send
+                m.product_uom_qty = line.qty
+                m.remaining_qty = line.qty - qty_to_send
+
+            # Update stock quant
             if line.scanned and line.qty:
                 stock_quant_obj._update_available_quantity(
                     product_id=line.product_id,
                     location_id=self.picking_id.location_dest_id,
                     quantity=line.qty,
                 )
-            move = self.picking_id.move_ids_without_package.filtered(
-                lambda m: m.product_id.id == line.product_id.id and m.line_number == line.line_number
-            )
-            for m in move:
-                m.remaining_qty = 0 if line.scanned else line.qty
-                m.quantity = line.qty if line.scanned else 0
+
         schedule_date = self.picking_id.scheduled_date.strftime("%d-%m-%Y") if self.picking_id.scheduled_date else "N/A"
         current_date = date.today().strftime("%d-%m-%Y")
 
@@ -164,8 +169,8 @@ class ReturnsScanWizard(models.TransientModel):
         json_data = json.dumps(payload, indent=4)
         _logger.info(f"Sending payload: {json_data}")
 
-        self.picking_id.state = 'done'
-        _logger.info(f"Picking {self.picking_id.name} marked as done.")
+        # self.picking_id.state = 'done'
+        # _logger.info(f"Picking {self.picking_id.name} marked as done.")
 
         is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
         if is_production == 'True':

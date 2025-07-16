@@ -55,3 +55,12 @@ class StockMoveLine(models.Model):
             return self
         return super()._merge_moves(merge_into=merge_into, **kwargs)
 
+    def unlink(self):
+        # Only block for return pickings
+        for move in self:
+            picking = move.picking_id
+            if picking and getattr(picking.picking_type_id, 'picking_process_type', False) == 'returns':
+                # Skip deletion for returns!
+                return False
+        return super().unlink()
+
