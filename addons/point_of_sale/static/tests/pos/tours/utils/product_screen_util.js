@@ -461,15 +461,39 @@ export function enterLotNumber(number, tracking = "serial", click = false) {
         }
     );
     if (tracking === "serial") {
-        steps.push(
-            {
-                content: "check entered lot number",
-                trigger: `.lot-container .lot-item:eq(-1) span:contains(${number})`,
-            },
-            {
-                trigger: ".o-autocomplete input:value()",
-            }
-        );
+        steps.push(...serialCheckStep(number));
+    }
+    steps.push(Dialog.confirm());
+    return steps;
+}
+
+export function serialCheckStep(number) {
+    return [
+        {
+            content: "Check entered lot/serial number",
+            trigger: `.lot-container .lot-item:eq(-1) span:contains(${number})`,
+        },
+        {
+            trigger: ".o-autocomplete input:value()",
+        },
+    ];
+}
+
+export function enterExistingLotNumber(number, tracking = "serial") {
+    const steps = [];
+    steps.push(
+        {
+            content: "enter lot number",
+            trigger: ".o-autocomplete input",
+            run: "edit " + number,
+        },
+        {
+            trigger: ".o-autocomplete input",
+            run: "press Enter",
+        }
+    );
+    if (tracking === "serial") {
+        steps.push(...serialCheckStep(number));
     }
     steps.push(Dialog.confirm());
     return steps;
