@@ -102,7 +102,10 @@
         <field name="model">calendar.event</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Meetings" js_class="calendar_form">
+            <form string="Meetings" class="o_calendar_event_form_view" js_class="calendar_form">
+                <header>
+                    <button name="action_open_composer" class="btn btn-primary" type="object" string="Send email" invisible="not user_can_edit"/>
+                </header>
                 <div invisible="not recurrence_id" class="alert alert-info oe_edit_only" role="status">
                     <p>Edit recurring event</p>
                     <field name="recurrence_update" widget="radio"/>
@@ -114,7 +117,6 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <field name="res_id" invisible="1" />
                     <field name="active" invisible="1"/>
                     <field name="user_can_edit" invisible="1"/>
                     <field name="invalid_email_partner_ids" invisible="1"/> <!-- this field will be used in
@@ -146,92 +148,69 @@
                                     <field name="allday" class="oe_inline" widget="boolean_toggle" force_save="1" options="{'autosave': False}" readonly="not user_can_edit"/>
                                 </div>
                             </div>
-                            <field name="event_tz" invisible="not recurrency" readonly="not user_can_edit"/>
-
-
-                            <field name="recurrence_id" invisible="1" />
-                            <field name="rrule_type" invisible="1" />
-                            <field name="recurrency" readonly="not user_can_edit"/>
-                            <field name="rrule_type_ui" class="w-auto" invisible="not recurrency" required="recurrency" readonly="not user_can_edit"/>
-                            <label for="interval" class="fw-bold text-900" invisible="not recurrency or rrule_type_ui != 'custom'"/>
-                            <div class="d-flex gap-1" invisible="not recurrency or rrule_type_ui != 'custom'">
-                                <field name="interval" string="Repeat every" class="oe_inline w-auto" />
-                                <field name="rrule_type" nolabel="1" class="oe_inline" required="rrule_type_ui == 'custom'"/>
-                            </div>
-                            <span class="fw-bold text-nowrap" invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')">Repeat on</span>
-                            <div invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')" ><widget name="calendar_week_days" readonly="not user_can_edit"/></div>
-                            <field name="recurrence_id" invisible="1" />
-
-                            <label string="Day of Month" for="month_by" class="fw-bold text-900" style="width: fit-content;" invisible="rrule_type_ui not in ['monthly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'monthly')"/>
-                            <div class="d-flex gap-2" invisible="rrule_type_ui not in ['monthly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'monthly')">
-                                <field name="month_by" nolabel="1" class="oe_inline w-auto" required="rrule_type_ui == 'monthly' or rrule_type == 'monthly'"/>
-                                <field name="day" nolabel="1" class="oe_inline w-auto"
-                                    required="(rrule_type_ui == 'monthly' or rrule_type == 'monthly') and month_by == 'date'"
-                                    invisible="month_by != 'date'"
-                                />
-                                <field name="byday" string="The" class="oe_inline w-auto" nolabel="1"
-                                    required="(rrule_type_ui == 'monthly' or rrule_type == 'monthly') and month_by == 'day'"
-                                    invisible="month_by != 'day'"
-                                />
-                                <field name="weekday" nolabel="1" class="oe_inline w-auto"
-                                    required="(rrule_type_ui == 'monthly' or rrule_type == 'monthly') and month_by == 'day'"
-                                    invisible="month_by != 'day'"
-                                />
-                            </div>
-                            <label string="Until" for="end_type" class="fw-bold text-900" invisible="not recurrency"/>
-                            <div class="d-flex gap-2" invisible="not recurrency">
-                                <field name="end_type" class="oe_inline w-auto" nolabel="1" required="recurrency" readonly="not user_can_edit"/>
-                                <field name="count" class="oe_inline w-auto" nolabel="1" invisible="end_type != 'count'" required="recurrency" readonly="not user_can_edit"/>
-                                <field name="until" class="oe_inline w-auto" nolabel="1" invisible="end_type != 'end_date'" readonly="not user_can_edit"
-                                    required="recurrency and end_type == 'end_date'"
-                                    placeholder="e.g: 12/31/2023"
-                                />
-                            </div>
 
                             <field name="location" placeholder="Online Meeting" readonly="not user_can_edit"/>
                             <label for="videocall_location" class="opacity-100"/>
-                            <div name="videocall_location_div" col="2">
-                                <field name="videocall_location" string="Videocall URL" widget="CopyClipboardChar" force_save="1" readonly="videocall_source == 'discuss' or not user_can_edit"/>
-                                <button name="clear_videocall_location" type="object" class="btn btn-link ps-0"
-                                    invisible="not videocall_location or not user_can_edit" context="{'recurrence_update': recurrence_update}">
-                                    <span class="fa fa-times"></span><span> Clear meeting</span>
-                                </button>
-                                <button name="set_discuss_videocall_location" type="object" class="btn btn-link ps-0"
-                                    invisible="videocall_location or not user_can_edit" context="{'recurrence_update': recurrence_update}">
-                                    <span class="fa fa-plus"></span><span> Odoo meeting</span>
-                                </button>
-                                <button name="action_join_video_call" class="btn btn-link" help="Join Video Call" type="object" invisible="not videocall_location or not user_can_edit">
-                                    <span class="oi oi-arrow-right"></span><span> Join video call</span>
-                                </button>
+                            <div name="videocall_location_div">
+                                <div class="d-flex">
+                                    <field name="videocall_location" string="Video Link" widget="CopyClipboardChar"
+                                        force_save="1" class="mb-0" readonly="videocall_source == 'discuss' or not user_can_edit"/>
+                                    <div class="d-flex flex-nowrap">
+                                        <button name="clear_videocall_location" type="object" class="btn btn-link btn-lg ms-1 px-1 py-0"
+                                            invisible="not videocall_location or not user_can_edit" context="{'recurrence_update': recurrence_update}">
+                                            <span title="Clear meeting" class="fa fa-times"></span>
+                                        </button>
+                                        <button name="action_join_video_call" class="btn btn-link btn-lg px-1 py-0" help="Join Video Call" type="object"
+                                            invisible="not videocall_location or not user_can_edit">
+                                            <span title="Join video call" class="fa fa-sign-in"></span>
+                                        </button>
+                                        <button name="set_discuss_videocall_location" type="object" class="btn btn-link btn-sm px-0 text-nowrap"
+                                            invisible="videocall_location or not user_can_edit" context="{'recurrence_update': recurrence_update}">
+                                            <span class="fa fa-plus"></span><span> Odoo meeting</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
+                            <field name="res_id" string="Linked to" invisible="not res_id" readonly="1" />
+                            <field name="res_model" invisible="1"/>
                             <field name="videocall_source" invisible="1"/>
                             <field name="access_token" invisible="1" force_save="1"/>
-                            <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" readonly="not user_can_edit"/>
-                            <label for="privacy"/>
-                                    <div class="o_row">
-                                        <field name="show_as" readonly="not user_can_edit" nolabel="1"/>
-                                        <field name="privacy" readonly="not user_can_edit" nolabel="1" placeholder="Default"/>
-                                    </div>
-                                    <field name="user_id" widget="many2one_avatar_user" readonly="not user_can_edit"/>
-                                    <field name="description" options="{'height': 100}" placeholder="Add description" readonly="not user_can_edit"/>
                         </group>
                         <group>
+                            <field name="current_status" class="o_calendar_form_status_selection_badge" string="Going?"
+                                widget="selection_badge" options="{'horizontal': true, 'size': 'sm'}"
+                                required="should_show_status" readonly="not should_show_status" invisible="not should_show_status"/>
+                            <label for="privacy" string="Status"/>
+                            <div class="d-flex">
+                                <field name="show_as" class="oe_inline me-2" readonly="not user_can_edit" nolabel="1"/>
+                                <field name="privacy" class="oe_inline me-2" readonly="not user_can_edit" nolabel="1" placeholder="User default"
+                                    help="Set whether you're available for other simultaneous avents and the privacy of this event to others. Manage your default privacy in your user preferences."/>
+                            </div>
                             <field name="should_show_status" invisible="1"/>
-                            <field name="current_status" class="w-auto" required="should_show_status" readonly="not should_show_status" invisible="not should_show_status"/>
-                            <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True}" readonly="not user_can_edit"/>
-                            <div class="o_row" colspan="2">
-                                <div colspan="1">
-                                    <field name="attendees_count" class="w-auto oe_inline" nolabel="1"/><span> Attendees</span>
+                            <div class="d-flex mb-2" colspan="2">
+                                <div>
+                                    <span class="fw-medium o_form_label">
+                                        <field name="attendees_count" class="w-auto oe_inline" nolabel="1"/><span> guests</span>
+                                    </span>
+                                    <div invisible="not accepted_count and not tentative_count and not declined_count and not awaiting_count"
+                                        class="text-muted fw-normal">
+                                        <span invisible="not accepted_count" class="me-1">
+                                            <field name="accepted_count" class="w-auto oe_inline" nolabel="1"/> Yes
+                                        </span>
+                                        <span invisible="not tentative_count" class="me-1">
+                                            <field name="tentative_count" class="w-auto oe_inline" nolabel="1"/> Maybe
+                                        </span>
+                                        <span invisible="not declined_count" class="me-1">
+                                            <field name="declined_count" class="w-auto oe_inline" nolabel="1"/> No
+                                        </span>
+                                        <span invisible="not awaiting_count" class="me-1">
+                                            <field name="awaiting_count" class="w-auto oe_inline" nolabel="1"/> Awaiting
+                                        </span>
+                                    </div>
                                 </div>
-                                <div name="send_buttons" class="d-flex gap-2 justify-content-end" colspan="1">
+                                <div name="send_buttons" class="d-flex gap-2 mb-auto ms-4">
                                     <button name="action_open_composer" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope" invisible="not user_can_edit"/>
                                 </div>
-                            </div>
-                            <div colspan="2">
-                                <field name="accepted_count" class="w-auto oe_inline" nolabel="1"/> yes,
-                                <field name="tentative_count" class="w-auto oe_inline" nolabel="1"/> maybe,
-                                <field name="declined_count" class="w-auto oe_inline" nolabel="1"/> no,
-                                <field name="awaiting_count" class="w-auto oe_inline" nolabel="1"/> awaiting
                             </div>
                             <div class="d-flex align-items-baseline" colspan="2">
                                 <field name="partner_ids" widget="many2manyattendee"
@@ -246,6 +225,69 @@
                         </group>
                     </group>
                     <notebook>
+                        <page name="options" string="Options">
+                            <group>
+                                <group>
+                                    <field name="user_id" widget="many2one_avatar_user" readonly="not user_can_edit"/>
+                                    <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" readonly="not user_can_edit"/>
+                                    <label for="description" string="Calendar description" colspan="2"/>
+                                    <field name="description"
+                                        colspan="2"
+                                        nolabel="1"
+                                        class="border border-1 rounded"
+                                        options="{'height': 120}"
+                                        placeholder="Add description"
+                                        readonly="not user_can_edit"
+                                    />
+                                </group>
+                                <group>
+                                    <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True}" readonly="not user_can_edit"/>
+                                    <field name="recurrence_id" invisible="1" />
+                                    <field name="rrule_type" invisible="1" />
+                                    <label for="recurrency" string="Recurrent"/>
+                                    <div class="d-flex align-items-baseline gap-1">
+                                        <field name="recurrency" widget="boolean_toggle" options="{'autosave': False}" class="w-auto" readonly="not user_can_edit"/>
+                                        <span invisible="not recurrency" class="mx-1">Repeat:</span>
+                                        <field name="rrule_type_ui" class="w-auto o_input" invisible="not recurrency" required="recurrency" readonly="not user_can_edit"/>
+                                    </div>
+                                    <label for="interval" class="fw-bold text-900" invisible="not recurrency or rrule_type_ui != 'custom'"/>
+                                    <div class="d-flex gap-1" invisible="not recurrency or rrule_type_ui != 'custom'">
+                                        <field name="interval" string="Repeat every" class="oe_inline w-auto o_input_5ch" />
+                                        <field name="rrule_type" nolabel="1" class="oe_inline" required="rrule_type_ui == 'custom'"/>
+                                    </div>
+                                    <span class="fw-bold text-nowrap" invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')">Repeat on</span>
+                                    <div invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')" ><widget name="calendar_week_days" readonly="not user_can_edit"/></div>
+                                    <field name="recurrence_id" invisible="1" />
+
+                                    <label string="Day of Month" for="month_by" class="fw-bold text-900" style="width: fit-content;" invisible="rrule_type_ui not in ['monthly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'monthly')"/>
+                                    <div class="d-flex gap-2" invisible="rrule_type_ui not in ['monthly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'monthly')">
+                                        <field name="month_by" nolabel="1" class="oe_inline w-auto" required="rrule_type_ui == 'monthly' or rrule_type == 'monthly'"/>
+                                        <field name="day" nolabel="1" class="oe_inline w-auto"
+                                            required="(rrule_type_ui == 'monthly' or rrule_type == 'monthly') and month_by == 'date'"
+                                            invisible="month_by != 'date'"
+                                        />
+                                        <field name="byday" string="The" class="oe_inline w-auto" nolabel="1"
+                                            required="(rrule_type_ui == 'monthly' or rrule_type == 'monthly') and month_by == 'day'"
+                                            invisible="month_by != 'day'"
+                                        />
+                                        <field name="weekday" nolabel="1" class="oe_inline w-auto"
+                                            required="(rrule_type_ui == 'monthly' or rrule_type == 'monthly') and month_by == 'day'"
+                                            invisible="month_by != 'day'"
+                                        />
+                                    </div>
+                                    <label string="Until" for="end_type" class="fw-bold text-900" invisible="not recurrency"/>
+                                    <div class="d-flex gap-2" invisible="not recurrency">
+                                        <field name="end_type" class="oe_inline w-auto" nolabel="1" required="recurrency" readonly="not user_can_edit"/>
+                                        <field name="count" class="oe_inline w-auto" nolabel="1" invisible="end_type != 'count'" required="recurrency" readonly="not user_can_edit"/>
+                                        <field name="until" class="oe_inline w-auto" nolabel="1" invisible="end_type != 'end_date'" readonly="not user_can_edit"
+                                            required="recurrency and end_type == 'end_date'"
+                                            placeholder="e.g: 12/31/2023"
+                                        />
+                                    </div>
+                                    <field name="event_tz" invisible="not recurrency" readonly="not user_can_edit"/>
+                                </group>
+                            </group>
+                        </page>
                         <page name="page_invitations" string="Invitations" groups="base.group_no_one" invisible="not user_can_edit">
                             <button name="action_sendmail" type="object" string="Send Invitations" icon="fa-envelope" class="oe_link"/>
                             <field name="attendee_ids" widget="one2many" mode="list,kanban" readonly="1">
@@ -312,7 +354,7 @@
                         />
                         <label for="videocall_location" class="opacity-100"/>
                         <div col="2">
-                            <field name="videocall_location" string="Videocall URL" widget="CopyClipboardChar" force_save="1" readonly="videocall_source == 'discuss'"/>
+                            <field name="videocall_location" string="Meeting Link" widget="CopyClipboardChar" force_save="1" readonly="videocall_source == 'discuss'"/>
                             <button name="clear_videocall_location" type="object" class="btn btn-link p-0"
                                 invisible="not videocall_location" context="{'recurrence_update': recurrence_update}">
                                 <span class="fa fa-times"></span><span> Clear meeting</span>
@@ -399,6 +441,8 @@
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <group>
                     <filter string="Responsible" name="responsible" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <separator/>
+                    <filter string="Date" name="group_by_start" domain="[]" context="{'group_by': 'start'}"/>
                 </group>
             </search>
         </field>
