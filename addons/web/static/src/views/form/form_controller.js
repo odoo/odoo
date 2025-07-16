@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog, deleteConfirmationMessage } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { registry } from "@web/core/registry";
@@ -195,7 +195,8 @@ export class FormController extends Component {
             if (this.display.controlPanel) {
                 addFieldDependencies(activeFields, fields, [
                     { name: "display_name", type: "char", readonly: true },
-                ]);
+                    ...["active", "x_active"].filter(field => field in fields).map(field => ({ name: field, type: "boolean" }))
+                  ]);
             }
             this.model.config.activeFields = activeFields;
             this.model.config.fields = fields;
@@ -322,7 +323,7 @@ export class FormController extends Component {
             useFormViewInDialog();
         }
 
-        this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
+        this.deleteRecordsWithConfirmation = useDeleteRecords(this.dialogService.add);
     }
 
     get cogMenuProps() {
@@ -588,17 +589,30 @@ export class FormController extends Component {
 
     get deleteConfirmationDialogProps() {
         return {
-            confirm: async () => {
-                await this.model.root.delete();
-                if (!this.model.root.resId) {
-                    this.env.config.historyBack();
-                }
+            title: _t("Bye-bye, record!"),
+            body: deleteConfirmationMessage,
+            confirmLabel: _t("Delete"),
+            cancel: () => {
+                // `ConfirmationDialog` needs this prop to display the cancel
+                // button but we do nothing on cancel.
             },
+            cancelLabel: _t("No, keep it"),
         };
     }
 
     async deleteRecord() {
-        this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps, [this.model.root]);
+        const archive = this.archiveEnabled ? async() => {
+            this.model.root.archive();
+        } : null;
+
+        const deleteFn = async () => {
+            await this.model.root.delete();
+            if (!this.model.root.resId) {
+                this.env.config.historyBack();
+            }
+        };
+
+        this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps, deleteFn, archive);
     }
 
     async beforeExecuteActionButton(clickParams) {
