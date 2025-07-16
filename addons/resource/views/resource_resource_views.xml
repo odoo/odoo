@@ -16,7 +16,7 @@
                <filter string="Material" name="material" domain="[('resource_type','=', 'material')]"/>
                <separator />
                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-               <group string="Group By">
+               <group>
                     <filter string="User" name="user" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Type" name="type" domain="[]" context="{'group_by':'resource_type'}"/>
                     <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>

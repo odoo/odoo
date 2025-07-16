@@ -152,7 +152,7 @@
                 <separator/>
                 <filter string="Inventory Adjustments" name="inventory" domain="[('is_inventory', '=', True)]"/>
                 <separator/>
-                <group string="Group By" name="groupby">
+                <group name="groupby">
                     <filter string="Product" name="groupby_product_id" domain="[]" context="{'group_by': 'product_id'}"/>
                     <filter string="Status" name="by_state" domain="[]"  context="{'group_by': 'state'}"/>
                     <filter string="Date" name="by_date" domain="[]" context="{'group_by': 'date'}"/>

@@ -28,7 +28,7 @@
                 <field name="delivery_type"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Provider" name="provider" context="{'group_by':'delivery_type', 'residual_visible':True}"/>
                 </group>
             </search>

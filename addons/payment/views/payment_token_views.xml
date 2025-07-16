@@ -55,7 +55,7 @@
                 <field name="partner_id"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Provider" name="provider_id" context="{'group_by': 'provider_id'}"/>
                     <filter string="Partner" name="partner_id" context="{'group_by': 'partner_id'}"/>
                     <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>

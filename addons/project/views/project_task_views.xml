@@ -28,7 +28,7 @@
                         <filter name="create_date_last_30_days" string="Last 30 Days" domain="[('date_last_stage_update', '&gt;=', 'today -30d +1d')]"/>
                         <filter name="create_date_last_365_days" string="Last 365 Days" domain="[('date_last_stage_update', '&gt;=', 'today -365d +1d')]"/>
                     </filter>
-                    <group string="Group By">
+                    <group>
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone"/>
                         <filter string="Priority" name="groupby_priority" context="{'group_by': 'priority'}"/>

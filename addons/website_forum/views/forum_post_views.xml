@@ -82,7 +82,7 @@
             <filter name="filter_write_date" date="write_date"/>
             <separator/>
             <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-            <group string="Group By">
+            <group>
                 <filter string="Forum" name="forum" domain="[]" context="{'group_by': 'forum_id'}"/>
                 <filter string="Author" name="author" domain="[]" context="{'group_by': 'create_uid'}"/>
                 <filter string="Post" name="post" domain="[]" context="{'group_by': 'parent_id'}"/>

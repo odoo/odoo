@@ -144,7 +144,7 @@
                 <separator/>
                 <filter name="type_is_lead" string="Leads" domain="[('lead_type', '=', 'lead')]"/>
                 <filter name="type_is_opportunity" string="Opportunities" domain="[('lead_type', '=', 'opportunity')]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Type" name="groupby_lead_type" domain="[]" context="{'group_by':'lead_type'}"/>
                     <filter string="Sales Team" name="groupby_team_id" domain="[]" context="{'group_by':'team_id'}"/>
                     <filter string="Salesperson" name="groupby_user_id" domain="[]" context="{'group_by':'user_id'}"/>

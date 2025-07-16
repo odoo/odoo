@@ -82,7 +82,7 @@
                 <field name="category_id"/>
                 <field name="location_in_id"/>
                 <field name="location_out_id"/>
-                <group string='Filters'>
+                <group>
                     <filter name="filter_to_rules_on_product"
                             string="Rules on Products"
                             domain="[('product_id', '!=', False)]"/>
@@ -90,7 +90,7 @@
                             string="Rules on Categories"
                             domain="[('category_id' ,'!=', False)]"/>
                 </group>
-                <group string="Group By">
+                <group>
                         <filter string="Location: When arrives to" name="location_in" context="{'group_by':'location_in_id'}"/>
                         <filter string="Location: Store to" name="location_out" context="{'group_by':'location_out_id'}"/>
                     </group>

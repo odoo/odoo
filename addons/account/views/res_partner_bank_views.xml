@@ -75,7 +75,7 @@
                         <filter string="Phishing risk: Medium" name="medium_phishing_risk" domain="[('has_iban_warning', '!=', False)]"/>
                         <separator/>
                         <filter string="Created On" name="create_date" date="create_date"/>
-                        <group string="Group By">
+                        <group>
                             <filter string="Created On" name="groupby_create_date" context="{'group_by': 'create_date'}"/>
                             <filter string="Created By" name="groupby_create_by" context="{'group_by': 'create_uid'}"/>
                         </group>

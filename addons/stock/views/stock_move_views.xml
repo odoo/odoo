@@ -345,7 +345,7 @@
                     <filter string="Inventory" name="inventory" domain="[('is_inventory', '=', True)]"/>
                     <separator/>
                     <filter string="Date" name="today" date="date" help="Scheduled or processing date"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Product" name="by_product" domain="[]"  context="{'group_by': 'product_id'}"/>
                         <filter string="Operation Type" name="groupby_picking_type_id" domain="[]"  context="{'group_by': 'picking_type_id'}"/>
                         <filter string="Picking" name="groupby_picking_id" domain="[]"  context="{'group_by': 'picking_id'}"/>

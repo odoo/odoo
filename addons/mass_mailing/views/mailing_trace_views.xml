@@ -21,7 +21,7 @@
                 <filter string="Bounced" name="filter_bounced" domain="[('trace_status', '=', 'bounce')]"/>
                 <filter string="Failed" name="filter_failed" domain="[('trace_status', '=', 'error')]"/>
                 <filter string="Test Traces" name="filter_is_test_trace" domain="[('is_test_trace', '=', 'True')]"/>
-                <group string="Group By">
+                <group>
                     <filter string="State" name="state" domain="[]" context="{'group_by': 'trace_status'}"/>
                     <filter string="Open Date" name="group_open_date" domain="[('trace_status', 'in', ['open', 'reply'])]" context="{'group_by': 'open_datetime:day'}"/>
                     <filter string="Reply Date" name="group_reply_date" domain="[('trace_status', '=', 'reply')]" context="{'group_by': 'reply_datetime:day'}"/>

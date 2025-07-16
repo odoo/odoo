@@ -20,7 +20,7 @@
                 <field name="employee_id"/>
                 <field name="duration" filter_domain="[('duration', '>=', self)]"/>
                 <filter string="Last 3 Months" invisible="1" name="last_three_months" domain="[('date','&gt;=', '-3m')]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Date" name="groupby_date" context="{'group_by': 'date:week'}"/>
                     <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
                 </group>

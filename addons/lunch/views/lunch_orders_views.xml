@@ -17,7 +17,7 @@
                 <filter name="date_filter" string="Today" domain="[('date', '=', 'today')]" />
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                <group string="Group By">
+                <group>
                     <filter name="group_by_user" string="User" context="{'group_by': 'user_id'}"/>
                     <filter name="group_by_supplier" string="Vendor" context="{'group_by': 'supplier_id'}"/>
                     <filter name="group_by_date" string="Order Date" context="{'group_by': 'date:day'}" help="Vendor Orders by Date"/>

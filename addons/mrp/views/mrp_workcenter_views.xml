@@ -366,7 +366,7 @@
                 <search string="Search for mrp workcenter">
                     <field name="name" string="Work Center" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
                     <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
-                    <group string="Group By...">
+                    <group>
                         <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
@@ -492,7 +492,7 @@
                 <filter name="productive" string="Fully Productive" domain="[('loss_type','=','productive')]"/>
                 <filter name="filter_date_start" string="Date" date="date_start"/>
                 <separator/>
-                <group string='Group by...'>
+                <group>
                     <filter string="User" name="user" context="{'group_by': 'create_uid'}"/>
                     <filter string='Workcenter' name="workcenter_group" context="{'group_by': 'workcenter_id'}"/>
                     <filter string="Loss Reason" name="loss_group" context="{'group_by': 'loss_id'}"/>

@@ -154,7 +154,7 @@
                 <filter string="Has Remaining Qty" name="has_remaining_qty" domain="[('remaining_qty', '>', 0)]"/>
                 <separator/>
                 <filter string="Date" name="date" date="create_date" />
-                <group string='Group by...'>
+                <group>
                     <filter string='Product' name="group_by_product_id" context="{'group_by': 'product_id'}"/>
                     <filter string='Lot/Serial Number' name="group_by_lot_id" context="{'group_by': 'lot_id'}"/>
                     <filter string='Product Category' name="group_by_categ_id" context="{'group_by': 'categ_id'}"/>

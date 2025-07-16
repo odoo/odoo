@@ -45,7 +45,7 @@
                 <separator/>
                 <filter string="Active" name="active" domain="[('archive', '=', False)]"/>
                 <filter string="Cancelled" name="inactive" domain="[('archive', '=', True)]"/>
-                <group string='Group by...'>
+                <group>
                     <filter string='Assigned to' name="assigned" domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string='Category' name="category" domain="[]" context="{'group_by' : 'category_id'}"/>
                     <filter string='Stage' name="stages" domain="[]" context="{'group_by' : 'stage_id'}"/>
@@ -537,7 +537,7 @@
                     domain="[('activity_date_deadline', '&gt;', 'today')]"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                <group string='Group by...'>
+                <group>
                     <filter string='Technician' name="technicians" domain="[]" context="{'group_by': 'technician_user_id'}"/>
                     <filter string='Category' name="category" domain="[]" context="{'group_by': 'category_id'}"/>
                     <filter string='Owner' name="owner" domain="[]" context="{'group_by': 'owner_user_id'}"/>
@@ -643,7 +643,7 @@
         <field name="arch" type="xml">
             <search string="Search">
                 <field name="name" string="Category Name" filter_domain="[('name','ilike',self)]"/>
-                <group  string='Group by...'>
+                <group>
                     <filter string='Responsible' name="responsible" domain="[]" context="{'group_by' : 'technician_user_id'}"/>
                 </group>
             </search>

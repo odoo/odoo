@@ -20,7 +20,7 @@
                 <field name="company_id" string="Company" groups="base.group_multi_company"/>
                 <separator/>
                 <filter name="filter_date" date="date" default_period="year" string="Period"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter name="company" string="Company" context="{'group_by': 'company_id'}"
                         groups="base.group_multi_company"/>
                 </group>
