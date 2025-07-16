@@ -35,7 +35,6 @@ export class PaymentScreen extends Component {
         this.dialog = useService("dialog");
         this.invoiceService = useService("account_move");
         this.notification = useService("notification");
-        this.hardwareProxy = useService("hardware_proxy");
         this.printer = useService("printer");
         this.payment_methods_from_config = this.pos.config.payment_method_ids
             .slice()
@@ -222,9 +221,6 @@ export class PaymentScreen extends Component {
         }
 
         this.currentOrder.setToInvoice(!this.currentOrder.isToInvoice());
-    }
-    openCashbox() {
-        this.pos.openCashbox();
     }
     async addTip() {
         const tip = this.pos.getTip();

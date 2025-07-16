@@ -57,7 +57,6 @@ export class PosStore extends WithLazyGetterTrap {
         "bus_service",
         "number_buffer",
         "barcode_reader",
-        "hardware_proxy",
         "ui",
         "pos_data",
         "dialog",
@@ -79,7 +78,6 @@ export class PosStore extends WithLazyGetterTrap {
         env,
         {
             number_buffer,
-            hardware_proxy,
             barcode_reader,
             ui,
             dialog,
@@ -134,7 +132,6 @@ export class PosStore extends WithLazyGetterTrap {
             create: new Set(),
         };
 
-        this.hardwareProxy = hardware_proxy;
         this.selectedOrderUuid = null;
         this.selectedPartner = null;
         this.selectedCategory = null;
@@ -145,15 +142,9 @@ export class PosStore extends WithLazyGetterTrap {
 
         this.orderCounter = new Counter(0);
 
-        // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
-        // the hardware proxy should just be part of the pos service?
-        this.hardwareProxy.pos = this;
         this.syncingOrders = new Set();
         await this.initServerData();
 
-        if (this.config.useProxy) {
-            await this.connectToProxy();
-        }
         this.closeOtherTabs();
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
         this._searchTriggered = false;
@@ -2035,38 +2026,6 @@ export class PosStore extends WithLazyGetterTrap {
         return await printer.printReceipt(receipt);
     }
 
-    connectToProxy() {
-        return new Promise((resolve, reject) => {
-            this.barcodeReader?.disconnectFromProxy();
-            this.loadingSkipButtonIsShown = true;
-            this.hardwareProxy.autoConnect({ force_ip: this.config.proxy_ip }).then(
-                () => {
-                    if (this.config.iface_scan_via_proxy) {
-                        this.barcodeReader?.connectToProxy();
-                    }
-                    resolve();
-                },
-                (statusText, url) => {
-                    // this should reject so that it can be captured when we wait for pos.ready
-                    // in the chrome component.
-                    // then, if it got really rejected, we can show the error.
-                    if (statusText == "error" && window.location.protocol == "https:") {
-                        // FIXME POSREF this looks like it's dead code.
-                        reject({
-                            title: _t("HTTPS connection to IoT Box failed"),
-                            body: _t(
-                                "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box.",
-                                url
-                            ),
-                            popup: "alert",
-                        });
-                    } else {
-                        resolve();
-                    }
-                }
-            );
-        });
-    }
     editPartnerContext(partner) {
         return {};
     }

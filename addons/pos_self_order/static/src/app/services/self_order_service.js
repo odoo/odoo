@@ -154,6 +154,7 @@ export class SelfOrder extends Reactive {
             this.addToCart(productTemplate, 1, "", {}, {});
             this.router.navigate("cart");
         });
+
         if (this.config.epson_printer_ip && this.config.other_devices) {
             this.receiptPrinter = new EpsonPrinter(this.config);
             this.printer.setPrinter(this.receiptPrinter);
@@ -482,7 +483,7 @@ export class SelfOrder extends Reactive {
 
     createPrinter(printer) {
         if (printer.printer_type === "epson_epos") {
-            return new EpsonPrinter({ ip: printer.epson_printer_ip });
+            return new EpsonPrinter(printer);
         } else if (printer.printer_type === "epson_server_direct_print") {
             return new EpsonServerDirectPrinter({
                 posConfigId: this.config.id,
