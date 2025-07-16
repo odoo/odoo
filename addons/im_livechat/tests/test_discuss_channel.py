@@ -136,3 +136,39 @@ class TestDiscussChannel(TestImLivechatCommon, MailCase):
             ],
         ):
             channel.livechat_status = "waiting"
+
+    def test_livechat_status_switch_on_operator_joined_batch(self):
+        """Test that the livechat status switches to 'in_progress' when an operator joins multiple channels in a batch,
+        and ensure re-adding the same member does not change the status."""
+        channel_1 = self.env["discuss.channel"].create({
+            "name": "Livechat Channel 1",
+            "channel_type": "livechat",
+            "livechat_operator_id": self.operators[0].partner_id.id,
+        })
+        channel_2 = self.env["discuss.channel"].create({
+            "name": "Livechat Channel 2",
+            "channel_type": "livechat",
+            "livechat_operator_id": self.operators[0].partner_id.id,
+        })
+        bob_operator = new_test_user(self.env, "bob_user", groups="im_livechat.im_livechat_group_user")
+        channel_1.livechat_status = "need_help"
+        channel_2.livechat_status = "need_help"
+        self.assertEqual(channel_1.livechat_status, "need_help")
+        self.assertEqual(channel_2.livechat_status, "need_help")
+        self.assertFalse(channel_1.livechat_end_dt)
+        self.assertFalse(channel_2.livechat_end_dt)
+
+        # Add the operator to both channels in a batch, which should switch their status to 'in_progress'
+        (channel_1 | channel_2).with_user(channel_1.livechat_operator_id.main_user_id).add_members(
+            partner_ids=bob_operator.partner_id.ids
+        )
+        self.assertEqual(channel_1.livechat_status, "in_progress")
+        self.assertEqual(channel_2.livechat_status, "in_progress")
+
+        # Re-add the same operator and ensure the status does not change
+        channel_1.livechat_status = "need_help"
+        self.assertEqual(channel_1.livechat_status, "need_help")
+        channel_1.with_user(channel_1.livechat_operator_id.main_user_id).add_members(
+            partner_ids=bob_operator.partner_id.ids
+        )
+        self.assertEqual(channel_1.livechat_status, "need_help")
