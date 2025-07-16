@@ -417,3 +417,23 @@ registry.category("web_tour.tours").add("test_order_invoice_search", {
             TicketScreen.nthRowContains(1, "001", false),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_order_with_existing_serial", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Serial Product"),
+            ProductScreen.enterExistingLotNumber("SN1"),
+            ProductScreen.selectedOrderlineHas("Serial Product", "1.00"),
+            inLeftSide({
+                trigger: ".info-list:contains('SN SN1')",
+            }),
+            ProductScreen.clickDisplayedProduct("Serial Product"),
+            ProductScreen.enterExistingLotNumber("SN2"),
+            ProductScreen.selectedOrderlineHas("Serial Product", "2.00"),
+            inLeftSide({
+                trigger: ".info-list:contains('SN SN2')",
+            }),
+        ].flat(),
+});
