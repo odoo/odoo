@@ -1,5 +1,5 @@
 import { before, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, drag, queryOne, setInputFiles } from "@odoo/hoot-dom";
+import { animationFrame, drag, queryOne, setInputFiles, waitFor } from "@odoo/hoot-dom";
 import { useEffect } from "@odoo/owl";
 import {
     contains,
@@ -14,6 +14,7 @@ import {
     onRpc,
     patchWithCleanup,
     serverState,
+    toggleActionMenu,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { redirect } from "@web/core/utils/urls";
@@ -471,6 +472,72 @@ describe("Import view", () => {
         expect.verifySteps(["/base_import/set_file"]);
         expect(`.o_import_data_sidepanel .o_import_formatting`).toHaveCount(1);
         expect(`.o_import_action .o_import_data_content`).toHaveCount(1);
+    });
+
+    test.tags("desktop");
+    test("canceling import navigates back to the previous view", async () => {
+        Partner._views = {
+            list: `<list><field name="name"/></list>`,
+        };
+
+        class Users extends models.Model {
+            _name = "res.users";
+            has_group() {
+                return true;
+            }
+        }
+
+        defineModels([Users]);
+        defineActions([
+            {
+                id: 2,
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "list"]],
+            },
+        ]);
+
+        mockService("http", {
+            post(route, params) {
+                expect.step(route);
+                expect(params.ufile[0].name).toBe("fake_file.csv");
+                return super.post(route, params);
+            },
+        });
+
+        onRpc("base_import.import", "create", ({ route }) => expect.step(route));
+        onRpc("base_import.import", "parse_preview", ({ route }) => expect.step(route));
+
+        await mountWebClient();
+        await getService("action").doAction(2);
+
+        await waitFor(".o_list_view");
+        // Open the import action to import records
+        await toggleActionMenu();
+        await waitFor(".o-dropdown--menu");
+        expect(`.o_import_menu`).toHaveCount(1);
+        await contains(`.o_import_menu`).click();
+        expect.verifySteps(["/web/dataset/call_kw/base_import.import/create"]);
+
+        await waitFor(".o_import_action");
+        expect(".o_control_panel button").toHaveCount(2);
+        expect(".o_view_nocontent").toHaveCount(1);
+
+        // Upload a file
+        const file = new File(["fake_file"], "fake_file.csv", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        expect.verifySteps([
+            "/base_import/set_file",
+            "/web/dataset/call_kw/base_import.import/parse_preview",
+        ]);
+
+        // Click on 'Cancel' to go back to the previous view.
+        await waitFor(".o_import_data_content");
+        expect(".o_control_panel_main_buttons button").toHaveCount(4);
+        expect(".o_control_panel_main_buttons button:nth-of-type(3)").toHaveText("Cancel");
+        await contains(".o_control_panel_main_buttons button:nth-of-type(3)").click();
+        await waitFor(".o_list_view");
     });
 
     test.tags("desktop");
