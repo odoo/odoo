@@ -21,6 +21,8 @@ class ProductTemplate(models.Model):
     )
     gelato_image_ids = fields.One2many(
         string="Gelato Print Images",
+        help="To ensure a good printing result, upload a PNG of the entire printing area with your"
+        " graphics correctly placed on it.",
         comodel_name='product.document',
         inverse_name='res_id',
         domain=[('is_gelato', '=', True)],
@@ -100,12 +102,14 @@ class ProductTemplate(models.Model):
         :param dict template_info: The template information fetched from Gelato.
         :return: None
         """
+        ProductAttributeValue = self.env['product.attribute.value']
         if len(template_info['variants']) == 1:  # The template has no attribute.
             self.gelato_product_uid = template_info['variants'][0]['productUid']
         else:  # The template has multiple attributes.
             # Iterate over the variants to find and create the possible attributes.
+            all_existing_pavs = ProductAttributeValue
             for variant_data in template_info['variants']:
-                current_variant_pavs = self.env['product.attribute.value']
+                current_variant_pavs = ProductAttributeValue
                 for attribute_data in variant_data['variantOptions']:  # Attribute name and value.
                     # Search for the existing attribute with the proper variant creation policy and
                     # create it if not found.
@@ -119,12 +123,11 @@ class ProductTemplate(models.Model):
                         })
 
                     # Search for the existing attribute value and create it if not found.
-                    attribute_value = self.env['product.attribute.value'].search([
-                        ('name', '=', attribute_data['value']),
-                        ('attribute_id', '=', attribute.id),
+                    attribute_value = ProductAttributeValue.search([
+                        ('name', '=', attribute_data['value']), ('attribute_id', '=', attribute.id)
                     ], limit=1)
                     if not attribute_value:
-                        attribute_value = self.env['product.attribute.value'].create({
+                        attribute_value = ProductAttributeValue.create({
                             'name': attribute_data['value'],
                             'attribute_id': attribute.id
                         })
@@ -144,6 +147,8 @@ class ProductTemplate(models.Model):
                     else:  # The PTAL already exists.
                         ptal.value_ids = [Command.link(attribute_value.id)]  # Link the value.
 
+                all_existing_pavs += current_variant_pavs
+
                 # Find the variant that was automatically created and set the Gelato UID.
                 for variant in self.product_variant_ids:
                     corresponding_ptavs = variant.product_template_attribute_value_ids
@@ -151,6 +156,11 @@ class ProductTemplate(models.Model):
                     if corresponding_pavs == current_variant_pavs:
                         variant.gelato_product_uid = variant_data['productUid']
                         break
+
+            # Remove attribute values that were removed in Gelato.
+            if removed_values := self.attribute_line_ids.value_ids - all_existing_pavs:
+                for attribute_line in self.attribute_line_ids:
+                    attribute_line.value_ids -= removed_values
 
             # Delete the incompatible variants that were created but not allowed by Gelato.
             variants_without_gelato = self.env['product.product'].search([

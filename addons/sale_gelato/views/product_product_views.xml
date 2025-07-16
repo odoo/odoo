@@ -7,10 +7,44 @@
         <field name="inherit_id" ref="product.product_normal_form_view"></field>
         <field name="arch" type="xml">
             <group name="description" position="after">
-                <group
-                    string="Gelato" invisible="not gelato_product_uid" groups="base.group_no_one"
-                >
-                    <field string="Product UID" name="gelato_product_uid"/>
+                <group string="Gelato" invisible="not gelato_product_uid">
+                    <field
+                        name="gelato_product_uid"
+                        string="Product UID"
+                        groups="base.group_no_one"
+                    />
+                    <label
+                        for="gelato_variant_image_ids"
+                        invisible="not gelato_variant_image_ids"
+                        class="opacity-100"
+                    />
+                    <div>
+                        <field
+                            string="Print Images"
+                            name="gelato_variant_image_ids"
+                            invisible="not gelato_variant_image_ids"
+                            widget="many2many_tags"
+                            options="{'on_tag_click': 'open_form'}"
+                            context="{'form_view_ref': 'sale_gelato.product_document_form'}"
+                            force_save="True"
+                        />
+                    </div>
+                    <button
+                        string="Generate Print Images"
+                        type="object"
+                        name="action_generate_variant_gelato_images"
+                        invisible="gelato_variant_image_ids"
+                        class="btn btn-secondary text-nowrap"
+                        colspan="2"
+                    />
+                    <button
+                        string="Synchronize"
+                        type="object"
+                        name="action_generate_variant_gelato_images"
+                        invisible="not gelato_variant_image_ids"
+                        class="btn btn-secondary text-nowrap"
+                        colspan="2"
+                    />
                 </group>
             </group>
         </field>
@@ -22,10 +56,44 @@
         <field name="inherit_id" ref="product.product_variant_easy_edit_view"></field>
         <field name="arch" type="xml">
             <group name="sales" position="after">
-                <group
-                    string="Gelato" invisible="not gelato_product_uid" groups="base.group_no_one"
-                >
-                    <field string="Product UID" name="gelato_product_uid"/>
+                <group string="Gelato" invisible="not gelato_product_uid">
+                    <field
+                        string="Product UID" name="gelato_product_uid" groups="base.group_no_one"
+                    />
+                    <!-- Split the label and the value to apply the 'opacity-100' class on the
+                    label. -->
+                    <label
+                        for="gelato_variant_image_ids"
+                        invisible="not gelato_variant_image_ids"
+                        class="opacity-100"
+                    />
+                    <div>
+                        <field
+                            string="Print Images"
+                            name="gelato_variant_image_ids"
+                            invisible="not gelato_variant_image_ids"
+                            widget="many2many_tags"
+                            options="{'on_tag_click': 'open_form'}"
+                            context="{'form_view_ref': 'sale_gelato.product_document_form'}"
+                            force_save="True"
+                        />
+                    </div>
+                    <button
+                        string="Generate Print Images"
+                        type="object"
+                        name="action_generate_variant_gelato_images"
+                        invisible="gelato_variant_image_ids"
+                        class="btn btn-secondary text-nowrap"
+                        colspan="2"
+                    />
+                    <button
+                        string="Synchronize"
+                        type="object"
+                        name="action_generate_variant_gelato_images"
+                        invisible="not gelato_variant_image_ids"
+                        class="btn btn-secondary text-nowrap"
+                        colspan="2"
+                    />
                 </group>
             </group>
         </field>

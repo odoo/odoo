@@ -145,13 +145,20 @@ class SaleOrder(models.Model):
         """
         items_payload = []
         for gelato_line in self.order_line.filtered(lambda l: l.product_id.gelato_product_uid):
+            # Build the list of images to send as the set of defined variant images, plus the
+            # template images that are not overridden by variant images.
+            defined_variant_images = gelato_line.product_id.gelato_variant_image_ids.filtered('raw')
+            all_template_images = gelato_line.product_id.product_tmpl_id.gelato_image_ids
+            remaining_template_images = all_template_images.filtered(
+                lambda image: image.name not in defined_variant_images.mapped('name')
+            )
+            line_images = defined_variant_images | remaining_template_images
+
+            # Build the item payload.
             item_data = {
                 'itemReferenceId': gelato_line.product_id.id,
                 'productUid': gelato_line.product_id.gelato_product_uid,
-                'files': [
-                    image._gelato_prepare_file_payload()
-                    for image in gelato_line.product_id.product_tmpl_id.gelato_image_ids
-                ],
+                'files': [image._gelato_prepare_file_payload() for image in line_images],
                 'quantity': int(gelato_line.product_uom_qty),
             }
             items_payload.append(item_data)

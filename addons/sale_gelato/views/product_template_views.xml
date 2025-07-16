@@ -33,11 +33,7 @@
                             string="Print Images"
                             name="gelato_image_ids"
                             widget="many2many_tags"
-                            options="{
-                                'no_create': True,
-                                'no_quick_create': True,
-                                'on_tag_click': 'open_form',
-                            }"
+                            options="{'on_tag_click': 'open_form'}"
                             context="{'form_view_ref': 'sale_gelato.product_document_form'}"
                             force_save="True"
                         />
