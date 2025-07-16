@@ -38,7 +38,7 @@ export class HootButtons extends Component {
 
     static template = xml`
         <t t-set="isRunning" t-value="runnerState.status === 'running'" />
-        <t t-set="showAll" t-value="env.runner.hasFilter" />
+        <t t-set="showAll" t-value="env.runner.hasRemovableFilter" />
         <t t-set="showFailed" t-value="runnerState.failedIds.size" />
         <t t-set="failedSuites" t-value="getFailedSuiteIds()" />
         <div

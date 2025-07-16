@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { queryAll } from "@odoo/hoot-dom";
-import { reactive, useEffect, useExternalListener } from "@odoo/owl";
+import { reactive, useComponent, useEffect, useExternalListener } from "@odoo/owl";
 import { isNode } from "@web/../lib/hoot-dom/helpers/dom";
 import {
     isInstanceOf,
@@ -557,6 +557,8 @@ const { DIFF_INSERT, DIFF_DELETE } = DiffMatchPatch;
 
 const labelObjects = new WeakSet();
 const objectConstructors = new Map();
+/** @type {(KeyboardEventInit & { callback: (ev: KeyboardEvent) => any })[]} */
+const hootKeys = [];
 const windowTarget = {
     addEventListener: window.addEventListener.bind(window),
     removeEventListener: window.removeEventListener.bind(window),
@@ -582,6 +584,20 @@ export async function copy(text) {
         $debug(`Copied to clipboard: ${stringify(text)}`);
     } catch (error) {
         console.warn("Could not copy to clipboard:", error);
+    }
+}
+
+/**
+ * @param {KeyboardEvent} ev
+ */
+export function callHootKey(ev) {
+    for (const { callback, ...params } of hootKeys) {
+        if ($entries(params).every(([k, v]) => ev[k] === v)) {
+            callback(ev);
+            if (ev.defaultPrevented) {
+                return;
+            }
+        }
     }
 }
 
@@ -1507,6 +1523,41 @@ export function useAutofocus(ref) {
 
     let displayed = new Set();
     useEffect(autofocus, () => [ref.el]);
+}
+
+/**
+ * @param {string[]} keyStroke
+ * @param {(ev: KeyboardEvent) => any} callback
+ */
+export function useHootKey(keyStroke, callback) {
+    const component = useComponent();
+    /** @type {KeyboardEventInit} */
+    const params = { callback: callback.bind(component) };
+    for (const key of keyStroke) {
+        switch (key) {
+            case "Alt": {
+                params.altKey = true;
+                break;
+            }
+            case "Control": {
+                params.ctrlKey = true;
+                break;
+            }
+            case "Meta": {
+                params.metaKey = true;
+                break;
+            }
+            case "Shift": {
+                params.shiftKey = true;
+                break;
+            }
+            default: {
+                params.key = key;
+                break;
+            }
+        }
+    }
+    hootKeys.push(params);
 }
 
 /** @type {EventTarget["addEventListener"]} */

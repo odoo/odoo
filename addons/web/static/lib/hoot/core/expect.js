@@ -16,7 +16,6 @@ import {
     isNodeVisible,
     queryRect,
 } from "@web/../lib/hoot-dom/helpers/dom";
-import { Deferred } from "@web/../lib/hoot-dom/helpers/time";
 import {
     addInteractionListener,
     getColorHex,
@@ -101,9 +100,8 @@ import { Test } from "./test";
 
 /**
  * @template T
- * @typedef {T & {
- *  deferred: Deferred<boolean>;
- *  options: VerifierOptions
+ * @typedef {T & ReturnType<Promise.withResolvers> & {
+ *  options: VerifierOptions;
  *  timeout: number;
  * }} AsyncResolver
  */
@@ -804,15 +802,15 @@ export function makeExpect(params) {
         }
 
         currentResult.errorResolver = {
+            ...Promise.withResolvers(),
             errors,
             options,
-            deferred: new Deferred(),
             timeout: setTimeout(
                 () => checkErrors(currentResult.errorResolver, true),
                 options?.timeout ?? 2000
             ),
         };
-        return currentResult.errorResolver.deferred;
+        return currentResult.errorResolver.promise;
     }
 
     /**
@@ -845,15 +843,15 @@ export function makeExpect(params) {
         }
 
         currentResult.stepResolver = {
+            ...Promise.withResolvers(),
             steps,
             options,
-            deferred: new Deferred(),
             timeout: setTimeout(
                 () => checkSteps(currentResult.stepResolver, true),
                 options?.timeout ?? 2000
             ),
         };
-        return currentResult.stepResolver.deferred;
+        return currentResult.stepResolver.promise;
     }
 
     /**
@@ -952,7 +950,7 @@ export class CaseResult {
     consumeErrors() {
         if (this.errorResolver) {
             clearTimeout(this.errorResolver.timeout);
-            this.errorResolver.deferred.resolve(true);
+            this.errorResolver.resolve(true);
             this.errorResolver = null;
         }
         this.currentErrors = [];
@@ -961,7 +959,7 @@ export class CaseResult {
     consumeSteps() {
         if (this.stepResolver) {
             clearTimeout(this.stepResolver.timeout);
-            this.stepResolver.deferred.resolve(true);
+            this.stepResolver.resolve(true);
             this.stepResolver = null;
         }
         this.currentSteps = [];

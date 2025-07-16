@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Deferred, on, setFrameRate } from "@odoo/hoot-dom";
+import { on, setFrameRate } from "@odoo/hoot-dom";
 import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { cleanupDOM } from "@web/../lib/hoot-dom/helpers/dom";
 import { cleanupEvents, enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
@@ -120,6 +120,7 @@ const {
         freeze: $freeze,
         fromEntries: $fromEntries,
         keys: $keys,
+        values: $values,
     },
     performance,
     Promise,
@@ -352,7 +353,19 @@ export class Runner {
      * @type {boolean}
      */
     get hasFilter() {
-        return this._hasRemovableFilter > 0;
+        for (const includeValues of $values(this.state.includeSpecs)) {
+            if ($keys(includeValues).length > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @type {boolean}
+     */
+    get hasRemovableFilter() {
+        return this._removableFilterCount > 0;
     }
 
     // Private properties
@@ -360,8 +373,7 @@ export class Runner {
     /** @type {Job[]} */
     _currentJobs = [];
     _failed = 0;
-    _hasRemovableFilter = 0;
-    _hasIncludeFilter = 0;
+    _includeFilterCount = 0;
     /** @type {(() => MaybePromise<void>)[]} */
     _missedCallbacks = [];
     _populateState = false;
@@ -370,6 +382,7 @@ export class Runner {
     _pushPendingTest;
     /** @type {(test: Test) => void} */
     _pushTest;
+    _removableFilterCount = 0;
     _started = false;
     _startTime = 0;
 
@@ -421,7 +434,8 @@ export class Runner {
                     this.queryInclude.push(queryPart);
                 }
             }
-            this._hasIncludeFilter += this.queryInclude.length;
+            this._filterCount += this.queryInclude.length;
+            this._includeFilterCount += this.queryInclude.length;
         }
 
         // Jobs (suites or tests)
@@ -798,7 +812,7 @@ export class Runner {
     }
 
     manualStart() {
-        this._canStartPromise.resolve(true);
+        this._canStartDef.resolve(true);
     }
 
     /**
@@ -872,8 +886,8 @@ export class Runner {
             this._currentJobs = filterReady(jobs);
         }
 
-        if (this._canStartPromise) {
-            await this._canStartPromise;
+        if (this._canStartDef) {
+            await this._canStartDef.promise;
         }
 
         this.state.status = "running";
@@ -1448,14 +1462,14 @@ export class Runner {
                     continue;
                 }
                 if (previousValue <= 0 && idLevel > 0) {
-                    this._hasIncludeFilter++;
+                    this._includeFilterCount++;
                 } else if (previousValue > 0 && idLevel <= 0) {
-                    this._hasIncludeFilter--;
+                    this._includeFilterCount--;
                 }
                 if (!wasRemovable && isRemovable) {
-                    this._hasRemovableFilter++;
+                    this._removableFilterCount++;
                 } else if (wasRemovable && !isRemovable) {
-                    this._hasRemovableFilter--;
+                    this._removableFilterCount--;
                 }
             } else {
                 delete values[nId];
@@ -1463,10 +1477,10 @@ export class Runner {
                     continue;
                 }
                 if (previousValue > 0) {
-                    this._hasIncludeFilter--;
+                    this._includeFilterCount--;
                 }
                 if (wasRemovable) {
-                    this._hasRemovableFilter--;
+                    this._removableFilterCount--;
                 }
             }
         }
@@ -1541,7 +1555,7 @@ export class Runner {
      * @param {boolean} [implicitInclude] fallback include value for sub-jobs
      * @returns {Job[]}
      */
-    _prepareJobs(jobs, implicitInclude = !this._hasIncludeFilter) {
+    _prepareJobs(jobs, implicitInclude = !this._includeFilterCount) {
         if (typeof this.debug !== "boolean") {
             // Special case: test (or suite with 1 test) with "debug" tag
             let debugTest = this.debug;
@@ -1779,7 +1793,7 @@ export class Runner {
     async _setupStart() {
         this._startTime = $now();
         if (this.config.manual) {
-            this._canStartPromise = new Deferred();
+            this._canStartDef = Promise.withResolvers();
         }
 
         // Config log
