@@ -11,7 +11,10 @@ class ProductDocument(models.Model):
 
     @api.constrains('datas')
     def _check_product_is_unpublished_before_removing_print_images(self):
-        for print_image in self.filtered(lambda i: i.is_gelato):
+        template_print_images = self.filtered(
+            lambda image: image.is_gelato and image.res_model == 'product.template'
+        )
+        for print_image in template_print_images:
             template = self.env['product.template'].browse(print_image.res_id)
             if template.is_published and not print_image.datas:
                 raise ValidationError(
