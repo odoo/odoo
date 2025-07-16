@@ -80,6 +80,16 @@ export class WebsocketWorker {
         this._onWebsocketError = this._onWebsocketError.bind(this);
         this._onWebsocketMessage = this._onWebsocketMessage.bind(this);
         this._onWebsocketOpen = this._onWebsocketOpen.bind(this);
+
+        globalThis.addEventListener("error", ({ error }) => {
+            const params = error instanceof Error ? [error.constructor.name, error.stack] : [error];
+            this._logDebug("Unhandled error", ...params);
+        });
+        globalThis.addEventListener("unhandledrejection", ({ reason }) => {
+            const params =
+                reason instanceof Error ? [reason.constructor.name, reason.stack] : [reason];
+            this._logDebug("Unhandled rejection", params);
+        });
     }
 
     //--------------------------------------------------------------------------
@@ -394,9 +404,18 @@ export class WebsocketWorker {
         this.broadcast("notification", notifications);
     }
 
-    _logDebug(title, ...args) {
+    async _logDebug(title, ...args) {
         if (this.loggingEnabled) {
-            logger.log({ dt: new Date().toISOString(), event: title, args, worker: UUID });
+            try {
+                await logger.log({
+                    dt: new Date().toISOString(),
+                    event: title,
+                    args,
+                    worker: UUID,
+                });
+            } catch (e) {
+                console.error(e);
+            }
         }
     }
 
