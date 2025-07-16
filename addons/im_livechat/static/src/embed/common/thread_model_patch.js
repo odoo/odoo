@@ -60,14 +60,16 @@ patch(Thread.prototype, {
         this.chatbot = fields.One("Chatbot");
         this._toggleChatbot = fields.Attr(false, {
             compute() {
-                return this.chatbot && this.isLoaded && !this.livechat_end_dt;
+                return this.chatbot && !this.livechat_end_dt;
             },
             onUpdate() {
-                if (this._toggleChatbot) {
-                    this.chatbot.start();
-                } else {
-                    this.chatbot?.stop();
-                }
+                this.isLoadedDeferred.then(() => {
+                    if (this._toggleChatbot) {
+                        this.chatbot.start();
+                    } else {
+                        this.chatbot?.stop();
+                    }
+                });
             },
             eager: true,
         });

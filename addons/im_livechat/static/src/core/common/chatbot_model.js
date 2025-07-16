@@ -260,6 +260,9 @@ export class Chatbot extends Record {
         );
         if (!redirectionAlreadyDone) {
             browser.location.assign(answer.redirect_link);
+        } else if (this.store.env.services.ui.isSmall) {
+            await this.store.chatHub.initPromise;
+            this.store.ChatWindow.get({ thread: this.thread })?.fold();
         }
         return redirectionAlreadyDone || !isRedirecting;
     }

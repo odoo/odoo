@@ -38,6 +38,11 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_redirect", {
             expectUnloadPage: true,
         },
         {
+            isActive: ["mobile"], //chatwindow is folded on mobile
+            trigger: ".o-livechat-root:shadow .o-mail-ChatBubble[name='Redirection Bot']",
+            run: "click",
+        },
+        {
             trigger:
                 ".o-livechat-root:shadow .o-mail-Message:contains('Go to the /chatbot-redirect page')",
         },
