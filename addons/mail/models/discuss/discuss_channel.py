@@ -1049,17 +1049,16 @@ class Channel(models.Model):
         channel_member_domain = expression.AND([
             [('channel_id', 'in', self.ids)],
             [('partner_id', '=', current_partner.id) if current_partner else ('guest_id', '=', current_guest.id)],
-            [] if allow_older else expression.OR([
-                [('seen_message_id', '=', False)],
-                [('seen_message_id', '<', last_message.id)]
-            ])
         ])
         member = self.env['discuss.channel.member'].search(channel_member_domain)
         if not member:
             return
         member.write({
             'fetched_message_id': max(member.fetched_message_id.id, last_message.id),
-            'seen_message_id': last_message.id,
+            'seen_message_id':
+                last_message.id
+                if last_message.id >= member.seen_message_id.id or allow_older
+                else member.seen_message_id.id,
             'last_seen_dt': fields.Datetime.now(),
         })
         member_basic_info = {
@@ -1068,7 +1067,7 @@ class Channel(models.Model):
                 "id": member.partner_id.id if member.partner_id else member.guest_id.id,
                 "type": "partner" if member.partner_id else "guest",
             },
-            "lastSeenMessage": {"id": last_message.id} if last_message else False,
+            "lastSeenMessage": {"id": member.seen_message_id.id} if member.seen_message_id else False,
         }
         member_self_info = {
             **member_basic_info,
@@ -1078,7 +1077,7 @@ class Channel(models.Model):
                 # sudo: bus.bus: reading non-sensitive last id
                 "message_unread_counter_bus_id": self.env["bus.bus"].sudo()._bus_last_id(),
                 "model": "discuss.channel",
-                "seen_message_id": last_message.id
+                "seen_message_id": member.seen_message_id.id
             },
         }
         notifications = [
