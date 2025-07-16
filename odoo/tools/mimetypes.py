@@ -15,6 +15,7 @@ import zipfile
 __all__ = ['guess_mimetype']
 
 _logger = logging.getLogger(__name__)
+_logger_guess_mimetype = _logger.getChild('guess_mimetype')
 
 # We define our own guess_mimetype implementation and if magic is available we
 # use it instead.
@@ -74,6 +75,12 @@ def _check_open_container_format(data):
 
         return False
 
+_old_ms_office_mimetypes = {
+    '.doc': 'application/msword',
+    '.xls': 'application/vnd.ms-excel',
+    '.ppt': 'application/vnd.ms-powerpoint',
+}
+_olecf_mimetypes = ('application/x-ole-storage', 'application/CDFV2')
 _xls_pattern = re.compile(b"""
     \x09\x08\x10\x00\x00\x06\x05\x00
   | \xFD\xFF\xFF\xFF(\x10|\x1F|\x20|"|\\#|\\(|\\))
@@ -160,7 +167,7 @@ def _odoo_guess_mimetype(bin_data, default='application/octet-stream'):
                         if guess: return guess
                     except Exception:
                         # log-and-next
-                        _logger.getChild('guess_mimetype').warn(
+                        _logger_guess_mimetype.warning(
                             "Sub-checker '%s' of type '%s' failed",
                             discriminant.__name__, entry.mimetype,
                             exc_info=True
@@ -188,9 +195,11 @@ try:
                 if msoffice_mimetype := _check_olecf(bin_data):
                     return msoffice_mimetype
             except Exception:  # noqa: BLE001
-                _logger.getChild('guess_mimetype').warning(
-                    "Sub-checker '_check_olecf' of type 'application/x-ole-storage' failed",
-                    exc_info=True)
+                _logger_guess_mimetype.warning(
+                    "Sub-checker '_check_olecf' of type '%s' failed",
+                    mimetype,
+                    exc_info=True,
+                )
         return mimetype
 
 except ImportError:
@@ -240,7 +249,12 @@ def fix_filename_extension(filename, mimetype):
         mimetype, otherwise the same filename with the mimetype's
         extension added at the end.
     """
-    if mimetypes.guess_type(filename)[0] == mimetype:
+    extension_mimetype = mimetypes.guess_type(filename)[0]
+    if extension_mimetype == mimetype:
+        return filename
+
+    extension = get_extension(filename)
+    if mimetype in _olecf_mimetypes and extension in _old_ms_office_mimetypes:
         return filename
 
     if extension := mimetypes.guess_extension(mimetype):
