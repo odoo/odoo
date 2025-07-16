@@ -35,7 +35,7 @@
                 <div class="o_self_combo_page_body container o_self_container" t-att-class="{'confirmation_container':this.state.showResume}">
                     <!-- Stepper -->
                     <div t-if="!this.state.showResume" class="stepper_container w-100 mt-2 mt-md-3 mb-4 mb-kiosk-p-5"  id="k-combo-scroll-target" >
-                        <ComboStepper steps="comboChoices" selectedStep="selectedChoice" onStepClicked="(c)=>this.onChoiceClicked(c)" />
+                        <Stepper steps="comboChoices" selectedStep="selectedChoice" onStepClicked="(c)=>this.onChoiceClicked(c)" />
                     </div>
 
                     <!-- Product selection -->
