@@ -180,10 +180,10 @@ try:
     import magic
     def guess_mimetype(bin_data, default=None):
         mimetype = magic.from_buffer(bin_data[:1024], mime=True)
-        # application/x-ole-storage is the generic file format that
-        # Microsoft Office was using before 2006, use our own check to
-        # further discriminate the mimetype.
-        if mimetype == 'application/x-ole-storage':
+        if mimetype in ('application/CDFV2', 'application/x-ole-storage'):
+            # Those are the generic file format that Microsoft Office
+            # was using before 2006, use our own check to further
+            # discriminate the mimetype.
             try:
                 if msoffice_mimetype := _check_olecf(bin_data):
                     return msoffice_mimetype
