@@ -115,7 +115,16 @@ export class SelectLotPopup extends Component {
             return (
                 itemValue !== "" &&
                 !this.props.isLotNameUsed(itemValue) &&
+<<<<<<< c2cbe56f6161c06e1733eba8fdf150dcfb17266c
                 (this.props.customInput || this.props.options.includes(itemValue))
+||||||| 70ca1868455859f7cb24045549c120dffeffd86b
+                (this.props.customInput ||
+                    this.props.options.map((o) => o.name).includes(itemValue))
+=======
+                (this.props.customInput ||
+                    this.props.options.map((o) => o.name).includes(itemValue) ||
+                    this.props.array.some((i) => i.text === itemValue))
+>>>>>>> e3ca7a7afc6d9ae40bfc37d480b26006a5c2b129
             );
         });
         const filteredValues = this.props.uniqueValues
