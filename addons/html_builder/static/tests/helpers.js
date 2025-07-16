@@ -72,7 +72,12 @@ class BuilderContainer extends Component {
             </div>
         </div>`;
     static components = { Builder, LocalOverlayContainer };
-    static props = { content: String, headerContent: String, Plugins: Array };
+    static props = {
+        content: String,
+        headerContent: String,
+        Plugins: Array,
+        onEditorLoad: Function,
+    };
 
     setup() {
         this.state = useState({ isMobile: false, isEditing: false, showSidebar: true });
@@ -102,6 +107,7 @@ class BuilderContainer extends Component {
 
     getBuilderProps() {
         return {
+            onEditorLoad: this.props.onEditorLoad,
             closeEditor: () => {},
             snippetsName: "",
             toggleMobile: () => {
@@ -122,6 +128,18 @@ class IrUiView extends models.Model {
     }
 }
 
+/**
+ * @typedef { import("@html_editor/editor").Editor } Editor
+ *
+ * @param {String} content
+ * @param {Object} options
+ * @param {String} options.headerContent
+ * @param {*} options.snippetContent
+ * @param {*} options.dropzoneSelectors
+ * @param {*} options.styleContent
+ * @returns {Promise<{ editor: Editor, contentEl: HTMLElement, builderEl: HTMLElement, snippetContent: String}>}
+}}
+ */
 export async function setupHTMLBuilder(
     content = "",
     { headerContent = "", snippetContent, dropzoneSelectors, styleContent } = {}
@@ -188,8 +206,16 @@ export async function setupHTMLBuilder(
             _resolve();
         },
     });
+    let attachedEditor;
     const comp = await mountWithCleanup(BuilderContainer, {
-        props: { content, headerContent, Plugins },
+        props: {
+            content,
+            headerContent,
+            Plugins,
+            onEditorLoad: (editor) => {
+                attachedEditor = editor;
+            },
+        },
     });
     await comp.iframeLoaded;
     if (styleContent) {
@@ -202,6 +228,7 @@ export async function setupHTMLBuilder(
     await prom;
     await animationFrame();
     return {
+        editor: attachedEditor,
         contentEl: comp.iframeRef.el.contentDocument.body.firstChild.firstChild,
         builderEl: comp.env.builderRef.el.querySelector(".o-website-builder_sidebar"),
         snippetContent: snippets.snippet_content.join(""),
