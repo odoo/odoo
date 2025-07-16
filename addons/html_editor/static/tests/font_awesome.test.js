@@ -155,6 +155,15 @@ describe("parse/render", () => {
             contentAfter: '<p>a[b]c<i class="fa fa-pastafarianism"></i></p>',
         });
     });
+
+    test("should not add U+FEFF characters around icons not within a paragraph related element or a base container", async () => {
+        await testEditor({
+            contentBefore: '<div><i class="fa fa-pastafarianism"></i><div><p>abc</p></div></div>',
+            contentBeforeEdit:
+                '<div><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i><div><p>abc</p></div></div>',
+            contentAfter: '<div><i class="fa fa-pastafarianism"></i><div><p>abc</p></div></div>',
+        });
+    });
     /** not sure this is necessary, keep for now in case it is
         test('should insert navigation helpers when before a fontawesome, in an editable', async () => {
             await testEditor({
