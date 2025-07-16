@@ -31,8 +31,8 @@ class TestViewSavingCommon(common.TransactionCase):
 
 @tagged('-at_install', 'post_install')
 class TestCustomizeView(common.HttpCase):
-    def url_open_authenticate(self, url, data):
-        self.authenticate('admin', 'admin')
+    def url_open_authenticate(self, url, data, login='admin', password='admin'):
+        self.authenticate(login, password)
         response = self.url_open(url, json={'params': {**data, 'is_view_data': True}}, headers={"Content-Type": "application/json"})
         data = json.loads(response.text)
         self.logout()
@@ -162,6 +162,36 @@ class TestCustomizeView(common.HttpCase):
         self.assertNotEqual(custo.id, new_custo.id)
         self.assertEqual([new_custo.active, default.active], [False, True])
         self.assertEqual(self.url_open(page.url).text, '<div></div>')
+
+    def test_enabling_optional_template_with_editor(self):
+        """ Ensure that a non-admin editor can enable a view """
+        website = self.env['website'].search([], limit=1)
+        auth = {'login': 'test', 'password': 'testtest'}
+        user = self.env['res.users'].create({'name': 'test', **auth})
+        user.group_ids += self.env.ref('website.group_website_designer')
+        View = self.env['ir.ui.view']
+        default = View.create({
+            'name': 'test_view',
+            'type': 'qweb',
+            'key': 'website.test_view',
+            'arch_db': '<span>Default</span>'
+        })
+        custo = View.create({
+            'active': False,
+            'name': 'test_view',
+            'type': 'qweb',
+            'key': 'website.test_view',
+            'website_id': website.id,
+            'arch_db': '<span>Customized</span>'
+        })
+        actives = self.url_open_authenticate('/website/theme_customize_data_get', {'keys': ['website.test_view']}, **auth)
+        self.assertEqual(set(actives), set())
+        self.assertEqual([custo.active, default.active], [False, True])
+
+        self.url_open_authenticate('/website/theme_customize_data', {'enable': ['website.test_view'], 'disable': []}, **auth)
+        actives = self.url_open_authenticate('/website/theme_customize_data_get', {'keys': ['website.test_view']}, **auth)
+        self.assertEqual(set(actives), {'website.test_view'})
+        self.assertEqual([custo.active, default.active], [True, True])
 
 
 class TestViewSaving(TestViewSavingCommon):
