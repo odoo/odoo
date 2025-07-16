@@ -35,7 +35,7 @@
                 <field name="visit_datetime"/>
                 <filter string="Pages" name="type_page" domain="[('page_id', '!=', False)]"/>
                 <filter string="Urls &amp; Pages" name="type_url" domain="[('url', '!=', False)]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Visitor" name="group_by_visitor" domain="[]" context="{'group_by': 'visitor_id'}"/>
                     <filter string="Page" name="group_by_page" domain="[]" context="{'group_by': 'page_id'}"/>
                     <filter string="Url" name="group_by_url" domain="[]" context="{'group_by': 'url'}"/>
@@ -239,7 +239,7 @@
                 <!-- connected in the last 5 minutes -->
                 <filter string="Connected" name="filter_is_connected" domain="[('last_connection_datetime', '&gt;', '-5M')]"/>
                 <separator/>
-                <group string="Group By">
+                <group>
                     <filter string="Country" name="group_by_country" context="{'group_by': 'country_id'}"/>
                     <filter string="Timezone" name="group_by_timezone" context="{'group_by': 'timezone'}"/>
                     <filter string="Language" name="group_by_lang" context="{'group_by': 'lang_id'}"/>

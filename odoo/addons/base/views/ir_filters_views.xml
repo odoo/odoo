@@ -64,7 +64,7 @@
                     <filter string="My filters" domain="[('user_ids','in',[uid])]" name="my_filters" help="Filters shared with myself"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="User" name="user" domain="[]" context="{'group_by':'user_ids'}"/>
                         <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>

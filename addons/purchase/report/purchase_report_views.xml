@@ -58,14 +58,14 @@
                 <filter name="filter_date_approve" date="date_approve" default_period="month"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
-                <group string="Extended Filters">
+                <group>
                     <field name="user_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="date_order"/>
                     <field name="date_approve"/>
                     <field name="category_id" filter_domain="[('category_id', 'child_of', self)]"/>
                 </group>
-                <group string="Group By">
+                <group>
                     <filter string="Vendor" name="group_partner_id" context="{'group_by':'partner_id'}"/>
                     <filter string="Vendor Country" name="country_id" context="{'group_by':'country_id'}"/>
                     <filter string="Buyer" name="user_id" context="{'group_by':'user_id'}"/>

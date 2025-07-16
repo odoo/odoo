@@ -302,7 +302,7 @@
                 <filter invisible="1" string="Running Applicants" name="running_applicant_activities"
                     domain="[('stage_id.hired_stage', '=', False)]"/>
                 <separator/>
-                <group string="Group By">
+                <group>
                     <filter string="Job" name="job" domain="[]" context="{'group_by': 'job_id'}"/>
                     <filter string="Stage" name="stage" domain="[]" context="{'group_by': 'stage_id'}"/>
                     <filter string="Responsible" name="responsible" domain="[]"  context="{'group_by': 'user_id'}"/>
@@ -615,14 +615,14 @@
                 <separator/>
                 <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                 <separator/>
-                <group string="Extended Filters">
+                <group>
                     <field name="priority"/>
                     <field name="stage_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="create_date"/>
                     <field name="date_closed"/>
                 </group>
-                <group string="Group By">
+                <group>
                     <filter string="Responsible" name='User' context="{'group_by':'user_id'}"/>
                     <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <filter string="Jobs" name="job" context="{'group_by':'job_id'}"/>

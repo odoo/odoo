@@ -83,7 +83,7 @@
                 <separator/>
                 <filter string="Recovery Email to Send" name="recovery_email" domain="[('cart_recovery_email_sent', '=', False)]" />
                 <filter string="Recovery Email Sent" name="recovery_email_set" domain="[('cart_recovery_email_sent', '=', True)]" />
-                <group string="Group By">
+                <group>
                     <filter string="Order Date" name="order_date" context="{'group_by':'date_order'}"/>
                 </group>
                 <!-- Dashboard filter - used by context -->

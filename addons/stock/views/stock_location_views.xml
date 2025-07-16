@@ -89,7 +89,7 @@
                 <field name="warehouse_id" string="Warehouse"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Warehouse" name="warehouse" domain="[]" context="{'group_by': 'warehouse_id'}"/>
                     <filter string="Location Type" name="usage" domain="[]" context="{'group_by': 'usage'}"/>
                 </group>

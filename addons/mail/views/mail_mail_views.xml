@@ -131,13 +131,13 @@
                             domain="[('message_type','=','comment')]"/>
                     <filter name="filter_type_notification" string="Notification"
                             domain="[('message_type','=','notification')]"/>
-                    <group string="Extended Filters...">
+                    <group>
                         <field name="author_id"/>
                         <field name="recipient_ids"/>
                         <field name="model"/>
                         <field name="res_id"/>
                     </group>
-                    <group string="Group By">
+                    <group>
                         <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Author" name="author" context="{'group_by':'author_id'}"/>
                         <filter string="Thread" name="thread" domain="[]" context="{'group_by':'message_id'}"/>

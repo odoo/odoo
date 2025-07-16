@@ -304,7 +304,7 @@
                     <filter name="not_published" string="Waiting for validation" domain="[('is_published', '=', False)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Course" name="groupby_channel" domain="[]" context="{'group_by': 'channel_id'}"/>
                         <filter string="Category" name="groupby_category" domain="[]" context="{'group_by': 'category_id'}"/>
                         <filter string="Type" name="groupby_type" domain="[]" context="{'group_by': 'slide_category'}"/>

@@ -132,7 +132,7 @@
                         filter_domain="['|', '|', '|', '|', ('name','ilike',self), ('model','ilike',self), ('type','ilike',self), ('report_name','ilike',self), ('report_type','ilike',self)]"
                         string="Report"/>
                     <field name="model" filter_domain="[('model','=', self)]" string="Model"/>
-                    <group string="Group By" colspan="4">
+                    <group colspan="4">
                         <filter string="Report Type" name="report_type" domain="[]" context="{'group_by':'report_type'}"/>
                         <filter string="Report Model" name="report_model" domain="[]" context="{'group_by':'model'}"/>
                     </group>
@@ -581,7 +581,7 @@ env['res.partner'].create({'name': partner_name})
                     <field name="model_id"/>
                     <field name="state"/>
                     <filter string="Top-level actions" name="toplevel_actions" domain="[('parent_id', '=', False)]"/>
-                    <group string="Group By" colspan="4" col="4">
+                    <group colspan="4" col="4">
                         <filter string="Action Type" name="action_type" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
                         <filter string="Usage" name="usage" domain="[]" context="{'group_by':'usage'}"/>

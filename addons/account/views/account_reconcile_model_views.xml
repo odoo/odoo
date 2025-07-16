@@ -132,7 +132,7 @@
                     <filter string="With tax" name="withtax" domain="[('line_ids.tax_ids', '!=', False)]"/>
                     <separator/>
                     <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Journals Availability" name="group_by_journal" context="{'group_by': 'match_journal_ids'}"/>
                         <filter string="Automation" name="group_by_auto_validate" context="{'group_by': 'trigger'}"/>
                     </group>

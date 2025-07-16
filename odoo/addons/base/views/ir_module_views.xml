@@ -31,7 +31,7 @@
                     <filter name="installed" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
                     <filter name="not_installed" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
                     <field name="category_id"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Author" name="author" domain="[]" context="{'group_by':'author'}"/>
                         <filter string="Category" name="category" domain="[]" context="{'group_by':'category_id'}"/>
                         <filter string="Status" name="state" domain="[]" context="{'group_by':'state'}"/>

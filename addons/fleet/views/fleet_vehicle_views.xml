@@ -255,7 +255,7 @@
                     domain="[('activity_date_deadline', '=', 'today')]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_date_deadline', '&gt;', 'today')]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Model" name="groupby_model" context="{'group_by': 'model_id'}"/>
                     <filter string="Brand" name="groupby_make" context="{'group_by': 'brand_id'}"/>
                     <filter string="Status" name="groupby_status" context="{'group_by': 'state_id'}"/>
@@ -430,7 +430,7 @@
                 <field name="driver_id"/>
                 <field name="value"/>
                 <field name="date"/>
-                <group string="Group By">
+                <group>
                     <filter name="groupby_vehicle" context="{'group_by': 'vehicle_id'}" string="Vehicle"/>
                     <filter name="groupby_date" context="{'group_by': 'date'}" string="Date"/>
                 </group>
@@ -482,7 +482,7 @@
             <search>
                 <field name="name"/>
                 <field name="category"/>
-                <group string="Group By">
+                <group>
                     <filter name="groupby_category" context="{'group_by' : 'category'}"/>
                 </group>
             </search>

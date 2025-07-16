@@ -72,7 +72,7 @@
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_date_deadline', '&gt;', 'today')
                         ]"/>
-                <group string="Group By">
+                <group>
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
                     <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
                     <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>

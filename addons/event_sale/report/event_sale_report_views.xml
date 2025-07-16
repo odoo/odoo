@@ -110,7 +110,7 @@
                         domain="[('event_date_end', '&lt;', 'now')]"/>
                 <filter string="Event Start Date" name="event_date_start" date="event_date_begin" default_period="year"/>
                 <filter string="Event End Date" name="event_date_end" date="event_date_end"/>
-                <group string="Group By">
+                <group>
                     <filter string="Event Type" name="group_by_event_type_id" context="{'group_by': 'event_type_id' }"/>
                     <filter string="Event" name="group_by_event_id" context="{'group_by': 'event_id' }"/>
                     <separator/>

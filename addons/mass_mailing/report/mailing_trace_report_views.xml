@@ -65,10 +65,10 @@
                     <field name="name" string="Mailing"/>
                     <field name="campaign" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign"/>
                     <filter name="filter_scheduled_date" date="scheduled_date"/>
-                    <group string="Extended Filters...">
+                    <group>
                         <field name="scheduled_date"/>
                     </group>
-                    <group string="Group By...">
+                    <group>
                         <filter string="Mass Mailing Campaign" domain="[]" name="mass_mailing_campaign"
                             context="{'group_by':'campaign'}" groups="mass_mailing.group_mass_mailing_campaign"/>
                         <filter string="State" domain="[]" name="state"

@@ -262,7 +262,7 @@
                         domain="[('activity_exception_decoration', '!=', False)]"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Product Type" name="group_by_type" context="{'group_by':'type'}"/>
                     <filter string="Product Category" name="group_by_categ_id" context="{'group_by':'categ_id'}"/>
                     <filter string="Product Properties" name="group_by_product_properties" context="{'group_by': 'product_properties'}"/>
@@ -721,7 +721,7 @@ action = {
                         name="goods"
                         domain="[('type', '=', 'consu')]"/>
                 <!-- Group By -->
-                <group string="Group By">
+                <group>
                     <filter string="Product Type" name="type" context="{'group_by':'type'}"/>
                     <filter string="Product Category"
                             name="categ_id"

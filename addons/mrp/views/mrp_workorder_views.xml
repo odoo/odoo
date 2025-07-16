@@ -16,7 +16,7 @@
                 <filter string="Late" name="late" domain="[('date_start','&lt;=',time.strftime('%Y-%m-%d'))]"/>
                 <separator/>
                 <filter string="Start Date" name="date_start_filter" date="date_start"/>
-                <group string="Group By...">
+                <group>
                     <filter string="Work center" name="workcenter" domain="[]" context="{'group_by': 'workcenter_id'}"/>
                     <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
                 </group>
@@ -290,7 +290,7 @@
                 <separator/>
                 <filter string="Late" name="late" domain="['&amp;', ('date_start', '&lt;', 'now'), ('state', '=', 'ready')]"
                     help="Production started late"/>
-                <group string="Group By">
+                <group>
                     <filter string="Work Center" name="work_center" domain="[]" context="{'group_by': 'workcenter_id'}"/>
                     <filter string="Manufacturing Order" name="production" domain="[]" context="{'group_by': 'production_id'}"/>
                     <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>

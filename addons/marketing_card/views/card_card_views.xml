@@ -21,12 +21,12 @@
         <field name="model">card.card</field>
         <field name="arch" type="xml">
             <search string="Search Card">
-                <group string="Filter By">
+                <group>
                     <field name="share_status"/>
                     <filter string="Shared" name="filter_shared" domain="[('share_status', '=', 'shared')]"/>
                     <filter string="Visited" name="filter_visited" domain="[('share_status', '=', 'visited')]"/>
                 </group>
-                <group string="Group By">
+                <group>
                     <field name="campaign_id"/>
                     <filter string="Campaign" name="by_campaign" context="{'group_by': 'campaign_id'}"/>
                 </group>

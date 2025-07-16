@@ -10,7 +10,7 @@
                    <field name="mail_template_id"/>
                    <field name="rating_template_id"/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Projects" name="project_ids" context="{'group_by': 'project_ids'}"/>
                     </group>
                 </search>

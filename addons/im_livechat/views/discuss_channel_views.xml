@@ -28,7 +28,7 @@
                         <filter name="rated_on_last_365_days" string="Last 365 Days" domain="[('create_date', '&gt;', 'today -365d +1d')]"/>
                     </filter>
                     <separator/>
-                    <group string="Group By...">
+                    <group>
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
                         <filter name="group_by_agent" string="Agent" domain="[]" context="{'group_by':'livechat_agent_partner_ids'}"/>
                         <filter name="group_by_agent_requesting_help" domain="[]" context="{'group_by': 'livechat_agent_requesting_help_history'}"/>
@@ -275,7 +275,7 @@
                         <filter name="created_on_last_365_days" string="Last 365 Days" domain="[('create_date', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=365), datetime.time(23, 59, 59)).to_utc())]"/>
                     </filter>
                     <separator/>
-                    <group string="Group By...">
+                    <group>
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
                         <filter name="group_by_agent" string="Agent" domain="[]" context="{'group_by':'livechat_agent_partner_ids'}"/>
                         <filter name="group_by_country" string="Country" domain="[]" context="{'group_by':'country_id'}"/>

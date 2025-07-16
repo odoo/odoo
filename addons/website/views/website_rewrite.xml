@@ -79,7 +79,7 @@
                     <filter string="308 Redirect / Rewrite" name="308" domain="[('redirect_type', '=', '308')]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Redirection Type" name="group_by_type" domain="[]" context="{'group_by': 'redirect_type'}"/>
                         <filter string="Created by" name="group_by_author" domain="[]" context="{'group_by': 'create_uid'}"/>
                     </group>

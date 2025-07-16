@@ -97,7 +97,7 @@
                     <field name="alias_parent_thread_id"/>
                     <separator/>
                     <filter string="Active" name="active" domain="[('alias_name', '!=', False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Creator" name="groupby_create_uid"
                                 context="{'group_by': 'create_uid'}"/>
                         <filter string="Alias Domain" name="groupby_alias_domain_id"

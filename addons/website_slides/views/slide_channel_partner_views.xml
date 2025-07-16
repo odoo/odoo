@@ -16,7 +16,7 @@
                     <filter string="Joined" name="filter_joined" domain="[('member_status', '=', 'joined')]"/>
                     <filter string="Ongoing" name="filter_ongoing" domain="[('member_status', '=', 'ongoing')]"/>
                     <filter string="Completed" name="filter_completed" domain="[('member_status', '=', 'completed')]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Course" name="groupby_channel_id" context="{'group_by': 'channel_id'}"/>
                         <filter string="Status" name="groupby_member_status" context="{'group_by': 'member_status'}"/>
                     </group>

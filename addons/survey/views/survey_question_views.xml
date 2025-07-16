@@ -307,7 +307,7 @@
                 <field name="title"/>
                 <field name="survey_id" string="Survey"/>
                 <field name="question_type" string="Type"/>
-                <group string="Group By">
+                <group>
                     <filter name="group_by_type" string="Type" domain="[]" context="{'group_by':'question_type'}"/>
                     <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by':'survey_id'}"/>
                 </group>
@@ -377,7 +377,7 @@
         <field name="arch" type="xml">
             <search string="Search Label">
                 <field name="question_id"/>
-                <group string="Group By">
+                <group>
                     <filter name="group_by_question" string="Question" domain="[]" context="{'group_by':'question_id'}"/>
                 </group>
             </search>

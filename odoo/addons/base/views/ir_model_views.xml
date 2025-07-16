@@ -398,7 +398,7 @@
                     <field name="required"/>
                     <field name="readonly"/>
                     <field name="relation"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Model" name="group_by_object" domain="[]" context="{'group_by':'model_id'}"/>
                         <filter string="Field Type" name="group_by_ttype" domain="[]" context="{'group_by':'ttype'}"/>
                     </group>
@@ -510,7 +510,7 @@
                     <field name="model"/>
                     <field name="res_id"/>
                     <field name="noupdate"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Module" name="group_by_module" domain="[]" context="{'group_by':'module'}"/>
                         <filter string="Model" name="group_by_object" domain="[]" context="{'group_by':'model'}"/>
                     </group>
@@ -564,7 +564,7 @@
                     <field name="model"/>
                     <field name="name"/>
                     <field name="message"/>
-                    <group string="Group By">
+                    <group>
                         <filter name="module" string="Module" context="{'group_by' : 'module'}"/>
                         <filter name="model" string="Model" context="{'group_by': 'model'}"/>
                         <filter name="type" string="Constraint type" context="{'group_by' : 'type'}"/>
@@ -690,7 +690,7 @@
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <field name="model_id"/>
                     <field name="group_id"/>
-                    <group string="Group By" colspan="11" col="11" groups="base.group_no_one">
+                    <group colspan="11" col="11" groups="base.group_no_one">
                         <filter string="Group" name="group" domain="[]" context="{'group_by': 'group_id'}"/>
                         <filter string="Model" name="group_by_object" domain="[]" context="{'group_by': 'model_id'}"/>
                     </group>

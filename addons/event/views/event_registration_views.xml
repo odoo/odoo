@@ -233,7 +233,7 @@
                 <filter string="Last 30 days" name="filter_last_month_creation" domain="[('create_date','&gt;', 'today -30d')]"/>
                 <separator/>
                 <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
                     <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>
                     <filter string="Ticket Type" name ="group_event_ticket_id" domain="[]" context="{'group_by': 'event_ticket_id'}"/>

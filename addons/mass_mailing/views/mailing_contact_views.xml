@@ -29,7 +29,7 @@
                     name="filter_not_optout"
                     domain="[('opt_out', '=', False)]"
                     invisible="not context.get('default_list_ids')"/>
-                <group string="Group By">
+                <group>
                     <filter string="Creation Date" name="group_create_date"
                         context="{'group_by': 'create_date'}"/>
                     <filter string="Properties" name="group_properties"

@@ -115,7 +115,7 @@
                 <field name="invoice_user_id" />
                 <field name="product_id" />
                 <field name="product_categ_id" filter_domain="[('product_categ_id', 'child_of', self)]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Salesperson" name='user' context="{'group_by':'invoice_user_id'}"/>
                     <filter string="Partner" name="partner_id" context="{'group_by':'partner_id','residual_visible':True}"/>
                     <filter string="Product Category" name="category_product" context="{'group_by':'product_categ_id','residual_invisible':True}"/>

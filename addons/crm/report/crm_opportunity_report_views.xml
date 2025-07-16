@@ -122,7 +122,7 @@
                     <filter name="filter_create_date" date="create_date" default_period="year"/>
                     <filter string="Expected Closing" name="filter_date_deadline" date="date_deadline"/>
                     <filter string="Date Closed" name="date_closed_filter" date="date_closed"/>
-                    <group string="Extended Filters">
+                    <group>
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                         <field name="stage_id" domain="['|', ('team_id', '=', False), ('team_id', '=', 'team_id')]"/>
                         <field name="campaign_id"/>
@@ -135,7 +135,7 @@
                         <field name="date_closed"/>
                     </group>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" name="saleschannel" context="{'group_by':'team_id'}"/>
                         <filter string="City" name="city" context="{'group_by':'city'}" />

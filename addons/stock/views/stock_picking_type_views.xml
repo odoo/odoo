@@ -47,7 +47,7 @@
                 <field name="warehouse_id"/>
                 <filter name="favorites" string="Favorites" domain="[('is_favorite', '=', True)]"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Type of Operation" name="groupby_code" domain="[]" context="{'group_by': 'code'}"/>
                     <filter string="Warehouse" name="groupby_warehouse_id" domain="[]" context="{'group_by': 'warehouse_id'}"/>
                 </group>

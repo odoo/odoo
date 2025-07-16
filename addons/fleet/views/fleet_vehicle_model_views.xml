@@ -140,7 +140,7 @@
                 <field name="name" string="Model" />
                 <field name="brand_id"/>
                 <filter string="Contains Vehicle" name="contains_vehicle" domain="[('vehicle_count', '!=', 0)]"/>
-                <group string="Group By">
+                <group>
                     <filter name="groupby_brand" context="{'group_by' : 'brand_id'}" string="Manufacturers"/>
                     <filter name="groupby_category" context="{'group_by' : 'category_id'}" string="Category"/>
                     <filter name="groupby_vehicle_type" context="{'group_by' : 'vehicle_type'}" string="Vehicle Type"/>

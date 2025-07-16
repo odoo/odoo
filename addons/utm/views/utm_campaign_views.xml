@@ -13,7 +13,7 @@
                     help="Campaigns that are assigned to me"/>
                 <separator/>
                 <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Stage" name="group_stage_id"
                         context="{'group_by': 'stage_id'}"/>
                     <filter string="Responsible" name="group_user_id"
