@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_references_carousel" name="References Carousel">
+    <section class="s_references_carousel o_cc o_cc1 pt64 pb64">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2" style="text-align: center;">
+                    <h1>Trusted references</h1>
+                    <p class="lead">We are in good company.</p>
+                </div>
+                <div class="slider col-12" style="--width: 150px; --height: 150px; --quantity: 7; --duration: 10s;">
+                    <ul class="list list-unstyled">
+                        <li class="item" style="--position: 1;">
+                            <img src="/web/image/website.s_reference_demo_image_1" class="img img-fluid" alt=""/>
+                        </li>
+                        <li class="item" style="--position: 2;">
+                            <img src="/web/image/website.s_reference_demo_image_2" class="img img-fluid" alt=""/>
+                        </li>
+                        <li class="item" style="--position: 3;">
+                            <img src="/web/image/website.s_reference_demo_image_3" class="img img-fluid" alt=""/>
+                        </li>
+                        <li class="item" style="--position: 4;">
+                            <img src="/web/image/website.s_reference_demo_image_2" class="img img-fluid" alt=""/>
+                        </li>
+                        <li class="item" style="--position: 5;">
+                            <img src="/web/image/website.s_reference_demo_image_5" class="img img-fluid" alt=""/>
+                        </li>
+                        <li class="item" style="--position: 6;">
+                            <img src="/web/image/website.s_reference_default_image_6" class="img img-fluid" alt=""/>
+                        </li>
+                        <li class="item" style="--position: 7;">
+                            <img src="/web/image/website.s_reference_demo_image_1" class="img img-fluid" alt=""/>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<record id="website.s_references_carousel_scss" model="ir.asset">
+    <field name="name">References Carousel SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_references_carousel/000.scss</field>
+</record>
+
+</odoo>

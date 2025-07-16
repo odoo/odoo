@@ -1,0 +1,47 @@
+.s_references_carousel {
+    .slider {
+        height: var(--height);
+        overflow: hidden;
+        mask-image: linear-gradient(to right, transparent, #000 10% 90%, transparent);
+        &:hover,
+        &:has(:focus) {
+            .item {
+                animation-play-state: paused;
+            }
+        }
+    }
+
+    .list {
+        min-width: calc(var(--width) * var(--quantity));
+        position: relative;
+    }
+
+    .item {
+        width: var(--width);
+        height: var(--height);
+        position: absolute;
+        left: 100%;
+        animation: autoRun var(--duration) linear infinite;
+        animation-delay: calc((var(--duration) / var(--quantity)) * (var(--position) - 1) - var(--duration));
+
+        @keyframes autoRun {
+            from {
+                left: 100%;
+            }
+            to {
+                left: calc(var(--width) * -1);
+            }
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+}
+
+// Pause animation when website is in edit mode
+body.editor_enable .s_references_carousel .item {
+    animation-play-state: paused;
+}
