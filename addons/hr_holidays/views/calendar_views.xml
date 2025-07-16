@@ -6,10 +6,10 @@
         <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
         <field name="arch" type="xml">
             <xpath expr="//label[@for='videocall_location']" position="attributes">
-                <attribute name="invisible">res_model == 'hr.leave'</attribute>
+                <attribute name="invisible" add="res_model == 'hr.leave'" separator=" or "/>
             </xpath>
             <xpath expr="//div[@name='videocall_location_div']" position="attributes">
-                <attribute name="invisible">res_model == 'hr.leave'</attribute>
+                <attribute name="invisible" add="res_model == 'hr.leave'" separator=" or "/>
             </xpath>
         </field>
     </record>
