@@ -6565,8 +6565,14 @@ class AccountMove(models.Model):
     def get_extra_print_items(self):
         """ Helper to dynamically add items in the 'Print' menu of list and form of account.move.
         """
-        # TO OVERRIDE
+        if len(self) > 1:
+            return [{
+                'key': 'download_zip',
+                'description': _('Export ZIP'),
+                **self.action_invoice_download_pdf(),
+            }]
         return []
+
 
     @staticmethod
     def _can_commit():
