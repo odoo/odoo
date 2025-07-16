@@ -270,6 +270,15 @@ class TestFiscalPosition(common.TransactionCase):
             fp_eu_extra
         )
 
+        # Case : 7
+        # Billing (VAT/country) : None/US
+        # Delivery (VAT/country) : NL/NL
+        # Expected FP : Régime Intra-Communautaire
+        self.assertEqual(
+            self.env['account.fiscal.position']._get_fiscal_position(partner_us_no_vat, partner_nl_vat),
+            fp_eu_intra
+        )
+
     def test_fiscal_position_constraint(self):
         """
         Test fiscal position constraint by updating the record
