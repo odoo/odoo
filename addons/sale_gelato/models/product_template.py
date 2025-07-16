@@ -25,6 +25,8 @@ class ProductTemplate(models.Model):
         inverse_name='res_id',
         domain=[('is_gelato', '=', True)],
         readonly=True,
+        help='To ensure a good printing result, upload a PNG of the entire printing area with your '
+             'graphics correctly placed on it.',
     )
     gelato_missing_images = fields.Boolean(
         string="Missing Print Images", compute='_compute_gelato_missing_images',
@@ -103,6 +105,8 @@ class ProductTemplate(models.Model):
         if len(template_info['variants']) == 1:  # The template has no attribute.
             self.gelato_product_uid = template_info['variants'][0]['productUid']
         else:  # The template has multiple attributes.
+            # Clear current attributes and attributes values
+            attribute_value_list = []
             # Iterate over the variants to find and create the possible attributes.
             for variant_data in template_info['variants']:
                 current_variant_pavs = self.env['product.attribute.value']
@@ -129,7 +133,7 @@ class ProductTemplate(models.Model):
                             'attribute_id': attribute.id
                         })
                     current_variant_pavs += attribute_value
-
+                    attribute_value_list.append(attribute_value.id)
                     # Search for the existing PTAL and create it if not found.
                     ptal = self.env['product.template.attribute.line'].search(
                         [('product_tmpl_id', '=', self.id), ('attribute_id', '=', attribute.id)],
@@ -151,6 +155,14 @@ class ProductTemplate(models.Model):
                     if corresponding_pavs == current_variant_pavs:
                         variant.gelato_product_uid = variant_data['productUid']
                         break
+
+            removed_values = self.attribute_line_ids.value_ids.filtered(
+                lambda l: l.id not in attribute_value_list)
+            if removed_values:
+                for attribute_line in self.attribute_line_ids:
+                    attribute_line.value_ids -= removed_values.filtered(
+                        lambda v: v.attribute_id == attribute_line.attribute_id
+                    )
 
             # Delete the incompatible variants that were created but not allowed by Gelato.
             variants_without_gelato = self.env['product.product'].search([
