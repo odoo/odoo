@@ -283,3 +283,23 @@ registry.category("web_tour.tours").add("LotTour", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_order_with_existing_serial", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Serial Product"),
+            ProductScreen.enterLotNumber("SN1"),
+            ProductScreen.selectedOrderlineHas("Serial Product", "1.00"),
+            inLeftSide({
+                trigger: ".info-list:contains('SN SN1')",
+            }),
+            ProductScreen.clickDisplayedProduct("Serial Product"),
+            ProductScreen.enterLastLotNumber("SN2"),
+            ProductScreen.selectedOrderlineHas("Serial Product", "2.00"),
+            inLeftSide({
+                trigger: ".info-list:contains('SN SN2')",
+            }),
+        ].flat(),
+});
