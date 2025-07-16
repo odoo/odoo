@@ -3,13 +3,13 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { Navbar } from "@point_of_sale/app/components/navbar/navbar";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { reactive, Component, onMounted, onWillStart } from "@odoo/owl";
-import { effect } from "@web/core/utils/reactive";
-import { batched } from "@web/core/utils/timing";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { CustomerDisplayPosAdapter } from "@point_of_sale/app/customer_display/customer_display_adapter";
 import { useIdleTimer } from "./utils/use_idle_timer";
 import useTours from "./hooks/use_tours";
 import { init as initDebugFormatters } from "./utils/debug-formatter";
+import { effect } from "@web/core/utils/reactive";
+import { batched } from "@web/core/utils/timing";
 
 /**
  * Chrome is the root component of the PoS App.
@@ -64,10 +64,9 @@ export class Chrome extends Component {
         }
     }
 
-    sendOrderToCustomerDisplay(selectedOrder, scaleData) {
+    sendOrderToCustomerDisplay(selectedOrder) {
         const adapter = new CustomerDisplayPosAdapter();
         adapter.formatOrderData(selectedOrder);
-        adapter.data.scaleData = scaleData;
         adapter.dispatch(this.pos);
     }
 
