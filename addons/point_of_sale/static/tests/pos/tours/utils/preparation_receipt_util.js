@@ -2,7 +2,7 @@
 
 import { renderToElement } from "@web/core/utils/render";
 
-export function generatePreparationReceiptElement() {
+export function generatePreparationReceiptElement(ticketType) {
     const order = posmodel.getOrder();
     const orderChange = posmodel.changesToOrder(
         order,
@@ -17,10 +17,26 @@ export function generatePreparationReceiptElement() {
         false
     );
 
-    orderData.changes = {
-        title: "new",
-        data: changes.new,
-    };
+    if (ticketType === "new") {
+        orderData.changes = {
+            title: "NEW",
+            data: changes.new,
+        };
+    }
+    if (ticketType === "cancelled") {
+        orderData.changes = {
+            title: "CANCELLED",
+            data: changes.cancelled,
+        };
+    }
+    if (ticketType === "noteUpdate") {
+        const { noteUpdateTitle, printNoteUpdateData = true } = orderChange;
+
+        orderData.changes = {
+            title: noteUpdateTitle || "NOTE UPDATE",
+            data: printNoteUpdateData ? changes.noteUpdate : [],
+        };
+    }
 
     return renderToElement("point_of_sale.OrderChangeReceipt", {
         data: orderData,
@@ -33,10 +49,11 @@ export function checkPreparationTicketData(
         visibleInDom: [],
         invisibleInDom: [],
         lineOrder: [],
+        type: "new", // can be "new", "cancelled" or "noteUpdate"
     }
 ) {
     const check = () => {
-        const ticket = generatePreparationReceiptElement();
+        const ticket = generatePreparationReceiptElement(opts.type || "new");
         const lines = ticket.querySelectorAll(".orderline");
         const lineNames = [];
 
