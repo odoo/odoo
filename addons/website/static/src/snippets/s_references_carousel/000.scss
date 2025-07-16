@@ -1,5 +1,6 @@
 .s_references_carousel {
     .slider {
+        --duration: 5s;
         height: var(--height);
         overflow: hidden;
         mask-image: linear-gradient(to right, transparent, #000 10% 90%, transparent);
@@ -44,4 +45,7 @@
 // Pause animation when website is in edit mode
 body.editor_enable .s_references_carousel .item {
     animation-play-state: paused;
+    // Position items properly when animation is paused to prevent overlapping
+    // Calculate left position based on item position and width
+    left: calc((var(--position) - 1) * var(--width));
 }

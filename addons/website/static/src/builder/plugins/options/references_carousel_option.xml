@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ReferencesCarouselOption">
+    <BuilderRow label.translate="Speed">
+        <BuilderRange
+            id="'references_carousel_speed'"
+            applyTo="'.slider'"
+            styleAction="'--duration'"
+            min="0"
+            max="10"
+            displayRangeValue="true"
+            unit="'s'"/>
+    </BuilderRow>
+    <ReferencesCarouselImagesOption/>
+</t>
+
+<t t-name="website.ReferencesCarouselImagesOption">
+    <div class="p-1 px-2 ps-3">
+        <table t-ref="root" class="o_references_carousel_images_list">
+            <tbody>
+                <tr t-foreach="this.computeItems()" t-as="item" t-key="item.fabricatedKey" t-att-data-id="item.id">
+                    <td>
+                        <button class="btn o_drag_handle ps-0">
+                            <i class="oi oi-draggable"/>
+                        </button>
+                    </td>
+                    <td width="100%">
+                        <div class="d-flex align-items-center">
+                            <div class="me-2" style="background-image: url('/web/static/img/transparent.png'); width: 50%; height: 40px;">
+                                <img t-att-src="item.src" alt="" class="w-100 h-100 object-fit-contain"/>
+                            </div>
+                            <BuilderButton
+                                action="'replaceMedia'"
+                                applyTo="`li.item:nth-of-type(${item.position}) img`"
+                                className="'btn-secondary btn-sm'"
+                                title.translate="Change Image"
+                                preview="false">
+                                Change Image
+                            </BuilderButton>
+                        </div>
+                    </td>
+                    <td style="'min-width: 2.5em'">
+                        <button
+                            class="btn btn-danger"
+                            title="Remove image"
+                            t-on-click="() => this.removeImage(item.position)">
+                            <i class="fa fa-trash-o"/>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="p-1 px-2 ps-3">
+        <button class="btn btn-primary" t-on-click="() => this.addImage()">Add New Image</button>
+    </div>
+</t>
+
+</templates>
