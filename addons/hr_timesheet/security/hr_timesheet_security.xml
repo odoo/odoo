@@ -37,7 +37,7 @@
             <field name="domain_force">[
                 ('project_id', '!=', False),
                 ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
-                ('project_id.privacy_visibility', '=', 'portal'),
+                ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']),
                 ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
             ]</field>
             <field name="perm_read" eval="True"/>
@@ -54,7 +54,7 @@
                 ('user_id', '=', user.id),
                 ('project_id', '!=', False),
                 '|', '|',
-                    ('project_id.privacy_visibility', '!=', 'followers'),
+                    ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
                     ('partner_id', '=', user.partner_id.id),
                     ('message_partner_ids', 'in', [user.partner_id.id])
             ]</field>
@@ -67,7 +67,7 @@
             <field name="domain_force">[
                 ('project_id', '!=', False),
                 '|', '|',
-                    ('project_id.privacy_visibility', '!=', 'followers'),
+                    ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
                     ('message_partner_ids', 'in', [user.partner_id.id]),
                     ('partner_id', '=', user.partner_id.id),
             ]</field>
@@ -106,7 +106,7 @@
             <field name="domain_force">[
                 ('user_id', '=', user.id),
                 '|',
-                    ('project_id.privacy_visibility', '!=', 'followers'),
+                    ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
                     ('message_partner_ids', 'in', [user.partner_id.id])
             ]</field>
             <field name="groups" eval="[(4, ref('group_hr_timesheet_user'))]"/>
@@ -117,7 +117,7 @@
             <field name="model_id" ref="model_timesheets_analysis_report"/>
             <field name="domain_force">[
                 '|',
-                    ('project_id.privacy_visibility', '!=', 'followers'),
+                    ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
                     ('project_id.message_partner_ids', 'in', [user.partner_id.id])
             ]</field>
             <field name="groups" eval="[(4, ref('group_hr_timesheet_approver'))]"/>

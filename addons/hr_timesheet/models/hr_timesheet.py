@@ -50,7 +50,7 @@ class AccountAnalyticLine(models.Model):
     def _domain_project_id(self):
         domain = Domain([('allow_timesheets', '=', True), ('is_template', '=', False)])
         if not self.env.user.has_group('hr_timesheet.group_timesheet_manager'):
-            domain &= Domain('privacy_visibility', '!=', 'followers') | Domain('message_partner_ids', 'in', [self.env.user.partner_id.id])
+            domain &= Domain('privacy_visibility', 'in', ['employees', 'portal']) | Domain('message_partner_ids', 'in', [self.env.user.partner_id.id])
         return domain
 
     def _domain_employee_id(self):
@@ -389,7 +389,7 @@ class AccountAnalyticLine(models.Model):
                 Domain('message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id])
                 | Domain('partner_id', 'child_of', [self.env.user.partner_id.commercial_partner_id.id])
             )
-            & Domain('project_id.privacy_visibility', '=', 'portal')
+            & Domain('project_id.privacy_visibility', 'in', ['invited_users', 'portal'])
         )
 
     def _timesheet_preprocess_get_accounts(self, vals):
