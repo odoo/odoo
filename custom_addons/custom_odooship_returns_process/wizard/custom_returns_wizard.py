@@ -175,14 +175,13 @@ class ReturnsScanWizard(models.TransientModel):
         is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
         if is_production == 'True':
             api_url = (
-                "https://shiperoo-connect-fp.prod.automation.shiperoo.com/"
-                "sc-file-processor/api/return-completion"
+
+                "https://shiperoo-connect-fp.prod.automation.shiperoo.com/sc-file-processor/api/return-completion"
             )
             auth = ('apiuser', 'd7oX8L3af6D4FDobC8AFsWRgLamvQs')
         else:
             api_url = (
-                "https://shiperoo-connect.uat.automation.shiperoo.com/"
-                "sc-file-processor/api/return-completion"
+                "https://shiperoo-connect.uat.automation.shiperoo.com/sc-file-processor/api/return-completion"
             )
             auth = ('apiuser', 'apipass')
 
