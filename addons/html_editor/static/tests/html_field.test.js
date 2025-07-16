@@ -1856,7 +1856,6 @@ describe("save image", () => {
                         expect(args[1].txt).toBe(getImageContainerHTML(newImageSrc, false));
                     } else {
                         // Fail the test if too many write are called.
-                        expect(true).toBe("false");
                         throw new Error("Write should only be called 3 times during this test");
                     }
                     writeCount += 1;
@@ -1912,7 +1911,6 @@ describe("save image", () => {
         // "registered".
         const newImageSrc = "/web/image/1234/cropped_transparent.png";
         onRpc("web_save", () => {
-            expect(true).toBe(false);
             throw new Error("web_save should only be called through sendBeacon");
         });
         onRpc(`/html_editor/modify_image/${imageRecord.id}`, async (request) => {
@@ -1925,7 +1923,6 @@ describe("save image", () => {
                 return newImageSrc;
             } else {
                 // Fail the test if too many modify_image are called.
-                expect(true).toBe(false);
                 throw new Error("The image should only have been modified once during this test");
             }
         });
