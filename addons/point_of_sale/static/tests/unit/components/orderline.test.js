@@ -2,8 +2,10 @@ import { test, expect } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { setupPosEnv } from "../utils";
+import { definePosModels } from "../data/generate_model_definitions";
 
-test.tags("pos");
+definePosModels();
+
 test("orderline.js", async () => {
     const store = await setupPosEnv();
     const order = store.addNewOrder();

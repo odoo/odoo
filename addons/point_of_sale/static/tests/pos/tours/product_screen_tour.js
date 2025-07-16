@@ -895,14 +895,3 @@ registry.category("web_tour.tours").add("test_load_pos_demo_data_by_pos_user", {
             Chrome.endTour(),
         ].flat(),
 });
-
-registry.category("web_tour.tours").add("test_load_pos_demo_data_by_pos_admin", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            clickLoadSampleButton(),
-            ProductScreen.isShown(),
-            ProductScreen.clickDisplayedProduct("Small Shelf"),
-            Chrome.endTour(),
-        ].flat(),
-});

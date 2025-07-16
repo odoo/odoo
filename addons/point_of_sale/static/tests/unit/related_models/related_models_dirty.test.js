@@ -2,10 +2,12 @@ import { expect, test, describe } from "@odoo/hoot";
 import { uuidv4 } from "@point_of_sale/utils";
 import { getRelatedModelsInstance } from "../data/get_model_definitions";
 import { makeMockServer } from "@web/../tests/web_test_helpers";
+import { definePosModels } from "../data/generate_model_definitions";
 
 const { DateTime } = luxon;
 
-describe.current.tags("pos");
+definePosModels();
+
 describe("Dirty record", () => {
     test("field update", async () => {
         await makeMockServer();

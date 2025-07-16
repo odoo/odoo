@@ -2,8 +2,7 @@ import { uuidv4 } from "@point_of_sale/utils";
 import { getService, makeMockEnv } from "@web/../tests/web_test_helpers";
 
 export const setupPosEnv = async () => {
-    // Do not change these variables, they are in accordance with the
-    // point_of_sale/static/tests/unit/data/base_data.js file.
+    // Do not change these variables, they are in accordance with the demo data
     odoo.pos_session_id = 1;
     odoo.pos_config_id = 1;
     odoo.login_number = 1;
@@ -39,5 +38,6 @@ export const getFilledOrder = async (store) => {
         },
         order
     );
+    store.addPendingOrder([order.id]);
     return order;
 };

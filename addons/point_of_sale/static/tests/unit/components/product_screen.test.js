@@ -2,8 +2,10 @@ import { test, expect } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupPosEnv } from "../utils";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
+import { definePosModels } from "../data/generate_model_definitions";
 
-test.tags("pos");
+definePosModels();
+
 test("product_screen.js", async () => {
     const store = await setupPosEnv();
     const comp = await mountWithCleanup(ProductScreen, {});
