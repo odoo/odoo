@@ -37,12 +37,12 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
     static components = {
         ...FieldMany2ManyTagsEmail.components,
         TagsList: FieldMany2ManyTagsEmailTagsList,
-        Many2XAutocomplete: FieldMany2ManyTagsEmailMany2xAutocomplete
+        Many2XAutocomplete: FieldMany2ManyTagsEmailMany2xAutocomplete,
     };
     static props = {
         ...Many2ManyTagsField.props,
         context: { type: Object, optional: true },
-        canEditTags: { type: Boolean, optional: true }
+        canEditTags: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -86,7 +86,8 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
      * @returns {Object}
      */
     getTagProps(record) {
-        return {...super.getTagProps(record),
+        return {
+            ...super.getTagProps(record),
             text:
                 record.data.name || record.data.email || record.data.display_name || _t("Unnamed"),
             onClick: (ev) => this.onTagClick(ev, record),
@@ -121,8 +122,10 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
     }
 
     async updateRecipient(newEmail, partnerId) {
-        await this.orm.write("res.partner", [partnerId], { email: newEmail });
-        return this.props.record.data[this.props.name].addAndRemove({ reload: true });
+        const list = this.props.record.data[this.props.name];
+        const partnerRecord = list.records.find((r) => r.resId === partnerId);
+        partnerRecord.canSaveOnUpdate = true;
+        return partnerRecord.update({ email: newEmail }, { save: true });
     }
 }
 
@@ -146,7 +149,7 @@ export const fieldMany2ManyTagsEmail = {
     },
     relatedFields: (fieldInfo) => [
         ...many2ManyTagsField.relatedFields(fieldInfo),
-        { name: "email", type: "char" },
+        { name: "email", type: "char", readonly: false },
         { name: "name", type: "char" },
     ],
     additionalClasses: ["o_field_many2many_tags"],
