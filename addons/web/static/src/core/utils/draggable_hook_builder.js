@@ -500,15 +500,14 @@ export function makeDraggableHook(hookParams) {
                 state.willDrag = false;
 
                 // Compute scrollable parent
-                const isDocumentScrollingElement = ctx.current.container
-                    === ctx.current.container.ownerDocument.scrollingElement;
+                const isDocumentScrollingElement =
+                    ctx.current.container === ctx.current.container.ownerDocument.scrollingElement;
                 // If the container is the "ownerDocument.scrollingElement",
                 // there is no need to get the scroll parent as it is the
                 // scrollable element itself.
                 // TODO: investigate if "getScrollParents" should not consider
                 // the "ownerDocument.scrollingElement" directly.
-                [ctx.current.scrollParentX, ctx.current.scrollParentY] =
-                    isDocumentScrollingElement
+                [ctx.current.scrollParentX, ctx.current.scrollParentY] = isDocumentScrollingElement
                     ? [ctx.current.container, ctx.current.container]
                     : getScrollParents(ctx.current.container);
 
@@ -525,6 +524,9 @@ export function makeDraggableHook(hookParams) {
                     dom.addStyle(ctx.current.element, {
                         width: `${width}px`,
                         height: `${height}px`,
+                        // Limit the impact of width and height !important on the dragged element
+                        "max-width": `${width}px`,
+                        "max-height": `${height}px`,
                         position: "fixed !important",
                     });
 
