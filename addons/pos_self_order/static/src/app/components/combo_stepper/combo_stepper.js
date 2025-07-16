@@ -3,8 +3,8 @@ import { useHorizontalScrollShadow } from "../../utils/scroll_shadow_hook";
 import { useDraggableScroll } from "../../utils/scroll_dnd_hook";
 import { scrollItemIntoViewX } from "../../utils/scroll";
 
-export class ComboStepper extends Component {
-    static template = "pos_self_order.comboStepper";
+export class Stepper extends Component {
+    static template = "pos_self_order.stepper";
     static props = ["steps", "selectedStep?", "onStepClicked"];
 
     setup() {

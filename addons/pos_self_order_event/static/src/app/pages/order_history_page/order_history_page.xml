@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-t-name="pos_self_order_event.OrdersHistoryPage" t-inherit="pos_self_order.OrdersHistoryPage" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_self_product_name')]/.." position="inside">
+            <a class="cursor-pointer text-primary"
+                t-if="line.event_ticket_id and order.state === 'paid'"
+                t-on-click="() => this.downloadOrderTickets(line)"
+                aria-label="Download Ticket"
+                title="Download Ticket">
+                Download
+                <i class="fa fa-ticket" role="img" aria-label="Download Ticket"/>
+            </a>
+        </xpath>
+    </t>
+</templates>

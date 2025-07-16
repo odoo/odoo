@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="pos_self_order.comboStepper">
+    <t t-name="pos_self_order.stepper">
         <div class="self_order_combo_stepper_container d-flex justify-content-center user-select-none position-relative" t-ref="stepperContainer">
           <ul class="stepper_list d-flex mw-100 overflow-y-hidden overflow-x-auto" t-ref="stepperScroll">
             <li class="d-flex text-nowrap" t-foreach="props.steps" t-as="step" t-key="step.id" t-att-data-stepper="step.id">

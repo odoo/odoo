@@ -9,7 +9,7 @@
             </div>
         </div>
         <div t-else="" class="confirmation-page d-flex justify-content-center align-items-center flex-column h-100 p-3 text-center o_self_background" t-attf-style="background-image:#{selfOrder.kioskBackgroundImageUrl};background-size: cover; background-position: center;">
-            <div class="d-flex flex-column align-items-center justify-content-center w-100 h-100">
+            <div class="o_confirmation_block d-flex flex-column align-items-center justify-content-center w-100 h-100">
                 <div class="mb-4">
                     <h1 t-if="state.payment and selfOrder.config.self_ordering_pay_after !== 'each'" class="fw-bold" style="text-wrap: pretty;">
                         Hope you enjoyed your meal!

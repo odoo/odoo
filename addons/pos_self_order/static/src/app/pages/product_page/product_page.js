@@ -1,8 +1,9 @@
-import { Component, onWillUnmount, useState, useSubEnv, useRef, onMounted } from "@odoo/owl";
+import { Component, useState, useSubEnv, useRef } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
+import { useStickyTitleObserver } from "@pos_self_order/app/utils/sticky_title_observer";
 
 export class ProductPage extends Component {
     static template = "pos_self_order.ProductPage";
@@ -32,30 +33,10 @@ export class ProductPage extends Component {
         this.productNameRef = useRef("productName");
         this.scrollContainerRef = useRef("scrollContainer");
         this.scrollShadow = useScrollShadow(this.scrollContainerRef);
-
-        onMounted(() => {
-            const productNameEl = this.productNameRef.el;
-            if (productNameEl) {
-                this.observer = new IntersectionObserver(
-                    ([entry]) => {
-                        this.state.showStickyTitle = !entry.isIntersecting;
-                    },
-                    {
-                        root: null,
-                        threshold: 0,
-                    }
-                );
-                this.observer.observe(productNameEl);
-            }
-        });
-
-        onWillUnmount(() => {
-            this.selfOrder.editedLine = null;
-
-            if (this.observer) {
-                this.observer.unobserve(this.productNameRef.el);
-            }
-        });
+        useStickyTitleObserver(
+            "productName",
+            (isSticky) => (this.state.showStickyTitle = isSticky)
+        );
     }
 
     get productTemplate() {
