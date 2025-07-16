@@ -2001,12 +2001,6 @@ class AccountTax(models.Model):
             if not base_amounts['base_lines']:
                 continue
 
-            base_line = max(
-                base_amounts['base_lines'],
-                key=lambda base_line: base_line['tax_details']['total_included_currency'],
-            )
-
-            tax_details = base_line['tax_details']
             if country_code == 'PT':
                 delta_base_amount_currency = (
                     base_amounts['raw_total_amount_currency']
@@ -2025,8 +2019,27 @@ class AccountTax(models.Model):
             if currency.is_zero(delta_base_amount_currency) and company.currency_id.is_zero(delta_base_amount):
                 continue
 
-            tax_details['delta_total_excluded_currency'] += delta_base_amount_currency
-            tax_details['delta_total_excluded'] += delta_base_amount
+            # Dispatch the base delta evenly on the base lines, starting from the biggest line.
+            factors = [{'factor': 1.0 / len(base_amounts['base_lines'])}] * len(base_amounts['base_lines'])
+            base_lines_sorted = sorted(
+                base_amounts['base_lines'],
+                key=lambda base_line: base_line['tax_details']['total_included_currency'],
+                reverse=True,
+            )
+            for delta_currency_indicator, currency, delta_amount in (
+                ('_currency', currency, delta_base_amount_currency),
+                ('', company.currency_id, delta_base_amount),
+            ):
+                amounts_to_distribute = self._distribute_delta_amount_smoothly(
+                    currency.decimal_places,
+                    delta_amount,
+                    factors,
+                )
+                for base_line, amount_to_distribute in zip(
+                    base_lines_sorted,
+                    amounts_to_distribute,
+                ):
+                    base_line['tax_details'][f'delta_total_excluded{delta_currency_indicator}'] += amount_to_distribute
 
     @api.model
     def _prepare_base_line_grouping_key(self, base_line):
