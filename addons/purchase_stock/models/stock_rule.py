@@ -82,7 +82,7 @@ class StockRule(models.Model):
                     moves._action_cancel()
                 moves.procure_method = 'make_to_stock'
                 self._notify_responsible(procurement)
-                return
+                continue
 
             partner = supplier.partner_id
             # we put `supplier_info` in values for extensibility purposes
