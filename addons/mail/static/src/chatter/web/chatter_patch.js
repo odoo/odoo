@@ -13,7 +13,7 @@ import { RecipientsInput } from "@mail/core/web/recipients_input";
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
-import { onWillStart, status, useEffect } from "@odoo/owl";
+import { onWillStart, reactive, status, useEffect, useSubEnv } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -120,6 +120,9 @@ patch(Chatter.prototype, {
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
         this.loadingAttachmentTimeout = null;
+        useSubEnv({
+            chatterState: reactive({ isFullComposerOpen: false }),
+        });
         useCustomDropzone(this.rootRef, MailAttachmentDropzone, {
             extraClass: "o-mail-Chatter-dropzone",
             /** @param {Event} ev */
