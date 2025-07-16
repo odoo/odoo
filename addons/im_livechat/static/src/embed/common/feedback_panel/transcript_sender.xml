@@ -8,8 +8,8 @@
         <t t-else="">Receive a copy of this conversation.</t>
     </div>
     <div class="input-group has-validation mb-3">
-        <input t-model="state.email" t-att-disabled="[STATUS.SENDING, STATUS.SENT].includes(state.status)" type="text" class="form-control" placeholder="mail@example.com"/>
-        <button class="btn btn-primary" type="button" data-action="sendTranscript" t-att-disabled="!state.email or !isValidEmail(state.email) or [STATUS.SENDING, STATUS.SENT].includes(state.status)" t-on-click="onClickSend">
+        <input type="text" class="form-control" disabled="1" t-att-value="store.self.email"/>
+        <button class="btn btn-primary" type="button" data-action="sendTranscript" t-att-disabled="!store.self.email or !isValidEmail(store.self.email) or [STATUS.SENDING, STATUS.SENT].includes(state.status)" t-on-click="onClickSend">
             <i class="fa" t-att-class="{
                 'fa-circle-o-notch fa-spin': state.status === STATUS.SENDING,
                 'fa-check': state.status === STATUS.SENT,

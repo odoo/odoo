@@ -24,6 +24,7 @@ export class TranscriptSender extends Component {
     setup() {
         this.isValidEmail = isValidEmail;
         this.livechatService = useService("im_livechat.livechat");
+        this.store = useService("mail.store");
         this.state = useState({
             email: "",
             status: this.STATUS.IDLE,
@@ -35,7 +36,7 @@ export class TranscriptSender extends Component {
         try {
             await rpc("/im_livechat/email_livechat_transcript", {
                 channel_id: this.props.thread.id,
-                email: this.state.email,
+                email: this.store.self.email,
             });
             this.state.status = this.STATUS.SENT;
         } catch {

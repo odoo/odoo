@@ -44,6 +44,10 @@ export class FeedbackPanel extends Component {
         this.state.rating = rating;
     }
 
+    get transcriptUrl() {
+        return url(`/im_livechat/download_transcript/${this.props.thread.id}`);
+    }
+
     onClickSendFeedback() {
         rpc("/im_livechat/feedback", {
             reason: this.state.feedback,

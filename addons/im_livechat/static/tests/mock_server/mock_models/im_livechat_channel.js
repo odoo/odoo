@@ -46,7 +46,13 @@ export class LivechatChannel extends models.ServerModel {
         return users.filter((user) => user.im_status === "online");
     }
     /** @param {integer} id */
-    _get_livechat_discuss_channel_vals(id, anonymous_name, previous_operator_id, country_id) {
+    _get_livechat_discuss_channel_vals(
+        id,
+        anonymous_name,
+        previous_operator_id,
+        user_id,
+        country_id
+    ) {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
@@ -62,6 +68,15 @@ export class LivechatChannel extends models.ServerModel {
                 partner_id: operator.partner_id,
             }),
         ];
+        if (user_id && user_id !== operator.id) {
+            const visitor_user = ResUsers.browse(user_id)[0];
+            membersToAdd.push(
+                Command.create({
+                    livechat_member_type: "visitor",
+                    partner_id: visitor_user.partner_id,
+                })
+            );
+        }
         const membersName = [
             this.env.user ? this.env.user.display_name : anonymous_name,
             operator.livechat_username ? operator.livechat_username : operator.name,
