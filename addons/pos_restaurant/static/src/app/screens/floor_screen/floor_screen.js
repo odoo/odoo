@@ -242,8 +242,11 @@ export class FloorScreen extends Component {
         this.useResizeHook();
         onMounted(() => {
             this.pos.openOpeningControl();
-            this.resetTable();
             this.restoreFloorScrollPosition();
+
+            if (!this.pos.isOrderTransferMode) {
+                this.resetTable();
+            }
         });
 
         onWillUnmount(() => {
