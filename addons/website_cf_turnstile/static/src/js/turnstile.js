@@ -112,6 +112,7 @@ publicWidget.registry.s_website_form.include({
         this.cleanTurnstile();
         if (
             !this.isEditable &&
+            !this.el.classList.contains('s_website_form_no_recaptcha') &&
             !this.el.querySelector(".s_turnstile") &&
             session.turnstile_site_key
         ) {
