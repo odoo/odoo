@@ -38,20 +38,21 @@ class StockPicking(models.Model):
 
         return super().create(vals)
 
-    def write(self, vals):
-        res = super().write(vals)
-        if 'move_ids_without_package' in vals or self.picking_type_id.picking_process_type == 'returns':
-            for picking in self:
-                for move in picking.move_ids:
-                    if move.product_uom_qty > 1:
-                        qty = int(move.product_uom_qty)
-                        for i in range(qty):
-                            new_move = move.copy(default={
-                                'product_uom_qty': 1,
-                                'name': (move.name or '') + f" (Return #{i + 1})"
-                            })
-                        # move.unlink()
-        return res
+    # def write(self, vals):
+    #     res = super().write(vals)
+    #     if 'move_ids_without_package' in vals or self.picking_type_id.picking_process_type == 'returns':
+    #         print("\n\n=======",self.operation_process_type)
+    #         for picking in self:
+    #             for move in picking.move_ids:
+    #                 if move.product_uom_qty > 1:
+    #                     qty = int(move.product_uom_qty)
+    #                     for i in range(qty):
+    #                         new_move = move.copy(default={
+    #                             'product_uom_qty': 1,
+    #                             'name': (move.name or '') + f" (Return #{i + 1})"
+    #                         })
+    #                     # move.unlink()
+    #     return res
 
 
     def action_confirm(self):
