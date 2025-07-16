@@ -28,4 +28,24 @@ describe("pos_store.js", () => {
         expect(order.tip_amount).toBe(50);
         expect(order.lines.length).toBe(3); // 2 original lines + 1 tip line
     });
+
+    test("productsToDisplay", async () => {
+        const store = await setupPosEnv();
+        store.selectedCategory = store.models["pos.category"].get(1);
+        let products = store.productsToDisplay;
+        expect(products.length).toBe(1);
+        expect(products[0].id).toBe(5);
+        expect(store.selectedCategory.id).toBe(1);
+        store.selectedCategory = store.models["pos.category"].get(1);
+        store.searchProductWord = "TEST";
+        products = store.productsToDisplay;
+        expect(products.length).toBe(2);
+        expect(products[0].id).toBe(5);
+        expect(products[1].id).toBe(6);
+        expect(store.selectedCategory).toBe(undefined);
+        store.searchProductWord = "TEST 2";
+        products = store.productsToDisplay;
+        expect(products.length).toBe(1);
+        expect(products[0].id).toBe(6);
+    });
 });
