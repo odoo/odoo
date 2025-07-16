@@ -24,10 +24,10 @@ class CalendarAttendee(models.Model):
         return uuid.uuid4().hex
 
     STATE_SELECTION = [
-        ('needsAction', 'Needs Action'),
-        ('tentative', 'Maybe'),
-        ('declined', 'No'),
         ('accepted', 'Yes'),
+        ('declined', 'No'),
+        ('tentative', 'Maybe'),
+        ('needsAction', 'Needs Action'),
     ]
 
     # event
