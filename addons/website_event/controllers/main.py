@@ -6,7 +6,6 @@ import werkzeug
 
 from ast import literal_eval
 from collections import Counter
-from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
@@ -133,7 +132,7 @@ class WebsiteEventController(http.Controller):
 
         if searches['date'] == 'old':
             # the only way to display this content is to set date=old so it must be canonical
-            values['canonical_params'] = OrderedMultiDict([('date', 'old')])
+            values['canonical_params'] = {'date': 'old'}
 
         return request.render("website_event.index", values)
 

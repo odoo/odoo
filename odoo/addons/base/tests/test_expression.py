@@ -867,7 +867,10 @@ class TestExpression(SavepointCaseWithUserDemo):
         with self.assertRaisesRegex(ValueError, r"^Invalid leaf \('create_date', '>>', 'foo'\)$"):
             Country.search([('create_date', '>>', 'foo')])
 
-        with self.assertRaisesRegex(ValueError, r"^stray % in format '%'$"):
+        with self.assertRaisesRegex(
+                ValueError,
+                r"^(time data 'foo' does not match|stray % in) format '%'$",
+        ):
             Country.search([]).filtered_domain([('create_date', '>>', 'foo')])
 
         with self.assertRaisesRegex(psycopg2.DataError, r"invalid input syntax"):
