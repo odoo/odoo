@@ -16,6 +16,9 @@ class TestTranslationFlow(common.TransactionCase):
                 "modules": [(6, 0, [module.id])]
             })
             export.act_getfile()
+            if not export.data:
+                # export.data = False => no terms to translate
+                continue
             pot_file = base64.b64decode(export.data)
             common.save_test_file(
                 module.name, pot_file, prefix="i18n_", extension="pot",
