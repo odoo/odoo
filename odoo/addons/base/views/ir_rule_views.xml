@@ -86,7 +86,7 @@
                     <filter string="Delete" name="delete_access_right" domain="[('perm_unlink', '=', True)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Model" name="group_by_object" domain="[]" context="{'group_by': 'model_id'}"/>
                         <separator/>
                         <filter string="Group" name="group_by_group" domain="[]" context="{'group_by': 'groups'}"/>

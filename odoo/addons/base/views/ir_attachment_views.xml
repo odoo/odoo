@@ -75,7 +75,7 @@
                     <separator/>
                     <field name="create_uid" string="Created by"/>
                     <field name="type"/>
-                    <group string="Group By">
+                    <group>
                         <filter name="owner" string="Owner" domain="[]" context="{'group_by':'create_uid'}"/>
                         <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}" groups="base.group_no_one"/>
                         <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>

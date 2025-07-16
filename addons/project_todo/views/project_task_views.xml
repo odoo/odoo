@@ -257,7 +257,7 @@
                         domain="[('activity_date_deadline', '=', 'today')]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_date_deadline', '&gt;', 'today')]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Priority" name="groupby_priority" context="{'group_by': 'priority'}"/>
                     <filter string="Tags" name="tags" help="By assigned tags" context="{'group_by':'tag_ids'}"/>
                     <filter string="Assignees" name="user_ids" context="{'group_by': 'user_ids'}"/>

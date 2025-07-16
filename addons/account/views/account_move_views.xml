@@ -362,7 +362,7 @@
                     <filter string="Report Dates" name="date_before" domain="[('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <separator/>
                     <filter string="Analytic Accounts" name="analytic_accounts" domain="[('analytic_distribution', 'in', context.get('analytic_ids'))]" invisible="1"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Journal Entry" name="group_by_move" domain="[]" context="{'group_by': 'move_name'}"/>
                         <filter string="Account" name="group_by_account" domain="[]" context="{'group_by': 'account_id'}"/>
                         <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
@@ -453,7 +453,7 @@
                     <filter string="Report Dates" name="date_between" domain="[('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <filter string="Report Dates" name="date_before" domain="[('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <separator/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Currency" name="group_by_currencies" domain="[]" context="{'group_by': 'currency_id'}"/>
                         <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
@@ -1596,7 +1596,7 @@
                     <filter string="Date" name="date" date="date"/>
                     <filter string="Invoice Date" name="invoice_date" date="invoice_date"/>
                     <separator/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Partner" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
@@ -1692,7 +1692,7 @@
                         domain="[('activity_date_deadline', '=', 'today')]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_date_deadline', '&gt;', 'today')]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'invoice_user_id'}"/>
                         <filter string="Partner" name="partner" context="{'group_by':'partner_id'}"/>
                         <filter name="status" string="Status" context="{'group_by':'state'}"/>

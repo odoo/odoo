@@ -32,7 +32,7 @@
                 <search string="Search Procurement">
                     <field name="name"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                    <group string='Group by...'>
+                    <group>
                         <filter string='Route' name="groupby_route" context="{'group_by': 'route_id'}"/>
                         <filter string='Destination Location' name="groupby_location_dest" context="{'group_by': 'location_dest_id'}"/>
                         <filter string='Warehouse' name="groupby_warehouse" context="{'group_by': 'warehouse_id'}" groups="stock.group_stock_multi_warehouses"/>

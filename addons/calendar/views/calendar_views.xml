@@ -397,7 +397,7 @@
                 <filter string="Recurrent" name="recurrent" domain="[('recurrency', '=', True)]"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Responsible" name="responsible" domain="[]" context="{'group_by': 'user_id'}"/>
                 </group>
             </search>

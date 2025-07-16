@@ -338,7 +338,7 @@
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_date_deadline', '&gt;', 'today')]"/>
                 <filter string="Online" name="filter_online" domain="[('address_id', '=', False)]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
                     <filter string="Template" name="event_type_id" context="{'group_by': 'event_type_id'}"/>
                     <!--

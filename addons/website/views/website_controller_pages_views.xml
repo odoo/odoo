@@ -93,7 +93,7 @@
     <field name="arch" type="xml">
         <search>
             <field name="model" filter_domain="[('model','=', self)]" string="Model"/>
-            <group string="Group By" colspan="4">
+            <group colspan="4">
                 <filter string="Model" name="page_model" domain="[]" context="{'group_by':'model'}"/>
                 <filter string="Website" name="page_website_id" domain="[]" context="{'group_by':'website_id'}"/>
             </group>

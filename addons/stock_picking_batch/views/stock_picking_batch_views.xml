@@ -234,7 +234,7 @@
                     domain="[('activity_date_deadline', '=', 'today')]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_date_deadline', '&gt;', 'today')]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Responsible" name="user" domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string="State" name="state" domain="[]" context="{'group_by': 'state'}"/>
                 </group>

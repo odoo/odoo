@@ -85,7 +85,7 @@
             <field name="name" string="Content" filter_domain="['|', ('name','ilike',self), ('content','ilike',self)]"/>
             <field name="write_uid"/>
             <field name="blog_id"/>
-            <group string="Group By">
+            <group>
                 <filter string="Blog" name="group_by_blog" domain="[]" context="{'group_by': 'blog_id'}"/>
                 <filter string="Author" name="group_by_author" domain="[]" context="{'group_by': 'create_uid'}"/>
                 <filter string="Last Contributor" name="last_contributor" domain="[]" context="{'group_by': 'write_uid'}"/>

@@ -449,7 +449,7 @@
                     <separator/>
                     <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Buyer" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
                         <filter string="Order Date" name="order_date" domain="[]" context="{'group_by': 'date_order'}"/>
@@ -491,7 +491,7 @@
                     <separator/>
                     <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Buyer" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
                         <filter string="Order Date" name="order_date" domain="[]" context="{'group_by': 'date_order'}"/>
@@ -802,7 +802,7 @@
                         domain="[
                             ('date_order', '>', 'today -1y')
                         ]" invisible="1"/>
-                    <group string="Group By">
+                    <group>
                         <filter name="groupby_supplier" string="Vendor" domain="[]" context="{'group_by' : 'partner_id'}" />
                         <filter name="groupby_product" string="Product" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter string="Order Reference" name="order_reference" domain="[]" context="{'group_by' :'order_id'}"/>

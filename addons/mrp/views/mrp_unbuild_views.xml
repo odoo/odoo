@@ -24,7 +24,7 @@
                 <search string="Search">
                     <field name="product_id"/>
                     <field name="mo_id"/>
-                    <group string="Filters">
+                    <group>
                         <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
                         <filter name="done" string="Done" domain="[('state', '=', 'done')]"/>
                         <filter invisible="1" string="My Activities" name="filter_activities_my"
@@ -38,7 +38,7 @@
                         <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                             domain="[('activity_date_deadline', '&gt;', 'today')]"/>
                     </group>
-                    <group string='Group by...'>
+                    <group>
                         <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
                         <filter string="Manufacturing Order" name="mogroup" context="{'group_by': 'mo_id'}"/>
                     </group>

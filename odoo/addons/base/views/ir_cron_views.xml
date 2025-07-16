@@ -74,7 +74,7 @@
                     <filter string="All" name="all" domain="['|', ('active', '=', False), ('active', '=', True)]" />
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                    <group string="Group By">
+                    <group>
                         <filter string="User" name="user" domain="[]" context="{'group_by': 'user_id'}"/>
                         <filter string="Execution" name="execution" domain="[]" context="{'group_by': 'nextcall'}" />
                         <filter string="Model" name="groupby_model_id" domain="[]" context="{'group_by': 'model_id'}"/>

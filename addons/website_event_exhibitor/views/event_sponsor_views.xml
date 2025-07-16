@@ -58,7 +58,7 @@
                 <separator/>
                 <filter string="Exhibitors" name="filter_is_exhibitor" domain="[('exhibitor_type', 'in', ['exhibitor', 'online'])]"/>
                 <filter string="Online" name="filter_is_exhibitor" domain="[('exhibitor_type', '=', 'online')]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Event" name="group_by_event_id" domain="[]" context="{'group_by': 'event_id'}"/>
                     <filter string="Level" name="group_by_sponsor_type_id" domain="[]" context="{'group_by': 'sponsor_type_id'}"/>
                 </group>

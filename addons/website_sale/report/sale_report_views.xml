@@ -14,7 +14,7 @@
                 <filter string="Confirmed Orders" name="confirmed" domain="[('state', '=', 'sale')]"/>
                 <separator/>
                 <filter name="filter_date" date="date" default_period="month"/>
-                <group string="Group By">
+                <group>
                     <filter string="Website" name="groupby_website" context="{'group_by':'website_id'}" groups="website.group_multi_website"/>
                     <filter string="Product" name="groupby_product" context="{'group_by':'product_id'}"/>
                     <filter string="Product Category" name="groupby_product_category" context="{'group_by':'categ_id'}"/>

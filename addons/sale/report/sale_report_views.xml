@@ -96,11 +96,11 @@
                 <field name="partner_id"/>
                 <field name="country_id"/>
                 <field name="industry_id"/>
-                <group string="Extended Filters">
+                <group>
                     <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
-                <group string="Group By">
+                <group>
                     <filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/>
                     <filter string="Sales Team" name="sales_channel" context="{'group_by':'team_id'}"/>
                     <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>

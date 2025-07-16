@@ -24,7 +24,7 @@
                 <separator/>
                 <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', 'open')]"/>
                 <filter string="Closed Tasks" name="closed_tasks" domain="[('is_closed', '=', 'closed')]"/>
-                <group string="Group By">
+                <group>
                     <filter string="Date" name="date" context="{'group_by': 'date:week'}" />
                     <filter string="Stage (Burndown Chart)" name="stage" context="{'group_by': 'stage_id'}"/>
                     <filter string="Is Closed (Burn-up Chart)" name="is_closed" context="{'group_by': 'is_closed'}"/>
