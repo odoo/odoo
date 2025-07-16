@@ -947,12 +947,13 @@ class Meeting(models.Model):
         return videocall_channel
 
     def _get_default_privacy_domain(self):
-        # Sub query user settings from calendars that are not private ('public' and 'confidential').
-        public_calendars_settings = self.env['res.users.settings'].sudo()._search([('calendar_default_privacy', '!=', 'private')])
+        # search user settings from calendars that are not private ('public' and 'confidential').
+        public_users_settings_ids = self.env['res.users.settings'].sudo().search(
+            [('calendar_default_privacy', '!=', 'private')]).ids
         # display public, confidential events and events with default privacy when owner's default privacy is not private
         return [
             '|', '|', '|', ('privacy', '=', 'public'), ('privacy', '=', 'confidential'), ('user_id', '=', self.env.user.id),
-            '&', ('privacy', '=', False), ('user_id.res_users_settings_id', 'in', public_calendars_settings)
+            '&', ('privacy', '=', False), ('user_id.res_users_settings_id', 'in', public_users_settings_ids)
         ]
 
     def _is_event_over(self):

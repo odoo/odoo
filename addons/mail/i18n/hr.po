@@ -1890,29 +1890,29 @@ msgstr "Otkazano"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_canned_response
 msgid "Canned Response"
-msgstr ""
+msgstr "Pripremljen odgovor"
 
 #. module: mail
 #: model:res.groups,name:mail.group_mail_canned_response_admin
 msgid "Canned Response Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_canned_response_action
 #: model:ir.module.category,name:mail.module_category_canned_response
 #: model:ir.ui.menu,name:mail.menu_canned_responses
 msgid "Canned Responses"
-msgstr "Gotovi odgovori"
+msgstr "Pripremljeni odgovori"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "Canned Responses Search"
-msgstr ""
+msgstr "Pretraži pripremljene odgovore"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
 msgid "Canned response"
-msgstr ""
+msgstr "Pripremljen odgovor"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__source
@@ -1921,11 +1921,14 @@ msgid ""
 "in your messages. Type ':' followed by the name of your shortcut (e.g. "
 ":hello) to use in your messages."
 msgstr ""
+"Pripremljen odgovor koji će se u vašim porukama automatski zamijeniti duljim"
+" sadržajem. Upišite ':', a zatim naziv prečaca (npr. :pozdrav) koji ćete "
+"koristiti u porukama."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "Canned responses"
-msgstr ""
+msgstr "Pripremljeni odgovori"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
@@ -1935,6 +1938,9 @@ msgid ""
 "                    replaced directly in your message, so that you can still edit\n"
 "                    it before sending."
 msgstr ""
+"Unaprijed pripremljeni odgovori omogućuju vam umetanje unaprijed napisanih "
+"odgovora u vaše poruke upisivanjem <i>:prečac</i>. Prečac se zamjenjuje "
+"izravno u vašoj poruci, tako da je možete urediti prije slanja."
 
 #. module: mail
 #. odoo-python
@@ -2583,7 +2589,7 @@ msgstr "Kreiraj novi zapis"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
 msgid "Create a new canned response"
-msgstr ""
+msgstr "Kreiraj novi pripremljen odgovor"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
@@ -3044,12 +3050,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
 msgid "Determines if the canned response can be edited by the current user"
-msgstr ""
+msgstr "Određuje može li trenutni korisnik uređivati pripremljeni odgovor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_shared
 msgid "Determines if the canned_response is currently shared with other users"
 msgstr ""
+"Određuje je li pripremljeni odgovor trenutno podijeljen s drugim korisnicima"
 
 #. module: mail
 #. odoo-javascript
@@ -5410,7 +5417,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__last_used
 msgid "Last time this canned_response was used"
-msgstr ""
+msgstr "Zadnji put kada je ovaj pripremljen odgovor korišten"
 
 #. module: mail
 #. odoo-javascript
@@ -5736,7 +5743,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
 msgid "Mail has been created to notify people of an existing mail.message"
-msgstr "Mail je kreiran za obavještavanje ljudi za postojeću mail.poruku"
+msgstr "E-pošta je kreirana kako bi obavijestili osobe o postojećoj e-poruci"
 
 #. module: mail
 #. odoo-python
@@ -6296,7 +6303,7 @@ msgstr "Moji predlošci"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "My canned responses"
-msgstr ""
+msgstr "Moji pripremljeni odgovori"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__name
@@ -8855,7 +8862,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "Shared canned responses"
-msgstr ""
+msgstr "Podijeljeni pripremljeni odgovori"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -9462,7 +9469,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss.js:0
 msgid "The avatar has been updated!"
-msgstr ""
+msgstr "Avatar je ažuriran!"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_uuid_unique
@@ -9733,7 +9740,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/scheduled_message_model.js:0
 msgid "This message has already been sent."
-msgstr ""
+msgstr "Ova poruka je već poslana."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete
@@ -11131,18 +11138,20 @@ msgstr " "
 msgid ""
 "Your account email has been changed from %(old_email)s to %(new_email)s."
 msgstr ""
+"E-pošta vašeg korisničkog računa promijenjena je iz %(old_email)s u "
+"%(new_email)s."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Your account login has been updated"
-msgstr ""
+msgstr "Vaš korisnički račun je ažuriran"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Your account password has been updated"
-msgstr ""
+msgstr "Vaša korisnička lozinka je ažurirana"
 
 #. module: mail
 #. odoo-javascript
@@ -11461,12 +11470,12 @@ msgstr "za"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been created from:"
-msgstr ""
+msgstr "je kreiran(a) iz:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been modified from:"
-msgstr ""
+msgstr "je promijenjen(a) od:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
