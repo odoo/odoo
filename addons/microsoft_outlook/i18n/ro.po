@@ -8,6 +8,7 @@
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Martin Trigaux, 2024
 # Betty Keresztesi, 2024
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Betty Keresztesi, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +37,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                        Connect your Outlook account"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                        Conectați-vă contul Outlook"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
@@ -44,6 +47,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"server_type != 'outlook' or not microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        Token Outlook valid\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -52,6 +58,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"smtp_authentication != 'outlook' or not microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        Token Outlook valid\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -85,6 +94,8 @@ msgid ""
 "Connect your Outlook account with the OAuth Authentication process.  \n"
 "By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
 msgstr ""
+"Conectați-vă contul Outlook folosind procesul de autentificare OAuth.\n"
+"Implicit, doar un utilizator cu o adresă de email corespunzătoare va putea folosi acest server. Pentru a extinde utilizarea, trebuie să setați parametrul de sistem \"mail.default.from\"."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -94,6 +105,8 @@ msgid ""
 "Connect your personal Outlook account using OAuth. \n"
 "You will be redirected to the Outlook login page to accept the permissions."
 msgstr ""
+"Conectați-vă contul personal Outlook folosind OAuth.\n"
+"Veți fi redirecționat către pagina de autentificare Outlook pentru a accepta permisiunile."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
@@ -108,7 +121,7 @@ msgstr "ID"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "ID of your Outlook app"
-msgstr ""
+msgstr "ID-ul aplicației Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_fetchmail_server
@@ -178,7 +191,7 @@ msgstr "Secret Client Outlook"
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__ir_mail_server__smtp_authentication__outlook
 msgid "Outlook OAuth Authentication"
-msgstr ""
+msgstr "Autentificare Outlook OAuth"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
@@ -199,7 +212,7 @@ msgstr "Vă rugăm să configurați credențialele dvs. Outlook."
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please connect with your Outlook account before using it."
-msgstr ""
+msgstr "Vă rugăm să vă conectați cu contul Outlook înainte de a-l utiliza."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -210,6 +223,9 @@ msgid ""
 "(your email address). This should be the same account as the one used for "
 "the Outlook OAuthentication Token."
 msgstr ""
+"Vă rugăm să completați câmpul \"Username\" cu numele de utilizator "
+"Outlook/Office365 (adresa dvs. de email). Acesta trebuie să fie același cont"
+" ca cel folosit pentru Token-ul de autentificare Outlook."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -242,7 +258,7 @@ msgstr "Secret"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "Secret of your Outlook app"
-msgstr ""
+msgstr "Secretul aplicației Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__server_type
