@@ -3,9 +3,9 @@
 # 	* account
 # 
 # Translators:
-# Anastasiia Koroleva, 2025
 # Ilya Rozhkov, 2025
 # Wil Odoo, 2025
+# Anastasiia Koroleva, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -216,6 +216,9 @@ msgid ""
 "\"%(receivable)s\" or \"%(payable)s\" with both options "
 "\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
+"Счет %(tax_account)s (%(account_name)s) должен быть счетом с типом "
+"«%(receivable)s» или «%(payable)s» и с включенными опциями "
+"«%(allow_reconciliation)s» и «%(non_trade)s»."
 
 #. module: account
 #. odoo-python
@@ -1580,6 +1583,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner "
 "%(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
+"Банковский счет с номером %(number)s уже существует у партнера %(partner)s, "
+"но находится в архиве. Пожалуйста, восстановите его из архива."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -3584,7 +3589,7 @@ msgstr "Банковский счёт"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s archived"
-msgstr ""
+msgstr "Банковский счет %(link)s с номером %(number)s архивирован"
 
 #. module: account
 #. odoo-python
@@ -4205,7 +4210,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Cannot identify the invoices in the generated PDF: %s"
-msgstr ""
+msgstr "Не удалось распознать счета в сгенерированном PDF: %s"
 
 #. module: account
 #: model:account.account,name:account.1_capital
@@ -9606,7 +9611,7 @@ msgstr "Ранее было '%(previous)s', теперь стало '%(current)s
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Items With Missing Analytic Distribution"
-msgstr ""
+msgstr "Позиции с отсутствующим аналитическим распределением"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -13906,7 +13911,7 @@ msgstr "Токен безопасности"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "See items"
-msgstr ""
+msgstr "Посмотреть позиции"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
@@ -15537,6 +15542,7 @@ msgstr "Комбинация модели ссылки и типа ссылки 
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
 msgstr ""
+"Коммерческий партнер был обновлен во всех связанных бухгалтерских записях."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -17991,7 +17997,7 @@ msgstr "Неверное значение кредита или дебета в 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "XML format"
-msgstr ""
+msgstr "Формат XML"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
@@ -18151,6 +18157,8 @@ msgid ""
 "You can't create payments for entries belonging to different branches "
 "without access to parent company."
 msgstr ""
+"Невозможно создать платежи для записей, принадлежащих разным филиалам, без "
+"доступа к материнской компании."
 
 #. module: account
 #. odoo-python
@@ -18640,6 +18648,8 @@ msgid ""
 "You cannot set a partner as an invoicing address of another if they have a "
 "different %(vat_label)s."
 msgstr ""
+"Нельзя указать партнера в качестве адреса для выставления счета  другому "
+"партнеру, если у них разные %(vat_label)s."
 
 #. module: account
 #. odoo-python

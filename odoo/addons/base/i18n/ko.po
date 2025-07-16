@@ -1637,6 +1637,9 @@ msgid ""
 "Accounting reports for China\n"
 "============================\n"
 msgstr ""
+"\n"
+"중국 회계 보고서\n"
+"============================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
@@ -2472,6 +2475,9 @@ msgid ""
 "Accounting reports:\n"
 "- Corporate Tax Report\n"
 msgstr ""
+"\n"
+"회계 보고서:\n"
+"- 법인세 신고서\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
@@ -2587,6 +2593,18 @@ msgid ""
 "- the company linked to the website is mexican\n"
 "- the option 'automatic_invoice' is enabled in the website settings (\"Generate the invoice automatically when the online payment is confirmed\")\n"
 msgstr ""
+"\n"
+"웹사이트/이커머스 결제 프로세스에 멕시코용 필드가 있는 별도 탭을 추가합니다:\n"
+"\n"
+"- l10n_mx_edi_cfdi_to_public (sale.order/account.move)\n"
+"- l10n_mx_edi_fiscal_regime (res.partner)\n"
+"- l10n_mx_edi_usage (sale.order/account.move)\n"
+"- l10n_mx_edi_ieps_breakdown (res.partner)\n"
+"\n"
+"별도 탭은 다음 조건이 충족되는 경우에만 표시됩니다:\n"
+"\n"
+"- 웹사이트에 연결된 회사가 멕시코 회사인 경우\n"
+"- 웹사이트 설정에서 'automatic_invoice' 옵션이 활성화된 경우(\"온라인 결제 확정 시 자동으로 청구서 생성\")\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
@@ -3144,6 +3162,8 @@ msgid ""
 "\n"
 "Allows using a compatible printer to print Event badges upon checking in.\n"
 msgstr ""
+"\n"
+"호환되는 프린터를 활용하여 체크인할 때 행사용 출입증을 인쇄할 수 있습니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_delivery
@@ -4114,6 +4134,8 @@ msgid ""
 "\n"
 "Bridge module for Event/Sale/IoT. Only used to prevent auto-printing if a registration is not yet sold.\n"
 msgstr ""
+"\n"
+"이 모듈은 행사/판매/IoT용 브리지 모듈입니다. 등록 제품이 아직 판매되지 않은 경우 자동 인쇄되지 않도록 하는 목적으로만 사용합니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_event_iot
@@ -4121,6 +4143,8 @@ msgid ""
 "\n"
 "Bridge module for PoS/Event/IoT. Used to print with IoT upon selling an event ticket.\n"
 msgstr ""
+"\n"
+"이 모듈은 POS/행사/IoT용 브리지 모듈입니다. 행사 티켓 판매 시 IoT에서 인쇄하려는 경우 사용합니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_enterprise
@@ -7015,6 +7039,8 @@ msgid ""
 "\n"
 "It can be installed running: %s"
 msgstr ""
+"\n"
+"다음 실행 환경에서 설치 가능: %s"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo_hr_payroll
@@ -8503,6 +8529,16 @@ msgid ""
 "- Fiscal Positions\n"
 "- States\n"
 msgstr ""
+"\n"
+"오만 회계 모듈\n"
+"======================================================================\n"
+"오만 회계 기본 계정과목표 및 현지화.\n"
+"활성화 대상:\n"
+"- 계정과목표\n"
+"- 세금\n"
+"- 부가가치세 신고서\n"
+"- 재정 위치\n"
+"- 주\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_org_chart
@@ -9962,6 +9998,9 @@ msgid ""
 "This addon contains a generic html builder application. It is designed to be\n"
 "used by the website builder and mass mailing editor.\n"
 msgstr ""
+"\n"
+"이 애드온에는 일반 HTML 빌더 앱이 함께 들어 있습니다. 이는 웹사이트 빌더와\n"
+"대량 메일 편집기에서 활용할 수 있도록 만들어져 있습니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_purchase
@@ -11329,6 +11368,13 @@ msgid ""
 "-----------------\n"
 "Three layouts copied from the US check printing module, adjusted for DO\n"
 msgstr ""
+"\n"
+"이 모듈을 통해 미리 인쇄된 수표 용지에 결제 내용을 인쇄할 수 있습니다.\n"
+"회사 설정에서 출력 사항(레이아웃, 스텁 정보 등)에 대한 환경설정을 할 수 있으며, \n"
+"전표 설정에서 수표 번호 관리(연번 없는 사전 인쇄 수표를 사용하는 경우)를 관리합니다.지\n"
+"원되는 형식\n"
+"-----------------\n"
+"미국 수표 인쇄 모듈에서 복사한 세 가지 레이아웃을 DO용으로 조정\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ph_check_printing
@@ -14119,6 +14165,9 @@ msgid ""
 "                                <span colspan=\"2\">ISO 8601 Week Year without Century: %(isoy)s</span>\n"
 "                                <span colspan=\"2\">ISO 8601 Week Number: %(isoweek)s</span>"
 msgstr ""
+"<span colspan=\"2\">ISO 8601 4자리 연도: %(isoyear)s</span>\n"
+"<span colspan=\"2\">ISO 8601 2자리 연도:%(isoy)s</span>\n"
+" <span colspan=\"2\">ISO 8601 주 연번: %(isoweek)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -14126,6 +14175,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or update_field_type in ['one2many', 'many2many']\">to</span>\n"
 "                                <span invisible=\"evaluation_type != 'sequence'\">with</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or update_field_type in ['one2many', 'many2many']\">대상</span>\n"
+"                                <span invisible=\"evaluation_type != 'sequence'\"></span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -14160,6 +14211,10 @@ msgid ""
 "                                    to this Python expression:\n"
 "                                </span>"
 msgstr ""
+"<span invisible=\"update_field_id != False or evaluation_type != 'value'\" class=\"o_actions_server_set_a_value text-muted\">값을 설정하세요...</span>\n"
+"                                <span invisible=\"evaluation_type != 'equation'\">\n"
+"                                    다음 파이썬 표현식에 설정합니다::\n"
+"                                </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -14602,7 +14657,7 @@ msgstr "다양한 린터로 오두 코드를 테스트하는 모듈입니다."
 #. module: base
 #: model:ir.module.module,description:base.module_test_orm
 msgid "A module to test the ORM."
-msgstr ""
+msgstr "ORM 테스트 모듈"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_rpc
@@ -14707,7 +14762,7 @@ msgstr "시연 목적으로 결제 흐름을 가짜로 제공하는 결제대행
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "A sequence must only be used with character fields."
-msgstr ""
+msgstr "시퀀스는 반드시 문자 필드에만 사용해야 합니다."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
@@ -15498,7 +15553,7 @@ msgstr "문서 서명 시 itsme® 식별 지원 추가 (벨기에 및 네덜란�
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_account_withholding_tax_pos
 msgid "Add support for the withholding tax module in the PoS."
-msgstr ""
+msgstr "PoS 앱에서 원천징수세 모듈과 관련된 지원 항목을 추가하세요."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_picking_batch
@@ -15879,7 +15934,7 @@ msgstr "외주업체 주문에 대한 수입 부대 비용을 관리하기 위�
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_odoo_experts
 msgid "Advisor, Corporate, Service, Business, Finance, IT"
-msgstr ""
+msgstr "Advisor, Corporate, Service, Business, Finance, IT"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__agpl-3
@@ -16387,7 +16442,7 @@ msgstr "코스에서 포럼 링크 허용"
 msgid ""
 "Allows to register withholding taxes during the payment of an invoice or "
 "bill."
-msgstr ""
+msgstr "청구서 혹은 업체 청구서를 결제할 때 원천징수 등록을 할 수 있습니다."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_withholding
@@ -17320,7 +17375,7 @@ msgstr "전 세계에 온라인 결제 서비스를 하고 있는 미국 결제�
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_paymob
 msgid "An Egyptian payment provider for the Middle East."
-msgstr ""
+msgstr "중동 지역의 이집트 결제대행업체"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_stripe
@@ -17428,12 +17483,12 @@ msgstr "안도라"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_anelusia
 msgid "Anelusia Fashion Theme"
-msgstr ""
+msgstr "아넬루시아 패션 테마"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_anelusia
 msgid "Anelusia Theme"
-msgstr ""
+msgstr "아넬루시아 테마"
 
 #. module: base
 #: model:res.country,name:base.ao
@@ -17660,7 +17715,7 @@ msgstr "앱 :"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_db
 msgid "Arch Blob"
-msgstr "Arch Blob"
+msgstr "아치형 곡선형 도형"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_fs
@@ -17675,7 +17730,7 @@ msgstr "다음과 비교한 보존"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_enark
 msgid "Architect, Corporate, Business, Finance, Services"
-msgstr ""
+msgstr "Architect, Corporate, Business, Finance, Services"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -17753,7 +17808,7 @@ msgstr "아르헨티나 - AR Doc을 사용한 POS"
 #: model:ir.module.module,description:base.module_l10n_ar_stock
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_stock
 msgid "Argentinean - Stock"
-msgstr ""
+msgstr "아르헨티나 - 재고"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_reports
@@ -17790,16 +17845,17 @@ msgstr "아르메니아"
 msgid ""
 "Artist, Arts, Galleries, Creative, Paintings, Photography, Shows, Stores"
 msgstr ""
+"Artist, Arts, Galleries, Creative, Paintings, Photography, Shows, Stores"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_artists
 msgid "Artists Theme"
-msgstr ""
+msgstr "아티스트 테마"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_artists
 msgid "Artists Theme - Art Galleries, Photography, Painting"
-msgstr ""
+msgstr "아티스트 테마 - 미술관, 사진, 그림"
 
 #. module: base
 #: model:res.country,name:base.aw
@@ -18799,12 +18855,12 @@ msgstr "사용 가능한 모델"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_avantgarde
 msgid "Avantgarde Theme"
-msgstr ""
+msgstr "아방가르드 테마"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_avantgarde
 msgid "Avantgarde is a sophisticated theme to inspire and impress"
-msgstr ""
+msgstr "아방가르드는 영감과 감동을 선사하는 세련된 테마입니다."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_1920
@@ -18880,12 +18936,12 @@ msgstr "지리 위치용 Avatax"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_aviato
 msgid "Aviato Theme"
-msgstr ""
+msgstr "아비아토 테마"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_aviato
 msgid "Aviato Theme - Responsive Bootstrap Theme for Odoo CMS"
-msgstr ""
+msgstr "아비아토 테마 - Odoo CMS용 반응형 부트스트랩 테마"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_fsm
@@ -19024,7 +19080,7 @@ msgstr "금지"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_notes
 msgid "Band, Musics, Sound, Concerts, Artists, Records, Event, Food, Stores"
-msgstr ""
+msgstr "Band, Musics, Sound, Concerts, Artists, Records, Event, Food, Stores"
 
 #. module: base
 #: model:res.country,name:base.bd
@@ -19289,7 +19345,7 @@ msgstr "일괄 전송, 운송업체"
 #: model:ir.module.module,description:base.module_theme_bewise
 #: model:ir.module.module,shortdesc:base.module_theme_bewise
 msgid "Be Wise Theme"
-msgstr ""
+msgstr "지식 테마"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -19303,17 +19359,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_beauty
 msgid "Beauty Theme"
-msgstr ""
+msgstr "뷰티 테마"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_beauty
 msgid "Beauty Theme - Cosmetics, Beauty, Make Up, Hairdresser"
-msgstr ""
+msgstr "뷰티 테마 - 화장품, 뷰티, 메이크업, 헤어드레서"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_beauty
 msgid "Beauty, Health, Care, Make Up, Cosmetics, Hair Dressers, Stores"
-msgstr ""
+msgstr "Beauty, Health, Care, Make Up, Cosmetics, Hair Dressers, Stores"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__before
@@ -19544,17 +19600,17 @@ msgstr "Birr"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_bistro
 msgid "Bistro Theme"
-msgstr ""
+msgstr "비스트로 테마"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_bistro
 msgid "Bistro Theme - Restaurant, Food/Drink, Catering, Food trucks"
-msgstr ""
+msgstr "비스트로 테마 - 레스토랑, 음식/음료, 케이터링, 푸드 트럭"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bistro
 msgid "Bistro, Restaurant, Bar, Pub, Cafe, Food, Catering"
-msgstr ""
+msgstr "Bistro, Restaurant, Bar, Pub, Cafe, Food, Catering"
 
 #. module: base
 #. odoo-python
@@ -19609,12 +19665,12 @@ msgstr "보네르"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_bookstore
 msgid "Books, Magazines, Music"
-msgstr ""
+msgstr "Books, Magazines, Music"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_bookstore
 msgid "Bookstore Theme"
-msgstr ""
+msgstr "서점 테마"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_boolean_value
@@ -19749,7 +19805,7 @@ msgstr "재고 관련 브라질 회계 EDI"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_website_sale
 msgid "Bridge Website Sale for Argentina"
-msgstr ""
+msgstr "아르헨티아 판매 연결용 웹사이트"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_website_sale
@@ -20012,12 +20068,12 @@ msgstr "부투트"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_buzzy
 msgid "Buzzy Theme"
-msgstr ""
+msgstr "버지 테마"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_buzzy
 msgid "Buzzy Theme - Responsive Bootstrap Theme for Odoo CMS"
-msgstr ""
+msgstr "버지 테마 - Odoo CMS용 반응형 부트스트랩 테마"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -20068,12 +20124,12 @@ msgstr "CPA005 결제"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__cpu_duration
 msgid "CPU Duration"
-msgstr ""
+msgstr "CPU 지속 시간"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_profile__cpu_duration
 msgid "CPU clock (not including other processes or SQL)"
-msgstr ""
+msgstr "CPU 클럭(다른 프로세스나 SQL 제외)"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_crm
@@ -20147,7 +20203,7 @@ msgstr "CUIT"
 msgid ""
 "Calculate and report your company's Environmental, Social, and Governance "
 "impact."
-msgstr ""
+msgstr "회사의 환경과 사회적 위치, 거버넌스에 미치는 영향에 대해 계산한 후 보고합니다."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__calendar
@@ -20764,7 +20820,7 @@ msgstr "중국 - 회계"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn_reports
 msgid "China - Accounting Reports"
-msgstr ""
+msgstr "중국 - 회계 보고서"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn_city
@@ -20843,13 +20899,13 @@ msgstr "시/군/구"
 #: model:ir.module.module,description:base.module_theme_clean
 #: model:ir.module.module,shortdesc:base.module_theme_clean
 msgid "Clean Theme"
-msgstr ""
+msgstr "클린 테마"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_cobalt
 #: model:ir.module.module,description:base.module_theme_paptic
 msgid "Clean and sharp design."
-msgstr ""
+msgstr "깔끔하고 매끈한 디자인"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
@@ -20920,7 +20976,7 @@ msgstr "Cloudflare Turnstile"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_cobalt
 msgid "Cobalt Theme"
-msgstr ""
+msgstr "코발트 테마"
 
 #. module: base
 #: model:res.country,name:base.cc
@@ -21555,7 +21611,7 @@ msgstr "구축"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_paptic
 msgid "Consultancy, Design, Tech, Computers, IT, Blogs"
-msgstr ""
+msgstr "Consultancy, Design, Tech, Computers, IT, Blogs"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_8
@@ -21707,7 +21763,7 @@ msgstr "기업"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_buzzy
 msgid "Corporate, Services, Technology, Shapes, Illustrations"
-msgstr ""
+msgstr "Corporate, Services, Technology, Shapes, Illustrations"
 
 #. module: base
 #: model:res.country,name:base.cr
@@ -21949,7 +22005,7 @@ msgstr "주소록에 새 공급 업체 만들기"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_themes
 msgid "Create a new website for each Odoo theme for an easy preview."
-msgstr ""
+msgstr "Odoo 테마별로 새로운 웹사이트를 제작하여 간편하게 미리보기를 할 수 있습니다."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
@@ -22451,7 +22507,7 @@ msgstr "바로가기 맞춤 설정"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_test_custo
 msgid "Custom Theme (Testing suite)"
-msgstr ""
+msgstr "사용자 지정 테마 (테스트 모음)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__selection_value
@@ -22648,7 +22704,7 @@ msgstr "현황판"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__cache
 msgid "Data Caching"
-msgstr ""
+msgstr "데이터 캐시"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_data_cleaning
@@ -23133,6 +23189,8 @@ msgid ""
 "Design, Fine Art, Artwork, Creative, Creativity, Galleries, Trends, Shows, "
 "Magazines, Blogs"
 msgstr ""
+"Design, Fine Art, Artwork, Creative, Creativity, Galleries, Trends, Shows, "
+"Magazines, Blogs"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_sms
@@ -23189,7 +23247,7 @@ msgstr "고객/회사 이름을 배치할 위치를 결정합니다. 예: 주소
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_cobalt
 msgid "Development, IT development, Design, Tech, Computers, IT, Blogs"
-msgstr ""
+msgstr "Development, IT development, Design, Tech, Computers, IT, Blogs"
 
 #. module: base
 #: model:ir.model,name:base.model_res_device_log
@@ -23225,6 +23283,8 @@ msgid ""
 "Digital, Marketing, Copywriting, Media, Events, Non Profit, NGO, Corporate, "
 "Business, Services"
 msgstr ""
+"Digital, Marketing, Copywriting, Media, Events, Non Profit, NGO, Corporate, "
+"Business, Services"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_extract
@@ -23546,7 +23606,7 @@ msgstr "표시된 필드"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_anelusia
 msgid "Diversity, Fashions, Trends, Clothes, Shoes, Sports, Fitness, Stores"
-msgstr ""
+msgstr "Diversity, Fashions, Trends, Clothes, Shoes, Sports, Fitness, Stores"
 
 #. module: base
 #: model:res.country,name:base.dj
@@ -23763,7 +23823,7 @@ msgstr "도미니카 공화국 - 회계 보고서"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_do_check_printing
 msgid "Dominican Republic - Checks Layout"
-msgstr ""
+msgstr "도미니카 공화국 - 수표 레이아웃"
 
 #. module: base
 #. odoo-python
@@ -23829,7 +23889,7 @@ msgstr "직배송 및 외주 관리"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Duplicate %(record)s"
-msgstr ""
+msgstr "%(record)s 복제"
 
 #. module: base
 #. odoo-python
@@ -24346,7 +24406,7 @@ msgstr "OnSIP와 VoIP 호환성을 지원합니다."
 #: model:ir.module.module,description:base.module_theme_enark
 #: model:ir.module.module,shortdesc:base.module_theme_enark
 msgid "Enark Theme"
-msgstr ""
+msgstr "에나크 테마"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_D
@@ -24448,6 +24508,8 @@ msgid ""
 "Environment, Nature, Ecology, Sustainable Development, Non Profit, NGO, "
 "Travels"
 msgstr ""
+"Environment, Nature, Ecology, Sustainable Development, Non Profit, NGO, "
+"Travels"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer
@@ -25147,6 +25209,8 @@ msgid ""
 "Event, Restaurants, Bars, Pubs, Cafes, Catering, Food, Drinks, Concerts, "
 "Shows, Musics, Dance, Party"
 msgstr ""
+"Event, Restaurants, Bars, Pubs, Cafes, Catering, Food, Drinks, Concerts, "
+"Shows, Musics, Dance, Party"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_exhibitor
@@ -25299,12 +25363,12 @@ msgstr "실시간 예약 가능 여부를 표시하여 편리하게 회의실을
 #. module: base
 #: model:ir.module.module,description:base.module_theme_odoo_experts
 msgid "Experts Business Theme"
-msgstr ""
+msgstr "전문가 비즈니스 테마"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_odoo_experts
 msgid "Experts Theme"
-msgstr ""
+msgstr "전문가 테마"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys__expiration_date
@@ -25497,7 +25561,7 @@ msgstr "외부 ID"
 #. odoo-python
 #: code:addons/base/models/ir_qweb.py:0
 msgid "External ID can not be loaded: %s"
-msgstr ""
+msgstr "외부 ID를 불러올 수 없음: %s"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_data_name_nospaces
@@ -26116,7 +26180,7 @@ msgstr "차량용 문서"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_orchid
 msgid "Florist, Gardens, Flowers, Nature, Green, Beauty, Stores"
-msgstr ""
+msgstr "Florist, Gardens, Flowers, Nature, Green, Beauty, Stores"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_4
@@ -26461,7 +26525,7 @@ msgstr "직능"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_loftspace
 msgid "Furniture, Toys, Games, Kids, Boys, Girls, Stores"
-msgstr ""
+msgstr "Furniture, Toys, Games, Kids, Boys, Girls, Stores"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_G
@@ -26689,7 +26753,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_html_builder
 msgid "Generic html builder"
-msgstr ""
+msgstr "일반 HTML 빌더"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__partner_latitude
@@ -26907,7 +26971,7 @@ msgstr "그래프"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_graphene
 msgid "Graphene Theme"
-msgstr ""
+msgstr "그래핀 테마"
 
 #. module: base
 #: model:res.country,name:base.gr
@@ -27214,7 +27278,7 @@ msgstr "HTML"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_html_builder
 msgid "HTML Builder"
-msgstr ""
+msgstr "HTML 빌더"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_html_editor
@@ -27930,6 +27994,8 @@ msgid ""
 "If enabled, this action will cache the related data used in list, Kanban and"
 " form views with the aim to increase the loading speed"
 msgstr ""
+"이 기능을 활성화할 경우, 목록 보기, 칸반 보기 및 양식 보기에서 사용되는 관련 데이터가 해당 작업을 통해 캐시되어 로딩 속도가 "
+"향상됩니다."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule__global
@@ -29157,12 +29223,12 @@ msgstr "배달을 위한 IoT"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_sale_iot
 msgid "IoT for Event/Sale"
-msgstr ""
+msgstr "행사/판매용 IoT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_iot
 msgid "IoT for Events"
-msgstr ""
+msgstr "행사용 IoT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_iot
@@ -29172,7 +29238,7 @@ msgstr "POS를 위한 IoT"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_event_iot
 msgid "IoT for PoS/Event"
-msgstr ""
+msgstr "POS/행사용 IoT"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_self_order_iot
@@ -29559,7 +29625,7 @@ msgstr "카자흐스탄 - 회계 보고서"
 #: model:ir.module.module,description:base.module_theme_kea
 #: model:ir.module.module,shortdesc:base.module_theme_kea
 msgid "Kea Theme"
-msgstr ""
+msgstr "케아 테마"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__password
@@ -29650,12 +29716,12 @@ msgstr "쿰"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_kiddo
 msgid "Kiddo Theme"
-msgstr ""
+msgstr "어린이 테마"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_kiddo
 msgid "Kiddo theme for Odoo Website"
-msgstr ""
+msgstr "Odoo 웹사이트 어린이 테마"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.PGK
@@ -30218,7 +30284,7 @@ msgstr "리걸    3   8.5 x 14 inches, 215.9 x 355.6 mm"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_clean
 msgid "Legal, Corporate, Business, Tech, Services"
-msgstr ""
+msgstr "Legal, Corporate, Business, Tech, Services"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -30304,7 +30370,7 @@ msgstr "라이베리아"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bookstore
 msgid "Library, Books, Magazines, Literature, Musics, Media, Store"
-msgstr ""
+msgstr "Library, Books, Magazines, Literature, Musics, Media, Store"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__libya
@@ -30325,12 +30391,12 @@ msgstr "리히텐슈타인"
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_lifestyle
 msgid "Lifestyle"
-msgstr ""
+msgstr "라이프스타일"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_graphene
 msgid "Light colours, thin text, clean and sharp design."
-msgstr ""
+msgstr "밝은 색상, 얇은 텍스트, 깔끔하고 세련된 디자인"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.SZL
@@ -30593,12 +30659,12 @@ msgstr "현지화"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_loftspace
 msgid "Loftspace Fashion Theme"
-msgstr ""
+msgstr "로프트스페이스 패션 테마"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_loftspace
 msgid "Loftspace Theme"
-msgstr ""
+msgstr "로프트스페이스 테마"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -30879,7 +30945,7 @@ msgstr "주요 순서"
 #: model:ir.model.fields,field_description:base.field_res_partner__main_user_id
 #: model:ir.model.fields,field_description:base.field_res_users__main_user_id
 msgid "Main User"
-msgstr ""
+msgstr "기본 사용자"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window__target__main
@@ -30916,7 +30982,7 @@ msgstr "Odoo 내에서 전화를 걸거나 받을 수 있습니다."
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_nano
 msgid "Maker, Agencies, Creative, Design, IT, Services, Fancy"
-msgstr ""
+msgstr "Maker, Agencies, Creative, Design, IT, Services, Fancy"
 
 #. module: base
 #: model:res.country,name:base.mw
@@ -32092,6 +32158,7 @@ msgid ""
 "Modifications to the forecast widget on SO lines to show fresh stock, i.e. "
 "ignoring stock to be removed due to expiration."
 msgstr ""
+"SO 내역에 있는 예측용 위젯을 수정하여 가용 재고를 표시하며, 예를 들어 유통기한이 임박한 재고는 제외하는 방식 등이 적용됩니다."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_updated
@@ -32246,12 +32313,12 @@ msgstr "월요일"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_monglia
 msgid "Monglia Catering Theme"
-msgstr ""
+msgstr "몽골 케이터링 테마"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_monglia
 msgid "Monglia Theme"
-msgstr ""
+msgstr "몽글리아 테마"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.MNT
@@ -32526,12 +32593,12 @@ msgstr "나미비아"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_nano
 msgid "Nano Theme"
-msgstr ""
+msgstr "나노 테마"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_nano
 msgid "Nano Theme - Responsive Bootstrap Theme for Odoo CMS"
-msgstr ""
+msgstr "나노 테마 - Odoo CMS용 반응형 부트스트랩 테마"
 
 #. module: base
 #. odoo-python
@@ -32825,7 +32892,7 @@ msgstr "view_mode에는 공백이 허용되지 않습니다: “%s”"
 #. odoo-python
 #: code:addons/translate.py:0
 msgid "No translatable terms were found in %s."
-msgstr ""
+msgstr "번역할 수 있는 용어가 %s 에 없습니다."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__noupdate
@@ -32950,7 +33017,7 @@ msgstr "메모"
 #: model:ir.module.module,description:base.module_theme_notes
 #: model:ir.module.module,shortdesc:base.module_theme_notes
 msgid "Notes & Play Theme"
-msgstr ""
+msgstr "메모 및 플레이 테마"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock_wishlist
@@ -32995,7 +33062,7 @@ msgstr "이 그룹에 속한 사용자 수(명시적 또는 실제)"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_kiddo
 msgid "Nursery, Toys, Games, Kids, Boys, Girls, Stores"
-msgstr ""
+msgstr "Nursery, Toys, Games, Kids, Boys, Girls, Stores"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
@@ -34945,7 +35012,7 @@ msgstr "오만"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_om
 msgid "Oman - Accounting"
-msgstr ""
+msgstr "오만 - 회계"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__on_delete
@@ -35202,12 +35269,12 @@ msgstr "옵션"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_orchid
 msgid "Orchid Theme"
-msgstr ""
+msgstr "오키드 테마"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_orchid
 msgid "Orchid Theme - Flowers, Beauty"
-msgstr ""
+msgstr "오키드 테마 - Flowers, Beauty"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__order
@@ -36251,7 +36318,7 @@ msgstr "용지 크기"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_paptic
 msgid "Paptic Theme"
-msgstr ""
+msgstr "팹틱 테마"
 
 #. module: base
 #: model:res.country,name:base.pg
@@ -36591,7 +36658,7 @@ msgstr "결제대행업체: Nuvei"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_paymob
 msgid "Payment Provider: Paymob"
-msgstr ""
+msgstr "결제대행업체: Paymob"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_paypal
@@ -36680,7 +36747,7 @@ msgstr "Peppol"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__company_type__person
 msgid "Person"
-msgstr "사람"
+msgstr "개인"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_personal
@@ -37188,7 +37255,7 @@ msgstr "CA 수표 인쇄"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_do_check_printing
 msgid "Print Dominican Republic Checks"
-msgstr ""
+msgstr "도마니카 공화국 수표 인쇄"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ph_check_printing
@@ -38228,12 +38295,12 @@ msgstr "부동산"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_real_estate
 msgid "Real Estate Theme"
-msgstr ""
+msgstr "부동산 테마"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_real_estate
 msgid "Real Estate Theme - Houses, Appartments, Real Estate Agencies"
-msgstr ""
+msgstr "부동산 테마 - 주택, 아파트, 부동산 중개업체"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_real_estate
@@ -38241,11 +38308,13 @@ msgid ""
 "Real Estate, Agencies, Construction, Services, Accomodations, Lodging, "
 "Hosting, Houses, Appartments, Vacations, Holidays, Travels"
 msgstr ""
+"Real Estate, Agencies, Construction, Services, Accomodations, Lodging, "
+"Hosting, Houses, Appartments, Vacations, Holidays, Travels"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_profile__duration
 msgid "Real elapsed time"
-msgstr ""
+msgstr "실제 경과 시간"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__resource_ref
@@ -39329,7 +39398,7 @@ msgstr "판매 재고 마진"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_stock_product_expiry
 msgid "Sale Stock Product Expiry"
-msgstr ""
+msgstr "판매 재고 품목 만료"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_stock
@@ -39780,7 +39849,7 @@ msgstr "레코드를 연결할 필드를 선택합니다."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Select a sequence..."
-msgstr ""
+msgstr "시퀀스 선택..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -39881,7 +39950,7 @@ msgstr "이커머스에서 렌탈 품목 판매 및 재고 관리"
 #: model:ir.module.module,summary:base.module_website_sale_renting_planning
 msgid ""
 "Sell rental products on your eCommerce and plan your material resources"
-msgstr ""
+msgstr "이커머스에서 렌탈 품목을 판매하고 자재류에 대한 리소스 계획 수립하기"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_subscription
@@ -39938,7 +40007,7 @@ msgstr "웹훅 알림 보내기"
 #. module: base
 #: model:ir.module.module,summary:base.module_sign
 msgid "Send and request electronic signatures."
-msgstr ""
+msgstr "전자 서명을 전송 및 요청합니다."
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_push_notifications
@@ -40132,7 +40201,7 @@ msgstr "시퀀스 크기"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__sequence_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__sequence_id
 msgid "Sequence to use"
-msgstr ""
+msgstr "사용할 시퀀스"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
@@ -40220,6 +40289,7 @@ msgstr "판매주문서 관련 서비스 마진"
 #: model:ir.module.module,summary:base.module_theme_graphene
 msgid "Service, Corporate, Design, Technology, Robotics, Computers, IT, Blogs"
 msgstr ""
+"Service, Corporate, Design, Technology, Robotics, Computers, IT, Blogs"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
@@ -40605,12 +40675,12 @@ msgstr "우편 발송 후속 조치"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_common
 msgid "Snippets Library"
-msgstr ""
+msgstr "스니펫 라이브러리"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_common
 msgid "Snippets library containing snippets to be styled in themes."
-msgstr ""
+msgstr "스니펫 라이브러리의 스니펫을 테마 스타일에 적용합니다."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_social
@@ -41028,7 +41098,7 @@ msgstr "제조용 스프레드시트 현황판"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_marketing_automation
 msgid "Spreadsheet dashboard for marketing automation"
-msgstr "마케팅 자동화를 위한 스프레드시트 대시보드"
+msgstr "마케팅 자동화용 스프레드시트 현황판"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_hr_payroll
@@ -41058,7 +41128,7 @@ msgstr "렌탈용 스프레드시트 현황판"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_pos_restaurant
 msgid "Spreadsheet dashboard for restaurants"
-msgstr "레스토랑용 스프레드시트 대시보드"
+msgstr "레스토랑용 스프레드시트 현황판"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_sale
@@ -41545,7 +41615,7 @@ msgstr "스위스 - 회계 및 급여"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll
 msgid "Switzerland - Swissdec Certified ELM 5.0 - Payroll"
-msgstr ""
+msgstr "스위스 - Swissdec 인증 ELM 5.0 - 급여"
 
 #. module: base
 #: model:res.country.group,name:base.ch_and_li
@@ -41650,7 +41720,7 @@ msgstr "TPIN"
 #. module: base
 #: model:res.country,vat_label:base.ae
 msgid "TRN"
-msgstr ""
+msgstr "TRN"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__tabloid
@@ -41866,7 +41936,7 @@ msgstr "기술"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_kea
 msgid "Technology, Tech, IT, Computers, Stores, Virtual Reality"
-msgstr ""
+msgstr "Technology, Tech, IT, Computers, Stores, Virtual Reality"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_name
@@ -41877,7 +41947,7 @@ msgstr "서식명"
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Template does not exist or has been deleted: %s"
-msgstr ""
+msgstr "템플릿이 존재하지 않거나 삭제되었습니다: %s"
 
 #. module: base
 #. odoo-python
@@ -41889,7 +41959,7 @@ msgstr "템플릿 이름이 없습니다."
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Template not found: %s"
-msgstr ""
+msgstr "서식을 찾을 수 없습니다: %s"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.TMT
@@ -42003,7 +42073,7 @@ msgstr "주요 프로세스 테스트"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_orm
 msgid "Test ORM"
-msgstr ""
+msgstr "ORM 테스트"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_rpc
@@ -42917,7 +42987,7 @@ msgstr "테마"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_common
 msgid "Theme Common"
-msgstr ""
+msgstr "공통 테마"
 
 #. module: base
 #: model:ir.actions.act_url,name:base.action_theme_store
@@ -42929,7 +42999,7 @@ msgstr "테마 스토어"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_themes
 msgid "Themes Testing Module"
-msgstr ""
+msgstr "테마 테스트 모듈"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -42943,6 +43013,8 @@ msgid ""
 "There can be several users related to the same partner. When a single user "
 "is needed, this field attempts to find the most appropriate one."
 msgstr ""
+"한 파트너에 대해 연결되어 있는 관련자가 여러 명이 될 수 있습니다. 사용자를 한 명만 지정하려는 경우에는, 이 필드를 통해 가장 알맞은"
+" 사용자를 선택합니다."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_latam_check
@@ -43081,6 +43153,8 @@ msgid ""
 "         Please install the new \"DHL Express Shipping\" module and "
 "uninstall this one as soon as possible."
 msgstr ""
+"더 이상 지원되지 않는 DHL Express 통합 레거시 버전입니다. 새로운 'DHL Express 배송' 모듈을 설치 후 최대한 빠른 "
+"시일 내에 해당 모듈을 제거하시기 바랍니다."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex
@@ -43205,7 +43279,7 @@ msgstr "Sendcloud 배송의 픽업 지점으로 배송되도록 이커머스 사
 msgid ""
 "This module allows to publish your available job positions on your website "
 "and keep track of application submissions easily."
-msgstr ""
+msgstr "이 모듈을 통해 웹사이트에서 채용 공고를 게시하고 지원서를 쉽게 관리할 수 있습니다."
 
 #. module: base
 #: model:ir.module.module,description:base.module_iot_box_image
@@ -43557,6 +43631,10 @@ msgid ""
 "    It will simply create a new website for each Odoo theme and install every\n"
 "    theme on one website."
 msgstr ""
+"이 모듈을 활용하면 웹사이트에서 테마를 전환하지 않더라도  Odoo에 있는\n"
+"    모든 테마를 신속하게 테스트해 볼 수 있습니다.\n"
+"    Odoo에 있는 테마별로 새로운 웹사이트를 생성한 후 모든 테마를 하나의 웹사이트에\n"
+"    설치하면 됩니다."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -43977,17 +44055,17 @@ msgstr "운송/물류"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_aviato
 msgid "Travel, Excursion, Plane, Tour, Agency "
-msgstr ""
+msgstr "Travel, Excursion, Plane, Tour, Agency "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_treehouse
 msgid "Treehouse Theme"
-msgstr ""
+msgstr "트리하우스 테마"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_treehouse
 msgid "Treehouse Theme - Responsive Bootstrap Theme for Odoo CMS"
-msgstr ""
+msgstr "트리하우스 테마 - Odoo CMS용 반응형 부트스트랩 테마"
 
 #. module: base
 #. odoo-python
@@ -44576,7 +44654,7 @@ msgstr "유니버설"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bewise
 msgid "University, Education, Schools, Young, Play, Kids"
-msgstr ""
+msgstr "University, Education, Schools, Young, Play, Kids"
 
 #. module: base
 #. odoo-python
@@ -44689,7 +44767,7 @@ msgstr "업데이트"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Update %(model_name)s"
-msgstr ""
+msgstr "%(model_name)s 업데이트"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_update
@@ -44793,7 +44871,7 @@ msgstr "PoS에서 IoT 장치 사용"
 #: model:ir.module.module,summary:base.module_event_sale_iot
 #: model:ir.module.module,summary:base.module_pos_event_iot
 msgid "Use IoT device integrations for events"
-msgstr ""
+msgstr "행사에 IoT 장치 통합 활용"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_iot
@@ -44917,7 +44995,7 @@ msgstr ""
 msgid ""
 "Use your employee data to measure important ESG metrics (e.g. employee "
 "commuting, sex parity)."
-msgstr ""
+msgstr "직원 데이터를 활용하여 주요 ESG 지표(예: 직원 출퇴근, 양성 평등)를 측정할 수 있습니다."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation_table
@@ -45218,12 +45296,12 @@ msgstr "바투"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_vehicle
 msgid "Vehicle Theme"
-msgstr ""
+msgstr "차량 테마"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_vehicle
 msgid "Vehicle Theme - Cars, Motorbikes, Bikes, Tires"
-msgstr ""
+msgstr "Vehicle Theme - Cars, Motorbikes, Bikes, Tires"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_vehicle
@@ -45231,6 +45309,8 @@ msgid ""
 "Vehicle, Cars, Motorbikes, Bikes, Tires, Transports, Repair, Mechanics, "
 "Garages, Sports, Services"
 msgstr ""
+"Vehicle, Cars, Motorbikes, Bikes, Tires, Transports, Repair, Mechanics, "
+"Garages, Sports, Services"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_0
@@ -45788,7 +45868,7 @@ msgstr "웹사이트 프로필"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_yes
 msgid "Wedding, Love, Photography, Services"
-msgstr ""
+msgstr "Wedding, Love, Photography, Services"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
@@ -46005,12 +46085,12 @@ msgstr "창 작업"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_account_withholding_tax
 msgid "Withholding Tax on Payment"
-msgstr ""
+msgstr "결제 시 원천징수세"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_account_withholding_tax_pos
 msgid "Withholding Tax on Payment - PoS"
-msgstr ""
+msgstr "결제 시 원천징수세 - PoS"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__wizard_id
@@ -46075,7 +46155,7 @@ msgstr "작업 항목 - 근태"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_enterprise
 msgid "Work Entries - Enterprise"
-msgstr ""
+msgstr "근무 항목 - 기업"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_planning
@@ -46174,12 +46254,12 @@ msgstr "네 (참)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_yes
 msgid "Yes Theme"
-msgstr ""
+msgstr "예스 테마"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_yes
 msgid "Yes Theme - Wedding"
-msgstr ""
+msgstr "예스 테마 - 웨딩"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -46371,7 +46451,7 @@ msgstr "재귀 상속보기를 만들 수 없습니다."
 msgid ""
 "You cannot create two date ranges for the same sequence with the same date "
 "range."
-msgstr ""
+msgstr "한 시퀀스에 대해 동일한 날짜 범위를 두 개 생성할 수 없습니다."
 
 #. module: base
 #. odoo-python
@@ -46594,12 +46674,12 @@ msgstr "잠비아 - 회계 보고서"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_zap
 msgid "Zap Theme"
-msgstr ""
+msgstr "속도 테마"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_zap
 msgid "Zap Theme - Corporate, Business, Marketing, Copywriting"
-msgstr ""
+msgstr "속도 테마 - Corporate, Business, Marketing, Copywriting"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.ZIG
@@ -46868,7 +46948,7 @@ msgstr "이커머스 렌탈"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_renting_planning
 msgid "eCommerce Rental with Planning"
-msgstr ""
+msgstr "이커머스 렌탈에 일정 계획이 있는 모습"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock_renting
@@ -47177,7 +47257,7 @@ msgstr "selection_value"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__sequence_id
 msgid "sequence_id"
-msgstr ""
+msgstr "sequence_id"
 
 #. module: base
 #. odoo-python

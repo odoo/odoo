@@ -66,19 +66,19 @@ msgstr "%(name)s的时间表"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(days)sd)"
-msgstr ""
+msgstr "%(project_name)s（%(days)s 天）"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(hours)sh%(minutes)s)"
-msgstr ""
+msgstr "%(project_name)s（%(hours)s 小时 %(minutes)s 分钟）"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(hours)sh)"
-msgstr ""
+msgstr "%(project_name)s（%(hours)s 小时）"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -163,6 +163,18 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"not has_timesheet\">\n"
+"                        哎唷！ 你正在尝试删除的员工，仍有一些工时记录，故此无法删除。\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            此情况有两个选择：你可删除相关工时间表，或将该员工封存。\n"
+"                        </span>\n"
+"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            请先删除他们的所有工时表。\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span invisible=\"has_timesheet\">\n"
+"                        确定要删除这些员工？\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -327,7 +339,7 @@ msgstr "致电客户并讨论项目"
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
 msgid "Choose an employee to create their timesheet."
-msgstr ""
+msgstr "选择一名员工，为他们建立工时表。"
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -335,7 +347,7 @@ msgstr ""
 msgid ""
 "Click on a day or select a range of days to generate timesheets for the "
 "selected employees on the chosen dates"
-msgstr ""
+msgstr "在适用的日子按一下，或选取一个日期范围，为所选员工产生所选日期的工时表"
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -343,14 +355,14 @@ msgstr ""
 msgid ""
 "Click on a day or select a range of days to generate timesheets for the "
 "selected project on the chosen dates"
-msgstr ""
+msgstr "在适用的日子按一下，或选取一个日期范围，为所选项目产生所选日期的工时表"
 
 #. module: hr_timesheet
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar_my_timesheets/timesheet_calendar_my_timesheets_side_panel/timesheet_calendar_my_timesheets_side_panel.xml:0
 msgid ""
 "Click on a day or select a range of days to permanently delete its contents"
-msgstr ""
+msgstr "在适用的日子按一下，或选取一个日期范围，以永久删除其内容"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
@@ -567,7 +579,7 @@ msgstr "额外工时"
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_side_panel/timesheet_calendar_side_panel.xml:0
 msgid "Filter by specific employees to view only their timesheets"
-msgstr ""
+msgstr "可按指定员工筛选记录，只查看相关员工的工时表"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -782,7 +794,7 @@ msgstr "合作伙伴"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line_calendar_employee
 msgid "Personal Filters on Employees for the Calendar view"
-msgstr ""
+msgstr "日历检视画面中筛选员工的个人筛选器"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -938,7 +950,7 @@ msgstr "设置"
 msgid ""
 "Some timesheet entries are weighing down these tasks! Remove them first, "
 "then you’ll be able to delete the tasks!"
-msgstr ""
+msgstr "有一些工时表记项阻碍此作。 请先移除它们，然后便可删除任务。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1467,7 +1479,7 @@ msgstr "日期"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_calendar_account_analytic_line_multi_create
 msgid "e.g. Sending E-mails"
-msgstr ""
+msgstr "例：传送电子邮件"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task

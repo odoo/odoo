@@ -1632,6 +1632,9 @@ msgid ""
 "Accounting reports for China\n"
 "============================\n"
 msgstr ""
+"\n"
+"Accounting reports for China\n"
+"============================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
@@ -2583,6 +2586,18 @@ msgid ""
 "- the company linked to the website is mexican\n"
 "- the option 'automatic_invoice' is enabled in the website settings (\"Generate the invoice automatically when the online payment is confirmed\")\n"
 msgstr ""
+"\n"
+"Add an extra tab in the checkout process of the website/eCommerce with the mexican fields:\n"
+"\n"
+"- l10n_mx_edi_cfdi_to_public (sale.order/account.move)\n"
+"- l10n_mx_edi_fiscal_regime (res.partner)\n"
+"- l10n_mx_edi_usage (sale.order/account.move)\n"
+"- l10n_mx_edi_ieps_breakdown (res.partner)\n"
+"\n"
+"The extra tab only appears if:\n"
+"\n"
+"- the company linked to the website is mexican\n"
+"- the option 'automatic_invoice' is enabled in the website settings (\"Generate the invoice automatically when the online payment is confirmed\")\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
@@ -8504,6 +8519,16 @@ msgid ""
 "- Fiscal Positions\n"
 "- States\n"
 msgstr ""
+"\n"
+"تطبيق المحاسبة في عُمان\n"
+"=================================================================\n"
+"شجرة الحسابات الأساسية للمحاسبة والأقلمة المحاسبية في عُمان.\n"
+"يقوم بتفعيل كل من:\n"
+"- شجرة الحسابات\n"
+"- الضرائب\n"
+"- الإقرار الضريبي\n"
+"- الأوضاع المالية\n"
+"- الحالات \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_org_chart
@@ -9969,6 +9994,9 @@ msgid ""
 "This addon contains a generic html builder application. It is designed to be\n"
 "used by the website builder and mass mailing editor.\n"
 msgstr ""
+"\n"
+"يحتوي هذا المكون الإضافي على تطبيق منشئ html عام. تم تصميمه\n"
+"ليستخدمه منشئ المواقع الإلكترونية ومحرر البريد الجماعي.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_purchase
@@ -11337,6 +11365,14 @@ msgid ""
 "-----------------\n"
 "Three layouts copied from the US check printing module, adjusted for DO\n"
 msgstr ""
+"\n"
+"This module allows to print your payments on pre-printed check paper.\n"
+"You can configure the output (layout, stubs information, etc.) in company settings, and manage the\n"
+"checks numbering (if you use pre-printed checks without numbers) in journal settings.\n"
+"\n"
+"Supported formats\n"
+"-----------------\n"
+"Three layouts copied from the US check printing module, adjusted for DO\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ph_check_printing
@@ -14156,6 +14192,9 @@ msgid ""
 "                                <span colspan=\"2\">ISO 8601 Week Year without Century: %(isoy)s</span>\n"
 "                                <span colspan=\"2\">ISO 8601 Week Number: %(isoweek)s</span>"
 msgstr ""
+"<span colspan=\"2\">ISO 8601 الأسبوع من السنة مع القرن: %(isoyear)s</span>\n"
+"                                <span colspan=\"2\">ISO 8601 الأسبوع من السنة دون القرن: %(isoy)s</span>\n"
+"                                <span colspan=\"2\">ISO 8601 رقم الأسبوع: %(isoweek)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -14197,6 +14236,10 @@ msgid ""
 "                                    to this Python expression:\n"
 "                                </span>"
 msgstr ""
+"<span invisible=\"update_field_id != False or evaluation_type != 'value'\" class=\"o_actions_server_set_a_value text-muted\">قم بتحديد قيمة...</span>\n"
+"                                <span invisible=\"evaluation_type != 'equation'\">\n"
+"                                    لتعبير Python هذا:\n"
+"                                </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -17843,7 +17886,7 @@ msgstr "Argentinean - Point of Sale with AR Doc"
 #: model:ir.module.module,description:base.module_l10n_ar_stock
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_stock
 msgid "Argentinean - Stock"
-msgstr ""
+msgstr "Argentinean - Stock"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_reports
@@ -28143,6 +28186,8 @@ msgid ""
 "If enabled, this action will cache the related data used in list, Kanban and"
 " form views with the aim to increase the loading speed"
 msgstr ""
+"في حالة تفعيل هذا الإجراء، سيؤدي ذلك إلى تخزين البيانات ذات الصلة المستخدمة "
+"في طرق عرض القائمة وكانبان والاستمارة بشكل مؤقت بهدف زيادة سرعة التحميل "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule__global
@@ -32361,6 +32406,8 @@ msgid ""
 "Modifications to the forecast widget on SO lines to show fresh stock, i.e. "
 "ignoring stock to be removed due to expiration."
 msgstr ""
+"تعديلات على أداة التنبؤ في بنود أمر البيع لإظهار المخزون الجديد، بمعنى تجاهل"
+" المخزون الذي سيتم إزالته بسبب انتهاء الصلاحية. "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_updated
@@ -37491,7 +37538,7 @@ msgstr "طباعة شيكات كندية"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_do_check_printing
 msgid "Print Dominican Republic Checks"
-msgstr ""
+msgstr "Print Dominican Republic Checks"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ph_check_printing
@@ -41872,7 +41919,7 @@ msgstr "Switzerland - Payroll with Accounting"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll
 msgid "Switzerland - Swissdec Certified ELM 5.0 - Payroll"
-msgstr ""
+msgstr "Switzerland - Swissdec Certified ELM 5.0 - Payroll"
 
 #. module: base
 #: model:res.country.group,name:base.ch_and_li
@@ -43313,6 +43360,8 @@ msgid ""
 "There can be several users related to the same partner. When a single user "
 "is needed, this field attempts to find the most appropriate one."
 msgstr ""
+"يمكن أن يكون هناك عدة مستخدمين مرتبطين بنفس الشريك. عند الحاجة إلى مستخدم "
+"واحد، يحاول هذا الحقل العثور على المستخدم الأنسب. "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_latam_check
@@ -43457,6 +43506,9 @@ msgid ""
 "         Please install the new \"DHL Express Shipping\" module and "
 "uninstall this one as soon as possible."
 msgstr ""
+"هذا هو التكامل القديم مع DHL Express الذي لم يعد مدعوماً بعد الآن. يرجى "
+"تثبيت تطبيق \"DHL Express Shipping\" الجديد وإلغاء تثبيت هذا التطبيق في أقرب"
+" وقت ممكن. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex
@@ -43956,6 +44008,10 @@ msgid ""
 "    It will simply create a new website for each Odoo theme and install every\n"
 "    theme on one website."
 msgstr ""
+"سيساعدك هذا التطبيق على اختبار كافة سمات أودو بسرعة\n"
+"    دون الحاجة إلى التبديل من سمة إلى أخرى على موقعك الإلكتروني.\n"
+"    سيقوم ببساطة بإنشاء موقع إلكتروني جديد لكل سمة من سمات أودو وتثبيت كل\n"
+"    سمة على موقع إلكتروني واحد. "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -47655,7 +47711,7 @@ msgstr "selection_value"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__sequence_id
 msgid "sequence_id"
-msgstr ""
+msgstr "sequence_id"
 
 #. module: base
 #. odoo-python

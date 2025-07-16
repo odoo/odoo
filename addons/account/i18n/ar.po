@@ -295,13 +295,13 @@ msgstr "%s، أو غير منطبق "
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
-msgstr ""
+msgstr "'%(filename)s' (تم استخلاصها من '%(root_filename)s'، النوع=%(type)s) "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
-msgstr ""
+msgstr "'%(filename)s' (النوع=%(type)s) "
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -961,6 +961,9 @@ msgid ""
 "                                        To Review\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"badge text-bg-info\">\n"
+"                                        باتنظار التقييم \n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -2135,7 +2138,7 @@ msgstr "عدد حركات الحساب "
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__line_ids
 msgid "Account Move Line Items"
-msgstr ""
+msgstr "عناصر بند حركة الحساب "
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -3493,7 +3496,7 @@ msgstr "مرفق"
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "Attachment %(filename)s not imported: %(reason)s"
-msgstr ""
+msgstr "المرفق %(filename)s لم يتم استيراده: %(reason)s "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_attachment_count
@@ -4199,7 +4202,7 @@ msgstr "الميزانيات "
 #. module: account
 #: model:ir.model,name:account.model_account_document_import_mixin
 msgid "Business document import mixin"
-msgstr ""
+msgstr "mixin لاستيراد مستندات الأعمال "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__foldable
@@ -6212,7 +6215,7 @@ msgstr "حساب المدينين الافتراضي لنقطة البيع "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_receipt_tax_id
 msgid "Default Purchase Receipt Tax"
-msgstr ""
+msgstr "الضريبة الافتراضية لإيصال الشراء "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
@@ -6223,7 +6226,7 @@ msgstr "الضريبة الافتراضية للمشتريات "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_sale_receipt_tax_id
 msgid "Default Sale Receipt Tax"
-msgstr ""
+msgstr "الضريبة الافتراضية لإيصال البيع "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_sale_tax_id
@@ -6765,7 +6768,7 @@ msgstr "عرض رمز QR الخاص بـ SEPA "
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_send_button
 #: model:ir.model.fields,field_description:account.field_account_move__display_send_button
 msgid "Display Send Button"
-msgstr ""
+msgstr "عرض زر الإرسال "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__display_type
@@ -7385,7 +7388,7 @@ msgstr "رأس المال "
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "Error importing attachment %(filename)s:"
-msgstr ""
+msgstr "حدث خطأ أثناء استيراد المرفق %(filename)s: "
 
 #. module: account
 #. odoo-python
@@ -7428,7 +7431,7 @@ msgstr "ضريبة الاتحاد الأوروبي "
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Even magicians can't post nothing!"
-msgstr ""
+msgstr "حتى وإن كنت ساحراً فلن تتمكن من إرسال \"اللاشيء\"! "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_amount
@@ -8458,7 +8461,7 @@ msgstr "أعلى اسم"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highlight_send_button
 #: model:ir.model.fields,field_description:account.field_account_move__highlight_send_button
 msgid "Highlight Send Button"
-msgstr ""
+msgstr "إبراز زر الإرسال "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
@@ -9729,7 +9732,7 @@ msgstr "أكبر من أو يساوي "
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
 msgid "Is lower than or equal to"
-msgstr ""
+msgstr "أقل من أو يساوي "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_being_sent
@@ -10423,7 +10426,7 @@ msgstr "قفل الحقول الآمنة "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Log changes to posted journal entries immutably"
-msgstr ""
+msgstr "قم بتدوين التغييرات التي تطرأ على قيود اليومية المُرحّلة بشكل ثابت "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -12839,7 +12842,7 @@ msgstr "المنتج"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Product Accounts:"
-msgstr ""
+msgstr "حسابات المنتج: "
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_product_product_categories
@@ -12945,6 +12948,8 @@ msgid ""
 "Propose to validate bills automatically when AI accuracy is right 3 times in"
 " a row for a vendor."
 msgstr ""
+"يمكنك اقتراح القيام بتصديق الفواتير تلقائياً عندما تكون دقة الذكاء الاصطناعي"
+" صحيحة 3 مرات متتالية لأحد الموردين. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_restricted
@@ -13653,7 +13658,7 @@ msgstr "مراجعة شجرة الحسابات "
 #. module: account
 #: model:ir.actions.server,name:account.accountant_confirm_entries_action
 msgid "Review Entries"
-msgstr ""
+msgstr "مراجعة القيود "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__checked
@@ -13919,7 +13924,7 @@ msgstr "قم بمسح كود QR باستخدام<br/>تطبيقك البنكي "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__search_account_id
 msgid "Search Account"
-msgstr ""
+msgstr "البحث عن حساب "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -14442,7 +14447,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__show_aba_routing
 msgid "Show Aba Routing"
-msgstr ""
+msgstr "إظهار مسار Aba "
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
@@ -15042,7 +15047,7 @@ msgstr "شامل الضريبة"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_label
 msgid "Tax Label"
-msgstr ""
+msgstr "بطاقة عنوان الضريبة "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_lock_date_message
@@ -15910,7 +15915,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The invoice already contains lines."
-msgstr ""
+msgstr "تحتوي الفاتورة على بنود بالفعل. "
 
 #. module: account
 #. odoo-javascript
@@ -16584,7 +16589,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "This document was created from the following attachment(s)."
-msgstr ""
+msgstr "تم إنشاء هذا المستند من المرفقات التالية. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
