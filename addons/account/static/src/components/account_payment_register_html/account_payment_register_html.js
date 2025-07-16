@@ -1,20 +1,23 @@
-import {HtmlField, htmlField} from "@web_editor/js/backend/html_field";
-import {registry} from "@web/core/registry";
+import { Component } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-export class AccountPaymentRegisterHtmlField extends HtmlField {
+class AccountPaymentRegisterHtmlField extends Component {
+    static props = standardFieldProps;
     static template = "account.AccountPaymentRegisterHtmlField";
 
-    async switchInstallmentsAmount(ev) {
+    get value() {
+        return this.props.record.data[this.props.name];
+    }
+
+    switchInstallmentsAmount(ev) {
         if (ev.srcElement.classList.contains("installments_switch_button")) {
             const root = this.env.model.root;
-            await root.update({amount: root.data.installments_switch_amount});
+            root.update({ amount: root.data.installments_switch_amount });
         }
     }
 }
 
-export const accountPaymentRegisterHtmlField = {
-    ...htmlField,
-    component: AccountPaymentRegisterHtmlField,
-};
+const accountPaymentRegisterHtmlField = { component: AccountPaymentRegisterHtmlField };
 
 registry.category("fields").add("account_payment_register_html", accountPaymentRegisterHtmlField);
