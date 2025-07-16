@@ -1214,6 +1214,8 @@ class TestSubcontractingTracking(TransactionCase):
 
         # We should be able to call the 'record_components' button
         self.assertEqual(picking_receipt.display_action_record_components, 'mandatory')
+        # We shouldn't be able to edit the quantity when there are tracked components
+        self.assertFalse(picking_receipt.move_ids.is_quantity_done_editable)
 
         # Check the created manufacturing order
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom_tracked.id)])
@@ -1291,6 +1293,8 @@ class TestSubcontractingTracking(TransactionCase):
 
         # We shouldn't be able to call the 'record_components' button
         self.assertEqual(picking_receipt.display_action_record_components, 'hide')
+        # We shouldn't be able to edit the quantity of a tracked move
+        self.assertFalse(picking_receipt.move_ids.is_quantity_done_editable)
 
         wh = picking_receipt.picking_type_id.warehouse_id
         lot_names_finished = [f"subtracked_{i}" for i in range(nb_finished_product)]
@@ -1894,17 +1898,21 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
             })],
         })
         receipt.action_confirm()
+        self.assertFalse(receipt.move_ids.show_subcontracting_details_visible)
         with Form(receipt) as picking_form:
             with picking_form.move_ids_without_package.edit(0) as move:
                 move.quantity = 5.0
+        self.assertTrue(receipt.move_ids.show_subcontracting_details_visible)
         self.assertRecordValues(receipt.move_line_ids, [
             {'quantity': 5.0, 'state': 'partially_available', 'picked': True}
         ])
         receipt.button_validate()
         backorder = receipt.backorder_ids
+        self.assertFalse(backorder.move_ids.show_subcontracting_details_visible)
         with Form(backorder) as picking_form:
             with picking_form.move_ids_without_package.edit(0) as move:
                 move.quantity = 3.0
+        self.assertTrue(backorder.move_ids.show_subcontracting_details_visible)
         self.assertRecordValues(backorder.move_line_ids, [
             {'quantity': 3.0, 'state': 'partially_available', 'picked': True}
         ])
