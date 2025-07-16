@@ -1,7 +1,10 @@
 import { test, expect, describe } from "@odoo/hoot";
 import { getFilledOrder, setupPosEnv } from "../utils";
+import { definePosModels } from "../data/generate_model_definitions";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
-describe.current.tags("pos");
+definePosModels();
+
 describe("pos_store.js", () => {
     test("getProductPrice", async () => {
         const store = await setupPosEnv();
@@ -27,6 +30,105 @@ describe("pos_store.js", () => {
         expect(order.is_tipped).toBe(true);
         expect(order.tip_amount).toBe(50);
         expect(order.lines.length).toBe(3); // 2 original lines + 1 tip line
+    });
+
+    describe("syncAllOrders", () => {
+        test("simple sync", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(1);
+            expect(order.lines).toHaveLength(2);
+            expect(order.lines[0].id).toBeOfType("string");
+            expect(order.lines[1].id).toBeOfType("string");
+
+            await store.syncAllOrders();
+            // Object should be updated in place
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(0);
+            expect(order.lines).toHaveLength(2);
+            expect(order.lines[0].id).toBeOfType("number");
+            expect(order.lines[1].id).toBeOfType("number");
+
+            const noSync = await store.syncAllOrders();
+            expect(noSync).toBe(undefined);
+            expect(store.models["pos.order"].length).toBe(2); // One order created during setupPosEnv
+        });
+
+        test("sync specific order", async () => {
+            const store = await setupPosEnv();
+            const order1 = await getFilledOrder(store);
+            const order2 = await getFilledOrder(store);
+
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(2);
+            expect(order1.lines).toHaveLength(2);
+            expect(order1.lines[0].id).toBeOfType("string");
+            expect(order1.lines[1].id).toBeOfType("string");
+
+            expect(order2.lines).toHaveLength(2);
+            expect(order2.lines[0].id).toBeOfType("string");
+            expect(order2.lines[1].id).toBeOfType("string");
+
+            await store.syncAllOrders({ orders: [order1] });
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(1);
+            expect(order1.lines).toHaveLength(2);
+            expect(order1.lines[0].id).toBeOfType("number");
+            expect(order1.lines[1].id).toBeOfType("number");
+
+            expect(order2.lines).toHaveLength(2);
+            expect(order2.lines[0].id).toBeOfType("string");
+            expect(order2.lines[1].id).toBeOfType("string");
+
+            const data = await store.syncAllOrders();
+            expect(data).toHaveLength(1);
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(0);
+            expect(order2.lines).toHaveLength(2);
+            expect(order2.lines[0].id).toBeOfType("number");
+            expect(order2.lines[1].id).toBeOfType("number");
+        });
+
+        test("sync no network should not raise error", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(1);
+            expect(order.lines).toHaveLength(2);
+            expect(order.lines[0].id).toBeOfType("string");
+            expect(order.lines[1].id).toBeOfType("string");
+
+            store.data.network.offline = true;
+            const data = await store.syncAllOrders();
+            expect(data).toBeInstanceOf(ConnectionLostError);
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(1);
+            expect(order.lines).toHaveLength(2);
+            expect(order.lines[0].id).toBeOfType("string");
+            expect(order.lines[1].id).toBeOfType("string");
+        });
+
+        test("insync order should not be re-synced", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(1);
+            expect(order.lines).toHaveLength(2);
+            expect(order.lines[0].id).toBeOfType("string");
+            expect(order.lines[1].id).toBeOfType("string");
+            store.syncingOrders.add(order.id);
+
+            const data = await store.syncAllOrders();
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(1);
+            expect(data).toBeEmpty();
+            expect(order.lines).toHaveLength(2);
+            expect(order.lines[0].id).toBeOfType("string");
+            expect(order.lines[1].id).toBeOfType("string");
+        });
+    });
+
+    test("deleteOrders", async () => {
+        const store = await setupPosEnv();
+        const order1 = await getFilledOrder(store);
+        await store.syncAllOrders();
+        await store.deleteOrders([order1]);
+        expect(store.models["pos.order"].getBy("uuid", order1.uuid).state).toBe("cancel");
     });
 
     test("productsToDisplay", async () => {

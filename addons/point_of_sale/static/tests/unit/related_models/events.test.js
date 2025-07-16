@@ -1,8 +1,10 @@
 import { expect, test, describe } from "@odoo/hoot";
 import { getRelatedModelsInstance } from "../data/get_model_definitions";
 import { makeMockServer } from "@web/../tests/web_test_helpers";
+import { definePosModels } from "../data/generate_model_definitions";
 
-describe.current.tags("pos");
+definePosModels();
+
 describe(`Related models Events`, () => {
     test("Connecting multiple records must fire update once", async () => {
         await makeMockServer();

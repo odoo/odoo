@@ -1,7 +1,9 @@
 import { test, describe, expect } from "@odoo/hoot";
 import { setupPosEnv } from "../utils";
+import { definePosModels } from "../data/generate_model_definitions";
 
-describe.current.tags("pos");
+definePosModels();
+
 describe("pos.order.line", () => {
     test("getAllPrices", async () => {
         const store = await setupPosEnv();

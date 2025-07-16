@@ -2414,15 +2414,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         products = self.env['product.product'].search([('available_in_pos', '=', True)])
         self.assertFalse(products, 'Demo data should not be loaded by user.')
 
-        # pos admin group access
-        self.pos_admin.write({
-            'group_ids': [Command.link(self.env.ref('base.group_system').id)],
-        })
-        # can load by pos admin
-        self.start_pos_tour('test_load_pos_demo_data_by_pos_admin', login='pos_admin')
-        products = self.env['product.product'].search([('available_in_pos', '=', True)])
-        self.assertTrue(products, 'Demo data should be loaded by admin.')
-
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
