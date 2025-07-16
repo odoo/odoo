@@ -24,12 +24,12 @@ class ResConfigSettings(models.TransientModel):
     # E-Invoice Methods
     def l10n_in_edi_test(self):
         self._l10n_in_check_gst_number()
-        self.company_id._l10n_in_edi_authenticate()
+        response = self.company_id._l10n_in_edi_authenticate()
         _ = self.env._
-        if not self.company_id._l10n_in_edi_token_is_valid():
-            raise UserError(_(
-                "Incorrect username or password, or the GST number on company does not match."
-            ))
+        if response.get('error'):
+            raise UserError("\n".join(["[%s] %s" % (e.get('code'), (e.get('message'))) for e in response['error']]))
+        elif not self.company_id.sudo()._l10n_in_edi_token_is_valid():
+            raise UserError(_("Incorrect username or password, or the GST number on company does not match."))
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
