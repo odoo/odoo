@@ -13,8 +13,9 @@ patch(Form.prototype, {
         super.start();
         TurnStile.clean(this.el);
         if (
-            !this.el.querySelector(".s_turnstile")
-            && session.turnstile_site_key
+            !this.el.classList.contains("s_website_form_no_recaptcha") &&
+            !this.el.querySelector(".s_turnstile") &&
+            session.turnstile_site_key
         ) {
             this.uniq = uniqueId("turnstile_");
             this.el.classList.add(this.uniq);
