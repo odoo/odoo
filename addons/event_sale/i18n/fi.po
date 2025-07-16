@@ -48,7 +48,7 @@ msgstr "<span class=\"o_stat_text\">Myynti</span>"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "<span>Registration modification for attendee:</span>"
-msgstr "<span>Rekisteröinnin muutos osallistujalle:</span>"
+msgstr "<span>Ilmoittautumisen muutos osallistujalle:</span>"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
@@ -88,7 +88,7 @@ msgstr "Ennen kuin linkitetyt ilmoittautumiset päivitetään"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Booked by"
-msgstr "Varaaja"
+msgstr "Varauksen teki"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_campaign_id
@@ -127,8 +127,8 @@ msgstr "Sulje"
 #: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
 msgid "Come back once tickets have been sold to overview your sales income."
 msgstr ""
-"Palaa takaisin, kun tapahtumaan on myyty lippuja. Näet sitten tapahtuman "
-"liikevaihdon."
+"Palaa takaisin, kun tapahtumaan on myyty lippuja. Saat yleiskatsauksen "
+"tapahtuman liikevaihdosta."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__company_id
@@ -258,7 +258,7 @@ msgstr "Tapahtumien myynnin raportti"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event Start Date"
-msgstr "Tapahtuman aloituspäivä"
+msgstr "Tapahtuman alkamispäivä"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
@@ -276,7 +276,7 @@ msgstr "Tapahtumatyyppi"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Events that have ended"
-msgstr "Tapahtumat, joiden olisi pitänyt loppua"
+msgstr "Tapahtumat, jotka ovat päättyneet"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
@@ -311,14 +311,14 @@ msgstr "On saatavilla lippuja"
 #: model:ir.model.fields,field_description:event_sale.field_sale_order__id
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: event_sale
 #. odoo-python
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid ticket choice \"%(ticket_name)s\" for event \"%(event_name)s\"."
 msgstr ""
-"Virheellinen lipun valinta \"%(ticket_name)s\" tapahtumalle "
+"Virheellinen lipun valinta \"%(ticket_name)s\" tapahtumaan "
 "\"%(event_name)s\"."
 
 #. module: event_sale
@@ -373,7 +373,7 @@ msgstr "Ei myyty"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_date
 msgid "Order Date"
-msgstr "Tilauksen pvm"
+msgstr "Tilauksen päivämäärä"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
@@ -443,7 +443,7 @@ msgstr "Ilmoittautuminen"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_create_date
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Registration Date"
-msgstr "Ilmottautumispäivä"
+msgstr "Ilmottautumisen päivämäärä"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_state
@@ -464,7 +464,7 @@ msgstr "Ilmoittautumiset"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
 msgid "Registrations to Edit"
-msgstr "Muokattavat rekisteröinnit"
+msgstr "Muokattavat ilmoittautumiset"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.event_sale_report_action
@@ -486,7 +486,7 @@ msgstr "Myyntitilaus"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_line_id
 msgid "Sale Order Line"
-msgstr "Myyntitilausrivi"
+msgstr "Myyntitilauksen rivi"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_state
@@ -517,7 +517,7 @@ msgstr "Myyntitilaus"
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
 msgid "Sales Order Line"
-msgstr "Myyntitilausrivi"
+msgstr "Myyntitilauksen rivi"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_user_id
@@ -552,8 +552,8 @@ msgid ""
 "The sale order line with the product %(product_name)s needs an event and a "
 "ticket."
 msgstr ""
-"Myyntitilausrivi, jossa on tuote %(product_name)s, tarvitsee tapahtuman ja "
-"lipun."
+"Myyntitilauksen rivi, jossa on tuote %(product_name)s, tarvitsee tapahtuman "
+"ja lipun."
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -594,10 +594,10 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
-"Vahvistamattomat: rekisteröinnit, jotka odottavat toimenpiteitä (erityistapaus, erityisesti myyntitilanne)\n"
-"Rekisteröity: rekisteröinnit, jotka asiakas on ottanut vastaan\n"
-"Osallistuneet: rekisteröinnit, joiden osalta osallistuja osallistui tapahtumaan\n"
-"Peruutettu: manuaalisesti peruutetut rekisteröinnit"
+"Vahvistamattomat: ilmoittautumiset ja rekisteröinnit, jotka odottavat toimenpiteitä (erityistapaus, erityisesti myyntitila)\n"
+"Rekisteröity: ilmoittautumiset ja rekisteröinnit, jotka asiakas on vastaanottanut\n"
+"Osallistuneet: ilmoittautumiset ja rekisteröinnit, joiden tapahtumaan osallistuja osallistui\n"
+"Peruutettu: manuaalisesti peruutetut ilmoittautumiset ja rekisteröinnit"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed
@@ -607,12 +607,12 @@ msgstr "Veroton liikevaihto"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Upcoming events from today"
-msgstr "Tulevia tapahtumia tänään"
+msgstr "Tulevat tapahtumat alkaen tästä päivästä"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Upcoming/Running"
-msgstr "Tulossa/Meneillään"
+msgstr "Tulossa/Käynnissä"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form

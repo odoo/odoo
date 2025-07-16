@@ -38,14 +38,14 @@ msgstr "Tilitiedot"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_token
 msgid "Account Token"
-msgstr "Tilin tunniste"
+msgstr "Tilin pääsytunniste"
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__account_token
 msgid ""
 "Account token is your authentication key for this service. Do not share it."
 msgstr ""
-"Tilin pääsytunniste on tunnistusavaimesi tätä palvelua varten. Älä jaa sitä."
+"Tilin pääsytunniste on tunnistusavaimesi tähän palveluun. Älä jaa sitä."
 
 #. module: iap
 #. odoo-python
@@ -54,7 +54,7 @@ msgid ""
 "An error occurred while reaching %s. Please contact Odoo support if this "
 "error persists."
 msgstr ""
-"Tavoitettaessa %s tapahtui virhe. Ota yhteyttä Odoo-tukeen, jos tämä virhe "
+"Tavoiteltaessa %s tapahtui virhe. Ota yhteyttä Odoo-tukeen, jos tämä virhe "
 "jatkuu."
 
 #. module: iap
@@ -99,7 +99,7 @@ msgstr "Luotu"
 #. module: iap
 #: model:iap.service,unit_name:iap.iap_service_reveal
 msgid "Credits"
-msgstr "Tekijät"
+msgstr "Krediitit"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__description
@@ -122,7 +122,7 @@ msgstr "Sähköpostihälytyksen vastaanottajat"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
 msgid "Email Alert Threshold"
-msgstr "Sähköpostihälytyksen kynnysarvo"
+msgstr "Sähköpostihälytyksen kynnys"
 
 #. module: iap
 #: model:iap.service,description:iap.iap_service_reveal
@@ -131,9 +131,9 @@ msgid ""
 "leads, generate leads based on a set of criteria and enrich the company data"
 " of your opportunities."
 msgstr ""
-"Hanki laadukkaita liidejä ja myyntimahdollisuuksia: muunna verkkosivuston "
-"kävijät liideiksi, luo liidejä tiettyjen kriteerien perusteella ja rikasta "
-"tilaisuuksiesi yritystietoja."
+"Hanki laadukkaita liidejä ja myyntimahdollisuuksia: muunna verkkosivun "
+"vierailjat liideiksi, luo liidejä tiettyjen kriteerien perusteella ja "
+"rikasta tilaisuuksiesi yritystietoja."
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -145,7 +145,7 @@ msgstr "IAP"
 #: model:ir.model,name:iap.model_iap_account
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "IAP Account"
-msgstr "IAP Tili"
+msgstr "IAP-tili"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_account_menu
@@ -168,7 +168,7 @@ msgstr "IAP-palvelu"
 #: model:ir.model.fields,field_description:iap.field_iap_enrich_api__id
 #: model:ir.model.fields,field_description:iap.field_iap_service__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: iap
 #. odoo-javascript
@@ -223,19 +223,19 @@ msgid ""
 "One of the email alert recipients doesn't have an email address set. Users: "
 "%s"
 msgstr ""
-"Yhdellä sähköpostihälytyksen vastaanottajista ei ole määritetty "
+"Yhdellä sähköpostihälytyksen vastaanottajista ei ole määritettyä "
 "sähköpostiosoitetta. Käyttäjät: %s"
 
 #. module: iap
 #: model:ir.model.constraint,message:iap.constraint_iap_service_unique_technical_name
 msgid "Only one service can exist with a specific technical_name"
-msgstr "Vain yksi palvelu voi olla olemassa tietyllä technical_name-nimellä"
+msgstr "Vain yksi palvelu voi olla olemassa tietyllä technical_name -nimellä"
 
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "Please set a positive email alert threshold."
-msgstr "Aseta positiivinen sähköpostihälytyskynnys."
+msgstr "Aseta positiivinen sähköpostihälytysten kynnys."
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
@@ -256,7 +256,7 @@ msgstr "Palvelu lukittu"
 #. odoo-javascript
 #: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
 msgid "Start a Trial at Odoo"
-msgstr "Aloita kokeilu Odoo:ssa"
+msgstr "Aloita kokeilu Odoossa"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state
@@ -276,7 +276,7 @@ msgid ""
 "The request to the service timed out. Please contact the author of the app. "
 "The URL it tried to contact was %s"
 msgstr ""
-"Pyyntö palveluun päättyi. Ota yhteyttä sovelluksen tekijään. URL-osoite, "
+"Palvelun pyyntö päättyi. Ota yhteyttä sovelluksen tekijään. URL-osoite, "
 "johon se yritti ottaa yhteyttä, oli %s"
 
 #. module: iap

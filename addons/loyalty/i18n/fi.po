@@ -42,7 +42,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Hallitse, missä ohjelmasi on oltava käytettävissä.\n"
+"        Hallitse, missä ohjelmasi tulisi olla käytettävissä.\n"
 "        "
 
 #. module: loyalty
@@ -53,7 +53,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Näytä verkkoportaalissa, kassan kuitilla ja verkkokaupan kassassa käytettävissä olevien ja palkinnon mukaan käytettyjen pisteiden määrä.\n"
+"        Näytä palkintoon käytettävissä olevien ja siihen käytettyjen pisteiden määrä verkkoportaalissa, kassan kuitilla ja Verkkokaupan kassalla.\n"
 "        "
 
 #. module: loyalty
@@ -71,25 +71,25 @@ msgstr "100€"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "%g%% on "
-msgstr "%g%% kohteessa "
+msgstr "%g%% "
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "%s on "
-msgstr "%s josta "
+msgstr "%s  "
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "%s per point"
-msgstr "%s pistettä kohti"
+msgstr "%s per piste "
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "%s per point on "
-msgstr "%s pistettä kohti, jossa "
+msgstr "%s per piste "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -132,7 +132,7 @@ msgstr "1000"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "2+1 Free"
-msgstr "2+1 maksuton"
+msgstr "2+1 ilmaiseksi"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -254,7 +254,7 @@ msgstr ""
 "                                <span class=\"o_stat_text\" invisible=\"program_type not in ('promotion', 'buy_x_get_y')\">Kampanjat</span>\n"
 "                                <span class=\"o_stat_text\" invisible=\"program_type != 'promo_code'\">Alennus</span>\n"
 "                                <span class=\"o_stat_text\" invisible=\"program_type != 'gift_card'\">Lahjakortit</span>\n"
-"                                <span class=\"o_stat_text\" invisible=\"program_type != 'ewallet'\">sähköiset lompakot</span>"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'ewallet'\">eLompakot</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -262,7 +262,7 @@ msgid ""
 "<span class=\"text-center\">OR</span>\n"
 "                                        <br/>"
 msgstr ""
-"<span class=\"text-center\">OR</span>\n"
+"<span class=\"text-center\">TAI</span>\n"
 "                                        <br/>"
 
 #. module: loyalty
@@ -271,8 +271,8 @@ msgid ""
 "<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Grant the amount"
 " of coupon points defined as the coupon value</span>"
 msgstr ""
-"<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Myönnetään "
-"kuponkipisteiden määrä, joka määritellään kupongin arvoksi</span>"
+"<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Myönnä "
+"kuponkipisteiden määrä, joka on määritelty kupongin arvona</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -314,7 +314,7 @@ msgstr "<span>Voimassa, kun ostetaan vähintään</span>"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "<span>on</span>"
-msgstr "<span>koskien</span>"
+msgstr "<span>-></span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -324,7 +324,7 @@ msgstr "<span>tuotteet</span>"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 msgid "<strong>Gift Card Code</strong>"
-msgstr "<strong>Lahjakortin Koodi</strong>"
+msgstr "<strong>Lahjakortin koodi</strong>"
 
 #. module: loyalty
 #: model:mail.template,body_html:loyalty.mail_template_loyalty_card
@@ -431,7 +431,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "A coupon with the same code was found."
-msgstr "Samaa koodia sisältävä kuponki löytyi."
+msgstr "Saman koodin sisältävä kuponki löytyi."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_card_card_code_unique
@@ -442,7 +442,7 @@ msgstr "Kupongissa tai kanta-asiakaskortissa on oltava yksilöllinen koodi."
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "A program must have at least one reward."
-msgstr "Ohjelmassa on oltava vähintään yksi palkkio."
+msgstr "Ohjelmassa on oltava vähintään yksi palkinto."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_buttons
@@ -453,14 +453,15 @@ msgstr "Palkinto odottaa sinua"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "A reward product can't be of type \"combo\"."
-msgstr "Palkintotuote ei voi olla tyyppiä \"combo\"."
+msgstr "Palkintotuote ei voi olla tyyppiä \"yhdistelmä\"."
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
 msgid "A trigger with the same code as one of your coupon already exists."
 msgstr ""
-"Laukaisin, jonka koodi on sama kuin jollakin kupongillasi, on jo olemassa."
+"Käynnistävä toiminto, jonka koodi on sama kuin jollakin kupongillasi, on jo "
+"olemassa."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
@@ -498,7 +499,7 @@ msgstr "Lisää"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Add a reward"
-msgstr "Lisää palkkio"
+msgstr "Lisää palkinto"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -514,12 +515,12 @@ msgstr "Kaikki alennustuotteet"
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "Among"
-msgstr "Jossa"
+msgstr "Koskien"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "Among:"
-msgstr "Jossa:"
+msgstr "Koskien:"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__anonymous
@@ -534,7 +535,7 @@ msgstr "Hakemus"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "Applied to:"
-msgstr "Koskee:"
+msgstr "Haettu:"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__applies_on
@@ -568,8 +569,7 @@ msgstr "Automaattinen"
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Automatic promo: 10% off on orders higher than $50"
 msgstr ""
-"Automaattinen promo: 10% off (alennusta) tilauksista, joiden hinta on yli 50"
-" dollaria"
+"Automaattinen promo: -10% tilauksista, joiden hinta on yli 50 dollaria"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
@@ -592,7 +592,7 @@ msgstr "Viivakoodi"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Buy 10 products to get 10$ off on the 11th one"
-msgstr "Osta 10 tuotetta saadaksesi 10 dollaria pois 11. tuotteesta"
+msgstr "Osta 10 tuotetta saadaksesi 10 dollaria alennusta 11. tuotteesta"
 
 #. module: loyalty
 #. odoo-python
@@ -638,7 +638,7 @@ msgstr "Kortti vanhenee"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_category_id
 msgid "Categories"
-msgstr "Tuoteryhmä(t)"
+msgstr "Kategoria(t)"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__cheapest
@@ -663,7 +663,7 @@ msgstr "Koodi"
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_with_code
 msgid "Code for 10% on orders"
-msgstr "Koodi 10% tilauksia varten"
+msgstr "Koodi -10% tilauksista"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__communication_plan_ids
@@ -741,7 +741,7 @@ msgstr "Alennuskoodi"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__coupon_count
 msgid "Coupon Count"
-msgstr "Kupongin määrä"
+msgstr "Kuponkien määrä"
 
 #. module: loyalty
 #. odoo-python
@@ -776,18 +776,18 @@ msgstr "Kupongit"
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
 msgid "Create a new one from scratch, or use one of the templates below."
-msgstr "Luo uusi tyhjästä tai käytä jotakin alla olevista malleista."
+msgstr "Luo uusi tyhjästä tai käytä jotakin alla olevista malleipohjista."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
 msgid "Create one from scratch, or use a templates below:"
-msgstr "Luo sellainen tyhjästä tai käytä alla olevia malleja:"
+msgstr "Luo sellainen tyhjästä tai käytä alla olevia malleipohjia:"
 
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
 msgid "Create record"
-msgstr "Luo tietue"
+msgstr "Luo kirjaus"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__create_uid
@@ -831,7 +831,7 @@ msgstr "Valuutta"
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__currency_symbol
 msgid "Currency sign, to be used when printing amounts."
-msgstr "Valuttamerkki, käytetään määrien tulostuksessa."
+msgstr "Valuttamerkki, jota käytetään määrien tulostuksessa."
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__applies_on__both
@@ -895,7 +895,7 @@ msgstr "Kuvaus"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Description on order"
-msgstr "Kuvaus tilauksesta"
+msgstr "Kuvaus tilauksessa"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount
@@ -923,7 +923,7 @@ msgstr "Alennuskoodi"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_line_product_id
 msgid "Discount Line Product"
-msgstr "Alennus rivituotteesta"
+msgstr "Alennusrivin tuote"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_mode
@@ -1008,7 +1008,7 @@ msgid ""
 "Drive repeat purchases by sending a unique, single-use coupon code for the "
 "next purchase when a customer buys something in your store."
 msgstr ""
-"Edistä uusintaostoksia lähettämällä ainutlaatuinen, kertakäyttöinen "
+"Edistä toistuvia ostoksia lähettämällä ainutlaatuinen, kertakäyttöinen "
 "kuponkikoodi seuraavaa ostosta varten, kun asiakas ostaa jotain "
 "myymälästäsi."
 
@@ -1131,7 +1131,7 @@ msgstr "Tulevat tilaukset"
 #: model:ir.actions.act_window,name:loyalty.loyalty_generate_wizard_action
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Generate"
-msgstr "Generoi"
+msgstr "Luo"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1140,8 +1140,8 @@ msgid ""
 "Point of Sale or regular orders to claim the Reward. You can define "
 "constraints on its usage through conditional rule."
 msgstr ""
-"Luo ja jaa kuponkikoodeja manuaalisesti. Tätä voidaan käyttää sähköisessä "
-"kaupankäynnissä, myyntipisteessä tai tavallisissa tilauksissa palkinnon "
+"Luo ja jaa kuponkikoodeja manuaalisesti. Tätä voidaan käyttää "
+"Verkkokaupassa, Kassajärjestelmässä tai tavallisissa tilauksissa palkinnon "
 "lunastamiseksi. Voit määritellä rajoituksia sen käytölle ehdollisen säännön "
 "avulla."
 
@@ -1165,18 +1165,18 @@ msgstr "Luo ja jaa ainutlaatuisia kuponkeja asiakkaidesi kanssa"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate eWallet"
-msgstr "Luo eWallet"
+msgstr "Luo eLompakko"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Get 10% off on some products, with a code"
-msgstr "Hanki 10% off joistakin tuotteista, koodilla"
+msgstr "Saa -10% joistakin tuotteista koodilla"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
 msgid "Gift &amp; Ewallet"
-msgstr "Lahja &amp; Ewallet"
+msgstr "Lahja &amp; eLompakko"
 
 #. module: loyalty
 #. odoo-python
@@ -1202,7 +1202,7 @@ msgstr "Lahjakortin arvo"
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_gift_card
 msgid "Gift Card: Gift Card Information"
-msgstr "Lahjakortin tiedot"
+msgstr "Lahjakortti: Lahjakortin tiedot"
 
 #. module: loyalty
 #. odoo-python
@@ -1231,7 +1231,7 @@ msgstr "Lahja asiakkaalle"
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_gift_ewallet_action
 msgid "Gift cards & eWallet"
-msgstr "Lahjakortit & eWallet"
+msgstr "Lahjakortit & eLompakko"
 
 #. module: loyalty
 #. odoo-python
@@ -1283,7 +1283,7 @@ msgstr "Historiarivit"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_history
 msgid "History for Loyalty cards and Ewallets"
-msgstr "Kanta-asiakaskorttien ja sähköisten lompakoiden historiaa"
+msgstr "Kanta-asiakaskorttien ja eLompakoiden historia"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_base_partner_merge_automatic_wizard__id
@@ -1299,7 +1299,7 @@ msgstr "Kanta-asiakaskorttien ja sähköisten lompakoiden historiaa"
 #: model:ir.model.fields,field_description:loyalty.field_product_template__id
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction
@@ -1315,7 +1315,7 @@ msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "If minimum"
-msgstr "Jos vähimmäismäärä"
+msgstr "Jos minimi,"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -1342,17 +1342,17 @@ msgstr "On seuraaja"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__is_global_discount
 msgid "Is Global Discount"
-msgstr "Onko yleinen alennus"
+msgstr "On yleinen alennus"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__is_nominative
 msgid "Is Nominative"
-msgstr "On kohde"
+msgstr "On nimitetty"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__is_payment_program
 msgid "Is Payment Program"
-msgstr "Onko maksuohjelma"
+msgstr "On maksuohjelma"
 
 #. module: loyalty
 #. odoo-python
@@ -1377,7 +1377,7 @@ msgstr "Matti Meikäläinen"
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
 msgid "Last Transactions"
-msgstr "Viimeiset tapahtumat"
+msgstr "Viimeisimmät tapahtumat"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__write_uid
@@ -1435,12 +1435,12 @@ msgstr "Kanta-asiakaskortit"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_mail
 msgid "Loyalty Communication"
-msgstr "Kanta-asiakkuutta koskeva viestintä"
+msgstr "Kanta-asiakkuusviestintä"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr "Kanta-asiakkuuden kuponki"
+msgstr "Kanta-asiakaskuponki"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_program
@@ -1471,7 +1471,7 @@ msgstr "Kanta-asiakaspisteet"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_max_amount
 msgid "Max Discount"
-msgstr "Suurin alennus"
+msgstr "Suurin sallittu alennus"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__max_usage
@@ -1501,17 +1501,17 @@ msgstr "Viestit"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount_tax_mode
 msgid "Minimum Amount Tax Mode"
-msgstr "Vähimmäismäärän verotustapa"
+msgstr "Minimimäärän verotustapa"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount
 msgid "Minimum Purchase"
-msgstr "Vähimmäisosto"
+msgstr "Minimiosto"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_qty
 msgid "Minimum Quantity"
-msgstr "Minimi määrä"
+msgstr "Minimimäärä"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__multi_product
@@ -1527,13 +1527,13 @@ msgstr "Uusi saldo"
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_card_update_balance.py:0
 msgid "New Balance should be positive and different then old balance."
-msgstr "Uuden saldon pitäisi olla positiivinen ja erilainen kuin vanha saldo."
+msgstr "Uuden saldon pitäisi olla positiivinen ja eri kuin vanhan saldon."
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Next Order Coupon"
-msgstr "Seuraava tilaus kuponki"
+msgstr "Seuraavan tilauksen kuponki"
 
 #. module: loyalty
 #. odoo-python
@@ -1545,7 +1545,7 @@ msgstr "Seuraavan tilauksen kupongit"
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
 msgid "No Coupons Found."
-msgstr "Kuponkeja ei löydetty."
+msgstr "Kuponkeja ei löytynyt."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
@@ -1592,7 +1592,7 @@ msgstr "Tilaus"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_history__order_model
 msgid "Order Model"
-msgstr "Tilaus Malli"
+msgstr "Tilausmalli"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__partner_id
@@ -1602,7 +1602,7 @@ msgstr "Kumppani"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "Point(s)"
-msgstr "Pisteet"
+msgstr "Piste(et)"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__points
@@ -1655,7 +1655,7 @@ msgstr "Tuote"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_domain
 msgid "Product Domain"
-msgstr "Tuotealue"
+msgstr "Tuotteen domain"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_tag_id
@@ -1666,7 +1666,7 @@ msgstr "Tuotteen tunniste"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_product_product
 msgid "Product Variant"
-msgstr "Tuotevariaatio"
+msgstr "Tuotevariantti"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__payment_program_discount_product_id
@@ -1715,7 +1715,7 @@ msgstr "Ohjelman tyyppi"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Program trigger"
-msgstr "Ohjelman liipaisin"
+msgstr "Ohjelman käynnistävä toiminto"
 
 #. module: loyalty
 #. odoo-python
@@ -1727,24 +1727,24 @@ msgstr "Kampanjakoodi"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Promo point(s)"
-msgstr "Myynninedistämispisteet"
+msgstr "Promootiopisteet"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Promos"
-msgstr "Myynninedistämiset"
+msgstr "Promootiot"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Promotional Program"
-msgstr "Myynninedistämisohjelma"
+msgstr "Promottio-ohjelma"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promotion
 msgid "Promotions"
-msgstr "Kampanjat"
+msgstr "Promootiot"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__coupon_qty
@@ -1759,12 +1759,12 @@ msgstr "Palkkion määrä"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Quantity to generate"
-msgstr "Tuotettava määrä"
+msgstr "Luotava määrä"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__rating_ids
 msgid "Ratings"
-msgstr "Arviointi"
+msgstr "Arvostelu"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_amount
@@ -1780,7 +1780,7 @@ msgstr "Palkintopistetila"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_domain
 msgid "Reward Product Domain"
-msgstr "Palkintotuotealue"
+msgstr "Palkintotuotteen domain"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_qty
@@ -1844,7 +1844,7 @@ msgstr "Lähetä"
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Send a coupon after an order, valid for next purchase"
 msgstr ""
-"Lähetä kuponki tilauksen jälkeen, joka on voimassa seuraavassa ostoksessa"
+"Lähetä kuponki tilauksen jälkeen, joka on voimassa seuraavaa ostosta varten"
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
@@ -1878,30 +1878,30 @@ msgstr "Näytä pisteiden yksikkö"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__specific
 msgid "Specific Products"
-msgstr "Määrätyt tuotteet"
+msgstr "Tietyt tuotteet"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_split
 msgid "Split per unit"
-msgstr "Jaa yksikköä kohti"
+msgstr "Jaa per yksikkö"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "Split per unit is not allowed for Loyalty and eWallet programs."
 msgstr ""
-"Yksikkökohtainen jakaminen ei ole sallittua kanta-asiakas- ja eWallet-"
+"Jakaminen per yksikkö ei ole sallittua kanta-asiakas- ja eLompakko-"
 "ohjelmissa."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__date_from
 msgid "Start Date"
-msgstr "Alkupäivä"
+msgstr "Alkamispäivä"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__currency_symbol
 msgid "Symbol"
-msgstr "Valuuttamerkki"
+msgstr "Symboli"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__tax_ids
@@ -1926,7 +1926,7 @@ msgstr "Alennuksen on oltava positiivinen."
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__date_to
 msgid "The end date is included in the validity period of this program"
-msgstr "Loppupäivä sisältyy tämän ohjelman voimassaoloaikaan"
+msgstr "Päättymispäivä sisältyy tämän ohjelman voimassaoloaikaan"
 
 #. module: loyalty
 #. odoo-python
@@ -1940,12 +1940,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "The promo code must be unique."
-msgstr "Kampanjakoodin on oltava yksilöllinen."
+msgstr "Promootiokoodin on oltava yksilöllinen."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_required_points_positive
 msgid "The required points for a reward must be strictly positive."
-msgstr "Palkitsemiseen vaadittavien pisteiden on oltava positiivisia."
+msgstr "Palkintoon vaadittavien pisteiden on oltava positiivisia."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
@@ -1963,7 +1963,7 @@ msgstr "Aloituspäivä sisältyy tämän ohjelman voimassaoloaikaan"
 msgid ""
 "The validity period's start date must be anterior or equal to its end date."
 msgstr ""
-"Voimassaoloajan alkamispäivän on oltava aikaisempi tai yhtä suuri kuin sen "
+"Voimassaoloajan alkamispäivän on oltava aikaisempi tai sama kuin sen "
 "päättymispäivä."
 
 #. module: loyalty
@@ -1988,8 +1988,8 @@ msgstr "Näitä tuotteita voidaan vaatia tämän säännön nojalla."
 msgid ""
 "This is the max amount this reward may discount, leave to 0 for no limit."
 msgstr ""
-"Tämä on maksimimäärä, jonka tämä palkkio voi alentaa, jätä arvoksi 0, jos et"
-" halua rajoitusta."
+"Tämä on maksimimäärä, jonka tämä palkinto voi alentaa. Jätä arvoksi 0, jos "
+"et halua rajoitusta."
 
 #. module: loyalty
 #. odoo-python
@@ -1998,18 +1998,18 @@ msgid ""
 "This product may not be archived. It is being used for an active promotion "
 "program."
 msgstr ""
-"Tätä tuotetta ei saa arkistoida. Sitä käytetään aktiivisessa "
-"myynninedistämisohjelmassa."
+"Tätä tuotetta ei saa arkistoida. Sitä käytetään käynnissä olevassa "
+"promootio-ohjelmassa."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__pricelist_ids
 msgid "This program is specific to this pricelist set."
-msgstr "Tämä ohjelma koskee ainoastaan tätä hinnastojoukkoa."
+msgstr "Tämä ohjelma koskee ainoastaan tätä hinnastosarjaa."
 
 #. module: loyalty
 #: model:product.template,name:loyalty.ewallet_product_50_product_template
 msgid "Top-up eWallet"
-msgstr "Täytä eWallet"
+msgstr "Lisää varoja eLompakkoon"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__total_order_count
@@ -2019,7 +2019,7 @@ msgstr "Tilausten kokonaismäärä"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger
 msgid "Trigger"
-msgstr "Liipaisin"
+msgstr "Käynnistävä toiminto"
 
 #. module: loyalty
 #. odoo-python
@@ -2057,7 +2057,7 @@ msgstr "Käytä pisteitä"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "Use this promo code before"
-msgstr "Käytä tätä tarjouskoodia ennen"
+msgstr "Käytä tämä tarjouskoodi ennen"
 
 #. module: loyalty
 #. odoo-python
@@ -2076,18 +2076,18 @@ msgstr "Käyttäjällä on vianmääritys"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__valid_until
 msgid "Valid Until"
-msgstr "Voimassaolo"
+msgstr "Voimassa asti"
 
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
 msgid "Valid until"
-msgstr "Voimassa"
+msgstr "Voimassa asti"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__website_message_ids
 msgid "Website Messages"
-msgstr "Verkkosivun ilmoitukset"
+msgstr "Verkkosivun viestit"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__website_message_ids
@@ -2110,8 +2110,8 @@ msgid ""
 "When customers make an order, they accumulate points they can exchange for "
 "rewards on the current order or on a future one."
 msgstr ""
-"Kun asiakkaat tekevät tilauksen, he keräävät pisteitä, jotka he voivat "
-"vaihtaa palkintoihin nykyisestä tai tulevasta tilauksesta."
+"Kun asiakkaat tekevät tilauksen, he kerryttävät pisteitä, joita he voivat "
+"vaihtaa palkintoihin nykyisessä tai tulevassa tilauksessa."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2128,9 +2128,9 @@ msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid.."
 msgstr ""
-"Erotetaanko palkintokupongit sovitettua yksikköä kohden, koskee vain "
-"\"tulevia\" ohjelmia ja käynnistystilaa käytetyn rahan tai maksetun yksikön "
-"mukaan..."
+"Erotetaanko palkintokupongit per yhteensovitettu yksikkö, koskee vain "
+"\"tulevia\" ohjelmia ja per käynnistävän toiminnon tila per käytetty raha "
+"tai maksettu yksikkö..."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
@@ -2151,7 +2151,7 @@ msgstr "Kampanjakoodilla"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
 msgid "You are about to change the balance of the card"
-msgstr "Olet aikeissa muuttaa kortin saldoa"
+msgstr "Olet muuttamassa kortin saldoa"
 
 #. module: loyalty
 #. odoo-python
@@ -2177,18 +2177,18 @@ msgid ""
 "You're about to generate %(program_type)s with a value of %(value)s for "
 "%(customer_number)i customers"
 msgstr ""
-"Olet aikeissa luoda %(program_type)s, jonka arvo on %(value)s, asiakkaalle "
+"Olet luomassa %(program_type)s, jonka arvo on %(value)s, asiakkaalle "
 "%(customer_number)i"
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_gift_card
 msgid "Your Gift Card at {{ object.company_id.name }}"
-msgstr "Lahjakorttisi {{ object.company_id.name }}"
+msgstr "Lahjakorttisi kohteessa {{ object.company_id.name }}"
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr "Palkintokuponkisi {{ object.program_id.company_id.name }} "
+msgstr "Palkintokuponkisi kohteesta {{ object.program_id.company_id.name }} "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2203,7 +2203,7 @@ msgstr "alennus"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "e.g. 10% discount on laptops"
-msgstr "esim. 10% discount kannettavissa tietokoneissa"
+msgstr "esim. 10% alennus kannettavista tietokoneista"
 
 #. module: loyalty
 #. odoo-python
@@ -2211,23 +2211,23 @@ msgstr "esim. 10% discount kannettavissa tietokoneissa"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__ewallet
 msgid "eWallet"
-msgstr "eWallet"
+msgstr "eLompakko"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "eWallet Products"
-msgstr "eWallet-tuotteet"
+msgstr "eLompakko-tuotteet"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "eWallet value"
-msgstr "eWalletin arvo"
+msgstr "eLompakon arvo"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "eWallets"
-msgstr "sähköiset lompakot"
+msgstr "eLompakot"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2236,9 +2236,9 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, eWallets are proposed during the checkout, to pay orders."
 msgstr ""
-"sähköiset lompakot luodaan manuaalisesti tai automaattisesti, kun asiakas tilaa sähköisen lompakon tuotteen.\n"
+"eLompakot luodaan manuaalisesti tai automaattisesti, kun asiakas tilaa eLompakkoon kuuluvan tuotteen.\n"
 "                                   <br/>\n"
-"                                    Sitten eWalletteja ehdotetaan kassalla tilausten maksamista varten."
+"                                    Sitten eLompakkoja ehdotetaan kassalla tilausten maksamista varten."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -2248,7 +2248,7 @@ msgstr "ostettu tuotteet"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "loyalty Reward"
-msgstr "uskollisuuspalkinto"
+msgstr "kanta-asiakkuuspalkinto"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2258,7 +2258,7 @@ msgstr "halvimmasta tuotteesta"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "on your next order"
-msgstr "seuraavassa tilauksessasi"
+msgstr "seuraavasta tilauksestasi"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2275,19 +2275,19 @@ msgstr "per %s käytetty"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "per order"
-msgstr "tilausta kohti"
+msgstr "per tilaus"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "per unit paid"
-msgstr "maksettua yksikköä kohti"
+msgstr "per maksettu yksikkö"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "specific products"
-msgstr "määrätyt tuotteet"
+msgstr "tietyt tuotteet"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -2297,12 +2297,12 @@ msgstr "käytetty"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__excl
 msgid "tax excluded"
-msgstr "verovapaa"
+msgstr "ei sis. veroja"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__incl
 msgid "tax included"
-msgstr "vero sisältyy"
+msgstr "sis. verot"
 
 #. module: loyalty
 #. odoo-python

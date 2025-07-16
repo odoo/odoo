@@ -3,8 +3,7 @@
 # 	* link_tracker
 # 
 # Translators:
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-# Wil Odoo, 2025
+# Wil Odoo, 2024
 # Jessica Jakara, 2025
 # 
 msgid ""
@@ -29,7 +28,7 @@ msgstr "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Klikkaukset\" role=\
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "<span class=\"o_stat_text\">Visit Page</span>"
-msgstr "<span class=\"o_stat_text\">Vieraile sivulla</span>"
+msgstr "<span class=\"o_stat_text\">Siirry sivulle</span>"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__absolute_url
@@ -59,12 +58,12 @@ msgstr "Klikkaustilastot"
 #: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_kanban
 msgid "Clicks"
-msgstr "Klikkausta"
+msgstr "Klikkaukset"
 
 #. module: link_tracker
 #: model:ir.model.constraint,message:link_tracker.constraint_link_tracker_code_code
 msgid "Code must be unique."
-msgstr "Koodin pitää olla uniikki."
+msgstr "Koodin pitää olla yksilöllinen."
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__link_code_ids
@@ -113,7 +112,7 @@ msgstr "Luotu"
 #. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
 msgid "Creating a Link Tracker without URL is not possible"
-msgstr "Linkkiseurannan luominen ilman URL-osoitetta ei ole mahdollista"
+msgstr "Linkin seurannan luominen ilman URL-osoitetta ei ole mahdollista"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__display_name
@@ -133,7 +132,7 @@ msgstr "Ryhmittely"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__short_url_host
 msgid "Host of the short URL"
-msgstr "Lyhyen URL-osoitteen isäntä"
+msgstr "Lyhyen URL-osoitteen host"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__id
@@ -142,12 +141,12 @@ msgstr "Lyhyen URL-osoitteen isäntä"
 #: model:ir.model.fields,field_description:link_tracker.field_mail_render_mixin__id
 #: model:ir.model.fields,field_description:link_tracker.field_utm_campaign__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__ip
 msgid "Internet Protocol"
-msgstr "Internet protokolla"
+msgstr "Internet-protokolla"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__write_uid
@@ -185,7 +184,7 @@ msgstr "Linkin klikkaukset"
 #: model:ir.model,name:link_tracker.model_link_tracker
 #: model:ir.ui.menu,name:link_tracker.link_tracker_menu_main
 msgid "Link Tracker"
-msgstr "Klikkiseuranta"
+msgstr "Linkin seuranta"
 
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_link_tracker_click
@@ -228,7 +227,7 @@ msgstr "Ei vielä tietoja!"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__count
 msgid "Number of Clicks"
-msgstr "Klikkausten lukumäärä"
+msgstr "Klikkausten määrä"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_utm_campaign__click_count
@@ -264,7 +263,7 @@ msgstr "Lähde"
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.link_tracker_action_campaign
 msgid "Statistics of Clicks"
-msgstr "Linkkien tilastot"
+msgstr "Klikkausten tilastot"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__url
@@ -278,21 +277,20 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
-"Nimi, joka auttaa luokittelemaan erilaiset kampanjatoimet esim. "
+"Tämä nimi auttaa seuraamaan erilaisia kampanjatoimintoja, esim. "
 "joulutervehdys, kesäkampanja"
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "Toimitustapa, esim. postitus, sähköposti tai mainosbanneri"
+msgstr "Toimitustapa, esim. postikortti, sähköposti tai mainosbanneri"
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr ""
-"Linkin lähde, esim. hakukone, toinen verkkotunnus tai sähköpostilistan nimi"
+msgstr "Linkin lähde, esim. hakukone, toinen domain tai sähköpostilistan nimi"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
@@ -312,8 +310,8 @@ msgid ""
 "Trackers are used to collect count stat about click on links and generate "
 "short URLs."
 msgstr ""
-"Seurantakoodeja käytetään keräämään lukumäärätilastoja linkkien "
-"klikkauksista ja luomaan lyhyitä URL-osoitteita."
+"Seurantakoodeja käytetään keräämään tilastoja linkkien klikkausten määrästä "
+"ja luomaan lyhyitä URL-osoitteita."
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
@@ -335,7 +333,7 @@ msgstr "UTM-kampanja"
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
 msgid "Visit Page"
-msgstr "Sivukäynti"
+msgstr "Siirry sivulle"
 
 #. module: link_tracker
 #. odoo-python
@@ -346,12 +344,12 @@ msgstr "Vieraile verkkosivulla"
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "Website Link"
-msgstr "Verkkosivusto"
+msgstr "Verkkosivun linkki"
 
 #. module: link_tracker
 #. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
 msgid "“%s” is not a valid link, links cannot redirect to the current page."
 msgstr ""
-"\"%s\" ei ole kelvollinen linkki, linkit eivät voi ohjata nykyiselle "
+"\"%s\" ei ole kelvollinen linkki; linkit eivät voi ohjata nykyiselle "
 "sivulle."

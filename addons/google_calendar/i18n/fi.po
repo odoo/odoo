@@ -24,7 +24,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 msgid "%(id)s and %(length)s following"
-msgstr "%(id)s ja %(length)s seuraavasti"
+msgstr "%(id)s ja %(length)s, jotka seuraavat "
 
 #. module: google_calendar
 #. odoo-python
@@ -76,10 +76,10 @@ msgid ""
 "secret on the Google APIs plateform or try to stop and restart your calendar"
 " synchronization."
 msgstr ""
-"Tunnuksen luomisessa tapahtui virhe. Valtuutuskoodisi voi olla virheellinen "
-"tai se on jo vanhentunut [%s]. Tarkista asiakastunnuksesi ja salauksesi "
-"Google API -alustalta tai yritä keskeyttää ja käynnistää kalenterin "
-"synkronointi uudelleen."
+"Pääsytunnisteen luomisessa tapahtui virhe. Valtuutuskoodisi voi olla "
+"virheellinen tai se on jo vanhentunut [%s]. Tarkista asiakastunnuksesi ja "
+"salauksesi Google API -alustalta tai yritä keskeyttää ja käynnistää "
+"kalenterin synkronointi uudelleen."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -89,13 +89,13 @@ msgstr "Osallistujan tiedot kalenterissa"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
 msgid "Calendar Event"
-msgstr "Kalenteritapahtuma"
+msgstr "Kalenterimerkintä"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_calendar_cal_id
 msgid "Calendar ID"
-msgstr "Calendar ID"
+msgstr "Kalenterin tunnus"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
@@ -105,12 +105,12 @@ msgstr "Peruuta"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client ID"
-msgstr "Asiakkaan tunniste/ID"
+msgstr "Asiakkaan tunnus"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client Secret"
-msgstr "Client Secret"
+msgstr "Asiakasohjelman salasana"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_client_id
@@ -125,7 +125,7 @@ msgstr "Client_key"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_config_settings
 msgid "Config Settings"
-msgstr "Asetukset"
+msgstr "Kokoonpanoasetukset"
 
 #. module: google_calendar
 #. odoo-javascript
@@ -167,7 +167,7 @@ msgstr "Poistetaan molemmista"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
 msgid "Delete from the current Google Calendar account"
-msgstr "Poista nykyisestä Google-kalenteritilistä"
+msgstr "Poista nykyisestä Google-tilin kalenterista"
 
 #. module: google_calendar
 #. odoo-javascript
@@ -207,29 +207,29 @@ msgstr "Google"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
 msgid "Google Calendar"
-msgstr "Google-kalenteri"
+msgstr "Google Kalenterin"
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
 #: model:ir.model,name:google_calendar.model_google_calendar_account_reset
 msgid "Google Calendar Account Reset"
-msgstr "Google-kalenteritilin nollaus"
+msgstr "Google Kalenterin tilin nollaus"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__google_id
 msgid "Google Calendar Event Id"
-msgstr "Google Calendar Event Id"
+msgstr "Google Kalenterin tunnus"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__google_id
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__google_id
 msgid "Google Calendar Id"
-msgstr "Google-kalenterin tunnus"
+msgstr "Google Kalenterin tunnus"
 
 #. module: google_calendar
 #: model:ir.actions.server,name:google_calendar.ir_cron_sync_all_cals_ir_actions_server
 msgid "Google Calendar: synchronization"
-msgstr "Google-kalenteri: synkronointi"
+msgstr "Google Kalenteri: synkronointi"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__calendar_event__videocall_source__google_meet
@@ -245,18 +245,18 @@ msgstr "Googlen synkronointi keskeytetty"
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_synchronization_stopped
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_synchronization_stopped
 msgid "Google Synchronization stopped"
-msgstr "Google-synkronointi pysähtyi"
+msgstr "Googlen synkronointi pysäytetty"
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 msgid "Google gave the following explanation: %s"
-msgstr "Google antoi seuraavan selityksen: %s"
+msgstr "Google antoi seuraavan selvennyksen: %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__guests_readonly
 msgid "Guests Event Modification Permission"
-msgstr "Vieraat Tapahtuma Muutos Lupa"
+msgstr "Vieraiden tapahtumien muokkauslupa"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__id
@@ -268,7 +268,7 @@ msgstr "Vieraat Tapahtuma Muutos Lupa"
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__id
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_calendar_event__active
@@ -276,14 +276,14 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"Jos aktiivinen-kentän arvoksi asetetaan false, voit piilottaa "
-"tapahtumahälytystiedot poistamatta niitä."
+"Jos aktiivinen-kentän arvoksi asetetaan epätosi, voit piilottaa "
+"tapahtumahälytyksen tiedot poistamatta niitä."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_res_config_settings__cal_sync_paused
 msgid "Indicates if synchronization with Google Calendar is paused or not."
 msgstr ""
-"Ilmaisee, onko synkronointi Google-kalenterin kanssa keskeytetty vai ei."
+"Ilmaisee, onko synkronointi Google Kalenterin kanssa keskeytetty vai ei."
 
 #. module: google_calendar
 #. odoo-python
@@ -298,7 +298,7 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
-"Viimeinen Calendar ID, joka on synkronoitu.  Jos tätä muutetaan, kaikki "
+"Viimeisin Kalenteritunnus, joka on synkronoitu. Jos tätä muutetaan, kaikki "
 "linkitykset poistetaan GoogleID:n ja Odoon sisäisen Google Internal ID:n "
 "väliltä"
 
@@ -315,7 +315,7 @@ msgstr "Viimeksi päivitetty"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__dont_delete
 msgid "Leave them untouched"
-msgstr "Jätä ne koskematta"
+msgstr "Jätä ne koskemattomiksi"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__need_sync
@@ -344,7 +344,7 @@ msgstr "Ilmoitus"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Pause Synchronization"
-msgstr "Pysäytä synkronointi"
+msgstr "Keskeytä synkronointi"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
@@ -360,12 +360,12 @@ msgstr "Nollaa tili"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
 msgid "Reset Google Calendar Account"
-msgstr "Nollaa Google-kalenteritili"
+msgstr "Nollaa Google Kalenterin tili"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_sync
 msgid "Synchronize a record with Google Calendar"
-msgstr "Synkronoi tietue Google-kalenterin kanssa"
+msgstr "Synkronoi kirjaus Google Kalenterin kanssa"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__all
@@ -394,14 +394,14 @@ msgid ""
 "The following event can only be updated by the organizer according to the "
 "event permissions set on Google Calendar."
 msgstr ""
-"Seuraavaa tapahtumaa voi päivittää vain järjestäjä Google-kalenterissa "
+"Seuraavaa tapahtumaa voi päivittää vain järjestäjä Google Kalenterissa "
 "asetettujen tapahtumaoikeuksien mukaisesti."
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 msgid "The following event could not be synced with Google Calendar."
-msgstr "Seuraavaa tapahtumaa ei voitu synkronoida Google-kalenterin kanssa."
+msgstr "Seuraavaa tapahtumaa ei voitu synkronoida Google Kalenterin kanssa."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
@@ -429,7 +429,7 @@ msgstr "Käyttäjäasetukset"
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_calendar_token
 msgid "User token"
-msgstr "User token"
+msgstr "Käyttäjän pääsytunniste"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_policy
@@ -453,4 +453,4 @@ msgstr "määrittelemätön aika"
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
 msgstr ""
-"sinulla ei näytä olevan lupaa muokata tätä tapahtumaa Google-kalenterissa"
+"sinulla ei näytä olevan lupaa muokata tätä tapahtumaa Google Kalenterissa"

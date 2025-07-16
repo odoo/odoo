@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Jessica Jakara, 2025
 # 
 msgid ""
@@ -88,7 +87,7 @@ msgstr "Pääsytunnisteen noutamisessa tapahtui virhe."
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
 msgid "Authenticate with"
-msgstr "Tunnistautuminen"
+msgstr "Tunnistautuminen käyttämällä"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_authorization_code
@@ -100,7 +99,7 @@ msgstr "Valtuutusavain"
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_res_config_settings
 msgid "Config Settings"
-msgstr "Asetukset"
+msgstr "Kokoonpanoasetukset"
 
 #. module: google_gmail
 #. odoo-python
@@ -110,7 +109,7 @@ msgid ""
 "You will be redirected to the Gmail login page where you will need to accept the permission."
 msgstr ""
 "Yhdistä Gmail-tilisi OAuth-todennusprosessilla.\n"
-"Sinut ohjataan Gmailin kirjautumissivulle, jossa sinun on hyväksyttävä Odoolle lupa käyttää tiliäsi."
+"Sinut ohjataan Gmailin kirjautumissivulle, jossa sinun on hyväksyttävä lupa käyttää tiliäsi."
 
 #. module: google_gmail
 #. odoo-python
@@ -138,7 +137,7 @@ msgstr "Gmail-asiakkaan tunnus"
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_secret
 msgid "Gmail Client Secret"
-msgstr "Gmail-asiakkaan salaisuus"
+msgstr "Gmail-asiakkaan salasana"
 
 #. module: google_gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__fetchmail_server__server_type__gmail
@@ -158,12 +157,12 @@ msgstr "Google Gmail mixin"
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__id
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "ID of your Google app"
-msgstr "Google-sovelluksen ID"
+msgstr "Google-sovelluksen tunnus"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_fetchmail_server
@@ -177,7 +176,7 @@ msgid ""
 "Incorrect Connection Security for Gmail mail server “%s”. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
-"Virheellinen yhteyden suojaus Gmailin sähköpostipalvelimelle \"%s\". Aseta "
+"Virheellinen yhteyden suojaus Gmailin sähköpostipalvelimessa \"%s\". Aseta "
 "sen arvoksi \"TLS (STARTTLS)\"."
 
 #. module: google_gmail
@@ -189,7 +188,7 @@ msgstr "Sähköpostipalvelin"
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "Only the administrator can link a Gmail mail server."
-msgstr "Vain järjestelmänvalvoja voi linkittää Gmail-palvelimen."
+msgstr "Vain ylläpitäjä voi linkittää Gmail-palvelimen."
 
 #. module: google_gmail
 #. odoo-python
@@ -207,7 +206,7 @@ msgid ""
 msgstr ""
 "Täytä \"Käyttäjätunnus\"-kenttään Gmailin käyttäjätunnuksesi "
 "(sähköpostiosoitteesi). Tämän pitäisi olla sama tili, jota käytetään Gmail "
-"OAuthentication käyttötunnisteen hankkimiseen."
+"OAuthentication pääsytunnisteen hankkimiseen."
 
 #. module: google_gmail
 #. odoo-python
@@ -216,7 +215,7 @@ msgid ""
 "Please leave the password field empty for Gmail mail server “%s”. The OAuth "
 "process does not require it"
 msgstr ""
-"Jätä salasanakenttä tyhjäksi Gmailin sähköpostipalvelimelle \"%s\". OAuth-"
+"Jätä salasanakenttä tyhjäksi Gmailin sähköpostipalvelimessa \"%s\". OAuth-"
 "prosessi ei vaadi sitä"
 
 #. module: google_gmail
@@ -229,17 +228,17 @@ msgstr "Lue lisää"
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_refresh_token
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_refresh_token
 msgid "Refresh Token"
-msgstr "Uudista pääsytunniste"
+msgstr "Päivitä pääsytunniste"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Secret"
-msgstr "Salausavain"
+msgstr "Salaus"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Secret of your Google app"
-msgstr "Googlen sovelluksen salaisuus"
+msgstr "Google-sovelluksen salaus"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__server_type
