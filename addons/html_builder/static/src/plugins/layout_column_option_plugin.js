@@ -35,7 +35,7 @@ class LayoutColumnOptionPlugin extends Plugin {
 export class ChangeColumnCountAction extends BuilderAction {
     static id = "changeColumnCount";
     static dependencies = ["selection", "clone"];
-    apply({ editingElement, value: nbColumns }) {
+    async apply({ editingElement, value: nbColumns }) {
         if (nbColumns === "custom") {
             return;
         }
@@ -71,7 +71,7 @@ export class ChangeColumnCountAction extends BuilderAction {
         if (itemsDelta > 0) {
             for (let i = 0; i < itemsDelta; i++) {
                 const lastEl = rowEl.lastElementChild;
-                this.dependencies.clone.cloneElement(lastEl, {
+                await this.dependencies.clone.cloneElement(lastEl, {
                     activateClone: false,
                 });
             }
