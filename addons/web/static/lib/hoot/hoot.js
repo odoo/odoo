@@ -116,8 +116,4 @@ export const globals = {
 };
 export const __debug__ = runner;
 
-//-----------------------------------------------------------------------------
-// Main
-//-----------------------------------------------------------------------------
-
-setupHootUI();
+export const isHootReady = setupHootUI();
