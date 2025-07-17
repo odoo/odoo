@@ -4,8 +4,11 @@
 
         <template id="report_picking">
             <t t-call="web.report_layout">
-                <div class="article o_report_layout_standard">
-                    <t t-foreach="docs" t-as="o">
+                <t t-foreach="docs" t-as="o">
+                    <div class="article o_report_layout_standard"
+                        t-att-data-oe-model="o and o._name"
+                        t-att-data-oe-id="o and o.id"
+                        t-att-data-oe-lang="o and o.env.context.get('lang')">
                         <t t-set="address" t-value="None"/>
                         <div class="page o_report_stockpicking_operations">
                             <div class="row justify-content-between">
@@ -240,8 +243,8 @@
                             <p t-field="o.note"/>
                             <div class="oe_structure"></div>
                         </div>
-                    </t>
-                </div>
+                    </div>
+                </t>
             </t>
         </template>
         <template id="report_picking_type_label">
