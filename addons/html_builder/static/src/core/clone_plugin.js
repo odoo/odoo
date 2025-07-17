@@ -32,7 +32,7 @@ export class ClonePlugin extends Plugin {
             // }
         ],
         on_cloned_handlers: [
-            // ({ cloneEl: cloneEl, originalEl: el }) => {
+            // async ({ cloneEl: cloneEl, originalEl: el }) => {
             //     called after an element was cloned and inserted in the DOM
             // }
         ],
@@ -56,8 +56,8 @@ export class ClonePlugin extends Plugin {
             class: "o_snippet_clone fa fa-clone",
             title: _t("Duplicate"),
             disabledReason,
-            handler: () => {
-                this.cloneElement(this.overlayTarget, { activateClone: false });
+            handler: async () => {
+                await this.cloneElement(this.overlayTarget, { activateClone: false });
                 this.dependencies.history.addStep();
             },
         });
@@ -77,7 +77,10 @@ export class ClonePlugin extends Plugin {
      *     the active ones, false otherwise
      * @returns {HTMLElement}
      */
-    cloneElement(el, { position = "afterend", scrollToClone = false, activateClone = true } = {}) {
+    async cloneElement(
+        el,
+        { position = "afterend", scrollToClone = false, activateClone = true } = {}
+    ) {
         this.dispatchTo("on_will_clone_handlers", { originalEl: el });
         const cloneEl = el.cloneNode(true);
         this.cleanElement(cloneEl); // TODO check that
@@ -93,7 +96,10 @@ export class ClonePlugin extends Plugin {
             cloneEl.scrollIntoView({ behavior: "smooth", block: "center" });
         }
 
-        this.dispatchTo("on_cloned_handlers", { cloneEl: cloneEl, originalEl: el });
+        for (const onCloned of this.getResource("on_cloned_handlers")) {
+            await onCloned({ cloneEl, originalEl: el });
+        }
+
         return cloneEl;
     }
 
@@ -114,9 +120,9 @@ export class ClonePlugin extends Plugin {
 export class CloneItemAction extends BuilderAction {
     static id = "addItem";
     static dependencies = ["clone", "history"];
-    apply({ editingElement, params: { mainParam: itemSelector }, value: position }) {
+    async apply({ editingElement, params: { mainParam: itemSelector }, value: position }) {
         const itemEl = editingElement.querySelector(itemSelector);
-        this.dependencies.clone.cloneElement(itemEl, { position, scrollToClone: true });
+        await this.dependencies.clone.cloneElement(itemEl, { position, scrollToClone: true });
         this.dependencies.history.addStep();
     }
 }

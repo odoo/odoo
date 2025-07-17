@@ -122,8 +122,8 @@ export class OptionsContainer extends BaseOptionComponent {
     }
 
     cloneElement() {
-        this.callOperation(() => {
-            this.env.editor.shared.clone.cloneElement(this.props.editingElement, {
+        this.callOperation(async () => {
+            await this.env.editor.shared.clone.cloneElement(this.props.editingElement, {
                 activateClone: false,
             });
         });
