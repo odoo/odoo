@@ -10,7 +10,6 @@ import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import {
     deserializeDate,
-    deserializeDateTime,
     parseDateTime,
     parseDate,
     serializeDateTime,
@@ -551,7 +550,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 options.isFinish = true;
             }
 
-            // Start datetime pickers
+            // Start date pickers
             self.trigger_up("widgets_start_request", { $target: this.$el.find('.o_survey_form_date') });
             if (this.options.isStartScreen || (options && options.initTimer)) {
                 this._initTimer();
@@ -677,26 +676,33 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                     }
                     break;
                 case 'date':
-                case 'datetime':
                     if (questionRequired && !data[questionId]) {
                         errors[questionId] = constrErrorMsg;
                     } else if (data[questionId]) {
-                        const [parse, deserialize] =
-                            $input.data("questionType") === "date"
-                                ? [parseDate, deserializeDate]
-                                : [parseDateTime, deserializeDateTime];
-                        const date = parse($input.val());
+                        const date = parseDate($input.val());
                         if (!date || !date.isValid) {
                             errors[questionId] = validationDateMsg;
                         } else {
-                            const maxDate = deserialize($input.data('max-date'));
-                            const minDate = deserialize($input.data('min-date'));
+                            const maxDate = deserializeDate($input.data('max-date'));
+                            const minDate = deserializeDate($input.data('min-date'));
                             if (
                                 (maxDate.isValid && date > maxDate) ||
                                 (minDate.isValid && date < minDate)
                             ) {
                                 errors[questionId] = validationErrorMsg;
                             }
+                        }
+                    }
+                    break;
+                case 'time':
+                    if (questionRequired && !$input.val()) {
+                        errors[questionId] = constrErrorMsg;
+                    } else {
+                        var timeMin = parseFloat($input.data('min-time'));
+                        var timeMax = parseFloat($input.data('max-time'));
+                        var value = self._timeStringToFloat($input.val());
+                        if (timeMin && (timeMin > value || value > timeMax)) {
+                            errors[questionId] = validationErrorMsg;
                         }
                     }
                     break;
@@ -775,13 +781,13 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             switch ($(this).data('questionType')) {
                 case 'text_box':
                 case 'char_box':
-                    params[this.name] = this.value;
-                    break;
                 case 'numerical_box':
                     params[this.name] = this.value;
                     break;
-                case 'date':
-                case 'datetime':{
+                case 'time':
+                    params[this.name] = self._timeStringToFloat(this.value);
+                    break;
+                case 'date':{
                     const [parse, serialize] =
                         $(this).data("questionType") === "date"
                             ? [parseDate, serializeDate]
@@ -1077,6 +1083,17 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         return false;
     },
 
+    /**
+     * Converts the string representation of a time like '5:30'
+     * (value of input type='time') to its float representation: 5.5
+     * @param {String} time
+     * @private
+     */
+    _timeStringToFloat(time) {
+        const [hours, minutes] = time.split(':').map(Number);
+        return hours + minutes / 60;
+    },
+
     // CONDITIONAL QUESTIONS MANAGEMENT TOOLS
     // -------------------------------------------------------------------------
 
@@ -1254,15 +1271,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         const questionType = questionWrapper.querySelector('[data-question-type]').dataset.questionType;
 
         // Only questions supporting correct answer are present here (ex.: scale question doesn't support it)
-        if (['numerical_box', 'date', 'datetime'].includes(questionType)) {
+        if (['numerical_box', 'date', 'time'].includes(questionType)) {
             const input = answerWrapper.querySelector('input');
             let isCorrect;
             if (questionType == 'numerical_box') {
                 isCorrect = input.valueAsNumber === correctAnswer;
-            } else if (questionType == 'datetime') {
-                const datetime = parseDateTime(input.value);
-                const value = datetime ? datetime.setZone("utc").toFormat("MM/dd/yyyy HH:mm:ss", { numberingSystem: "latn" }) : '';
-                isCorrect = value === correctAnswer;
             } else {
                 isCorrect = input.value === correctAnswer;
             }
