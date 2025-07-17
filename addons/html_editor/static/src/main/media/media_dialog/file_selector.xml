@@ -29,7 +29,7 @@
         </div>
         <input type="file" class="d-none o_file_input" t-on-change="onChangeFileInput" t-ref="file-input" t-att-accept="props.accept" t-att-multiple="props.multiSelect and 'multiple'"/>
         <div class="col-auto btn-group">
-            <button type="button" class="btn btn-primary o_upload_media_button" t-on-click="onClickUpload">
+            <button type="button" class="btn btn-secondary o_upload_media_button" t-on-click="onClickUpload">
                 <t t-esc="props.uploadText"/>
             </button>
         </div>

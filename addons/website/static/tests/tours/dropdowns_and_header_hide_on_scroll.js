@@ -40,7 +40,7 @@ registerWebsitePreviewTour("dropdowns_and_header_hide_on_scroll", {
     ...changeOptionInPopover("Header", "Scroll Effect", ".dropdown-item:contains('Fixed')"),
     {
         content: "Wait for the modification has been applied",
-        trigger: ".o_notification .o_notification_title:contains('Content saved')",
+        trigger: ".o_notification .o_notification_content:contains('Content saved')",
         timeout: 30000,
     },
     {
