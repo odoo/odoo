@@ -97,6 +97,8 @@ class Page(models.Model):
         if self.env.user.has_group('website.group_website_designer'):
             for record in self:
                 record.can_publish = True
+        # FIXME this makes it so no-rights internal users *see* the publish
+        # button for website pages (although they cannot use it)
         else:
             super()._compute_can_publish()
 

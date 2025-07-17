@@ -622,8 +622,7 @@ class AccountMove(models.Model):
             'buyerAddressLine': self.partner_id.street,
             'buyerPhoneNumber': commercial_partner_phone or '',
             'buyerEmail': self.commercial_partner_id.email or '',
-            'buyerDistrictName': self.partner_id.state_id.name,
-            'buyerCityName': self.partner_id.city,
+            'buyerCityName': self.partner_id.city or self.partner_id.state_id.name,
             'buyerCountryCode': self.partner_id.country_id.code,
             'buyerNotGetInvoice': 0,  # Set to 1 to no send the invoice to the buyer.
         }

@@ -156,6 +156,9 @@ publicWidget.registry.s_website_form.include({
      */
     start: function () {
         const res = this._super(...arguments);
+        if (this.$target[0].classList.contains('s_website_form_no_recaptcha')) {
+            return res;
+        }
         if (session.turnstile_site_key) {
             const button = this.el.querySelector(".s_website_form_send, .o_website_form_send");
             this.addSpinner(button);

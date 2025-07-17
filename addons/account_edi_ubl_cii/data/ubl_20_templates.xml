@@ -333,6 +333,11 @@
                 <cac:SellersItemIdentification>
                     <cbc:ID t-out="item_vals.get('sellers_item_identification_vals', {}).get('id')"/>
                 </cac:SellersItemIdentification>
+                <cac:StandardItemIdentification>
+                    <t t-set="standard_item_identification_vals" t-value="item_vals.get('standard_item_identification_vals', {})"/>
+                    <cbc:ID t-att="standard_item_identification_vals.get('id_attrs')"
+                            t-out="standard_item_identification_vals.get('id')"/>
+                </cac:StandardItemIdentification>
                 <cac:CommodityClassification t-foreach="item_vals.get('commodity_classification_vals', [])" t-as="foreach_vals">
                     <cbc:ItemClassificationCode
                             t-att="foreach_vals.get('item_classification_attrs', {})"
