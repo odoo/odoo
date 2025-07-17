@@ -76,7 +76,7 @@
                                     <td><span t-field="payment.move_id.date">2023-01-05</span></td>
                                     <td><span t-field="payment.move_id.name">PAY001</span></td>
                                     <td><span t-field="payment.payment_id.memo" data-oe-demo="Payment Ref"/></td>
-                                    <t t-set="amountPayment" t-value="-par[0].amount"/>
+                                    <t t-set="amountPayment" t-value="-(par[0].debit_amount_currency if par[2].debit > 0 else par[0].credit_amount_currency)"/>
                                     <t t-set="amountInvoice" t-value="-par[1]"/>
                                     <t t-set="currencyPayment" t-value="payment.currency_id"/>
                                     <t t-set="currencyInvoice" t-value="inv.currency_id"/>
