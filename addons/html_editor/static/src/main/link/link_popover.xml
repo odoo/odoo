@@ -53,7 +53,7 @@
                                         t-attf-style="background-color: {{this.customTextColorState.selectedColor}}" />
                                 <label>Fill Color</label>
                                 <button class="o_we_color_preview custom-fill-picker" t-att-data-color="this.customFillColorState.selectedColor" t-ref="customFillColorButton"
-                                        t-attf-style="background-color: {{this.customFillColorState.selectedColor}}" />
+                                        t-attf-style="{{this.customFillColorState.selectedColor?.includes('gradient') ? 'background-image' : 'background-color'}}: {{this.customFillColorState.selectedColor}}" />
                             </div>
                             <div class="d-flex mb-1 custom-border-color">
                                 <label>Border</label>
