@@ -256,13 +256,13 @@ class HrLeaveAllocation(models.Model):
                         default_holiday_status_id = self._default_holiday_status_id()
                     allocation.holiday_status_id = default_holiday_status_id
 
-    @api.depends('holiday_status_id', 'number_of_hours_display', 'number_of_days_display', 'type_request_unit')
+    @api.depends('holiday_status_id', 'number_of_hours_display', 'number_of_days_display', 'type_request_unit', 'employee_id')
     def _compute_number_of_days(self):
         for allocation in self:
             allocation_unit = allocation.type_request_unit
             if allocation_unit != 'hour':
                 allocation.number_of_days = allocation.number_of_days_display
-            else:
+            elif allocation_unit == 'hour' and allocation.employee_id:
                 allocation.number_of_days = allocation.number_of_hours_display / allocation.employee_id._get_hours_per_day(allocation.date_from)
 
     @api.depends('holiday_status_id', 'allocation_type')
