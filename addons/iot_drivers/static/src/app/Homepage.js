@@ -2,7 +2,6 @@
 
 import { SingleData } from "./components/SingleData.js";
 import { FooterButtons } from "./components/FooterButtons.js";
-import { HostnameDialog } from "./components/dialog/HostnameDialog.js";
 import { ServerDialog } from "./components/dialog/ServerDialog.js";
 import { WifiDialog } from "./components/dialog/WifiDialog.js";
 import useStore from "./hooks/useStore.js";
@@ -19,7 +18,6 @@ export class Homepage extends Component {
     static components = {
         SingleData,
         FooterButtons,
-        HostnameDialog,
         ServerDialog,
         WifiDialog,
         UpdateDialog,
@@ -118,7 +116,7 @@ export class Homepage extends Component {
                 <IconButton onClick.bind="restartOdooService" icon="'fa-power-off'" />
             </div>
             <div class="d-flex mb-4 flex-column align-items-center justify-content-center">
-                <h4 class="text-center m-0">IoT Box - <t t-esc="state.data.hostname" /></h4>
+                <h4 class="text-center m-0">IoT Box</h4>
             </div>
             <div t-if="!state.data.certificate_end_date and !store.base.is_access_point_up" class="alert alert-warning" role="alert">
                 <p class="m-0 fw-bold">
@@ -137,18 +135,13 @@ export class Homepage extends Component {
                     Please connect your IoT Box to internet via an ethernet cable or via Wi-Fi by clicking on "Configure" below
                 </small>
             </div>
-            <SingleData t-if="!store.base.is_access_point_up" name="'Name'" value="state.data.hostname" icon="'fa-id-card'">
-				<t t-set-slot="button">
-					<HostnameDialog t-if="this.store.isLinux" />
-				</t>
-			</SingleData>
+            <SingleData name="'Identifier'" value="state.data.identifier" icon="'fa-address-card'" />
             <SingleData t-if="store.advanced" name="'Version'" value="state.data.version" icon="'fa-microchip'">
                 <t t-set-slot="button">
                     <UpdateDialog />
                 </t>
             </SingleData>
             <SingleData t-if="store.advanced" name="'IP address'" value="state.data.ip" icon="'fa-globe'" />
-            <SingleData t-if="store.advanced" name="'Identifier'" value="state.data.identifier" icon="'fa-address-card'" />
             <SingleData t-if="store.isLinux" name="'Internet Status'" value="networkStatus" icon="'fa-wifi'">
                 <t t-set-slot="button">
                     <WifiDialog />
