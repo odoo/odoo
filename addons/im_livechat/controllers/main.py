@@ -6,7 +6,7 @@ from urllib.parse import urlsplit
 
 from odoo import http, _
 from odoo.exceptions import UserError
-from odoo.http import request
+from odoo.http import content_disposition, request
 from odoo.tools import replace_exceptions
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
@@ -240,11 +240,35 @@ class LivechatController(http.Controller):
             if pid in channel.sudo().channel_member_ids.partner_id.ids:
                 request.env["res.partner"].browse(pid)._bus_send_history_message(channel, page_history)
 
-    @http.route("/im_livechat/email_livechat_transcript", type="jsonrpc", auth="public")
+    @http.route("/im_livechat/email_livechat_transcript", type="jsonrpc", auth="user")
     @add_guest_to_context
     def email_livechat_transcript(self, channel_id, email):
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
-            channel._email_livechat_transcript(email)
+            channel._email_livechat_transcript(
+                email if not request.env.user.share else request.env.user.email,
+            )
+
+    @http.route("/im_livechat/download_transcript/<int:channel_id>", type="http", auth="public")
+    @add_guest_to_context
+    def download_livechat_transcript(self, channel_id):
+        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        if not channel:
+            raise NotFound()
+        pdf, _type = (
+            request.env["ir.actions.report"]
+            .sudo()
+            ._render_qweb_pdf(
+                "im_livechat.action_report_livechat_conversation",
+                channel.ids,
+                data={"company": request.env.company},
+            )
+        )
+        headers = [
+            ("Content-Disposition", content_disposition(f"transcript_{channel.id}.pdf", "inline")),
+            ("Content-Length", len(pdf)),
+            ("Content-Type", "application/pdf"),
+        ]
+        return request.make_response(pdf, headers=headers)
 
     @http.route("/im_livechat/visitor_leave_session", type="jsonrpc", auth="public")
     @add_guest_to_context
