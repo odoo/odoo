@@ -102,6 +102,9 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         vals['vals'].pop('payment_means_vals_list', None)
 
         other_party = opposite_generic_tin = expected_generic_tin = None
+        # For Myinvois, prepaid amount is defined as a separate node.
+        vals['vals'].get('monetary_total_vals', {}).pop('prepaid_amount', None)
+
         # We add the company industrial classification to the supplier vals.
         if vals['vals']['document_type_code'] in ('01', '02', '03', '04'):  # Regular invoices
             vals['vals']['accounting_supplier_party_vals']['party_vals'].update({
@@ -150,6 +153,14 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                     'uuid': (original_document and original_document.l10n_my_edi_external_uuid) or 'NA',
                 },
             })
+
+        vals['vals'].update({
+            'prepaid_payment_vals': {
+                'currency': invoice.currency_id,
+                'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
+                'amount': invoice.amount_total - invoice.amount_residual,
+            },
+        })
 
         return vals
 
