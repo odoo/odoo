@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="delivery.locationSelector.location">
+    <t t-name="location_selector.location">
         <button
             t-attf-id="location-{{this.props.id}}"
             class="list-group-item list-group-item-action collapsed d-flex gap-2 gap-lg-3"
-            t-att-class="{'text-bg-light': props.isSelected}"
+            t-att-class="{'text-bg-light': props.isSelected, 'd-none': props.hiddenLocations?.includes(props.number + '')}"
             t-on-click="() => props.setSelectedLocation(props.id)"
             type="button"
             t-attf-data-bs-target="#collapseHours_{{props.id}}"
@@ -23,7 +23,7 @@
                     <small class="opacity-75" t-out="props.street"/>
                     <small class="opacity-75" t-out="this.getCityAndZipCode()"/>
                 </span>
-                <small name="location_opening_hours" class="d-flex d-md-none align-items-center gap-1 fw-bold">
+                <small t-if="Object.keys(props.openingHours ?? {}).length > 0" name="location_opening_hours" class="d-flex d-md-none align-items-center gap-1 fw-bold">
                     <i class="fa fa-clock-o" role="img"/>
                     <t t-out="openingHoursLabel"/>
                     <i class="o_location_selector_hours_caret fa fa-caret-up ms-auto transition-base"/>
@@ -31,6 +31,7 @@
 
                 <!-- Schedule -->
                 <span
+                    t-if="Object.keys(props.openingHours ?? {}).length > 0"
                     class="collapse d-md-none"
                     t-attf-id="collapseHours_{{props.id}}"
                     data-bs-parent="#o_location_selector_list_view"

@@ -3,9 +3,7 @@ import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
 
-import {
-    LocationSelectorDialog
-} from '@delivery/js/location_selector/location_selector_dialog/location_selector_dialog';
+import { LocationSelectorDialog } from "@location_selector/location_selector_dialog/location_selector_dialog";
 
 export class ClickAndCollectAvailability extends Component {
     static template = 'website_sale_collect.ClickAndCollectAvailability';

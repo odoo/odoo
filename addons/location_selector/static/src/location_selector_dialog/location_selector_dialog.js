@@ -1,19 +1,19 @@
-import { LocationList } from '@delivery/js/location_selector/location_list/location_list';
-import { MapContainer } from '@delivery/js/location_selector/map_container/map_container';
-import { Component, onMounted, onWillUnmount, useEffect, useState } from '@odoo/owl';
-import { browser } from '@web/core/browser/browser';
-import { Dialog } from '@web/core/dialog/dialog';
-import { _t } from '@web/core/l10n/translation';
-import { rpc } from '@web/core/network/rpc';
-import { useDebounced } from '@web/core/utils/timing';
+import { LocationList } from "@location_selector/location_list/location_list";
+import { MapContainer } from "@location_selector/map_container/map_container";
+import { Component, onMounted, onWillUnmount, useEffect, useState } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { Dialog } from "@web/core/dialog/dialog";
+import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
+import { useDebounced } from "@web/core/utils/timing";
 
 export class LocationSelectorDialog extends Component {
     static components = { Dialog, LocationList, MapContainer };
-    static template = 'delivery.locationSelector.dialog';
+    static template = "location_selector.dialog";
     static props = {
         orderId: Number,
         zipCode: String,
-        selectedLocationId: { type: String, optional: true},
+        selectedLocationId: { type: String, optional: true },
         save: Function,
         close: Function, // This is the close from the env of the Dialog Component
     };
@@ -25,14 +25,14 @@ export class LocationSelectorDialog extends Component {
         this.state = useState({
             locations: [],
             error: false,
-            viewMode: 'list',
+            viewMode: "list",
             zipCode: this.props.zipCode,
             // Some APIs like FedEx use strings to identify locations.
             selectedLocationId: String(this.props.selectedLocationId),
             isSmall: this.env.isSmall,
         });
 
-        this.getLocationUrl = '/delivery/get_pickup_locations';
+        this.getLocationUrl = "/delivery/get_pickup_locations";
 
         this.debouncedOnResize = useDebounced(this.updateSize, 300);
         this.debouncedSearchButton = useDebounced((zipCode) => {
@@ -41,17 +41,17 @@ export class LocationSelectorDialog extends Component {
         }, 300);
 
         onMounted(() => {
-            browser.addEventListener('resize', this.debouncedOnResize);
+            browser.addEventListener("resize", this.debouncedOnResize);
             this.updateSize();
         });
-        onWillUnmount(() => browser.removeEventListener('resize', this.debouncedOnResize));
+        onWillUnmount(() => browser.removeEventListener("resize", this.debouncedOnResize));
 
         // Fetch new locations when the zip code is updated.
         useEffect(
             (zipCode) => {
-                this._updateLocations(zipCode)
+                this._updateLocations(zipCode);
                 return () => {
-                    this.state.locations = []
+                    this.state.locations = [];
                 };
             },
             () => [this.state.zipCode]
@@ -70,7 +70,7 @@ export class LocationSelectorDialog extends Component {
      * @return {Object} The result values.
      */
     async _getLocations(zip) {
-        return rpc(this.getLocationUrl, {order_id: this.props.orderId, zip_code: zip});
+        return rpc(this.getLocationUrl, { order_id: this.props.orderId, zip_code: zip });
     }
 
     //--------------------------------------------------------------------------
@@ -95,10 +95,10 @@ export class LocationSelectorDialog extends Component {
             console.error(error);
         } else {
             this.state.locations = pickup_locations;
-            if (!this.state.locations.find(l => String(l.id) === this.state.selectedLocationId)) {
+            if (!this.state.locations.find((l) => String(l.id) === this.state.selectedLocationId)) {
                 this.state.selectedLocationId = this.state.locations[0]
-                                                ? String(this.state.locations[0].id)
-                                                : false;
+                    ? String(this.state.locations[0].id)
+                    : false;
             }
         }
     }
@@ -113,7 +113,7 @@ export class LocationSelectorDialog extends Component {
      * @return {Object} The selected location.
      */
     get selectedLocation() {
-        return this.state.locations.find(l => String(l.id) === this.state.selectedLocationId);
+        return this.state.locations.find((l) => String(l.id) === this.state.selectedLocationId);
     }
 
     /**
@@ -132,9 +132,11 @@ export class LocationSelectorDialog extends Component {
      * @return {void}
      */
     async validateSelection() {
-        if (!this.state.selectedLocationId) return;
+        if (!this.state.selectedLocationId) {
+            return;
+        }
         const selectedLocation = this.state.locations.find(
-            l => String(l.id) === this.state.selectedLocationId
+            (l) => String(l.id) === this.state.selectedLocationId
         );
         await this.props.save(selectedLocation);
         this.props.close();
@@ -153,13 +155,15 @@ export class LocationSelectorDialog extends Component {
      * @return {Component} The component to show in mobile view.
      */
     get mobileComponent() {
-        if (this.state.viewMode === 'map') return MapContainer;
+        if (this.state.viewMode === "map") {
+            return MapContainer;
+        }
         return LocationList;
     }
 
     get title() {
         if (this.state.locations.length === 1) {
-            return _t("Pickup Location")
+            return _t("Pickup Location");
         }
         return _t("Choose a pick-up point");
     }
