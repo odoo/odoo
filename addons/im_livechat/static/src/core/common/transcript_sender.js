@@ -1,6 +1,7 @@
 import { isValidEmail } from "@im_livechat/core/common/misc";
 import { Component, onWillUpdateProps, useEffect, useState } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
@@ -24,6 +25,7 @@ export class TranscriptSender extends Component {
             email: this.props.thread.livechatVisitorMember?.persona.email,
             status: this.STATUS.IDLE,
         });
+        this.store = useService("mail.store");
         onWillUpdateProps((newProps) => {
             if (this.props.thread?.notEq(newProps.thread)) {
                 this.state.email = newProps.thread.livechatVisitorMember?.persona.email;
@@ -40,17 +42,16 @@ export class TranscriptSender extends Component {
 
     get isButtonDisabled() {
         return (
-            this.isInputDisabled ||
-            this.state.status === this.STATUS.SENT ||
+            [this.STATUS.SENDING, this.STATUS.SENT].includes(this.state.status) ||
             !this.isValidEmail(this.state.email)
         );
     }
 
     get isInputDisabled() {
         return (
+            !(this.store.self_partner?.main_user_id?.share === false) ||
             this.state.status === this.STATUS.SENDING ||
-            (this.props.disableOnSend &&
-                [this.STATUS.SENDING, this.STATUS.SENT].includes(this.state.status))
+            (this.props.disableOnSend && this.state.status === this.STATUS.SENT)
         );
     }
 
