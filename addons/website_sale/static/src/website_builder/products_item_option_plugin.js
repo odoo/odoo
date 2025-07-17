@@ -397,7 +397,7 @@ export class SetRibbonAction extends BuilderAction {
 }
 export class CreateRibbonAction extends BuilderAction {
     static id = "createRibbon";
-    dependencies = ["productsItemOptionPlugin"]
+    static dependencies = ["productsItemOptionPlugin"];
     apply({ editingElement }) {
         this.dependencies.productsItemOptionPlugin.setProductTemplateID(parseInt(
             editingElement
