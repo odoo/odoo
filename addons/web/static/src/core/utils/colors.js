@@ -320,6 +320,19 @@ export function isColorGradient(value) {
     return value && value.includes("-gradient(");
 }
 
+/**
+ * @param {string} gradient
+ * @returns {string} standardized gradient
+ */
+export function standardizeGradient(gradient) {
+    if (isColorGradient(gradient)) {
+        const el = document.createElement("div");
+        el.style.setProperty("background-image", gradient);
+        gradient = el.style.getPropertyValue("background-image");
+    }
+    return gradient;
+}
+
 export const RGBA_REGEX = /[\d.]{1,5}/g;
 
 /**
