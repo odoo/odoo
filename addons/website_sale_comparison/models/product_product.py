@@ -31,6 +31,17 @@ class ProductProduct(models.Model):
         for pa in attributes:
             categories[pa.category_id][pa] = OrderedDict([(
                 product,
+                product.product_template_attribute_value_ids.filtered(
+                    lambda ptav: ptav.attribute_id == pa
+                ) or  # If no_variant, show all possible values
                 product.attribute_line_ids.filtered(lambda ptal: ptal.attribute_id == pa).value_ids
             ) for product in self])
         return categories
+
+    def _get_image_1024_url(self):
+        """ Returns the local url of the product main image.
+        Note: self.ensure_one()
+        :rtype: str
+        """
+        self.ensure_one()
+        return self.env['website'].image_url(self, 'image_1024')

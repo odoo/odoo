@@ -7,21 +7,28 @@ import { redirect } from '@web/core/utils/urls';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 import comparisonUtils from '@website_sale_comparison/js/website_sale_comparison_utils';
 import {
-    ProductComparisonButton
-} from '@website_sale_comparison/js/product_comparison_button/product_comparison_button';
+    ProductComparisonBottomBar
+} from '@website_sale_comparison/js/product_comparison_bottom_bar/product_comparison_bottom_bar';
 
 export class ProductComparison extends Interaction {
-    static selector = '.js_sale';
+    static selector = 'main:has(.o_add_compare, .o_add_compare_dyn, .o_add_to_compare)';
+
     dynamicContent = {
         '.o_add_compare, .o_add_compare_dyn': { 't-on-click': this.addProduct },
         'input.product_id': { 't-on-change': this.onChangeVariant },
         '.o_comparelist_remove': { 't-on-click': this.removeProduct },
-        'button[name="comparison_add_to_cart"]': { 't-on-click': this.addToCart },
     };
 
     setup() {
         this.bus = new EventBus();
-        this.mountComponent(this.el, ProductComparisonButton, { bus: this.bus });
+        // Mount the ProductComparisonBottomBar on pages with comparison functionality
+        this.mountComponent(
+            this.el,
+            ProductComparisonBottomBar,
+            {
+                bus: this.bus,
+            },
+        );
     }
 
     /**
@@ -42,19 +49,12 @@ export class ProductComparison extends Interaction {
             }));
         }
         if (!productId || this._checkProductAlreadyInComparison(productId)) {
-            this._updateDisabled(el, true);
+            comparisonUtils.updateDisabled(el, true);
             return;
         }
 
-        comparisonUtils.addComparisonProduct(productId);
-        this.bus.dispatchEvent(new CustomEvent('comparison_products_changed', { bubbles: true }));
-        this._updateDisabled(el, true);
-        await wSaleUtils.animateClone(
-            $('button[name="product_comparison_button"]'),
-            $(this.el.querySelector('#product_detail_main') ?? form),
-            -50,
-            10,
-        );
+        comparisonUtils.addComparisonProduct(productId, this.bus);
+        comparisonUtils.updateDisabled(el, true);
     }
 
     /**
@@ -70,7 +70,7 @@ export class ProductComparison extends Interaction {
             const isDisabled = comparisonUtils.getComparisonProductIds().includes(
                 parseInt(productId)
             );
-            this._updateDisabled(button, isDisabled);
+            comparisonUtils.updateDisabled(button, isDisabled);
             button.dataset.productProductId = productId;
         }
     }
@@ -82,32 +82,18 @@ export class ProductComparison extends Interaction {
      */
     removeProduct(ev) {
         const productId = parseInt(ev.currentTarget.dataset.productProductId);
-        comparisonUtils.removeComparisonProduct(productId);
-        this.bus.dispatchEvent(new CustomEvent('comparison_products_changed', { bubbles: true }));
+        comparisonUtils.removeComparisonProduct(productId, this.bus);
 
         const productIds = comparisonUtils.getComparisonProductIds();
         const comparisonUrl = `/shop/compare?products=${encodeURIComponent(productIds.join(','))}`;
         redirect(productIds.length ? comparisonUrl : '/shop');
     }
 
-    /**
-     * Add a product to the cart from the comparison page.
-     *
-     * @param {Event} ev
-     */
-    addToCart(ev) {
-        const button = ev.currentTarget;
-        const productId = parseInt(button.dataset.productProductId);
-        const productTemplateId = parseInt(button.dataset.productTemplateId);
-        const showQuantity = Boolean(button.dataset.showQuantity);
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
-         this.services['cart'].add({
-            productTemplateId: productTemplateId,
-            productId: productId,
-        }, {
-            showQuantity: showQuantity,
-        });
-    }
+
 
     /**
      * Check whether the maximum number of products in the comparison has been reached, and if so,
@@ -148,11 +134,6 @@ export class ProductComparison extends Interaction {
             return true;
         }
         return false;
-    }
-
-    _updateDisabled(el, isDisabled) {
-        el.disabled = isDisabled;
-        el.classList.toggle('disabled', isDisabled);
     }
 }
 
