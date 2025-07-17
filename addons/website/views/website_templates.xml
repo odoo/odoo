@@ -90,9 +90,9 @@
             'data-seo-object': repr(seo_object) if seo_object else None,
         }"/>
         <t t-if="not request.env.user._is_public()" t-set="nothing" t-value="html_data.update({
-            'data-is-published': 'website_published' in main_object.fields_get() and main_object.website_published,
+            'data-is-published': 'website_published' in main_object.fields_get() and main_object.sudo().website_published,
             'data-can-optimize-seo': 'website_meta_description' in main_object.fields_get(),
-            'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.can_publish,
+            'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.sudo(False).can_publish,
             'data-editable-in-backend': edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page'),
         })"/>
         <t t-if="editable or translatable" t-set="nothing" t-value="html_data.update({
@@ -124,12 +124,12 @@
     <xpath expr="//head/*[1]" position="before">
         <t t-if="not title">
             <t t-if="not additional_title and main_object and 'name' in main_object">
-                <t t-set="additional_title" t-value="main_object.name"/>
+                <t t-set="additional_title" t-value="main_object.sudo().name"/>
             </t>
             <t t-set="default_title" t-translation="off" t-value="(additional_title + ' | ' if additional_title else '') + website.name"/>
             <t t-set="seo_object" t-value="seo_object or main_object"/>
-            <t t-if="seo_object and 'website_meta_title' in seo_object and seo_object.website_meta_title">
-                <t t-set="title" t-value="seo_object.website_meta_title"/>
+            <t t-if="seo_object and 'website_meta_title' in seo_object and seo_object.sudo().website_meta_title">
+                <t t-set="title" t-value="seo_object.sudo().website_meta_title"/>
             </t>
             <t t-else="">
                 <t t-set="title" t-value="default_title"></t>
@@ -139,19 +139,19 @@
     </xpath>
     <xpath expr="//head/meta[last()]" position="after">
         <meta name="generator" content="Odoo"/>
-        <t t-set="website_meta" t-value="seo_object and seo_object.get_website_meta() or {}"/>
+        <t t-set="website_meta" t-value="seo_object and seo_object.sudo().get_website_meta() or {}"/>
         <meta name="default_title" t-att-content="default_title" groups="website.group_website_designer"/>
         <t t-set="no_index" t-value="
-            (main_object and 'website_indexed' in main_object and not main_object.website_indexed)
+            (main_object and 'website_indexed' in main_object and not main_object.sudo().website_indexed)
             or (website.domain and not website._is_indexable_url(request.httprequest.url_root))
             or (pager and isinstance(pager, dict) and pager.get('page', {}).get('num', 1) != 1)
         "/>
         <meta t-if="no_index" name="robots" content="noindex"/>
         <t t-set="seo_object" t-value="seo_object or main_object"/>
         <t t-set="meta_description" t-value="seo_object and 'website_meta_description' in seo_object
-            and seo_object.website_meta_description or website_meta_description or website_meta.get('meta_description', '')"/>
+            and seo_object.sudo().website_meta_description or website_meta_description or website_meta.get('meta_description', '')"/>
         <t t-set="meta_keywords" t-value="seo_object and 'website_meta_keywords' in seo_object
-            and seo_object.website_meta_keywords or website_meta_keywords"/>
+            and seo_object.sudo().website_meta_keywords or website_meta_keywords"/>
         <meta t-if="meta_description or editable" name="description" t-att-content="meta_description"/>
         <meta t-if="meta_keywords or editable" name="keywords" t-att-content="meta_keywords"/>
         <t t-if="seo_object">
@@ -289,21 +289,21 @@
 
     <!-- Page options -->
     <xpath expr="//div[@id='wrapwrap']" position="before">
-        <!-- Todo: Refactor this part. These inputs were initially used for multiple use cases but are now only used to determine if a given option is activated on the page. We should probably implement the feature using an RPC. -->        
+        <!-- Todo: Refactor this part. These inputs were initially used for multiple use cases but are now only used to determine if a given option is activated on the page. We should probably implement the feature using an RPC. -->
         <t groups="website.group_website_restricted_editor">
             <t t-foreach="['header_overlay', 'header_color', 'header_text_color', 'header_visible', 'footer_visible']" t-as="optionName">
                 <!-- Firefox autocomplete is too aggressive and works on hidden inputs,
                 so we need to disable it (https://bugzilla.mozilla.org/show_bug.cgi?id=520561) -->
-                <input t-if="optionName in main_object" type="hidden" class="o_page_option_data" autocomplete="off" t-att-name="optionName" t-att-value="main_object[optionName]"/>
+                <input t-if="optionName in main_object" type="hidden" class="o_page_option_data" autocomplete="off" t-att-name="optionName" t-att-value="main_object.sudo()[optionName]"/>
             </t>
         </t>
 
-        <t t-set="header_bg_color" t-value="'header_color' in main_object and main_object.header_color or ''"/>
+        <t t-set="header_bg_color" t-value="'header_color' in main_object and main_object.sudo().header_color or ''"/>
         <t t-set="header_bg_color_is_class" t-value="'bg-' in header_bg_color"/>
         <t t-set="header_bg_color_class" t-value="header_bg_color_is_class and header_bg_color or ''"/>
         <t t-set="header_bg_color_style" t-value="(not header_bg_color_is_class) and header_bg_color or ''"/>
 
-        <t t-set="header_text_color" t-value="'header_text_color' in main_object and main_object.header_text_color or ''"/>
+        <t t-set="header_text_color" t-value="'header_text_color' in main_object and main_object.sudo().header_text_color or ''"/>
         <t t-set="header_text_color_is_class" t-value="'text-' in header_text_color"/>
         <t t-set="header_text_color_class" t-value="header_text_color_is_class and header_text_color or ''"/>
         <t t-set="header_text_color_style" t-value="(not header_text_color_is_class) and header_text_color or ''"/>
@@ -327,7 +327,7 @@
         </div>
     </xpath>
     <xpath expr="//div[@id='wrapwrap']" position="attributes">
-        <attribute name="t-attf-class" add="#{'o_header_overlay' if 'header_overlay' in main_object and main_object.header_overlay else ''}" separator=" "/>
+        <attribute name="t-attf-class" add="#{'o_header_overlay' if 'header_overlay' in main_object and main_object.sudo().header_overlay else ''}" separator=" "/>
     </xpath>
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="#{header_bg_color_class}" separator=" "/>
@@ -336,13 +336,13 @@
         <attribute name="t-attf-style" add="#{header_text_color_style and ('color: %s;' % header_text_color_style)}" separator=" "/>
     </xpath>
     <xpath expr="//header" position="attributes">
-        <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'header_visible' in main_object and not main_object.header_visible else ''}" separator=" "/>
-        <attribute name="t-att-data-invisible">'1' if 'header_visible' in main_object and not main_object.header_visible else None</attribute>
+        <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'header_visible' in main_object and not main_object.sudo().header_visible else ''}" separator=" "/>
+        <attribute name="t-att-data-invisible">'1' if 'header_visible' in main_object and not main_object.sudo().header_visible else None</attribute>
     </xpath>
     <xpath expr="//footer[@id='bottom']" position="attributes">
-        <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'footer_visible' in main_object and not main_object.footer_visible else ''}" separator=" "/>
-        <attribute name="t-att-data-invisible">'1' if 'footer_visible' in main_object and not main_object.footer_visible else None</attribute>
-        <attribute name="t-cache" add="main_object.footer_visible if 'footer_visible' in main_object else True" separator=","/>
+        <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'footer_visible' in main_object and not main_object.sudo().footer_visible else ''}" separator=" "/>
+        <attribute name="t-att-data-invisible">'1' if 'footer_visible' in main_object and not main_object.sudo().footer_visible else None</attribute>
+        <attribute name="t-cache" add="main_object.sudo().footer_visible if 'footer_visible' in main_object else True" separator=","/>
     </xpath>
 </template>
 
