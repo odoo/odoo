@@ -476,3 +476,17 @@ class TestAllocations(TestHrHolidaysCommon):
                 },
                 "The name_validity field was not set correctly."
             )
+
+    def test_leave_allocation_by_removing_employee(self):
+        """
+        Test that creating a leave allocation and then removing the employee will
+        not raise an error
+        """
+        self.leave_type.request_unit = "hour"
+        with self.assertRaises(AssertionError):  # AssertionError raised by Form as employee is required
+            with Form(self.env['hr.leave.allocation']) as allocation_form:
+                allocation_form.allocation_type = "regular"
+                allocation_form.holiday_status_id = self.leave_type
+                allocation_form.number_of_hours_display = 10
+                allocation_form.employee_id = self.env["hr.employee"]
+            allocation_form.save()
