@@ -1194,6 +1194,13 @@ class PosOrder(models.Model):
     def _should_create_picking_real_time(self):
         return not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice)
 
+    def _create_pos_order_picking(self, destination_id, picking_type):
+        """Create stock picking(s) for the POS order."""
+        self.ensure_one()
+        return self.env['stock.picking']._create_picking_from_pos_order_lines(
+            destination_id, self.lines, picking_type, self.partner_id
+        )
+
     def _create_order_picking(self):
         self.ensure_one()
         if self.shipping_date:
@@ -1208,7 +1215,7 @@ class PosOrder(models.Model):
                 else:
                     destination_id = picking_type.default_location_dest_id.id
 
-                pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(destination_id, self.lines, picking_type, self.partner_id)
+                pickings = self._create_pos_order_picking(destination_id, picking_type)
                 pickings.write({'pos_session_id': self.session_id.id, 'pos_order_id': self.id, 'origin': self.name})
 
     def add_payment(self, data):
