@@ -53,6 +53,7 @@ export class ColorPicker extends Component {
         applyColor: Function,
         applyColorPreview: Function,
         applyColorResetPreview: Function,
+        editColorCombination: { type: Function, optional: true },
         enabledTabs: { type: Array, optional: true },
         colorPrefix: { type: String },
         showRgbaField: { type: Boolean, optional: true },
@@ -125,7 +126,7 @@ export class ColorPicker extends Component {
     }
 
     onColorApply(ev) {
-        if (this.getTarget(ev).tagName !== "BUTTON") {
+        if (!this.isColorButton(this.getTarget(ev))) {
             return;
         }
         const color = this.processColorFromEvent(ev);
@@ -144,14 +145,14 @@ export class ColorPicker extends Component {
     }
 
     onColorHover(ev) {
-        if (this.getTarget(ev).tagName !== "BUTTON") {
+        if (!this.isColorButton(this.getTarget(ev))) {
             return;
         }
         this.onColorPreview(ev);
     }
 
     onColorHoverOut(ev) {
-        if (this.getTarget(ev).tagName !== "BUTTON") {
+        if (!this.isColorButton(this.getTarget(ev))) {
             return;
         }
         this.props.applyColorResetPreview();
@@ -179,14 +180,14 @@ export class ColorPicker extends Component {
     }
 
     onColorFocusout(ev) {
-        if (ev.relatedTarget?.tagName !== "BUTTON") {
+        if (!ev.relatedTarget || !this.isColorButton(ev.relatedTarget)) {
             // Do not trigger a revert if we are in the focus loop (i.e. focus
             // a button > selection is reset > focusout). Otherwise, the
             // relatedTarget should always be one of the colorpicker's buttons.
             return;
         }
         const activeEl = document.activeElement;
-        this.onColorHoverOut(ev);
+        this.props.applyColorResetPreview();
         if (document.activeElement !== activeEl) {
             // The focus was lost during revert. Reset it where it should be.
             ev.relatedTarget.focus();
@@ -239,6 +240,10 @@ export class ColorPicker extends Component {
         if (targetBtn && targetBtn.classList.contains("o_color_button")) {
             targetBtn.focus();
         }
+    }
+
+    isColorButton(targetEl) {
+        return targetEl.tagName === "BUTTON" && !targetEl.matches(".o_colorpicker_ignore");
     }
 }
 

@@ -41,7 +41,7 @@
                 <CustomizeTab t-else="" currentOptionsContainers="state.currentOptionsContainers" snippetModel="snippetModel"/>
             </t>
             <t t-if="state.activeTab === 'theme'">
-                <t t-component="ThemeTab"/>
+                <t t-component="ThemeTab" colorPresetToShow="colorPresetToShow"/>
             </t>
         </div>
         <InvisibleElementsPanel t-if="state.invisibleEls.length" invisibleEls="state.invisibleEls" invisibleSelector="this.getInvisibleSelector()"/>
