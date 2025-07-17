@@ -38,7 +38,7 @@ test("check 'Edit' and 'View Tasks' buttons are in Project Calendar Popover", as
     expect(queryAllTexts(".o_popover .card-footer .btn")).toEqual(["Edit", "View Tasks", ""]);
     expect(".o_popover .card-footer .btn i.fa-trash").toHaveCount(1);
 
-    await click(".o_popover .card-footer a:contains(View Tasks)");
+    await click(".o_popover .card-footer button:contains(View Tasks)");
     await click(".o_popover .card-footer a:contains(Edit)");
     expect.verifySteps(["view tasks"]);
 });
