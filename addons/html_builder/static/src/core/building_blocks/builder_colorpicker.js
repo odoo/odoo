@@ -139,6 +139,7 @@ export class BuilderColorPicker extends Component {
                 noTransparency: this.props.noTransparency,
                 enabledTabs: this.props.enabledTabs,
                 className: "o-hb-colorpicker",
+                editColorCombination: this.env.editColorCombination,
             },
             {
                 onClose: onPreviewRevert,

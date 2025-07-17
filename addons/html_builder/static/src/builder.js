@@ -69,6 +69,7 @@ export class Builder extends Component {
 
         this.lastTrigerUpdateId = 0;
         this.editorBus = new EventBus();
+        this.colorPresetToShow = null;
 
         // TODO: maybe do a different config for the translate mode and the
         // "regular" mode.
@@ -167,6 +168,7 @@ export class Builder extends Component {
             editor: this.editor,
             editorBus: this.editorBus,
             triggerDomUpdated: this.triggerDomUpdated.bind(this),
+            editColorCombination: this.editColorCombination.bind(this),
         });
         // onMounted(() => {
         //     // actionService.setActionMode("fullscreen");
@@ -264,11 +266,14 @@ export class Builder extends Component {
      * Called when clicking on a tab. Sets the active tab to the given tab.
      *
      * @param {String} tab the tab to set
+     * @param {Number | null} presetId the color preset expanding on "theme" tab
+     * open.
      */
-    onTabClick(tab) {
+    onTabClick(tab, presetId = null) {
         this.setTab(tab);
         // Deactivate the options when clicking on the "BLOCKS" or "THEME" tabs.
         if (tab === "theme" || tab === "blocks") {
+            this.colorPresetToShow = presetId;
             this.editor.shared["builderOptions"].deactivateContainers();
         }
     }
@@ -322,5 +327,9 @@ export class Builder extends Component {
         this.state.invisibleEls = [
             ...this.editor.editable.querySelectorAll(this.getInvisibleSelector(isMobile)),
         ];
+    }
+
+    editColorCombination(presetId) {
+        this.onTabClick("theme", presetId);
     }
 }

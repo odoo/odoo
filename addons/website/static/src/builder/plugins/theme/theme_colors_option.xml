@@ -68,14 +68,14 @@
                     </div>
                 </div>
             </BuilderRow>
-            <BuilderRow label.translate="Color Presets">
+            <BuilderRow label.translate="Color Presets" expand="!!colorPresetToShow">
                 <div></div>     <!-- This is required, without it the row is not displayed at all -->
                 <t t-set-slot="collapse">
                     <t t-foreach="state.presets" t-as="preset" t-key="preset.id">
-                        <BuilderRow t-slot-scope="row">
-                            <div class="o_cc_preview_wrapper" t-on-click="row.toggleCollapseContent">
+                        <BuilderRow t-slot-scope="row" initialExpandAnim="colorPresetToShow === preset.id">
+                            <div class="o_cc_preview_wrapper w-100" t-on-click="row.toggleCollapseContent">
                                 <div inert="" t-att-class="`o_cc${preset.id}`"
-                                     class="w-100 p-2 d-flex justify-content-between align-items-center ms-3">
+                                     class="p-2 d-flex justify-content-between align-items-center ms-3">
                                     <h3 class="m-0">
                                         Title
                                     </h3>
