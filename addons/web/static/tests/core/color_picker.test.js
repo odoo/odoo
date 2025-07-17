@@ -232,3 +232,22 @@ test("custom color picker change from grey to solid color on hue click", async (
         expect(Math.round(hsl.lightness)).toBe(25);
     }
 });
+
+test("custom gradient must be defined", async () => {
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: {
+                selectedColor: "#FF0000", //linear-gradient(0deg, rgb(0,0,0) 0%, rgb(100,100,100) 100%)",
+                defaultTab: "gradient",
+            },
+            getUsedCustomColors: () => [],
+            applyColor() {},
+            applyColorPreview() {},
+            applyColorResetPreview() {},
+            colorPrefix: "",
+        },
+    });
+    await click(".o_custom_gradient_button");
+    await animationFrame();
+    expect(".gradient-colors input[type='range']").toHaveCount(2);
+});
