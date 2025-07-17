@@ -906,37 +906,37 @@ class TestDomainOptimize(TransactionCase):
         ]:
             field_type = model._fields[field_name].type
             m2o = field_type == 'many2one'
-            left = left.optimize_full(model[field_name])
-            right = right.optimize_full(model[field_name])
+            left = left.optimize(model[field_name])
+            right = right.optimize(model[field_name])
 
             with self.subTest(field_type=field_type):
                 self.assertEqual(
-                    (Domain(field_name, 'any', left) | Domain(field_name, 'any', right)).optimize_full(model),
+                    (Domain(field_name, 'any', left) | Domain(field_name, 'any', right)).optimize(model),
                     Domain(field_name, 'any', left | right),
                 )
                 self.assertEqual(
-                    (Domain(field_name, 'any', left) & Domain(field_name, 'any', right)).optimize_full(model),
+                    (Domain(field_name, 'any', left) & Domain(field_name, 'any', right)).optimize(model),
                     Domain(field_name, 'any', left & right) if m2o
                     else Domain(field_name, 'any', left) & Domain(field_name, 'any', right),
                 )
                 query = model[field_name]._search([])
                 self.assertEqual(
-                    (Domain(field_name, 'any', left) | Domain(field_name, 'any', query) | Domain(field_name, 'any', right)).optimize_full(model),
+                    (Domain(field_name, 'any', left) | Domain(field_name, 'any', query) | Domain(field_name, 'any', right)).optimize(model),
                     Domain(field_name, 'any', left | right) | Domain(field_name, 'any!', query),
                     "Don't merge query with domains",
                 )
                 self.assertEqual(
-                    (Domain(field_name, 'not any', left) | Domain(field_name, 'not any', right)).optimize_full(model),
+                    (Domain(field_name, 'not any', left) | Domain(field_name, 'not any', right)).optimize(model),
                     Domain(field_name, 'not any', left & right) if m2o
                     else Domain(field_name, 'not any', left) | Domain(field_name, 'not any', right),
                 )
                 self.assertEqual(
-                    (Domain(field_name, 'not any', left) & Domain(field_name, 'not any', right)).optimize_full(model),
+                    (Domain(field_name, 'not any', left) & Domain(field_name, 'not any', right)).optimize(model),
                     Domain(field_name, 'not any', left | right),
                 )
 
                 self.assertEqual(
-                    (Domain(field_name, 'any', left) | Domain(field_name, 'not any', right)).optimize_full(model),
+                    (Domain(field_name, 'any', left) | Domain(field_name, 'not any', right)).optimize(model),
                     (Domain(field_name, 'any', left) | Domain(field_name, 'not any', right)),
                     "Do not merge any and not any",
                 )
