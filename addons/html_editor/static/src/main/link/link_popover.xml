@@ -50,10 +50,10 @@
                             <div class="d-flex mb-1 custom-text-color">
                                 <label>Text Color</label>
                                 <button class="o_we_color_preview custom-text-picker me-3" t-att-data-color="this.customTextColorState.selectedColor" t-ref="customTextColorButton"
-                                        t-attf-style="background-color: {{this.customTextColorState.selectedColor}}"/>
+                                        t-attf-style="background-color: {{this.props.formatColor(this.customTextColorState.selectedColor)}}"/>
                                 <label>Fill Color</label>
                                 <button class="o_we_color_preview custom-fill-picker" t-att-data-color="this.customFillColorState.selectedColor" t-ref="customFillColorButton"
-                                        t-attf-style="{{this.customFillColorState.selectedColor?.includes('gradient') ? 'background-image' : 'background-color'}}: {{this.customFillColorState.selectedColor}}" />
+                                        t-attf-style="{{this.customFillColorState.selectedColor?.includes('gradient') ? 'background-image' : 'background-color'}}: {{this.props.formatColor(this.customFillColorState.selectedColor)}}" />
                             </div>
                             <div class="d-flex mb-1 custom-border align-items-center">
                                 <label class="flex-shrink-0">Border</label>
@@ -72,7 +72,7 @@
                                         </t>
                                     </select>
                                     <button class="o_we_color_preview custom-border-picker" t-att-data-color="this.customBorderColorState.selectedColor" t-ref="customBorderColorButton"
-                                            t-attf-style="background-color: {{this.customBorderColorState.selectedColor}}"/>
+                                        t-attf-style="background-color: {{this.props.formatColor(this.customBorderColorState.selectedColor)}}" />
                                 </div>
                             </div>
                             <div class="input-group mb-1">
