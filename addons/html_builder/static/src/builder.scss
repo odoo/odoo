@@ -9,6 +9,12 @@
 .o-snippets-top-actions {
     border-bottom: $o-we-border-width solid $o-we-bg-lighter;
     height: 46px;
+
+    .o_rtl & {
+        .fa-undo, .fa-repeat {
+            transform: scaleX(-1);
+        }
+    }
 }
 
 .o-snippets-top-actions, .o-snippets-tabs {
