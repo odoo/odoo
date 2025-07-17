@@ -94,9 +94,9 @@ class HrLeave(models.Model):
         for leave in self:
             if leave._l10n_fr_leave_applies():
                 new_date_from, new_date_to = leave._get_fr_date_from_to(leave.date_from, leave.date_to)
-                if new_date_from != leave.date_from:
+                if new_date_from != leave.date_from.day:
                     leave.date_from = new_date_from
-                if new_date_to != leave.date_to:
+                if new_date_to != leave.date_to.day:
                     leave.date_to = new_date_to
                     leave.l10n_fr_date_to_changed = True
                 else:
@@ -116,6 +116,31 @@ class HrLeave(models.Model):
             duration_by_leave_id = super(HrLeave, self - fr_leaves)._get_durations(resource_calendar=resource_calendar)
             fr_leaves_by_company = fr_leaves.grouped('company_id')
             for company, leaves in fr_leaves_by_company.items():
-                duration_by_leave_id.update(leaves._get_durations(resource_calendar=company.resource_calendar_id))
+                company_cal = company.resource_calendar_id
+                for leave in leaves:
+                    if leave.request_unit_half:
+                        duration_by_leave_id.update(leave._get_durations(resource_calendar=company_cal))
+                        continue
+                    # Extend the end date to next working day
+                    date_start = leave.date_from
+                    date_end = leave.date_to
+                    while not leave.resource_calendar_id._works_on_date(date_start):
+                        date_start += relativedelta(days=1)
+                    extended_date_end = date_end
+                    while not company_cal._works_on_date(extended_date_end + relativedelta(days=1)):
+                        extended_date_end += relativedelta(days=1)
+                    # Count number of days in company calendar
+                    current = date_start.date()
+                    end_date = extended_date_end.date()
+                    legal_days = 0.0
+                    while current <= end_date:
+                        if company_cal._works_on_date(current):
+                            legal_days += 1.0
+                        current += relativedelta(days=1)
+                    standard_duration = super()._get_durations(resource_calendar=resource_calendar)
+                    _, hours = standard_duration.get(leave.id, (0.0, 0.0))
+
+                    duration_by_leave_id[leave.id] = (legal_days, hours)
+
             return duration_by_leave_id
         return super()._get_durations(resource_calendar=resource_calendar)
