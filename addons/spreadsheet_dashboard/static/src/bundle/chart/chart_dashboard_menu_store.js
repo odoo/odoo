@@ -1,31 +1,32 @@
-import { components, registries } from "@odoo/o-spreadsheet";
+import { stores, registries } from "@odoo/o-spreadsheet";
 import { patch } from "@web/core/utils/patch";
 
 const { chartSubtypeRegistry } = registries;
 
-patch(components.ChartDashboardMenu.prototype, {
+patch(stores.ChartDashboardMenuStore.prototype, {
     get changeChartTypeMenuItems() {
-        const definition = this.env.model.getters.getChartDefinition(this.props.figureUI.id);
+        const definition = this.getters.getChartDefinition(this.chartId);
         if (["odoo_bar", "odoo_line", "odoo_pie"].includes(definition.type)) {
             return ["odoo_bar", "odoo_line", "odoo_pie"].map((type) => {
                 const item = chartSubtypeRegistry.get(type);
                 return {
                     id: item.chartType,
                     label: item.displayName,
-                    onClick: () => this.onTypeChange(item.chartType),
-                    isSelected: item.chartType === this.selectedChartType,
+                    onClick: () => this.updateType(item.chartType),
+                    isSelected:
+                        item.chartType === this.getters.getChartDefinition(this.chartId).type,
                     iconClass: this.getIconClasses(item.chartType),
                 };
             });
         }
         return super.changeChartTypeMenuItems;
     },
-    onTypeChange(type) {
+    updateType(type) {
         if (!type.startsWith("odoo_")) {
-            return super.onTypeChange(type);
+            return super.updateType(type);
         }
-        const figureId = this.props.figureUI.id;
-        const currentDefinition = this.env.model.getters.getChartDefinition(figureId);
+        const figureId = this.chartId;
+        const currentDefinition = this.getters.getChartDefinition(figureId);
         if (currentDefinition.type === type) {
             return;
         }
@@ -39,10 +40,10 @@ patch(components.ChartDashboardMenu.prototype, {
                       type,
                   };
 
-        this.env.model.dispatch("UPDATE_CHART", {
+        this.model.dispatch("UPDATE_CHART", {
             definition,
             figureId,
-            sheetId: this.env.model.getters.getActiveSheetId(),
+            sheetId: this.getters.getActiveSheetId(),
         });
     },
 });
