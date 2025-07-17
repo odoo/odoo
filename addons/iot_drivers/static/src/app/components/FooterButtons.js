@@ -26,7 +26,7 @@ export class FooterButtons extends Component {
     }
 
     static template = xml`
-    <div class="w-100 d-flex flex-wrap align-items-cente gap-2 justify-content-center">
+    <div class="w-100 d-flex flex-wrap align-items-cente gap-2 justify-content-center" t-translation="off">
         <a t-if="store.isLinux and !store.base.is_access_point_up" class="btn btn-primary btn-sm" t-att-href="this.url + '/status'" target="_blank">
             Status Display
         </a>

@@ -49,6 +49,7 @@ export class DeviceDialog extends Component {
     }
 
     static template = xml`
+    <t t-translation="off">
         <BootstrapDialog identifier="'device-list'" btnName="'Show'" isLarge="true">
             <t t-set-slot="header">
                 Devices list
@@ -87,5 +88,6 @@ export class DeviceDialog extends Component {
                 <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
         </BootstrapDialog>
+    </t>
     `;
 }

@@ -1,33 +1,14 @@
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 
-import { EventBus, Component, useState, xml } from "@odoo/owl";
+import { EventBus, Component, useState } from "@odoo/owl";
 
 export class BlockUI extends Component {
     static props = {
         bus: EventBus,
     };
 
-    static template = xml`
-        <t t-if="state.blockState === BLOCK_STATES.UNBLOCKED">
-            <div/>
-        </t>
-        <t t-else="">
-            <t t-set="visiblyBlocked" t-value="state.blockState === BLOCK_STATES.VISIBLY_BLOCKED"/>
-            <div class="o_blockUI fixed-top d-flex justify-content-center align-items-center flex-column vh-100"
-                 t-att-class="visiblyBlocked ? '' : 'o_blockUI_invisible'">
-                <t t-if="visiblyBlocked">
-                    <div class="o_spinner mb-4">
-                        <img src="/web/static/img/spin.svg" alt="Loading..."/>
-                    </div>
-                    <div class="o_message text-center px-4">
-                        <t t-esc="state.line1"/><br/>
-                        <t t-esc="state.line2"/>
-                    </div>
-                </t>
-            </div>
-        </t>
-    `;
+    static template = "web.BlockUI";
 
     setup() {
         this.messagesByDuration = [

@@ -39,6 +39,7 @@ export class BootstrapDialog extends Component {
     }
 
     static template = xml`
+    <t t-translation="off">
         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" t-att-data-bs-target="'#'+this.props.identifier" t-esc="this.props.btnName" />
         <div t-ref="dialog" t-att-id="this.props.identifier" class="modal modal-dialog-scrollable fade" t-att-class="{'modal-lg': props.isLarge}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
@@ -57,5 +58,6 @@ export class BootstrapDialog extends Component {
                 </div>
             </div>
         </div>
+    </t>
     `;
 }

@@ -106,6 +106,7 @@ export class WifiDialog extends Component {
     }
 
     static template = xml`
+    <t t-translation="off">
         <LoadingFullScreen t-if="this.state.waitRestart">
             <t t-set-slot="body">
                 Updating Wi-Fi configuration, please wait...
@@ -172,5 +173,6 @@ export class WifiDialog extends Component {
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
         </BootstrapDialog>
+    </t>
     `;
 }
