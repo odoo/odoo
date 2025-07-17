@@ -56,6 +56,7 @@ export class ColorPicker extends Component {
         editColorCombination: { type: Function, optional: true },
         enabledTabs: { type: Array, optional: true },
         colorPrefix: { type: String },
+        themeColorPrefix: { type: String, optional: true },
         showRgbaField: { type: Boolean, optional: true },
         noTransparency: { type: Boolean, optional: true },
         close: { type: Function, optional: true },
@@ -65,6 +66,7 @@ export class ColorPicker extends Component {
         close: () => {},
         enabledTabs: ["solid", "gradient", "custom"],
         showRgbaField: false,
+        themeColorPrefix: "",
     };
 
     setup() {

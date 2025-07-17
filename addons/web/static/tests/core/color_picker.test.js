@@ -1,6 +1,6 @@
 import { test, expect } from "@odoo/hoot";
 import { press, click, animationFrame, queryOne } from "@odoo/hoot-dom";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ColorPicker, DEFAULT_COLORS } from "@web/core/color_picker/color_picker";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { convertRgbToHsl } from "@web/core/utils/colors";
@@ -142,6 +142,82 @@ test("keyboard navigation", async () => {
     expect(
         ".o_font_color_selector .o_color_section .o_color_button[data-color]:last-of-type"
     ).toBeFocused();
+});
+
+test("colorpicker inside the builder are linked to the builder theme colors", async () => {
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: {
+                selectedColor: "",
+                defaultTab: "",
+            },
+            getUsedCustomColors: () => [],
+            applyColor() {},
+            applyColorPreview() {},
+            applyColorResetPreview() {},
+            colorPrefix: "",
+            themeColorPrefix: "xyz-",
+        },
+    });
+    const getButtonColor = (sel) => getComputedStyle(queryOne(sel)).backgroundColor;
+
+    defineStyle(`
+        :root {
+            --o-color-1: rgb(113, 75, 103);
+            --o-color-2: rgb(45, 49, 66);
+            --xyz-o-color-1: rgb(113, 75, 103);
+            --xyz-o-color-2: rgb(45, 49, 66);
+        }
+    `);
+    expect(getButtonColor("button[data-color='o-color-1']")).toBe("rgb(113, 75, 103)");
+    expect(getButtonColor("button[data-color='o-color-2']")).toBe("rgb(45, 49, 66)");
+
+    defineStyle(`
+        :root {
+            --xyz-o-color-1: rgb(0, 0, 255);
+            --xyz-o-color-2: rgb(0, 255, 0);
+        }
+    `);
+    expect(getButtonColor("button[data-color='o-color-1']")).toBe("rgb(0, 0, 255)");
+    expect(getButtonColor("button[data-color='o-color-2']")).toBe("rgb(0, 255, 0)");
+});
+
+test("colorpicker outside the builder are not linked to the builder theme colors", async () => {
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: {
+                selectedColor: "",
+                defaultTab: "",
+            },
+            getUsedCustomColors: () => [],
+            applyColor() {},
+            applyColorPreview() {},
+            applyColorResetPreview() {},
+            colorPrefix: "",
+            themeColorPrefix: "",
+        },
+    });
+    const getButtonColor = (sel) => getComputedStyle(queryOne(sel)).backgroundColor;
+
+    defineStyle(`
+        :root {
+            --o-color-1: rgb(113, 75, 103);
+            --o-color-2: rgb(45, 49, 66);
+            --xyz-o-color-1: rgb(113, 75, 103);
+            --xyz-o-color-2: rgb(45, 49, 66);
+        }
+    `);
+    expect(getButtonColor("button[data-color='o-color-1']")).toBe("rgb(113, 75, 103)");
+    expect(getButtonColor("button[data-color='o-color-2']")).toBe("rgb(45, 49, 66)");
+
+    defineStyle(`
+        :root {
+            --xyz-o-color-1: rgb(0, 0, 255);
+            --xyz-o-color-2: rgb(0, 255, 0);
+        }
+    `);
+    expect(getButtonColor("button[data-color='o-color-1']")).toBe("rgb(113, 75, 103)");
+    expect(getButtonColor("button[data-color='o-color-2']")).toBe("rgb(45, 49, 66)");
 });
 
 test("custom color picker sets default color as selected", async () => {

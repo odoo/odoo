@@ -74,11 +74,11 @@
                 t-on-focusin="onColorFocusin"
                 t-on-focusout="onColorFocusout">
                 <div class="o_colorpicker_section">
-                    <button data-color="o-color-1" t-attf-style="background-color: var(--o-color-1)" class="btn p-0 o_color_button"/>
-                    <button data-color="o-color-3" t-attf-style="background-color: var(--o-color-3)" class="btn p-0 o_color_button"/>
-                    <button data-color="o-color-2" t-attf-style="background-color: var(--o-color-2)" class="btn p-0 o_color_button"/>
-                    <button data-color="o-color-4" t-attf-style="grid-column: 5; background-color: var(--o-color-4)" class="btn p-0 o_color_button"/>
-                    <button data-color="o-color-5" t-attf-style="background-color: var(--o-color-5)" class="btn p-0 o_color_button"/>
+                    <button data-color="o-color-1" t-attf-style="background-color: var(--{{props.themeColorPrefix}}o-color-1)" class="btn p-0 o_color_button"/>
+                    <button data-color="o-color-3" t-attf-style="background-color: var(--{{props.themeColorPrefix}}o-color-3)" class="btn p-0 o_color_button"/>
+                    <button data-color="o-color-2" t-attf-style="background-color: var(--{{props.themeColorPrefix}}o-color-2)" class="btn p-0 o_color_button"/>
+                    <button data-color="o-color-4" t-attf-style="background-color: var(--{{props.themeColorPrefix}}o-color-4); grid-column: 5;" class="btn p-0 o_color_button"/>
+                    <button data-color="o-color-5" t-attf-style="background-color: var(--{{props.themeColorPrefix}}o-color-5)" class="btn p-0 o_color_button"/>
                 </div>
 
                 <div class="o_color_section">
