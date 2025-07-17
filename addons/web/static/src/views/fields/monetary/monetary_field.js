@@ -42,7 +42,7 @@ export class MonetaryField extends Component {
         return {
             getValue: () => this.formattedValue,
             refName: "numpadDecimal",
-            parse: parseMonetary,
+            parse: (v) => parseMonetary(v, { allowOperation: true }),
         };
     }
 

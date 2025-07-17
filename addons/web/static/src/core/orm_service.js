@@ -90,6 +90,7 @@ export const UPDATE_METHODS = [
     "create",
     "write",
     "web_save",
+    "web_save_multi",
     "action_archive",
     "action_unarchive",
 ];
@@ -361,6 +362,24 @@ export class ORM {
         validatePrimitiveList("ids", "number", ids);
         validateObject("data", data);
         return this.call(model, "web_save", [ids, data], kwargs);
+    }
+
+    /**
+     * @param {string} model
+     * @param {number[]} ids
+     * @param {Object[]} data
+     * @param {Object} [kwargs={}]
+     * @param {Object} [kwargs.specification]
+     * @param {Object} [kwargs.context]
+     * @returns {Promise<any[]>}
+     */
+    async webSaveMulti(model, ids, data, kwargs = {}) {
+        validatePrimitiveList("ids", "number", ids);
+        validateArray("data", data);
+        data.forEach((d) => {
+            validateObject("data item", d);
+        });
+        return this.call(model, "web_save_multi", [ids, data], kwargs);
     }
 }
 
