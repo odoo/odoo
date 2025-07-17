@@ -1874,8 +1874,10 @@ test.tags("desktop");
 test("current act_window action is stored in session_storage if possible", async () => {
     let expectedAction;
     patchWithCleanup(browser.sessionStorage, {
-        setItem(k, value) {
-            expect(JSON.parse(value)).toEqual(expectedAction);
+        setItem(key, value) {
+            if (key === "current_action") {
+                expect(JSON.parse(value)).toEqual(expectedAction);
+            }
         },
     });
     await mountWithCleanup(WebClient);
