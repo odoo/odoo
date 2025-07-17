@@ -1,7 +1,7 @@
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { TourPointer } from "@web_tour/tour_pointer/tour_pointer";
-import { getScrollParent } from "../tour_utils";
+import { TourPointer } from "@web_tour/js/tour_pointer/tour_pointer";
+import { getScrollParent } from "@web_tour/js/utils/tour_utils";
 
 /**
  * @typedef {import("@web/core/position/position_hook").Direction} Direction
@@ -22,7 +22,7 @@ import { getScrollParent } from "../tour_utils";
  * @property {Direction} position
  * @property {number} rev
  *
- * @typedef {import("./tour_service").TourStep} TourStep
+ * @typedef {import("../tour_service").TourStep} TourStep
  */
 
 class Intersection {

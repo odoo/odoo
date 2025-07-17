@@ -1,4 +1,4 @@
-import { tourState } from "@web_tour/tour_service/tour_state";
+import { tourState } from "@web_tour/js/tour_state";
 import { TourSelectorPopup } from "../components/tour_selector_popup/tour_selector_popup";
 import { useService } from "@web/core/utils/hooks";
 import { makeAwaitable } from "../utils/make_awaitable_dialog";

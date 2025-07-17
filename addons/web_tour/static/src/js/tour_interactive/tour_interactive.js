@@ -1,10 +1,10 @@
-import { tourState } from "@web_tour/tour_service/tour_state";
+import { tourState } from "@web_tour/js/tour_state";
 import { debounce } from "@web/core/utils/timing";
-import { getScrollParent } from "@web_tour/tour_utils";
 import * as hoot from "@odoo/hoot-dom";
 import { utils } from "@web/core/ui/ui_service";
-import { TourStep } from "./tour_step";
+import { TourStep } from "@web_tour/js/tour_step";
 import { MacroMutationObserver } from "@web/core/macro";
+import { getScrollParent } from "@web_tour/js/utils/tour_utils";
 
 /**
  * @typedef ConsumeEvent
@@ -30,7 +30,7 @@ export class TourInteractive {
     }
 
     /**
-     * @param {import("@web_tour/tour_pointer/tour_pointer").TourPointer} pointer
+     * @param {import("@web_tour/js/tour_pointer/tour_pointer").TourPointer} pointer
      * @param {Function} onTourEnd
      */
     start(pointer, onTourEnd) {
@@ -161,7 +161,7 @@ export class TourInteractive {
 
     /**
      * @param {HTMLElement} params.anchorEl
-     * @param {import("../tour_utils").ConsumeEvent[]} params.consumeEvents
+     * @param {import("../../tour_utils").ConsumeEvent[]} params.consumeEvents
      * @param {() => void} params.onMouseEnter
      * @param {() => void} params.onMouseLeave
      * @param {(ev: Event) => any} params.onScroll
@@ -217,7 +217,7 @@ export class TourInteractive {
 
     /**
      *
-     * @param {import("./tour_service").TourStep} step
+     * @param {import("../tour_service").TourStep} step
      * @returns {{
      *  event: string,
      *  anchor: string,

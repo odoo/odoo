@@ -4,7 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { usePosition } from "@web/core/position/position_hook";
 
 /**
- * @typedef {import("../tour_service/tour_pointer_state").TourPointerState} TourPointerState
+ * @typedef {import("./tour_pointer_state").TourPointerState} TourPointerState
  *
  * @typedef TourPointerProps
  * @property {TourPointerState} pointerState
