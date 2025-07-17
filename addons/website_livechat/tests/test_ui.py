@@ -21,7 +21,7 @@ class TestLivechatUI(HttpCaseWithUserDemo, TestLivechatCommon):
         self._check_end_of_rating_tours()
 
     def test_complete_rating_flow_ui_logged_in(self):
-        self.start_tour("/", "website_livechat_complete_flow_tour_logged_in", login="demo")
+        self.start_tour("/", "website_livechat_complete_flow_tour_logged_in", login=self.user_employee.login)
         self._check_end_of_rating_tours()
 
     def test_happy_rating_flow_ui(self):
