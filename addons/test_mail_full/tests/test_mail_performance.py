@@ -240,6 +240,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
         self.assertEqual(len(res), len(messages_all))
         for format_res, message, record in zip(res, messages_all, self.messages_records):
             self.assertEqual(len(format_res['attachment_ids']), 2)
+            self.maxDiff = None
             self.assertEqual(
                 format_res['attachment_ids'],
                 [
@@ -247,7 +248,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         'checksum': message.attachment_ids[0].checksum,
                         'filename': 'Test file 1',
                         'id': message.attachment_ids[0].id,
-                        'mimetype': 'application/octet-stream',
+                        'mimetype': 'text/plain',
                         'name': 'Test file 1',
                         'raw_access_token': message.attachment_ids[0]._get_raw_access_token(),
                         'res_id': record.id,
@@ -256,7 +257,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         'checksum': message.attachment_ids[1].checksum,
                         'filename': 'Test file 0',
                         'id': message.attachment_ids[1].id,
-                        'mimetype': 'application/octet-stream',
+                        'mimetype': 'text/plain',
                         'name': 'Test file 0',
                         'raw_access_token': message.attachment_ids[1]._get_raw_access_token(),
                         'res_id': record.id,
