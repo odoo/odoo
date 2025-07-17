@@ -86,7 +86,7 @@ class HrOrgChartController(http.Controller):
         if subordinates_type == 'direct':
             res = (employee.child_ids - employee).ids
         elif subordinates_type == 'indirect':
-            res = (employee.subordinate_ids - employee.child_ids).ids
+            res = (employee.subordinate_ids - employee.child_ids.employee_id).ids
         else:
             res = employee.subordinate_ids.ids
 
