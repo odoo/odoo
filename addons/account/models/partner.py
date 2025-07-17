@@ -613,13 +613,13 @@ class ResPartner(models.Model):
     property_outbound_payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
         company_dependent=True,
-        domain=lambda self: [('payment_type', '=', 'outbound'), ('company_id', '=', self.env.company.id)],
+        domain=lambda self: [('payment_type', '=', 'outbound'), ('company_id', 'parent_of', self.env.company.id)],
     )
 
     property_inbound_payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
         company_dependent=True,
-        domain=lambda self: [('payment_type', '=', 'inbound'), ('company_id', '=', self.env.company.id)],
+        domain=lambda self: [('payment_type', '=', 'inbound'), ('company_id', 'parent_of', self.env.company.id)],
     )
 
     def _compute_bank_count(self):
