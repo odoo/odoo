@@ -449,3 +449,23 @@ registry.category("web_tour.tours").add("test_down_payment_displayed", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_quantity_updated_settle", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.clickNumpad("2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            PosSale.settleNthOrder(1),
+            Order.hasLine({
+                productName: "Product A",
+                quantity: "3.0",
+                price: "34.50",
+            }),
+        ].flat(),
+});
