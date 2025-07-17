@@ -21,7 +21,10 @@ class RatingRating(models.Model):
     def action_open_rated_object(self):
         action = super().action_open_rated_object()
         if self.res_model == 'discuss.channel':
-            if self.env[self.res_model].browse(self.res_id):
+            if (
+                self.env["discuss.channel"].browse(self.res_id).is_member
+                or self.env.user.has_group("im_livechat.im_livechat_group_manager")
+            ):
                 ctx = self.env.context.copy()
                 ctx.update({'active_id': self.res_id})
                 return {
