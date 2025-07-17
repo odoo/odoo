@@ -443,7 +443,7 @@ export function setBuilderCSSVariables(htmlStyle) {
 
 export function parseBoxShadow(value) {
     const regex =
-        /(?<color>(rgb(a)?\([^)]*\))|(var\([^)]+\)))\s+(?<offsetX>-?\d+px)\s+(?<offsetY>-?\d+px)\s+(?<blur>-?\d+px)\s+(?<spread>-?\d+px)(?:\s+(?<mode>\w+))?/;
+        /(?<color>(rgb(a)?\([^)]*\))|(var\([^)]+\)))\s+(?<offsetX>-?\d+\.?\d*px)\s+(?<offsetY>-?\d+\.?\d*px)\s+(?<blur>-?\d+\.?\d*px)\s+(?<spread>-?\d+\.?\d*px)(?:\s+(?<mode>\w+))?/;
     return value.match(regex).groups;
 }
 
