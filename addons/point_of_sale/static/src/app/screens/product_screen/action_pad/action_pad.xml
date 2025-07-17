@@ -6,7 +6,7 @@
             <div t-if="ui.isSmall" class="d-flex gap-2">
                 <BackButton t-if="!props.showActionButton and pos.showBackButton()" onClick="() => pos.onClickBackButton()"/>
                 <t t-if="props.onClickMore">
-                    <SelectPartnerButton partner="props.partner"/>
+                    <SelectPartnerButton partner="partner"/>
                     <button t-if="pos.config.use_presets and currentOrder"
                         class="btn btn-secondary btn-lg flex-shrink-0 border-0"
                         t-attf-class="{{`o_colorlist_item_color_${currentOrder.preset_id?.color}`}}"

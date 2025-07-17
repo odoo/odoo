@@ -8,6 +8,7 @@ export class ActionpadWidget extends Component {
     static template = "point_of_sale.ActionpadWidget";
     static components = { SelectPartnerButton, BackButton };
     static props = {
+        order: Object,
         partner: { type: [Object, { value: null }], optional: true },
         onClickMore: { type: Function, optional: true },
         actionName: String,
@@ -24,6 +25,10 @@ export class ActionpadWidget extends Component {
     }
 
     get currentOrder() {
-        return this.pos.getOrder();
+        return this.props.order;
+    }
+
+    get partner() {
+        return this.currentOrder.getPartner();
     }
 }

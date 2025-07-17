@@ -15,7 +15,7 @@ export class OrderSummary extends Component {
         Orderline,
         OrderDisplay,
     };
-    static props = {};
+    static props = { order: Object };
 
     setup() {
         super.setup();
@@ -30,7 +30,7 @@ export class OrderSummary extends Component {
     }
 
     get currentOrder() {
-        return this.pos.getOrder();
+        return this.props.order;
     }
 
     async editPackLotLines(line) {

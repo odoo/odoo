@@ -467,12 +467,8 @@ patch(PosStore.prototype, {
         const order = this.getOrder();
         if (order && !order.isBooked) {
             this.removeOrder(order);
-        } else if (order) {
-            if (!this.isOrderTransferMode) {
-                this.syncAllOrders();
-            } else if (order && this.previousScreen !== "ReceiptScreen") {
-                await this.syncAllOrders({ orders: [order] });
-            }
+        } else if (order && !this.isOrderTransferMode) {
+            this.syncAllOrders();
         }
     },
     getActiveOrdersOnTable(table) {
@@ -509,7 +505,7 @@ patch(PosStore.prototype, {
         };
         document.addEventListener("click", onClickWhileTransfer);
     },
-    prepareOrderTransfer(order, destinationTable) {
+    async prepareOrderTransfer(order, destinationTable) {
         const originalTable = order.table_id;
         this.alert.dismiss();
 
@@ -523,7 +519,7 @@ patch(PosStore.prototype, {
             order.origin_table_id = originalTable?.id;
             order.table_id = destinationTable;
             this.setOrder(order);
-            this.addPendingOrder([order.id]);
+            await this.syncAllOrders({ orders: [order] });
             return false;
         }
         return true;
@@ -535,7 +531,7 @@ patch(PosStore.prototype, {
         const sourceOrder = this.models["pos.order"].getBy("uuid", orderUuid);
 
         if (destinationTable) {
-            if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
+            if (!(await this.prepareOrderTransfer(sourceOrder, destinationTable))) {
                 return;
             }
             destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
@@ -548,7 +544,7 @@ patch(PosStore.prototype, {
     async mergeTableOrders(orderUuid, destinationTable) {
         const sourceOrder = this.models["pos.order"].getBy("uuid", orderUuid);
 
-        if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
+        if (!(await this.prepareOrderTransfer(sourceOrder, destinationTable))) {
             return;
         }
 
