@@ -67,8 +67,17 @@ export function onGeoOdooChartItemClick(getters, chart) {
     });
 }
 
+export function onSunburstOdooChartItemClick(getters, chart) {
+    return navigateInOdooMenuOnClick(getters, chart, (chartJsItem, chartData, chartJSChart) => {
+        const { datasetIndex, index } = chartJsItem;
+        const rawItem = chartJSChart.data.datasets[datasetIndex].data[index];
+        const domain = chart.dataSource.buildDomainFromGroupByLabels(rawItem.groups);
+        return { name: rawItem.groups.join(" / "), domain: domain };
+    });
+}
+
 function navigateInOdooMenuOnClick(getters, chart, getDomainFromChartItem) {
-    return async (event, items) => {
+    return async (event, items, chartJSChart) => {
         const env = getters.getOdooEnv();
         const { datasets, labels } = chart.dataSource.getData();
         if (!items.length || !env || !datasets[items[0].datasetIndex]) {
@@ -79,7 +88,11 @@ function navigateInOdooMenuOnClick(getters, chart, getDomainFromChartItem) {
         } else {
             return;
         }
-        const { name, domain } = getDomainFromChartItem(items[0], { datasets, labels });
+        const { name, domain } = getDomainFromChartItem(
+            items[0],
+            { datasets, labels },
+            chartJSChart
+        );
         if (!domain || !name) {
             return;
         }
