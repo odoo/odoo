@@ -176,12 +176,17 @@ export class PosData extends Reactive {
     }
 
     async synchronizeServerDataInIndexedDB(serverData = {}) {
-        for (const [model, data] of Object.entries(serverData)) {
-            try {
-                await this.indexedDB.create(model, data);
-            } catch {
-                console.info(`Error while updating ${model} in indexedDB.`);
+        try {
+            const clone = JSON.parse(JSON.stringify(serverData));
+            for (const [model, data] of Object.entries(clone)) {
+                try {
+                    await this.indexedDB.create(model, data);
+                } catch {
+                    console.info(`Error while updating ${model} in indexedDB.`);
+                }
             }
+        } catch {
+            console.debug("Error while synchronizing server data in indexedDB.");
         }
     }
 
