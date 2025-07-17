@@ -93,11 +93,10 @@ export const feedback = [
     },
 ];
 
-export const transcript = [
+export const emailTranscript = [
     {
-        content: "Type your email",
-        trigger: ".o-livechat-root:shadow input[placeholder='mail@example.com']",
-        run: "edit deboul@onner.com",
+        content: "Check email field",
+        trigger: ".o-livechat-root:shadow input:value(mark.brown23@example.com)",
     },
     {
         content: "Send the conversation to your email address",
@@ -107,6 +106,14 @@ export const transcript = [
     {
         content: "Check conversation is sent",
         trigger: ".o-livechat-root:shadow .form-text:contains(The conversation was sent)",
+        run: "click",
+    },
+];
+
+export const downloadTranscript = [
+    {
+        content: "Download transcript",
+        trigger: ".o-livechat-root:shadow .btn[title='Download a copy of this conversation']",
         run: "click",
     },
 ];

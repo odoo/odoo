@@ -16,6 +16,7 @@ from . import test_js
 from . import test_member_history
 from . import test_message
 from . import test_upload_attachment
+from . import test_transcript
 from . import test_res_users
 from . import test_session_history
 from . import test_user_livechat_username

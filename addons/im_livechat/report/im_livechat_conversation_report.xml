@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Added in stable, its usage should always be covered by an existence check -->
+    <record id="action_report_livechat_conversation" model="ir.actions.report">
+        <field name="name">Live Chat Conversation</field>
+        <field name="model">discuss.channel</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">im_livechat.report_livechat_conversation</field>
+        <field name="report_file">im_livechat.report_livechat_conversation</field>
+    </record>
+
+    <!-- Added in stable, its usage should always be covered by an existence check -->
+    <template id="report_livechat_conversation">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="channel" t-value="doc"/>
+                <t t-call="im_livechat.livechat_email_template"/>
+            </t>
+        </t>
+    </template>
+</odoo>
