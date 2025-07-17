@@ -1,9 +1,9 @@
-import { Location } from '@delivery/js/location_selector/location/location';
-import { Component, onMounted, useEffect } from '@odoo/owl';
+import { Location } from "@location_selector/location/location";
+import { Component, onMounted, useEffect } from "@odoo/owl";
 
 export class LocationList extends Component {
     static components = { Location };
-    static template = 'delivery.locationSelector.locationList';
+    static template = "location_selector.location_list";
     static props = {
         locations: {
             type: Array,
@@ -22,18 +22,22 @@ export class LocationList extends Component {
                     },
                     street: String,
                     city: String,
-                    zip_code: String,
-                    state: { type: String, optional: true},
+                    zip: String,
+                    state: { type: String, optional: true },
                     country_code: String,
-                    additional_data: { type: Object, optional: true},
-                    latitude: String,
-                    longitude: String,
-                }
+                    additional_data: { type: Object, optional: true },
+                    partner_latitude: String,
+                    partner_longitude: String,
+                },
             },
         },
-        selectedLocationId: [String, {value: false}],
+        selectedLocationId: [String, { value: false }],
         setSelectedLocation: Function,
         validateSelection: Function,
+        hiddenLocations: {
+            type: Array,
+            element: String,
+        },
     };
 
     setup() {
@@ -44,9 +48,7 @@ export class LocationList extends Component {
         // Focus on the location on the list when clicking on the map marker.
         useEffect(
             (locations, selectedLocationId) => {
-                const selectedLocation = locations.find(
-                    l => String(l.id) === selectedLocationId
-                );
+                const selectedLocation = locations.find((l) => String(l.id) === selectedLocationId);
                 if (selectedLocation) {
                     document.getElementById(`location-${selectedLocation.id}`).focus();
                 }

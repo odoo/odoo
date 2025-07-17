@@ -2,9 +2,7 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
-import {
-    LocationSelectorDialog
-} from '@delivery/js/location_selector/location_selector_dialog/location_selector_dialog';
+import { LocationSelectorDialog } from "@location_selector/location_selector_dialog/location_selector_dialog";
 
 export class Checkout extends Interaction {
     static selector = '#shop_checkout';

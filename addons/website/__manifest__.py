@@ -20,6 +20,7 @@
         'google_recaptcha',
         'utm',
         'html_builder',
+        'location_selector',
     ],
     'external_dependencies': {
         'python': ['geoip2'],
