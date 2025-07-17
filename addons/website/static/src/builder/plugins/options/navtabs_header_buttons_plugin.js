@@ -14,7 +14,7 @@ class NavTabsOptionPlugin extends Plugin {
             Component: NavTabsHeaderMiddleButtons,
             selector: tabsSectionSelector,
             props: {
-                addItem: (editingElement) => this.addItem(editingElement),
+                addItem: async (editingElement) => await this.addItem(editingElement),
                 removeItem: (editingElement) => this.removeItem(editingElement),
             },
         },
@@ -45,11 +45,11 @@ class NavTabsOptionPlugin extends Plugin {
         paneEl.classList.add("show");
     }
 
-    addItem(editingElement) {
+    async addItem(editingElement) {
         const activeNavItemEl = this.getActiveLinkEl(editingElement).parentElement;
         const activePaneEl = this.getActivePaneEl(editingElement);
 
-        const newPaneEl = this.dependencies.clone.cloneElement(activePaneEl);
+        const newPaneEl = await this.dependencies.clone.cloneElement(activePaneEl);
         const newNavItemEl = activeNavItemEl.cloneNode(true);
         activeNavItemEl.after(newNavItemEl);
         // To make sure the DOM is clean and correct, leave it to Bootstrap to
