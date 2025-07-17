@@ -1030,3 +1030,29 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.order_line.price_unit, 6)
         po.order_line.product_qty = 2
         self.assertEqual(po.order_line.price_unit, 5)
+
+    def test_purchase_order_lock(self):
+        """
+        Test that the purchase order can be locked and unlocked without the lock_confirmed_po setting.
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+            })],
+        })
+        po.button_confirm()
+        self.assertFalse(po.locked)
+        # Lock the purchase order
+        po.button_lock()
+        self.assertTrue(po.locked)
+        # Unlocking should not raise an error regardless of the 'Lock Confirmed Orders' setting.
+        self.assertNotEqual(po.lock_confirmed_po, 'lock')
+        po.button_unlock()
+        self.assertFalse(po.locked)
+
+        po.button_lock()
+        self.assertTrue(po.locked)
+        po.lock_confirmed_po = 'lock'
+        po.button_unlock()
+        self.assertFalse(po.locked)
