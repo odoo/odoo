@@ -12,22 +12,43 @@ class StockMoveLine(models.Model):
     released_manual_orders = fields.Selection([('partial_pack','Partial Packed'),
                                         ('fully_pack','Fully Packed')],
                                        string='Packed Orders')
-    remaining_packed_qty = fields.Float('Packed Remaining Quantity', compute='_compute_remaining_packed_qty',
-                                        store=True)
-    released_manual = fields.Boolean('Packed', default=False)
+    # released_manual = fields.Boolean('Packed', default=False)
     pc_container_code = fields.Char(string='PC Container code')
+    picked_qty = fields.Float(
+        string='Picked Quantity',
+        default=0.0,
+        help="Quantity that has been picked."
+    )
+    packed_qty = fields.Float(
+        string='Packed Quantity',
+        default=0.0,
+        help="Quantity that has been packed."
+    )
+    remaining_picked_qty = fields.Float(
+        string='Remaining Picked Quantity',
+        # compute='_compute_remaining_picked_qty',
+        store=True,
+        help="Quantity remaining to be picked."
+    )
 
+    remaining_packed_qty = fields.Float(
+        string='Remaining Packed Quantity',
+        # compute='_compute_remaining_packed_qty',
+        store=True,
+        help="Quantity remaining to be packed."
+    )
 
-    @api.depends('quantity')
-    def _compute_remaining_packed_qty(self):
-        """
-        Compute remaining quantity based on the quantity ordered (product_uom_qty)
-        and the quantity done (quantity). Remaining qty is initially equal to available qty.
-        """
-        for move in self:
-            # Initial remaining qty is the product_uom_qty (expected qty)
-            move.remaining_packed_qty = move.quantity
-            # move.is_remaining_qty = move.remaining_qty > 0
+    # @api.depends('product_uom_qty', 'picked_qty')
+    # def _compute_remaining_picked_qty(self):
+    #     for move in self:
+    #         print("\n\n\n mmove picked ==", move)
+    #         # move.remaining_picked_qty = move.product_uom_qty - move.picked_qty
+    #
+    # @api.depends('picked_qty', 'packed_qty')
+    # def _compute_remaining_packed_qty(self):
+    #     for move in self:
+    #         print("\n\n\n packed qty=====",  move)
+    #         move.remaining_packed_qty = move.picked_qty - move.packed_qty
 
     @api.onchange('packed')
     def _onchange_packed(self):

@@ -34,8 +34,14 @@
                        position="after">
                     <field name="pc_container_code"/>
                     <field name="packed" optional="hide" column_invisible="parent.state=='draft'"/>
-                    <field name="released_manual" optional="hide" column_invisible="parent.state=='draft'"/>
-                    <field name="remaining_packed_qty" optional="hide" column_invisible="parent.state=='draft'"/>
+<!--                    <field name="released_manual" optional="hide" column_invisible="parent.state=='draft'"/>-->
+<!--                    <field name="remaining_packed_qty" optional="hide" column_invisible="parent.state=='draft'"/>-->
+                </xpath>
+                <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='quantity']" position="after">
+                    <field name="picked_qty" optional="hide"/>
+                    <field name="packed_qty" optional="hide"/>
+                    <field name="remaining_picked_qty" readonly="1" optional="hide"/>
+                    <field name="remaining_packed_qty" readonly="1" optional="hide"/>
                 </xpath>
 
             </field>
