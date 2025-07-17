@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import inspect
 import logging
 from contextlib import contextmanager
 from unittest.mock import patch
@@ -27,6 +28,13 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
     def _get_url(self, pos_config=None):
         pos_config = pos_config or self.main_pos_config
         return f"/pos/ui?config_id={pos_config.id}"
+
+    def get_method_additional_tags(self, test_method):
+        additional_tags = super().get_method_additional_tags(test_method)
+        method_source = inspect.getsource(test_method)
+        if "self.start_pos_tour" in method_source:
+            additional_tags.append("is_tour")
+        return additional_tags
 
     def start_pos_tour(self, tour_name, login="pos_user", **kwargs):
         self.start_tour(self._get_url(pos_config=kwargs.get('pos_config')), tour_name, login=login, **kwargs)
