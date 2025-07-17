@@ -617,6 +617,27 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
 
+    def test_13_prepaid_amount_present(self):
+        """
+        Ensure the prepaid amount is present in the UBL XML under <cac:PrepaidPayment>
+        """
+        invoice = self.init_invoice('out_invoice', currency=self.other_currency, products=self.product_a)
+        invoice.action_post()
+
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'amount': 2200.00, 'payment_date': '2024-07-15'
+        })._create_payments()
+
+        file, errors = invoice._l10n_my_edi_generate_invoice_xml()
+        self.assertFalse(errors)
+        root = etree.fromstring(file)
+        self._assert_node_values(
+            root,
+            'cac:PrepaidPayment/cbc:PaidAmount',
+            '2200.00',
+            attributes={'currencyID': self.other_currency.name}
+        )
+
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)
 
