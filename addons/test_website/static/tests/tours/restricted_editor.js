@@ -29,22 +29,28 @@ const closeErrorDialog = [{
 }, {
     trigger: "body:not(:has(.modal))",
 }];
-const switchTo = (lang) => {
-    return [{
+const switchTo = (lang) => [
+    {
         content: `Switch to ${lang}`,
         trigger: `:iframe .js_change_lang[data-url_code='${lang}']`,
         run: "click",
-    }, {
+    },
+    {
         content: `Wait until ${lang} is applied`,
         trigger: `:iframe html[lang*="${lang}"]`,
-    }];
-};
+    },
+    stepUtils.waitIframeIsReady(),
+];
 const goToMenuItem = [
     clickOnExtraMenuItem({}, true),
     {
         content: "Navigate to model item page",
         trigger: ":iframe a[href='/test_website/model_item/1']",
         run: "click",
+    },
+    {
+        content: "Wait to land on model item page",
+        trigger: ':iframe a[href="/test_website/model_item/1"].nav-link.active:not(:visible)',
     },
     stepUtils.waitIframeIsReady(),
 ];
