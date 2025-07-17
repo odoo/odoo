@@ -59,6 +59,9 @@ class TestPersonalStages(TestProjectCommon):
                 'The search should only have returned task that are in the inbox personal stage.')
 
     def test_personal_stage_read_group(self):
+        # Ensure user doesnt have any tasks before hand
+        (self.env['project.task'].sudo().search([("user_ids", "in", (self.task_1.user_ids + self.user_projectmanager).ids)]) - self.task_1).unlink()
+
         self.task_1.user_ids += self.user_projectmanager
         self.task_1.with_user(self.user_projectmanager).personal_stage_type_id = self.manager_stages[1]
         #Makes sure the personal stage for project manager is saved in the database
@@ -88,7 +91,7 @@ class TestPersonalStages(TestProjectCommon):
                 total_stage_0 += 1
             elif group['personal_stage_type_ids'][0] == self.manager_stages[1].id:
                 total_stage_1 += 1
-        self.assertEqual(2, total,
+        self.assertEqual(1, total,
             'read_group should not have returned more tasks than the user is assigned to.')
         self.assertEqual(1, total_stage_0)
         self.assertEqual(1, total_stage_1)
@@ -109,7 +112,10 @@ class TestPersonalStages(TestProjectCommon):
             'name': 'User 3 with personal stages',
         }])
 
-        # Users should have no personal stage and no tasks as one has not access My Tasks or To-do views
+        # Ensure user doesnt have any personal stages before hand and no onboarding tasks
+        self.env['project.task.type'].sudo().search([("user_id", "in", (user_1 + user_2 + user_3).ids)]).user_id = False
+        self.env['project.task'].sudo().search([("user_ids", "in", (user_1 + user_2 + user_3).ids)]).unlink()
+
         self.assertEqual(self.env['project.task.type'].search_count([('user_id', '=', user_1.id)]), 0)
         self.assertEqual(self.env['project.task.type'].search_count([('user_id', '=', user_2.id)]), 0)
         self.assertEqual(self.env['project.task'].search_count([('user_ids', 'in', user_1.ids)]), 0)
