@@ -180,6 +180,7 @@
         ],
         'web.assets_unit_tests': [
             'website_sale/static/tests/interactions/**/*',
+            'website_sale/static/tests/builder/**/*',
         ],
         'web.assets_unit_tests_setup': [
             'website_sale/static/src/interactions/**/*',
