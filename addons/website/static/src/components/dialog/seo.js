@@ -594,6 +594,11 @@ export class SeoChecks extends Component {
             counterLinks: 0,
             totalLinks: 0,
             headingsScan: [],
+            issues: {
+                title: 0,
+                images: 0,
+                links: 0,
+            },
         });
         this.imgUpdated = this.imgUpdated.bind(this);
         onWillStart(async () => {
@@ -712,6 +717,9 @@ export class SeoChecks extends Component {
         });
 
         const results = await rpc("/website/get_alt_images", { models });
+        this.state.issues.images = JSON.parse(results).filter(
+            (alt) => !alt.decorative && alt.alt === ""
+        ).length;
 
         return JSON.parse(results);
     }
@@ -778,6 +786,7 @@ export class SeoChecks extends Component {
             this.state.counterLinks++;
         });
         await Promise.all(promises);
+        this.state.issues.links = brokenLinks.length;
         this.state.checkingLinks = false;
         this.state.checkedLinks = true;
         this.seoContext.brokenLinks = brokenLinks.map((link) => {
