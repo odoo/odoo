@@ -497,10 +497,11 @@ class HTML_Editor(Controller):
                 # empty record set.
                 request.env[fields['res_model']].browse(fields['res_id']).check_access('write')
 
-                # Sudo and SUPERUSER_ID because restricted editor will not be able
-                # to copy the record and the mimetype will be forced to plain text.
-                attachment = attachment.with_user(SUPERUSER_ID).sudo().copy(fields)
-                attachment = attachment.with_user(request.env.user.id).sudo(False)
+                # Sudo because restricted editor will not be able to copy the record
+                attachment = attachment.sudo().copy(fields).sudo(False)
+                # Override mimetype with SUPERUSER if it was forced to plain text
+                if attachment.mimetype == 'text/plain' != fields['mimetype']:
+                    attachment.with_user(SUPERUSER_ID).mimetype = fields['mimetype']
             return attachment
 
         self._clean_context()
