@@ -2517,6 +2517,67 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'account_id': self.bank_payment_move.payment_ids.outstanding_account_id.id,
         }])
 
+    def test_split_payments_negative_amount(self):
+        """
+        Test that we can close the session when we make a negative order paid with split payments method.
+        """
+
+        product = self.env['product.product'].create({
+            'name': 'product5',
+            'is_storable': True,
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        split_bank = self.env['pos.payment.method'].create({
+            'name': 'Bank',
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'receivable_account_id': self.company_data['default_account_receivable'].id,
+            'company_id': self.env.company.id,
+            'split_transactions': True,
+        })
+        self.pos_config.write({
+            'payment_method_ids': [(4, split_bank.id)],
+        })
+
+        # sell product thru pos
+        self.pos_config.open_ui()
+        pos_session = self.pos_config.current_session_id
+        product5_order = {
+            'amount_paid': -750,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': -750,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'lines': [[0, 0, {
+                    'discount': 0,
+                    'pack_lot_ids': [],
+                    'price_unit': 750.0,
+                    'product_id': product.id,
+                    'price_subtotal': -750.0,
+                    'price_subtotal_incl': -750.0,
+                    'tax_ids': [[6, False, []]],
+                    'qty': -1,
+                }]],
+            'name': 'Order 12345-123-1234',
+            'partner_id': self.partner1.id,
+            'session_id': pos_session.id,
+            'sequence_number': 2,
+            'payment_ids': [[0, 0, {
+                    'amount': -750,
+                    'name': fields.Datetime.now(),
+                    'payment_method_id': split_bank.id
+                }]],
+            'uuid': '12345-123-1234',
+            'user_id': self.env.uid,
+            'last_order_preparation_change': '{}',
+            'to_invoice': True
+        }
+
+        self.PosOrder.sync_from_ui([product5_order])['pos.order'][0]['id']
+        self.pos_config.current_session_id.action_pos_session_closing_control()
+        self.assertTrue(pos_session.state == 'closed', "Session should be closed")
+
     def test_invoice_rounding_overpaid_backend(self):
         rouding_method = self.env['account.cash.rounding'].create({
             'name': 'Rounding up',
