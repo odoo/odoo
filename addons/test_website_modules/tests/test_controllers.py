@@ -43,8 +43,10 @@ class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             self.assertEqual(200, response.status_code, "Expect response")
             if expect_fail:
                 return json_safe.loads(response.content)
-            url = json_safe.loads(response.content).get('result')
-            self.assertTrue(url.endswith(name), "Expect name in URL")
+            content = json_safe.loads(response.content)
+            self.assertFalse(content.get('error'), "An error should not happen")
+            url = content.get('result')
+            self.assertTrue(url.partition('?unique=')[0].endswith(name), "Expect name in URL")
             response = self.url_open(url)
             self.assertEqual(200, response.status_code, "Expect response")
             self.assertTrue('image/svg+xml' in response.headers.get('Content-Type'), "Expect SVG mimetype")
@@ -86,6 +88,11 @@ class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             ]
         })
         modify('demo', 'page-demo.gif')
+
+        # Website designer can modify url attachment (for e.g. unsplash)
+        attachment.url = '/page-logo-unique.gif'
+        modify('demo', 'page-logo-unique.gif')
+        attachment.url = False  # Reset previous value
 
         # Portal user cannot modify page
         with mute_logger('odoo.http'):
