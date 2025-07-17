@@ -154,6 +154,25 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             'cac:DeliveryParty': self._get_party_node({**vals, 'partner': vals['customer'], 'role': 'delivery'}),
         }
 
+    def _add_invoice_payment_terms_nodes(self, document_node, vals):
+        # For Myinvois, prepaid amount is defined as a separate node.
+        super()._add_invoice_payment_terms_nodes(document_node, vals)
+        invoice = vals['invoice']
+        document_node['cac:PrepaidPayment'] = {
+            'cbc:PaidAmount': {
+                '_text': self.format_float(invoice.amount_total - invoice.amount_residual, vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            }
+        }
+        return document_node
+
+    def _add_invoice_monetary_total_nodes(self, document_node, vals):
+        super()._add_invoice_monetary_total_nodes(document_node, vals)
+
+        monetary_total_tag = self._get_tags_for_document_type(vals)['monetary_total']
+        if monetary_total_tag in document_node:
+            document_node[monetary_total_tag].pop('cbc:PrepaidAmount', None)
+
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         # PaymentMeans is optional, and since we can't have the correct one at the time of generating, we don't add it.
         pass
