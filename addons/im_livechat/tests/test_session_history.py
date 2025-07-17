@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests import new_test_user, tagged
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 
@@ -23,4 +24,34 @@ class TestImLivechatSessionHistory(TestImLivechatCommon):
             f"/odoo/livechat/{self.livechat_channel.id}/action-{action.id}",
             "im_livechat_history_back_and_forth_tour",
             login="operator",
+        )
+
+    def test_livechat_operator_cannot_access_other_operator_session(self):
+        member = new_test_user(self.env, login="member")
+        agent = new_test_user(self.env, login="agent")
+        channel = self.env["discuss.channel"].create(
+            {
+                "channel_type": "livechat",
+                "livechat_operator_id": member.partner_id.id,
+                "name": "test",
+                "channel_member_ids": [Command.create({"partner_id": member.partner_id.id})],
+            },
+        )
+        rating = self.env["rating.rating"].create(
+            {
+                "res_model_id": self.env["ir.model"]._get_id("discuss.channel"),
+                "res_id": channel.id,
+            },
+        )
+        self.assertEqual(
+            rating.with_user(member).action_open_rated_object().get("tag"),
+            "mail.action_discuss",
+        )
+        self.assertEqual(
+            rating.with_user(self.operators[0]).action_open_rated_object().get("tag"),
+            "mail.action_discuss",
+        )
+        self.assertNotEqual(
+            rating.with_user(agent).action_open_rated_object().get("tag"),
+            "mail.action_discuss",
         )
