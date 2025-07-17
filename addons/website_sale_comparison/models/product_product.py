@@ -34,3 +34,9 @@ class ProductProduct(models.Model):
                 product.attribute_line_ids.filtered(lambda ptal: ptal.attribute_id == pa).value_ids
             ) for product in self])
         return categories
+
+    def _get_combination_name(self):
+        return self.product_template_attribute_value_ids._get_combination_name()
+
+    def _get_line_header(self):
+        return self.name
