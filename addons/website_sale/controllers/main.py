@@ -23,7 +23,7 @@ from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.web_editor.tools import get_video_thumbnail
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.addons.website_sale.const import SHOP_PATH
+from odoo.addons.website_sale.const import SHOP_PATH, CHECKOUT_STEP_HREF_MAPPING
 from odoo.addons.website_sale.controllers.checkout_validation import CheckoutValidation
 from odoo.addons.website_sale.models.website import (
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
@@ -1621,12 +1621,70 @@ class WebsiteSale(payment_portal.PaymentPortal, CheckoutValidation):
 
     # === CHECK METHODS === #
 
+    def _check_checkout_step_access(self):
+        """Check that all the checkout steps prior to the current step are valid, otherwise redirect
+        to the page where actions are still required.
+
+        Note: Uses `request.httprequest.path` to find the current checkout step.
+
+        :return: None if the user can be on the current step, otherwise a redirection.
+        :rtype: None | http.Response
+        """
+        order_sudo = request.cart
+
+        step_href = request.httprequest.path
+        step_href = CHECKOUT_STEP_HREF_MAPPING.get(step_href, step_href)
+        previous_steps = request.website._get_previous_checkout_steps(step_href)
+
+        for prev_step_href in previous_steps.mapped('step_href'):
+            if redirection := self._check_checkout_step(prev_step_href, order_sudo):
+                return redirection
+
     def _check_checkout_step(self, step_href, order_sudo):
-        if step_href == '/shop/cart' and (redirection := self._check_addresses(order_sudo)):
+        """Check that the given step is finished and valid, otherwise redirect to the page where
+        actions are still required.
+
+        This method is intended to be overriden by other modules if further validation are needed.
+
+        :param str step_href: The checkout step href to check.
+        :param sale.order order_sudo: The current cart.
+        :return: None if the given step is valid, otherwise a redirection to the appropriate page.
+        :rtype: None | http.Response
+        """
+        match step_href:
+            case '/shop/cart':
+                return self._check_cart_step_ready(order_sudo)
+            case '/shop/checkout':
+                return self._check_checkout_step_ready(order_sudo)
+
+    def _check_cart_step_ready(self, order_sudo):
+        """ Check whether the cart is a valid, and redirect to the appropriate page if not.
+
+        The cart is only valid if:
+
+        - it exists and is in the draft state;
+        - either the user is logged in, or public orders are allowed;
+        - it is ready for checkout (See also `sale.order._is_cart_ready_for_checkout`), and
+        - the addresses are complete and valid.
+
+        :param sale.order order_sudo: The cart to check.
+        :return: None if the cart is valid; otherwise, a redirection to the appropriate page.
+        """
+        # Check that the cart exists and is in the draft state.
+        if not order_sudo or order_sudo.state != 'draft':
+            request.session['sale_order_id'] = None
+            request.session['sale_transaction_id'] = None
+            return request.redirect(self._get_shop_path())
+
+        # Check that public orders are allowed.
+        if request.env.user._is_public() and request.website.account_on_checkout == 'mandatory':
+            return request.redirect_query('/web/login', {'redirect': request.httprequest.full_path})
+
+        if not order_sudo._is_cart_ready_for_checkout():
+            return request.redirect('/shop/cart')
+
+        if redirection := self._check_addresses(order_sudo):
             return redirection
-        if step_href == '/shop/checkout' and (redirection := self._check_checkout_ready(order_sudo)):
-            return redirection
-        return super()._check_checkout_step(step_href, order_sudo)
 
     def _check_addresses(self, order_sudo):
         """ Check whether the cart's addresses are complete and valid.
@@ -1666,7 +1724,7 @@ class WebsiteSale(payment_portal.PaymentPortal, CheckoutValidation):
                 f'/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing'
             )
 
-    def _check_checkout_ready(self, order_sudo):
+    def _check_checkout_step_ready(self, order_sudo):
         if not order_sudo._is_cart_ready_to_confirm():
             return request.redirect('/shop/checkout')
 

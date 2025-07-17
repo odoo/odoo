@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import cart
-from . import checkout_validation
 from . import combo_configurator
 from . import delivery
 from . import gmc
