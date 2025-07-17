@@ -176,7 +176,6 @@
             'barcodes/static/src/js/barcode_parser.js',
             'barcodes_gs1_nomenclature/static/src/js/barcode_parser.js',
             'barcodes_gs1_nomenclature/static/src/js/barcode_service.js',
-            'web/static/src/views/fields/parsers.js',
             # report download utils
             'web/static/src/webclient/actions/reports/utils.js',
             # PoS files

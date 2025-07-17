@@ -2918,6 +2918,36 @@ export class Model extends Array {
     }
 
     /**
+     * @param {number[]} ids - List of record IDs to update
+     * @param {Partial<ModelRecord>[]} values - List of value dicts (same length/order as `ids`)
+     * @param {Record<string, any>} specification - Fields to return after save
+     * @returns {any[]} - List of saved records
+     */
+    web_save_multi(ids, values, specification) {
+        const kwargs = getKwArgs(arguments, "ids", "values", "specification");
+        ({ ids, values, specification } = kwargs);
+
+        if (!Array.isArray(ids) || !Array.isArray(values) || ids.length !== values.length) {
+            throw new Error("web_save_multi requires `ids` and `values` of the same length.");
+        }
+
+        const results = [];
+
+        for (let i = 0; i < ids.length; i++) {
+            const id = ids[i];
+            const val = values[i];
+            const res = this.web_save([id], val, specification);
+            if (Array.isArray(res)) {
+                results.push(...res);
+            } else {
+                results.push(res);
+            }
+        }
+
+        return results;
+    }
+
+    /**
      * @param {DomainListRepr} domain
      * @param {Record<string, any>} specification
      * @param {number} [offset]

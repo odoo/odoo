@@ -49,7 +49,9 @@ export class FloatField extends Component {
     }
 
     parse(value) {
-        return this.props.inputType === "number" ? Number(value) : parseFloat(value);
+        return this.props.inputType === "number"
+            ? Number(value)
+            : parseFloat(value, { allowOperation: true });
     }
 
     get formattedValue() {

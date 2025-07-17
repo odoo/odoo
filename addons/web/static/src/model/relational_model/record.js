@@ -6,6 +6,7 @@ import { x2ManyCommands } from "@web/core/orm_service";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { htmlJoin } from "@web/core/utils/html";
 import { DataPoint } from "./datapoint";
+import { Operation } from "./operation";
 import { FetchRecordError } from "./errors";
 import {
     createPropertyActiveField,
@@ -33,6 +34,7 @@ import {
  *
  * @typedef {"edit" | "readonly"} Mode
  */
+
 export class Record extends DataPoint {
     static type = "Record";
 
@@ -353,7 +355,10 @@ export class Record extends DataPoint {
 
         // Apply changes
         for (const fieldName in changes) {
-            const change = changes[fieldName];
+            let change = changes[fieldName];
+            if (change instanceof Operation) {
+                change = change.compute(this.data[fieldName]);
+            }
             this._changes[fieldName] = change;
             this.data[fieldName] = change;
             if (this.fields[fieldName].type === "html") {
@@ -1308,6 +1313,11 @@ export class Record extends DataPoint {
     }
 
     async _getOnchangeValues(changes) {
+        for (const fieldName in changes) {
+            if (changes[fieldName] instanceof Operation) {
+                changes[fieldName] = changes[fieldName].compute(this.data[fieldName]);
+            }
+        }
         const onChangeFields = Object.keys(changes).filter(
             (fieldName) => this.activeFields[fieldName] && this.activeFields[fieldName].onChange
         );
@@ -1356,8 +1366,7 @@ export class Record extends DataPoint {
             await prom;
         }
         if (this.selected && this.model.multiEdit) {
-            this._applyChanges(changes);
-            return this.model.root._multiSave(this);
+            return this.model.root._multiSave(this, changes);
         }
 
         let onchangeServerValues = {};

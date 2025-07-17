@@ -505,7 +505,7 @@ export class ListController extends Component {
 
     onWillSaveMulti(editedRecord, changes, validSelectedRecords) {
         if (this.hasMousedownDiscard) {
-            this.nextActionAfterMouseup = () => this.model.root.multiSave(editedRecord);
+            this.nextActionAfterMouseup = () => this.model.root.multiSave(editedRecord, changes);
             return false;
         }
         if (validSelectedRecords.length > 1) {
@@ -534,6 +534,7 @@ export class ListController extends Component {
                             widget: fieldNode && fieldNode.widget,
                         };
                     }),
+                    changes,
                     nbRecords: selection.length,
                     nbValidRecords: validSelectedRecords.length,
                     record: editedRecord,

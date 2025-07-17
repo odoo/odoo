@@ -2,8 +2,9 @@ import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/c
 import { _t } from "@web/core/l10n/translation";
 import { unique } from "@web/core/utils/arrays";
 import { DataPoint } from "./datapoint";
+import { Operation } from "./operation";
 import { Record as RelationalRecord } from "./record";
-import { resequence } from "./utils";
+import { getFieldsSpec, resequence } from "./utils";
 
 /**
  * @typedef {import("./record").Record} RelationalRecord
@@ -133,6 +134,9 @@ export class DynamicList extends DataPoint {
             if (discard) {
                 this._recordToDiscard = editedRecord;
                 await editedRecord.discard();
+                for (const record of this.selection) {
+                    await record.discard();
+                }
                 this._recordToDiscard = null;
                 editedRecord = this.editedRecord;
                 if (editedRecord && editedRecord.isNew) {
@@ -175,8 +179,8 @@ export class DynamicList extends DataPoint {
         return this.model.mutex.exec(() => this._load(offset, limit, orderBy, domain));
     }
 
-    async multiSave(record) {
-        return this.model.mutex.exec(() => this._multiSave(record));
+    async multiSave(record, changes) {
+        return this.model.mutex.exec(() => this._multiSave(record, changes));
     }
 
     selectDomain(value) {
@@ -299,11 +303,14 @@ export class DynamicList extends DataPoint {
         }
     }
 
-    async _multiSave(record) {
-        const changes = record._getChanges();
+    async _multiSave(record, changes) {
+        changes ??= {};
         if (!Object.keys(changes).length || record === this._recordToDiscard) {
             return;
         }
+        this.model.root.selection.forEach((record) => {
+            record._applyChanges(changes);
+        });
         const validSelection = this.selection.filter((record) =>
             Object.keys(changes).every((fieldName) => {
                 if (record._isReadonly(fieldName)) {
@@ -316,6 +323,8 @@ export class DynamicList extends DataPoint {
         );
         const canProceed = await this.model.hooks.onWillSaveMulti(record, changes, validSelection);
         if (canProceed === false) {
+            this.selection.forEach((record) => record._discard());
+            this.leaveEditMode({ discard: true });
             return false;
         }
         if (validSelection.length === 0) {
@@ -327,15 +336,29 @@ export class DynamicList extends DataPoint {
             return false;
         } else {
             const resIds = unique(validSelection.map((r) => r.resId));
+            let records = [];
             const context = this.context;
+            const changesHasFieldOperation = Object.values(changes).some(
+                (value) => value instanceof Operation
+            );
+            const method = changesHasFieldOperation ? "webSaveMulti" : "webSave";
+            const payload = changesHasFieldOperation
+                ? resIds.map((id) => {
+                      const record = validSelection.find((r) => r.resId === id);
+                      return record._getChanges();
+                  })
+                : record._getChanges();
+            const specification = getFieldsSpec(record.activeFields, record.fields);
             try {
-                await this.model.orm.write(this.resModel, resIds, changes, { context });
+                records = await this.model.orm[method](this.resModel, resIds, payload, {
+                    context,
+                    specification,
+                });
             } catch (e) {
                 record._discard();
                 this.model._updateConfig(record.config, { mode: "readonly" }, { reload: false });
                 throw e;
             }
-            const records = await this.model._loadRecords({ ...this.config, resIds });
             for (const record of validSelection) {
                 const serverValues = records.find((r) => r.id === record.resId);
                 record._applyValues(serverValues);
