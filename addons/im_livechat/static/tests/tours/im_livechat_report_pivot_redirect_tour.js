@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 
-function makePivotRedirectTourSteps(singleRecordName) {
+function makePivotRedirectTourSteps(singleRecordName, multiRecordName) {
     return [
         {
             content: "Click on a cell with a single related record",
@@ -17,8 +17,8 @@ function makePivotRedirectTourSteps(singleRecordName) {
             run: "click",
         },
         {
-            content: "Click on a cell with multiple related records",
-            trigger: "tr:has(th:contains(total)) td:eq(0)",
+            content: "Click on a cell with a multiple related records",
+            trigger: `.o_pivot table tbody tr:has(th:contains(${multiRecordName})) td:eq(0)`,
             run: "click",
         },
         {
@@ -29,9 +29,9 @@ function makePivotRedirectTourSteps(singleRecordName) {
 }
 
 registry.category("web_tour.tours").add("im_livechat_agents_report_pivot_redirect_tour", {
-    steps: () => makePivotRedirectTourSteps("test 1"),
+    steps: () => makePivotRedirectTourSteps("test 1", "test 2"),
 });
 
 registry.category("web_tour.tours").add("im_livechat_sessions_report_pivot_redirect_tour", {
-    steps: () => makePivotRedirectTourSteps("operator_1"),
+    steps: () => makePivotRedirectTourSteps("operator_1", "operator_2"),
 });
