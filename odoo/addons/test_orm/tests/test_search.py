@@ -48,13 +48,13 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_orm_multi"."id"
             FROM "test_orm_multi"
-            WHERE ("test_orm_multi"."partner" NOT IN (
+            WHERE ("test_orm_multi"."partner" IS NULL OR "test_orm_multi"."partner" NOT IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
                 WHERE ("res_partner"."name" LIKE %s
                     AND "res_partner"."phone" LIKE %s
                 )
-            ) OR "test_orm_multi"."partner" IS NULL)
+            ))
             ORDER BY "test_orm_multi"."id"
         """]):
             self.env['test_orm.multi'].search([
@@ -67,13 +67,13 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_orm_multi"."id"
             FROM "test_orm_multi"
-            WHERE ("test_orm_multi"."partner" NOT IN (
+            WHERE ("test_orm_multi"."partner" IS NULL OR "test_orm_multi"."partner" NOT IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
                 WHERE ("res_partner"."name" LIKE %s
                     OR "res_partner"."phone" LIKE %s
                 )
-            ) OR "test_orm_multi"."partner" IS NULL)
+            ))
             ORDER BY "test_orm_multi"."id"
         """]):
             self.env['test_orm.multi'].search([
@@ -158,19 +158,19 @@ class TestSubqueries(TransactionCase):
                         OR "res_partner"."name" LIKE %s
                     )
                 )
-                AND ({many2one} NOT IN (
+                AND ({many2one} IS NULL OR {many2one} NOT IN (
                     {subselect}
                     WHERE "res_partner"."website" LIKE %s
-                ) OR {many2one} IS NULL)
+                ))
                 AND (
                     {many2one} IN (
                         {subselect}
                         WHERE "res_partner"."function" LIKE %s
                     )
-                    OR ({many2one} NOT IN (
+                    OR ({many2one} IS NULL OR {many2one} NOT IN (
                         {subselect}
                         WHERE "res_partner"."phone" LIKE %s
-                    ) OR {many2one} IS NULL)
+                    ))
                 )
             )
             ORDER BY "test_orm_multi"."id"
@@ -1018,11 +1018,11 @@ class TestSearchRelated(TransactionCase):
             SELECT "test_orm_related"."id"
             FROM "test_orm_related"
             WHERE (
-                "test_orm_related"."foo_id" NOT IN (
+                "test_orm_related"."foo_id" IS NULL OR "test_orm_related"."foo_id" NOT IN (
                     SELECT "test_orm_related_foo"."id"
                     FROM "test_orm_related_foo"
                     WHERE "test_orm_related_foo"."name" IN %s
-                ) OR "test_orm_related"."foo_id" IS NULL
+                )
             )
             ORDER BY "test_orm_related"."id"
         """]):
@@ -1071,11 +1071,12 @@ class TestSearchRelated(TransactionCase):
             SELECT "test_orm_related"."id"
             FROM "test_orm_related"
             WHERE (
+                "test_orm_related"."foo_id" IS NULL OR
                 "test_orm_related"."foo_id" NOT IN (
                     SELECT "test_orm_related_foo"."id"
                     FROM "test_orm_related_foo"
                     WHERE "test_orm_related_foo"."name" IN %s
-                ) OR "test_orm_related"."foo_id" IS NULL
+                )
             )
             ORDER BY "test_orm_related"."id"
         """]):
