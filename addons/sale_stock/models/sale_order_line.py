@@ -316,8 +316,11 @@ class SaleOrderLine(models.Model):
             moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
 
         for move in moves:
-            if (strict and move.location_dest_id._is_outgoing()) or \
-               (not strict and move.rule_id.id in triggering_rule_ids and (move.location_final_id or move.location_dest_id)._is_outgoing()):
+            if not move._is_dropshipped_returned() and (
+                (strict and move.location_dest_id._is_outgoing()) or (
+                not strict and move.rule_id.id in triggering_rule_ids and
+                (move.location_final_id or move.location_dest_id)._is_outgoing()
+            )):
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
                     outgoing_moves_ids.add(move.id)
             elif move.location_id._is_outgoing() and move.to_refund:

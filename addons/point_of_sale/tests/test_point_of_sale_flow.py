@@ -2352,3 +2352,125 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.PosOrder.sync_from_ui(refund_values)
         refunded_order_line = self.env['pos.order.line'].search([('product_id', '=', product.id), ('qty', '=', -2)])
         self.assertEqual(refunded_order_line.total_cost, -20)
+
+    def test_sum_only_pos_locations(self):
+        """Test that quantities are summed only from POS source locations"""
+
+        self.product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'tracking': 'lot',
+            'is_storable': True,
+        })
+
+        self.warehouse = self.env['stock.warehouse'].create({
+            'name': 'Test Warehouse',
+            'code': 'TWH',
+        })
+
+        self.pos_child_location = self.env['stock.location'].create({
+            'name': 'POS Child Location',
+            'usage': 'internal',
+            'location_id': self.warehouse.lot_stock_id.id,
+        })
+
+        self.other_location = self.env['stock.location'].create({
+            'name': 'Other Location',
+            'usage': 'internal',
+        })
+
+        picking_type = self.env['stock.picking.type'].create({
+            'name': 'POS Operations',
+            'code': 'outgoing',
+            'sequence_code': 'POS',
+            'warehouse_id': self.warehouse.id,
+            'default_location_src_id': self.warehouse.lot_stock_id.id,
+        })
+
+        self.pos_config = self.env['pos.config'].create({
+            'name': 'Test POS Config',
+            'picking_type_id': picking_type.id,
+        })
+
+        self.lot = self.env['stock.lot'].create({
+            'name': 'TEST_LOT',
+            'product_id': self.product.id,
+        })
+
+        # Create quants in different locations for the same lot
+        self.env['stock.quant'].create([{
+            'product_id': self.product.id,
+            'location_id': self.warehouse.lot_stock_id.id,
+            'lot_id': self.lot.id,
+            'quantity': 10.0,
+        }, {
+            'product_id': self.product.id,
+            'location_id': self.pos_child_location.id,
+            'lot_id': self.lot.id,
+            'quantity': 5.0,
+        }, {
+            'product_id': self.product.id,
+            'location_id': self.other_location.id,
+            'lot_id': self.lot.id,
+            'quantity': 20.0,
+        }])
+
+        pos_order_line = self.env['pos.order.line'].with_context(config_id=self.pos_config.id)
+        result = pos_order_line.get_existing_lots(self.env.company.id, self.product.id)
+
+        self.assertEqual(len(result), 1, "Should return exactly one lot")
+        self.assertEqual(result[0]['name'], 'TEST_LOT')
+        self.assertEqual(result[0]['product_qty'], 15.0, "Should sum only quantities from POS source locations")
+
+    def test_payment_difference_accounting_items(self):
+        """Verify that the amount of the accounting items are correct when closing a session with a payment difference."""
+        self.product1 = self.env['product.product'].create({
+            'name': 'Test Product',
+            'lst_price': 100,
+        })
+        # Make a sale paid by bank
+        self.pos_config.open_ui()
+        session_id = self.pos_config.current_session_id
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session_id.id,
+            'partner_id': False,
+            'lines': [Command.create({
+                'name': 'OL/0001',
+                'product_id': self.product1.id,
+                'price_unit': 100.00,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': False,
+                'price_subtotal': 100.00,
+                'price_subtotal_incl': 100.00,
+            })],
+            'pricelist_id': self.pos_config.pricelist_id.id,
+            'amount_paid': 100.00,
+            'amount_total': 100.00,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+        })
+
+        # Make payment
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.bank_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+
+        session_id.action_pos_session_closing_control(bank_payment_method_diffs={self.bank_payment_method.id: -10.00})
+        self.bank_payment_move = session_id._get_related_account_moves().filtered(lambda move: 'Combine Bank' in move.ref)
+        self.assertRecordValues(self.bank_payment_move.line_ids.sorted('balance'), [{
+            'balance': -100.0,
+            'account_id': self.bank_payment_method.receivable_account_id.id,
+        },
+        {
+            'balance': 10.0,
+            'account_id': self.bank_payment_method.journal_id.loss_account_id.id,
+        },
+        {
+            'balance': 90.0,
+            'account_id': self.bank_payment_move.payment_ids.outstanding_account_id.id,
+        }])

@@ -180,7 +180,8 @@ class PickingType(models.Model):
         # Make sure that all picking type IDs are represented, even if empty
         picking_type_id_to_dates = {i: [] for i in repair_picking_types.ids}
         picking_type_id_to_dates.update({r[0].id: r[1] for r in repair_records})
-        repair_records = [(i, d, _('Confirmed')) for i, d in picking_type_id_to_dates.items()]
+        label = self.env._('Confirmed')
+        repair_records = [(i, d, label) for i, d in picking_type_id_to_dates.items()]
         return records + repair_records
 
     def action_repair_overview(self):

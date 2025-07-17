@@ -92,7 +92,7 @@ export class DocumentSelector extends FileSelector {
 
 export function renderStaticFileBox(filename, mimetype, downloadUrl, id) {
     const rootSpan = document.createElement("span");
-    rootSpan.classList.add("o_file_box");
+    rootSpan.classList.add("o_file_box", "o-contenteditable-false");
     rootSpan.contentEditable = false;
     rootSpan.dataset.attachmentId = id;
     const bannerElement = renderToElement("html_editor.StaticFileBox", {

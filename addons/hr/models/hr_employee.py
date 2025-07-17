@@ -579,7 +579,7 @@ class HrEmployeePrivate(models.Model):
             employee_fields_to_empty = self._get_employee_m2o_to_empty_on_archived_employees()
             user_fields_to_empty = self._get_user_m2o_to_empty_on_archived_employees()
             employee_domain = [[(field, 'in', archived_employees.ids)] for field in employee_fields_to_empty]
-            user_domain = [[(field, 'in', archived_employees.user_id.ids) for field in user_fields_to_empty]]
+            user_domain = [[(field, 'in', archived_employees.user_id.ids)] for field in user_fields_to_empty]
             employees = self.env['hr.employee'].search(expression.OR(employee_domain + user_domain))
             for employee in employees:
                 for field in employee_fields_to_empty:

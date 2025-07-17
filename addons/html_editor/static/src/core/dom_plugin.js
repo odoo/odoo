@@ -28,6 +28,7 @@ import {
     isUnprotecting,
     listElementSelector,
     paragraphRelatedElementsSelector,
+    isEditorTab,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -93,6 +94,7 @@ export class DomPlugin extends Plugin {
             }
         },
         normalize_handlers: this.normalize.bind(this),
+        functional_empty_node_predicates: [isSelfClosingElement, isEditorTab],
     };
     contentEditableToRemove = new Set();
 

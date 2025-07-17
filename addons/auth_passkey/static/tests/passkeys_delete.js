@@ -26,7 +26,6 @@ registry.category("web_tour.tours").add('passkeys_tour_delete', {
             },
         }, {
             content: "Open Passkey dropdown",
-            // It just happens to be invisible due to scroll bar, if it becomes visible in the future just remove the :not(:visible).
             trigger: '.o_dropdown_kanban .o-dropdown:not(:visible)',
             run: 'click',
         }, {
@@ -56,6 +55,10 @@ registry.category("web_tour.tours").add('passkeys_tour_delete', {
             content: "Open preferences / profile screen",
             trigger: '[data-menu=settings]',
             run: 'click',
+        }, {
+            // The HR module causes the switch to security tab to trigger on the old DOM, before the new one is loaded
+            content: "Make sure the Preferences tab is open",
+            trigger: 'label:contains("Email Signature")',
         }, {
             content: "Switch to security tab",
             trigger: 'a[role=tab]:contains("Account Security")',

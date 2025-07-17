@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import {
     ICON_SELECTOR,
     isIconElement,
+    isMediaElement,
     isProtected,
     isProtecting,
 } from "@html_editor/utils/dom_info";
@@ -65,6 +66,7 @@ export class MediaPlugin extends Plugin {
         normalize_handlers: this.normalizeMedia.bind(this),
 
         unsplittable_node_predicates: isIconElement, // avoid merge
+        functional_empty_node_predicates: isMediaElement,
 
         selectors_for_feff_providers: () => ICON_SELECTOR,
     };

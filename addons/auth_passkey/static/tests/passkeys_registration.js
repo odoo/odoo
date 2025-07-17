@@ -97,12 +97,22 @@ registry.category("web_tour.tours").add('passkeys_tour_registration', {
             trigger: '[data-menu=settings]',
             run: 'click',
         }, {
+            // The HR module causes the switch to security tab to trigger on the old DOM, before the new one is loaded
+            content: "Make sure the Preferences tab is open",
+            trigger: 'label:contains("Email Signature")',
+        }, {
             content: "Switch to security tab",
             trigger: 'a[role=tab]:contains("Account Security")',
             run: 'click',
         }, {
             content: "Ensure there is one passkey",
             trigger: 'button:contains("Add Passkey")',
+            run: () => {
+                let amount = document.querySelectorAll("div[name='auth_passkey_key_ids'] article").length;
+                if(amount != 1) {
+                    throw Error("Amount of Passkeys must be 1");
+                }
+            },
         },
     ]
 })

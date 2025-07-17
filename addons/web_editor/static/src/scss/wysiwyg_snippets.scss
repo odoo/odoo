@@ -1831,6 +1831,15 @@
             .o_we_so_color_palette.o_we_user_value_widget + .o_we_user_value_widget:not(.o_we_so_color_palette) {
                 margin-left: $o-we-sidebar-content-field-multi-spacing * 4 !important;
             }
+
+            // For layout having button-group + we-select, to avoid the long
+            // text to overflow the row.
+            &:has(div > we-button-group + we-select.o_grid) {
+                we-button-group we-selection-items {
+                    display: grid !important;
+                    grid-template-columns: auto auto;
+                }
+            }
         }
 
         %o-we-inline {
