@@ -505,8 +505,8 @@ import { pay } from "@website_sale/js/tours/tour_utils";
         expectUnloadPage: true,
     },
     {
-        content: "Click on 'Continue checkout' button",
-        trigger: '.oe_cart .btn:contains("Continue checkout")',
+        content: "Click on Confirm button to save the Extra Info form",
+        trigger: 'a[name="website_sale_main_button"]',
         run: "click",
         expectUnloadPage: true,
     },
