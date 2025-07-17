@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
-"PO-Revision-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-07-16 18:39+0000\n"
+"PO-Revision-Date: 2025-07-16 18:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,12 +17,17 @@ msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
+msgid "<b>End</b>"
 msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "<small>Add this event to your calendar</small>"
+msgid "<b>Start</b>"
+msgstr ""
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
 msgstr ""
 
 #. module: website_event_sale
@@ -49,23 +54,18 @@ msgid ""
 msgstr ""
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "Add to Google Agenda"
-msgstr ""
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "Add to iCal/Outlook"
-msgstr ""
-
-#. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
 msgid "Confirm Registration"
 msgstr ""
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "Don't miss out!"
+#: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order_line__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: website_event_sale
@@ -104,13 +104,13 @@ msgid "Go to Payment"
 msgstr ""
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "Google Agenda"
-msgstr ""
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "Outlook"
+#: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__id
+#: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item__id
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__id
+#: model:ir.model.fields,field_description:website_event_sale.field_product_template__id
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order_line__id
+msgid "ID"
 msgstr ""
 
 #. module: website_event_sale
@@ -155,13 +155,19 @@ msgstr ""
 #: code:addons/website_event_sale/models/sale_order.py:0
 msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
-" ticket for the %(event)s event."
+" ticket for the %(event)s event%(slot)s."
 msgstr ""
 
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 msgid "The provided ticket doesn't exist"
+msgstr ""
+
+#. module: website_event_sale
+#. odoo-python
+#: code:addons/website_event_sale/models/sale_order.py:0
+msgid "The provided ticket slot doesn't exist"
 msgstr ""
 
 #. module: website_event_sale
@@ -177,24 +183,9 @@ msgid "Warning"
 msgstr ""
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "We are looking forward to meeting you at the following"
-msgstr ""
-
-#. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 msgid "You cannot raise manually the event ticket quantity in your cart"
-msgstr ""
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "event"
-msgstr ""
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "events"
 msgstr ""
 
 #. module: website_event_sale

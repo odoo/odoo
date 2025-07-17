@@ -4,21 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
-"PO-Revision-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-07-16 18:39+0000\n"
+"PO-Revision-Date: 2025-07-16 18:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
-msgid "#{year}"
-msgstr ""
 
 #. module: website_blog
 #. odoo-python
@@ -33,17 +28,7 @@ msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
-msgid "' page header."
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "'. Showing results for '"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
-msgid "-- All dates"
 msgstr ""
 
 #. module: website_blog
@@ -69,7 +54,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid "<b>Publish your blog post</b> to make it visible to your visitors."
 msgstr ""
 
@@ -90,7 +75,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid ""
 "<b>Write your story here.</b> Use the top toolbar to style your text: add an"
 " image or table, set bold or italic, etc. Drag and drop building blocks for "
@@ -156,51 +141,20 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
-msgid "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
-msgstr ""
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
 msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
-msgid ""
-"<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" "
-"title=\"Instagram\"/>"
-msgstr ""
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
 msgid ""
 "<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
 "title=\"LinkedIn\"/>"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
-msgid "<i class=\"fa fa-rss-square\" aria-label=\"RSS\" title=\"RSS\"/>"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
-msgid "<i class=\"fa fa-tiktok text-tiktok\" aria-label=\"TikTok\" title=\"TikTok\"/>"
-msgstr ""
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
 msgid "<i class=\"fa fa-twitter text-twitter\" aria-label=\"X\" title=\"X\"/>"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
-msgid ""
-"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
-"title=\"Youtube\"/>"
 msgstr ""
 
 #. module: website_blog
@@ -310,8 +264,15 @@ msgid "All Blogs"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "All blogs"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
+msgid "All dates"
 msgstr ""
 
 #. module: website_blog
@@ -327,7 +288,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/website_blog.js:0
+#: code:addons/website_blog/static/src/interactions/website_blog.js:0
 msgid "Amazing blog article: %(title)s! Check it live: %(url)s"
 msgstr ""
 
@@ -354,6 +315,8 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_archive_display
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Archive"
@@ -368,6 +331,8 @@ msgid "Archived"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_archives
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Archives"
@@ -414,6 +379,10 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__author_id
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
@@ -487,8 +456,10 @@ msgid "Beyond The Eye"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
 #. odoo-python
 #: code:addons/website_blog/models/website.py:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model,name:website_blog.model_blog_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__blog_id
 #: model:ir.ui.menu,name:website_blog.menu_website_blog_root_global
@@ -506,6 +477,8 @@ msgid "Blog Name"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option_plugin.js:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Blog Page"
 msgstr ""
@@ -575,6 +548,8 @@ msgid "Blog's Title"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_searchbar_option.xml:0
 #: model:ir.actions.act_window,name:website_blog.action_blog_blog
 #: model:ir.ui.menu,name:website_blog.menu_blog_global
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
@@ -585,21 +560,29 @@ msgid "Blogs"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Blogs List"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option_plugin.js:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Blogs Page"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Bottom"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Breadcrumb"
 msgstr ""
@@ -634,6 +617,8 @@ msgid "Can Publish"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Cards"
 msgstr ""
@@ -650,13 +635,13 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid "Choose an image from the library."
 msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid "Click here to add new content to your website."
 msgstr ""
 
@@ -679,18 +664,22 @@ msgid "Color"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info
 msgid "Comment"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info
 #: model_terms:ir.ui.view,arch_db:website_blog.post_info
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Comments"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Comments/Views Stats"
 msgstr ""
@@ -717,6 +706,8 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Cover"
 msgstr ""
@@ -744,26 +735,36 @@ msgid "Created on"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "Date"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_searchbar_option_plugin.js:0
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
 msgid "Date (new to old)"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_searchbar_option_plugin.js:0
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
 msgid "Date (old to new)"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_searchbar_option_plugin.js:0
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
 msgid "Description"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "Dexter"
 msgstr ""
@@ -773,6 +774,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -798,11 +801,6 @@ msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
-msgid "Edit the '"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Edit the 'All Blogs' page header."
 msgstr ""
 
@@ -812,20 +810,24 @@ msgid "Edit the 'Filter Results' page header."
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "Edit the '{{0}}' page header."
+msgstr ""
+
+#. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid "Edit your title, the subtitle is optional."
 msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid "Enter your post's title"
 msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
 msgid "Facebook"
 msgstr ""
 
@@ -845,6 +847,8 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Follow Us"
@@ -860,6 +864,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_partner_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_partner_ids
 msgid "Followers (Partners)"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post__footer_visible
+msgid "Footer Visible"
 msgstr ""
 
 #. module: website_blog
@@ -888,6 +897,8 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Full-Width"
 msgstr ""
@@ -913,6 +924,8 @@ msgid "Get started"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Grid"
 msgstr ""
@@ -929,6 +942,11 @@ msgid "Has Message"
 msgstr ""
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post__header_visible
+msgid "Header Visible"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
 msgid "Here are some of the key facts you should bear in mind:"
 msgstr ""
@@ -939,6 +957,8 @@ msgid "Holiday tips"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "Hover Effect"
 msgstr ""
@@ -973,6 +993,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__id
+#: model:ir.model.fields,field_description:website_blog.field_website__id
+#: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__id
 msgid "ID"
 msgstr ""
 
@@ -1023,6 +1045,9 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Increase Readability"
 msgstr ""
@@ -1099,7 +1124,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/options.js:0
+#: code:addons/website_blog/static/src/website_builder/blog_cover_properties_option.js:0
 msgid "Large"
 msgstr ""
 
@@ -1130,6 +1155,9 @@ msgid "Latest Blog Posts"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Layout"
 msgstr ""
@@ -1154,6 +1182,8 @@ msgid "LinkedIn"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "List"
 msgstr ""
@@ -1173,6 +1203,8 @@ msgid "Location"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "Marley"
 msgstr ""
@@ -1214,7 +1246,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/options.js:0
+#: code:addons/website_blog/static/src/website_builder/blog_cover_properties_option.js:0
 msgid "Medium"
 msgstr ""
 
@@ -1285,11 +1317,15 @@ msgid "New Blog Post"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Next Article"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "No Cover"
 msgstr ""
@@ -1320,6 +1356,8 @@ msgid "No tags defined yet."
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "None"
 msgstr ""
@@ -1335,11 +1373,15 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "Normal"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "Normal picture"
 msgstr ""
@@ -1394,7 +1436,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid ""
 "Once you have reviewed the content on mobile, you can switch back to the "
 "normal view by clicking here again"
@@ -1472,6 +1514,12 @@ msgid "Photo by Teddy Kelley, @teddykelley"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+msgid "Picture Size"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "Picture size"
 msgstr ""
@@ -1483,11 +1531,15 @@ msgid "Posts"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Posts List"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_searchbar_option_plugin.js:0
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
 msgid "Publication Date"
 msgstr ""
@@ -1579,7 +1631,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid "Search for an image. (eg: type \"business\")"
 msgstr ""
 
@@ -1602,24 +1654,14 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid "Select the blog you want to add the post to."
 msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid "Select this menu item to create a new blog post."
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
-msgid "Select to Comment"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
-msgid "Select to Tweet"
 msgstr ""
 
 #. module: website_blog
@@ -1635,8 +1677,13 @@ msgid "Separate every keyword with a comma"
 msgstr ""
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid "Set a blog post <b>cover</b>."
 msgstr ""
 
@@ -1649,6 +1696,8 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Share Links"
 msgstr ""
@@ -1674,6 +1723,9 @@ msgid "Share this post"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Sidebar"
 msgstr ""
@@ -1693,6 +1745,8 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "Silly-Chico"
 msgstr ""
@@ -1704,11 +1758,15 @@ msgid "Skies"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "Smaller"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "Smaller picture"
 msgstr ""
@@ -1830,6 +1888,9 @@ msgid "Tag name already exists!"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/blog_post_tags_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__tag_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__tag_ids
 #: model:ir.ui.menu,name:website_blog.menu_blog_tag_global
@@ -1840,6 +1901,8 @@ msgid "Tags"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Tags List"
 msgstr ""
@@ -1851,12 +1914,16 @@ msgid "Taking pictures in the dark"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__teaser
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "Teaser"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Teaser & Tags"
 msgstr ""
@@ -1927,8 +1994,13 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#: model:ir.model.fields,help:website_blog.field_blog_post__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_post__website_url
-msgid "The full URL to access the document through the website."
+msgid "The full relative URL to access the document through the website."
 msgstr ""
 
 #. module: website_blog
@@ -2021,13 +2093,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/options.js:0
-msgid "This tag already exists"
-msgstr ""
-
-#. module: website_blog
-#. odoo-javascript
-#: code:addons/website_blog/static/src/js/options.js:0
+#: code:addons/website_blog/static/src/website_builder/blog_cover_properties_option.js:0
 msgid "Tiny"
 msgstr ""
 
@@ -2038,11 +2104,15 @@ msgid "Title"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Title Above Cover"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Title Inside Cover"
 msgstr ""
@@ -2098,6 +2168,8 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Top Banner"
 msgstr ""
@@ -2124,7 +2196,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid "Use this icon to preview your blog post on <b>mobile devices</b>."
 msgstr ""
 
@@ -2164,6 +2236,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__website_id
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_id
 msgid "Website"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post__website_absolute_url
+msgid "Website Absolute URL"
 msgstr ""
 
 #. module: website_blog
@@ -2288,7 +2365,7 @@ msgid "breadcrumb"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info
 #: model_terms:ir.ui.view,arch_db:website_blog.post_heading
 msgid "by"
 msgstr ""
@@ -2334,13 +2411,13 @@ msgid "unpublished"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info
 msgid ""
 "|\n"
-"                            <i class=\"fa fa-comment text-muted me-1\"/>"
+"            <i class=\"fa fa-comment ms-1 text-muted\"/>"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info
 msgid "| No comments yet"
 msgstr ""
