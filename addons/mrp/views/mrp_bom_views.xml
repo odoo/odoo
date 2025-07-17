@@ -170,11 +170,6 @@
                         <page string="Miscellaneous" name="miscellaneous">
                             <group>
                                 <group>
-                                    <field name="ready_to_produce" invisible="type == 'phantom'" string="Manufacturing Readiness" widget="radio" groups="mrp.group_mrp_routings"/>
-                                    <field name="allow_operation_dependencies" groups="mrp.group_mrp_workorder_dependencies"/>
-                                    <field name="note" />
-                                </group>
-                                <group>
                                     <field name="picking_type_id" invisible="type == 'phantom'" groups="stock.group_adv_location"/>
                                     <label for="produce_delay" string="Manuf. Lead Time"/>
                                     <div>
@@ -193,6 +188,11 @@
                                         <field name="batch_size" class="w-50" invisible="not enable_batch_size" decoration-danger="batch_size &lt;= 0.0"/>
                                         <field name="uom_id" groups="uom.group_uom" readonly="1" invisible="not enable_batch_size"/>
                                     </div>
+                                </group>
+                                <group>
+                                    <field name="ready_to_produce" invisible="type == 'phantom'" string="Manufacturing Readiness" widget="radio" groups="mrp.group_mrp_routings"/>
+                                    <field name="allow_operation_dependencies" groups="mrp.group_mrp_workorder_dependencies"/>
+                                    <field name="note"/>
                                 </group>
                             </group>
                         </page>
