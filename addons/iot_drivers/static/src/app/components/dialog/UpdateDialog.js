@@ -79,6 +79,7 @@ export class UpdateDialog extends Component {
     }
 
     static template = xml`
+    <t t-translation="off">
         <LoadingFullScreen t-if="this.state.waitRestart">
             <t t-set-slot="body">
                 Updating your device, please wait...
@@ -151,5 +152,6 @@ export class UpdateDialog extends Component {
                 </button>
             </t>
         </BootstrapDialog>
+    </t>
     `;
 }

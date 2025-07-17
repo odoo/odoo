@@ -1,4 +1,4 @@
-import { Component, markup, whenReady, validate, xml } from "@odoo/owl";
+import { Component, markup, whenReady, validate } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -18,18 +18,7 @@ import { tourRecorderState } from "@web_tour/js/tour_recorder/tour_recorder_stat
 
 class OnboardingItem extends Component {
     static components = { DropdownItem };
-    static template = xml`
-    <DropdownItem>
-        <div class="d-flex justify-content-between ps-3">
-            <div class="align-self-center">
-                <span class="form-check form-switch" t-on-click.stop.prevent="() => this.props.toggleItem()">
-                    <input type="checkbox" class="form-check-input" id="onboarding" t-att-checked="this.props.toursEnabled"/>
-                    <label class="form-check-label">Onboarding</label>
-                </span>
-            </div>
-        </div>
-    </DropdownItem>
-    `;
+    static template = "web_tour.OnboardingItem";
     static props = {
         toursEnabled: { type: Boolean },
         toggleItem: { type: Function },

@@ -3,12 +3,10 @@ import { registry } from "@web/core/registry";
 
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
-import { xml, useState, Component } from "@odoo/owl";
+import { useState, Component } from "@odoo/owl";
 
 export class TestsSharedJsPython extends Component {
-    static template = xml`
-        <button t-attf-class="#{state.done ? 'text-success' : ''}" t-on-click="processTests">Test</button>
-    `;
+    static template = "account.TestsSharedJsPython";
     static props = {
         tests: { type: Array, optional: true },
     };
