@@ -98,8 +98,8 @@
                     <div class="d-flex align-items-center my-1 me-2">
                         <!-- Scoring info -->
                         <t t-if="survey.scoring_type != 'no_scoring' and (question.answer_numerical_box or question.answer_date or
-                            question.answer_datetime or any([a.is_correct for a in question.suggested_answer_ids]))">
-                            <span t-if="question.question_type in ['numerical_box', 'date', 'datetime', 'simple_choice', 'multiple_choice']"
+                            question.answer_time or any([a.is_correct for a in question.suggested_answer_ids]))">
+                            <span t-if="question.question_type in ['numerical_box', 'date', 'time', 'simple_choice', 'multiple_choice']"
                                 class="badge d-flex gap-1 ms-0 me-1 text-info text-start border rounded">
                                 <span t-out="question_data['right_inputs_count']"/>
                                 <span class="text-success">Correct</span>
@@ -141,7 +141,7 @@
                                 <i t-else="" class="fa fa-bar-chart-o"/>
                             </a>
                         </li>
-                        <li t-elif="question.question_type in ['numerical_box', 'date', 'datetime']" class="nav-item btn-group">
+                        <li t-elif="question.question_type in ['numerical_box', 'date', 'time']" class="nav-item btn-group">
                             <a t-att-href="'#survey_stats_question_%d' % question.id" t-att-aria-controls="'survey_stats_question_%d' % question.id"
                                 data-bs-toggle="tab" role="tab" class="o_survey_results_data_tab nav-link btn btn-light py-1 px-2 active">
                                 <i class="fa fa-trophy"/>
@@ -166,8 +166,8 @@
                 </div>
                 <t t-elif="question.question_type in ['text_box', 'char_box']"
                     t-call="survey.question_result_text"/>
-                <t t-elif="question.question_type in ['numerical_box', 'date', 'datetime']"
-                    t-call="survey.question_result_number_or_date_or_datetime"/>
+                <t t-elif="question.question_type in ['numerical_box', 'date', 'time']"
+                    t-call="survey.question_result_number_or_date_or_time"/>
                 <t t-elif="question.question_type in ['simple_choice', 'multiple_choice', 'scale']"
                     t-call="survey.question_result_choice"/>
                 <t t-elif="question.question_type in ['matrix']"
@@ -267,7 +267,7 @@
         </div>
     </template>
 
-    <template id="question_result_number_or_date_or_datetime" name="Question: number or date (and time) result (numerical_box or date or datetime)">
+    <template id="question_result_number_or_date_or_time" name="Question: number or date (and time) result (numerical_box or date or time)">
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active with-3d-shadow with-transitions" t-att-id="'survey_stats_question_%d' % question.id">
                 <table class="table table-hover table-sm">
@@ -291,9 +291,9 @@
                                     <span t-out="common_line[0]" t-options='{"widget": "date"}'/>
                                     <i t-if="right_answer" class="fa fa-check"/>
                                 </t>
-                                <t t-elif="question.question_type == 'datetime'">
-                                    <t t-set="right_answer" t-value="common_line[0] == question.answer_datetime"/>
-                                    <span t-out="common_line[0]" t-options='{"widget": "datetime"}'/>
+                                <t t-elif="question.question_type == 'time'">
+                                    <t t-set="right_answer" t-value="common_line[0] == question.answer_time"/>
+                                    <span t-out="format_time(common_line[0])"/>
                                     <i t-if="right_answer" class="fa fa-check"/>
                                 </t>
                             </td>

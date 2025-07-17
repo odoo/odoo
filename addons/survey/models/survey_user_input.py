@@ -9,7 +9,8 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, format_time
+from odoo.tools.date_utils import float_to_time
 
 _logger = logging.getLogger(__name__)
 
@@ -291,7 +292,7 @@ class SurveyUser_Input(models.Model):
         if old_answers and not overwrite_existing:
             raise UserError(_("This answer cannot be overwritten."))
 
-        if question.question_type in ['char_box', 'text_box', 'scale', 'numerical_box', 'date', 'datetime']:
+        if question.question_type in ['char_box', 'text_box', 'scale', 'numerical_box', 'date', 'time']:
             self._save_line_simple_answer(question, old_answers, answer)
             if question.save_as_email and answer:
                 self.write({'email': answer})
@@ -738,13 +739,13 @@ class SurveyUser_InputLine(models.Model):
         ('numerical_box', 'Number'),
         ('scale', 'Number'),
         ('date', 'Date'),
-        ('datetime', 'Datetime'),
+        ('time', 'Time'),
         ('suggestion', 'Suggestion')], string='Answer Type')
     value_char_box = fields.Char('Text answer')
     value_numerical_box = fields.Float('Numerical answer')
     value_scale = fields.Integer('Scale value')
     value_date = fields.Date('Date answer')
-    value_datetime = fields.Datetime('Datetime answer')
+    value_time = fields.Float('Time answer')
     value_text_box = fields.Text('Free Text answer')
     suggested_answer_id = fields.Many2one('survey.question.answer', string="Suggested answer")
     matrix_row_id = fields.Many2one('survey.question.answer', string="Row answer")
@@ -754,7 +755,7 @@ class SurveyUser_InputLine(models.Model):
 
     @api.depends(
         'answer_type', 'value_text_box', 'value_numerical_box',
-        'value_char_box', 'value_date', 'value_datetime',
+        'value_char_box', 'value_date', 'value_time',
         'suggested_answer_id.value', 'matrix_row_id.value',
     )
     def _compute_display_name(self):
@@ -767,8 +768,8 @@ class SurveyUser_InputLine(models.Model):
                 line.display_name = line.value_numerical_box
             elif line.answer_type == 'date':
                 line.display_name = fields.Date.to_string(line.value_date)
-            elif line.answer_type == 'datetime':
-                line.display_name = fields.Datetime.to_string(fields.Datetime.context_timestamp(self.env.user, line.value_datetime))
+            elif line.answer_type == 'time':
+                line.display_name = format_time(self.env, float_to_time(line.value_time), time_format="short")
             elif line.answer_type == 'scale':
                 line.display_name = line.value_scale
             elif line.answer_type == 'suggestion':
@@ -780,7 +781,7 @@ class SurveyUser_InputLine(models.Model):
             if not line.display_name:
                 line.display_name = _('Skipped')
 
-    @api.depends('answer_type', 'value_text_box', 'value_numerical_box', 'value_date', 'value_datetime',
+    @api.depends('answer_type', 'value_text_box', 'value_numerical_box', 'value_date', 'value_time',
                  'suggested_answer_id', 'user_input_id')
     def _compute_answer_score(self):
         """ Get values for: answer_is_correct and associated answer_score.
@@ -809,14 +810,12 @@ class SurveyUser_InputLine(models.Model):
                         answer_score = line.suggested_answer_id.answer_score
                         answer_is_correct = line.suggested_answer_id.is_correct
                 # for all other scored question cases, record question answer_score (can be: pos or 0)
-                elif line.question_id.question_type in ['date', 'datetime', 'numerical_box']:
+                elif line.question_id.question_type in ['date', 'time', 'numerical_box']:
                     answer = line[f'value_{line.answer_type}']
-                    if line.answer_type == 'numerical_box':
+                    if line.answer_type in ['numerical_box', 'time']:
                         answer = float(answer)
                     elif line.answer_type == 'date':
                         answer = fields.Date.from_string(answer)
-                    elif line.answer_type == 'datetime':
-                        answer = fields.Datetime.from_string(answer)
                     if answer and answer == line.question_id[f'answer_{line.answer_type}']:
                         answer_is_correct = True
                         answer_score = line.question_id.answer_score
@@ -867,14 +866,14 @@ class SurveyUser_InputLine(models.Model):
 
     def _get_answer_matching_domain(self):
         self.ensure_one()
-        if self.answer_type in ('char_box', 'text_box', 'numerical_box', 'scale', 'date', 'datetime'):
+        if self.answer_type in ('char_box', 'text_box', 'numerical_box', 'scale', 'date', 'time'):
             value_field = {
                 'char_box': 'value_char_box',
                 'text_box': 'value_text_box',
                 'numerical_box': 'value_numerical_box',
                 'scale': 'value_scale',
                 'date': 'value_date',
-                'datetime': 'value_datetime',
+                'time': 'value_time',
             }
             operators = {
                 'char_box': 'ilike',
@@ -882,7 +881,7 @@ class SurveyUser_InputLine(models.Model):
                 'numerical_box': '=',
                 'scale': '=',
                 'date': '=',
-                'datetime': '=',
+                'time': '=',
             }
             return ['&', ('question_id', '=', self.question_id.id), (value_field[self.answer_type], operators[self.answer_type], self._get_answer_value())]
         elif self.answer_type == 'suggestion':
@@ -900,7 +899,7 @@ class SurveyUser_InputLine(models.Model):
             return self.value_scale
         elif self.answer_type == 'date':
             return self.value_date
-        elif self.answer_type == 'datetime':
-            return self.value_datetime
+        elif self.answer_type == 'time':
+            return self.value_time
         elif self.answer_type == 'suggestion':
             return self.suggested_answer_id.value

@@ -332,12 +332,11 @@
         <record model="survey.question" id="vendor_certification_page_3_question_3">
             <field name="survey_id" ref="vendor_certification" />
             <field name="sequence">14</field>
-            <field name="title">If a customer purchases a 1 year warranty on 6 January 2020, when do we expect the warranty to expire?</field>
-            <field name="question_type">datetime</field>
+            <field name="title">What time does our customer service open?</field>
+            <field name="question_type">time</field>
             <field name="is_scored_question" eval="True" />
-            <field name="answer_datetime">2021-01-07 00:00:01</field>
+            <field name="answer_time">8.0</field>
             <field name="answer_score">1.0</field>
-            <field name="question_placeholder">Beware of leap years!</field>
         </record>
         <!-- Question and predefined answer 12 -->
         <record model="survey.question" id="vendor_certification_page_3_question_4">
@@ -351,8 +350,8 @@
         <record model="survey.question" id="vendor_certification_page_3_question_5">
             <field name="survey_id" ref="vendor_certification" />
             <field name="sequence">16</field>
-            <field name="title">What day and time do you think most customers are most likely to call customer service (not rated)?</field>
-            <field name="question_type">datetime</field>
+            <field name="title">What time do you think most customers are most likely to call customer service (not rated)?</field>
+            <field name="question_type">time</field>
             <field name="answer_score">0</field>
         </record>
         <!-- Question and predefined answer 14 -->

@@ -137,11 +137,13 @@ const failSteps = [
         run: "edit 01/06/2020",
     },
     {
-        // Question: If a customer purchases a 1 year warranty on 6 January 2020, when do we expect the warranty to expire?
-        content: "Inputting answer '01/06/2021 00:00:01'",
-        trigger:
-            'div.js_question-wrapper:contains("If a customer purchases a 1 year warranty on 6 January 2020, when do we expect the warranty to expire") input',
-        run: "edit 01/06/2021 00:00:01",
+        // Question: What time does our customer service open?
+        content: "Inputting answer '7:00'",
+        trigger: 'div.js_question-wrapper:contains("What time does our customer service open") input',
+        run: function() {
+            // edit not working for input of type time
+            this.anchor.value = "07:00";
+        },
     },
     {
         // Question: What day to you think is best for us to start having an annual sale (not rated)?
@@ -150,10 +152,12 @@ const failSteps = [
         run: "edit Test",
     },
     {
-        // Question: What day and time do you think most customers are most likely to call customer service (not rated)?
-        trigger:
-            'div.js_question-wrapper:contains("What day and time do you think most customers are most likely to call customer service (not rated)") input',
-        run: "edit Test",
+        // Question: What time do you think most customers are most likely to call customer service (not rated)?
+        trigger: 'div.js_question-wrapper:contains("What time do you think most customers are most likely to call customer service (not rated)") input',
+        run: function() {
+            // edit not working for input of type time
+            this.anchor.value = "08:00";
+        },
     },
     {
         // Question: How many chairs do you think we should aim to sell in a year (not rated)?

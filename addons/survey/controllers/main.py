@@ -12,7 +12,8 @@ from odoo import fields, http, SUPERUSER_ID, _
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request, content_disposition
-from odoo.tools import format_datetime, format_date, is_html_empty
+from odoo.tools import format_time, format_date, is_html_empty
+from odoo.tools.date_utils import float_to_time
 from odoo.addons.base.models.ir_qweb import keep_query
 
 _logger = logging.getLogger(__name__)
@@ -264,7 +265,7 @@ class Survey(http.Controller):
                 'id': page.id,
                 'title': page.title,
             } for page in survey_sudo.page_ids],
-            'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
+            'float_to_time': float_to_time,
             'format_date': lambda date: format_date(request.env, date)
         }
         if answer_sudo.state == 'new':
@@ -612,7 +613,7 @@ class Survey(http.Controller):
         more info on data structures.
         :param question: survey.question
         :param answers:
-          * question_type: free_text, text_box, numerical_box, date, datetime
+          * question_type: free_text, text_box, numerical_box, date, time
             answers is a string containing the value
           * question_type: simple_choice with no comment
             answers is a string containing the value ('question_id_1')
@@ -670,7 +671,8 @@ class Survey(http.Controller):
             'answer': answer_sudo if survey_sudo.scoring_type != 'scoring_without_answers' else answer_sudo.browse(),
             'questions_to_display': answer_sudo._get_print_questions(),
             'scoring_display_correction': survey_sudo.scoring_type in ['scoring_with_answers', 'scoring_with_answers_after_page'] and answer_sudo,
-            'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
+            'float_to_time': float_to_time,
+            'format_time': lambda float_time: format_time(self.env, float_to_time(float_time), time_format="short"),
             'format_date': lambda date: format_date(request.env, date),
             'graph_data': json.dumps(answer_sudo._prepare_statistics()[answer_sudo])
                               if answer_sudo and survey_sudo.scoring_type in ['scoring_with_answers', 'scoring_with_answers_after_page'] else False,
@@ -749,6 +751,8 @@ class Survey(http.Controller):
             'search_finished': post.get('finished') == 'true',
             'search_failed': post.get('failed') == 'true',
             'search_passed': post.get('passed') == 'true',
+            # extra method
+            'format_time': lambda float_time: format_time(self.env, float_to_time(float_time), time_format="short"),
         }
 
         if survey.session_show_leaderboard:
@@ -825,7 +829,7 @@ class Survey(http.Controller):
                         user_input_line_subdomains.append(answer._get_answer_matching_domain(row_id))
                         search_filters.append(self._prepare_search_filter_answer(answer, row))
 
-        # Char_box, Text_box, Numerical_box, Date, Datetime filters
+        # Char_box, Text_box, Numerical_box, Date, Time filters
         if user_input_lines_ids:
             user_input_lines = request.env['survey.user_input.line'].browse(user_input_lines_ids)
             for input_line in user_input_lines:
@@ -859,7 +863,7 @@ class Survey(http.Controller):
                 user_input_lines_ids: [36]
 
         * Model short key = 'A' : Match a `survey.question.answer` record (simple_choice, multiple_choice, matrix)
-        * Model short key = 'L' : Match a `survey.user_input.line` record (char_box, text_box, numerical_box, date, datetime)
+        * Model short key = 'L' : Match a `survey.user_input.line` record (char_box, text_box, numerical_box, date, time)
         :rtype: (collections.defaultdict[int, list[int]], list[int])
         """
         answer_by_column = defaultdict(list)
@@ -893,11 +897,13 @@ class Survey(http.Controller):
 
     def _prepare_search_filter_input_line(self, user_input_line):
         """ Format parameters used to render/remove this filter on the results page."""
+        answer_value = user_input_line._get_answer_value()
         return {
             'question_id': user_input_line.question_id.id,
             'question': user_input_line.question_id.title,
             'row_id': 0,
-            'answer': user_input_line._get_answer_value(),
+            'answer': answer_value if user_input_line.answer_type != 'time' else
+                format_time(self.env, float_to_time(answer_value), time_format="short"),
             'model_short_key': 'L',
             'record_id': user_input_line.id,
         }

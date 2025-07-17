@@ -4,10 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import {
     deserializeDate,
-    deserializeDateTime,
-    parseDateTime,
     parseDate,
-    serializeDateTime,
     serializeDate,
 } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
@@ -763,6 +760,8 @@ export class SurveyForm extends Interaction {
                 validationFloatMax: Number(inputEl.dataset.validationFloatMax),
                 minDate: inputEl.dataset.minDate,
                 maxDate: inputEl.dataset.maxDate,
+                minTime: inputEl.dataset.minTime,
+                maxTime: inputEl.dataset.maxTime,
             };
             switch (inputData.questionType) {
                 case "char_box":
@@ -801,26 +800,36 @@ export class SurveyForm extends Interaction {
                     }
                     break;
                 case "date":
-                case "datetime":
                     if (questionRequired && !data[questionId]) {
                         errors[questionId] = constrErrorMsg;
                     } else if (data[questionId]) {
-                        const [parse, deserialize] =
-                            inputData.questionType === "date"
-                                ? [parseDate, deserializeDate]
-                                : [parseDateTime, deserializeDateTime];
-                        const date = parse(inputEl.value);
+                        const date = parseDate(inputEl.value);
                         if (!date || !date.isValid) {
                             errors[questionId] = validationDateMsg;
                         } else {
-                            const maxDate = deserialize(inputData.maxDate);
-                            const minDate = deserialize(inputData.minDate);
+                            const maxDate = deserializeDate(inputData.maxDate);
+                            const minDate = deserializeDate(inputData.minDate);
                             if (
                                 (maxDate.isValid && date > maxDate) ||
                                 (minDate.isValid && date < minDate)
                             ) {
                                 errors[questionId] = validationErrorMsg;
                             }
+                        }
+                    }
+                    break;
+                case 'time':
+                    if (questionRequired && !data[questionId]) {
+                        errors[questionId] = constrErrorMsg;
+                    } else if (data[questionId]) {
+                        const value = this.convertTimeStringToFloat(inputEl.value);
+                        const timeMax = parseFloat(inputData.maxTime);
+                        const timeMin = parseFloat(inputData.minTime);
+                        if (
+                            (timeMax && value > timeMax) ||
+                            (timeMin && value < timeMin)
+                        ) {
+                            errors[questionId] = validationErrorMsg;
                         }
                     }
                     break;
@@ -901,16 +910,14 @@ export class SurveyForm extends Interaction {
                 case "numerical_box":
                     params[el.name] = el.value;
                     break;
-                case "date":
-                case "datetime": {
-                    const [parse, serialize] =
-                        el.dataset.questionType === "date"
-                            ? [parseDate, serializeDate]
-                            : [parseDateTime, serializeDateTime];
-                    const date = parse(el.value);
-                    params[el.name] = date ? serialize(date) : "";
+                case "date": {
+                    const date = parseDate(el.value);
+                    params[el.name] = date ? serializeDate(date) : "";
                     break;
                 }
+                case "time":
+                    params[el.name] = this.convertTimeStringToFloat(el.value);
+                    break;
                 case "scale":
                 case "simple_choice_radio":
                 case "multiple_choice":
@@ -1195,6 +1202,17 @@ export class SurveyForm extends Interaction {
         return check(false);
     }
 
+    /**
+     * Converts the string representation of a time like '5:30'
+     * (value of input type='time') to its float representation: 5.5
+     * @param {String} time
+     * @private
+     */
+    convertTimeStringToFloat(time) {
+        const [hours, minutes] = time.split(':').map(Number);
+        return hours + minutes / 60;
+    }
+
     // CONDITIONAL QUESTIONS MANAGEMENT TOOLS
     // -------------------------------------------------------------------------
 
@@ -1402,19 +1420,13 @@ export class SurveyForm extends Interaction {
             questionWrapperEl.querySelector("[data-question-type]").dataset.questionType;
 
         // Only questions supporting correct answer are present here (ex.: scale question doesn't support it)
-        if (["numerical_box", "date", "datetime"].includes(questionType)) {
+        if (["numerical_box", "date", "time"].includes(questionType)) {
             const inputEl = answerWrapperEl.querySelector("input");
             let isCorrect;
             if (questionType === "numerical_box") {
                 isCorrect = inputEl.valueAsNumber === correctAnswer;
-            } else if (questionType === "datetime") {
-                const datetime = parseDateTime(inputEl.value);
-                const value = datetime
-                    ? datetime
-                          .setZone("utc")
-                          .toFormat("MM/dd/yyyy HH:mm:ss", { numberingSystem: "latn" })
-                    : "";
-                isCorrect = value === correctAnswer;
+            } else if (questionType === "time") {
+                isCorrect = this.convertTimeStringToFloat(inputEl.value) === correctAnswer;
             } else {
                 isCorrect = inputEl.value === correctAnswer;
             }

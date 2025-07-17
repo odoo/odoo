@@ -224,7 +224,7 @@ class UserInputSession(http.Controller):
         - question_statistics_graph
           The graph data to display the bar chart for questions of type 'choice'
         - input_lines_values
-          The answer values to text/date/datetime questions
+          The answer values to text/date/time questions
         - answers_validity
           An array containing the is_correct value for all question answers.
           We need this special variable because of Chartjs data structure.
@@ -248,7 +248,7 @@ class UserInputSession(http.Controller):
 
         full_statistics = question._prepare_statistics(user_input_lines)[0]
         input_line_values = []
-        if question.question_type in ['char_box', 'date', 'datetime']:
+        if question.question_type in ['char_box', 'date', 'time']:
             input_line_values = [{
                 'id': line.id,
                 'value': line['value_%s' % question.question_type]

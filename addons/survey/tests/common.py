@@ -28,7 +28,7 @@ class SurveyCase(common.TransactionCase):
             'numerical_box': ('numerical_box', 'value_numerical_box'),
             'scale': ('scale', 'value_scale'),  # similar to numerical_box
             'date': ('date', 'value_date'),
-            'datetime': ('datetime', 'value_datetime'),
+            'time': ('time', 'value_time'),
             'simple_choice': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
             'multiple_choice': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
             'matrix': ('suggestion', ('suggested_answer_id', 'matrix_row_id')),  # TDE: still unclear
@@ -271,9 +271,9 @@ class SurveyCase(common.TransactionCase):
             elif question_type == 'date':
                 kwargs['answer_score'] = 2
                 kwargs['answer_date'] = datetime.date(2023, 10, 16)
-            elif question_type == 'datetime':
+            elif question_type == 'time':
                 kwargs['answer_score'] = 3
-                kwargs['answer_datetime'] = datetime.datetime(2023, 11, 17, 8, 0, 0)
+                kwargs['answer_time'] = 14.5
             elif question_type == 'multiple_choice':
                 kwargs['answer_score'] = 4
                 kwargs['labels'] = [

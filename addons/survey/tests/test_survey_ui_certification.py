@@ -248,20 +248,20 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'answer_date': '2020-01-08',
                     'answer_score': 1,
                 }), (0, 0, {
-                    'title': 'If a customer purchases a 1 year warranty on 6 January 2020, when do we expect the warranty to expire?',
+                    'title': 'What time does our customer service open?',
                     'sequence': 14,
-                    'question_type': 'datetime',
+                    'question_type': 'time',
                     'is_scored_question': True,
-                    'answer_datetime': '2021-01-07 00:00:01',
+                    'answer_time': 8.0,
                     'answer_score': 1,
                 }), (0, 0, {
                     'title': 'What day to you think is best for us to start having an annual sale (not rated)?',
                     'sequence': 15,
                     'question_type': 'date',
                 }), (0, 0, {
-                    'title': 'What day and time do you think most customers are most likely to call customer service (not rated)?',
+                    'title': 'What time do you think most customers are most likely to call customer service (not rated)?',
                     'sequence': 16,
-                    'question_type': 'datetime',
+                    'question_type': 'time',
                 }), (0, 0, {
                     'title': 'How many chairs do you think we should aim to sell in a year (not rated)?',
                     'sequence': 17,

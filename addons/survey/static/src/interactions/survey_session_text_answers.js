@@ -1,4 +1,5 @@
-import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import { formatDate } from "@web/core/l10n/dates";
+import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 import { Interaction } from "@web/public/interaction";
@@ -19,7 +20,7 @@ export class SurveySessionTextAnswers extends Interaction {
 
     /**
      * Adds the attendees answers on the screen.
-     * This is used for char_box/date and datetime questions.
+     * This is used for char_box/date and time questions.
      *
      * We use some tricks for wow effect:
      * - force a width on the external div container, to reserve space for that answer
@@ -28,7 +29,7 @@ export class SurveySessionTextAnswers extends Interaction {
      *
      * @param {CustomEvent} ev Custom event containing the questionType and
      * the array of survey.user_input.line records in the form
-     * {id: line.id, value: line.[value_char_box/value_date/value_datetime]}
+     * {id: line.id, value: line.[value_char_box/value_date/value_time]}
      */
     updateTextAnswers(ev) {
         const inputLineValues = ev.detail.inputLineValues;
@@ -39,10 +40,11 @@ export class SurveySessionTextAnswers extends Interaction {
                 let textValue = inputLineValue.value;
                 if (questionType === "date") {
                     textValue = formatDate(DateTime.fromFormat(textValue, "yyyy-MM-dd"));
-                } else if (questionType === "datetime") {
-                    textValue = formatDateTime(
-                        DateTime.fromFormat(textValue, "yyyy-MM-dd HH:mm:ss")
-                    );
+                } else if (questionType === 'time') {
+                    const hours = Math.floor(textValue);
+                    const minutes = Math.round((textValue - hours) * 60);
+                    const dt = DateTime.fromObject({ hour: hours, minute: minutes });
+                    textValue = dt.toFormat(localization.timeFormat.replace(":ss", ""));
                 }
                 const textAnswerEl = renderToElement("survey.survey_session_text_answer", {
                     value: textValue,

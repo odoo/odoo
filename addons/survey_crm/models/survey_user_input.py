@@ -170,7 +170,7 @@ class SurveyUser_Input(models.Model):
                         })
                     )
 
-                elif question.question_type in ['numerical_box', 'scale', 'date', 'datetime']:
+                elif question.question_type in ['numerical_box', 'scale', 'date', 'time']:
                     answers.append(Markup(' %(separator)s %(answer)s') % {
                         'separator': '—',
                         'answer': str(input_line._get_answer_value()),

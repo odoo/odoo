@@ -23,7 +23,7 @@ class TestSurveyResults(common.TestSurveyResultsCommon):
 
     def test_get_filters_from_post(self):
         """ Check that the filters are correctly retrieved from the post. """
-        # Matrix filter | simple_choice or multiple_choice filter | char_box, text_box, numerical_box, date or datetime filter
+        # Matrix filter | simple_choice or multiple_choice filter | char_box, text_box, numerical_box, date or time filter
         post = {'filters': 'A,14,101|A,0,58|L,0,2'}
         with MockRequest(self.env):
             answer_by_column, user_input_lines_ids = self.SurveyController._get_filters_from_post(post)

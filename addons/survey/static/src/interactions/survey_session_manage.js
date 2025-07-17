@@ -606,7 +606,7 @@ export class SurveySessionManage extends Interaction {
      *
      * What we get from this call:
      * - The 'question statistics' used to display the bar chart when appropriate
-     * - The 'user input lines' that are used to display text/date/datetime answers on the screen
+     * - The 'user input lines' that are used to display text/date/time answers on the screen
      * - The number of answers, useful for refreshing the progress bar
      */
     refreshResults() {
