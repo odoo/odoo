@@ -30,25 +30,7 @@ class RemoveButton extends Component {
 
 export class AttachmentError extends Component {
     static components = { Dialog };
-    static template = xml`
-        <Dialog title="title">
-            <div class="form-text">
-                <p>The image could not be deleted because it is used in the
-                    following pages or views:</p>
-                <ul t-foreach="props.views"  t-as="view" t-key="view.id">
-                    <li>
-                        <a t-att-href="'/odoo/ir.ui.view/' + window.encodeURIComponent(view.id)">
-                            <t t-esc="view.name"/>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="() => this.props.close()">
-                    Ok
-                </button>
-            </t>
-        </Dialog>`;
+    static template = "web_editor.AttachmentError";
     static props = ["views", "close"];
     setup() {
         this.title = _t("Alert");

@@ -54,6 +54,7 @@ export class CredentialDialog extends Component {
     }
 
     static template = xml`
+    <t t-translation="off">
         <LoadingFullScreen t-if="this.state.waitRestart">
             <t t-set-slot="body">
                 Your IoT Box is currently processing your request. Please wait.
@@ -79,5 +80,6 @@ export class CredentialDialog extends Component {
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
         </BootstrapDialog>
+    </t>
     `;
 }

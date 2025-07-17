@@ -29,7 +29,7 @@ export class SingleData extends Component {
     }
 
     static template = xml`
-    <div class="w-100 d-flex justify-content-between align-items-center bg-light rounded ps-2 pe-3 py-1 mb-2 gap-2">
+    <div class="w-100 d-flex justify-content-between align-items-center bg-light rounded ps-2 pe-3 py-1 mb-2 gap-2" t-translation="off">
         <div t-att-class="this.props.style === 'primary' ? 'odoo-bg-primary' : 'odoo-bg-secondary'" class="rounded odoo-pill" />
         <div class="flex-grow-1 overflow-hidden">
             <h6 class="m-0">

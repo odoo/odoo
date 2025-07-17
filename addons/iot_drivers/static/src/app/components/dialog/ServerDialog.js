@@ -49,6 +49,7 @@ export class ServerDialog extends Component {
     }
 
     static template = xml`
+    <t t-translation="off">
         <LoadingFullScreen t-if="this.state.waitRestart">
             <t t-set-slot="body">
                 Updating Odoo Server information, please wait...
@@ -84,5 +85,6 @@ export class ServerDialog extends Component {
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
         </BootstrapDialog>
+    </t>
     `;
 }

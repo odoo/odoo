@@ -36,12 +36,7 @@ import { exprToBoolean } from "@web/core/utils/strings";
 
 class BlankComponent extends Component {
     static props = ["onMounted", "withControlPanel", "*"];
-    static template = xml`
-        <ControlPanel display="{disableDropdown: true}" t-if="props.withControlPanel and !env.isSmall">
-            <t t-set-slot="layout-buttons">
-                <button class="btn btn-primary invisible"> empty </button>
-            </t>
-        </ControlPanel>`;
+    static template = "web.BlankComponent";
     static components = { ControlPanel };
 
     setup() {

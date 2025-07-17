@@ -1,4 +1,4 @@
-import { Component, xml } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
@@ -148,11 +148,7 @@ export class ControlButtons extends Component {
 
 export class ControlButtonsPopup extends Component {
     static components = { Dialog, ControlButtons };
-    static template = xml`
-        <Dialog bodyClass="'d-flex flex-column'" footer="false" title="'Actions'" t-on-click="props.close">
-            <ControlButtons showRemainingButtons="true" close="props.close"/>
-        </Dialog>
-    `;
+    static template = "point_of_sale.ControlButtonsPopup";
     static props = {
         close: Function,
     };

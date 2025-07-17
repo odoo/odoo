@@ -92,6 +92,7 @@ export class RemoteDebugDialog extends Component {
     }
 
     static template = xml`
+    <t t-translation="off">
         <BootstrapDialog identifier="'remote-debug-configuration'" btnName="'Remote debug'">
             <t t-set-slot="header">
                 Remote Debugging
@@ -133,5 +134,6 @@ export class RemoteDebugDialog extends Component {
                 <button type="button" t-att-class="'btn btn-sm btn-' + (state.ngrok ? 'secondary' : 'primary')" data-bs-dismiss="modal">Close</button>
             </t>
         </BootstrapDialog>
+    </t>
     `;
 }
