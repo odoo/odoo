@@ -243,7 +243,7 @@ export class HtmlField extends Component {
                 peerId: this.generateId(),
             },
             dropImageAsAttachment: true, // @todo @phoenix always true ?
-            dynamicPlaceholder: this.dynamicPlaceholder,
+            dynamicPlaceholder: this.props.dynamicPlaceholder,
             dynamicPlaceholderResModel:
                 this.props.record.data[this.props.dynamicPlaceholderModelReferenceField || "model"],
             direction: localization.direction || "ltr",
