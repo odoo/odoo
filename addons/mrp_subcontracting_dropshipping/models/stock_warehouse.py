@@ -7,10 +7,6 @@ from odoo import api, fields, models, _
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
-    subcontracting_dropshipping_to_resupply = fields.Boolean(
-        'Dropship Subcontractors', default=True,
-        help="Dropship subcontractors with components")
-
     subcontracting_dropshipping_pull_id = fields.Many2one(
         'stock.rule', 'Subcontracting-Dropshipping MTS Rule', copy=False
     )
@@ -19,15 +15,15 @@ class StockWarehouse(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         # if new warehouse has resupply enabled, enable global route
-        if any([vals.get('subcontracting_dropshipping_to_resupply', False) for vals in vals_list]):
+        if any(vals.get('subcontracting_to_resupply', False) for vals in vals_list):
             res.update_global_route_dropship_subcontractor()
         return res
 
     def write(self, vals):
         res = super().write(vals)
         # if all warehouses have resupply disabled, disable global route, until its enabled on a warehouse
-        if 'subcontracting_dropshipping_to_resupply' in vals or 'active' in vals:
-            if 'subcontracting_dropshipping_to_resupply' in vals:
+        if 'subcontracting_to_resupply' in vals or 'active' in vals:
+            if 'subcontracting_to_resupply' in vals:
                 # ignore when warehouse archived since it will auto-archive all of its rules
                 self._update_dropship_subcontract_rules()
             self.update_global_route_dropship_subcontractor()
@@ -36,9 +32,9 @@ class StockWarehouse(models.Model):
     def _update_dropship_subcontract_rules(self):
         '''update (archive/unarchive) any warehouse subcontracting location dropship rules'''
         subcontracting_locations = self._get_subcontracting_locations()
-        route_id = self._find_or_create_global_route('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping',
+        route_id = self._find_or_create_global_route('stock_dropshipping.route_drop_shipping',
                                            _('Dropship Subcontractor on Order'))
-        warehouses_dropship = self.filtered(lambda w: w.subcontracting_dropshipping_to_resupply and w.active)
+        warehouses_dropship = self.filtered(lambda w: w.subcontracting_to_resupply and w.active)
         if warehouses_dropship:
             self.env['stock.rule'].with_context(active_test=False).search([
                 ('route_id', '=', route_id.id),
@@ -55,7 +51,7 @@ class StockWarehouse(models.Model):
                 ('location_src_id', 'in', subcontracting_locations.ids)]).action_archive()
 
     def update_global_route_dropship_subcontractor(self):
-        route_id = self._find_or_create_global_route('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping',
+        route_id = self._find_or_create_global_route('stock_dropshipping.route_drop_shipping',
                                            _('Dropship Subcontractor on Order'))
         # if route has no pull rules, it means all warehouses have Dropship Subcontractor disabled
         # Pick type is per company so we need to check rules per company to archive it, however
@@ -74,7 +70,7 @@ class StockWarehouse(models.Model):
         dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
         rules.update({
             'subcontracting_dropshipping_pull_id': {
-                'depends': ['subcontracting_dropshipping_to_resupply'],
+                'depends': ['subcontracting_to_resupply'],
                 'create_values': {
                     'procure_method': 'make_to_order',
                     'company_id': self.company_id.id,
@@ -87,7 +83,7 @@ class StockWarehouse(models.Model):
                     'picking_type_id': self.subcontracting_type_id.id
                 },
                 'update_values': {
-                    'active': self.subcontracting_dropshipping_to_resupply
+                    'active': self.subcontracting_to_resupply
                 }
             },
         })
