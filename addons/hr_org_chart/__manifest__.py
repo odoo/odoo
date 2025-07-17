@@ -30,6 +30,9 @@ This module extend the employee form with a organizational chart.
         'web.assets_backend_lazy': [
             'hr_org_chart/static/src/views/**/*',
         ],
+        'web.assets_tests': [
+            'hr_org_chart/static/tests/tours/*.js',
+        ],
         'web.assets_unit_tests': [
             'hr_org_chart/static/tests/**/*',
         ],
