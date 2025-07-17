@@ -27,7 +27,7 @@
     <record id="product_view_kanban_catalog_purchase_only" model="ir.ui.view">
         <field name="name">product.view.kanban.catalog.purchase_stock</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
+        <field name="inherit_id" ref="stock.product_view_kanban_catalog"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//kanban" position="attributes">
