@@ -158,6 +158,12 @@ class TestHttpMisc(TestHttpBase):
             self.url_open('/test_http/concurrency_error').raise_for_status()
         self.assertIn("A dummy concurrency error occurred", log_catcher.output[0])
 
+    def test_misc9_webversion(self):
+        res = self.nodb_url_open('/web/version')
+        res.raise_for_status()
+        self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
+        self.assertEqual(set(res.json()), {'version', 'version_info'})
+
 
 @tagged('post_install', '-at_install')
 class TestHttpCors(TestHttpBase):
