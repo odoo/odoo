@@ -37,7 +37,7 @@ class WebClient(WebclientController):
         if name == "init_livechat":
             partner, guest = request.env["res.partner"]._get_current_persona()
             if partner:
-                store.add_global_values(self_partner=Store.One(partner))
+                store.add_global_values(self_partner=Store.One(partner, extra_fields="email"))
             if guest:
                 store.add_global_values(self_guest=Store.One(guest))
             # sudo - im_livechat.channel: allow access to live chat channel to
@@ -59,10 +59,13 @@ class WebClient(WebclientController):
                 .match_rule(params, url, country_id)
             ):
                 matching_rule = matching_rule.with_context(
-                    lang=request.env["chatbot.script"]._get_chatbot_language()
+                    lang=request.env["chatbot.script"]._get_chatbot_language(),
                 )
                 store.add_global_values(livechat_rule=Store.One(matching_rule))
             store.add_global_values(
                 livechat_available=matching_rule.action != "hide_button"
-                and bool(matching_rule.chatbot_script_id or channel.available_operator_ids)
+                and bool(matching_rule.chatbot_script_id or channel.available_operator_ids),
+                can_download_transcript=bool(
+                    request.env.ref("im_livechat.action_report_livechat_conversation", False),
+                ),
             )

@@ -34,9 +34,11 @@ async function get_session(request) {
         context = {},
     } = await parseRequestParams(request);
     previous_operator_id = parseInt(previous_operator_id);
+    let user_id;
     let country_id;
     // don't use the anonymous name if the user is logged in
     if (this.env.user && !ResUsers._is_public(this.env.uid)) {
+        user_id = this.env.user.id;
         country_id = this.env.user.country_id;
     } else {
         // simulate geoip
@@ -53,6 +55,7 @@ async function get_session(request) {
         channel_id,
         anonymous_name,
         previous_operator_id,
+        user_id,
         country_id,
         persisted
     );
@@ -207,6 +210,20 @@ async function session_update_note(request) {
 }
 
 patch(mailDataHelpers, {
+    _process_request_for_all(store, name, params) {
+        const ResPartner = this.env["res.partner"];
+        const ResUsers = this.env["res.users"];
+        super._process_request_for_all(...arguments);
+        store.add({ livechat_available: true });
+        if (name === "init_livechat") {
+            if (this.env.user && !ResUsers._is_public(this.env.uid)) {
+                store.add(
+                    ResPartner.browse(this.env.user.partner_id),
+                    makeKwArgs({ fields: ["email"] })
+                );
+            }
+        }
+    },
     _process_request_for_internal_user(store, name, params) {
         super._process_request_for_internal_user(...arguments);
         if (name === "im_livechat.channel") {
@@ -215,9 +232,5 @@ patch(mailDataHelpers, {
                 makeKwArgs({ fields: ["are_you_inside", "name"] })
             );
         }
-    },
-    _process_request_for_all(store) {
-        super._process_request_for_all(...arguments);
-        store.add({ livechat_available: true });
     },
 });
