@@ -142,10 +142,6 @@
                         <page string="Miscellaneous" name="miscellaneous">
                             <group>
                                 <group>
-                                    <field name="ready_to_produce" invisible="type == 'phantom'" string="Manufacturing Readiness" widget="radio" groups="mrp.group_mrp_routings"/>
-                                    <field name="allow_operation_dependencies" groups="mrp.group_mrp_workorder_dependencies"/>
-                                </group>
-                                <group>
                                     <field name="picking_type_id" invisible="type == 'phantom'" groups="stock.group_adv_location"/>
                                     <label for="produce_delay" string="Manuf. Lead Time"/>
                                     <div>
@@ -159,6 +155,10 @@
                                                       Also note that purchase security lead times will be added when appropriate."
                                                 class="oe_link pt-0"/>
                                     </div>
+                                </group>
+                                <group>
+                                    <field name="ready_to_produce" invisible="type == 'phantom'" string="Manufacturing Readiness" widget="radio" groups="mrp.group_mrp_routings"/>
+                                    <field name="allow_operation_dependencies" groups="mrp.group_mrp_workorder_dependencies"/>
                                 </group>
                             </group>
                         </page>
