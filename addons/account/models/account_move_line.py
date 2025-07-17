@@ -154,7 +154,7 @@ class AccountMoveLine(models.Model):
         compute='_compute_partner_id', inverse='_inverse_partner_id', store=True, readonly=False, precompute=True,
         ondelete='restrict',
     )
-    is_imported = fields.Boolean()  # Technical field indicating if the line was captured automatically by import/ocr etc
+    is_imported = fields.Boolean(store=False, compute='_compute_is_imported')  # Technical field indicating if the line was captured automatically by import/ocr etc
 
     # === Origin fields === #
     reconcile_model_id = fields.Many2one(
@@ -187,7 +187,7 @@ class AccountMoveLine(models.Model):
     commercial_partner_country = fields.Many2one(
         string="Commercial Partner Country",
         related="move_id.commercial_partner_id.country_id",
-    )
+    )  # Not used but since important, why not letting user created that with studio?
 
     # === Tax fields === #
     tax_ids = fields.Many2many(
@@ -212,7 +212,7 @@ class AccountMoveLine(models.Model):
         help="Indicates that this journal item is a tax line")
     tax_group_id = fields.Many2one(  # used in the widget tax-group-custom-field
         string='Originator tax group',
-        related='tax_line_id.tax_group_id', store=True, precompute=True,
+        related='tax_line_id.tax_group_id',
     )
     tax_base_amount = fields.Monetary(
         string="Base Amount",
@@ -492,6 +492,9 @@ class AccountMoveLine(models.Model):
                 'payment_term' if account_set and line.account_id.account_type in ['asset_receivable', 'liability_payable'] else
                 'product'
             ) if line.move_id.is_invoice() else 'product'
+
+    def _compute_is_imported(self):
+        self.is_imported = False  # dummy compute, is_imported is only valid in the current request
 
     # Do not depend on `move_id.partner_id`, the inverse is taking care of that
     def _compute_partner_id(self):
