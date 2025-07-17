@@ -79,26 +79,29 @@ class TestImLivechatReport(TestImLivechatCommon):
     def test_redirect_to_form_from_pivot(self):
         operator_1 = new_test_user(self.env, login="operator_1", groups="im_livechat.im_livechat_group_manager")
         operator_2 = new_test_user(self.env, login="operator_2")
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {"name": "Support", "user_ids": [operator_1.id, operator_2.id]}
+        )
         [partner_1, partner_2] = self.env["res.partner"].create([{"name": "test 1"}, {"name": "test 2"}])
         [channel_1, channel_2, channel_3] = self.env["discuss.channel"].create(
             [{
                 "name": "test 1",
                 "channel_type": "livechat",
-                "livechat_channel_id": 1,
+                "livechat_channel_id": livechat_channel.id,
                 "livechat_operator_id": operator_1.partner_id.id,
                 "channel_member_ids": [Command.create({"partner_id": partner_1.id})],
             },
             {
                 "name": "test 2",
                 "channel_type": "livechat",
-                "livechat_channel_id": 1,
+                "livechat_channel_id": livechat_channel.id,
                 "livechat_operator_id": operator_2.partner_id.id,
                 "channel_member_ids": [Command.create({"partner_id": partner_2.id})],
             },
             {
                 "name": "test 3",
                 "channel_type": "livechat",
-                "livechat_channel_id": 1,
+                "livechat_channel_id": livechat_channel.id,
                 "livechat_operator_id": operator_2.partner_id.id,
                 "channel_member_ids": [Command.create({"partner_id": partner_2.id})],
             }]
