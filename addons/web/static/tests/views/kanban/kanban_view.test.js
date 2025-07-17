@@ -7637,7 +7637,9 @@ test("rendering date and datetime (value)", async () => {
     });
 
     expect(getKanbanRecord({ index: 0 }).querySelector(".date")).toHaveText("Jan 25, 2017");
-    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime")).toHaveText("Dec 12, 2016, 11:55 AM");
+    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime")).toHaveText(
+        "Dec 12, 2016, 11:55 AM"
+    );
 });
 
 test("rendering date and datetime (raw value)", async () => {
@@ -13434,12 +13436,17 @@ test("kanban records are middle clickable by default", async () => {
 
     await contains(".o_kanban_record").click({ ctrlKey: true });
     expect.verifySteps([
+        "get current_state-null",
         "get current_action-null",
+        'set current_state-{"actionStack":[{"displayName":"","action":1,"view_type":"kanban"}],"action":1}',
         'set current_action-{"id":1,"res_model":"partner","type":"ir.actions.act_window","views":[[false,"kanban"],[false,"form"]]}',
         'get current_action-{"id":1,"res_model":"partner","type":"ir.actions.act_window","views":[[false,"kanban"],[false,"form"]]}',
+        'get current_state-{"actionStack":[{"displayName":"","action":1,"view_type":"kanban"}],"action":1}',
         'set current_action-{"id":1,"res_model":"partner","type":"ir.actions.act_window","views":[[false,"kanban"],[false,"form"]]}',
+        'set current_state-{"actionStack":[{"displayName":"","action":1,"view_type":"kanban"},{"displayName":"","action":1,"view_type":"form","resId":1}],"resId":1,"action":1}',
         "opened in new window: /odoo/action-1/1",
         'set current_action-{"id":1,"res_model":"partner","type":"ir.actions.act_window","views":[[false,"kanban"],[false,"form"]]}',
+        'set current_state-{"actionStack":[{"displayName":"","action":1,"view_type":"kanban"}],"action":1}',
     ]);
 });
 

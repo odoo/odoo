@@ -1394,8 +1394,11 @@ describe(`new urls`, () => {
 
         expect(`.o_kanban_view`).toHaveCount(1);
         expect.verifySteps([
+            "get current_state-null",
             "get current_action-null",
+            'set current_state-{"actionStack":[{"displayName":"First record","model":"partner","view_type":"form","resId":1}],"resId":1,"model":"partner"}',
             'set current_action-{"type":"ir.actions.act_window","res_model":"partner","res_id":1,"views":[[false,"form"]]}',
+            'set current_state-{"actionStack":[{"displayName":"First record","model":"partner","view_type":"form","resId":1},{"displayName":"","model":"partner","view_type":"kanban","active_id":1}],"active_id":1,"model":"partner"}',
             'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_model":"partner","active_id":1,"active_ids":[1]}}',
         ]);
 
@@ -1407,7 +1410,9 @@ describe(`new urls`, () => {
         await animationFrame();
         expect(`.o_kanban_view`).toHaveCount(1);
         expect.verifySteps([
+            'get current_state-{"actionStack":[{"displayName":"First record","model":"partner","view_type":"form","resId":1},{"displayName":"","model":"partner","view_type":"kanban","active_id":1}],"active_id":1,"model":"partner"}',
             'get current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_model":"partner","active_id":1,"active_ids":[1]}}',
+            'set current_state-{"actionStack":[{"displayName":"First record","model":"partner","view_type":"form","resId":1},{"displayName":"","model":"partner","view_type":"kanban","active_id":1}],"active_id":1,"model":"partner"}',
             'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"active_model":"partner","active_id":1,"active_ids":[1]}}',
             "get menu_id-null",
         ]);
@@ -1460,8 +1465,11 @@ describe(`new urls`, () => {
         expect(`.o_kanban_view`).toHaveCount(1);
         expect(`.o_kanban_record:not(.o_kanban_ghost)`).toHaveCount(1);
         expect.verifySteps([
+            "get current_state-null",
             "get current_action-null",
+            'set current_state-{"actionStack":[{"displayName":"First record","action":100,"view_type":"form","resId":1}],"resId":1,"action":100}',
             'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":100,"type":"ir.actions.act_window","xml_id":100,"res_model":"partner","res_id":1,"views":[[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
+            'set current_state-{"actionStack":[{"displayName":"First record","action":100,"view_type":"form","resId":1},{"displayName":"","action":200,"view_type":"kanban"}],"action":200}',
             'set current_action-{"id":200,"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"domain":[["id","=",1]]}',
         ]);
 
@@ -1478,8 +1486,165 @@ describe(`new urls`, () => {
         expect(`.o_kanban_view`).toHaveCount(1);
         expect(`.o_kanban_record:not(.o_kanban_ghost)`).toHaveCount(1);
         expect.verifySteps([
+            'get current_state-{"actionStack":[{"displayName":"First record","action":100,"view_type":"form","resId":1},{"displayName":"","action":200,"view_type":"kanban"}],"action":200}',
             'get current_action-{"id":200,"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"domain":[["id","=",1]]}',
+            'set current_state-{"actionStack":[{"displayName":"First record","action":100,"view_type":"form","resId":1},{"displayName":"","action":200,"view_type":"kanban","active_id":1}],"action":200,"active_id":1}',
             'set current_action-{"id":200,"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"domain":[["id","=",1]]}',
+            "get menu_id-null",
+        ]);
+    });
+
+    test(`properly reload breadcrumb (state)`, async () => {
+        onRpc("/web/action/load_breadcrumbs", () => {
+            expect.step(`load_breadcrumbs shouldn't be called`);
+        });
+        patchWithCleanup(browser.sessionStorage, {
+            setItem(key, value) {
+                expect.step(`set ${key}-${value}`);
+                super.setItem(key, value);
+            },
+            getItem(key) {
+                const res = super.getItem(key);
+                expect.step(`get ${key}-${res}`);
+                return res;
+            },
+        });
+
+        defineActions([
+            {
+                id: 100,
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                res_id: 1,
+                name: "Partners",
+                views: [
+                    [false, "form"],
+                    [false, "list"],
+                ],
+            },
+            {
+                id: 200,
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                name: "Kanban Partners",
+                views: [
+                    [1, "kanban"],
+                    [false, "form"],
+                ],
+            },
+            {
+                id: 300,
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                context: { active_id: 5 },
+                name: "List Partners with active id",
+                views: [[false, "list"]],
+            },
+        ]);
+
+        await mountWebClient();
+        await getService("action").doAction(200);
+        await getService("action").doAction(300);
+        await getService("action").doAction(100);
+
+        await animationFrame();
+        expect(`.o_form_view`).toHaveCount(1);
+        expect(browser.location.href).toBe(
+            "http://example.com/odoo/action-200/5/action-300/action-100/1"
+        );
+        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
+            "Kanban Partners",
+            "List Partners with active id",
+            "First record",
+        ]);
+        expect(router.current.actionStack).toEqual([
+            {
+                action: 200,
+                displayName: "Kanban Partners",
+                view_type: "kanban",
+            },
+            {
+                action: 300,
+                active_id: 5,
+                displayName: "List Partners with active id",
+                view_type: "list",
+            },
+            {
+                action: 100,
+                displayName: "First record",
+                resId: 1,
+                view_type: "form",
+            },
+        ]);
+        expect.verifySteps([
+            "get current_state-null",
+            "get current_action-null",
+            'set current_state-{"actionStack":[{"displayName":"Kanban Partners","action":200,"view_type":"kanban"}],"action":200}',
+            'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":200,"type":"ir.actions.act_window","xml_id":200,"res_model":"partner","name":"Kanban Partners","views":[[1,"kanban"],[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
+            'set current_state-{"actionStack":[{"displayName":"Kanban Partners","action":200,"view_type":"kanban"},{"displayName":"List Partners with active id","action":300,"view_type":"list","active_id":5}],"action":300,"active_id":5}',
+            'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":300,"type":"ir.actions.act_window","xml_id":300,"res_model":"partner","context":{"active_id":5},"name":"List Partners with active id","views":[[false,"list"]],"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
+            'set current_state-{"actionStack":[{"displayName":"Kanban Partners","action":200,"view_type":"kanban"},{"displayName":"List Partners with active id","action":300,"view_type":"list","active_id":5},{"displayName":"First record","action":100,"view_type":"form","resId":1}],"resId":1,"action":100}',
+            'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":100,"type":"ir.actions.act_window","xml_id":100,"res_model":"partner","res_id":1,"name":"Partners","views":[[false,"form"],[false,"list"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
+        ]);
+
+        // Emulate a Reload
+        startRouter(); // Emulate a full reload. Update the current state of the router with the URL (as is done on reload)
+        // State created from URL with 5 actions and without displayNames
+        expect(router.current.actionStack).toEqual([
+            {
+                action: 200,
+            },
+            {
+                action: 200,
+                resId: 5,
+            },
+            {
+                action: 300,
+                active_id: 5,
+            },
+            {
+                action: 100,
+            },
+            {
+                action: 100,
+                resId: 1,
+            },
+        ]);
+        routerBus.trigger("ROUTE_CHANGE");
+
+        await animationFrame();
+        await animationFrame();
+        // State from the sessionStoreage with 3 actions and with displayNames
+        expect(router.current.actionStack).toEqual([
+            {
+                action: 200,
+                displayName: "Kanban Partners",
+            },
+            {
+                action: 300,
+                active_id: 5,
+                displayName: "List Partners with active id",
+            },
+            {
+                action: 100,
+                displayName: "First record",
+                resId: 1,
+                view_type: "form",
+            },
+        ]);
+        expect(browser.location.href).toBe(
+            "http://example.com/odoo/action-200/5/action-300/action-100/1"
+        );
+        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
+            "Kanban Partners",
+            "List Partners with active id",
+            "First record",
+        ]);
+        expect.verifySteps([
+            'get current_state-{"actionStack":[{"displayName":"Kanban Partners","action":200,"view_type":"kanban"},{"displayName":"List Partners with active id","action":300,"view_type":"list","active_id":5},{"displayName":"First record","action":100,"view_type":"form","resId":1}],"resId":1,"action":100}',
+            'get current_action-{"binding_type":"action","binding_view_types":"list,form","id":100,"type":"ir.actions.act_window","xml_id":100,"res_model":"partner","res_id":1,"name":"Partners","views":[[false,"form"],[false,"list"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
+            'set current_state-{"actionStack":[{"displayName":"Kanban Partners","action":200},{"displayName":"List Partners with active id","action":300,"active_id":5},{"displayName":"First record","action":100,"view_type":"form","resId":1}],"resId":1,"action":100}',
+            'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":100,"type":"ir.actions.act_window","xml_id":100,"res_model":"partner","res_id":1,"name":"Partners","views":[[false,"form"],[false,"list"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
             "get menu_id-null",
         ]);
     });
