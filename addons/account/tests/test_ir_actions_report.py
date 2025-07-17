@@ -7,7 +7,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import RedirectWarning
 from odoo.tools import pdf
 from odoo.tests import tagged
-from odoo.tools import file_open
+from odoo.tools import file_open, mute_logger
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter
 
 
@@ -44,6 +44,8 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
         test_record_report = self.env['ir.actions.report'].with_context(force_report_rendering=True)._render_qweb_pdf('account.action_account_original_vendor_bill', res_ids=in_invoice_1.id)
         self.assertTrue(test_record_report, "The PDF should have been generated")
 
+    # Document synchronization being enabled, avoid a warning when computing the number of page of the corrupted pdf.
+    @mute_logger('odoo.addons.documents.models.documents_document')
     def test_download_with_encrypted_pdf(self):
         """
         Same as test_download_one_corrupted_pdf

@@ -16,15 +16,19 @@ class TestAuditTrailDE(AccountTestInvoicingHttpCommon):
         super().setUpClass()
         cls.document_installed = 'documents_account' in cls.env['ir.module.module']._installed()
         if cls.document_installed:
-            cls.env.user.company_id.documents_account_settings = True
             folder_test = cls.env['documents.document'].create({
                 'name': 'folder_test',
                 'type': 'folder',
             })
-            cls.env['documents.account.folder.setting'].create({
-                'folder_id': folder_test.id,
-                'journal_id': cls.company_data['default_journal_sale'].id,
-            })
+            existing_setting = cls.env['documents.account.folder.setting'].sudo().search(
+                [('journal_id', '=', cls.company_data['default_journal_sale'].id)])
+            if existing_setting:
+                existing_setting.folder_id = folder_test
+            else:
+                cls.env['documents.account.folder.setting'].sudo().create({
+                    'folder_id': folder_test.id,
+                    'journal_id': cls.company_data['default_journal_sale'].id,
+                })
 
     def _send_and_print(self, invoice):
         return self.env['account.move.send'].with_context(
