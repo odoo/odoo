@@ -32,6 +32,18 @@ class ThreadController(http.Controller):
         )
 
     @classmethod
+    def _get_thread_with_access_for_post(cls, thread_model, thread_id, **kwargs):
+        """ Helper allowing to fetch thread with access when requesting 'create'
+        access on mail.message, aka rights to post on the document. Default
+        behavior is to rely on _mail_post_access but it might be customized.
+        See '_mail_get_operation_for_mail_message_operation'. """
+        thread_su = request.env[thread_model].sudo().browse(int(thread_id))
+        access_mode = thread_su._mail_get_operation_for_mail_message_operation('create')[thread_su]
+        if not access_mode:
+            return request.env[thread_model]  # match _get_thread_with_access void result
+        return cls._get_thread_with_access(thread_model, thread_id, mode=access_mode, **kwargs)
+
+    @classmethod
     def _get_thread_with_access(cls, thread_model, thread_id, mode="read", **kwargs):
         """ Simplified getter that filters access params only, making model methods
         using strong parameters. """
@@ -190,8 +202,7 @@ class ThreadController(http.Controller):
                 'last_used': datetime.now(),
                 'ids': canned_response_ids,
             })
-        # TDE todo: should rely on '_get_mail_message_access'
-        thread = self._get_thread_with_access(thread_model, thread_id, mode=request.env[thread_model]._mail_post_access, **kwargs)
+        thread = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
         if not thread:
             raise NotFound()
         if not self._get_thread_with_access(thread_model, thread_id, mode="write"):
