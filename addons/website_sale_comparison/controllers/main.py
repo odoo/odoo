@@ -31,6 +31,7 @@ class WebsiteSaleProductComparison(Controller):
                 'id': product.id,
                 'display_name': combination_info['display_name'],
                 'website_url': product.website_url,
+                'image_url': product._get_image_1024_url(),
                 'price': combination_info['price'],
                 'prevent_zero_price_sale': combination_info['prevent_zero_price_sale'],
                 'currency_id': combination_info['currency'].id,

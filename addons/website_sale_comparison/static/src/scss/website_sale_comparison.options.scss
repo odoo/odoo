@@ -13,14 +13,6 @@
         display: var(--o-wsale-comparison-btn-placeholder-display, none);
         order: var(--o-wsale-comparison-btn-order);
     }
-
-    .o_add_compare, .o_add_compare_placeholder {
-        @include media-breakpoint-down(lg) {
-            // Enforce hiding these buttons regardless by options and context.
-            --o-wsale-comparison-btn-display: none !important;
-            --o-wsale-comparison-btn-placeholder-display: none !important;
-        }
-    }
 }
 
 :where(.o_wsale_products_opt_has_comparison) {

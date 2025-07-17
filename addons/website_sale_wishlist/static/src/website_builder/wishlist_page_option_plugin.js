@@ -9,7 +9,7 @@ class WishlistPageOptionPlugin extends Plugin {
         builder_options: [
             {
                 template: "website_sale_wishlist.WishlistPageOption",
-                selector: "#o_comparelist_table",
+                selector: ".o_wishlist_table",
                 editableOnly: false,
                 title: _t("Wishlist Page"),
                 groups: ["website.group_website_designer"],
