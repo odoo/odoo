@@ -135,3 +135,13 @@ class TestHttpWebJson_2(TestHttpBase):
         self.assertEqual(res.text, '''"cannot call res.users.create with ids"''')
         self.assertEqual(res.status_code, HTTPStatus.UNPROCESSABLE_ENTITY)
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
+
+    def test_webjson2_missing_method(self):
+        res = self.db_url_open(
+            '/json/2/res.users',
+            data=r'{}',
+            headers=CT_JSON | self.bearer_header,
+        )
+        self.assertEqual(res.text, '''"Did you mean POST /json/2/<model>/<method>?"''')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
