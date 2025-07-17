@@ -3,7 +3,6 @@
 import json
 import logging
 import netifaces
-import re
 import requests
 import subprocess
 import threading
@@ -166,7 +165,6 @@ class IotBoxOwlHomePage(http.Controller):
         return json.dumps({
             'db_uuid': helpers.get_conf('db_uuid'),
             'enterprise_code': helpers.get_conf('enterprise_code'),
-            'hostname': helpers.get_hostname(),
             'ip': helpers.get_ip(),
             'identifier': helpers.get_identifier(),
             'devices': grouped_devices,
@@ -355,39 +353,6 @@ class IotBoxOwlHomePage(http.Controller):
             return {'status': 'success'}
 
         return {'status': 'failure'}
-
-    @route.iot_route('/iot_drivers/update_hostname', type="jsonrpc", methods=['POST'], cors='*', linux_only=True)
-    def update_hostname(self, hostname):
-        """Update the hostname of the IoT Box.
-
-        :param hostname: new hostname to set
-        """
-        current_hostname = helpers.get_hostname()
-        if not hostname or not IS_RPI or hostname == current_hostname:
-            return {
-                'status': 'failure',
-                'message': 'Hostname is not valid or already set.',
-            }
-
-        # Sanitize the hostname
-        hostname = re.sub(r'[^a-zA-Z0-9-]', '', hostname).encode('ascii')
-
-        with helpers.writable():
-            try:
-                subprocess.run(
-                    ['sudo', 'tee', '/root_bypass_ramdisks/etc/hostname'], input=hostname, check=True
-                )  # this is used exclusively for an elevated-privileges write to a file
-                subprocess.run(
-                    ['sudo', 'sed', '-i', f's/\\b{current_hostname}/{hostname.decode("ascii")}/g', '/root_bypass_ramdisks/etc/hosts'],
-                    check=True,
-                )
-                subprocess.run(['sudo', 'reboot'], check=False)  # Reboot to apply the new hostname
-            except subprocess.CalledProcessError:
-                _logger.exception("Failed to update hostname")
-                return {
-                    'status': 'failure',
-                    'message': 'Failed to update hostname, please try again.',
-                }
 
     @route.iot_route('/iot_drivers/connect_to_server', type="jsonrpc", methods=['POST'], cors='*')
     def connect_to_odoo_server(self, token):
