@@ -5,7 +5,7 @@ import { useDebounced } from "@web/core/utils/timing";
 
 export const DELAY_FETCH = 250;
 
-class UseSuggestion {
+export class UseSuggestion {
     constructor(comp) {
         this.comp = comp;
         this.fetchSuggestions = useDebounced(this.fetchSuggestions.bind(this), DELAY_FETCH);
