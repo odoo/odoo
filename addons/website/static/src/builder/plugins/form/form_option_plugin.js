@@ -228,7 +228,10 @@ export class FormOptionPlugin extends Plugin {
         return await this.services.orm.call("ir.model", "get_compatible_form_models");
     }
     async fetchFieldRecords(field) {
-        return this.fieldRecordsCache.preload(field);
+        if (field) {
+            field.records = await this.fieldRecordsCache.preload(field);
+            return field.records;
+        }
     }
     /**
      * Returns a promise which is resolved once the records of the field
@@ -1216,8 +1219,10 @@ export class SetVisibilityDependencyAction extends BuilderAction {
 export class SetFormCustomFieldValueListAction extends BuilderAction {
     static id = "setFormCustomFieldValueList";
     static dependencies = ["websiteFormOption"];
-    apply({ editingElement: fieldEl, value }) {
-        const fields = [];
+    load(context) {
+        return this.dependencies.websiteFormOption.prepareFields(context);
+    }
+    apply({ editingElement: fieldEl, value, loadResult: fields }) {
         let valueList = JSON.parse(value);
         if (getSelect(fieldEl)) {
             valueList = valueList.filter((value) => value.id !== "" || value.display_name !== "");

@@ -117,7 +117,7 @@ export class FormFieldOption extends BaseOptionComponent {
             dependencyEl.nodeName === "TEXTAREA"
         );
     }
-    get isExisingFieldSelectType() {
+    get isExistingFieldSelectType() {
         const el = this.env.getEditingElement();
         return !isFieldCustom(el) && ["selection", "many2one"].includes(el.dataset.type);
     }
