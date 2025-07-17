@@ -17,7 +17,7 @@
     }
 
     & > div:not(:first-child) {
-        .btn {
+        .btn:not(.o-hb-edit-color-combination) {
             @include button-variant(
                 $background: $o-we-item-clickable-bg,
                 $border: transparent,
@@ -82,6 +82,15 @@
             0 0 0 1px $o-we-bg-darker,
             0 0 0 3px var(--o-color-picker-active-color);
         outline: none;
+    }
+
+    .o-hb-edit-color-combination {
+        color: $o-we-item-clickable-color;
+        border: none;
+
+        &:hover {
+            color: $o-we-fg-lighter;
+        }
     }
 
     // Gradients
