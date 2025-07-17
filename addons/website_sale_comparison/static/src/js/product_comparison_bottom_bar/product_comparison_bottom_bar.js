@@ -1,20 +1,21 @@
-import { Component, onWillStart, useState } from '@odoo/owl';
+import { Component, onWillStart, useState, useSubEnv } from '@odoo/owl';
 import { rpc } from '@web/core/network/rpc';
 import { useBus } from '@web/core/utils/hooks';
 import comparisonUtils from '@website_sale_comparison/js/website_sale_comparison_utils';
 import { ProductRow } from '../product_row/product_row';
 
-export class ProductComparisonPopover extends Component {
-    static template = 'website_sale_comparison.ProductComparisonPopover';
+export class ProductComparisonBottomBar extends Component {
+    static template = 'website_sale_comparison.ProductComparisonBottomBar';
     static components = { ProductRow };
     static props = {
-        close: Function,
+        bus: Object,
     };
 
     setup() {
         super.setup();
         this.state = useState({ products: new Map() });
-        useBus(this.env.bus, 'comparison_products_changed', (_) => this._loadProducts());
+        useBus(this.props.bus, comparisonUtils.COMPARISON_EVENT, (_) => this._loadProducts());
+        useSubEnv({bus: this.props.bus});
         onWillStart(this._loadProducts);
     }
 
@@ -25,16 +26,16 @@ export class ProductComparisonPopover extends Component {
      */
     async _loadProducts() {
         const productIds = comparisonUtils.getComparisonProductIds();
-        if (!productIds.length) return;
+        if (!productIds.length) {
+            this.state.products.clear();
+            return;
+        }
         const productData = await rpc('/shop/compare/get_product_data', {
             product_ids: productIds,
         });
 
         this.state.products.clear();
         productData.forEach((product) => this.state.products.set(product.id, product));
-        if (productIds.length > productData.length) {
-            comparisonUtils.setComparisonProductIds(this.state.products.keys());
-        }
     }
 
     /**
@@ -45,5 +46,22 @@ export class ProductComparisonPopover extends Component {
     get comparisonUrl() {
         const productIds = Array.from(this.state.products.keys());
         return `/shop/compare?products=${encodeURIComponent(productIds.join(','))}`;
+    }
+
+    /**
+     * Get the count of products being compared.
+     * @return {number} The number of products.
+     */
+    get productCount() {
+        return this.state.products.size;
+    }
+
+
+
+    /**
+     * Clear all products from comparison.
+     */
+    clearAllProducts() {
+        comparisonUtils.clearComparisonProducts(this.env.bus);
     }
 }

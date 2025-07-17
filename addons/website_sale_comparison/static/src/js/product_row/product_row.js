@@ -8,6 +8,7 @@ export class ProductRow extends Component {
         id: Number,
         display_name: String,
         website_url: String,
+        image_url: String,
         price: Number,
         strikethrough_price: { type: Number, optional: true },
         prevent_zero_price_sale: Boolean,
@@ -18,10 +19,8 @@ export class ProductRow extends Component {
      * Remove the product from the comparison.
      */
     removeProduct() {
-        comparisonUtils.removeComparisonProduct(this.props.id);
-        this.env.bus.dispatchEvent(
-            new CustomEvent('comparison_products_changed', { bubbles: true })
-        );
+        comparisonUtils.removeComparisonProduct(this.props.id, this.env.bus);
+        comparisonUtils.enableDisabledProducts([this.props.id], false);
     }
 
     /**
