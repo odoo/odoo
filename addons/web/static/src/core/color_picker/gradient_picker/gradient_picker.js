@@ -1,6 +1,11 @@
 import { Component, onWillUpdateProps, useState, useRef } from "@odoo/owl";
 import { CustomColorPicker as ColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
-import { isColorGradient, rgbaToHex, convertCSSColorToRgba } from "@web/core/utils/colors";
+import {
+    isColorGradient,
+    standardizeGradient,
+    rgbaToHex,
+    convertCSSColorToRgba,
+} from "@web/core/utils/colors";
 
 export class GradientPicker extends Component {
     static components = { ColorPicker };
@@ -45,6 +50,7 @@ export class GradientPicker extends Component {
         if (!gradient || !isColorGradient(gradient)) {
             return;
         }
+        gradient = standardizeGradient(gradient);
         const colors = [
             ...gradient.matchAll(
                 /(#[0-9a-f]{6}|rgba?\(\s*[0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+\s*[,\s*[0-9.]*]?\s*\)|[a-z]+)\s*([[0-9]+%]?)/g
