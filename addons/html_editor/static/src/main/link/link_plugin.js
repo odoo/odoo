@@ -154,6 +154,7 @@ export class LinkPlugin extends Plugin {
         "overlay",
         "color",
         "feff",
+        "linkSelection",
     ];
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
@@ -404,6 +405,7 @@ export class LinkPlugin extends Plugin {
             },
             onClose: () => {
                 this.overlay.close();
+                this.removeCurrentLinkIfEmtpy();
             },
             getInternalMetaData: this.getInternalMetaData,
             getExternalMetaData: this.getExternalMetaData,
@@ -510,6 +512,10 @@ export class LinkPlugin extends Plugin {
                 this.overlay.close();
                 this.linkElement = linkEl;
                 this.LinkPopoverState.editing = false;
+            }
+
+            if (this.linkElement && this.linkElement.classList.contains("o_link_in_selection")) {
+                this.dependencies.linkSelection.padLinkWithZwnbsp(this.linkElement);
             }
 
             // if the link includes an inline image, we close the previous opened popover to reposition it
