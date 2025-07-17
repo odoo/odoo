@@ -799,6 +799,61 @@ describe("Link formatting in the popover", () => {
             '<p><a href="http://test.com/" class="btn btn-secondary">link2[]</a></p>'
         );
     });
+    const styleForceColor = `p > a.btn { color: black !important; border-color: gray !important }`;
+    test("custom link format fill with solid color should be stored as background-color", async () => {
+        const { el } = await setupEditor(
+            '<p><a href="http://test.com/" class="btn btn-secondary">link2[]</a></p>',
+            {
+                config: {
+                    allowCustomStyle: true,
+                },
+                styleContent: styleForceColor,
+            }
+        );
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await animationFrame();
+
+        expect(queryOne('select[name="link_type"]').selectedIndex).toBe(2);
+
+        await click('select[name="link_type"');
+        await select("custom");
+        await animationFrame();
+        await click(".o_we_color_preview.custom-fill-picker");
+        await animationFrame();
+        await click('[data-color="#FF9C00"]');
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p><a href="http://test.com/" class="btn btn-custom" style="color: rgb(0, 0, 0); background-color: #FF9C00; border-width: 1px; border-color: rgb(128, 128, 128); border-style: solid; ">link2</a></p>'
+        );
+    });
+    test("custom link format fill with gradient should be stored as background-image", async () => {
+        const { el } = await setupEditor(
+            '<p><a href="http://test.com/" class="btn btn-secondary">link2[]</a></p>',
+            {
+                config: {
+                    allowCustomStyle: true,
+                },
+                styleContent: styleForceColor,
+            }
+        );
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await animationFrame();
+
+        expect(queryOne('select[name="link_type"]').selectedIndex).toBe(2);
+
+        await click('select[name="link_type"');
+        await select("custom");
+        await animationFrame();
+        await click(".o_we_color_preview.custom-fill-picker");
+        await animationFrame();
+        await click(".gradient-tab");
+        await animationFrame();
+        await click(".o_gradient_color_button");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p><a href="http://test.com/" class="btn btn-custom" style="color: rgb(0, 0, 0); background-image: linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%); border-width: 1px; border-color: rgb(128, 128, 128); border-style: solid; ">link2</a></p>'
+        );
+    });
     test("clicking the discard button should revert the link format", async () => {
         const { el } = await setupEditor('<p><a href="http://test.com/">link1[]</a></p>');
         await waitFor(".o-we-linkpopover");
