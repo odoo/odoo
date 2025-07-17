@@ -76,6 +76,7 @@ class TestHttpWebJson_2(TestHttpBase):
         """))
         self.assertEqual(res.status_code, HTTPStatus.UNSUPPORTED_MEDIA_TYPE)
         self.assertEqual(res.headers.get('Content-Type'), 'text/html; charset=utf-8')
+        self.assertEqual(res.headers.get('Accept'), 'application/json')
 
     def test_webjson2_bad_data(self):
         res = self.db_url_open(

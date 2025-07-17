@@ -37,10 +37,11 @@ You can get a renewed cookie via the html form at /web/login?db= or the\
 
 class Json2RpcDispatcher(http.Dispatcher):
     routing_type = '/json/2/rpc'
+    mimetypes = ('application/json',)
 
     @classmethod
     def is_compatible_with(cls, request):
-        return request.httprequest.mimetype == 'application/json'
+        return request.httprequest.mimetype in cls.mimetypes
 
     def dispatch(self, endpoint, args):
         self.request.params = dict(args)
