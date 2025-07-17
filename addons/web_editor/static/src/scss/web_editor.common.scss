@@ -100,7 +100,7 @@ html, body {
     height: 100%;
 }
 
-pre {    
+pre {
     padding: map-get($spacers, 2) map-get($spacers, 3);
     border: $border-width solid $border-color;
     border-radius: $border-radius;
@@ -482,7 +482,7 @@ a.o_underline {
     &::before {
         transform: scale(-1, 1);
         content: "";
-        @include o-position-absolute($top: 0, $left: 50px);
+        @include o-position-absolute($top: 12px, $left: 40px);
         width: 100px;
         height: 150px;
         opacity: .5;
