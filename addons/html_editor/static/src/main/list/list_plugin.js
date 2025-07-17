@@ -147,7 +147,7 @@ export class ListPlugin extends Plugin {
         shift_tab_overrides: this.handleShiftTab.bind(this),
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         color_apply_overrides: this.applyColorToListItem.bind(this),
-        format_selection_overrides: this.applyFormatToListItem.bind(this),
+        format_selection_handlers: this.applyFormatToListItem.bind(this),
         node_to_insert_processors: this.processNodeToInsert.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         before_insert_within_pre_processors: this.insertListWithinPre.bind(this),

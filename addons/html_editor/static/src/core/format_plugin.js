@@ -229,7 +229,7 @@ export class FormatPlugin extends Plugin {
     }
 
     formatSelection(...args) {
-        this.delegateTo("format_selection_overrides", ...args);
+        this.dispatchTo("format_selection_handlers", ...args);
         if (this._formatSelection(...args)) {
             this.dependencies.history.addStep();
         }
