@@ -1,7 +1,8 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { Field, fieldVisualFeedback } from "@web/views/fields/field";
 import { useAutofocus } from "@web/core/utils/hooks";
+import { Operation } from "@web/model/relational_model/operation";
+import { Field, fieldVisualFeedback } from "@web/views/fields/field";
 
 import { Component } from "@odoo/owl";
 
@@ -11,12 +12,9 @@ export class ListConfirmationDialog extends Component {
     static props = {
         close: Function,
         title: {
-            validate: (m) => {
-                return (
-                    typeof m === "string" ||
-                    (typeof m === "object" && typeof m.toString === "function")
-                );
-            },
+            validate: (m) =>
+                typeof m === "string" ||
+                (typeof m === "object" && typeof m.toString === "function"),
             optional: true,
         },
         confirm: { type: Function, optional: true },
@@ -26,6 +24,7 @@ export class ListConfirmationDialog extends Component {
         nbRecords: Number,
         nbValidRecords: Number,
         record: Object,
+        changes: Object,
     };
     static defaultProps = {
         title: _t("Confirmation"),
@@ -51,6 +50,12 @@ export class ListConfirmationDialog extends Component {
         });
     }
 
+    get showTip() {
+        return this.props.fields.some((field) =>
+            ["monetary", "integer", "float"].includes(field.fieldNode?.type)
+        );
+    }
+
     _cancel() {
         if (this.props.cancel) {
             this.props.cancel();
@@ -74,5 +79,9 @@ export class ListConfirmationDialog extends Component {
             ...field.fieldNode,
             readonly: true,
         }).empty;
+    }
+
+    isValueOperation(field) {
+        return this.props.changes[field.name] instanceof Operation;
     }
 }

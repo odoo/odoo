@@ -75,6 +75,7 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 
+import { localization } from "@web/core/l10n/localization";
 import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
 import { currencies } from "@web/core/currency";
 import { Domain } from "@web/core/domain";
@@ -2945,10 +2946,10 @@ test(`editing a record should change same record in other groups when grouped by
 
 test.tags("desktop");
 test(`selecting the same record on different groups and editing it when grouping by m2m field`, async () => {
-    onRpc("write", ({ args }) => {
-        expect.step("write");
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
         expect(args[0]).toEqual([1], {
-            message: "the write rpc should only contain unique ids in arguments",
+            message: "the web_save rpc should only contain unique ids in arguments",
         });
     });
 
@@ -2978,7 +2979,7 @@ test(`selecting the same record on different groups and editing it when grouping
     await contains(`.modal .modal-footer .btn-primary`).click();
     expect(`.modal`).toHaveCount(0);
     expect(queryAllTexts(`.o_list_char`)).toEqual(["xyz", "blip", "blip", "xyz", "blip"]);
-    expect.verifySteps(["write"]);
+    expect.verifySteps(["web_save"]);
 });
 
 test(`change a record field in readonly should change same record in other groups when grouped by m2m field`, async () => {
@@ -10638,7 +10639,7 @@ test(`multi edit reference field batched in grouped list`, async () => {
     ];
 
     stepAllNetworkCalls();
-    onRpc("write", ({ args }) => {
+    onRpc("web_save", ({ args }) => {
         expect(args).toEqual([[1, 2, 3], { bar: true }]);
     });
 
@@ -10670,7 +10671,7 @@ test(`multi edit reference field batched in grouped list`, async () => {
 
     await contains(`.modal .modal-footer .btn-primary`).click();
     expect(`.modal`).toHaveCount(0);
-    expect.verifySteps(["write", "web_read"]);
+    expect.verifySteps(["web_save"]);
     expect(`.o_group_header`).toHaveCount(2);
     expect(queryAllTexts(`.o_data_cell[name=reference]`)).toEqual([
         "Value 1",
@@ -10704,8 +10705,8 @@ test(`multi edit field with daterange widget`, async () => {
     }
     defineModels([Daterange]);
 
-    onRpc("write", ({ args }) => {
-        expect.step("write");
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
         expect(args).toEqual([[1, 2], { date_start: "2017-01-16", date_end: "2017-02-12" }]);
     });
 
@@ -10747,7 +10748,7 @@ test(`multi edit field with daterange widget`, async () => {
     // Valid the confirm dialog
     await contains(`.modal .btn-primary`).click();
     expect(`.modal`).toHaveCount(0);
-    expect.verifySteps(["write"]);
+    expect.verifySteps(["web_save"]);
 });
 
 test.tags("desktop");
@@ -10773,8 +10774,8 @@ test(`multi edit field with daterange widget (edition without using the picker)`
     }
     defineModels([Daterange]);
 
-    onRpc("write", ({ args }) => {
-        expect.step("write");
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
         expect(args).toEqual([[1, 2], { date_start: "2016-04-01" }]);
     });
 
@@ -10809,7 +10810,7 @@ test(`multi edit field with daterange widget (edition without using the picker)`
     // Valid the confirm dialog
     await contains(`.modal .btn-primary`).click();
     expect(`.modal`).toHaveCount(0);
-    expect.verifySteps(["write"]);
+    expect.verifySteps(["web_save"]);
 });
 
 test(`list daterange with start date and empty end date`, async () => {
@@ -10882,15 +10883,13 @@ test.tags("desktop");
 test(`editable list view: contexts with multiple edit`, async () => {
     serverState.userContext = { someKey: "some value" };
 
-    onRpc(({ method, kwargs }) => {
-        if (method === "web_read" || method === "write") {
-            expect.step(method);
-            const context = kwargs.context;
-            expect(context.active_field).toBe(2, { message: "context should be correct" });
-            expect(context.someKey).toBe("some value", {
-                message: "context should be correct",
-            });
-        }
+    onRpc("web_save", ({ args, kwargs }) => {
+        expect.step("web_save");
+        const context = kwargs.context;
+        expect(context.active_field).toBe(2, { message: "context should be correct" });
+        expect(context.someKey).toBe("some value", {
+            message: "context should be correct",
+        });
     });
 
     await mountView({
@@ -10906,7 +10905,7 @@ test(`editable list view: contexts with multiple edit`, async () => {
     // Edits first record then confirms changes.
     await contains(`.o_data_row [name=foo] input`).edit("legion");
     await contains(`.modal-dialog button.btn-primary`).click();
-    expect.verifySteps(["write", "web_read"]);
+    expect.verifySteps(["web_save"]);
 });
 
 test.tags("desktop");
@@ -10989,15 +10988,12 @@ test(`editable list view: non dirty record with required fields`, async () => {
 test.tags("desktop");
 test(`editable list view: multi edition`, async () => {
     stepAllNetworkCalls();
-    onRpc("write", ({ args }) => {
-        expect(args).toEqual([[1, 2], { int_field: 666 }], {
-            message: "should write on multi records",
-        });
-    });
-    onRpc("web_read", ({ args, kwargs }) => {
-        if (args[0].length !== 1) {
+    onRpc("web_save", ({ args, kwargs }) => {
+        if (args[0].length) {
+            expect(args).toEqual([[1, 2], { int_field: 666 }], {
+                message: "should write on multi records",
+            });
             expect.step("conditional web_read");
-            expect(args).toEqual([[1, 2]], { message: "should batch the read" });
             expect(kwargs.specification).toEqual({ foo: {}, int_field: {} });
         }
     });
@@ -11066,7 +11062,7 @@ test(`editable list view: multi edition`, async () => {
     expect(`.o_list_record_selector input:checked`).toHaveCount(0, {
         message: "no record should be selected anymore",
     });
-    expect.verifySteps(["write", "web_read", "conditional web_read"]);
+    expect.verifySteps(["web_save", "conditional web_read"]);
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["yop", "666"], {
         message: "the first row should be updated",
     });
@@ -11136,7 +11132,7 @@ test(`editable list view: multi edition cannot call onchanges`, async () => {
     };
 
     stepAllNetworkCalls();
-    onRpc("write", function ({ args }) {
+    onRpc("web_save", function ({ args }) {
         for (const record of this.env["foo"].browse(args[0])) {
             record.int_field = args[1].foo.length;
         }
@@ -11167,7 +11163,7 @@ test(`editable list view: multi edition cannot call onchanges`, async () => {
     expect(`.modal`).toHaveCount(0);
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["hi", "2"]);
     expect(queryAllTexts(`.o_data_row:eq(1) .o_data_cell`)).toEqual(["blip", "9"]);
-    expect.verifySteps(["write", "web_read"]);
+    expect.verifySteps(["web_save"]);
     // select the second record (the first one is still selected)
     expect(`.o_list_record_selector input:checked`).toHaveCount(1, {
         message: "Record should be still selected",
@@ -11183,7 +11179,7 @@ test(`editable list view: multi edition cannot call onchanges`, async () => {
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["hello", "5"]);
     expect(queryAllTexts(`.o_data_row:eq(1) .o_data_cell`)).toEqual(["hello", "5"]);
     // should not perform the onchange in multi edition
-    expect.verifySteps(["write", "web_read"]);
+    expect.verifySteps(["web_save"]);
 });
 
 test.tags("desktop");
@@ -11306,8 +11302,8 @@ test(`multi edition: many2many field in grouped list`, async () => {
 
 test.tags("desktop");
 test(`editable list view: multi edition of many2one: set same value`, async () => {
-    onRpc("write", ({ args }) => {
-        expect.step("write");
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
         expect(args).toEqual([[1, 2, 3, 4], { m2o: 2 }], {
             message: "should force write value on all selected records",
         });
@@ -11336,7 +11332,7 @@ test(`editable list view: multi edition of many2one: set same value`, async () =
 
     await contains(`.modal .modal-footer .btn-primary`).click();
     expect(queryAllTexts(`.o_list_many2one`)).toEqual(["Value 2", "Value 2", "Value 2", "Value 2"]);
-    expect.verifySteps(["write"]);
+    expect.verifySteps(["web_save"]);
 });
 
 test.tags("desktop");
@@ -11574,7 +11570,7 @@ test(`editable list view (multi edition): mousedown on 'Discard', but mouseup so
 test.tags("desktop");
 test(`editable list view (multi edition): writable fields in readonly (force save)`, async () => {
     stepAllNetworkCalls();
-    onRpc("write", ({ args }) => {
+    onRpc("web_save", ({ args }) => {
         expect(args).toEqual([[1, 3], { bar: false }]);
     });
 
@@ -11602,13 +11598,13 @@ test(`editable list view (multi edition): writable fields in readonly (force sav
     expect(`.modal-header`).toHaveText("Confirmation");
 
     await contains(`.modal .btn-primary`).click();
-    expect.verifySteps(["write", "web_read"]);
+    expect.verifySteps(["web_save"]);
 });
 
 test.tags("desktop");
 test(`editable list view: multi edition with readonly modifiers`, async () => {
-    onRpc("write", ({ args }) => {
-        expect.step("write");
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
         expect(args).toEqual([[1, 2], { int_field: 666 }], {
             message: "should only write on the valid records",
         });
@@ -11630,10 +11626,10 @@ test(`editable list view: multi edition with readonly modifiers`, async () => {
     await contains(`.o_data_row .o_data_cell:eq(1)`).click();
     await contains(`.o_data_row [name=int_field] input`).edit("666");
 
-    expect(`.modal-body`).toHaveText(`Among the 4 selected records, 2 are valid for this update.
-Are you sure you want to update 2 records?
-
-Field: Int field
+    expect(`.modal-body main p`)
+        .toHaveText(`Among the 4 selected records, 2 are valid for this update.
+Are you sure you want to update 2 records?`);
+    expect(`.modal-body main .o_modal_changes`).toHaveText(`Field: Int field
 Update to: 666`);
     expect(queryOne(".modal .o_modal_changes .o_field_widget").parentNode.style.pointerEvents).toBe(
         "none",
@@ -11641,7 +11637,7 @@ Update to: 666`);
     );
 
     await contains(`.modal .btn-primary`).click();
-    expect.verifySteps(["write"]);
+    expect.verifySteps(["web_save"]);
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["1", "yop", "666"], {
         message: "the first row should be updated",
     });
@@ -11698,7 +11694,7 @@ test(`editable list view: many2one with readonly modifier`, async () => {
 
 test.tags("desktop");
 test(`editable list view: multi edition server error handling`, async () => {
-    onRpc("write", () => {
+    onRpc("web_save", () => {
         throw makeServerError();
     });
 
@@ -11946,15 +11942,12 @@ test(`editable readonly list view: single edition does not behave like a multi-e
 test.tags("desktop");
 test(`non editable list view: multi edition`, async () => {
     stepAllNetworkCalls();
-    onRpc("write", ({ args }) => {
-        expect(args).toEqual([[1, 2], { int_field: 666 }], {
-            message: "should write on multi records",
-        });
-    });
-    onRpc("web_read", ({ args, kwargs }) => {
-        if (args[0].length !== 1) {
+    onRpc("web_save", ({ args, kwargs }) => {
+        if (args[0].length) {
+            expect(args).toEqual([[1, 2], { int_field: 666 }], {
+                message: "should write on multi records",
+            });
             expect.step("conditional web_read");
-            expect(args).toEqual([[1, 2]], { message: "should batch the read" });
             expect(kwargs.specification).toEqual({ foo: {}, int_field: {} });
         }
     });
@@ -12000,7 +11993,7 @@ test(`non editable list view: multi edition`, async () => {
     });
 
     await contains(`.modal .btn-primary`).click();
-    expect.verifySteps(["write", "web_read", "conditional web_read"]);
+    expect.verifySteps(["web_save", "conditional web_read"]);
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["yop", "666"], {
         message: "the first row should be updated",
     });
@@ -18837,4 +18830,66 @@ test(`cache web_read_group (with sample data, change)`, async () => {
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_group_header`).toHaveCount(2);
     expect(queryAllTexts(`.o_group_header`)).toEqual(["-4 (1)", "44 (1)"]);
+});
+
+test.tags("desktop");
+test(`multi_edit: edit field with operator with localization`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="int_field"/>
+                <field name="qux"/>
+                <field name="amount"/>
+                <field name="foo"/>
+            </list>
+        `,
+    });
+    await contains(`th .o-checkbox`).click();
+    async function checkFieldValue(field, value, text) {
+        await contains(`.o_data_cell[name=${field}]`).click();
+        await edit(value, { confirm: "tab" });
+        await waitFor(`.modal table [name=${field}]`);
+        expect(`.modal table [name=${field}]`).toHaveText(text);
+        expect(`.modal .alert`).toHaveCount(1);
+        await contains(".modal footer button:contains(cancel)").click();
+    }
+    await checkFieldValue("int_field", "+=100", "Int field + 100");
+    await checkFieldValue("int_field", "-=00100", "Int field - 100");
+    await checkFieldValue("int_field", "/=100", "Int field / 100");
+    await checkFieldValue("int_field", "*=100", "Int field * 100");
+    patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
+    await checkFieldValue("qux", "*=1,5", "Qux * 1.5");
+    await checkFieldValue("qux", "-=1,50000", "Qux - 1.5");
+    await checkFieldValue("qux", "+=00001,50000", "Qux + 1.5");
+    patchWithCleanup(localization, { decimalPoint: ".", thousandsSep: "@" });
+    await checkFieldValue("amount", "/ = 1.4", "Amount / 1.4");
+    await checkFieldValue("amount", "*=1.4", "Amount * 1.4");
+    await checkFieldValue("amount", "- =1.4", "Amount - 1.4");
+    await checkFieldValue("amount", "+= 1.4", "Amount + 1.4");
+
+    let field = "amount";
+    await contains(`.o_data_cell[name=${field}]`).click();
+    await edit("100", { confirm: "tab" });
+    await waitFor(`.modal table [name=${field}]`);
+    expect(`.modal table [name=${field}]`).toHaveText("100.00");
+    expect(`.modal .alert`).toHaveCount(1);
+    await contains(".modal footer button:contains(update)").click();
+    expect(`table tr:eq(1) td[name=${field}]`).toHaveText("100.00");
+    expect(`table tr:eq(2) td[name=${field}]`).toHaveText("100.00");
+    expect(`table tr:eq(3) td[name=${field}]`).toHaveText("100.00");
+    expect(`table tr:eq(4) td[name=${field}]`).toHaveText("100.00");
+
+    field = "int_field";
+    await contains(`.o_data_cell[name=${field}]`).click();
+    await edit("*=2", { confirm: "tab" });
+    await waitFor(`.modal table [name=${field}]`);
+    expect(`.modal table [name=${field}]`).toHaveText("Int field * 2");
+    expect(`.modal .alert`).toHaveCount(1);
+    await contains(".modal footer button:contains(update)").click();
+    expect(`table tr:eq(1) td[name=${field}]`).toHaveText("20");
+    expect(`table tr:eq(2) td[name=${field}]`).toHaveText("18");
+    expect(`table tr:eq(3) td[name=${field}]`).toHaveText("34");
+    expect(`table tr:eq(4) td[name=${field}]`).toHaveText("-8");
 });

@@ -92,6 +92,15 @@ class Base(models.AbstractModel):
             self = self.browse(next_id)
         return self.with_context(bin_size=True).web_read(specification)
 
+    def web_save_multi(self, vals_list: list[dict], specification: dict[str, dict]) -> list[dict]:
+        if len(self) != len(vals_list):
+            raise ValueError("Each record must have a corresponding vals entry.")
+
+        for record, val in zip(self, vals_list):
+            record.write(val)
+
+        return self.with_context(bin_size=True).web_read(specification)
+
     @api.readonly
     def web_read(self, specification: dict[str, dict]) -> list[dict]:
         fields_to_read = list(specification) or ['id']
