@@ -59,6 +59,14 @@ registerWebsitePreviewTour('test_cannot_publish_partner', {
     trigger: ':iframe a:contains("Agrolait")',
     run: "click",
 }, {
+    content: 'Wait for the "edit in backend" button to appear before checking the publish button',
+    trigger: '.o_menu_systray .o_website_edit_in_backend > a',
+    // Seems enough to just wait for that button presence before checking the
+    // following step but a bit of delay seems a bit more robust to potential
+    // code changes. At least if the rendering flow changes or the tour system
+    // changes, this should be enough to trigger a race condition in this test.
+    run: () => new Promise(resolve => setTimeout(resolve, 100)),
+}, {
     content: 'Check there is no Publish/Unpublish',
-    trigger: '.o_menu_systray:not(:has(.o_menu_systray_item.o_website_publish_container))',
+    trigger: '.o_menu_systray:has(.o_website_edit_in_backend > a):not(:has(.o_menu_systray_item.o_website_publish_container))',
 }]);

@@ -65,11 +65,11 @@ class WebsitePage(models.Model):
 
     @api.depends_context('uid')
     def _compute_can_publish(self):
+        # Note: this `if`'s purpose it to optimize the way this is computed for
+        # multiple records.
         if self.env.user.has_group('website.group_website_designer'):
             for record in self:
                 record.can_publish = True
-        # FIXME this makes it so no-rights internal users *see* the publish
-        # button for website pages (although they cannot use it)
         else:
             super()._compute_can_publish()
 
