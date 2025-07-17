@@ -3739,11 +3739,11 @@ class AccountMove(models.Model):
         exchange_diff_moves = []
 
         for partial in pay_term_lines.matched_debit_ids:
-            invoice_partials.append((partial, partial.credit_amount_currency, partial.debit_move_id))
+            invoice_partials.append((partial, partial.debit_amount_currency, partial.credit_amount_currency, partial.debit_move_id))
             if partial.exchange_move_id:
                 exchange_diff_moves.append(partial.exchange_move_id.id)
         for partial in pay_term_lines.matched_credit_ids:
-            invoice_partials.append((partial, partial.debit_amount_currency, partial.credit_move_id))
+            invoice_partials.append((partial, partial.credit_amount_currency, partial.debit_amount_currency, partial.credit_move_id))
             if partial.exchange_move_id:
                 exchange_diff_moves.append(partial.exchange_move_id.id)
         return invoice_partials, exchange_diff_moves
