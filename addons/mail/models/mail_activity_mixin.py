@@ -235,6 +235,7 @@ class MailActivityMixin(models.AbstractModel):
 
     def _search_my_activity_date_deadline(self, operator, operand):
         activity_ids = self.env['mail.activity']._search([
+            ('active', '=', True),  # never overdue if "done"
             ('date_deadline', operator, operand),
             ('res_model', '=', self._name),
             ('user_id', '=', self.env.user.id)
