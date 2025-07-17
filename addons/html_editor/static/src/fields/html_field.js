@@ -191,7 +191,7 @@ export class HtmlField extends Component {
 
     async commitChanges({ urgent } = {}) {
         if (urgent) {
-            this._commitChanges({ urgent });
+            return this._commitChanges({ urgent });
         } else {
             return this.mutex.exec(() => this._commitChanges({ urgent }));
         }
