@@ -156,7 +156,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             nl_id = commercial_partner.company_registry if commercial_partner.peppol_eas not in ('0106', '0190') else commercial_partner.peppol_endpoint
             party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {
                 '_text': nl_id,
-                'schemeID': '0190' if nl_id and len(nl_id) == 9 else '0106'
+                'schemeID': '0190' if nl_id and len(nl_id) == 20 else '0106'
             }
         elif commercial_partner.country_id.code == 'LU' and commercial_partner.company_registry:
             party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {
