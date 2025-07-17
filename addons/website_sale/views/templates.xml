@@ -3040,40 +3040,40 @@
                                     t-field="product.description_sale"
                                 />
                             </div>
-                            <h6
-                                class="d-flex mb-0 text-end"
-                                name="suggested_product_price_container"
-                            >
-                                <t
-                                    t-set="combination_info"
-                                    t-value="product._get_combination_info_variant()"
-                                />
-                                <del
-                                    name="suggested_product_list_price"
-                                    t-attf-class="me-2 text-nowrap text-muted {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
-                                    t-esc="combination_info['list_price']"
-                                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-                                />
-                                <span
-                                    name="suggested_product_price"
-                                    class="text-nowrap"
-                                    t-esc="combination_info['price']"
-                                    t-options="{'widget': 'monetary','display_currency': website.currency_id}"
-                                />
-                            </h6>
-                        </div>
-                        <div class="d-flex justify-content-md-end">
-                            <button
-                                role="button"
-                                class="js_add_suggested_products btn btn-primary text-nowrap"
-                                t-att-data-product-id="product.id"
-                                t-att-data-product-template-id="product.product_tmpl_id.id"
-                                t-att-data-product-type="product.type"
-                                t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
-                            >
-                                <i class="d-md-none fa fa-shopping-cart" role="presentation"/>
-                                <span class="d-none d-md-inline">Add to cart</span>
-                            </button>
+                            <div class="d-flex flex-column gap-2 align-items-end">
+                                <h6
+                                    class="d-flex mb-0 text-end"
+                                    name="suggested_product_price_container"
+                                >
+                                    <t
+                                        t-set="combination_info"
+                                        t-value="product._get_combination_info_variant()"
+                                    />
+                                    <del
+                                        name="suggested_product_list_price"
+                                        t-attf-class="me-2 text-nowrap text-muted {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                                        t-esc="combination_info['list_price']"
+                                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                                    />
+                                    <span
+                                        name="suggested_product_price"
+                                        class="text-nowrap"
+                                        t-esc="combination_info['price']"
+                                        t-options="{'widget': 'monetary','display_currency': website.currency_id}"
+                                    />
+                                </h6>
+                                <button
+                                    role="button"
+                                    class="js_add_suggested_products btn btn-primary text-nowrap"
+                                    t-att-data-product-id="product.id"
+                                    t-att-data-product-template-id="product.product_tmpl_id.id"
+                                    t-att-data-product-type="product.type"
+                                    t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                                >
+                                    <i class="d-md-none fa fa-shopping-cart" role="presentation"/>
+                                    <span class="d-none d-md-inline">Add to cart</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
