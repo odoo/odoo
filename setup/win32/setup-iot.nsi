@@ -170,7 +170,7 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
 
     # Cloning odoo
     DetailPrint "Cloning Odoo"
-    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" clone --filter=tree:0 -b 18.0 --single-branch --no-checkout https://github.com/odoo/odoo.git "$INSTDIR\odoo"'
+    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" clone --filter=tree:0 -b saas-18.4 --single-branch --no-checkout https://github.com/odoo/odoo.git "$INSTDIR\odoo"'
 
     DetailPrint "Configuring Sparse Checkout for IoT modules"
     nsExec::Exec '"$INSTDIR\git\cmd\git.exe" -C "$INSTDIR\odoo" sparse-checkout init --no-cone'
