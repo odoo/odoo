@@ -611,8 +611,6 @@ class PurchaseOrder(models.Model):
         self.locked = True
 
     def button_unlock(self):
-        if self.lock_confirmed_po == 'lock':
-            raise UserError(_("Unlocking the order is not allowed as 'Lock Confirmed Orders' is enabled."))
         self.locked = False
 
     def _confirmation_error_message(self):
