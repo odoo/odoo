@@ -9,10 +9,13 @@ import os
 import re
 import threading
 import unicodedata
+
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.routing
 import werkzeug.utils
+from werkzeug.datastructures import WWWAuthenticate
+from werkzeug.exceptions import Unauthorized
 
 try:
     from werkzeug.routing import NumberConverter
@@ -237,19 +240,19 @@ class IrHttp(models.AbstractModel):
             # 'rpc' scope does not really exist, we basically require a global key (scope NULL)
             uid = request.env['res.users.apikeys']._check_credentials(scope='rpc', key=token)
             if not uid:
-                raise werkzeug.exceptions.Unauthorized(
-                    "Invalid apikey",
-                    www_authenticate=werkzeug.datastructures.WWWAuthenticate('bearer'))
+                e = "Invalid apikey"
+                raise Unauthorized(e, www_authenticate=WWWAuthenticate('bearer'))
             if request.env.uid and request.env.uid != uid:
-                raise AccessDenied("Session user does not match the used apikey")  # pylint: disable=missing-gettext
+                e = "Session user does not match the used apikey."
+                raise AccessDenied(e)
             request.update_env(user=uid)
             request.session.can_save = False  # stateless
         elif not request.env.uid:
-            raise werkzeug.exceptions.Unauthorized(
-                'User not authenticated, use the "Authorization" header',
-                www_authenticate=werkzeug.datastructures.WWWAuthenticate('bearer'))
+            e = "User not authenticated, use an API Key with a Bearer Authorization header."
+            raise Unauthorized(e, www_authenticate=WWWAuthenticate('bearer'))
         elif not check_sec_headers():
-            raise AccessDenied("Missing \"Authorization\" or Sec-headers for interactive usage")  # pylint: disable=missing-gettext
+            e = 'Missing "Authorization" or Sec-headers for interactive usage.'
+            raise werkzeug.exceptions.Unauthorized(e, www_authenticate=WWWAuthenticate('bearer'))
         cls._auth_method_user()
 
     @classmethod

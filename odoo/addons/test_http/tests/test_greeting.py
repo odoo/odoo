@@ -58,11 +58,13 @@ class TestHttpGreeting(TestHttpBase):
                 if withdb and login:
                     self.logout(keep_db=False)
 
-        # create job with an apikey
+    def test_greeting0_matrix_bearer(self):
+        self.authenticate(None, None)
         joe = new_test_user(self.env, 'joe', context={'lang': 'en_US'})
         joe = joe.with_user(joe)
         key_expiration = datetime.datetime.now() + datetime.timedelta(days=0.5)
         key = joe.env['res.users.apikeys']._generate('rpc', 'test', key_expiration)
+
         for path, authorization, expected_code, expected_pattern in [
             ('/test_http/greeting-bearer', None, 401, r".*Unauthorized.*"),
             ('/test_http/greeting-bearer', 'invalid', 401, r".*Unauthorized.*"),
@@ -93,7 +95,7 @@ class TestHttpGreeting(TestHttpBase):
             self.authenticate("jackoneill", "jackoneill")
             with mute_logger('odoo.http'):
                 res = self.db_url_open('/test_http/greeting-bearer')
-            self.assertEqual(res.status_code, 403)
+            self.assertEqual(res.status_code, 401)
             self.assertRegex(res.text, r".*Authorization.*headers")
             self.logout(keep_db=False)
 
