@@ -24,7 +24,7 @@ import { execCommand } from "../_helpers/userCommands";
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
-describe("should open a popover", () => {
+describe("should open or close a popover", () => {
     test("should open a popover when the selection is inside a link and close outside of a link", async () => {
         const { el } = await setupEditor("<p>this is a <a>link</a></p>");
         await expectElementCount(".o-we-linkpopover", 0);
@@ -35,6 +35,7 @@ describe("should open a popover", () => {
         setContent(el, "<p>this []is a <a>link</a></p>");
         await expectElementCount(".o-we-linkpopover", 0);
     });
+<<<<<<< 43d3fbbfd6b0c5e471c6ce45e2c5ad62fae52819
     test("should open a popover when the selection is inside a link and stay open if selection move in the same link", async () => {
         const { el } = await setupEditor('<p>this []is a <a href="exist">l<b>in</b>k</a></p>');
         await expectElementCount(".o-we-linkpopover", 0);
@@ -64,6 +65,22 @@ describe("should open a popover", () => {
             '<p>this is a <a href="exist">[]l<b>in</b>k</a></p>'
         );
     });
+||||||| 74eecadb39e0c260f4cfc1ae9478c84eda815132
+=======
+    test("should pad new created links and close a popover, remove empty link when press esc", async () => {
+        const { el } = await setupEditor("<p>[Hello]</p>");
+        await waitFor(".o-we-toolbar");
+        await click(".o-we-toolbar .fa-link");
+        await waitFor(".o-we-linkpopover", { timeout: 1500 });
+        expect(getContent(el)).toBe(
+            '<p>\ufeff<a class="o_link_in_selection">\ufeffHello\ufeff</a>\ufeff</p>'
+        );
+        await press("escape");
+        await animationFrame();
+        await expectElementCount(".o-we-linkpopover", 0);
+        expect(cleanLinkArtifacts(getContent(el))).toBe("<p>Hello</p>");
+    });
+>>>>>>> 4488229f2b807f43332c599a0552a41079e5295d
     test("link popover should have input field for href when the link doesn't have href", async () => {
         await setupEditor("<p>this is a <a>li[]nk</a></p>");
         await expectElementCount(".o-we-linkpopover", 1);
@@ -943,7 +960,8 @@ describe("link preview", () => {
     });
     test("test external metadata cached correctly", async () => {
         const title = "Open Source ERP and CRM | Odoo";
-        const description = "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.";
+        const description =
+            "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.";
         onRpc("/html_editor/link_preview_external", () => {
             expect.step("/html_editor/link_preview_external");
             return {

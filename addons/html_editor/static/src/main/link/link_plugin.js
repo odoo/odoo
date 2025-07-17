@@ -144,6 +144,7 @@ export class LinkPlugin extends Plugin {
         "overlay",
         "color",
         "feff",
+        "linkSelection",
     ];
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
@@ -569,6 +570,49 @@ export class LinkPlugin extends Plugin {
 
     handleSelectionChange(selectionData) {
         const selection = selectionData.editableSelection;
+<<<<<<< 43d3fbbfd6b0c5e471c6ce45e2c5ad62fae52819
+||||||| 74eecadb39e0c260f4cfc1ae9478c84eda815132
+        const props = {
+            onRemove: () => {
+                this.removeLink();
+                this.overlay.close();
+                this.dependencies.history.addStep();
+            },
+            onCopy: () => {
+                this.overlay.close();
+            },
+            onClose: () => {
+                this.overlay.close();
+            },
+            getInternalMetaData: this.getInternalMetaData,
+            getExternalMetaData: this.getExternalMetaData,
+            getAttachmentMetadata: this.getAttachmentMetadata,
+            recordInfo: this.config.getRecordInfo?.() || {},
+            type: this.type || "",
+            LinkPopoverState: this.LinkPopoverState,
+        };
+=======
+        const props = {
+            onRemove: () => {
+                this.removeLink();
+                this.overlay.close();
+                this.dependencies.history.addStep();
+            },
+            onCopy: () => {
+                this.overlay.close();
+            },
+            onClose: () => {
+                this.overlay.close();
+                this.removeCurrentLinkIfEmtpy();
+            },
+            getInternalMetaData: this.getInternalMetaData,
+            getExternalMetaData: this.getExternalMetaData,
+            getAttachmentMetadata: this.getAttachmentMetadata,
+            recordInfo: this.config.getRecordInfo?.() || {},
+            type: this.type || "",
+            LinkPopoverState: this.LinkPopoverState,
+        };
+>>>>>>> 4488229f2b807f43332c599a0552a41079e5295d
         if (
             this._isNavigatingByMouse &&
             selection.isCollapsed &&
@@ -635,10 +679,142 @@ export class LinkPlugin extends Plugin {
                 this.closeLinkTools();
             }
         } else {
+<<<<<<< 43d3fbbfd6b0c5e471c6ce45e2c5ad62fae52819
             const closestLinkElement = closestElement(selection.anchorNode, "A");
             if (closestLinkElement) {
                 if (closestLinkElement !== this.linkInDocument) {
                     this.openLinkTools(closestLinkElement);
+||||||| 74eecadb39e0c260f4cfc1ae9478c84eda815132
+            const linkEl = closestElement(selection.anchorNode, "A");
+            if (!linkEl) {
+                this.overlay.close();
+                this.removeCurrentLinkIfEmtpy();
+                return;
+            }
+            if (linkEl !== this.linkElement) {
+                this.removeCurrentLinkIfEmtpy();
+                this.overlay.close();
+                this.linkElement = linkEl;
+                this.LinkPopoverState.editing = false;
+            }
+
+            // if the link includes an inline image, we close the previous opened popover to reposition it
+            const imageNode = linkEl.querySelector("img");
+            if (imageNode) {
+                this.removeCurrentLinkIfEmtpy();
+                this.overlay.close();
+            }
+
+            if (linkEl.isConnected) {
+                const linkProps = {
+                    ...props,
+                    isImage: false,
+                    linkEl: this.linkElement,
+                    onApply: (url, label, classes, attachmentId) => {
+                        this.linkElement.href = url;
+                        if (attachmentId) {
+                            this.linkElement.dataset.attachmentId = attachmentId;
+                        }
+                        if (
+                            cleanZWChars(this.linkElement.innerText) === label ||
+                            !!this.linkElement.childElementCount
+                        ) {
+                            this.overlay.close();
+                            this.dependencies.selection.setSelection(
+                                this.dependencies.selection.getEditableSelection()
+                            );
+                        } else {
+                            const restore = prepareUpdate(...leftPos(this.linkElement));
+                            this.linkElement.innerText = label;
+                            restore();
+                            this.overlay.close();
+                            this.dependencies.selection.setCursorEnd(this.linkElement);
+                        }
+                        if (classes) {
+                            this.linkElement.className = classes;
+                        } else {
+                            this.linkElement.removeAttribute("class");
+                        }
+                        cleanTrailingBR(closestBlock(this.linkElement));
+                        this.dependencies.selection.focusEditable();
+                        this.removeCurrentLinkIfEmtpy();
+                        this.LinkPopoverState.editing = false;
+                        this.dependencies.history.addStep();
+                    },
+                    canEdit: !this.linkElement.classList.contains("o_link_readonly"),
+                    canUpload: !this.config.disableFile,
+                    onUpload: this.config.onAttachmentChange,
+                };
+                if (!this.linkElement.href) {
+                    this.LinkPopoverState.editing = true;
+=======
+            const linkEl = closestElement(selection.anchorNode, "A");
+            if (!linkEl) {
+                this.overlay.close();
+                this.removeCurrentLinkIfEmtpy();
+                return;
+            }
+            if (linkEl !== this.linkElement) {
+                this.removeCurrentLinkIfEmtpy();
+                this.overlay.close();
+                this.linkElement = linkEl;
+                this.LinkPopoverState.editing = false;
+            }
+
+            if (this.linkElement && this.linkElement.classList.contains("o_link_in_selection")) {
+                this.dependencies.linkSelection.padLinkWithZwnbsp(this.linkElement);
+            }
+
+            // if the link includes an inline image, we close the previous opened popover to reposition it
+            const imageNode = linkEl.querySelector("img");
+            if (imageNode) {
+                this.removeCurrentLinkIfEmtpy();
+                this.overlay.close();
+            }
+
+            if (linkEl.isConnected) {
+                const linkProps = {
+                    ...props,
+                    isImage: false,
+                    linkEl: this.linkElement,
+                    onApply: (url, label, classes, attachmentId) => {
+                        this.linkElement.href = url;
+                        if (attachmentId) {
+                            this.linkElement.dataset.attachmentId = attachmentId;
+                        }
+                        if (
+                            cleanZWChars(this.linkElement.innerText) === label ||
+                            !!this.linkElement.childElementCount
+                        ) {
+                            this.overlay.close();
+                            this.dependencies.selection.setSelection(
+                                this.dependencies.selection.getEditableSelection()
+                            );
+                        } else {
+                            const restore = prepareUpdate(...leftPos(this.linkElement));
+                            this.linkElement.innerText = label;
+                            restore();
+                            this.overlay.close();
+                            this.dependencies.selection.setCursorEnd(this.linkElement);
+                        }
+                        if (classes) {
+                            this.linkElement.className = classes;
+                        } else {
+                            this.linkElement.removeAttribute("class");
+                        }
+                        cleanTrailingBR(closestBlock(this.linkElement));
+                        this.dependencies.selection.focusEditable();
+                        this.removeCurrentLinkIfEmtpy();
+                        this.LinkPopoverState.editing = false;
+                        this.dependencies.history.addStep();
+                    },
+                    canEdit: !this.linkElement.classList.contains("o_link_readonly"),
+                    canUpload: !this.config.disableFile,
+                    onUpload: this.config.onAttachmentChange,
+                };
+                if (!this.linkElement.href) {
+                    this.LinkPopoverState.editing = true;
+>>>>>>> 4488229f2b807f43332c599a0552a41079e5295d
                 }
             } else {
                 this.linkInDocument = null;
