@@ -9,7 +9,6 @@ from typing import Any
 from werkzeug.exceptions import (
     BadRequest,
     HTTPException,
-    MethodNotAllowed,
     NotFound,
     UnprocessableEntity,
 )
@@ -104,9 +103,21 @@ class WebJson2Controller(http.Controller):
                 return method._readonly
         return False
 
+    # Take over /json/<path:subpath>
+    @http.route(
+        ['/json/2', '/json/2/<path:subpath>'],
+        auth='public',
+        type='/json/2/rpc',
+        readonly=True,
+        methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    )
+    def web_json_2_404(self, subpath=None):
+        e = "Did you mean POST /json/2/<model>/<method>?"
+        raise request.not_found(e)
+
     @http.route(
         '/json/2/<model>/<method>',
-        # methods=['POST'], # must accept all methods, otherwise /json/<path:subpath> takes over
+        methods=['POST'],
         auth='bearer',
         type='/json/2/rpc',
         readonly=_web_json_2_rpc_readonly,
@@ -120,9 +131,6 @@ class WebJson2Controller(http.Controller):
         context: Mapping[str, Any] = frozendict(),
         **kwargs,
     ):
-        if request.httprequest.method != 'POST':
-            raise MethodNotAllowed()
-
         try:
             Model = request.env[model].with_context(context)
         except KeyError as exc:
