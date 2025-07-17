@@ -4,7 +4,7 @@ from collections import defaultdict
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.exceptions import ValidationError
 from odoo.tools import format_date
@@ -217,7 +217,7 @@ class HrVersion(models.Model):
             if not version.contract_date_start or not version.employee_id:
                 continue
             if version.contract_date_end and version.contract_date_start > version.contract_date_end:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     'Start date (%(start)s) must be earlier than contract end date (%(end)s).',
                     start=version.contract_date_start, end=version.contract_date_end,
                 ))
@@ -231,12 +231,12 @@ class HrVersion(models.Model):
                     contract_period_exists = True
                     continue
                 if date_start <= contract_date_end and version.contract_date_start <= date_to:
-                    raise ValidationError(_(
+                    raise ValidationError(self.env._(
                         'You have some overlapping contracts for %(employee)s:\n%(overlaps)s',
                         employee=version.employee_id.display_name,
                         overlaps='\n'.join(
-                            [f'Version ({version.display_name}): {version.contract_date_start} - {version.contract_date_end}'] +
-                            [f'Version ({version.display_name}): {date_start} - {date_end}' for version in versions])))
+                            [f'{self.env._("Employee Record")} ({version.display_name}): {version.contract_date_start} - {version.contract_date_end}'] +
+                            [f'{self.env._("Employee Record")} ({version.display_name}): {date_start} - {date_end}' for version in versions])))
             if not contract_period_exists:
                 dates_per_employee[version.employee_id].append((version.contract_date_start, version.contract_date_end, version))
 
@@ -255,7 +255,7 @@ class HrVersion(models.Model):
         for employee_id, versions in self.grouped('employee_id').items():
             if employee_id.versions_count == len(versions):
                 raise ValidationError(
-                    self.env._('Employee %s must always have at least one active version.') % employee_id.name
+                    self.env.self.env._('Employee %s must always have at least one active version.') % employee_id.name
                 )
 
     def write(self, values):
@@ -263,10 +263,10 @@ class HrVersion(models.Model):
         # ARPI TODO: what if mass edit ?
         if 'employee_id' in values:
             if self.filtered(lambda v: len(v.employee_id.version_ids) == 1 and values['employee_id'] != v.employee_id.id):
-                raise ValidationError(self.env._("Cannot unassign the only active version of an employee."))
+                raise ValidationError(self.env.self.env._("Cannot unassign the only active version of an employee."))
         if 'active' in values and not values['active']:
             if self.filtered(lambda v: len(v.employee_id.version_ids) == 1):
-                raise ValidationError(self.env._("Cannot archive the only active version of an employee."))
+                raise ValidationError(self.env.self.env._("Cannot archive the only active version of an employee."))
 
         if self.env.context.get('sync_contract_dates'):
             return super().write(values)
@@ -524,11 +524,11 @@ class HrVersion(models.Model):
     @api.model
     def _get_marital_status_selection(self):
         return [
-            ('single', _('Single')),
-            ('married', _('Married')),
-            ('cohabitant', _('Legal Cohabitant')),
-            ('widower', _('Widower')),
-            ('divorced', _('Divorced')),
+            ('single', self.env._('Single')),
+            ('married', self.env._('Married')),
+            ('cohabitant', self.env._('Legal Cohabitant')),
+            ('widower', self.env._('Widower')),
+            ('divorced', self.env._('Divorced')),
         ]
 
     def _inverse_resource_calendar_id(self):
