@@ -85,7 +85,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 nl_id = partner.company_registry if partner.peppol_eas not in ('0106', '0190') else partner.peppol_endpoint
                 vals.update({
                     'company_id': nl_id,
-                    'company_id_attrs': {'schemeID': '0190' if nl_id and len(nl_id) == 9 else '0106'},
+                    'company_id_attrs': {'schemeID': '0190' if nl_id and len(nl_id) == 20 else '0106'},
                 })
             if partner.country_id.code == "LU":
                 if 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
