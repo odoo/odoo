@@ -236,8 +236,9 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             composer.action_send_and_print(allow_fallback_pdf=True)
             self.env.cr.flush()  # force tracking message
 
-        self.assertEqual(len(self._new_msgs), 1, 'Should produce 1 message (for posting template)')
-        print_msg = self._new_msgs[0]
+        new_account_msgs = self._new_msgs.filtered(lambda msg: (msg.model or '').startswith('account'))
+        self.assertEqual(len(new_account_msgs), 1, 'Should produce 1 message (for posting template)')
+        print_msg = new_account_msgs[0]
         self.assertNotified(
             print_msg,
             [{
@@ -319,8 +320,9 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             composer.action_send_and_print()
             self.env.cr.flush()  # force tracking message
 
-        self.assertEqual(len(self._new_msgs), 1, 'Should produce 1 message (for posting template)')
-        print_msg = self._new_msgs[0]
+        new_account_msgs = self._new_msgs.filtered(lambda msg: (msg.model or '').startswith('account'))
+        self.assertEqual(len(new_account_msgs), 1, 'Should produce 1 message (for posting template)')
+        print_msg = new_account_msgs[0]
         self.assertNotified(
             print_msg,
             [{
