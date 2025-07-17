@@ -28,7 +28,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         (cls.product_a | cls.product_b).is_storable = True
 
         cls.dropship_route = cls.env.ref('stock_dropshipping.route_drop_shipping')
-        cls.dropship_subcontractor_route = cls.env.ref('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping')
+        cls.dropship_subcontractor_route = cls.env.ref('stock_dropshipping.route_drop_shipping')
 
         cls.bom_a = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.product_a.product_tmpl_id.id,
