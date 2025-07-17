@@ -1,8 +1,8 @@
-import { tourState } from "./tour_state";
+import { tourState } from "@web_tour/js/tour_state";
 import * as hoot from "@odoo/hoot-dom";
-import { serializeChanges, serializeMutation } from "../tour_utils";
-import { TourHelpers } from "./tour_helpers";
-import { TourStep } from "./tour_step";
+import { serializeChanges, serializeMutation } from "@web_tour/js/utils/tour_utils";
+import { TourHelpers } from "@web_tour/js/tour_automatic/tour_helpers";
+import { TourStep } from "@web_tour/js/tour_step";
 import { getTag } from "@web/core/utils/xml";
 import { waitForStable } from "@web/core/macro";
 

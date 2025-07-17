@@ -14,7 +14,7 @@ import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 /**
  * @param {LineOptions} options
- * @returns {import("@web_tour/tour_service/tour_service").TourStep[]}
+ * @returns {import("@web_tour/js/tour_service").TourStep[]}
  */
 export function hasLine({
     withClass = "",
@@ -78,7 +78,7 @@ export function hasLine({
 }
 /**
  * @param {LineOptions} options
- * @returns {import("@web_tour/tour_service/tour_service").TourStep}
+ * @returns {import("@web_tour/tour_service").TourStep}
  */
 export function doesNotHaveLine(options = {}) {
     const step = hasLine(options)[0];

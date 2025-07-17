@@ -2,7 +2,6 @@ import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { contains } from "@web/../tests/utils";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
-import { TourHelpers } from "@web_tour/tour_service/tour_helpers";
 import { Chatbot } from "@im_livechat/core/common/chatbot_model";
 
 const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
@@ -138,8 +137,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             {
                 // Simulate that the user is typing, so the chatbot shouldn't go to the next step
                 trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                async run() {
-                    const target = new TourHelpers(this.anchor);
+                async run(helpers) {
                     chatbotDelayProcessingDef = new Deferred();
                     let failTimeout = setTimeout(() => {
                         chatbotDelayProcessingDef.reject(
@@ -147,7 +145,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                         );
                     }, 5000);
                     chatbotDelayProcessingDef.then(() => clearTimeout(failTimeout));
-                    target.edit("Never mind!");
+                    helpers.edit("Never mind!");
                     await chatbotDelayProcessingDef;
                     chatbotDelayProcessingDef = new Deferred();
                     failTimeout = setTimeout(() => {
@@ -156,7 +154,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                         );
                     }, 5000);
                     chatbotDelayProcessingDef.then(() => clearTimeout(failTimeout));
-                    target.edit("Never mind!!!");
+                    helpers.edit("Never mind!!!");
                     await chatbotDelayProcessingDef;
                 },
             },
