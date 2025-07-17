@@ -241,6 +241,13 @@ export class HootSideBar extends Component {
             if (singleRootSuite.length === 1) {
                 // Unfolds only root suite containing jobs
                 this.unfoldAndSelect(singleRootSuite[0]);
+            } else {
+                // As the runner might have registered suites after the initial render,
+                // with those suites not being read by this component yet, it will
+                // not have subscribed and re-rendered automatically.
+                // This here allows the opportunity to read all suites one last time
+                // before starting the run.
+                this.render();
             }
         });
 

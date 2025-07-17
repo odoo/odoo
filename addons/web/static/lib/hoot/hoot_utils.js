@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { queryAll } from "@odoo/hoot-dom";
+import { on, queryAll } from "@odoo/hoot-dom";
 import { reactive, useComponent, useEffect, useExternalListener } from "@odoo/owl";
 import { isNode } from "@web/../lib/hoot-dom/helpers/dom";
 import {
@@ -1563,6 +1563,23 @@ export function useHootKey(keyStroke, callback) {
 /** @type {EventTarget["addEventListener"]} */
 export function useWindowListener(type, callback, options) {
     return useExternalListener(windowTarget, type, (ev) => ev.isTrusted && callback(ev), options);
+}
+
+/**
+ * @param {Document} doc
+ */
+export function waitForDocument(doc) {
+    return new Promise(function (resolve) {
+        if (doc.readyState !== "loading") {
+            return resolve(true);
+        }
+        const removeListener = on(doc, "readystatechange", function checkReadyState() {
+            if (doc.readyState !== "loading") {
+                removeListener();
+                resolve(true);
+            }
+        });
+    });
 }
 
 export class Callbacks {
