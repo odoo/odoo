@@ -51,7 +51,7 @@ class TestWebsiteSaleMail(HttpCase):
                                                     order='create_date DESC', limit=1)
             self.assertTrue(new_mail)
             self.assertIn('Your', new_mail.body_html)
-            self.assertIn('Order', new_mail.body_html)
+            self.assertIn('order', new_mail.body_html)
 
 
 @tagged('post_install', '-at_install')
