@@ -92,6 +92,22 @@ class MailActivityMixin(models.AbstractModel):
         help="Type of the exception activity on record.")
     activity_exception_icon = fields.Char('Icon', help="Icon to indicate an exception activity.",
         compute='_compute_activity_exception_type')
+    activity_plans_ids = fields.Many2many(
+        'mail.activity.plan',
+        string="Activity Plans",
+        compute='_compute_activity_plans_ids',
+        search='_search_activity_plans_ids',
+    )
+
+    @api.depends('activity_ids.activity_plan_id')
+    def _compute_activity_plans_ids(self):
+        for record in self:
+            record.activity_plans_ids = record.activity_ids.activity_plan_id
+
+    def _search_activity_plans_ids(self, operator, value):
+        if operator == 'in' and True in value:
+            return [('activity_ids.activity_plan_id', '!=', False)]
+        return [('activity_ids.activity_plan_id', operator, value)]
 
     @api.depends('activity_ids.activity_type_id.decoration_type', 'activity_ids.activity_type_id.icon')
     def _compute_activity_exception_type(self):

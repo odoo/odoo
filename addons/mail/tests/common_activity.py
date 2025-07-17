@@ -93,6 +93,7 @@ class ActivityScheduleCase(MailCommon):
         self.assertEqual(len(activities), expected_number_of_activity)
 
         for activity, template, expected_deadline in zip(activities, plan.template_ids, expected_deadlines):
+            self.assertEqual(activity.activity_plan_id, template.plan_id)
             self.assertEqual(activity.activity_type_id, template.activity_type_id)
             self.assertEqual(activity.date_deadline, expected_deadline)
             self.assertEqual(activity.note, template.note)
