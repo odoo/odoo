@@ -96,7 +96,7 @@ export const feedback = [
 export const emailTranscript = [
     {
         content: "Check email field",
-        trigger: ".o-livechat-root:shadow input:value(mark.brown23@example.com)",
+        trigger: ".o-livechat-root:shadow input:value(e.e@example.com)",
     },
     {
         content: "Send the conversation to your email address",
