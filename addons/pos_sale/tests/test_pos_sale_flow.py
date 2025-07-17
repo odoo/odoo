@@ -1416,3 +1416,85 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         pos_order_id = self.env['pos.order'].sync_from_ui([pos_order])['pos.order'][0]['id']
         pos_order = self.env['pos.order'].browse(pos_order_id)
         self.assertFalse(pos_order.account_move.invoice_payment_term_id)
+<<<<<<< abb45f2c1ff1ba02b62e6d75a2e78b5ea476029a
+||||||| 73e907d15d15a807e082e40c64f8516a53ebe091
+
+    def test_settle_order_with_different_uom(self):
+        """Verify that a qty has changed according to UOM"""
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 10.0,
+        })
+        test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        # Create a sale order
+        sale_order = self.env['sale.order'].create({
+            'partner_id': test_partner.id,
+            'order_line': [Command.create({
+                    'product_id': product_a.id,
+                    'name': product_a.name,
+                    'product_uom_qty': 1,
+                    'product_uom':  self.env.ref('uom.product_uom_dozen').id,
+                    'price_unit': product_a.lst_price,
+                })]
+        })
+        sale_order.action_confirm()
+
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('PoSSettleQuotation', login="accountman")
+        pos_order = self.env['pos.order'].search([('partner_id', '=', test_partner.id)], limit=1)
+
+        self.assertEqual(pos_order.lines[0].qty, 12.0, "quantity should be 12.0")
+        self.assertEqual(pos_order.lines[0].price_unit, 0.83, "price of product should be 0.83")
+=======
+
+    def test_settle_order_with_different_uom(self):
+        """Verify that a qty has changed according to UOM"""
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 10.0,
+        })
+        test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        # Create a sale order
+        sale_order = self.env['sale.order'].create({
+            'partner_id': test_partner.id,
+            'order_line': [Command.create({
+                    'product_id': product_a.id,
+                    'name': product_a.name,
+                    'product_uom_qty': 1,
+                    'product_uom':  self.env.ref('uom.product_uom_dozen').id,
+                    'price_unit': product_a.lst_price,
+                })]
+        })
+        sale_order.action_confirm()
+
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('PoSSettleQuotation', login="accountman")
+        pos_order = self.env['pos.order'].search([('partner_id', '=', test_partner.id)], limit=1)
+
+        self.assertEqual(pos_order.lines[0].qty, 12.0, "quantity should be 12.0")
+        self.assertEqual(pos_order.lines[0].price_unit, 0.83, "price of product should be 0.83")
+
+    def test_quantity_updated_settle(self):
+        """
+        Tests that the quantity is updated when partially settling an order, so that the
+        settle displays the right amount that still needs to be settled.
+        """
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'lst_price': 10.0,
+        })
+        self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'product_uom_qty': 5,
+                'price_unit': product_a.lst_price,
+            })]
+        })
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_quantity_updated_settle', login="accountman")
+>>>>>>> ebb8280df9d27e2f829f4fb7c7f567e6f49dce38
