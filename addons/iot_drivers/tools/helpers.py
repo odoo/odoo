@@ -13,7 +13,6 @@ from pathlib import Path
 import re
 import requests
 import secrets
-import socket
 import subprocess
 from urllib.parse import parse_qs
 import urllib3.util
@@ -455,12 +454,6 @@ def unzip_file(path_to_filename, path_to_extract):
         _logger.info('Unzipped %s to %s', path_to_filename, path_to_extract)
     except Exception:
         _logger.exception('Failed to unzip %s', path_to_filename)
-
-
-@cache
-def get_hostname():
-    """Cache the hostname to avoid multiple calls to socket.gethostname()"""
-    return socket.gethostname()
 
 
 def update_conf(values, section='iot.box'):
