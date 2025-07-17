@@ -44,6 +44,12 @@ const Markup = markup().constructor;
  */
 export function _t(term, ...values) {
     if (translatedTerms[translationLoaded]) {
+        if (!odoo.translationContext) {
+            throw new Error("No translation context found");
+        }
+        if (!(odoo.translationContext in translatedTerms)) {
+            throw new Error(`Invalid translation context found: ${odoo.translationContext}`);
+        }
         const translation = translatedTerms[odoo.translationContext]?.[term] ?? term;
         if (values.length === 0) {
             return translation;
@@ -57,12 +63,18 @@ export function _t(term, ...values) {
 class LazyTranslatedString extends String {
     constructor(term, values) {
         super(term);
+        if (!odoo.translationContext) {
+            throw new Error("No translation context found");
+        }
         this.translationContext = odoo.translationContext;
         this.values = values;
     }
     valueOf() {
         const term = super.valueOf();
         if (translatedTerms[translationLoaded]) {
+            if (!(this.translationContext in translatedTerms)) {
+                throw new Error(`Invalid translation context found: ${this.translationContext}`);
+            }
             const translation = translatedTerms[this.translationContext]?.[term] ?? term;
             if (this.values.length === 0) {
                 return translation;
