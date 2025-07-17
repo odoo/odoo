@@ -479,7 +479,7 @@ class Many2one(_Relational):
                 subselect,
             )
             if can_be_null and operator in ('not any', 'not any!'):
-                sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
+                sql = SQL("(%s IS NULL OR %s)", sql_field, sql)
             if self.company_dependent:
                 sql = self._condition_to_sql_company(sql, field_expr, operator, value, model, alias, query)
             return sql
