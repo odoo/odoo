@@ -3,18 +3,18 @@ import { browser } from "@web/core/browser/browser";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import { TourPointer } from "../tour_pointer/tour_pointer";
-import { createPointerState } from "./tour_pointer_state";
-import { tourState } from "./tour_state";
-import { TourInteractive } from "./tour_interactive";
-import { TourAutomatic } from "./tour_automatic";
-import { callWithUnloadCheck } from "../tour_utils";
+import { TourPointer } from "@web_tour/js/tour_pointer/tour_pointer";
+import { createPointerState } from "@web_tour/js/tour_pointer/tour_pointer_state";
+import { tourState } from "@web_tour/js/tour_state";
+import { TourInteractive } from "@web_tour/js/tour_interactive/tour_interactive";
+import { TourAutomatic } from "@web_tour/js/tour_automatic/tour_automatic";
+import { callWithUnloadCheck } from "@web_tour/js/utils/tour_utils";
 import {
     TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
     TourRecorder,
-} from "@web_tour/tour_service/tour_recorder/tour_recorder";
+} from "@web_tour/js/tour_recorder/tour_recorder";
 import { redirect } from "@web/core/utils/urls";
-import { tourRecorderState } from "@web_tour/tour_service/tour_recorder/tour_recorder_state";
+import { tourRecorderState } from "@web_tour/js/tour_recorder/tour_recorder_state";
 
 class OnboardingItem extends Component {
     static components = { DropdownItem };

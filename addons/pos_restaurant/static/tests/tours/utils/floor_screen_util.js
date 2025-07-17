@@ -173,7 +173,7 @@ export function addFloor(floorName) {
     ];
 }
 
-import { TourHelpers } from "@web_tour/tour_service/tour_helpers";
+import { TourHelpers } from "@web_tour/js/tour_automatic/tour_helpers";
 import { patch } from "@web/core/utils/patch";
 import * as hoot from "@odoo/hoot-dom";
 

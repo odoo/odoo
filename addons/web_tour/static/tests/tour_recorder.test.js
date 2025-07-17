@@ -14,11 +14,11 @@ import { browser } from "@web/core/browser/browser";
 import {
     TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
     TourRecorder,
-} from "@web_tour/tour_service/tour_recorder/tour_recorder";
+} from "@web_tour/js/tour_recorder/tour_recorder";
 import { Component, xml } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { WebClient } from "@web/webclient/webclient";
-import { tourRecorderState } from "@web_tour/tour_service/tour_recorder/tour_recorder_state";
+import { tourRecorderState } from "@web_tour/js/tour_recorder/tour_recorder_state";
 
 describe.current.tags("desktop");
 

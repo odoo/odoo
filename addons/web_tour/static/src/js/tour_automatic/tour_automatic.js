@@ -1,6 +1,6 @@
-import { tourState } from "./tour_state";
+import { tourState } from "@web_tour/js/tour_state";
 import { config as transitionConfig } from "@web/core/transition";
-import { TourStepAutomatic } from "./tour_step_automatic";
+import { TourStepAutomatic } from "@web_tour/js/tour_automatic/tour_step_automatic";
 import { Macro } from "@web/core/macro";
 import { browser } from "@web/core/browser/browser";
 import { enableEventLogs, setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
