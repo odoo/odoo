@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 export class EditInteractionPlugin extends Plugin {
     static id = "edit_interaction";
 
-    static shared = ["restartInteractions"];
+    static shared = ["restartInteractions", "stopInteraction"];
 
     resources = {
         normalize_handlers: this.refreshInteractions.bind(this),
@@ -70,6 +70,13 @@ export class EditInteractionPlugin extends Plugin {
             throw new Error("website edit service not loaded");
         }
         this.websiteEditService.stop(element);
+    }
+
+    stopInteraction(name) {
+        if (!this.websiteEditService) {
+            throw new Error("website edit service not loaded");
+        }
+        this.websiteEditService.stopInteraction(name);
     }
 }
 

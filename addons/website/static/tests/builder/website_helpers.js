@@ -193,6 +193,7 @@ export async function setupWebsiteBuilder(
                 update: () => {},
                 refresh: () => {},
                 stop: () => {},
+                stopInteraction: () => {},
             };
         },
     });

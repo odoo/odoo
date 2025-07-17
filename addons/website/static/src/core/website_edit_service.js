@@ -95,6 +95,10 @@ registry.category("services").add("website_edit", {
             publicInteractions.stopInteractions(target);
         };
 
+        const stopInteraction = (name) => {
+            publicInteractions.stopInteractionByName(name);
+        };
+
         const isEditingTranslations = () =>
             !!publicInteractions.el.closest("html").dataset.edit_translations;
 
@@ -223,6 +227,20 @@ registry.category("services").add("website_edit", {
                         }
                         return super.shouldStop(el, interaction);
                     },
+
+                    stopInteractionByName(name) {
+                        const IToStop = registry.category("public.interactions").get(name);
+                        const interactions = [];
+                        for (const interaction of this.interactions) {
+                            if (interaction.interaction.constructor === IToStop) {
+                                interaction.destroy();
+                                this.activeInteractions.delete(interaction.el, IToStop);
+                            } else {
+                                interactions.push(interaction);
+                            }
+                        }
+                        this.interactions = interactions;
+                    },
                 })
             );
         };
@@ -256,6 +274,7 @@ registry.category("services").add("website_edit", {
             update,
             refresh,
             stop,
+            stopInteraction,
             installPatches,
             uninstallPatches,
             applyAction,
