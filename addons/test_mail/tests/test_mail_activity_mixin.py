@@ -552,7 +552,7 @@ class TestActivityMixin(TestActivityCommon):
         })
 
         test_record_1 = self.env['mail.test.activity'].with_context(self._test_context).create({'name': 'Test 1'})
-        Activity.create({
+        test_record_1_late_activity = Activity.create({
             'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
             'date_deadline': date_today,
             'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
@@ -562,6 +562,11 @@ class TestActivityMixin(TestActivityCommon):
         with self.with_user('employee'):
             record = self.env['mail.test.activity'].search([('my_activity_date_deadline', '=', date_today)])
             self.assertEqual(test_record_1, record)
+            test_record_1_late_activity._action_done()
+            record = self.env['mail.test.activity'].with_context(active_test=False).search([
+                ('my_activity_date_deadline', '=', date_today)
+            ])
+            self.assertFalse(record, "Should not find record if the only late activity is done")
 
     @users('employee')
     def test_record_unlink(self):
