@@ -153,12 +153,6 @@
         </xpath>
     </template>
 
-    <template id="website_sale_coupon_cart_hide_qty" inherit_id="website_sale.cart_lines_price">
-        <xpath expr="//del" position="attributes">
-            <attribute name="t-if">not line.is_reward_line</attribute>
-        </xpath>
-    </template>
-
     <template id="layout" inherit_id="website.layout">
         <xpath expr="//*[@id='wrapwrap']" position="inside">
             <t t-set="coupon_error" t-value="request.params.get('coupon_error')"/>
