@@ -193,7 +193,8 @@ export class SelectMenu extends Component {
     get menuClass() {
         return mergeClasses(
             {
-                "o_select_menu_menu my-0": true,
+                "my-0": this.displayInputInToggler,
+                o_select_menu_menu: true,
                 o_select_menu_multi_select: this.props.multiSelect,
             },
             this.props.menuClass
