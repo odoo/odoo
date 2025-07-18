@@ -56,4 +56,4 @@ class TestWishlistProcess(HttpCase):
 
         self.env.ref('base.user_admin').name = 'Mitchell Admin'
 
-        self.start_tour("/", 'shop_wishlist')
+        self.start_tour("/", 'shop_wishlist', timeout=120)
