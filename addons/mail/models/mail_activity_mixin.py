@@ -56,7 +56,8 @@ class MailActivityMixin(models.AbstractModel):
         ('today', 'Today'),
         ('planned', 'Planned')], string='Activity State',
         compute='_compute_activity_state',
-        search='_search_activity_state',
+        compute_sql='_compute_sql_activity_state',
+        compute_sudo=False,
         groups="base.group_user",
         help='Status based on activities\nOverdue: Due date is already passed\n'
              'Today: Activity date is today\nPlanned: Future activities.')
@@ -171,62 +172,39 @@ class MailActivityMixin(models.AbstractModel):
             else:
                 record.activity_state = False
 
-    def _search_activity_state(self, operator, value):
-        all_states = {'overdue', 'today', 'planned', False}
-        if operator == 'in':
-            search_states = set(value)
-        elif operator == 'not in':
-            search_states = all_states - set(value)
-        else:
-            return NotImplemented
+    def _compute_sql_activity_state(self, alias, query):
+        # find activities
+        Activity = self.activity_ids
+        act_query = Activity._search(Domain('res_model', '=', self._name) & Domain('active', '=', True))
+        res_id_sql = SQL.identifier(act_query.table, 'res_id')
+        # group them by res_id and compute the state (as int)
+        act_query.groupby = res_id_sql
+        act_sql = act_query.subselect(res_id_sql, SQL(
+            """
+            -- Global activity state
+            MIN(
+                -- Compute the state of each individual activities
+                -- -1: overdue
+                --  0: today
+                --  1: planned
+                SIGN(EXTRACT(day FROM (
+                    %s - DATE_TRUNC('day', %s AT TIME ZONE COALESCE(%s, 'utc'))
+                )))
+            )::INT AS activity_state
+            """,
+            Activity._field_to_sql(act_query.table, 'date_deadline', act_query),
+            fields.Datetime.now().astimezone(pytz.utc),
+            Activity._field_to_sql(act_query.table, 'user_tz', act_query),
+        ))
 
-        reverse_search = False
-        if False in search_states:
-            # If we search "activity_state = False", they might be a lot of records
-            # (million for some models), so instead of returning the list of IDs
-            # [(id, 'in', ids)] we will reverse the domain and return something like
-            # [(id, 'not in', ids)], so the list of ids is as small as possible
-            reverse_search = True
-            search_states = all_states - search_states
-
-        # Use number in the SQL query for performance purpose
-        integer_state_value = {
-            'overdue': -1,
-            'today': 0,
-            'planned': 1,
-            False: None,
-        }
-
-        search_states_int = {integer_state_value.get(s or False) for s in search_states}
-
-        self.env['mail.activity'].flush_model(['active', 'date_deadline', 'res_model', 'user_id', 'user_tz'])
-        query = SQL(
-            """(
-            SELECT res_id
-                FROM (
-                    SELECT res_id,
-                        -- Global activity state
-                        MIN(
-                                -- Compute the state of each individual activities
-                                -- -1: overdue
-                                --  0: today
-                                --  1: planned
-                            SIGN(EXTRACT(day from (
-                                    mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(mail_activity.user_tz, 'utc'))
-                            )))
-                            )::INT AS activity_state
-                    FROM mail_activity
-                    WHERE mail_activity.res_model = %(res_model_table)s AND mail_activity.active = true
-                GROUP BY res_id
-                ) AS res_record
-            WHERE %(search_states_int)s @> ARRAY[activity_state]
-            )""",
-            today_utc=pytz.utc.localize(datetime.utcnow()),
-            res_model_table=self._name,
-            search_states_int=list(search_states_int)
-        )
-
-        return [('id', 'not in' if reverse_search else 'in', query)]
+        # join the results and translate int into the state value
+        act_alias = query.make_alias(alias, 'activity_state')
+        query.add_join('LEFT JOIN', act_alias, act_sql, SQL("%s = %s", SQL.identifier(alias, 'id'), SQL.identifier(act_alias, 'res_id')))
+        return SQL("""CASE
+            WHEN %(col)s < 0 THEN 'overdue'
+            WHEN %(col)s = 0 THEN 'today'
+            WHEN %(col)s > 0 THEN 'planned'
+            END""", col=SQL.identifier(act_alias, 'activity_state'))
 
     @api.depends('activity_ids.date_deadline')
     def _compute_activity_date_deadline(self):
@@ -291,45 +269,6 @@ class MailActivityMixin(models.AbstractModel):
             ('res_model', '=', self._name),
             ('user_id', '=', self.env.user.id)
         ])]
-
-    def _read_group_groupby(self, alias, groupby_spec, query):
-        if groupby_spec != 'activity_state':
-            return super()._read_group_groupby(alias, groupby_spec, query)
-        self._check_field_access(self._fields['activity_state'], 'read')
-
-        # if already grouped by activity_state, do not add the join again
-        alias = query.make_alias(self._table, 'last_activity_state')
-        if alias in query._joins:
-            return SQL.identifier(alias, 'activity_state')
-
-        self.env['mail.activity'].flush_model(['res_model', 'res_id', 'user_id', 'date_deadline'])
-        self.env['res.users'].flush_model(['partner_id'])
-        self.env['res.partner'].flush_model(['tz'])
-
-        tz = 'UTC'
-        if self.env.context.get('tz') in pytz.all_timezones_set:
-            tz = self.env.context['tz']
-
-        sql_join = SQL(
-            """
-            (SELECT res_id,
-                CASE
-                    WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(mail_activity.user_tz, %(tz)s))))) > 0 THEN 'planned'
-                    WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(mail_activity.user_tz, %(tz)s))))) < 0 THEN 'overdue'
-                    WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(mail_activity.user_tz, %(tz)s))))) = 0 THEN 'today'
-                    ELSE null
-                END AS activity_state
-            FROM mail_activity
-            WHERE res_model = %(res_model)s AND mail_activity.active = true
-            GROUP BY res_id)
-            """,
-            res_model=self._name,
-            today_utc=pytz.utc.localize(datetime.utcnow()),
-            tz=tz,
-        )
-        alias = query.left_join(self._table, "id", sql_join, "res_id", "last_activity_state")
-
-        return SQL.identifier(alias, 'activity_state')
 
     # Reschedules next my activity to Today
     def action_reschedule_my_next_today(self):

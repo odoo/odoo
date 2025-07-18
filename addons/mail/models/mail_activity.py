@@ -153,19 +153,17 @@ class MailActivity(models.Model):
     @api.depends('active', 'date_deadline')
     def _compute_state(self):
         for record in self.filtered(lambda activity: activity.date_deadline):
-            tz = record.user_id.sudo().tz
+            tz = record.user_tz
             date_deadline = record.date_deadline
             record.state = 'done' if not record.active else self._compute_state_from_date(date_deadline, tz)
 
     @api.model
     def _compute_state_from_date(self, date_deadline, tz=False):
-        date_deadline = fields.Date.from_string(date_deadline)
-        today_default = date.today()
-        today = today_default
+        date_deadline = fields.Date.to_date(date_deadline)
         if tz:
-            today_utc = pytz.utc.localize(datetime.utcnow())
-            today_tz = today_utc.astimezone(pytz.timezone(tz))
-            today = date(year=today_tz.year, month=today_tz.month, day=today_tz.day)
+            today = fields.Date.context_today(self.with_context(tz=tz))
+        else:
+            today = fields.Date.today()
         diff = (date_deadline - today)
         if diff.days == 0:
             return 'today'
