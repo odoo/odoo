@@ -3447,8 +3447,6 @@
                                         default: `True`.
             - oe_structure: The structure element to append at the bottom of the page;
                             default: `None`.
-            - show_shop_warnings: Whether to show the warning on the order at the top of the page,
-                                  if any; default: `True`.
         -->
         <!-- Checkout context (non exhaustive):
             - redirect: The route to redirect to when a customer enters a coupon; default: `None`.
@@ -3465,7 +3463,6 @@
                 t-value="True if show_mobile_cart_summary is None else show_mobile_cart_summary"
             />
             <t t-set="body_classname" t-value="'o_website_sale_checkout'"/>
-            <t t-set="show_shop_warning" t-value="True if show_shop_warning is None else show_shop_warning"/>
             <div id="wrap" class="d-flex flex-column flex-grow-1">
                 <div class="oe_website_sale o_website_sale_checkout_container container d-flex flex-column flex-grow-1 py-lg-2">
                     <div t-attf-class="row #{not show_wizard_checkout and 'mt32'} mb32">
@@ -3474,7 +3471,7 @@
                         </div>
                         <!-- Checkout Page Content | Left Column -->
                         <div class="oe_clear_stucture oe_cart col-12 col-lg-7">
-                            <t t-if="show_shop_warnings" t-call="website_sale.order_warning"/>
+                            <t t-call="website_sale.order_warning"/>
                             <t t-out="0"/>
                         </div>
                         <!-- Short Checkout Summary displayed on /cart | Right Column -->
@@ -3631,7 +3628,7 @@
                                     />
                                     <span class="o_cart_item_count badge bg-secondary position-absolute top-0 start-100 translate-middle">
                                         <t t-out="int(line.product_uom_qty)" />
-                                        <t t-if="show_shop_warnings" t-call="website_sale.line_warning"/>
+                                        <t t-call="website_sale.line_warning"/>
                                     </span>
                                 </div>
                             </td>
@@ -3660,7 +3657,7 @@
                     </tbody>
                 </table>
             </div>
-            <t t-if="show_shop_warnings" t-call="website_sale.order_warning"/>
+            <t t-call="website_sale.order_warning"/>
         </div>
     </template>
 
