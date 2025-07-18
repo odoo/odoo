@@ -340,7 +340,8 @@
                     <field name="project_id"/>
                     <field name="task_id" invisible="not task_id"/>
                     <field name="name"/>
-                    <field name="employee_id" avatar_field="avatar_128" filters="1" write_model="account.analytic.line.calendar.employee" write_field="employee_id" filter_field="checked"/>
+                    <field name="employee_id" avatar_field="avatar_128" filters="1" write_model="account.analytic.line.calendar.employee"
+                        write_field="employee_id" filter_field="checked" domain="[('company_id', 'in', allowed_company_ids + [False])]"/>
                 </calendar>
             </field>
         </record>
