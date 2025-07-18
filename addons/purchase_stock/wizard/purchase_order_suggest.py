@@ -67,21 +67,29 @@ class PurchaseOrderSuggest(models.TransientModel):
                     quantity = ceil(product.outgoing_qty * (self.percent_factor / 100))
                 else:
                     quantity = ceil(product.monthly_demand * self.multiplier)
-                qty_to_deduce = max(product.qty_available, 0) + max(product.incoming_qty, 0)
+                qty_to_deduce = product.qty_available + max(product.incoming_qty, 0)
                 quantity -= qty_to_deduce
                 if quantity <= 0:
                     continue
                 product_count += 1
                 # Then, compute the price.
-                price = product.standard_price
+                price = product.standard_price  # Price if no pricelist at all
                 seller = product._select_seller(
                     partner_id=suggest.partner_id,
                     quantity=quantity,
-                    ordered_by='min_qty',
                     params=seller_params
                 )
                 if seller:
-                    price = seller.price_discounted
+                    price = seller.price_discounted  # Price if pricelist matching suggest qty
+                else:
+                    lowest_qty_pricelist = product._select_seller(
+                        partner_id=suggest.partner_id,
+                        quantity=None,  # skips filetering on min_qty
+                        ordered_by='min_qty',
+                        params=seller_params
+                    )
+                    if lowest_qty_pricelist:
+                        price = lowest_qty_pricelist.price_discounted  # Take lowest unit pricelist if pricelist
                 estimated_price += price * quantity
             suggest.product_count = product_count
             suggest.estimated_price = estimated_price
@@ -89,16 +97,7 @@ class PurchaseOrderSuggest(models.TransientModel):
     @api.depends('number_of_days', 'percent_factor')
     def _compute_multiplier(self):
         for suggest in self:
-            match suggest.based_on:
-                case 'one_week':
-                    period_in_days = 7
-                case 'three_months' | 'last_year_quarter':
-                    period_in_days = 90
-                case 'one_year':
-                    period_in_days = 365
-                case _:
-                    period_in_days = 30
-            suggest.multiplier = (suggest.number_of_days / period_in_days) * (suggest.percent_factor / 100)
+            suggest.multiplier = (suggest.number_of_days / (365.25 / 12)) * (suggest.percent_factor / 100)
 
     def action_purchase_order_suggest(self):
         """ Auto-fill the Purchase Order with vendor's product regarding the
@@ -180,7 +179,6 @@ class PurchaseOrderSuggest(models.TransientModel):
         if self.warehouse_id and not self.hide_warehouse:
             context['warehouse_id'] = self.warehouse_id.id
         context['suggest_based_on'] = self.based_on
-
         return context
 
     def _get_period_of_time(self):

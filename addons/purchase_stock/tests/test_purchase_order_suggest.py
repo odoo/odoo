@@ -320,6 +320,41 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             {'product_id': product_4.id, 'product_qty': 2},
         ])
 
+        # ------ Check pricelist selection ------
+        product_7 = self.env['product.product'].create({
+            'name': 'Product 7',
+            'standard_price': 12,
+            'is_storable': True,
+        })
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_1.id,
+            'price': 17,
+            'product_id': product_7.id,
+            'min_qty': 2
+        })
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_1.id,
+            'price': 13,
+            'product_id': product_7.id,
+            'min_qty': 3
+        })
+        self.env['stock.quant']._update_available_quantity(product_7, self.stock_location, 1)
+        self._create_and_process_delivery_at_date(
+            [(product_7, 1)], today - relativedelta(days=1)
+        )
+        context = {
+            'default_purchase_order_id': po.id,
+            'default_warehouse_id': po.picking_type_id.warehouse_id.id,
+            'default_product_ids': [product_7.id],
+        }
+        po_suggest_3 = self.env['purchase.order.suggest'].with_context(context).create({
+            'number_of_days': 30,
+        })
+        # suggested qty 1 < min pricelist 1 qty of 2 but should still use 20 $ / unit price
+        self.assertEstimatedPrice(po_suggest_3, 17, based_on='one_week', days=7)
+        self.assertEstimatedPrice(po_suggest_3, 34, based_on='one_week', days=14)  # suggested qty 2
+        self.assertEstimatedPrice(po_suggest_3, 52, based_on='one_week', days=28)  # suggested qty 4
+
     def test_purchase_order_suggest_quantities_for_consu(self):
         """ Checks the suggest wizard works also with consumable products."""
         today = fields.Datetime.now()
