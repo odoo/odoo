@@ -2152,7 +2152,7 @@ class Website(models.Model):
                 if field.translate:
                     alias = model._table
                     if field.related and not field.store:
-                        _, field, alias = model._traverse_related_sql(model._table, field, subquery)
+                        _model, field, alias = field.traverse_related_sql(model, model._table, subquery)
                     where_clauses.append(SQL("(%(search)s <%% %(jsonb_path)s AND %(search)s <%% (%(field)s))",
                         search=unaccent(SQL("%s", search)),
                         jsonb_path=unaccent(SQL("jsonb_path_query_array(%s, '$.*')::text", SQL.identifier(alias, field.name))),

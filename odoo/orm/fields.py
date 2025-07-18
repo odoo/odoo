@@ -673,6 +673,28 @@ class Field(typing.Generic[T]):
             record = next(iter(corecord), corecord)
         return record, self.related_field
 
+    def traverse_related_sql(self, model: BaseModel, alias: str, query: Query) -> tuple[BaseModel, Field, str]:
+        """ Traverse the related `field` and add needed join to the `query`.
+
+        :returns: tuple ``(model, field, alias)``, where ``field`` is the last
+            field in the sequence, ``model`` is that field's model, and
+            ``alias`` is the model's table alias
+        """
+        assert self.related and not self.store
+        if not (model.env.su or self.compute_sudo or self.inherited):
+            raise ValueError(f'Cannot convert {self} to SQL because it is not a sudoed related or inherited field')
+
+        if self.compute_sudo:
+            model = model.sudo()
+        *path_fnames, last_fname = self.related.split('.')
+        for path_fname in path_fnames:
+            path_field = model._fields[path_fname]
+            if path_field.type != 'many2one':
+                raise ValueError(f'Cannot convert {self} (related={self.related}) to SQL because {path_fname} is not a Many2one')
+            model, alias = path_field.join(model, alias, query)
+
+        return model, model._fields[last_fname], alias
+
     def _compute_related(self, records: BaseModel) -> None:
         """ Compute the related field ``self`` on ``records``. """
         #
