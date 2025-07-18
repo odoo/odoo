@@ -6,6 +6,7 @@ from . import event_registration
 from . import event_tag_category
 from . import event_tag
 from . import event_type
+from . import ir_http
 from . import website
 from . import website_event_menu
 from . import website_menu
