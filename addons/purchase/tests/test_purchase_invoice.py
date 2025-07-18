@@ -90,7 +90,6 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
         for product in (products or []):
             with po_form.order_line.new() as line_form:
                 line_form.product_id = product
-                line_form.price_unit = product.list_price
                 line_form.product_qty = 1
                 line_form.product_uom_id = product.uom_id
                 line_form.date_planned = date_planned
