@@ -26,6 +26,17 @@
         </field>
     </record>
 
+    <record id="view_account_invoice_report_search_inherit_source" model="ir.ui.view">
+    <field name="name">account.invoice.report.search.inherit.source</field>
+    <field name="model">account.invoice.report</field>
+    <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
+    <field name="arch" type="xml">
+        <filter name="status" position="after">
+            <filter string="Source" name="source_id" context="{'group_by': 'source_id'}"/>
+        </filter>
+    </field>
+    </record>
+
     <record id="action_account_invoice_report_salesteam" model="ir.actions.act_window">
         <field name="name">Invoices Analysis</field>
         <field name="res_model">account.invoice.report</field>
