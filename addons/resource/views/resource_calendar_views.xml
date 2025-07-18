@@ -25,12 +25,6 @@
             <form string="Working Time">
                 <field name="two_weeks_calendar" invisible="1"/>
                 <header>
-                    <button name="switch_calendar_type" invisible="two_weeks_calendar or flexible_hours" string="Switch to 2 weeks calendar" type="object"
-                        confirm="Are you sure you want to switch to a 2-week calendar? All work entries will be lost."
-                        confirm-label="Switch"/>
-                    <button name="switch_calendar_type" invisible="flexible_hours or not two_weeks_calendar" string="Switch to 1 week calendar" type="object"
-                        confirm="Are you sure you want to switch to a 1-week calendar? All work entries will be lost."
-                        confirm-label="Switch"/>
                 </header>
                 <sheet string="Working Time">
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -59,39 +53,112 @@
                     </div>
                     <group name="resource_details" col="2">
                         <group name="resource_working_hours">
-                            <field name="flexible_hours"/>
-                            <label for="full_time_required_hours" invisible="flexible_hours"/>
-                            <label for="full_time_required_hours" string="Hours per Week" invisible="not flexible_hours"/>
+                            <field name="flexible_hours" invisible="1"/>
+                            <field name="schedule_type" widget="radio"/>
+                            <label for="full_time_required_hours" invisible="not company_id"/>
+                            <label for="full_time_required_hours" string="Required Full Time" invisible="company_id"/>
                             <div>
-                                <field name="full_time_required_hours" style="width: 6ch;" widget="float_time"/>
+                                <field name="full_time_required_hours" style="width: 6ch;" widget="float_time" readonly="company_id"/>
                                 <span>hours/week</span>
                             </div>
-                            <field name="hours_per_day" widget="float_time" readonly="not flexible_hours"/>
-                            <label for="work_time_rate" string="Work Time Rate" invisible="flexible_hours"/>
-                            <div invisible="flexible_hours">
-                                <field name="work_time_rate" nolabel="1"  style="width: 5ch;"/>
+                            <label for="work_time_rate" string="Work Time Rate"/>
+                            <div>
+                                <field name="work_time_rate" nolabel="1" style="width: 6ch;"/>
                                 <span class="ms-1">%</span>
                             </div>
                             <field name="is_fulltime" invisible="1"/>
                         </group>
-                        <group name="resource_company">
-                            <field name="active" invisible="1"/>
-                            <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
-                            <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset', 'mismatch_title': 'Timezone Mismatch : This timezone is different from that of your browser.\nPlease, be mindful of this when setting the working hours or the time off.'}" />
-                            <field name="tz_offset" invisible="1"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="Working Hours" name="working_hours" invisible="flexible_hours">
-                            <field name="two_weeks_explanation" invisible="not two_weeks_calendar"/>
-                            <field name="attendance_ids" widget="section_one2many"/>
-                            <group class="oe_subtotal_footer">
+                        <group>
+                            <group name="resource_company" colspan="2">
+                                <field name="active" invisible="1"/>
+                                <field name="company_id" placeholder="Visible to all"/>
+                                <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset', 'mismatch_title': 'Timezone Mismatch : This timezone is different from that of your browser.\nPlease, be mindful of this when setting the working hours or the time off.'}" />
+                                <field name="tz_offset" invisible="1"/>
+                            </group>
+                            <group name="flex_details" invisible="not flexible_hours" colspan="2">
+                                <label for="hours_per_day" string="Avg"/>
+                                <div class="d-flex">
+                                    <field name="hours_per_day" nolabel="1" style="width: 6ch;" widget="float_time"/>
+                                    <span class="ms-2">hours/day</span>
+                                </div>
                                 <label for="hours_per_week" string="Total"/>
                                 <div class="d-flex">
-                                    <field name="hours_per_week" nolabel="1" widget="float_time"/>
+                                    <field name="hours_per_week" nolabel="1" style="width: 6ch;" widget="float_time"/>
                                     <span class="ms-2">hours/week</span>
                                 </div>
                             </group>
+                            <group name="switch_calendar" invisible="flexible_hours">
+                                <label for="switch_calendar_type" string="2 Week's Calendar" class="o_form_label"/>
+                                <button name="switch_calendar_type" invisible="two_weeks_calendar" type="object"
+                                    icon="fa-square-o" class="btn p-0"
+                                    confirm="Are you sure you want to switch to a 2-week calendar? All work entries will be lost."
+                                    confirm-label="Switch"/>
+                                <button name="switch_calendar_type" invisible="not two_weeks_calendar" type="object"
+                                    icon="fa-check-square" class="btn p-0"
+                                    confirm="Are you sure you want to switch to a 1-week calendar? All work entries will be lost."
+                                    confirm-label="Switch"/>
+                            </group>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Working Hours" name="working_hours" invisible="flexible_hours or two_weeks_calendar">
+                            <group>
+                                <group>
+                                    <label for="hours_per_day" string="Avg"/>
+                                    <div class="d-flex">
+                                        <field name="hours_per_day" nolabel="1" style="width: 6ch;" widget="float_time" readonly="1"/>
+                                        <span class="ms-2">hours/day</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="hours_per_week" string="Total"/>
+                                    <div class="d-flex">
+                                        <field name="hours_per_week" nolabel="1" style="width: 6ch;" widget="float_time" readonly="1"/>
+                                        <span class="ms-2">hours/week</span>
+                                    </div>
+                                </group>
+                            </group>
+                            <field name="attendance_ids" widget="section_one2many"/>
+                        </page>
+                        <page string="Week 1 Working Hours" name="working_hours" invisible="not two_weeks_calendar">
+                            <field name="two_weeks_explanation"/>
+                            <group>
+                                <group>
+                                    <label for="hours_per_day" string="Avg"/>
+                                    <div class="d-flex">
+                                        <field name="hours_per_day" nolabel="1" style="width: 6ch;" widget="float_time" readonly="1"/>
+                                        <span class="ms-2">hours/day</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="hours_per_week" string="Total"/>
+                                    <div class="d-flex">
+                                        <field name="hours_per_week" nolabel="1" style="width: 6ch;" widget="float_time" readonly="1"/>
+                                        <span class="ms-2">hours/week</span>
+                                    </div>
+                                </group>
+                            </group>
+                            <field name="attendance_ids_1st_week" widget="section_one2many"/>
+                        </page>
+                        <page string="Week 2 Working Hours" name="working_hours" invisible="not two_weeks_calendar">
+                            <field name="two_weeks_explanation"/>
+                            <group>
+                                <group>
+                                    <label for="hours_per_day" string="Avg"/>
+                                    <div class="d-flex">
+                                        <field name="hours_per_day" nolabel="1" style="width: 6ch;" widget="float_time" readonly="1"/>
+                                        <span class="ms-2">hours/day</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="hours_per_week" string="Total"/>
+                                    <div class="d-flex">
+                                        <field name="hours_per_week" nolabel="1" style="width: 6ch;" widget="float_time" readonly="1"/>
+                                        <span class="ms-2">hours/week</span>
+                                    </div>
+                                </group>
+                            </group>
+                            <field name="attendance_ids_1st_week" widget="section_one2many"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -106,8 +173,8 @@
             <list string="Working Time">
                 <field name="name" string="Working Time"/>
                 <field name="hours_per_week" string="Schedule Total Time" optional="hide"/>
-                <field name="work_time_rate" invisible="flexible_hours"/>
-                <field name="flexible_hours" optional="hide"/>
+                <field name="work_time_rate"/>
+                <field name="schedule_type"/>
                 <field name="full_time_required_hours" widget="float_time" optional="hide"/>
                 <field name="work_resources_count" string="# Work Resources" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
