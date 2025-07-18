@@ -54,3 +54,9 @@ class ResPartner(models.Model):
             self.city = False
             self.zip = False
             self.state_id = False
+
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        super()._onchange_country_id()
+        if self.country_id and self.country_id != self.city_id.country_id:
+            self.city_id = False
