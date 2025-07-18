@@ -237,6 +237,7 @@ class WebsiteEventController(http.Controller):
             'ticket': browse record of ticket if any (None if no ticket),
             'name': ticket name (or generic 'Registration' name if no ticket),
             'quantity': number of registrations for that ticket,
+            'current_limit_per_order': maximum of ticket orderable
         }, {...}]
         """
         ticket_order = {}
@@ -251,11 +252,16 @@ class WebsiteEventController(http.Controller):
             ('event_id', '=', event.id)
         ]))
 
+        tickets = request.env['event.event.ticket'].browse(ticket_dict.keys())
+        slot = request.env['event.slot'].browse(int(slot)) if (slot := form_details.get("event_slot_id", False)) else slot
+        tickets_limits = tickets._get_current_limit_per_order(slot, event)
+
         return [{
             'id': tid if ticket_dict.get(tid) else 0,
             'ticket': ticket_dict.get(tid),
             'name': ticket_dict[tid]['name'] if ticket_dict.get(tid) else _('Registration'),
             'quantity': count,
+            'current_limit_per_order': tickets_limits.get(tid, next(iter(tickets_limits.values()))),  # next is used if the ticket id isn't known (alone event case)
         } for tid, count in ticket_order.items() if count]
 
     @http.route(['/event/<model("event.event"):event>/registration/slot/<int:slot_id>/tickets'], type='jsonrpc', auth="public", methods=['POST'], website=True)
@@ -286,6 +292,8 @@ class WebsiteEventController(http.Controller):
         slot_id = post.get('event_slot_id', False)
         # Availability check needed as the total number of tickets can exceed the event/slot available tickets
         availability_check = True
+        # Double check to verify that we are ordering fewer tickets than the limit conditions set
+        limit_check = not any(ticket['quantity'] > ticket['current_limit_per_order'] for ticket in tickets)
         if event.seats_limited:
             ordered_seats = 0
             for ticket in tickets:
@@ -318,6 +326,7 @@ class WebsiteEventController(http.Controller):
             'event': event,
             'availability_check': availability_check,
             'default_first_attendee': default_first_attendee,
+            'limit_check': limit_check,
         })
 
     def _process_attendees_form(self, event, form_details):
