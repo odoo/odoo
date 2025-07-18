@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+
+    <t t-name="pos_self_order.QrOrderButton">
+        <button class="oe_qr_order_btn new-order btn btn-primary btn-lg lh-lg" t-on-click.prevent="doRedirectToQrForm.call" t-att-disabled="doRedirectToQrForm.status == 'loading'">
+            <i class="fa fa-qrcode fa-fw" role="img" aria-label="Get QR Codes" title="Get QR Codes"></i><span class="ms-1">Get QR Codes</span>
+        </button>
+    </t>
+
+</templates>

@@ -1,5 +1,3 @@
-import qrcode
-import qrcode.image.svg
 import zipfile
 from io import BytesIO
 
@@ -81,20 +79,6 @@ class ResConfigSettings(models.TransientModel):
             "domain": ['|', ['pos_config_ids', 'in', self.pos_config_id.id], ["pos_config_ids", "=", False]],
         }
 
-    def __generate_single_qr_code(self, url):
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(url)
-        qr.make(fit=True)
-        return {
-            'png': qr.make_image(fill_color="black", back_color="transparent"),
-            'svg': qr.make_image(fill_color="black", back_color="transparent", image_factory=qrcode.image.svg.SvgImage)
-        }
-
     def _generate_excel(self, rows, headers):
         import xlsxwriter  # noqa: PLC0415
         with BytesIO() as buffer:
@@ -126,7 +110,7 @@ class ResConfigSettings(models.TransientModel):
                 floor_name = table.floor_id.name
                 url = url_unquote(self.pos_config_id._get_self_order_url(table.id))
                 qr_images.append({
-                    'images': self.__generate_single_qr_code(url),
+                    'images': self.pos_config_id._generate_single_qr_code__(url),
                     'name': f"{floor_name} - {table_number}",
                 })
                 excel_rows.append([self.pos_config_id.name, floor_name, table_number, url])
@@ -134,7 +118,7 @@ class ResConfigSettings(models.TransientModel):
         else:
             url = url_unquote(self.pos_config_id._get_self_order_url())
             qr_images.append({
-                'images': self.__generate_single_qr_code(url),
+                'images': self.pos_config_id._generate_single_qr_code__(url),
                 'name': "generic",
             })
             excel_rows.append([self.pos_config_id.name, url])
