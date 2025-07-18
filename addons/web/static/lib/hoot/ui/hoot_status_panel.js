@@ -241,7 +241,7 @@ export class HootStatusPanel extends Component {
 
         runner.beforeAll(this.globalSetup.bind(this));
         runner.afterAll(this.globalCleanup.bind(this));
-        if (!runner.config.headless) {
+        if (!runner.headless) {
             runner.beforeEach(this.startTimer.bind(this));
             runner.afterPostTest(this.stopTimer.bind(this));
         }
@@ -273,7 +273,7 @@ export class HootStatusPanel extends Component {
      * @param {Runner} runner
      */
     globalCleanup(runner) {
-        if (!runner.config.headless) {
+        if (!runner.headless) {
             this.stopTimer();
         }
         updateTitle(this.runnerReporting.failed > 0);

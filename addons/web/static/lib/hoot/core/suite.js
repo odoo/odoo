@@ -113,6 +113,9 @@ export class Suite extends Job {
      * @param {Job[]} jobs
      */
     setCurrentJobs(jobs) {
+        if (this.isMinimized) {
+            return;
+        }
         this.currentJobs = jobs;
         this.currentJobIndex = 0;
     }
