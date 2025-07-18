@@ -72,7 +72,7 @@ class HrVersion(models.Model):
                 for contract in self:
                     resource_calendar_id = vals.get('resource_calendar_id', contract.resource_calendar_id.id)
                     extra_domain = [('resource_calendar_id', '!=', resource_calendar_id)] if resource_calendar_id else None
-                    leaves = contract._get_leaves(
+                    leaves = contract.sudo()._get_leaves(
                         extra_domain=extra_domain
                     )
                     for leave in leaves:
