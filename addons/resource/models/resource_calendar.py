@@ -1,25 +1,24 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
-
 from collections import defaultdict
-from datetime import datetime, timedelta, time
+from datetime import datetime, time, timedelta
 from functools import partial
 from itertools import chain
 
 from dateutil.relativedelta import relativedelta
-from dateutil.rrule import rrule, DAILY
+from dateutil.rrule import DAILY, rrule
 from pytz import timezone, utc
 
-from odoo import api, fields, models, _
-from odoo.addons.base.models.res_partner import _tz_get
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.fields import Domain
-from odoo.tools.intervals import Intervals
+from odoo.fields import Command, Domain
+from odoo.tools import date_utils, float_compare, ormcache
 from odoo.tools.date_utils import float_to_time, localized, to_timezone
 from odoo.tools.float_utils import float_round
+from odoo.tools.intervals import Intervals
 
-from odoo.tools import date_utils, float_compare, ormcache
+from odoo.addons.base.models.res_partner import _tz_get
 
 
 class ResourceCalendar(models.Model):
@@ -44,38 +43,7 @@ class ResourceCalendar(models.Model):
         if 'attendance_ids' in fields and not res.get('attendance_ids'):
             company_id = res.get('company_id', self.env.company.id)
             company = self.env['res.company'].browse(company_id)
-            company_attendance_ids = company.resource_calendar_id.attendance_ids
-            if not company.resource_calendar_id.two_weeks_calendar and company_attendance_ids:
-                res['attendance_ids'] = [
-                    (0, 0, {
-                        'name': attendance.name,
-                        'dayofweek': attendance.dayofweek,
-                        'hour_from': attendance.hour_from,
-                        'hour_to': attendance.hour_to,
-                        'day_period': attendance.day_period,
-                        'date_from': attendance.date_from,
-                        'date_to': attendance.date_to,
-                    })
-                    for attendance in company_attendance_ids
-                ]
-            else:
-                res['attendance_ids'] = [
-                    (0, 0, {'name': _('Monday Morning'), 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': _('Monday Lunch'), 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                    (0, 0, {'name': _('Monday Afternoon'), 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': _('Tuesday Morning'), 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': _('Tuesday Lunch'), 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                    (0, 0, {'name': _('Tuesday Afternoon'), 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': _('Wednesday Morning'), 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': _('Wednesday Lunch'), 'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                    (0, 0, {'name': _('Wednesday Afternoon'), 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': _('Thursday Morning'), 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': _('Thursday Lunch'), 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                    (0, 0, {'name': _('Thursday Afternoon'), 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': _('Friday Morning'), 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': _('Friday Lunch'), 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                    (0, 0, {'name': _('Friday Afternoon'), 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
-                ]
+            res["attendance_ids"] = self._get_default_attendance_ids(company)
         if 'full_time_required_hours' in fields and not res.get('full_time_required_hours'):
             company_id = res.get('company_id', self.env.company.id)
             company = self.env['res.company'].browse(company_id)
@@ -108,13 +76,67 @@ class ResourceCalendar(models.Model):
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
     flexible_hours = fields.Boolean(string="Flexible Hours",
-                                    help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours).")
-    hours_per_week = fields.Float(compute="_compute_hours_per_week", string="Hours per Week", store=True)
-    full_time_required_hours = fields.Float(string="Company Full Time", help="Number of hours to work on the company schedule to be considered as fulltime.")
+        compute="_compute_flexible_hours", inverse="_inverse_flexible_hours",
+        help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours).")
+    hours_per_week = fields.Float(
+        string="Hours per Week",
+        compute="_compute_hours_per_week", store=True, readonly=False)
+    full_time_required_hours = fields.Float(
+        string="Company Full Time",
+        compute="_compute_full_time_required_hours", store=True, readonly=False,
+        help="Number of hours to work on the company schedule to be considered as fulltime.")
     is_fulltime = fields.Boolean(compute='_compute_work_time_rate', string="Is Full Time")
     work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', search='_search_work_time_rate',
         help='Work time rate versus full time working schedule, should be between 0 and 100 %.')
     work_resources_count = fields.Integer("Work Resources count", compute='_compute_work_resources_count')
+    schedule_type = fields.Selection(
+        [
+            ('flexible', 'Flexible'),
+            ('fully_fixed', 'Fully Fixed'),
+        ],
+        string='Schedule Type',
+        required=True,
+        default='fully_fixed',
+        help="Choose which level of definition you want to define on your Schedule\n"
+            "- Flexible : Define an amount of hours to work on the week.\n"
+            "- Fully Fixed : define the days, periods and the start & end time for each period of the day",
+    )
+    attendance_ids_1st_week = fields.One2many('resource.calendar.attendance', 'calendar_id', 'Working Time 1st Week',
+        compute="_compute_two_weeks_attendance", inverse="_inverse_two_weeks_calendar")
+
+    attendance_ids_2nd_week = fields.One2many('resource.calendar.attendance', 'calendar_id', 'Working Time 2nd Week',
+        compute="_compute_two_weeks_attendance", inverse="_inverse_two_weeks_calendar")
+
+    @api.depends('two_weeks_calendar')
+    def _compute_two_weeks_attendance(self):
+        for calendar in self:
+            if not calendar.two_weeks_calendar:
+                continue
+            calendar.attendance_ids_1st_week = calendar.attendance_ids.filtered(lambda a: a.week_type == '0')
+            calendar.attendance_ids_2nd_week = calendar.attendance_ids.filtered(lambda a: a.week_type == '1')
+
+    def _inverse_two_weeks_calendar(self):
+        for calendar in self:
+            if not calendar.two_weeks_calendar:
+                continue
+            calendar.attendance_ids = [Command.clear()] + calendar.attendance_ids_1st_week + calendar.attendance_ids_2nd_week
+
+    @api.depends('hours_per_week', 'company_id.resource_calendar_id.hours_per_week')
+    def _compute_full_time_required_hours(self):
+        for calendar in self.filtered("company_id"):
+            if calendar != calendar.company_id.resource_calendar_id:
+                calendar.full_time_required_hours = calendar.company_id.resource_calendar_id.hours_per_week
+            else:
+                calendar.full_time_required_hours = calendar.hours_per_week
+
+    @api.depends("schedule_type")
+    def _compute_flexible_hours(self):
+        for calendar in self:
+            calendar.flexible_hours = calendar.schedule_type == 'flexible'
+
+    def _inverse_flexible_hours(self):
+        for calendar in self:
+            calendar.schedule_type = 'flexible' if calendar.flexible_hours else 'fully_fixed'
 
     def _compute_work_resources_count(self):
         count_data = self.env['resource.resource']._read_group(
@@ -212,11 +234,11 @@ class ResourceCalendar(models.Model):
     def _compute_two_weeks_explanation(self):
         today = fields.Date.today()
         week_type = self.env['resource.calendar.attendance'].get_week_type(today)
-        week_type_str = _("second") if week_type else _("first")
+        week_type_str = _("even") if week_type else _("odd")
         first_day = date_utils.start_of(today, 'week')
         last_day = date_utils.end_of(today, 'week')
         self.two_weeks_explanation = _(
-            "The current week (from %(first_day)s to %(last_day)s) corresponds to week number %(number)s.",
+            "The current week (from %(first_day)s to %(last_day)s) corresponds to %(number)s week.",
             first_day=first_day,
             last_day=last_day,
             number=week_type_str,
@@ -259,10 +281,11 @@ class ResourceCalendar(models.Model):
         return days / 2 if self.two_weeks_calendar else days
 
     def switch_calendar_type(self):
+        self.ensure_one()
         if not self.two_weeks_calendar:
-            self.attendance_ids.unlink()
-            self.attendance_ids = [
-                (0, 0, {
+            self.two_weeks_calendar = True
+            final_attendances = [
+                Command.create({
                     'name': 'First week',
                     'dayofweek': '0',
                     'sequence': '0',
@@ -272,7 +295,7 @@ class ResourceCalendar(models.Model):
                     'hour_to': 0,
                     'display_type':
                     'line_section'}),
-                (0, 0, {
+                Command.create({
                     'name': 'Second week',
                     'dayofweek': '0',
                     'sequence': '25',
@@ -282,21 +305,15 @@ class ResourceCalendar(models.Model):
                     'hour_to': 0,
                     'display_type': 'line_section'}),
             ]
+            for idx, att in enumerate(self.attendance_ids):
+                final_attendances.append(Command.create(dict(att._copy_attendance_vals(), week_type='0', sequence=idx + 1)))
+                final_attendances.append(Command.create(dict(att._copy_attendance_vals(), week_type='1', sequence=idx + 26)))
+            self.attendance_ids = [Command.clear()] + final_attendances
 
-            self.two_weeks_calendar = True
-            default_attendance = self.default_get(['attendance_ids'])['attendance_ids']
-            for idx, att in enumerate(default_attendance):
-                att[2]["week_type"] = '0'
-                att[2]["sequence"] = idx + 1
-            self.attendance_ids = default_attendance
-            for idx, att in enumerate(default_attendance):
-                att[2]["week_type"] = '1'
-                att[2]["sequence"] = idx + 26
-            self.attendance_ids = default_attendance
         else:
             self.two_weeks_calendar = False
             self.attendance_ids.unlink()
-            self.attendance_ids = self.default_get(['attendance_ids'])['attendance_ids']
+            self.attendance_ids = self._get_default_attendance_ids(self.company_id)
 
     @api.onchange('attendance_ids')
     def _onchange_attendance_ids(self):
@@ -747,6 +764,41 @@ class ResourceCalendar(models.Model):
             return {fields.Date.to_string(day.date()): (day.date() in works) for day in rrule(DAILY, start_dt, until=end_dt)}
         works = {d[0].date() for d in self._work_intervals_batch(start_dt, end_dt, domain=domain)[False]}
         return {fields.Date.to_string(day.date()): (day.date() not in works) for day in rrule(DAILY, start_dt, until=end_dt)}
+
+    def _get_default_attendance_ids(self, company_id=None):
+        """ return a copy of the company's calendar attendance or default 40 hours/week """
+        if company_id and (attendances := company_id.resource_calendar_id.attendance_ids):
+            return [
+                Command.create({
+                    'name': attendance.name,
+                    'dayofweek': attendance.dayofweek,
+                    'week_type': attendance.week_type,
+                    'hour_from': attendance.hour_from,
+                    'hour_to': attendance.hour_to,
+                    'day_period': attendance.day_period,
+                    'date_from': attendance.date_from,
+                    'date_to': attendance.date_to,
+                    'display_type': attendance.display_type,
+                })
+                for attendance in attendances
+            ]
+        return [
+            Command.create({'name': _('Monday Morning'), 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': _('Monday Lunch'), 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+            Command.create({'name': _('Monday Afternoon'), 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': _('Tuesday Morning'), 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': _('Tuesday Lunch'), 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+            Command.create({'name': _('Tuesday Afternoon'), 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': _('Wednesday Morning'), 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': _('Wednesday Lunch'), 'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+            Command.create({'name': _('Wednesday Afternoon'), 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': _('Thursday Morning'), 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': _('Thursday Lunch'), 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+            Command.create({'name': _('Thursday Afternoon'), 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': _('Friday Morning'), 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': _('Friday Lunch'), 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+            Command.create({'name': _('Friday Afternoon'), 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+        ]
 
     # --------------------------------------------------
     # External API
