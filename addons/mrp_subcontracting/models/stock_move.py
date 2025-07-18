@@ -324,7 +324,7 @@ class StockMove(models.Model):
 
         # Cancel productions until reach new_quantity
         for production in (productions - wip_production):
-            if quantity_to_remove >= production.product_qty:
+            if float_compare(quantity_to_remove, production.product_qty, precision_rounding=production.product_uom_id.rounding) >= 0:
                 quantity_to_remove -= production.product_qty
                 production.with_context(skip_activity=True).action_cancel()
             else:
