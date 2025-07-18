@@ -1,5 +1,5 @@
 import { addBusMessageHandler, busModels } from "@bus/../tests/bus_test_helpers";
-import { after, before, expect, getFixture, registerDebugInfo } from "@odoo/hoot";
+import { after, before, expect, getFixture, registerDebugInfo, test } from "@odoo/hoot";
 import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
 import {
@@ -165,6 +165,14 @@ let archs = {};
 export function registerArchs(newArchs) {
     archs = newArchs;
     after(() => (archs = {}));
+}
+
+export function onlineTest(...args) {
+    if (navigator.onLine) {
+        return test(...args);
+    } else {
+        return test.skip(...args);
+    }
 }
 
 export async function openDiscuss(activeId, { target } = {}) {
