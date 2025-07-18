@@ -1,5 +1,7 @@
 /** @odoo-module */
 
+import { isInstanceOf } from "../hoot_dom_utils";
+
 /**
  * @typedef {{
  *  animationFrame?: boolean;
@@ -433,7 +435,7 @@ export async function waitUntil(predicate, options) {
                 if (typeof message === "function") {
                     message = message();
                 }
-                if (message instanceof Error) {
+                if (isInstanceOf(message, Error)) {
                     reject(message);
                 } else {
                     reject(new HootTimingError(message.replace("%timeout%", String(timeout))));
