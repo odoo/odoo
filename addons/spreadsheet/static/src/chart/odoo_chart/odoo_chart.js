@@ -140,6 +140,9 @@ export class OdooChart extends AbstractChart {
         if (!this.dataSource) {
             return this.datasetsConfig || [];
         }
+        if (!this.dataSource.isReady()) {
+            return [];
+        }
         const data = this.dataSource.getData();
         return data.datasets.map((ds, index) => this._dataSets?.[index] || {});
     }
