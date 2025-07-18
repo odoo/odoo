@@ -40,7 +40,7 @@ class ResPartner(models.Model):
         for line in order_lines:
             on_time, ordered = partner_dict.get(line.partner_id, (0, 0))
             ordered += line.product_uom_qty
-            on_time += lines_quantity[line.id]
+            on_time += min(lines_quantity[line.id], line.product_uom_qty)
             partner_dict[line.partner_id] = (on_time, ordered)
         seen_partner = self.env['res.partner']
         for partner, numbers in partner_dict.items():
