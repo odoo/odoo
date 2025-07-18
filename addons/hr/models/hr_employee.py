@@ -901,7 +901,7 @@ class HrEmployee(models.Model):
         }
         if dep_rd:
             return action_reload
-        convert.convert_file(env=self.env, module='hr', filename='data/scenarios/hr_scenario.xml', idref=None, mode='init')
+        convert.convert_file(env=self.sudo().env, module='hr', filename='data/scenarios/hr_scenario.xml', idref=None, mode='init')
         if 'resume_line_ids' in self:
             convert.convert_file(env=self.env, module='hr_skills', filename='data/scenarios/hr_skills_scenario.xml', idref=None, mode='init')
         return action_reload
