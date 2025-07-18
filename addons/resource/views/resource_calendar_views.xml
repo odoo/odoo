@@ -23,7 +23,6 @@
         <field name="model">resource.calendar</field>
         <field name="arch" type="xml">
             <form string="Working Time">
-                <field name="two_weeks_calendar" invisible="1"/>
                 <header>
                 </header>
                 <sheet string="Working Time">
@@ -53,7 +52,6 @@
                     </div>
                     <group name="resource_details" col="2">
                         <group name="resource_working_hours">
-                            <field name="flexible_hours" invisible="1"/>
                             <field name="schedule_type" widget="radio"/>
                             <label for="full_time_required_hours" invisible="not company_id"/>
                             <label for="full_time_required_hours" string="Required Full Time" invisible="company_id"/>
@@ -66,14 +64,12 @@
                                 <field name="work_time_rate" nolabel="1" style="width: 6ch;"/>
                                 <span class="ms-1">%</span>
                             </div>
-                            <field name="is_fulltime" invisible="1"/>
                         </group>
                         <group>
                             <group name="resource_company" colspan="2">
-                                <field name="active" invisible="1"/>
                                 <field name="company_id" placeholder="Visible to all"/>
                                 <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset', 'mismatch_title': 'Timezone Mismatch : This timezone is different from that of your browser.\nPlease, be mindful of this when setting the working hours or the time off.'}" />
-                                <field name="tz_offset" invisible="1"/>
+                                <field name="tz_offset" invisible="1"/> <!-- Computed field needed for timezone_mismatch widget -->
                             </group>
                             <group name="flex_details" invisible="not flexible_hours" colspan="2">
                                 <label for="hours_per_day" string="Avg"/>
@@ -90,11 +86,11 @@
                             <group name="switch_calendar" invisible="flexible_hours">
                                 <label for="switch_calendar_type" string="2 Week's Calendar" class="o_form_label"/>
                                 <button name="switch_calendar_type" invisible="two_weeks_calendar" type="object"
-                                    icon="fa-square-o" class="btn p-0"
+                                    icon="fa-square-o" title="Switch to 2-weeks calendar" class="btn p-0"
                                     confirm="Are you sure you want to switch to a 2-week calendar? All work entries will be lost."
                                     confirm-label="Switch"/>
                                 <button name="switch_calendar_type" invisible="not two_weeks_calendar" type="object"
-                                    icon="fa-check-square" class="btn p-0"
+                                    icon="fa-check-square" title="Switch to 1-week calendar" class="btn p-0"
                                     confirm="Are you sure you want to switch to a 1-week calendar? All work entries will be lost."
                                     confirm-label="Switch"/>
                             </group>
@@ -120,7 +116,7 @@
                             </group>
                             <field name="attendance_ids" widget="section_one2many"/>
                         </page>
-                        <page string="Week 1 Working Hours" name="working_hours" invisible="not two_weeks_calendar">
+                        <page string="Week 1 Working Hours" name="working_hours" invisible="flexible_hours or not two_weeks_calendar">
                             <field name="two_weeks_explanation"/>
                             <group>
                                 <group>
@@ -140,7 +136,7 @@
                             </group>
                             <field name="attendance_ids_1st_week" widget="section_one2many"/>
                         </page>
-                        <page string="Week 2 Working Hours" name="working_hours" invisible="not two_weeks_calendar">
+                        <page string="Week 2 Working Hours" name="working_hours" invisible="flexible_hours or not two_weeks_calendar">
                             <field name="two_weeks_explanation"/>
                             <group>
                                 <group>
@@ -158,7 +154,7 @@
                                     </div>
                                 </group>
                             </group>
-                            <field name="attendance_ids_1st_week" widget="section_one2many"/>
+                            <field name="attendance_ids_2nd_week" widget="section_one2many"/>
                         </page>
                     </notebook>
                 </sheet>
