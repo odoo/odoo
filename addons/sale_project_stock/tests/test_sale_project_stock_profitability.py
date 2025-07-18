@@ -2,9 +2,24 @@
 
 from odoo import Command, fields
 from odoo.addons.sale_project.tests.test_project_profitability import TestProjectProfitabilityCommon
+<<<<<<< 1484bac0a182c964f7267d9b5801164bdfefcfcd
+||||||| cccec4ccb802771ffb74033f6c1c7b577e8adced
+from odoo.tests.common import tagged
+=======
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.tests.common import tagged
+>>>>>>> 9697aad20a61fbff7fe4aea73d58509df37ce68a
 
 
+<<<<<<< 1484bac0a182c964f7267d9b5801164bdfefcfcd
 class TestSaleProjectStockProfitability(TestProjectProfitabilityCommon):
+||||||| cccec4ccb802771ffb74033f6c1c7b577e8adced
+@tagged("post_install", "-at_install")
+class TestSaleProjectStockProfitability(TestProjectProfitabilityCommon):
+=======
+@tagged("post_install", "-at_install")
+class TestSaleProjectStockProfitability(TestProjectProfitabilityCommon, ValuationReconciliationTestCommon):
+>>>>>>> 9697aad20a61fbff7fe4aea73d58509df37ce68a
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
