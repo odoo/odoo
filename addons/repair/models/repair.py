@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
 from random import randint
 
 from odoo import api, fields, models, _
@@ -730,13 +729,7 @@ class RepairOrder(models.Model):
         return {'price': product.list_price}
 
     def _get_product_catalog_record_lines(self, product_ids, **kwargs):
-        grouped_lines = defaultdict(lambda: self.env['stock.move'])
-
-        for line in self.move_ids:
-            if line.product_id.id in product_ids:
-                grouped_lines[line.product_id] |= line
-
-        return grouped_lines
+        return self.move_ids.filtered(lambda l: l.product_id.id in product_ids).grouped('product_id')
 
     def _is_display_stock_in_catalog(self):
         return True

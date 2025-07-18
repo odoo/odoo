@@ -1026,11 +1026,9 @@ class PosOrder(models.Model):
         account_receivable = self.payment_ids.payment_method_id.receivable_account_id
         reversal_entry_receivable = reversal_entry.line_ids.filtered(lambda l: l.account_id in (pos_account_receivable + account_receivable))
         payment_receivable = payment_moves.line_ids.filtered(lambda l: l.account_id in (pos_account_receivable + account_receivable))
-        lines_to_reconcile = defaultdict(lambda: self.env['account.move.line'])
-        for line in (reversal_entry_receivable | payment_receivable):
-            lines_to_reconcile[line.account_id] |= line
+        lines_to_reconcile = (reversal_entry_receivable | payment_receivable).filtered(lambda l: not l.reconciled).grouped('account_id')
         for line in lines_to_reconcile.values():
-            line.filtered(lambda l: not l.reconciled).reconcile()
+            line.reconcile()
 
     def action_pos_order_invoice(self):
         if len(self.company_id) > 1:

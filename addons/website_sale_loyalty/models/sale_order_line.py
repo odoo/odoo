@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
 from odoo import models
 
 
@@ -23,12 +21,8 @@ class SaleOrderLine(models.Model):
 
     def unlink(self):
         if self.env.context.get('website_sale_loyalty_delete', False):
-            disabled_rewards_per_order = defaultdict(lambda: self.env['loyalty.reward'])
-            for line in self:
-                if line.reward_id:
-                    disabled_rewards_per_order[line.order_id] |= line.reward_id
-            for order, rewards in disabled_rewards_per_order.items():
-                order.disabled_auto_rewards += rewards
+            for order, lines in self.filtered('reward_id').grouped('order_id').items():
+                order.disabled_auto_rewards += lines.reward_id
         return super().unlink()
 
     def _should_show_strikethrough_price(self):

@@ -715,10 +715,10 @@ class SlideChannel(models.Model):
             to_unarchived.member_status = member_status
             if member_status == 'joined':
                 to_unarchived._recompute_completion()
-
-        existing_channel_partners_map = defaultdict(lambda: self.env['slide.channel.partner'])
-        for channel_partner in existing_channel_partners:
-            existing_channel_partners_map[channel_partner.channel_id] += channel_partner
+        existing_channel_partners_map = defaultdict(
+            self.env['slide.channel.partner'].browse,
+            existing_channel_partners.grouped('channel_id')
+        )
 
         # Invited partners confirming their invitation by enrolling, or upgraded to 'joined'.
         to_update_as_joined = SlideChannelPartnerSudo

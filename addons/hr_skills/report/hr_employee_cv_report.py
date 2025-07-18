@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
-from odoo import _, models
+from odoo import models
 
 
 class ReportHr_SkillsReport_Employee_Cv(models.AbstractModel):
@@ -15,12 +13,8 @@ class ReportHr_SkillsReport_Employee_Cv(models.AbstractModel):
 
         resume_lines = {}
         for employee in employees:
-            resume_lines[employee] = defaultdict(self.env['hr.resume.line'].browse)
-            for line in employee.resume_line_ids:
-                if not show_others and not line.line_type_id:
-                    continue
-                resume_lines[employee][line.line_type_id.name or _('Other')] |= line
-
+            filtered_lines = employee.resume_line_ids.filtered(lambda l: show_others or l.line_type_id)
+            resume_lines[employee] = filtered_lines.grouped(lambda l: l.line_type_id.name or l.env._("Other"))
         return {
             'doc_ids': docids,
             'doc_model': 'hr.employee',

@@ -2802,21 +2802,19 @@ class AccountMove(models.Model):
         return product_infos
 
     def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):
-        grouped_lines = defaultdict(lambda: self.env['account.move.line'])
         if section_id is None:
             section_id = (
                 self.line_ids[:1].id
                 if self.line_ids[:1].display_type == 'line_section'
                 else False
             )
-        for line in self.line_ids:
-            if (
+        return self.line_ids.filtered(
+            lambda line: (
                 line.get_parent_section_line().id == section_id
                 and line.display_type == 'product'
                 and line.product_id.id in product_ids
-            ):
-                grouped_lines[line.product_id] |= line
-        return grouped_lines
+            )
+        ).grouped('product_id')
 
     def _update_order_line_info(
         self, product_id, quantity, *, section_id=False, child_field='line_ids', **kwargs

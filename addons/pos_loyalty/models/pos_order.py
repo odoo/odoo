@@ -112,11 +112,10 @@ class PosOrder(models.Model):
 
         # We need a sudo here because this can trigger `_compute_order_count` that require access to `sale.order.line`
         all_coupons = self.env['loyalty.card'].sudo().browse(coupon_new_id_map.keys()).exists()
-        lines_per_reward_code = defaultdict(lambda: self.env['pos.order.line'])
-        for line in self.lines:
-            if not line.reward_identifier_code:
-                continue
-            lines_per_reward_code[line.reward_identifier_code] |= line
+        lines_per_reward_code = defaultdict(
+            lambda: self.env['pos.order.line'],
+            self.lines.filtered('reward_identifier_code').grouped('reward_identifier_code')
+        )
         for coupon in all_coupons:
             if coupon.id in coupon_new_id_map:
                 # Coupon existed previously, update amount of points.

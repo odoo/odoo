@@ -114,7 +114,6 @@ class ResPartner(models.Model):
             ('partner_ids', 'in', self.ids),
             ('show_as', '=', 'busy'),
         ])
-
         event_by_partner_id = defaultdict(lambda: self.env['calendar.event'])
         for event in events:
             for partner in event.partner_ids:

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
 from odoo import models
 
 
@@ -33,9 +31,7 @@ class EventRegistration(models.Model):
                 rule_new_regs = rule_to_new_regs[rule]
 
                 # for each group (sale_order), find its linked registrations
-                so_to_regs = defaultdict(lambda: self.env['event.registration'])
-                for registration in rule_new_regs & so_registrations:
-                    so_to_regs[registration.sale_order_id] |= registration
+                so_to_regs = (rule_new_regs & so_registrations).grouped('sale_order_id')
 
                 # for each grouped registrations, prepare result with group and existing lead
                 so_res = []

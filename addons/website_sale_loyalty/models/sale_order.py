@@ -114,10 +114,8 @@ class SaleOrder(models.Model):
         """
         super()._compute_website_order_line()
         for order in self:
-            grouped_order_lines = defaultdict(lambda: self.env['sale.order.line'])
-            for line in order.order_line:
-                if line.reward_id and line.coupon_id:
-                    grouped_order_lines[(line.reward_id, line.coupon_id, line.reward_identifier_code)] |= line
+            order_lines = order.order_line.filtered(lambda l: l.reward_id and l.coupon_id)
+            grouped_order_lines = order_lines.grouped(lambda l: (l.reward_id, l.coupon_id, l.reward_identifier_code))
             new_lines = self.env['sale.order.line']
             for lines in grouped_order_lines.values():
                 if lines.reward_id.reward_type != 'discount':

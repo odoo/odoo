@@ -352,10 +352,11 @@ class HrLeave(models.Model):
     @api.depends('employee_id')
     def _compute_resource_calendar_id(self):
         # YTI TODO: Clean that brol to improve performance
-        employees_by_dates = defaultdict(lambda: self.env['hr.employee'])
-        for leave in self:
-            if leave.employee_id and leave.request_date_from:
-                employees_by_dates[leave.request_date_from] += leave.employee_id
+        leaves_by_dates = self.filtered(lambda l: l.employee_id and l.request_date_from).grouped('request_date_from')
+        employees_by_dates = {
+            date_from: leaves.employee_id
+            for date_from, leaves in leaves_by_dates.items()
+        }
         calendar_by_dates = {date_from: employees._get_calendars(date_from) for date_from, employees in employees_by_dates.items()}
         for leave in self:
             calendar = False
@@ -552,11 +553,18 @@ Versions:
         """
         result = {}
         employee_leaves = self.filtered('employee_id')
-        employees_by_dates_calendar = defaultdict(lambda: self.env['hr.employee'])
-        for leave in employee_leaves:
-            if not leave.date_from or not leave.date_to:
-                continue
-            employees_by_dates_calendar[(leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, resource_calendar or leave.resource_calendar_id)] += leave.employee_id
+        leaves_with_dates = employee_leaves.filtered(lambda l: l.date_from and l.date_to)
+        leaves_grouped_by_dates_calender = leaves_with_dates.grouped(lambda l: (
+            l.date_from,
+            l.date_to,
+            l.holiday_status_id.include_public_holidays_in_duration,
+            resource_calendar or l.resource_calendar_id
+        ))
+        employees_by_dates_calendar = {
+            key: leaves.employee_id
+            for key, leaves in leaves_grouped_by_dates_calender.items()
+        }
+
         # We force the company in the domain as we are more than likely in a compute_sudo
         domain = [('time_type', '=', 'leave'),
                   ('company_id', 'in', self.env.companies.ids + self.env.context.get('allowed_company_ids', [])),
@@ -742,9 +750,7 @@ Versions:
                 raise ValidationError(_("This modification is not allowed in the current state."))
 
     def _check_validity(self):
-        sorted_leaves = defaultdict(lambda: self.env['hr.leave'])
-        for leave in self:
-            sorted_leaves[(leave.holiday_status_id, leave.date_from.date())] |= leave
+        sorted_leaves = self.grouped(lambda l: (l.holiday_status_id, l.date_from.date()))
         for (leave_type, date_from), leaves in sorted_leaves.items():
             if not leave_type.requires_allocation:
                 continue

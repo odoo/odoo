@@ -155,15 +155,15 @@ class EventLeadRule(models.Model):
             ('registration_ids', 'in', registrations.ids),
             ('event_lead_rule_id', 'in', self.ids)
         ])
-        rule_to_existing_regs = defaultdict(lambda: self.env['event.registration'])
+        rule_to_existing_regs = defaultdict(list)
         for lead in existing_leads:
-            rule_to_existing_regs[lead.event_lead_rule_id] += lead.registration_ids
+            rule_to_existing_regs[lead.event_lead_rule_id] += lead.registration_ids.ids
 
         # second: check registrations matching rules (in batch)
         new_registrations = self.env['event.registration']
         rule_to_new_regs = dict()
         for rule in self:
-            new_for_rule = registrations.filtered(lambda reg: reg not in rule_to_existing_regs[rule])
+            new_for_rule = registrations.filtered(lambda reg: reg.id not in rule_to_existing_regs[rule])
             rule_registrations = rule._filter_registrations(new_for_rule)
             new_registrations |= rule_registrations
             rule_to_new_regs[rule] = rule_registrations

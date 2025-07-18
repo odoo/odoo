@@ -168,10 +168,7 @@ class MrpBom(models.Model):
                 continue
             finished_products = bom.product_id or bom.product_tmpl_id.product_variant_ids
             if bom.bom_line_ids.bom_product_template_attribute_value_ids:
-                grouped_by_components = defaultdict(lambda: self.env['product.product'])
-                for finished in finished_products:
-                    components = bom.bom_line_ids.filtered(lambda l: not l._skip_bom_line(finished)).product_id
-                    grouped_by_components[components] |= finished
+                grouped_by_components = finished_products.grouped(lambda p: bom.bom_line_ids.filtered(lambda l: not l._skip_bom_line(p)).product_id)
                 for components, finished in grouped_by_components.items():
                     _check_cycle(components, finished)
             else:

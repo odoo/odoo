@@ -802,16 +802,16 @@ class MailMessage(models.Model):
         self.mapped('attachment_ids').filtered(
             lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
         ).unlink()
-        messages_by_partner = defaultdict(lambda: self.env['mail.message'])
+        messages_by_partner = defaultdict(list)
         partners_with_user = self.partner_ids.filtered('user_ids')
         for elem in self:
             for partner in (
                 elem.partner_ids & partners_with_user | elem.notification_ids.author_id
             ):
-                messages_by_partner[partner] |= elem
+                messages_by_partner[partner].append(elem.id)
         # Notify front-end of messages deletion for partners having a user
-        for partner, messages in messages_by_partner.items():
-            partner._bus_send("mail.message/delete", {"message_ids": messages.ids})
+        for partner, message_ids in messages_by_partner.items():
+            partner._bus_send("mail.message/delete", {"message_ids": message_ids})
         return super().unlink()
 
     def export_data(self, fields_to_export):

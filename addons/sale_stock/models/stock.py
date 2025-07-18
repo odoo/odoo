@@ -286,11 +286,14 @@ class StockLot(models.Model):
 
     @api.depends('name')
     def _compute_sale_order_ids(self):
-        sale_orders = defaultdict(lambda: self.env['sale.order'])
-        for move_line in self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('state', '=', 'done')]):
-            move = move_line.move_id
-            if move.picking_id.location_dest_id.usage in ('customer', 'transit') and move.sale_line_id.order_id:
-                sale_orders[move_line.lot_id.id] |= move.sale_line_id.order_id
+        move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('state', '=', 'done')])
+        filtered_move_lines = move_lines.filtered(
+            lambda l: l.move_id.picking_id.location_dest_id.usage in ('customer', 'transit') and l.move_id.sale_line_id.order_id
+        )
+        sale_orders = defaultdict(lambda: self.env['sale.order'], {
+            lot: line.move_id.sale_line_id.order_id
+            for lot, line in filtered_move_lines.grouped(lambda l: l.lot_id).items()
+        })
         for lot in self:
             lot.sale_order_ids = sale_orders[lot.id]
             lot.sale_order_count = len(lot.sale_order_ids)

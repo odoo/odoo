@@ -1375,12 +1375,9 @@ class HrEmployee(models.Model):
             for employee in self:
                 employee._track_set_log_message(Markup("<b>Modified on the Version '%s'</b>") % employee.version_id.display_name)
         if res and 'resource_calendar_id' in vals:
-            resources_per_calendar_id = defaultdict(lambda: self.env['resource.resource'])
-            for employee in self:
-                if employee.version_id == employee.current_version_id:
-                    resources_per_calendar_id[employee.resource_calendar_id.id] += employee.resource_id
-            for calendar_id, resources in resources_per_calendar_id.items():
-                resources.write({'calendar_id': calendar_id})
+            employees_per_calender = self.filtered(lambda e: e.version_id == e.current_version_id).grouped('resource_calendar_id')
+            for calendar, employees in employees_per_calender.items():
+                employees.resource_id.write({'calendar_id': calendar.id})
         return res
 
     def unlink(self):

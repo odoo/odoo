@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.sql import column_exists, create_column
@@ -77,9 +75,7 @@ class AccountMove(models.Model):
         manual_documents = self.filtered(lambda x: x.l10n_latam_use_documents and x.l10n_latam_manual_document_number)
         (without_doc_type + manual_documents.filtered(lambda x: not x.name)).name = False
         # we need to group moves by document type as _compute_name will apply the same name prefix of the first record to the others
-        group_by_document_type = defaultdict(self.env['account.move'].browse)
-        for move in (self - without_doc_type - manual_documents):
-            group_by_document_type[move.l10n_latam_document_type_id.id] += move
+        group_by_document_type = (self - without_doc_type - manual_documents).grouped(lambda m: m.l10n_latam_document_type_id)
         for group in group_by_document_type.values():
             super(AccountMove, group)._compute_name()
 

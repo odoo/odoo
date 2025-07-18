@@ -2,7 +2,6 @@
 
 import json
 import logging
-from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
 
@@ -2132,22 +2131,18 @@ class SaleOrder(models.Model):
         return res
 
     def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):
-        grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
         if section_id is None:
             section_id = (
                 self.order_line[:1].id
                 if self.order_line[:1].display_type == 'line_section'
                 else False
             )
-        for line in self.order_line:
-            if (
-                line.display_type
-                or line.product_id.id not in product_ids
-                or line.get_parent_section_line().id != section_id
-            ):
-                continue
-            grouped_lines[line.product_id] |= line
-        return grouped_lines
+        filtered_lines = self.order_line.filtered(lambda line: not (
+            line.display_type
+            or line.product_id.id not in product_ids
+            or line.get_parent_section_line().id != section_id
+        ))
+        return filtered_lines.grouped('product_id')
 
     def _get_parent_field_on_child_model(self):
         return 'order_id'

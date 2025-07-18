@@ -421,19 +421,19 @@ class HrEmployee(models.Model):
         if ignore_future:
             leaves_domain.append(('date_from', '<=', target_date))
         leaves = self.env['hr.leave'].search(leaves_domain)
-        leaves_per_employee_type = defaultdict(lambda: defaultdict(lambda: self.env['hr.leave']))
-        for leave in leaves:
-            leaves_per_employee_type[leave.employee_id][leave.holiday_status_id] |= leave
-
+        leaves_per_employee_type = defaultdict(
+            self.env['hr.leave'].browse,
+            leaves.grouped(lambda l: (l.employee_id, l.holiday_status_id))
+        )
         allocations = self.env['hr.leave.allocation'].with_context(active_test=False).search([
             ('employee_id', 'in', employees.ids),
             ('holiday_status_id', 'in', leave_types.ids),
             ('state', '=', 'validate'),
         ])
-        allocations_per_employee_type = defaultdict(lambda: defaultdict(lambda: self.env['hr.leave.allocation']))
-        for allocation in allocations:
-            allocations_per_employee_type[allocation.employee_id][allocation.holiday_status_id] |= allocation
-
+        allocations_per_employee_type = defaultdict(
+            self.env['hr.leave.allocation'].browse,
+            allocations.grouped(lambda a: (a.employee_id, a.holiday_status_id))
+        )
         # _get_consumed_leaves returns a tuple of two dictionnaries.
         # 1) The first is a dictionary to map the number of days/hours of leaves taken per allocation
         # The structure is the following:
@@ -504,7 +504,7 @@ class HrEmployee(models.Model):
             for leave_type in leave_types:
                 allocations_with_date_to = self.env['hr.leave.allocation']
                 allocations_without_date_to = self.env['hr.leave.allocation']
-                for leave_allocation in allocations_per_employee_type[employee][leave_type]:
+                for leave_allocation in allocations_per_employee_type[employee, leave_type]:
                     if leave_allocation.date_to:
                         allocations_with_date_to |= leave_allocation
                     else:
@@ -519,7 +519,7 @@ class HrEmployee(models.Model):
                     leave_unit = 'hours'
 
                 leave_type_data = allocations_leaves_consumed[employee][leave_type]
-                for leave in leaves_per_employee_type[employee][leave_type].sorted('date_from'):
+                for leave in leaves_per_employee_type[employee, leave_type].sorted('date_from'):
                     leave_duration = leave[leave_duration_field]
                     skip_excess = False
 

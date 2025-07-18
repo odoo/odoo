@@ -577,12 +577,11 @@ class AccountMove(models.Model):
         is_overseas = self.l10n_in_gst_treatment == "overseas"
         line_ids = []
         global_discount_line_ids = []
-        grouping_lines = self.invoice_line_ids.grouped(
+        grouping_lines = defaultdict(self.env['account.move.line'].browse, self.invoice_line_ids.grouped(
             lambda l: l.display_type == 'product' and (l._l10n_in_is_global_discount() and 'global_discount' or 'lines')
-        )
-        default_line = self.env['account.move.line'].browse()
-        lines = grouping_lines.get('lines', default_line)
-        global_discount_line = grouping_lines.get('global_discount', default_line)
+        ))
+        lines = grouping_lines['lines']
+        global_discount_line = grouping_lines['global_discount']
         tax_details_per_record = tax_details['tax_details_per_record']
         sign = self.is_inbound() and -1 or 1
         rounding_amount = sum(line.balance for line in self.line_ids if line.display_type == 'rounding') * sign

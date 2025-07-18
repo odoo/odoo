@@ -901,11 +901,13 @@ class ResCompany(models.Model):
                 })
 
         # Decode the existing opening move.
-        corresponding_lines_per_account = defaultdict(lambda: self.env['account.move.line'])
-        corresponding_lines_per_account.update(opening_move.line_ids.grouped(lambda line: (
-            line.account_id,
-            'debit' if line.balance > 0.0 or line.amount_currency > 0.0 else 'credit',
-        )))
+        corresponding_lines_per_account = defaultdict(
+            lambda: self.env['account.move.line'],
+            opening_move.line_ids.grouped(lambda line: (
+                line.account_id,
+                'debit' if line.balance > 0.0 or line.amount_currency > 0.0 else 'credit',
+            ))
+        )
 
         # Update the opening move's lines.
         balancing_account = self.get_unaffected_earnings_account()

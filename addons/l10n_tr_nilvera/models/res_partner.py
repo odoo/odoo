@@ -1,8 +1,6 @@
 import logging
 import urllib.parse
 
-from collections import defaultdict
-
 from odoo import _, api, fields, models
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
@@ -59,19 +57,16 @@ class ResPartner(models.Model):
         )
 
     def l10n_tr_check_nilvera_customer(self):
-        results = defaultdict(lambda: self.env['res.partner'])
-        for record in self:
-            if not record.vat:
-                return
-
-            if record._check_nilvera_customer():
-                if len(record.l10n_tr_nilvera_customer_alias_ids) > 1:
-                    results['multi_alias'] |= record
-                else:
-                    results['success'] |= record
-            else:
-                results['failure'] |= record
-
+        def _get_partner_notification_type(partner):
+            if partner._check_nilvera_customer():
+                if len(partner.l10n_tr_nilvera_customer_alias_ids) > 1:
+                    return 'multi_alias'
+                return 'success'
+            return 'failure'
+        partner_with_vat = self.filtered('vat')
+        if (self - partner_with_vat):
+            return
+        results = partner_with_vat.grouped(_get_partner_notification_type)
         if results['failure']:
             self._send_user_notification('danger', _('Nilvera verification failed. Please try again.'))
         if results['success']:

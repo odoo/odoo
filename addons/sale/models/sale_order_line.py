@@ -521,13 +521,10 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id', 'company_id')
     def _compute_tax_ids(self):
-        lines_by_company = defaultdict(lambda: self.env['sale.order.line'])
         cached_taxes = {}
-        for line in self:
-            if line.product_type == 'combo':
-                line.tax_ids = False
-                continue
-            lines_by_company[line.company_id] += line
+        filtered_lines = self.filtered(lambda l: l.product_type != 'combo')
+        (self - filtered_lines).tax_ids = False
+        lines_by_company = filtered_lines.grouped('company_id')
         for company, lines in lines_by_company.items():
             for line in lines.with_company(company):
                 taxes = None

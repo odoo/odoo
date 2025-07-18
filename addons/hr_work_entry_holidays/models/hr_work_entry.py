@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
@@ -45,9 +44,7 @@ class HrWorkEntry(models.Model):
             ('leave_id', '!=', False),
             ('leave_state', '=', 'validate'),
         ])
-        entries_by_leave_type = defaultdict(lambda: self.env['hr.work.entry'])
-        for work_entry in leaves_work_entries:
-            entries_by_leave_type[work_entry.leave_id.holiday_status_id] |= work_entry
+        entries_by_leave_type = leaves_work_entries.grouped(lambda we: we.leave_id.holiday_status_id)
 
         durations_by_leave_type = {}
         for leave_type, work_entries in entries_by_leave_type.items():
