@@ -536,7 +536,7 @@ describe("colorElement", () => {
                     "backgroundColor"
                 );
             },
-            contentAfter: '<div class="o_cc1">a</div>',
+            contentAfter: '<div class="o_cc o_cc1">a</div>',
         });
     });
     describe("when a color was defined", () => {
@@ -550,7 +550,7 @@ describe("colorElement", () => {
                         "backgroundColor"
                     );
                 },
-                contentAfter: '<div style="background-color: #ff0000;" class="o_cc1">a</div>',
+                contentAfter: '<div style="background-color: #ff0000;" class="o_cc o_cc1">a</div>',
             });
         });
         test("should apply o_cc1 class to the element when a color bg-900 was defined", async () => {
@@ -563,7 +563,7 @@ describe("colorElement", () => {
                         "backgroundColor"
                     );
                 },
-                contentAfter: '<div class="bg-900 o_cc1">a</div>',
+                contentAfter: '<div class="bg-900 o_cc o_cc1">a</div>',
             });
         });
         test("should apply o_cc1 class to the element when a color gradient was defined", async () => {
@@ -576,14 +576,14 @@ describe("colorElement", () => {
                         "backgroundColor"
                     );
                 },
-                contentAfter: `<div style="background-image: ${greenToBlueGradient};" class="o_cc1">a</div>`,
+                contentAfter: `<div style="background-image: ${greenToBlueGradient};" class="o_cc o_cc1">a</div>`,
             });
         });
     });
 
     test("should keep o_cc1 when adding a color", async () => {
         await testEditor({
-            contentBefore: `<div class="o_cc1">a</div>`,
+            contentBefore: `<div class="o_cc o_cc1">a</div>`,
             stepFunction: (editor) => {
                 editor.shared.color.colorElement(
                     editor.editable.firstChild,
@@ -591,7 +591,8 @@ describe("colorElement", () => {
                     "backgroundColor"
                 );
             },
-            contentAfter: '<div class="o_cc1" style="background-color: rgb(255, 0, 0);">a</div>',
+            contentAfter:
+                '<div class="o_cc o_cc1" style="background-color: rgb(255, 0, 0);">a</div>',
         });
     });
 
@@ -628,7 +629,7 @@ describe("colorElement", () => {
                     "backgroundColor"
                 );
             },
-            contentAfter: `<div class="o_cc2" style="background-image: ${greenToBlueGradient};">a</div>`,
+            contentAfter: `<div class="o_cc o_cc2" style="background-image: ${greenToBlueGradient};">a</div>`,
         });
     });
 
@@ -646,7 +647,7 @@ describe("colorElement", () => {
         });
         test("should remove o_cc1 when setting an empty color", async () => {
             await testEditor({
-                contentBefore: `<div class="o_cc1" style="background-image: ${redToBlueGradient};">a</div>`,
+                contentBefore: `<div class="o_cc o_cc1" style="background-image: ${redToBlueGradient};">a</div>`,
                 stepFunction: (editor) => {
                     editor.shared.color.colorElement(
                         editor.editable.firstChild,
@@ -667,7 +668,7 @@ describe("colorElement", () => {
                         "backgroundColor"
                     );
                 },
-                contentAfter: `<div class="o_cc1" style="background-image: ${redToBlueGradient};">a</div>`,
+                contentAfter: `<div class="o_cc o_cc1" style="background-image: ${redToBlueGradient};">a</div>`,
             });
         });
         test("should keep the background image when applying o_cc1 gradient", async () => {
@@ -680,7 +681,7 @@ describe("colorElement", () => {
                         "backgroundColor"
                     );
                 },
-                contentAfter: `<div style='background-image: url("https://example.com/image.png"), ${redToBlueGradient};' class="o_cc1">a</div>`,
+                contentAfter: `<div style='background-image: url("https://example.com/image.png"), ${redToBlueGradient};' class="o_cc o_cc1">a</div>`,
             });
         });
         test("change o_cc1 (with gradient) with o_cc2 (without gradient)", async () => {
@@ -693,7 +694,7 @@ describe("colorElement", () => {
                         "backgroundColor"
                     );
                 },
-                contentAfter: `<div class="o_cc2">a</div>`,
+                contentAfter: `<div class="o_cc o_cc2">a</div>`,
             });
         });
 
@@ -708,7 +709,7 @@ describe("colorElement", () => {
                             "backgroundColor"
                         );
                     },
-                    contentAfter: `<div style="background-color: rgb(255, 0, 0); background-image: none;" class="o_cc1">a</div>`,
+                    contentAfter: `<div style="background-color: rgb(255, 0, 0); background-image: none;" class="o_cc o_cc1">a</div>`,
                 });
             });
             test("should not write o_cc1 gradient when bg-900 is already present", async () => {
@@ -721,7 +722,7 @@ describe("colorElement", () => {
                             "backgroundColor"
                         );
                     },
-                    contentAfter: `<div class="bg-900 o_cc1" style="background-image: none;">a</div>`,
+                    contentAfter: `<div class="bg-900 o_cc o_cc1" style="background-image: none;">a</div>`,
                 });
             });
             test("should not write o_cc1 gradient when a gradient is already present", async () => {
@@ -734,14 +735,14 @@ describe("colorElement", () => {
                             "backgroundColor"
                         );
                     },
-                    contentAfter: `<div style="background-image: ${greenToBlueGradient};" class="o_cc1">a</div>`,
+                    contentAfter: `<div style="background-image: ${greenToBlueGradient};" class="o_cc o_cc1">a</div>`,
                 });
             });
         });
         describe("set a color when a o_cc1 is already defined", () => {
             test("should not have an o_cc1 gradient when applying the color rgb(255, 0, 0)", async () => {
                 await testEditor({
-                    contentBefore: `<div class="o_cc1">a</div>`,
+                    contentBefore: `<div class="o_cc o_cc1">a</div>`,
                     stepFunction: (editor) => {
                         editor.shared.color.colorElement(
                             editor.editable.firstChild,
@@ -750,12 +751,12 @@ describe("colorElement", () => {
                         );
                     },
                     contentAfter:
-                        '<div class="o_cc1" style="background-image: none; background-color: rgb(255, 0, 0);">a</div>',
+                        '<div class="o_cc o_cc1" style="background-image: none; background-color: rgb(255, 0, 0);">a</div>',
                 });
             });
             test("should not have an o_cc1 gradient when applying the color bg-900", async () => {
                 await testEditor({
-                    contentBefore: `<div class="o_cc1">a</div>`,
+                    contentBefore: `<div class="o_cc o_cc1">a</div>`,
                     stepFunction: (editor) => {
                         editor.shared.color.colorElement(
                             editor.editable.firstChild,
@@ -764,12 +765,12 @@ describe("colorElement", () => {
                         );
                     },
                     contentAfter:
-                        '<div class="o_cc1 bg-900" style="background-image: none;">a</div>',
+                        '<div class="o_cc o_cc1 bg-900" style="background-image: none;">a</div>',
                 });
             });
             test("should not have an o_cc1 gradient when applying a gradient color", async () => {
                 await testEditor({
-                    contentBefore: `<div class="o_cc1">a</div>`,
+                    contentBefore: `<div class="o_cc o_cc1">a</div>`,
                     stepFunction: (editor) => {
                         editor.shared.color.colorElement(
                             editor.editable.firstChild,
@@ -777,7 +778,7 @@ describe("colorElement", () => {
                             "backgroundColor"
                         );
                     },
-                    contentAfter: `<div class="o_cc1" style="background-image: ${greenToBlueGradient};">a</div>`,
+                    contentAfter: `<div class="o_cc o_cc1" style="background-image: ${greenToBlueGradient};">a</div>`,
                 });
             });
         });
