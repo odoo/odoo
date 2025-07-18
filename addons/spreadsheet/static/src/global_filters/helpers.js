@@ -37,6 +37,51 @@ export const RELATIVE_PERIODS = {
 };
 
 /**
+ * @param {DateValue} dateFilterValue
+ * @param {{ chain: string, type: string }} [fieldMatching]
+ * @returns {string}
+ */
+export function getBestGranularity(dateFilterValue, fieldMatching) {
+    if (!dateFilterValue) {
+        return "year";
+    }
+    const { from, to } = getDateRange(dateFilterValue);
+    const numberOfDays = Math.round(to.diff(from, "days").days);
+    if (numberOfDays <= 1) {
+        return fieldMatching?.type === "datetime" ? "hour" : "day";
+    } else if (numberOfDays <= 90) {
+        return "day";
+    } else if (numberOfDays <= 365 * 3) {
+        return "month";
+    } else {
+        return "year";
+    }
+}
+
+/**
+ * @param {DateValue} dateFilterValue
+ * @returns {string[]}
+ */
+export function getValidGranularities(dateFilterValue) {
+    if (!dateFilterValue) {
+        return ["week", "month", "quarter", "year"];
+    }
+    const { from, to } = getDateRange(dateFilterValue);
+    const numberOfDays = Math.round(to.diff(from, "days").days);
+    if (numberOfDays <= 1) {
+        return ["hour", "day"];
+    } else if (numberOfDays <= 7) {
+        return ["hour", "day", "week"];
+    } else if (numberOfDays <= 31) {
+        return ["hour", "day", "week", "month"];
+    } else if (numberOfDays <= 31 * 3) {
+        return ["day", "week", "month", "quarter"];
+    } else {
+        return ["week", "month", "quarter", "year"];
+    }
+}
+
+/**
  * Compute the display name of a date filter value.
  */
 export function dateFilterValueToString(value) {

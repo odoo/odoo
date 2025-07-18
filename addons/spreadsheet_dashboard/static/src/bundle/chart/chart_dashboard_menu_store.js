@@ -4,6 +4,22 @@ import { patch } from "@web/core/utils/patch";
 const { chartSubtypeRegistry } = registries;
 
 patch(stores.ChartDashboardMenuStore.prototype, {
+    handle(cmd) {
+        switch (cmd.type) {
+            case "UPDATE_CHART_GRANULARITY": {
+                if (cmd.chartId === this.chartId) {
+                    const definition = this.getters.getChartDefinition(this.chartId);
+                    this.originalChartDefinition = {
+                        ...this.originalChartDefinition,
+                        searchParams: definition.searchParams,
+                        metaData: definition.metaData,
+                    };
+                }
+                break;
+            }
+        }
+        super.handle(cmd);
+    },
     get changeChartTypeMenuItems() {
         const definition = this.getters.getChartDefinition(this.chartId);
         if (["odoo_bar", "odoo_line", "odoo_pie"].includes(definition.type)) {
@@ -39,7 +55,6 @@ patch(stores.ChartDashboardMenuStore.prototype, {
                       ...chartSubtypeRegistry.get(type).subtypeDefinition,
                       type,
                   };
-
         this.model.dispatch("UPDATE_CHART", {
             definition,
             figureId,
