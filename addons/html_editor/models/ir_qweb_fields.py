@@ -26,6 +26,7 @@ from werkzeug import urls
 from odoo import _, api, models, fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import posix_to_ldml
+from odoo.tools.json import scriptsafe as json_safe
 from odoo.tools.misc import file_open, get_lang, babel_locale_parse
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
@@ -240,6 +241,7 @@ class IrQwebFieldMany2one(models.AbstractModel):
 
     @api.model
     def attributes(self, record, field_name, options, values=None):
+        field = record._fields[field_name]
         attrs = super().attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
             many2one = record[field_name]
@@ -250,6 +252,7 @@ class IrQwebFieldMany2one(models.AbstractModel):
                 attrs['data-oe-many2one-allowreset'] = 1
                 if not many2one:
                     attrs['data-oe-many2one-model'] = record._fields[field_name].comodel_name
+            attrs['data-oe-many2one-domain'] = json_safe.dumps(field._description_domain(self.env))
         return attrs
 
     @api.model
