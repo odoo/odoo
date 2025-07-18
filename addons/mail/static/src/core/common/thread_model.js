@@ -247,6 +247,10 @@ export class Thread extends Record {
      * current model and includes the recipients of the last message. (e.g: for
      * a crm lead, the model will suggest the customer associated to the lead). */
     suggestedRecipients = fields.Attr([]);
+    /** @type {String[]|undefined} */
+    partner_fields;
+    /** @type {String|undefined} */
+    primary_email_field;
     hasLoadingFailed = false;
     canPostOnReadonly;
     /** @type {Boolean} */
