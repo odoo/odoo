@@ -534,7 +534,7 @@ class SaleOrder(models.Model):
         if reward.discount_mode == 'per_point' and not reward.clear_wallet:
             # Calculate the actual point cost if the cost is per point
             converted_discount = self.currency_id._convert(min(max_discount, discountable), reward_currency, self.company_id, fields.Date.today())
-            point_cost = converted_discount / reward.discount
+            point_cost = coupon.currency_id.round(converted_discount / reward.discount)
 
         if reward_program.is_payment_program:  # Gift card / eWallet
             reward_line_values = {
