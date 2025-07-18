@@ -244,11 +244,6 @@ class HrEmployee(models.Model):
     @api.onchange('contract_template_id')
     def _onchange_contract_template_id(self):
         if self.contract_template_id:
-            self.version_id.update(self.version_id.get_values_from_contract_template(self.contract_template_id))
-
-    @api.onchange('contract_template_id')
-    def _onchange_contract_template_id(self):
-        if self.contract_template_id:
             whitelist = self.env['hr.version']._get_whitelist_fields_from_template()
             for field in self.contract_template_id._fields:
                 if field in whitelist and not self.env['hr.version']._fields[field].related:
