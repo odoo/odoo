@@ -6,6 +6,7 @@ import time
 from unittest.mock import patch
 
 from odoo.exceptions import AccessError
+from odoo.tests import Form
 from odoo.tests.common import BaseCase, TransactionCase, tagged, new_test_user
 from odoo.tools import profiler
 from odoo.tools.profiler import Profiler, ExecutionContext
@@ -582,6 +583,13 @@ class TestProfiling(TransactionCase):
             self.env.cr.execute("SELECT 1")
         p.json()  # check we can call it
         self.assertEqual(p.collectors[0].entries[0]['query'], 'SELECT 1')
+
+    def test_speedscope_url_compute_for_record(self):
+        profiler = Form(self.env['ir.profile'])
+        self.assertFalse(profiler.speedscope_url)
+
+        profiler.save()
+        self.assertTrue(profiler.speedscope_url)
 
 
 def deep_call(func, depth):
