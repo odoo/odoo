@@ -10,7 +10,6 @@
                             type="radio"
                             t-att-checked="value.id === props.selected.id"
                             t-on-change="() => props.setSelected(value)"
-                            t-att-disabled="value.doHaveConflictWith(props.allSelectedValues)" 
                             t-att-name="value.attribute_id.id"
                             t-attf-id="{{ value.attribute_id.id }}_{{ value.id }}"
                             class="form-check-input radio-check"
@@ -71,7 +70,7 @@
 
             <select class="configurator_select form-select form-select-md" t-on-change="(e) => this.onChange(e)">
                 <t t-foreach="props.attribute.values()" t-as="value" t-key="value.id">
-                    <option t-att-value="value.id" t-att-disabled="value.doHaveConflictWith(props.allSelectedValues)"  t-att-class="{'ptav-not-available': value.excluded}">
+                    <option t-att-value="value.id" t-att-class="{'ptav-not-available': value.excluded}">
                         <t t-set="is_custom" t-value="is_custom || (value.is_custom and value.id == props.selected.id)"/>
                         <t t-esc="value.name"/>
                         <t t-if="value.price_extra">
@@ -103,7 +102,6 @@
                                 t-att-checked="value.id === props.selected.id"
                                 t-on-change="() => props.setSelected(value)"
                                 t-att-name="value.attribute_id.id"
-                                t-att-disabled="value.doHaveConflictWith(props.allSelectedValues)" 
                                 t-attf-id="{{ value.attribute_id.id }}_{{ value.id }}"
                                 class="m-2 opacity-0" 
                             />
@@ -181,7 +179,7 @@
                 <div class="d-flex flex-row gap-2 w-100">
                     <button
                             class="btn btn-primary btn-lg lh-lg w-50 o-default-button"
-                            t-att-class="{'disabled': isArchivedCombination()}"
+                            t-att-class="{'disabled': isArchivedCombination() or !this.isValidCombination()}"
                             t-on-click="confirm">
                             Add
                         </button>
