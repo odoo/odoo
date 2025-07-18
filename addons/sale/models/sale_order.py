@@ -895,6 +895,8 @@ class SaleOrder(models.Model):
     @api.onchange('order_line')
     def _onchange_order_line(self):
         for index, line in enumerate(self.order_line):
+            if line.product_type != 'combo':
+                continue
             combo_item_lines = line._get_linked_lines().filtered('combo_item_id')
             if line.selected_combo_items:
                 selected_combo_items = json.loads(line.selected_combo_items)
@@ -938,7 +940,7 @@ class SaleOrder(models.Model):
                 # Clear `selected_combo_items` to avoid applying the same changes multiple times.
                 line.selected_combo_items = False
                 self.order_line = delete_commands + create_commands + update_commands
-            else:
+            elif combo_item_lines:
                 combo_item_lines.update({
                     'product_uom_qty': line.product_uom_qty,
                     'discount': line.discount,

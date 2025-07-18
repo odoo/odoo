@@ -109,3 +109,34 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
             combo_ids=[Command.link(combo.id)],
         )
         self.start_tour('/', 'website_sale_combo_configurator_single_configurable_item')
+
+    def test_sale_combo_configurator_with_optional_products(self):
+        combo_a = self.env['product.combo'].create({
+            'name': "Combo A",
+            'combo_item_ids': [
+                Command.create({'product_id': self._create_product(name="Product A1").id}),
+            ],
+        })
+        combo_b = self.env['product.combo'].create({
+            'name': "Combo B",
+            'combo_item_ids': [
+                Command.create({'product_id': self._create_product(name="Product B1").id}),
+                Command.create({'product_id': self._create_product(name="Product B2").id}),
+            ],
+        })
+        optional_product = self.env['product.template'].create({
+            'name': "Optional Product",
+            'website_published': True,
+        })
+        self.env['product.template'].create({
+            'name': "Combo product",
+            'list_price': 25,
+            'type': 'combo',
+            'website_published': True,
+            'combo_ids': [
+                Command.link(combo_a.id),
+                Command.link(combo_b.id),
+            ],
+            'optional_product_ids': [Command.link(optional_product.id)],
+        })
+        self.start_tour('/shop', 'website_sale_combo_configurator_with_optional_products')

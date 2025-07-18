@@ -115,7 +115,6 @@ registry
             ...tourUtils.createNewSalesOrder(),
             ...tourUtils.selectCustomer("Test Partner"),
             ...tourUtils.addProduct("Combo product"),
-            comboConfiguratorTourUtils.selectComboItem("Product A2"),
             comboConfiguratorTourUtils.selectComboItem("Product B2"),
             ...comboConfiguratorTourUtils.saveConfigurator(),
             productConfiguratorTourUtils.addOptionalProduct("Optional product"),
@@ -129,7 +128,6 @@ registry
             },
             ...productConfiguratorTourUtils.saveConfigurator(),
             tourUtils.checkSOLDescriptionContains("Combo product"),
-            tourUtils.checkSOLDescriptionContains("Product A2"),
             tourUtils.checkSOLDescriptionContains("Product B2"),
             tourUtils.checkSOLDescriptionContains("Optional product"),
             // Don't end the tour with a form in edition mode.

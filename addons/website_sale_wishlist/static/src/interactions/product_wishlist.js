@@ -33,7 +33,7 @@ export class ProductWishlist extends Interaction {
         const ptavs = JSON.parse(button.dataset.ptavIds || '[]');
         const showQuantity = Boolean(button.dataset.showQuantity);
 
-        const quantity = await this.waitFor(this.services['cart'].add({
+        const res = await this.waitFor(this.services['cart'].add({
             productTemplateId: productTemplateId,
             productId: productId,
             isCombo: isCombo,
@@ -44,7 +44,7 @@ export class ProductWishlist extends Interaction {
             showQuantity: showQuantity,
         }));
 
-        if (quantity > 0 && !document.getElementById('b2b_wish').checked) {
+        if (res.quantity > 0 && !document.getElementById('b2b_wish').checked) {
             await this._removeProduct(button, '/shop/cart');
         }
     }

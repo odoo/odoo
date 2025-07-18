@@ -3,7 +3,7 @@
 from werkzeug.exceptions import NotFound
 
 from odoo import fields
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.http import request, route
 from odoo.tools import consteq
 from odoo.tools.image import image_data_uri
@@ -21,7 +21,6 @@ class Cart(PaymentPortal):
     def cart(self, id=None, access_token=None, revive_method='', **post):
         """ Display the cart page.
 
-        This route is responsible for the main cart management and abandoned cart revival logic.
 
         :param str id: The abandoned cart's id.
         :param str access_token: The abandoned cart's access token.
@@ -194,6 +193,12 @@ class Cart(PaymentPortal):
             )
         else:
             values = {'line_id': combo_line_id}
+        main_product_line = request.env['sale.order.line'].sudo().browse(values['line_id'])
+        if main_product_line.order_id != order_sudo:
+            return ValidationError(self.env._(
+                "Some of the parameters passed are not valid"
+            ))
+
         line_ids = {product_template_id: values['line_id']}
 
         if linked_products and values['line_id']:
@@ -234,7 +239,6 @@ class Cart(PaymentPortal):
 
         # The validity of a combo product line can only be checked after creating all of its combo
         # item lines.
-        main_product_line = request.env['sale.order.line'].browse(values['line_id'])
         if main_product_line.product_type == 'combo':
             main_product_line._check_validity()
         if combo_line_id:
