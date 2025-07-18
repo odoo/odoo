@@ -903,7 +903,8 @@
                 <small class="d-none d-md-inline opacity-75"><t t-out="_sort_label"/>:</small>
                 <span class="d-none d-md-inline">
                     <t t-if="isSortingBy" t-out="isSortingBy[0][1]"/>
-                    <span t-else="" t-field="website.shop_default_sort"/>
+                    <!-- Prevent editing the content in website builder -->
+                    <span t-else="" t-out="dict(website_sale_sortable)[website.shop_default_sort]"/>
                 </span>
                 <i t-if="_icon_classes" t-attf-class="fa fa-sort {{_icon_classes}}" role="img"/>
             </a>
