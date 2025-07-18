@@ -26,14 +26,14 @@ class ProductProduct(models.Model):
     purchase_order_line_ids = fields.One2many('purchase.order.line', 'product_id', string="PO Lines") # used to compute quantities
     monthly_demand = fields.Float(compute='_compute_monthly_demand')
 
-    @api.depends_context('monthly_demand_start_date', 'monthly_demand_limit_date', 'warehouse_id')
+    @api.depends_context('monthly_demand_start_date', 'monthly_demand_limit_date', 'warehouse_id', 'suggest_based_on')
     def _compute_monthly_demand(self):
         start_date = self.env.context.get('monthly_demand_start_date', fields.Datetime.now() - relativedelta(months=1))
         limit_date = self.env.context.get('monthly_demand_limit_date', fields.Datetime.now())
         warehouse_id = self.env.context.get('warehouse_id')
         move_domain = Domain([
             ('product_id', 'in', self.ids),
-            ('state', '=', 'done'),
+            ('state', 'in', ['assigned', 'confirmed', 'partially_available', 'done']),
             ('date', '>=', start_date),
             ('date', '<', limit_date),
         ])
@@ -48,8 +48,17 @@ class ProductProduct(models.Model):
             ])
         move_qty_by_products = self.env['stock.move']._read_group(move_domain, ['product_id'], ['product_qty:sum'])
         qty_by_product = {product.id: qty for product, qty in move_qty_by_products}
+
+        based_on = self.env.context.get("suggest_based_on", "this_month")
+        factor = 1
+        if based_on == "one_year":
+            factor = 12
+        elif based_on == "three_months" or based_on == "last_year_quarter":
+            factor = 3
+        elif based_on == "one_week":
+            factor = 7 / (365.25 / 12)  # 7 days / (365.25 days/yr / 12 mth/yr) = 0.23 months
         for product in self:
-            product.monthly_demand = qty_by_product.get(product.id, 0)
+            product.monthly_demand = qty_by_product.get(product.id, 0) / factor
 
     @api.model
     def _get_monthly_demand_moves_location_domain(self):
