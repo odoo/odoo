@@ -862,11 +862,9 @@ test("toolbar correctly show namespace button group and stop showing when namesp
     const { el } = await setupEditor("<div>[<section><p>abc</p></section><div>d]ef</div></div>", {
         config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
     });
-    await waitFor(".o-we-toolbar");
-    expect(".btn-group[name='test_group']").toHaveCount(1);
+    await expectElementCount(".o-we-toolbar .btn-group[name='test_group']", 1);
     setContent(el, "<div><section><p>[abc]</p></section><div>def</div></div>");
-    await animationFrame();
-    expect(".btn-group[name='test_group']").toHaveCount(0);
+    await expectElementCount(".o-we-toolbar .btn-group[name='test_group']", 0);
 });
 
 test("toolbar does not evaluate isActive when namespace does not match", async () => {
