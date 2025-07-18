@@ -1,13 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import psycopg2
-from unittest.mock import patch
-
+from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.tests.common import TransactionCase, tagged
+
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.addons.website.tools import MockRequest
-from odoo.tests.common import tagged, TransactionCase
 
 
 @tagged('post_install', '-at_install')
@@ -67,8 +66,19 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
     def test_website_form_nested_forms(self):
         self.start_tour('/my/account', 'website_form_nested_forms', login='admin')
 
+
 @tagged('post_install', '-at_install')
 class TestWebsiteForm(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.partner_model = self.env['ir.model'].search([('model', '=', 'res.partner')])
+        self.test_field = self.env['ir.model.fields'].create({
+            'name': 'x_test_field',
+            'model_id': self.partner_model.id,
+            'ttype': 'char',
+            'field_description': 'test',
+        })
 
     def test_website_form_html_escaping(self):
         website = self.env['website'].browse(1)
@@ -108,3 +118,24 @@ class TestWebsiteForm(TransactionCase):
             self.assertEqual(response.status_code, 200)
             self.assertTrue(response.data.startswith(b'{"id":'))
         test_sp.close(rollback=True)
+
+    def test_cannot_delete_field_used_in_website_form(self):
+        """
+        Test that deleting a field used in a website form raises a ValidationError.
+        """
+        self.env['ir.ui.view'].create({
+            'name': 'Test Form for Deletion Constraint',
+            'type': 'qweb',
+            'arch_db': f'''
+                <template id="test_form_template_for_deletion">
+                    <form action="/website/form/" data-model_name="res.partner">
+                        <label for="my_input">Test Input</label>
+                        <input type="text" name="{self.test_field.name}" id="my_input"/>
+                        <button type="submit">Submit</button>
+                    </form>
+                </template>
+            ''',
+        })
+        with self.assertRaises(ValidationError):
+            self.test_field.unlink()
+        self.assertTrue(self.test_field.exists())
