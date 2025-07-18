@@ -81,12 +81,12 @@ class SaleOrder(models.Model):
                 zip_code = None  # Reset the zip code to skip the `assert` in the `super` call.
         return super()._get_pickup_locations(zip_code=zip_code, country=country, **kwargs)
 
-    def _is_cart_ready_to_confirm(self):
+    def _is_cart_ready_for_payment(self):
         """Override of `website_sale` to includes errors if no pickup location is selected and to
         ensure the cart is available in the selected store no even if out of stock orders are
         allowed."""
         if not self._has_deliverable_products():
-            return super()._is_cart_ready_to_confirm()
+            return super()._is_cart_ready_for_payment()
 
         if self.carrier_id.delivery_type == 'in_store':
             if not self.pickup_location_data:
@@ -112,7 +112,7 @@ class SaleOrder(models.Model):
             )
             return False
 
-        return super()._is_cart_ready_to_confirm()
+        return super()._is_cart_ready_for_payment()
 
     # === TOOLING ===#
 
@@ -172,8 +172,8 @@ class SaleOrder(models.Model):
         """Whether the order can be delivered using the given delivery method.
 
         In-store deliveries need to ensure stock is available even if `allow_out_of_stock` is
-        enabled as a customers can pick-up their order at any moment without leaving time to refill
-        the sotck.
+        enabled, as customers can pick up their order at any moment without leaving time to refill
+        the stock.
 
         :param delivery.carrier dm: The delivery method to use to check for stock availability.
         :rtype: bool

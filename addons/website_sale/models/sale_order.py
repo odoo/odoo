@@ -819,7 +819,7 @@ class SaleOrder(models.Model):
         return warnings
 
     def _is_cart_ready_for_checkout(self):
-        """Whether the cart is valid and the user can proceed to the checkout.
+        """Whether the cart is valid and the user can proceed to the checkout step.
 
         This method is also intended to set the `shop_warning` with any relevant message that can
         help the customer in completing their cart.
@@ -834,8 +834,8 @@ class SaleOrder(models.Model):
             return False
         return True
 
-    def _is_cart_ready_to_confirm(self):
-        """Whether the cart is ready to be confirmed and the user can proceed to the payment.
+    def _is_cart_ready_for_payment(self):
+        """Whether the cart is ready to be confirmed and the user can proceed to the payment step.
 
         By default, the cart must have a delivery method if it contains deliverable products.
 
@@ -872,4 +872,4 @@ class SaleOrder(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return self._is_cart_ready_for_checkout() and self._is_cart_ready_to_confirm()
+        return self._is_cart_ready_for_checkout() and self._is_cart_ready_for_payment()

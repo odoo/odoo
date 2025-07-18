@@ -6,7 +6,7 @@ from odoo import models
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    def _is_cart_ready_to_confirm(self):
+    def _is_cart_ready_for_payment(self):
         """Override of `website_sale` to check that Point Relais® are used with the correct delivery
         method, and vice versa."""
         if (
@@ -22,7 +22,7 @@ class SaleOrder(models.Model):
                 "Delivery method Mondial Relay can only ship to Point Relais®."
             )
             return False
-        return super()._is_cart_ready_to_confirm()
+        return super()._is_cart_ready_for_payment()
 
     def _compute_partner_shipping_id(self):
         super()._compute_partner_shipping_id()
