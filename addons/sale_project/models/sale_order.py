@@ -200,11 +200,12 @@ class SaleOrder(models.Model):
             return {'type': 'ir.actions.act_window_close'}
 
         sorted_line = self.order_line.sorted('sequence')
+        projects = self.with_context(active_test=False).project_ids
         default_sale_line = next((sol for sol in sorted_line if sol.product_id.detailed_type == 'service'), None)
         action = {
             'type': 'ir.actions.act_window',
             'name': _('Projects'),
-            'domain': ['|', ('sale_order_id', '=', self.id), ('id', 'in', self.with_context(active_test=False).project_ids.ids), ('active', 'in', [True, False])],
+            'domain': ['|', ('sale_order_id', '=', self.id), ('id', 'in', projects.ids), ('active', 'in', [True, False])],
             'res_model': 'project.project',
             'views': [(False, 'kanban'), (False, 'tree'), (False, 'form')],
             'view_mode': 'kanban,tree,form',
@@ -215,8 +216,8 @@ class SaleOrder(models.Model):
                 'default_allow_billable': 1,
             }
         }
-        if len(self.with_context(active_test=False).project_ids) == 1:
-            action.update({'views': [(False, 'form')], 'res_id': self.project_ids.id})
+        if len(projects) == 1:
+            action.update({'views': [(False, 'form')], 'res_id': projects.id})
         return action
 
     def action_view_milestone(self):
