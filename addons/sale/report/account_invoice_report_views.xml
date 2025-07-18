@@ -12,6 +12,9 @@
             <field name="invoice_user_id" position="after">
                 <field name="team_id"/>
             </field>
+            <filter name="status" position="after">
+                <filter string="Source" name="source_id" context="{'group_by': 'source_id'}"/>
+            </filter>
         </field>
     </record>
 
