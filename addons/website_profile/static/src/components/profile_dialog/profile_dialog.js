@@ -9,7 +9,7 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { isHtmlEmpty } from "@web/core/utils/html";
 import { isEmail } from "@web/core/utils/strings";
 import { FileUploader } from "@web/views/fields/file_handler";
-import { setCursorEnd } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
+import { endPos } from "@html_editor/utils/position";
 
 export class ProfileDialog extends Component {
     static template = "website_profile.ProfileDialog";
@@ -86,7 +86,7 @@ export class ProfileDialog extends Component {
                     `.${websiteDescriptionClass}[contenteditable="true"]`
                 );
                 if (websiteDescription) {
-                    setCursorEnd(websiteDescription);
+                    document.getSelection()?.setPosition(...endPos(websiteDescription));
                 }
             }
             this.validate();
