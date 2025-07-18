@@ -2698,7 +2698,9 @@
         <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="js_cart_lines alert alert-info">
             Your cart is empty!
         </div>
-        <t t-else="" t-call="website_sale.order_warning"/>
+        <t t-else="" t-call="website_sale.order_warning">
+            <t t-set="_warning_classes" t-valuef="js_cart_lines"/>
+        </t>
         <div id="cart_products"
              t-if="website_sale_order and website_sale_order.website_order_line"
              class="js_cart_lines d-flex flex-column mb32">
@@ -2852,14 +2854,11 @@
                     t-att-data-product-id="line.product_id.id"
                     t-att-value="line._get_displayed_quantity()"
                 />
-                <t t-if="line._get_shop_warning(clear=False)">
+                <t t-if="shop_warnings and line in shop_warnings">
                     <a href="#" class="btn btn-link">
-                        <i
-                            class="fa fa-warning text-warning"
-                            t-att-title="line._get_shop_warning()"
-                            role="img"
-                            aria-label="Warning"
-                        />
+                        <t t-call="website_sale.line_warning">
+                            <t t-set="_warning_classes" t-valuef="text-warning"/>
+                        </t>
                     </a>
                 </t>
                 <a
@@ -3113,7 +3112,7 @@
                     t-call="payment.express_checkout"
                 />
                 <t t-if="current_website_checkout_step_href == '/shop/confirm_order'">
-                    <div t-if="not errors and not website_sale_order.amount_total"
+                    <div t-if="not shop_warnings and not website_sale_order.amount_total"
                          name="o_website_sale_free_cart">
                         <form name="o_wsale_confirm_order"
                               class="d-flex flex-column"
@@ -3133,7 +3132,7 @@
                 </t>
                 <t t-else="">
                     <a role="button" name="website_sale_main_button"
-                        t-attf-class="#{_cta_classes} btn btn-primary #{order_warnings and 'disabled'} #{_form_send_navigation and 'order-lg-3 w-100 w-lg-auto ms-lg-auto' or 'w-100'}"
+                        t-attf-class="#{_cta_classes} btn btn-primary #{shop_warnings and 'disabled' or ''} #{_form_send_navigation and 'order-lg-3 w-100 w-lg-auto ms-lg-auto' or 'w-100'}"
                         t-att-href="next_website_checkout_step_href">
                         <span t-field="next_website_checkout_step.main_button_label"/>
                         <i class="fa fa-angle-right ms-2 fw-light"/>
@@ -3402,7 +3401,7 @@
                      t-att-id) and each template needs to define a div element. -->
                 <div class="oe_structure" id="oe_structure_website_sale_payment_2"/>
             </t>
-            <t t-if="shop_warnings and order in shop_warnings" t-set="hide_payment_button" t-value="True"/>
+            <t t-if="shop_warnings" t-set="hide_payment_button" t-value="True"/>
             <div class="oe_structure clearfix" id="oe_structure_website_sale_payment_1"/>
 
             <div t-if="not shop_warnings and website_sale_order.amount_total" name="website_sale_non_free_cart">
@@ -3448,7 +3447,7 @@
                                         default: `True`.
             - oe_structure: The structure element to append at the bottom of the page;
                             default: `None`.
-            - show_order_warning: Whether to show the warning on the order at the top of the page,
+            - show_shop_warnings: Whether to show the warning on the order at the top of the page,
                                   if any; default: `True`.
         -->
         <!-- Checkout context (non exhaustive):
@@ -3466,7 +3465,7 @@
                 t-value="True if show_mobile_cart_summary is None else show_mobile_cart_summary"
             />
             <t t-set="body_classname" t-value="'o_website_sale_checkout'"/>
-            <t t-set="show_order_warning" t-value="True if show_order_warning is None else show_order_warning"/>
+            <t t-set="show_shop_warning" t-value="True if show_shop_warning is None else show_shop_warning"/>
             <div id="wrap" class="d-flex flex-column flex-grow-1">
                 <div class="oe_website_sale o_website_sale_checkout_container container d-flex flex-column flex-grow-1 py-lg-2">
                     <div t-attf-class="row #{not show_wizard_checkout and 'mt32'} mb32">
@@ -3475,7 +3474,7 @@
                         </div>
                         <!-- Checkout Page Content | Left Column -->
                         <div class="oe_clear_stucture oe_cart col-12 col-lg-7">
-                            <t t-if="show_order_warning" t-call="website_sale.order_warning"/>
+                            <t t-if="show_shop_warnings" t-call="website_sale.order_warning"/>
                             <t t-out="0"/>
                         </div>
                         <!-- Short Checkout Summary displayed on /cart | Right Column -->
@@ -3632,13 +3631,7 @@
                                     />
                                     <span class="o_cart_item_count badge bg-secondary position-absolute top-0 start-100 translate-middle">
                                         <t t-out="int(line.product_uom_qty)" />
-                                        <i
-                                            t-if="line._get_shop_warning(clear=False)"
-                                            class="fa fa-warning"
-                                            role="img"
-                                            t-att-title="line._get_shop_warning()"
-                                            aria-label="Warning"
-                                        />
+                                        <t t-if="show_shop_warnings" t-call="website_sale.line_warning"/>
                                     </span>
                                 </div>
                             </td>
@@ -3667,7 +3660,7 @@
                     </tbody>
                 </table>
             </div>
-            <t t-if="show_order_warning" t-call="website_sale.order_warning"/>
+            <t t-if="show_shop_warnings" t-call="website_sale.order_warning"/>
         </div>
     </template>
 
@@ -3806,10 +3799,24 @@
     </template>
 
     <template id="order_warning">
-        <div t-if="shop_warnings and order in shop_warnings" class="alert alert-warning js_cart_lines" role="alert">
+        <div
+            t-if="shop_warnings and order in shop_warnings"
+            t-attf-class="alert alert-warning #{_warning_classes}"
+            role="alert"
+        >
             <strong>Warning!</strong>
             <t t-out="shop_warnings[order]"/>
         </div>
+    </template>
+
+    <template id="line_warning">
+        <i
+            t-if="shop_warnings and line in shop_warnings"
+            t-attf-class="fa fa-warning #{_warning_classes}"
+            role="img"
+            t-att-title="shop_warnings[line]"
+            aria-label="Warning"
+        />
     </template>
 
     <!-- Deactivatable through the website editor. -->

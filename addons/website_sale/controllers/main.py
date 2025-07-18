@@ -24,7 +24,6 @@ from odoo.addons.web_editor.tools import get_video_thumbnail
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_sale.const import SHOP_PATH, CHECKOUT_STEP_HREF_MAPPING
-from odoo.addons.website_sale.controllers.checkout_validation import CheckoutValidation
 from odoo.addons.website_sale.models.website import (
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
     PRICELIST_SESSION_CACHE_KEY,
@@ -129,7 +128,7 @@ class TableCompute:
         return rows
 
 
-class WebsiteSale(payment_portal.PaymentPortal, CheckoutValidation):
+class WebsiteSale(payment_portal.PaymentPortal):
     _express_checkout_route = '/shop/express_checkout'
     _express_checkout_delivery_route = '/shop/express/shipping_address_change'
 
