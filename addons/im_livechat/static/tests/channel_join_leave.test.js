@@ -36,6 +36,7 @@ test("from the discuss app", async () => {
         ],
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: serverState.partnerId,
+        livechat_active: true,
         create_uid: serverState.publicUserId,
     });
     await start();
@@ -138,4 +139,38 @@ test("visitor leaving ends the livechat conversation", async () => {
     await contains(".o-mail-Composer-input"); // so that can still `/lead` or last resort send message to visitor
     await click("button[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
+});
+
+test("No warning when leaving an ended live chat conversation", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        groups_id: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
+    const livechatChannelId = pyEnv["im_livechat.channel"].create({
+        name: "HR",
+        user_ids: [serverState.userId],
+    });
+    const channel_id = pyEnv["discuss.channel"].create({
+        channel_type: "livechat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+        ],
+        livechat_channel_id: livechatChannelId,
+        livechat_operator_id: serverState.partnerId,
+        livechat_active: true,
+        create_uid: serverState.publicUserId,
+    });
+    await start();
+    await openDiscuss(channel_id);
+    // simulate visitor leaving
+    await withGuest(guestId, () => rpc("/im_livechat/visitor_leave_session", { channel_id }));
+    await contains("span", { text: "This livechat conversation has ended" });
+    await click("[title='Leave Channel']", {
+        parent: [".o-mail-DiscussSidebarChannel", { text: "Visitor" }],
+    });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Visitor", count: 0 });
 });
