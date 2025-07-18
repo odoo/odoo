@@ -5,7 +5,7 @@ const cacheName = "odoo-sw-cache";
 const homepageURL = "/odoo";
 const offLineURL = `${homepageURL}/offline`;
 
-let browserCacheSecret = null;
+let sessionInfo = null;
 
 self.addEventListener("install", (event) => {
     event.waitUntil(
@@ -18,20 +18,9 @@ self.addEventListener("install", (event) => {
     );
 });
 
-const userLogout = async () => {
-    browserCacheSecret = null;
-    const cache = await caches.open(cacheName);
-    const requests = await cache.keys();
-    for (const request of requests) {
-        if (!request.url.endsWith(offLineURL)) {
-            await cache.delete(request);
-        }
-    }
-};
-
 const extractSessionInfo = (htmlContent) => {
     const match = htmlContent.match(/odoo\.__session_info__\s*=\s*({.*?});/s);
-    return match && match[1] ? JSON.parse(match[1]) : {};
+    return match && match[1] ? match[1] : null;
 };
 
 const getTextFromResponse = async (response) => {
@@ -53,13 +42,12 @@ const getTextFromResponse = async (response) => {
 
 const storeDataOnCache = async (url, response) => {
     const htmlBody = await getTextFromResponse(response);
-    const session = extractSessionInfo(htmlBody);
-    // store on ram, the crypto key
-    browserCacheSecret = session.browser_cache_secret;
+    // store on ram, the session info
+    sessionInfo = extractSessionInfo(htmlBody);
     const cache = await caches.open(cacheName);
     return cache.put(
         url.endsWith(offLineURL) ? url : homepageURL,
-        new Response(htmlBody.replace(session.browser_cache_secret, "@@@browser_cache_secret@@@"), {
+        new Response(htmlBody.replace(sessionInfo, "@@@session_info_secret@@@"), {
             headers: response.headers,
         })
     );
@@ -71,20 +59,21 @@ const readDataOnCache = async (url) => {
     if (url === offLineURL) {
         return response;
     }
-    // if you come from /odoo to project the url is now /odoo/project but it doesn't exist in cache so use /odoo instead
+    // if you come from /odoo to project the url is now /odoo/project, but it doesn't exist in cache so use /odoo instead
     if (!response) {
         return readDataOnCache(homepageURL);
     }
     const htmlBody = await getTextFromResponse(response);
-    return new Response(htmlBody.replace("@@@browser_cache_secret@@@", browserCacheSecret), {
+    return new Response(htmlBody.replaceAll("@@@session_info_secret@@@", sessionInfo), {
         headers: response.headers,
     });
 };
 
 const navigateOrDisplayOfflinePage = async (request) => {
+    const isDebugAssets = new URL(request.url).searchParams.get("debug")?.includes("assets");
     try {
         const response = await fetch(request);
-        if (response.ok) {
+        if (response.ok && !isDebugAssets) {
             storeDataOnCache(request.url, response.clone());
         }
         return response;
@@ -93,10 +82,7 @@ const navigateOrDisplayOfflinePage = async (request) => {
             request.method === "GET" &&
             ["Failed to fetch", "Load failed"].includes(requestError.message)
         ) {
-            if (
-                browserCacheSecret &&
-                !new URL(request.url).searchParams.get("debug")?.includes("assets")
-            ) {
+            if (sessionInfo?.length && !isDebugAssets) {
                 const cachedResponse = await readDataOnCache(request.url);
                 if (cachedResponse) {
                     return cachedResponse;
@@ -171,6 +157,6 @@ self.addEventListener("message", (event) => {
         nextMessageMap.delete(event.data);
     }
     if (event.data === "user_logout") {
-        userLogout();
+        sessionInfo = null;
     }
 });
