@@ -19,7 +19,6 @@ export class LinkPopover extends Component {
         onDiscard: Function,
         onRemove: Function,
         onCopy: Function,
-        onClose: Function,
         onEdit: Function,
         getInternalMetaData: Function,
         getExternalMetaData: Function,
@@ -265,7 +264,7 @@ export class LinkPopover extends Component {
         if (ev.key === "Escape") {
             ev.preventDefault();
             ev.stopImmediatePropagation();
-            this.props.onClose();
+            this.onClickApply();
         }
     }
 
