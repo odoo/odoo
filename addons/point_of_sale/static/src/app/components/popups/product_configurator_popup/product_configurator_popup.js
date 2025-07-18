@@ -210,6 +210,10 @@ export class ProductConfiguratorPopup extends Component {
         );
     }
 
+    isValidCombination() {
+        return !this.selectedValues.some((value) => value.doHaveConflictWith(this.selectedValues));
+    }
+
     get title() {
         const info = this.props.productTemplate.getProductPriceInfo(this.product, this.pos.company);
         const name = this.props.productTemplate.display_name;
