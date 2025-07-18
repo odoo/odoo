@@ -16,6 +16,18 @@ export class EventSlot extends models.ServerModel {
             "start_datetime",
         ];
     }
+
+    _records = [
+        {
+            id: 1,
+            date: "2019-03-11",
+            display_name: "Event Slot 1",
+            event_id: 1,
+            registration_ids: [],
+            seats_available: 5,
+            start_datetime: "2019-03-11 11:00:00",
+        },
+    ];
 }
 
 patch(hootPosModels, [...hootPosModels, EventSlot]);

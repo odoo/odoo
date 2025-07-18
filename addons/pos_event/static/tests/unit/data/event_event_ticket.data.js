@@ -19,6 +19,21 @@ export class EventEventTicket extends models.ServerModel {
             "end_sale_datetime",
         ];
     }
+
+    _records = [
+        {
+            id: 1,
+            name: "Standard",
+            event_id: 1,
+            seats_used: 0,
+            seats_available: 5,
+            price: 100,
+            product_id: 106,
+            seats_max: 5,
+            start_sale_datetime: "2019-03-10 11:00:00",
+            end_sale_datetime: "2019-03-15 12:00:00",
+        },
+    ];
 }
 
 patch(hootPosModels, [...hootPosModels, EventEventTicket]);

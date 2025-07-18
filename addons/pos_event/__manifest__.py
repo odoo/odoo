@@ -28,7 +28,7 @@
             'pos_event/static/tests/tours/**/*',
         ],
         'web.assets_unit_tests': [
-            'pos_event/static/tests/unit/data/**/*'
+            'pos_event/static/tests/unit/**/*'
         ],
     },
     'author': 'Odoo S.A.',
