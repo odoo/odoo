@@ -74,7 +74,7 @@ class HrEmployee(models.Model):
     name = fields.Char(string="Employee Name", related='resource_id.name', store=True, readonly=False, tracking=True)
     resource_id = fields.Many2one('resource.resource', required=True)
     # required because the mixin already creates it so it is not related to the version_id
-    resource_calendar_id = fields.Many2one(related='version_id.resource_calendar_id', index=False, store=False, check_company=True)
+    resource_calendar_id = fields.Many2one(related='version_id.resource_calendar_id', inherited=True, index=False, store=False, check_company=True)
     user_id = fields.Many2one(
         'res.users', 'User',
         related='resource_id.user_id',
@@ -148,6 +148,16 @@ class HrEmployee(models.Model):
     study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
     emergency_contact = fields.Char(groups="hr.group_hr_user", tracking=True)
     emergency_phone = fields.Char(groups="hr.group_hr_user", tracking=True)
+    contract_date_start = fields.Date(readonly=False, related="version_id.contract_date_start", inherited=True, groups="hr.group_hr_manager")
+    contract_date_end = fields.Date(readonly=False, related="version_id.contract_date_end", inherited=True, groups="hr.group_hr_manager")
+    trial_date_end = fields.Date(readonly=False, related="version_id.trial_date_end", inherited=True, groups="hr.group_hr_manager")
+    contract_wage = fields.Monetary(related="version_id.contract_wage", inherited=True, groups="hr.group_hr_manager")
+    date_start = fields.Date(related='version_id.date_start', inherited=True, groups="hr.group_hr_manager")
+    date_end = fields.Date(related='version_id.date_end', inherited=True, groups="hr.group_hr_manager")
+    is_current = fields.Boolean(related='version_id.is_current', inherited=True, groups="hr.group_hr_manager")
+    is_past = fields.Boolean(related='version_id.is_past', inherited=True, groups="hr.group_hr_manager")
+    is_future = fields.Boolean(related='version_id.is_future', inherited=True, groups="hr.group_hr_manager")
+    is_in_contract = fields.Boolean(related='version_id.is_in_contract', inherited=True, groups="hr.group_hr_manager")
 
     # employee in company
     parent_id = fields.Many2one('hr.employee', 'Manager', tracking=True, index=True,
