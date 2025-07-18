@@ -72,20 +72,17 @@ test("shape_circle and shape_rounded are mutually exclusive", async () => {
     }
 
     await click(buttons["shape_rounded"]);
-    await animationFrame();
-    expect(buttons["shape_rounded"]).toHaveClass("active");
+    await waitFor(buttons["shape_rounded"] + ".active");
     expect(img).toHaveClass("rounded");
 
     await click(buttons["shape_circle"]);
-    await animationFrame();
-    expect(buttons["shape_circle"]).toHaveClass("active");
+    await waitFor(buttons["shape_circle"] + ".active");
     expect(img).toHaveClass("rounded-circle");
     expect(buttons["shape_rounded"]).not.toHaveClass("active");
     expect(img).not.toHaveClass("rounded");
 
     await click(buttons["shape_rounded"]);
-    await animationFrame();
-    expect(buttons["shape_rounded"]).toHaveClass("active");
+    await waitFor(buttons["shape_rounded"] + ".active");
     expect(img).toHaveClass("rounded");
     expect(buttons["shape_circle"]).not.toHaveClass("active");
     expect(img).not.toHaveClass("rounded-circle");
