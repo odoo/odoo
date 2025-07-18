@@ -531,10 +531,10 @@
                                     <div class="ms-auto">
                                         <t t-set="seats_available_slot_ticket" t-value="seats_available_slot_tickets and seats_available_slot_tickets.get(ticket.id, 0) or 0"/>
                                         <t t-set="seats_available_slot" t-value="event_slot and event_slot.seats_available or 0"/>
-                                        <t t-set="seats_max_slot_ticket" t-value="((not event.seats_limited and not ticket.seats_limited) or seats_available_slot_ticket &gt; 9) and 10 or seats_available_slot_ticket + 1"/>
-                                        <t t-set="seats_max_slot" t-value="(not event.seats_limited or seats_available_slot &gt; 9) and 10 or seats_available_slot + 1"/>
-                                        <t t-set="seats_max_ticket" t-value="(not ticket.seats_limited or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
-                                        <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
+                                        <t t-set="seats_max_slot_ticket" t-value="(not event.seats_limited and not ticket.seats_limited and ticket.limit_per_order + 1) or min(ticket.limit_per_order + 1, seats_available_slot_ticket + 1)"/>
+                                        <t t-set="seats_max_slot" t-value="(not event.seats_limited and ticket.limit_per_order + 1) or min(ticket.limit_per_order + 1, seats_available_slot + 1)"/>
+                                        <t t-set="seats_max_ticket" t-value="(not ticket.seats_limited and ticket.limit_per_order + 1) or min(ticket.limit_per_order + 1, ticket.seats_available + 1)"/>
+                                        <t t-set="seats_max_event" t-value="(not event.seats_limited and ticket.limit_per_order + 1) or min(ticket.limit_per_order + 1, event.seats_available + 1)"/>
                                         <t t-set="seats_max_event_or_slot" t-value="seats_max_slot if event_slot else seats_max_event"/>
                                         <t t-set="seats_max" t-value="seats_available_slot_tickets and seats_max_slot_ticket or min(seats_max_ticket, seats_max_event_or_slot)"/>
                                         <select t-if="(not ticket.is_expired and ticket.sale_available) or seats_available_slot_ticket"
@@ -589,11 +589,11 @@
                                     <link itemprop="availability" content="http://schema.org/InStock"/>
                                     <div class="o_wevent_registration_single_select w-auto ms-auto">
                                         <t t-set="seats_available_slot_ticket" t-value="seats_available_slot_tickets and tickets and seats_available_slot_tickets.get(tickets.id, 0) or 0"/>
-                                        <t t-set="seats_max_slot_ticket" t-value="((not event.seats_limited and not tickets.seats_limited) or seats_available_slot_ticket &gt; 9) and 10 or seats_available_slot_ticket + 1"/>
+                                        <t t-set="seats_max_slot_ticket" t-value="(not event.seats_limited and not tickets.seats_limited and tickets.limit_per_order + 1) or min(tickets.limit_per_order + 1, seats_available_slot_ticket + 1)"/>
                                         <t t-set="seats_available_slot" t-value="event_slot and event_slot.seats_available or 0"/>
-                                        <t t-set="seats_max_slot" t-value="(not event.seats_limited or seats_available_slot &gt; 9) and 10 or seats_available_slot + 1"/>
-                                        <t t-set="seats_max_ticket" t-value="(not tickets or not tickets.seats_limited or tickets.seats_available &gt; 9) and 10 or tickets.seats_available + 1"/>
-                                        <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
+                                        <t t-set="seats_max_slot" t-value="(not event.seats_limited and tickets.limit_per_order + 1) or min(tickets.limit_per_order + 1, seats_available_slot + 1)"/>
+                                        <t t-set="seats_max_ticket" t-value="((not tickets or not tickets.seats_limited) and tickets.limit_per_order + 1) or min(tickets.limit_per_order + 1, tickets.seats_available + 1)"/>
+                                        <t t-set="seats_max_event" t-value="(not event.seats_limited and tickets.limit_per_order + 1) or min(tickets.limit_per_order + 1, event.seats_available + 1)"/>
                                         <t t-set="seats_max_event_or_slot" t-value="seats_max_slot if event_slot else seats_max_event"/>
                                         <t t-set="seats_max" t-value="(seats_available_slot_tickets and seats_max_slot_ticket or min(seats_max_ticket, seats_max_event_or_slot)) if tickets else seats_max_event_or_slot"/>
                                         <select t-att-name="'nb_register-%s' % (tickets.id if tickets else 0)" class="d-inline w-auto form-select">

@@ -4,6 +4,9 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.misc import formatLang
 
+# TODO RROS: Add this line when the input component will changed for spinner :)
+# from sys import maxsize
+
 
 class EventEventTicket(models.Model):
     """ Ticket model allowing to have different kind of registrations for a given
@@ -42,6 +45,10 @@ class EventEventTicket(models.Model):
     seats_available = fields.Integer(string='Available Seats', compute='_compute_seats', store=False)
     seats_used = fields.Integer(string='Used Seats', compute='_compute_seats', store=False)
     seats_taken = fields.Integer(string="Taken Seats", compute="_compute_seats", store=False)
+    limit_per_order = fields.Integer(compute="_compute_limit_per_order", store=False)
+    limit_max_per_order = fields.Integer(string='Limit per Order', default=0,
+        help="Maximum of this product per order.\n"
+        "Set to 0 to ignore this rule")
     is_sold_out = fields.Boolean(
         'Sold Out', compute='_compute_is_sold_out', help='Whether seats are not available for this ticket.')
     # reports
@@ -69,6 +76,16 @@ class EventEventTicket(models.Model):
                 current_datetime = fields.Datetime.context_timestamp(ticket, now)
                 start_sale_datetime = fields.Datetime.context_timestamp(ticket, ticket.start_sale_datetime)
                 ticket.is_launched = start_sale_datetime <= current_datetime
+
+    @api.depends('limit_max_per_order', 'seats_limited', 'seats_available')
+    def _compute_limit_per_order(self):
+        for ticket in self:
+            if not ticket.seats_limited and not ticket.seats_available:
+                ticket.limit_per_order = ticket.limit_max_per_order or 1000
+            elif ticket.seats_available:
+                ticket.limit_per_order = min(ticket.seats_available, ticket.limit_max_per_order) if ticket.limit_max_per_order else ticket.seats_available
+            else:
+                ticket.limit_per_order = 0
 
     @api.depends('is_expired', 'start_sale_datetime', 'event_id.date_tz', 'seats_available', 'seats_max')
     def _compute_sale_available(self):
@@ -118,6 +135,13 @@ class EventEventTicket(models.Model):
         for ticket in self:
             if ticket.start_sale_datetime and ticket.end_sale_datetime and ticket.start_sale_datetime > ticket.end_sale_datetime:
                 raise UserError(_('The stop date cannot be earlier than the start date. '
+                                  'Please check ticket %(ticket_name)s', ticket_name=ticket.name))
+
+    @api.constrains('limit_max_per_order', 'seats_max')
+    def _constrains_limit_per_order(self):
+        for ticket in self:
+            if ticket.limit_max_per_order + 1 > ticket.seats_max and ticket.seats_max != 0:
+                raise UserError(_('The limit per order cannot be greater than the maximum seats number. '
                                   'Please check ticket %(ticket_name)s', ticket_name=ticket.name))
 
     @api.depends('seats_max', 'seats_available')
