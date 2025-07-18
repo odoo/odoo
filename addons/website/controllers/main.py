@@ -232,7 +232,7 @@ class Website(Home):
         # detecting if the current URL is the domain one and add a `Disallow: /`
         # if it's not the case to prevent the crawler to continue.
         return request.render('website.robots', {
-            'allowed_routes': self._get_allowed_robots_routes(),
+            'allowed_routes': request.env['ir.http']._get_allowed_robots_routes(),
             'url_root': request.httprequest.url_root,
         }, mimetype='text/plain')
 

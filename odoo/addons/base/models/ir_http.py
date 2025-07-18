@@ -457,3 +457,11 @@ class IrHttp(models.AbstractModel):
     @api.model
     def _verify_request_recaptcha_token(self, action: str):
         return
+
+    def _get_allowed_robots_routes(self):
+        """Override this method to return a list of allowed routes.
+
+        :return: A list of URL paths that should be allowed by robots.txt
+              Examples: ['/social_instagram/', '/sitemap.xml', '/web/']
+        """
+        return []
