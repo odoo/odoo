@@ -2,9 +2,11 @@
 
 from ast import literal_eval
 
-from odoo import models, fields, api, SUPERUSER_ID
+from odoo import models, fields, api, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.osv import expression
+from odoo.exceptions import ValidationError
+from lxml import etree
 
 
 class website_form_config(models.Model):
@@ -146,6 +148,28 @@ class website_form_model_fields(models.Model):
         # blacklisted by default)
         self._cr.execute('ALTER TABLE ir_model_fields '
                          ' ALTER COLUMN website_form_blacklisted SET DEFAULT true')
+
+    @api.ondelete(at_uninstall=False)
+    def _check_if_used_in_website_form(self):
+        """prevent field deletion if used in a website form."""
+        arch_models = expression.OR([
+           ('arch_db', 'like', f' data-model_name="{model}"')
+        ] for model in self.mapped('model'))
+        form_views = self.env['ir.ui.view'].search(expression.OR([
+            [('type', '=', 'qweb')], arch_models
+        ]))
+        for field in self:
+            for view in form_views:
+                # Use a targeted XPath to find if the specific field is used
+                # in a form for the correct model within the view's arch.
+                arch = etree.fromstring(view.arch_db)
+                xpath_selector = f'//form[@data-model_name="{field.model}"]//*[@name="{field.name}"]'
+                if arch.xpath(xpath_selector):
+                    raise ValidationError(
+                        _("Cannot delete field '%(field)s' because it is used in the website form at '%(page)s' page.",
+                        field=field.name,
+                        page=view.name)
+                    )
 
     @api.model
     def formbuilder_whitelist(self, model, fields):
