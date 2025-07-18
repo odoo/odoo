@@ -1931,14 +1931,15 @@ class BaseModel(metaclass=MetaModel):
         if property_name:
             raise ValueError(f"Invalid {aggregate_spec!r}, this dot notation is not supported")
 
-        if fname not in self._fields:
+        field = self._fields.get(fname)
+        if field is None:
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r} for {aggregate_spec!r}.")
+        self._check_field_access(field, 'read')
         if not func:
             raise ValueError(f"Aggregate method is mandatory for {fname!r}")
         if func not in READ_GROUP_AGGREGATE:
             raise ValueError(f"Invalid aggregate method {func!r} for {aggregate_spec!r}.")
 
-        field = self._fields[fname]
         if func == 'recordset' and not (field.relational or fname == 'id'):
             raise ValueError(f"Aggregate method {func!r} can be only used on relational field (or id) (for {aggregate_spec!r}).")
 
@@ -1951,10 +1952,10 @@ class BaseModel(metaclass=MetaModel):
         accessible for reading.
         """
         fname, property_name, granularity = parse_read_group_spec(groupby_spec)
-        if fname not in self._fields:
+        field = self._fields.get(fname)
+        if field is None:
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
-
-        field = self._fields[fname]
+        self._check_field_access(field, 'read')
 
         if field.type == 'properties':
             sql_expr = self._read_group_groupby_properties(field, property_name, query)
@@ -2826,6 +2827,8 @@ class BaseModel(metaclass=MetaModel):
 
         The query object is necessary for inherited fields, many2one fields and
         properties fields, where joins are added to the query.
+
+        The caller is responsible of checking whether the field is accessible.
         """
         fname, property_name = parse_field_expr(field_expr)
         field = self._fields.get(fname)
@@ -2836,8 +2839,6 @@ class BaseModel(metaclass=MetaModel):
             model, field, alias = self._traverse_related_sql(alias, field, query)
             related_expr = field.name if not property_name else f"{field.name}.{property_name}"
             return model._field_to_sql(alias, related_expr, query)
-
-        self._check_field_access(field, 'read')
 
         sql = field.to_sql(self, alias)
         if property_name:
@@ -5157,6 +5158,10 @@ class BaseModel(metaclass=MetaModel):
             order_match = regex_order.match(order_part)
             assert order_match is not None, "No match found"
             field_name = order_match['field']
+            field = self._fields.get(field_name)
+            if not field:
+                raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
+            self._check_field_access(field, 'read')
 
             direction = (order_match['direction'] or '').upper()
             nulls = (order_match['nulls'] or '').upper()
@@ -5180,8 +5185,7 @@ class BaseModel(metaclass=MetaModel):
     def _order_field_to_sql(self, alias: str, field_name: str, direction: SQL,
                             nulls: SQL, query: Query) -> SQL:
         """ Return an :class:`SQL` object that represents the ordering by the
-        given field.  The method also checks whether the field is accessible for
-        reading.
+        given field.
 
         :param direction: one of ``SQL("ASC")``, ``SQL("DESC")``, ``SQL()``
         :param nulls: one of ``SQL("NULLS FIRST")``, ``SQL("NULLS LAST")``, ``SQL()``
@@ -5231,7 +5235,7 @@ class BaseModel(metaclass=MetaModel):
             return SQL(", ").join(terms)
 
         sql_field = self._field_to_sql(alias, field_name, query)
-        if field.type == 'boolean':
+        if field.type == 'boolean' and field not in self.env.registry.not_null_fields:
             sql_field = SQL("COALESCE(%s, FALSE)", sql_field)
 
         query._order_groupby.append(sql_field)
