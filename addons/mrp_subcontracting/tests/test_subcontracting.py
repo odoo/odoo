@@ -1107,6 +1107,37 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_with_custom_location = create_picking(subcontractor)
         self.assertEqual(picking_with_custom_location.location_dest_id, custom_subcontract_location)
 
+    def test_validate_partial_subcontracting_without_backorder(self):
+        """ Test the validation of a partial subcontracting without creating a backorder."""
+        self.bom.consumption = 'flexible'
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        receipt = self.env['stock.picking'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.finished.id,
+                'product_uom_qty': 20.0,
+                'location_id': supplier_location.id,
+                'location_dest_id': self.warehouse.lot_stock_id.id,
+            })],
+        })
+        receipt.action_confirm()
+        self.assertEqual(receipt.state, 'assigned')
+        receipt.move_ids.quantity = 19.8
+        # Validate picking without backorder
+        backorder_wizard_dict = receipt.button_validate()
+        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form.save().process_cancel_backorder()
+        self.assertEqual(receipt.state, 'done')
+        productions = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)]).sorted('id')
+        self.assertRecordValues(productions, [
+            {'product_qty': 19.8, 'qty_producing': 19.8, 'state': 'done'},
+            {'product_qty': 0.2, 'qty_producing': 0.2, 'state': 'cancel'},
+        ])
+
+
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
 
