@@ -21,9 +21,7 @@
                 </div>
                 <ul class="info-list d-flex flex-column">
                     <li class="price-per-unit">
-                        <span class="qty px-1 border rounded text-bg-view fw-bolder me-1">
-                            <t t-esc="line.qty" /> <t t-if="line.unit and line.unit !== 'Units'" t-esc="line.unit" />
-                        </span>
+                        <span class="qty px-1 border rounded text-bg-view fw-bolder me-1" t-esc="line.qty"/>
                         <t t-if="!props.basic_receipt">
                             x
                             <t t-if="line.price !== 0">
