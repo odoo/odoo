@@ -8,5 +8,5 @@ class DiscussVoiceMetadata(models.Model):
     _description = "Metadata for voice attachments"
 
     attachment_id = fields.Many2one(
-        "ir.attachment", ondelete="cascade", auto_join=True, copy=False, index=True
+        "ir.attachment", ondelete="cascade", bypass_search_access=True, copy=False, index=True
     )

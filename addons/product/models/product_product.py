@@ -38,7 +38,7 @@ class ProductProduct(models.Model):
         help="If unchecked, it will allow you to hide the product without removing it.")
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
-        auto_join=True, index=True, ondelete="cascade", required=True)
+        bypass_search_access=True, index=True, ondelete="cascade", required=True)
     barcode = fields.Char(
         'Barcode', copy=False, index='btree_not_null',
         help="International Article Number used for product identification.")

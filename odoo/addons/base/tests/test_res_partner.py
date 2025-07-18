@@ -281,7 +281,7 @@ class TestPartner(TransactionCaseWithUserDemo):
         self.assertEqual(partners[0][1], 'B Raoul chirurgiens-dentistes.fr', 'Incorrect partner returned, should be the first active')
 
     def test_name_search_with_user(self):
-        """ Check name_search on partner, especially with domain based on auto_join
+        """ Check name_search on partner, especially with domain based on bypass_search_access
         user_ids field. Check specific SQL of name_search correctly handle joined tables. """
         test_partner = self.env['res.partner'].create({'name': 'Vlad the Impaler'})
         test_user = self.env['res.users'].create({'name': 'Vlad the Impaler', 'login': 'vlad', 'email': 'vlad.the.impaler@example.com'})

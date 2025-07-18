@@ -35,7 +35,7 @@ class AccountMoveLine(models.Model):
         required=True,
         readonly=True,
         index=True,
-        auto_join=True,
+        bypass_search_access=True,
         ondelete="cascade",
         check_company=True,
     )
@@ -96,7 +96,7 @@ class AccountMoveLine(models.Model):
         compute='_compute_account_id', store=True, readonly=False, precompute=True,
         inverse='_inverse_account_id',
         index=False,  # covered by account_move_line_account_id_date_idx defined in init()
-        auto_join=True,
+        bypass_search_access=True,
         ondelete="cascade",
         domain="[('account_type', '!=', 'off_balance')]",
         check_company=True,
@@ -168,19 +168,19 @@ class AccountMoveLine(models.Model):
         comodel_name='account.payment',
         string="Originator Payment",
         related='move_id.origin_payment_id', store=True,
-        auto_join=True,
+        bypass_search_access=True,
         index='btree_not_null',
         help="The payment that created this entry")
     statement_line_id = fields.Many2one(
         comodel_name='account.bank.statement.line',
         string="Originator Statement Line",
         related='move_id.statement_line_id', store=True,
-        auto_join=True,
+        bypass_search_access=True,
         index='btree_not_null',
         help="The statement line that created this entry")
     statement_id = fields.Many2one(
         related='statement_line_id.statement_id', store=True,
-        auto_join=True,
+        bypass_search_access=True,
         index='btree_not_null',
         copy=False,
         help="The bank statement used for bank reconciliation")
@@ -657,7 +657,7 @@ class AccountMoveLine(models.Model):
                 query_value = value.select('id') if isinstance(value, Query) else value
                 value = [row[0] for row in self.env.execute_query(query_value)]
             else:  # isinstance(value, Domain) is True
-                # sudo reason: ignore ir.rules, `account_id` is with `auto_join=True`
+                # sudo reason: ignore ir.rules, `account_id` is with `bypass_search_access=True`
                 value = self.env['account.account'].sudo()._search(value).get_result_ids()
 
         return [('account_id', operator, value)]

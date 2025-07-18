@@ -367,7 +367,7 @@ class ProductProduct(models.Model):
         if not location_ids:
             return (Domain.FALSE,) * 3
         locations = self.env['stock.location'].browse(location_ids)
-        # TDE FIXME: should move the support of child_of + auto_join directly in expression
+        # TDE FIXME: should move the support of child_of + bypass_search_access directly in expression
         # this optimizes [('location_id', 'child_of', locations.ids)]
         # by avoiding the ORM to search for children locations and injecting a
         # lot of location ids into the main query

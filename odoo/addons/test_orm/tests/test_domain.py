@@ -230,10 +230,10 @@ class TestDomain(TransactionExpressionCase):
         res_search = self._search(Child, [('link_sibling_id', 'not any', [('quantity', '>', 5)])])
         self.assertEqual(res_search, parent_1.child_ids[1] + parent_2.child_ids)
 
-        # Check any/not any traversing auto_join Many2one
-        self.assertFalse(Child._fields['link_sibling_id'].auto_join)
-        self.patch(Child._fields['link_sibling_id'], 'auto_join', True)
-        self.assertTrue(Child._fields['link_sibling_id'].auto_join)
+        # Check any/not any traversing bypass_search_access Many2one
+        self.assertFalse(Child._fields['link_sibling_id'].bypass_search_access)
+        self.patch(Child._fields['link_sibling_id'], 'bypass_search_access', True)
+        self.assertTrue(Child._fields['link_sibling_id'].bypass_search_access)
 
         res_search = self._search(Child, [('link_sibling_id', 'any', [('quantity', '>', 5)])])
         self.assertEqual(res_search, parent_1.child_ids[0])
@@ -300,10 +300,10 @@ class TestDomain(TransactionExpressionCase):
         res_search = self._search(Parent, [('child_ids', 'not any', [('quantity', '=', 1)])])
         self.assertEqual(res_search, parent_2 + parent_3)
 
-        # Check any/not any traversing auto_join Many2one
-        self.assertFalse(Parent._fields['child_ids'].auto_join)
-        self.patch(Parent._fields['child_ids'], 'auto_join', True)
-        self.assertTrue(Parent._fields['child_ids'].auto_join)
+        # Check any/not any traversing bypass_search_access Many2one
+        self.assertFalse(Parent._fields['child_ids'].bypass_search_access)
+        self.patch(Parent._fields['child_ids'], 'bypass_search_access', True)
+        self.assertTrue(Parent._fields['child_ids'].bypass_search_access)
 
         res_search = self._search(Parent, [('child_ids', 'any', [('quantity', '=', 1)])])
         self.assertEqual(res_search, parent_1)
@@ -312,7 +312,7 @@ class TestDomain(TransactionExpressionCase):
         self.assertEqual(res_search, parent_2 + parent_3)
 
     def test_anys_many2many(self):
-        # auto_join + without
+        # bypass_search_access + without
         Child = self.env['test_orm.any.child']
 
         child_1, child_2, child_3 = Child.create([

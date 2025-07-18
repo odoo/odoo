@@ -24,7 +24,7 @@ class AccountBankStatementLine(models.Model):
     # == Business fields ==
     move_id = fields.Many2one(
         comodel_name='account.move',
-        auto_join=True,
+        bypass_search_access=True,
         string='Journal Entry', required=True, readonly=True, ondelete='cascade',
         index=True,
         check_company=True)

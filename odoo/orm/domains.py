@@ -92,7 +92,7 @@ This should be supported in the framework at all levels.
 - `any` works for relational fields and `id` to check if a record matches
   the condition
   - if value is SQL or Query, see `any!`
-  - if auto_join is set on the field, see `any!`
+  - if bypass_search_access is set on the field, see `any!`
   - if value is a Domain for a many2one (or `id`),
     _search with active_test=False
   - if value is a Domain for a x2many,
@@ -926,7 +926,7 @@ class DomainCondition(Domain):
 
         if level == OptimizationLevel.FULL:
             # resolve inherited fields
-            # inherits implies both Field.delegate=True and Field.auto_join=True
+            # inherits implies both Field.delegate=True and Field.bypass_search_access=True
             # so no additional permissions will be added by the 'any' operator below
             if field.inherited:
                 parent_fname = field.related.split('.')[0]
