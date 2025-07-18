@@ -2,6 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { formatInteger } from "@web/views/fields/formatters";
+import { formatCurrency } from "@web/core/currency";
 
 import { Component, onWillUpdateProps, onWillUnmount, useState } from "@odoo/owl";
 
@@ -52,6 +53,9 @@ export class AnimatedNumber extends Component {
     }
 
     format(value) {
+        if (this.props.currency) {
+            return formatCurrency(value, this.props.currency.id, { humanReadable: true });
+        }
         return this.formatInteger(value, { humanReadable: true, decimals: 0, minDigits: 3 });
     }
 }
