@@ -12,6 +12,7 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     website_id = fields.Many2one('website', related='partner_id.website_id', store=True, related_sudo=False, readonly=False)
+    current_website_id = fields.Many2one('website', "Current Website", compute='_compute_current_website_id')
 
     _login_key = models.Constraint(
         'unique (login, website_id)',
@@ -105,3 +106,12 @@ class ResUsers(models.Model):
     # the required method.
     def website_publish_button(self):
         return self.partner_id.website_publish_button()
+
+    @api.depends_context('website_id')
+    def _compute_current_website_id(self):
+        website = self.env['website'].get_current_website(fallback=False)
+        if website:
+            self.current_website_id = website
+            return
+        for rec in self:
+            rec.current_website_id = self.website_id or website.get_current_website(fallback=True)
