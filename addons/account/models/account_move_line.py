@@ -691,7 +691,10 @@ class AccountMoveLine(models.Model):
 
     def _get_rate_date(self):
         self.ensure_one()
-        return self.move_id.invoice_date or self.move_id.date or fields.Date.context_today(self)
+        if self.move_id.move_type in ('in_refund', 'out_refund'):
+            return self.move_id.date or self.move_id.invoice_date or fields.Date.context_today(self)
+        else:
+            return self.move_id.invoice_date or self.move_id.date or fields.Date.context_today(self)
 
     @api.depends('currency_id', 'company_currency_id')
     def _compute_same_currency(self):
