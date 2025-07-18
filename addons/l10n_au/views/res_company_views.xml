@@ -8,11 +8,20 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="attributes">
                 <attribute name="nolabel">1</attribute>
+                <attribute name="class" add="oe_inline" separator=" "/>
             </xpath>
             <field name="vat" position="before">
                 <label for="vat" attrs="{'invisible':[('country_code', '=', 'AU')]}" />
                 <label for="vat" string="ABN" attrs="{'invisible':[('country_code', '!=', 'AU')]}" />
             </field>
+            <xpath expr="//field[@name='vat']" position="after">
+                <div name="abn_gst_container"/>
+            </xpath>
+            <xpath expr="//div[@name='abn_gst_container']" position="inside">
+                <xpath expr="//field[@name='vat']" position="move"/>
+                <label for="gst_registered" string="GST registered" attrs="{'invisible':[('country_code', '!=', 'AU')]}" class="fw-bold"/>
+                <field name="gst_registered" attrs="{'invisible':[('country_code', '!=', 'AU')]}" class="oe_inline"/>
+            </xpath>
             <xpath expr="//field[@name='company_registry']" position="attributes">
                 <attribute name="nolabel">1</attribute>
             </xpath>
