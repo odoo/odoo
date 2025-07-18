@@ -43,7 +43,7 @@ export class HootMain extends Component {
     static props = {};
 
     static template = xml`
-        <t t-if="env.runner.config.headless">
+        <t t-if="env.runner.headless">
             <div class="absolute bottom-0 start-1/2 -translate-x-1/2
                 flex z-4 mb-4 px-4 py-2 gap-2 whitespace-nowrap
                 text-xl rounded-full shadow bg-gray-200 dark:bg-gray-800"

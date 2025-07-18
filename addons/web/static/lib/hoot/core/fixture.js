@@ -84,7 +84,7 @@ export function makeFixtureManager(runner) {
         if (!currentFixture) {
             // Prepare fixture once to not force layouts/reflows
             currentFixture = document.createElement(HootFixtureElement.TAG_NAME);
-            if (runner.debug || runner.config.headless) {
+            if (runner.debug || runner.headless) {
                 currentFixture.show();
             }
 
