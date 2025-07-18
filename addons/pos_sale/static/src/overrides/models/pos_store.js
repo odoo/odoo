@@ -69,7 +69,7 @@ patch(PosStore.prototype, {
     },
     async _getSaleOrder(id) {
         const sale_order = (await this.data.read("sale.order", [id]))[0];
-        const orderlines = this.models["sale.order.line"].readMany(sale_order.raw.order_line);
+        const orderlines = await this.data.read("sale.order.line", sale_order.raw.order_line);
         sale_order.order_line = orderlines;
         return sale_order;
     },

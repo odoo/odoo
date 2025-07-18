@@ -2,7 +2,7 @@
 
 import { Component, useState, xml } from "@odoo/owl";
 import { createUrl, refresh } from "../core/url";
-import { useWindowListener } from "../hoot_utils";
+import { callHootKey, useHootKey, useWindowListener } from "../hoot_utils";
 import { HootButtons } from "./hoot_buttons";
 import { HootConfigMenu } from "./hoot_config_menu";
 import { HootDebugToolBar } from "./hoot_debug_toolbar";
@@ -43,7 +43,7 @@ export class HootMain extends Component {
     static props = {};
 
     static template = xml`
-        <t t-if="env.runner.config.headless">
+        <t t-if="env.runner.headless">
             <div class="absolute bottom-0 start-1/2 -translate-x-1/2
                 flex z-4 mb-4 px-4 py-2 gap-2 whitespace-nowrap
                 text-xl rounded-full shadow bg-gray-200 dark:bg-gray-800"
@@ -114,51 +114,59 @@ export class HootMain extends Component {
             this.state.debugTest = null;
         });
 
-        useWindowListener("keydown", (ev) => this.onWindowKeyDown(ev));
         useWindowListener("resize", (ev) => this.onWindowResize(ev));
+        useWindowListener("keydown", callHootKey, { capture: true });
+        useHootKey(["Enter"], this.manualStart);
+        useHootKey(["Escape"], this.abort);
+
+        if (!runner.config.headless) {
+            useHootKey(["Alt", "d"], this.toggleDebug);
+        }
     }
 
     /**
      * @param {KeyboardEvent} ev
      */
-    onWindowKeyDown(ev) {
+    abort(ev) {
         const { runner } = this.env;
-        switch (ev.key) {
-            case "d": {
-                if (ev.altKey) {
-                    ev.preventDefault();
-                    runner.config.debugTest = !runner.config.debugTest;
-                }
-                break;
-            }
-            case "Enter": {
-                if (runner.state.status === "ready") {
-                    ev.preventDefault();
-                    if (runner.config.manual) {
-                        runner.manualStart();
-                    } else {
-                        refresh();
-                    }
-                }
-                break;
-            }
-            case "Escape": {
-                this.escapeKeyPresses++;
-                setTimeout(() => this.escapeKeyPresses--, 500);
+        this.escapeKeyPresses++;
+        setTimeout(() => this.escapeKeyPresses--, 500);
 
-                if (ev.ctrlKey && runner.config.debugTest) {
-                    runner.config.debugTest = false;
-                }
-                if (runner.state.status === "running" && this.escapeKeyPresses >= 2) {
-                    ev.preventDefault();
-                    runner.stop();
-                }
-                break;
-            }
+        if (runner.state.status === "running" && this.escapeKeyPresses >= 2) {
+            ev.preventDefault();
+            runner.stop();
+        }
+    }
+
+    /**
+     * @param {KeyboardEvent} ev
+     */
+    manualStart(ev) {
+        const { runner } = this.env;
+        if (runner.state.status !== "ready") {
+            return;
+        }
+
+        ev.preventDefault();
+
+        if (runner.config.manual) {
+            runner.manualStart();
+        } else {
+            refresh();
         }
     }
 
     onWindowResize() {
         this.env.runner.checkPresetForViewPort();
+    }
+
+    /**
+     * @param {KeyboardEvent} ev
+     */
+    toggleDebug(ev) {
+        ev.preventDefault();
+
+        const { runner } = this.env;
+        runner.config.debugTest = !runner.config.debugTest;
     }
 }

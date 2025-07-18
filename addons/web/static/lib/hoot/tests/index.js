@@ -1,5 +1,4 @@
-import { start } from "@odoo/hoot";
-import { whenReady } from "@odoo/owl";
+import { isHootReady, start } from "@odoo/hoot";
 
 import "./core/expect.test.js";
 import "./core/runner.test.js";
@@ -12,7 +11,7 @@ import "./hoot_utils.test.js";
 import "./mock/navigator.test.js";
 import "./mock/network.test.js";
 import "./mock/window.test.js";
-import "./ui/hoot_test_result.test.js";
 import "./ui/hoot_technical_value.test.js";
+import "./ui/hoot_test_result.test.js";
 
-whenReady(() => start());
+isHootReady.then(start);

@@ -38,7 +38,7 @@ export class HootButtons extends Component {
 
     static template = xml`
         <t t-set="isRunning" t-value="runnerState.status === 'running'" />
-        <t t-set="showAll" t-value="env.runner.hasFilter" />
+        <t t-set="showAll" t-value="env.runner.hasRemovableFilter" />
         <t t-set="showFailed" t-value="runnerState.failedIds.size" />
         <t t-set="failedSuites" t-value="getFailedSuiteIds()" />
         <div
@@ -78,7 +78,7 @@ export class HootButtons extends Component {
                     </t>
                     <t t-if="showFailed">
                         <HootLink
-                            ids="{ test: runnerState.failedIds }"
+                            ids="{ id: runnerState.failedIds }"
                             class="'bg-btn p-2 whitespace-nowrap transition-colors'"
                             title="'Run failed tests'"
                             onClick="onRunFailedClick"
@@ -86,7 +86,7 @@ export class HootButtons extends Component {
                             Run failed <strong>tests</strong>
                         </HootLink>
                         <HootLink
-                            ids="{ suite: failedSuites }"
+                            ids="{ id: failedSuites }"
                             class="'bg-btn p-2 whitespace-nowrap transition-colors'"
                             title="'Run failed suites'"
                             onClick="onRunFailedClick"
