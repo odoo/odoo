@@ -42,6 +42,8 @@ class EventEventTicket(models.Model):
     seats_available = fields.Integer(string='Available Seats', compute='_compute_seats', store=False)
     seats_used = fields.Integer(string='Used Seats', compute='_compute_seats', store=False)
     seats_taken = fields.Integer(string="Taken Seats", compute="_compute_seats", store=False)
+    limit_max_per_order = fields.Integer(string='Limit per Order', default=0,
+        help="Maximum of this product per order.\nSet to 0 to ignore this rule")
     is_sold_out = fields.Boolean(
         'Sold Out', compute='_compute_is_sold_out', help='Whether seats are not available for this ticket.')
     # reports
@@ -120,6 +122,19 @@ class EventEventTicket(models.Model):
                 raise UserError(_('The stop date cannot be earlier than the start date. '
                                   'Please check ticket %(ticket_name)s', ticket_name=ticket.name))
 
+    @api.constrains('limit_max_per_order', 'seats_max')
+    def _constrains_limit_max_per_order(self):
+        for ticket in self:
+            if ticket.seats_max and ticket.limit_max_per_order > ticket.seats_max:
+                raise UserError(_('The limit per order cannot be greater than the maximum seats number. '
+                                  'Please check ticket %(ticket_name)s', ticket_name=ticket.name))
+            if ticket.limit_max_per_order > ticket.event_id.EVENT_MAX_TICKETS:
+                raise UserError(_('The limit per order cannot be greater than %(limit_orderable)s. '
+                                  'Please check ticket %(ticket_name)s', limit_orderable=ticket.event_id.EVENT_MAX_TICKETS, ticket_name=ticket.name))
+            if ticket.limit_max_per_order < 0:
+                raise UserError(_('The limit per order must be positive. '
+                                  'Please check ticket %(ticket_name)s', ticket_name=ticket.name))
+
     @api.depends('seats_max', 'seats_available')
     @api.depends_context('name_with_seats_availability')
     def _compute_display_name(self):
@@ -142,6 +157,25 @@ class EventEventTicket(models.Model):
                     count=formatLang(self.env, ticket.seats_available, digits=0),
                 )
             ticket.display_name = name
+
+    def _get_current_limit_per_order(self, event_slot=False, event=False):
+        """ Compute the maximum possible number of tickets for an order, taking
+        into account the given event_slot if applicable.
+        If no ticket is created (alone event), event_id argument is used. Then
+        return the dictionary with False as key. """
+        event_slot.ensure_one() if event_slot else None
+        if self:
+            slots_seats_available = self.event_id._get_seats_availability([[event_slot, ticket] for ticket in self])
+        else:
+            return {False: event_slot.seats_available if event_slot else (event.seats_available if event.seats_limited else event.EVENT_MAX_TICKETS)}
+        availabilities = {}
+        for ticket, seats_available in zip(self, slots_seats_available):
+            if not seats_available:  # "No limit"
+                seats_available = ticket.limit_max_per_order or ticket.event_id.EVENT_MAX_TICKETS
+            else:
+                seats_available = min(ticket.limit_max_per_order or seats_available, seats_available)
+            availabilities[ticket.id] = seats_available
+        return availabilities
 
     def _get_ticket_multiline_description(self):
         """ Compute a multiline description of this ticket. It is used when ticket

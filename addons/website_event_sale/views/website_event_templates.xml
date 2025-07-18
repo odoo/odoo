@@ -10,8 +10,12 @@
             </t>
         </div>
     </xpath>
+    <!-- Add style display for price if the ticket is available -->
+    <xpath expr="//div[contains(@t-attf-class, 'o_wevent_registration_multi_select')]" position="attributes">
+        <attribute name="t-attf-class" separator=" " add="{{'' if not ticket.sale_available and not ticket.is_expired and ticket.is_launched else ('mt-1' if ticket.price_reduce == 0 else 'mt-2')}}"/>
+    </xpath>
     <!-- Add price information on tickets (multi tickets, aka in collapse) -->
-    <xpath expr="//div[hasclass('o_wevent_registration_multi_select')]" position="inside">
+    <xpath expr="//div[contains(@t-attf-class, 'o_wevent_registration_multi_select')]" position="inside">
         <t t-if="ticket.price">
             <t t-if="(ticket.price - ticket.price_reduce) &gt; 0">
                 <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
@@ -54,7 +58,7 @@
     </xpath>
     <!-- Add price information on tickets (mono ticket, aka not in collapse) -->
     <xpath expr="//div[hasclass('o_wevent_registration_single_select')]" position="before">
-        <div class="flex-md-grow-1 me-2 text-end">
+        <div class="flex-md-grow-1 mt-1 me-2 text-end">
             <t t-if="tickets.price">
                 <t t-if="(tickets.price - tickets.price_reduce) &gt;0">
                     <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
@@ -93,7 +97,7 @@
         </t>
         <t t-else="">
             <t t-set="has_paying_ticket" t-value="any(ticket.get('price', 0) > 0 for ticket in tickets)"/>
-            <button t-if="availability_check" type="submit" class="btn btn-primary">
+            <button t-if="availability_check and limit_check" type="submit" class="btn btn-primary">
                 <span t-if="has_paying_ticket">Go to Payment</span>
                 <span t-else="">Confirm Registration</span>
             </button>
