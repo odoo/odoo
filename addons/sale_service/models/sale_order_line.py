@@ -33,6 +33,8 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id.type')
     def _compute_is_service(self):
+        self.fetch(['is_service', 'product_id'])
+        self.product_id.fetch(['type'])
         for so_line in self:
             so_line.is_service = so_line.product_id.type == 'service'
 
