@@ -269,8 +269,11 @@ export class CalendarModel extends Model {
             }
         }
         if (records.length) {
-            await this.orm.create(this.meta.resModel, records, { context: this.meta.context });
-            return this.load();
+            const createdRecords = await this.orm.create(this.meta.resModel, records, {
+                context: this.meta.context,
+            });
+            this.load();
+            return createdRecords;
         }
     }
 
