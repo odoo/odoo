@@ -1424,17 +1424,17 @@ class TestExpression2(TransactionExpressionCase):
 
 
 @tagged('res_partner')
-class TestAutoJoin(TransactionExpressionCase):
+class TestBypassAccess(TransactionExpressionCase):
 
-    def test_auto_join(self):
+    def test_bypass_search_access(self):
         # Get models
         partner_obj = self.env['res.partner']
         state_obj = self.env['res.country.state']
         bank_obj = self.env['res.partner.bank']
 
         # Get test columns
-        def patch_auto_join(model, fname, value):
-            self.patch(model._fields[fname], 'auto_join', value)
+        def patch_bypass_search_access(model, fname, value):
+            self.patch(model._fields[fname], 'bypass_search_access', value)
             model.invalidate_model([fname])
 
         def patch_domain(model, fname, value):
@@ -1464,7 +1464,7 @@ class TestAutoJoin(TransactionExpressionCase):
         # Test1: basics about the attribute
         # --------------------------------------------------
 
-        patch_auto_join(partner_obj, 'category_id', True)
+        patch_bypass_search_access(partner_obj, 'category_id', True)
         with self.assertRaises(AssertionError):
             partner_obj.search([('category_id.name', '=', 'foo')])
 
@@ -1474,130 +1474,130 @@ class TestAutoJoin(TransactionExpressionCase):
 
         name_test = '12'
 
-        # Do: one2many without _auto_join
+        # Do: one2many without bypass_search_access
         partners = self._search(partner_obj, [('bank_ids.sanitized_acc_number', 'like', name_test)])
         self.assertEqual(partners, p_aa,
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
+            "bypass_search_access off: ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
 
         partners = self._search(partner_obj, ['|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', name_test)])
         self.assertIn(p_aa, partners,
-            "_auto_join off: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
+            "bypass_search_access off: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
         self.assertIn(p_c, partners,
-            "_auto_join off: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
+            "bypass_search_access off: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
 
-        # Do: cascaded one2many without _auto_join
+        # Do: cascaded one2many without bypass_search_access
         partners = self._search(partner_obj, [('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
         self.assertEqual(partners, p_a + p_b,
-            "_auto_join off: ('child_ids.bank_ids.id', 'in', [..]): incorrect result")
+            "bypass_search_access off: ('child_ids.bank_ids.id', 'in', [..]): incorrect result")
 
-        # Do: one2many with _auto_join
-        patch_auto_join(partner_obj, 'bank_ids', True)
+        # Do: one2many with bypass_search_access
+        patch_bypass_search_access(partner_obj, 'bank_ids', True)
         partners = self._search(partner_obj, [('bank_ids.sanitized_acc_number', 'like', name_test)])
         self.assertEqual(partners, p_aa,
-            "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') incorrect result")
+            "bypass_search_access on: ('bank_ids.sanitized_acc_number', 'like', '..') incorrect result")
 
         partners = self._search(partner_obj, ['|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', name_test)])
         self.assertIn(p_aa, partners,
-            "_auto_join on: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
+            "bypass_search_access on: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
         self.assertIn(p_c, partners,
-            "_auto_join on: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
+            "bypass_search_access on: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
 
-        # Do: one2many with _auto_join, test final leaf is an id
+        # Do: one2many with bypass_search_access, test final leaf is an id
         bank_ids = [b_aa.id, b_ab.id]
         partners = self._search(partner_obj, [('bank_ids.id', 'in', bank_ids)])
         self.assertEqual(partners, p_aa + p_ab,
-            "_auto_join on: ('bank_ids.id', 'in', [..]) incorrect result")
+            "bypass_search_access on: ('bank_ids.id', 'in', [..]) incorrect result")
 
-        # Do: 2 cascaded one2many with _auto_join, test final leaf is an id
-        patch_auto_join(partner_obj, 'child_ids', True)
+        # Do: 2 cascaded one2many with bypass_search_access, test final leaf is an id
+        patch_bypass_search_access(partner_obj, 'child_ids', True)
         bank_ids = [b_aa.id, b_ba.id]
         partners = self._search(partner_obj, [('child_ids.bank_ids.id', 'in', bank_ids)])
         self.assertEqual(partners, p_a + p_b,
-            "_auto_join on: ('child_ids.bank_ids.id', 'not in', [..]): incorrect result")
+            "bypass_search_access on: ('child_ids.bank_ids.id', 'not in', [..]): incorrect result")
 
         # --------------------------------------------------
         # Test3: many2one
         # --------------------------------------------------
         name_test = 'US'
 
-        # Do: many2one without _auto_join
+        # Do: many2one without bypass_search_access
         partners = self._search(partner_obj, [('state_id.country_id.code', 'like', name_test)])
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
-            "_auto_join off: ('state_id.country_id.code', 'like', '..') incorrect result")
+            "bypass_search_access off: ('state_id.country_id.code', 'like', '..') incorrect result")
 
         partners = self._search(partner_obj, ['|', ('industry_id.name', '=', industries[0].name), ('name', 'like', 'C')])
-        self.assertIn(p_a, partners, '_auto_join off: disjunction incorrect result')
-        self.assertIn(p_c, partners, '_auto_join off: disjunction incorrect result')
+        self.assertIn(p_a, partners, 'bypass_search_access off: disjunction incorrect result')
+        self.assertIn(p_c, partners, 'bypass_search_access off: disjunction incorrect result')
 
-        # Do: many2one with 1 _auto_join on the first many2one
-        patch_auto_join(partner_obj, 'state_id', True)
+        # Do: many2one with 1 bypass_search_access on the first many2one
+        patch_bypass_search_access(partner_obj, 'state_id', True)
         partners = self._search(partner_obj, [('state_id.country_id.code', 'like', name_test)])
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
-            "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') incorrect result")
+            "bypass_search_access on for state_id: ('state_id.country_id.code', 'like', '..') incorrect result")
 
         partners = self._search(partner_obj, ['|', ('industry_id.name', '=', industries[0].name), ('name', 'like', 'C')])
-        self.assertIn(p_a, partners, '_auto_join: disjunction incorrect result')
-        self.assertIn(p_c, partners, '_auto_join: disjunction incorrect result')
+        self.assertIn(p_a, partners, 'bypass_search_access: disjunction incorrect result')
+        self.assertIn(p_c, partners, 'bypass_search_access: disjunction incorrect result')
 
-        # Do: many2one with 1 _auto_join on the second many2one
-        patch_auto_join(partner_obj, 'state_id', False)
-        patch_auto_join(state_obj, 'country_id', True)
+        # Do: many2one with 1 bypass_search_access on the second many2one
+        patch_bypass_search_access(partner_obj, 'state_id', False)
+        patch_bypass_search_access(state_obj, 'country_id', True)
         partners = self._search(partner_obj, [('state_id.country_id.code', 'like', name_test)])
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
-            "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') incorrect result")
+            "bypass_search_access on for country_id: ('state_id.country_id.code', 'like', '..') incorrect result")
 
-        # Do: many2one with 2 _auto_join
-        patch_auto_join(partner_obj, 'state_id', True)
-        patch_auto_join(state_obj, 'country_id', True)
+        # Do: many2one with 2 bypass_search_access
+        patch_bypass_search_access(partner_obj, 'state_id', True)
+        patch_bypass_search_access(state_obj, 'country_id', True)
         partners = self._search(partner_obj, [('state_id.country_id.code', 'like', name_test)])
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
-            "_auto_join on: ('state_id.country_id.code', 'like', '..') incorrect result")
+            "bypass_search_access on: ('state_id.country_id.code', 'like', '..') incorrect result")
 
         # --------------------------------------------------
         # Test4: domain attribute on one2many fields
         # --------------------------------------------------
 
-        patch_auto_join(partner_obj, 'child_ids', True)
-        patch_auto_join(partner_obj, 'bank_ids', True)
+        patch_bypass_search_access(partner_obj, 'child_ids', True)
+        patch_bypass_search_access(partner_obj, 'bank_ids', True)
         patch_domain(partner_obj, 'child_ids', lambda self: ['!', ('name', '=', self._name)])
         patch_domain(partner_obj, 'bank_ids', [('sanitized_acc_number', 'like', '2')])
 
-        # Do: 2 cascaded one2many with _auto_join, test final leaf is an id
+        # Do: 2 cascaded one2many with bypass_search_access, test final leaf is an id
         partners = self._search(partner_obj, ['&', (1, '=', 1), ('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
         self.assertLessEqual(p_a, partners,
-            "_auto_join on one2many with domains incorrect result")
+            "bypass_search_access on one2many with domains incorrect result")
         self.assertFalse((p_ab + p_ba) & partners,
-            "_auto_join on one2many with domains incorrect result")
+            "bypass_search_access on one2many with domains incorrect result")
 
         patch_domain(partner_obj, 'child_ids', lambda self: [('name', '=', '__%s' % self._name)])
         partners = self._search(partner_obj, ['&', (1, '=', 1), ('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
         self.assertFalse(partners,
-            "_auto_join on one2many with domains incorrect result")
+            "bypass_search_access on one2many with domains incorrect result")
 
         # ----------------------------------------
         # Test5: result-based tests
         # ----------------------------------------
 
-        patch_auto_join(partner_obj, 'bank_ids', False)
-        patch_auto_join(partner_obj, 'child_ids', False)
-        patch_auto_join(partner_obj, 'state_id', False)
-        patch_auto_join(partner_obj, 'parent_id', False)
-        patch_auto_join(state_obj, 'country_id', False)
+        patch_bypass_search_access(partner_obj, 'bank_ids', False)
+        patch_bypass_search_access(partner_obj, 'child_ids', False)
+        patch_bypass_search_access(partner_obj, 'state_id', False)
+        patch_bypass_search_access(partner_obj, 'parent_id', False)
+        patch_bypass_search_access(state_obj, 'country_id', False)
         patch_domain(partner_obj, 'child_ids', [])
         patch_domain(partner_obj, 'bank_ids', [])
 
-        # Do: ('child_ids.state_id.country_id.code', 'like', '..') without _auto_join
+        # Do: ('child_ids.state_id.country_id.code', 'like', '..') without bypass_search_access
         partners = self._search(partner_obj, [('child_ids.state_id.country_id.code', 'like', name_test)])
         self.assertLessEqual(p_a + p_b, partners,
-            "_auto_join off: ('child_ids.state_id.country_id.code', 'like', '..') incorrect result")
+            "bypass_search_access off: ('child_ids.state_id.country_id.code', 'like', '..') incorrect result")
 
-        # Do: ('child_ids.state_id.country_id.code', 'like', '..') with _auto_join
-        patch_auto_join(partner_obj, 'child_ids', True)
-        patch_auto_join(partner_obj, 'state_id', True)
-        patch_auto_join(state_obj, 'country_id', True)
+        # Do: ('child_ids.state_id.country_id.code', 'like', '..') with bypass_search_access
+        patch_bypass_search_access(partner_obj, 'child_ids', True)
+        patch_bypass_search_access(partner_obj, 'state_id', True)
+        patch_bypass_search_access(state_obj, 'country_id', True)
         partners = self._search(partner_obj, [('child_ids.state_id.country_id.code', 'like', name_test)])
         self.assertLessEqual(p_a + p_b, partners,
-            "_auto_join on: ('child_ids.state_id.country_id.code', 'like', '..') incorrect result")
+            "bypass_search_access on: ('child_ids.state_id.country_id.code', 'like', '..') incorrect result")
 
     def test_nullfields(self):
         obj1 = self.env['res.bank'].create({'name': 'c0'})
@@ -1811,8 +1811,8 @@ class TestMany2one(TransactionCase):
         ''']):
             self.User.search([('name', 'like', 'foo')])
 
-        # the field supporting the inheritance should be auto_join, too
-        # TODO: use another model, since 'res.users' has explicit auto_join
+        # the field supporting the inheritance should be bypass_search_access, too
+        # TODO: use another model, since 'res.users' has explicit bypass_search_access
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
@@ -1975,10 +1975,10 @@ class TestMany2one(TransactionCase):
             company_ids = self.company._search([('name', 'like', self.company.name)], order='id')
             self.Partner.search([('company_id', 'in', company_ids.subselect())])
 
-    def test_autojoin(self):
-        # auto_join on the first many2one
-        self.patch(self.Partner._fields['company_id'], 'auto_join', True)
-        self.patch(self.company._fields['partner_id'], 'auto_join', False)
+    def testbypass_search_access(self):
+        # bypass_search_access on the first many2one
+        self.patch(self.Partner._fields['company_id'], 'bypass_search_access', True)
+        self.patch(self.company._fields['partner_id'], 'bypass_search_access', False)
         self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
 
         with self.assertQueries(['''
@@ -2015,9 +2015,9 @@ class TestMany2one(TransactionCase):
         ''']):
             self.Partner.search([('company_id.parent_id', '=', False)])
 
-        # auto_join on the second many2one
-        self.patch(self.Partner._fields['company_id'], 'auto_join', False)
-        self.patch(self.company._fields['partner_id'], 'auto_join', True)
+        # bypass_search_access on the second many2one
+        self.patch(self.Partner._fields['company_id'], 'bypass_search_access', False)
+        self.patch(self.company._fields['partner_id'], 'bypass_search_access', True)
         self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
 
         with self.assertQueries(['''
@@ -2034,9 +2034,9 @@ class TestMany2one(TransactionCase):
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
 
-        # auto_join on both many2one
-        self.patch(self.Partner._fields['company_id'], 'auto_join', True)
-        self.patch(self.company._fields['partner_id'], 'auto_join', True)
+        # bypass_search_access on both many2one
+        self.patch(self.Partner._fields['company_id'], 'bypass_search_access', True)
+        self.patch(self.company._fields['partner_id'], 'bypass_search_access', True)
         self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
 
         with self.assertQueries(['''
@@ -2051,9 +2051,9 @@ class TestMany2one(TransactionCase):
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
 
-        # union with two auto_join
-        self.patch(self.Partner._fields['company_id'], 'auto_join', True)
-        self.patch(self.Partner._fields['country_id'], 'auto_join', True)
+        # union with two bypass_search_access
+        self.patch(self.Partner._fields['company_id'], 'bypass_search_access', True)
+        self.patch(self.Partner._fields['country_id'], 'bypass_search_access', True)
         self.Partner.search([
             '|',
             ('company_id.name', 'like', self.company.name),
@@ -2184,9 +2184,9 @@ class TestOne2many(TransactionCase):
         ''']):
             self.Partner.search([('child_ids.bank_ids.sanitized_acc_number', 'like', '12')])
 
-    def test_autojoin(self):
-        self.patch(self.Partner._fields['bank_ids'], 'auto_join', True)
-        self.patch(self.Partner._fields['child_ids'], 'auto_join', True)
+    def testbypass_search_access(self):
+        self.patch(self.Partner._fields['bank_ids'], 'bypass_search_access', True)
+        self.patch(self.Partner._fields['child_ids'], 'bypass_search_access', True)
         self.Partner.search([('bank_ids', 'in', self.partner.bank_ids.ids)])
         self.Partner.search([('bank_ids.sanitized_acc_number', 'like', '12')])
         self.Partner.search([('child_ids.bank_ids.sanitized_acc_number', 'like', '12')])
@@ -2284,10 +2284,10 @@ class TestOne2many(TransactionCase):
         ''']):
             self.Partner.search([('child_ids.bank_ids.id', 'in', self.partner.bank_ids.ids)])
 
-    def test_autojoin_mixed(self):
-        self.patch(self.Partner._fields['child_ids'], 'auto_join', True)
-        self.patch(self.Partner._fields['state_id'], 'auto_join', True)
-        self.patch(self.Partner.state_id._fields['country_id'], 'auto_join', True)
+    def testbypass_search_access_mixed(self):
+        self.patch(self.Partner._fields['child_ids'], 'bypass_search_access', True)
+        self.patch(self.Partner._fields['state_id'], 'bypass_search_access', True)
+        self.patch(self.Partner.state_id._fields['country_id'], 'bypass_search_access', True)
         self.Partner.search([('child_ids.state_id.country_id.code', 'like', 'US')])
 
         with self.assertQueries(['''
@@ -2489,8 +2489,8 @@ class TestMany2many(TransactionCase):
         ''']):
             self.User.search([('group_ids', 'not in', [group.id, False])], order='id')
 
-    def test_autojoin(self):
-        self.patch(self.User._fields['group_ids'], 'auto_join', True)
+    def testbypass_search_access(self):
+        self.patch(self.User._fields['group_ids'], 'bypass_search_access', True)
         with self.assertRaises(AssertionError):
             self.User.search([('group_ids.name', '=', 'foo')])
 

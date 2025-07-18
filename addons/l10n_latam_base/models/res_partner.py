@@ -7,7 +7,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     l10n_latam_identification_type_id = fields.Many2one('l10n_latam.identification.type',
-        string="Identification Type", index='btree_not_null', auto_join=True,
+        string="Identification Type", index='btree_not_null', bypass_search_access=True,
         default=lambda self: self.env.ref('l10n_latam_base.it_vat', raise_if_not_found=False),
         inverse="_inverse_vat",  # To trigger the vat checking
         help="The type of identification")

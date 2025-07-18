@@ -13,7 +13,7 @@ class ResourceMixin(models.AbstractModel):
 
     resource_id = fields.Many2one(
         'resource.resource', 'Resource',
-        auto_join=True, index=True, ondelete='restrict', required=True)
+        bypass_search_access=True, index=True, ondelete='restrict', required=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company,
