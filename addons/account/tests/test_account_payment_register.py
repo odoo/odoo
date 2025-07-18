@@ -3,6 +3,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
 from odoo import Command
+from unittest.mock import patch
 
 
 @tagged('post_install', '-at_install')
@@ -759,6 +760,21 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             self.env['account.payment.register']\
                 .with_context(active_model='account.move', active_ids=self.out_invoice_2.ids)\
                 .create({})
+
+    def test_register_payment_doesnt_send_email(self):
+        ''' When registering a payment manually with a payment register,
+        we shouldn't sent email notification automatically.
+        '''
+        self.env['ir.config_parameter'].set_param('sale.automatic_invoice', True)
+        payment_register = self.env['account.payment.register']\
+                               .with_context(active_model='account.move', active_ids=self.out_invoice_2.ids)\
+                               .create({})
+        with patch(
+            'odoo.addons.sale.models.payment_transaction.PaymentTransaction'
+            '._send_invoice'
+        ) as patched:
+            payment_register._create_payments()
+            patched.assert_not_called()
 
     def test_register_payment_multi_currency_rounding_issue_positive_delta(self):
         ''' When registering a payment using a different currency than the invoice one, the invoice must be fully paid

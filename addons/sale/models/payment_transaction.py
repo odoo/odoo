@@ -129,7 +129,7 @@ class PaymentTransaction(models.Model):
             # even if only a partial payment was made.
             self._invoice_sale_orders()
         super()._reconcile_after_done()
-        if auto_invoice:
+        if auto_invoice and not self.env.context.get('skip_invoice_send'):
             # Must be called after the super() call to make sure the invoice are correctly posted.
             self._send_invoice()
 
