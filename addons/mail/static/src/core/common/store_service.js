@@ -449,6 +449,19 @@ export class Store extends BaseStore {
         return chat;
     }
 
+    fillPartnersMentionToken(postData) {
+        postData.partner_ids_mention_token ||= {};
+        Object.assign(
+            postData.partner_ids_mention_token,
+            Object.fromEntries(
+                postData.partner_ids
+                    .map((pid) => this["res.partner"].get(pid))
+                    .filter((partner) => partner && partner.mention_token)
+                    .map((partner) => [partner.id, partner.mention_token])
+            )
+        );
+    }
+
     /** @returns {number} */
     getLastMessageId() {
         return Object.values(this["mail.message"].records).reduce(
@@ -459,11 +472,7 @@ export class Store extends BaseStore {
 
     getMentionsFromText(
         body,
-        {
-            mentionedChannels = [],
-            mentionedPartners = [],
-            mentionedRoles = [],
-        } = {}
+        { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
     ) {
         const validMentions = {};
         validMentions.threads = mentionedChannels.filter((thread) => {
@@ -529,6 +538,7 @@ export class Store extends BaseStore {
         }
         if (partner_ids.length) {
             Object.assign(postData, { partner_ids });
+            this.fillPartnersMentionToken(postData);
         }
         if (role_ids.length) {
             Object.assign(postData, { role_ids });

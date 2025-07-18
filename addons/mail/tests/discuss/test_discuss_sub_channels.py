@@ -170,6 +170,6 @@ class TestDiscussSubChannels(HttpCase):
     def test_11_sub_channel_fallback_name_on_empty_message(self):
         parent = self.env["discuss.channel"].create({"name": "General"})
         message = parent.message_post(body="Hello there!", message_type="comment")
-        parent._message_update_content(message, "")
+        parent._message_update_content(message, body="")
         sub_channel = parent._create_sub_channel(from_message_id=message.id)
         self.assertEqual(sub_channel.name, "This message has been removed")

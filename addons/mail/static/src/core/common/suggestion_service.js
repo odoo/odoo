@@ -227,7 +227,10 @@ export class SuggestionService {
     }
 
     isSuggestionValid(partner, thread) {
-        return partner.notEq(this.store.odoobot);
+        return (
+            (this.store.self_partner?.main_user_id?.share === false || partner.mention_token) &&
+            partner.notEq(this.store.odoobot)
+        );
     }
 
     getPartnerSuggestions(thread) {

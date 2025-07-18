@@ -529,7 +529,7 @@ export class Message extends Record {
             mentionedRoles,
         });
         const hadLink = this.hasLink; // to remove old previews if message no longer contains any link
-        const data = await rpc("/mail/message/update_content", {
+        const updateData = {
             attachment_ids: attachments
                 .concat(this.attachment_ids)
                 .map((attachment) => attachment.id),
@@ -541,7 +541,9 @@ export class Message extends Record {
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
             role_ids: validMentions?.roles?.map((role) => role.id),
             ...this.thread.rpcParams,
-        });
+        };
+        this.store.fillPartnersMentionToken(updateData);
+        const data = await rpc("/mail/message/update_content", updateData);
         this.store.insert(data);
         if ((hadLink || this.hasLink) && this.store.hasLinkPreviewFeature) {
             rpc("/mail/link_preview", { message_id: this.id }, { silent: true });

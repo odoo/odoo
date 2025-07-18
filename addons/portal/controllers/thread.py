@@ -7,8 +7,8 @@ from odoo.addons.portal.utils import get_portal_partner
 
 class ThreadController(thread.ThreadController):
 
-    def _prepare_post_data(self, post_data, thread, **kwargs):
-        post_data = super()._prepare_post_data(post_data, thread, **kwargs)
+    def _prepare_message_data(self, post_data, thread, **kwargs):
+        post_data = super()._prepare_message_data(post_data, thread, **kwargs)
         if request.env.user._is_public():
             if partner := get_portal_partner(
                 thread, kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token")

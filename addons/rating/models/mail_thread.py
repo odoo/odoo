@@ -3,7 +3,7 @@
 import datetime
 import markupsafe
 
-from odoo import _, api, fields, models, tools
+from odoo import _, fields, models, tools
 
 
 class MailThread(models.AbstractModel):
@@ -146,9 +146,10 @@ class MailThread(models.AbstractModel):
 
             if rating.message_id:
                 self._message_update_content(
-                    rating.message_id, rating_body,
+                    rating.message_id,
+                    body=rating_body,
                     scheduled_date=scheduled_datetime,
-                    strict=False
+                    strict=False,
                 )
             else:
                 self.message_post(
@@ -190,17 +191,12 @@ class MailThread(models.AbstractModel):
             rating.message_id = message.id
         super()._message_post_after_hook(message, msg_values)
 
-    def _get_allowed_message_post_params(self):
-        return super()._get_allowed_message_post_params() | {"rating_value"}
+    def _get_allowed_message_params(self):
+        return super()._get_allowed_message_params() | {"rating_value"}
 
-    @api.model
-    def _get_allowed_message_update_params(self):
-        return super()._get_allowed_message_update_params() | {"rating_value"}
-
-    def _message_update_content(self, message, body, *args, rating_value=None, **kwargs):
+    def _message_update_content(self, message, /, *, body, rating_value=None, **kwargs):
         if rating_value:
             message.rating_id.rating = rating_value
             message.rating_id.feedback = tools.html2plaintext(body)
-        return super()._message_update_content(
-            message, body, *args, rating_value=rating_value, **kwargs
-        )
+        kwargs.update({"body": body, "rating_value": rating_value})
+        return super()._message_update_content(message, **kwargs)
