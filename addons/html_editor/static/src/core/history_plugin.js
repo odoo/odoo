@@ -687,10 +687,7 @@ export class HistoryPlugin extends Plugin {
                         // it does not accidentally get observed during those
                         // operations.
                         // TODO Find a better solution.
-                        if (
-                            added?.dataset?.skipHistoryHack ||
-                            added?.closest?.("data-skip-history-hack")
-                        ) {
+                        if (added?.dataset?.skipHistoryHack) {
                             return;
                         }
                         const mutation = {
@@ -716,10 +713,7 @@ export class HistoryPlugin extends Plugin {
                     });
                     record.removedNodes.forEach((removed) => {
                         // TODO Find a better solution.
-                        if (
-                            removed?.dataset?.skipHistoryHack ||
-                            removed?.closest?.("data-skip-history-hack")
-                        ) {
+                        if (removed?.dataset?.skipHistoryHack) {
                             return;
                         }
                         this.currentStep.mutations.push({
