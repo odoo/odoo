@@ -3,7 +3,6 @@ import { useService } from "@web/core/utils/hooks";
 import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
-import { ProxyStatus } from "@point_of_sale/app/components/navbar/proxy_status/proxy_status";
 import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import {
     SaleDetailsButton,
@@ -18,7 +17,6 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { user } from "@web/core/user";
 import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
 import { _t } from "@web/core/l10n/translation";
-import { openProxyCustomerDisplay } from "@point_of_sale/customer_display/utils";
 import { uuidv4 } from "@point_of_sale/utils";
 import { QrCodeCustomerDisplay } from "@point_of_sale/app/customer_display/customer_display_qr_code_popup";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
@@ -28,7 +26,6 @@ export class Navbar extends Component {
     static components = {
         // FIXME POSREF remove some of these components
         CashierName,
-        ProxyStatus,
         SaleDetailsButton,
         Input,
         Dropdown,
@@ -141,29 +138,24 @@ export class Navbar extends Component {
     }
 
     openCustomerDisplay() {
-        const proxyIP = this.pos.getDisplayDeviceIP();
-        if (proxyIP) {
-            openProxyCustomerDisplay(proxyIP, this.pos, this.notification);
-        } else {
-            const getDeviceUuid = () => {
-                if (!localStorage.getItem("device_uuid")) {
-                    localStorage.setItem("device_uuid", uuidv4());
-                }
-                return localStorage.getItem("device_uuid");
-            };
-            const customer_display_url = `/pos_customer_display/${
-                this.pos.config.id
-            }/${getDeviceUuid()}`;
-
-            if (this.ui.isSmall) {
-                this.dialog.add(QrCodeCustomerDisplay, {
-                    customerDisplayURL: `${this.pos.config._base_url}${customer_display_url}`,
-                });
-                return;
+        const getDeviceUuid = () => {
+            if (!localStorage.getItem("device_uuid")) {
+                localStorage.setItem("device_uuid", uuidv4());
             }
-            window.open(customer_display_url, "newWindow", "width=800,height=600,left=200,top=200");
-            this.notification.add(_t("PoS Customer Display opened in a new window"));
+            return localStorage.getItem("device_uuid");
+        };
+        const customer_display_url = `/pos_customer_display/${
+            this.pos.config.id
+        }/${getDeviceUuid()}`;
+
+        if (this.ui.isSmall) {
+            this.dialog.add(QrCodeCustomerDisplay, {
+                customerDisplayURL: `${this.pos.config._base_url}${customer_display_url}`,
+            });
+            return;
         }
+        window.open(customer_display_url, "newWindow", "width=800,height=600,left=200,top=200");
+        this.notification.add(_t("PoS Customer Display opened in a new window"));
     }
 
     get showCreateProductButton() {

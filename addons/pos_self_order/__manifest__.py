@@ -71,7 +71,6 @@
             'point_of_sale/static/src/app/utils/html-to-image.js',
             "point_of_sale/static/src/app/services/render_service.js",
             "pos_self_order/static/src/app/**/*",
-            "point_of_sale/static/src/app/utils/printer/hw_printer.js",
             "web/static/src/core/utils/render.js",
             "pos_self_order/static/src/app/store/order_change_receipt_template.xml",
             "account/static/src/helpers/*.js",

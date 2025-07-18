@@ -38,7 +38,6 @@ export class PaymentScreen extends Component {
         this.dialog = useService("dialog");
         this.invoiceService = useService("account_move");
         this.notification = useService("notification");
-        this.hardwareProxy = useService("hardware_proxy");
         this.printer = useService("printer");
         this.payment_methods_from_config = this.pos.config.payment_method_ids
             .slice()
@@ -217,11 +216,14 @@ export class PaymentScreen extends Component {
             this.selectedPaymentLine.setAmount(amount);
         }
     }
+    /**
+     * Overridden in pos_epson_printer to open the cash drawer.
+     */
+    openCashbox() {
+        console.log("openCashbox called");
+    }
     async toggleIsToInvoice() {
         this.currentOrder.setToInvoice(!this.currentOrder.isToInvoice());
-    }
-    openCashbox() {
-        this.hardwareProxy.openCashbox();
     }
     async addTip() {
         const tip = this.currentOrder.getTip();
@@ -322,10 +324,6 @@ export class PaymentScreen extends Component {
         }
     }
     async _finalizeValidation() {
-        if (this.currentOrder.isPaidWithCash() || this.currentOrder.getChange()) {
-            this.hardwareProxy.openCashbox();
-        }
-
         this.currentOrder.date_order = serializeDateTime(luxon.DateTime.now());
         for (const line of this.paymentLines) {
             if (!line.amount === 0) {

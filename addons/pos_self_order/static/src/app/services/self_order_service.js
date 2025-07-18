@@ -10,10 +10,9 @@ import { cookie } from "@web/core/browser/cookie";
 import { formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
 import { printerService } from "@point_of_sale/app/services/printer_service";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
-import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
-import { constructFullProductName, deduceUrl, random5Chars } from "@point_of_sale/utils";
+import { constructFullProductName, random5Chars } from "@point_of_sale/utils";
 import { getOrderLineValues } from "./card_utils";
 import {
     getTaxesAfterFiscalPosition,
@@ -440,11 +439,6 @@ export class SelfOrder extends Reactive {
             lg.display_name = lg.name.split("/").pop();
         });
         cookie.set("frontend_lang", this.currentLanguage?.code || "en_US");
-    }
-
-    createPrinter(printer) {
-        const url = deduceUrl(printer.proxy_ip || "");
-        return new HWPrinter({ url });
     }
 
     _getKioskPrintingCategoriesChanges(order, categories) {

@@ -17,24 +17,16 @@ export class CustomerDisplayPosAdapter {
     }
 
     dispatch(pos) {
-        const proxyIP = pos.getDisplayDeviceIP();
-        if (proxyIP) {
-            pos.hardwareProxy.deviceControllers.customerDisplay.action({
-                action: "set",
-                data: this.data,
+        this.channel.postMessage(JSON.parse(JSON.stringify(this.data)));
+        pos.data
+            .call("pos.config", "update_customer_display", [
+                [pos.config.id],
+                this.data,
+                localStorage.getItem("device_uuid"),
+            ])
+            .catch((error) => {
+                console.info("Failed to update customer display:", error);
             });
-        } else {
-            this.channel.postMessage(JSON.parse(JSON.stringify(this.data)));
-            pos.data
-                .call("pos.config", "update_customer_display", [
-                    [pos.config.id],
-                    this.data,
-                    localStorage.getItem("device_uuid"),
-                ])
-                .catch((error) => {
-                    console.info("Failed to update customer display:", error);
-                });
-        }
     }
 
     formatOrderData(order) {

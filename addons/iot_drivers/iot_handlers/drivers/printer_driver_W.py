@@ -10,7 +10,6 @@ import win32print
 import pywintypes
 import ghostscript
 
-from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
 from odoo.addons.iot_drivers.tools import helpers
 from odoo.tools.mimetypes import guess_mimetype
@@ -156,6 +155,3 @@ class PrinterDriver(PrinterDriverBase):
             else:
                 _logger.exception('Win32 error occurred while querying print job')
             self.job_ids.remove(job_id)
-
-
-proxy_drivers['printer'] = PrinterDriver

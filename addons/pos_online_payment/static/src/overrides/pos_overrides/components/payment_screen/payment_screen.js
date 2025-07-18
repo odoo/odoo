@@ -220,12 +220,8 @@ patch(PaymentScreen.prototype, {
         this.currentOrder.state = "paid";
         this.pos.validated_orders_name_server_id_map[this.currentOrder.name] = this.currentOrder.id;
 
-        // Now, do practically the normal flow
-        if (
-            (this.currentOrder.isPaidWithCash() || this.currentOrder.getChange()) &&
-            this.pos.config.iface_cashdrawer
-        ) {
-            this.hardwareProxy.printer.openCashbox();
+        if (this.currentOrder.isPaidWithCash() || this.currentOrder.getChange()) {
+            this.openCashbox();
         }
 
         if (isInvoiceRequested) {

@@ -14,12 +14,9 @@ from threading import Lock
 import time
 from usb import util
 
-from odoo import http
-from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.iot_drivers.driver import Driver
 from odoo.addons.iot_drivers.event_manager import event_manager
-from odoo.addons.iot_drivers.main import iot_devices
-from odoo.addons.iot_drivers.tools import helpers, route
+from odoo.addons.iot_drivers.tools import helpers
 
 _logger = logging.getLogger(__name__)
 xlib = ctypes.cdll.LoadLibrary('libX11.so.6')
@@ -83,12 +80,6 @@ class KeyboardUSBDriver(Driver):
                     device.interface_protocol = itf.bInterfaceProtocol
                     return True
         return False
-
-    @classmethod
-    def get_status(self):
-        """Allows `hw_proxy.Proxy` to retrieve the status of the scanners"""
-        status = 'connected' if any(iot_devices[d].device_type == "scanner" for d in iot_devices) else 'disconnected'
-        return {'status': status, 'messages': ''}
 
     @classmethod
     @helpers.require_db
@@ -367,16 +358,3 @@ class KeyboardUSBDriver(Driver):
                     return barcode
             except Empty:
                 return ''
-
-
-proxy_drivers['scanner'] = KeyboardUSBDriver
-
-
-class KeyboardUSBController(http.Controller):
-    @route.iot_route('/hw_proxy/scanner', type='jsonrpc', cors='*')
-    def get_barcode(self):
-        scanners = [iot_devices[d] for d in iot_devices if iot_devices[d].device_type == "scanner"]
-        if scanners:
-            return scanners[0].read_next_barcode()
-        time.sleep(5)
-        return None
