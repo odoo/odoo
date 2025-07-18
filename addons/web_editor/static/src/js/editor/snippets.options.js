@@ -9263,8 +9263,9 @@ registry.many2one = SnippetOptionWidget.extend({
      * @override
      */
     async willStart() {
-        const {oeMany2oneModel, oeMany2oneId} = this.$target[0].dataset;
+        const {oeMany2oneModel, oeMany2oneId, oeMany2oneDomain} = this.$target[0].dataset;
         this.fields = ['name', 'display_name'];
+        this.domain = oeMany2oneDomain;
         return Promise.all([
             this._super(...arguments),
             this.orm.read(oeMany2oneModel, [parseInt(oeMany2oneId)], this.fields).then(([initialRecord]) => {
@@ -9338,6 +9339,7 @@ registry.many2one = SnippetOptionWidget.extend({
         many2oneWidget.setAttribute('String', modelName);
         many2oneWidget.dataset.model = model;
         many2oneWidget.dataset.fields = JSON.stringify(this.fields);
+        many2oneWidget.dataset.domain = this.domain;
         uiFragment.appendChild(many2oneWidget);
     },
     /**
