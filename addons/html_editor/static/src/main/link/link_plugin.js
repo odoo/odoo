@@ -576,11 +576,6 @@ export class LinkPlugin extends Plugin {
                 this.linkInDocument = null;
                 this.currentOverlay.close();
             },
-            onClose: () => {
-                this.linkInDocument = null;
-                this.currentOverlay.close();
-                this.dependencies.selection.focusEditable();
-            },
             onEdit: () => {
                 this.restoreSavePoint = this.dependencies.history.makeSavePoint();
             },
