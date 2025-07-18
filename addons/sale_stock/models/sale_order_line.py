@@ -117,13 +117,11 @@ class SaleOrderLine(models.Model):
             treated |= line
 
         qty_processed_per_product = defaultdict(lambda: 0)
-        grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
         # We first loop over the SO lines to group them by warehouse and schedule
         # date in order to batch the read of the quantities computed field.
-        for line in self.filtered(lambda l: l.state in ('draft', 'sent')):
-            if not (line.product_id and line.display_qty_widget):
-                continue
-            grouped_lines[(line.warehouse_id.id, line.order_id.commitment_date or line._expected_date())] |= line
+        grouped_lines = self.filtered(
+            lambda l: l.state in ('draft', 'sent') and l.product_id and l.display_qty_widget
+        ).grouped(lambda l: (l.warehouse_id.id, l.order_id.commitment_date or l._expected_date()))
 
         for (warehouse, scheduled_date), lines in grouped_lines.items():
             product_qties = lines._read_qties(scheduled_date, warehouse)

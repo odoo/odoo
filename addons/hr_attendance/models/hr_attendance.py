@@ -301,11 +301,8 @@ class HrAttendance(models.Model):
             ) if attendance_dates else Domain.TRUE)
 
             # Attendances per LOCAL day
-            attendances_per_day = defaultdict(lambda: self.env['hr.attendance'])
             all_attendances = self.env['hr.attendance'].search(attendance_domain)
-            for attendance in all_attendances:
-                check_in_day_start = attendance._get_day_start_and_day(attendance.employee_id, attendance.check_in)
-                attendances_per_day[check_in_day_start[1]] += attendance
+            attendances_per_day = all_attendances.grouped(lambda a: a._get_day_start_and_day(a.employee_id, a.check_in)[1])
 
             # As _attendance_intervals_batch and _leave_intervals_batch both take localized dates we need to localize those date
             start = pytz.utc.localize(min(attendance_dates, key=itemgetter(0))[0])

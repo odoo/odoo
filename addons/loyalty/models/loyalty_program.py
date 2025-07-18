@@ -441,9 +441,7 @@ class LoyaltyProgram(models.Model):
     @api.depends('program_type')
     def _compute_from_program_type(self):
         program_type_defaults = self._program_type_default_values()
-        grouped_programs = defaultdict(lambda: self.env['loyalty.program'])
-        for program in self:
-            grouped_programs[program.program_type] |= program
+        grouped_programs = self.grouped('program_type')
         for program_type, programs in grouped_programs.items():
             if program_type in program_type_defaults:
                 programs.write(program_type_defaults[program_type])

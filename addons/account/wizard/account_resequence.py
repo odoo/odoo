@@ -114,10 +114,7 @@ class AccountResequenceWizard(models.TransientModel):
 
         self.new_values = "{}"
         for record in self.filtered('first_name'):
-            moves_by_period = defaultdict(lambda: record.env['account.move'])
-            for move in record.move_ids._origin:  # Sort the moves by period depending on the sequence number reset
-                moves_by_period[_get_move_key(move)] += move
-
+            moves_by_period = record.move_ids._origin.grouped(_get_move_key)  # Sort the moves by period depending on the sequence number reset
             seq_format, format_values = record.move_ids[0]._get_sequence_format_param(record.first_name)
             sequence_number_reset = record.move_ids[0]._deduce_sequence_number_reset(record.first_name)
 

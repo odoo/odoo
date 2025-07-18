@@ -6158,7 +6158,7 @@ class BaseModel(metaclass=MetaModel):
             collator[key(record)].extend(record._ids)
 
         browse = functools.partial(type(self), self.env, prefetch_ids=self._prefetch_ids)
-        return {key: browse(tuple(ids)) for key, ids in collator.items()}
+        return defaultdict(self.browse, {key: browse(tuple(ids)) for key, ids in collator.items()})
 
     @api.private
     def filtered_domain(self, domain: DomainType) -> Self:

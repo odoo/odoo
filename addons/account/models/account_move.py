@@ -2588,11 +2588,9 @@ class AccountMove(models.Model):
         return product_infos
 
     def _get_product_catalog_record_lines(self, product_ids, **kwargs):
-        grouped_lines = defaultdict(lambda: self.env['account.move.line'])
-        for line in self.line_ids:
-            if line.display_type == 'product' and line.product_id.id in product_ids:
-                grouped_lines[line.product_id] |= line
-        return grouped_lines
+        return self.line_ids.filtered(
+            lambda line: line.display_type == 'product' and line.product_id.id in product_ids
+        ).grouped('product_id')
 
     def _update_order_line_info(self, product_id, quantity, **kwargs):
         """ Update account_move_line information for a given product or create a
