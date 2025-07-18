@@ -45,12 +45,24 @@ export const QUARTER_OPTIONS = {
 
 export const DEFAULT_INTERVAL = "month";
 
+/**
+ * Time interval options that users can select in the views.
+ */
 export const INTERVAL_OPTIONS = {
     year: { description: _t("Year"), id: "year", groupNumber: 1 },
     quarter: { description: _t("Quarter"), id: "quarter", groupNumber: 1 },
     month: { description: _t("Month"), id: "month", groupNumber: 1 },
     week: { description: _t("Week"), id: "week", groupNumber: 1 },
     day: { description: _t("Day"), id: "day", groupNumber: 1 },
+};
+
+/**
+ * Time interval options supported by the backend.
+ * These options are not available in the views UI, but can be used in dashboards.
+ */
+export const BACKEND_INTERVAL_OPTIONS = {
+    ...INTERVAL_OPTIONS,
+    hour: { description: _t("Hour"), id: "hour" },
 };
 
 //-------------------------------------------------------------------------

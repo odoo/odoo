@@ -1,8 +1,9 @@
 import { Domain } from "@web/core/domain";
 import { ChartDataSource, chartTypeToDataSourceMode } from "../data_source/chart_data_source";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
+import { deepEqual } from "@web/core/utils/objects";
 
-export class OdooChartUIPlugin extends OdooUIPlugin {
+export class OdooChartCoreViewPlugin extends OdooUIPlugin {
     static getters = /** @type {const} */ (["getChartDataSource", "getOdooEnv"]);
 
     shouldChartUpdateReloadDataSource = false;
@@ -29,19 +30,12 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
                 break;
             case "UPDATE_CHART": {
                 if (cmd.definition.type.startsWith("odoo_")) {
-                    const dataSource = this.getChartDataSource(cmd.figureId);
                     const chart = this.getters.getChart(cmd.figureId);
-                    if (
-                        chart.metaData.cumulated !== cmd.definition.cumulative ||
-                        chart.cumulatedStart !== cmd.definition.cumulatedStart ||
-                        dataSource.getInitialDomainString() !==
-                            new Domain(cmd.definition.searchParams.domain).toString()
-                    ) {
+                    if (this._shouldReloadDataSource(cmd.figureId, cmd.definition)) {
                         this.shouldChartUpdateReloadDataSource = true;
                     } else if (cmd.definition.type !== chart.type) {
-                        dataSource.changeChartType(
-                            chartTypeToDataSourceMode(cmd.definition.type)
-                        );
+                        const dataSource = this.getChartDataSource(cmd.figureId);
+                        dataSource.changeChartType(chartTypeToDataSourceMode(cmd.definition.type));
                     }
                 }
                 break;
@@ -99,11 +93,7 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
                     if (!this.getters.getOdooChartIds().includes(cmd.figureId)) {
                         continue;
                     }
-                    const dataSource = this.getChartDataSource(cmd.figureId);
-                    if (
-                        dataSource.getInitialDomainString() !==
-                        new Domain(cmd.definition.searchParams.domain).toString()
-                    ) {
+                    if (this._shouldReloadDataSource(cmd.figureId, cmd.definition)) {
                         this._resetChartDataSource(cmd.figureId);
                     }
                 }
@@ -158,7 +148,9 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
      */
     _addDomains() {
         for (const chartId of this.getters.getOdooChartIds()) {
-            this._addDomain(chartId);
+            // Reset the data source to prevent eager loading
+            // of the data source when the domain is added
+            this._resetChartDataSource(chartId);
         }
     }
 
@@ -171,7 +163,6 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
         if (!(dataSourceId in this.charts)) {
             this._resetChartDataSource(chartId);
         }
-        this._setChartDataSource(chartId);
     }
 
     /**
@@ -182,6 +173,8 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
         const definition = this.getters.getChart(chartId).getDefinitionForDataSource();
         const dataSourceId = this._getOdooChartDataSourceId(chartId);
         this.charts[dataSourceId] = new ChartDataSource(this.custom, definition);
+        this._addDomain(chartId);
+        this._setChartDataSource(chartId);
     }
 
     /**
@@ -212,5 +205,17 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
         for (const chartId of this.getters.getOdooChartIds()) {
             this._refreshOdooChart(chartId);
         }
+    }
+
+    _shouldReloadDataSource(chartId, definition) {
+        const chart = this.getters.getChart(chartId);
+        const dataSource = this.getChartDataSource(chartId);
+        return (
+            !deepEqual(chart.searchParams.groupBy, definition.searchParams.groupBy) ||
+            chart.metaData.cumulated !== definition.cumulative ||
+            chart.cumulatedStart !== definition.cumulatedStart ||
+            dataSource.getInitialDomainString() !==
+                new Domain(definition.searchParams.domain).toString()
+        );
     }
 }

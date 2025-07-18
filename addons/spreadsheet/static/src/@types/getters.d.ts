@@ -1,5 +1,5 @@
 import { CorePlugin, Model, UID } from "@odoo/o-spreadsheet";
-import { ChartOdooMenuPlugin, OdooChartCorePlugin, OdooChartUIPlugin } from "@spreadsheet/chart";
+import { ChartOdooMenuPlugin, OdooChartCorePlugin, OdooChartCoreViewPlugin } from "@spreadsheet/chart";
 import { CurrencyPlugin } from "@spreadsheet/currency/plugins/currency";
 import { AccountingPlugin } from "addons/spreadsheet_account/static/src/plugins/accounting_plugin";
 import { GlobalFiltersCorePlugin, GlobalFiltersCoreViewPlugin } from "@spreadsheet/global_filters";
@@ -68,7 +68,7 @@ declare module "@spreadsheet" {
     interface OdooGetters extends OdooCoreGetters {}
     interface OdooGetters extends PluginGetters<typeof GlobalFiltersCoreViewPlugin> {}
     interface OdooGetters extends PluginGetters<typeof ListCoreViewPlugin> {}
-    interface OdooGetters extends PluginGetters<typeof OdooChartUIPlugin> {}
+    interface OdooGetters extends PluginGetters<typeof OdooChartCoreViewPlugin> {}
     interface OdooGetters extends PluginGetters<typeof CurrencyPlugin> {}
     interface OdooGetters extends PluginGetters<typeof AccountingPlugin> {}
 }
