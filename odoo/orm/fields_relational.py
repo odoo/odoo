@@ -36,7 +36,7 @@ class _Relational(Field[BaseModel]):
     comodel_name: str
     domain: DomainType = []         # domain for searching values
     context: ContextType = {}       # context for searching values
-    auto_join: bool = False         # whether joins are generated upon search
+    bypass_search_access: bool = False  # whether access rights are bypassed on the comodel
     check_company: bool = False
 
     def __get__(self, records: BaseModel, owner=None):
@@ -211,8 +211,8 @@ class Many2one(_Relational):
     :param str ondelete: what to do when the referred record is deleted;
         possible values are: ``'set null'``, ``'restrict'``, ``'cascade'``
 
-    :param bool auto_join: whether JOINs are generated upon search through that
-        field (default: ``False``)
+    :param bool bypass_search_access: whether access rights are bypassed on the
+        comodel (default: ``False``)
 
     :param bool delegate: set it to ``True`` to make fields of the target model
         accessible from the current model (corresponds to ``_inherits``)
@@ -239,8 +239,8 @@ class Many2one(_Relational):
         # determine self.delegate
         if name in model_class._inherits.values():
             self.delegate = True
-            # self.delegate implies self.auto_join
-            self.auto_join = True
+            # self.delegate implies self.bypass_search_access
+            self.bypass_search_access = True
         elif self.delegate:
             comodel_name = self.comodel_name or 'comodel_name'
             raise TypeError((
@@ -486,7 +486,7 @@ class Many2one(_Relational):
 
         # value is a Domain
 
-        if self.auto_join or operator in ('any!', 'not any!'):
+        if self.bypass_search_access or operator in ('any!', 'not any!'):
             comodel, coalias = self.join(model, alias, query)
 
             sql = value._to_sql(comodel, coalias, query)
@@ -787,7 +787,7 @@ class _RelationalMulti(_Relational):
         if isinstance(value, Domain):
             domain = value & field_domain
             comodel = comodel.with_context(**self.context)
-            bypass_access = self.auto_join or operator in ('any!', 'not any!')
+            bypass_access = self.bypass_search_access or operator in ('any!', 'not any!')
             query = comodel._search(domain, bypass_access=bypass_access)
             assert isinstance(query, Query)
             return query
@@ -821,8 +821,8 @@ class One2many(_RelationalMulti):
     :param dict context: an optional context to use on the client side when
         handling that field
 
-    :param bool auto_join: whether JOINs are generated upon search through that
-        field (default: ``False``)
+    :param bool bypass_search_access: whether access rights are bypassed on the
+        comodel (default: ``False``)
 
     The attributes ``comodel_name`` and ``inverse_name`` are mandatory except in
     the case of related fields or field extensions.
@@ -1215,8 +1215,8 @@ class Many2many(_RelationalMulti):
     def __init__(self, comodel_name: str | Sentinel = SENTINEL, relation: str | Sentinel = SENTINEL,
                  column1: str | Sentinel = SENTINEL, column2: str | Sentinel = SENTINEL,
                  string: str | Sentinel = SENTINEL, **kwargs):
-        if 'auto_join' in kwargs:
-            raise NotImplementedError("auto_join is not supported on Many2many fields")
+        if 'bypass_search_access' in kwargs:
+            raise NotImplementedError("bypass_search_access is not supported on Many2many fields")
         super().__init__(
             comodel_name=comodel_name,
             relation=relation,
@@ -1637,7 +1637,7 @@ class Many2many(_RelationalMulti):
             ])
 
     def _condition_to_sql_relational(self, model: BaseModel, alias: str, exists: bool, coquery: Query, query: Query) -> SQL:
-        assert not self.auto_join, f"auto_join not implemented for many2many fields ({self})"
+        assert not self.bypass_search_access, f"bypass_search_access not implemented for many2many fields ({self})"
         if coquery.is_empty():
             return SQL("FALSE") if exists else SQL("TRUE")
         rel_table, rel_id1, rel_id2 = self.relation, self.column1, self.column2

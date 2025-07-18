@@ -16,7 +16,7 @@ class RatingParentMixin(models.AbstractModel):
 
     rating_ids = fields.One2many(
         'rating.rating', 'parent_res_id', string='Ratings',
-        auto_join=True, groups='base.group_user',
+        bypass_search_access=True, groups='base.group_user',
         domain=lambda self: [('parent_res_model', '=', self._name)])
     rating_percentage_satisfaction = fields.Integer(
         "Rating Satisfaction",

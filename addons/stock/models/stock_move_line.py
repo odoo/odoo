@@ -18,7 +18,7 @@ class StockMoveLine(models.Model):
     _order = "result_package_id desc, id"
 
     picking_id = fields.Many2one(
-        'stock.picking', 'Transfer', auto_join=True,
+        'stock.picking', 'Transfer', bypass_search_access=True,
         check_company=True,
         index=True,
         help='The stock operation where the packing has been made')

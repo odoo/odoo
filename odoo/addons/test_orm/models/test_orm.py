@@ -1197,7 +1197,7 @@ class TestOrmAttachmentHost(models.Model):
     _description = 'Attachment Host'
 
     attachment_ids = fields.One2many(
-        'test_orm.attachment', 'res_id', auto_join=True,
+        'test_orm.attachment', 'res_id', bypass_search_access=True,
         domain=lambda self: [('res_model', '=', self._name)],
     )
 

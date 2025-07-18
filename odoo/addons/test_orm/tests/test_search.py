@@ -82,8 +82,8 @@ class TestSubqueries(TransactionCase):
                     ('partner.phone', 'like', '01234'),
             ])
 
-    def test_or_autojoined_many2one_with_subfield(self):
-        self.patch(self.env['test_orm.multi']._fields['partner'], 'auto_join', True)
+    def test_or_bypass_access_many2one_with_subfield(self):
+        self.patch(self.env['test_orm.multi']._fields['partner'], 'bypass_search_access', True)
         with self.assertQueries(["""
             SELECT "test_orm_multi"."id"
             FROM "test_orm_multi"
@@ -101,8 +101,8 @@ class TestSubqueries(TransactionCase):
                     ('partner.phone', 'like', '01234'),
             ])
 
-    def test_not_or_autojoined_many2one_with_subfield(self):
-        self.patch(self.env['test_orm.multi']._fields['partner'], 'auto_join', True)
+    def test_not_or_bypass_access_many2one_with_subfield(self):
+        self.patch(self.env['test_orm.multi']._fields['partner'], 'bypass_search_access', True)
         with self.assertQueries(["""
             SELECT "test_orm_multi"."id"
             FROM "test_orm_multi"
@@ -1594,8 +1594,8 @@ class TestFlushSearch(TransactionCase):
             self.belgium.name = "Belgique"
             self.model.search([('country_id.name', 'like', 'foo')], order='id')
 
-    def test_flush_auto_join_field_in_domain(self):
-        self.patch(self.env.registry['test_orm.city'].country_id, 'auto_join', True)
+    def test_flush_bypass_access_field_in_domain(self):
+        self.patch(self.env.registry['test_orm.city'].country_id, 'bypass_search_access', True)
 
         with self.assertQueries(['''
             UPDATE "test_orm_city"

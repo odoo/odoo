@@ -41,7 +41,7 @@ class MailMail(models.Model):
         return super().default_get(fields)
 
     # content
-    mail_message_id = fields.Many2one('mail.message', 'Message', required=True, ondelete='cascade', index=True, auto_join=True)
+    mail_message_id = fields.Many2one('mail.message', 'Message', required=True, ondelete='cascade', index=True, bypass_search_access=True)
     mail_message_id_int = fields.Integer(compute='_compute_mail_message_id_int', compute_sudo=True)
     message_type = fields.Selection(related='mail_message_id.message_type', inherited=True, default='email_outgoing')
     body_html = fields.Text('Text Contents', help="Rich-text/HTML message")

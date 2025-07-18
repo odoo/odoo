@@ -141,7 +141,7 @@ class MailThread(models.AbstractModel):
     )
     message_ids = fields.One2many(
         'mail.message', 'res_id', string='Messages',
-        domain=lambda self: [('message_type', '!=', 'user_notification')], auto_join=True)
+        domain=lambda self: [('message_type', '!=', 'user_notification')], bypass_search_access=True)
     has_message = fields.Boolean(compute="_compute_has_message", search="_search_has_message", store=False)
     message_needaction = fields.Boolean(
         'Action Needed',

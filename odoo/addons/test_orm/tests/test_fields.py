@@ -4123,11 +4123,11 @@ class TestMany2oneReference(TransactionExpressionCase):
         foo = m.browse(1 if not ids[0] else (ids[0] + 1))
         self.assertTrue(foo.unlink())
 
-    def test_search_inverse_one2many_autojoin(self):
+    def test_search_inverse_one2many_bypass_search_access(self):
         record = self.env['test_orm.inverse_m2o_ref'].create({})
 
-        # the one2many field 'model_ids' should be auto_join=True
-        self.patch(type(record).model_ids, 'auto_join', True)
+        # the one2many field 'model_ids' should be bypass_search_access=True
+        self.patch(type(record).model_ids, 'bypass_search_access', True)
 
         # create a reference to record
         reference = self.env['test_orm.model_many2one_reference'].create({'res_id': record.id})

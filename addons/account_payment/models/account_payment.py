@@ -12,7 +12,7 @@ class AccountPayment(models.Model):
         string="Payment Transaction",
         comodel_name='payment.transaction',
         readonly=True,
-        auto_join=True,  # No access rule bypass since access to payments means access to txs too
+        bypass_search_access=True,  # No access rule bypass since access to payments means access to txs too
     )
     payment_token_id = fields.Many2one(
         string="Saved Payment Token", comodel_name='payment.token', domain="""[

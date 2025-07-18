@@ -14,7 +14,7 @@ class MailThread(models.AbstractModel):
 
     website_message_ids = fields.One2many('mail.message', 'res_id', string='Website Messages',
         domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ('comment', 'email', 'email_outgoing', 'auto_comment'))],
-        auto_join=True,
+        bypass_search_access=True,
         help="Website communication history")
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):

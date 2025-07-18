@@ -64,11 +64,11 @@ class AccountAnalyticAccount(models.Model):
         default=lambda self: self.env.company,
     )
 
-    # use auto_join to speed up name_search call
     partner_id = fields.Many2one(
         'res.partner',
         string='Customer',
-        auto_join=True,
+        # use bypass_access to speed up name_search call
+        bypass_search_access=True,
         tracking=True,
         check_company=True,
         index='btree_not_null',

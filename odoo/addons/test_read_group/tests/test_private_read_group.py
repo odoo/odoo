@@ -779,8 +779,8 @@ class TestPrivateReadGroup(common.TransactionCase):
             )],
         )
 
-    def test_auto_join(self):
-        """ Test what happens when grouping with a domain using a one2many field with auto_join. """
+    def test_field_bypass_search_access(self):
+        """ Test what happens when grouping with a domain using a one2many field with bypass_search_access. """
         model = self.env['test_read_group.order']
         records = model.create([{
             'line_ids': [Command.create({'value': 1}), Command.create({'value': 2})],
@@ -801,8 +801,8 @@ class TestPrivateReadGroup(common.TransactionCase):
         result2 = model._read_group(domain2, aggregates=['__count'])
         self.assertEqual(result1, [(2,)])
 
-        # same requests, with auto_join
-        self.patch(type(model).line_ids, 'auto_join', True)
+        # same requests, with bypass_search_access
+        self.patch(type(model).line_ids, 'bypass_search_access', True)
 
         self.assertEqual(len(model.search(domain1)), 2)
         self.assertEqual(len(model.search(domain2)), 2)
