@@ -236,7 +236,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 lambda mv: bool(_split_codes([(mv.pc_container_code or "")]) & tote_codes)
             )
             for mv in moves:
-                qty_to_create = int(round(mv.remaining_qty or 0))
+                qty_to_create = int(round(mv.picked_qty or 0))
                 for _ in range(qty_to_create):
                     vals_list.append({
                         "wizard_id": self.id,
@@ -426,37 +426,54 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     _logger.info("[LEGACY] Payload already sent — skipping.")
                     return
 
-                line.scanned = True
-                line.quantity = 1
-                line.remaining_quantity = 0
-                line.available_quantity = 1
-                line.line_added = True
-
                 try:
+                    # Temporarily set as scanned for payload generation (just for this context)
+                    line.scanned = True
                     payload = self._prepare_old_logic_payload_multi_picks()
                     is_prod = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
                     api_url = "https://shiperoo-connect-shopify.uat.automation.shiperoo.com/auspost/shipment" if is_prod == 'True' \
                         else "https://shiperoo-connect-shopify.uat.automation.shiperoo.com/auspost/shipment"
 
-                    self.send_payload_to_api(api_url, payload)
+                    headers = {'Content-Type': 'application/json'}
+                    response = requests.post(api_url, headers=headers, data=json.dumps(payload))
+                    response_json = response.json()
+                    line.api_payload_attempted = True
+                    print("\n\n\n response_json===", response_json)
 
-                    for l in self.line_ids:
-                        l.api_payload_success = True
-                        l.line_added = True
-                        l.scanned = True
-                        l.quantity = 1
-                        l.remaining_quantity = 0
-
-                    return {
-                        'warning': {
-                            'title': _("Success"),
-                            'message': _("Legacy label printed successfully."),
-                            'type': 'notification'
+                    # Only success if BOTH HTTP and payload code are 200
+                    if response.status_code == 200 and str(response_json.get("code")) == "200":
+                        # Success! Update all fields and persist scanned state for all involved lines
+                        for l in self.line_ids:
+                            l.scanned = True
+                            l.quantity = 1
+                            l.remaining_quantity = 0
+                            l.available_quantity = 1
+                            l.line_added = True
+                            l.api_payload_success = True
+                        return {
+                            'warning': {
+                                'title': _("Success"),
+                                'message': _("Legacy label printed successfully."),
+                                'type': 'notification'
+                            }
                         }
-                    }
                 except Exception as e:
-                    _logger.error(f"[LEGACY] Payload failed: {str(e)}")
-                    raise UserError(_("Legacy label failed:\n%s") % str(e))
+                    # Rollback on all exceptions, not just UserError
+                    line.scanned = False
+                    error_details = response_json.get("details", "")
+                    error_message = response_json.get("message", "")
+                    full_error = ""
+                    if error_details and error_message:
+                        full_error = f"{error_message}\n{error_details}"
+                    elif error_message:
+                        full_error = error_message
+                    elif error_details:
+                        full_error = error_details
+                    else:
+                        full_error = response.text or "Unknown error"
+                    print("\n\n\n Error", full_error)
+                    _logger.error(f"[LEGACY] Payload failed: {str(full_error)}")
+                    raise UserError(_("exfeptionLegacy label failed:\n%s") % full_error)
 
             # MULTI-PICK - OneTraker
             else:
@@ -628,21 +645,21 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "tenant_code": line.tenant_code_id.name if line.tenant_code_id else "",
                 "site_code": line.site_code_id.name if line.site_code_id else "",
                 "receipt_number": line.picking_id.name,
-                "partner_id": line.picking_id.partner_id.name,
+                "partner_id": line.picking_id.partner_id.name or "",
                 "business_name": line.picking_id.partner_id.business_name or "",
-                "origin": line.picking_id.origin or "N/A",
+                "origin": line.picking_id.origin or "",
                 "package_name": (line.package_box_type_id.name if line.package_box_type_id else "NoBox") + '_' + str(
                     line.product_package_number),
-                "length": line.package_box_type_id.length or "NA",
-                "width": line.package_box_type_id.width or "NA",
-                "height": line.package_box_type_id.height or "NA",
-                "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
-                "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "N/A",
-                "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
-                "customer_reference": line.picking_id.sale_id.client_order_ref if line.picking_id.sale_id else "N/A",
-                "incoterm_location": line.incoterm_location or "N/A",
-                "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
-                "carrier": line.picking_id.sale_id.carrier or "N/A",
+                "length": line.package_box_type_id.length or "",
+                "width": line.package_box_type_id.width or "",
+                "height": line.package_box_type_id.height or "",
+                "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "",
+                "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "",
+                "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "",
+                "customer_reference": line.picking_id.sale_id.client_order_ref if line.picking_id.sale_id else "",
+                "incoterm_location": line.incoterm_location or "",
+                "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "",
+                "carrier": line.picking_id.sale_id.carrier or "",
                 "hs_code": line.product_id.hs_code or "",
                 "cost_price": line.product_id.standard_price or "0.0",
                 "sale_price": line.product_id.list_price or "0.0",
@@ -728,21 +745,21 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "receipt_number": line.picking_id.name,
                 "partner_id": line.picking_id.partner_id.name,
                 "business_name": line.picking_id.partner_id.business_name or "",
-                "origin": line.picking_id.origin or "N/A",
+                "origin": line.picking_id.origin or "",
                 "package_name": (line.package_box_type_id.name if line.package_box_type_id else "NoBox") + '_' + str(
                     line.product_package_number),
-                "length": line.package_box_type_id.length or "NA",
-                "width": line.package_box_type_id.width or "NA",
-                "height": line.package_box_type_id.height or "NA",
-                "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
-                "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "N/A",
-                "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
-                "customer_reference": line.picking_id.sale_id.client_order_ref if line.picking_id.sale_id else "N/A",
-                "incoterm_location": line.sale_order_id.packaging_source_type if line.sale_order_id else "N/A",
-                "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
-                "carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A",
+                "length": line.package_box_type_id.length or "",
+                "width": line.package_box_type_id.width or "",
+                "height": line.package_box_type_id.height or "",
+                "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "",
+                "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "",
+                "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "",
+                "customer_reference": line.picking_id.sale_id.client_order_ref if line.picking_id.sale_id else "",
+                "incoterm_location": line.sale_order_id.packaging_source_type if line.sale_order_id else "",
+                "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "",
+                "carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "",
                 "hs_code": line.product_id.hs_code or "",
-                "so_reference": line.picking_id.sale_id.client_order_ref or "N/A",
+                "so_reference": line.picking_id.sale_id.client_order_ref or "",
                 "cost_price": line.product_id.standard_price or "0.0",
                 "sale_price": line.product_id.list_price or "0.0",
                 "shipment_id": line.picking_id.sale_id.shipmentid or "",

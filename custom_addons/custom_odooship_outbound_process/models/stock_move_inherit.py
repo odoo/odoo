@@ -9,10 +9,12 @@ class StockMoveLine(models.Model):
 
 
     packed = fields.Boolean('Packed', default=False)
-    released_manual_orders = fields.Selection([('partial_pack','Partial Packed'),
-                                        ('fully_pack','Fully Packed')],
-                                       string='Packed Orders')
-    # released_manual = fields.Boolean('Packed', default=False)
+    pick_status = fields.Selection([
+        ('partial_pick', 'Partial Picked'),
+        ('fully_pick', 'Fully Picked'),
+        ('partial_pack','Partial Packed'),
+        ('fully_pack','Fully Packed')],
+        string='Pick Status')
     pc_container_code = fields.Char(string='PC Container code')
     picked_qty = fields.Float(
         string='Picked Quantity',
@@ -38,17 +40,41 @@ class StockMoveLine(models.Model):
         help="Quantity remaining to be packed."
     )
 
-    # @api.depends('product_uom_qty', 'picked_qty')
-    # def _compute_remaining_picked_qty(self):
-    #     for move in self:
-    #         print("\n\n\n mmove picked ==", move)
-    #         # move.remaining_picked_qty = move.product_uom_qty - move.picked_qty
-    #
-    # @api.depends('picked_qty', 'packed_qty')
-    # def _compute_remaining_packed_qty(self):
-    #     for move in self:
-    #         print("\n\n\n packed qty=====",  move)
-    #         move.remaining_packed_qty = move.picked_qty - move.packed_qty
+    @api.onchange('picked_qty')
+    def _onchange_picked_qty(self):
+        for move in self:
+            move.remaining_picked_qty = move.product_uom_qty - move.picked_qty
+            if move.remaining_picked_qty !=0:
+                move.pick_status = 'partial_pick'
+            else:
+                move.pick_status = 'fully_pick'
+                move.picked = True
+
+    @api.onchange('packed_qty')
+    def _onchange_packed_qty(self):
+        for move in self:
+            move.remaining_packed_qty = move.picked_qty - move.packed_qty
+            if move.remaining_packed_qty !=0:
+                move.pick_status = 'partial_pack'
+            else:
+                move.pick_status = 'fully_pack'
+                move.packed = True
+
+    def _update_picking_current_state(self):
+        for move in self:
+            picking = move.picking_id
+            if not picking:
+                continue
+            moves = picking.move_ids_without_package
+            fully_picked = all(m.picked_qty >= m.product_uom_qty and m.product_uom_qty > 0 for m in moves)
+            any_picked = any(m.picked_qty > 0 for m in moves)
+            if fully_picked:
+                picking.current_state = 'pick'
+            elif any_picked:
+                picking.current_state = 'partially_pick'
+            else:
+                picking.current_state = 'draft'
+
 
     @api.onchange('packed')
     def _onchange_packed(self):
@@ -63,11 +89,22 @@ class StockMoveLine(models.Model):
     def create(self, vals):
         res = super().create(vals)
         res._ensure_pc_barcode_config()
+        res._update_picking_current_state()
         return res
 
     def write(self, vals):
         result = super().write(vals)
+        # Only update for the affected lines (self)
+        for move in self:
+            # Update remaining_picked_qty if picked_qty changed
+            if 'picked_qty' in vals:
+                move.remaining_picked_qty = move.product_uom_qty - move.picked_qty
+            # Update remaining_packed_qty if packed_qty changed
+            if 'packed_qty' in vals:
+                move.remaining_packed_qty = move.picked_qty - move.packed_qty
         self._ensure_pc_barcode_config()
+        if 'picked_qty' in vals:
+            self._update_picking_current_state()
         return result
 
     def _ensure_pc_barcode_config(self):

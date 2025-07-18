@@ -30,6 +30,7 @@ class StockPicking(models.Model):
     ], string='Automation/Manual Order', copy=False)
     slsu = fields.Boolean(string="Manual SLSU")
     operation_process_type = fields.Selection(related='picking_type_id.picking_process_type')
+    allow_partial = fields.Boolean(string='Allow partial', store='True', default=False)
 
     def action_confirm_geek_pick(self):
         """
@@ -48,3 +49,20 @@ class StockPicking(models.Model):
             if record.current_state == 'pick':
                 record.current_state = 'pack'
                 _logger.info(f"Picking {record.name} moved to 'pack' state {record.state}- {record.current_state}.")
+
+    def action_allow_partial(self):
+        """
+          This method allows partials functionality on for those customers whose
+          allow partial configuration is setup
+        """
+        for rec in self:
+            allow_partials = self.env['partial.fulfill.order.configuration'].search([
+                ('tenant_code_id','=', self.tenant_code_id),
+                ('allow_partial', '=', True)
+            ])
+            if allow_partials:
+                rec.allow_partial = True
+            else:
+                raise ValidationError("Partial Shipping is not allowed for this. If you want to deliver this order as"
+                                      "a Partial one then please reach out to customer and note valide "
+                                      "reason here before processing this order. Thank you!")
