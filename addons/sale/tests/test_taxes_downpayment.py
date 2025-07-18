@@ -601,16 +601,21 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             'amount_total': so.amount_total - dp_invoice_2.amount_total,
         }])
 
+    @freeze_time('2018-01-01')
     def test_down_payment_100_first_then_0_final_invoice_round_per_line(self):
         self.env.company.tax_calculation_rounding_method = 'round_per_line'
         product = self.company_data['product_order_cost']
         tax_23 = self.percent_tax(23.0)
+        other_currency = self.setup_other_currency('EUR', rates=[('2017-01-01', 1.2834)])
+        self.foreign_currency_pricelist.currency_id = other_currency
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
+            'currency_id': other_currency.id,
+            'pricelist_id': self.foreign_currency_pricelist.id,
             'order_line': [
                 Command.create({
-                    'name': 'line_1',
+                    'name': 'line',
                     'product_id': product.id,
                     'price_unit': price_unit,
                     'product_uom_qty': quantity,
@@ -653,6 +658,37 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             'amount_tax': 275.27,
             'amount_total': 1472.14,
         }])
+        self.assert_invoice_tax_totals_summary(dp_invoice, {
+            'same_tax_base': True,
+            'currency_id': other_currency.id,
+            'company_currency_id': self.env.company.currency_id.id,
+            'base_amount_currency': 1196.87,
+            'base_amount': 932.57,
+            'tax_amount_currency': 275.27,
+            'tax_amount': 214.49,
+            'total_amount_currency': 1472.14,
+            'total_amount': 1147.06,
+            'subtotals': [
+                {
+                    'name': "Untaxed Amount",
+                    'base_amount_currency': 1196.87,
+                    'base_amount': 932.57,
+                    'tax_amount_currency': 275.27,
+                    'tax_amount': 214.49,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_groups[0].id,
+                            'base_amount_currency': 1196.87,
+                            'base_amount': 932.57,
+                            'tax_amount_currency': 275.27,
+                            'tax_amount': 214.49,
+                            'display_base_amount_currency': 1196.87,
+                            'display_base_amount': 932.57,
+                        },
+                    ],
+                },
+            ],
+        })
 
         # Create the final invoice.
         wizard = (
@@ -667,17 +703,53 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             'amount_tax': 0.0,
             'amount_total': 0.0,
         }])
+        self.assert_invoice_tax_totals_summary(final_invoice, {
+            'same_tax_base': True,
+            'currency_id': other_currency.id,
+            'company_currency_id': self.env.company.currency_id.id,
+            'base_amount_currency': 0.0,
+            'base_amount': 0.0,
+            'tax_amount_currency': 0.0,
+            'tax_amount': 0.0,
+            'total_amount_currency': 0.0,
+            'total_amount': 0.0,
+            'subtotals': [
+                {
+                    'name': "Untaxed Amount",
+                    'base_amount_currency': 0.0,
+                    'base_amount': 0.0,
+                    'tax_amount_currency': 0.0,
+                    'tax_amount': 0.0,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_groups[0].id,
+                            'base_amount_currency': 0.0,
+                            'base_amount': 0.0,
+                            'tax_amount_currency': 0.0,
+                            'tax_amount': 0.0,
+                            'display_base_amount_currency': 0.0,
+                            'display_base_amount': 0.0,
+                        },
+                    ],
+                },
+            ],
+        })
 
+    @freeze_time('2018-01-01')
     def test_down_payment_100_first_then_0_final_invoice_round_globally(self):
         self.env.company.tax_calculation_rounding_method = 'round_globally'
         product = self.company_data['product_order_cost']
         tax_23 = self.percent_tax(23.0)
+        other_currency = self.setup_other_currency('EUR', rates=[('2017-01-01', 1.2834)])
+        self.foreign_currency_pricelist.currency_id = other_currency
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
+            'currency_id': other_currency.id,
+            'pricelist_id': self.foreign_currency_pricelist.id,
             'order_line': [
                 Command.create({
-                    'name': 'line_1',
+                    'name': 'line',
                     'product_id': product.id,
                     'price_unit': price_unit,
                     'product_uom_qty': quantity,
@@ -720,6 +792,37 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             'amount_tax': 275.28,
             'amount_total': 1472.17,
         }])
+        self.assert_invoice_tax_totals_summary(dp_invoice, {
+            'same_tax_base': True,
+            'currency_id': other_currency.id,
+            'company_currency_id': self.env.company.currency_id.id,
+            'base_amount_currency': 1196.89,
+            'base_amount': 932.59,
+            'tax_amount_currency': 275.28,
+            'tax_amount': 214.5,
+            'total_amount_currency': 1472.17,
+            'total_amount': 1147.09,
+            'subtotals': [
+                {
+                    'name': "Untaxed Amount",
+                    'base_amount_currency': 1196.89,
+                    'base_amount': 932.59,
+                    'tax_amount_currency': 275.28,
+                    'tax_amount': 214.5,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_groups[0].id,
+                            'base_amount_currency': 1196.89,
+                            'base_amount': 932.59,
+                            'tax_amount_currency': 275.28,
+                            'tax_amount': 214.5,
+                            'display_base_amount_currency': 1196.89,
+                            'display_base_amount': 932.59,
+                        },
+                    ],
+                },
+            ],
+        })
 
         # Create the final invoice.
         wizard = (
@@ -734,6 +837,37 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             'amount_tax': 0.0,
             'amount_total': 0.0,
         }])
+        self.assert_invoice_tax_totals_summary(final_invoice, {
+            'same_tax_base': True,
+            'currency_id': other_currency.id,
+            'company_currency_id': self.env.company.currency_id.id,
+            'base_amount_currency': 0.0,
+            'base_amount': 0.0,
+            'tax_amount_currency': 0.0,
+            'tax_amount': 0.0,
+            'total_amount_currency': 0.0,
+            'total_amount': 0.0,
+            'subtotals': [
+                {
+                    'name': "Untaxed Amount",
+                    'base_amount_currency': 0.0,
+                    'base_amount': 0.0,
+                    'tax_amount_currency': 0.0,
+                    'tax_amount': 0.0,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_groups[0].id,
+                            'base_amount_currency': 0.0,
+                            'base_amount': 0.0,
+                            'tax_amount_currency': 0.0,
+                            'tax_amount': 0.0,
+                            'display_base_amount_currency': 0.0,
+                            'display_base_amount': 0.0,
+                        },
+                    ],
+                },
+            ],
+        })
 
     def test_down_payment_analytic_distribution_aggregation(self):
         tax_account = self.company_data['default_account_tax_sale']
