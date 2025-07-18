@@ -74,7 +74,7 @@ registry
                 ]),
                 ...addDiscount("7"),
                 ProductScreen.checkTotalAmount("34.08"),
-                ProductScreen.checkTaxAmount("4.50"),
+                ProductScreen.checkTaxAmount("4.53"),
                 ...payAndInvoice("34.08"),
                 ...addDocument([
                     { product: "product_1_1", quantity: "1" },
@@ -82,7 +82,7 @@ registry
                 ]),
                 ...addDiscount("18"),
                 ProductScreen.checkTotalAmount("30.04"),
-                ProductScreen.checkTaxAmount("3.98"),
+                ProductScreen.checkTaxAmount("3.99"),
                 ...payAndInvoice("30.04"),
             ].flat(),
     });
@@ -144,7 +144,7 @@ registry
                 ]),
                 ...addDiscount("7"),
                 ProductScreen.checkTotalAmount("34.08"),
-                ProductScreen.checkTaxAmount("4.50"),
+                ProductScreen.checkTaxAmount("4.53"),
                 ...payAndInvoice("34.08"),
                 ...addDocument([
                     { product: "product_3_1", quantity: "1" },
@@ -152,7 +152,7 @@ registry
                 ]),
                 ...addDiscount("18"),
                 ProductScreen.checkTotalAmount("30.04"),
-                ProductScreen.checkTaxAmount("3.98"),
+                ProductScreen.checkTaxAmount("3.99"),
                 ...payAndInvoice("30.04"),
             ].flat(),
     });
