@@ -66,3 +66,21 @@ export function isUnavailable(option) {
         },
     ];
 }
+
+export function isAddDisabled() {
+    return [
+        {
+            content: "Add button is disabled",
+            trigger: ".modal .btn-primary.disabled",
+        },
+    ];
+}
+
+export function isAddEnabled() {
+    return [
+        {
+            content: "Add button is enabled",
+            trigger: ".modal .btn-primary:not(.disabled)",
+        },
+    ];
+}

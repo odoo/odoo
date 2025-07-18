@@ -142,3 +142,25 @@ registry.category("web_tour.tours").add("test_combo_variant_mix", {
             ),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_cross_exclusion_attribute_values", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product 1"),
+            ProductConfigurator.pickRadio("attribute_1_value_1"),
+            ProductConfigurator.pickRadio("attribute_2_value_1"),
+            ProductConfigurator.isAddDisabled(),
+            ProductConfigurator.pickRadio("attribute_2_value_2"),
+            ProductConfigurator.pickRadio("attribute_1_value_2"),
+            ProductConfigurator.isAddDisabled(),
+            ProductConfigurator.pickRadio("attribute_1_value_1"),
+            ProductConfigurator.pickRadio("attribute_2_value_2"),
+            ProductConfigurator.isAddEnabled(),
+            ProductConfigurator.pickRadio("attribute_1_value_2"),
+            ProductConfigurator.pickRadio("attribute_2_value_1"),
+            ProductConfigurator.isAddEnabled(),
+            Chrome.endTour(),
+        ].flat(),
+});

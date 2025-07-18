@@ -2755,6 +2755,71 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_combo_variant_mix', login="pos_user")
 
+    def test_cross_exclusion_attribute_values(self):
+        """ If you create a product with two attributes and 2 values for each attribute, and you exclude one value of the first attribute with one value of the second attribute
+        and vice versa, you should still be able to select the other values of the attributes. """
+        self.attribute_1 = self.env['product.attribute'].create({
+            'name': 'attribute_1',
+            'create_variant': 'no_variant',
+        })
+
+        self.attribute_2 = self.env['product.attribute'].create({
+            'name': 'attribute_2',
+            'create_variant': 'no_variant',
+        })
+
+        self.attribute_1_value_1 = self.env['product.attribute.value'].create({
+            'name': 'attribute_1_value_1',
+            'attribute_id': self.attribute_1.id,
+        })
+        self.attribute_1_value_2 = self.env['product.attribute.value'].create({
+            'name': 'attribute_1_value_2',
+            'attribute_id': self.attribute_1.id,
+        })
+        self.attribute_2_value_1 = self.env['product.attribute.value'].create({
+            'name': 'attribute_2_value_1',
+            'attribute_id': self.attribute_2.id,
+        })
+        self.attribute_2_value_2 = self.env['product.attribute.value'].create({
+            'name': 'attribute_2_value_2',
+            'attribute_id': self.attribute_2.id,
+        })
+
+        self.test_product_1 = self.env['product.template'].create({
+            'name': 'Test Product 1',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'attribute_line_ids': [
+                (0, 0, {
+                    'attribute_id': self.attribute_1.id,
+                    'value_ids': [(6, 0, [self.attribute_1_value_1.id, self.attribute_1_value_2.id])],
+                }),
+                (0, 0, {
+                    'attribute_id': self.attribute_2.id,
+                    'value_ids': [(6, 0, [self.attribute_2_value_1.id, self.attribute_2_value_2.id])],
+                }),
+            ],
+        })
+
+        # Test the exclusion of attribute values
+        ptav_1_1 = self.test_product_1.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.attribute_1.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.attribute_1_value_1.id)
+        ptav_1_2 = self.test_product_1.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.attribute_1.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.attribute_1_value_2.id)
+        ptav_2_2 = self.test_product_1.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.attribute_2.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.attribute_2_value_2.id)
+        ptav_2_1 = self.test_product_1.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.attribute_2.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.attribute_2_value_1.id)
+        self.env['product.template.attribute.exclusion'].create({
+            'product_tmpl_id': self.test_product_1.id,
+            'product_template_attribute_value_id': ptav_1_1.id,
+            'value_ids': [Command.set([ptav_2_1.id])],
+        })
+
+        self.env['product.template.attribute.exclusion'].create({
+            'product_tmpl_id': self.test_product_1.id,
+            'product_template_attribute_value_id': ptav_1_2.id,
+            'value_ids': [Command.set([ptav_2_2.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_cross_exclusion_attribute_values')
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
