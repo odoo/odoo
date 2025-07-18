@@ -2,11 +2,12 @@
 
 from odoo import Command, fields
 from odoo.addons.sale_project.tests.test_project_profitability import TestProjectProfitabilityCommon
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests.common import tagged
 
 
 @tagged("post_install", "-at_install")
-class TestSaleProjectStockProfitability(TestProjectProfitabilityCommon):
+class TestSaleProjectStockProfitability(TestProjectProfitabilityCommon, ValuationReconciliationTestCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

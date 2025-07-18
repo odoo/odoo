@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0</cbc:CustomizationID>
+<CreditNote xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2">
+  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
   <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
-  <cbc:ID>RINV/2017/00001</cbc:ID>
+  <cbc:ID>RINV/2017/01/0001</cbc:ID>
   <cbc:IssueDate>2017-01-01</cbc:IssueDate>
   <cbc:CreditNoteTypeCode>381</cbc:CreditNoteTypeCode>
   <cbc:Note>test narration</cbc:Note>
@@ -11,11 +11,6 @@
   <cac:OrderReference>
     <cbc:ID>ref_move</cbc:ID>
   </cac:OrderReference>
-  <cac:BillingReference>
-    <cac:InvoiceDocumentReference>
-      <cbc:ID>ref_move</cbc:ID>
-    </cac:InvoiceDocumentReference>
-  </cac:BillingReference>
   <cac:AdditionalDocumentReference>
     <cbc:ID>___ignore___</cbc:ID>
     <cbc:Attachment>
@@ -24,64 +19,56 @@
   </cac:AdditionalDocumentReference>
   <cac:AccountingSupplierParty>
     <cac:Party>
-      <cbc:EndpointID schemeID="0106">77777677</cbc:EndpointID>
-      <cac:PartyIdentification>
-        <cbc:ID>77777677</cbc:ID>
-      </cac:PartyIdentification>
+      <cbc:EndpointID schemeID="0208">0202239951</cbc:EndpointID>
       <cac:PartyName>
         <cbc:Name>partner_1</cbc:Name>
       </cac:PartyName>
       <cac:PostalAddress>
-        <cbc:StreetName>Kunststraat, 3</cbc:StreetName>
-        <cbc:CityName>Amsterdam</cbc:CityName>
-        <cbc:PostalZone>1000</cbc:PostalZone>
+        <cbc:StreetName>Chaussée de Namur 40</cbc:StreetName>
+        <cbc:CityName>Ramillies</cbc:CityName>
+        <cbc:PostalZone>1367</cbc:PostalZone>
         <cac:Country>
-          <cbc:IdentificationCode>NL</cbc:IdentificationCode>
+          <cbc:IdentificationCode>BE</cbc:IdentificationCode>
         </cac:Country>
       </cac:PostalAddress>
       <cac:PartyTaxScheme>
-        <cbc:CompanyID>NL000099998B57</cbc:CompanyID>
+        <cbc:CompanyID>BE0202239951</cbc:CompanyID>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
       </cac:PartyTaxScheme>
       <cac:PartyLegalEntity>
         <cbc:RegistrationName>partner_1</cbc:RegistrationName>
-        <cbc:CompanyID schemeID="0106">77777677</cbc:CompanyID>
+        <cbc:CompanyID>BE0202239951</cbc:CompanyID>
       </cac:PartyLegalEntity>
       <cac:Contact>
         <cbc:Name>partner_1</cbc:Name>
-        <cbc:Telephone>+31 180 6 225789</cbc:Telephone>
-        <cbc:ElectronicMail>info@outlook.nl</cbc:ElectronicMail>
       </cac:Contact>
     </cac:Party>
   </cac:AccountingSupplierParty>
   <cac:AccountingCustomerParty>
     <cac:Party>
-      <cbc:EndpointID schemeID="9944">NL41452B11</cbc:EndpointID>
-      <cac:PartyIdentification>
-        <cbc:ID>NL41452B11</cbc:ID>
-      </cac:PartyIdentification>
+      <cbc:EndpointID schemeID="0208">0477472701</cbc:EndpointID>
       <cac:PartyName>
         <cbc:Name>partner_2</cbc:Name>
       </cac:PartyName>
       <cac:PostalAddress>
-        <cbc:StreetName>Europaweg, 2</cbc:StreetName>
-        <cbc:CityName>Rotterdam</cbc:CityName>
-        <cbc:PostalZone>1200</cbc:PostalZone>
+        <cbc:StreetName>Rue des Bourlottes 9</cbc:StreetName>
+        <cbc:CityName>Ramillies</cbc:CityName>
+        <cbc:PostalZone>1367</cbc:PostalZone>
         <cac:Country>
-          <cbc:IdentificationCode>NL</cbc:IdentificationCode>
+          <cbc:IdentificationCode>BE</cbc:IdentificationCode>
         </cac:Country>
       </cac:PostalAddress>
       <cac:PartyTaxScheme>
-        <cbc:CompanyID>NL000041452B11</cbc:CompanyID>
+        <cbc:CompanyID>BE0477472701</cbc:CompanyID>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
       </cac:PartyTaxScheme>
       <cac:PartyLegalEntity>
         <cbc:RegistrationName>partner_2</cbc:RegistrationName>
-        <cbc:CompanyID schemeID="0106">123456789</cbc:CompanyID>
+        <cbc:CompanyID>BE0477472701</cbc:CompanyID>
       </cac:PartyLegalEntity>
       <cac:Contact>
         <cbc:Name>partner_2</cbc:Name>
@@ -91,44 +78,95 @@
   <cac:Delivery>
     <cac:DeliveryLocation>
       <cac:Address>
-        <cbc:StreetName>Europaweg, 2</cbc:StreetName>
-        <cbc:CityName>Rotterdam</cbc:CityName>
-        <cbc:PostalZone>1200</cbc:PostalZone>
+        <cbc:StreetName>Rue des Bourlottes 9</cbc:StreetName>
+        <cbc:CityName>Ramillies</cbc:CityName>
+        <cbc:PostalZone>1367</cbc:PostalZone>
         <cac:Country>
-          <cbc:IdentificationCode>NL</cbc:IdentificationCode>
+          <cbc:IdentificationCode>BE</cbc:IdentificationCode>
         </cac:Country>
       </cac:Address>
     </cac:DeliveryLocation>
   </cac:Delivery>
   <cac:PaymentMeans>
-    <cbc:PaymentMeansCode>57</cbc:PaymentMeansCode>
-    <cbc:PaymentID>RINV/2017/00001</cbc:PaymentID>
+    <cbc:PaymentMeansCode name="standing agreement">57</cbc:PaymentMeansCode>
+    <cbc:PaymentID>RINV/2017/01/0001</cbc:PaymentID>
     <cac:PayeeFinancialAccount>
-      <cbc:ID>NL93999574162167</cbc:ID>
+      <cbc:ID>BE90735788866632</cbc:ID>
     </cac:PayeeFinancialAccount>
   </cac:PaymentMeans>
   <cac:PaymentTerms>
-    <cbc:Note>Payment terms: 30% Advance End of Following Month</cbc:Note>
+    <cbc:Note>10% discount if paid before 10 days</cbc:Note>
   </cac:PaymentTerms>
+  <cac:AllowanceCharge>
+    <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+    <cbc:AllowanceChargeReasonCode>66</cbc:AllowanceChargeReasonCode>
+    <cbc:AllowanceChargeReason>Conditional cash/payment discount</cbc:AllowanceChargeReason>
+    <cbc:Amount currencyID="USD">-178.20</cbc:Amount>
+    <cac:TaxCategory>
+      <cbc:ID>S</cbc:ID>
+      <cbc:Percent>21.0</cbc:Percent>
+      <cac:TaxScheme>
+        <cbc:ID>VAT</cbc:ID>
+      </cac:TaxScheme>
+    </cac:TaxCategory>
+  </cac:AllowanceCharge>
+  <cac:AllowanceCharge>
+    <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+    <cbc:AllowanceChargeReasonCode>66</cbc:AllowanceChargeReasonCode>
+    <cbc:AllowanceChargeReason>Conditional cash/payment discount</cbc:AllowanceChargeReason>
+    <cbc:Amount currencyID="USD">-90.00</cbc:Amount>
+    <cac:TaxCategory>
+      <cbc:ID>S</cbc:ID>
+      <cbc:Percent>12.0</cbc:Percent>
+      <cac:TaxScheme>
+        <cbc:ID>VAT</cbc:ID>
+      </cac:TaxScheme>
+    </cac:TaxCategory>
+  </cac:AllowanceCharge>
+  <cac:AllowanceCharge>
+    <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
+    <cbc:AllowanceChargeReasonCode>ZZZ</cbc:AllowanceChargeReasonCode>
+    <cbc:AllowanceChargeReason>Conditional cash/payment discount</cbc:AllowanceChargeReason>
+    <cbc:Amount currencyID="USD">-268.20</cbc:Amount>
+    <cac:TaxCategory>
+      <cbc:ID>E</cbc:ID>
+      <cbc:Percent>0.0</cbc:Percent>
+      <cac:TaxScheme>
+        <cbc:ID>VAT</cbc:ID>
+      </cac:TaxScheme>
+    </cac:TaxCategory>
+  </cac:AllowanceCharge>
   <cac:TaxTotal>
-    <cbc:TaxAmount currencyID="USD">401.58</cbc:TaxAmount>
+    <cbc:TaxAmount currencyID="USD">434.00</cbc:TaxAmount>
     <cac:TaxSubtotal>
-      <cbc:TaxableAmount currencyID="USD">1782.00</cbc:TaxableAmount>
-      <cbc:TaxAmount currencyID="USD">338.58</cbc:TaxAmount>
+      <cbc:TaxableAmount currencyID="USD">1960.20</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="USD">336.80</cbc:TaxAmount>
       <cac:TaxCategory>
         <cbc:ID>S</cbc:ID>
-        <cbc:Percent>19.0</cbc:Percent>
+        <cbc:Percent>21.0</cbc:Percent>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
       </cac:TaxCategory>
     </cac:TaxSubtotal>
     <cac:TaxSubtotal>
-      <cbc:TaxableAmount currencyID="USD">900.00</cbc:TaxableAmount>
-      <cbc:TaxAmount currencyID="USD">63.00</cbc:TaxAmount>
+      <cbc:TaxableAmount currencyID="USD">990.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="USD">97.20</cbc:TaxAmount>
       <cac:TaxCategory>
         <cbc:ID>S</cbc:ID>
-        <cbc:Percent>7.0</cbc:Percent>
+        <cbc:Percent>12.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="USD">-268.20</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="USD">0.00</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID>E</cbc:ID>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cbc:TaxExemptionReason>Exempt from tax</cbc:TaxExemptionReason>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
@@ -138,12 +176,14 @@
   <cac:LegalMonetaryTotal>
     <cbc:LineExtensionAmount currencyID="USD">2682.00</cbc:LineExtensionAmount>
     <cbc:TaxExclusiveAmount currencyID="USD">2682.00</cbc:TaxExclusiveAmount>
-    <cbc:TaxInclusiveAmount currencyID="USD">3083.58</cbc:TaxInclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="USD">3116.00</cbc:TaxInclusiveAmount>
+    <cbc:AllowanceTotalAmount currencyID="USD">-268.20</cbc:AllowanceTotalAmount>
+    <cbc:ChargeTotalAmount currencyID="USD">-268.20</cbc:ChargeTotalAmount>
     <cbc:PrepaidAmount currencyID="USD">0.00</cbc:PrepaidAmount>
-    <cbc:PayableAmount currencyID="USD">3083.58</cbc:PayableAmount>
+    <cbc:PayableAmount currencyID="USD">3116.00</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
   <cac:CreditNoteLine>
-    <cbc:ID>1405</cbc:ID>
+    <cbc:ID>966</cbc:ID>
     <cbc:CreditedQuantity unitCode="DZN">2.0</cbc:CreditedQuantity>
     <cbc:LineExtensionAmount currencyID="USD">1782.00</cbc:LineExtensionAmount>
     <cac:AllowanceCharge>
@@ -156,7 +196,7 @@
       <cbc:Name>product_a</cbc:Name>
       <cac:ClassifiedTaxCategory>
         <cbc:ID>S</cbc:ID>
-        <cbc:Percent>19.0</cbc:Percent>
+        <cbc:Percent>21.0</cbc:Percent>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
@@ -167,7 +207,7 @@
     </cac:Price>
   </cac:CreditNoteLine>
   <cac:CreditNoteLine>
-    <cbc:ID>1406</cbc:ID>
+    <cbc:ID>967</cbc:ID>
     <cbc:CreditedQuantity unitCode="C62">10.0</cbc:CreditedQuantity>
     <cbc:LineExtensionAmount currencyID="USD">1000.00</cbc:LineExtensionAmount>
     <cac:Item>
@@ -175,7 +215,7 @@
       <cbc:Name>product_b</cbc:Name>
       <cac:ClassifiedTaxCategory>
         <cbc:ID>S</cbc:ID>
-        <cbc:Percent>7.0</cbc:Percent>
+        <cbc:Percent>12.0</cbc:Percent>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
@@ -186,7 +226,7 @@
     </cac:Price>
   </cac:CreditNoteLine>
   <cac:CreditNoteLine>
-    <cbc:ID>1407</cbc:ID>
+    <cbc:ID>968</cbc:ID>
     <cbc:CreditedQuantity unitCode="C62">-1.0</cbc:CreditedQuantity>
     <cbc:LineExtensionAmount currencyID="USD">-100.00</cbc:LineExtensionAmount>
     <cac:Item>
@@ -194,7 +234,7 @@
       <cbc:Name>product_b</cbc:Name>
       <cac:ClassifiedTaxCategory>
         <cbc:ID>S</cbc:ID>
-        <cbc:Percent>7.0</cbc:Percent>
+        <cbc:Percent>12.0</cbc:Percent>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>

@@ -609,6 +609,9 @@ class IrActionsReport(models.Model):
         if kwargs['humanReadable']:
             kwargs['fontName'] = _DEFAULT_BARCODE_FONT
 
+        if kwargs['width'] * kwargs['height'] > 400000 or max(kwargs['width'], kwargs['height']) > 10000:
+            raise ValueError("Barcode too large")
+
         if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
             barcode_type = 'EAN13'
             if len(value) in (11, 12):
