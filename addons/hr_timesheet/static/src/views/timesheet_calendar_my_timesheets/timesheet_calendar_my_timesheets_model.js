@@ -7,6 +7,6 @@ export class TimesheetCalendarMyTimesheetsModel extends CalendarModel {
     async multiCreateRecords(multiCreateData, dates) {
         this.meta.context = this.meta.context || {};
         this.meta.context.timesheet_calendar = true;
-        super.multiCreateRecords(multiCreateData, dates);
+        return await super.multiCreateRecords(multiCreateData, dates);
     }
 }
