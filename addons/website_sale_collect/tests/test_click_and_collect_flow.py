@@ -25,4 +25,5 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
                 'partner_longitude': 2.0,
             }
         )
-        self.start_tour('/', 'website_sale_collect_buy_product')
+        self.website.warehouse_id = self._create_warehouse()
+        self.start_tour('/', 'website_sale_collect_buy_product', debug=True, step_delay=1500)

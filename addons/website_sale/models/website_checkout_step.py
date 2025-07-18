@@ -24,18 +24,10 @@ class WebsiteCheckoutStep(models.Model):
         )
         return self.search(next_step_domain, order='sequence', limit=1)
 
-    def _get_previous_checkout_step(self, allowed_steps_domain):
-        """ Get the previous step in the checkout flow based on the sequence."""
+    def _get_previous_checkout_steps(self, allowed_steps_domain, limit=None):
+        """ Get the previous steps in the checkout flow based on the sequence."""
 
         previous_step_domain = Domain.AND(
             [allowed_steps_domain, [('sequence', '<', self.sequence)]]
         )
-        return self.search(previous_step_domain, order='sequence DESC', limit=1)
-
-    def _get_previous_checkout_steps(self, allowed_steps_domain):
-        """Get all the steps prior to `self` according to `sequence`."""
-
-        return self.search(
-            Domain.AND([allowed_steps_domain, [('sequence', '<', self.sequence)]]),
-            order='sequence',
-        )
+        return self.search(previous_step_domain, order='sequence DESC', limit=limit)

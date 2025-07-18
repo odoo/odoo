@@ -44,6 +44,7 @@ registry.category('web_tour.tours').add('website_sale_collect_buy_product', {
             content: "Click on confirm button",
             trigger: '[name="website_sale_main_button"]',
             run: 'click',
+            expectUnloadPage: true,
         },
         {
             content: "Ensure in store delivery method is selected.",
@@ -52,6 +53,14 @@ registry.category('web_tour.tours').add('website_sale_collect_buy_product', {
         {
             content: "Check the pickup address is set.",
             trigger: 'b[name="o_pickup_location_name"]:contains("Shop 1")',
+        },
+        {
+            content: "Check deliveries are unavailable for the order.",
+            trigger: 'input[name="o_delivery_radio"][data-delivery-type="fixed"] ~ span:contains("Not available")',
+        },
+        {
+            content: "Check pick-up in store os available for the order.",
+            trigger: 'input[name="o_delivery_radio"][data-delivery-type="in_store"] ~ span:contains("Available")',
         },
         tourUtils.confirmOrder(),
         {

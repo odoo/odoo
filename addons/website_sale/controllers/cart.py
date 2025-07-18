@@ -276,6 +276,11 @@ class Cart(PaymentPortal):
 
     @staticmethod
     def _get_cart_update_values(order_sudo):
+        """Construct the values needed to update the UI after a cart update.
+
+        :param sale.order order_sudo: The current cart order.
+        :rtype: dict
+        """
         return {
             'cart_quantity': order_sudo.cart_quantity,
             'cart_ready': order_sudo._is_cart_ready_for_checkout(),
@@ -293,9 +298,7 @@ class Cart(PaymentPortal):
                 }
             ),
             'website_sale.total': request.env['ir.ui.view']._render_template(
-                'website_sale.total', {
-                    'website_sale_order': order_sudo,
-                }
+                'website_sale.total', {'website_sale_order': order_sudo}
             ),
         }
 

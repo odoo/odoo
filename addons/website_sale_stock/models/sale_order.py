@@ -113,8 +113,8 @@ class SaleOrder(models.Model):
         return self.order_line.filtered(lambda sol: sol.product_id.id == product_id)
 
     def _is_cart_ready_for_checkout(self):
-        """Override of `website_sale` to stop the user if there is not enough stock for some order
-        lines."""
+        """Override of `website_sale` to prevent the user from proceeding if there is not enough
+        stock for some order lines."""
         if self._has_deliverable_products() and not self._check_stock():
             self.shop_warning = self.env._(
                 "Unfortunately, there is no longer enough stock to fulfill your order.\n"

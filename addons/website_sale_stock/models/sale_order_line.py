@@ -38,10 +38,11 @@ class SaleOrderLine(models.Model):
         return min(max_quantities, default=None)
 
     def _check_availability(self):
-        """Whether the current order line is available on the website.
+        """Check whether the current order line is available on the website.
 
         Note: self.ensure_one()
 
+        :return: True if available, False otherwise.
         :rtype: bool
         """
         self.ensure_one()

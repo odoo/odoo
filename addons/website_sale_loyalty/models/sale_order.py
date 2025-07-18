@@ -256,12 +256,12 @@ class SaleOrder(models.Model):
         )
 
     def _is_cart_ready_for_checkout(self):
-        """Override of `website_sale` to ensure the rewards are up to date before checkout."""
+        """Override of `website_sale` to ensure rewards are up to date before checkout."""
         initial_amount = self.amount_total
         self._update_programs_and_rewards()
         if self.currency_id.compare_amounts(self.amount_total, initial_amount):
             self.shop_warning = self.env._(
-                "Applied rewards were changed or have expired.\n"
+                "Applied rewards have changed or expired.\n"
                 "Please review your cart and try again."
             )
             return False

@@ -799,9 +799,9 @@ class SaleOrder(models.Model):
         return res
 
     def _pop_shop_warnings(self):
-        """Clear and return the warnings associated to the current orders/carts.
+        """Clear and return the warnings associated with the current orders.
 
-        Note: can be called with an empty recordset.
+        Note: Can be called with an empty recordset.
 
         :return: A dict mapping the orders or order lines to a warning message, if any.
         :rtype: dict[sale.order | sale.order.line, str]
@@ -819,10 +819,10 @@ class SaleOrder(models.Model):
         return warnings
 
     def _is_cart_ready_for_checkout(self):
-        """Whether the cart is valid and the user can proceed to the checkout.
+        """Whether the cart is valid and the user can proceed to the checkout step.
 
         This method is also intended to set the `shop_warning` with any relevant message that can
-        help the customer in completing their cart.
+        help the customer complete their cart.
 
         Note: self.ensure_one()
 
@@ -834,13 +834,13 @@ class SaleOrder(models.Model):
             return False
         return True
 
-    def _is_cart_ready_to_confirm(self):
-        """Whether the cart is ready to be confirmed and the user can proceed to the payment.
+    def _is_cart_ready_for_payment(self):
+        """Whether the cart is ready to be confirmed and the user can proceed to the payment step.
 
         By default, the cart must have a delivery method if it contains deliverable products.
 
         This method is also intended to set the `shop_warning` with any relevant message that can
-        help the customer in completing their cart.
+        help the customer complete their cart.
 
         Note: self.ensure_one()
 
@@ -865,11 +865,11 @@ class SaleOrder(models.Model):
         """Whether the cart is valid and can be paid for.
 
         This method is also intended to set the `shop_warning` with any relevant message that can
-        help the customer in completing their cart.
+        help the customer complete their cart.
 
         Note: self.ensure_one()
 
         :rtype: bool
         """
         self.ensure_one()
-        return self._is_cart_ready_for_checkout() and self._is_cart_ready_to_confirm()
+        return self._is_cart_ready_for_checkout() and self._is_cart_ready_for_payment()

@@ -21,6 +21,14 @@ class TestCheckoutAddress(CheckoutCommon):
     * address choice (/shop/checkout)
     """
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.country_id = cls.country_be.id
+        cls.user_portal = cls._create_new_portal_user()
+        cls.user_internal = cls._create_new_internal_user()
+        cls.user_internal.partner_id.company_id = cls.env.company
+
     def setUp(self):
         super().setUp()
         self.WebsiteSaleController = WebsiteSale()

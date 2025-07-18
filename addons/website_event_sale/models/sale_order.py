@@ -127,8 +127,7 @@ class SaleOrder(models.Model):
         )
 
     def _is_cart_ready_for_checkout(self):
-        """Override of `website_sale` to check if the user tries to order a ticket which isn't
-        available anymore."""
+        """Override of `website_sale` to check if the user is trying to order a ticket that is no longer available."""
         ready = super()._is_cart_ready_for_checkout()
         if not (ready and self.order_line.event_id):
             return ready

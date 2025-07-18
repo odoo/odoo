@@ -81,28 +81,27 @@ class SaleOrder(models.Model):
                 zip_code = None  # Reset the zip code to skip the `assert` in the `super` call.
         return super()._get_pickup_locations(zip_code=zip_code, country=country, **kwargs)
 
-    def _is_cart_ready_to_confirm(self):
-        """Override of `website_sale` to includes errors if no pickup location is selected and to
-        ensure the cart is available in the selected store no even if out of stock orders are
+    def _is_cart_ready_for_payment(self):
+        """Override of `website_sale` to include errors if no pickup location is selected and to
+        ensure the cart is available in the selected store, even if out-of-stock orders are
         allowed."""
         if not self._has_deliverable_products():
-            return super()._is_cart_ready_to_confirm()
+            return super()._is_cart_ready_for_payment()
 
         if self.carrier_id.delivery_type == 'in_store':
             if not self.pickup_location_data:
                 self.shop_warning = self.env._("Please choose a store to collect your order.")
                 return False
-            # `_is_cart_ready_for_checkout` checks for all the available in-store warehouse, we must
-            # now check for the selected warehouse.
+            # `_is_cart_ready_for_checkout` checks all available warehouses; we must now
+            # check the selected warehouse.
             if not self._is_in_stock(self.warehouse_id.id):
                 self.shop_warning = self.env._(
                     "Some products are not available in the selected store."
                 )
                 return False
 
-        # If `shop_wh_id` is not False, limit the cart availability to the shop warehouse. False
-        # indicates the website uses any warehouse, including in-store warehouses, which is already
-        # checked in `_is_cart_ready_for_checkout`.
+        # `_is_cart_ready_for_checkout` checks all available warehouses, including in-store.
+        # Therefore, ensure the website warehouse, if specified, has enough stock.
         elif (shop_wh_id := self._get_shop_warehouse_id()) and not self._is_in_stock(
             shop_wh_id, allow_out_of_stock=True,
         ):
@@ -112,7 +111,7 @@ class SaleOrder(models.Model):
             )
             return False
 
-        return super()._is_cart_ready_to_confirm()
+        return super()._is_cart_ready_for_payment()
 
     # === TOOLING ===#
 
@@ -141,7 +140,7 @@ class SaleOrder(models.Model):
         """ Check whether all storable products of the cart are in stock in the given warehouse.
 
         :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
-        :param bool allow_out_of_stock: Wheter `product.allow_out_of_stock_order` should be taken
+        :param bool allow_out_of_stock: Whether `product.allow_out_of_stock_order` should be taken
             into account or not.
         :return: Whether all storable products are in stock.
         :rtype: bool
@@ -169,13 +168,12 @@ class SaleOrder(models.Model):
         return unavailable_order_lines
 
     def _can_be_delivered(self, dm):
-        """Whether the order can be delivered using the given delivery method.
+        """Determine whether the order can be delivered using the given delivery method.
 
-        In-store deliveries need to ensure stock is available even if `allow_out_of_stock` is
-        enabled as a customers can pick-up their order at any moment without leaving time to refill
-        the sotck.
+        For in-store deliveries, stock availability must be ensured even if `allow_out_of_stock` is
+        enabled, since customers may collect their order at any time without notice.
 
-        :param delivery.carrier dm: The delivery method to use to check for stock availability.
+        :param delivery.carrier dm: The delivery method to check for stock availability.
         :rtype: bool
         """
         self.ensure_one()

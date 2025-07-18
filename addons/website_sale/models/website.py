@@ -781,15 +781,10 @@ class Website(models.Model):
             ('step_href', '=', href),
         ], limit=1)
 
-    def _get_next_checkout_step(self, href):
+    def _get_previous_checkout_steps(self, href, limit=None):
         return self._get_checkout_step(
             href
-        )._get_next_checkout_step(self._get_allowed_steps_domain())
-
-    def _get_previous_checkout_steps(self, href):
-        return self._get_checkout_step(
-            href
-        )._get_previous_checkout_steps(self._get_allowed_steps_domain())
+        )._get_previous_checkout_steps(self._get_allowed_steps_domain(), limit=limit)
 
     def _get_allowed_steps_domain(self):
         return [
@@ -814,7 +809,7 @@ class Website(models.Model):
             Domain.AND([allowed_steps_domain, [('step_href', '=', href)]]), limit=1
         )
         next_step = current_step._get_next_checkout_step(allowed_steps_domain)
-        previous_step = current_step._get_previous_checkout_step(allowed_steps_domain)
+        previous_step = current_step._get_previous_checkout_steps(allowed_steps_domain, limit=1)
 
         next_href = next_step.step_href
         # try_skip_step option required on /shop/checkout next button
