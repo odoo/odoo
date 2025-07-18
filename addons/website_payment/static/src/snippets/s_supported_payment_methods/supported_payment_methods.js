@@ -4,6 +4,9 @@ import { registry } from '@web/core/registry';
 import { Interaction } from '@web/public/interaction';
 
 
+const PAYMENT_METHODS_CACHE_KEY = 'website_payment.supported_payment_methods';
+
+
 export class SupportedPaymentMethods extends Interaction {
     static selector = '.s_supported_payment_methods';
 
@@ -13,6 +16,11 @@ export class SupportedPaymentMethods extends Interaction {
     }
 
     async willStart() {
+        // If the page is reloaded, invalidate the cache to display the latest changes. Note that
+        // this won’t trigger if the user navigates to another page within the same tab.
+        if (browser.performance.getEntriesByType('navigation').at(0)?.type === 'reload') {
+            browser.sessionStorage.removeItem(PAYMENT_METHODS_CACHE_KEY);
+        }
         await this.fetchPaymentMethods();
     }
 
@@ -24,7 +32,7 @@ export class SupportedPaymentMethods extends Interaction {
      */
     async fetchPaymentMethods() {
         let cache = JSON.parse(
-            browser.sessionStorage.getItem('website_payment.supported_payment_methods') || '{}',
+            browser.sessionStorage.getItem(PAYMENT_METHODS_CACHE_KEY) || '{}',
         );
 
         // Re-fetch if the cached list can potentially be larger
@@ -34,7 +42,7 @@ export class SupportedPaymentMethods extends Interaction {
             ).catch(_ => []);
             cache.limit = this.limit;
             browser.sessionStorage.setItem(
-                'website_payment.supported_payment_methods', JSON.stringify(cache),
+                PAYMENT_METHODS_CACHE_KEY, JSON.stringify(cache),
             );
         }
 

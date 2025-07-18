@@ -2,7 +2,17 @@
 <odoo>
 
     <template id="s_supported_payment_methods" name="Supported Payment Methods">
-        <div class="s_supported_payment_methods o_not_editable" data-limit="6" data-height="30px"/>
+        <!-- `o_not_editable` prevents the user from selecting content inside the snippet like
+             images as they will not be saved either way.
+             `data-oe-protected` prevents the history plugin from registering DOM changes in this
+             element, otherwise a warning is logged when reverting previewed changes.
+        -->
+        <div
+            class="s_supported_payment_methods o_not_editable"
+            data-limit="6"
+            data-height="30px"
+            data-oe-protected="true"
+        />
     </template>
 
     <record id="s_supported_payment_methods_OOO_xml" model="ir.asset">
