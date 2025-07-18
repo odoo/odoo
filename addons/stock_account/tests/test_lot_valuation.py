@@ -441,6 +441,32 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.lot2.standard_price, 5, "lot2 cost remains unchanged")
         self.assertEqual(self.product1.standard_price, 6.43, "product cost changed too")
 
+    def test_average_manual_product_revaluation_with_lots(self):
+        self.product1.categ_id.property_cost_method = 'average'
+
+        self._make_in_move(self.product1, 8, 5, lot_ids=[self.lot1, self.lot2])
+        self._make_in_move(self.product1, 6, 7, lot_ids=[self.lot1])
+        self.assertEqual(self.lot1.standard_price, 6.2)
+        self.assertEqual(self.lot1.value_svl, 62)
+        self.assertEqual(self.lot2.standard_price, 5)
+        self.assertEqual(self.lot2.value_svl, 20)
+        self.assertEqual(self.product1.standard_price, 5.86)
+
+        Form(self.env['stock.valuation.layer.revaluation'].with_context({
+            'default_product_id': self.product1.id,
+            'default_company_id': self.env.company.id,
+            'default_added_value': 11.2,
+        })).save().action_validate_revaluation()
+
+        layers = self.lot1.stock_valuation_layer_ids
+        self.assertEqual(len(layers), 3)
+        self.assertEqual(layers.lot_id, self.lot1)
+        self.assertEqual(self.lot1.standard_price, 7, "lot1 cost changed")
+        self.assertEqual(self.lot1.value_svl, 70, "lot1 value changed")
+        self.assertEqual(self.lot2.standard_price, 5.8, "lot2 cost changed")
+        self.assertEqual(self.lot2.value_svl, 23.2, "lot2 value changed")
+        self.assertEqual(self.product1.standard_price, 6.66, "product cost changed too")
+
     def test_lot_move_update_after_done(self):
         """validate a stock move. Edit the move line in done state."""
         move = self._make_in_move(self.product1, 8, 5, create_picking=True, lot_ids=[self.lot1, self.lot2])
