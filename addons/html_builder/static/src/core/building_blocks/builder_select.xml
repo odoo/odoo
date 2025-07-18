@@ -8,9 +8,18 @@
         <div t-ref="root" class="o-hb-select-wrapper">
             <div inert="" class="h-0 w-0 overflow-hidden" t-att-class="props.className" t-ref="content"><WithIgnoreItem><t t-slot="default" /></WithIgnoreItem></div>
             <Dropdown state="this.dropdown" menuClass="'o-hb-select-dropdown'">
-                <button class="o-hb-select-toggle o-hb-btn btn btn-secondary text-start o-dropdown-caret" t-ref="button" t-att-id="props.id">
-                    <t t-slot="fixedButton"/>
-                </button>
+                <t t-if="props.customInputComponent">
+                    <t t-component="customComponent"
+                        t-props="props.customInputProps"
+                        t-on-click="onClick"
+                        t-on-keydown="onInputKeydown"
+                    />
+                </t>
+                <t t-else="">
+                    <button class="o-hb-select-toggle o-hb-btn btn btn-secondary text-start o-dropdown-caret" t-ref="button" t-att-id="props.id">
+                        <t t-slot="fixedButton"/>
+                    </button>
+                </t>
                 <t t-set-slot="content">
                     <div t-att-class="props.dropdownContainerClass" data-prevent-closing-overlay="true" t-att-style="'max-height: calc(50dvh - ' + heightOfButton() + 'px);'">
                         <t t-slot="default" />

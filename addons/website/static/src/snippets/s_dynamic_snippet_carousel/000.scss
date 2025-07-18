@@ -13,3 +13,19 @@
 .s_dynamic_snippet_title_aside + .s_dynamic_snippet_content {
     width: 75%;
 }
+
+.loading .carousel-control-prev,
+.loading .carousel-control-next,
+.loading .carousel-item {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+@keyframes loadingAnimation {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.2; }
+}
+
+.loading .carousel-item {
+  animation: loadingAnimation 1s infinite;
+}

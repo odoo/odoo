@@ -26,7 +26,13 @@
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Fetched Elements" t-if="!!this.dynamicOptionParams.domState.filterId">
-        <BuilderSelect dataAttributeAction="'numberOfRecords'" preview="false" id="'number_of_records_opt'">
+        <BuilderSelect dataAttributeAction="'numberOfRecords'" preview="false" id="'number_of_records_opt'" customInputComponent="'builderNumberInput'"
+            customInputProps="{
+                min: 1,
+                preview: false,
+                select: true
+            }"
+        >
             <t t-foreach="['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16']" t-as="value" t-key="value">
                 <BuilderSelectItem dataAttributeActionValue="value" t-out="value"/>
             </t>

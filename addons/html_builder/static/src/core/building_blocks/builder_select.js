@@ -10,6 +10,8 @@ import {
 import { BuilderComponent } from "./builder_component";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { setElementContent } from "@web/core/utils/html";
+import { BuilderNumberInput } from "@html_builder/core/building_blocks/builder_number_input";
+import { BuilderTextInput } from "@html_builder/core/building_blocks/builder_text_input";
 
 export class WithIgnoreItem extends Component {
     static template = xml`<t t-slot="default"/>`;
@@ -36,6 +38,8 @@ export class BuilderSelect extends Component {
                 fixedButton: { type: Object, optional: true },
             },
         },
+        customInputComponent: { type: String, optional: true },
+        customInputProps: { type: Object, optional: true },
     };
     static components = {
         Dropdown,
@@ -73,6 +77,34 @@ export class BuilderSelect extends Component {
     }
 
     heightOfButton() {
-        return this.buttonRef.el.getBoundingClientRect().height;
+        if (!this.props.customInputComponent) {
+            return this.buttonRef.el.getBoundingClientRect().height;
+        }
+    }
+
+    get customComponent() {
+        if (this.props.customInputComponent === "builderNumberInput") {
+            return BuilderNumberInput;
+        } else {
+            return BuilderTextInput;
+        }
+    }
+
+    onInputKeydown(ev) {
+        if (ev.key === "Enter") {
+            this.closeDropdown();
+        }
+    }
+
+    onClick() {
+        this.openDropdown();
+    }
+
+    openDropdown() {
+        this.dropdown.open();
+    }
+
+    closeDropdown() {
+        this.dropdown.close();
     }
 }

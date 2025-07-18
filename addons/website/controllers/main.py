@@ -409,11 +409,11 @@ class Website(Home):
         request.session[f'website_{view_id}_layout_mode'] = layout_mode
 
     @http.route('/website/snippet/filters', type='jsonrpc', auth='public', website=True, readonly=True)
-    def get_dynamic_filter(self, filter_id, template_key, limit=None, search_domain=None, with_sample=False, **custom_template_data):
+    def get_dynamic_filter(self, filter_id, template_key, limit=None, offset=0, search_domain=None, with_sample=False, **custom_template_data):
         dynamic_filter = request.env['website.snippet.filter'].sudo().search(
             Domain('id', '=', filter_id) & request.website.website_domain()
         )
-        return dynamic_filter and dynamic_filter._render(template_key, limit, search_domain, with_sample, **custom_template_data) or []
+        return dynamic_filter and dynamic_filter._render(template_key, limit, offset, search_domain, with_sample, **custom_template_data) or []
 
     @http.route('/website/snippet/options_filters', type='jsonrpc', auth='user', website=True, readonly=True)
     def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):
