@@ -5,6 +5,7 @@ from datetime import timedelta, datetime, time
 from collections import defaultdict
 
 from odoo import api, fields, models
+from odoo.osv import expression
 
 
 class ResPartner(models.Model):
@@ -48,3 +49,30 @@ class ResPartner(models.Model):
             on_time, ordered = numbers
             partner.on_time_rate = on_time / ordered * 100 if ordered else -1   # use negative number to indicate no data
         (self - seen_partner).on_time_rate = -1
+
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        res = super().name_search(name, domain, operator, limit)
+        if not self.env.context.get('highlight_supplier', False):  # Flag for replenish wizard
+            return res
+
+        product = self.env['product.product'].browse(self.env.context['product_id'])
+        seen_ids = {pid for pid, _ in res}
+        missing_ids = list(set(product.seller_ids.partner_id.ids) - seen_ids)
+        if missing_ids:  # Vendors not in res due to limit
+            vendor_domain = expression.AND([domain or [], [('id', 'in', missing_ids)]])
+            res.extend(super().name_search(name, vendor_domain, operator, limit))
+
+        res.sort(key=lambda partner: 0 if partner[0] in product.seller_ids.partner_id.ids else 1)
+        return res[:limit] if limit else res
+
+    @api.depends('name')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        ctx = self.env.context
+        if not (ctx.get('product_id', 0) and ctx.get("formatted_display_name", 0) and ctx.get("highlight_supplier", 0)):
+            return
+        product = self.env['product.product'].browse(ctx['product_id'])
+        for rec in self:
+            if rec.id in product.seller_ids.partner_id.ids:
+                rec.display_name = f"**{rec.display_name}**"
