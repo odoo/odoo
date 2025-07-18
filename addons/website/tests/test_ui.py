@@ -354,19 +354,6 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour(f'/website/force/{website_default.id}?{url_params}', "generic_website_editor", login="website_user")
         self.start_tour(f'/website/force/{new_website.id}?{url_params}', "specific_website_editor", login="website_user")
 
-    def test_06_public_user_editor(self):
-        website_default = self.env['website'].search([], limit=1)
-        self.env['website.page'].search([
-            ('url', '=', '/'), ('website_id', '=', website_default.id)
-        ], limit=1).arch = """
-            <t name="Homepage" t-name="website.homepage">
-                <t t-call="website.layout">
-                    <textarea class="o_public_user_editor_test_textarea o_wysiwyg_loader"/>
-                </t>
-            </t>
-        """
-        self.start_tour("/", "public_user_editor", login=None)
-
     def test_07_snippet_version(self):
         website_snippets = self.env.ref('website.snippets')
         view_ids = self.env['ir.ui.view'].create([{

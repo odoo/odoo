@@ -9,9 +9,10 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { htmlJoin } from "@web/core/utils/html";
 import { session } from "@web/session";
-import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 import { FlagMarkAsOffensiveDialog } from "../components/flag_mark_as_offensive/flag_mark_as_offensive";
 import { WebsiteForumTagsWrapper } from "../components/website_forum_tags_wrapper";
+import { WebsiteForumWysiwyg } from "@website_forum/components/website_forum_wysiwyg/website_forum_wysiwyg";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 export class WebsiteForum extends Interaction {
     static selector = ".website_forum";
@@ -100,42 +101,31 @@ export class WebsiteForum extends Interaction {
 
         this.el.querySelectorAll("textarea.o_wysiwyg_loader").forEach((textareaEl) => {
             const editorKarma = parseInt(textareaEl.dataset.karma || 0); // default value for backward compatibility
-            const formEl = textareaEl.closest("form");
             const hasFullEdit = parseInt(this.el.querySelector("#karma").value) >= editorKarma;
-            const options = {
-                toolbarTemplate: "website_forum.web_editor_toolbar",
-                toolbarOptions: {
-                    showColors: false,
-                    showFontSize: false,
-                    showHistory: true,
-                    showHeading1: false,
-                    showHeading2: false,
-                    showHeading3: false,
-                    showLink: hasFullEdit,
-                    showImageEdit: hasFullEdit,
-                },
-                recordInfo: {
+            const isReply = !!textareaEl.closest("#post_reply");
+            const props = {
+                textareaEl,
+                fullEdit: hasFullEdit,
+                getRecordInfo: () => ({
                     context: this.services.website_page.context,
-                    res_model: "forum.post",
+                    resModel: "forum.post",
                     // Id is retrieved from URL, which is either:
                     // - /forum/name-1/post/something-5
                     // - /forum/name-1/post/something-5/edit
                     // TODO: Make this more robust.
-                    res_id: +browser.location.pathname.split("-").slice(-1)[0].split("/")[0],
-                },
-                value: textareaEl.getAttribute("content"),
-                resizable: true,
-                userGeneratedContent: true,
-                height: 350,
+                    resId: +browser.location.pathname.split("-").slice(-1)[0].split("/")[0],
+                }),
+                ...(!isReply && {
+                    resizable: !isMobileOS(),
+                    height: "350px",
+                }),
             };
-            options.allowCommandLink = hasFullEdit;
-            options.allowCommandImage = hasFullEdit;
-            loadWysiwygFromTextarea(this, textareaEl, options).then(() => {
-                // float-start class messes up the post layout OPW 769721
-                formEl.querySelectorAll(".note-editable img.float-start").forEach((el) => {
-                    el.classList.remove("float-start");
-                });
-            });
+            const wysiwygWrapper = textareaEl.closest(".o_wysiwyg_textarea_wrapper");
+            textareaEl.style.display = "none";
+            wysiwygWrapper.after(textareaEl);
+            wysiwygWrapper.replaceChildren();
+
+            this.mountComponent(wysiwygWrapper, WebsiteForumWysiwyg, props);
         });
 
         this.el.querySelectorAll(".o_wforum_bio_popover").forEach((authorBox) => {
