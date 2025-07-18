@@ -1,5 +1,3 @@
-import { browser } from '@web/core/browser/browser';
-import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { Interaction } from '@web/public/interaction';
 
@@ -23,22 +21,9 @@ export class SupportedPaymentMethods extends Interaction {
      * the editor as any edit reloads the interaction.
      */
     async fetchPaymentMethods() {
-        let cache = JSON.parse(
-            browser.sessionStorage.getItem('website_payment.supported_payment_methods') || '{}',
-        );
-
-        // Re-fetch if the cached list can potentially be larger
-        if (cache.payment_methods === undefined || cache.limit < this.limit) {
-            cache.payment_methods = await this.waitFor(
-                rpc('/website_payment/snippet/supported_payment_methods', { limit: this.limit }),
-            ).catch(_ => []);
-            cache.limit = this.limit;
-            browser.sessionStorage.setItem(
-                'website_payment.supported_payment_methods', JSON.stringify(cache),
-            );
-        }
-
-        this.payment_methods = cache.payment_methods.slice(0, this.limit);
+        this.payment_methods = await this.waitFor(this.services.http.get(
+            `/website_payment/snippet/supported_payment_methods?limit=${this.limit}`
+        )).catch(_ => []);
     }
 
     start() {
