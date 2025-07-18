@@ -159,7 +159,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
     @http.route(
         '/website_payment/snippet/supported_payment_methods',
-        type='jsonrpc', auth='public', website=True, sitemap=False, readonly=True,
+        type='http', methods=['GET'], auth='public', website=True, sitemap=False, readonly=True,
     )
     def get_supported_payment_methods(self, limit=None):
         """Retrieve the payment methods linked to payment providers published on the current
@@ -200,7 +200,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             ('provider_ids', 'in', compatible_providers_sudo.ids),
         ])
 
-        return request.env['payment.method'].search(
+        supported_pms = request.env['payment.method'].search(
             Domain.OR([brands_domain, primary_without_brands_domain]),
             limit=limit,
         ).mapped(lambda pm: {
@@ -208,6 +208,18 @@ class PaymentPortal(payment_portal.PaymentPortal):
             # Loading the image via this url caches the image on the client browser
             'image_url': request.env['website'].image_url(pm, 'image'),
         })
+
+        if request.env.user._is_internal():
+            # Ensure the internal users can always see the most up to date list of PMs.
+            cache_control = 'no-cache'
+        else:
+            # Cache the PMs for public/portal users for 7 days, with an additional day to re-use
+            # the stale PMs while a background task updates the client cache.
+            cache_control = 'public, max-age=604800, stale-while-revalidate=86400'
+
+        return request.make_json_response(
+            supported_pms, headers=[('Cache-Control', cache_control)],
+        )
 
 
 class PortalAccount(account_payment_portal.PortalAccount):
