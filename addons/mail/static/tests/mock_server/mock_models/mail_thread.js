@@ -373,7 +373,7 @@ export class MailThread extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _message_get_suggested_recipients(ids) {
+    _message_get_suggested_recipients(ids, additional_partners = [], primary_email = false) {
         /** @type {import("mock_models").MailThread} */
         const MailThread = this.env["mail.thread"];
         /** @type {import("mock_models").ResFake} */
@@ -384,7 +384,11 @@ export class MailThread extends models.ServerModel {
         const ResUsers = this.env["res.users"];
 
         if (this._name === "res.fake") {
-            return ResFake._message_get_suggested_recipients(ids);
+            return ResFake._message_get_suggested_recipients(
+                ids,
+                additional_partners,
+                primary_email
+            );
         }
         const result = ids.reduce((result, id) => (result[id] = []), {});
         const model = this.env[this._name];
@@ -632,6 +636,10 @@ export class MailThread extends models.ServerModel {
                     makeKwArgs({ only_id: true })
                 );
             }
+        }
+        if (request_list.includes("contact_fields")) {
+            res.primary_email_field = this.env[this._name]._primary_email;
+            res.partner_fields = this.env[this._name]._mail_get_partner_fields?.();
         }
         if (request_list.includes("display_name")) {
             res.display_name = thread.display_name;
