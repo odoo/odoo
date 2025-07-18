@@ -282,14 +282,15 @@ export class Runner {
     expect;
     /** @type {ReturnType<typeof makeExpect>[1]} */
     expectHooks;
+    headless = false;
     /** @type {Record<string, Preset>} */
-    presets = reactive({
+    presets = {
         [""]: { label: "No preset" },
-    });
+    };
     reporting = createReporting();
     /** @type {Suite[]} */
     rootSuites = [];
-    state = reactive({
+    state = {
         /** @type {Test | null} */
         currentTest: null,
         /**
@@ -334,7 +335,7 @@ export class Runner {
          * @type {Test[]}
          */
         tests: [],
-    });
+    };
     /** @type {Map<string, Suite>} */
     suites = new Map();
     /** @type {Suite[]} */
@@ -379,9 +380,9 @@ export class Runner {
     _populateState = false;
     _prepared = false;
     /** @type {() => void} */
-    _pushPendingTest;
+    _pushPendingTest = () => {};
     /** @type {(test: Test) => void} */
-    _pushTest;
+    _pushTest = () => {};
     _removableFilterCount = 0;
     _started = false;
     _startTime = 0;
@@ -399,25 +400,30 @@ export class Runner {
         this.test = this._addConfigurators(this.addTest, false);
 
         this.initialConfig = { ...DEFAULT_CONFIG, ...config };
-        const reactiveConfig = reactive({ ...this.initialConfig }, () => {
-            setParams(
-                $fromEntries(
-                    $entries(this.config).map(([key, value]) => [
-                        key,
-                        deepEqual(value, DEFAULT_CONFIG[key]) ? null : value,
-                    ])
-                )
-            );
-        });
+        // Headless cannot be configured while running since it retains much less
+        // information/state that cannot be retrieved after construction.
+        this.headless = this.initialConfig.headless;
+        if (this.headless) {
+            this.config = { ...this.initialConfig };
+        } else {
+            this.presets = reactive(this.presets);
+            this.state = reactive(this.state);
+            this.config = reactive({ ...this.initialConfig }, () => {
+                setParams(
+                    $fromEntries(
+                        $entries(this.config).map(([key, value]) => [
+                            key,
+                            deepEqual(value, DEFAULT_CONFIG[key]) ? null : value,
+                        ])
+                    )
+                );
+            });
 
-        [this._pushTest, this._pushPendingTest] = batch((test) => this.state.done.add(test));
-        [this.expect, this.expectHooks] = makeExpect({
-            get headless() {
-                return reactiveConfig.headless;
-            },
-        });
+            [this._pushTest, this._pushPendingTest] = batch((test) => this.state.done.add(test));
+        }
 
-        this.config = reactiveConfig;
+        [this.expect, this.expectHooks] = makeExpect({ headless: this.headless });
+
         for (const key in this.config) {
             this.config[key];
         }
@@ -510,6 +516,10 @@ export class Runner {
         this.suiteStack.push(suite);
 
         this._applyTagModifiers(suite);
+        if (suite.config.skip && this.headless) {
+            // Do not register skipped jobs in headless
+            return this._erase(suite, true);
+        }
 
         let error, result;
         if (!this._prepared || suite.currentJobs.length) {
@@ -581,6 +591,10 @@ export class Runner {
         test.setRunFn(runFn);
 
         this._applyTagModifiers(test);
+        if (test.config.skip && this.headless) {
+            // Do not register skipped jobs in headless
+            return this._erase(test, true);
+        }
 
         return test;
     }
@@ -769,14 +783,11 @@ export class Runner {
 
         await callback();
 
-        this._prepareRunner();
+        const result = this._prepareRunner();
 
         this.dry = false;
 
-        return {
-            suites: this.state.suites,
-            tests: this.state.tests,
-        };
+        return result;
     }
 
     /**
@@ -870,6 +881,7 @@ export class Runner {
      * @param {...Job} jobs
      */
     async start(...jobs) {
+        jobs = jobs.filter(Boolean);
         if (!this._started) {
             this._started = true;
             this._prepareRunner();
@@ -929,10 +941,14 @@ export class Runner {
                         if (suite.willRunAgain()) {
                             suite.reset();
                             continue;
+                        } else if (this.headless) {
+                            this._erase(suite);
                         } else {
                             suite.cleanup();
                         }
                     }
+                } else if (this.headless) {
+                    this._erase(suite);
                 } else {
                     suite.minimize();
                 }
@@ -1083,6 +1099,8 @@ export class Runner {
 
             if (test.willRunAgain()) {
                 test.reset();
+            } else if (this.headless) {
+                this._erase(test);
             } else {
                 test.cleanup();
             }
@@ -1130,7 +1148,7 @@ export class Runner {
         const { passed, failed, assertions } = this.reporting;
         if (failed > 0) {
             const errorMessage = ["Some tests failed: see above for details"];
-            if (this.config.headless) {
+            if (this.headless) {
                 const ids = this.simplifyUrlIds({ id: this.state.failedIds });
                 const link = createUrlFromId(ids, { debug: true });
                 // Tweak parameters to make debugging easier
@@ -1394,6 +1412,29 @@ export class Runner {
     }
 
     /**
+     * @param {Job} job
+     * @param {boolean} [canEraseParent]
+     */
+    _erase(job, canEraseParent = false) {
+        job.minimize();
+        if (job instanceof Suite) {
+            this.suites.delete(job.id);
+        } else {
+            this.tests.delete(job.id);
+        }
+        if (canEraseParent && job.parent) {
+            const jobIndex = job.parent.jobs.indexOf(job);
+            if (jobIndex >= 0) {
+                job.parent.jobs.splice(jobIndex, 1);
+            }
+            if (!job.parent.jobs.length) {
+                this._erase(job.parent);
+            }
+        }
+        return job;
+    }
+
+    /**
      * Executes a given callback when not in debug mode.
      * @param {() => Promise<void>} callback
      */
@@ -1626,7 +1667,7 @@ export class Runner {
 
     _prepareRunner() {
         if (this._prepared) {
-            return;
+            return {};
         }
         this._prepared = true;
 
@@ -1682,15 +1723,34 @@ export class Runner {
         const includedSuites = new Set(this.state.suites);
         for (const suite of this.suites.values()) {
             if (!includedSuites.has(suite)) {
-                suite.minimize();
+                if (this.headless) {
+                    this._erase(suite, true);
+                } else {
+                    suite.minimize();
+                }
             }
         }
         const includedTests = new Set(this.state.tests);
         for (const test of this.tests.values()) {
             if (!includedTests.has(test)) {
-                test.minimize();
+                if (this.headless) {
+                    this._erase(test, true);
+                } else {
+                    test.minimize();
+                }
             }
         }
+
+        if (this.headless) {
+            this.rootSuites.length = 0;
+            this.state.suites.length = 0;
+            this.state.tests.length = 0;
+        }
+
+        return {
+            suites: [...includedSuites],
+            tests: [...includedTests],
+        };
     }
 
     /**
