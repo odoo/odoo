@@ -38,11 +38,10 @@
                             <td t-attf-rowspan="#{skip_row > 0 and skip_row}"/>
                             <td t-attf-rowspan="#{skip_row > 0 and skip_row}">
                                 <t t-if="line.document_in">
-                                    <a t-if="line.document_in"
-                                        href="#"
+                                    <button t-if="line.document_in"
                                         t-on-click.prevent="() => this.props.openView(line.document_in._name, 'form', line.document_in.id)"
                                         t-out="line.document_in.name"
-                                        class="fw-bold"/>
+                                        class="btn btn-link p-0 fw-bold"/>
                                     <span t-if="line.receipt_date">:
                                         <t t-out="_formatFloat(skip_row > 0 ? mergesLinesData[line_index].tot_qty : line.quantity)"/> <t t-out="line.uom_id.display_name"/> expected on <t t-out="line.receipt_date"/>
                                     </span>
@@ -70,12 +69,11 @@
                                 t-attf-class="o_priority o_priority_star me-1 fa fa-star#{line.move_out.picking_id.priority=='1' ? '' : '-o'}"
                                 t-on-click="() => this._onClickChangePriority('stock.picking', line.move_out.picking_id)"
                                 name="change_priority_link"/>
-                            <a t-if="line.document_out"
-                                href="#"
+                            <button t-if="line.document_out"
                                 t-attf-class="#{line.is_matched and 'fst-italic'}"
                                 t-on-click.prevent="() => this.props.openView(line.document_out._name, 'form', line.document_out.id)"
                                 t-out="line.document_out.name"
-                                class="fw-bold"/>
+                                class="btn btn-link p-0 fw-bold"/>
                         </td>
                         <td class="p-0 text-center border-start-0">
                             <t t-if="displayReserve(line)">

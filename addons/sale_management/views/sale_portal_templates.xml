@@ -5,16 +5,15 @@
         <div t-if="line._can_be_edited_on_portal()" class="d-inline-flex">
             <div class="input-group js_quantity_container pull-right">
                 <span class="d-print-none input-group-text d-none d-md-inline-block">
-                    <a
+                    <button
                         title="Remove one"
                         aria-label="Remove one"
-                        href="#"
-                        t-att-class="'opacity-50' if line.product_uom_qty == 0 else 'js_update_line_json'"
+                        t-att-class="'opacity-50 btn btn-link p-0' if line.product_uom_qty == 0 else 'js_update_line_json'"
                         t-att-data-line-id="line.id"
                         t-att-data-remove="True"
                     >
                         <span class="fa fa-minus"/>
-                    </a>
+                    </button>
                 </span>
                 <input
                     type="text"
@@ -23,15 +22,14 @@
                     t-att-value="int(line.product_uom_qty) or '0'"
                 />
                 <span class="d-print-none input-group-text d-none d-md-inline-block">
-                    <a
+                    <button
                         title="Add one"
                         aria-label="Add one"
-                        class="js_update_line_json"
-                        href="#"
+                        class="js_update_line_json btn btn-link p-0"
                         t-att-data-line-id="line.id"
                     >
                         <span class="fa fa-plus"/>
-                    </a>
+                    </button>
                 </span>
             </div>
             <div class="ms-1 align-self-center">
