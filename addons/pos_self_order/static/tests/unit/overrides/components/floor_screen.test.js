@@ -1,16 +1,17 @@
 import { test, describe } from "@odoo/hoot";
-import { getFilledOrder, setupPosEnv } from "@point_of_sale/../tests/unit/utils";
+import { getFilledOrder } from "@point_of_sale/../tests/unit/utils";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { FloorScreen } from "@pos_restaurant/app/screens/floor_screen/floor_screen";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { waitFor, waitForNone } from "@odoo/hoot-dom";
+import { setupPoSEnvForSelfOrder } from "../../utils";
 
 definePosModels();
 
 describe("floor_screen.js", () => {
     test.tags("desktop");
     test("computeFloorSize", async () => {
-        const store = await setupPosEnv();
+        const store = await setupPoSEnvForSelfOrder();
         const floor = store.models["restaurant.floor"].get(2);
         store.currentFloor = floor;
         store.floorPlanStyle = "default";

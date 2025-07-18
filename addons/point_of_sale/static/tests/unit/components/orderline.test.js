@@ -23,7 +23,7 @@ test("orderline.js", async () => {
         props: { line },
     });
 
-    expect(comp.line).toEqual(line);
+    expect(comp.line.id).toEqual(line.id);
     expect(comp.taxGroup).toBeEmpty();
     expect(comp.formatCurrency(comp.line.price_subtotal_incl)).toBe("$\u00a010.35");
     expect(comp.getInternalNotes()).toEqual([

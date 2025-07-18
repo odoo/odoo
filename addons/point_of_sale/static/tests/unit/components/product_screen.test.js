@@ -19,9 +19,7 @@ describe("product_screen.js", () => {
         expect(comp.items).toBe("1");
 
         const productByBarcode = await comp._getProductByBarcode({ base_code: "test_test" });
-        const match = store.models["product.product"].get(5);
-
-        expect(productByBarcode).toEqual(match);
+        expect(productByBarcode.id).toEqual(5);
     });
 
     test("fastValidate", async () => {

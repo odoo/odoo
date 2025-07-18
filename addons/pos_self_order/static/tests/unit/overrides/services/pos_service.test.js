@@ -1,12 +1,13 @@
 import { test, expect, describe } from "@odoo/hoot";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
-import { getFilledOrder, setupPosEnv } from "@point_of_sale/../tests/unit/utils";
+import { getFilledOrder } from "@point_of_sale/../tests/unit/utils";
+import { setupPoSEnvForSelfOrder } from "../../utils";
 
 definePosModels();
 
 describe("pos_store.js", () => {
     test("check self_ordering_table_id", async () => {
-        const store = await setupPosEnv();
+        const store = await setupPoSEnvForSelfOrder();
         const table = store.models["restaurant.table"].getFirst();
 
         expect(store.tableHasOrders(table)).toBe(false);
