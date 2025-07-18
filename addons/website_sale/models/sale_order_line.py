@@ -90,3 +90,14 @@ class SaleOrderLine(models.Model):
             raise UserError(self.env._(
                 "The given product does not have a price therefore it cannot be added to cart.",
             ))
+
+    def _should_show_strikethrough_price(self):
+        """ Compute whether the strikethrough price should be shown.
+
+        The strikethrough price should be shown if there is a discount on a sellable line for
+        which a price unit is non-zero.
+
+        :return: Whether the strikethrough price should be shown.
+        :rtype: bool
+        """
+        return self.discount and self._is_sellable() and self._get_displayed_unit_price()

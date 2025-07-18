@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import _, models
 from odoo.exceptions import UserError
 
 
@@ -125,17 +125,3 @@ class SaleOrder(models.Model):
         return super()._filter_can_send_abandoned_cart_mail().filtered(
             lambda so: all(ticket.sale_available for ticket in so.order_line.event_ticket_id),
         )
-
-
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
-
-    @api.depends('product_id.display_name', 'event_ticket_id.display_name')
-    def _compute_name_short(self):
-        """ If the sale order line concerns a ticket, we don't want the product name, but the ticket name instead.
-        """
-        super(SaleOrderLine, self)._compute_name_short()
-
-        for record in self:
-            if record.event_ticket_id:
-                record.name_short = record.event_ticket_id.display_name

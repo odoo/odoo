@@ -2926,13 +2926,12 @@
             class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-md-end mb-1"
             name="website_sale_cart_line_price"
         >
-            <t t-if="line.discount and line._is_sellable() and line._get_displayed_unit_price()">
-                <del
-                    class="me-md-2 text-muted text-nowrap opacity-50"
-                    t-out="line._get_displayed_unit_price() * line.product_uom_qty"
-                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-                />
-            </t>
+            <del
+                t-if="line._should_show_strikethrough_price()"
+                class="me-md-2 text-muted text-nowrap opacity-50"
+                t-out="line._get_displayed_unit_price() * line.product_uom_qty"
+                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+            />
             <t t-set="product_price" t-value="line._get_cart_display_price()"/>
             <t t-call="website_sale.cart_product_price"/>
         </h6>
