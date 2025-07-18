@@ -34,6 +34,9 @@ class EventEvent(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_begin, id'
 
+    # Maximum number of tickets that can be ordered at one time on a same line
+    EVENT_MAX_TICKETS = 30
+
     @api.model
     def default_get(self, fields):
         result = super().default_get(fields)

@@ -89,11 +89,14 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             'date_end': fields.Datetime.now() + relativedelta(days=15),
             'event_ticket_ids': [(0, 0, {
                 'name': 'Free',
-                'start_sale_datetime': fields.Datetime.now() - relativedelta(days=15)
+                'start_sale_datetime': fields.Datetime.now() - relativedelta(days=15),
+                'limit_max_per_order': 22,
             }), (0, 0, {
                 'name': 'Other',
                 'start_sale_datetime': fields.Datetime.now() - relativedelta(days=15)
             })],
+            'seats_limited': True,
+            'seats_max': 28,
             'website_published': True,
             'question_ids': [(0, 0, {
                 'title': 'Name',

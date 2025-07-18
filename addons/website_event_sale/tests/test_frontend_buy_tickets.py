@@ -36,6 +36,8 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
             'product_id': cls.env.ref('event_product.product_product_event').id,
             'end_sale_datetime': (Datetime.today() + timedelta(90)).strftime('%Y-%m-%d'),
             'price': 1500.0,
+            'seats_max': 12,
+            'limit_max_per_order': 11,
         })
 
         cls.event_3 = cls.env['event.event'].create({
