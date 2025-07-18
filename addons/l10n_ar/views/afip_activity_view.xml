@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_afip_activity_form" model="ir.ui.view">
+        <field name="name">afip.activity.form</field>
+        <field name="model">afip.activity</field>
+        <field name="arch" type="xml">
+            <form string="AFIP activity">
+                <group>
+                    <field name="name"/>
+                    <field name='code'/>
+                    <field name='active'/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_afip_activity_tree" model="ir.ui.view">
+        <field name="name">afip.activity.list</field>
+        <field name="model">afip.activity</field>
+        <field name="arch" type="xml">
+            <list string="AFIP activity">
+                <field name="name"/>
+                <field name="code"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_afip_activity">
+        <field name="name">AFIP activity</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">afip.activity</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem name="Activities" action="act_afip_activity" id="menu_action_afip_activity" sequence="30" parent="l10n_ar.menu_afip_config"/>
+
+</odoo>

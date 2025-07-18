@@ -91,6 +91,7 @@ Master Data:
         'views/res_company_view.xml',
         'views/res_country_view.xml',
         'views/afip_menuitem.xml',
+        'views/afip_activity_view.xml',
         'views/l10n_ar_afip_responsibility_type_view.xml',
         'views/res_currency_view.xml',
         'views/account_fiscal_position_view.xml',

@@ -9,6 +9,10 @@
             <xpath expr="//app[@name='account']/block" position="after">
                 <div  id="argentina_localization_section" invisible="1">
                     <block title="Argentinean Localization" id="argentina_localization" invisible="country_code != 'AR'">
+                        <div class="content-group mt16">
+                            <label for="l10n_ar_afip_activity_ids" class="o_form_label col-lg-3" string="AFIP Activities"/>
+                            <field name="l10n_ar_afip_activity_ids" options="{'no_open': True, 'no_create': True}" widget="many2many_tags"/>
+                        </div>
                     </block>
                 </div>
             </xpath>
