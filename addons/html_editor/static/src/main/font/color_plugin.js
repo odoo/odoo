@@ -473,7 +473,7 @@ export class ColorPlugin extends Plugin {
         if (color.startsWith("o_cc")) {
             parts = backgroundImageCssToParts(element.style["background-image"]);
             element.classList.remove(...COLOR_COMBINATION_CLASSES);
-            element.classList.add(color);
+            element.classList.add("o_cc", color);
             setBackgroundImageAndOverride(element, element.style["background-image"]);
             this.fixColorCombination(element);
             return;
@@ -481,7 +481,7 @@ export class ColorPlugin extends Plugin {
 
         if (mode === "backgroundColor") {
             if (!color) {
-                element.classList.remove(...COLOR_COMBINATION_CLASSES);
+                element.classList.remove("o_cc", ...COLOR_COMBINATION_CLASSES);
             }
             delete parts.gradient;
             const newBackgroundImage = backgroundImagePartsToCss(parts);
