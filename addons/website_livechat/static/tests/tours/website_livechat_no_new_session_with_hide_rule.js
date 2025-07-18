@@ -32,7 +32,7 @@ registry.category("web_tour.tours").add("website_livechat_no_session_with_hide_r
             run: "click",
         },
         {
-            trigger: ".o-livechat-root:shadow button:contains('Yes, leave conversation')",
+            trigger: ".o-livechat-root:shadow button:contains('Yes, end chat')",
             run: "click",
         },
         {
@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add("website_livechat_no_session_with_hide_r
             run: "click",
         },
         {
-            trigger: ".o-livechat-root:shadow button:contains('Yes, leave conversation')",
+            trigger: ".o-livechat-root:shadow button:contains('Yes, end chat')",
             run: "click",
         },
         {

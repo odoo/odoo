@@ -61,14 +61,19 @@ patch(Thread.prototype, {
         return this.channel_type === "livechat" || super.isChatChannel;
     },
 
-    get composerDisabled() {
+    get hasLivechatEnded() {
         return this.channel_type === "livechat" && this.livechat_end_dt;
     },
 
+    get composerDisabled() {
+        return this.hasLivechatEnded;
+    },
+
     get composerDisabledText() {
-        return this.channel_type === "livechat" && this.livechat_end_dt
-            ? _t("This livechat conversation has ended")
-            : "";
+        return this.hasLivechatEnded ? _t("This livechat conversation has ended") : "";
+    },
+    get leaveConfirmationLabel() {
+        return this.channel_type === "livechat" ? _t("End Chat") : super.leaveConfirmationLabel;
     },
     /**
      * @override

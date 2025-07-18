@@ -50,7 +50,7 @@ test("from the discuss app", async () => {
         parent: [".o-mail-DiscussSidebarChannel", { text: "Visitor" }],
     });
     await click(".o-dropdown-item:contains('Leave Channel')");
-    await click("button:contains(Leave Conversation)");
+    await click("button:contains(End Chat)");
     await click("[title='Leave HR']", {
         parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
     });
@@ -101,7 +101,7 @@ test("from chat window", async () => {
     await start();
     await contains(".o-mail-ChatWindow");
     await click("button[title*='Close Chat Window']");
-    await click("button:contains('Yes, leave conversation')");
+    await click("button:contains('Yes, end chat')");
     await contains(".o-mail-ChatWindow", { count: 0 });
 });
 
@@ -135,4 +135,38 @@ test("visitor leaving ends the livechat conversation", async () => {
     await contains("span", { text: "This livechat conversation has ended" });
     await click("button[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
+});
+
+test("No warning when leaving an ended channel", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
+    const livechatChannelId = pyEnv["im_livechat.channel"].create({
+        name: "HR",
+        user_ids: [serverState.userId],
+    });
+    const channel_id = pyEnv["discuss.channel"].create({
+        channel_type: "livechat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        livechat_channel_id: livechatChannelId,
+        livechat_operator_id: serverState.partnerId,
+        create_uid: serverState.publicUserId,
+    });
+    await start();
+    await openDiscuss(channel_id);
+    // simulate visitor leaving
+    await withGuest(guestId, () => rpc("/im_livechat/visitor_leave_session", { channel_id }));
+    await contains("span", { text: "This livechat conversation has ended" });
+    await click("[title='Chat Actions']", {
+        parent: [".o-mail-DiscussSidebarChannel", { text: "Visitor" }],
+    });
+    await click(".o-dropdown-item:contains('Leave Channel')");
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Visitor", count: 0 });
 });

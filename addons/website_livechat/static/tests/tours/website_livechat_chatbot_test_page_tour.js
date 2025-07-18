@@ -59,7 +59,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
             run: "click",
         },
         {
-            trigger: ".o-livechat-root:shadow button:contains('Yes, leave conversation')",
+            trigger: ".o-livechat-root:shadow button:contains('Yes, end chat')",
             run: "click",
         },
         {

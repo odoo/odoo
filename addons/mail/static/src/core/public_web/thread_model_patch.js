@@ -109,12 +109,15 @@ patch(Thread.prototype, {
             );
         }
     },
+    get leaveConfirmationLabel() {
+        return _t("Leave Conversation");
+    },
     /** @param {string} body */
     async askLeaveConfirmation(body) {
         await new Promise((resolve) => {
             this.store.env.services.dialog.add(ConfirmationDialog, {
                 body: body,
-                confirmLabel: _t("Leave Conversation"),
+                confirmLabel: this.leaveConfirmationLabel,
                 confirm: resolve,
                 cancel: () => {},
             });
