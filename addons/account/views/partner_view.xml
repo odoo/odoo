@@ -213,9 +213,9 @@
                         <group>
                             <group string="General" name="general" groups="account.group_account_invoice,account.group_account_readonly">
                                 <field name="bank_ids" context="{'default_partner_id': id}" domain="[('partner_id','=', id)]" widget="many2many_tags_banks" options="{'color_field': 'color', 'allow_out_payment_field': 'allow_out_payment', 'edit_tags': True}"/>
-                                <field name="property_account_receivable_id" required="True"/>
-                                <field name="property_account_payable_id" required="True"/>
-                                <field name="autopost_bills" groups="account.group_account_invoice,account.group_account_readonly"/>
+                                <field name="property_account_receivable_id" required="True" groups="account.group_account_user"/>
+                                <field name="property_account_payable_id" required="True" groups="account.group_account_user"/>
+                                <field name="autopost_bills" groups="account.group_account_user"/>
                                 <field name="ignore_abnormal_invoice_amount" groups="base.group_no_one"/>
                                 <field name="ignore_abnormal_invoice_date" groups="base.group_no_one"/>
                             </group>
