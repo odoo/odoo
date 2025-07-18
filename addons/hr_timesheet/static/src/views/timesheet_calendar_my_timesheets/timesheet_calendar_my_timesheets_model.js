@@ -1,9 +1,9 @@
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 
 export class TimesheetCalendarMyTimesheetsModel extends CalendarModel {
-    multiCreateRecords(dates) {
+    async multiCreateRecords(dates) {
         this.meta.context = this.meta.context || {};
         this.meta.context.timesheet_calendar = true;
-        super.multiCreateRecords(dates);
+        return await super.multiCreateRecords(dates);
     }
 }
