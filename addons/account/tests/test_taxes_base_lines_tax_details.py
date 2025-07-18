@@ -23,8 +23,8 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
                 {
                     'total_excluded': 9.04,
                     'total_excluded_currency': 9.04,
-                    'total_included': 10.93,
-                    'total_included_currency': 10.93,
+                    'total_included': 10.94,
+                    'total_included_currency': 10.94,
                     'delta_total_excluded': -0.01,
                     'delta_total_excluded_currency': -0.01,
                     'taxes_data': [
@@ -42,8 +42,8 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
                 {
                     'total_excluded': 0.94,
                     'total_excluded_currency': 0.94,
-                    'total_included': 1.13,
-                    'total_included_currency': 1.13,
+                    'total_included': 1.14,
+                    'total_included_currency': 1.14,
                     'delta_total_excluded': -0.01,
                     'delta_total_excluded_currency': -0.01,
                     'taxes_data': [
@@ -61,8 +61,8 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
                 {
                     'total_excluded': 0.94,
                     'total_excluded_currency': 0.94,
-                    'total_included': 1.13,
-                    'total_included_currency': 1.13,
+                    'total_included': 1.14,
+                    'total_included_currency': 1.14,
                     'delta_total_excluded': -0.01,
                     'delta_total_excluded_currency': -0.01,
                     'taxes_data': [
@@ -80,8 +80,8 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
                 {
                     'total_excluded': 0.94,
                     'total_excluded_currency': 0.94,
-                    'total_included': 1.13,
-                    'total_included_currency': 1.13,
+                    'total_included': 1.14,
+                    'total_included_currency': 1.14,
                     'delta_total_excluded': 0.0,
                     'delta_total_excluded_currency': 0.0,
                     'taxes_data': [
