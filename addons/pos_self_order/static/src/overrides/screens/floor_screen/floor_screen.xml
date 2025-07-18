@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+
+    <t t-name="pos_self_order.FloorScreen" t-inherit="pos_restaurant.FloorScreen" t-inherit-mode="extension">
+        <xpath expr="//NumpadDropdown" position="before">
+            <QrOrderButton/>
+        </xpath>
+    </t>
+
+</templates>
