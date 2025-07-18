@@ -1,3 +1,4 @@
+import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
 import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst, waitFor } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
@@ -355,7 +356,7 @@ describe("animate text in toolbar", () => {
         selection.setBaseAndExtent(textNode, 1, textNode, 3);
 
         // click on animate and it create a span with the animation
-        await contains("button[name=expand_toolbar]").click();
+        await expandToolbar();
         expect("button[title='Animate Text']").not.toHaveClass("active");
         await contains("button[title='Animate Text']").click();
         expect(":iframe span").toHaveText("bc");
@@ -383,7 +384,7 @@ describe("animate text in toolbar", () => {
         selection.setBaseAndExtent(textNode, 0, textNode, 2);
 
         // animate is marked active
-        await contains("button[name=expand_toolbar]").click();
+        await expandToolbar();
         expect("button[title='Animate Text']").toHaveClass("active");
         await contains("button[title='Animate Text']").click();
         expect(":iframe span:contains('bc')").not.toHaveClass("o_anim_rotate_in");
@@ -403,7 +404,7 @@ describe("animate text in toolbar", () => {
         // reset removes the span
         await contains(":iframe span").click(); // move the selection around to make the toolbar re-appear
         selection.setBaseAndExtent(textNode, 0, textNode, 2);
-        await contains("button[name=expand_toolbar]").click();
+        await expandToolbar();
         await contains("button[title='Animate Text']").click();
         await contains("button[title=Reset]").click();
         expect(":iframe span").toHaveCount(0);
@@ -422,7 +423,7 @@ describe("animate text in toolbar", () => {
         selection.setBaseAndExtent(textNode, 0, textNode, 2);
 
         // animate is marked active
-        await contains("button[name=expand_toolbar]").click();
+        await expandToolbar();
         expect("button[title='Animate Text']").toHaveClass("active");
         await contains("button[title='Animate Text']").click();
         expect("div[data-class-action=o_animate]").toHaveCount(1);
@@ -443,7 +444,7 @@ describe("animate text in toolbar", () => {
 
         selection.setBaseAndExtent(test.childNodes[0], 0, span.childNodes[0], 1);
 
-        await contains("button[name=expand_toolbar]").click();
+        await expandToolbar();
         expect("button[title='Animate Text']").not.toHaveClass("active");
         await contains("button[title='Animate Text']").click();
         expect(":iframe span:eq(0)").toHaveText("ab");
@@ -462,7 +463,7 @@ describe("animate text in toolbar", () => {
 
         selection.setBaseAndExtent(span.childNodes[0], 1, test.childNodes[2], 1);
 
-        await contains("button[name=expand_toolbar]").click();
+        await expandToolbar();
         expect("button[title='Animate Text']").not.toHaveClass("active");
         await contains("button[title='Animate Text']").click();
         expect(":iframe span:eq(0)").toHaveText("b");
@@ -480,7 +481,7 @@ describe("animate text in toolbar", () => {
 
         selection.setBaseAndExtent(span.childNodes[0], 1, span.childNodes[0], 2);
 
-        await contains("button[name=expand_toolbar]").click();
+        await expandToolbar();
         expect("button[title='Animate Text']").not.toHaveClass("active");
         await contains("button[title='Animate Text']").click();
         expect(":iframe span[other-attribute]:eq(0)").toHaveText("b");
@@ -504,7 +505,7 @@ describe("animate text in toolbar", () => {
             1
         );
 
-        await contains("button[name=expand_toolbar]").click();
+        await expandToolbar();
         expect("button[title='Animate Text']").not.toHaveClass("active");
         await contains("button[title='Animate Text']").click();
         expect(":iframe span:eq(0)").toHaveText("b");
