@@ -27,6 +27,9 @@ msgid ""
 "                {{ object.company_id.name }} : Your order with reference: {{ object.pos_reference }} was processed succesfully with amount {{  object.currency_id.format(object.amount_total) }}. Use {{ object.pos_reference }}  for further reference\n"
 "            "
 msgstr ""
+"\n"
+"                {{ object.company_id.name }}: Din ordre med referencenummer: {{ object.pos_reference }} på {{ object.currency_id.format(object.amount_total) }} er blevet behandlet. Brug {{ object.pos_reference }} ved henvendelser\n"
+"            "
 
 #. module: pos_sms
 #: model:ir.model,name:pos_sms.model_res_config_settings
@@ -50,7 +53,7 @@ msgstr "ID"
 #. module: pos_sms
 #: model:sms.template,name:pos_sms.sms_template_data_point_of_sale
 msgid "POS: Sent Order Confirmation via Text"
-msgstr ""
+msgstr "POS: ordrebekræftelse sendt via SMS"
 
 #. module: pos_sms
 #: model:ir.model,name:pos_sms.model_pos_config
@@ -71,10 +74,10 @@ msgstr "Kvitteringsskabelon"
 #: model:ir.model.fields,help:pos_sms.field_pos_config__sms_receipt_template_id
 #: model:ir.model.fields,help:pos_sms.field_res_config_settings__pos_sms_receipt_template_id
 msgid "SMS will be sent to the customer based on this template"
-msgstr ""
+msgstr "SMS’er til kunden sendes ud fra denne skabelon"
 
 #. module: pos_sms
 #: model:ir.model.fields,field_description:pos_sms.field_pos_config__sms_receipt_template_id
 #: model:ir.model.fields,field_description:pos_sms.field_res_config_settings__pos_sms_receipt_template_id
 msgid "Sms Receipt template"
-msgstr ""
+msgstr "SMS-kvitteringsskabelon"

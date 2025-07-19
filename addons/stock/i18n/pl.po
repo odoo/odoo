@@ -52,6 +52,21 @@ msgid ""
 "    - Minute: %(min)s\n"
 "    - Second: %(sec)s\n"
 msgstr ""
+"\n"
+"    Jeśli wiele produktów ma ten sam prefiks, będą one miały tę samą sekwencję, w przeciwnym razie sekwencja będzie przypisana do danego produktu.\n"
+"\n"
+"    * Legenda (dla prefiksów):\n"
+"    - Bieżący rok z stuleciem %(year)s\n"
+"    - Bieżący rok bez stulecia: %(y)s\n"
+"    - Miesiąc: %(month)s\n"
+"    - Dzień: %(day)s\n"
+"    - Dzień roku: %(doy)s\n"
+"    - Tydzień roku: %(woy)s\n"
+"    - Dzień tygodnia (0:Ponidziałek): %(weekday)s\n"
+"    - Godzina 00->24: %(h24)s\n"
+"    - Godzina 00->12: %(h12)s\n"
+"    - Minuta: %(min)s\n"
+"    - Sekunda: %(sec)s\n"
 
 #. module: stock
 #. odoo-python
@@ -6759,6 +6774,8 @@ msgid ""
 "Press the \"New\" button to define the quantity for a product in your stock "
 "or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
+"Kliknij przycisk \"Nowy\", aby zdefiniować ilość produktu w Twoim magazynie "
+"lub zaimportuj ilości z arkusza kalkulacyjnego przez menu Akcji."
 
 #. module: stock
 #. odoo-javascript
@@ -10283,6 +10300,9 @@ msgid ""
 "\n"
 "To avoid this, please discard the source location change before saving."
 msgstr ""
+"Zaktualizowanie lokalizacji tego transferu spowoduje anulowanie rezerwacji aktualnie przypisanych elementów. Zostanie przeprowadzona próba rezerwacji elementów w nowej lokalizacji  a powiązanie z poprzednimi transferami zostanie anulowane.\n"
+"\n"
+"Aby tego uniknąć, odrzuć zmianę lokalizacji źródłowej przed zapisaniem."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__1
@@ -10731,6 +10751,8 @@ msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
 msgstr ""
+"Kiedy ustawione na True lokacja docelowa ruchu magazynowego będzie regułą. W"
+" przeciwnym razie, zostanie ona pobrana z typu kompletacji."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -10749,6 +10771,9 @@ msgid ""
 " Odoo generates a procurement to bring the forecasted quantity above of this"
 " Min Quantity."
 msgstr ""
+"Kiedy wirtualny stan zapasów spadnie poniżej ilości minimalnej, Odoo "
+"wygeneruje zamówienie, aby prognozowana ilość została zwiększona powyżej "
+"minimalnej ilości określonej w tym polu."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -10757,6 +10782,10 @@ msgid ""
 "procurement to bring the forecasted quantity up to (or near to) the Max "
 "Quantity specified for this field (or to Min Quantity, whichever is bigger)."
 msgstr ""
+"Kiedy wirtualny stan zapasów spadnie poniżej ilości minimalnej, Odoo "
+"wygeneruje zamówienie, aby prognozowana ilość została zwiększona do (lub "
+"zbliżona do) maksymalnej ilości określonej dla tego pola (lub minimalnej "
+"ilości, w zależności, która z tych wartości jest większa)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
@@ -10840,6 +10869,8 @@ msgid ""
 "You are about to move quantities in a package without moving the full package.\n"
 "                    Those quantities will be removed from the following package(s):"
 msgstr ""
+"Zamierzasz przenieść ilości w pakiecie bez przenoszenia całego pakietu.\n"
+"                    Te ilości mogą zostać usunięte z następujących pakietów:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
@@ -11107,6 +11138,8 @@ msgid ""
 "You cannot set a location as a scrap location when it is assigned as a "
 "destination location for a manufacturing type operation."
 msgstr ""
+"Nie można ustawić lokacji jako lokalizacji złomu, gdy jest ona przypisana "
+"jako lokalizacja docelowa dla operacji typu produkcja."
 
 #. module: stock
 #. odoo-python
@@ -11178,6 +11211,8 @@ msgid ""
 "You have product(s) in stock that have lot/serial number tracking enabled. \n"
 "Switch off tracking on all the products before switching off this setting."
 msgstr ""
+"Masz produkty w magazynie, które mają włączone śledzenie numeru partii/serii.\n"
+"Wyłącz śledzenie we wszystkich produktach przed wyłączeniem tego ustawienia."
 
 #. module: stock
 #. odoo-python
