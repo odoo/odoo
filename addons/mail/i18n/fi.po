@@ -54,16 +54,16 @@ msgstr ""
 "            <p class=\"o_view_nocontent_smiling_face\">\n"
 "                Lisää osoitteita sallittujen luetteloon\n"
 "            </p><p>\n"
-"                Suojellaksesi sinua roskapostilta ja vastaussilmukoilta Odoo estää automaattisesti sähköpostit\n"
-"                jotka saapuvat palvelimellesi, kun kynnysarvo on ylittynyt <b>%(threshold)i</b> sähköposteja joka <b>%(minutes)i</b>\n"
-"                minuutti. Jos on joitakin osoitteita, joista sinun on saatava hyvin usein\n"
+"                Suojataksemme sinua roskapostilta ja vastausluupeilta Odoo estää automaattisesti sähköpostit,\n"
+"                jotka saapuvat palvelimellesi, kun sähköpostien kynnysarvo <b>%(threshold)i</b> ylittyy joka <b>%(minutes)i</b>\n"
+"                minuutti. Jos on joitakin osoitteita, joista sinun on saatava säännöllisesti\n"
 "                päivityksiä, voit kuitenkin lisätä ne alle ja Odoo päästää ne läpi.\n"
 "            </p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_document_unfollowed
 msgid "\" no longer followed"
-msgstr "\" ei enää seurannut"
+msgstr "\" ei enää seurata"
 
 #. module: mail
 #. odoo-python
@@ -87,7 +87,8 @@ msgstr "\"%(hostname)s\" tarvitsee pääsyn mikrofoniisi"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "%(activity)s, assigned to %(name)s, due on the %(deadline)s"
-msgstr "%(activity)s, osoitettu %(name)s, erääntyy %(deadline)s"
+msgstr ""
+"%(activity)s, joka on vastuutettu henkilölle %(name)s, erääntyy %(deadline)s"
 
 #. module: mail
 #. odoo-javascript
@@ -108,20 +109,20 @@ msgid ""
 "%(email)s is not recognized as a valid email. This is required to create a "
 "new customer."
 msgstr ""
-"%(email)s sähköpostia ei tunnisteta kelvolliseksi sähköpostiosoitteeksi. "
-"Tämä tarvitaan, jotta voidaan luoda uusi asiakas."
+"%(email)s ei tunnisteta kelvolliseksi sähköpostiosoitteeksi. Tämä tarvitaan,"
+" jotta voidaan luoda uusi asiakas."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reaction_list.js:0
 msgid "%(emoji)s reacted by %(person)s"
-msgstr "%(emoji)s reagoi %(person)s"
+msgstr "%(person)s reagoi %(emoji)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reaction_list.js:0
 msgid "%(emoji)s reacted by %(person1)s and %(person2)s"
-msgstr "%(emoji)s, johon reagoivat %(person1)s ja %(person2)s"
+msgstr "%(person1)s ja %(person2)s reagoivat %(emoji)s"
 
 #. module: mail
 #. odoo-javascript
@@ -130,8 +131,7 @@ msgid ""
 "%(emoji)s reacted by %(person1)s, %(person2)s, %(person3)s, and %(count)s "
 "others"
 msgstr ""
-"%(emoji)s, johon reagoivat %(person1)s, %(person2)s, %(person3)s ja "
-"%(count)s muuta"
+"%(person1)s, %(person2)s, %(person3)s ja %(count)s muut reagoivat %(emoji)s"
 
 #. module: mail
 #. odoo-javascript
@@ -139,14 +139,14 @@ msgstr ""
 msgid ""
 "%(emoji)s reacted by %(person1)s, %(person2)s, %(person3)s, and 1 other"
 msgstr ""
-"%(emoji)s reagoivat %(person1)s, %(person2)s, %(person3)s ja yksi muu "
-"henkilö"
+"%(person1)s, %(person2)s, %(person3)s ja yksi toinen henkilö reagoivat "
+"%(emoji)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reaction_list.js:0
 msgid "%(emoji)s reacted by %(person1)s, %(person2)s, and %(person3)s"
-msgstr "%(emoji)s, johon reagoivat %(person1)s, %(person2)s ja %(person3)s"
+msgstr "%(person1)s, %(person2)s ja %(person3)s reagoivat %(emoji)s"
 
 #. module: mail
 #. odoo-python
@@ -188,8 +188,8 @@ msgid ""
 "%(open_button)s%(icon)s%(open_em)sDiscard "
 "editing%(close_em)s%(close_button)s"
 msgstr ""
-"%(open_button)s%(icon)s%(open_em)sHylkää "
-"muokkaus%(close_em)s%(close_button)s]"
+"%(open_button)s%(icon)s%(open_em)sHylkää %(close_em)s%(close_button)s "
+"muokkaaminen"
 
 #. module: mail
 #. odoo-javascript
@@ -200,10 +200,9 @@ msgid ""
 "Enter%(close_samp)s %(open_em)sto "
 "%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"%(open_samp)sEsc%(close_samp)s %(open_em)s "
-"%(open_cancel)speruuttaa%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
-"Enter%(close_samp)s %(open_em)sto "
-"%(open_save)stallentaa%(close_save)s%(close_em)s"
+"%(open_samp)sEsc%(close_samp)s %(open_em)s %(open_cancel)s, jos haluat "
+"peruuttaa%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s"
+" %(open_em)s%(open_save)s tallentaaksesi %(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -214,10 +213,9 @@ msgid ""
 "%(open_samp)sEnter%(close_samp)s %(open_em)sto "
 "%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"%(open_samp)sEsc%(close_samp)s %(open_em)s "
-"%(open_cancel)speruuttaa%(close_cancel)s%(close_em)s, "
-"%(open_samp)sEnter%(close_samp)s %(open_em)s "
-"%(open_save)stallentaa%(close_save)s%(close_em)s"
+"%(open_samp)sEsc%(close_samp)s %(open_em)s %(open_cancel)s, jos haluat "
+"peruuttaa%(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s "
+"%(open_em)s %(open_save)stallentaaksesi %(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -230,8 +228,8 @@ msgstr "%(recipientCount)s lisää"
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
 msgid "%(user)s connected. This is their first connection. Wish them luck."
 msgstr ""
-"%(user)s kytketty. Tämä on heidän ensimmäinen yhteytensä. Toivota heille "
-"onnea."
+"%(user)s yhdistänyt. Tämä on heidän ensimmäinen yhteydenmuodostamisensa. "
+"Toivota heille onnea."
 
 #. module: mail
 #. odoo-python
@@ -241,7 +239,7 @@ msgid ""
 "%(goto_all)sSee all threads%(goto_all_end)s."
 msgstr ""
 "%(user)s aloitti viestiketjun: %(goto)s%(thread_name)s%(goto_end)s. "
-"%(goto_all)s Katso kaikki säikeet%(goto_all_end)s."
+"%(goto_all)s Katso kaikki viestit%(goto_all_end)s."
 
 #. module: mail
 #. odoo-javascript
@@ -253,7 +251,7 @@ msgstr "%(user1)s ja %(user2)s kirjoittavat..."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/typing/common/typing.js:0
 msgid "%(user1)s, %(user2)s and more are typing..."
-msgstr "%(user1)s, %(user2)s ja muut ovat kirjoittamassa...."
+msgstr "%(user1)s, %(user2)s ja muut kirjoittavat...."
 
 #. module: mail
 #. odoo-python
@@ -265,7 +263,7 @@ msgstr "%(user_name)s kiinnitti viestin tälle kanavalle."
 #. odoo-python
 #: code:addons/mail/models/ir_mail_server.py:0
 msgid "%s (Email Template)"
-msgstr "%s (Sähköpostin malli)"
+msgstr "%s (Sähköpostimalli)"
 
 #. module: mail
 #. odoo-python
@@ -314,19 +312,19 @@ msgstr "%s nosti kätensä"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "%s started a live conference"
-msgstr "%s aloitti tapaamisen"
+msgstr "%s aloitti livekokouksen"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "%s\" requires \"camera\" access"
-msgstr "%s\" vaatii \"kamera\" -yhteyden"
+msgstr "%s\" vaatii \"kamera\"-pääsyn"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "%s\" requires \"screen recording\" access"
-msgstr "%s\" edellyttää \"näytön tallennus\"-oikeutta"
+msgstr "%s\" vaatii \"näytön tallennus\"-pääsyn"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_attachment_links
@@ -342,7 +340,7 @@ msgstr "&amp;nbsp;&amp;nbsp;"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "(Translated from: %(language)s)"
-msgstr "(Käännetty osoitteesta: %(language)s)"
+msgstr "(Käännetty kielestä: %(language)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -366,7 +364,7 @@ msgstr "(lähettäjä"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
-msgstr "(alunperin vastuutettu"
+msgstr "(alunperin vastuutettu henkilölle"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_invite
@@ -386,7 +384,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_patch.js:0
 msgid "1 new message"
-msgstr "yksi uusi viesti"
+msgstr "1 uusi viesti"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -394,8 +392,8 @@ msgid ""
 "<b invisible=\"not no_record\" class=\"text-warning\">No record for this "
 "model</b>"
 msgstr ""
-"<b invisible=\"not no_record\" class=\"text-warning\">Ei tietuetta tästä "
-"mallista</b>"
+"<b invisible=\"not no_record\" class=\"text-warning\">Ei kirjauksia tälle "
+"mallille</b>"
 
 #. module: mail
 #. odoo-javascript
@@ -440,7 +438,7 @@ msgid ""
 "first.</i></p>"
 msgstr ""
 "<p><b>Keskustele kollegoiden kanssa</b> reaaliajassa käyttäen "
-"viestejä.</p><p><i>Käyttäjä pitää mahdollisesti kutusa ensin "
+"suoraviestejä.</p><p><i>Käyttäjä tulee mahdollisesti kutsua ensin "
 "'Asetukset'-sovelluksen kautta.</i></p>"
 
 #. module: mail
@@ -452,9 +450,9 @@ msgid ""
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
 "<p><b>Kirjoita viesti</b> kanavan jäsenille täällä.</p> <p>Voit ilmoittaa "
-"jollekulle tunnuksella <i>'@'</i> tai linkittää toisen kanavan tunnuksella "
-"<i >'#'</i>. Aloita viestisi kirjaimella <i>'/'</i> saadaksesi luettelon "
-"valittavissa olevista komennoista.</p>"
+"jollekulle mainitsemalla heidät <i>'@'</i> tai linkittää toisen kanavan "
+"tunnuksella <i >'#'</i>. Aloita viestisi merkillä <i>'/'</i> saadaksesi "
+"luettelon valittavissa olevista komennoista.</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -472,7 +470,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid "<p>Create a channel here.</p>"
-msgstr "<p>Luo kanava tähän.</p>"
+msgstr "<p>Luo kanava täällä.</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -483,7 +481,7 @@ msgstr "<p>Luo julkinen tai yksityinen kanava.</p>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"d-block w-75 py-2\">Button Color</span>"
-msgstr "<span class=\"d-block w-75 py-2\">Napin väri</span>"
+msgstr "<span class=\"d-block w-75 py-2\">Painikkeen väri</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -537,7 +535,7 @@ msgstr ""
 "                                käyttäjille viestihistoriassa.\n"
 "                            </span>\n"
 "                            <span invisible=\"mail_post_method != 'comment'\">\n"
-"                                Viesti lähetetään viestinä tietueeseen,\n"
+"                                Viesti tallennetaan viestinä kirjaukseen,\n"
 "                                jossa ilmoitetaan kaikille seuraajille. Se näkyy viestihistoriassa.\n"
 "                            </span>"
 
@@ -545,22 +543,23 @@ msgstr ""
 #: model_terms:web_tour.tour,rainbow_man_message:mail.discuss_channel_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>Hyvää työtä!</b> Kävit läpi kaikki tämän kiertueen vaiheet.</span>"
+"<span><b>Hyvää työtä!</b> Tutustuit kaikkiin tämän esittelyn "
+"vaiheisiin.</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "<span>If this was done by you:</span><br/>"
-msgstr "<span>Jos tämä oli sinun tekemäsi:</span><br/>"
+msgstr "<span>Jos sinä olet tämän takana:</span><br/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "<span>If this was not done by you:</span>"
-msgstr "<span>Jos tämä ei ole sinun tekemääsi:</span>"
+msgstr "<span>Jos sinä et ole tämän takana:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
 msgid "<span>Open Record</span>"
-msgstr "<span>Avaa tietue</span>"
+msgstr "<span>Avaa kirjaus</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -588,14 +587,14 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Python-kirjasto, joka evaluoidaan oletusarvoja varten, kun tätä aliasta "
-"varten luodaan uusia tietueita."
+"Python-kirjasto, josta haetaan oletusarvoja, kun luodaan uusia kirjauksia "
+"tälle aliakselle."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid "A Scheduled Message cannot be scheduled in the past"
-msgstr "Aikataulutettua viestiä ei voi aikatauluttaa menneisyyteen"
+msgstr "Aikataulutettua viestiä ei voi ajoittaa menneisyyteen"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_bus_presence_partner_or_guest_exists
@@ -605,7 +604,7 @@ msgstr "Väylän olemassaolo edellyttää käyttäjää tai vierasta."
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_member_partner_or_guest_exists
 msgid "A channel member must be a partner or a guest."
-msgstr "Kanavan jäsenen tulee olla partneri tai vieras."
+msgstr "Kanavan jäsenen tulee olla kumppani tai vieras."
 
 #. module: mail
 #. odoo-python
@@ -620,40 +619,40 @@ msgid ""
 "A chat should not be created with more than 2 persons. Create a group "
 "instead."
 msgstr ""
-"Chattia ei voi luoda useammalle kuin kahdelle henkilölle. Luo chatin sijaan "
-"ryhmä."
+"Keskustelua ei voi luoda useammalle kuin kahdelle henkilölle. Luo "
+"keskustelun sijaan ryhmä."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "A message can only be scheduled in monocomment mode"
-msgstr "Viesti voidaan ajoittaa vain monokommenttitilassa"
+msgstr "Viesti voidaan ajoittaa vain monocomment-tilassa"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid ""
 "A message cannot be scheduled on a model that does not have a mail thread."
-msgstr "Viestiä ei voi ajoittaa malliin, jossa ei ole sähköpostisäiettä."
+msgstr "Viestiä ei voi ajoittaa malliin, jossa ei ole sähköpostiketjua."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
 msgid "A message reaction must be from a partner or from a guest."
-msgstr "Viestin reaktion tulee olla joko partnerilta tai vieraalta."
+msgstr "Viestireaktion tulee olla joko kumppanilta tai vieraalta."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 msgid "A next activity can only be planned on models that use activities."
 msgstr ""
-"Seuraa akvititeetti voidaan suunnitella vain malleille, jotka käyttävät "
+"Seuraava akvititeetti voidaan suunnitella vain malleille, jotka käyttävät "
 "aktiviteetteja."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "A scheduled date is needed to schedule a message"
-msgstr "Ajoitettu päivämäärä tarvitaaan viestin aijoittamiseksi"
+msgstr "Suunniteltu päivämäärä tarvitaaan viestin ajoittamiseksi"
 
 #. module: mail
 #. odoo-python
@@ -673,7 +672,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
 msgid "A volume setting must have a partner or a guest."
-msgstr "Äänenvoimakkuuden asetus edellyttää partneria tai vierasta."
+msgstr "Äänenvoimakkuuden asetus edellyttää kumppania tai vierasta."
 
 #. module: mail
 #. odoo-javascript
@@ -762,8 +761,9 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
-"Toiminnot voivat laukaista tietyn toiminnan, kuten kalenterinäkymän "
-"avaamisen tai automaattisesti valmiiksi merkinnän, kun asiakirja on ladattu"
+"Toiminnot voivat käynnistää tietyn toiminnan, kuten kalenterinäkymän "
+"avaamisen tai valmiiksi merkitsemisen automaattisesti, kun asiakirja on "
+"ladattu"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -773,7 +773,7 @@ msgstr "Saapuville sähköposteille tehtävät toimenpiteet"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
 msgid "Activated by default when subscribing."
-msgstr "Aktivoidaan oletuksena kun tilataan."
+msgstr "Aktivoidaan oletuksena, kun tilausta tehdään."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__active
@@ -790,7 +790,7 @@ msgstr "Aktiivinen"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_domain
 msgid "Active domain"
-msgstr "Aktiivinen verkkotunnus"
+msgstr "Aktiivinen domain"
 
 #. module: mail
 #. odoo-javascript
@@ -808,19 +808,17 @@ msgstr "Aktiivinen verkkotunnus"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Activities"
-msgstr "Toimenpiteet"
+msgstr "Toiminnot"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Activities To Create"
-msgstr "Toimintoja luotavaksi"
+msgstr "Luotavat toiminnot"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
 msgid "Activities have to be linked to records with a not null res_id."
-msgstr ""
-"Aktiviteetit tulee linkittää tietueisiin, joilla ei ole null-arvoa "
-"res_id:ssä."
+msgstr "Toiminnot tulee linkittää kirjauksiin, joilla ei ole null res_id."
 
 #. module: mail
 #. odoo-javascript
@@ -835,7 +833,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Activity"
-msgstr "Toimenpide"
+msgstr "Toiminto"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -853,30 +851,30 @@ msgstr "Toimintojen mixin"
 #: model:ir.actions.act_window,name:mail.mail_activity_action
 #: model:ir.ui.menu,name:mail.menu_mail_activities
 msgid "Activity Overview"
-msgstr "Toiminnan yleiskatsaus"
+msgstr "Toiminnon yleiskatsaus"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_plan
 msgid "Activity Plan"
-msgstr "Toimintasuunnitelma"
+msgstr "Toimintosuunnitelma"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_plan_action
 #: model:ir.ui.menu,name:mail.menu_mail_activity_plan
 msgid "Activity Plans"
-msgstr "Toimintasuunnitelmat"
+msgstr "Toimintosuunnitelmat"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "Activity Settings"
-msgstr "Toimenpiteen asetukset"
+msgstr "Toiminnon asetukset"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_state
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_state
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_state
 msgid "Activity State"
-msgstr "Toimenpiteen tila"
+msgstr "Toiminnon tila"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_type
@@ -888,31 +886,31 @@ msgstr "Toimenpiteen tila"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Activity Type"
-msgstr "Toimenpidetyyppi"
+msgstr "Toimintotyyppi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_type_icon
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_icon
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Toimenpiteen ikoni"
+msgstr "Toimintotyypin kuvake"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Activity Type Name"
-msgstr "Toimintatyypin nimi"
+msgstr "Toimintotyypin nimi"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
 #: model:ir.ui.menu,name:mail.menu_mail_activity_type
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Activity Types"
-msgstr "Toimenpiteiden tyypit"
+msgstr "Toimintotyypit"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_plan_template
 msgid "Activity plan template"
-msgstr "Toimintasuunnitelman malli"
+msgstr "Toimintosuunnitelman mallipohja"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
@@ -920,8 +918,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Onboarding\", \"Prospect Follow-up\", \"Project Milestone Meeting\", ...)"
 msgstr ""
-"Toimintasuunnitelmien avulla voidaan määrittää luettelo toiminnoista vain muutamalla napsautuksella\n"
-"                    (esim. \"Perehdytys\", \"Prospektin seuranta\", \"Projektin virstanpylväspalaveri\", ...)"
+"Toimintosuunnitelmien avulla voidaan määrittää luettelo toiminnoista vain muutamalla napsautuksella\n"
+"                    (esim. \"Perehdytys\", \"Prospektin seuranta\", \"Projektin välitavoitepalaveri\", ...)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
@@ -932,13 +930,13 @@ msgstr "Toiminta-aikataulun suunnittelun ohjattu toiminto"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "Activity type"
-msgstr "Toimenpiteiden tyyppi"
+msgstr "Toimintotyyppi"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 msgid "Activity: %s"
-msgstr "Toimenpide: %s"
+msgstr "Toiminto: %s"
 
 #. module: mail
 #. odoo-javascript
@@ -1011,7 +1009,7 @@ msgstr "Lisää kuvaus"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Add a description to your activity..."
-msgstr "Lisää kuvaus aktiviteetillesi..."
+msgstr "Lisää toiminnollesi kuvaus..."
 
 #. module: mail
 #. odoo-python
@@ -1035,7 +1033,7 @@ msgstr "Lisää ja sulje"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/suggested_recipient.js:0
 msgid "Add as recipient and follower (reason: %s)"
-msgstr "Lisää vastaanottaja ja seuraaa (syy: %s)"
+msgstr "Lisää vastaanottaja ja seuraaja (syy: %s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
@@ -1046,13 +1044,13 @@ msgstr "Lisää yhteystietoja"
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
 msgid "Add contacts to notify..."
-msgstr "Lisää kontaktit, joille ilmoitetaan..."
+msgstr "Lisää yhteystiedot, joille ilmoitetaan..."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/follower_list.js:0
 msgid "Add followers to this document"
-msgstr "Lisää seuraajia tähän asiakirjaan"
+msgstr "Lisää tälle asiakirjalle seuraajia"
 
 #. module: mail
 #. odoo-javascript
@@ -1093,7 +1091,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
 msgid "Additional Contacts"
-msgstr "Lisäkontaktit"
+msgstr "Muut yhteystiedot"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -1184,8 +1182,8 @@ msgid ""
 "%(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s "
 "%(parent_model_name)s."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) on jo linkitetty "
-"%(alias_model_name)s (%(matching_id)s) ja sitä käytetään %(parent_name)s "
+"Alias %(matching_name)s (%(current_id)s) on jo linkitetty kohteeseen "
+"%(alias_model_name)s (%(matching_id)s) ja sitä käyttää %(parent_name)s "
 "%(parent_model_name)s."
 
 #. module: mail
@@ -1195,7 +1193,7 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with "
 "%(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) on jo linkitetty "
+"Alias %(matching_name)s (%(current_id)s) on jo linkitetty kohteen "
 "%(alias_model_name)s (%(matching_id)s) kanssa."
 
 #. module: mail
@@ -1221,7 +1219,7 @@ msgstr "Alias Domain"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_domain
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_optional__alias_domain
 msgid "Alias Domain Name"
-msgstr "Alias Verkkotunnus"
+msgstr "Alias domainin nimi"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_alias_domain_action
@@ -1229,12 +1227,12 @@ msgstr "Alias Verkkotunnus"
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_tree
 msgid "Alias Domains"
-msgstr "Alias-verkkotunnukset"
+msgstr "Alias Domainit"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_full_name
 msgid "Alias Email"
-msgstr "Alias Email"
+msgstr "Aliassähköposti"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_name
@@ -1251,7 +1249,7 @@ msgstr "Alias Status"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
 msgid "Alias domain name"
-msgstr "Alias-verkkotunnus"
+msgstr "Alias domainin nimi"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_status
@@ -1261,7 +1259,7 @@ msgstr "Aliaksen tila arvioituna viimeksi vastaanotetun viestin perusteella."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_model_id
 msgid "Aliased Model"
-msgstr "Aliasmalli"
+msgstr "Malli, johon on käytetty aliasta"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_alias_action
@@ -1276,8 +1274,8 @@ msgid ""
 "Aliases %(alias_names)s is already used as bounce or catchall address. "
 "Please choose another alias."
 msgstr ""
-"Alias %(alias_names)s on jo käytössä bounce- tai catchall-keräilyosoitteena."
-" Valitse toinen alias."
+"Alias %(alias_names)s on jo käytössä palautuvien tai catch-all-osoitteena. "
+"Valitse toinen alias."
 
 #. module: mail
 #. odoo-javascript
@@ -1331,7 +1329,7 @@ msgstr "Jokaisella liitteellä on oltava pääsytunniste."
 #. odoo-python
 #: code:addons/mail/models/res_partner.py:0
 msgid "An email is required for find_or_create to work"
-msgstr "Sähköposti tarvitaan, jotta find_or_create toimisi"
+msgstr "Sähköposti tarvitaan, jotta find_or_create toimii"
 
 #. module: mail
 #. odoo-javascript
@@ -1402,7 +1400,7 @@ msgstr "Arkistoitu"
 #: code:addons/mail/models/res_users.py:0
 msgid ""
 "Archived because %(user_name)s (#%(user_id)s) deleted the portal account"
-msgstr "Arkistoitu, koska %(user_name)s (#%(user_id)s) poisti portaali-tilin"
+msgstr "Arkistoitu, koska %(user_name)s (#%(user_id)s) poisti portaalitilin"
 
 #. module: mail
 #. odoo-javascript
@@ -1436,8 +1434,7 @@ msgstr "Haluatko varmasti poistaa tämän sähköpostiosoitteen estolistalta?"
 #. odoo-python
 #: code:addons/mail/models/mail_blacklist.py:0
 msgid "Are you sure you want to unblacklist this email address?"
-msgstr ""
-"Haluatko varmasti poistaa tämän sähköpostiosoitteen mustalta listalta?"
+msgstr "Haluatko varmasti poistaa tämän sähköpostiosoitteen estolistalta?"
 
 #. module: mail
 #. odoo-javascript
@@ -1454,19 +1451,19 @@ msgstr "Kysy käynnistyksen yhteydessä"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 msgid "Assign to ..."
-msgstr "Vastuuta hlölle ..."
+msgstr "Vastuuta henkilölle ..."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 msgid "Assign to me"
-msgstr "Ota tiketti vastuullesi"
+msgstr "Määrää minulle"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_on_demand_user_id
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Assigned To"
-msgstr "Vastuuhenkilö"
+msgstr "Määrätty henkilölle"
 
 #. module: mail
 #. odoo-javascript
@@ -1475,7 +1472,7 @@ msgstr "Vastuuhenkilö"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__activity_user_id
 msgid "Assigned to"
-msgstr "Vastuuhenkilö"
+msgstr "Määrätty henkilölle"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_type
@@ -1492,7 +1489,7 @@ msgstr "Tässä vaiheessa kielen pitäisi olla oikein asetettu"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
 msgid "Attach Files"
-msgstr "Lisää tiedostoja"
+msgstr "Liitä tiedostoja"
 
 #. module: mail
 #. odoo-javascript
@@ -1524,7 +1521,7 @@ msgstr "Liitteiden määrä"
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "Attachment counter loading..."
-msgstr "Tiedostoliitteiden laskuria ladataan..."
+msgstr "Liitteiden laskuria ladataan..."
 
 #. module: mail
 #. odoo-javascript
@@ -1549,7 +1546,7 @@ msgstr "Äänisoitin:"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__partners
 msgid "Authenticated Partners"
-msgstr "Kirjautuneet kumppanit"
+msgstr "Todennetut kumppanit"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__author_id
@@ -1559,7 +1556,7 @@ msgstr "Kirjautuneet kumppanit"
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__author_id
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Author"
-msgstr "Tekijä"
+msgstr "Kirjoittaja"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__author_id
@@ -1569,14 +1566,14 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
 msgstr ""
-"Viestin luoja. Jos tätä ei ole asetettu, viestin lähettäjä (email_from) voi "
-"olla osoite, joka ei täsmännyt mihinkään kumppaniin."
+"Viestin kirjoittaja. Jos tätä ei ole asetettu, email_from voi olla osoite, "
+"joka ei täsmännyt mihinkään kumppaniin."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__author_avatar
 #: model:ir.model.fields,field_description:mail.field_mail_message__author_avatar
 msgid "Author's avatar"
-msgstr "Tekijän avatar"
+msgstr "Kirjoittajan avatar"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__group_public_id
@@ -1631,7 +1628,7 @@ msgstr "Automaattinen viesti"
 msgid ""
 "Automatically schedule this activity once the current one is marked as done."
 msgstr ""
-"Automaattinen aikataulutus toiminnolle, kun nykyinen on merkitty valmiiksi."
+"Aikatauluta toiminto automaattisesti, kun nykyinen on merkitty valmiiksi."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -1679,7 +1676,7 @@ msgstr "Avatarin välimuistin avain"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Avatar of user"
-msgstr "Avatar, käyttäjä"
+msgstr "Käyttäjän avatar"
 
 #. module: mail
 #. odoo-javascript
@@ -1725,8 +1722,8 @@ msgid ""
 "Batch log cannot support attachments or tracking values on more than 1 "
 "document"
 msgstr ""
-"Eräloki ei voi tukea liitetiedostoja tai seuranta-arvoja useammassa kuin 1 "
-"asiakirjassa"
+"Eräloki ei voi tukea liitetiedostoja tai seuranta-arvoja useammassa kuin "
+"yhdessä asiakirjassa"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__before_plan_date
@@ -1739,12 +1736,12 @@ msgstr "Ennen suunniteltua päivää"
 #: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Blacklist"
-msgstr "Markkinointikielto"
+msgstr "Estolista"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Blacklist Date"
-msgstr "Estolistan päiväys"
+msgstr "Estolistan päivämäärä"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_bl
@@ -1754,7 +1751,7 @@ msgstr "Markkinointikiellossa oleva osoite"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_blacklist_action
 msgid "Blacklisted Email Addresses"
-msgstr "Mustalla listalla olevat sähköpostiosoitteet"
+msgstr "Estolistalla olevat sähköpostiosoitteet"
 
 #. module: mail
 #. odoo-python
@@ -1763,8 +1760,8 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr ""
-"Estetty, koska portaali-tili on poistettu %(portal_user_name)s tekijänä "
-"%(user_name)s (#%(user_id)s)"
+"Estetty, koska portaali-tili on poistettu %(portal_user_name)s käyttäjän "
+"%(user_name)s toimesta (#%(user_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -1790,7 +1787,7 @@ msgstr "Viesti"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body_has_template_value
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr "Rungon sisältö on sama kuin mallissa"
+msgstr "Viestin sisältö on sama kuin mallissa"
 
 #. module: mail
 #. odoo-javascript
@@ -1807,18 +1804,18 @@ msgstr "Botti"
 #: model:ir.model.fields,field_description:mail.field_res_users__message_bounce
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_bounce
 msgid "Bounce"
-msgstr "Viestin palautus"
+msgstr "Palautuminen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__bounce_alias
 msgid "Bounce Alias"
-msgstr "Bounce Alias"
+msgstr "Palautumisen alias"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__bounce_email
 #: model:ir.model.fields,field_description:mail.field_res_company__bounce_email
 msgid "Bounce Email"
-msgstr "Bounce Email"
+msgstr "Palautuneiden sähköposti"
 
 #. module: mail
 #. odoo-python
@@ -1827,14 +1824,14 @@ msgid ""
 "Bounce alias %(bounce)s is already used for another domain with same name. "
 "Use another bounce or simply use the other alias domain."
 msgstr ""
-"Bounce alias %(bounce)s on jo käytössä toiselle samannimiselle "
-"verkkotunnukselle. Käytä toista bouncea tai yksinkertaisesti toista alias-"
-"verkkotunnusta."
+"Palautumisaliasta %(bounce)s käytetään jo toisessa samannimisessä "
+"domainissa. Käytä toista palautumista tai yksinkertaisesti toista alias "
+"domainia."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
 msgid "Bounce emails should be unique"
-msgstr "Bounce-sähköpostiviestien tulisi olla ainutlaatuisia"
+msgstr "Palautuneiden sähköpostien tulisi olla yksilöllisiä"
 
 #. module: mail
 #. odoo-python
@@ -1843,8 +1840,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used by "
 "%(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
-"Bounce/Catchall '%(matching_alias_name)s' on jo %(document_name)s:n "
-"käytössä. Valitse toinen alias tai muuta se toisessa asiakirjassa."
+"Palautumista/Catch-all '%(matching_alias_name)s' käyttää jo "
+"%(document_name)s. Valitse toinen alias tai muuta se toisessa asiakirjassa."
 
 #. module: mail
 #. odoo-python
@@ -1853,15 +1850,15 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used. Choose another "
 "alias or change it on the linked model."
 msgstr ""
-"Bounce/Catchall '%(matching_alias_name)s' on jo käytössä. Valitse toinen "
-"alias tai muuta se linkitetyssä mallissa."
+"Palautuminen/Catch-all '%(matching_alias_name)s' on jo käytössä. Valitse "
+"toinen alias tai muuta se linkitetyssä mallipohjassa."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__bounce
 msgid "Bounced"
-msgstr "Hylätty"
+msgstr "Palautunut"
 
 #. module: mail
 #. odoo-javascript
@@ -1877,7 +1874,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Browser default"
-msgstr "Selaimen oletusarvo"
+msgstr "Oletusselain"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__endpoint
@@ -1887,7 +1884,7 @@ msgstr "Selaimen päätepiste"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__keys
 msgid "Browser keys"
-msgstr "Selaimen näppäimet"
+msgstr "Selaimen avaimet"
 
 #. module: mail
 #. odoo-python
@@ -1904,13 +1901,13 @@ msgstr "CTRL"
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_call
 msgid "Call"
-msgstr "Soitto"
+msgstr "Soita"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Call Settings"
-msgstr "Puheluasetukset"
+msgstr "Soittoasetukset"
 
 #. module: mail
 #. odoo-javascript
@@ -1927,7 +1924,7 @@ msgstr "Voi perua"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__can_edit_body
 msgid "Can Edit Body"
-msgstr "Voi muokata runkoa"
+msgstr "Voi muokata tekstiä"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
@@ -1944,7 +1941,7 @@ msgstr "Voi kirjoittaa"
 #. odoo-python
 #: code:addons/mail/models/mail_notification.py:0
 msgid "Can not update the message or recipient of a notification."
-msgstr "Ei voi päivittää viestiä tai vastaanottokuittausta."
+msgstr "Ei voi päivittää viestiä tai ilmoituksen vastaanottajaa."
 
 #. module: mail
 #: model:ir.model,name:mail.model_bus_listener_mixin
@@ -1991,29 +1988,29 @@ msgstr "Peruttu"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_canned_response
 msgid "Canned Response"
-msgstr "Purkitettu vastaus"
+msgstr "Valmisvastaus"
 
 #. module: mail
 #: model:res.groups,name:mail.group_mail_canned_response_admin
 msgid "Canned Response Administrator"
-msgstr "Purkitetun vastauksen hallinta"
+msgstr "Valmisvastauksen hallinta"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_canned_response_action
 #: model:ir.module.category,name:mail.module_category_canned_response
 #: model:ir.ui.menu,name:mail.menu_canned_responses
 msgid "Canned Responses"
-msgstr "Tallennetut vastaukset"
+msgstr "Valmisvastaukset"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "Canned Responses Search"
-msgstr "Valmiiden vastausten haku"
+msgstr "Valmisvastausten haku"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
 msgid "Canned response"
-msgstr "Purkitettu vastaus"
+msgstr "Valmisvastaus"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__source
@@ -2022,34 +2019,35 @@ msgid ""
 "in your messages. Type ':' followed by the name of your shortcut (e.g. "
 ":hello) to use in your messages."
 msgstr ""
-"Purkitettu vastaus, joka korvataan automaattisesti pidemmällä sisällöllä "
+"Valmisvastaus, joka korvataan automaattisesti pidemmällä sisällöllä "
 "viesteissäsi. Kirjoita ':' ja sen perään viestissäsi käytettävän lyhenteen "
 "nimi (esim. :hello)."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "Canned responses"
-msgstr "Purkitetut vastaukset"
+msgstr "Valmisvastaukset"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change authorized group of sub-channel: %(channels)s."
-msgstr "Ei voida muuttaa valtuutettua ryhmää alakanavassa: %(channels)s."
+msgstr ""
+"Ei voida muuttaa valtuutettua ryhmää alisteisessa kanavassa: %(channels)s."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change initial message nor parent channel of: %(channels)s."
 msgstr ""
-"Ei voi vaihtaa alkuperäistä viestiä eikä ylemmän tason kanavaa: "
+"Ei voida vaihtaa alkuperäistä viestiä eikä ylemmän tason kanavaa: "
 "%(channels)s."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change the channel type of: %(channel_names)s"
-msgstr "Ei voi muuttaa kanavan tyyppiä: %(channel_names)s"
+msgstr "Ei voida muuttaa kanavan tyyppiä: %(channel_names)s"
 
 #. module: mail
 #. odoo-python
@@ -2068,14 +2066,14 @@ msgid ""
 " of type 'channel' or 'group'. The sub-channel should have the same type as "
 "the parent."
 msgstr ""
-" Ei voida luoda %(channels)s: ylemmän hierarkian kanavan ei voi olla "
-"alakanava, vaan sen tulee olla tyyppiä 'kanava' tai 'ryhmä'. Alakanavan "
-"tulee olla samaa tyyppiä kuin hierarkiassa ylemmän."
+" Ei voida luoda %(channels)s: ylempi taso ei voi olla alisteinen kanava, "
+"vaan sen tulee olla tyyppiä 'kanava' tai 'ryhmä'. Alisteisen kanavan tulee "
+"olla samaa tyyppiä kuin hierarkiassa ylemmän."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
 msgid "Carbon copy message recipients"
-msgstr "Piilokopion vastaanottajat"
+msgstr "Kopion vastaanottajat"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_cc
@@ -2090,18 +2088,18 @@ msgstr "Viestin kopion vastaanottajat (voit käyttä täytettä)"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_formatted
 msgid "Catchall"
-msgstr "Catchall"
+msgstr "Catch-all"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__catchall_alias
 msgid "Catchall Alias"
-msgstr "Catchall Alias"
+msgstr "Catch-all Alias"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__catchall_email
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_email
 msgid "Catchall Email"
-msgstr "Catchall-sähköposti"
+msgstr "Catch-all-sähköposti"
 
 #. module: mail
 #. odoo-python
@@ -2110,14 +2108,14 @@ msgid ""
 "Catchall alias %(catchall)s is already used for another domain with same "
 "name. Use another catchall or simply use the other alias domain."
 msgstr ""
-"Catchall-aliasta %(catchall)s käytetään jo toisen samannimisen "
-"verkkotunnuksen yhteydessä. Käytä toista catchall-tunnusta tai "
-"yksinkertaisesti toista alias-verkkotunnusta."
+"Catch-all-aliasta %(catchall)s käytetään jo toisessa samannimisess' "
+"domainissa. Käytä toista catch-all-tunnusta tai yksinkertaisesti toista "
+"alias domainia."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
 msgid "Catchall emails should be unique"
-msgstr "Catchall-sähköpostien tulisi olla yksilöllisiä"
+msgstr "Catch-all-sähköpostien tulisi olla yksilöllisiä"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -2131,13 +2129,13 @@ msgstr "Kopio"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__chaining_type
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__chaining_type
 msgid "Chaining Type"
-msgstr "Ketjutyyppi"
+msgstr "Ketjutustyyppi"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_decoration
 #: model:ir.model.fields,help:mail.field_mail_activity_type__decoration_type
 msgid "Change the background color of the related activities of this type."
-msgstr "Muuta tähän aktiviteettityyppiin liittyviä taustavärejä."
+msgstr "Muuta tähän toimintotyyppiin liittyviä taustavärejä."
 
 #. module: mail
 #. odoo-javascript
@@ -2164,7 +2162,7 @@ msgstr "Kanavan jäsen"
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__channel_notifications
 msgid "Channel Notifications"
-msgstr "Kanavailmoitukset"
+msgstr "Kanavan ilmoitukset"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_type
@@ -2218,20 +2216,20 @@ msgstr "Kanavat"
 #: model:ir.actions.act_window,name:mail.discuss_channel_member_action
 #: model:ir.ui.menu,name:mail.discuss_channel_member_menu
 msgid "Channels/Members"
-msgstr "Kanavat / jäsenet"
+msgstr "Kanavat/Jäsenet"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/messaging_menu.js:0
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__chat
 msgid "Chat"
-msgstr "Chat"
+msgstr "Chatti"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Chat Options"
-msgstr "Yksityiskeskustelun asetukset"
+msgstr "Chatin asetukset"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__channel_type
@@ -2239,7 +2237,7 @@ msgid ""
 "Chat is private and unique between 2 persons. Group is private among invited"
 " persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
-"Chat on yksityinen ja ainutlaatuinen kahden henkilön välillä. Ryhmä on "
+"Chatti on yksityinen ja yksilöllinen kahden henkilön välillä. Ryhmä on "
 "yksityinen kutsuttujen kesken. Kanavaan voi liittyä vapaasti (sen "
 "kokoonpanosta riippuen)."
 
@@ -2258,7 +2256,7 @@ msgstr "Tarkista poissulkemisluettelo"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__child_ids
 msgid "Child Messages"
-msgstr "Aliviestit"
+msgstr "Alisteiset viestit"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -2268,7 +2266,7 @@ msgstr "Valitse yhteystieto..."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Choose a template..."
-msgstr "Valitse malli..."
+msgstr "Valitse mallipohja..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -2285,8 +2283,8 @@ msgstr "Valitse toinen arvo tai muuta sitä toisessa asiakirjassa."
 #: model:ir.model.fields,help:mail.field_mail_activity_schedule__plan_on_demand_user_id
 msgid "Choose assignation for activities with on demand assignation."
 msgstr ""
-"Valitse toimeksianto toimintoja varten, joissa on kysynnän mukaan tapahtuva "
-"toimeksianto."
+"Valitse toimeksianto toimintoja varten, joissa on toimeksianto kysynnän "
+"mukaan."
 
 #. module: mail
 #. odoo-javascript
@@ -2386,7 +2384,7 @@ msgstr "Pienennä osallistujat"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__new
 msgid "Collect replies on a specific email address"
-msgstr "Kerää vastauksia tietyltä sähköpostiosoitteelta"
+msgstr "Kerää vastauksia tietystä sähköpostiosoitteesta"
 
 #. module: mail
 #. odoo-javascript
@@ -2400,7 +2398,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated carbon copy recipients addresses"
 msgstr ""
-"Pilkulla eroteltu lista piilokopioiden vastaanottajien sähköpostiosoitteista"
+"Pilkulla eroteltu lista kopioiden vastaanottajien sähköpostiosoitteista"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2443,8 +2441,8 @@ msgstr "Yritykset"
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
 msgid "Companies using this domain as default for sending mails"
 msgstr ""
-"Yritykset, jotka käyttävät tätä verkkotunnusta oletusarvoisesti sähköpostien"
-" lähettämiseen"
+"Yritykset, jotka käyttävät tätä domainia oletuksena sähköpostien "
+"lähettämiseen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
@@ -2890,28 +2888,28 @@ msgstr "Valuutta"
 #: model:ir.model.fields,help:mail.field_mail_message__starred
 msgid "Current user has a starred notification linked to this message"
 msgstr ""
-"Nykyinen käyttäjä on merkannut tähän viestiin linkitetyn ilmoituksen "
+"Nykyinen käyttäjä on merkinnyt tähän viestiin linkitetyn ilmoituksen "
 "tärkeäksi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Mukautettu palautettu viesti"
+msgstr "Räätälöi palautunutta viestiä"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE server list"
-msgstr "Mukautettu ICE-palvelinluettelo"
+msgstr "Räätälöity ICE-palvelinluettelo"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
 msgid "Custom Template"
-msgstr "Mukautettu malli"
+msgstr "Räätälöity mallipohja"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Custom Templates"
-msgstr "Mukautetut mallit"
+msgstr "Räätälöidyt mallipohjat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__custom_channel_name
@@ -2926,12 +2924,12 @@ msgstr "Asiakas vaaditaan viestien / sähköpostin ilmoituksiin"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Customize the look and feel of automated emails"
-msgstr "Mukauta automaattisten sähköpostien ulkoasua ja tunnelmaa"
+msgstr "Mukauta automaattisten sähköpostien ulkoasua ja sävyä"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__custom_notifications
 msgid "Customized Notifications"
-msgstr "Mukautetut ilmoitukset"
+msgstr "Räätälöidyt ilmoitukset"
 
 #. module: mail
 #. odoo-javascript
@@ -2955,18 +2953,18 @@ msgstr "Päivämäärä"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_schedule__scheduled_datetime
 msgid "Datetime at which notification should be sent."
-msgstr "Päivä, jolloin huomautukset tulisi lähettää."
+msgstr "Päivämäärä ja aika, jolloin ilmoitukset tulisi lähettää."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__pinned_at
 #: model:ir.model.fields,help:mail.field_mail_message__pinned_at
 msgid "Datetime at which the message has been pinned"
-msgstr "Päivämäärä, jolloin viesti on kiinnitetty"
+msgstr "Päivämäärä ja aika, jolloin viesti on kiinnitetty"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__days
 msgid "Days"
-msgstr "Päivää"
+msgstr "Päivät"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -3029,23 +3027,23 @@ msgstr "Oletus"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__default_display_mode
 msgid "Default Display Mode"
-msgstr "Oletusarvoinen näyttötila"
+msgstr "Oletusnäyttötila"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__default_from_email
 #: model:ir.model.fields,field_description:mail.field_res_company__default_from_email
 msgid "Default From"
-msgstr "Oletus From"
+msgstr "Oletus käyttäen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__default_from
 msgid "Default From Alias"
-msgstr "Oletus From Alias"
+msgstr "Oletus käyttäen aliasta"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_note
 msgid "Default Note"
-msgstr "Oletushuomio"
+msgstr "Oletusmuistiinpano"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
@@ -3081,10 +3079,10 @@ msgid ""
 " local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
-"Oletusarvo alkaen, kun se ei vastaa lähtevän palvelimen suodattimia. Voi "
-"olla joko paikallinen osa, esim. 'notifications', tai täydellinen "
-"sähköpostiosoite, esim. 'notifications@example.com', joka ohittaa kaikki "
-"lähtevät sähköpostit."
+"Oletusarvo alkaen, kun se ei vastaa lähettävän palvelimen suodattimia. Voi "
+"olla joko paikallinen osa, esim. 'ilmoitukset', tai kokonainen "
+"sähköpostiosoite, esim. 'notifications@example.com', jotta kaikki lähtevät "
+"sähköpostit ohitetaan."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -3098,9 +3096,9 @@ msgid ""
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
 msgstr ""
-"Tietueen oletusvastaanottajat:\n"
-"- kumppani (käyttäen id:tä kumppanissa tai partner_id-kentässä) TAI\n"
-"- sähköposti (käyttäen email_from- tai email-kenttää)"
+"Kirjauksen oletusvastaanottajat:\n"
+"- kumppani (käyttäen kumppanin tunnusta tai partner_id-kenttää) TAI\n"
+"- sähköposti (käyttäen email_from- tai sähköposti-kenttää)"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
@@ -3111,7 +3109,7 @@ msgstr "Oletus käyttäjä"
 #: model:ir.model.fields,help:mail.field_fetchmail_server__priority
 msgid "Defines the order of processing, lower values mean higher priority"
 msgstr ""
-"Määrittelee toimintojen jäjrestyksen, pienempi arvo tarkoittaa suurempaa "
+"Määrittelee käsittelyjärjestyksen: pienempi arvo tarkoittaa korkeampaa "
 "prioriteettia"
 
 #. module: mail
@@ -3128,7 +3126,7 @@ msgstr "Viiveen tyyppi"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Delay after releasing push-to-talk"
-msgstr "Viive tangentin vapauttamisen jälkeen"
+msgstr "Viive paina-ja-puhu -painikkeen vapauttamisen jälkeen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__delay_unit
@@ -3166,7 +3164,7 @@ msgstr "Toimitettu"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__exception
 msgid "Delivery Failed"
-msgstr "Lähetys epäonnistui"
+msgstr "Toimitus epäonnistui"
 
 #. module: mail
 #. odoo-javascript
@@ -3196,8 +3194,8 @@ msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
 msgstr ""
-"Kuvaus, joka lisätään tähän alatyyppiin lähetettyihin viesteihin. Jos tyhjä,"
-"  viesteihin lisätään nimi."
+"Kuvaus, joka lisätään viestiin, joka on tallennettu tähän alatyyppiin. Jos "
+"tyhjä,  viesteihin lisätään nimi."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__default_display_mode
@@ -3211,14 +3209,14 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
 msgid "Determines if the canned response can be edited by the current user"
-msgstr "Määrittää, voiko nykyinen käyttäjä muokata purkitettua vastausta"
+msgstr "Määrittää, voiko nykyinen käyttäjä muokata valmisvastausta"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_shared
 msgid "Determines if the canned_response is currently shared with other users"
 msgstr ""
-"Määrittää, onko purkitettu vastaus (canned_response) tällä hetkellä jaettu "
-"muiden käyttäjien kanssa"
+"Määrittää, onko valmisvastaus canned_response tällä hetkellä jaettu muiden "
+"käyttäjien kanssa"
 
 #. module: mail
 #. odoo-javascript
@@ -3248,7 +3246,7 @@ msgstr "Katkaise yhteys"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Disconnected from the RTC call by the server"
-msgstr "RTC-yhteys katkennut palvelimelta"
+msgstr "Palvelin katkaisi RTC-yhteyden"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_discuss
@@ -3261,22 +3259,22 @@ msgstr "Viestintä"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form
 msgid "Discuss sidebar"
-msgstr "Keskustelun sivupalkki"
+msgstr "Viestinnän sivupalkki"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_discuss_channel_member_unmute_ir_actions_server
 msgid "Discuss: channel member unmute"
-msgstr "Keskustele: kanavan jäsen mykistyksen poisto"
+msgstr "Viestintä: kanavan jäsenen mykistyksen poisto"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_discuss_users_settings_unmute_ir_actions_server
 msgid "Discuss: users settings unmute"
-msgstr "Keskustele: käyttäjien asetukset mykistyksen poistaminen"
+msgstr "Viestintä: käyttäjien asetukset, mykistyksen poistaminen"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel
 msgid "Discussion Channel"
-msgstr "Keskustelukanava"
+msgstr "Viestintäkanava"
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
@@ -3399,12 +3397,12 @@ msgstr "Haluatko varmasti poistaa tämän esikatselun?"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Document"
-msgstr "Dokumentti"
+msgstr "Asiakirja"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
 msgid "Document Followers"
-msgstr "Dokumentin seuraajat"
+msgstr "Asiakirjan seuraajat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__res_ids
@@ -3416,22 +3414,22 @@ msgstr "Asiakirjan tunnukset"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_search
 msgid "Document Model"
-msgstr "Dokumentin malli"
+msgstr "Asiakirjan malli"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_name
 msgid "Document Name"
-msgstr "Dokumentin nimi"
+msgstr "Asiakirjan nimi"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "Document: \""
-msgstr "Dokumentti: \""
+msgstr "Asiakirja: \""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "Domain"
-msgstr "Verkkotunnus"
+msgstr "Domain"
 
 #. module: mail
 #. odoo-javascript
@@ -3447,7 +3445,7 @@ msgstr "Valmis"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Done & Launch Next"
-msgstr "Merkitse tehdyksi & avaa seuraava"
+msgstr "Valmis & käynnistä seuraava"
 
 #. module: mail
 #. odoo-javascript
@@ -3455,19 +3453,19 @@ msgstr "Merkitse tehdyksi & avaa seuraava"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Done & Schedule Next"
-msgstr "Merkitse tehdyksi & aikatauluta seuraava"
+msgstr "Valmis & aikatauluta seuraava"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_done
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Done Date"
-msgstr "Valmis päivä"
+msgstr "Valmistumispäivä"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
 msgid "Done and Schedule Next"
-msgstr "Valmis ja aseta seuraavan aikataulu"
+msgstr "Valmis ja aikatauluta seuraava"
 
 #. module: mail
 #. odoo-javascript
@@ -3523,19 +3521,19 @@ msgstr "Erääntyy"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.js:0
 msgid "Due in %s days"
-msgstr "Erääntyy %s päivässä"
+msgstr "Erääntyy %s päivän kuluttua"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "Due on"
-msgstr "Eräpäivä"
+msgstr "Määräaika"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range_type
 msgid "Due type"
-msgstr "Erääntymisen tyyppi"
+msgstr "Määräajan tyyppi"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_dup
@@ -3560,13 +3558,13 @@ msgstr "Dynaamiset raportit"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__generic
 msgid "Dynamic User (based on record)"
-msgstr "Dynaaminen käyttäjä (perustuu tietueeseen)"
+msgstr "Dynaaminen käyttäjä (perustuu kirjaukseen)"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Edge blur intensity"
-msgstr "Sivujen sumennuksen voimakkuus"
+msgstr "Reunojen sumennuksen voimakkuus"
 
 #. module: mail
 #. odoo-javascript
@@ -3598,7 +3596,7 @@ msgstr "Muokkaa ajastettua huomautusta"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/follower_subtype_dialog.js:0
 msgid "Edit Subscription of %(name)s"
-msgstr "Muokkaa tilausta %(name)s"
+msgstr "Muokkaa henkilön %(name)s tilausta"
 
 #. module: mail
 #. odoo-javascript
@@ -3628,7 +3626,7 @@ msgstr "Sähköposti"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_add_signature
 #: model:ir.model.fields,field_description:mail.field_mail_message__email_add_signature
 msgid "Email Add Signature"
-msgstr "Sähköposti Lisää allekirjoitus"
+msgstr "Sähköposti, Lisää allekirjoitus"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__email
@@ -3685,7 +3683,7 @@ msgstr "Sähköpostin asetukset"
 #: model:ir.model,name:mail.model_mail_alias_domain
 #: model:ir.model.fields,field_description:mail.field_res_company__alias_domain_id
 msgid "Email Domain"
-msgstr "Sähköpostin verkkotunnus"
+msgstr "Sähköpostin domain"
 
 #. module: mail
 #. odoo-javascript
@@ -3702,7 +3700,7 @@ msgstr "Sähköpostin ylätunnisteen väri"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_mail
 msgid "Email Mass Mailing"
-msgstr "Sähköpostimarkkinointi"
+msgstr "Massasähköposti"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_layout_xmlid
@@ -3742,7 +3740,7 @@ msgstr "Sähköpostimallit"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr "Sähköpostiviestiketju"
+msgstr "Sähköpostiketju"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_blacklist_unique_email
@@ -3757,8 +3755,8 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
-"Lähettäjän sähköpostiosoite. Tälle kentälle annetaan arvo kun lähettäjälle "
-"ei automaattisesti löydy kumppania. Korvaa author_id kentän keskustelussa."
+"Lähettäjän sähköpostiosoite. Tälle kentälle annetaan arvo, kun yhteensopivaa"
+" kumppania ei löydy ja se korvaa author_id -kentän chatterissa."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -3766,7 +3764,8 @@ msgid ""
 "Email address to which replies will be redirected when sending emails in "
 "mass"
 msgstr ""
-"Sähköpostiosoite, johon vastaukset ohjataan lähetettäessä massasähköposteja"
+"Sähköpostiosoite, johon vastaukset ohjataan, kun massasähköposteja "
+"lähetetään"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__reply_to
@@ -3775,17 +3774,16 @@ msgid ""
 "mass; only used when the reply is not logged in the original discussion "
 "thread."
 msgstr ""
-"Sähköpostiosoite, johon vastaukset ohjataan lähetettäessä sähköposteja "
-"massana; käytetään vain, kun vastausta ei ole kirjattu alkuperäiseen "
-"keskusteluketjuun."
+"Sähköpostiosoite, johon vastaukset ohjataan, kun massasähköposteja "
+"lähetetään; käytetään vain, kun vastausta ei ole kirjattu alkuperäiseen "
+"viestiketjuun."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid ""
 "Email addresses that are blacklisted won't receive Email mailings anymore."
 msgstr ""
-"Markkinointikiellon listalla olevat sähköpostiosoitteet eivät enää "
-"vastaanota sähköpostiviestejä."
+"Estolistalla olevat sähköpostiosoitteet eivät enää vastaanota sähköposteja."
 
 #. module: mail
 #. odoo-python
@@ -3794,8 +3792,8 @@ msgid ""
 "Email aliases %(alias_name)s cannot be used on several records at the same "
 "time. Please update records one by one."
 msgstr ""
-"Sähköpostin aliaksia %(alias_name)s ei voi käyttää useissa tietueissa "
-"samanaikaisesti. Päivitä tietueet yksi kerrallaan."
+"Sähköpostialiaksia %(alias_name)s ei voi käyttää useissa kirjauksissa "
+"samanaikaisesti. Päivitä kirjaukset yksi kerrallaan."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
@@ -3813,8 +3811,7 @@ msgstr "Ohjattu sähköpostin koostaminen"
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_domain
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
-"Sähköpostin verkkotunnus esim. 'example.com' kohdassa 'odoo@example.com'"
+msgstr "Sähköpostin domain, esim. 'example.com' kohdassa 'odoo@example.com'"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -3848,7 +3845,7 @@ msgstr "Sähköpostit"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
 msgid "Emoji"
-msgstr "Hymiö"
+msgstr "Emoji"
 
 #. module: mail
 #. odoo-javascript
@@ -3871,19 +3868,19 @@ msgstr "Ota käyttöön"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
 msgid "Enable Ordered Tracking"
-msgstr "Salli järjestetty seuranta"
+msgstr "Salli tilausten seuranta"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Enter"
-msgstr "Käy sisään"
+msgstr "Siirry"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Enter Full Screen"
-msgstr "Siirry koko näyttöön"
+msgstr "Siirry koko näytön tilaan"
 
 #. module: mail
 #. odoo-javascript
@@ -3968,8 +3965,8 @@ msgid ""
 "Error without exception. Probably due to concurrent access update of "
 "notification records. Please see with an administrator."
 msgstr ""
-"Virhe ilman poikkeusta. Todennäköisesti syynä ilmoitustietueiden "
-"samanaikaisen käytön päivitys. Katso asiaa järjestelmänvalvojan kanssa."
+"Virhe ilman poikkeusta. Todennäköisesti syynä ilmoituskirjausten "
+"samanaikaisen käytön päivitys. Tarkista asia ylläpitäjän kanssa."
 
 #. module: mail
 #. odoo-python
@@ -3978,18 +3975,18 @@ msgid ""
 "Error without exception. Probably due to sending an email without computed "
 "recipients."
 msgstr ""
-"Virhe poikkeuksetta. Todennäköisesti syynä on sähköpostin lähettäminen ilman"
-" laskettuja vastaanottajia."
+"Virhe ilman poikkeusta. Todennäköisesti syynä on sähköpostin lähettäminen "
+"ilman laskettuja vastaanottajia."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
 msgid "Error, a partner cannot follow twice the same object."
-msgstr "Virhe: kumppani ei voi olla saman tietueen seuraajan kahdesti."
+msgstr "Virhe: kumppani ei voi olla seurata samaa kirjausta kahdesti."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
 msgid "Everyone"
-msgstr "Näytä kaikille"
+msgstr "Kaikki"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__exception
@@ -4001,7 +3998,7 @@ msgstr "Poikkeus"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Exit Fullscreen"
-msgstr "Poistu kokoruututilasta"
+msgstr "Poistu kokoruudun tilasta"
 
 #. module: mail
 #. odoo-javascript
@@ -4029,7 +4026,7 @@ msgstr "Pääsytunnisteen voimassaolon päättymispäivä"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Extended Filters..."
-msgstr "Edistyneet suotimet..."
+msgstr "Edistyneet suodattimet..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
@@ -4050,7 +4047,7 @@ msgstr "Epäonnistui"
 #. odoo-javascript
 #: code:addons/mail/static/src/webclient/web/webclient.js:0
 msgid "Failed to enable push notifications"
-msgstr "Push-ilmoitusten ottaminen käyttöön epäonnistui"
+msgstr "Push-ilmoitusten käyttöönottaminen epäonnistui"
 
 #. module: mail
 #. odoo-javascript
@@ -4064,13 +4061,13 @@ msgstr "Gifien lataaminen epäonnistui..."
 msgid "Failed to load the SFU server, falling back to peer-to-peer"
 msgstr ""
 "SFU-palvelimen lataaminen epäonnistui, palataan takaisin "
-"vertaisverkkopalveluun"
+"vertaisjärjestelmään"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.xml:0
 msgid "Failed to post the message. Click to retry"
-msgstr "Viestin lähettäminen epäonnistui. Napsauta yrittääksesi uudelleen"
+msgstr "Viestin lähettäminen epäonnistui. Klikkaa yrittääksesi uudelleen"
 
 #. module: mail
 #. odoo-python
@@ -4080,7 +4077,7 @@ msgid ""
 "\n"
 "%(template_traceback)s)"
 msgstr ""
-"QWeb-mallin renderöinti epäonnistui: %(template_src)s\n"
+"QWeb-mallin hahmontaminen epäonnistui: %(template_src)s\n"
 "\n"
 "%(template_traceback)s)"
 
@@ -4088,13 +4085,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Failed to render inline_template template: %(template_txt)s"
-msgstr "Inline_template-mallin renderöinti epäonnistui: %(template_txt)s)"
+msgstr "Inline_template -mallin hahmontaminen epäonnistui: %(template_txt)s)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Failed to render template: %(view_ref)s"
-msgstr "Mallin renderöinti epäonnistui: %(view_ref)s"
+msgstr "Mallin hahmontaminen epäonnistui: %(view_ref)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
@@ -4116,14 +4113,13 @@ msgid ""
 "stored to ease the debugging of mailing issues."
 msgstr ""
 "Epäonnistumisen syy. Tämä on yleensä sähköpostipalvelimen ilmoittama "
-"poikkeusvirhe, joka on tallennettu helpottamaan postitusongelmien "
-"virheenkorjausta."
+"poikkeus, joka on tallennettu helpottamaan postiongelmien virheenkorjausta."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_type
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_type
 msgid "Failure type"
-msgstr "Epäonnistumisen tyyppi"
+msgstr "Epäonnistumistyyppi"
 
 #. module: mail
 #. odoo-javascript
@@ -4135,7 +4131,7 @@ msgstr "Epäonnistui: %(modelName)s"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__starred_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__starred_partner_ids
 msgid "Favorited By"
-msgstr "Suosikkina"
+msgstr "Lisätty suosikiksi"
 
 #. module: mail
 #. odoo-javascript
@@ -4152,13 +4148,13 @@ msgstr "Palaute:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Fetch Now"
-msgstr "Toimita nyt"
+msgstr "Nouda nyt"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_gif_limit
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Fetch up to the specified number of GIF."
-msgstr "Nouda määritettyyn GIF-määrään asti."
+msgstr "Nouda määritettyyn GIF-numeroon asti."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_id
@@ -4175,7 +4171,7 @@ msgstr "Kenttää \"Sähköpostin aktiivisuus\" ei voida vaihtaa tyhjäksi."
 #. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 msgid "Field \"Mail Blacklist\" cannot be changed to \"False\"."
-msgstr "Kenttää \"Sähköpostin estolista\" ei voida vaihtaa tyhjäksi."
+msgstr "Kenttää \"Sähköpostin estolista\" ei voida vaihtaa arvoon \"Epätosi\"."
 
 #. module: mail
 #. odoo-python
@@ -4245,7 +4241,7 @@ msgstr "Etsi tai aloita keskustelu"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 msgid "Fold"
-msgstr "Laskosta"
+msgstr "Taita"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__fold_state
@@ -4255,7 +4251,7 @@ msgstr "Taita tila"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__fold_state__folded
 msgid "Folded"
-msgstr "Laskostettu"
+msgstr "Taitettu"
 
 #. module: mail
 #. odoo-javascript
@@ -4336,7 +4332,7 @@ msgstr "Seurataan"
 #: model:ir.model.fields,help:mail.field_res_partner__activity_type_icon
 #: model:ir.model.fields,help:mail.field_res_users__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome -ikoni esim.. fa-tasks"
+msgstr "Font awesome -kuvake, esim. fa-tasks"
 
 #. module: mail
 #. odoo-python
@@ -4345,7 +4341,7 @@ msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the group-based "
 "authorization or group auto-subscription."
 msgstr ""
-"Kohdassa %(channels)s kanavatyypin tulee olla 'channel', jotta sillä on "
+"Kohdassa %(channels)s kanavatyypin tulee olla 'kanava', jotta sillä on "
 "ryhmäpohjainen valtuutus tai ryhmätilaus."
 
 #. module: mail
@@ -4381,7 +4377,7 @@ msgstr "8 tunnin ajan"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
 msgid "Force Send"
-msgstr "Pakota lähettäminen"
+msgstr "Pakota lähetys"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -4400,7 +4396,7 @@ msgstr "Muotoiltu sähköposti"
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_from
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_from
 msgid "From"
-msgstr "Alkaa"
+msgstr "Alkaen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__from_message_id
@@ -4411,7 +4407,7 @@ msgstr "Viestistä"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "From peer:"
-msgstr "Vertaisilta:"
+msgstr "Vertaisesta:"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__default_display_mode__video_full_screen
@@ -4441,7 +4437,7 @@ msgstr "GIF"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 msgid "GIF Category"
-msgstr "GIF-luokka"
+msgstr "GIF-kategoria"
 
 #. module: mail
 #. odoo-javascript
@@ -4460,7 +4456,7 @@ msgstr "GIF-suosikki"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_gif_favorite__tenor_gif_id
 msgid "GIF id from Tenor"
-msgstr "GIF id Tenorilta"
+msgstr "GIF:in tunnus Tenorista"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
@@ -4476,7 +4472,7 @@ msgstr "Siirry keskusteluun"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Google Translate Integration"
-msgstr "Google Translate -integraatio"
+msgstr "Google Kääntäjän integraatio"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__group
@@ -4507,7 +4503,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Group by..."
-msgstr "Ryhmittele..."
+msgstr "Ryhmittely..."
 
 #. module: mail
 #. odoo-javascript
@@ -4578,22 +4574,22 @@ msgstr "Sisältää virheen"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_activity
 msgid "Has Mail Activity"
-msgstr "On sähköpostin aktiviteetteja"
+msgstr "Sisältää sähköpostitoimintoja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_blacklist
 msgid "Has Mail Blacklist"
-msgstr "On sähköpostin markkinointikieltolista"
+msgstr "Sisältää sähköpostin estolistan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
 msgid "Has Mail Thread"
-msgstr "On sähköpostin ketju"
+msgstr "Sisältää sähköpostiketjun"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Has Mentions"
-msgstr "On mainintoja"
+msgstr "Sisältää mainintoja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__has_message
@@ -4610,19 +4606,19 @@ msgstr "Sisältää viestin"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_deaf
 msgid "Has disabled incoming sound"
-msgstr "On kytkenyt äänet pois päältä"
+msgstr "Sisältää poiskytketyt saapuvat ilmoitusäänet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__has_error
 #: model:ir.model.fields,field_description:mail.field_mail_message__has_error
 msgid "Has error"
-msgstr "On virhe"
+msgstr "Sisältää virheen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__has_user_on_demand
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_has_user_on_demand
 msgid "Has on demand responsible"
-msgstr "Sisältää pyynnöstä vastaavan"
+msgstr "Sisältää kysynnystä vastaavan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
@@ -4643,7 +4639,7 @@ msgstr "Piilotettu"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__hidden_template
 msgid "Hidden Template"
-msgstr "Kätketty malli"
+msgstr "Piilotettu mallipohja"
 
 #. module: mail
 #. odoo-javascript
@@ -4661,7 +4657,7 @@ msgstr "Piilota kaikki keskustelut"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call.xml:0
 msgid "Hide sidebar"
-msgstr "Kätke sivupalkki"
+msgstr "Piilotettu sivupalkki"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__hidden
@@ -4674,7 +4670,7 @@ msgstr "Piilota alatyyppi seuraajavalinnoista"
 msgid ""
 "Hide to public / portal users, independently from subtype configuration."
 msgstr ""
-"Piilota julkisille / portaalin käyttäjille, riippumatta alatyypin "
+"Piilota julkisilta / portaalin käyttäjiltä, riippumatta alatyypin "
 "asetuksista."
 
 #. module: mail
@@ -4707,8 +4703,8 @@ msgid ""
 "How long the audio broadcast will remain active after passing the volume "
 "threshold"
 msgstr ""
-"Kuinka kauan äänilähetys pysyy aktiivisena äänenvoimakkuuden kynnyksen "
-"ylittämisen jälkeen"
+"Kuinka kauan audiolähetys pysyy aktiivisena äänenvoimakkuuden kynnyksen "
+"ylittymisen jälkeen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -4725,7 +4721,7 @@ msgstr "ICE-yhteys:"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "ICE gathering:"
-msgstr "ICE:n kokoontuminen:"
+msgstr "ICE-kerääminen:"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_ice_server
@@ -4822,7 +4818,7 @@ msgstr "ICE:"
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__id
 #: model:ir.model.fields,field_description:mail.field_template_reset_mixin__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_thread_id
@@ -4830,13 +4826,13 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"Ylätason aliastietueen id (esim. tehtävien luontiin käytettävän aliaksen "
-"sisältävä projekti)"
+"Ylemmän tason kirjauksen tunnus, joka sisältää aliaksen (esim. projekti, "
+"joka sisältää tehtävien luontiin käytettävän aliaksen)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__im_status
 msgid "IM Status"
-msgstr "Pikaviestimen tila"
+msgstr "Pikaviestin tila"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -4863,13 +4859,13 @@ msgstr "Kuvake"
 #: model:ir.model.fields,help:mail.field_res_partner__activity_exception_icon
 #: model:ir.model.fields,help:mail.field_res_users__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Kuvake joka kertoo poikkeustoiminnosta."
+msgstr "Kuvake, joka kertoo poikkeustoiminnosta."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__res_id
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__res_id
 msgid "Id of the followed resource"
-msgstr "Seuratun resurssin id"
+msgstr "Seuratun resurssin tunnus"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_form
@@ -4918,7 +4914,7 @@ msgid ""
 "If set every modification done to this field is tracked. Value is used to "
 "order tracking values."
 msgstr ""
-"Jos asetettu, jokainen tähän kenttään tehty muutos seurataan. Arvoa "
+"Jos asetettu, jokaista tähän kenttään tehtyä muutosta seurataan. Arvoa "
 "käytetään seuranta-arvojen järjestämiseen."
 
 #. module: mail
@@ -4936,8 +4932,8 @@ msgid ""
 "the email will be send as soon as possible. Unless a timezone is specified, "
 "it is considered as being in UTC timezone."
 msgstr ""
-"Jos valittu, jononhallinta lähettää sähköpostin päivämäärän jälkeen. Jos ei "
-"valittu, sähköposti lähetetään mahdollisimman pian. Jos aikavyöhykettä ole "
+"Jos valittu, jonon hallinta lähettää sähköpostin päivämäärän jälkeen. Jos ei"
+" valittu, sähköposti lähetetään mahdollisimman pian. Jos aikavyöhykettä ole "
 "määritetty, sen katsotaan olevan UTC-aikavyöhykkeellä."
 
 #. module: mail
@@ -4946,9 +4942,9 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. You can use dynamic expression."
 msgstr ""
-"Jos valittu, jononhallinta lähettää sähköpostin päivämäärän jälkeen. Jos ei "
-"valittu, sähköposti lähetetään mahdollisimman pian. Voit käyttää dynaamista "
-"lauseketta."
+"Jos valittu, jonon hallinta lähettää sähköpostin päivämäärän jälkeen. Jos ei"
+" valittu, sähköposti lähetetään mahdollisimman pian. Voit käyttää dynaamista"
+" lauseketta."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__mute_until_dt
@@ -4956,8 +4952,8 @@ msgid ""
 "If set, the user will not receive notifications from all the channels until "
 "this date."
 msgstr ""
-"Jos tämä asetetaan, käyttäjä ei saa ilmoituksia kaikilta kanavilta ennen "
-"tätä päivämäärää."
+"Jos tämä asetetaan, käyttäjä ei saa ilmoituksia mistään kanavista ennen tätä"
+" päivämäärää."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_bounced_content
@@ -4965,7 +4961,7 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
-"Jos asetettu, lähetetään automaattisesti luvattomille käyttäjille "
+"Jos asetettu, lähetetään automaattisesti valtuuttamattomille käyttäjille "
 "oletusviestin sijasta."
 
 #. module: mail
@@ -4976,7 +4972,7 @@ msgid ""
 "all users."
 msgstr ""
 "Jos asetettu, malli rajoitetaan koskemaan vain tätä käyttäjää."
-"                                                   Jos asetettu, jaetaan "
+"                                                   Jos ei asetettu, jaetaan "
 "kaikille käyttäjille."
 
 #. module: mail
@@ -4988,12 +4984,12 @@ msgid ""
 "mailing anymore, from any list"
 msgstr ""
 "Jos sähköpostiosoite on markkinointikiellossa, yhteystieto ei vastaanota "
-"postituksia miltään postituslistalta."
+"postia miltään postilistalta."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_scheduled_message__is_note
 msgid "If the message will be posted as a Note."
-msgstr "Jos viesti lähetetään muistiinpanona."
+msgstr "Jos viesti kirjataan muistiinpanona."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__reply_to_force_new
@@ -5003,9 +4999,9 @@ msgid ""
 "Instead, it will check for the reply_to in tracking message-id and "
 "redirected accordingly. This has an impact on the generated message-id."
 msgstr ""
-"Jos True, vastaukset eivät mene alkuperäisen asiakirjan keskusteluketjuun. "
-"Sen sijaan se tarkistaa reply_to-parametrin seurantaviestin id:stä ja ohjaa "
-"sen vastaavasti. Tämä vaikuttaa luotuun viestitunnukseen."
+"Jos Tosi, vastaukset eivät siirry alkuperäisen asiakirjan viestiketjuun. Sen"
+" sijaan se tarkistaa reply_to -parametrin seurattavassa message-id:ssä ja "
+"ohjaa sen vastaavasti. Tämä vaikuttaa luotuun viestitunnukseen message-id."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain_id
@@ -5013,14 +5009,13 @@ msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
 msgstr ""
-"Jos haluat asettaa catchall-sähköpostidomainin (osoite joka vastaanottaa "
-"kaikki domainiin saapuvat postit, joilla ei ole vastaanottajaa), joka "
-"ohjataan Odoo-palvelimelle, aseta domainin nimi tässä."
+"Jos olet asettanut catchall-sähköpostidomainin, joka ohjataan Odoo-"
+"palvelimelle, aseta domain-nimi tässä."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
 msgid "If you want to use twilio as TURN/STUN server provider"
-msgstr "If you want to use Twilio as TURN/STUN server provider"
+msgstr "Jos haluat käyttää Twilio:tas TURN/STUN -palvelintarjoajana"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -5141,8 +5136,8 @@ msgstr "Saapuva puhelu"
 msgid ""
 "Indicates this activity has been created automatically and not by any user."
 msgstr ""
-"Ilmaisee, että tämä aktiviteetti on luotu automaattisesti, eikä käyttäjän "
-"luomana."
+"Ilmaisee, että tämä toiminto on luotu automaattisesti, ei käyttäjän "
+"toimesta."
 
 #. module: mail
 #. odoo-javascript
@@ -5215,7 +5210,7 @@ msgstr "Virheellinen"
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Invalid domain “%(domain)s” (type “%(domain_type)s”)"
-msgstr "Virheellinen toimialue \"%(domain)s\" (tyyppi \"%(domain_type)s\")"
+msgstr "Virheellinen domain \"%(domain)s\" (tyyppi \"%(domain_type)s\")"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_invalid
@@ -5236,8 +5231,8 @@ msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
 msgstr ""
-"Virheellinen lauseke. Lausekkeen täytyy olla oikeanmuotoinen python-"
-"dictionary, esim. \"{'kentta': 'arvo'}\""
+"Virheellinen lauseke. Lausekkeen täytyy olla täsmälleen python-"
+"kirjastomääritelmä, esim. \"{'field': 'value'}\""
 
 #. module: mail
 #. odoo-python
@@ -5256,13 +5251,13 @@ msgstr "Virheellinen osoite"
 #. odoo-python
 #: code:addons/mail/models/mail_thread_blacklist.py:0
 msgid "Invalid primary email field on model %s"
-msgstr "Virheellinen pääsähköposti mallilla %s"
+msgstr "Virheellinen pääsähköposti mallissa %s"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/tools/parser.py:0
 msgid "Invalid res_ids %(res_ids_str)s (type %(res_ids_type)s)"
-msgstr "Virheelliset res_ids %(res_ids_str)s (type %(res_ids_type)s)"
+msgstr "Virheelliset res_ids %(res_ids_str)s (tyyppi %(res_ids_type)s)"
 
 #. module: mail
 #. odoo-python
@@ -5281,8 +5276,8 @@ msgid ""
 "Invalid template or view source %(svalue)s (type %(stype)s), should be a "
 "record or an XMLID"
 msgstr ""
-"Virheellinen mallin tai näkymän lähde %(svalue)s (type %(stype)s), pitäisi "
-"olla tietue tai XMLID"
+"Virheellinen mallin tai näkymän lähde %(svalue)s (tyyppi %(stype)s), pitäisi"
+" olla kirjaus tai XMLID"
 
 #. module: mail
 #. odoo-python
@@ -5298,7 +5293,9 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
 "Invalid template or view source record %(svalue)s, is %(model)s instead"
-msgstr "Virheellinen mallin tai näkymän lähdetietue %(svalue)s, on %(model)s"
+msgstr ""
+"Virheellinen mallin tai näkymän lähdekirjaus %(svalue)s, on %(model)s sen "
+"sijaan"
 
 #. module: mail
 #. odoo-python
@@ -5315,7 +5312,7 @@ msgstr ""
 msgid ""
 "Invalid value when creating a channel with members, only 4 or 6 are allowed."
 msgstr ""
-"Virheellinen arvo luotaessa kanavaa, jossa on jäseniä, vain 4 tai 6 "
+"Virheellinen arvo, kun luotiin kanavaa, jossa on jäseniä; vain 4 tai 6 "
 "sallitaan."
 
 #. module: mail
@@ -5324,8 +5321,8 @@ msgstr ""
 msgid ""
 "Invalid value when creating a channel with memberships, only 0 is allowed."
 msgstr ""
-"Virheellinen arvo luotaessa jäsenyyksiä sisältävää kanavaa. Vain 0 on "
-"sallittu."
+"Virheellinen arvo, kun luotiin kanavaa, joka sisältää jäsenyyksiä; vain 0 on"
+" sallittu."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__invitation_url
@@ -5336,7 +5333,7 @@ msgstr "Kutsun URL"
 #. odoo-python
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
 msgid "Invitation to follow %(document_model)s: %(document_name)s"
-msgstr "Kutsu seuraamaan %(document_model)s: %(document_name)s"
+msgstr "Kutsu seurata %(document_model)s: %(document_name)s"
 
 #. module: mail
 #. odoo-javascript
@@ -5388,24 +5385,24 @@ msgstr "Kutsu jäseniä"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__is_active
 msgid "Is Active"
-msgstr "On aktiivinen"
+msgstr "Aktiivinen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_current_user_or_guest_author
 #: model:ir.model.fields,field_description:mail.field_mail_message__is_current_user_or_guest_author
 msgid "Is Current User Or Guest Author"
-msgstr "On nykyinen käyttäjä tai tekijävieras"
+msgstr "Nykyinen käyttäjä tai vieraileva kirjotitaja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_editable
 msgid "Is Editable"
-msgstr "On muokattava"
+msgstr "Muokattava"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_mail_template_editor
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__is_mail_template_editor
 msgid "Is Editor"
-msgstr "On muokkaaja"
+msgstr "Muokkaaja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_is_follower
@@ -5417,72 +5414,72 @@ msgstr "On muokkaaja"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_res_users__message_is_follower
 msgid "Is Follower"
-msgstr "On seuraaja"
+msgstr "Seuraaja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__is_hidden
 msgid "Is Hidden"
-msgstr "On piilotettu"
+msgstr "Piilotettu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_member
 msgid "Is Member"
-msgstr "On jäsen"
+msgstr "Jäsen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__is_read
 msgid "Is Read"
-msgstr "On luettu"
+msgstr "Luettu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__is_self
 msgid "Is Self"
-msgstr "On itse"
+msgstr "Itse"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__is_template_editor
 msgid "Is Template Editor"
-msgstr "Onko mallieditori"
+msgstr "Mallipohjaeditori"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__subtype_is_log
 msgid "Is a log"
-msgstr "On loki"
+msgstr "Loki"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__is_note
 msgid "Is a note"
-msgstr "On huomautus"
+msgstr "Muistiinpano"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_channel_open
 msgid "Is discuss sidebar category channel open?"
-msgstr "Onko keskustelun sivupalkin kanavan kategoria avoin?"
+msgstr "Onko keskustelun sivupalkin kategorian kanava avoin?"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_chat_open
 msgid "Is discuss sidebar category chat open?"
-msgstr "Onko keskustelun sivupalkin kategorian keskustelu avoin?"
+msgstr "Onko keskustelun sivupalkin kategorian chatti avoin?"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_muted
 msgid "Is microphone muted"
-msgstr "Onko mikrofoni kytketty pois päältä"
+msgstr "Mikrofoni kytketty pois päältä"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__is_pinned
 msgid "Is pinned on the interface"
-msgstr "On kiinnitetty käyttöliittymään"
+msgstr "Kiinnitetty käyttöliittymään"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_camera_on
 msgid "Is sending user video"
-msgstr "On lähettämässä videota"
+msgstr "Lähettää videota"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_screen_sharing_on
 msgid "Is sharing the screen"
-msgstr "On jakamassa näyttöä"
+msgstr "Jakaa näyttöä"
 
 #. module: mail
 #. odoo-python
@@ -5506,7 +5503,7 @@ msgid ""
 msgstr ""
 "Viittaa selaimen näppäimiin, joita ilmoitus käyttää:\n"
 "- p256dh: Se on selaimen luoma tilauksen julkinen avain. Selain\n"
-"          pitää yksityisen avaimen salassa ja käyttää sitä hyötykuorman purkamiseen\n"
+"          pitää yksityisen avaimen salassa ja käyttää sitä tietojen purkamiseen\n"
 "- auth: Auth-arvoa on käsiteltävä salaisuutena, eikä sitä saa jakaa Odoon ulkopuolelle"
 
 #. module: mail
@@ -5558,12 +5555,12 @@ msgstr "Säilytä liitteet"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__keep_done
 msgid "Keep Done"
-msgstr "Pidä valmiit"
+msgstr "Säilytä valmiit"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_keep_log
 msgid "Keep Message Copy"
-msgstr "Pidä viestin kopio"
+msgstr "Säilytä viestin kopio"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__original
@@ -5581,7 +5578,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__keep_done
 msgid "Keep activities marked as done in the activity view"
-msgstr "Pidä toiminnot, jotka on merkitty tehdyiksi toimintonäkymässä"
+msgstr "Säilytä toiminnot, jotka on merkitty valmiiksi toimintonäkymässä"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -5614,18 +5611,18 @@ msgstr "Kieli"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__date
 msgid "Last Fetch Date"
-msgstr "Edellinen noutopäivä"
+msgstr "Viimeisin noutopäivä"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__fetched_message_id
 msgid "Last Fetched"
-msgstr "Haettu viimeksi"
+msgstr "Noudettu viimeksi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__last_interest_dt
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_interest_dt
 msgid "Last Interest"
-msgstr "Viimeinen kiinnostus"
+msgstr "Viimeisin kiinnostus"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__seen_message_id
@@ -5731,7 +5728,7 @@ msgstr "Viimeksi nähty päivänä"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__last_used
 msgid "Last time this canned_response was used"
-msgstr "Viimeisin aika, jolloin tätä purkitettua vastausta käytettiin"
+msgstr "Viimeisin kerta, kun tätä valmisvastausta käytettiin"
 
 #. module: mail
 #. odoo-javascript
@@ -5839,7 +5836,9 @@ msgstr "Paikallinen palvelin"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr "Paikallisiin osiin perustuva saapuvien lähetysten havaitseminen"
+msgstr ""
+"Sähköpostiosoitteessa \"local-part\" perustuva saapuvien lähetysten "
+"havaitseminen"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__catchall_alias
@@ -5847,8 +5846,9 @@ msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
 msgstr ""
-"Sähköpostin paikallinen osa, jota käytetään Reply-To -osoitteessa vastausten"
-" saamiseksi, esim. \"catchall\" osoitteessa \"catchall@example.com\""
+"Sähköpostiosoitteen \"local-part\", jota käytetään vastausosoitteessa "
+"vastausten saamiseksi, esim. \"catchall\" osoitteessa "
+"\"catchall@example.com\""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -5856,8 +5856,9 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
-"Sähköpostin paikallinen osa, jota käytetään Return-Pathissa, jota käytetään,"
-" kun sähköpostit kimpoavat, esim. 'bounce' sanassa 'bounce@example.com'"
+"Sähköpostin \"local-part\", jota käytetään Return-Path-ostakkeessa, jota "
+"käytetään, kun sähköpostit palautuvat, esim. 'bounce' sanassa "
+"'bounce@example.com'"
 
 #. module: mail
 #. odoo-javascript
@@ -5865,7 +5866,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Log"
-msgstr "Tallenna"
+msgstr "Kirjaa"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
@@ -5876,7 +5877,7 @@ msgstr "Kirjaa nyt"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Log RTC events"
-msgstr "RTC-tapahtumien kirjaaminen"
+msgstr "Kirjaa RTC-tapahtumia"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -5889,13 +5890,13 @@ msgstr "Kirjaa muistiinpano..."
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 msgid "Log an Activity"
-msgstr "Kirjaa tehty toimenpide"
+msgstr "Kirjaa toimenpide"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web_portal/composer_patch.js:0
 msgid "Log an internal note…"
-msgstr "Kirjaa sisäinen huomautus…"
+msgstr "Kirjaa sisäinen muistiinpano…"
 
 #. module: mail
 #. odoo-javascript
@@ -5908,7 +5909,7 @@ msgstr "Kirjaa muistiinpano"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Log step:"
-msgstr "Kirjaa askel:"
+msgstr "Kirjaa vaihe:"
 
 #. module: mail
 #. odoo-javascript
@@ -5947,20 +5948,20 @@ msgstr "Sähköposti"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Activity"
-msgstr "Sähköpostin aktiviteetti"
+msgstr "Sähköpostitoiminto"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__mail_activity_type_id
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_activity_type_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr "Postitoiminnan tyyppi"
+msgstr "Postitoiminnon tyyppi"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Blacklist"
-msgstr "Sähköpostin estolista"
+msgstr "Postin estolista"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_blacklist
@@ -5970,7 +5971,7 @@ msgstr "Sähköpostin estolistan mixin"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Mail Channel Form"
-msgstr "Sähköpostikanavan lomake"
+msgstr "Postikanavan lomake"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_composer_mixin
@@ -5981,7 +5982,7 @@ msgstr "Sähköpostin luomisen mixin"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
 msgid "Mail Failures"
-msgstr "Sähköpostin virheet"
+msgstr "Postivirheet"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_gateway_allowed_action
@@ -5989,7 +5990,7 @@ msgstr "Sähköpostin virheet"
 #: model:ir.ui.menu,name:mail.mail_gateway_allowed_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_gateway_allowed_view_tree
 msgid "Mail Gateway Allowed"
-msgstr "Sallittu sähköpostin kuljetustie"
+msgstr "Sallittu postin yhdyskäytävä"
 
 #. module: mail
 #. odoo-python
@@ -6000,17 +6001,17 @@ msgstr "Sähköpostin asettelu"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_main_attachment
 msgid "Mail Main Attachment management"
-msgstr "Sähköpostin pääliitteen hallinta"
+msgstr "Postin pääliitteen hallinta"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_message_id_int
 msgid "Mail Message Id Int"
-msgstr "Sähköpostin viestin tunnus (Id int)"
+msgstr "Postin viestin id int"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel_rtc_session
 msgid "Mail RTC session"
-msgstr "Sähköpostin RTC-istunto"
+msgstr "Postin RTC-istunto"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_render_mixin
@@ -6020,32 +6021,32 @@ msgstr "Sähköpostin render mixin"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_mail_server
 msgid "Mail Server"
-msgstr "Sähköpostipalvelin"
+msgstr "Postipalvelin"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__template_id
 msgid "Mail Template"
-msgstr "Viestipohja"
+msgstr "Postimallipohja"
 
 #. module: mail
 #: model:res.groups,name:mail.group_mail_template_editor
 msgid "Mail Template Editor"
-msgstr "Sähköpostimallin editori"
+msgstr "Postimallin editori"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_template_reset
 msgid "Mail Template Reset"
-msgstr "Sähköpostimallin nollaus"
+msgstr "Postimallin nollaus"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
-msgstr "Sähköpostiketju"
+msgstr "Postiketju"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_value
 msgid "Mail Tracking Value"
-msgstr "Sähköpostin seuranta-arvo"
+msgstr "Postin seuranta-arvo"
 
 #. module: mail
 #. odoo-python
@@ -6054,35 +6055,34 @@ msgid ""
 "Mail composer in comment mode should run on at least one record. No records "
 "found (model %(model_name)s)."
 msgstr ""
-"Kommentointitilassa olevan sähköpostin koostajan pitäisi toimia vähintään "
-"yhdellä tietueella. Tietueita ei löytynyt (model %(model_name)s)."
+"Kommentointitilassa olevan mail composerin pitäisi toimia vähintään yhdellä "
+"kirjauksella. Kirjausta ei löytynyt (malli %(model_name)s)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
 msgid "Mail has been created to notify people of an existing mail.message"
-msgstr ""
-"Olemassaolevasta sähköpostiviestistä (mail.message) on lähetetty ilmoitus"
+msgstr "Olemassaolevasta postiviestistä (mail.message) on luotu ilmoitusposti"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 msgid "Mail template model of %(action_name)s does not match action model."
-msgstr "Mail-mallin malli %(action_name)s ei vastaa toimintamallia."
+msgstr "Postimallipohja %(action_name)s ei vastaa toimintomallia."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__mail_template_ids
 msgid "Mail template using this mail server"
-msgstr "Lähetä malli tämän palvelimen kautta"
+msgstr "Lähetä mallipohja tämän palvelimen kautta"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_scheduler_action_ir_actions_server
 msgid "Mail: Email Queue Manager"
-msgstr "Sähköposti: Sähköpostijonon hallinta"
+msgstr "Posti: Sähköpostijonon hallinta"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_gateway_action_ir_actions_server
 msgid "Mail: Fetchmail Service"
-msgstr "Postipalvelin"
+msgstr "Posti: Fetchmail palvelu"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_post_scheduled_message_ir_actions_server
@@ -6092,13 +6092,13 @@ msgstr "Posti: Lähetä ajastettuja viestejä"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_web_push_notification_ir_actions_server
 msgid "Mail: send web push notification"
-msgstr "Mail: lähetä web push -ilmoitus"
+msgstr "Posti: lähetä web push -ilmoitus"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Mailbox unavailable - %s"
-msgstr "Sähköpostilaatikko ei ole saatavilla - %s"
+msgstr "Postilaatikko ei ole saatavilla - %s"
 
 #. module: mail
 #. odoo-javascript
@@ -6113,8 +6113,8 @@ msgid ""
 "Mailing or posting with a source should not be called with an empty "
 "%(source_type)s"
 msgstr ""
-"Lähteen kanssa tapahtuvaa postitusta tai lähettämistä ei saa kutsua tyhjällä"
-" %(source_type)s -kentällä"
+"Postitusta tai kirjausta, jossa on lähde,ei saa kutsua tyhjällä "
+"%(source_type)s:lla/-llä"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_ids
@@ -6131,7 +6131,7 @@ msgstr "Pääliitetiedosto"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.xml:0
 msgid "Make Chat"
-msgstr "Tee keskustelusta"
+msgstr "Tee chatti"
 
 #. module: mail
 #. odoo-javascript
@@ -6190,13 +6190,13 @@ msgstr "Merkitse tehtäväksi"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/message_actions.js:0
 msgid "Mark as Unread"
-msgstr "Lukematta"
+msgstr "Merkitse lukemattomaksi"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.xml:0
 msgid "Mark as done"
-msgstr "Merkitse tehdyksi"
+msgstr "Merkitse valmiiksi"
 
 #. module: mail
 #. odoo-javascript
@@ -6242,7 +6242,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_command_palette_patch.js:0
 msgid "Mentions"
-msgstr "Viittaukset"
+msgstr "Maininnat"
 
 #. module: mail
 #. odoo-javascript
@@ -6317,7 +6317,7 @@ msgstr "Ongelma viestin toimituksessa"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__mail_message_id
 msgid "Message ID"
-msgstr "Viestin ID"
+msgstr "Viestin tunnus"
 
 #. module: mail
 #. odoo-javascript
@@ -6329,12 +6329,12 @@ msgstr "Viestin linkki kopioitu!"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Message Link Copy Failed (Permission denied?)!"
-msgstr "Viesti Linkin kopiointi epäonnistui (puuttuvat käyttöoikeudet?)!"
+msgstr "Viestin linkin kopiointi epäonnistui (puuttuvat käyttöoikeudet?)!"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
 msgid "Message Notifications"
-msgstr "Viestien ilmoitukset"
+msgstr "Viesti-ilmoitukset"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_reaction
@@ -6351,7 +6351,7 @@ msgstr "Viestin reaktiot"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__record_name
 #: model:ir.model.fields,field_description:mail.field_mail_message__record_name
 msgid "Message Record Name"
-msgstr "Viestin tietuenimi"
+msgstr "Viestin kirjauksen nimi"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_translation
@@ -6372,13 +6372,13 @@ msgstr "Viestityyppi"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__new_message_separator
 msgid "Message id before which the separator should be displayed"
-msgstr "Viestin id, jonka edessä erottimen pitäisi näkyä"
+msgstr "Viestin tunnus, jonka edessä erottimen pitäisi näkyä"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Message posted on \"%s\""
-msgstr "Viesti lähetetty kohteeseen \"%s\""
+msgstr "Viesti kirjattu kohteeseen \"%s\""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_to
@@ -6388,13 +6388,13 @@ msgstr "Viestin vastaanottajat (sähköpostit)"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__references
 msgid "Message references, such as identifiers of previous messages"
-msgstr "Viestin viitteet, kuten tunnisteet aikaisemmista viesteistä"
+msgstr "Viestin viitteet, kuten aikaisempien viestien tunnisteet"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Message should be a valid EmailMessage instance"
-msgstr "Viestin tulee olla kelvollinen EmailMessage-esiintymä"
+msgstr "Viestin tulee olla kelvollinen EmailMessage-instanssi"
 
 #. module: mail
 #. odoo-javascript
@@ -6413,14 +6413,14 @@ msgid ""
 msgstr ""
 "Viestin alatyyppi antaa tarkemman tyypin viestille, erityisesti "
 "järjestelmäilmoituksille. Se voi olla esimerkiksi ilmoitus, joka liittyy "
-"uuteen tietueeseen (Uusi) tai prosessin vaiheen muutokseen (Stage change). "
-"Viestien alatyypit antavat mahdollisuuden säätää tarkasti ilmoitukset, joita"
-" käyttäjä haluaa vastaanottaa seinälleen."
+"uuteen kirjaukseen (Uusi) tai prosessin vaiheen muutokseen (Vaiheen muutos)."
+" Viestien alatyypit antavat mahdollisuuden säätää tarkasti ilmoitukset, "
+"joita käyttäjä haluaa vastaanottaa seinälleen."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
 msgid "Message subtypes"
-msgstr "Viestin alityypit"
+msgstr "Viestin alatyypit"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__subtype_ids
@@ -6428,7 +6428,7 @@ msgid ""
 "Message subtypes followed, meaning subtypes that will be pushed onto the "
 "user's Wall."
 msgstr ""
-"Viestien alatyypit seurasivat, eli alatyyppejä, jotka työnnetään käyttäjän "
+"Viestien alatyyppejä seurattu, eli alatyyppejä, jotka työnnetään käyttäjän "
 "seinälle."
 
 #. module: mail
@@ -6437,8 +6437,8 @@ msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
 msgstr ""
-"Viestityyppi: Sähköposti  sähköposteille, Ilmoitus järjestelmän viesteille, "
-"ja Kommentti muille viesteille, kuten käyttäjien vastauksille"
+"Viestityyppi: Sähköposti sähköposteille, Ilmoitus järjestelmän viesteille ja"
+" Kommentti muille viesteille, kuten käyttäjien vastauksille"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__message_id
@@ -6450,7 +6450,7 @@ msgstr "Viestin yksilöivä tunniste"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__message_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__message_id
 msgid "Message-Id"
-msgstr "Viestin ID"
+msgstr "Viestin tunnus"
 
 #. module: mail
 #. odoo-javascript
@@ -6480,13 +6480,13 @@ msgstr "Viestien haku"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
 msgid "Messages can only be linked to one sub-channel"
-msgstr "Viestit voidaan yhdistää vain yhteen alakanavaan"
+msgstr "Viestit voidaan yhdistää vain yhteen alisteiseen kanavaan"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
 msgid "Messages marked as read will appear in the history."
-msgstr "Luetuksi merkatut viestit näkyvät historiassa."
+msgstr "Luetuksi merkityt viestit näkyvät historiassa."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__internal
@@ -6501,7 +6501,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Messages with tracking values cannot be modified"
-msgstr "Viestejä, joissa on seurantaarvoja, ei voi muokata"
+msgstr "Viestejä, joissa on seuranta-arvoja, ei voi muokata"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_voice_metadata
@@ -6552,14 +6552,14 @@ msgstr "Malli on muuttunut"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__res_model
 msgid "Model of the followed resource"
-msgstr "Seuraavan resurssin malli"
+msgstr "Seurattavan resurssin malli"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__res_model
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
 msgstr ""
-"Malli, jota alatyyppi koskee. Jos arvoksi asetettu False, tämä alatyyppi "
+"Malli, jota alatyyppi koskee. Jos arvoksi asetettu Epätosi, tämä alatyyppi "
 "koskee kaikkia malleja."
 
 #. module: mail
@@ -6574,7 +6574,7 @@ msgid ""
 "activity type, be careful."
 msgstr ""
 "Mallin muuttaminen voi vaikuttaa olemassa oleviin toimintoihin, joissa "
-"käytetään tätä toimintatyyppiä, ole varovainen."
+"käytetään tätä toimintatyyppiä, joten ole varovainen."
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
@@ -6602,7 +6602,7 @@ msgstr "Lisää toimintoja"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Mute"
-msgstr "Mykkä"
+msgstr "Mykistä"
 
 #. module: mail
 #. odoo-javascript
@@ -6632,7 +6632,7 @@ msgstr "Mykistä ilmoitukset, kunnes"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 msgid "Muting prevents unread indicators and notifications from appearing."
-msgstr "Mykistys estää lukemattomien ilmaisimien ja ilmoitusten näkymisen."
+msgstr "Mykistys estää lukemattomien indikaattorien ja ilmoitusten näkymisen."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_action_my
@@ -6705,7 +6705,7 @@ msgstr "Uuden viestin erotin"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "New Thread"
-msgstr "Uusi ketju"
+msgstr "Uusi viestiketju"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_char
@@ -6715,22 +6715,22 @@ msgstr "Uusi Char-arvo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_datetime
 msgid "New Value Datetime"
-msgstr "Uusi Datetime-arvo"
+msgstr "Uusi päivämäärä ja aika -arvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_float
 msgid "New Value Float"
-msgstr "Uusi Float-arvo"
+msgstr "Uusi liukulukuarvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_integer
 msgid "New Value Integer"
-msgstr "Uusi Integer-arvo"
+msgstr "Uusi kokonaislukuarvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_text
 msgid "New Value Text"
-msgstr "Uusi Text-arvo"
+msgstr "Uusi tekstiarvo"
 
 #. module: mail
 #. odoo-javascript
@@ -6752,33 +6752,33 @@ msgstr "Uudet arvot"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Next Activities"
-msgstr "Seuraavat toimenpiteet"
+msgstr "Seuraavat toiminnot"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "Next Activity"
-msgstr "Seuraava toimenpide"
+msgstr "Seuraava toiminto"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Seuraavan toimenpiteen eräpäivä"
+msgstr "Seuraavan toiminnon määräaika"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_summary
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_summary
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_summary
 msgid "Next Activity Summary"
-msgstr "Seuraavan toimenpiteen kuvaus"
+msgstr "Seuraavan toiminnon kuvaus"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_type_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_id
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_type_id
 msgid "Next Activity Type"
-msgstr "Seuraavan toimenpiteen tyyppi"
+msgstr "Seuraavan toiminnon tyyppi"
 
 #. module: mail
 #. odoo-javascript
@@ -6789,7 +6789,7 @@ msgstr "Seuraava maanantaiaamu"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__has_recommended_activities
 msgid "Next activities available"
-msgstr "Seuraavat saatavilla olevat aktiviteetit"
+msgstr "Seuraavat saatavilla olevat toiminnot"
 
 #. module: mail
 #. odoo-javascript
@@ -6820,7 +6820,7 @@ msgstr "Pikaviestistatus ei ole saatavilla"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__no_record
 msgid "No Record"
-msgstr "Ei tietuetta"
+msgstr "Ei kirjausta"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_without_access_action
@@ -6848,7 +6848,7 @@ msgstr "Keskustelua ei valittu."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 msgid "No conversation yet..."
-msgstr "Keskustelua ei ole vielä..."
+msgstr "Ei vielä keskustelua..."
 
 #. module: mail
 #. odoo-javascript
@@ -6896,14 +6896,14 @@ msgstr ""
 msgid ""
 "No responsible specified for %(activity_type_name)s: %(activity_summary)s."
 msgstr ""
-"%(activity_type_name)s ei ole määritetty vastuulliseksi: "
+"Vastuuhenkilöä ei ole määritetty kohteelle %(activity_type_name)s: "
 "%(activity_summary)s."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.xml:0
 msgid "No saved templates"
-msgstr "Ei tallennettuja malleja"
+msgstr "Ei tallennettuja mallipohjia"
 
 #. module: mail
 #. odoo-javascript
@@ -6915,13 +6915,13 @@ msgstr "Ei tähdellisiä viestejä"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 msgid "No thread found."
-msgstr "Ei löytynyt ketjua"
+msgstr "Viestiketjua ei löytynyt"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.js:0
 msgid "No thread named \"%(thread_name)s\""
-msgstr "Ei ketjua nimeltä \"%(thread_name)s\""
+msgstr "Ei viestiketjua nimeltä \"%(thread_name)s\""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__reply_to_force_new
@@ -6951,7 +6951,7 @@ msgstr "Käyttäjiä ei löydy."
 #. odoo-python
 #: code:addons/mail/controllers/mail.py:0
 msgid "Non existing record or wrong token."
-msgstr "Ei olemassa olevaa tietuetta tai väärä pääsytunniste."
+msgstr "Ei olemassa olevaa kirjausta tai väärä pääsytunniste."
 
 #. module: mail
 #. odoo-javascript
@@ -7016,18 +7016,18 @@ msgstr "Ilmoitus"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_notification
 msgid "Notification Email"
-msgstr "Huomiosähköposti"
+msgstr "Ilmoitussähköposti"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/notification_item.xml:0
 msgid "Notification Item Image"
-msgstr "Ilmoituskohteen kuva"
+msgstr "Ilmoituksen kohteen kuva"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_schedule__notification_parameters
 msgid "Notification Parameter"
-msgstr "Huomioparametri"
+msgstr "Ilmoitusparametri"
 
 #. module: mail
 #. odoo-javascript
@@ -7054,7 +7054,7 @@ msgid ""
 "(received %(aids)s)"
 msgstr ""
 "Ilmoituksen tulisi vastaanottaa liitetiedostot luettelona tai "
-"tietokantariveinä (received %(aids)s)"
+"tietokantariveinä (vastaanotettu %(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -7063,8 +7063,8 @@ msgid ""
 "Notification should receive attachments records as a list of IDs (received "
 "%(aids)s)"
 msgstr ""
-"Ilmoituksen tulisi vastaanottaa liitetietueet ID-luettelona (received "
-"%(aids)s)"
+"Ilmoituksen tulisi vastaanottaa liitekirjaukset tunnusluettelona "
+"(vastaanotettu %(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -7073,13 +7073,13 @@ msgid ""
 "Notification should receive partners given as a list of IDs (received "
 "%(pids)s)"
 msgstr ""
-"Ilmoituksen tulisi vastaanottaa kumppanit, jotka annetaan ID-luettelona "
-"(received %(pids)s)"
+"Ilmoituksen tulisi vastaanottaa kumppanit, jotka annetaan tunnusluettelona "
+"(vastaanotettu %(pids)s)"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
 msgid "Notification: Delete Notifications older than 6 Month"
-msgstr "Ilmoitukset: Poista yli 6kk ikäiset"
+msgstr "Ilmoitukset: Poista yli 6kk vanhat"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_send_scheduled_message_ir_actions_server
@@ -7131,7 +7131,7 @@ msgstr "Ilmoita kaikille"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_res_users__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Toimenpiteiden määrä"
+msgstr "Toimintojen määrä"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_plan_template__delay_count
@@ -7203,7 +7203,7 @@ msgstr "Odoo ei lähetä ilmoituksia tällä laitteella."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_permission_service.js:0
 msgid "Odoo will send notifications on this device!"
-msgstr "Odoo lähettää ilmoituksia tälle laitteelle!"
+msgstr "Odoo lähettää ilmoituksia täll laitteella!"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_config_settings__tenor_content_filter__off
@@ -7222,7 +7222,7 @@ msgstr "Poissa"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.js:0
 msgid "Offline - %(offline_count)s"
-msgstr "Offline - %(offline_count)s"
+msgstr "Poissa - %(offline_count)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_char
@@ -7232,22 +7232,22 @@ msgstr "Vanha Char-arvo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_datetime
 msgid "Old Value DateTime"
-msgstr "Vanha Datetime-arvo"
+msgstr "Vanha päivämäärä ja aika -arvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_float
 msgid "Old Value Float"
-msgstr "Vanha Float-arvo"
+msgstr "Vanha liukulukuarvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_integer
 msgid "Old Value Integer"
-msgstr "Vanha Integer-arvo"
+msgstr "Vanha kokonaislukuarvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_text
 msgid "Old Value Text"
-msgstr "Vanha Text-arvo"
+msgstr "Vanha tekstiarvo"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -7268,7 +7268,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/public_web/discuss_sidebar_call_indicator.xml:0
 msgid "Ongoing call"
-msgstr "Jatkuva puhelu"
+msgstr "Puhelu käynnissä"
 
 #. module: mail
 #. odoo-javascript
@@ -7276,13 +7276,13 @@ msgstr "Jatkuva puhelu"
 #: code:addons/mail/static/src/core/common/thread_icon.xml:0
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
 msgid "Online"
-msgstr "Verkossa"
+msgstr "Paikalla"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.js:0
 msgid "Online - %(online_count)s"
-msgstr "Online - %(online_count)s"
+msgstr "Paikalla - %(online_count)s"
 
 #. module: mail
 #. odoo-python
@@ -7314,8 +7314,8 @@ msgid ""
 "Only members of %(group_name)s group are allowed to edit templates "
 "containing sensible placeholders"
 msgstr ""
-"Vain %(group_name)s-ryhmän jäsenet saavat muokata malleja, jotka sisältävät "
-"järkeviä paikannussoittimia"
+"Vain ryhmän %(group_name)s jäsenet saavat muokata malleja, jotka sisältävät "
+"paikanvaraajia"
 
 #. module: mail
 #. odoo-python
@@ -7338,7 +7338,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__fold_state__open
 msgid "Open"
-msgstr "Avoin"
+msgstr "Avaa"
 
 #. module: mail
 #. odoo-javascript
@@ -7350,7 +7350,7 @@ msgstr "Avaa Toiminnot-valikko"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_window.xml:0
 msgid "Open Channel"
-msgstr "Avoin kanava"
+msgstr "Avaa kanava"
 
 #. module: mail
 #. odoo-javascript
@@ -7362,19 +7362,19 @@ msgstr "Avaa keskustelu"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid "Open Discuss App"
-msgstr "Avaa Keskustelusovellus"
+msgstr "Avaa Viestintä-sovellus"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_tree
 msgid "Open Document"
-msgstr "Avaa dokumentti"
+msgstr "Avaa asiakirja"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_actions.js:0
 msgid "Open Form View"
-msgstr "Avaa lomakkeen näkymä"
+msgstr "Avaa lomakenäkymä"
 
 #. module: mail
 #. odoo-javascript
@@ -7403,7 +7403,7 @@ msgstr "Avaa kortti"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/thread_actions.js:0
 msgid "Open in Discuss"
-msgstr "Avaa keskustelussa"
+msgstr "Avaa Viestintä-sovelluksessa"
 
 #. module: mail
 #. odoo-javascript
@@ -7415,12 +7415,12 @@ msgstr "Avaa esikatselu erillisessä ikkunassa."
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid "Operation not supported"
-msgstr "Toiminto ei ole tuettu"
+msgstr "Toimintoa ei tueta"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_optout
 msgid "Opted Out"
-msgstr "Markkinointikiellon asettaneet"
+msgstr "Markkinointikiellon asettaneiden määrä"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_force_thread_id
@@ -7429,14 +7429,15 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Valinnainen sen viestiketjun (tietueen) ID, johon kaikki saapuvat viestit "
-"liitetään, vaikka niihin ei vastattaisikaan. Jos tämä asetetaan, uusien "
-"tietueiden luominen estetään kokonaan."
+"Valinnainen sen viestiketjun (kirjauksen) tunnus, johon kaikki saapuvat "
+"viestit liitetään, vaikka niihin ei vastattaisikaan. Jos tämä asetetaan, "
+"uusien kirjausten luominen estetään kokonaan."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_mail_id
 msgid "Optional mail_mail ID. Used mainly to optimize searches."
-msgstr "Valinnainen mail_mail ID. Käytetään pääasiassa hakujen optimointiin."
+msgstr ""
+"Valinnainen mail_mail -tunnus. Käytetään pääasiassa hakujen optimointiin."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__mail_server_id
@@ -7444,8 +7445,8 @@ msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
 msgstr ""
-"Lisätiedoksi toivottu lähtevän sähköpostin palvelin, jos ei asetettu "
-"korkeimman prioriteetin palvelinta käytetään."
+"Lähtevän postin toivottu lisäpalvelin, mutta jos ei asetettu, käytetään "
+"korkeimman prioriteetin palvelinta."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__lang
@@ -7460,8 +7461,8 @@ msgid ""
 msgstr ""
 "Valinnainen käännöskieli (ISO-koodi), joka valitaan sähköpostia "
 "lähetettäessä. Jos sitä ei ole asetettu, käytetään englanninkielistä "
-"versiota. Tämän pitäisi yleensä olla sijoitusilmaus, joka antaa sopivan "
-"kielen, esim. {{ object.partner_id.lang }}."
+"versiota. Tämän pitäisi yleensä olla paikanvaraajalauseke, joka määrittää "
+"sopivan kielen, esim. {{ object.partner_id.lang }}."
 
 #. module: mail
 #. odoo-javascript
@@ -7476,7 +7477,7 @@ msgid ""
 " Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n"
 " This has an impact on the generated message-id."
 msgstr ""
-"Alkuperäinen keskustelu: Vastaukset tulevat alkuperäisen asiakirjan keskusteluketjuun.\n"
+"Alkuperäinen keskustelu: Vastaukset siirtyvät alkuperäisen asiakirjan keskusteluketjuun.\n"
 " Toinen sähköpostiosoite: Vastaukset lähetetään seurantaviestin tunnisteessa mainittuun sähköpostiosoitteeseen alkuperäisen asiakirjan keskusteluketjun sijasta.\n"
 " Tämä vaikuttaa luotuun viestin tunnisteeseen."
 
@@ -7496,7 +7497,7 @@ msgstr "Alkuperäinen huomautus:"
 #: code:addons/mail/models/res_users.py:0
 #: model:ir.actions.act_window,name:mail.mail_activity_without_access_action
 msgid "Other activities"
-msgstr "Muuta tekemistä"
+msgstr "Muut toiminnot"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -7590,12 +7591,12 @@ msgstr "Lähtevän postin palvelin"
 #: model:ir.model.fields.selection,name:mail.selection__survey_user_input__activity_state__overdue
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Overdue"
-msgstr "Myöhässä"
+msgstr "Erääntynyt"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Override author's email"
-msgstr "Yliaja luojan sähköposti"
+msgstr "Ohita kirjoittajan sähköposti"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -7605,7 +7606,7 @@ msgstr "POP"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__fetchmail_server__server_type__pop
 msgid "POP Server"
-msgstr "POP palvelin"
+msgstr "POP-palvelin"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_tree
@@ -7627,7 +7628,7 @@ msgstr "Lähetetyt paketit:"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__parent_id
 msgid "Parent"
-msgstr "Ylätaso"
+msgstr "Ylempi taso"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__parent_channel_id
@@ -7639,17 +7640,17 @@ msgstr "Ylemmän tason kanava"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__parent_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__parent_id
 msgid "Parent Message"
-msgstr "Edeltävä viesti"
+msgstr "Ylemmän tason viesti"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_model_id
 msgid "Parent Model"
-msgstr "Ylätason malli"
+msgstr "Ylemmän tason malli"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Ylätason keskustelun ID"
+msgstr "Ylemmän tason kirjausketjun tunnus"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__parent_channel_id
@@ -7663,9 +7664,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Aliaksen hallussa oleva emomalli. Alias-viittauksen sisältävä malli ei "
-"välttämättä ole alias_model_id:llä annettu malli (esimerkki: project "
-"(parent_model) ja task (model))"
+"Ylemmän tason malli, joka sisältää aliaksen. Malli, joka sisältää aliaksen "
+"viitteen, ei välttämllä ole malli, jonka  alias_model_id antaa (esimerkki: "
+"project (parent_model) ja task (model))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -7674,9 +7675,9 @@ msgid ""
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
 msgstr ""
-"Vanhempaa alatyyppiä, jota käytetään automaattisessa tilauksessa, ei ole "
-"oikea. Esimerkiksi projektissa projektin alatyyppien parent_id viittaa "
-"tehtäviin liittyviin alatyyppeihin."
+"Ylempi alatyyppi, jota käytetään automaattisessa tilauksessa, ei ole oikea. "
+"Esimerkiksi projektissa projektin alatyyppien parent_id viittaa tehtäviin "
+"liittyviin alatyyppeihin."
 
 #. module: mail
 #. odoo-javascript
@@ -7712,13 +7713,12 @@ msgstr "Kumppaniprofiili"
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__partner_readonly
 msgid "Partner Readonly"
-msgstr "Kumppani Vain luku"
+msgstr "Kumppani Vain luku -tila"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_partner
 msgid "Partner with additional information for mail resend"
-msgstr ""
-"Yhteistyökumppani, jolla on lisätietoja postin uudelleenlähetystä varten"
+msgstr "Kumppani, jolla on lisätietoja postin uudelleenlähetystä varten"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_partner_ids
@@ -7745,12 +7745,12 @@ msgstr "Liitä API-avaimesi"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_player.xml:0
 msgid "Pause"
-msgstr "Tauko"
+msgstr "Keskeytä"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push__payload
 msgid "Payload"
-msgstr "Hyötykuorma"
+msgstr "Tiedot"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
@@ -7761,7 +7761,7 @@ msgstr "Puhelin"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__category__phonecall
 msgid "Phonecall"
-msgstr "Puhelinsoitto"
+msgstr "Puhelu"
 
 #. module: mail
 #. odoo-javascript
@@ -7895,12 +7895,12 @@ msgstr "Suunniteltu"
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "Planned Activities"
-msgstr "Suunnitellut toimet"
+msgstr "Suunnitellut toiminnot"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 msgid "Planned in"
-msgstr "Suunniteltu viive"
+msgstr "Suunniteltu kohteelle"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -7923,13 +7923,13 @@ msgstr "Täytä asiakkaan tiedot"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
-msgstr "Ota sen sijaan yhteyttä meihin käyttämällä"
+msgstr "Ota sen sijaan yhteyttä meihin"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Please wait while the file is uploading."
-msgstr "Odota, tiedosto ladataan."
+msgstr "Odota, tiedostoa ladataan."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users__notification_type
@@ -7938,7 +7938,7 @@ msgid ""
 "- Handle by Emails: notifications are sent to your email address\n"
 "- Handle in Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
-"Käytäntö siitä, miten Chatter-ilmoituksia käsitellään:\n"
+"Käytäntö Chatter-ilmoitusten käsittelystä:\n"
 "- Ilmoitukset lähetetään sähköpostiosoitteeseesi\n"
 "- Käsittele Odoossa: ilmoitukset näkyvät Odoon Saapuneet-kansiossasi"
 
@@ -7951,8 +7951,8 @@ msgid ""
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
 "Käytäntö, jolla lähetetään viesti asiakirjaan mailgatewayn avulla.\n"
-"- everyone: kaikki voivat lähettää viestin\n"
-"- partners: vain todennetut kumppanit\n"
+"- kaikki: kaikki voivat lähettää viestin\n"
+"- kumppanit: vain todennetut kumppanit\n"
 "- seuraajat: vain asiaan liittyvän asiakirjan seuraajat tai seuraavien kanavien jäsenet\n"
 
 #. module: mail
@@ -7983,7 +7983,8 @@ msgstr "Portaalin käyttöoikeus peruutettu"
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Portal users can only filter threads by themselves as followers."
 msgstr ""
-"Portaalikäyttäjät voivat suodattaa vain ketjuja, joiden seuraajia he ovat."
+"Portaalikäyttäjät voivat suodattaa vain viestiketjuja, joiden seuraajia he "
+"ovat."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__comment
@@ -8003,8 +8004,8 @@ msgid ""
 "Posting a message should be done on a business document. Use message_notify "
 "to send a notification to an user."
 msgstr ""
-"Viestin lähettäminen on tehtävä työasiakirjalla. Lähetä ilmoitus käyttäjälle"
-" message_notify-ohjelmalla."
+"Viesti tulisi lähettää työasiakirjaan. Lähetä ilmoitus käyttäjälle käyttäen "
+"message_notify."
 
 #. module: mail
 #. odoo-python
@@ -8013,8 +8014,8 @@ msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"Viestin lähettämisen pitäisi vastaanottaa liitteet luettelona tai "
-"tietokantariveinä (received %(aids)s)"
+"Viestin lähettämisen pitäisi käynnistää liitteiden vastaanottaminen "
+"luettelona tai tupleina (vastaanotettu %(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -8023,8 +8024,8 @@ msgid ""
 "Posting a message should receive attachments records as a list of IDs "
 "(received %(aids)s)"
 msgstr ""
-"Viestin lähettämisen pitäisi vastaanottaa liitetiedostot ID-luettelona "
-"(received %(aids)s)"
+"Viestin lähettämisen pitäisi käynnistää liitteiden vastaanottaminen "
+"tunnusluettelona (vastaanotettu %(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -8033,19 +8034,19 @@ msgid ""
 "Posting a message should receive partners as a list of IDs (received "
 "%(pids)s)"
 msgstr ""
-"Viestin lähettämisen pitäisi vastaanottaa kumppanit ID-luettelona (received "
-"%(pids)s)"
+"Viestin lähettämisen pitäisi käynnistää liitteiden vastaanottaminen "
+"kumppaneina tunnusluettelona (vastaanotettu %(pids)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 msgid "Powered by"
-msgstr "Järjestelmää pyörittää"
+msgstr "Palvelun tarjoaa"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__previous_type_ids
 msgid "Preceding Activities"
-msgstr "Edeltävät toimenpiteet"
+msgstr "Edeltävät toiminnot"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__reply_to
@@ -8056,7 +8057,7 @@ msgstr "Suositeltu vastausosoite"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Press a key to register it as the push-to-talk shortcut."
-msgstr "Paina näppäintä rekisteröidäksesi sen tangentin-pikanäppäimeksi."
+msgstr "Paina näppäintä rekisteröidäksesi sen paina ja puhu -pikanäppäimeksi."
 
 #. module: mail
 #. odoo-javascript
@@ -8105,13 +8106,13 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__process
 msgid "Processing"
-msgstr "Käsittelyssä"
+msgstr "Käsitellään"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_icon.xml:0
 msgid "Public Channel"
-msgstr "Julkiset kanavat"
+msgstr "Julkinen kanava"
 
 #. module: mail
 #. odoo-javascript
@@ -8132,7 +8133,7 @@ msgstr "Julkaisija: Päivitä ilmoitus"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_push_device
 msgid "Push Notification Device"
-msgstr "Push-ilmoituslaite"
+msgstr "Push-ilmoitus laitteella"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_push
@@ -8143,36 +8144,36 @@ msgstr "Push-ilmoitukset"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Push to Talk"
-msgstr "Puhu painamalla"
+msgstr "Paina ja puhu"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
 msgid "Push to talk"
-msgstr "Puhu painamalla"
+msgstr "Paina ja puhu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__push_to_talk_key
 msgid "Push-To-Talk shortcut"
-msgstr "Tangentin näppäinoikotie"
+msgstr "Paina ja puhu pikanäppäin"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Push-to-talk key"
-msgstr "Tangentin näppäin"
+msgstr "Paina ja puhu näppäin"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 msgid "Quick search"
-msgstr "Nopea haku"
+msgstr "Pikahaku"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_quick_search.xml:0
 msgid "Quick search…"
-msgstr "Nopea haku…"
+msgstr "Pikahaku…"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_qweb
@@ -8212,7 +8213,8 @@ msgstr "Nosta käsi ylös"
 #: model:ir.model.fields,help:mail.field_res_users_settings_volumes__volume
 msgid ""
 "Ranges between 0.0 and 1.0, scale depends on the browser implementation"
-msgstr "Alueet 0,0 ja 1,0 välillä. Asteikko riippuu selaimen toteutuksesta"
+msgstr ""
+"Vaihtelualue välillä 0,0 ja 1,0. Asteikko riippuu selaimen implementaatiosta"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__guest_id
@@ -8222,7 +8224,7 @@ msgstr "Reagoiva vieras"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__partner_id
 msgid "Reacting Partner"
-msgstr "Reagoiva partneri"
+msgstr "Reagoiva kumppani"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__reaction_ids
@@ -8255,12 +8257,12 @@ msgstr "Lue lisää"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 msgid "Ready"
-msgstr "Valmis siirrettäväksi"
+msgstr "Valmis"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__ready
 msgid "Ready to Send"
-msgstr "Valmiina lähetettäväksi"
+msgstr "Valmis lähetettäväksi"
 
 #. module: mail
 #. odoo-javascript
@@ -8316,7 +8318,7 @@ msgstr "Vastaanottajat"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Recommended Activities"
-msgstr "Suositellut aktiviteetit"
+msgstr "Suositellut toiminnot"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__recommended_activity_type_id
@@ -8326,17 +8328,17 @@ msgstr "Suositellun toiminnon tyyppi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__resource_ref
 msgid "Record"
-msgstr "Tietue"
+msgstr "Kirjaus"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__record_name
 msgid "Record Name"
-msgstr "Tiedon nimi"
+msgstr "Kirjauksen nimi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "Tietueen keskustelun ID"
+msgstr "Kirjausketjun tunnus"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__references
@@ -8347,7 +8349,7 @@ msgstr "Viitteet"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
 msgid "Refuse"
-msgstr "Hylkää"
+msgstr "Kieltäydy"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -8379,7 +8381,7 @@ msgstr "Liittyvä yritys"
 #: model:ir.model.fields,field_description:mail.field_mail_message__res_id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__res_id
 msgid "Related Document ID"
-msgstr "Liittyvä dokumentti ID"
+msgstr "Liittyvän asiakirjan tunnus"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_ids
@@ -8389,7 +8391,7 @@ msgstr "Liittyvän asiakirjan tunnukset"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__res_id
 msgid "Related Document Id"
-msgstr "Liittyvän asiakirja Id"
+msgstr "Liittyvän asiakirja tunnus"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_model
@@ -8400,17 +8402,17 @@ msgstr "Liittyvän asiakirja Id"
 #: model:ir.model.fields,field_description:mail.field_mail_template__model
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__res_model
 msgid "Related Document Model"
-msgstr "Liittyvä dokumenttimalli"
+msgstr "Liittyvä asiakirjamalli"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__res_model
 msgid "Related Document Model Name"
-msgstr "Liittyvän dokumentin mallin nimi"
+msgstr "Liittyvän asiakirjamallin nimi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__mail_template_id
 msgid "Related Mail Template"
-msgstr "Liittyvä sähköpostin malli"
+msgstr "Liittyvä sähköpostimalli"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -8425,7 +8427,7 @@ msgstr "Liittyvä kumppani"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__relation_field
 msgid "Relation field"
-msgstr "Yhdistämiskenttä"
+msgstr "Suhdekenttä"
 
 #. module: mail
 #. odoo-javascript
@@ -8484,7 +8486,7 @@ msgstr "Poistetut kentän tiedot"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 msgid "Rename Thread"
-msgstr "Nimeä ketju uudelleen"
+msgstr "Nimeä viestiketju uudelleen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__render_model
@@ -8492,7 +8494,7 @@ msgstr "Nimeä ketju uudelleen"
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__render_model
 #: model:ir.model.fields,field_description:mail.field_mail_template__render_model
 msgid "Rendering Model"
-msgstr "Renderöintimalli"
+msgstr "Hahmontamismalli"
 
 #. module: mail
 #. odoo-python
@@ -8500,8 +8502,8 @@ msgstr "Renderöintimalli"
 msgid ""
 "Rendering of %(field_name)s is not possible as no counterpart on template."
 msgstr ""
-"Renderöinti %(field_name)s ei ole mahdollista, koska mallissa ei ole "
-"vastinetta."
+"Kohteen %(field_name)s hahmontaminen ei ole mahdollista, koska mallilla ei "
+"ole vastinetta."
 
 #. module: mail
 #. odoo-python
@@ -8510,8 +8512,8 @@ msgstr ""
 msgid ""
 "Rendering of %(field_name)s is not possible as not defined on template."
 msgstr ""
-"Renderöinti %(field_name)s ei ole mahdollista, koska sitä ei ole määritelty "
-"mallissa."
+"Kohteen %(field_name)s hahmontaminen ei ole mahdollista, koska sitä ei ole "
+"määritelty mallissa."
 
 #. module: mail
 #. odoo-javascript
@@ -8535,7 +8537,7 @@ msgstr "Vastaa"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_template__reply_to
 msgid "Reply To"
-msgstr "Vastausosoite"
+msgstr "Vastaa viestiin"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to
@@ -8545,15 +8547,15 @@ msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
 msgstr ""
-"Reply email address. Setting the reply_to bypasses the automatic thread "
-"creation."
+"Sähköpostiosoite, johon vastaus lähetetään. Kun reply_to asetetaan, se "
+"ohittaa automaattisen viestiketjun luomisen."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_message__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__reply_to
 msgid "Reply-To"
-msgstr "Vastausosoite"
+msgstr "Vastaa"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -8564,7 +8566,7 @@ msgstr "Vastausosoite"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Replying to"
-msgstr "Vastataan osoitteelle"
+msgstr "Vastataan"
 
 #. module: mail
 #. odoo-python
@@ -8590,7 +8592,7 @@ msgstr "Ohjattu uudelleenlähetoiminto"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Reset Confirmation"
-msgstr "Resetoi vahvistus"
+msgstr "Nollaa vahvistus"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_template_reset_action
@@ -8601,12 +8603,12 @@ msgstr "Nollaa sähköpostimalli"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_reset_view_form
 msgid "Reset Template"
-msgstr "Nollaa malli"
+msgstr "Nollaa mallipohja"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "Resetting Your Password"
-msgstr "Salasanan palauttaminen"
+msgstr "Salasanan nollaaminen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
@@ -8620,12 +8622,12 @@ msgstr "Vastuuhenkilö"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_user_id
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_user_id
 msgid "Responsible User"
-msgstr "Vastuuhenkilö"
+msgstr "Vastuukäyttäjä"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__restrict_template_rendering
 msgid "Restrict Template Rendering"
-msgstr "Rajoita mallin renderöintiä"
+msgstr "Rajoita mallin hahmontamista"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -8658,22 +8660,22 @@ msgstr "Kumoa muutokset"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Review All Templates"
-msgstr "Tarkista kaikki mallit"
+msgstr "Tarkista kaikki mallipohjat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body_content
 msgid "Rich-text Contents"
-msgstr "Rich-text -muotoiset sisällöt"
+msgstr "Tekstimuotoilun sisällöt"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__body_html
 msgid "Rich-text/HTML message"
-msgstr "Rich-text/HTML -muotoiltu viesti"
+msgstr "Tekstimuotoiltu/HTML-viesti"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__rtc_inviting_session_id
 msgid "Ringing session"
-msgstr "Soittava istunto"
+msgstr "Soiva istunto"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__rtc_session_ids
@@ -8733,7 +8735,7 @@ msgstr "Tallenna mallipohja"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.xml:0
 msgid "Save as Template"
-msgstr "Tallenna mallina"
+msgstr "Tallenna mallipohjana"
 
 #. module: mail
 #. odoo-javascript
@@ -8753,12 +8755,12 @@ msgstr "Tallenna suosikki GIF Tenor API:sta"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Schedule"
-msgstr "Aikatauluta"
+msgstr "Ajoita"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Schedule & Mark as Done"
-msgstr "Aikatauluta ja merkitse valmiiksi"
+msgstr "Ajoita ja merkitse valmiiksi"
 
 #. module: mail
 #. odoo-javascript
@@ -8767,7 +8769,7 @@ msgstr "Aikatauluta ja merkitse valmiiksi"
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Schedule Activity"
-msgstr "Aikatauluta toimenpide"
+msgstr "Ajoita toiminto"
 
 #. module: mail
 #. odoo-javascript
@@ -8775,42 +8777,42 @@ msgstr "Aikatauluta toimenpide"
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Schedule Activity On Selected Records"
-msgstr "Toiminnan ajoittaminen valituille tietueille"
+msgstr "Ajoita toiminto valituille kirjauksille"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 msgid "Schedule activities to help you get things done."
-msgstr "Aikatauluta toimenpide ja aikaansaa asioita."
+msgstr "Ajoita toimintoja ja saa asioita hoidettua."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/activity/activity_renderer.xml:0
 msgid "Schedule activity"
-msgstr "Aikatauluta toimenpide"
+msgstr "Ajoita toiminto"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 msgid "Schedule an Activity"
-msgstr "Aikatauluta toimenpide"
+msgstr "Ajoita toiminto"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 msgid "Schedule an activity"
-msgstr "Aikatauluta toimenpide"
+msgstr "Ajoita toiminto"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 msgid "Schedule an activity on selected records"
-msgstr "Ajoittaa toiminto valituille tietueille"
+msgstr "Ajoita toiminto valituille tietueille"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_cron
 msgid "Scheduled Actions"
-msgstr "Aikataulutetut toiminnot"
+msgstr "Ajoitetut toiminnot"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__scheduled_date
@@ -8818,14 +8820,14 @@ msgstr "Aikataulutetut toiminnot"
 #: model:ir.model.fields,field_description:mail.field_mail_template__scheduled_date
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__scheduled_date
 msgid "Scheduled Date"
-msgstr "Suunniteltu päivämäärä"
+msgstr "Ajoituspäivämäärä"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_scheduled_message
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
 msgid "Scheduled Message"
-msgstr "Aikataulutettu viesti"
+msgstr "Ajoitettu viesti"
 
 #. module: mail
 #. odoo-javascript
@@ -8835,19 +8837,19 @@ msgstr "Aikataulutettu viesti"
 #: model:ir.ui.menu,name:mail.mail_message_schedule_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_search
 msgid "Scheduled Messages"
-msgstr "Aikataulutetut viestit"
+msgstr "Ajoitetut viestit"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__scheduled_date
 #: model:ir.model.fields,field_description:mail.field_mail_message_schedule__scheduled_datetime
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr "Aikataulutettu lähetyspäivä"
+msgstr "Ajoitettu lähetyspäivä"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__script
 msgid "Script"
-msgstr "Skripti"
+msgstr "Komentosarja"
 
 #. module: mail
 #. odoo-javascript
@@ -8868,13 +8870,13 @@ msgstr "Hakuryhmät"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "Search Incoming Mail Servers"
-msgstr "Etsi saapuvan sähköpostin palvelimia"
+msgstr "Hae saapuvan postin palvelimia"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.js:0
 msgid "Search Message"
-msgstr "Etsi viestiä"
+msgstr "Hae viestiä"
 
 #. module: mail
 #. odoo-javascript
@@ -8888,24 +8890,24 @@ msgstr "Hae viestejä"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.xml:0
 msgid "Search More..."
-msgstr "Etsi lisää..."
+msgstr "Hae enemmän ..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_search
 msgid "Search RTC session"
-msgstr "Etsi RTC-istunto"
+msgstr "Hae RTC-istunto"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "Search Sub Channels"
-msgstr "Etsi alakanavia"
+msgstr "Hae alakanavia"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 msgid "Search a conversation"
-msgstr "Etsi keskustelu"
+msgstr "Hae keskustelua"
 
 #. module: mail
 #. odoo-javascript
@@ -8924,19 +8926,19 @@ msgstr "Hae nimellä"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 msgid "Search for a GIF"
-msgstr "GIF:n etsiminen"
+msgstr "Hae GIF:iä"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mention_list.js:0
 msgid "Search for a channel..."
-msgstr "Etsi kanavaa..."
+msgstr "Hae kanavaa..."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mention_list.js:0
 msgid "Search for a user..."
-msgstr "Etsi käyttäjää..."
+msgstr "Hae käyttäjää..."
 
 #. module: mail
 #. odoo-javascript
@@ -9747,22 +9749,22 @@ msgstr "Mallin kuvaus"
 #: model:ir.model.fields,field_description:mail.field_mail_template__template_fs
 #: model:ir.model.fields,field_description:mail.field_template_reset_mixin__template_fs
 msgid "Template Filename"
-msgstr "Mallin tiedostonimi"
+msgstr "Mallipohjan tiedostonimi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_name
 msgid "Template Name"
-msgstr "Mallin nimi"
+msgstr "Mallipohjan nimi"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_template_preview_action
 msgid "Template Preview"
-msgstr "Mallin esikatselu"
+msgstr "Mallipohjan esikatselu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__lang
 msgid "Template Preview Language"
-msgstr "Mallin kielen esikatselu"
+msgstr "Mallipohjan esikatselun kieli"
 
 #. module: mail
 #: model:ir.model,name:mail.model_template_reset_mixin
@@ -9773,7 +9775,8 @@ msgstr "Mallin nollaus mixin"
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Template creation from composer requires a valid model."
-msgstr "Mallien luominen editoijalta edellyttää kelvollista mallia."
+msgstr ""
+"Mallipohjien luominen koontitoiminnolla edellyttää kelvollista mallipohjaa."
 
 #. module: mail
 #. odoo-python
@@ -9782,8 +9785,8 @@ msgid ""
 "Template rendering should only be called with a list of IDs. Received "
 "“%(res_ids)s” instead."
 msgstr ""
-"Mallin renderöintiä tulisi kutsua vain ID-luettelon kanssa. Vastaanotetaan "
-"sen sijaan \"%(res_ids)s\"."
+"Mallipohjan hahmontaminen tulisi kutsua vain tunnusluettelon kanssa. "
+"Vastaanotettu sen sijaan \"%(res_ids)s\"."
 
 #. module: mail
 #. odoo-python
@@ -9803,7 +9806,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_compose_message_view_form_template_save
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Templates"
-msgstr "Mallit"
+msgstr "Mallipohjat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
@@ -9818,17 +9821,17 @@ msgstr "Tenor GIF API-avain"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF content filter"
-msgstr "Tenor GIF-sisällön suodatin"
+msgstr "Tenor GIF sisällön suodatin"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF limits"
-msgstr "Tenori GIF-rajat"
+msgstr "Tenori GIF rajat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
 msgid "Tenor Gif Limit"
-msgstr "Tenori Gif-raja"
+msgstr "Tenori Gif raja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
@@ -9849,7 +9852,7 @@ msgstr "Testaa ja vahvista"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Test Record:"
-msgstr "Testiennätys:"
+msgstr "Testikirjaus:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body_html

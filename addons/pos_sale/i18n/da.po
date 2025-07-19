@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Kira Petersen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-03-27 20:36+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,13 +24,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
 msgid "%(line_description)s (Cancelled)"
-msgstr ""
+msgstr "%(line_description)s (Annulleret)"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/account_move.py:0
 msgid "%(old_name)s (Cancelled)"
-msgstr ""
+msgstr "%(old_name)s (Annulleret)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -51,12 +52,14 @@ msgstr "En ny ordre er blevet oprettet."
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount To Pay In POS"
-msgstr ""
+msgstr "Beløb, der skal betales i kassesystemet"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount left to pay in POS to avoid double payment or double invoicing."
 msgstr ""
+"Beløb, der stadig skal afregnes i kassesystemet for at undgå dobbeltbetaling"
+" eller dobbeltfakturering."
 
 #. module: pos_sale
 #. odoo-javascript
@@ -142,6 +145,8 @@ msgid ""
 "Down payment (ref: %(order_reference)s on \n"
 " %(date)s)"
 msgstr ""
+"Acontobetaling (reference: %(order_reference)s den \n"
+" %(date)s)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -178,7 +183,6 @@ msgstr "ID"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__state__invoiced
 msgid "Invoiced"
 msgstr "Faktureret"
 
@@ -249,13 +253,11 @@ msgstr "Ordrelinjer overført til Point of Sale"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__order_reference__pos_order
 msgid "POS Order"
 msgstr "POS ordre"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__state__paid
 msgid "Paid"
 msgstr "Betalt"
 
@@ -291,7 +293,6 @@ msgstr "Pos Ordre antal"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__done
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__state__done
 msgid "Posted"
 msgstr "Bogført"
 
@@ -435,6 +436,8 @@ msgid ""
 "Transferred<br/>\n"
 "                                from Sale"
 msgstr ""
+"Overført<br/>\n"
+"                                fra Salg"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale

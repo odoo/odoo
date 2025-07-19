@@ -3004,12 +3004,12 @@ msgstr "Laskutus- ja toimitusosoite"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
 msgid "Is Downpayment"
-msgstr "Onko käsiraha"
+msgstr "Ennakkomaksu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__is_mail_template_editor
 msgid "Is Editor"
-msgstr "On muokkaaja"
+msgstr "Muokkaaja"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
@@ -3019,7 +3019,7 @@ msgstr "Vanhentunut"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
 msgid "Is Follower"
-msgstr "On seuraaja"
+msgstr "Seuraaja"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_product_archived
@@ -3034,7 +3034,7 @@ msgstr "On ennakkomaksu"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
 msgid "Is expense"
-msgstr "On kulukirjaus"
+msgstr "Kulu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_configurable_product
@@ -5942,7 +5942,7 @@ msgid ""
 " }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'Pending Order' or 'Order' }} (Viite {{ object.name or "
+"== 'pending') ja 'Odottava tilaus' tai 'Tilaus' }} (Viite {{ object.name or "
 "'n/a' }})"
 
 #. module: sale

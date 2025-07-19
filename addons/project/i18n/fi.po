@@ -1791,10 +1791,10 @@ msgid ""
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
 msgstr ""
-"Määrittele projektissa käytettävät vaiheet projektin alusta\n"
+"Määrittele projektissa käytettävät vaiheet projektin\n"
 "                tehtävän luomisesta aina tehtävän tai ongelman sulkemiseen asti.\n"
-"                Näitä vaiheita käytetään edistymisen seuraamiseen seuraavissa vaiheissa\n"
-"                tehtävän tai ongelman ratkaisemisen edistymistä."
+"                Näitä vaiheita käytetään edistymisen seuraamiseen seuraavien\n"
+"                tehtävien tai ongelmien ratkaisemisessa."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
@@ -2444,7 +2444,7 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
 "your projects. Projects in a folded stage are considered as closed."
 msgstr ""
-"Jos käytössä, tämä vaihe näytetään taitettuna projektisi Kanban-näkymässä. "
+"Jos valittu, tämä vaihe näytetään taitettuna projektisi Kanban-näkymässä. "
 "Projektit, jotka ovat taitetussa vaiheessa, katsotaan suljetuiksi."
 
 #. module: project
@@ -2454,9 +2454,9 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
 "To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
 msgstr ""
-"Jos asetettu, asiakkaalle lähetetään automaattisesti sähköpostitse luokituspyyntö, kun tehtävä saavuttaa tämän vaiheen.\n"
-"Vaihtoehtoisesti se lähetetään säännöllisin väliajoin niin kauan kuin tehtävä pysyy tässä vaiheessa, projektisi asetuksista riippuen.\n"
-"Tämän ominaisuuden käyttämiseksi varmista, että 'Asiakkaan arviot' -vaihtoehto on käytössä projektissasi."
+"Jos asetettu, asiakkaalle lähetetään automaattisesti sähköpostitse arvostelupyyntö, kun tehtävä saavuttaa tämän vaiheen.\n"
+"Vaihtoehtoisesti se lähetetään säännöllisin väliajoin niin kauan kuin tehtävä pysyy tässä vaiheessa projektisi asetuksista riippuen.\n"
+"Tämän ominaisuuden käyttämiseksi varmista, että 'Asiakkaan arvostelu' -vaihtoehto on käytössä projektissasi."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2473,8 +2473,8 @@ msgid ""
 "If set, an email will be automatically sent to the customer when the task "
 "reaches this stage."
 msgstr ""
-"Jos asetettu, asiakkaalle lähetetään automaattisesti sähköpostiviesti, kun "
-"tehtävä saavuttaa tämän vaiheen."
+"Jos asetettu, asiakkaalle lähetetään automaattisesti sähköposti, kun tehtävä"
+" saavuttaa tämän vaiheen."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_bounced_content
@@ -2572,7 +2572,7 @@ msgstr "On suljettu (palamiskaavio)"
 #: model:ir.model.fields,field_description:project.field_project_update__message_is_follower
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__message_is_follower
 msgid "Is Follower"
-msgstr "On seuraaja"
+msgstr "Seuraaja"
 
 #. module: project
 #. odoo-javascript
@@ -3332,7 +3332,7 @@ msgstr "Ylätason keskustelun ID"
 #: model:ir.model.fields,field_description:project.field_project_task__parent_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__parent_id
 msgid "Parent Task"
-msgstr "Ylätehtävä"
+msgstr "Ylemmän tason tehtävä"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_model_id
@@ -3341,9 +3341,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Aliaksen hallussa oleva emomalli. Alias-viittauksen sisältävä malli ei "
-"välttämättä ole alias_model_id:llä annettu malli (esimerkki: project "
-"(parent_model) ja task (model))"
+"Aliaksen hallussa oleva ylemmän tason malli. Malli, joka sisältää aliasksen,"
+" ei välttämättä ole se malli, jonka alias_model_id antoi (esimerkki: project"
+" (parent_model) ja task (model))"
 
 #. module: project
 #. odoo-python
@@ -3351,7 +3351,7 @@ msgstr ""
 msgid ""
 "Partner company cannot be different from its assigned projects' company"
 msgstr ""
-"Kumppaniyritys ei voi olla eri yritys kuin sille osoitettujen projektien "
+"Kumppaniyritys ei voi olla eri yritys kuin sille määrättyjen projektien "
 "yritys"
 
 #. module: project
@@ -3359,7 +3359,8 @@ msgstr ""
 #: code:addons/project/models/res_partner.py:0
 msgid "Partner company cannot be different from its assigned tasks' company"
 msgstr ""
-"Kumppaniyritys ei voi olla eri yritys kuin sille annettujen tehtävien yritys"
+"Kumppaniyritys ei voi olla eri yritys kuin sille määrättyjen tehtävien "
+"yritys"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
@@ -3371,8 +3372,8 @@ msgstr "Kumppanin tehtävät"
 msgid ""
 "People invited to collaborate on the project will have portal access rights."
 msgstr ""
-"Projektissa yhteistyöhön kutsutuilla henkilöillä on portaalin "
-"käyttöoikeudet."
+"Niillä henkilöillä, jotka on kutsuttu projekteihin tekemään yhteistyötä, on "
+"portaalin käyttöoikeudet."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3393,20 +3394,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
-"Henkilöt, joille tämä hanke ja sen tehtävät näkyvät.\n"
+"Henkilöt, joille tämä projekti ja sen tehtävät näkyvät.\n"
 "\n"
-"- Kutsutut sisäiset käyttäjät: Kun projektia seurataan, sisäiset käyttäjät saavat pääsyn kaikkiin sen tehtäviin erottelematta. Muussa tapauksessa he saavat pääsyn vain tiettyihin tehtäviin, joita he seuraavat.\n"
+"- Kutsutut sisäiset käyttäjät: Kun projektia seurataan, sisäiset käyttäjät saavat pääsyn kaikkiin sen tehtäviin. Muussa tapauksessa he saavat pääsyn vain tiettyihin tehtäviin, joita he seuraavat.\n"
 " Käyttäjä, jolla on projektin > ylläpitäjän käyttöoikeustaso, voi silti käyttää tätä projektia ja sen tehtäviä, vaikka hän ei nimenomaisesti kuuluisi seuraajiin.\n"
 "\n"
-"- Kaikki sisäiset käyttäjät: Kaikki sisäiset käyttäjät voivat käyttää projektia ja kaikkia sen tehtäviä erottelematta.\n"
+"- Kaikki sisäiset käyttäjät: Kaikki sisäiset käyttäjät voivat käyttää projektia ja kaikkia sen tehtäviä.\n"
 "\n"
-"- Kutsutut portaalikäyttäjät ja kaikki sisäiset käyttäjät: Kaikki sisäiset käyttäjät voivat käyttää projektia ja kaikkia sen tehtäviä erottelematta.\n"
+"- Kutsutut portaalikäyttäjät ja kaikki sisäiset käyttäjät: Kaikki sisäiset käyttäjät voivat käyttää projektia ja kaikkia sen tehtäviä.\n"
 "Kun portaalikäyttäjät seuraavat projektia, he pääsevät käsiksi vain tiettyihin tehtäviin, joita he seuraavat.\n"
 "\n"
-"Kun hanke jaetaan vain lukuoikeudella, portaalikäyttäjä ohjataan omalle portaalilleen. Hän voi tarkastella seuraamiaan tehtäviä, mutta ei muokata niitä.\n"
-"Kun projekti on jaettu muokkaustilassa, portaalin käyttäjä ohjataan tehtävien kanban- ja luettelonäkymiin. Hän voi muokata valittua määrää tehtävien kenttiä.\n"
+"Kun projekti jaetaan \"vain luku\" oikeuksilla, portaalikäyttäjä ohjataan omaan portaaliinsa. Hän voi tarkastella seuraamiaan tehtäviä, mutta ei muokata niitä.\n"
+"Kun projekti on jaettu muokkaus-oikeuksilla, portaalin käyttäjä ohjataan tehtävien kanban- ja luettelonäkymiin. Hän voi muokata valittua määrää tehtävien kenttiä.\n"
 "\n"
-"Joka tapauksessa sisäinen käyttäjä, jolla ei ole projektin käyttöoikeuksia, voi silti päästä tehtävään, jos hänelle annetaan vastaava URL-osoite (ja jos hän kuuluu seuraajiin, jos projekti on yksityinen)."
+"Joka tapauksessa sisäinen käyttäjä, jolla ei ole projektin käyttöoikeuksia, voi silti päästä tehtävään, jos hänelle annetaan vastaava URL-osoite (ja jos hän on seuraaja, jos projekti on yksityinen)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
