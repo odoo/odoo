@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <!-- ======= Numérotation des lignes sur la facture ======= -->
+    <template id="report_invoice_numbering"
+              inherit_id="account.report_invoice_document"
+              priority="20">
+
+      <!-- 1️⃣  Colonne « N° » dans l’en‑tête (une seule fois) -->
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_description']"
+             position="before">
+        <th name="th_line_number"
+            class="text-center"
+            style="width: 10mm;">N°</th>
+      </xpath>
+
+      <!-- 2️⃣  Injecte l’index dans la boucle t‑foreach -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody/t[@t-foreach='lines']"
+             position="attributes">
+        <attribute name="t-foreach-index">line_index</attribute>
+      </xpath>
+
+      <!-- 3️⃣  Cellule « N° » pour chaque ligne produit -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody//t[@name='account_invoice_line_accountable']/td[@name='account_invoice_line_name']"
+             position="before">
+        <td name="td_line_number"
+            class="text-center"
+            style="width: 10mm;">
+          <span t-esc="line_index + 1"/>
+        </td>
+      </xpath>
+
+      <!-- 4️⃣  (Optionnel mais recommandé) <colgroup> pour figer les largeurs -->
+      <xpath expr="//table[@name='invoice_line_table']" position="inside">
+        <colgroup>
+          <col style="width: 10mm;"/>   <!-- N° -->
+          <col/>                        <!-- Description -->
+          <col style="width: 22mm;"/>   <!-- Quantity -->
+          <col style="width: 28mm;"/>   <!-- Unit Price -->
+          <col t-if="display_discount" style="width: 22mm;"/> <!-- Discount -->
+          <col style="width: 28mm;"/>   <!-- Taxes -->
+          <col style="width: 30mm;"/>   <!-- Amount -->
+        </colgroup>
+      </xpath>
+
+    </template>
+
+  </data>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <template id="external_layout_sale_order" name="Layout Bon de commande">
+    <t t-name="custom_document_layouts.external_layout_sale_order" t-call="web.external_layout_standard">
+      <t t-set="layout_document_title">BON DE COMMANDE</t>
+
+      <!-- Exemple d'en-tête personnalisé -->
+      <t t-set="company" t-value="res_company or company"/>
+      <div class="row mb-3">
+        <div class="col-6">
+          <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" class="img img-fluid" style="max-height: 80px"/>
+        </div>
+        <div class="col-6 text-right">
+          <strong><t t-esc="company.name"/></strong><br/>
+          <t t-esc="company.street"/><br/>
+          <t t-esc="company.city"/> <t t-esc="company.zip"/><br/>
+          <t t-esc="company.country_id.name"/><br/>
+        </div>
+      </div>
+
+      <!-- Le contenu du document sera injecté ici via t-call -->
+      <t t-out="0"/>
+    </t>
+  </template>
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <!-- =========================================================
+         Ajout de la colonne "Référence" dans le rapport facture
+         ========================================================= -->
+    <template id="report_invoice_add_reference"
+              inherit_id="account.report_invoice_document"
+              priority="25">
+
+      <!-- 1️⃣  ENTÊTE : ajoute “Référence” après la colonne N° -->
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_line_number']"
+             position="after">
+        <th name="th_product_ref"
+            class="text-start"
+            style="width: 25mm;">Code</th>
+      </xpath>
+
+      <!-- 2️⃣  CORPS : ajoute la valeur default_code ligne par ligne -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_line_number']"
+             position="after">
+        <td name="td_product_ref"
+            class="text-start"
+            style="width: 25mm;">
+          <!-- Si le produit existe on affiche sa référence, sinon vide -->
+          <span t-esc="line.product_id and line.product_id.default_code or ''"/>
+        </td>
+      </xpath>
+
+      <!-- 3️⃣  COLGROUP : ajoute une colonne fixe de 25 mm
+           (juste après la première <col> qui correspond au N°) -->
+      <xpath expr="//table[@name='invoice_line_table']/colgroup/col[1]"
+             position="after">
+        <col style="width: 25mm;"/> <!-- Référence -->
+      </xpath>
+
+      <!-- 4️⃣  (optionnel) Si tu préfères redéfinir entièrement le colgroup,
+               remplace-le plutôt que d’insérer -->
+      
+      <xpath expr="//table[@name='invoice_line_table']/colgroup" position="replace">
+        <colgroup>
+          <col style="width: 10mm;"/>  <!-- N° -->
+          <col style="width: 25mm;"/>  <!-- Référence -->
+          <col/>                       <!-- Description (reste flexible) -->
+          <col style="width: 22mm;"/>  <!-- Quantity -->
+          <col style="width: 28mm;"/>  <!-- Unit Price -->
+          <col t-if="display_discount" style="width: 22mm;"/> <!-- Discount -->
+          <col style="width: 28mm;"/>  <!-- Taxes -->
+          <col style="width: 30mm;"/>  <!-- Amount -->
+        </colgroup>
+      </xpath>
+      
+
+    </template>
+
+  </data>
+</odoo>

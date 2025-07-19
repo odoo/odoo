@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <template id="external_layout_modern" name="Facture style">
-    <t t-name="web.external_layout_bubble">
+    <t t-name="web.external_layout_standard">
 
       <!-- HEADER PDF-FRIENDLY -->
       <div class="container mt-3" t-attf-class="header o_company_#{company.id}_layout {{ report_type == 'pdf' and 'pt-5' or '' }}" style="position: running(header);">
@@ -17,88 +17,91 @@
                     </td>
                   </tr>
                   <tr>
-                    <td style="border: 1px solid black; padding: 8px; margin-top: 10px;"><strong>Document N°</strong></td>
-                    <td style="border: 1px solid black; padding: 8px; margin-top: 10px;"><span t-esc="o.name"/></td>
+                    <td style="border: 1px solid black; padding: 2px; margin-top: 0px;"><strong>Document N°</strong></td>
+                    <td style="border: 1px solid black; padding: 2px; margin-top: 0px;"><span t-esc="o.name"/></td>
                   </tr>
                   <tr>
-                    <td style="border: 1px solid black; padding: 8px; margin-top: 10px;"><strong>Référence</strong></td>
-                    <td style="border: 1px solid black; padding: 8px; margin-top: 10px;"><span t-esc="o.ref or ''"/></td>
+                    <td style="border: 1px solid black; padding: 2px; margin-top: 0px;"><strong>Référence</strong></td>
+                    <td style="border: 1px solid black; padding: 2px; margin-top: 0px;">
+                      <span t-if="o._fields.get('ref')" t-esc="o.ref"/>
+                      <span t-elif="o._fields.get('client_order_ref')" t-esc="o.client_order_ref"/>
+                    </td>
                   </tr>
                   <tr>
-                    <td style="border: 1px solid black; padding: 8px; margin-top: 10px;"><strong>Date</strong></td>
-                    <td style="border: 1px solid black; padding: 8px; margin-top: 10px;"><span t-esc="o.invoice_date"/></td>
+                    <td style="border: 1px solid black; padding: 2px; margin-top: 0px;"><strong>Date</strong></td>
+                    <td style="border: 1px solid black; padding: 2px; margin-top: 0px;">
+                      <span t-if="o._fields.get('invoice_date')" t-esc="o.invoice_date"/>
+                      <span t-elif="o._fields.get('date_order')" t-esc="o.date_order"/>
+                    </td>
                   </tr>
                   <tr>
-                    <td style="border: 1px solid black; padding: 8px; margin-top: 10px;"><strong>Client</strong></td>
-                    <td style="border: 1px solid black; padding: 8px; margin-top: 10px;"><span t-esc="o.partner_id.name"/></td>
+                    <td style="border: 1px solid black; padding: 2px; margin-top: 0px;"><strong>Client</strong></td>
+                    <td style="border: 1px solid black; padding: 2px; margin-top: 0px;"><span t-esc="o.partner_id.name"/></td>
                   </tr>
                   <tr>
-                    <td style="border: 1px solid black; padding: 8px; margin-top: 10px;"><strong>Page</strong></td>
-                    <td style="border: 1px solid black; padding: 8px; margin-top: 10px;">1</td>
+                    <td style="border: 1px solid black; padding: 2px; margin-top: 0px;"><strong>Page</strong></td>
+                    <td style="border: 1px solid black; padding: 2px; margin-top: 0px;">1</td>
                   </tr>
                 </table>
 
                 <!-- Adresse du client -->
-                <div style="border: 1px solid black; padding: 8px; margin-top: 10px;">
+                <div style="border: 1px solid black; padding: 1px; margin-top: 10px; font-size:10px;">
                   <span t-esc="o.partner_id.contact_address"/>
                 </div>
               </t>
             </td>
 
             <!-- Colonne droite : Logo + Infos entreprise -->
-            <td style="width: 50%; text-align: right;">
+            <td style="width: 100%; text-align: center; vertical-align: top;">
               <!-- Logo -->
-              <div style="margin-bottom: 10px;">
+              <div style="text-align: left; margin-bottom: -30px; padding-left: 80px;">
                 <img t-if="company.logo" class="o_company_logo" t-att-src="image_data_uri(company.logo)" style="max-height: 70px;" alt="Logo"/>
               </div>
+               <div style="display: inline-block; text-align: left; padding: 5px 10px; border: 1px solid transparent;">
+                  <!-- Slogan -->
+                  <div style="font-weight: bold; margin-bottom: 5px">
+                    <span t-esc="company.report_header"/>
+                  </div>
 
-              <!-- Slogan -->
-              <div style="font-weight: bold; margin-bottom: 5px;">
-                <span t-esc="company.report_header"/>
-              </div>
+                  <!-- Infos entreprise -->
+               
+                  <div>
+                    <ul class="mb-0" style="list-style: none; padding: 0; margin: 0; font-size:10px;">
+                      <li t-if="company.company_details">
+                        <span t-esc="company.company_details"/>
+                      </li>
+                      <li t-else="">
+                        <div class="placeholder-company p-3 text-center">
+                          <strong>Company details block</strong>
+                          <div>Contains the company details.</div>
+                        </div>
+                      </li>
+                      <li t-if="forced_vat">
+                        <t t-esc="company.country_id.vat_label or 'Tax ID'"/> :
+                        <span t-esc="forced_vat"/>
+                      </li>
+                    </ul>
+                  </div>
+               </div>
 
-              <!-- Infos entreprise -->
-              <div>
-                <ul class="mb-0" style="list-style: none; padding: 0; margin: 0;">
-                  <li t-if="company.company_details">
-                    <span t-esc="company.company_details"/>
-                  </li>
-                  <li t-else="">
-                    <div class="placeholder-company p-3 text-center">
-                      <strong>Company details block</strong>
-                      <div>Contains the company details.</div>
-                    </div>
-                  </li>
-                  <li t-if="forced_vat">
-                    <t t-esc="company.country_id.vat_label or 'Tax ID'"/> :
-                    <span t-esc="forced_vat"/>
-                  </li>
-                </ul>
-              </div>
             </td>
           </tr>
         </table>
       </div>
 
       <!-- BODY -->
-      <div
-        t-attf-class="article o_report_layout_folder o_table_striped o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
-        t-attf-style="{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}"
-        t-att-data-oe-model="o and o._name"
-        t-att-data-oe-id="o and o.id"
-        t-att-data-oe-lang="o and o.env.context.get('lang')"
-      >
+      <div t-attf-class="article o_report_layout_standard o_table_standard o_company_#{company.id}_layout o_snail_mail {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}" t-attf-style="{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
         <!-- Ajout marge top manuelle -->
         
-          <div class="container" style="margin-top: 60px; margin-bottom: 30px;">
-          <div t-if="report_type == 'pdf'" style="height: 200px;"/>
+          <div class="container" style="margin-top: 60px; margin-bottom: 30px;font-size: 10px;">
+          <div t-if="report_type == 'pdf'" style="height: 80px;"/>
 
             <!-- Contenu dynamique (body réel du rapport) -->
             <t t-out="0"/>
 
             <!-- Montant en lettres centré -->
             <t t-if="o">
-              <div class="mt-4 text-center" style="padding-top: 10px; border-top: 1px solid #000; max-width: 700px; margin: 20px auto 0 auto;">
+              <div class="mt-4 text-center" style="padding-top: 10px; border-top: 1px solid #000; max-width: 700px; margin: 20px auto 0 auto;font-size: 10px;">
                 <p>
                   <strong>
                     <t t-if="o.amount_total">
@@ -114,11 +117,11 @@
             </t>
 
             <!-- Signature alignée à droite -->
-            <div class="mt-4 d-flex justify-content-end" style="width: 100%;">
+            <div class="mt-4 d-flex justify-content-end" style="width: 100%;font-size: 10px">
               <div class="text-end">
                 <div class="signature-block" style="width: 250px;">
                   <div class="border-top pt-3">
-                    <p class="mb-1">Le Responsable</p>
+                    <p class="mb-1">Signature</p>
                   </div>
                 </div>
               </div>
